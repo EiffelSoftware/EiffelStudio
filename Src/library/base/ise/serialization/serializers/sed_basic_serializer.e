@@ -44,10 +44,10 @@ feature {NONE} -- Implementation
 
 				l_dtype_table.forth
 			end
-			
+
 			write_object_table (a_list)
 		end
-		
+
 	type_table (a_list: ARRAYED_LIST [ANY]): HASH_TABLE [INTEGER, INTEGER] is
 			-- Given a list of objects `a_list', builds a compact table of the
 			-- dynamic type IDs present in `a_list'.
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 		local
 			l_dtype: INTEGER
 			l_int: like internal
-			l_array: ARRAY [ANY]
+			l_array: ?ARRAY [ANY]
 			l_area: SPECIAL [ANY]
 			i, nb: INTEGER
 		do
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				l_dtype := l_int.dynamic_type (l_area.item (i))				
+				l_dtype := l_int.dynamic_type (l_area.item (i))
 				Result.put (l_dtype, l_dtype)
 				i := i + 1
 			end
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -94,10 +94,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	call (event_data: EVENT_DATA) is
+	call (event_data: ?EVENT_DATA) is
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -151,11 +151,14 @@ feature -- Basic operations
 
 feature -- Access
 
-	name: STRING is
+	name: ?STRING is
 			-- Textual description.
+		local
+			i: like name_internal
 		do
-			if name_internal /= Void then
-				Result := name_internal.twin
+			i := name_internal
+			if i /= Void then
+				Result := i.twin
 			end
 		ensure
 			equal_to_name_internal: equal (Result, name_internal)
@@ -165,19 +168,26 @@ feature -- Access
 			-- Attribute of the generic type.
 			-- Useful for introspection and use in like statements.
 		obsolete "Not implemented. To be removed"
+		local
+			r: EVENT_DATA
 		do
-			if dummy_event_data_internal = Void then
-				create dummy_event_data_internal
+			r := dummy_event_data_internal
+			if r = Void then
+				create r
+				dummy_event_data_internal := r
 			end
-			Result := dummy_event_data_internal
+			Result := r
 		end
 
-	event_data_names: ARRAY [STRING] is
+	event_data_names: ?ARRAY [STRING] is
 			-- Textual description of each event datum.
 		obsolete "Not implemented. To be removed"
+		local
+			i: like event_data_names_internal
 		do
-			if event_data_names_internal /= Void then
-				Result := event_data_names_internal.deep_twin
+			i := event_data_names_internal
+			if i /= Void then
+				Result := i.deep_twin
 			end
 		ensure
 			equal_to_event_data_names_internal:
@@ -270,9 +280,9 @@ feature -- Removal
 			l_kamikazes: like kamikazes_internal
 		do
 			Precursor {ARRAYED_LIST}(v)
-			if kamikazes_internal /= Void then
+			l_kamikazes := kamikazes_internal
+			if l_kamikazes /= Void then
 				if object_comparison then
-					l_kamikazes := kamikazes_internal
 					l_compare_objects := l_kamikazes.object_comparison
 					l_kamikazes.compare_objects
 					l_kamikazes.start
@@ -281,7 +291,7 @@ feature -- Removal
 						l_kamikazes.compare_references
 					end
 				else
-					kamikazes_internal.prune (v)
+					l_kamikazes.prune (v)
 				end
 			end
 		end
@@ -308,20 +318,28 @@ feature -- Event handling
 
 	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
+		local
+			r: like not_empty_actions_internal
 		do
-			if not_empty_actions_internal = Void then
-				create not_empty_actions_internal.make (0)
+			r := not_empty_actions_internal
+			if r = Void then
+				create r.make (0)
+				not_empty_actions_internal := r
 			end
-			Result := not_empty_actions_internal
+			Result := r
 		end
 
 	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
+		local
+			r: like empty_actions_internal
 		do
-			if empty_actions_internal = Void then
-				create empty_actions_internal.make (0)
+			r := empty_actions_internal
+			if r = Void then
+				create r.make (0)
+				empty_actions_internal := r
 			end
-			Result := empty_actions_internal
+			Result := r
 		end
 
 feature {NONE} -- Implementation, ARRAYED_LIST
@@ -369,54 +387,66 @@ feature {NONE} -- Implementation
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
+		local
+			r: like is_aborted_stack_internal
 		do
-			if is_aborted_stack_internal = Void then
-				create is_aborted_stack_internal.make
+			r := is_aborted_stack_internal
+			if r = Void then
+				create r.make
+				is_aborted_stack_internal := r
 			end
-			Result := is_aborted_stack_internal
+			Result := r
 		end
 
-	is_aborted_stack_internal: like is_aborted_stack
+	is_aborted_stack_internal: ?like is_aborted_stack
 		-- Internal storage for `is_aborted_stack'.
 
 	call_buffer: LINKED_QUEUE [EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
+		local
+			r: like call_buffer_internal
 		do
-			if call_buffer_internal = Void then
-				create call_buffer_internal.make
+			r := call_buffer_internal
+			if r = Void then
+				create r.make
+				call_buffer_internal := r
 			end
-			Result := call_buffer_internal
+			Result := r
 		end
 
-	call_buffer_internal: like call_buffer
+	call_buffer_internal: ?like call_buffer
 			-- Internal storage for `call_buffer'.
 
-	name_internal: STRING
+	name_internal: ?STRING
 			-- See name.
 
-	event_data_names_internal: ARRAY [STRING]
+	event_data_names_internal: ?ARRAY [STRING]
 			-- See event_data_names.
 
-	dummy_event_data_internal: EVENT_DATA
+	dummy_event_data_internal: ?EVENT_DATA
 			-- See dummy_event_data.
 
 	kamikazes: ARRAYED_LIST [like item]
 			-- Used by `prune_when_called'.
+		local
+			r: like kamikazes_internal
 		do
-			if kamikazes_internal = Void then
-				create kamikazes_internal.make (0)
+			r := kamikazes_internal
+			if r = Void then
+				create r.make (0)
+				kamikazes_internal := r
 			end
-			Result := kamikazes_internal
+			Result := r
 		end
 
-	kamikazes_internal: like kamikazes
+	kamikazes_internal: ?like kamikazes
 			-- Internal storage for `kamikazes'.
 
-	not_empty_actions_internal: like not_empty_actions
+	not_empty_actions_internal: ?like not_empty_actions
 			-- Internal storage for `not_empty_actions'.
 
-	empty_actions_internal: like empty_actions
+	empty_actions_internal: ?like empty_actions
 			-- Internal storage for `empty_actions'.
 
 feature -- Obsolete
@@ -454,7 +484,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -463,11 +493,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ACTION_SEQUENCE

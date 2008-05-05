@@ -21,20 +21,25 @@ create
 
 feature {NONE} -- Implementation: Access
 
-	dynamic_type_table: SPECIAL [INTEGER]
+	dynamic_type_table: ?SPECIAL [INTEGER]
 			-- Mapping between old dynamic types and new ones.
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER is
 			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
 			-- type id in current system.
+		local
+			t: like dynamic_type_table
 		do
-			check
-				dynamic_type_table.valid_index (a_old_type_id)
-				dynamic_type_table.item (a_old_type_id) >= 0
+			t := dynamic_type_table
+			if t /= Void then
+				check
+					t.valid_index (a_old_type_id)
+					t.item (a_old_type_id) >= 0
+				end
+				Result := t.item (a_old_type_id)
 			end
-			Result := dynamic_type_table.item (a_old_type_id)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	read_header (a_count: NATURAL_32) is
@@ -90,7 +95,7 @@ feature {NONE} -- Cleaning
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -99,10 +104,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

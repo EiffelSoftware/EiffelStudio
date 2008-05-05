@@ -158,11 +158,16 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				check
-					is_error: a_callback.is_error
+					-- In case it is an internal error (Call on Void target, or others...)
+					-- we need to properly handle this.
+				if a_callback.is_error then
+					l_pos := l_parser.position
+					a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
+				else
+						-- Since no error was retrieved it means that we had an internal
+						-- failure. Create an internal error instead.
+					a_callback.set_internal_error
 				end
-				l_pos := l_parser.position
-				a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
 			end
 				-- add warnings
 			is_warning := a_callback.is_warning

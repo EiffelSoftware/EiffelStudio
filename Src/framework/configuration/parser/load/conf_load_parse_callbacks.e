@@ -379,7 +379,7 @@ feature {NONE} -- Implementation attribute processing
 			if current_library_target /= Void then
 				current_library_target.to_lower
 			end
-			if is_valid_system_name (l_name) and then l_uuid = Void or else check_uuid (l_uuid) then
+			if is_valid_system_name (l_name) and then (l_uuid = Void or else check_uuid (l_uuid)) then
 				if l_uuid /= Void then
 					create l_uu.make_from_string (l_uuid)
 				else

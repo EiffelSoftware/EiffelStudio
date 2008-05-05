@@ -531,6 +531,8 @@ feature -- Validation warnings
 
 feature -- Parse errors
 
+	e_internal_parse_error: STRING is "Cannot parse configuration file. Unknown internal error."
+
 	e_parse_invalid_tag (a_tag: STRING): STRING is
 		do
 			Result := "Invalid tag/tag position '"+a_tag+"'"

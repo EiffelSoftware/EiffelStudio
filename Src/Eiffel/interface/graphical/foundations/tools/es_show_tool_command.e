@@ -167,6 +167,8 @@ feature -- Execution
 					l_shared.set_default_screen_y (l_y)
 
 					tool.show (True)
+				else
+					l_content.set_focus
 				end
 			end
 		end

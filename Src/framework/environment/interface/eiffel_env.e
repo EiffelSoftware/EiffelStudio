@@ -966,8 +966,6 @@ feature -- Directories (user)
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					Result ?= user_files_path.twin
 					Result.extend (projects_name)
-				elseif {PLATFORM}.is_windows then
-					create Result.make_from_string ("C:\Projects")
 				else
 					create Result.make_from_string (environment.home_directory_name)
 				end

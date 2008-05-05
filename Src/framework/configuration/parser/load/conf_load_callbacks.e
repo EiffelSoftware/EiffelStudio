@@ -50,6 +50,19 @@ feature -- Callbacks
 			set_parse_error_message (a_message)
 		end
 
+feature -- Setting
+
+	set_internal_error is
+			-- When an error occur during parsing which is not caught by our callback.
+		local
+			l_error: CONF_ERROR_PARSE
+		do
+			create l_error
+			l_error.set_message ({CONF_INTERFACE_NAMES}.e_internal_parse_error)
+			is_error := True
+			last_error := l_error
+		end
+
 feature {NONE} -- Implementation
 
 	check_uuid (a_value: STRING): BOOLEAN is

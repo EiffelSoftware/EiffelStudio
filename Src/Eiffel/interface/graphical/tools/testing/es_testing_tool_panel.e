@@ -23,7 +23,8 @@ inherit
 		redefine
 			on_after_initialized,
 			build_tool_interface,
-			is_appliable_event
+			is_appliable_event,
+			create_right_tool_bar_items
 		end
 
 create
@@ -35,7 +36,6 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_box: EV_BOX
-			l_string: STRING_GENERAL
 			l_level_2_2_vertical_box: EV_VERTICAL_BOX
 			l_top_container: EV_VERTICAL_BOX
 			l_tool_bar: SD_TOOL_BAR
@@ -46,23 +46,6 @@ feature {NONE} -- Initialization
 			-- Level 2 2nd box
 			l_top_container := widget
 			create l_level_2_2_vertical_box
-			create {EV_HORIZONTAL_BOX} l_box
-			l_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
-			l_level_2_2_vertical_box.extend (l_box)
-			l_level_2_2_vertical_box.disable_item_expand (l_box)
-
-			l_string := runs_string.twin
-			l_string.append (": 0/0")
-			create runs_label.make_with_text (l_string)
-			l_box.extend (runs_label)
-
-			create errors_label
-			set_error_label_with (0)
-			l_box.extend (errors_label)
-
-			create failures_label
-			set_failure_label_with (0)
-			l_box.extend (failures_label)
 
 			create {EV_HORIZONTAL_BOX} l_box
 			l_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
@@ -209,6 +192,58 @@ feature {NONE} -- Initialization
 
 			Result.force_last (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
 			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
+		end
+
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- <Precursor>
+		local
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_string: STRING_GENERAL
+			l_v_box: EV_VERTICAL_BOX
+			l_h_box: EV_HORIZONTAL_BOX
+			l_pixmap, l_temp_pixmap: EV_PIXMAP
+			l_constants: EB_CONSTANTS
+		do
+			l_string := runs_string.twin
+			l_string.append (": 0/0")
+			create runs_label.make_with_text (l_string)
+
+			create errors_label
+			set_error_label_with (0)
+
+			create failures_label
+			set_failure_label_with (0)
+
+			create l_v_box
+			l_v_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
+			create l_h_box
+			l_h_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_v_box.extend (l_h_box)
+
+			create l_constants
+
+			l_pixmap := l_constants.pixmaps.icon_pixmaps.run_animation_5_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_h_box.extend (l_pixmap)
+
+			l_h_box.extend (runs_label)
+
+			l_pixmap := l_constants.pixmaps.icon_pixmaps.general_error_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_h_box.extend (l_pixmap)
+
+			l_h_box.extend (errors_label)
+
+			l_pixmap := l_constants.pixmaps.icon_pixmaps.testing_failure_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_h_box.extend (l_pixmap)
+
+			l_h_box.extend (failures_label)
+
+			create Result.make (1)
+
+			create l_widget_item.make (l_v_box)
+			Result.force_last (l_widget_item)
 		end
 
 feature -- Query

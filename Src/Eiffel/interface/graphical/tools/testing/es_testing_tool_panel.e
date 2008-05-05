@@ -170,6 +170,8 @@ feature {NONE} -- Initialization
 			l_constants: EB_CONSTANTS
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_icons: ES_PIXMAPS_10X10
+			l_shim: ES_TESTING_RESULT_TOOL
+			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 		do
 			create l_constants
 			l_icons := l_constants.pixmaps.mini_pixmaps
@@ -192,6 +194,14 @@ feature {NONE} -- Initialization
 
 			Result.force_last (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
 			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
+
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			
+			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+			if l_shim /= Void then
+				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
+				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
+			end
 		end
 
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is

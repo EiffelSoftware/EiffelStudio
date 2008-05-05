@@ -60,7 +60,6 @@ feature {NONE} -- Redefine
 			l_box.extend (l_cell)
 
 			check not_void: failure_trace_grid /= Void end
-
 		ensure then
 			set: failure_trace_grid = a_grid
 		end
@@ -139,6 +138,8 @@ feature {NONE} -- Redefine
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_manager: ES_EWEASEL_EXECUTION_MANAGER
 			l_show_failure_trace_button: SD_TOOL_BAR_BUTTON
+			l_shim: ES_TESTING_TOOL
+			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 		do
 			create l_shared
 			l_manager := l_shared.manager
@@ -155,6 +156,14 @@ feature {NONE} -- Redefine
 
 			-- FIXIT: This button is not implemented now
 --			Result.force_last (l_manager.compare_with_expected_result_command.new_sd_toolbar_item (False))
+
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_TOOL})
+			if l_shim /= Void then
+				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
+				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
+			end
 		end
 
 	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN is

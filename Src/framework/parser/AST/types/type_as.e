@@ -115,7 +115,7 @@ feature -- Modification
 	set_attachment_mark (m: like attachment_mark; a: like has_attached_mark; d: like has_detachable_mark)
 		require
 			correct_attachment_status: not (a and d)
-			meaningfull_attachment_mark: (m /= Void) = (a or d)
+			meaningfull_attachment_mark: (m /= Void) implies (a or d)
 		do
 			if m = Void then
 				attachment_mark_index := 0

@@ -68,6 +68,8 @@ feature {NONE} -- Implementation
 
 	to_one_string (a_lines: !LIST [STRING]): !STRING is
 			-- Join each lines of string in `a_line' to one string.
+		local
+			l_item: STRING
 		do
 			create Result.make_empty
 			from
@@ -75,7 +77,15 @@ feature {NONE} -- Implementation
 			until
 				a_lines.after
 			loop
-				Result.append (a_lines.item)
+				l_item := a_lines.item
+				if not l_item.is_empty then
+					if l_item.index_of ('%R', 1) /= l_item.count then
+						-- On Linux, `l_item' don't have `%R', we add it to make it same as Windows
+						l_item.append ("%R")
+					end
+				end
+
+				Result.append (l_item)
 
 				a_lines.forth
 			end

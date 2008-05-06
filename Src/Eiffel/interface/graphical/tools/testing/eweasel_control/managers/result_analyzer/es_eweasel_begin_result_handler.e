@@ -54,12 +54,32 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	signature: STRING is "EiffelWeasel test execution manager%R"
+	signature: STRING is
 			-- eweasel first line of output
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := "EiffelWeasel test execution manager%R"
+			else
+				Result := "EiffelWeasel test execution manager"
+			end
+		end
 
-	signature_2: STRING is "(version 1.0.001)%R";
+	signature_2: STRING is
 			-- eweasel second line of output
 			-- FIXIT: This value have to be changed if eweasel version changed.
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := "(version 1.0.001)%R"
+			else
+				Result := "(version 1.0.001)"
+			end
+		end
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

@@ -137,11 +137,24 @@ feature {NONE} -- Implementation routines
 			ready: test_case_source_folder /= Void
 					and then not test_case_source_folder.is_empty
 --					and then test_case_source_folder.is_valid
+		local
+			l_platform: PLATFORM
+			l_source_path: STRING
 		do
 			if a_new_line then
 				file.put_string ("%N")
 			end
-			file.put_string ("source_path	" + test_case_source_folder)
+
+			l_source_path := "source_path	"
+
+			create l_platform
+			if not l_platform.is_windows then
+				-- Add '/' for Linux, otherwise directory not found
+				l_source_path.append (Operating_environment.directory_separator.out)
+			end
+			l_source_path.append (test_case_source_folder)
+
+			file.put_string (l_source_path)
 			file.put_string ("%N")
 		end
 

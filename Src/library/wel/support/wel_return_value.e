@@ -66,7 +66,7 @@ feature -- Access
 				Result := True
 			end
 		end
-		
+
 feature -- Element Change
 
 	set_message_return_value (value: POINTER) is
@@ -84,7 +84,7 @@ feature -- Element Change
 				has_return_value_area_not_void: has_return_value_area /= Void
 				message_return_value_area_not_void: message_return_value_area /= Void
 			end
-							
+
 			if
 				has_return_value_area.count < level_count
 			then
@@ -94,7 +94,7 @@ feature -- Element Change
 				message_return_value_area := message_return_value_area.resized_area (
 					level_count + Area_resize_increment)
 			end
-			
+
 			check
 				valid_level_count: level_count > 0
 			end
@@ -118,11 +118,11 @@ feature -- Element Change
 			check
 				default_processing_not_void: default_processing_area /= Void
 			end
-							
+
 			if
 				default_processing_area.count < level_count
 			then
-				default_processing_area := default_processing_area.resized_area (
+				default_processing_area := default_processing_area.aliased_resized_area (
 					level_count + Area_resize_increment)
 			end
 
@@ -141,20 +141,20 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 			-- is called.
 		do
 			level_count := level_count + 1
-			
+
 			if
 				has_return_value
 			then
 				has_return_value_area.put (False, level_count - 1)
 			end
-			
+
 			if
 				not default_processing
 			then
 				set_default_processing (True)
 			end
 		ensure
-			level_count_increased: level_count = old level_count + 1			
+			level_count_increased: level_count = old level_count + 1
 			default_processing_true: default_processing = True
 			has_return_value_false: has_return_value = False
 		end
@@ -173,7 +173,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 
 	level_count: INTEGER
 			-- Index for areas
-	
+
 feature {NONE} -- Implementation
 
 	has_return_value_area: SPECIAL [BOOLEAN]

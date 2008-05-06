@@ -256,31 +256,32 @@ feature -- Pattern generation
 		local
 			f_name: STRING
 		do
-			f_name := "toc"
+			create f_name.make (8)
+			f_name.append (once "toc")
 			f_name.append_integer (id)
 
-			buffer.generate_function_signature ("void", f_name, False, buffer,
-					<<"ptr">>, <<"fnptr">>)
+			buffer.generate_function_signature (once "void", f_name, False, buffer,
+					<<once "ptr">>, <<once "fnptr">>)
 			buffer.generate_block_open
 			buffer.put_new_line
-			buffer.put_string ("EIF_REFERENCE Current;")
+			buffer.put_string (once "EIF_REFERENCE Current;")
 			if not result_type.is_void then
 				buffer.put_new_line
-				buffer.put_string ("EIF_TYPED_VALUE result;")
+				buffer.put_string (once "EIF_TYPED_VALUE result;")
 				buffer.put_new_line
-				buffer.put_string ("EIF_TYPED_VALUE *it;")
+				buffer.put_string (once "EIF_TYPED_VALUE *it;")
 			end
 			generate_argument_declaration (buffer)
 			generate_toc_pop (buffer)
 			generate_routine_call (buffer)
 			if not result_type.is_void then
 				buffer.put_new_line
-				buffer.put_string ("it = iget();")
+				buffer.put_string (once "it = iget();")
 				buffer.put_new_line
 				if result_type.is_pointer then
 						-- Result might need to be boxed.
 					buffer.put_string (
-						"[
+						once "[
 							if (result.type != SK_REF) {
 									it->type = SK_REF;
 									it->it_ref = RTBU(result);
@@ -291,7 +292,7 @@ feature -- Pattern generation
 					)
 				else
 						-- Result of a basic type can be used as it is.
-					buffer.put_string ("*it = result;")
+					buffer.put_string (once "*it = result;")
 				end
 			end
 			buffer.generate_block_close

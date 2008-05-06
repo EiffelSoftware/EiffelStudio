@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 	row_locked_but_not_obscured_by_locked_column: BOOLEAN is
 			-- Is `row' locked and above `column' if also locked?
 		do
-			if row_i.is_locked then
+			if row_i /= Void and then row_i.is_locked then
 				if not column_i.is_locked then
 					Result := True
 				else
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 	column_locked_but_not_obscured_by_locked_row: BOOLEAN is
 			-- Is `column' locked and above `row' if also locked?
 		do
-			if column_i.is_locked then
+			if column_i /= Void and then column_i.is_locked then
 				if not row_i.is_locked then
 					Result := True
 				else

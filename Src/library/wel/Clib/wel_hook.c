@@ -95,6 +95,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 	MOUSEHOOKSTRUCT *pInfo = (MOUSEHOOKSTRUCT *) lParam;
 	RECT rect;
 
+
 	if (nCode < 0)					// Windows tell us not to handle this msg
 		return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
 
@@ -108,7 +109,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 	if (hHookWindow == NULL)		// No window has requested a hook
 		return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
 
-
+		
 	//===================================
 	// We will handle this mouse message
 	//===================================

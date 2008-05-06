@@ -235,11 +235,11 @@ feature -- Generation
 			until
 				i > nb
 			loop
-				buffer.put_string ("{(void (*)(fnptr)) toc")
+				buffer.put_string (once "{(void (*)(fnptr)) toc")
 				buffer.put_integer (i)
-				buffer.put_string (", (fnptr) toi")
+				buffer.put_string (once ", (fnptr) toi")
 				buffer.put_integer (i)
-				buffer.put_string ("},%N")
+				buffer.put_string (once "},%N")
 				i := i + 1
 			end
 			buffer.put_string ("};")

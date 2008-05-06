@@ -228,7 +228,7 @@ feature {NONE} -- Externals
 			"CreateDIBitmap"
 		end
 
-	cwin_set_di_bits (hdc, bitmap: POINTER;start_line, lenght: INTEGER;
+	cwin_set_di_bits (hdc, bitmap: POINTER;start_line, length: INTEGER;
 			 bits, info: POINTER; mode: INTEGER) is
 			-- SDK SetDIBits
 		external
@@ -236,6 +236,16 @@ feature {NONE} -- Externals
 				%BITMAPINFO *, UINT)"
 		alias
 			"SetDIBits"
+		end
+
+	cwin_get_di_bits (hdc, bitmap: POINTER;start_line, no_scanlines: INTEGER;
+			 bits, info: POINTER; mode: INTEGER) is
+			-- SDK GetDIBits
+		external
+			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
+				%BITMAPINFO *, UINT)"
+		alias
+			"GetDIBits"
 		end
 
 	cwin_load_bitmap (hinstance: POINTER; id: POINTER): POINTER is

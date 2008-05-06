@@ -610,6 +610,7 @@ feature {NONE} -- Implementation
 				if msg.quit then
 					set_is_destroyed (True)
 				else
+
 					focused_window := window_with_focus
 					if focused_window /= Void and then focused_window.exists then
 						if is_dialog (focused_window.wel_item) then

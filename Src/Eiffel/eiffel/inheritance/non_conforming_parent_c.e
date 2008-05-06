@@ -16,7 +16,7 @@ inherit
 feature -- Status
 
 	is_non_conforming: BOOLEAN
-			-- Is `Current' from a non-conforming inheritance branch?
+			-- <Precursor>
 		do
 			Result := True
 		end

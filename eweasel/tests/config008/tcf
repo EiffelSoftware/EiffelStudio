@@ -11,7 +11,7 @@ compile_result validity_error NONE VD00
 define NAME_ATTR "name="test""
 copy_sub 	Ace $TEST Ace
 
-compile_melted
+resume_compile
 compile_result ok
 
 test_end

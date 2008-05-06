@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DEPEND_UNIT 
+class DEPEND_UNIT
 
 inherit
 	COMPARABLE
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences.
 		do
-			make_with_level (c_id, f, 0)	
+			make_with_level (c_id, f, 0)
 		end
-		
+
 	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: INTEGER_8) is
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences in a given context.
@@ -58,10 +58,11 @@ feature {NONE} -- Initialization
 			end
 			written_in := f.written_in
 			body_index := f.body_index
+
 			if f.is_external then
-				internal_flags := is_external_flag | a_context;
+				internal_flags := is_external_flag | a_context
 			else
-				internal_flags := a_context;
+				internal_flags := a_context
 			end
 		end
 
@@ -118,7 +119,7 @@ feature -- Access
 		do
 			Result := internal_flags & is_special_flag = is_special_flag
 		end
-		
+
 	is_needed_for_dead_code_removal: BOOLEAN is
 			-- Is `Current' needed for dead code removal?
 			-- True if not used in assertions (and no assertions
@@ -181,14 +182,14 @@ feature {NONE} -- Implementation: flags
 	is_special_flag: INTEGER_8 is 0x02
 
 	is_in_assertion_mask: INTEGER_8 is 0x3C
-	
+
 feature -- Flags
 
 	is_in_require_flag: INTEGER_8 is 0x04
 	is_in_check_flag: INTEGER_8 is 0x08
 	is_in_ensure_flag: INTEGER_8 is 0x10
 	is_in_invariant_flag: INTEGER_8 is 0x20
-	
+
 	is_in_assignment_flag: INTEGER_8 is 0x40
 	is_in_creation_flag: INTEGER_8 is 0x80
 			-- Mask used for internal property.
@@ -224,7 +225,7 @@ feature {NONE} -- Debug
 				Result := "Class not in system or not compiled yet."
 			end
 		end
-		
+
 invariant
 	valid_class_id: class_id > 0
 

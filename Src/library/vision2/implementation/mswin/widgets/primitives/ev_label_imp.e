@@ -21,7 +21,8 @@ inherit
 		redefine
 			set_default_minimum_size,
 			interface,
-			initialize
+			initialize,
+			on_size
 		end
 
 	EV_TEXT_ALIGNABLE_IMP
@@ -375,6 +376,17 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			-- This causes flicker.
 		do
 			disable_default_processing
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER_32)
+			-- Wm_size message
+		do
+			if parent /= Void then
+					-- We have to force a full redraw on resize so that the label gets properly drawn
+					-- in all circumstances.
+				invalidate_without_background
+			end
+			Precursor {EV_PRIMITIVE_IMP} (size_type, a_width, a_height)
 		end
 
 feature {NONE} -- Implementation

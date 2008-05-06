@@ -88,7 +88,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 					-- First erase the background
 				if selected_state then
 					rect.set_rect (left_pos, top_pos, left_pos + plain_text_position - 2, bottom_pos)
-					erase_background (draw_dc, rect, system_color_menu)
+					erase_background (draw_dc, rect, system_color_highlight)
 
 					rect.set_rect (left_pos + plain_text_position - 2, top_pos, left_pos + plain_text_position, bottom_pos)
 					erase_background (draw_dc, rect, system_color_highlight)
@@ -194,12 +194,9 @@ feature {NONE} -- WEL Implementation
 			create edge_rect.make (rect.left, rect.top, rect.left + plain_text_position - 2, rect.bottom)
 			if checked then
 				create hlc.make_by_color (contrast_color (system_color_menu).item)
-				erase_background (draw_dc, edge_rect, hlc)
 				draw_dc.draw_edge (edge_rect, Wel_drawing_constants.Bdr_sunkenouter, Wel_drawing_constants.Bf_rect)
 			elseif selected and not disabled then
-				create hlc.make_by_color (contrast_color (system_color_menu).item)
-				erase_background (draw_dc, edge_rect, hlc)
-				draw_dc.draw_edge (edge_rect, Wel_drawing_constants.Bdr_raisedinner, Wel_drawing_constants.Bf_rect)
+				create hlc.make_by_color (contrast_color (system_color_highlight).item)
 			end
 			edge_rect.dispose
 

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	JOIN 
+	JOIN
 
 inherit
 	COMPILER_EXPORTER
@@ -16,14 +16,14 @@ inherit
 
 create
 	make
-	
+
 feature -- Status Report
 
 	is_valid_old_features (old_feats: INHERIT_FEAT): BOOLEAN is
 			-- Is `old_feats' valid for a JOIN?
 		do
-			Result := old_feats.nb_deferred > 1
-		end	
+			Result := old_feats.deferred_features.count > 1
+		end
 
 feature -- Checking
 
@@ -52,7 +52,9 @@ feature -- Checking
 						-- Record assigner command for comparison with other features
 					feature_with_assigner := new_feature
 				end
-				deferred_features.go_i_th (2)
+					-- Go to the second item in the list
+				deferred_features.start
+				deferred_features.forth
 			until
 				deferred_features.after
 			loop

@@ -27,7 +27,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create main_vbox
 			create inner_hbox
@@ -38,18 +38,19 @@ feature {NONE}-- Initialization
 			create scroll_vbox
 			create vertical_scrollbar
 			create scroll_cell
-			
+
 				-- Build_widget_structure.
 			widget.extend (main_vbox)
 			main_vbox.extend (inner_hbox)
 			inner_hbox.extend (margin_container)
 			inner_hbox.extend (editor_viewport)
 			editor_viewport.extend (editor_drawing_area)
+			editor_viewport.resize_actions.force_extend (agent editor_drawing_area.redraw)
 			main_vbox.extend (horizontal_scrollbar)
 			widget.extend (scroll_vbox)
 			scroll_vbox.extend (vertical_scrollbar)
 			scroll_vbox.extend (scroll_cell)
-			
+
 			main_vbox.disable_item_expand (horizontal_scrollbar)
 			inner_hbox.disable_item_expand (margin_container)
 			--editor_viewport.set_item_width (10)
@@ -62,7 +63,7 @@ feature {NONE}-- Initialization
 			vertical_scrollbar.disable_sensitive
 			vertical_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))
 			widget.disable_item_expand (scroll_vbox)
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -100,12 +101,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

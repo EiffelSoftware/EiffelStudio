@@ -157,11 +157,11 @@ feature {NONE} -- C code generation
 			loop
 				cl_name := l_keys.item (i)
 				if cl_name = Void then
-					buffer.put_string ("(char *) 0")
+					buffer.put_string (once "(char *) 0")
 				else
 					buffer.put_string_literal (cl_name)
 				end
-				buffer.put_string (",%N")
+				buffer.put_string (once ",%N")
 				i := i + 1
 			end
 			buffer.put_string ("};%N%N")
@@ -177,12 +177,12 @@ feature {NONE} -- C code generation
 					l_is_generic := l_class.is_generic
 					if l_is_generic then
 						if for_expanded then
-							buffer.put_string ("static int32 exp_patterns")
+							buffer.put_string (once "static int32 exp_patterns")
 						else
-							buffer.put_string ("static int32 patterns")
+							buffer.put_string (once "static int32 patterns")
 						end
 						buffer.put_integer (l_class.class_id)
-						buffer.put_string (" [] = {%N")
+						buffer.put_string (once " [] = {%N")
 						from
 							l_types := l_class.types
 							l_types.start
@@ -200,22 +200,22 @@ feature {NONE} -- C code generation
 						 			end
 									gen_type.generate_cecil_values (buffer, l_types.item.type)
 								else
-									buffer.put_string ("(int32) ")
+									buffer.put_string (once "(int32) ")
 									l_types.item.type.generate_cecil_value (buffer, l_types.item.type)
-									buffer.put_string (",%N")
+									buffer.put_string (once ",%N")
 								end
 							end
 							l_types.forth
 						end
-						buffer.put_string ("(int32) SK_INVALID%N};%N%N")
+						buffer.put_string (once "(int32) SK_INVALID%N};%N%N")
 
 						if for_expanded then
-							buffer.put_string ("static EIF_TYPE_INDEX exp_dyn_types")
+							buffer.put_string (once "static EIF_TYPE_INDEX exp_dyn_types")
 						else
-							buffer.put_string ("static EIF_TYPE_INDEX dyn_types")
+							buffer.put_string (once "static EIF_TYPE_INDEX dyn_types")
 						end
 						buffer.put_integer (l_class.class_id)
-						buffer.put_string (" [] = {%N")
+						buffer.put_string (once " [] = {%N")
 						from
 							l_types.start
 						until
@@ -226,11 +226,11 @@ feature {NONE} -- C code generation
 								(not for_expanded and not l_types.item.is_expanded)
 							then
 								buffer.put_type_id (l_types.item.type_id)
-								buffer.put_string (",%N")
+								buffer.put_string (once ",%N")
 							end
 							l_types.forth
 						end
-						buffer.put_string ("};%N%N")
+						buffer.put_string (once "};%N%N")
 					end
 				end
 				i := i + 1
@@ -249,24 +249,24 @@ feature {NONE} -- C code generation
 			loop
 				l_class := l_values.item (i)
 				if l_class = Void then
-					buffer.put_string ("{(int) 0, (EIF_TYPE_INDEX) 0, NULL, NULL}")
+					buffer.put_string (once "{(int) 0, (EIF_TYPE_INDEX) 0, NULL, NULL}")
 				else
-					buffer.put_string ("{(int) ")
+					buffer.put_string (once "{(int) ")
 					if l_class.is_generic then
 						buffer.put_integer (l_class.generics.count)
 						if for_expanded then
-							buffer.put_string (", (EIF_TYPE_INDEX) 0, exp_patterns")
+							buffer.put_string (once ", (EIF_TYPE_INDEX) 0, exp_patterns")
 							buffer.put_integer (l_class.class_id)
-							buffer.put_string (", exp_dyn_types")
+							buffer.put_string (once ", exp_dyn_types")
 							buffer.put_integer (l_class.class_id)
 						else
-							buffer.put_string (", (EIF_TYPE_INDEX) 0, patterns")
+							buffer.put_string (once ", (EIF_TYPE_INDEX) 0, patterns")
 							buffer.put_integer (l_class.class_id)
-							buffer.put_string (", dyn_types")
+							buffer.put_string (once ", dyn_types")
 							buffer.put_integer (l_class.class_id)
 						end
 					else
-						buffer.put_string ("0, (EIF_TYPE_INDEX) ")
+						buffer.put_string (once "0, (EIF_TYPE_INDEX) ")
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.
@@ -284,11 +284,11 @@ feature {NONE} -- C code generation
 							end
 							l_types.forth
 						end
-						buffer.put_string (", NULL, NULL")
+						buffer.put_string (once ", NULL, NULL")
 					end
 					buffer.put_character ('}')
 				end
-				buffer.put_string (",%N")
+				buffer.put_string (once ",%N")
 				i := i + 1
 			end
 			buffer.put_string ("};%N%N")

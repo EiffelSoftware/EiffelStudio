@@ -52,7 +52,7 @@ feature -- Command
 			else
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			end
-			if cur_wid = Void then
+			if cur_wid = Void or old_cur = Void then
 				--| Do nothing.
 			else
 				cur_wid.set_pointer_style (old_cur)
@@ -70,14 +70,17 @@ feature {NONE} -- Implementation functions
 			l_pixmaps: EV_STOCK_PIXMAPS
 			l_editor: like current_editor
 		do
-			if cur_wid = Void then
-				--| Do nothing.
-			else
-				if old_cur = Void then
-					old_cur := cur_wid.pointer_style
+				-- Only change the cursor in the event it is a different stone object.
+			if develop_window.stone /= a_stone then
+				if cur_wid = Void then
+					--| Do nothing.
+				else
+					if old_cur = Void then
+						old_cur := cur_wid.pointer_style
+					end
+					create l_pixmaps
+					cur_wid.set_pointer_style (l_pixmaps.Wait_cursor)
 				end
-				create l_pixmaps
-				cur_wid.set_pointer_style (l_pixmaps.Wait_cursor)
 			end
 			old_class_stone ?= develop_window.stone
 			develop_window.old_set_stone (a_stone)

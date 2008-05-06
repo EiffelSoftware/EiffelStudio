@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+						l_table := l_table.aliased_resized_area ((l_old_dtype + 1).max (l_table.count * 2))
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end

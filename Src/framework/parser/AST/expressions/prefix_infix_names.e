@@ -75,7 +75,12 @@ feature -- Basic operations
 			symbol_not_void: symbol /= Void
 			symbol_not_empty: not symbol.is_empty
 		do
-			Result := Prefix_str + symbol + Quote_str
+				-- Allocate enough space for Result
+				-- 9 = count of 'Prefix_str' + 'Quote_str'
+			create Result.make (9 + symbol.count)
+			Result.append (Prefix_str)
+			Result.append (symbol)
+			Result.append (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -86,7 +91,12 @@ feature -- Basic operations
 			symbol_not_void: symbol /= Void
 			symbol_not_empty: not symbol.is_empty
 		do
-			Result := Infix_str + symbol + Quote_str
+				-- Allocate enough space for Result
+				-- 8 = count of 'Infix_str' + 'Quote_str'
+			create Result.make (8 + symbol.count)
+			Result.append (Infix_str)
+			Result.append (symbol)
+			Result.append (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -1897,7 +1897,6 @@ rt_public void exok(void)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *top;		/* Top of calling stack */
-	struct stxchunk *start;	/* First chunk in trace stack */
 	int type;					/* Type of execution vector */
 
 	/* If 'echval' is set to zero, then no exception occurred, so return

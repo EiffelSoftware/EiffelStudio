@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+						l_table := l_table.aliased_resized_area ((l_old_dtype + 1).max (l_table.count * 2))
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 						i := nb - 1 -- Jump out of loop
 					else
 						if not l_table.valid_index (l_old_dtype) then
-							l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+							l_table := l_table.aliased_resized_area ((l_old_dtype + 1).max (l_table.count * 2))
 						end
 						l_table.put (l_new_dtype, l_old_dtype)
 					end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 					a := attributes_mapping
 					if a /= Void then
 						if not a.valid_index (a_dtype) then
-							a := a.resized_area ((a_dtype + 1).max (a.count * 2))
+							a := a.aliased_resized_area ((a_dtype + 1).max (a.count * 2))
 							attributes_mapping := a
 						end
 						a.put (l_mapping, a_dtype)

@@ -7,8 +7,6 @@
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<library name="a" location="$LIB_A\a.ecf" $PREFIX use_application_options="true"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll" $PREFIX/>
 		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>
 </system>

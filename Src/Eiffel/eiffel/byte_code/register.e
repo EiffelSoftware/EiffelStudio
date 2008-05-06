@@ -12,7 +12,7 @@ inherit
 	REGISTRABLE
 		redefine
 			get_register, free_register,
-			is_temporary, is_predefined
+			is_temporary, is_predefined, print_register
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -71,6 +71,12 @@ feature
 			register_exists: regnum /= 0
 		do
 			context.register_server.free_register (level, regnum)
+		end
+
+	print_register is
+			-- Generates the C representation of `register'
+		do
+			context.put_register_name (level, regnum, context.buffer)
 		end
 
 	register_name: STRING is

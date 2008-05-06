@@ -265,58 +265,64 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Encoder Implementation
 
-	base64_encoded (s: STRING): STRING is
+	base64_encoded (s: STRING): STRING_8 is
 			-- base64 encoded value of `s'.
+		require
+			s_not_void: s /= Void
 		local
-			l1: ARRAY [INTEGER]
-			i : INTEGER
+			i,n: INTEGER
 			c: INTEGER
-			f, w: STRING
-			ch: CHARACTER
-			chars: STRING
+			f: SPECIAL [BOOLEAN]
+			base64chars: STRING_8
 		do
-			chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-"
-			create l1.make (1, s.count)
+			base64chars := once "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 			from
-				f := ""
-				i := l1.lower
+				n := s.count
+				i := (8 * n) \\ 6
+				if i > 0 then
+					create f.make (8 * n + (6 - i))
+				else
+					create f.make (8 * n)
+				end
+				i := 0
 			until
-				i > l1.upper
+				i > n - 1
 			loop
-				c := s.item (i).code
-				w := ""
-				l1.put (c, i)
-				if c.bit_test (7) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (6) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (5) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (4) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (3) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (2) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (1) then w.extend ('1') else w.extend ('0') end
-				if c.bit_test (0) then w.extend ('1') else w.extend ('0') end
-				f.append (w)
+				c := s.item (i + 1).code
+				f[8 * i + 0] := c.bit_test(7)
+				f[8 * i + 1] := c.bit_test(6)
+				f[8 * i + 2] := c.bit_test(5)
+				f[8 * i + 3] := c.bit_test(4)
+				f[8 * i + 4] := c.bit_test(3)
+				f[8 * i + 5] := c.bit_test(2)
+				f[8 * i + 6] := c.bit_test(1)
+				f[8 * i + 7] := c.bit_test(0)
 				i := i + 1
 			end
 			from
-				i := f.count \\ 6
-				if i /= 0 then
-					f.append (("000000").substring (1, 6 - i))
-				end
-				i := 1
-				Result := ""
+				i := 0
+				n := f.count
+				create Result.make (n // 6)
 			until
-				i > f.count
+				i > n - 1
 			loop
 				c := 0
-				if f.item (i + 0).is_equal ('1') then c := c + 0x20 end
-				if f.item (i + 1).is_equal ('1') then c := c + 0x10 end
-				if f.item (i + 2).is_equal ('1') then c := c + 0x8 end
-				if f.item (i + 3).is_equal ('1') then c := c + 0x4 end
-				if f.item (i + 4).is_equal ('1') then c := c + 0x2 end
-				if f.item (i + 5).is_equal ('1') then c := c + 0x1 end
-				ch := chars.item (c + 1)
-				Result.extend (ch)
+				if f[i + 0] then c := c + 0x20 end
+				if f[i + 1] then c := c + 0x10 end
+				if f[i + 2] then c := c + 0x8 end
+				if f[i + 3] then c := c + 0x4 end
+				if f[i + 4] then c := c + 0x2 end
+				if f[i + 5] then c := c + 0x1 end
+				Result.extend (base64chars.item (c + 1))
 				i := i + 6
+			end
+
+			i := s.count \\ 3
+			if i > 0 then
+				from until i > 2 loop
+					Result.extend ('=')
+					i := i + 1
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

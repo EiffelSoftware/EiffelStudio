@@ -60,23 +60,10 @@ feature -- Access
 
 	locale_combo: EV_COMBO_BOX is
 			-- Combo box to display locale list
-		local
-			l_locale_table: like locale_table
-			l_locales: LINKED_LIST [STRING_GENERAL]
 		do
 			if locale_combo_internal = Void then
 				create locale_combo_internal
-				l_locale_table := locale_table
-				create l_locales.make
-				from
-					l_locale_table.start
-				until
-					l_locale_table.after
-				loop
-					l_locales.extend (l_locale_table.item_for_iteration.as_string_32)
-					l_locale_table.forth
-				end
-				locale_combo_internal.set_strings (l_locales)
+				locale_combo_internal.set_strings (locale_table.linear_representation)
 				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id).as_string_32)
 				locale_combo_internal.select_actions.extend (agent on_encoding_change)
 				locale_combo_internal.disable_edit

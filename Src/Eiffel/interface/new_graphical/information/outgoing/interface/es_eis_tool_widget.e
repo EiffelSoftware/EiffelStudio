@@ -104,11 +104,6 @@ feature {NONE} -- Initialization
 			create split_area
 			l_whole_vbox.extend (split_area)
 
-			create l_hsep
-			l_hsep.set_minimum_height (2)
-			l_whole_vbox.extend (l_hsep)
-			l_whole_vbox.disable_item_expand (l_hsep)
-
 				-- Progress bar
 			create l_progress_hbox
 			l_progress_hbox.set_padding_width (layout_constants.tiny_padding_size)
@@ -234,13 +229,15 @@ feature {NONE} -- Initialization
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_border: ES_BORDERED_WIDGET [like entry_list]
 		do
 			create l_vbox
 			split_area.set_second (l_vbox)
 
 				-- Entry list
 			create entry_list.make (panel)
-			l_vbox.extend (entry_list)
+			create l_border.make (entry_list)
+			l_vbox.extend (l_border)
 
 			create l_support.make_with_grid (entry_list)
 			l_support.enable_grid_item_pnd_support

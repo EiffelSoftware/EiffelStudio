@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 			move_up_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_up_icon)
 			move_up_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_up_icon_buffer)
 			move_up_cmd.set_tooltip (interface_names.f_move_item_up)
-			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
+			move_up_cmd.add_agent (agent move_selected (-1))
 			tbb := move_up_cmd.new_mini_sd_toolbar_item
 			Result.force_last (tbb)
 
@@ -179,7 +179,7 @@ feature {NONE} -- Initialization
 			move_down_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_down_icon)
 			move_down_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_down_icon_buffer)
 			move_down_cmd.set_tooltip (interface_names.f_move_item_down)
-			move_down_cmd.add_agent (agent move_selected (watches_grid, +1))
+			move_down_cmd.add_agent (agent move_selected (+1))
 			tbb := move_down_cmd.new_mini_sd_toolbar_item
 			Result.force_last (tbb)
 		end
@@ -777,7 +777,7 @@ feature {NONE} -- Event handling
 
 	move_processing: BOOLEAN
 
-	move_selected (grid: ES_OBJECTS_GRID; offset: INTEGER) is
+	move_selected (offset: INTEGER) is
 		local
 			sel_rows: LIST [EV_GRID_ROW]
 			sel: EV_GRID_ROW
@@ -785,10 +785,12 @@ feature {NONE} -- Event handling
 			new_index, to_index: INTEGER
 			line: ES_OBJECTS_GRID_EXPRESSION_LINE
 			witems: like watched_items
+			g: ES_OBJECTS_GRID
 		do
 			if not move_processing then
+				g := watches_grid
 				move_processing := True --| To avoid concurrent move
-				sel_rows := grid_selected_top_rows (watches_grid)
+				sel_rows := grid_selected_top_rows (g)
 				if not sel_rows.is_empty then
 					sel := sel_rows.first
 					if sel.parent_row = Void then
@@ -809,9 +811,9 @@ feature {NONE} -- Event handling
 								witems.swap (new_index)
 							end
 						end
-						to_index := grid.grid_move_top_row_node_by (grid, sel_index, offset)
+						to_index := g.grid_move_top_row_node_by (g, sel_index, offset)
 						check to_index > 0 end
-						grid.remove_selection
+						g.remove_selection
 						sel.enable_select
 					end
 				end
@@ -966,7 +968,7 @@ feature {NONE} -- Event handling
 						and not ev_application.alt_pressed
 						and not ev_application.shift_pressed
 					then
-						move_selected (watches_grid, -1)
+						move_selected (-1)
 					end
 				when {EV_KEY_CONSTANTS}.key_numpad_add then
 					if
@@ -974,7 +976,7 @@ feature {NONE} -- Event handling
 						and not ev_application.alt_pressed
 						and not ev_application.shift_pressed
 					then
-						move_selected (watches_grid, +1)
+						move_selected (+1)
 					end
 				when {EV_KEY_CONSTANTS}.key_right then
 					expand_selected_rows (watches_grid)

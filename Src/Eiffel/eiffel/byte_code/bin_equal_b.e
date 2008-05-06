@@ -107,23 +107,17 @@ feature
 
 	get_left_register is
 			-- Get register for left expression
-		local
-			tmp_register: REGISTER;
 		do
 			if left_register = Void then
-				create tmp_register.make (Reference_c_type);
-				set_left_register (tmp_register);
+				set_left_register (create {REGISTER}.make (Reference_c_type));
 			end;
 		end;
 
 	get_right_register is
 			-- Get register for right expression
-		local
-			tmp_register: REGISTER;
 		do
 			if right_register = Void then
-				create tmp_register.make (Reference_c_type);
-				set_right_register (tmp_register);
+				set_right_register (create {REGISTER}.make (Reference_c_type));
 			end;
 		end;
 

@@ -53,8 +53,11 @@ feature {NONE} -- Implementation refedines
 		local
 			l_box, l_box_2, l_box_3: EV_BOX
 			l_label: EV_LABEL
+			l_grid: like grid
+			l_border: ES_BORDERED_WIDGET [ES_GRID]
 		do
-			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
+			a_container.set_padding ({ES_UI_CONSTANTS}.dialog_button_vertical_padding)
+			a_container.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 
 			create {EV_HORIZONTAL_BOX} l_box
 			create l_label
@@ -65,15 +68,17 @@ feature {NONE} -- Implementation refedines
 			a_container.disable_item_expand (l_box)
 
 			create {EV_HORIZONTAL_BOX} l_box
-			l_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			l_box.set_padding ({ES_UI_CONSTANTS}.dialog_button_horizontal_padding)
 
 			create {EV_VERTICAL_BOX} l_box_2
-			l_box_2.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
+			l_box_2.set_padding ({ES_UI_CONSTANTS}.dialog_button_vertical_padding)
 
-			create grid
-			grid.enable_single_row_selection
-			grid.pointer_double_press_item_actions.extend (agent on_grid_pointer_double_press)
-			l_box_2.extend (grid)
+			create l_grid
+			grid := l_grid
+			l_grid.enable_single_row_selection
+			l_grid.pointer_double_press_item_actions.extend (agent on_grid_pointer_double_press)
+			create l_border.make (l_grid)
+			l_box_2.extend (l_border)
 			create {EV_HORIZONTAL_BOX} l_box_3
 			l_box_3.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label
@@ -91,7 +96,7 @@ feature {NONE} -- Implementation refedines
 			l_box.extend (l_box_2)
 
 			create {EV_VERTICAL_BOX} l_box_2
-			l_box_2.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
+			l_box_2.set_padding ({ES_UI_CONSTANTS}.dialog_button_vertical_padding)
 			create show_test_run_cases
 			show_test_run_cases.set_text (interface_names.b_Show_test_run_cases)
 			show_test_run_cases.select_actions.extend (agent on_show_test_run_cases)

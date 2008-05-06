@@ -44,10 +44,20 @@ feature -- Query
 			-- Full eweasel command
 		local
 			l_path: like path
+			l_platform: PLATFORM
+			l_exe_name: STRING
 		do
 			l_path := path.twin
-			l_path.extend_from_array (<<"bin">>)
-			Result := l_path + Operating_environment.directory_separator.out + "eweasel.exe"
+			l_path.extend_from_array (<<"spec",ise_platform,"bin">>)
+
+			create l_platform
+			if l_platform.is_windows then
+				l_exe_name := "eweasel.exe"
+			else
+				l_exe_name := "eweasel"
+			end
+
+			Result := l_path + Operating_environment.directory_separator.out + l_exe_name
 		end
 
 	target_directory: DIRECTORY_NAME is
@@ -139,8 +149,8 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			elseif l_platform.is_windows then
 				create Result.make_from_string ("WINDOWS")
 			elseif l_platform.is_unix then
-				-- FIXIT: We have to check if following value works on Unix
-				create Result.make_from_string ("UNIX")
+				-- We must use lower case on Unix, otherwise eweasel/control/unix_platform will not found
+				create Result.make_from_string ("unix")
 			end
 		end
 

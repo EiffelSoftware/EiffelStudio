@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			l_class: like associated_class
 		do
 			class_id := a_class_id
-			l_class := system.class_of_id (class_id)
+			l_class := system.class_of_id (a_class_id)
 			if l_class /= Void and then l_class.is_expanded then
 				set_expanded_class_mark
 			end

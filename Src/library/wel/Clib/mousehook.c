@@ -132,7 +132,9 @@ static void load_library () {
 	if (!is_library_loaded) {
 			// Get the module of the library WITHOUT loading it.
 		hLibrary = LoadLibrary (L"wel_hook.dll");
-		is_library_loaded = 1;
+		if (hLibrary != NULL)
+				// We only set the 'is_library_loaded' if it is actually loaded.
+			is_library_loaded = 1;
 	}
 }
 

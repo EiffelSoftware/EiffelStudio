@@ -10,7 +10,7 @@ feature {NONE}
 	Inherit_table: INHERIT_TABLE is
 			-- Inheritance table for second pass
 		once
-			create Result.make (300);
+			create Result.make (35);
 		end;
 
 indexing

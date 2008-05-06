@@ -116,7 +116,7 @@ feature -- Element change
 				found_item := l_top_index
 				l_area := area
 				if l_area.count <= l_top_index then
-					l_area := l_area.resized_area (l_top_index + (l_top_index // 2).max (Chunk))
+					l_area := l_area.aliased_resized_area (l_top_index + (l_top_index // 2).max (Chunk))
 					area := l_area
 				end
 					-- Twin string as the heap cannot work if `s' is externally
@@ -140,10 +140,10 @@ feature -- Convenience
 			i, nb: INTEGER
 		do
 			if t /= Void then
-				create Result.make (t.lower, t.upper)
 				from
 					i := t.lower
 					nb := t.upper
+					create Result.make (i, nb)
 				until
 					i > nb
 				loop

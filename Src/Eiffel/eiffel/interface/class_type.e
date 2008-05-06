@@ -1051,7 +1051,7 @@ feature -- Generation
 				-- initialisation bulk.
 
 			buffer.generate_function_signature ("void", c_name, True, header_buffer,
-				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
+				<<"Current", "parent">>, <<EIF_REFERENCE_str, EIF_REFERENCE_str>>)
 
 			buffer.generate_block_open
 			buffer.put_gtcx
@@ -1369,7 +1369,8 @@ feature -- Skeleton generation
 				parent_list.after
 			loop
 				buffer.put_type_id (parent_list.item.type_id)
-				buffer.put_string (", ")
+				buffer.put_character (',')
+				buffer.put_character (' ')
 				parent_list.forth
 			end
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
@@ -1710,7 +1711,7 @@ feature -- Structure generation
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)
 					Extern_declarations.add_routine_with_signature (Void_type.c_type.c_string,
-						c_name, <<"EIF_REFERENCE">>)
+						c_name, <<EIF_REFERENCE_str>>)
 					buffer.put_string (");")
 				end
 			end
@@ -1721,7 +1722,8 @@ feature -- Structure generation
 		require
 			is_expanded: is_expanded
 		do
-			Result := "struct eif_ex_"
+			create Result.make (20)
+			Result.append (once "struct eif_ex_")
 			Result.append_integer (static_type_id - 1)
 		ensure
 			expanded_structure_name_not_void: Result /= Void
@@ -1739,11 +1741,11 @@ feature -- Cecil generation
 			final_mode := byte_context.final_mode
 			buffer.put_new_line
 			buffer.put_character ('{')
-			buffer.put_string ("(int32) ")
+			buffer.put_string (once "(int32) ")
 			buffer.put_integer (associated_class.visible_table_size)
-			buffer.put_string (", sizeof(char *(*)()), cl")
+			buffer.put_string (once ", sizeof(char *(*)()), cl")
 			buffer.put_integer (associated_class.class_id)
-			buffer.put_string (", (char *) cr")
+			buffer.put_string (once ", (char *) cr")
 			buffer.put_integer (type_id)
 			buffer.put_character ('}')
 		end
@@ -1977,6 +1979,8 @@ feature {NONE} -- Debug output
 		end
 
 feature {NONE} -- Implementation
+
+	EIF_REFERENCE_str: STRING = "EIF_REFERENCE"
 
 	internal_namespace: STRING
 	internal_type_name: STRING

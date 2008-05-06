@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 				-- Fetch original text
 			l_editor := active_editor_for_class (a_class)
-			if l_editor = Void then
+			if not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text
 			else
@@ -126,6 +126,19 @@ feature {NONE} -- Status report
 
 	is_committing: BOOLEAN
 			-- Indicates if modiciations commits are being performed.
+
+	is_editor_text_ready (a_editor: EB_SMART_EDITOR): BOOLEAN is
+			-- If `a_editor''s text ready for reading texts?
+		local
+			l_text_displayed: SMART_TEXT
+		do
+			if a_editor /= Void then
+				l_text_displayed := a_editor.text_displayed
+				if l_text_displayed /= Void and then not l_text_displayed.is_empty then
+					Result := l_text_displayed.reading_text_finished
+				end
+			end
+		end
 
 feature -- Query
 

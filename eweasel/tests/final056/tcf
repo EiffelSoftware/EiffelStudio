@@ -1,0 +1,15 @@
+test_name 	 inlining-with-formal
+test_description Inlining a call to a routine defined in a descendant class from the current class and the current class reduces the number of generic paramters causes the compiler to crash at degree -3.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

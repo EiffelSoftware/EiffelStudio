@@ -82,7 +82,6 @@ feature {NONE} -- Initialization
 			l_toolbar: SD_TOOL_BAR
 			l_vbox: EV_VERTICAL_BOX
 			l_whole_vbox: EV_VERTICAL_BOX
-			l_hsep: EV_HORIZONTAL_SEPARATOR
 			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_frame

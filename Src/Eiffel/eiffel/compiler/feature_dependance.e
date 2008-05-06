@@ -44,7 +44,7 @@ create {FEATURE_DEPENDANCE}
 
 feature {NONE} -- Initialization
 
-	make is 
+	make is
 		do
 			Precursor {TWO_WAY_SORTED_SET}
 			compare_objects
@@ -64,7 +64,7 @@ feature -- Access
 			suppliers.extend (a_class.class_id)
 		end;
 
-	wipe_out is 
+	wipe_out is
 		do
 			Precursor {TWO_WAY_SORTED_SET}
 			suppliers.wipe_out
@@ -94,7 +94,7 @@ feature -- Access
 
 	feature_name_id: INTEGER
 			-- name ID of the feature for which we have the dependances
-	
+
 	set_feature_name_id (id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		require
@@ -124,7 +124,7 @@ feature -- Comparison
 feature -- Incrementality
 
 	has_removed_id: BOOLEAN is
-			-- One of thesuppliers has been removed from the system?
+			-- One of the suppliers has been removed from the system?
 		local
 			l_system: like system
 		do

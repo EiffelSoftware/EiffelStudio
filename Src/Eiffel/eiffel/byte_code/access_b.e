@@ -355,7 +355,7 @@ feature -- C generation
 				if register /= Void then
 					buf.put_new_line
 					register.print_register
-					buf.put_string (" = ")
+					buf.put_three_character (' ', '=', ' ')
 				else
 					buf.put_new_line
 				end

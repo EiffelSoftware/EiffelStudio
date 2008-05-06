@@ -17,15 +17,31 @@ inherit
 		end
 
 create
-	make
+	make, make_with_feature_and_parent
 
 feature {NONE} -- Initialization
 
 	make (f: like a_feature) is
+			-- Make inheritance information object for feature `f'.
+		require
+			f_not_void: f /= Void
 		do
 			a_feature := f
 		ensure
 			a_feature_set: a_feature = f
+		end
+
+	make_with_feature_and_parent (f: like a_feature; p: like parent) is
+			-- Make inheritance information object for feature `f' in parent `p'.
+		require
+			f_not_void: f /= Void
+			p_not_void: p /= Void
+		do
+			a_feature := f
+			parent := p
+		ensure
+			a_feature_set: a_feature = f
+			parent_set: parent = p
 		end
 
 feature -- Access
@@ -51,6 +67,8 @@ feature -- Settings
 
 	set_a_feature (f: like a_feature) is
 			-- Assign `f' to `a_feature'.
+		require
+			f_not_void: f /= Void
 		do
 			a_feature := f
 		ensure
@@ -59,6 +77,8 @@ feature -- Settings
 
 	set_parent (p: like parent) is
 			-- Assign `p' to `parent'.
+		require
+			p_not_void: p /= Void
 		do
 			parent:= p
 		ensure

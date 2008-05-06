@@ -19,7 +19,8 @@ inherit
 			set_default_minimum_size
 		redefine
 			interface,
-			initialize
+			initialize,
+			on_size
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -79,6 +80,17 @@ feature {NONE} -- WEL Implementation
 		do
 			disable_default_processing
 			set_message_return_value (to_lresult (1))
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER_32)
+			-- Wm_size message
+		do
+			if parent /= Void then
+					-- We make sure that separators are redrawn
+					-- on reallocation
+				invalidate_without_background
+			end
+			Precursor (size_type, a_width, a_height)
 		end
 
 feature {EV_ANY_I}

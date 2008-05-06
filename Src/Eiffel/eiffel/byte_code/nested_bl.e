@@ -344,7 +344,7 @@ feature
 			buf.put_new_line
 			if register /= Void and then register /= No_register and then not complex_message_target then
 				register.print_register
-				buf.put_string (" = ")
+				buf.put_three_character (' ', '=', ' ')
 			end
 				-- If register is No_register, then the call will be
 				-- generated directly by a call to `print_register'.

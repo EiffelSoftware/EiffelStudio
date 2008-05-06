@@ -11,7 +11,7 @@ class
 inherit
 	ARRAYED_LIST [FEATURE_I]
 		export
-			{COMPUTED_FEATURE_TABLE, CLASS_TYPE, SELECT_TABLE}
+			{COMPUTED_FEATURE_TABLE, CLASS_TYPE, SELECT_TABLE, INHERIT_TABLE}
 				area, same_items, copy
 		end
 
@@ -21,10 +21,7 @@ inherit
 		end
 
 create
-	make
-
-create {COMPUTED_FEATURE_TABLE}
-	make_filled
+	make, make_filled
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

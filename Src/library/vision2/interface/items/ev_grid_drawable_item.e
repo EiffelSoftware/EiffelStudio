@@ -6,8 +6,10 @@ indexing
 		coordinates 0x0 in the passed drawable. All drawing Performed in the drawable is
 		clipped to `width', `height' of Current. Note that the dimensions of the drawable area are
 		undefined, but are always be greater than `width' and `height'.
-
-			]"
+		Note also that like a EV_DRAWING_AREA the content of the area is unspecified when
+		the `expose_actions' are called, therefore you might have to clear its content before drawing
+		to ensure proper behavior.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

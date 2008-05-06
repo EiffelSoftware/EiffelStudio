@@ -53,6 +53,9 @@ feature -- Access
 	has_old_verbatim_strings: BOOLEAN
 			-- Is old semantics of verbatim strings used?
 
+	has_old_feature_replication: BOOLEAN
+			-- Is old semantics for feature replication used?
+
 	exception_stack_managed: BOOLEAN;
 			-- Is the exception stack managed in final mode
 
@@ -425,6 +428,18 @@ feature -- Update
 			has_old_verbatim_strings_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				has_old_verbatim_strings = b
+		end
+
+	set_has_old_feature_replication (b: BOOLEAN) is
+			-- Set `has_old_feature_replication' to `b'.
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				has_old_feature_replication := b
+			end
+		ensure
+			has_old_feature_replication_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				has_old_feature_replication = b
 		end
 
 	set_console_application (b: BOOLEAN) is

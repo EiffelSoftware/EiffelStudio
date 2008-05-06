@@ -865,6 +865,7 @@ feature -- Registers
 			buf.put_character ('x')
 		end
 
+
 feature {BYTE_CONTEXT, REGISTER} -- Registers
 
 	register_server: REGISTER_SERVER
@@ -878,8 +879,20 @@ feature {REGISTER} -- Registers
 			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
 			positive_n: n > 0
 		do
-			Result := register_names [t].twin
+			create Result.make (5)
+			Result.append (register_names [t])
 			Result.append_integer (n)
+		end
+
+	put_register_name (t: INTEGER; n: INTEGER; buf: like buffer) is
+			-- Put name of a temporary register number `n' of type `t' into `buf'.
+		require
+			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
+			positive_n: n > 0
+			buf_attached: buf /= Void
+		do
+			buf.put_string (register_names [t])
+			buf.put_integer (n)
 		end
 
 	register_type (t: INTEGER): TYPE_C is
@@ -928,17 +941,6 @@ feature {REGISTER} -- Registers
 		end
 
 feature {NONE} -- Registers: implementation
-
-	put_register_name (t: INTEGER; n: INTEGER; buf: like buffer) is
-			-- Put name of a temporary register number `n' of type `t' into `buf'.
-		require
-			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
-			positive_n: n > 0
-			buf_attached: buf /= Void
-		do
-			buf.put_string (register_names [t])
-			buf.put_integer (n)
-		end
 
 	register_names: SPECIAL [STRING] is
 			-- Names of registers indexed by their level

@@ -48,6 +48,12 @@ feature
 	exports: EXPORT_ADAPTATION
 			-- Export adaptation
 
+	is_non_conforming: BOOLEAN
+			-- Is `Current' from a non-conforming inheritance branch?
+		do
+--			Result := False
+		end
+
 	new_export_for (feature_name_id: INTEGER): EXPORT_I is
 			-- New export status for feature named `feature_name_id'.
 			-- Void if none.
@@ -109,6 +115,12 @@ feature
 			Result := parent_type.associated_class
 		end;
 
+	has_renaming: BOOLEAN is
+			-- Does `Current' renaming any features?
+		do
+			Result := renaming /= Void and then renaming.count > 0
+		end
+
 	is_renaming (feature_name_id: INTEGER): BOOLEAN is
 			-- Is the current parent renaming `feature_name_id'?
 		do
@@ -134,10 +146,10 @@ feature
 
 	is_selecting (feature_name_id: INTEGER): BOOLEAN is
 			-- Is the current parent selecting `feature_name_id'?
+		require
+			conforming: not is_non_conforming
 		do
-			Result :=	selecting /= Void
-						and then
-						selecting.has (feature_name_id)
+			Result := selecting /= Void and then selecting.has (feature_name_id)
 		end
 
 	check_validity1 is

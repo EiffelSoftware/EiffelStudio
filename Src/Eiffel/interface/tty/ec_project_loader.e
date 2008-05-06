@@ -173,7 +173,7 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING) is
+	report_project_corrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
@@ -182,7 +182,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when project retrieval was stopped.
 		do
 			localized_print (a_msg)
@@ -190,7 +190,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_incomplete (a_msg: STRING) is
+	report_project_incomplete (a_msg: STRING_GENERAL) is
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do

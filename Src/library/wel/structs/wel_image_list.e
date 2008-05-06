@@ -28,7 +28,7 @@ feature -- Initialization
 	make (given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN) is
 			-- Initialization with an empty image list. Images located
 			-- in this imageList must have the a width equal to `given_width'
-			-- and a height equal to `given_height'. 
+			-- and a height equal to `given_height'.
 			--
 			-- The flag `color_depth' determines the color depth of the bitmaps.
 			-- (bitmaps with a different color depth than indicated in
@@ -51,12 +51,12 @@ feature -- Initialization
 			if masked_bitmap then
 				mask_flag := Ilc_mask
 				use_masked_bitmap := True
-			end			
+			end
 			item := cwel_imagelist_create(
-						bitmaps_width, 
-						bitmaps_height, 
-						color_depth + mask_flag, 
-						Initial_size, 
+						bitmaps_width,
+						bitmaps_height,
+						color_depth | mask_flag,
+						Initial_size,
 						Grow_parameter
 					)
 		end
@@ -169,7 +169,7 @@ feature -- Basic operations
 
 	add_color_masked_bitmap(bitmap_to_add: WEL_BITMAP; mask_color: WEL_COLOR_REF) is
 			-- Add the bitmap `bitmap_to_add' into the image list.
-			-- `mask_color' represents the color used to generate the mask. 
+			-- `mask_color' represents the color used to generate the mask.
 			-- Each pixel of this color in the specified bitmap is changed to black
 			-- and the corresponding bit in the mask is set to 1.
 			--
@@ -194,6 +194,14 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
 		end
 
+	draw_to_dc (index: INTEGER; a_dc: WEL_DC; a_x, a_y: INTEGER; a_style: NATURAL_32) is
+			-- Draw image at index `index' to `a_dc' at (`a_x', `a_y') using `a_style'.
+		local
+			l_success: INTEGER
+		do
+			l_success := cwel_imagelist_draw (item, index, a_dc.item, a_x, a_y, a_style)
+		end
+
 	replace_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE; index: INTEGER) is
 			-- Replace the bitmap at position `index' in the imageList by
 			-- the cursor or icon `icon_to_add'.
@@ -215,16 +223,16 @@ feature -- Basic operations
 			create Result.make_by_pointer (cwel_imagelist_get_icon (item, index, flags))
 			Result.set_unshared
 		end
-		
+
 
 	remove_image (index: INTEGER) is
 			-- Remove the image at index `index' from the image list.
 			--
-			-- When an image is removed, the indexes of the remaining images are 
+			-- When an image is removed, the indexes of the remaining images are
 			-- adjusted so that the image indexes always range from zero to one
-			-- less than the number of images in the image list. 
-			-- For example, if you remove the image at index 0, then image 1 becomes 
-			-- image 0, image 2 becomes image 1, and so on. 
+			-- less than the number of images in the image list.
+			-- For example, if you remove the image at index 0, then image 1 becomes
+			-- image 0, image 2 becomes image 1, and so on.
 		require
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
@@ -261,7 +269,7 @@ feature -- Basic operations
 		end
 
 feature -- Status report
-	
+
 	bitmaps_width: INTEGER
 			-- width of all bitmaps located in this imageList
 
@@ -269,7 +277,7 @@ feature -- Status report
 			-- height of all bitmaps located in this imageList
 
 	get_background_color: WEL_COLOR_REF is
-			-- Retrieves the current background color for this image list. 
+			-- Retrieves the current background color for this image list.
 		require
 			exists: exists
 		do
@@ -307,6 +315,13 @@ feature {NONE} -- Externals
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, HBITMAP): int"
 		alias
 			"ImageList_Add"
+		end
+
+	cwel_imagelist_draw (ptr: POINTER; index: INTEGER; mem_dc: POINTER; a_x, a_y: INTEGER; style: NATURAL_32): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HDC, int, int, UINT): int"
+		alias
+			"ImageList_Draw"
 		end
 
 	cwel_imagelist_replace (ptr: POINTER;  index: INTEGER; bitmap_to_add, mask_bitmap_to_add: POINTER) is
@@ -375,13 +390,13 @@ feature {NONE} -- Externals
 feature {NONE} -- Private Constants
 
 	Initial_size	: INTEGER is 1
-		-- Number of images that the image list initially contains. 
+		-- Number of images that the image list initially contains.
 
 	Grow_parameter	: INTEGER is 1;
 		-- Number of images by which the image list can grow when the
-		-- system needs to make room for new images. This attribute 
+		-- system needs to make room for new images. This attribute
 		-- represents the number of new images that the resized image
-		-- list can contain. 
+		-- list can contain.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

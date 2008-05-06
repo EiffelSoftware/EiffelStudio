@@ -867,6 +867,7 @@ test	wrong-call-when-merging		final052 tcf pass finalizing
 test	wrong-polymorphic-wrapper-2	final053 tcf pass finalizing
 test	wrong-polymorphic-external-wrapper	final054 tcf pass finalizing
 test	inlining-with-anchor-3		final055 tcf pass finalizing inlining
+test	inlining-with-formal		final056 tcf pass finalizing inlining
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

@@ -312,6 +312,12 @@ feature -- Roundtrip
 			end
 		end
 
+	set_replicated_features (a_replicated_features_list: like replicated_features)
+			-- Set `replicated_features' to `a_replicated_features_list'
+		do
+			replicated_features := a_replicated_features_list
+		end
+
 feature -- Roundtrip
 
 	internal_bottom_indexes: INDEXING_CLAUSE_AS
@@ -423,6 +429,11 @@ feature -- Attributes
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			-- Feature list
+
+	replicated_features: EIFFEL_LIST [FEATURE_AS]
+			-- List of inherited features that are replicated in `Current'.
+			-- Even though this information is compilation specific it needs to be
+			-- here so that the AST's of the replicated features get stored to disk.
 
 	invariant_part: INVARIANT_AS
 			-- Class invariant

@@ -445,12 +445,11 @@ feature -- Commands
 				output_line.set_text (header)
 				output_line.refresh_now
 			end
-			if cur_wid = Void then
+			if cur_wid = Void or old_cur = Void then
 				--| Do nothing.
 			else
-				if old_cur /= Void then
-					cur_wid.set_pointer_style (old_cur)
-				end
+				cur_wid.set_pointer_style (old_cur)
+				old_cur := Void
 				cur_wid := Void
 			end
 		end
@@ -596,9 +595,8 @@ feature {NONE} -- Implementation
 				--| Do nothing.
 			else
 				old_cur := cur_wid.pointer_style
-				cur_wid.set_pointer_style (Wait_cursor)
+				cur_wid.set_pointer_style (wait_cursor)
 			end
-
 			if output_line /= Void then
 				output_line.set_text (temp_header)
 				output_line.refresh_now

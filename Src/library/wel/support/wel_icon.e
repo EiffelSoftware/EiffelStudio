@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 	load_item (hinstance, id: POINTER) is
 			-- Load icon.
 		do
-			item := cwin_load_icon (hinstance, id)
+			item := cwin_load_icon_image (hinstance, id)
 		end
 
 feature {NONE} -- Implementation
@@ -37,12 +37,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_load_icon (hinstance: POINTER; id: POINTER): POINTER is
-			-- SDK LoadIcon
+	cwin_load_icon_image (hinstance, id: POINTER): POINTER is
+			--
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
+			"C inline use <winuser.h>"
 		alias
-			"LoadIcon"
+			"[
+				return LoadImage((HINSTANCE)$hinstance, MAKEINTRESOURCE($id), IMAGE_ICON, 0, 0, LR_SHARED | LR_DEFAULTSIZE);
+			]"
 		end
 
 	cwin_destroy_icon (hicon: POINTER): BOOLEAN is

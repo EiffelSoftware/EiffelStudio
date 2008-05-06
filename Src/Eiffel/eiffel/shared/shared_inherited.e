@@ -3,14 +3,14 @@ indexing
 	status: "See notice at end of class."
 -- Shared access to the inheritance table
 
-class SHARED_INHERITED 
-	
+class SHARED_INHERITED
+
 feature {NONE}
 
 	Inherit_table: INHERIT_TABLE is
-			-- inheritance table for second pass
+			-- Inheritance table for second pass
 		once
-			create Result.make (35);
+			create Result.make (300);
 		end;
 
 indexing

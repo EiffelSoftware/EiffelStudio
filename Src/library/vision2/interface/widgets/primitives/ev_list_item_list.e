@@ -122,25 +122,27 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_string_array_not_void: a_string_array /= Void
-			a_string_array_with_no_empty_strings:
+			a_string_array_with_no_void_strings:
 				a_string_array.linear_representation /= Void implies
-				a_string_array.linear_representation.for_all (agent (v: STRING_GENERAL): BOOLEAN
-					do
-						Result := v /= Void
-					end)
+					not a_string_array.linear_representation.has (Void)
 		local
-			sc: like a_string_array
-			i, upper: INTEGER
+			i, nb: INTEGER
+			l_set: INTEGER_INTERVAL
 			li: EV_LIST_ITEM
 		do
 			wipe_out
-			sc := a_string_array
-			upper := sc.index_set.upper
-			from i := sc.index_set.lower until i > upper loop
-				create li.make_with_text (sc.item (i))
+			l_set := a_string_array.index_set
+			from
+				i := l_set.lower
+				nb := l_set.upper
+			until
+				i > nb
+			loop
+				create li.make_with_text (a_string_array.item (i))
 				extend (li)
 				i := i + 1
 			end
+
 		ensure
 			items_created: count = strings.count
 		end

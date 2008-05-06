@@ -178,7 +178,9 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		do
 			Result := Current
-			internal_attachment_type := context.real_type (internal_attachment_type)
+				-- Adapt type in current context for better results. We have to remove
+				-- the anchors otherwise it does not work, see eweasel test#final055.		
+			internal_attachment_type := context.real_type (internal_attachment_type.deep_actual_type).instantiated_in (context.context_cl_type)
 			expression := expression.pre_inlined_code
 		end
 

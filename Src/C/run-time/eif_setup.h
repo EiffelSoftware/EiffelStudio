@@ -180,7 +180,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	eif_thr_register(); \
 	eif_set_thr_context ();\
 { \
-	EIF_RT_BASIC_SETUP(fail_func)
+	EIF_RT_BASIC_SETUP(fail_func) \
 	init_emnger();
 #endif
 

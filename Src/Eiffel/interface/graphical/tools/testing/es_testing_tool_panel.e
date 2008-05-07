@@ -321,6 +321,19 @@ feature -- Command
 			end
 		end
 
+feature {ES_EWEASEL_EXECUTION_MANAGER} -- Command
+
+	set_progress_proportion_completed is
+			-- Set progress proportion completed
+		local
+			l_bar: like progress_bar
+		do
+			l_bar := progress_bar
+			if l_bar /= Void then
+				l_bar.set_proportion (1)
+			end
+		end
+
 feature {ES_TEST_CASE_GRID_MANAGER} -- Command
 
 	set_error_label_with (a_value: INTEGER) is

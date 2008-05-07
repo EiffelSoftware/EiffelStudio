@@ -133,6 +133,9 @@ feature -- Command
 				if not process.launched then
 					create l_error.make_standard (testing_tool.interface_names.l_eweasel_executable_not_found (environment_manager.eweasel_command))
 					l_error.show_on_active_window
+				else
+					display_testing_result_tool
+					testing_tool.content.set_focus
 				end
 			end
 		end
@@ -360,12 +363,49 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	swtich_buttons_states_on_exit is
-			-- Switch buttons states on eweasel exit/terminate
+	update_ui_on_exit is
+			-- Update ui states on eweasel exits
+		local
+			l_testing_result_tool: like testing_result_tool
+			l_testing_tool: like testing_tool
 		do
+			-- Switch buttons states on eweasel exit/terminate
 			start_test_run_command.enable_sensitive
 			start_test_run_failed_first_command.enable_sensitive
 			stop_test_run_command.disable_sensitive
+
+			l_testing_result_tool := testing_result_tool
+			if l_testing_result_tool /= Void then
+				display_testing_result_tool
+				l_testing_result_tool.content.set_focus
+			end
+
+			l_testing_tool := testing_tool
+			if l_testing_tool /= Void then
+				l_testing_tool.set_progress_proportion_completed
+			end
+		end
+
+	display_testing_result_tool is
+			-- We display `testing_result_tool' if not initialized or `testing_result_tool' not visible
+		require
+			ready: testing_tool /= Void
+		local
+			l_shim: ES_TESTING_RESULT_TOOL
+			l_show_tool_command: ES_SHOW_TOOL_COMMAND
+			l_win: EB_DEVELOPMENT_WINDOW
+		do
+			if testing_result_tool = Void or else not testing_result_tool.content.is_visible then
+				l_win := testing_tool.develop_window
+				check not_void: l_win /= Void end
+				l_shim ?= l_win.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+				if l_shim /= Void then
+					l_show_tool_command := l_win.commands.show_shell_tool_commands.item (l_shim)
+					l_show_tool_command.execute
+				end
+			end
+		ensure
+			created: testing_result_tool /= Void
 		end
 
 feature {NONE} -- Porcess event handler
@@ -378,7 +418,7 @@ feature {NONE} -- Porcess event handler
 		do
 			result_analyzer.on_eweasel_exit
 
-			swtich_buttons_states_on_exit
+			update_ui_on_exit
 
 			l_testing_result_tool := testing_result_tool
 			if l_testing_result_tool /= Void then
@@ -394,9 +434,14 @@ feature {NONE} -- Porcess event handler
 
 	on_terminate is
 			-- Handle eweasel terminate action
+		local
+			l_testing_result_tool: like testing_result_tool
 		do
-			swtich_buttons_states_on_exit
-			testing_result_tool.test_run_result_grid_manager.save_test_run_data_to_session
+			update_ui_on_exit
+			l_testing_result_tool := testing_result_tool
+			if l_testing_result_tool /= Void then
+				l_testing_result_tool.test_run_result_grid_manager.save_test_run_data_to_session
+			end
 			result_analyzer.clear_buffer_string_moving
 		end
 

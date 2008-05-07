@@ -1,16 +1,14 @@
 EiffelStudio is a modern IDE offering the following features:
-
-* Complete compiler for the Eiffel programming language, with both high
-  compile-time speed and high-performance executables
-* Support for Windows, MacOS X, Linux, *BSD, Solaris and other operating
-  systems
-* Smart code editor
-* Sophisticated multi-view browsing and viewing facilities
-* Interactive debugger
-* Graphical modelling tool for UML and BON with full roundtrip
-* Refactoring support
-* GUI development tool and fully portable GUI library
-
+   * Complete compiler for the Eiffel programming language, with both high
+     compile-time speed and high-performance executables
+   * Support for Windows, MacOS X, Linux, *BSD, Solaris and other operating
+     systems
+   * Smart code editor
+   * Sophisticated multi-view browsing and viewing facilities
+   * Interactive debugger
+   * Graphical modelling tool for UML and BON with full roundtrip
+   * Refactoring support
+   * GUI development tool and fully portable GUI library
 The Eiffel compiler creates C code that is then handed to a standard C
 compiler. As a result, Eiffel programs have a run-time performance comparable
 to those directly written in C or C++. At the same time, Eiffel is an object

@@ -10,6 +10,11 @@ case "$O" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
 $spitshell > $RPM_DIR/eiffelstudio.spec <<!GROK!THIS!
+
+%define _topdir $RPM_DIR
+%define _tmppath $RPM_DIR/tmp
+%define _use_internal_dependency_generator 0
+
 Summary: $summary
 Name: $PRODUCT
 Version: $VERSION
@@ -19,8 +24,9 @@ Group: Development/Tools
 Source: $download
 URL: $url
 Vendor: $ise_name
-Packager: $ise_name <$ise_email>
+Packager: $ise_name
 BuildRoot: $RPM_DIR/eiffelstudio
+Requires: gcc, gtk2-devel, libXtst-devel
 %description
 !GROK!THIS!
 

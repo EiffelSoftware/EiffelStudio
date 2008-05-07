@@ -11,7 +11,7 @@ case "$O" in
 esac
 $spitshell > $DEBIAN_DIR/control <<!GROK!THIS!
 Source: $PRODUCT
-Maintainer: $ise_name <$ise_email>
+Maintainer: $ise_name
 
 Package: $PRODUCT
 Section: devel

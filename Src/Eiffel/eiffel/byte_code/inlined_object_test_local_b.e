@@ -32,7 +32,8 @@ inherit
 			print_register,
 			propagate,
 			set_parent,
-			type
+			type,
+			used
 		redefine
 			print_register, enlarged
 		end

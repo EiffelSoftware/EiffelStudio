@@ -886,7 +886,7 @@ feature {NONE} -- Action handlers
 		do
 			if not retried then
 				is_saving := True
-
+				
 				if is_class_file_modified_externally then
 					create l_question.make_standard (messages.w_contract_tool_merge_changes (context.context_class.name))
 					l_question.show_on_active_window
@@ -898,10 +898,8 @@ feature {NONE} -- Action handlers
 					l_check_modifier.prepare
 					if not l_check_modifier.is_ast_available then
 							-- The class contains syntax errors
-						if l_question.dialog_result = l_question.default_confirm_button and then is_class_file_modified_externally then
-							create l_question.make_standard (messages.w_contract_tool_merge_syntax_invalid_changes (context.context_class.name))
-							l_question.show_on_active_window
-						end
+						create l_question.make_standard (messages.w_contract_tool_merge_syntax_invalid_changes (context.context_class.name))
+						l_question.show_on_active_window
 					end
 				end
 

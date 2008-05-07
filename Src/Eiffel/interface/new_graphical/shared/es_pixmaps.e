@@ -166,9 +166,7 @@ invariant
 	width_positive: width > 0
 	height_positive: height > 0
 	pixel_width_positive: pixel_width > 0
-	pixel_width_small_enough: pixel_width <= width
 	pixel_height_positive: pixel_height > 0
-	pixel_height_small_enough: pixel_height <= height
 
 ;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

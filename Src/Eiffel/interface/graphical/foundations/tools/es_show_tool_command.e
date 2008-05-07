@@ -151,7 +151,7 @@ feature -- Execution
 			l_content := tool.panel.content
 			if l_content /= Void and then l_content.is_docking_manager_attached  then
 				l_stonable ?= tool
-				if l_stonable /= Void and then stone /= Void and then not stone.is_equal (l_stonable.stone) then
+				if l_stonable /= Void and then stone /= Void and then not equal (stone, l_stonable.stone) then
 						-- We check if the stone is attached to prevent the existing stone from being wiped out.
 					check is_stone_usable: l_stonable.is_stone_usable (stone) end
 					l_stonable.set_stone_with_query (stone)

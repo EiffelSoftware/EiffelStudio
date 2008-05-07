@@ -110,13 +110,13 @@ feature -- Notification
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): ?TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
+	events_feature_argument (t: TUPLE): ?TUPLE [ref: ?ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
 			-- Argument for `process_*_feature'.
 		do
 			Result ?= t
 		end
 
-	events_assign_argument (t: TUPLE): ?TUPLE [ref: ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
+	events_assign_argument (t: TUPLE): ?TUPLE [ref: ?ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
 
 			-- Argument for `process_*_assign'.
 		do
@@ -150,8 +150,11 @@ feature {NONE} -- Execution replay
 			-- Execution enters a feature
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
 			end
 		end
@@ -160,8 +163,11 @@ feature {NONE} -- Execution replay
 			-- Execution enters a feature
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				r.enter_rescue (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
 			end
 		end
@@ -170,8 +176,11 @@ feature {NONE} -- Execution replay
 			-- Execution leaves a feature
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				r.leave_feature (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
 			end
 		end
@@ -180,8 +189,11 @@ feature {NONE} -- Execution replay
 			-- Execution reach a RTHOOK or RTNHOOK point
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				r.notify_rt_hook (a_data.a_dep, a_data.bp_i, a_data.bp_ni)
 			end
 		end
@@ -190,8 +202,11 @@ feature {NONE} -- Execution replay
 			-- Local variable assignment event
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				if {ot_ref: ANY} a_data.ref then
 					r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 				end
@@ -202,8 +217,11 @@ feature {NONE} -- Execution replay
 			-- Local variable assignment event
 		require
 			execution_recording_not_void: execution_recorder /= Void
+		local
+			r: like execution_recorder
 		do
-			if {r: like execution_recorder} execution_recorder then
+			r := execution_recorder
+			if r /= Void then
 				r.notify_rt_assign_local (a_data.a_dep, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 			end
 		end
@@ -260,7 +278,9 @@ feature -- Execution replay
 				r.start_recording (ref, cid, fid, dep, break_index)
 			else
 				r := execution_recorder
-				r.stop_recording
+				if r /= Void then
+					r.stop_recording
+				end
 				execution_recorder_cell.replace (Void)
 			end
 		ensure

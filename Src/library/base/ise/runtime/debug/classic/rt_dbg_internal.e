@@ -73,7 +73,7 @@ feature -- Object access
 			end
 		end
 
-	frozen field_name_at (off: INTEGER; obj: ANY): STRING is
+	frozen field_name_at (off: INTEGER; obj: ANY): ?STRING is
 			-- Field name at offset `off' on `obj'
 			--| note: heavy computing, for debug purpose only
 		require
@@ -87,7 +87,7 @@ feature -- Object access
 			end
 		end
 
-	frozen field_at (off: INTEGER; a_field_type: NATURAL_32; object: ANY): ANY is
+	frozen field_at (off: INTEGER; a_field_type: NATURAL_32; object: ANY): ?ANY is
 			-- Object attached at offset `off' field of `object'
 			-- (directly or through a reference)
 		require
@@ -132,7 +132,7 @@ feature -- Object access
 			end
 		end
 
-	frozen stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ANY is
+	frozen stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ?ANY is
 			-- Object attached at offset `off' field of `object'
 			-- (directly or through a reference)
 		require
@@ -232,9 +232,9 @@ feature {NONE} -- Factory
 			when Pointer_type then
 				create {RT_DBG_FIELD_RECORD [POINTER]} Result.make (obj, i, ft, pointer_field (i, obj))
 			when Reference_type then
-				create {RT_DBG_FIELD_RECORD [ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [?ANY]} Result.make (obj, i, ft, field (i, obj))
 			when Expanded_type then
-				create {RT_DBG_FIELD_RECORD [ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [?ANY]} Result.make (obj, i, ft, field (i, obj))
 			when Boolean_type then
 				create {RT_DBG_FIELD_RECORD [BOOLEAN]} Result.make (obj, i, ft, boolean_field (i, obj))
 			when real_32_type then
@@ -491,7 +491,7 @@ feature -- Get
 			"return *(EIF_POINTER *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
 		end
 
-	frozen c_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): ANY is
+	frozen c_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): ?ANY is
 			-- Object value referenced at `off' offset of `object'
 		external
 			"C inline use %"eif_internal.h%""
@@ -679,7 +679,7 @@ end
 
 feature -- Access local
 
-	frozen c_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ANY is
+	frozen c_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ?ANY is
 			-- Object value referenced at `off' offset of `object'
 		external
 			"C inline use %"eif_debug.h%""

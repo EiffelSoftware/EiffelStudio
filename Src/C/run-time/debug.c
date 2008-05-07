@@ -537,10 +537,11 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 }
 #endif
 
-/*
-#define RT_DEBUG_ENABLED(cond,d) d
-*/
-#define RT_DEBUG_ENABLED(cond,d) cond
+#ifdef EIF_RTDBG_DEBUG
+#define RTDBG_MACRO(cond,d) d
+#else
+#define RTDBG_MACRO(cond,d) cond
+#endif
 
 rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
@@ -556,7 +557,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
+		if (RTDBG_MACRO(is_inside_rt_eiffel_code == 0,1)) {
 			RTDBGH(d_data.db_callstack_depth, break_index, 0);
 			if (!BREAKPOINTS_DISCARDED) {
 				int stopped = 0;
@@ -633,7 +634,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 	   					* when the application is started from the command line
 	   					*/
 
-		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
+		if (RTDBG_MACRO(is_inside_rt_eiffel_code == 0,1)) {
 			RTDBGH(d_data.db_callstack_depth, break_index, nested_break_index);
 			if (!BREAKPOINTS_DISCARDED) {
 				BODY_INDEX bodyid = exvect->ex_bodyid;
@@ -2151,7 +2152,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			EIF_TYPED_VALUE rtd_op;
 			RT_ENTER_EIFFELCODE;
 			{
-			RT_DEBUG_ENABLED(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
+			RTDBG_MACRO(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
 
 			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
 			rtd_op.it_i4 = op;
@@ -2166,7 +2167,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
-			RT_DEBUG_ENABLED(c_check_assert (rtdbg_asserting),);
+			RTDBG_MACRO(c_check_assert (rtdbg_asserting),);
 			}
 			RT_EXIT_EIFFELCODE;
 		};	
@@ -2212,7 +2213,7 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 
 			RT_ENTER_EIFFELCODE;
 			{
-			RT_DEBUG_ENABLED(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
+			RTDBG_MACRO(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
 
 			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
 			rtd_op.it_i4 = op;
@@ -2229,7 +2230,7 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
-			RT_DEBUG_ENABLED(c_check_assert (rtdbg_asserting),);
+			RTDBG_MACRO(c_check_assert (rtdbg_asserting),);
 			}
 			RT_EXIT_EIFFELCODE;
 		};	

@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 			end
 			last_position := [0, 0]
 			rt_information_available := True
-			create steps.make (5)
+			create steps.make (3)
 		end
 
-	recorder: RT_DBG_EXECUTION_RECORDER
+	recorder: !RT_DBG_EXECUTION_RECORDER
 			-- Associated recorder.
 
 feature -- Properties
@@ -88,8 +88,26 @@ feature -- Properties
 	value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Recorded values (assignment...)
 
-	flat_value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
-			-- Flat value records list
+	flat_value_records_has_local: BOOLEAN
+			-- Does `value_records' has local values ?
+		require
+			is_flat: is_flat
+		local
+			c: CURSOR
+		do
+			if {vals: like value_records} value_records then
+				c := vals.cursor
+				from
+					vals.start
+				until
+					vals.after or Result
+				loop
+					Result := vals.item.is_local_record
+					vals.forth
+				end
+				vals.go_to (c)
+			end
+		end
 
 feature -- Measure
 
@@ -104,10 +122,20 @@ feature -- Change
 
 	wipe_out_value_records
 			-- Wipe out value records
+		local
+			n: INTEGER
+			vs: like value_records
 		do
-			object := Void
-			value_records := Void
-			flat_value_records := Void
+			vs := value_records
+			if vs /= Void then
+				n := n + vs.count
+				value_records := Void
+			end
+			if object /= Void then
+				n := n + 1
+				object := Void
+			end
+			recorder.increment_records_count (-n)
 		end
 
 	set_breakable_info (v: like breakable_info)
@@ -230,7 +258,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			l_value_records.finish
 			l_value_records.move (+1) --| point `after' when not replaying
 			register_value_step
-			recorder.increment_records_count (1)
+			recorder.increment_records_count (+1)
 		ensure
 			in_records: {vr: like value_records} value_records and then vr.has (v) and then vr.after
 		end
@@ -346,41 +374,17 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		require
 			not_flat: not is_flat
 		local
-			o: like object
 			n: INTEGER
 		do
 			debug ("RT_DBG_OPTIMIZATION")
 				dtrace_indent (depth); dtrace ("flatten_value_records (depth=" + depth.out + ") -start-%N")
 			end
-			if {vrecs: like value_records} value_records then
-				-- Remove local records, since we leave the stack
-				-- we won't be able to access those locals anymore
-				-- Warning: move cursor of `value_records', but it should be safe since right after we reset value_records to Void				
-				from
-					vrecs.start
-				until
-					vrecs.after
-				loop
-					if vrecs.item.is_local_record then
-						vrecs.remove
-						n := n + 1
-					else
-						vrecs.forth
-					end
-				end
-				if n > 0 then
-					recorder.increment_records_count (-n)
-				end
-				debug ("RT_DBG_OPTIMIZATION")
-					dtrace_indent (depth); dtrace ("wipe_out_local_records (depth=" + depth.out + ") -> -"+ n.out +" locals%N")
-				end
+			if value_records = Void then
+				create value_records.make (0)
 			end
-
-			o := object --| Keep `object' to restore it after changes_between (..., True)
-			flat_value_records := changes_between (Current, Void, True) --| Note with True, all value records and object will be removed
-			value_records := Void --| All records will be in `flat_value_records', thus the global record_count is the same.
-			object := o --| Restore `object' in Current.
-
+			if {vals: like value_records} value_records then
+				get_value_records_flattened_into (vals)
+			end
 			if not recorder.keep_calls_records then
 				call_records := Void
 			end
@@ -391,10 +395,94 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			end
 		ensure
 			is_flat: is_flat
-			object_kept: object = old object
-			no_value_records: value_records = Void
-			flat_value_records_not_void: flat_value_records /= Void
+			flat_value_records_not_void: value_records /= Void
 			no_records: not recorder.keep_calls_records implies call_records = Void
+		end
+
+	get_value_records_flattened_into (vals: !like value_records) is
+			-- Flatten record `rec'
+			--| Note: all value records and object will be removed from sub call records.
+		require
+			rec_not_flat_if_current: is_flat implies value_records /= vals
+		local
+			vrecs: like value_records
+			v: RT_DBG_VALUE_RECORD
+			c: CURSOR
+			n: INTEGER
+		do
+			vrecs := value_records
+			if is_flat then
+				check value_records_not_void_if_flat: vrecs /= Void end
+				c := vrecs.cursor
+				vals.append (vrecs)
+				vrecs.go_to (c)
+				n := vrecs.count
+			else
+				if vrecs /= Void then
+					if vrecs = vals then --| i.e: rec = flattening call record
+						-- Remove local records, since the stack won't be accessible anymore
+						-- thus we won't be able to access those locals anymore
+						from
+							vals.start
+						until
+							vals.after
+						loop
+							v := vals.item
+							if v = Void or else v.is_local_record then
+								vals.remove
+								n := n - 1
+							else
+								vals.forth
+							end
+						end
+					else
+						--| Should not occurs, but in case it is not a closed call record
+						--| let's keep this code.
+						c := vrecs.cursor
+						from
+							vrecs.start
+						until
+							vrecs.after
+						loop
+							v := vrecs.item
+							if v /= Void and then not v.is_local_record then
+								vals.extend (v)
+								n := n + 1
+							end
+							vrecs.forth
+						end
+						vrecs.go_to (c)
+					end
+				end
+
+				if {crecs: like call_records} call_records then
+					c := crecs.cursor
+					from
+						crecs.start
+					until
+						crecs.after
+					loop
+						debug ("RT_DBG_WARNING")
+							if not crecs.item_for_iteration.is_flat then
+								print ("Rec not flat !!!! %N")
+							end
+						end
+						crecs.item_for_iteration.get_value_records_flattened_into (vals)
+						crecs.forth
+					end
+					crecs.go_to (c)
+				end
+			end
+
+			if vals /= value_records then
+				wipe_out_value_records
+			else
+				object := Void
+				n := n - 1
+			end
+			recorder.increment_records_count (n)
+		ensure
+			flat_value_records_has_no_local: not flat_value_records_has_local
 		end
 
 	optimize_flat_value_records
@@ -414,17 +502,17 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			n: INTEGER
 			retried: BOOLEAN
 		do
-			if not retried and then {ffrcds: like flat_value_records} flat_value_records then
+			if not retried and then {vals: like value_records} value_records then
 				n := 0
-				if ffrcds.count > 1 then
+				if vals.count > 1 then
 					from
 						create ot.make (10)
 						create ort.make (1, ot.capacity - 1)
-						ffrcds.start
+						vals.start
 					until
-						ffrcds.after
+						vals.after
 					loop
-						rec := ffrcds.item_for_iteration
+						rec := vals.item_for_iteration
 						check is_not_local_record: not rec.is_local_record end
 						if {rec_obj: ANY} rec.associated_object then
 							if o /= rec_obj then
@@ -474,11 +562,11 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 							--| thus forget about them, not kept for optimized flat fields
 						end
 
-						ffrcds.forth
+						vals.forth
 					end
 
 						--| rebuild flat_value_records
-					ffrcds.wipe_out
+					vals.wipe_out
 					from
 						ot.start
 						oi := ot.index
@@ -493,14 +581,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 						until
 							orcds.after
 						loop
-							ffrcds.force (orcds.item_for_iteration)
+							vals.force (orcds.item_for_iteration)
 							orcds.forth
 						end
 						ot.forth
 					end
 				end
 				debug ("RT_DBG_OPTIMIZATION")
-					dtrace_indent (depth); dtrace ("optimize_flat_value_records (depth=" + depth.out + "): to " + ffrcds.count.out + " (-" + n.out + ")%N")
+					dtrace_indent (depth); dtrace ("optimize_flat_value_records (depth=" + depth.out + "): to " + vals.count.out + " (-" + n.out + ")%N")
 				end
 				recorder.increment_records_count (-n)
 			end
@@ -520,7 +608,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			p: CURSOR
 		do
 			if is_flat then
-				if {ffr: like flat_value_records} flat_value_records then
+				if {ffr: like value_records} value_records then
 					Result := ffr.count
 				end
 			else
@@ -542,6 +630,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 					end
 					crs.go_to (p)
 				end
+			end
+			if object /= Void then
+				Result := Result + 1
 			end
 		end
 
@@ -811,7 +902,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 						dtrace (call_records.index.out + "/" + call_records.count.out )
 					end
 					check call_records /= Void and then not call_records.before end
-					Result := changes_between (call_records.item, Void, False)
+					Result := changes_between (call_records.item, Void)
 				end
 			end
 			debug ("RT_DBG_REPLAY")
@@ -1015,12 +1106,14 @@ feature -- debug
 			end
 
 			if {obj: like object} object and then rt_dynamic_type (obj) /= class_type_id then
-				Result.append_string (" -> ERROR Dtype(obj) /= " + class_type_id.out)
+				Result.append_string (" -> ERROR Dtype(obj):" + rt_dynamic_type (obj).out + " /= " + class_type_id.out)
 			end
 		end
 
 invariant
 	non_empty_call_records: call_records /= Void implies call_records.count > 0
+
+	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

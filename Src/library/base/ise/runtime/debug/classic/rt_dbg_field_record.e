@@ -35,7 +35,7 @@ feature -- Properties
 	object: !ANY
 			-- Associated object.
 
-	value: G
+	value: ?G
 			-- Associated value.
 
 feature -- Access

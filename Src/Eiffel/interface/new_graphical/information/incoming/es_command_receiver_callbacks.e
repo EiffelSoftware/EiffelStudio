@@ -342,7 +342,7 @@ feature {NONE} -- EIS implementation
 						end
 
 						if l_class /= Void then
-							if a_class_name /= Void then
+							if a_feature_name /= Void then
 								l_feature := check_feature (l_class, a_feature_name)
 							end
 						else

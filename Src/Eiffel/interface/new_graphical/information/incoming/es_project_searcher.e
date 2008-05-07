@@ -30,26 +30,28 @@ feature -- Searcher
 				system_uuid := a_system_uuid
 				target_name := a_target_name
 				target_uuid := a_target_uuid
-				l_splitted_path := a_path.split (';')
-				if not l_splitted_path.is_empty then
-					l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
-					from
-						l_splitted_path.start
-					until
-						l_splitted_path.after or project_found
-					loop
-						l_path := l_splitted_path.item_for_iteration
-						l_path.left_adjust
-						l_path.right_justify
-							-- Remove the trailing directory separator.
-							-- Or neither DIRECTORY nor KL_DIRECTORY can find it.
-						if l_path.item (l_path.count) = l_sep then
-							l_path.remove_tail (1)
+				if search_needed then
+					l_splitted_path := a_path.split (';')
+					if not l_splitted_path.is_empty then
+						l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
+						from
+							l_splitted_path.start
+						until
+							l_splitted_path.after or project_found
+						loop
+							l_path := l_splitted_path.item_for_iteration
+							l_path.left_adjust
+							l_path.right_justify
+								-- Remove the trailing directory separator.
+								-- Or neither DIRECTORY nor KL_DIRECTORY can find it.
+							if l_path.item (l_path.count) = l_sep then
+								l_path.remove_tail (1)
+							end
+							if {lt_path: STRING}l_path then
+								search_project_in_directory (lt_path)
+							end
+							l_splitted_path.forth
 						end
-						if {lt_path: STRING}l_path then
-							search_project_in_directory (lt_path)
-						end
-						l_splitted_path.forth
 					end
 				end
 			end
@@ -81,10 +83,17 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implemetation
 
+	search_needed: BOOLEAN is
+			-- Is current context needed to search?
+		do
+			Result := system_name /= Void or system_uuid /= Void or target_name /= Void or target_uuid /= Void
+		end
+
 	search_project_in_directory (a_path: !STRING) is
 			-- Search project in `a_path'
 		require
 			a_path_not_empty: not a_path.is_empty
+			search_needed: search_needed
 		local
 			l_file_uti: FILE_UTILITIES
 			l_files: !DS_ARRAYED_LIST [!STRING]
@@ -105,6 +114,8 @@ feature {NONE} -- Implemetation
 
 	check_file (a_file: !STRING) is
 			-- Check file and see if it is the system we need.
+		require
+			search_needed: search_needed
 		local
 			l_conf: CONF_LOAD
 			l_conf_system: CONF_SYSTEM
@@ -113,72 +124,70 @@ feature {NONE} -- Implemetation
 			l_target: CONF_TARGET
 			l_error, l_found: BOOLEAN
 		do
-			if system_name /= Void or system_uuid /= Void or target_name /= Void or target_uuid /= Void then
-				create l_conf.make (create {CONF_COMP_FACTORY})
-				l_conf.retrieve_configuration (a_file)
-				if not l_conf.is_error then
-					l_conf_system := l_conf.last_system
-					create l_uuid
-					if system_name /= Void then
-						l_error := not l_conf_system.name.is_case_insensitive_equal (system_name)
-					end
-					if not l_error and then system_uuid /= Void and then l_uuid.is_valid_uuid (system_uuid) then
-						l_error := not l_conf_system.uuid.is_equal (create {UUID}.make_from_string (system_uuid))
-					end
-					if system_name = Void and then target_uuid = Void then
-							-- Not too strict when we find system, we do not go further for target,
-							-- Because before compiling, library targets are not ready.
-						if not l_error and then target_uuid /= Void and then l_uuid.is_valid_uuid (target_uuid) then
-							if l_conf_system.uuid.is_equal (create {UUID}.make_from_string (target_uuid)) then
-									-- Current system and target share the same UUID
-								l_error := False
-							else
-									-- Look into libraries
-								l_all_libs := l_conf_system.all_libraries
-								if l_all_libs /= Void then
-									l_all_libs.search (create {UUID}.make_from_string (target_uuid))
-									if l_all_libs.found then
-										l_target := l_all_libs.found_item
-									else
-										l_error := True
-									end
+			create l_conf.make (create {CONF_COMP_FACTORY})
+			l_conf.retrieve_configuration (a_file)
+			if not l_conf.is_error then
+				l_conf_system := l_conf.last_system
+				create l_uuid
+				if system_name /= Void then
+					l_error := not l_conf_system.name.is_case_insensitive_equal (system_name)
+				end
+				if not l_error and then system_uuid /= Void and then l_uuid.is_valid_uuid (system_uuid) then
+					l_error := not l_conf_system.uuid.is_equal (create {UUID}.make_from_string (system_uuid))
+				end
+				if system_name = Void and then target_uuid = Void then
+						-- Not too strict when we find system, we do not go further for target,
+						-- Because before compiling, library targets are not ready.
+					if not l_error and then target_uuid /= Void and then l_uuid.is_valid_uuid (target_uuid) then
+						if l_conf_system.uuid.is_equal (create {UUID}.make_from_string (target_uuid)) then
+								-- Current system and target share the same UUID
+							l_error := False
+						else
+								-- Look into libraries
+							l_all_libs := l_conf_system.all_libraries
+							if l_all_libs /= Void then
+								l_all_libs.search (create {UUID}.make_from_string (target_uuid))
+								if l_all_libs.found then
+									l_target := l_all_libs.found_item
 								else
-										-- Not found
 									l_error := True
 								end
-							end
-						end
-						if not l_error and then target_name /= Void then
-							if l_target /= Void then
-								l_error := not l_target.name.is_case_insensitive_equal (target_name)
 							else
-									-- Get target from the system.
-								l_conf_system.targets.search (target_name.as_lower)
-								if not l_conf_system.targets.found then
-									l_all_libs := l_conf_system.all_libraries
-									if l_all_libs /= Void then
-										from
-											l_all_libs.start
-										until
-											l_all_libs.after or l_found
-										loop
-											if target_name.is_case_insensitive_equal (l_all_libs.item_for_iteration.name) then
-												l_found := True
-											end
-											l_all_libs.forth
-										end
-									end
-									l_error := not l_found
-								end
+									-- Not found
+								l_error := True
 							end
 						end
 					end
-
-					project_found := not l_error
-					if project_found then
-						found_project := a_file
-						read_user_options (l_conf_system.file_name)
+					if not l_error and then target_name /= Void then
+						if l_target /= Void then
+							l_error := not l_target.name.is_case_insensitive_equal (target_name)
+						else
+								-- Get target from the system.
+							l_conf_system.targets.search (target_name.as_lower)
+							if not l_conf_system.targets.found then
+								l_all_libs := l_conf_system.all_libraries
+								if l_all_libs /= Void then
+									from
+										l_all_libs.start
+									until
+										l_all_libs.after or l_found
+									loop
+										if target_name.is_case_insensitive_equal (l_all_libs.item_for_iteration.name) then
+											l_found := True
+										end
+										l_all_libs.forth
+									end
+								end
+								l_error := not l_found
+							end
+						end
 					end
+				end
+
+				project_found := not l_error
+				if project_found then
+					found_project := a_file
+					read_user_options (l_conf_system.file_name)
 				end
 			end
 		end

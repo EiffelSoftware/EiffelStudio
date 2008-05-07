@@ -130,7 +130,8 @@ feature {NONE} -- Implementation
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
 				if {l_stone: !FILED_STONE} last_monitored_stone then
-					if {l_fn: !STRING_32} (l_stone.file_name.out.as_string_32) then
+					check l_stone_has_file_name: l_stone.file_name /= Void end
+					if {l_file_name: FILE_NAME} l_stone.file_name and then {l_fn: !STRING_32} (l_file_name.out.as_string_32) then
 						if l_notifier.service.is_monitoring (l_fn) then
 							l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
 							last_monitored_stone := Void
@@ -145,7 +146,7 @@ feature {NONE} -- Implementation
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
 				if {l_stone2: !FILED_STONE} a_stone then
-					if {l_fn2: !STRING_32} (l_stone2.file_name.out.as_string_32) then
+					if {l_file_name2: FILE_NAME} l_stone2.file_name and then {l_fn2: !STRING_32} (l_file_name2.out.as_string_32) then
 						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
 						last_monitored_stone := l_stone2
 					end

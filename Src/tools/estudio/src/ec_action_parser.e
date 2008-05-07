@@ -19,28 +19,36 @@ feature -- Action
 			--| <eiffel://project=base.6D7FF712-BBA5-4AC0-AABF-2D9880493A01&target=base&cluster=ise&class=exception&feature=raise>
 		local
 			l_string: !STRING
-			l_result: ?STRING
+			l_cmd, l_dcmd: ?STRING
 			l_prefix_count: INTEGER
 		do
 			last_command := Void
+			last_direct_command := Void
 			l_prefix_count := eis_incoming.count
 			if a_string.count > l_prefix_count and then a_string.substring (1, l_prefix_count).is_case_insensitive_equal (eis_incoming) then
 				l_string := a_string.twin
 					-- Remove "eisi:"
 				l_string.remove_head (l_prefix_count)
 
-				l_result := label ({COMMAND_PROTOCOL_NAMES}.compiler_module)
-				l_result.append (label ({COMMAND_PROTOCOL_NAMES}.project_ready))
-				l_result.append (label ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module))
-				l_result.append (label (l_string))
+				l_cmd := label ({COMMAND_PROTOCOL_NAMES}.compiler_module)
+				l_cmd.append (label ({COMMAND_PROTOCOL_NAMES}.project_ready))
+				l_cmd.append (label ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module))
+				l_cmd.append (label (l_string))
+
+				l_dcmd := label ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module)
+				l_dcmd.append (label (l_string))
 			end
-			last_command := l_result
+			last_command := l_cmd
+			last_direct_command := l_dcmd
 		end
 
 feature -- Access
 
 	last_command: ?STRING
 			-- Last commans string for EiffelStudio
+
+	last_direct_command: ?STRING
+			-- Last direct command without condition
 
 feature {NONE} -- Implementation
 

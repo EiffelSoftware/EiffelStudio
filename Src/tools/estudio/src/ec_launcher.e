@@ -311,12 +311,13 @@ feature -- Properties
 feature {NONE} -- Command sender
 
 	broadcast_command is
-			-- Broadcast `ec_action' as command to EiffelStudio processes.
+			-- Broadcast `direct_action' as command to EiffelStudio processes.
+			-- We broadcast `direct_action', so that EiffelStudios directly process command if possible.
 		require
 			command_sender_not_void: command_sender /= Void
 		do
 			last_command_handled := False
-			if {lt_action: STRING}ec_action then
+			if {lt_action: STRING}direct_action then
 				command_sender.send_command (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 				last_command_handled := command_sender.last_command_handled
 			end
@@ -332,6 +333,7 @@ feature {NONE} -- Command sender
 			debug ("LAUNCHER")
 				print ("Launched process ID: " + last_launched_ec_pid.out + "%N")
 			end
+				-- We send `ec_action' rather than `direct_action' trying to conduct the explicit target of ES.
 			if {lt_action: STRING}ec_action and then last_launched_ec_pid > 0 then
 				command_sender.send_command_process (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key, last_launched_ec_pid)
 				command_sent_trial := command_sent_trial + 1
@@ -367,7 +369,10 @@ feature {NONE} -- Command sender
 			-- Is "/ec_action" specified?
 
 	ec_action: STRING
-			-- Command for opened ec.
+			-- Command with condition, for the openning ec.
+
+	direct_action: STRING
+			-- Command without condition, for broadcasting.
 
 	command_sent_trial: INTEGER
 			-- Number of trial to send command to newly launched ec.
@@ -448,6 +453,7 @@ feature -- Environment
 							if {lt_string: STRING}cmdline_argument (1) then
 								ec_action_parser.parse (lt_string)
 								ec_action := ec_action_parser.last_command
+								direct_action := ec_action_parser.last_direct_command
 							end
 						end
 					else

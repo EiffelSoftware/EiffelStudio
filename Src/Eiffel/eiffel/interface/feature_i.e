@@ -2734,23 +2734,8 @@ feature -- Debugging
 			--| in DEBUGGABLE objects.
 		require
 			valid_body_id: valid_body_id
-		local
-			exec_unit: EXECUTION_UNIT
-			old_group: CONF_GROUP
 		do
-			old_group := Inst_context.group
-			Inst_context.set_group (written_class.group)
-
-				-- Search for associated EXECUTION_UNIT
-			create exec_unit.make (class_type)
-			exec_unit.set_body_index (body_index)
-				-- `exec_unit' can be absent in `Execution_table' if a feature is just added
-			if Execution_table.has (exec_unit) then
-				Execution_table.search (exec_unit)
-				exec_unit := Execution_table.last_unit
-				Result := exec_unit.real_body_id
-			end
-			Inst_context.set_group (old_group)
+			Result := execution_table.real_body_id (body_index, class_type)
 		end
 
 	valid_body_id: BOOLEAN is

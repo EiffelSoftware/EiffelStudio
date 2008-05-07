@@ -85,6 +85,18 @@ feature -- Access
 			end
 		end
 
+	real_body_id (body_index: INTEGER; class_type: CLASS_TYPE): INTEGER is
+			-- Real body id associated to an instance of FEATURE_I of
+			-- body index `body_index' in a class type `class_type'.
+		local
+			unit: EXECUTION_UNIT
+		do
+			unit := unit_of_body_index (body_index, class_type)
+			if unit /= Void then
+				Result := unit.real_body_id
+			end
+		end
+
 feature -- Element change
 
 	update_with (t: EXECUTION_UNIT) is
@@ -221,7 +233,7 @@ feature -- Byte Code generation
 			-- Generate byte code for updating the execution table
 		local
 			e: EXECUTION_UNIT
-			real_body_id: INTEGER
+			l_real_body_id: INTEGER
 			melted_feature: MELT_FEATURE
 			removed_list: LINKED_LIST [EXECUTION_UNIT]
 		do
@@ -234,10 +246,10 @@ feature -- Byte Code generation
 			loop
 				e := melted_list.item_for_iteration
 				if e.is_valid then
-					real_body_id := e.real_body_id
-					melted_feature := M_feature_server.item (real_body_id)
+					l_real_body_id := e.real_body_id
+					melted_feature := M_feature_server.item (l_real_body_id)
 						-- Write the body id
-					write_int (file.file_pointer, real_body_id - 1)
+					write_int (file.file_pointer, l_real_body_id - 1)
 						-- Write the size
 					write_int (file.file_pointer, melted_feature.count)
 						-- Write the pattern id

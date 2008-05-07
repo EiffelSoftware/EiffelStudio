@@ -1,9 +1,6 @@
-class TEST1 [G]
+deferred class TEST1 [G]
 inherit
 	TEST2 [G, G]
-
-create
-	make
 
 feature
 

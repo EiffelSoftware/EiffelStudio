@@ -407,13 +407,13 @@ feature -- Inlining
 						cl_type.associated_class.simple_conform_to (f.written_class) or
 						f.written_class.simple_conform_to (cl_type.associated_class)
 					then
-						if cl_type.class_id /= entry.class_id then
-								-- If it is different, then `entry' is defined in a descendant class
-								-- of `cl_type'.
-							cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-						else
-							cl_type := cl_type
-						end
+							-- Evaluate the type of `cl_type' in the descendant class `entry.class_id'.
+							-- Note that if `cl_type.class_id = entry.class_id' we still do that
+							-- because `cl_type' might not be a valid generic type on its own, see
+							-- eweasel test#final056 where `cl_type' is `CACHE [G#2]' but it should
+							-- be transformed as `CACHE [G#1]' to be a valid context type.
+						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+
 							-- We should now have conformance the other way around or the same class.
 						check cl_type.associated_class.simple_conform_to (f.written_class) end
 

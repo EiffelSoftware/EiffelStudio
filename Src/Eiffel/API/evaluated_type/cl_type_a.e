@@ -807,9 +807,9 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 		local
 			l_generics, l_result_generics: like generics
 			l_class: like associated_class
-			l_formal: FORMAL_A
+			l_formal, l_new_formal: FORMAL_A
 			l_type_feat: TYPE_FEATURE_I
-			i, nb: INTEGER
+			i, nb, pos: INTEGER
 		do
 			Result := c.actual_type
 			if generics /= Void and Result.generics /= Void then
@@ -829,7 +829,13 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 					if l_type_feat.is_formal then
 						l_formal ?= l_type_feat.type
 						check l_formal_not_void: l_formal /= Void end
-						l_result_generics.put (l_generics.item (i), l_formal.position)
+							-- If `l_generics.item (i)' is a formal, we need to make sure that it is a valid
+							-- formal for `Result' otherwise we simply keep the existing formal.
+							-- This fixes eweasel test#final056.
+						l_new_formal ?= l_generics.item (i).actual_type
+						if l_new_formal = Void or else l_new_formal.is_valid_for_class (c) then
+							l_result_generics.put (l_generics.item (i), l_formal.position)
+						end
 					end
 					i := i + 1
 				end

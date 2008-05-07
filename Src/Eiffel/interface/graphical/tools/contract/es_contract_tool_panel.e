@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		The contract editor tool graphical panel.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -415,7 +415,12 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if has_stone and then file_notifier.is_service_available and then {l_fn: !STRING_32} context.context_class.file_name.string.as_string_32 then
+			if
+				has_stone and then
+				file_notifier.is_service_available and then
+				{l_file_name: !FILE_NAME} context.context_class.file_name and then
+				{l_fn: !STRING_32} l_file_name.string.as_string_32
+			then
 					-- Poll for modifications, which will call `on_file_modified' if have occurred.
 				file_notifier.service.poll_modifications (l_fn).do_nothing
 			end
@@ -886,7 +891,7 @@ feature {NONE} -- Action handlers
 		do
 			if not retried then
 				is_saving := True
-				
+
 				if is_class_file_modified_externally then
 					create l_question.make_standard (messages.w_contract_tool_merge_changes (context.context_class.name))
 					l_question.show_on_active_window

@@ -20,7 +20,7 @@ BuildArch: noarch
 Source: $download
 URL: $url
 Vendor: $ise_name
-Packager: $ise_name <$ise_email>
+Packager: $ise_name
 BuildRoot: $RPM_DIR/eiffelstudio-doc
 %description
 !GROK!THIS!

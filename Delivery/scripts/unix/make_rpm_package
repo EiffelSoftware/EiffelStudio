@@ -11,14 +11,16 @@ if [ ! "$ISE_PLATFORM" ]; then
 	echo '$ISE_PLATFORM not defined. Cannot continue'
 	exit 1
 fi
-echo "Using EiffelStudio delivery in $ISE_EIFFEL"
+echo "ISE_EIFFEL: $ISE_EIFFEL"
 
 
 # Exctract EiffelStudio version
+EC="$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version"
+eval "$EC > /dev/null"
 export VERSION=`$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
 MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
 MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
-echo "EiffelStudio version $VERSION will be used for debian package"
+echo "EiffelStudio version: $VERSION"
 
 
 # Define environment variables
@@ -26,16 +28,6 @@ export PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
 export PACKAGING_DIR=`pwd`/packaging
 export RPM_DIR=$PACKAGING_DIR/rpm
 DOCS_DIR=/usr/share/doc/$PRODUCT/docs
-RPMMACRO=~/.rpmmacros
-
-
-# Create RPM macro file in ./rpmmacros
-if test -f $RPMMACRO; then
-    mv $RPMMACRO /tmp/.rpmmacros$$
-fi
-echo %_topdir  $RPM_DIR > $RPMMACRO
-echo %_tmppath $RPM_DIR/tmp >> $RPMMACRO
-echo %_use_internal_dependency_generator 0 >> $RPMMACRO
 
 
 # Create unix layout in RPM BUILD directory
@@ -50,6 +42,7 @@ cp $PACKAGING_DIR/logo.png $RPM_DIR/eiffelstudio/usr/share/icons/eiffelstudio.pn
 
 # Prepare spec files
 sh $RPM_DIR/eiffelstudio.spec.sh
+mkdir -p $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
 
 
@@ -76,13 +69,6 @@ rpmbuild -bb $RPM_DIR/eiffelstudio.spec
 
 # Move all generated .rpm files to current directory
 find $RPM_DIR/RPMS -type f | xargs mv -t ./
-
-
-# Reset RPM macro file
-rm $RPMMACRO
-if test -f /tmp/.rpmmacros$$; then
-    mv /tmp/.rpmmacros$$ $RPMMACRO
-fi
 
 
 # Clean up RPM directory

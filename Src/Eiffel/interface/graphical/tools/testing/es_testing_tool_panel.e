@@ -18,6 +18,8 @@ class
 
 inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
+		rename
+			grid_events as test_case_grid
 		export
 			{ES_EWEASEL_EXECUTION_MANAGER}  interface_names
 		redefine
@@ -36,41 +38,42 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_box: EV_BOX
-			l_level_2_2_vertical_box: EV_VERTICAL_BOX
-			l_top_container: EV_VERTICAL_BOX
 			l_tool_bar: SD_TOOL_BAR
+			l_bottom_container: EV_VERTICAL_BOX
+			l_grid_border: EV_CELL
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_grid)
-			test_case_grid := a_grid
+			l_bottom_container := widget
 
-			-- Level 2 2nd box
-			l_top_container := widget
-			create l_level_2_2_vertical_box
+				-- Bottom border for grid
+			create l_grid_border
+			l_grid_border.set_minimum_height (1)
+			l_grid_border.set_background_color (colors.stock_colors.color_3d_shadow)
+			l_bottom_container.extend (l_grid_border)
+			l_bottom_container.disable_item_expand (l_grid_border)
 
 			create {EV_HORIZONTAL_BOX} l_box
-			l_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
 			l_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			l_level_2_2_vertical_box.extend (l_box)
-			l_level_2_2_vertical_box.disable_item_expand (l_box)
+			l_bottom_container.extend (l_box)
+			l_bottom_container.disable_item_expand (l_box)
 
+				-- Progress bar
 			create progress_bar
 			l_box.extend (progress_bar)
+
+				-- Cancel button
 			create l_tool_bar.make
-			l_tool_bar.extend (unit_test_manager.stop_test_run_command.new_sd_toolbar_item (False))
+			l_tool_bar.extend (unit_test_manager.stop_test_run_command.new_sd_toolbar_item (True))
 			l_tool_bar.compute_minimum_size
 			l_box.extend (l_tool_bar)
 			l_box.disable_item_expand (l_tool_bar)
 
-			check not_void: test_case_grid /= Void  end
 			test_case_grid_manager.build_columns
-			-- Enable sorting
+
+				-- Enable sorting
 			enable_sorting_on_columns (test_case_grid_manager.all_columns)
 			enable_copy_to_clipboard
-
-			l_level_2_2_vertical_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
-			l_level_2_2_vertical_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
-			l_top_container.extend (l_level_2_2_vertical_box)
-			l_top_container.disable_item_expand (l_level_2_2_vertical_box)
 		ensure then
 			set: test_case_grid = a_grid
 		end
@@ -162,98 +165,6 @@ feature {NONE} -- Initialization
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_class_stone)
 				end
 			end
-		end
-
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- <Precursor>
-		local
-			l_constants: EB_CONSTANTS
-			l_separator: SD_TOOL_BAR_SEPARATOR
-			l_icons: ES_PIXMAPS_10X10
-			l_shim: ES_TESTING_RESULT_TOOL
-			l_show_tool_command: ES_SHOW_TOOL_COMMAND
-		do
-			create l_constants
-			l_icons := l_constants.pixmaps.mini_pixmaps
-			create Result.make (8)
-
-			Result.force_last (unit_test_manager.new_manual_test_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.del_test_case_command.new_sd_toolbar_item (False))
-
-			create l_separator.make
-			Result.force_last (l_separator)
-
-			Result.force_last (unit_test_manager.next_failed_test_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.previous_failed_test_command.new_sd_toolbar_item (False))
-
-			Result.force_last (unit_test_manager.show_failed_tests_only_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.update_last_changed_time_command.new_sd_toolbar_item (False))
-
-			create l_separator.make
-			Result.force_last (l_separator)
-
-			Result.force_last (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
-
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-
-			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
-			if l_shim /= Void then
-				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
-				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
-			end
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- <Precursor>
-		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
-			l_string: STRING_GENERAL
-			l_v_box: EV_VERTICAL_BOX
-			l_h_box: EV_HORIZONTAL_BOX
-			l_pixmap: EV_PIXMAP
-			l_constants: EB_CONSTANTS
-		do
-			l_string := runs_string.twin
-			l_string.append (": 0/0")
-			create runs_label.make_with_text (l_string)
-
-			create errors_label
-			set_error_label_with (0)
-
-			create failures_label
-			set_failure_label_with (0)
-
-			create l_v_box
-			l_v_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
-			create l_h_box
-			l_h_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
-			l_v_box.extend (l_h_box)
-
-			create l_constants
-
-			l_pixmap := l_constants.pixmaps.icon_pixmaps.run_animation_5_icon.twin
-			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
-			l_h_box.extend (l_pixmap)
-
-			l_h_box.extend (runs_label)
-
-			l_pixmap := l_constants.pixmaps.icon_pixmaps.general_error_icon.twin
-			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
-			l_h_box.extend (l_pixmap)
-
-			l_h_box.extend (errors_label)
-
-			l_pixmap := l_constants.pixmaps.icon_pixmaps.testing_failure_icon.twin
-			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
-			l_h_box.extend (l_pixmap)
-
-			l_h_box.extend (failures_label)
-
-			create Result.make (1)
-
-			create l_widget_item.make (l_v_box)
-			Result.force_last (l_widget_item)
 		end
 
 feature -- Query
@@ -413,8 +324,130 @@ feature {NONE} -- UI widgets
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
 			-- Progress bar show test case run progress
 
-	test_case_grid: ES_GRID;
-			-- Grid to show all test cases of Current run.
+feature {NONE} -- Factory
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		local
+			l_constants: EB_CONSTANTS
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_icons: ES_PIXMAPS_10X10
+			l_shim: ES_TESTING_RESULT_TOOL
+			l_show_tool_command: ES_SHOW_TOOL_COMMAND
+		do
+			create l_constants
+			l_icons := l_constants.pixmaps.mini_pixmaps
+			create Result.make (8)
+
+			Result.force_last (unit_test_manager.new_manual_test_command.new_sd_toolbar_item (False))
+			Result.force_last (unit_test_manager.del_test_case_command.new_sd_toolbar_item (False))
+
+			create l_separator.make
+			Result.force_last (l_separator)
+
+			Result.force_last (unit_test_manager.next_failed_test_command.new_sd_toolbar_item (False))
+			Result.force_last (unit_test_manager.previous_failed_test_command.new_sd_toolbar_item (False))
+
+			Result.force_last (unit_test_manager.show_failed_tests_only_command.new_sd_toolbar_item (False))
+			Result.force_last (unit_test_manager.update_last_changed_time_command.new_sd_toolbar_item (False))
+
+			create l_separator.make
+			Result.force_last (l_separator)
+
+			Result.force_last (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
+			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
+
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+			if l_shim /= Void then
+				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
+				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
+			end
+		end
+
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		local
+			l_string: STRING_GENERAL
+			l_vbox: EV_VERTICAL_BOX
+			l_box: EV_HORIZONTAL_BOX
+			l_pixmap: EV_PIXMAP
+		do
+			l_string := runs_string.twin
+			l_string.append (": 0/0")
+
+			create Result.make (5)
+
+				-- Runs
+			create l_vbox
+			l_vbox.extend (create {EV_CELL})
+
+			create l_box
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
+			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+
+			l_pixmap := stock_pixmaps.run_animation_5_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_box.extend (l_pixmap)
+
+			create runs_label.make_with_text (l_string)
+			runs_label.align_text_left
+			l_box.extend (runs_label)
+
+			l_vbox.extend (l_box)
+			l_vbox.disable_item_expand (l_box)
+			l_vbox.extend (create {EV_CELL})
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Errors
+			create l_vbox
+			l_vbox.extend (create {EV_CELL})
+
+			create l_box
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
+			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+
+			l_pixmap := stock_pixmaps.general_error_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_box.extend (l_pixmap)
+
+			create errors_label
+			errors_label.align_text_left
+			set_error_label_with (0)
+			l_box.extend (errors_label)
+
+			l_vbox.extend (l_box)
+			l_vbox.disable_item_expand (l_box)
+			l_vbox.extend (create {EV_CELL})
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Failures
+			create l_vbox
+			l_vbox.extend (create {EV_CELL})
+
+			create l_box
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
+			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+
+			l_pixmap := stock_pixmaps.general_warning_icon.twin
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_box.extend (l_pixmap)
+
+			create failures_label
+			failures_label.align_text_left
+			set_failure_label_with (0)
+			l_box.extend (failures_label)
+
+			l_vbox.extend (l_box)
+			l_vbox.disable_item_expand (l_box)
+			l_vbox.extend (create {EV_CELL})
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+		end
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

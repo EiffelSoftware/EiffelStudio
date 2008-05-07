@@ -1,0 +1,27 @@
+test_name 	 inlining-wrong-argument-reuse
+test_description Inlining a call will incorrectly reuse a temporary register for argument passing and thus killing the previously computed value causing a crash.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_1
+execute_result	ok
+compare exec_output_1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_2
+execute_result	ok
+compare	exec_output_2 output
+
+test_end

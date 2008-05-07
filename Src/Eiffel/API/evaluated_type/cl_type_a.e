@@ -809,7 +809,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			l_class: like associated_class
 			l_formal, l_new_formal: FORMAL_A
 			l_type_feat: TYPE_FEATURE_I
-			i, nb, pos: INTEGER
+			i, nb: INTEGER
 		do
 			Result := c.actual_type
 			if generics /= Void and Result.generics /= Void then

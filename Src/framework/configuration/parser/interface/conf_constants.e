@@ -89,6 +89,7 @@ feature -- Settings
 	s_msil_use_optimized_precompile: STRING is "msil_use_optimized_precompile"
 	s_multithreaded: STRING is "multithreaded"
 	s_old_verbatim_strings: STRING is "old_verbatim_strings"
+	s_old_feature_replication: STRING is "old_feature_replication"
 	s_platform: STRING is "platform"
 	s_external_runtime: STRING is "external_runtime"
 	s_shared_library_definition: STRING is "shared_library_definition"

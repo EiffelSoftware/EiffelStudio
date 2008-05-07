@@ -5,6 +5,8 @@ feature
 	evaluate (a_type: STRING; a_context: STRING): TEST3 is
 		do
 			create Result
+			print (generating_type)
+			print ("%N")
 			print (a_type.generating_type)
 			print ("%N")
 			print (a_context.generating_type)
@@ -14,6 +16,8 @@ feature
 	solved (a_type: TEST3; a_orig_type: STRING): TEST3 is
 		do
 			create Result
+			print (generating_type)
+			print ("%N")
 			print (a_type.generating_type)
 			print ("%N")
 			print (a_orig_type.generating_type)

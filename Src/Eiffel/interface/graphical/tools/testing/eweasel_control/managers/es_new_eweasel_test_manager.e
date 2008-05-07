@@ -540,7 +540,7 @@ feature {NONE} -- File contents
 				Result.append (l_file.last_string)
 
 				-- Set class name
-				Result.replace_substring_all ("$CLASS_NAME", manager.environment_manager.test_case_root_eiffel_class_name)
+				Result.replace_substring_all ("$CLASS_NAME", manager.environment_manager.test_case_root_eiffel_class_name.as_upper)
 
 				-- Set date time
 				create l_date_time.make_now

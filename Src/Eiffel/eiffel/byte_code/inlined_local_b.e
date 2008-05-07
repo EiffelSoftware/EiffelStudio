@@ -8,7 +8,7 @@ inherit
 		redefine
 			type, propagate, analyze, generate, free_register,
 			print_register, enlarged, Current_register,
-			is_local
+			is_local, used
 		end
 
 feature
@@ -65,6 +65,14 @@ feature -- Register and code generation
 		do
 			System.remover.inliner.inlined_feature.local_regs.item (position).print_register
 		end;
+
+	used (r: REGISTRABLE): BOOLEAN is
+			-- Is `r' the same as us ?
+		do
+			if {l_local: like Current} r then
+				Result := l_local.position = position
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

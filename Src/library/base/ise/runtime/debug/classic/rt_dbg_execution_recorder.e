@@ -181,7 +181,7 @@ feature -- Access
 			p: INTEGER
 			i: INTEGER
 			r: like callstack_record
-			sub_id: STRING
+			sub_id: ?STRING
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("callstack_record_by_id (" + a_id + ") -start-%N")
@@ -217,7 +217,7 @@ feature -- Constants from eif_debug.h
 
 feature -- Event
 
-	enter_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER)
+	enter_feature (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Enter feature `{cid}.fid' on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
@@ -231,6 +231,8 @@ feature -- Event
 			end
 			monitor_record_count
 			create r.make (Current, ref, cid, fid, dep)
+			increment_records_count (+1)
+
 --| We do not use it anymore, however, we might need to reuse it, with external calls
 --| need to check/test this. Since we don't have hands on what the external could do on the Eiffel objects
 --			r.record_fields
@@ -270,7 +272,7 @@ feature -- Event
 			end
 		end
 
-	enter_rescue (ref: ANY; cid,fid: INTEGER; dep: INTEGER)
+	enter_rescue (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Enter rescue on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
@@ -308,7 +310,7 @@ feature -- Event
 			end
 		end
 
-	leave_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER)
+	leave_feature (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Leave feature `{cid}.fid' on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
@@ -644,14 +646,15 @@ feature -- Monitoring
 			-- if `max_record_count' is 0, then no limit
 		local
 			p: like bottom_callstack_record
-			c, n: INTEGER
+			c, m, n: INTEGER
 		do
-			if maximum_record_count > 0 then
+			m := maximum_record_count
+			if m > 0 then
 				c := record_count
-				if c > 1.1 * maximum_record_count then
+				if c > 1.1 * m then
 					if top_callstack_record /= bottom_callstack_record then
 						debug ("RT_DBG_OPTIMIZATION")
-							print ("monitor_record_count[" + ((maximum_record_count - c).abs // maximum_record_count).out + "%%] -> remove oldest: record_count=" + c.out + " (max=" + maximum_record_count.out + ")%N")
+							print ("monitor_record_count[" + ((m - c).abs // m).out + "%%] -> remove oldest: record_count=" + c.out + " (max=" + m.out + ")%N")
 						end
 						from
 							p := top_callstack_record
@@ -661,17 +664,22 @@ feature -- Monitoring
 							p := p.parent
 						end
 						check
-							p_void_void_and_last_of_parent: p /= Void and then bottom_callstack_record.call_records.last = p
+							p_not_void_and_last_of_parent: p /= Void and then
+								bottom_callstack_record.call_records /= Void and then bottom_callstack_record.call_records.last = p
 						end
 						n := bottom_callstack_record.record_count_but (p)
 						p.remove_parent
 							--| We may clean the current `bottom_callstack_record' to help the GC ...
 						bottom_callstack_record := p
-						record_count := c - n
+						c := c - n
+						record_count := c
 						check record_count = bottom_callstack_record.record_count_but (Void) end
-						if record_count <= 0.9 * maximum_record_count then
+						if c <= 0.9 * m then
 								--| Could be optimized instead of recursively call this monitoring
 							monitor_record_count
+						end
+						debug ("RT_DBG_OPTIMIZATION")
+							print ("monitor_record_count -> count=" + c.out + "%N")
 						end
 					end
 				end
@@ -689,7 +697,7 @@ feature -- Replay operation
 	replayed_call: ?RT_DBG_CALL_RECORD
 			-- Current replayed call stack record
 
-	replay_stack: ?LINKED_LIST [TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]]
+	replay_stack: ?LINKED_LIST [TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]]
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
@@ -714,11 +722,11 @@ feature -- Replay operation
 				create replay_stack.make
 					-- This is the first replay operation
 					-- Replay to the beginning of the current frame
-				l_records := changes_between (r, Void, False)
+				l_records := changes_between (r, Void)
 			else
-				check replay_stack.count > 0 end
+				check replay_stack_not_empty: replay_stack.count > 0 end
 				n := replay_stack.last.call_record
-				l_records := changes_between (r, n, False)
+				l_records := changes_between (r, n)
 			end
 			if not last_replay_operation_failed then
 				if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
@@ -1024,7 +1032,7 @@ feature -- Replay operation
 					end
 				end
 			end
-			check replay_stack.is_empty end
+			check replay_stack /= Void and then replay_stack.is_empty end
 			replay_stack := Void
 			debug ("RT_DBG_REPLAY")
 				print ("revert_replay_stack -end-%N")

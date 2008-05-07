@@ -1264,6 +1264,18 @@ end
 			end
 		end
 
+	generate_rtdbgd_leave is
+			-- Generate the execution recording for leave feature
+		local
+			buf: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTDBGLE;")
+			end
+		end
+
 	generate_pop_execution_trace is
 			-- Generate the execution trace stack handling at the end of the
 			-- routine
@@ -1389,6 +1401,8 @@ end
 		do
 				-- Generate the hook corresponding to the end of the feature ("end;")
 			generate_frozen_end_debugger_hook
+
+			generate_rtdbgd_leave
 
 				-- Generate the remove of the GC hooks
 			context.remove_gc_hooks

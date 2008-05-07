@@ -3513,6 +3513,9 @@ rt_private void interpret(int flag, int where)
 		caller_assertion_level = saved_caller_assertion_level;
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
+
+		RTDBGLE;
+
 		pop_registers();	/* Pop registers */
 		/* leave_body: */
 			/* Exit rutine body. */
@@ -3614,6 +3617,11 @@ rt_private void interpret(int flag, int where)
 			}
 				/* Retrieve once result. */
 			get_once_result (OResult, rtype, iresult);
+
+				/* exit body */
+			RTDBGLE;
+
+
 				/* Pop registers */
 			pop_registers();
 			if (rescue) {

@@ -205,8 +205,8 @@ feature -- Button texts
 
 	b_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Back")	end
 	b_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Forth")	end
-	b_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Left")	end
-	b_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Right")	end
+	b_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Previous")	end
+	b_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Next")	end
 	b_Exec_replay_to: STRING_GENERAL is	do Result := locale.translation("Go to")	end
 	t_Exec_replay_to: STRING_GENERAL is	do Result := locale.translation("Replay execution to selected call.")	end
 
@@ -716,10 +716,10 @@ feature -- Accelerator, focus label and menu name
 	m_Activate_execution_replay_mode: STRING_GENERAL is 		do Result := locale.translation("Activate Replay Mode")	end
 	m_Deactivate_execution_replay_mode: STRING_GENERAL is 	do Result := locale.translation("Deactivate Replay Mode")	end
 
-	m_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Replay Execution Back")	end
-	m_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay Execution Forth")	end
-	m_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay Execution Left")	end
-	m_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay Execution Right")	end
+	m_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Replay Execution: Previous Stack")	end
+	m_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay Execution: Next Stack")	end
+	m_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay Execution: Previous Step")	end
+	m_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay Execution: Next Step")	end
 
 
 	m_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control Debuggee Object Storage")	end
@@ -2496,10 +2496,10 @@ feature -- Description text, no translation (for the editor).
 	e_Deactivate_execution_replay_mode: STRING_GENERAL is	do Result := locale.translation("Deactivate execution replay mode")	end
 
 	e_Exec_replay: STRING_GENERAL is	do Result := locale.translation("Replay the execution")	end
-	e_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Replay back the execution")	end
-	e_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay forth the execution")	end
-	e_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay left the execution")	end
-	e_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay right the execution")	end
+	e_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Replay previous execution stack")	end
+	e_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay next execution stack")	end
+	e_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay previous execution step")	end
+	e_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay next execution step")	end
 
 	e_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control debuggee object storage")	end
 	e_Operation_succeeded: STRING_GENERAL is	do Result := locale.translation("Operation succeeded.")	end

@@ -13,8 +13,8 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1, csr2: RT_DBG_CALL_RECORD; get_and_remove: BOOLEAN): ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
-			-- from `r1' to -beginning-of- `r2'.
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
+			-- Return records from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
 		local
@@ -22,31 +22,28 @@ feature -- Query
 			c,v: CURSOR
 		do
 			if csr1.is_flat then
-				Result := csr1.flat_value_records
+				Result := csr1.value_records
 			else
 				create Result.make (30)
 					--| Get Full records
-				if {flds: LIST [RT_DBG_VALUE_RECORD]} csr1.value_records then
-					v := flds.cursor
-					Result.append (flds)
-					flds.go_to (v)
+				if {vrecs: LIST [RT_DBG_VALUE_RECORD]} csr1.value_records then
+					v := vrecs.cursor
+					Result.append (vrecs)
+					vrecs.go_to (v)
 				end
-				if {rcds: LIST [RT_DBG_CALL_RECORD]} csr1.call_records then
-					c := rcds.cursor
+				if {crecs: LIST [RT_DBG_CALL_RECORD]} csr1.call_records then
+					c := crecs.cursor
 					from
-						rcds.start
+						crecs.start
 					until
-						rcds.after or rcds.item_for_iteration = csr2
+						crecs.after or crecs.item_for_iteration = csr2
 					loop
-						chgs := changes_between (rcds.item_for_iteration, csr2, get_and_remove)
+						chgs := changes_between (crecs.item_for_iteration, csr2)
 						Result.append (chgs)
-						rcds.forth
+						crecs.forth
 					end
-					rcds.go_to (c)
+					crecs.go_to (c)
 				end
-			end
-			if get_and_remove then
-				csr1.wipe_out_value_records
 			end
 		ensure
 			result_not_void: Result /= Void

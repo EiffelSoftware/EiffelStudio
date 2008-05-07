@@ -252,26 +252,29 @@ feature {NONE}	-- Agents
 			-- Handler for `class_under_test'.change_actions.
 		local
 			l_color: EV_STOCK_COLORS
-			l_text: STRING_GENERAL
+			l_text: STRING_32
+			l_utext: STRING_32
 			l_old_position: INTEGER
 		do
-			l_text := class_under_test.text.as_upper
-			l_old_position := class_under_test.caret_position
-			class_under_test.set_text (l_text)
-			class_under_test.set_caret_position (l_old_position)
-
-			create l_color
-			if is_class_under_test_name_valid or class_under_test.text.is_empty then
-				class_under_test.set_foreground_color (l_color.default_foreground_color)
-				if not l_text.is_empty then
-					wizard_information.set_class_under_test (l_text.as_string_8)
-					update_next_button_sensitivity (False)
-				end
+			l_text := class_under_test.text
+			l_utext := l_text.as_upper
+			if not l_utext.is_equal (l_text) then
+				l_old_position := class_under_test.caret_position
+				class_under_test.set_text (l_utext)
+				class_under_test.set_caret_position (l_old_position)
 			else
-				class_under_test.set_foreground_color (l_color.red)
-				update_next_button_sensitivity (True)
+				create l_color
+				if is_class_under_test_name_valid or class_under_test.text.is_empty then
+					class_under_test.set_foreground_color (l_color.default_foreground_color)
+					if not l_text.is_empty then
+						wizard_information.set_class_under_test (l_text.as_string_8)
+						update_next_button_sensitivity (False)
+					end
+				else
+					class_under_test.set_foreground_color (l_color.red)
+					update_next_button_sensitivity (True)
+				end
 			end
-
 		end
 
 	on_valid_test_case_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32] is

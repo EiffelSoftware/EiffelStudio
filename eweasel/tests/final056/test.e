@@ -7,9 +7,10 @@ feature {NONE}
 
 	make
 		local
-			test1: TEST1 [HASHABLE]
+			test3: TEST3
 		do
-			create test1.make
+			create test3.make
+			test3.clear
 		end
 
 end

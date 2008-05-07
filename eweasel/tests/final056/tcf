@@ -5,6 +5,8 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+copy_raw 	 cache.e  $CLUSTER cache.e
 
 compile_final
 compile_result ok

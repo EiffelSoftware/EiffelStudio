@@ -12,4 +12,13 @@ feature
 		deferred
 		end
 
+	clear is
+		do
+			cache.wipe_out
+		end
+
+	cache: CACHE [K] is
+		deferred
+		end
+
 end

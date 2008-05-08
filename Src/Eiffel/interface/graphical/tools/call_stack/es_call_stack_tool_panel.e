@@ -1286,7 +1286,7 @@ feature {NONE} -- Stack grid implementation
 			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
 		do
-			level := level_from_row (a_row)
+			level := level_from_row (a_row).abs
 			if stack_data /= Void and then stack_data.valid_index (level) then
 				cse := stack_data [level]
 			end
@@ -1696,16 +1696,17 @@ feature {NONE} -- Grid Implementation
 		local
 			row: EV_GRID_ROW
 			g: EV_GRID
-			r,n: INTEGER
+			r,n,l: INTEGER
 		do
 			g := stack_grid
 			n := g.row_count
 			if n > 0 then
+				l := a_level.abs
 				from r := 1 until r > n or Result /= Void loop
 					row := g.row (r)
 					if
 						row.parent_row = Void and then
-						level_from_row (row) = a_level
+						level_from_row (row).abs = l
 					then
 						Result := row
 					end

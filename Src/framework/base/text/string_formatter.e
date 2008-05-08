@@ -231,8 +231,11 @@ feature -- Formatting
 				elseif c = '%T' then
 					l_reset := True
 				else
+					if l_spaces > 0 then
+						Result.append (create {STRING_32}.make_filled (' ', l_spaces))
+						l_spaces := 0
+					end
 					Result.append_character (c)
-					l_spaces := 0
 					l_reset := False
 				end
 				if l_reset then

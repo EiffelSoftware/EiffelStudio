@@ -11,7 +11,7 @@ inherit
 	ACCESS_B
 		redefine
 			read_only, assign_code, expanded_assign_code,
-			is_fast_as_local, is_predefined,
+			is_fast_as_local,
 			calls_special_features, is_unsafe, optimized_byte_node,
 			size, pre_inlined_code, inlined_byte_code,
 			enlarged,
@@ -75,9 +75,6 @@ feature -- Access
 
 	position: INTEGER
 			-- Position in tuple we are accessing.
-
-	is_predefined: BOOLEAN is True
-			-- Predefined as results is store in a register.
 
 	source: EXPR_B
 			-- If Current is used for assignment into a tuple, then `source'

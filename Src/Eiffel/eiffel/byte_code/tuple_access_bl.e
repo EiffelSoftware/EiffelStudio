@@ -41,15 +41,13 @@ feature -- C Code generation
 		do
 			if source /= Void then
 				source.analyze
-			else
-				get_register
 			end
 		end
 
 	unanalyze is
 			-- <Precursor>
 		do
-			free_register
+			set_register (Void)
 		end
 
 	propagate (r: REGISTRABLE) is

@@ -373,8 +373,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			-- Flatten value records structure
 		require
 			not_flat: not is_flat
-		local
-			n: INTEGER
 		do
 			debug ("RT_DBG_OPTIMIZATION")
 				dtrace_indent (depth); dtrace ("flatten_value_records (depth=" + depth.out + ") -start-%N")

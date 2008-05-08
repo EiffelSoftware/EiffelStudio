@@ -178,6 +178,15 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
+	template_category: !STRING
+			-- Code template category name
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Query
 
 	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])

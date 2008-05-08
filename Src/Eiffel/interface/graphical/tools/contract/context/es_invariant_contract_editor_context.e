@@ -51,7 +51,13 @@ feature -- Contracts
 				end
 			end
 
-			if l_class_as = Void and not a_live then
+			if l_class_as /= Void then
+					-- Should only be avilable when requesting live data.
+				check a_live: a_live end
+
+					-- Use live AST
+				l_invariant_as := l_class_as.invariant_part
+			elseif not a_live then
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
 				l_class_i := l_modifier.context_class
 				if l_class_i.is_compiled then
@@ -61,9 +67,6 @@ feature -- Contracts
 						l_invariant_as := l_class_c.invariant_ast
 					end
 				end
-			else
-					-- Use live AST
-				l_invariant_as := l_class_as.invariant_part
 			end
 
 			if l_invariant_as /= Void then
@@ -79,6 +82,9 @@ feature -- Contracts
 
 			Result ?= [l_result, l_modifier]
 		end
+
+	template_category: !STRING = "invariant"
+			-- <Precondition>		
 
 feature -- Query
 

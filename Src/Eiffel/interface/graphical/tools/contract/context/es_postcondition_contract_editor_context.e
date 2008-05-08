@@ -13,6 +13,11 @@ class
 inherit
 	ES_FEATURE_CONTRACT_EDITOR_CONTEXT
 
+feature -- Contracts
+
+	template_category: !STRING = "postcondition"
+			-- <Precondition>
+
 feature {NONE} -- Contracts
 
 	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]

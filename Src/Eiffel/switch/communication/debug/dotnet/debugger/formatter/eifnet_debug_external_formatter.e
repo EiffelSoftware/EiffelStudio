@@ -132,7 +132,7 @@ feature {NONE} -- get member data
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 
 	get_ise_runtime_tokens is
-			--
+			-- token of "EiffelSoftware.Runtime.ISE_RUNTIME.exception_manager"
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: INTEGER
@@ -143,7 +143,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 				private_token_IseRuntime := l_type_token
 				private_token_IseRuntime__check_assert := l_icd_module.md_member_token (l_type_token, "check_assert")
 				private_token_IseRuntime__rt_extension_object := l_icd_module.md_member_token (l_type_token, "rt_extension_object")
-				private_token_IseRuntime__exception_manager := l_icd_module.md_member_token (l_type_token, "exception_manager")
+				private_token_IseRuntime__get_exception_manager := l_icd_module.md_member_token (l_type_token, "get_exception_manager")
 			end
 		end
 
@@ -177,13 +177,13 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__exception_manager: INTEGER is
-			-- Attribute token of ISE_RUNTIME::exception_manager
+	token_IseRuntime__get_exception_manager: INTEGER is
+			-- Attribute token of ISE_RUNTIME::get_exception_manager
 		do
-			Result := private_token_IseRuntime__exception_manager
+			Result := private_token_IseRuntime__get_exception_manager
 			if Result = 0 then
 				get_ise_runtime_tokens
-				Result := private_token_IseRuntime__exception_manager
+				Result := private_token_IseRuntime__get_exception_manager
 			end
 		end
 
@@ -198,8 +198,8 @@ feature {NONE} -- ISE_RUNTIME: Once per instance implementation
 	private_token_IseRuntime__rt_extension_object: INTEGER
 			-- Attribute token of ISE_RUNTIME::rt_extension_object .
 
-	private_token_IseRuntime__exception_manager: INTEGER
-			-- Attribute token of ISE_RUNTIME::exception_manager .				
+	private_token_IseRuntime__get_exception_manager: INTEGER
+			-- Attribute token of ISE_RUNTIME::get_exception_manager .				
 
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 

@@ -890,14 +890,7 @@ feature {NONE} -- Action handlers
 			-- `Result': True to indicate the key was handled
 		do
 			if a_released then
-				if not a_alt and not a_ctrl and not a_shift then
-					inspect a_key.code
-					when {EV_KEY_CONSTANTS}.key_escape then
-						on_cancel_dialog
-						Result := True
-					else
-					end
-				elseif a_ctrl and not a_alt and not a_shift then
+				if a_ctrl and not a_alt and not a_shift then
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_f12 then
 						if is_size_and_position_remembered then
@@ -907,8 +900,15 @@ feature {NONE} -- Action handlers
 					else
 					end
 				end
-
-				if not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+			else
+				if not a_alt and not a_ctrl and not a_shift then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_escape then
+						on_cancel_dialog
+						Result := True
+					else
+					end
+				elseif not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 					if a_ctrl or else ({l_widget: !EV_WIDGET} ev_application.focused_widget and then not {l_button: !EV_BUTTON} l_widget) then
 							-- We check if the focus widget is Void, because if it is then, technically the dialog does not have focus.
 							-- The key processing will stil be effective if there is no focused widget, which could be a bug.

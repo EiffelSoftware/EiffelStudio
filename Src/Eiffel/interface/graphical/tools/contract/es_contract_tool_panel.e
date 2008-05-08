@@ -181,13 +181,15 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			has_stone: has_stone
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
 			l_categories: DS_ARRAYED_LIST [STRING_32]
 		do
-			create l_categories.make (1)
+			create l_categories.make (2)
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
-			Result ?= code_template_catalog.service.templates_by_category (l_categories, False)
+			l_categories.put_last (context.template_category)
+			Result ?= code_template_catalog.service.templates_by_category (l_categories, True)
 		end
 
 feature {NONE} -- Element change
@@ -405,6 +407,9 @@ feature {NONE} -- Basic operations
 				execute_with_busy_cursor (agent contract_editor.set_context (l_context))
 			end
 			update_stone_buttons
+
+				-- Update the templates to display only the applicable templates.
+			update_code_template_list
 		ensure
 			not_is_dirty: not is_dirty
 		end
@@ -625,21 +630,26 @@ feature {NONE} -- User interface manipulation
 			l_menu ?= add_from_template_menu
 			l_menu.wipe_out
 
-			l_cursor := contract_code_templates.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_definition := l_cursor.item
-				l_title := l_definition.metadata.title
-				if l_title.is_empty then
-					l_title := l_definition.metadata.shortcut
+			if has_stone and then contract_editor.has_context then
+				l_cursor := contract_code_templates.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_definition := l_cursor.item
+					l_title := l_definition.metadata.title
+					if l_title.is_empty then
+						l_title := l_definition.metadata.shortcut
+					end
+					if not l_title.is_empty then
+						create l_menu_item.make_with_text (l_title)
+						l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
+						l_menu_item.set_data (l_definition)
+						l_menu_item.select_actions.extend (agent on_add_contract_from_template (l_definition))
+						l_menu.extend (l_menu_item)
+					end
+					l_cursor.forth
 				end
-				if not l_title.is_empty then
-					create l_menu_item.make_with_text (l_title)
-					l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
-					l_menu_item.set_data (l_definition)
-					l_menu_item.select_actions.extend (agent on_add_contract_from_template (l_definition))
-					l_menu.extend (l_menu_item)
-				end
-				l_cursor.forth
+				add_from_template_menu.enable_sensitive
+			else
+				add_from_template_menu.disable_sensitive
 			end
 		end
 

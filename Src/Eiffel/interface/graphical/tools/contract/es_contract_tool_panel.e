@@ -56,15 +56,25 @@ feature {NONE} -- Initialization
             --
             -- `a_widget': A widget to build the tool interface using.
 		do
+				-- Edit context menu
+			create edit_menu
+			create edit_menu_item.make_with_text (interface_names.m_edit)
+			register_action (edit_menu_item.select_actions, agent on_edit_contract)
+			edit_menu.extend (edit_menu_item)
+
+				--
+				-- Set up actions
+				--
 			register_action (contract_editor.source_selection_actions, agent on_source_selected_in_editor)
 
 				-- Register action to edit on double click
-			register_action (contract_editor.widget.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
+			register_action (contract_editor.widget.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32)
 				require
 					is_interface_usable: is_interface_usable
 					is_initialized: is_initialized
 				do
-					if ia_button = 1 then
+					if ia_button = 1 and then contract_editor.widget.item_at_virtual_position (ia_x, ia_y) /= Void then
+							-- The check above ensures there is actually an item at this location.
 						if has_stone and then contract_editor.selected_line /= Void and then contract_editor.selected_line.is_editable then
 							on_edit_contract
 						end
@@ -72,7 +82,7 @@ feature {NONE} -- Initialization
 				end)
 
 				-- Register action to show context menu on single click
-			register_action (contract_editor.widget.pointer_button_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
+			register_action (contract_editor.widget.pointer_button_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32)
 				require
 					is_interface_usable: is_interface_usable
 					is_initialized: is_initialized
@@ -81,13 +91,13 @@ feature {NONE} -- Initialization
 				do
 					if ia_button = 3 then
 						l_item := contract_editor.widget.item_at_virtual_position (ia_x, ia_y)
-						if l_item /= Void and then not l_item.is_selected then
-							contract_editor.widget.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
-							l_item.row.enable_select
-							contract_editor.widget.enable_selection_on_click
-						end
-						if has_stone and then contract_editor.selected_source /= Void and then contract_editor.selected_source.is_editable then
-							add_menu.show_at (contract_editor.widget, ia_x, ia_y + contract_editor.widget.header.height)
+						if l_item /= Void then
+							if not l_item.is_selected then
+								contract_editor.widget.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+								l_item.row.enable_select
+								contract_editor.widget.enable_selection_on_click
+							end
+							on_row_selected_in_contract_editor (({!EV_GRID_ROW}) #? l_item.row, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
 						end
 					end
 				end)
@@ -511,6 +521,12 @@ feature {NONE} -- User interface elements
 
 --	add_from_template_for_entity_menu: ?EV_MENU
 --			-- Menu to add a template contract for a given argument/class attribute
+
+	edit_menu: ?EV_MENU
+			-- Menu to edit contracts.
+
+	edit_menu_item: ?EV_MENU_ITEM
+			-- Menu item to edit a selected contract.
 
 	remove_contract_button: ?SD_TOOL_BAR_BUTTON
 			-- Button to remove a selected contract.
@@ -1295,6 +1311,33 @@ feature {NONE} -- Action handlers
 			update_editable_buttons
 		end
 
+	on_row_selected_in_contract_editor (a_row: !EV_GRID_ROW; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER)
+			-- Actions called when a row was selected in the editor.
+			--
+			-- `a_row': The row selected in the contract editor widget.
+			-- `a_x': The X coordinate relative to the widget.
+			-- `a_y': The Y coordinate relative to the widget.
+			-- `a_button': The button index selected in the editor.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_parented: a_row.parent /= Void
+			a_x_non_negative: a_x >= 0
+			a_y_non_negative: a_y >= 0
+		do
+			if a_button = 3 then
+				if has_stone and then contract_editor.selected_source /= Void and then contract_editor.selected_source.is_editable then
+					if contract_editor.selected_line = Void then
+							-- The contract item is select, show the add menu.
+						add_menu.show_at (a_row.parent, a_x, a_y)
+					else
+							-- The contract is select, show the edit menu.
+						edit_menu.show_at (a_row.parent, a_x, a_y)
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Action agents
 
 	last_file_change_notified_agent: PROCEDURE [ANY, TUPLE]
@@ -1506,6 +1549,8 @@ invariant
 	add_manual_menu_item_attached: (is_initialized and is_interface_usable) implies add_manual_menu_item /= Void
 	add_from_template_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_menu /= Void
 --	add_from_template_for_entity_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_for_entity_menu /= Void
+	edit_menu_attached: (is_initialized and is_interface_usable) implies edit_menu /= Void
+	edit_menu_item_attached: (is_initialized and is_interface_usable) implies edit_menu_item /= Void
 	remove_contract_button_attached: (is_initialized and is_interface_usable) implies remove_contract_button /= Void
 	edit_contract_button_attached: (is_initialized and is_interface_usable) implies edit_contract_button /= Void
 	move_contract_up_button_attached: (is_initialized and is_interface_usable) implies move_contract_up_button /= Void

@@ -40,6 +40,7 @@
 #include "eif_except.h"		/* Exception vectors definition */
 #include "eif_sig.h"		/* initsig() */
 #include "eif_local.h"		/* initstk(), local stacks */
+#include "eif_except.h"
 #include "eif_cecil.h"		/* eif_rtinit(), run-time initialization */
 
 #ifdef WORKBENCH

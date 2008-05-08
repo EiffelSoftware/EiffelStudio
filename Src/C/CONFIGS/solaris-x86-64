@@ -188,7 +188,7 @@ eif_64_bits='define'
 eif_os='EIF_OS_SUNOS'
 eif_arch='EIF_ARCH_X86_64'
 Mcc='Mcc'
-d_tls='undef'
+d_tls='define'
 #Check value for next 2
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"

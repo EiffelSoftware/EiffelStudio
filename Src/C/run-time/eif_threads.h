@@ -222,6 +222,8 @@ extern "C" {
 #	else
 #		if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 303)
 #			define EIF_TLS __thread
+#		elif EIF_OS == EIF_OS_SUNOS
+#			define EIF_TLS __thread	
 #		else
 #			warning "USE_TLS macro is defined, but compiler does not support thread-local storage specifier."
 #		endif

@@ -21,18 +21,28 @@ feature {NONE} -- Initialization
 		do
 			arguments := std.arguments
 			body_index := std.body_index
+			class_custom_attributes := std.class_custom_attributes
+			compound := std.compound
+			custom_attributes := std.custom_attributes
+			end_location := std.end_location
 			feature_name_id := std.feature_name_id
+			has_loop := std.has_loop
+			interface_custom_attributes := std.interface_custom_attributes
+			local_count := std.local_count
 			locals := std.locals
 			old_expressions := std.old_expressions
+			once_manifest_string_count := std.once_manifest_string_count
 			pattern_id := std.pattern_id
 			postcondition := std.postcondition
 			precondition := std.precondition
+			property_custom_attributes := std.property_custom_attributes
+			property_name_id := std.property_name_id
 			real_body_id := std.real_body_id
 			rescue_clause := std.rescue_clause
 			result_type := std.result_type
 			rout_id := std.rout_id
-			compound := std.compound
-			once_manifest_string_count := std.once_manifest_string_count
+			start_line_number := std.start_line_number
+			written_class_id := std.written_class_id
 		end
 
 feature -- Status report

@@ -14,18 +14,6 @@ inherit
 
 feature {NONE} -- Constants
 
-	Default_precompiled_location: DIRECTORY_NAME is
-			-- Default location for the precompiled base
-			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-		once
-			if eiffel_layout.is_unix_layout then
-				create Result.make_from_string (eiffel_layout.lib_path)
-			else
-				create Result.make_from_string (eiffel_layout.shared_path)
-			end
-			Result.extend_from_array (<<"precomp", "spec", eiffel_layout.Eiffel_platform>>)
-		end
-
 	Interface_names: INTERFACE_NAMES is
 			-- Interface names for buttons, label, ...
 		once

@@ -236,6 +236,9 @@ feature {SESSION_MANAGER_S} -- Element change
 
 								-- Remove old data so we can publish a events for removed data
 							l_old_data.remove (l_id)
+						else
+								-- The value changed because the old data did not have the current session item.
+							l_change_events.publish ([Current, l_id])
 						end
 						l_cursor.forth
 					end

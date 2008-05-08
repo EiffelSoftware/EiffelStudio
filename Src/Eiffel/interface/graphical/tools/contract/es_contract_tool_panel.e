@@ -71,6 +71,27 @@ feature {NONE} -- Initialization
 					end
 				end)
 
+				-- Register action to show context menu on single click
+			register_action (contract_editor.widget.pointer_button_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
+				require
+					is_interface_usable: is_interface_usable
+					is_initialized: is_initialized
+				local
+					l_item: EV_GRID_ITEM
+				do
+					if ia_button = 3 then
+						l_item := contract_editor.widget.item_at_virtual_position (ia_x, ia_y)
+						if l_item /= Void and then not l_item.is_selected then
+							contract_editor.widget.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+							l_item.row.enable_select
+							contract_editor.widget.enable_selection_on_click
+						end
+						if has_stone and then contract_editor.selected_source /= Void and then contract_editor.selected_source.is_editable then
+							add_menu.show_at (contract_editor.widget, ia_x, ia_y + contract_editor.widget.header.height)
+						end
+					end
+				end)
+
 			register_action (save_modifications_button.select_actions, agent on_save)
 			register_action (add_contract_button.select_actions, agent add_contract_button.perform_select)
 			register_action (remove_contract_button.select_actions, agent on_remove_contract)
@@ -479,8 +500,11 @@ feature {NONE} -- User interface elements
 	add_contract_button: ?SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button to add a new contract to the current feature.
 
+	add_menu: ?EV_MENU
+			-- Menu to add contracts.
+
 	add_manual_menu_item: ?EV_MENU_ITEM
-			-- Menu item to save contracts.
+			-- Menu item to add contracts manually.
 
 	add_from_template_menu: ?EV_MENU
 			-- Menu to save contracts and open modified class.
@@ -1320,6 +1344,8 @@ feature {NONE} -- Factory
 
 				-- Create menu for add selection button
 			create l_menu
+			add_menu := l_menu
+
 			create l_menu_item.make_with_text (interface_names.m_contract_add_contract)
 			l_menu.set_pixmap (stock_pixmaps.general_add_icon)
 			l_menu.extend (l_menu_item)
@@ -1476,6 +1502,7 @@ feature {NONE} -- Constants
 invariant
 	save_modifications_button_attached: (is_initialized and is_interface_usable) implies save_modifications_button /= Void
 	add_contract_button_attached: (is_initialized and is_interface_usable) implies add_contract_button /= Void
+	add_menu_attached: (is_initialized and is_interface_usable) implies add_menu /= Void
 	add_manual_menu_item_attached: (is_initialized and is_interface_usable) implies add_manual_menu_item /= Void
 	add_from_template_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_menu /= Void
 --	add_from_template_for_entity_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_for_entity_menu /= Void

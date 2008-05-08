@@ -485,21 +485,33 @@ feature -- Remote access to Exceptions
 		local
 			m: ICOR_DEBUG_MODULE
 			f: ICOR_DEBUG_FRAME
-			icl: ICOR_DEBUG_CLASS
+			fct: ICOR_DEBUG_FUNCTION
 			ctok, ftok: INTEGER
 		do
 			m := eifnet_debugger.ise_runtime_module
 			if m /= Void then
 				ctok := eifnet_debugger.edv_external_formatter.token_IseRuntime
 				if ctok > 0 then
-					ftok := eifnet_debugger.edv_external_formatter.token_IseRuntime__exception_manager
+					ftok := eifnet_debugger.edv_external_formatter.token_IseRuntime__get_exception_manager
 					if ftok > 0 then
-						icl := m.get_class_from_token (ctok)
-						f := eifnet_debugger.new_active_frame
-						if f /= Void then
-							Result := icl.get_static_field_value (ftok, f)
-							f.clean_on_dispose
+							--| exception_manager is a static property
+						fct := m.get_function_from_token (ftok)
+						if fct /= Void then
+							f := eifnet_debugger.new_active_frame
+							if f /= Void then
+								Result := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (f, fct, Void)
+								f.clean_on_dispose
+							end
 						end
+--| Keep code, if it becomes a static variable again later.
+--							--| exception_manager is a static variable
+--						if {icl: ICOR_DEBUG_CLASS} m.get_class_from_token (ctok) then
+--							f := eifnet_debugger.new_active_frame
+--							if f /= Void then
+--								Result := icl.get_static_field_value (ftok, f)
+--								f.clean_on_dispose
+--							end
+--						end
 					end
 				end
 			end

@@ -2648,13 +2648,16 @@ feature -- C code generation
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.
 				l_byte_context := byte_context
-				l_byte_context.set_byte_code (l_byte_code)
 
 				if System.in_final_mode and then System.inlining_on then
+						-- We need to set `{BYTE_CONTEXT}.byte_code', since it is used
+						-- in `inlined_byte_code'.
+					l_byte_context.set_byte_code (l_byte_code)
 					l_byte_code := l_byte_code.inlined_byte_code
 				end
 
 					-- Generation of the C routine
+				l_byte_context.set_byte_code (l_byte_code)
 				l_byte_context.set_current_feature (Current)
 				l_byte_code.analyze
 				l_byte_code.set_real_body_id (real_body_id (class_type))

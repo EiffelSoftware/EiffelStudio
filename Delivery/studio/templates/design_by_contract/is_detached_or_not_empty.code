@@ -9,6 +9,8 @@
          <category>Eiffel</category>
          <category>code</category>
          <category>contract</category>
+		 <category>precondition</category>
+		 <category>postcondition</category>
       </categories>
   </metadata>
   

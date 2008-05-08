@@ -932,13 +932,11 @@ feature -- change
 					end
 				end
 			elseif wh_atype.is_equal ({BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS}) then
-				if not when_hits_actions_entries_has (wh_atype) then
-					if wh_a = Void then
-						insert_when_hits_action_change_breakpoints_status_entry (Void, box, a_has_focus)
-					else
-						if {x2: !BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS} wh_a then
-							insert_when_hits_action_change_breakpoints_status_entry (x2, box, a_has_focus)
-						end
+				if wh_a = Void then
+					insert_when_hits_action_change_breakpoints_status_entry (Void, box, a_has_focus)
+				else
+					if {x2: !BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS} wh_a then
+						insert_when_hits_action_change_breakpoints_status_entry (x2, box, a_has_focus)
 					end
 				end
 			elseif wh_atype.is_equal ({BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING}) then

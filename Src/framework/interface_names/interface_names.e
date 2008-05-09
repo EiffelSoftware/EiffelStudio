@@ -2006,6 +2006,7 @@ feature -- Title part
 	t_Feature_properties: STRING_GENERAL is				do Result := locale.translation("Feature Properties")	end
 	t_File_selection: STRING_GENERAL is					do Result := locale.translation("File Selection")	end
 	t_Find: STRING_GENERAL is							do Result := locale.translation("Find: ")	end
+	t_Find_test_case_classes: STRING_GENERAL is			do Result := locale.translation("Find test case classes")	end
 	t_finish_freezing_status: STRING_GENERAL is			do Result := locale.translation("Finish Freezing Status")	end
 	t_Index: STRING_GENERAL is							do Result := locale.translation("Index")	end
 	t_New_class: STRING_GENERAL is						do Result := locale.translation("New Class")	end

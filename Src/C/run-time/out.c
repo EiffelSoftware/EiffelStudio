@@ -55,7 +55,7 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include "rt_macros.h"
 #include "rt_constants.h"
 #include "rt_gen_types.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "eif_size.h"		/* For macro LNGPAD */
 #include "rt_assert.h"
 #include <string.h>
 #include <stdio.h>

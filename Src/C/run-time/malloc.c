@@ -59,7 +59,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "eif_except.h"			/* For exception raising */
-#include "x2c.h"			/* For macro LNGPAD */
+#include "eif_size.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "rt_sig.h"
 #include "rt_err_msg.h"

@@ -41,9 +41,9 @@ doc:<file name="runtime_validation.c" version="$Id$" summary="Convert .x file in
 #define EIF_ASSERTIONS
 
 #include "eif_eiffel.h"
+#include "eif_offset.h"
 #include "rt_malloc.h"
 #include "rt_assert.h"
-#include "x2c.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,9 +62,6 @@ struct align_test {
 
 void print_info() {
 	struct align_test t;
-	size_t n = OVERHEAD + sizeof(EIF_REAL_64);
-	size_t mod;
-
 
 	printf ("Size of overhead %d\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
@@ -73,26 +70,16 @@ void print_info() {
 
 int main(int argc, char **argv)
 {
-	size_t offset;
-
 	print_info();
 
 	CHECK ("TAG: Proper header alignment", (OVERHEAD % MEM_ALIGNBYTES) == 0);
-	offset = R64OFF(0,0,0,0,0,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(1,0,0,0,0,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,1,0,0,0,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,0,1,0,0,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,0,0,1,0,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,0,0,0,1,0,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,0,0,0,0,1,0);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
-	offset = R64OFF(0,0,0,0,0,0,1);
-	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(1,0,0,0,0,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,1,0,0,0,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,1,0,0,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,1,0,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,1,0,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,1,0) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,0,1) % MEM_ALIGNBYTES) == 0));
 }
 

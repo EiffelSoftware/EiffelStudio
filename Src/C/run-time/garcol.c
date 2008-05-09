@@ -62,7 +62,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_gen_types.h"	/* For tuple marking */
 #include "eif_cecil.h"
 #include "rt_struct.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "eif_size.h"		/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <string.h>
 #endif

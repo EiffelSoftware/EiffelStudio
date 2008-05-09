@@ -35,61 +35,51 @@
 */
 
 /*
-doc:<file name="x2c.c" header="x2c.h" version="$Id$" summary="Convert .x file into compilable .c files">
+doc:<file name="x2c.c" version="$Id$" summary="Convert .x file into compilable .c files">
 */
 
-#include "x2c.h"
+#include "eif_eiffel.h"
+
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
 #else
 #include "rt_err_msg.h"
 #endif
 
+#include "eif_offset.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
-#define NON_RECURSIVE	'0'
-#define RECURSIVE		'1'
+rt_private size_t chroff();
+rt_private size_t i16off();
+rt_private size_t lngoff();
+rt_private size_t r32off();
+rt_private size_t ptroff();
+rt_private size_t r64off();
+rt_private size_t objsiz();
+rt_private size_t i64off();
+rt_private size_t bitoff();
 
-rt_private long chroff(char recursive_call);
-rt_private long i16off(char recursive_call);
-rt_private long lngoff(char recursive_call);
-rt_private long r32off(char recursive_call);
-rt_private long ptroff(char recursive_call);
-rt_private long r64off(char recursive_call);
-rt_private long objsiz(char recursive_call);
-rt_private long i64off(char recursive_call);
-rt_private long bitoff(char recursive_call);
+rt_private size_t refacs ();
+rt_private size_t chracs ();
+rt_private size_t i16acs ();
+rt_private size_t lngacs ();
+rt_private size_t r32acs ();
+rt_private size_t r64acs ();
+rt_private size_t i64acs ();
+rt_private size_t ptracs ();
 
-rt_private long refacs (char recursive_call);
-rt_private long chracs (char recursive_call);
-rt_private long i16acs (char recursive_call);
-rt_private long lngacs (char recursive_call);
-rt_private long r32acs (char recursive_call);
-rt_private long r64acs (char recursive_call);
-rt_private long i64acs (char recursive_call);
-rt_private long ptracs (char recursive_call);
-
-rt_private long nextarg(void);
+rt_private size_t nextarg(void);
 rt_private void getarg(int n, char *name);
 
-long a[8];		/* Parameters array */
-
-#define first_argument		a[0]
-#define second_argument		a[1]
-#define third_argument		a[2]
-#define fourth_argument		a[3]
-#define fifth_argument		a[4]
-#define sixth_argument		a[5]
-#define	seventh_argument	a[6]
-#define eigth_argument		a[7]
+size_t a[8];		/* Parameters array */
 
 #define nb_ref	a[0]
 #define nb_char	a[1]
 #define nb_i16	a[2]
-#define nb_int	a[3]
+#define nb_i32	a[3]
 #define nb_r32	a[4]
 #define nb_ptr	a[5]
 #define nb_i64	a[6]
@@ -100,7 +90,7 @@ long a[8];		/* Parameters array */
 struct parse {
 	char *c_macro;		/* Macro name */
 	int c_args;			/* Number of arguments */
-	long (*c_off)(char);	/* Function to compute value */
+	size_t (*c_off)();	/* Function to compute value */
 } parser[] = {
 	{ "REFACS", 1, refacs },
 	{ "CHRACS", 1, chracs },
@@ -274,7 +264,7 @@ int main(int argc, char **argv)
 					continue;
 				}
 				getarg(ps->c_args, buf);
-				fprintf(output_file, "%ld", (ps->c_off)(NON_RECURSIVE));
+				fprintf(output_file, "%ld", (ps->c_off)());
 				continue;
 			}
 			buf[pos++] = (char) c;
@@ -310,6 +300,7 @@ rt_private struct parse *locate(char *name)
 	return (struct parse *) 0;
 }
 
+#define INVALID_VALUE ((size_t) -1)
 rt_private void getarg(int n, char *name)
       				/* Expected number of arguments */
            			/* Macro name (used only for error message) */
@@ -321,11 +312,11 @@ rt_private void getarg(int n, char *name)
 
 	int i;
 	int c;
-	int val;
+	size_t val;
 
 	for (i = 0; i < n; i++) {
 		val = nextarg();
-		if (val == -1) {
+		if (val == INVALID_VALUE) {
 			print_err_msg(stdout,
 				"x2c: warning: macro %s has %d argument%s, expected %d\n",
 				name, i, i == 1 ? "" : "s", n);
@@ -341,17 +332,17 @@ rt_private void getarg(int n, char *name)
 		ungetc(c, input_file);
 }
 
-rt_private long nextarg(void)
+rt_private size_t nextarg(void)
 {
 	/* Extract the next argument from the macro. Arguments are separated by
 	 * a ',' and the argument list ends with a ')'. The numerical value of
-	 * each (positive) argument is returned, or -1 if no more arguments.
+	 * each (positive) argument is returned, or INVALID_VALUE if no more arguments.
 	 */
 
 	int c;
 	int pos = 0;
 	char buf[BUFSIZ];
-	long val;
+	size_t val;
 
 	buf[pos] = '\0';
 
@@ -362,101 +353,41 @@ rt_private long nextarg(void)
 			ungetc(c, input_file);
 		if (c == ',' || c == ')') {
 			if (pos == 0)
-				return -1;
+				return INVALID_VALUE;
 			buf[pos] = '\0';
 			sscanf(buf, "%ld", &val);
 			return val;
 		}
 		buf[pos++] = (char) c;
 		if (pos >= BUFSIZ)
-			return -1;
+			return INVALID_VALUE;
 	}
 
-	return -1;		/* Not found */
+	return INVALID_VALUE;		/* Not found */
 }
 
 /*
- * Offset-calculation routines (take their arguments from a[] arary).
+ * Offset-calculation routines (take their arguments from a[] array via the `nb_xx' macros).
  */
 
-rt_private long chroff(char recursive_call)
-{
-	long to_add = nb_ref * REFSIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add, (long) CHRSIZ);
-	else
-		return to_add + PADD(to_add, (long) CHRSIZ) + CHRACS(second_argument);
-}
+rt_private size_t chroff() { return eif_chroff(nb_ref) + CHRACS(nb_char); }
+rt_private size_t i16off() { return eif_i16off(nb_ref, nb_char) + I16ACS(nb_i16); }
+rt_private size_t lngoff() { return eif_lngoff(nb_ref, nb_char, nb_i16) + LNGACS(nb_i32); }
+rt_private size_t r32off() { return eif_r32off(nb_ref, nb_char, nb_i16, nb_i32) + R32ACS(nb_r32); }
+rt_private size_t ptroff() { return eif_ptroff(nb_ref, nb_char, nb_i16, nb_i32, nb_r32) + PTRACS(nb_ptr); }
+rt_private size_t i64off() { return eif_i64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr) + I64ACS(nb_i64); }
+rt_private size_t r64off() { return eif_r64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64) + R64ACS(nb_r64); }
+rt_private size_t objsiz() { return eif_objsiz(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64, nb_r64); }
 
-rt_private long i16off(char recursive_call)
-{
-	long to_add = chroff(RECURSIVE) + nb_char *CHRSIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add,(long)  I16SIZ);
-	else
-		return to_add + PADD(to_add,(long)  I16SIZ) + I16ACS(third_argument);
-}
-
-rt_private long lngoff(char recursive_call)
-{
-	long to_add = i16off(RECURSIVE) + nb_i16 *I16SIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add,(long)  LNGSIZ);
-	else
-		return to_add + PADD(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
-}
-
-rt_private long r32off(char recursive_call)
-{
-	long to_add = lngoff(RECURSIVE) + nb_int * LNGSIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add, (long) R32SIZ);
-	else
-		return to_add + PADD(to_add, (long) R32SIZ) + R32ACS(fifth_argument);
-}
-
-rt_private long ptroff(char recursive_call)
-{
-	long to_add = r32off(RECURSIVE) + nb_r32 * R32SIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add, (long) PTRSIZ);
-	else
-		return to_add + PADD(to_add, (long) PTRSIZ) + PTRACS(sixth_argument);
-}
-
-rt_private long i64off(char recursive_call)
-{
-	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add, (long) I64SIZ);
-	else
-		return to_add + PADD(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
-}
-
-rt_private long r64off(char recursive_call)
-{
-	long to_add = i64off(RECURSIVE) + nb_i64 * I64SIZ;
-	if (recursive_call == RECURSIVE)
-		return to_add + PADD(to_add, (long) R64SIZ);
-	else
-		return to_add + PADD(to_add, (long) R64SIZ) + R64ACS(eigth_argument);
-}
-
-rt_private long objsiz(char recursive_call)
-{
-	long to_add = r64off(RECURSIVE) + nb_r64 * R64SIZ;
-	return to_add + REMAINDER(to_add);
-}
-
-rt_private long bitoff (char recursive_call) { return BITOFF(first_argument); }
-rt_private long refacs (char recursive_call) { return REFACS(first_argument); } 
-rt_private long chracs (char recursive_call) { return CHRACS(first_argument); }
-rt_private long i16acs (char recursive_call) { return I16ACS(first_argument); }
-rt_private long lngacs (char recursive_call) { return LNGACS(first_argument); }
-rt_private long r32acs (char recursive_call) { return R32ACS(first_argument); }
-rt_private long r64acs (char recursive_call) { return R64ACS(first_argument); }
-rt_private long i64acs (char recursive_call) { return I64ACS(first_argument); }
-rt_private long ptracs (char recursive_call) { return PTRACS(first_argument); }
+rt_private size_t bitoff () { return BITOFF(a[0]); }
+rt_private size_t refacs () { return REFACS(a[0]); } 
+rt_private size_t chracs () { return CHRACS(a[0]); }
+rt_private size_t i16acs () { return I16ACS(a[0]); }
+rt_private size_t lngacs () { return LNGACS(a[0]); }
+rt_private size_t r32acs () { return R32ACS(a[0]); }
+rt_private size_t r64acs () { return R64ACS(a[0]); }
+rt_private size_t i64acs () { return I64ACS(a[0]); }
+rt_private size_t ptracs () { return PTRACS(a[0]); }
 
 /*
 doc:</file>

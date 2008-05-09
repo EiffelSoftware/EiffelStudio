@@ -25,6 +25,7 @@ LIBMTNAME = mtipc.$lib
 FINAL_OBJECTS = \
 	$(INDIR)lmalloc.$obj \
 	$(INDIR)malloc.$obj \
+	$(INDIR)offset.$obj \
 	$(INDIR)garcol.$obj \
 	$(INDIR)local.$obj \
 	$(INDIR)except.$obj \
@@ -77,6 +78,7 @@ OBJECTS = $(FINAL_OBJECTS) \
 WORKBENCH_OBJECTS = \
 	$(INDIR)wlmalloc.$obj \
 	$(INDIR)wmalloc.$obj \
+	$(INDIR)offset.$obj \
 	$(INDIR)wgarcol.$obj \
 	$(INDIR)wlocal.$obj \
 	$(INDIR)wexcept.$obj \
@@ -133,6 +135,7 @@ WOBJECTS = $(WORKBENCH_OBJECTS) \
 MT_FINAL_OBJECTS = \
 	$(INDIR)MTlmalloc.$obj \
 	$(INDIR)MTmalloc.$obj \
+	$(INDIR)offset.$obj \
 	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTlocal.$obj \
 	$(INDIR)MTexcept.$obj \
@@ -185,6 +188,7 @@ MT_OBJECTS = $(MT_FINAL_OBJECTS) \
 MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwlmalloc.$obj \
 	$(INDIR)MTwmalloc.$obj \
+	$(INDIR)offset.$obj \
 	$(INDIR)MTwgarcol.$obj \
 	$(INDIR)MTwlocal.$obj \
 	$(INDIR)MTwexcept.$obj \
@@ -314,11 +318,11 @@ $(OUTDIR)finalized.dll : $(OBJECTS)
 
 all:: x2c.exe runtime_validation.exe
 
-x2c.exe: x2c.c eif_size.h
-	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ x2c.c
+x2c.exe: x2c.c offset.$obj eif_size.h
+	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ x2c.c offset.$obj
 
-runtime_validation.exe: runtime_validation.c
-	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ runtime_validation.c
+runtime_validation.exe: runtime_validation.c offset.$obj
+	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ runtime_validation.c offset.$obj
 
 
 $all_dependency
@@ -416,6 +420,9 @@ $(INDIR)misc.$obj: $(RTSRC)misc.c
 
 $(INDIR)object_id.$obj: $(RTSRC)object_id.c
 	$(CC) $(JCFLAGS) $(RTSRC)object_id.c
+
+$(INDIR)offset.$obj: $(RTSRC)offset.c
+	$(CC) $(JCFLAGS) $(RTSRC)offset.c
 
 $(INDIR)option.$obj: $(RTSRC)option.c
 	$(CC) $(JCFLAGS) $(RTSRC)option.c

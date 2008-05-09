@@ -50,8 +50,22 @@ void rv_failure (char *a_msg) {
 	exit(1);
 }
 
+struct align_test {
+	char a;
+	double d;
+};
+
+void print_info() {
+	struct align_test t;
+
+	printf ("Size of overhead %d\n", OVERHEAD);
+	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
+	printf ("Computed alignment %d\n", (char *) &t.d - (char *) &t);
+}
+
 int main(int argc, char **argv)
 {
+	print_info();
 	if ((OVERHEAD % MEM_ALIGNBYTES) != 0) {
 		rv_failure("Wrong alignment");
 	}

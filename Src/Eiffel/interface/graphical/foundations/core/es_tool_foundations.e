@@ -96,7 +96,6 @@ feature {NONE} -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
 			result_consistent: Result = foundation_widget
 		end
 
@@ -121,7 +120,7 @@ feature -- Status report
 			-- Indicates if foundataion tool is current visible
 		do
 			if is_interface_usable and then is_initialized then
-				Result := foundation_widget.is_displayed
+				Result := not foundation_widget.is_destroyed and then foundation_widget.is_displayed
 			end
 		end
 

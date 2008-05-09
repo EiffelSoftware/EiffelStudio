@@ -163,17 +163,19 @@ feature {NONE} -- Clean up
 			-- To be called when the button has became useless.
 			-- Note: It's recommended that you do not detach objects here.
 		do
-			if session_manager.is_service_available then
-				if project_window_session_data.is_connected (Current) then
-						-- Disconnect session value change observer.
-					project_window_session_data.disconnect_events (Current)
+			if is_initialized then
+				if session_manager.is_service_available then
+					if project_window_session_data.is_connected (Current) then
+							-- Disconnect session value change observer.
+						project_window_session_data.disconnect_events (Current)
+					end
 				end
-			end
 
-			if code_template_catalog.is_service_available then
-				if code_template_catalog.service.is_connected (Current) then
-						-- Disconnect catalog change observer.
-					code_template_catalog.service.disconnect_events (Current)
+				if code_template_catalog.is_service_available then
+					if code_template_catalog.service.is_connected (Current) then
+							-- Disconnect catalog change observer.
+						code_template_catalog.service.disconnect_events (Current)
+					end
 				end
 			end
 

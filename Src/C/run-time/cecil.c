@@ -218,8 +218,8 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 
 rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 {
-	/* Look for the routine named 'routine' in the type 'cid' (there is no
-	 * polymorphism here). Return a pointer to the routine if found, or the
+	/* Look for the routine named 'routine' in the type 'cid'.
+	 * Return a pointer to the routine if found, or the
 	 * null pointer if the routine does not exist.
 	 */
 

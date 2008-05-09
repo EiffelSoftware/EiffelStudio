@@ -31,6 +31,11 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_BENCH_NAMES
+		undefine
+			default_create, copy
+		end
+
 create
 	default_create
 
@@ -391,7 +396,7 @@ feature -- Header menu
 				s := hi.text
 			end
 			if s = Void or else s.is_empty then
-				s := "Grid menu"
+				s := names.m_grid_menu
 			end
 			create mi.make_with_text (s)
 			mi.disable_sensitive
@@ -399,7 +404,7 @@ feature -- Header menu
 
 			if col /= Void then
 				Result.extend (create {EV_MENU_SEPARATOR})
-				create mci.make_with_text ("Auto resize")
+				create mci.make_with_text (names.m_auto_resize)
 				if column_has_auto_resizing (col.index) then
 					mci.enable_select
 					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
@@ -409,15 +414,15 @@ feature -- Header menu
 				end
 				Result.extend (mci)
 
-				create mci.make_with_text ("Displayed")
+				create mci.make_with_text (names.m_displayed)
 				mci.enable_select
 				mci.select_actions.extend (agent col.hide)
 				Result.extend (mci)
 				Result.extend (create {EV_MENU_SEPARATOR})
-				create mi.make_with_text ("Resize to content")
+				create mi.make_with_text (names.m_resize_to_content)
 				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, False))
 				Result.extend (mi)
-				create mi.make_with_text ("Resize to visible content")
+				create mi.make_with_text (names.m_resize_to_visible_content)
 				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, True))
 				Result.extend (mi)
 			end
@@ -435,10 +440,10 @@ feature -- Header menu
 			sm: EV_MENU
 			mci: EV_CHECK_MENU_ITEM
 			c: INTEGER
-			s: STRING
+			s: STRING_GENERAL
 			col: EV_GRID_COLUMN
 		do
-			create Result.make_with_text ("Grid settings")
+			create Result.make_with_text (names.m_grid_settings)
 			from
 				c := 1
 			until
@@ -446,21 +451,21 @@ feature -- Header menu
 			loop
 				col := column (c)
 				if not col.title.is_empty then
-					s := "Column %"" + col.title + "%""
+					s := names.m_column_n_title (col.title)
 				else
-					s := "Column #" + c.out
+					s := names.m_column_n_index (c.out)
 				end
 				create sm.make_with_text (s)
 				Result.extend (sm)
 
-				create mci.make_with_text ("Auto resize")
+				create mci.make_with_text (names.m_auto_resize)
 				if column_has_auto_resizing (c) then
 					mci.enable_select
 				end
 				mci.select_actions.extend (agent set_auto_resizing_column (c, not column_has_auto_resizing (c)))
 				sm.extend (mci)
 
-				create mci.make_with_text ("Displayed")
+				create mci.make_with_text (names.m_displayed)
 				if col.is_displayed then
 					mci.enable_select
 					mci.select_actions.extend (agent col.hide)

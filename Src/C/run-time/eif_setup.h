@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description: "Setup macros for Eiffel run-time when C is used to startup an Eiffel system." 
 	date:		"$Date$"
 	revision:	"$Revision$"

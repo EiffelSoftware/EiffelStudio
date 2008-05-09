@@ -257,7 +257,7 @@ feature -- Processes
 			"[
 				return (EIF_INTEGER) MsgWaitForMultipleObjects(
 					(DWORD) $n,
-					(const HANDLE *) $phandles,
+					(LPHANDLE) $phandles,
 					(BOOL) $waitall,
 					(DWORD) $ms,
 					(DWORD) $mask);

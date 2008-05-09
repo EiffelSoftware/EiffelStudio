@@ -182,7 +182,7 @@ feature {NONE} -- Clean up
 
 				button_actions.wipe_out
 
-				if internal_dialog /= Void then
+				if internal_dialog /= Void and then not internal_dialog.is_destroyed then
 					internal_dialog.hide
 					internal_dialog.destroy
 				end

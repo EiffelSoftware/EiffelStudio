@@ -81,24 +81,26 @@ feature {NONE} -- Clean up
 			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			l_service: EVENT_LIST_S
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
+			if is_initialized then
+				if event_list.is_service_available then
+					l_service := event_list.service
 
-				l_agent := agent on_event_added
-				if l_service.item_added_event.is_subscribed (l_agent) then
-					l_service.item_added_event.unsubscribe (l_agent)
-				end
-				l_agent := agent on_event_removed
-				if l_service.item_removed_event.is_subscribed (l_agent) then
-					l_service.item_removed_event.unsubscribe (l_agent)
-				end
-				l_agent := agent on_event_changed
-				if l_service.item_changed_event.is_subscribed (l_agent) then
-					l_service.item_changed_event.unsubscribe (l_agent)
+					l_agent := agent on_event_added
+					if l_service.item_added_event.is_subscribed (l_agent) then
+						l_service.item_added_event.unsubscribe (l_agent)
+					end
+					l_agent := agent on_event_removed
+					if l_service.item_removed_event.is_subscribed (l_agent) then
+						l_service.item_removed_event.unsubscribe (l_agent)
+					end
+					l_agent := agent on_event_changed
+					if l_service.item_changed_event.is_subscribed (l_agent) then
+						l_service.item_changed_event.unsubscribe (l_agent)
+					end
 				end
 			end
-			internal_grid_wrapper := Void
 
+			internal_grid_wrapper := Void
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 		ensure then
 			internal_grid_wrapper_deatched: internal_grid_wrapper = Void

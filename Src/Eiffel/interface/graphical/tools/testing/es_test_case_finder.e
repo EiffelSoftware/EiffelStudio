@@ -35,7 +35,7 @@ feature -- Command
 		do
 			if agent_cell.item /= Void then
 				create l_shared
-				l_shared.system.rebuild_configuration_actions.extend (agent_cell.item)
+				l_shared.system.rebuild_configuration_actions.prune_all  (agent_cell.item)
 				agent_cell.replace (Void)
 			end
 		ensure
@@ -158,33 +158,44 @@ feature {NONE} -- Implementation
 	is_class_with_indexing (a_class: !CLASS_I; a_indexing_to_test: !STRING): BOOLEAN is
 			-- If `a_class''s class indexing have the key `a_indexing_to_test' ?
 		local
-			l_modifier: ES_CLASS_TEXT_AST_MODIFIER
-			l_indexing: INDEXING_CLAUSE_AS
-			l_class_as: CLASS_AS
 			l_tag: ID_AS
+			l_parser: EIFFEL_PARSER
+			l_testing_factory: ES_AST_TESTING_FACTORY
+			l_file: KL_BINARY_INPUT_FILE
+			l_class_c: CLASS_C
+			l_top_indexes: INDEXING_CLAUSE_AS
+			l_index_item: INDEX_AS
+			l_name: STRING
 		do
-			create l_modifier.make (a_class)
-			l_modifier.prepare
-			if l_modifier.is_ast_available then
-				l_class_as := l_modifier.ast
+			l_class_c := a_class.compiled_class
+			if l_class_c /= Void and then l_class_c.has_ast then
+				l_top_indexes := l_class_c.ast.top_indexes
+			else
+				-- If class not compiled, we parse it
+				create l_testing_factory
+				create l_parser.make_with_factory (l_testing_factory)
+				create l_file.make (a_class.file_name)
+				l_file.open_read
+				l_parser.parse (l_file)
+				l_top_indexes := l_testing_factory.top_indexing
+				l_file.close
 			end
 
-			if l_class_as /= Void then
-			l_indexing := l_class_as.top_indexes
-				if l_indexing /= Void then
-					from
-						l_indexing.start
-					until
-						l_indexing.after or Result
-					loop
-						l_tag := l_indexing.item.tag
-						if l_tag /= Void then
-							if {lt_name: STRING} l_tag.name then
-								Result := lt_name.is_equal (a_indexing_to_test)
-							end
+			if l_top_indexes /= Void then
+				from
+					l_top_indexes.start
+				until
+					l_top_indexes.after or Result
+				loop
+					l_index_item := l_top_indexes.item
+					if l_index_item /= Void then
+						l_tag:= l_index_item.tag
+						l_name := l_tag.name
+						if l_name /= Void then
+							Result := l_name.is_equal (a_indexing_to_test)
 						end
-						l_indexing.forth
 					end
+					l_top_indexes.forth
 				end
 			end
 		end

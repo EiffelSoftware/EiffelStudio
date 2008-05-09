@@ -6,6 +6,11 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.3416 non-RTEA:
+174.93u 13.01s 3:51.08 81.3% (non-multithreaded, exe size: 14633544)
+222.86u 13.55s 4:29.32 87.7% (multithreaded without __thread TLS qualifier, exe size: 15593040)
+194.66u 13.46s 3:57.77 87.5% (multithreaded with __thread TLS qualifier, exe size: 15421648)
+
 6.2.7.3140 non-RTEA with updated generation for polymorphic wrapper:
 177.46u 13.21s 3:49.06 83.2%
 177.21u 13.16s 3:43.44 85.1%

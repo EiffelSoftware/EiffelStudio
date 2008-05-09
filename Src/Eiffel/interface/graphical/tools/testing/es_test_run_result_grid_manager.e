@@ -316,17 +316,19 @@ feature {NONE} -- Implementation commands
 			l_row_height: INTEGER
 		do
 			if a_parent_row.subrow_count = 0 then -- We only add subrows one time
-				l_lines := lines_of (a_item.orignal_eweasel_ouput)
-				l_sub_row := grid.extended_new_subrow (a_parent_row)
-				create l_item.make_with_text (a_item.orignal_eweasel_ouput)
-				l_sub_row.set_item (1, l_item)
-				l_row_height := {ES_UI_CONSTANTS}.grid_row_height
-				if l_lines /= Void then
-					l_sub_row.set_height (l_row_height * l_lines.count)
-				end
+				if a_item.orignal_eweasel_ouput /= Void then
+					l_lines := lines_of (a_item.orignal_eweasel_ouput)
+					l_sub_row := grid.extended_new_subrow (a_parent_row)
+					create l_item.make_with_text (a_item.orignal_eweasel_ouput)
+					l_sub_row.set_item (1, l_item)
+					l_row_height := {ES_UI_CONSTANTS}.grid_row_height
+					if l_lines /= Void then
+						l_sub_row.set_height (l_row_height * l_lines.count)
+					end
 
-				if unit_test_manager.see_testing_failure_trace_command.is_selected then
-					a_parent_row.expand
+					if unit_test_manager.see_testing_failure_trace_command.is_selected then
+						a_parent_row.expand
+					end
 				end
 			end
 		end

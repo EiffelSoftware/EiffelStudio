@@ -105,23 +105,25 @@ feature {NONE} -- Redefine
 		do
 			create l_factory
 			-- If testing tool initialized, we select that row related with `a_row'
-			l_testing_tool := l_factory.manager.testing_tool
-			if l_testing_tool /= Void then
-				if {l_event_list: EVENT_LIST_ITEM} a_row.data then
-					if {l_test_run_result: ES_EWEASEL_TEST_RESULT_ITEM} l_event_list.data then
-						if l_test_run_result.root_class_name /= Void then
-							create l_util
-							if {lt_class_name: STRING} l_test_run_result.root_class_name.as_string_8 then
-								l_conf_class := l_util.conf_class_of (lt_class_name)
-								if {lt_conf_class: CONF_CLASS} l_conf_class then
-									l_row := l_testing_tool.test_case_grid_manager.test_case_row_related_with (lt_conf_class)
-									if l_row /= Void then
-										l_testing_tool.content.set_focus
-										l_testing_tool.test_case_grid_manager.unselect_all_rows
-										l_row.enable_select
-										-- Start test for that row
-										if l_factory.manager.start_test_run_command.executable then
-											l_factory.manager.start_test_run_command.execute
+			if not l_factory.manager.is_eweasel_running then
+				l_testing_tool := l_factory.manager.testing_tool
+				if l_testing_tool /= Void then
+					if {l_event_list: EVENT_LIST_ITEM} a_row.data then
+						if {l_test_run_result: ES_EWEASEL_TEST_RESULT_ITEM} l_event_list.data then
+							if l_test_run_result.root_class_name /= Void then
+								create l_util
+								if {lt_class_name: STRING} l_test_run_result.root_class_name.as_string_8 then
+									l_conf_class := l_util.conf_class_of (lt_class_name)
+									if {lt_conf_class: CONF_CLASS} l_conf_class then
+										l_row := l_testing_tool.test_case_grid_manager.test_case_row_related_with (lt_conf_class)
+										if l_row /= Void then
+											l_testing_tool.content.set_focus
+											l_testing_tool.test_case_grid_manager.unselect_all_rows
+											l_row.enable_select
+											-- Start test for that row
+											if l_factory.manager.start_test_run_command.executable then
+												l_factory.manager.start_test_run_command.execute
+											end
 										end
 									end
 								end

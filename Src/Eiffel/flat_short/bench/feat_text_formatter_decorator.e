@@ -64,7 +64,9 @@ feature -- Execution
 					System.set_current_class (current_class);
 					Inst_context.set_group (current_class.group);
 					begin;
-					written_in_class := target_feat.written_class;
+				
+						-- We use access_class as the written class so that replicated features are retrieved correctly		
+					written_in_class := target_feat.access_class;
 					if written_in_class /= current_class then
 							-- Retrieve source feature.
 						source_feat := a_target_feat.written_feature.associated_feature_i

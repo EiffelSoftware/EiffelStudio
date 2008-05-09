@@ -26,7 +26,7 @@ URL: $url
 Vendor: $ise_name
 Packager: $ise_name
 BuildRoot: $RPM_DIR/eiffelstudio
-Requires: gcc, gtk2-devel, libXtst-devel
+Requires: gcc, gtk2-devel, /usr/lib/libXtst.so
 %description
 !GROK!THIS!
 
@@ -38,9 +38,23 @@ $spitshell >> $RPM_DIR/eiffelstudio.spec <<!GROK!THIS!
 /
 
 %post
-`sh $PACKAGING_DIR/postinstall.sh`
+set -e
+
+export ISE_EIFFEL=""
+export ISE_PLATFOR=""
+
+if [ "x\$DISPLAY" = "x" ]; then
+	echo Please run make_install in /usr/share/$PRODUCT to make precompiles
+else
+	WIZARD=/usr/lib/eiffelstudio-6.2/studio/wizards/others/precompile
+        \$WIZARD/spec/unix/wizard \$WIZARD
+fi
 
 %preun
-`sh $PACKAGING_DIR/preremove.sh`
+set -e
+
+echo Removing precompiles
+rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs
+
 !GROK!THIS!
 

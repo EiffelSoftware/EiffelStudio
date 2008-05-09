@@ -60,9 +60,11 @@ cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
 # Copy library
 cp -r $ISE_EIFFEL/library $LIB_DIR
 
-# Copy precompile without EIFGENs
+# Copy precompile without EIFGENs and remove WEL files
 mkdir -p $LIB_DIR/precomp/spec/$UNIX_PLATFORM
 cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/* $LIB_DIR/precomp/spec/$UNIX_PLATFORM/
+rm -f $LIB_DIR/precomp/spec/$UNIX_PLATFORM/wel*
+
 
 # Copy documentation
 cp $ISE_EIFFEL/VERSION $DOC_DIR

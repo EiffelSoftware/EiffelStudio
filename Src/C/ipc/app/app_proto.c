@@ -58,7 +58,7 @@
 #include "eif_eiffel.h"
 #include "rt_interp.h"
 #include "eif_memory.h"
-#include "x2c.h"	/* For macro LNGPAD */
+#include "eif_size.h"	/* For macro LNGPAD */
 #include "app_proto.h"
 #include "rt_assert.h"
 #include "rt_macros.h"

@@ -63,7 +63,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include "rt_threads.h"
 #include "rt_struct.h"
 #include "rt_gen_types.h"
-#include "x2c.h"
+#include "eif_size.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>

@@ -42,7 +42,7 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "eif_equal.h"			/* For Eiffel boolean */
 #include "rt_struct.h"			/* For skeleton structure */
 #include "rt_traverse.h"		/* For traversing objects */
-#include "x2c.h"			/* For macro LNGPAD */
+#include "eif_size.h"			/* For macro LNGPAD */
 #include "rt_tools.h"			/* For `nprime' */
 #include "rt_search.h"
 #include "eif_plug.h"			/* for econfg */

@@ -61,7 +61,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_globals.h"
 #include "rt_struct.h"
 #include "rt_compress.h"
-#include "x2c.h"	/* For macro LNGPAD */
+#include "eif_size.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For read () */
 #endif

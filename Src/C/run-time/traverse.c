@@ -59,7 +59,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_gen_conf.h"
 #include "rt_struct.h"
 #include "rt_interp.h"
-#include "x2c.h"		/* For LNGPAD macros... */
+#include "eif_size.h"		/* For LNGPAD macros... */
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
 

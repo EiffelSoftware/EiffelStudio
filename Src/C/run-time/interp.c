@@ -59,7 +59,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_main.h"
 #include "rt_gen_conf.h"
 #include "rt_gen_types.h"
-#include "x2c.h"		/* For LNGPAD */
+#include "eif_size.h"		/* For LNGPAD */
 #include "eif_misc.h"
 #include "rt_assert.h"
 #include "rt_wbench.h"

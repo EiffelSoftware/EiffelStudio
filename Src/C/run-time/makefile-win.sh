@@ -312,10 +312,14 @@ $(OUTDIR)finalized.dll : $(OBJECTS)
 	cd ..$(DIR)run-time
 
 
-all:: x2c.exe
+all:: x2c.exe runtime_validation.exe
 
 x2c.exe: x2c.c eif_size.h
 	$(CC) $ccflags $optimize -I./include -I. -I$(TOP) $(OUTPUT_EXE_CMD)$@ x2c.c
+
+runtime_validation.exe: runtime_validation.c
+	$(CC) $ccflags $optimize -I./include -I. -I$(TOP) $(OUTPUT_EXE_CMD)$@ runtime_validation.c
+
 
 $all_dependency
 

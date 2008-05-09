@@ -65,8 +65,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) \$(MT_EOBJ) x2c.o
-SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) \$(MT_EOBJ) x2c.o runtime_validation.o
+SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -1005,6 +1005,17 @@ x2c: x2c.o
 	if test -f $@$(_EXE); then \
 	$(MV) $@$(_EXE) $@~$(_EXE); fi
 	$(CC) -o $@ x2c.o $(JLKFLAGS) $(LIBS)
+
+all:: runtime_validation
+
+local_realclean::
+	$(RM) runtime_validation
+
+runtime_validation: runtime_validation.o
+	$(RM) $@
+	if test -f $@$(_EXE); then \
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(CC) -o $@ runtime_validation.o $(JLKFLAGS) $(LIBS)
 
 all:: eif_config.h eif_portable.h eif_confmagic.h
 

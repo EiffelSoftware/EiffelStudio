@@ -4209,13 +4209,13 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	static_fixed_x_offset: INTEGER
 			-- Default X offset of viewport contained within static fixed.
 		do
-			Result := 16000
+			Result := 15000
 		end
 
 	static_fixed_y_offset: INTEGER
 			-- Default Y offset of viewport container within static fixed.
 		do
-			Result := 16000
+			Result := 15000
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
@@ -4621,7 +4621,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 
-	buffered_drawable_size: INTEGER is 32000
+	buffered_drawable_size: INTEGER is 30000
 		-- Default size of `drawable' used for scrolling purposes.
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
@@ -4646,7 +4646,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			if l_widget.parent = Void then
 				static_fixed.extend (l_widget)
 			end
-			static_fixed.set_item_position (l_widget, 16000 + a_column.locked_column.offset, 16000)
+			static_fixed.set_item_position (l_widget, 15000 + a_column.locked_column.offset, 15000)
 			static_fixed.set_item_size (l_widget, a_column.width, viewport.height)
 			a_column.locked_column.internal_set_virtual_y_position (virtual_y_position)
 		end
@@ -4662,7 +4662,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			if l_widget.parent = Void then
 				static_fixed.extend (l_widget)
 			end
-			static_fixed.set_item_position (l_widget, 16000, 16000 + a_row.locked_row.offset)
+			static_fixed.set_item_position (l_widget, 15000, 15000 + a_row.locked_row.offset)
 			static_fixed.set_item_size (l_widget, viewport.width, a_row.height)
 			a_row.locked_row.internal_set_virtual_x_position (virtual_x_position)
 		end
@@ -5846,7 +5846,7 @@ feature {NONE} -- Implementation
 			counts_equal: rows.count = internal_row_data.count
 		end
 
-	maximum_header_width: INTEGER is 32000
+	maximum_header_width: INTEGER is 30000
 		-- Maximium width of `header'.
 
 	default_scroll_bar_leap: INTEGER is 1

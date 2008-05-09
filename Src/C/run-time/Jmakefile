@@ -186,6 +186,7 @@ CustomSharedLibraryTarget(finalized,$(LOBJ))
 CustomSharedLibraryTarget(wkbench,$(WOBJ))
 
 SimpleProgramTarget(x2c)
+SimpleProgramTarget(runtime_validation)
 
 AllTarget(eif_config.h eif_portable.h eif_confmagic.h)
 

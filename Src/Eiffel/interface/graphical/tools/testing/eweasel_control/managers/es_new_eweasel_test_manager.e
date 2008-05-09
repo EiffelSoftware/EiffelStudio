@@ -275,8 +275,7 @@ feature {NONE} -- Implementation
 		do
 			if is_to_implemented_used then
 				create l_inherit_string.make_empty
-				l_inherit_string.append ("%N%Ninherit")
-				l_inherit_string.append ("%N%TREFACTORING_HELPER")
+				l_inherit_string.append ("%N%N%TREFACTORING_HELPER")
 				a_file_content.replace_substring_all (inherit_class_template_string, l_inherit_string)
 			else
 				a_file_content.replace_substring_all (inherit_class_template_string, "")

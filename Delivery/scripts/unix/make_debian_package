@@ -44,10 +44,9 @@ cp $PACKAGING_DIR/logo.png $DEBIAN_DIR/$PRODUCT/usr/share/icons/eiffelstudio.png
 sh $DEBIAN_DIR/control.sh
 sh $DEBIAN_DIR/changelog.sh
 cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
-echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst
-echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.prerm
-sh $PACKAGING_DIR/postinstall.sh >> $DEBIAN_DIR/$PRODUCT.postinst
-sh $PACKAGING_DIR/preremove.sh >> $DEBIAN_DIR/$PRODUCT.prerm
+sh $DEBIAN_DIR/postinst.sh
+sh $DEBIAN_DIR/prerm.sh
+
 
 cd $DEBIAN_DIR
 
@@ -76,7 +75,7 @@ echo Finished building package $PRODUCT
 # Clean up all build files
 cd ../
 rm -r $DEBIAN_DIR/$PRODUCT
-dh_clean
+debuild clean
 rm $DEBIAN_DIR/$PRODUCT.postinst
 rm $DEBIAN_DIR/$PRODUCT.prerm
 rm $DEBIAN_DIR/copyright

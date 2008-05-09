@@ -28,6 +28,16 @@ export PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
 export PACKAGING_DIR=`pwd`/packaging
 export RPM_DIR=$PACKAGING_DIR/rpm
 DOCS_DIR=/usr/share/doc/$PRODUCT/docs
+KEY=A03DDC5C
+RPM_CMD="rpmbuild -bb"
+
+
+# Check if GPG $KEY is available for signing
+if which gpg > /dev/null; then
+	if gpg --list-secret-keys | grep $KEY > /dev/null; then
+		RPM_CMD="echo \"\" | setsid $RPM_CMD --sign --define '_gpg_name $KEY'"
+	fi
+fi
 
 
 # Create unix layout in RPM BUILD directory
@@ -49,22 +59,22 @@ cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
 # If we have a $DOCS_DIR move it to a seperate
 # directory and build noarch doc package
 if test -d $RPM_DIR/eiffelstudio$DOCS_DIR; then
-    sh $RPM_DIR/eiffelstudio-doc.spec.sh
-    mkdir -p $RPM_DIR/eiffelstudio-doc$DOCS_DIR
-    mv $RPM_DIR/eiffelstudio$DOCS_DIR/* $RPM_DIR/eiffelstudio-doc$DOCS_DIR
-    rm -r $RPM_DIR/eiffelstudio$DOCS_DIR
-    rpmbuild -bb $RPM_DIR/eiffelstudio-doc.spec
+	sh $RPM_DIR/eiffelstudio-doc.spec.sh
+	mkdir -p $RPM_DIR/eiffelstudio-doc$DOCS_DIR
+	mv $RPM_DIR/eiffelstudio$DOCS_DIR/* $RPM_DIR/eiffelstudio-doc$DOCS_DIR
+	rm -r $RPM_DIR/eiffelstudio$DOCS_DIR
+	$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec
 
-    # Clean up documentation specific build files
-    rm $RPM_DIR/eiffelstudio-doc.spec
-    rm -r $RPM_DIR/eiffelstudio-doc
+	# Clean up documentation specific build files
+	rm $RPM_DIR/eiffelstudio-doc.spec
+	rm -r $RPM_DIR/eiffelstudio-doc
 else
     echo "No $RPM_DIR/eiffelstudio$DOCS_DIR, $PRODUCT-doc package will not be created"
 fi
 
 
 # Build main package
-rpmbuild -bb $RPM_DIR/eiffelstudio.spec
+eval "$RPM_CMD $RPM_DIR/eiffelstudio.spec"
 
 
 # Move all generated .rpm files to current directory

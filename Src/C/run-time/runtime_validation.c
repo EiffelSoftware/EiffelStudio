@@ -60,12 +60,19 @@ struct align_test {
 	EIF_REAL_64 d;
 };
 
+struct align_test2 {
+	EIF_CHARACTER a;
+	EIF_REAL_32 r;
+};
+
 void print_info() {
 	struct align_test t;
+	struct align_test2 t2;
 
 	printf ("Size of overhead %d\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
-	printf ("Computed alignment %d\n", (char *) &t.d - (char *) &t);
+	printf ("Computed alignment EIF_REAL_64 %d\n", (char *) &t.d - (char *) &t);
+	printf ("Computed alignment EIF_REAL_32 %d\n", (char *) &t2.r - (char *) &t2);
 }
 
 int main(int argc, char **argv)

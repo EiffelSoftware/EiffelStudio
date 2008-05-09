@@ -3,6 +3,11 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
+6.2.7.3416 RTEA:
+604.58u 37.49s 20:54.51 51.1% (with ecb, no thread, no RTEA)
+851.81u 41.11s 27:14.25 54.6% (multithreaded with __thread TLS, exe size: 50136232)
+1026.33u 40.35s 29:38.85 59.9% (multithreaded without __thread TLS, exe size: )
+
 6.2.7.2874 RTEA with new EiffelBase rewrite for void safety:
 933.49u 39.44s 26:06.14 62.1%
 931.07u 36.52s 28:39.01 56.2%

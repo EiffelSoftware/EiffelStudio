@@ -77,12 +77,20 @@ feature {NONE} -- Wizard UI Implementation
 			l_cluster_name_and_path: TUPLE [a_cluster_id: STRING_8; a_cluster_sub_path: STRING_8]
 			l_cluster_id: STRING
 			l_cluster_path: STRING
+			l_cluster_id_solution: EB_SHARED_ID_SOLUTION
+			l_conf_group: CONF_GROUP
 		do
 			l_cluster_name_and_path ?= ui_builder.cluster_name_entry.data
 			if l_cluster_name_and_path /= Void then
 				l_cluster_id := l_cluster_name_and_path.a_cluster_id
 				l_cluster_path := l_cluster_name_and_path.a_cluster_sub_path
-				wizard_information.set_cluster_id_and_path (l_cluster_id, l_cluster_path)
+				create l_cluster_id_solution
+				l_conf_group := l_cluster_id_solution.group_of_id (l_cluster_id)
+				if l_conf_group /= Void and then not l_conf_group.is_readonly then
+					wizard_information.set_cluster_id_and_path (l_cluster_id, l_cluster_path)
+				else
+					wizard_information.set_cluster_id_and_path ("", "")
+				end
 			end
 			update_next_button_state
 		end

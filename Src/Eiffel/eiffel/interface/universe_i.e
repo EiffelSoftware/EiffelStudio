@@ -639,18 +639,23 @@ feature {NONE} -- Implementation
 				a_result.extend (l_found_item)
 			end
 
-			from
-				l_groups := a_group_to_search.accessible_groups
-				l_groups.start
-			until
-				l_groups.after
-			loop
-				if not group_visited.has (l_groups.item_for_iteration) then
-					group_of_name_recursive_imp (a_group_name, l_groups.item_for_iteration, a_result)
-				end
+			-- We have to check if {CONF_GROUP}.`classes_set'
+			-- For dotnet `a_group_to_search', {CONF_GROUP}.`classes_set' will be false even in classic projects
+			if a_group_to_search.classes_set then
+				from
+					l_groups := a_group_to_search.accessible_groups
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					if not group_visited.has (l_groups.item_for_iteration) then
+						group_of_name_recursive_imp (a_group_name, l_groups.item_for_iteration, a_result)
+					end
 
-				l_groups.forth
+					l_groups.forth
+				end
 			end
+
 		end
 
 	group_visited: ARRAYED_LIST [CONF_GROUP]

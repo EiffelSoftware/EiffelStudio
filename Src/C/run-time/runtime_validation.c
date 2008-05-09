@@ -75,6 +75,31 @@ void print_info() {
 	printf ("Computed alignment EIF_REAL_32 %d\n", (char *) &t2.r - (char *) &t2);
 }
 
+int randomizer (int i) {
+	return i % 100;
+}
+
+void double_alignment_speed_test () {
+	double *pd = (double *) malloc (sizeof(double) * 10005);
+	double d;
+	int i, j;
+
+/* Comment out the line below to test if a double incorrectly aligned causes
+ * either a segfault or a slow down in performance. */
+/*	pd = (double *) ((char *)pd + 4); */
+	for (j = 1; j < 100000; j++) {
+		for (i = 0; i < 10000; i++) {
+			d = pd [i];
+			pd [i] = d + randomizer (i);
+		}
+	}
+
+	for (i = 0; i < 1000; i++) {
+		printf ("%g\n", pd [i]);
+	}
+}
+
+
 int main(int argc, char **argv)
 {
 	print_info();

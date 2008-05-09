@@ -38,7 +38,12 @@
 doc:<file name="runtime_validation.c" version="$Id$" summary="Convert .x file into compilable .c files">
 */
 
+#define EIF_ASSERTIONS
+
 #include "eif_eiffel.h"
+#include "rt_malloc.h"
+#include "rt_assert.h"
+#include "x2c.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,12 +56,15 @@ void rv_failure (char *a_msg) {
 }
 
 struct align_test {
-	char a;
-	double d;
+	EIF_CHARACTER a;
+	EIF_REAL_64 d;
 };
 
 void print_info() {
 	struct align_test t;
+	size_t n = OVERHEAD + sizeof(EIF_REAL_64);
+	size_t mod;
+
 
 	printf ("Size of overhead %d\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
@@ -65,9 +73,26 @@ void print_info() {
 
 int main(int argc, char **argv)
 {
+	size_t offset;
+
 	print_info();
-	if ((OVERHEAD % MEM_ALIGNBYTES) != 0) {
-		rv_failure("Wrong alignment");
-	}
+
+	CHECK ("TAG: Proper header alignment", (OVERHEAD % MEM_ALIGNBYTES) == 0);
+	offset = R64OFF(0,0,0,0,0,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(1,0,0,0,0,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,1,0,0,0,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,0,1,0,0,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,0,0,1,0,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,0,0,0,1,0,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,0,0,0,0,1,0);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
+	offset = R64OFF(0,0,0,0,0,0,1);
+	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((offset % MEM_ALIGNBYTES) == 0));
 }
 

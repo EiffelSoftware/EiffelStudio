@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -123,19 +128,21 @@ feature -- Command
 		local
 			l_error: ES_ERROR_PROMPT
 		do
-			if catalog_manager.update_catalog_file (a_failed_first) then
-				result_analyzer.reset
-				result_analyzer.start_buffer_string_moving
-				process.launch
+			if check_precompile then
+				if catalog_manager.update_catalog_file (a_failed_first) then
+					result_analyzer.reset
+					result_analyzer.start_buffer_string_moving
+					process.launch
 
-				check not_void: testing_tool /= Void end
+					check not_void: testing_tool /= Void end
 
-				if not process.launched then
-					create l_error.make_standard (testing_tool.interface_names.l_eweasel_executable_not_found (environment_manager.eweasel_command))
-					l_error.show_on_active_window
-				else
-					display_testing_result_tool
-					testing_tool.content.set_focus
+					if not process.launched then
+						create l_error.make_standard (testing_tool.interface_names.l_eweasel_executable_not_found (environment_manager.eweasel_command))
+						l_error.show_on_active_window
+					else
+						display_testing_result_tool
+						testing_tool.content.set_focus
+					end
 				end
 			end
 		end
@@ -407,6 +414,78 @@ feature {NONE} -- Implementation
 		ensure
 			created: testing_result_tool /= Void
 		end
+		
+	check_precompile: BOOLEAN is
+			-- Check if base and base-mt precompile library correct
+			-- If we don't check it, testing tool will hang
+		local
+			l_retry: BOOLEAN
+			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
+			l_event_list_item: EVENT_LIST_TESTING_RESULT_ITEM
+			l_result: ES_EWEASEL_TEST_RESULT_ITEM
+			l_contexts: ES_TESTING_EVENT_LIST_CONTEXTS
+
+			l_exception_manager: ISE_EXCEPTION_MANAGER
+		do
+			if not l_retry then
+				check_precompile_correct ("base")
+				check_precompile_correct ("base-mt")
+				Result := True
+			else
+				-- precompile library not compatible, we report it to testing result panel
+				display_testing_result_tool
+				create l_consumer
+				if l_consumer.is_service_available then
+					create l_exception_manager
+
+					create l_result
+					if is_missing_error then
+						l_result.set_title (l_exception_manager.last_exception.message)
+					else
+						-- We want to give end user more useful meaning error, not just `Compiler Error'
+						l_result.set_title ("Precompile library version incompatible")
+					end
+
+					l_result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.error)
+					create l_event_list_item.make ({ENVIRONMENT_CATEGORIES}.testing, 0, l_result)
+
+					create l_contexts
+					l_consumer.service.put_event_item (l_contexts.execution_manager, l_event_list_item)
+				end
+			end
+		rescue
+			l_retry := True
+			retry
+		end
+
+	check_precompile_correct (a_library_target_name: STRING) is
+			-- Check if precompile library correct
+			-- If error, exception will be raised
+		require
+			not_void: a_library_target_name /= Void and then not a_library_target_name.is_empty
+		local
+			l_remote_project_dir: REMOTE_PROJECT_DIRECTORY
+			l_project_dir: PROJECT_DIRECTORY
+			l_exception: DEVELOPER_EXCEPTION
+			l_project_file: PROJECT_EIFFEL_FILE
+		do
+			is_missing_error := False
+			create l_project_dir.make (eiffel_layout.precomp_platform_path (False), a_library_target_name)
+			create l_remote_project_dir.make (l_project_dir)
+			l_remote_project_dir.check_version_number (1)
+			l_project_file := l_remote_project_dir.precomp_eif_file
+
+			if not l_project_file.exists or else l_project_file.has_error then
+				-- Precompile library missing
+				is_missing_error := True
+				create l_exception
+				l_exception.set_message ("Precompile library " + a_library_target_name + " missing")
+				l_exception.raise
+			end
+		end
+
+	is_missing_error: BOOLEAN
+			-- If precompile library missing error?
 
 feature {NONE} -- Porcess event handler
 

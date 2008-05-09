@@ -17,6 +17,6 @@ copy_raw p1.e $CLUSTER p1.e
 copy_raw p2.e $CLUSTER p2.e
 
 compile_melted
-compile_result validity_error P1 NOTDEFINEDERROR
+compile_result syntax_error P1 19 
 
 test_end

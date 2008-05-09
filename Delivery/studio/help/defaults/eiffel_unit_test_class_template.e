@@ -6,7 +6,10 @@ indexing
 	date: "$DATE"
 
 class
-	$CLASS_NAME$INHERIT_CLASS
+	$CLASS_NAME
+
+inherit
+	TEST_CASE$INHERIT_CLASS
 		
 create
 	make

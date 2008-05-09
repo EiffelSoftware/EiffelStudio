@@ -92,24 +92,11 @@ feature {NONE} -- Initialization
 			create l_factory
 			if l_shared.eiffel_project.manager.is_project_loaded then
 				test_case_grid_manager.restore_test_case_from_session
-				add_testing_hook
 				l_factory.manager.new_manual_test_command.enable_sensitive
 			else
 				l_shared.eiffel_project.manager.load_agents.extend (agent test_case_grid_manager.restore_test_case_from_session)
-				l_shared.eiffel_project.manager.load_agents.extend (agent add_testing_hook)
 				l_shared.eiffel_project.manager.load_agents.extend (agent ((l_factory.manager).new_manual_test_command).enable_sensitive)
 			end
-		end
-
-	add_testing_hook is
-			-- Add hook to system configuration rebuild action
-		local
-			l_finder: ES_TEST_CASE_FINDER
-		do
-			-- FIXIT: Maybe we need a additional plug-able tools builder, such as EB_DEVELOPMENT_WINDOW_PLUGIN_BUILDER ?
-			-- 		To build the tools we maybe disabled in the future?
-			create l_finder
-			l_finder.add_hook
 		end
 
 	init_event_list_service is
@@ -350,6 +337,7 @@ feature {NONE} -- Factory
 
 			Result.force_last (unit_test_manager.show_failed_tests_only_command.new_sd_toolbar_item (False))
 			Result.force_last (unit_test_manager.update_last_changed_time_command.new_sd_toolbar_item (False))
+			Result.force_last (unit_test_manager.find_test_case_command.new_sd_toolbar_item (False))
 
 			create l_separator.make
 			Result.force_last (l_separator)

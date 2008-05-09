@@ -281,6 +281,12 @@ feature -- UI commands
 			create Result.make (Current)
 		end
 
+	find_test_case_command: !ES_FIND_TEST_CASE_COMMAND is
+			-- Find test case command
+		once
+			create Result.make (Current)
+		end
+
 	all_test_run_results_command: !ES_ALL_TEST_RUN_RESULTS_COMMAND is
 			-- All test run results command
 		once
@@ -414,7 +420,7 @@ feature {NONE} -- Implementation
 		ensure
 			created: testing_result_tool /= Void
 		end
-		
+
 	check_precompile: BOOLEAN is
 			-- Check if base and base-mt precompile library correct
 			-- If we don't check it, testing tool will hang

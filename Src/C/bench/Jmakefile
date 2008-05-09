@@ -5,13 +5,13 @@
 #include "../U/runtime.H"
 
 ;# Files used to build the daemon
-LSRC = byte.c date.c offset.c minilzo.c
+LSRC = byte.c date.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 ;# Derived object file names
 FOBJ = \
 |expand f!$(LSRC) $(PSTORE)!
-    !f:\.c=.o \
+	!f:\.c=.o \
 -expand \\
 
 MT_FOBJ = \
@@ -24,10 +24,10 @@ MT_FOBJ = \
  */
 WOBJ = \
 |expand f!$(LSRC)!
-       !f:\.c=.o \
+	!f:\.c=.o \
 -expand
 |expand f!$(PSTORE)!
-        w!f:\.c=.o \
+	w!f:\.c=.o \
 -expand \\
 
 MT_WOBJ = \

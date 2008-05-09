@@ -35,41 +35,68 @@ feature -- Status
 
 	is_profile_configured: BOOLEAN
 			-- Is `is_profile' configured?
+		do
+			Result := option_flags & is_profile_configured_flag /= 0
+		end
 
 	is_trace_configured: BOOLEAN
 			-- Is `is_trace' configured?
+		do
+			Result := option_flags & is_trace_configured_flag /= 0
+		end
 
 	is_optimize_configured: BOOLEAN
 			-- Is `is_optimize' configured?
+		do
+			Result := option_flags & is_optimize_configured_flag /= 0
+		end
 
 	is_debug_configured: BOOLEAN
 			-- Is `is_debug' configured?
+		do
+			Result := option_flags & is_debug_configured_flag /= 0
+		end
 
 	is_warning_configured: BOOLEAN
 			-- Is `is_warning' configured?
+		do
+			Result := option_flags & is_warning_configured_flag /= 0
+		end
 
 	is_msil_application_optimize_configured: BOOLEAN
 			-- Is `is_msil_application_optimize' configured?
+		do
+			Result := option_flags & is_msil_application_optimize_configured_flag /= 0
+		end
 
 	is_full_class_checking_configured: BOOLEAN
-			-- Is `is_full_class_checking' configued?
+			-- Is `is_full_class_checking' configured?
+		do
+			Result := option_flags & is_full_class_checking_configured_flag /= 0
+		end
 
 	is_cat_call_detection_configured: BOOLEAN
 			-- Is `is_cat_call_detection' configured?
+		do
+			Result := option_flags & is_cat_call_detection_configured_flag /= 0
+		end
 
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
+		do
+			Result := option_flags & is_attached_by_default_configured_flag /= 0
+		end
 
 	is_void_safe_configured: BOOLEAN
 			-- Is `is_void_safe' configured?
+		do
+			Result := option_flags & is_void_safe_configured_flag /= 0
+		end
 
 	is_empty: BOOLEAN is
-			-- Is `Current' empty? No settings are set?
+			-- Is `Current' empty? ie: no settings are set.
 		do
-			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
-				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
-				is_cat_call_detection_configured or is_attached_by_default_configured or is_void_safe_configured or
-				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void)
+			Result := option_flags = 0 and then assertions = Void and then local_namespace = Void and then debugs = Void
 		end
 
 feature -- Status update
@@ -77,71 +104,61 @@ feature -- Status update
 	unset_profile is
 			-- Unset profile.
 		do
-			is_profile_configured := False
-			is_profile := False
+			option_flags := option_flags & ((is_profile_configured_flag | is_profile_flag).bit_not)
 		end
 
 	unset_trace is
 			-- Unset trace.
 		do
-			is_trace_configured := False
-			is_trace := False
+			option_flags := option_flags & ((is_trace_configured_flag | is_trace_flag).bit_not)
 		end
 
 	unset_optimize is
 			-- Unset optimize.
 		do
-			is_optimize_configured := False
-			is_optimize := False
+			option_flags := option_flags & ((is_optimize_configured_flag | is_optimize_flag).bit_not)
 		end
 
 	unset_debug is
 			-- Unset debug.
 		do
-			is_debug_configured := False
-			is_debug := False
+			option_flags := option_flags & ((is_debug_configured_flag | is_debug_flag).bit_not)
 		end
 
 	unset_warning is
 			-- Unset warning.
 		do
-			is_warning_configured := False
-			is_warning := False
+			option_flags := option_flags & ((is_warning_configured_flag | is_warning_flag).bit_not)
 		end
 
 	unset_msil_application_optimize is
 			-- Unset .NET application optimizations
 		do
-			is_msil_application_optimize_configured := False
-			is_msil_application_optimize := False
+			option_flags := option_flags & ((is_msil_application_optimize_configured_flag | is_msil_application_optimize_flag).bit_not)
 		end
 
 	unset_full_class_checking is
 			-- Unset full class checking.
 		do
-			is_full_class_checking_configured := False
-			is_full_class_checking := False
+			option_flags := option_flags & ((is_full_class_checking_configured_flag | is_full_class_checking_flag).bit_not)
 		end
 
 	unset_cat_call_detection is
 			-- Unset cat call detection.
 		do
-			is_cat_call_detection_configured := False
-			is_cat_call_detection := False
+			option_flags := option_flags & ((is_cat_call_detection_configured_flag | is_cat_call_detection_flag).bit_not)
 		end
 
 	unset_is_attached_by_default
 			-- Unset `is_attached_by_default'.
 		do
-			is_attached_by_default_configured := False
-			is_attached_by_default := False
+			option_flags := option_flags & ((is_attached_by_default_configured_flag | is_attached_by_default_flag).bit_not)
 		end
 
 	unset_is_void_safe
 			-- Unset `is_void_safe'.
 		do
-			is_void_safe_configured := False
-			is_void_safe := False
+			option_flags := option_flags & ((is_void_safe_configured_flag | is_void_safe_flag).bit_not)
 		end
 
 feature -- Access, stored in configuration file
@@ -153,37 +170,67 @@ feature -- Access, stored in configuration file
 			-- .NET namespace that is computed on demand.
 
 	local_namespace: STRING
-			-- .NET namespace set in configuration file
+			-- .NET namespace set in configuration file.
 
 	is_profile: BOOLEAN
-			-- Do profile?
+			-- Do profiling?
+		do
+			Result := option_flags & is_profile_flag /= 0
+		end
 
 	is_trace: BOOLEAN
-			-- Do trace?
+			-- Do tracing?
+		do
+			Result := option_flags & is_trace_flag /= 0
+		end
 
 	is_optimize: BOOLEAN
-			-- Do optimize?
+			-- Do optimization?
+		do
+			Result := option_flags & is_optimize_flag /= 0
+		end
 
 	is_debug: BOOLEAN
-			-- Do debug?
+			-- Do debug clauses?
+		do
+			Result := option_flags & is_debug_flag /= 0
+		end
 
 	is_warning: BOOLEAN
-			-- Show warnings?
+			-- Generate warnings?
+		do
+			Result := option_flags & is_warning_flag /= 0
+		end
 
 	is_msil_application_optimize: BOOLEAN
-			-- Do .NET specific application optimizations?
+			-- Is MSIL application optimization enabled?
+		do
+			Result := option_flags & is_msil_application_optimize_flag /= 0
+		end
 
 	is_full_class_checking: BOOLEAN
-			-- Do we perform a full class checking?
+			-- Do full class checking?
+		do
+			Result := option_flags & is_full_class_checking_flag /= 0
+		end
 
 	is_cat_call_detection: BOOLEAN
-			-- Do we perform cat-call detection on all feature calls?
+			-- Do cat call detection?
+		do
+			Result := option_flags & is_cat_call_detection_flag /= 0
+		end
 
 	is_attached_by_default: BOOLEAN
-			-- Is type declaration considered attached by default?
+			-- Is attached by default?
+		do
+			Result := option_flags & is_attached_by_default_flag /= 0
+		end
 
 	is_void_safe: BOOLEAN
-			-- Is source code void safe?
+			-- Is void safe?
+		do
+			Result := option_flags & is_void_safe_flag /= 0
+		end
 
 	description: STRING
 			-- A description about the options.
@@ -299,8 +346,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 	set_profile (a_enabled: BOOLEAN) is
 			-- Set `is_profile' to `a_enabled'.
 		do
-			is_profile_configured := True
-			is_profile := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_profile_flag) | is_profile_configured_flag
+			else
+				option_flags := (option_flags & is_profile_flag.bit_not) | is_profile_configured_flag
+			end
 		ensure
 			is_profile_set: is_profile = a_enabled
 			is_profile_configured: is_profile_configured
@@ -309,8 +359,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 	set_trace (a_enabled: BOOLEAN) is
 			-- Set `is_trace' to `a_enabled'.
 		do
-			is_trace_configured := True
-			is_trace := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_trace_flag) | is_trace_configured_flag
+			else
+				option_flags := (option_flags & is_trace_flag.bit_not) | is_trace_configured_flag
+			end
 		ensure
 			is_trace_set: is_trace = a_enabled
 			is_trace_configured: is_trace_configured
@@ -319,8 +372,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 	set_optimize (a_enabled: BOOLEAN) is
 			-- Set `is_optimize' to `a_enabled'.
 		do
-			is_optimize_configured := True
-			is_optimize := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_optimize_flag) | is_optimize_configured_flag
+			else
+				option_flags := (option_flags & is_optimize_flag.bit_not) | is_optimize_configured_flag
+			end
 		ensure
 			is_optimize_set: is_optimize = a_enabled
 			is_optimize_configured: is_optimize_configured
@@ -330,8 +386,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			-- Set `is_debug' to `a_enabled'.
 			-- Enables/disables debug clauses in general.
 		do
-			is_debug_configured := True
-			is_debug := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_debug_flag) | is_debug_configured_flag
+			else
+				option_flags := (option_flags & is_debug_flag.bit_not) | is_debug_configured_flag
+			end
 		ensure
 			is_debug_set: is_debug = a_enabled
 			is_debug_configured: is_debug_configured
@@ -341,8 +400,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			-- Set `is_warning' to `a_enabled'.
 			-- Enables/disables warning clauses in general.
 		do
-			is_warning_configured := True
-			is_warning := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_warning_flag) | is_warning_configured_flag
+			else
+				option_flags := (option_flags & is_warning_flag.bit_not) | is_warning_configured_flag
+			end
 		ensure
 			is_warning_set: is_warning = a_enabled
 			is_warning_configured: is_warning_configured
@@ -352,8 +414,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			-- Set `is_msil_application_optimize' to `a_enable'.
 			-- Enabled/disables .NET application optimizations in general.
 		do
-			is_msil_application_optimize_configured := True
-			is_msil_application_optimize := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_msil_application_optimize_flag) | is_msil_application_optimize_configured_flag
+			else
+				option_flags := (option_flags & is_msil_application_optimize_flag.bit_not) | is_msil_application_optimize_configured_flag
+			end
 		ensure
 			is_msil_application_optimize_set: is_msil_application_optimize = a_enabled
 			is_msil_application_optimize_configured: is_msil_application_optimize_configured
@@ -362,8 +427,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 	set_full_class_checking (a_enabled: BOOLEAN) is
 			-- Set `is_full_class_checking' to `a_enabled'.
 		do
-			is_full_class_checking_configured := True
-			is_full_class_checking := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_full_class_checking_flag) | is_full_class_checking_configured_flag
+			else
+				option_flags := (option_flags & is_full_class_checking_flag.bit_not) | is_full_class_checking_configured_flag
+			end
 		ensure
 			is_full_class_checking_set: is_full_class_checking = a_enabled
 			is_full_class_checking_configured: is_full_class_checking_configured
@@ -372,30 +440,39 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 	set_cat_call_detection (a_enabled: BOOLEAN) is
 			-- Set `is_cat_call_detection' to `a_enabled'.
 		do
-			is_cat_call_detection_configured := True
-			is_cat_call_detection := a_enabled
+			if a_enabled then
+				option_flags := (option_flags | is_cat_call_detection_flag) | is_cat_call_detection_configured_flag
+			else
+				option_flags := (option_flags & is_cat_call_detection_flag.bit_not) | is_cat_call_detection_configured_flag
+			end
 		ensure
 			is_cat_call_detection_set: is_cat_call_detection = a_enabled
 			is_cat_call_detection_configured: is_cat_call_detection_configured
 		end
 
-	set_is_attached_by_default (v: BOOLEAN)
-			-- Set `is_attached_by_default' to `v'.
+	set_is_attached_by_default (a_enabled: BOOLEAN)
+			-- Set `is_attached_by_default' to `a_enabled'.
 		do
-			is_attached_by_default_configured := True
-			is_attached_by_default := v
+			if a_enabled then
+				option_flags := (option_flags | is_attached_by_default_flag) | is_attached_by_default_configured_flag
+			else
+				option_flags := (option_flags & is_attached_by_default_flag.bit_not) | is_attached_by_default_configured_flag
+			end
 		ensure
-			is_attached_by_default_set: is_attached_by_default = v
+			is_attached_by_default_set: is_attached_by_default = a_enabled
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
-	set_is_void_safe (v: BOOLEAN)
-			-- Set `is_void_safe' to `v'.
+	set_is_void_safe (a_enabled: BOOLEAN)
+			-- Set `is_void_safe' to `a_enabled'.
 		do
-			is_void_safe_configured := True
-			is_void_safe := v
+			if a_enabled then
+				option_flags := (option_flags | is_void_safe_flag) | is_void_safe_configured_flag
+			else
+				option_flags := (option_flags & is_void_safe_flag.bit_not) | is_void_safe_configured_flag
+			end
 		ensure
-			is_void_safe_set: is_void_safe = v
+			is_void_safe_set: is_void_safe = a_enabled
 			is_void_safe_configured: is_void_safe_configured
 		end
 
@@ -428,26 +505,7 @@ feature -- Duplication
 			else
 				description := Void
 			end
-			is_attached_by_default := other.is_attached_by_default
-			is_attached_by_default_configured := other.is_attached_by_default_configured
-			is_cat_call_detection := other.is_cat_call_detection
-			is_cat_call_detection_configured := other.is_cat_call_detection_configured
-			is_debug := other.is_debug
-			is_debug_configured := other.is_debug_configured
-			is_full_class_checking := other.is_full_class_checking
-			is_full_class_checking_configured := other.is_full_class_checking_configured
-			is_msil_application_optimize := other.is_msil_application_optimize
-			is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
-			is_optimize := other.is_optimize
-			is_optimize_configured := other.is_optimize_configured
-			is_profile := other.is_profile
-			is_profile_configured := other.is_profile_configured
-			is_trace := other.is_trace
-			is_trace_configured := other.is_trace_configured
-			is_void_safe := other.is_void_safe
-			is_void_safe_configured := other.is_void_safe_configured
-			is_warning := other.is_warning
-			is_warning_configured := other.is_warning_configured
+			option_flags := other.option_flags
 			if {l: like local_namespace} other.local_namespace then
 				local_namespace := l.twin
 			else
@@ -505,16 +563,11 @@ feature -- Comparison
 	is_equal_options (other: like Current): BOOLEAN is
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
 		do
-			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
-				is_optimize = other.is_optimize and is_profile = other.is_profile and
-				is_full_class_checking = other.is_full_class_checking and
-				is_cat_call_detection = other.is_cat_call_detection and
-				is_attached_by_default = other.is_attached_by_default and
-				is_void_safe = other.is_void_safe and
-				is_trace = other.is_trace and
-				syntax_level.is_equal (other.syntax_level) and
-				equal(local_namespace, other.local_namespace) and
-				equal (debugs, other.debugs)
+			Result := other.option_flags = option_flags
+				and then syntax_level.is_equal (other.syntax_level)
+				and then equal (assertions, other.assertions)
+				and then equal (local_namespace, other.local_namespace)
+				and then equal (debugs, other.debugs)
 		end
 
 feature -- Merging
@@ -524,6 +577,8 @@ feature -- Merging
 		local
 			l_tmp: like debugs
 			l_namespace: like local_namespace
+			l_old_options: like option_flags
+			l_old_options_configure_flags: like option_flags
 		do
 			if other /= Void then
 				if assertions = Void then
@@ -551,7 +606,10 @@ feature -- Merging
 				end
 				if l_namespace /= Void then
 					if local_namespace /= Void then
-						namespace := l_namespace + "." + local_namespace
+						create namespace.make (l_namespace.count + 1 + local_namespace.count)
+						namespace.append (l_namespace)
+						namespace.append_character ('.')
+						namespace.append (local_namespace)
 					else
 						namespace := l_namespace.twin
 					end
@@ -560,49 +618,61 @@ feature -- Merging
 				else
 					namespace := Void
 				end
-				if not is_profile_configured then
-					is_profile_configured := other.is_profile_configured
-					is_profile := other.is_profile
-				end
-				if not is_trace_configured then
-					is_trace_configured := other.is_trace_configured
-					is_trace := other.is_trace
-				end
-				if not is_optimize_configured then
-					is_optimize_configured := other.is_optimize_configured
-					is_optimize := other.is_optimize
-				end
-				if not is_debug_configured then
-					is_debug_configured := other.is_debug_configured
-					is_debug := other.is_debug
-				end
-				if not is_warning_configured then
-					is_warning_configured := other.is_warning_configured
-					is_warning := other.is_warning
-				end
-				if not is_msil_application_optimize_configured then
-					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
-					is_msil_application_optimize := other.is_msil_application_optimize
-				end
-				if not is_full_class_checking_configured then
-					is_full_class_checking_configured := other.is_full_class_checking_configured
-					is_full_class_checking := other.is_full_class_checking
-				end
-				if not is_cat_call_detection_configured then
-					is_cat_call_detection_configured := other.is_cat_call_detection_configured
-					is_cat_call_detection := other.is_cat_call_detection
-				end
-				if not is_attached_by_default_configured then
-					is_attached_by_default_configured := other.is_attached_by_default_configured
-					is_attached_by_default := other.is_attached_by_default
-				end
-				if not is_void_safe_configured then
-					is_void_safe_configured := other.is_void_safe_configured
-					is_void_safe := other.is_void_safe
-				end
+
+
+					-- Optimization - If the value is unset in current then its configure flag is zero
+					-- If we do a merge we want to keep all the values in current where the configure
+					-- flag is set and the rest we pull in from 'other.option_flags'
+
+					-- Get values of `Current' that we wish to keep, if configure flag is set then keep
+					-- its corresponding value, flags are lined up with the configure flag to the right of the
+					-- value flag.
+					-- This leaves us just the flags we want to keep. If we bit shift left by 1 place
+					-- we can use the mask to keep the values that are configured by first, if we also 'or' with
+					-- the original mask that also masks out the configured flags which cannot override
+					-- the flags in `Current' if not set.  If we then do a 'bit_not' of this mask
+					-- this gives us a list of flags that should be kept in 'other.option_flags', this can
+					-- then be or'd with the flags of `Current' to give us the merge.
+
+					-- Set the new options with the merged options.
+				l_old_options := option_flags
+
+					-- Filter out the non configure flags.
+				l_old_options_configure_flags := l_old_options & 0x55555555
+
+				option_flags := l_old_options | (other.option_flags & (l_old_options_configure_flags | (l_old_options_configure_flags |<< 1).bit_not))
 				syntax_level.set_safely (other.syntax_level)
 			end
 		end
+
+feature {CONF_OPTION} -- Implementation
+
+	option_flags: NATURAL_32
+		-- Flags used to store the configuration options of `Current'.
+
+feature {NONE} -- Implementation
+
+	is_profile_configured_flag: NATURAL_32 = 0x1
+	is_profile_flag: NATURAL_32 = 0x2
+	is_trace_configured_flag: NATURAL_32 = 0x4
+	is_trace_flag: NATURAL_32 = 0x8
+	is_optimize_configured_flag: NATURAL_32 = 0x10
+	is_optimize_flag: NATURAL_32 = 0x20
+	is_debug_configured_flag: NATURAL_32 = 0x40
+	is_debug_flag: NATURAL_32 = 0x80
+	is_warning_configured_flag: NATURAL_32 = 0x100
+	is_warning_flag: NATURAL_32 = 0x200
+	is_msil_application_optimize_configured_flag: NATURAL_32 = 0x400
+	is_msil_application_optimize_flag: NATURAL_32 = 0x800
+	is_full_class_checking_configured_flag: NATURAL_32 = 0x1000
+	is_full_class_checking_flag: NATURAL_32 = 0x2000
+	is_cat_call_detection_configured_flag: NATURAL_32 = 0x4000
+	is_cat_call_detection_flag: NATURAL_32 = 0x8000
+	is_attached_by_default_configured_flag: NATURAL_32 = 0x10000
+	is_attached_by_default_flag: NATURAL_32 = 0x20000
+	is_void_safe_configured_flag: NATURAL_32 = 0x40000
+	is_void_safe_flag: NATURAL_32 = 0x80000
+		-- Option flags.
 
 invariant
 	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
@@ -641,3 +711,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 end
+

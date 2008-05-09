@@ -6455,9 +6455,6 @@ end
 				if yyval105 /= Void then
 					yyval105.set_inheritance_tokens (yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1), yyvs2.item (yyvsp2), yyvs4.item (yyvsp4))
 				end
-				
-					-- Set flag so that no more inheritance clauses can be added as non-conforming is always the last one.
-				non_conforming_inheritance_flag := True
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
@@ -6486,6 +6483,9 @@ end
 						-- Check to make sure Class_identifier is 'NONE'
 						-- An error will be thrown if TYPE_AS is not of type NONE_TYPE_AS
 					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type (yyvs2.item (yyvsp2), Void))
+
+						-- Set flag so that no more inheritance clauses can be added as non-conforming is always the last one.
+					non_conforming_inheritance_flag := True
 				else
 						-- Raise error as non conforming inheritance has already been specified
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename, "Only one non-conforming inheritance clause allowed per class"))
@@ -6676,6 +6676,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				if non_conforming_inheritance_flag then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs98.item (yyvsp98)), token_column (yyvs98.item (yyvsp98)), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				yyval66 := ast_factory.new_parent_as (yyvs79.item (yyvsp79), Void, Void, Void, Void, yyvs98.item (yyvsp98), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status = yyContinue then
@@ -6714,6 +6717,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				if non_conforming_inheritance_flag and then yyvs98.item (yyvsp98) /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs98.item (yyvsp98)), token_column (yyvs98.item (yyvsp98)), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				yyval66 := ast_factory.new_parent_as (yyvs79.item (yyvsp79), Void, Void, Void, yyvs97.item (yyvsp97), yyvs98.item (yyvsp98), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status = yyContinue then
@@ -6753,6 +6759,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				if non_conforming_inheritance_flag and then yyvs98.item (yyvsp98) /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs98.item (yyvsp98)), token_column (yyvs98.item (yyvsp98)), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				yyval66 := ast_factory.new_parent_as (yyvs79.item (yyvsp79), Void, Void, yyvs96.item (yyvsp96), yyvs97.item (yyvsp97), yyvs98.item (yyvsp98), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status = yyContinue then
@@ -6793,6 +6802,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				if non_conforming_inheritance_flag and then yyvs98.item (yyvsp98) /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs98.item (yyvsp98)), token_column (yyvs98.item (yyvsp98)), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				yyval66 := ast_factory.new_parent_as (yyvs79.item (yyvsp79), Void, yyvs89.item (yyvsp89), yyvs96.item (yyvsp96), yyvs97.item (yyvsp97), yyvs98.item (yyvsp98), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status = yyContinue then
@@ -6834,6 +6846,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				if non_conforming_inheritance_flag and then yyvs98.item (yyvsp98) /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs98.item (yyvsp98)), token_column (yyvs98.item (yyvsp98)), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				yyval66 := ast_factory.new_parent_as (yyvs79.item (yyvsp79), yyvs107.item (yyvsp107), yyvs89.item (yyvsp89), yyvs96.item (yyvsp96), yyvs97.item (yyvsp97), yyvs98.item (yyvsp98), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status = yyContinue then
@@ -22230,19 +22245,8 @@ feature {NONE} -- Table templates
 
 	yytypes1_template: SPECIAL [INTEGER] is
 			-- Template for `yytypes1'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1010)
-			yytypes1_template_1 (an_array)
-			yytypes1_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yytypes1_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yytypes1'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			    1,   12,   12,   12,   12,   12,   12,   12,    2,    2,
 			    2,  101,    1,    1,    1,   12,   62,    1,   51,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -22351,17 +22355,10 @@ feature {NONE} -- Table templates
 			  110,   12,    1,    1,    4,    4,    4,    4,    4,    1,
 			   12,   48,    1,    1,   48,   12,  108,  100,    4,    4,
 			   92,    1,    3,    2,   68,   77,    3,    2,   59,   68,
-			    2,   59,   68,   77,    1,    3,    2,   59,   68,   12, yyDummy>>,
-			1, 1000, 0)
-		end
+			    2,   59,   68,   77,    1,    3,    2,   59,   68,   12,
 
-	yytypes1_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yytypes1'.
-		do
-			yy_array_subcopy (an_array, <<
 			   12,   87,   15,    4,  102,   15,   15,   12,    1,    1,
-			    1, yyDummy>>,
-			1, 11, 1000)
+			    1, yyDummy>>)
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
@@ -22387,19 +22384,8 @@ feature {NONE} -- Table templates
 
 	yydefact_template: SPECIAL [INTEGER] is
 			-- Template for `yydefact'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1010)
-			yydefact_template_1 (an_array)
-			yydefact_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yydefact_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yydefact'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			   14,  581,  582,  323,  581,  582,    0,  484,  483,  482,
 			    0,   48,    1,  582,  582,  325,    6,  582,    3,    0,
 			  546,  554,  553,  552,  551,  550,  549,  548,  547,  545,
@@ -22508,17 +22494,10 @@ feature {NONE} -- Table templates
 			    0,    9,  582,   13,    0,    0,    0,  584,    0,    0,
 			  287,    0,    0,  288,  327,  186,  334,   69,  141,    0,
 			   71,   61,  305,  311,  319,    0,  310,  307,  308,  314,
-			  309,  303,  317,    0,    0,  318,  313,  316,  315,  186, yyDummy>>,
-			1, 1000, 0)
-		end
+			  309,  303,  317,    0,    0,  318,  313,  316,  315,  186,
 
-	yydefact_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yydefact'.
-		do
-			yy_array_subcopy (an_array, <<
 			  186,  290,    0,  140,  301,  299,  291,  320,    0,    0,
-			    0, yyDummy>>,
-			1, 11, 1000)
+			    0, yyDummy>>)
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
@@ -22554,19 +22533,8 @@ feature {NONE} -- Table templates
 
 	yypact_template: SPECIAL [INTEGER] is
 			-- Template for `yypact'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1010)
-			yypact_template_1 (an_array)
-			yypact_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yypact_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yypact'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			  532, 1343, 1055,  349, 1280, -32768, 2153, -32768, -32768, -32768,
 			 1378,   62, -32768, -32768, -32768, -32768, -32768, -32768, -32768, 1093,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
@@ -22675,17 +22643,10 @@ feature {NONE} -- Table templates
 			  151, -32768, -32768, -32768,  654,  727, 1358, -32768,  727,  124,
 			 -32768, 2586,   85, -32768, 3098, -32768, -32768, -32768, -32768,  117,
 			 -32768, -32768, -32768, -32768, -32768,  202, -32768, -32768, -32768, -32768,
-			 -32768, -32768, -32768,  815,  727, -32768, -32768, -32768, -32768, -32768, yyDummy>>,
-			1, 1000, 0)
-		end
+			 -32768, -32768, -32768,  815,  727, -32768, -32768, -32768, -32768, -32768,
 
-	yypact_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yypact'.
-		do
-			yy_array_subcopy (an_array, <<
 			 -32768, -32768,   89, -32768, -32768, -32768, -32768, -32768,  110,  108,
-			 -32768, yyDummy>>,
-			1, 11, 1000)
+			 -32768, yyDummy>>)
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
@@ -22727,8 +22688,6 @@ feature {NONE} -- Table templates
 			create an_array.make (0, 3161)
 			yytable_template_1 (an_array)
 			yytable_template_2 (an_array)
-			yytable_template_3 (an_array)
-			yytable_template_4 (an_array)
 			Result := yyfixed_array (an_array)
 		end
 
@@ -22844,14 +22803,8 @@ feature {NONE} -- Table templates
 			  220,  216,  323, -164,  983,  987,  990,  777,  996,  345,
 			  343,  344,   19,  335,  264,  342,  272,  -65,  -65, 1005,
 			 1006,  270,  937,  332,  502,    7,  243, -366,  243,  265,
-			  265,  329,  265,  324,  938,  243,  243,  243,  243,  243, yyDummy>>,
-			1, 1000, 0)
-		end
+			  265,  329,  265,  324,  938,  243,  243,  243,  243,  243,
 
-	yytable_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yytable'.
-		do
-			yy_array_subcopy (an_array, <<
 			  243,  243,  243,  243,  243,  243,  243,  243,  243,  243,
 			  -65,  243,  243,  -65,  243,  243,  243,  322,  265,  -65,
 			  320,  247,  253,  252,  916,  700,  246,  568,  223,  222,
@@ -22960,14 +22913,8 @@ feature {NONE} -- Table templates
 			   57,   56,    0,    0,    0,    0,    0,   55,   54,   53,
 			    0,    0,   52,    0,   51,    0,    0,    0,   50,    0,
 			   49,   48,    0,   47,    0,    0,    0,    7,    0,    0,
-			    0,    0,   46,    0,    0,  373,    0,    0,    0,    0, yyDummy>>,
-			1, 1000, 1000)
-		end
+			    0,    0,   46,    0,    0,  373,    0,    0,    0,    0,
 
-	yytable_template_3 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #3 of template for `yytable'.
-		do
-			yy_array_subcopy (an_array, <<
 			    0,   45,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,   44,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,   43,   42,   41,
@@ -23077,11 +23024,11 @@ feature {NONE} -- Table templates
 			  228,  227,  226,  225,  224,   70,  413,  242,  241,  240,
 			  239,  238,  237,  236,  235,  234,  233,  232,  231,  230,
 			  229,  228,  227,  226,  225,  224,   70,  240,  239,  238, yyDummy>>,
-			1, 1000, 2000)
+			1, 3000, 0)
 		end
 
-	yytable_template_4 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #4 of template for `yytable'.
+	yytable_template_2 (an_array: ARRAY [INTEGER]) is
+			-- Fill chunk #2 of template for `yytable'.
 		do
 			yy_array_subcopy (an_array, <<
 			  237,  236,  235,  234,  233,  232,  231,  230,  229,  228,
@@ -23113,8 +23060,6 @@ feature {NONE} -- Table templates
 			create an_array.make (0, 3161)
 			yycheck_template_1 (an_array)
 			yycheck_template_2 (an_array)
-			yycheck_template_3 (an_array)
-			yycheck_template_4 (an_array)
 			Result := yyfixed_array (an_array)
 		end
 
@@ -23230,14 +23175,8 @@ feature {NONE} -- Table templates
 			   33,   33,  149,   43,  964,  965,  966,   54,  968,   45,
 			   45,   48,  962,   43,  908,   46,   93,   30,   31,  999,
 			 1000,   93,  908,   48,  443,   72,  346,   28,  348,  965,
-			  966,   28,  968,   28,  994,  355,  356,  357,  358,  359, yyDummy>>,
-			1, 1000, 0)
-		end
+			  966,   28,  968,   28,  994,  355,  356,  357,  358,  359,
 
-	yycheck_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yycheck'.
-		do
-			yy_array_subcopy (an_array, <<
 			  360,  361,  362,  363,  364,  365,  366,  367,  368,  369,
 			   63,  371,  372,   66,  374,  375,  376,   49,  994,   72,
 			   69,   28,   17,   18,  877,   84,   28,   12,   36,   28,
@@ -23346,14 +23285,8 @@ feature {NONE} -- Table templates
 			   45,   46,   -1,   -1,   -1,   -1,   -1,   52,   53,   54,
 			   -1,   -1,   57,   -1,   59,   -1,   -1,   -1,   63,   -1,
 			   65,   66,   -1,   68,   -1,   -1,   -1,   72,   -1,   -1,
-			   -1,   -1,   77,   -1,   -1,   80,   -1,   -1,   -1,   -1, yyDummy>>,
-			1, 1000, 1000)
-		end
+			   -1,   -1,   77,   -1,   -1,   80,   -1,   -1,   -1,   -1,
 
-	yycheck_template_3 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #3 of template for `yycheck'.
-		do
-			yy_array_subcopy (an_array, <<
 			   -1,   86,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   99,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,  112,  113,  114,
@@ -23463,11 +23396,11 @@ feature {NONE} -- Table templates
 			   19,   20,   21,   22,   23,   24,   47,    5,    6,    7,
 			    8,    9,   10,   11,   12,   13,   14,   15,   16,   17,
 			   18,   19,   20,   21,   22,   23,   24,    7,    8,    9, yyDummy>>,
-			1, 1000, 2000)
+			1, 3000, 0)
 		end
 
-	yycheck_template_4 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #4 of template for `yycheck'.
+	yycheck_template_2 (an_array: ARRAY [INTEGER]) is
+			-- Fill chunk #2 of template for `yycheck'.
 		do
 			yy_array_subcopy (an_array, <<
 			   10,   11,   12,   13,   14,   15,   16,   17,   18,   19,
@@ -24944,3 +24877,4 @@ indexing
 		]"
 
 end -- class EIFFEL_PARSER
+

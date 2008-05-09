@@ -65,8 +65,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) \$(MT_EOBJ) x2c.o runtime_validation.o
-SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c runtime_validation.c
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
+SOURCES =  \$(LSRC) \$(WADD) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -115,9 +115,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	error.c umain.c memory.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
-	option.c compress.c console.c
-
-OTHER = main.c except.c
+	option.c compress.c console.c offset.c main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
 
@@ -171,6 +169,7 @@ WOBJ = \
 	woption.o \
 	wcompress.o \
 	wconsole.o \
+	woffset.o \
 	wmain.o \
 	wexcept.o 
 
@@ -218,61 +217,9 @@ LOBJ = \
 	option.o \
 	compress.o \
 	console.o \
+	offset.o \
 	main.o \
 	except.o 
-
-EOBJ = \
-	$(IDRS_OBJ) \
-	$(LIB_IPC_ARCH) \
-	$(EWB_PROTO_OBJ) \
-	debug.o \
-	interp.o \
-	update.o \
-	wbench.o \
-	wmalloc.o \
-	wgarcol.o \
-	wlocal.o \
-	wstore.o \
-	wretrieve.o \
-	whash.o \
-	wtraverse.o \
-	whashin.o \
-	wtools.o \
-	winternal.o \
-	wplug.o \
-	wcopy.o \
-	wequal.o \
-	wlmalloc.o \
-	wout.o \
-	wtimer.o \
-	wurgent.o \
-	wsig.o \
-	whector.o \
-	wcecil.o \
-	wbits.o \
-	wfile.o \
-	wdir.o \
-	wmisc.o \
-	werror.o \
-	wumain.o \
-	wmemory.o \
-	wargv.o \
-	wboolstr.o \
-	wsearch.o \
-	wrun_idr.o \
-	wpath_name.o \
-	wobject_id.o \
-	weif_threads.o \
-	weif_project.o \
-	weif_rw_lock.o \
-	wgen_conf.o \
-	weif_type_id.o \
-	wrout_obj.o \
-	woption.o \
-	wcompress.o \
-	wconsole.o \
-	bmain.o \
-	bexcept.o 
 
 MT_WOBJ = \
 	$(MTIDRS_OBJ) \
@@ -324,6 +271,7 @@ MT_WOBJ = \
 	MTwoption.o \
 	MTwcompress.o \
 	MTwconsole.o \
+	MTwoffset.o \
 	MTwmain.o \
 	MTwexcept.o 
 
@@ -371,61 +319,9 @@ MT_LOBJ = \
 	MToption.o \
 	MTcompress.o \
 	MTconsole.o \
+	MToffset.o \
 	MTmain.o \
 	MTexcept.o 
-
-MT_EOBJ = \
-	$(MTIDRS_OBJ) \
-	$(LIB_MTIPC_ARCH) \
-	$(MTEWB_PROTO_OBJ) \
-	MTdebug.o \
-	MTinterp.o \
-	MTupdate.o \
-	MTwbench.o \
-	MTwmalloc.o \
-	MTwgarcol.o \
-	MTwlocal.o \
-	MTwstore.o \
-	MTwretrieve.o \
-	MTwhash.o \
-	MTwtraverse.o \
-	MTwhashin.o \
-	MTwtools.o \
-	MTwinternal.o \
-	MTwplug.o \
-	MTwcopy.o \
-	MTwequal.o \
-	MTwlmalloc.o \
-	MTwout.o \
-	MTwtimer.o \
-	MTwurgent.o \
-	MTwsig.o \
-	MTwhector.o \
-	MTwcecil.o \
-	MTwbits.o \
-	MTwfile.o \
-	MTwdir.o \
-	MTwmisc.o \
-	MTwerror.o \
-	MTwumain.o \
-	MTwmemory.o \
-	MTwargv.o \
-	MTwboolstr.o \
-	MTwsearch.o \
-	MTwrun_idr.o \
-	MTwpath_name.o \
-	MTwobject_id.o \
-	MTweif_threads.o \
-	MTweif_project.o \
-	MTweif_rw_lock.o \
-	MTwgen_conf.o \
-	MTweif_type_id.o \
-	MTwrout_obj.o \
-	MTwoption.o \
-	MTwcompress.o \
-	MTwconsole.o \
-	MTbmain.o \
-	MTbexcept.o 
 
 wmalloc.o: malloc.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
@@ -551,6 +447,9 @@ wcompress.o: compress.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wconsole.o: console.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+woffset.o: offset.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmain.o: main.c
@@ -686,6 +585,9 @@ MTcompress.o: compress.c
 MTconsole.o: console.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MToffset.o: offset.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
 MTmain.o: main.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -819,25 +721,14 @@ MTwcompress.o: compress.c
 MTwconsole.o: console.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
+MTwoffset.o: offset.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 MTwmain.o: main.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwexcept.o: except.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
-
-bmain.o: main.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
-
-bexcept.o: except.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
-
-
-MTbmain.o: main.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
-
-MTbexcept.o: except.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
 
 
 debug.o: debug.c
@@ -939,26 +830,6 @@ libwkbench.a: $(WOBJ)
 	$(AR) $@ $(WOBJ)
 	$(RANLIB) $@
 
-all:: libebench.a
-
-local_realclean::
-	$(RM) libebench.a
-
-libebench.a: $(EOBJ)
-	$(RM) $@
-	$(AR) $@ $(EOBJ)
-	$(RANLIB) $@
-
-all:: libmtebench.a
-
-local_realclean::
-	$(RM) libmtebench.a
-
-libmtebench.a: $(MT_EOBJ)
-	$(RM) $@
-	$(AR) $@ $(MT_EOBJ)
-	$(RANLIB) $@
-
 all:: libmtfinalized.so
 
 local_realclean::
@@ -1000,22 +871,22 @@ all:: x2c
 local_realclean::
 	$(RM) x2c
 
-x2c: x2c.o
+x2c: x2c.o offset.o
 	$(RM) $@
 	if test -f $@$(_EXE); then \
 	$(MV) $@$(_EXE) $@~$(_EXE); fi
-	$(CC) -o $@ x2c.o $(JLKFLAGS) $(LIBS)
+	$(CC) -o $@ x2c.o offset.o $(JLKFLAGS) $(LIBS)
 
 all:: runtime_validation
 
 local_realclean::
 	$(RM) runtime_validation
 
-runtime_validation: runtime_validation.o
+runtime_validation: runtime_validation.o offset.o
 	$(RM) $@
 	if test -f $@$(_EXE); then \
 	$(MV) $@$(_EXE) $@~$(_EXE); fi
-	$(CC) -o $@ runtime_validation.o $(JLKFLAGS) $(LIBS)
+	$(CC) -o $@ runtime_validation.o offset.o $(JLKFLAGS) $(LIBS)
 
 all:: eif_config.h eif_portable.h eif_confmagic.h
 

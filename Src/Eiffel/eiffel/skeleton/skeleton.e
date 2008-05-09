@@ -514,7 +514,7 @@ feature -- Status
 			nb_bit := nb_bits
 			nb_exp := nb_expanded
 
-			Result := objsiz(nb_ref + nb_exp, nb_char, nb_int16, nb_int32,
+			Result := eif_objsiz(nb_ref + nb_exp, nb_char, nb_int16, nb_int32,
 								nb_r32, nb_ptr, nb_int64, nb_r64);
 
 			if nb_bit > 0 then
@@ -862,24 +862,24 @@ feature -- Status
 				Result := refacs (index);
 			when Character_level, Boolean_level, Integer_8_level, natural_8_level then
 				nb_ref := nb_reference;
-				Result := chroff (nb_ref + nb_expanded) + chracs (index - nb_ref);
+				Result := eif_chroff (nb_ref + nb_expanded) + chracs (index - nb_ref);
 			when Integer_16_level, natural_16_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				Result := i16off (nb_ref + nb_expanded, nb_char) +
+				Result := eif_i16off (nb_ref + nb_expanded, nb_char) +
 							i16acs (index - nb_ref - nb_char);
 			when Integer_32_level, natural_32_level, wide_char_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
-				Result := i32off (nb_ref + nb_expanded, nb_char, nb_int16) +
+				Result := eif_i32off (nb_ref + nb_expanded, nb_char, nb_int16) +
 							i32acs (index - nb_ref - nb_char - nb_int16);
 			when Real_32_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
-				Result := r32off (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32) +
+				Result := eif_r32off (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32) +
 							r32acs (index - nb_ref - nb_char - nb_int16 - nb_int32);
 			when Pointer_level then
 				nb_ref := nb_reference;
@@ -887,7 +887,7 @@ feature -- Status
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
 				nb_r32 := nb_real_32;
-				Result := ptroff (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32, nb_r32) +
+				Result := eif_ptroff (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32, nb_r32) +
 							ptracs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32);
 			when Integer_64_level, natural_64_level then
 				nb_ref := nb_reference;
@@ -896,7 +896,7 @@ feature -- Status
 				nb_int32 := nb_integer_32;
 				nb_r32 := nb_real_32;
 				nb_ptr := nb_pointer;
-				Result := i64off (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr) +
+				Result := eif_i64off (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr) +
 							r64acs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr);
 			when Real_64_level then
 				nb_ref := nb_reference;
@@ -906,7 +906,7 @@ feature -- Status
 				nb_r32 := nb_real_32;
 				nb_ptr := nb_pointer;
 				nb_int64 := nb_integer_64;
-				Result := r64off (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr,nb_int64) +
+				Result := eif_r64off (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr,nb_int64) +
 							r64acs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr - nb_int64);
 			else
 				nb_ref := nb_reference;
@@ -917,7 +917,7 @@ feature -- Status
 				nb_ptr := nb_pointer;
 				nb_int64 := nb_integer_64;
 				nb_r64 := nb_real_64;
-				Result := objsiz (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr,nb_int64,nb_r64);
+				Result := eif_objsiz (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr,nb_int64,nb_r64);
 				if level = Bits_level then
 					from
 						current_area := area
@@ -1345,65 +1345,65 @@ feature {NONE} -- Implementation of quick sort algorithm
 
 feature {NONE} -- Externals
 
-	chroff(nb_ref: INTEGER): INTEGER is
+	eif_chroff(nb_ref: INTEGER): INTEGER is
 			-- Offset of first character after `nb_ref' references
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	i16off(nb_ref, nb_char: INTEGER): INTEGER is
+	eif_i16off(nb_ref, nb_char: INTEGER): INTEGER is
 			-- Offset of first integer 16 bits after `nb_ref' references,
 			-- and `nb_char' characters
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER is
+	eif_i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER is
 			-- Offset of first integer 32 bits after `nb_ref' references,
 			-- `nb_char' characters and `nb_int16' integers.
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		alias
-			"lngoff"
+			"eif_lngoff"
 		end;
 
-	r32off (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER is
+	eif_r32off (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER is
 			-- Offset of first real 32 bits after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers and `nb_int32' integers
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_r32: INTEGER): INTEGER is
+	eif_ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_r32: INTEGER): INTEGER is
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers
 			-- and `nb_r32' reals
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr: INTEGER): INTEGER is
+	eif_i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr: INTEGER): INTEGER is
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals and `nb_ptr' pointers.
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	r64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64: INTEGER): INTEGER is
+	eif_r64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64: INTEGER): INTEGER is
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals, `nb_ptr' pointers and `nb_int64' integers.
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
-	objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64, nb_r64: INTEGER): INTEGER is
+	eif_objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64, nb_r64: INTEGER): INTEGER is
 			-- Size of an object having `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals, `nb_ptr' pointers, `nb_int64' integers and `nb_r64' reals
 		external
-			"C"
+			"C use %"eif_offset.h%""
 		end;
 
 	bitoff (bit_val: INTEGER): INTEGER is

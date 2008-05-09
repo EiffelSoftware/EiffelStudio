@@ -993,6 +993,9 @@ Inheritance: -- Empty
 						-- Check to make sure Class_identifier is 'NONE'
 						-- An error will be thrown if TYPE_AS is not of type NONE_TYPE_AS
 					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void))
+
+						-- Set flag so that no more inheritance clauses can be added as non-conforming is always the last one.
+					non_conforming_inheritance_flag := True
 				else
 						-- Raise error as non conforming inheritance has already been specified
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class"))
@@ -1004,9 +1007,6 @@ Inheritance: -- Empty
 				if $$ /= Void then
 					$$.set_inheritance_tokens ($1, $2, $3, $4)
 				end
-				
-					-- Set flag so that no more inheritance clauses can be added as non-conforming is always the last one.
-				non_conforming_inheritance_flag := True
 			}
 			
 	;
@@ -1041,22 +1041,37 @@ Parent_clause: Parent_class_type
 			}
 	|	Parent_class_type Select TE_END
 			{
+				if non_conforming_inheritance_flag then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($2), token_column ($2), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, Void, $2, $3)
 			}
 	|	Parent_class_type Redefine Select_opt TE_END
 			{
+				if non_conforming_inheritance_flag and then $3 /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($3), token_column ($3), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3, $4)
 			}
 	|	Parent_class_type Undefine Redefine_opt Select_opt TE_END
 			{
+				if non_conforming_inheritance_flag and then $4 /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($4), token_column ($4), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4, $5)
 			}
 	|	Parent_class_type New_exports Undefine_opt Redefine_opt Select_opt TE_END
 			{
+				if non_conforming_inheritance_flag and then $5 /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($5), token_column ($5), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5, $6)
 			}
 	|	Parent_class_type Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
 			{
+				if non_conforming_inheritance_flag and then $6 /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($6), token_column ($6), filename, "Non-conforming inheritance may not use select clause"))
+				end
 				$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6, $7)
 			}
 	;
@@ -3316,3 +3331,4 @@ indexing
 		]"
 
 end -- class EIFFEL_PARSER
+

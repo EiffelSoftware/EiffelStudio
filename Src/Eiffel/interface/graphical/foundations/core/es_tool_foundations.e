@@ -163,6 +163,12 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
+	frozen interface_messages: !INTERFACE_MESSAGES
+			-- Access to EiffelStudio's interface messages
+		once
+			create Result
+		end
+
 	frozen stock_pixmaps: !ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once

@@ -24,6 +24,12 @@ inherit
 			on_text_edited
 		end
 
+--inherit {NONE}
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -80,6 +86,7 @@ feature {NONE} -- Initialization
 
 			propagate_action (contract_editor.widget, agent suppress_confirmation_key_close, Void)
 			propagate_action (contract_editor.editor_drawing_area, agent suppress_confirmation_key_close, Void)
+
 			set_button_action_before_close (default_confirm_button, agent on_ok)
 		end
 
@@ -166,6 +173,17 @@ feature {NONE} -- User interface elements
 	contract_editor: !EB_SMART_EDITOR
 			-- Editor use to edit the contract
 
+feature {NONE} -- Helpers
+
+	expression_parser: !EIFFEL_PARSER
+			-- Parser used to parse Eiffel expression
+		once
+			create Result.make_with_factory (create {AST_NULL_FACTORY})
+			Result.set_expression_parser
+		ensure
+			Result.expression_parser
+		end
+
 feature {NONE} -- Validation
 
 	validate_tag_text (a_text: !STRING_32): !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]
@@ -204,10 +222,23 @@ feature {NONE} -- Action handler
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+		local
+			l_error: ES_ERROR_PROMPT
 		do
-			contract := [({!STRING_32}) #? tag_text.text, ({!STRING_32}) #? contract_editor.text.as_string_32]
+			check not_error_handler_has_error: not error_handler.has_error end
+			expression_parser.parse_from_string ("check " + contract_editor.text)
+			if expression_parser.syntax_error then
+				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)
+				l_error.show_on_active_window
+				veto_close
+			else
+				contract := [({!STRING_32}) #? tag_text.text, ({!STRING_32}) #? contract_editor.text.as_string_32]
+			end
+			expression_parser.wipe_out
+			error_handler.wipe_out
 		ensure then
-			contract_attached: contract /= Void
+			contract_attached: not is_close_vetoed implies contract /= Void
+			not_error_handler_has_error: not error_handler.has_error
 		end
 
 feature {TEXT_OBSERVER_MANAGER} -- Observer handler

@@ -60,6 +60,12 @@ feature -- Values
 
 	contract_category: !STRING_8 = "contract"
 
+	precondition_category: !STRING_8 = "precondition"
+
+	postcondition_category: !STRING_8 = "postcondition"
+
+	invariant_category: !STRING_8 = "invariant"
+
 	class_category: !STRING_8 = "class"
 
 feature -- Token values

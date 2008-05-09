@@ -173,9 +173,9 @@ feature -- Command
 
 	set_cluster_id_and_path (a_cluster_id: STRING; a_path: STRING)
 			-- Set `internal_cluster' with `a_cluster'
+			-- `a_cluster_id' can be empty
 		require
 			not_void: a_cluster_id /= Void
-			valid: has_cluster_id (a_cluster_id)
 		do
 			internal_cluster_id := a_cluster_id
 			internal_cluster_sub_path := a_path

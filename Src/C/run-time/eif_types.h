@@ -324,6 +324,11 @@ union overhead {
 			} ovs;
 		} ovu;
 		rt_uint_ptr ovs_size;
+#if (MEM_ALIGNBYTES == 8) && !defined(EIF_64_BITS)
+			/* On 32-bit platform where alignment is 8,
+			 * we need to add an additional 4 bytes.*/
+		uint32 dummy;
+#endif
 #ifdef EIF_TID
         void *ovs_tid;          /* thread id of creator thread */
 #endif  /* EIF_TID */

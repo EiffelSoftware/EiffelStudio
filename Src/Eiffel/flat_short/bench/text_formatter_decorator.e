@@ -127,7 +127,7 @@ feature -- Initialization
 		do
 			source_feature := source
 			target_feature := target
-			source_class := source.written_class
+			source_class := source.access_class
 			setup_output_strategy
 		end
 

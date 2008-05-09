@@ -339,6 +339,7 @@ feature -- Accelerator, focus label and menu name
 	m_auto_expression_context: STRING_GENERAL is		do Result := locale.translation("Auto expression")	end
 	t_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Enable auto expressions ?%N(add contextual symbols automatically)")	end
 	t_auto_sweeping_the_system: STRING_GENERAL is		do Result := locale.translation ("Enable auto-sweeping the system for information?")	end
+	m_auto_resize: STRING_GENERAL is		do Result := locale.translation ("Auto resize")	end
 	l_all_classes: STRING_GENERAL is			do Result := locale.translation("All Classes")	end
 	l_all_tags: STRING_GENERAL is				do Result := locale.translation ("All tags") end
 	l_affected_items: STRING_GENERAL is			do Result := locale.translation ("Affected items") end
@@ -522,8 +523,10 @@ feature -- Accelerator, focus label and menu name
 	m_Generate_documentation: STRING_GENERAL is do Result := locale.translation("Generate &Documentation...")	end
 	m_Go_to: STRING_GENERAL is					do Result := locale.translation("&Go to...")	end
 	m_Guided_tour: STRING_GENERAL is			do Result := locale.translation("&Guided Tour")	end
+	m_grid_menu: STRING_GENERAL is					do Result := locale.translation("Grid menu")	end
 	m_grid_name (a_name: STRING_GENERAL): STRING_GENERAL is
 		do Result := locale.formatted_string (locale.translation ("Grid %"$1%""), [a_name]) end
+	m_grid_settings: STRING_GENERAL is					do Result := locale.translation("Grid settings")	end
 	m_Help: STRING_GENERAL is					do Result := locale.translation("&Help")	end
 	m_Hide_favorites: STRING_GENERAL is			do Result := locale.translation("&Hide Favorites")	end
 	m_Hide_formatting_marks: STRING_GENERAL is	do Result := locale.translation("&Hide Formatting Marks")	end
@@ -598,6 +601,8 @@ feature -- Accelerator, focus label and menu name
 	m_Recent_project: STRING_GENERAL is			do Result := locale.translation("&Recent Projects")	end
 	m_Redo: STRING_GENERAL is					do Result := locale.translation("Re&do%TCtrl+Y")	end
 	f_Redo: STRING_GENERAL is					do Result := locale.translation("Redo (Ctrl+Y)")	end
+	m_resize_to_content: STRING_GENERAL is	do Result := locale.translation("Resize to content")	end
+	m_resize_to_visible_content: STRING_GENERAL is	do Result := locale.translation("Resize to visible content")	end
 	m_Restore_Editor_Area: STRING_GENERAL is	do Result := locale.translation("&Restore Editor Area")	end
 	m_Restore_Editors: STRING_GENERAL is		do Result := locale.translation("&Restore Editors")	end
 	m_Replace: STRING_GENERAL is				do Result := locale.translation("&Replace...")	end
@@ -896,6 +901,7 @@ feature -- Context menu
 	m_change_color: STRING_GENERAL is			do Result := locale.translation ("Change color") end
 	m_clone_metric: STRING_GENERAL is			do Result := locale.translation ("Clone metric") end
 	m_delete: STRING_GENERAL is					do Result := b_delete_command	end
+	m_displayed: STRING_GENERAL is			do Result := locale.translation ("Displayed") end
 	m_diagram_with: STRING_GENERAL is	do Result := locale.translation ("Diagram with") end
 	m_expanded_object_view: STRING_GENERAL is	do Result := locale.translation ("Expanded object view") end
 	m_include_all_classes: STRING_GENERAL is	do Result := locale.translation ("Include all classes") end
@@ -907,6 +913,20 @@ feature -- Context menu
 	m_new_metric: STRING_GENERAL is				do Result := locale.translation ("New metric") end
 	m_open_user_defined_metric: STRING_GENERAL is	do Result := locale.translation ("Open user defined metrics externally") end
 	m_Pick: STRING_GENERAL is					do Result := locale.translation("&Pick") end
+
+	m_column_n_index (a_c: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_c /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Column #$1"), [a_c])
+		end
+
+	m_column_n_title (a_c: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_c /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Column %"$1%""), [a_c])
+		end
 
 	m_context_menu_pick (a_type, a_name: STRING_GENERAL): STRING_GENERAL
 		require

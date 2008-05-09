@@ -19,7 +19,7 @@
 #Computation/sizes
 byteorder='1234'
 pagesize='4096'
-alignbytes='4'
+alignbytes='8'
 doublesize='8'
 intsize='4'
 integer_64_size='8'

@@ -53,6 +53,9 @@ extern "C" {
 #ifndef DWORD_PTR
 #define DWORD_PTR DWORD
 #endif
+#ifndef PDWORD_PTR
+#define PDWORD_PTR LPDWORD
+#endif
 #define GetWindowLongPtr GetWindowLong
 #define SetWindowLongPtr SetWindowLong
 #define SetClassLongPtr SetClassLong

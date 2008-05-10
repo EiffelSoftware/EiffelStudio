@@ -99,7 +99,7 @@ feature {NONE} -- User interface initialization
 			l_message := interface_names.l_do_not_show_again.twin
 			if not l_message.is_empty and not discard_message.is_empty then
 				l_message.prune_all_trailing ('.')
-				l_message.append (" (" + discard_message + ")")
+				l_message.append ((" (").as_string_32 + discard_message + ")")
 			end
 			if not l_message.is_empty then
 				create discard_check.make_with_text (l_message)

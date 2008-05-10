@@ -30,7 +30,7 @@ inherit
 
 feature -- Status report
 
-	compiled_parent (a_system: SYSTEM_I; a_class: CLASS_C; a_parent: PARENT_AS): PARENT_C is
+	compiled_parent (a_system: SYSTEM_I; a_class: CLASS_C; a_parent: PARENT_AS; a_is_non_conforming: BOOLEAN): PARENT_C is
 			-- Compiled version of a parent. The second pass needs:
 			-- 1. Internal name for features, that means infix/prefix
 			--	features must have a string name
@@ -43,6 +43,7 @@ feature -- Status report
 		do
 			current_system := a_system
 			current_class := a_class
+			is_non_conforming := a_is_non_conforming
 			process_parent_as (a_parent)
 			Result := last_parent_c
 			reset
@@ -57,9 +58,13 @@ feature {NONE} -- Implementation: Reset
 			Precursor {AST_EXPORT_STATUS_GENERATOR}
 			last_parent_c := Void
 			last_export_adaptation := Void
+			is_non_conforming := False
 		end
 
 feature {NONE} -- Implementation: Access
+
+	is_non_conforming: BOOLEAN
+		-- Should computed parent be non-conforming?
 
 	last_parent_c: PARENT_C
 			-- Last computed parent
@@ -78,7 +83,12 @@ feature {NONE} -- Implementation
 			l_vhrc2: VHRC2
 			l_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
-			create last_parent_c
+			if is_non_conforming then
+					-- If non-conforming then we will we create the appropriate non conforming parent c class
+				create {NON_CONFORMING_PARENT_C} last_parent_c
+			else
+				create {PARENT_C} last_parent_c
+			end
 			last_parent_c.set_parent_type (type_a_generator.evaluate_class_type (l_as.type, current_class))
 			l_exports := l_as.exports
 			if l_exports /= Void then

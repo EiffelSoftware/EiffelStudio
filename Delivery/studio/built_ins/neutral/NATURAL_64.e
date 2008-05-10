@@ -2,7 +2,7 @@ class NATURAL_64
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: NATURAL_64): BOOLEAN is
 			-- Is current integer less than `other'?
 		do
 			Result := Precursor (other)
@@ -10,49 +10,49 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: NATURAL_64): NATURAL_64 is
 			-- Sum with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: NATURAL_64): NATURAL_64 is
 			-- Result of subtracting `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: NATURAL_64): NATURAL_64 is
 			-- Product by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "/" (other: like Current): DOUBLE is
+	infix "/" (other: NATURAL_64): REAL_64 is
 			-- Division by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	prefix "+": like Current is
+	prefix "+": NATURAL_64 is
 			-- Unary plus
 		do
 			Result := Precursor
 		end
 
-	infix "//" (other: like Current): like Current is
+	infix "//" (other: NATURAL_64): NATURAL_64 is
 			-- Integer division of Current by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "\\" (other: like Current): like Current is
+	infix "\\" (other: NATURAL_64): NATURAL_64 is
 			-- Remainder of the integer division of Current by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Integer power of Current by `other'
 		do
 			Result := Precursor (other)
@@ -96,7 +96,7 @@ feature -- Conversion
 			Result := Precursor
 		end
 
-	as_integer_32: INTEGER is
+	as_integer_32: INTEGER_32 is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := Precursor
@@ -108,14 +108,14 @@ feature -- Conversion
 			Result := Precursor
 		end
 
-	to_real_32: REAL is
-			-- Convert `item' into a REAL
+	to_real_32: REAL_32 is
+			-- Convert `item' into a REAL_32
 		do
 			Result := Precursor
 		end
 
-	to_real_64: DOUBLE is
-			-- Convert `item' into a DOUBLE
+	to_real_64: REAL_64 is
+			-- Convert `item' into a REAL_64
 		do
 			Result := Precursor
 		end
@@ -134,37 +134,37 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and (i: like Current): like Current is
+	bit_and (i: NATURAL_64): NATURAL_64 is
 			-- Bitwise and between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_or (i: like Current): like Current is
+	bit_or (i: NATURAL_64): NATURAL_64 is
 			-- Bitwise or between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_xor (i: like Current): like Current is
+	bit_xor (i: NATURAL_64): NATURAL_64 is
 			-- Bitwise xor between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_not: like Current is
+	bit_not: NATURAL_64 is
 			-- One's complement of Current.
 		do
 			Result := Precursor
 		end
 
-	bit_shift_left (n: INTEGER): like Current is
+	bit_shift_left (n: INTEGER): NATURAL_64 is
 			-- Shift Current from `n' position to left.
 		do
 			Result := Precursor (n)
 		end
 
-	bit_shift_right (n: INTEGER): like Current is
+	bit_shift_right (n: INTEGER): NATURAL_64 is
 			-- Shift Current from `n' position to right.
 		do
 			Result := Precursor (n)

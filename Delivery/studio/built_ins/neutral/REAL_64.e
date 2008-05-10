@@ -2,7 +2,7 @@ class REAL_64
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: REAL_64): BOOLEAN is
 			-- Is `other' greater than current double?
 		do
 			Result := Precursor (other)
@@ -10,7 +10,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	truncated_to_integer: INTEGER is
+	truncated_to_integer: INTEGER_32 is
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
@@ -45,43 +45,43 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: REAL_64): REAL_64 is
 			-- Sum with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: REAL_64): REAL_64 is
 			-- Result of subtracting `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: REAL_64): REAL_64 is
 			-- Product with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "/" (other: like Current): like Current is
+	infix "/" (other: REAL_64): REAL_64 is
 			-- Division by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Current double to the power `other'
 		do
 			Result := Precursor (other)
 		end
 
-	prefix "+": like Current is
+	prefix "+": REAL_64 is
 			-- Unary plus
 		do
 			Result := Precursor
 		end
 
-	prefix "-": like Current is
+	prefix "-": REAL_64 is
 			-- Unary minus
 		do
 			Result := Precursor

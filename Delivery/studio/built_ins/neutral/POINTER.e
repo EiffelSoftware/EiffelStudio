@@ -18,7 +18,7 @@ feature -- Operations
 
 feature -- Conversion
 
-	to_integer_32: INTEGER is
+	to_integer_32: INTEGER_32 is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := Precursor

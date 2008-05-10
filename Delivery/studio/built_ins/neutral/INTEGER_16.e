@@ -2,7 +2,7 @@ class INTEGER_16
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: INTEGER_16): BOOLEAN is
 			-- Is current integer less than `other'?
 		do
 			Result := Precursor (other)
@@ -10,55 +10,55 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: INTEGER_16): INTEGER_16 is
 			-- Sum with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: INTEGER_16): INTEGER_16 is
 			-- Result of subtracting `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: INTEGER_16): INTEGER_16 is
 			-- Product by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "/" (other: like Current): DOUBLE is
+	infix "/" (other: INTEGER_16): REAL_64 is
 			-- Division by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	prefix "+": like Current is
+	prefix "+": INTEGER_16 is
 			-- Unary plus
 		do
 			Result := Precursor
 		end
 
-	prefix "-": like Current is
+	prefix "-": INTEGER_16 is
 			-- Unary minus
 		do
 			Result := Precursor
 		end
 
-	infix "//" (other: like Current): like Current is
+	infix "//" (other: INTEGER_16): INTEGER_16 is
 			-- Integer division of Current by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "\\" (other: like Current): like Current is
+	infix "\\" (other: INTEGER_16): INTEGER_16 is
 			-- Remainder of the integer division of Current by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Integer power of Current by `other'
 		do
 			Result := Precursor (other)
@@ -102,7 +102,7 @@ feature -- Conversion
 			Result := Precursor
 		end
 
-	as_integer_32: INTEGER is
+	as_integer_32: INTEGER_32 is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := Precursor
@@ -114,14 +114,14 @@ feature -- Conversion
 			Result := Precursor
 		end
 
-	to_real: REAL is
-			-- Convert `item' into a REAL
+	to_real: REAL_32 is
+			-- Convert `item' into a REAL_32
 		do
 			Result := Precursor
 		end
 
-	to_double: DOUBLE is
-			-- Convert `item' into a DOUBLE
+	to_double: REAL_64 is
+			-- Convert `item' into a REAL_64
 		do
 			Result := Precursor
 		end
@@ -140,37 +140,37 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and (i: like Current): like Current is
+	bit_and (i: INTEGER_16): INTEGER_16 is
 			-- Bitwise and between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_or (i: like Current): like Current is
+	bit_or (i: INTEGER_16): INTEGER_16 is
 			-- Bitwise or between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_xor (i: like Current): like Current is
+	bit_xor (i: INTEGER_16): INTEGER_16 is
 			-- Bitwise xor between Current' and `i'.
 		do
 			Result := Precursor (i)
 		end
 
-	bit_not: like Current is
+	bit_not: INTEGER_16 is
 			-- One's complement of Current.
 		do
 			Result := Precursor
 		end
 
-	bit_shift_left (n: INTEGER): like Current is
+	bit_shift_left (n: INTEGER): INTEGER_16 is
 			-- Shift Current from `n' position to left.
 		do
 			Result := Precursor (n)
 		end
 
-	bit_shift_right (n: INTEGER): like Current is
+	bit_shift_right (n: INTEGER): INTEGER_16 is
 			-- Shift Current from `n' position to right.
 		do
 			Result := Precursor (n)

@@ -53,7 +53,6 @@ feature
 			create rout_id_set.make
 		end
 
-
 --| FIXME IEK: The following two features are currently unused.
 	has_assertion: BOOLEAN is
 			-- Do deferred_features or features have assertions?
@@ -92,28 +91,17 @@ feature
 			inherited_info := f
 		end
 
-	nb_features: INTEGER is
-			-- Count of `features'.
-		do
-			Result := features.count
-		end
-
-	nb_deferred: INTEGER is
-			-- Count of `deferred_features'.
-		do
-			Result := deferred_features.count
-		end
-
 	is_empty: BOOLEAN is
 			-- Are the feature info lists empty ?
 		do
-			Result := nb_features = 0 and then nb_deferred = 0
+			Result := features.count = 0 and then deferred_features.count = 0
 		end
 
 	insert (info: INHERIT_INFO) is
 			-- Insert `info' in one of the two lists.
 		require
 			info_not_void: info /= Void
+			a_feature_set: info.a_feature /= Void
 		do
 				-- The position of the list of features must not change
 				-- as `treat_renamings' may call it.
@@ -132,13 +120,13 @@ feature
 			Result := inherited_info.a_feature
 		end
 
-	check_renamings is
-			-- Check renamings in the two lists
+	process_renamings is
+			-- Check renaming in both effective and deferred features.
 		do
-			if deferred_features /= Void then
+			if deferred_features.count > 0 then
 				treat_renamings (deferred_features)
 			end
-			if features /= Void then
+			if features.count > 0 then
 				treat_renamings (features)
 			end
 		end
@@ -149,16 +137,12 @@ feature
 			good_argument: feat /= Void
 		local
 			next: INHERIT_INFO
-			parent: PARENT_C
 			replication: FEATURE_I
-			feature_i: FEATURE_I
 			feature_name_id: INTEGER
-			alias_name_id: INTEGER
 			extended_feature_name: RENAMING
 			new_name_id: INTEGER
 			new_alias_name_id: INTEGER
 			names: like Names_heap
-			new_name: STRING
 		do
 			from
 				feat.start
@@ -167,74 +151,79 @@ feature
 				feat.after
 			loop
 				next := feat.item
-				parent := next.parent
 				if next.renaming_processed then
 					feat.forth
 				else
-					feature_i := next.a_feature
-					feature_name_id := feature_i.feature_name_id
-					if parent.is_renaming (feature_name_id) then
-							-- Detection of a renaming clause: check repeated
-							-- inheritance possible replication
-						extended_feature_name := parent.renaming.item (feature_name_id)
-						new_name_id := extended_feature_name.feature_name_id
-						new_alias_name_id := extended_feature_name.alias_name_id
-						replication := feature_i.twin
-							-- Mark it as processed
-						next.set_renaming_processed
-							-- Move the inherit feature information under
-							-- 'new_name'.
-						replication.set_renamed_name_id (new_name_id, new_alias_name_id)
-						replication.set_has_convert_mark (extended_feature_name.has_convert_mark)
-							-- Update feature flags
-						new_name := names.item (new_name_id)
-						if is_mangled_name (new_name) then
-							if replication.argument_count = 0 then
-									-- Prefix feature
-								replication.set_is_infix (False)
-								replication.set_is_prefix (True)
+					feature_name_id :=  next.a_feature.feature_name_id
+					if next.parent.renaming /= Void then
+						extended_feature_name := next.parent.renaming.item (feature_name_id)
+						if extended_feature_name /= Void then
+
+							new_name_id := extended_feature_name.feature_name_id
+							new_alias_name_id := extended_feature_name.alias_name_id
+
+								-- We only need a twin so as to not unnecessarily duplicate
+								-- arguments and type for some feature_i descendents.
+								--| Aliasing products unexpected results so a twin is needed.
+							replication := next.a_feature.twin
+								-- Mark it as processed
+							next.set_renaming_processed
+								-- Move the inherit feature information under
+								-- 'new_name'.
+							replication.set_renamed_name_id (new_name_id, new_alias_name_id)
+							replication.set_has_convert_mark (extended_feature_name.has_convert_mark)
+
+								-- Update feature flags
+							if is_mangled_name (names.item (new_name_id)) then
+								if replication.argument_count = 0 then
+										-- Prefix feature
+									replication.set_is_infix (False)
+									replication.set_is_prefix (True)
+								else
+										-- Infix feature
+									replication.set_is_infix (True)
+									replication.set_is_prefix (False)
+								end
 							else
-									-- Infix feature
-								replication.set_is_infix (True)
+									-- Identifier feature
+								replication.set_is_infix (False)
 								replication.set_is_prefix (False)
 							end
-						else
-								-- Identifier feature
-							replication.set_is_infix (False)
-							replication.set_is_prefix (False)
-						end
-						if new_alias_name_id > 0 then
-							if new_alias_name_id = bracket_symbol_id then
-									-- Bracket alias
-								replication.set_is_binary (False)
-								replication.set_is_bracket (True)
-								replication.set_is_unary (False)
-							elseif replication.argument_count = 0 then
-									-- Unary operator
-								replication.set_is_binary (False)
-								replication.set_is_bracket (False)
-								replication.set_is_unary (True)
+							if new_alias_name_id > 0 then
+								if new_alias_name_id = bracket_symbol_id then
+										-- Bracket alias
+									replication.set_is_binary (False)
+									replication.set_is_bracket (True)
+									replication.set_is_unary (False)
+								elseif replication.argument_count = 0 then
+										-- Unary operator
+									replication.set_is_binary (False)
+									replication.set_is_bracket (False)
+									replication.set_is_unary (True)
+								else
+										-- Binary operator
+									replication.set_is_binary (True)
+									replication.set_is_bracket (False)
+									replication.set_is_unary (False)
+								end
 							else
-									-- Binary operator
-								replication.set_is_binary (True)
+								replication.set_is_binary (False)
 								replication.set_is_bracket (False)
 								replication.set_is_unary (False)
 							end
+							next.set_a_feature (replication)
+							Inherit_table.add_renamed_feature (next, new_name_id)
+								-- Remove the information, this will move the cursor to the next item
+							feat.remove
+								-- Remove empty structure
+							if is_empty then
+									-- If there are no longer any features using that name then we remove the reference to the feature name.
+								Inherit_table.remove (feature_name_id)
+							end
 						else
-							replication.set_is_binary (False)
-							replication.set_is_bracket (False)
-							replication.set_is_unary (False)
-						end
-						next.set_a_feature (replication)
-						Inherit_table.add_inherited_feature (next, new_name_id)
-							-- Remove the information
-						feat.remove
-							-- Remove empty structure
-						if is_empty then
-							Inherit_table.remove (feature_name_id)
+							feat.forth
 						end
 					else
-						alias_name_id := feature_i.alias_name_id
 						feat.forth
 					end
 				end
@@ -247,10 +236,10 @@ feature
 			inherited_info = Void
 		do
 			process_undefinition (cl, feature_name_id)
-			if nb_deferred > 0 then
+			if deferred_features.count > 0 then
 				check_deferred (cl)
 			end
-			if nb_features > 0 then
+			if features.count > 0 then
 				check_features (cl, feature_name_id)
 			end
 		end
@@ -313,7 +302,7 @@ feature
 	check_deferred (cl: CLASS_C) is
 			-- Process the deferred features
 		require
-			nb_deferred > 0
+			deferred_features.count > 0
 		do
 				-- Update `rout_id_set'.
 			rout_id_set.update (deferred_features)
@@ -323,7 +312,7 @@ feature
 			-- Process the non-deferred inherited features.
 		require
 			features /= Void;
-			nb_features > 0;
+			features.count > 0;
 		local
 			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
@@ -365,9 +354,8 @@ feature
 	features_all_redefined (feature_name_id: INTEGER): BOOLEAN is
 			-- Are all the non-deferred inherited features redefined?
 		require
-			nb_features > 0
+			features.count > 0
 		local
-			inherit_info: INHERIT_INFO;
 			vdrs2: VDRS2;
 		do
 			from
@@ -376,15 +364,13 @@ feature
 			until
 				features.after or else not Result
 			loop
-				inherit_info := features.item
-				Result := inherit_info.parent.is_redefining (feature_name_id)
-
-				if Result and then not inherit_info.a_feature.redefinable then
+				Result := features.item.parent.is_redefining (feature_name_id)
+				if Result and then not features.item.a_feature.redefinable then
 						-- Cannot redefine frozen feature, constant or once
 					create vdrs2;
 					vdrs2.set_class (System.current_class);
 					vdrs2.set_feature_name (names_heap.item (feature_name_id));
-					vdrs2.set_parent (inherit_info.parent.parent);
+					vdrs2.set_parent (features.item.parent.parent);
 					Error_handler.insert_error (vdrs2);
 				end;
 				features.forth;
@@ -394,14 +380,14 @@ feature
 	features_all_the_same: BOOLEAN is
 			-- Are all the non-deferred features all the same ?
 		require
-			good_context: nb_features > 0;
+			good_context: features.count > 0;
 		local
 			body_id: INTEGER
 			written_id: INTEGER
 			first_feature: FEATURE_I
 			current_feature: FEATURE_I
 			written_class: CLASS_C
-			to_compair, written_type, written_actual_type: TYPE_A
+			to_compare, written_actual_type: TYPE_A
 			alias_name_id: INTEGER
 		do
 				-- First condition for sharing feature: same body id
@@ -433,19 +419,19 @@ feature
 					from
 						written_actual_type := written_class.actual_type
 						written_id := written_class.class_id
-						to_compair := written_actual_type.duplicate
-						to_compair := to_compair.instantiation_in
-							(features.first.parent.parent_type, written_id)
-						features.go_i_th (2)
+						to_compare := written_actual_type.instantiation_in (features.first.parent.parent_type, written_id)
+							-- Go to the second item in 'features'
+
+						features.start
+						features.forth
 					until
 						features.after or else not Result
 					loop
-						written_type := written_actual_type.duplicate
-						written_type := written_type.instantiation_in
-							(features.item.parent.parent_type, written_id)
 							-- Same instantiated parent type for
 							-- sharing feature
-						Result := written_type.is_safe_equivalent (to_compair)
+						Result := to_compare.is_safe_equivalent (
+							written_actual_type.instantiation_in (features.item.parent.parent_type, written_id)
+						)
 						features.forth
 					end
 				end

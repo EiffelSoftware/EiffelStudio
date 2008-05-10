@@ -63,7 +63,6 @@ feature
 			rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 			rout_id: INTEGER
-			l: SELECTION_LIST
 		do
 			from
 				rout_id_set := info.a_feature.rout_id_set
@@ -73,13 +72,13 @@ feature
 				i > nb
 			loop
 				rout_id := rout_id_set.item (i)
-				l := item (rout_id)
-				if l = Void then
-					create l.make
-					put (l, rout_id)
+				search (rout_id)
+				if found_item = Void then
+						-- We are adding the first feature corresponding to `rout_id'
+						-- so we create a new selection list.
+					put (create {SELECTION_LIST}.make, rout_id)
 				end
-				l.extend (info)
-
+				found_item.extend (info)
 				i := i + 1
 			end
 		end
@@ -90,23 +89,71 @@ feature
 		require
 			parents_not_void: parents /= Void
 		local
-			selected: FEATURE_I
-			vmrc3: VMRC3
+			i, l_iteration_position: INTEGER
+			l_keys: like keys
+			l_process_replication: BOOLEAN
+			l_replicated_feature_set: LINKED_LIST [SELECTION_LIST]
+			l_selection_list: SELECTION_LIST
+			l_feature_replication_generator: AST_FEATURE_REPLICATION_GENERATOR
+			l_current_class: CLASS_C
+			l_class_as: CLASS_AS
 		do
 			from
-				start
+					-- If we perform 'count' iterations this means we exit
+					-- immediately after the last item has been processed
+					-- instead of calling a needless extra 'forth'
+				i := count
+				l_keys := keys
+				l_process_replication := not System.has_old_feature_replication
 			until
-				after
+				i = 0
 			loop
-				selected := item_for_iteration.selection (parents, old_t, new_t)
-				if selected = Void then
-							-- No selected feature
-					create vmrc3
-					vmrc3.set_class (System.current_class)
-					vmrc3.set_selection_list (item_for_iteration)
-					Error_handler.insert_error (vmrc3)
+					-- Move 'iteration' position to the next usable 'content' slot.
+				if l_keys [l_iteration_position] /= 0 then
+					content [l_iteration_position].process_selection (parents, old_t, new_t)
+
+						-- Check if replication was processed.
+						-- All non replicated features get removed during selection processing.
+					if l_process_replication and then
+					content [l_iteration_position].count > 0 then
+						if l_replicated_feature_set = Void then
+							create l_replicated_feature_set.make
+						end
+						l_replicated_feature_set.extend (content [l_iteration_position])
+					end
+						-- Decrement processed selection list counter.
+					i := i - 1
 				end
-				forth
+				l_iteration_position := l_iteration_position + 1
+			end
+
+			if l_replicated_feature_set /= Void then
+					-- There are features replicated at the level of the current class that have been processed.
+
+					-- A full type check is needed to detect replication.
+				l_current_class := System.current_class
+				l_current_class.set_need_type_check (True)
+				l_class_as := l_current_class.ast
+				l_class_as.set_replicated_features (create {EIFFEL_LIST [FEATURE_AS]}.make (5))
+
+				create l_feature_replication_generator
+				from
+					l_replicated_feature_set.start
+				until
+					l_replicated_feature_set.after
+				loop
+					l_selection_list := l_replicated_feature_set.item
+					from
+							-- Iterate through the replicated features and adjust AST as necessary.
+						l_selection_list.start
+					until
+						l_selection_list.after
+					loop
+						l_feature_replication_generator.process_replicated_feature (l_selection_list.item.a_feature, l_selection_list.item.parent, l_current_class, old_t, new_t)
+						l_selection_list.forth
+					end
+					l_replicated_feature_set.forth
+				end
 			end
 			debug
 				io.error.put_string ("========= END TRACE ==========%N")

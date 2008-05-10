@@ -22,6 +22,7 @@ feature -- Code template
 feature -- Contract tool
 
 	e_contract_tool_save_failed: !STRING_32 do Result ?= locale.translation ("There was a problem saving the contracts. Please check you have access to the class file.") end
+	e_contract_tool_expression_error: !STRING_32 do Result ?= locale.translation ("The entered contract expression is not a valid expression or contains syntax errors.%NPlease fix the error before continuing.") end
 
 feature -- Prompts
 

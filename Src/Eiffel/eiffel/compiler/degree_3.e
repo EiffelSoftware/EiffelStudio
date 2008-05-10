@@ -14,7 +14,7 @@ inherit
 			make
 		end
 
-	
+
 
 	COMPILER_EXPORTER
 	SHARED_ERROR_HANDLER
@@ -96,7 +96,7 @@ feature -- Processing
 						-- to recheck it at the next compilation as otherwise we
 						-- would not typecheck inherited features after the ancestor
 						-- class fixed the error.
-					if not ignored_classes.has (l_class) then
+					if ignored_classes.count = 0 or else not ignored_classes.has (l_class) then
 						if l_error_handler.error_level = l_error_level then
 								-- No errors we can safely remove it from degree 3
 							l_class.remove_from_degree_3
@@ -139,7 +139,7 @@ feature {NONE} -- Processing
 			if not retried then
 					-- Process creation feature of `a_class'.
 				a_class.process_creation_feature
-				a_class.pass3 (not ignored_classes.has (a_class))
+				a_class.pass3 (ignored_classes.count = 0 or else not ignored_classes.has (a_class))
 
 					-- Type checking and maybe byte code production for `a_class'.
 				if System.il_generation then

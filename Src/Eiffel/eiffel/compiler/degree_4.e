@@ -119,7 +119,7 @@ feature -- Processing
 						if a_class.changed and then a_class.generics /= Void then
 							l_system.set_current_class (a_class)
 							a_class.check_constraint_genericity
-							if constraint_error_list /= Void and then not constraint_error_list.is_empty then
+							if constraint_error_list /= Void and then constraint_error_list.count > 0 then
 								insert_class (a_class)
 							end
 						end
@@ -131,8 +131,8 @@ feature -- Processing
 
 				-- Cannot continue if there is an error in the
 				-- constraint genericity clause of a class.
-			if error_handler.has_error then
-				error_handler.raise_error
+			if l_error_handler.has_error then
+				l_error_handler.raise_error
 			end
 
 			nb := 0
@@ -142,7 +142,7 @@ feature -- Processing
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed and not ignored_classes.has (a_class) then
+					if not a_class.degree_4_processed and then (ignored_classes.count = 0 or else not ignored_classes.has (a_class)) then
 						l_degree_output.put_degree_4 (a_class, count - nb)
 						l_system.set_current_class (a_class)
 							-- Adds future checks to the `remaining_validity_checking_list'

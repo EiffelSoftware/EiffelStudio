@@ -15,7 +15,8 @@ inherit
 		rename
 			put as server_put
 		redefine
-			item, has, flush, make
+			item, has, flush, make,
+			remove
 		end
 
 create
@@ -49,7 +50,7 @@ feature -- Element access
 feature -- Element change
 
 	put (t: FEATURE_I) is
-			-- Put featire `t' in memory.
+			-- Put feature `t' in memory.
 		require
 			t_not_void: t /= Void
 			t_id_set: t.id > 0
@@ -57,6 +58,13 @@ feature -- Element change
 			storage.force (t, t.id)
 		ensure
 			has: has (t.id)
+		end
+
+	remove (an_id: INTEGER_32)
+			-- <Precursor>
+		do
+			storage.remove (an_id)
+			Precursor (an_id)
 		end
 
 feature -- Server

@@ -68,7 +68,9 @@ feature {NONE} -- Initialization
 				end
 			else
 				feature_id := f.feature_id
-				written_in := f.written_in
+				written_in := f.access_in
+					--| IEK Changed from 'written_in' to handle replication correctly
+					--| FIXME IEK .Net implementation needs updating
 			end
 		end
 

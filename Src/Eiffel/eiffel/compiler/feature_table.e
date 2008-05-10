@@ -152,7 +152,7 @@ feature -- Access
 		require
 			computed: is_computed
 		local
-			l_id: INTEGER
+			i, l_count, l_id: INTEGER
 			l_server: FEATURE_SERVER
 		do
 			Result := feature_table
@@ -160,18 +160,22 @@ feature -- Access
 				Result := feature_table_cache.item_id (feat_tbl_id)
 				if Result = Void then
 					from
-						create Result.make (count)
+						l_count := count
+							-- Create Result filled with at least `l_count' items.
+						create Result.make_filled (l_count)
 						Result.set_id (feat_tbl_id)
-						internal_table_start
 						l_server := system.feature_server
+							--
+						iteration_position := -1
 					until
-						internal_table_after
+						i = l_count
 					loop
-						l_id := internal_table_item_for_iteration
-						if l_id > 0 then
-							Result.extend (l_server.item (l_id))
-						end
+						i := i + 1
 						internal_table_forth
+						l_id := content [iteration_position]
+						if l_id > 0 then
+							Result.put_i_th (l_server.item (l_id), i)
+						end
 					end
 					feature_table_cache.force (Result)
 				end
@@ -275,10 +279,16 @@ feature {NONE} -- HASH_TABLE like features
 	remove (key: INTEGER) is
 		local
 			old_feature: FEATURE_I
+			l_id: INTEGER
 			alias_name_id: INTEGER
 		do
 			old_feature := item_id (key)
 			if old_feature /= Void then
+					-- Remove feature from temporary feature server
+				l_id := old_feature.id
+				if l_id > 0 then
+					tmp_feature_server.remove (l_id)
+				end
 					-- Remove old alias name
 				alias_name_id := old_feature.alias_name_id
 				if alias_name_id > 0 then
@@ -357,28 +367,21 @@ feature -- Traversal
 
 	start is
 			-- Start iteration
-		local
-			l_feat_tbl: like feature_table
 		do
-			l_feat_tbl := feature_table
-			if l_feat_tbl /= Void then
-				l_feat_tbl.start
+			if feature_table /= Void then
+				feature_table.start
 			else
 					-- Load all the features in memory. It makes sense, since
 					-- the traversal will need to go through all the items.
-				internal_features.do_nothing
-				feature_table.start
+				internal_features.start
 			end
 		end
 
 	after: BOOLEAN is
 			-- Are we off?
-		local
-			l_feat_tbl: like feature_table
 		do
-			l_feat_tbl := feature_table
-			if l_feat_tbl /= Void then
-				Result := l_feat_tbl.after
+			if feature_table /= Void then
+				Result := feature_table.after
 			else
 				Result := internal_table_after
 			end
@@ -389,12 +392,9 @@ feature -- Traversal
 
 	forth is
 			-- Are we off?
-		local
-			l_feat_tbl: like feature_table
 		do
-			l_feat_tbl := feature_table
-			if l_feat_tbl /= Void then
-				l_feat_tbl.forth
+			if feature_table /= Void then
+				feature_table.forth
 			else
 				internal_table_forth
 			end
@@ -403,12 +403,10 @@ feature -- Traversal
 feature -- Status report
 
 	has_overloaded (a_feature_name_id: INTEGER): BOOLEAN is
-			-- Does Current have `a_feature_name' has being an overloaded routine?
+			-- Does Current have `a_feature_name' as being an overloaded routine?
 		do
-			if associated_class.is_true_external and overloaded_names /= Void then
-				if a_feature_name_id > 0 then
-					Result := overloaded_names.has (a_feature_name_id)
-				end
+			if a_feature_name_id > 0 and then overloaded_names /= Void and then associated_class.is_true_external then
+				Result := overloaded_names.has (a_feature_name_id)
 			end
 		end
 
@@ -844,29 +842,35 @@ end
 			-- Build `select_table', `feature_id_table' and `body_index_table'.
 		local
 			l_feat: FEATURE_I
-			nb, l_id: INTEGER
-			l_system: like system
+			nb: INTEGER
+			l_feature_server: FEATURE_SERVER
+			i: INTEGER
 		do
 			from
 				nb := count
-				l_system := system
-				create feature_table.make (nb)
+				l_feature_server := system.feature_server
+				create feature_table.make_filled (nb)
 				feature_table.set_id (feat_tbl_id)
 				create select_table.make (nb, Current)
 				create feature_id_table.make (1, nb)
 				create body_index_table.make (nb)
-				internal_table_start
+				iteration_position := -1
 			until
-				internal_table_after
+				i = nb
 			loop
-				l_id := internal_table_item_for_iteration
-				check l_id_positive: l_id > 0 end
-				l_feat := l_system.feature_server.item (l_id)
+					-- We loop 'nb' times so that when all features are computed we exit loop immediately.
+				internal_table_forth
+				i := i + 1
+					-- Retrieve feature from current routine id of `Current'.
+				check l_id_positive: content [iteration_position] > 0 end
+				l_feat := l_feature_server.item (content [iteration_position])
+
 				feature_id_table.force (l_feat.feature_name_id, l_feat.feature_id)
 				body_index_table.put (l_feat.feature_name_id, l_feat.body_index)
 				select_table.add_feature (l_feat)
-				feature_table.extend (l_feat)
-				internal_table_forth
+					-- We can use `i' to insert the feature in to the correct
+					-- part of the feature table.
+				feature_table.put_i_th (l_feat, i)
 			end
 			is_computed := True
 		ensure
@@ -948,27 +952,27 @@ end
 			end
 		end
 
-	update_instantiator2 is
-			-- Look for generic types in the result and arguments of
-			-- the features assuming that the associated class is
-			-- syntactically changed
-		require
-			associated_class.changed
-		local
-			a_class: CLASS_C
-			feature_i: FEATURE_I
-		do
-			from
-				start
-				a_class := associated_class
-			until
-				after
-			loop
-				feature_i := item_for_iteration
-				feature_i.update_instantiator2 (a_class)
-				forth
-			end
-		end
+--	update_instantiator2 is
+--			-- Look for generic types in the result and arguments of
+--			-- the features assuming that the associated class is
+--			-- syntactically changed
+--		require
+--			associated_class.changed
+--		local
+--			a_class: CLASS_C
+--			feature_i: FEATURE_I
+--		do
+--			from
+--				start
+--				a_class := associated_class
+--			until
+--				after
+--			loop
+--				feature_i := item_for_iteration
+--				feature_i.update_instantiator2 (a_class)
+--				forth
+--			end
+--		end
 
 	skeleton: GENERIC_SKELETON is
 			-- Skeleton of the associated class

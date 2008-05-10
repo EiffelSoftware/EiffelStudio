@@ -5,26 +5,34 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DYN_PROC_I 
+class DYN_PROC_I
 
 inherit
 	PROCEDURE_I
 		redefine
 			replicated, unselected, is_do
 		end
-	
-feature 
 
-	replicated: FEATURE_I is
+feature
+
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_DYN_PROC_I
 		do
 			create rep;
 			transfer_to (rep);
+			rep.set_access_in (in)
 			rep.set_code_id (new_code_id);
 			Result := rep;
 		end;
+
+	selected: DYN_PROC_I is
+			-- <Precursor>
+		do
+			create Result
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature

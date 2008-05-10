@@ -11,7 +11,7 @@ inherit
 	CONSTANT_I
 		redefine
 			is_unique, is_once, check_types, equiv, value,
-			replicated, unselected, new_api_feature
+			replicated, unselected, new_api_feature, selected
 		end
 
 create
@@ -75,7 +75,7 @@ feature
 			end
 		end
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_UNIQUE_I
@@ -83,7 +83,15 @@ feature
 			create rep.make
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
+			rep.set_access_in (in)
 			Result := rep
+		end
+
+	selected: UNIQUE_I is
+			-- <Precursor>
+		do
+			create Result.make
+			Result.transfer_from (Current)
 		end
 
 	unselected (in: INTEGER): FEATURE_I is

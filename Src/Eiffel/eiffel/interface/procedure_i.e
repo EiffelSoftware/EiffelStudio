@@ -10,7 +10,7 @@ deferred class PROCEDURE_I
 inherit
 	FEATURE_I
 		redefine
-			transfer_to, duplicate,
+			transfer_to, transfer_from, duplicate,
 			is_routine, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
@@ -186,6 +186,15 @@ feature -- Initialization
 			other.set_has_postcondition (has_postcondition)
 			other.set_assert_id_set (assert_id_set)
 			other.set_has_rescue_clause (has_rescue_clause)
+		end
+
+	transfer_from (other: PROCEDURE_I) is
+			-- Transfer datas form `other' into Current.
+		do
+			Precursor {FEATURE_I} (other)
+			arguments := other.arguments
+			obsolete_message_id := other.obsolete_message_id
+			assert_id_set := other.assert_id_set
 		end
 
 	check_local_names (a_body: BODY_AS) is

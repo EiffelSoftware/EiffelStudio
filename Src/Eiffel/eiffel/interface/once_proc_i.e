@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ONCE_PROC_I 
+class ONCE_PROC_I
 
 inherit
 	DYN_PROC_I
@@ -14,10 +14,12 @@ inherit
 			is_process_relative,
 			replicated,
 			transfer_to,
+			transfer_from,
 			unselected,
-			update_api
+			update_api,
+			selected
 		end
-	
+
 feature -- Status report
 
 	is_once: BOOLEAN is True
@@ -45,7 +47,14 @@ feature -- Adaptation
 			other.set_is_process_relative (is_process_relative)
 		end
 
-	replicated: FEATURE_I is
+	transfer_from (other: ONCE_PROC_I) is
+			-- Transfer data from Current into `other'.
+		do
+			Precursor (other)
+			set_is_process_relative (other.is_process_relative)
+		end
+
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_ONCE_PROC_I
@@ -53,7 +62,15 @@ feature -- Adaptation
 			create rep
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
+			rep.set_access_in (in)
 			Result := rep
+		end
+
+	selected: ONCE_PROC_I
+			-- <Precursor>
+		do
+			create Result
+			Result.transfer_from (Current)
 		end
 
 	unselected (in: INTEGER): FEATURE_I is

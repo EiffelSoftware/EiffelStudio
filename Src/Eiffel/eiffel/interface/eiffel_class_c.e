@@ -505,6 +505,7 @@ feature -- Third pass: byte code production and type check
 
 			l_class_error_level, l_error_level: NATURAL
 			l_ast_context: AST_CONTEXT
+			i: INTEGER
 		do
 				-- Initialization for actual types evaluation
 			Inst_context.set_group (cluster)
@@ -536,29 +537,30 @@ feature -- Third pass: byte code production and type check
 				old_inline_agent_table := internal_inline_agent_table.twin
 			end
 
-				-- Check validity of the types in signatures.
+				-- Preprocess features
 			l_error_level := Error_handler.error_level
 			l_class_error_level := l_error_level
 			from
-				feat_table.start
+				i := feat_table.count
 			until
-				feat_table.after
+				i = 0
 			loop
-				feature_i := feat_table.item_for_iteration
+				feature_i := feat_table [i]
+					-- Check validity of the types in signatures.
 				l_ast_context.set_written_class (feature_i.written_class)
 				l_ast_context.set_current_feature (feature_i)
 				feature_i.check_type_validity (Current)
-				feat_table.forth
+				i := i - 1
 			end
 
 			if error_handler.error_level = l_error_level then
 					-- Now check the body.
 				from
-					feat_table.start
+					i := feat_table.count
 				until
-					feat_table.after
+					i = 0
 				loop
-					feature_i := feat_table.item_for_iteration
+					feature_i := feat_table [i]
 					l_ast_context.set_written_class (feature_i.written_class)
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
@@ -774,8 +776,9 @@ feature -- Third pass: byte code production and type check
 							is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 						record_suppliers (feature_i, dependances)
 					end
+
 					l_ast_context.clear_feature_context
-					feat_table.forth
+					i := i - 1
 				end -- Main loop
 
 					-- Recomputation of invariant clause

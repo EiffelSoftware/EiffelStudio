@@ -181,6 +181,12 @@ feature -- Access
 			Result := feature_flags & is_origin_mask = is_origin_mask
 		end
 
+	frozen has_replicated_ast: BOOLEAN is
+			-- Does feature have a replicated AST?
+		do
+			Result := feature_flags & has_replicated_ast_mask = has_replicated_ast_mask
+		end
+
 	frozen is_frozen: BOOLEAN is
 			-- Is feature frozen?
 		do
@@ -229,18 +235,12 @@ feature -- Access
 			Result := feature_flags & has_convert_mark_mask = has_convert_mark_mask
 		end
 
-	frozen is_selected: BOOLEAN is
-			-- Is feature selected?
-		do
-			-- FIXME: Manu 11/21/2001.
-			-- Not used at the moment.
-		end
-
 	has_formal: BOOLEAN is
 			-- Is formal type present in the feature signature at the top level?
 			-- (Formals used as parameters of generic class types do not count.)
 		local
 			a: like arguments
+			i, l_count: INTEGER
 		do
 				-- It is pretty important that we use `actual_type.is_formal' and not
 				-- just `is_formal' because otherwise if you have `like x' and `x: G'
@@ -251,15 +251,16 @@ feature -- Access
 				a := arguments
 				if a /= Void then
 					from
-						a.start
+						i := 1
+						l_count := a.count
 					until
-						a.after
+						i > l_count
 					loop
-						if a.item.actual_type.is_formal then
+						if a [i].actual_type.is_formal then
 							Result := True
-							a.finish
+							i := l_count
 						end
-						a.forth
+						i := i + 1
 					end
 				end
 			end
@@ -472,7 +473,7 @@ feature -- Debugger access
 		end
 
 	first_breakpoint_slot_index: INTEGER is
-			-- Index of the first breakpoin-slot of the body
+			-- Index of the first breakpoint-slot of the body
 			-- Take into account inherited and inner assertions
 		local
 			l_body: like real_body
@@ -505,7 +506,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in
+			Result := a_class.class_id = written_in or else (is_replicated and then a_class.class_id = access_in and then not System.has_old_feature_replication)
 		end
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
@@ -513,7 +514,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in
+			Result := a_class.class_id = written_in or else (is_replicated and then a_class.class_id = access_in and then not System.has_old_feature_replication)
 		end
 
 	frozen to_implement_in (a_class: CLASS_C): BOOLEAN is
@@ -562,7 +563,20 @@ feature -- Setting
 			feature_name_set: equal (feature_name, s)
 		end
 
-	set_feature_name_id, set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER) is
+	set_feature_name_id (a_id: INTEGER; alias_id: INTEGER) is
+			-- Assign `a_id' to `feature_name_id'.
+		require
+			valid_id: Names_heap.valid_index (a_id)
+			valid_alias_id: Names_heap.valid_index (alias_id)
+		do
+			feature_name_id := a_id
+			alias_name_id := alias_id
+		ensure
+			feature_name_id_set: feature_name_id = a_id
+			alias_name_id_set: alias_name_id = alias_id
+		end
+
+	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER) is
 			-- Assign `a_id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (a_id)
@@ -636,6 +650,14 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (b, is_origin_mask)
 		ensure
 			is_origin_set: is_origin = b
+		end
+
+	frozen set_has_replicated_ast (b: BOOLEAN) is
+			-- Assign `b' to `has_replicated_ast'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_replicated_ast_mask)
+		ensure
+			is_origin_set: has_replicated_ast = b
 		end
 
 	frozen set_is_empty (b : BOOLEAN) is
@@ -735,14 +757,6 @@ feature -- Setting
 			has_rescue_clause_set: has_rescue_clause = b
 		end
 
-	set_is_selected (b: BOOLEAN) is
-			-- Assign `b' to `is_selected'.
-		do
-			-- FIXME: Manu 11/21/2001
-			-- Not used currently used
-			-- is_selected := b
-		end
-
 	set_has_property (v: BOOLEAN) is
 			-- Set `has_property' to `v'.
 		do
@@ -825,7 +839,6 @@ feature -- Incrementality
 			good_argument: other /= Void
 		do
 			Result := written_in = other.written_in
-				and then is_selected = other.is_selected
 				and then rout_id_set.same_as (other.rout_id_set)
 				and then is_origin = other.is_origin
 				and then is_frozen = other.is_frozen
@@ -848,7 +861,6 @@ feature -- Incrementality
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
-			io.error.put_boolean (is_selected = other.is_selected) io.error.put_new_line;
 			io.error.put_boolean (rout_id_set.same_as (other.rout_id_set)) io.error.put_new_line;
 			io.error.put_boolean (is_origin = other.is_origin) io.error.put_new_line;
 			io.error.put_boolean (is_frozen = other.is_frozen) io.error.put_new_line;
@@ -893,7 +905,7 @@ end
 	select_table_equiv (other: FEATURE_I): BOOLEAN is
 			-- Incrementality of select table
 		require
-			good_argumnet: other /= Void
+			good_argument: other /= Void
 
 		do
 			Result := written_in = other.written_in
@@ -1028,7 +1040,7 @@ feature -- Conveniences
 	is_replicated: BOOLEAN is
 			-- Is Current feature conceptually replicated?
 		do
-			-- Do nothig
+			-- Do nothing
 		end
 
 	is_routine: BOOLEAN is
@@ -1386,7 +1398,12 @@ feature -- Check
 			feat_as: FEATURE_AS
 			l_enclosing_feature: FEATURE_I
 		do
-			if is_inline_agent then
+			if not is_inline_agent then
+				feat_as := body
+				if feat_as /= Void then
+					Result := feat_as.body
+				end
+			else
 				if not is_fake_inline_agent then
 					l_enclosing_feature := enclosing_feature
 					if l_enclosing_feature.is_invariant then
@@ -1396,11 +1413,6 @@ feature -- Check
 						Result := inline_agent_lookup.lookup_inline_agent_of_feature (
 							l_enclosing_feature.body, inline_agent_nr)
 					end
-				end
-			else
-				feat_as := body
-				if feat_as /= Void then
-					Result := feat_as.body
 				end
 			end
 		end
@@ -1421,7 +1433,7 @@ feature -- Check
 					-- class ast and find the feature as
 				class_ast := Tmp_ast_server.item (written_in)
 				if class_ast /= Void then
-					Result ?= class_ast.feature_with_name (feature_name_id)
+					Result := class_ast.feature_with_name (feature_name_id)
 				end
 			end
 		end
@@ -1593,7 +1605,13 @@ feature -- Polymorphism
  			create Result
  			Result.set_body_index (body_index)
  			Result.set_type_a (type.actual_type)
- 			Result.set_written_in (written_in)
+
+ 			if has_replicated_ast then
+ 				Result.set_written_in (access_in)
+ 			else
+ 				Result.set_written_in (written_in)
+ 			end
+
  			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
 			Result.set_is_deferred (is_deferred)
@@ -1645,7 +1663,7 @@ feature -- Signature instantiation
 			l_arguments: like arguments
 		do
 				-- Instantiation of the type
-			old_type ?= type
+			old_type := type
 			set_type (old_type.instantiated_in (parent_type), assigner_name_id)
 				-- Instantiation of the arguments
 			from
@@ -1676,7 +1694,7 @@ feature -- Signature instantiation
 		do
 			l_written_in := written_in
 				-- Instantiation of the type
-			old_type ?= type
+			old_type := type
 			set_type (old_type.instantiation_in (descendant_type, l_written_in), assigner_name_id)
 				-- Instantiation of the arguments
 			from
@@ -1837,11 +1855,15 @@ feature -- Signature checking
 		do
 			if a_context_class.changed then
 					-- Generic types tracking
+					-- This needs to be called for all features
 				update_instantiator2 (a_context_class)
 			end
 
 			if a_context_class.class_id = written_in then
 				l_type := type
+
+					-- We only need to check the features that are actually defined in the current class
+					-- as inherited features should already have been checked.
 				type_a_checker.init_with_feature_table (
 					Current, a_context_class.feature_table, Void, error_handler)
 				if not l_type.is_void then
@@ -2369,7 +2391,6 @@ feature -- Undefinition
 			Result.set_origin_class_id (origin_class_id)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_assert_id_set (assert_id_set)
-			Result.set_is_selected (is_selected)
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_is_frozen (is_frozen)
@@ -2425,6 +2446,12 @@ feature -- Replication
 			-- Do nothing
 		end
 
+	set_access_in (i: INTEGER_32)
+			-- Assign `i' to access_in
+		do
+			-- Do nothing
+		end
+
 	access_in: INTEGER is
 			-- Id of class where current feature can be accessed
 			-- through its routine id
@@ -2433,17 +2460,28 @@ feature -- Replication
 			Result := written_in
 		end
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replicated feature
+		require
+			in_not_void: in /= 0
 		deferred
 		ensure
-			Result /= Void
+			Result_exists: Result /= Void
+			access_in_set: Result.access_in = in
 		end
 
 	new_code_id: INTEGER is
 			-- New code id
 		do
 			Result := System.body_index_counter.next_id
+		end
+
+	selected: FEATURE_I is
+			-- Selected feature (used for duplicating inherited features by resetting replication and selection status
+		deferred
+		ensure
+			Result_exists: Result /= Void
+			equivalent: Result.equiv (Current)
 		end
 
 	unselected (in: INTEGER): FEATURE_I is
@@ -2466,25 +2504,52 @@ feature -- Replication
 		require
 			other_exists: other /= Void
 		do
-			other.set_body_index (body_index)
 			other.set_export_status (export_status)
 			other.set_feature_id (feature_id)
 			other.set_feature_name_id (feature_name_id, alias_name_id)
-			other.set_is_frozen (is_frozen)
-			other.set_is_infix (is_infix)
-			other.set_is_prefix (is_prefix)
-			other.set_is_selected (is_selected)
+			other.set_written_feature_id (written_feature_id)
+			other.set_origin_feature_id (origin_feature_id)
+			other.set_origin_class_id (origin_class_id)
 			other.set_pattern_id (pattern_id)
 			other.set_rout_id_set (rout_id_set)
 			other.set_written_in (written_in)
-			other.set_written_feature_id (written_feature_id)
+
+				--| IEK: As an minor optimization the flags below internally
+				--| could be set simply with 'other.set_feature_flags (feature_flags)'
+				--| It would also prevents bugs when adding another flag and it doesn't
+				--| get accounted for in this routine.
+			other.set_is_frozen (is_frozen)
+			other.set_is_infix (is_infix)
+			other.set_is_prefix (is_prefix)
 			other.set_is_origin (is_origin)
-			other.set_origin_feature_id (origin_feature_id)
-			other.set_origin_class_id (origin_class_id)
 			other.set_is_bracket (is_bracket)
 			other.set_is_binary (is_binary)
 			other.set_is_unary (is_unary)
 			other.set_has_convert_mark (has_convert_mark)
+			other.set_body_index (body_index)
+		end
+
+	transfer_from (other: FEATURE_I) is
+			-- Transfer of datas from `other' into `Current'.
+		require
+			other_exists: other /= Void
+		do
+				-- `export_status' needs to be set via `set_export_status'
+			set_export_status (other.export_status)
+
+			feature_id := other.feature_id
+			feature_name_id := other.feature_name_id
+			alias_name_id := other.alias_name_id
+			written_feature_id := other.written_feature_id
+			origin_feature_id := other.origin_feature_id
+			origin_class_id := other.origin_class_id
+			pattern_id := other.pattern_id
+			rout_id_set := other.rout_id_set
+			written_in := other.written_in
+			body_index := other.body_index
+
+				-- Set `feature_flags' directly from `other'.
+			feature_flags := other.feature_flags
 		end
 
 feature -- Genericity
@@ -2627,7 +2692,7 @@ feature -- C code generation
 			-- Generate feature written in `class_type' in `buffer'.
 		require
 			valid_buffer: buffer /= Void
-			written_in_type: class_type.associated_class.class_id = generation_class_id
+			written_in_type: class_type.associated_class.class_id = generation_class_id or is_replicated
 			not_deferred: not is_deferred
 		local
 			l_byte_code: BYTE_CODE
@@ -2788,16 +2853,16 @@ feature -- Api creation
 
 feature {FEATURE_I} -- Implementation
 
+	feature_flags: NATURAL_32
+			-- Property of Current feature, i.e. frozen,
+			-- infix, origin, prefix, selected...
+
 	new_api_feature: E_FEATURE is
 			-- API feature creation
 		deferred
 		ensure
 			non_void_result: Result /= Void
 		end
-
-	feature_flags: NATURAL_32
-			-- Property of Current feature, i.e. frozen,
-			-- infix, origin, prefix, selected...
 
 	is_frozen_mask: NATURAL_32 is 0x0001
 	is_origin_mask: NATURAL_32 is 0x0002
@@ -2818,6 +2883,8 @@ feature {FEATURE_I} -- Implementation
 	is_fake_inline_agent_mask: NATURAL_32 is 0x10000
 	has_rescue_clause_mask: NATURAL_32 is 0x20000
 	is_export_status_none_mask: NATURAL_32 is 0x40000
+	has_function_origin_mask: NATURAL_32 is 0x80000 -- Used in ATTRIBUTE_I
+	has_replicated_ast_mask: NATURAL_32 is 0x100000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

@@ -11,7 +11,7 @@ inherit
 	EXTERNAL_I
 		redefine
 			assigner_name_id, unselected, replicated, transfer_to, set_type, is_function, type,
-			new_api_feature
+			new_api_feature, transfer_from, selected
 		end
 
 create
@@ -41,7 +41,14 @@ feature
 			other.set_type (type, assigner_name_id)
 		end
 
-	replicated: FEATURE_I is
+	transfer_from (other: like Current) is
+			-- Transfer datas form `other' into Current
+		do
+			Precursor {EXTERNAL_I} (other)
+			set_type (other.type, other.assigner_name_id)
+		end
+
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_EXTERNAL_FUNC_I;
@@ -49,8 +56,16 @@ feature
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end;
+
+	selected: EXTERNAL_FUNC_I
+			-- <Precursor>
+		do
+			create Result.make (extension)
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature

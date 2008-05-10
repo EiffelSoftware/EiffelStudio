@@ -1830,7 +1830,11 @@ end
 						-- Re-sort the list of classes because the topological
 						-- sort modified the topological ids.
 					classes.sort
-					reset_conformance_table
+
+					if not first_compilation then
+							-- Conformance table only needs to be reset upon incremental compilation.
+						reset_conformance_table
+					end
 					build_conformance_table
 
 						-- Clear the topo sorter
@@ -2266,7 +2270,7 @@ end
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
+				a_class := class_array [i]
 				if a_class /= Void then
 					a_class.reset_dep_classes
 				end
@@ -2284,7 +2288,7 @@ end
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
+				a_class := class_array [i]
 				if a_class /= Void then
 					a_class.fill_conformance_table
 				end
@@ -4481,23 +4485,23 @@ feature -- Generation
 				buffer.flush_buffer (skeleton_file)
 				cl_type := class_types.item (i)
 					-- Classes could be removed
-if cl_type /= Void then
-				if final_mode then
-					if
-						not cl_type.associated_class.is_precompiled or else
-						cl_type.associated_class.is_in_system
-					then
+				if cl_type /= Void then
+					if final_mode then
+						if
+							not cl_type.associated_class.is_precompiled or else
+							cl_type.associated_class.is_in_system
+						then
+							cl_type.generate_skeleton1 (buffer)
+						end
+					else
 						cl_type.generate_skeleton1 (buffer)
 					end
+					if not final_mode then
+						cltype_array.put (cl_type, cl_type.static_type_id)
+					end
 				else
-					cl_type.generate_skeleton1 (buffer)
+						-- FIXME
 				end
-				if not final_mode then
-					cltype_array.put (cl_type, cl_type.static_type_id)
-				end
-else
-		-- FIXME
-end
 				i := i + 1
 			end
 
@@ -4741,9 +4745,9 @@ end
 						if cl_type /= Void and then cl_type.associated_class.has_visible then
 							cl_type.generate_cecil (buffer)
 						else
-							buffer.put_string ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+							buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 						end
-						buffer.put_string (",%N")
+						buffer.put_two_character (',', '%N')
 						i := i + 1
 					end
 					buffer.put_string ("};%N")
@@ -4994,16 +4998,22 @@ feature -- Pattern table generation
 
 			rout_id: INTEGER
 			rout_table: ROUT_TABLE
+			l_empty_array: ARRAY [STRING_8]
+			l_encoder: like encoder
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
 			buffer.clear_all
+
+			l_encoder := encoder
 
 			final_mode := byte_context.final_mode
 
 			root_cl := root_type.associated_class
 			cl_type := root_class_type
 			dtype := cl_type.type_id - 1
+
+			l_empty_array := <<>>
 
 			if not Compilation_modes.is_precompiling and then root_creation_name /= Void then
 				root_feat := root_cl.feature_table.item (root_creation_name)
@@ -5095,7 +5105,7 @@ feature -- Pattern table generation
 					-- Separation for formatting
 				buffer.put_new_line
 					-- Prototypes
-				buffer.generate_extern_declaration ("void", "egc_tabinit_init", <<>>)
+				buffer.generate_extern_declaration ("void", "egc_tabinit_init", l_empty_array)
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -5104,7 +5114,7 @@ feature -- Pattern table generation
 				loop
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
-						buffer.generate_extern_declaration ("void", Encoder.init_name (cl_type.static_type_id), <<>>)
+						buffer.generate_extern_declaration (once "void", l_encoder.init_name (cl_type.static_type_id), l_empty_array)
 					end
 					i := i + 1
 				end
@@ -5123,8 +5133,8 @@ feature -- Pattern table generation
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
 						buffer.put_new_line
-						buffer.put_string (Encoder.init_name (cl_type.static_type_id))
-						buffer.put_string ("();")
+						buffer.put_string (l_encoder.init_name (cl_type.static_type_id))
+						buffer.put_string (once "();")
 					end
 					i := i + 1
 				end
@@ -5132,7 +5142,7 @@ feature -- Pattern table generation
 
 					-- Separation for formatting
 				buffer.put_new_line
-				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<>>, <<>>)
+				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, l_empty_array, l_empty_array)
 				buffer.generate_block_open
 
 					-- Set C variable `ccount'.
@@ -5175,7 +5185,7 @@ feature -- Pattern table generation
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
 						buffer.generate_extern_declaration (
-									"void", Encoder.module_init_name (cl_type.static_type_id), <<>>)
+									once "void", l_encoder.module_init_name (cl_type.static_type_id), l_empty_array)
 					end
 				end
 				i := i + 1
@@ -5189,7 +5199,7 @@ feature -- Pattern table generation
 
 				-- Module initialization
 			buffer.generate_function_signature (
-				"void", "egc_system_mod_init_init", True, buffer, <<>>, <<>>)
+				"void", "egc_system_mod_init_init", True, buffer, l_empty_array, l_empty_array)
 
 			buffer.generate_block_open
 
@@ -5220,7 +5230,7 @@ feature -- Pattern table generation
 					then
 						buffer.put_new_line
 						buffer.put_string (Encoder.module_init_name (cl_type.static_type_id))
-						buffer.put_string ("();")
+						buffer.put_string (once "();")
 					end
 				end
 				i := i + 1

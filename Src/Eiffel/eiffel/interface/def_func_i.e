@@ -10,9 +10,9 @@ class DEF_FUNC_I
 inherit
 	DEF_PROC_I
 		redefine
-			assigner_name_id, transfer_to,
+			assigner_name_id, transfer_to, transfer_from,
 			unselected, replicated, set_type, is_function, type,
-			new_api_feature
+			new_api_feature, selected
 		end
 
 feature
@@ -33,7 +33,7 @@ feature
 	is_function: BOOLEAN is True;
 			-- Is the current feature a function ?
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_DEF_FUNC_I;
@@ -41,8 +41,16 @@ feature
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end;
+
+	selected: DEF_FUNC_I is
+			-- <Precursor>
+		do
+			create Result
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
@@ -56,10 +64,17 @@ feature
 		end;
 
 	transfer_to (other: like Current) is
-			-- Transfer datas form `other' into Current
+			-- Transfer data
 		do
 			Precursor {DEF_PROC_I} (other)
 			other.set_type (type, assigner_name_id)
+		end
+
+	transfer_from (other: like Current) is
+			-- Transfer data from `other' into Current
+		do
+			Precursor {DEF_PROC_I} (other)
+			set_type (other.type, other.assigner_name_id)
 		end
 
 feature {NONE} -- Implementation

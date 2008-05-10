@@ -108,8 +108,6 @@ feature {NONE} -- Initialization
 			good_argument: l /= Void
 		do
 			initialize (l)
-				-- Creation of a conformance table
-			create conformance_table.make (0)
 				-- Creation of the syntactical supplier list
 			create syntactical_suppliers.make (5)
 				-- Creation of the syntactical client list
@@ -495,9 +493,13 @@ feature -- Building conformance table
 		require
 			topological_id_processed: topological_id > 0
 		do
-				-- Resize the table after the topological sort
-			conformance_table.clear_all
-			conformance_table.resize (topological_id)
+			if conformance_table = Void then
+				create conformance_table.make (topological_id)
+			else
+					-- Resize the table after the topological sort
+				conformance_table.clear_all
+				conformance_table.resize (topological_id)
+			end
 			conf_dep_table := Void
 			build_conformance_table_of (Current)
 		end
@@ -509,22 +511,18 @@ feature -- Building conformance table
 			topological_id_processed: topological_id > 0
 			conformance: topological_id <= cl.topological_id
 		local
-			a_table: PACKED_BOOLEANS
-			l_area: SPECIAL [CLASS_C]
-			i, nb: INTEGER
+			i: INTEGER
 		do
-			a_table := cl.conformance_table
-			if a_table.item (topological_id) = False then
+			if cl.conformance_table.item (topological_id) = False then
 					-- The parent has not been inserted yet
-				a_table.put (True, topological_id)
+				cl.conformance_table.put (True, topological_id)
 				from
-					l_area := conforming_parents_classes.area
-					nb := conforming_parents_classes.count
+					i := conforming_parents_classes.count
 				until
-					i = nb
+					i = 0
 				loop
-					l_area [i].build_conformance_table_of (cl)
-					i := i + 1
+					conforming_parents_classes [i].build_conformance_table_of (cl)
+					i := i - 1
 				end
 			end
 		end
@@ -1106,6 +1104,7 @@ feature -- Parent checking
 			l_dummy_list: LINKED_LIST [INTEGER]
 			l_client: CLASS_C
 			l_conforming_parents_tuple, l_non_conforming_parents_tuple: like similar_parents
+			l_conforming_parents_count: INTEGER
 			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
 			l_parent_type: CL_TYPE_A
 			l_vtug: VTUG
@@ -1120,6 +1119,9 @@ feature -- Parent checking
 			l_conforming_parents_as := a_class_info.conforming_parents
 			l_has_non_conforming_parents := l_non_conforming_parents_as /= Void and then not l_non_conforming_parents_as.is_empty
 			l_has_conforming_parents := l_conforming_parents_as /= Void and then not l_conforming_parents_as.is_empty
+			if l_has_conforming_parents then
+				l_conforming_parents_count := l_conforming_parents_as.count
+			end
 			l_any_id := System.any_id
 
 			if l_parents_as /= Void and then not l_parents_as.is_empty then
@@ -1183,7 +1185,14 @@ feature -- Parent checking
 							-- Evaluation of the parent type
 						l_parent_as := l_parents_as.item
 						l_raw_type := l_parent_as.type
-						l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as)
+
+
+							-- Create appropriate conforming or non-conforming compiled parent class.
+							-- l_parents_as is a merging of conforming parents with non-conforming parents.
+							-- If the conforming parents count is greater than the current index we know that
+							-- we have to add a conforming PARENT_C, else a NON_CONFORMING_PARENT_C is added.
+						l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as, l_parents_as.index > l_conforming_parents_count)
+
 						l_parent_type := l_parent_c.parent_type
 
 							-- Check if there is no anchor (has_like) and no bit symbol (is_class_valid) in the constraint type.
@@ -1379,7 +1388,7 @@ feature -- Parent checking
 					parent_actual_type.reset_constraint_error_list
 						-- Check creation readyness because parents have to be creation ready.
 					parent_actual_type.check_constraints (Current, Void, True)
-					if not parent_actual_type.constraint_error_list.is_empty then
+					if parent_actual_type.constraint_error_list.count > 0 then
 						create vtcg4
 						vtcg4.set_class (Current)
 						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
@@ -1693,7 +1702,7 @@ feature -- Convenience features
 		end
 
 	set_need_type_check (b: like need_type_check) is
-			-- Assign `b' to `need_tye_check'.
+			-- Assign `b' to `need_type_check'.
 		do
 			need_type_check := b
 		ensure
@@ -2643,11 +2652,9 @@ feature -- Initialization
 			is_class_any := name.is_equal (once "ANY")
 			is_class_none := name.is_equal (once "NONE")
 				-- Creation of the descendant list
-			create direct_descendants.make (10)
-				-- Creation of the supplier list
 			create suppliers.make (2)
 				-- Creation of the client list
-			create clients.make (10)
+			create clients.make (2)
 				-- Types list creation
 			create types.make (1)
 		end
@@ -2710,7 +2717,7 @@ feature -- Properties
 			-- Does Current need to recompute `parents' and `computed_parents'?
 
 	number_of_ancestors: INTEGER is
-			-- Number of direct and inderect ancestor of Current. If repeated inheritance
+			-- Number of direct and indirect ancestor of Current. If repeated inheritance
 			-- parents are counted twice.
 		do
 			if conforming_parents /= Void then
@@ -2771,6 +2778,15 @@ feature -- Properties
 
 	direct_descendants: ARRAYED_LIST [CLASS_C]
 			-- Direct descendants of the current class
+		do
+			if direct_descendants_internal = Void then
+				create direct_descendants_internal.make (2)
+			end
+			Result := direct_descendants_internal
+		end
+
+	direct_descendants_internal: like direct_descendants
+			-- One per object storage for direct descendants.
 
 	clients: ARRAYED_LIST [CLASS_C]
 			-- Clients of the class
@@ -2784,7 +2800,7 @@ feature -- Properties
 
 	generic_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			-- Collect all possible generic derivations inherited or current.
-			-- Indexed by `rout_id' of formal generic parmater.
+			-- Indexed by `rout_id' of formal generic parameter.
 			-- Updated during `pass2' of INHERIT_TABLE.
 
 	anchored_features: like generic_features
@@ -4410,7 +4426,6 @@ invariant
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
 	config_class_connection: original_class.compiled_class = Current
-	conformance_table_not_void: conformance_table /= Void
 
 		-- Invariants IL versus normal generation.
 	anchored_features_void_in_non_il_generation:

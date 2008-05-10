@@ -11,7 +11,7 @@ inherit
 	ONCE_PROC_I
 		redefine
 			replicated, code_id, unselected, transfer_to,
-			is_replicated, set_code_id
+			is_replicated, set_code_id, transfer_from
 		end
 
 feature
@@ -36,14 +36,14 @@ feature
 			Result := unselect
 		end; -- unselected
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: RD2_ONCE_PROC_I
 		do
 			create rep;
 			transfer_to (rep);
-			rep.set_access_in (access_in)
+			rep.set_access_in (in)
 			rep.set_code_id (new_code_id);
 			Result := rep;
 		end;
@@ -53,6 +53,13 @@ feature
 		do
 			Precursor {ONCE_PROC_I} (f);
 			f.set_code_id (code_id);
+		end;
+
+	transfer_from (f: like Current) is
+			-- Data transfer
+		do
+			Precursor {ONCE_PROC_I} (f);
+			set_code_id (f.code_id);
 		end;
 
     is_replicated: BOOLEAN is True;

@@ -165,6 +165,7 @@ feature -- Type checking
 			if a_is_safe_to_check_inherited then
 				is_byte_node_enabled := False
 				break_point_slot_count := 0
+
 				process_inherited_assertions (a_feature, True)
 				is_byte_node_enabled := True
 				a_feature.body.process (Current)
@@ -1128,7 +1129,7 @@ feature -- Implementation
 
 			l_context_current_class := context.current_class
 
-			if l_context_current_class.lace_class.is_void_safe and then not a_type.is_attached then
+			if not a_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
 				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
 			end
 
@@ -1408,7 +1409,7 @@ feature -- Implementation
 												-- type of the routine, not the anchor.
 											if
 												not l_arg_type.conform_to (l_like_arg_type) and then
-												not l_arg_type.convert_to (context.current_class, l_like_arg_type)
+												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type)
 											then
 												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
 													l_like_arg_type)
@@ -1433,7 +1434,7 @@ feature -- Implementation
 										if l_open_type /= Void or else not l_arg_type.conform_to (l_formal_arg_type) then
 											if
 												l_open_type = Void and
-												l_arg_type.convert_to (context.current_class, l_formal_arg_type)
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type)
 											then
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
@@ -1496,7 +1497,7 @@ feature -- Implementation
 													information about the parameters.
 													]")
 												if not l_expr.is_constant_expression then
-													create l_vica2.make (context.current_class, current_feature)
+													create l_vica2.make (l_context_current_class, current_feature)
 													l_vica2.set_location (l_parameters.i_th (i).start_location)
 													error_handler.insert_error (l_vica2)
 												end
@@ -1547,7 +1548,7 @@ feature -- Implementation
 								-- Export validity
 							if
 								not context.is_ignoring_export and is_qualified and
-								not l_feature.is_exported_for (context.current_class)
+								not l_feature.is_exported_for (l_context_current_class)
 							then
 								create l_vuex
 								context.init_error (l_vuex)
@@ -1560,7 +1561,7 @@ feature -- Implementation
 								l_feature.is_obsolete
 									-- If the obsolete call is in an obsolete class,
 									-- no message is displayed
-								and then not context.current_class.is_obsolete
+								and then not l_context_current_class.is_obsolete
 									-- The current feature is whether the invariant or
 									-- a non obsolete feature
 								and then (current_feature = Void or else
@@ -1568,10 +1569,10 @@ feature -- Implementation
 									-- Inherited code is checked in parent class.
 								and then not is_inherited
 									-- Warning not disabled
-								and then context.current_class.is_warning_enabled (w_obsolete_feature)
+								and then l_context_current_class.is_warning_enabled (w_obsolete_feature)
 							then
 								create l_obs_warn
-								l_obs_warn.set_class (context.current_class)
+								l_obs_warn.set_class (l_context_current_class)
 								if current_feature /= Void then
 									l_obs_warn.set_feature (current_feature)
 								end
@@ -1602,6 +1603,17 @@ feature -- Implementation
 										create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
 											depend_unit_level)
 										context.supplier_ids.extend (l_depend_unit)
+									end
+
+									if not is_qualified and then l_feature.access_in /= l_feature.written_in and then system.current_class.class_id = l_feature.access_in
+										and then not system.has_old_feature_replication
+									then
+											-- We are unqualified-calling an inherited feature that is replicated in the current class.
+											-- Therefore the calling feature must also be replicated in the current class.
+										if current_feature.access_in /= system.current_class.class_id then
+											-- Invalid call to replicated feature, for now raise an error.
+											Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
+										end
 									end
 									create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 								end
@@ -1650,7 +1662,7 @@ feature -- Implementation
 							end
 
 								-- Check if cat-call detection is enabled for current context class
-							if context.current_class.is_cat_call_detection then
+							if l_context_current_class.is_cat_call_detection then
 									-- Inline agents have no descendants, so they don't need to be checked anyway
 									-- Static calls don't need to be checked since they can't have a descendant either
 								if not l_feature.is_inline_agent and not is_static then
@@ -3026,7 +3038,7 @@ feature -- Implementation
 			if error_level = l_error_level then
 				if l_needs_byte_node then
 					context.init_byte_code (l_byte_code)
-					if old_expressions /= Void and then not old_expressions.is_empty then
+					if old_expressions /= Void and then old_expressions.count > 0 then
 						l_byte_code.set_old_expressions (old_expressions)
 					end
 					l_byte_code.set_end_location (l_as.end_location)

@@ -13,7 +13,7 @@ inherit
 			assigner_name_id, transfer_to, unselected, extension,
 			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			set_type, type, is_attribute,
-			undefinable, check_expanded
+			undefinable, check_expanded, transfer_from
 		end
 
 	SHARED_DECLARATIONS
@@ -44,11 +44,16 @@ feature
 			-- class FEATURE_TABLE and will be useful for generating a
 			-- access function of this attribute in the C file associated
 			-- to the class where this attribute is available.
+		do
+			Result := feature_flags & has_function_origin_mask = has_function_origin_mask
+		end
 
 	set_has_function_origin (b: BOOLEAN) is
 			-- Assign `b' to `has_function_origin'.
 		do
-			has_function_origin := b
+			feature_flags := feature_flags.set_bit_with_mask (b, has_function_origin_mask)
+		ensure
+			has_function_origin_set: has_function_origin = b
 		end
 
 	is_attribute: BOOLEAN is True
@@ -59,8 +64,6 @@ feature
 
 	new_rout_entry: ROUT_ENTRY is
 			-- New routine unit
-		require else
-			has_to_be_generated: generate_in > 0
 		do
 			create Result
 			Result.set_body_index (body_index)
@@ -287,7 +290,7 @@ feature -- Element Change
 			buffer.put_string(")")
 		end
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_ATTRIBUTE_I
@@ -297,7 +300,15 @@ feature -- Element Change
 			rep.set_has_property_getter (has_property_getter)
 			rep.set_has_property_setter (has_property_setter)
 			rep.set_code_id (new_code_id)
+			rep.set_access_in (in)
 			Result := rep
+		end
+
+	selected: ATTRIBUTE_I is
+			-- Selected attribute
+		do
+			create Result.make
+			Result.transfer_from (Current)
 		end
 
 	unselected (in: INTEGER): FEATURE_I is
@@ -317,6 +328,17 @@ feature -- Element Change
 			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
+			extension := other.extension
+		end
+
+	transfer_from (other: like Current) is
+			-- Transfer data from `Current' to `other'.
+		do
+			Precursor {ENCAPSULATED_I} (other)
+			type := other.type
+			assigner_name_id := other.assigner_name_id
+				-- `has_function_origin' is set in FEATURE_I
+--			has_function_origin := other.has_function_origin
 			extension := other.extension
 		end
 

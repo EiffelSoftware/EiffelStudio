@@ -12,7 +12,7 @@ inherit
 	FEATURE_I
 		redefine
 			can_be_encapsulated, generation_class_id,
-			to_melt_in, to_generate_in, transfer_to
+			to_melt_in, to_generate_in, transfer_to, transfer_from
 		end
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature -- Access
 
 	can_be_encapsulated: BOOLEAN is True
 			-- Current feature can be encapsulated (eg attribute or
-			-- constantn definition with a deferred routine)
+			-- constant definition with a deferred routine)
 
 	generate_in: INTEGER
 			-- Class id where an equivalent feature has to be generated
@@ -66,6 +66,15 @@ feature -- Element change
 			Precursor {FEATURE_I} (other)
 			if generate_in > 0 then
 				other.set_generate_in (generate_in)
+			end
+		end
+
+	transfer_from (other: like Current) is
+			-- Transfer data from `Current' to `other'.
+		do
+			Precursor {FEATURE_I} (other)
+			if other.generate_in > 0 then
+				set_generate_in (other.generate_in)
 			end
 		end
 

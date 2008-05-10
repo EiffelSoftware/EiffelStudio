@@ -10,7 +10,7 @@ class RD1_DYN_FUNC_I
 inherit
 	D_DYN_FUNC_I
 		redefine
-			code_id, transfer_to, is_replicated, set_code_id
+			code_id, transfer_to, is_replicated, set_code_id, transfer_from
 		end
 
 feature
@@ -31,9 +31,16 @@ feature
 			f.set_code_id (code_id);
 		end;
 
+	transfer_from (f: like Current) is
+			-- Data transfer
+		do
+			Precursor {D_DYN_FUNC_I} (f);
+			set_code_id (f.code_id);
+		end;
+
     is_replicated: BOOLEAN is True;
             -- Is Current feature conceptually replicated (True)
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

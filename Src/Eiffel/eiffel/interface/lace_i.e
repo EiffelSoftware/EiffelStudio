@@ -1153,6 +1153,21 @@ feature {NONE} -- Implementation
 				end
 			end
 
+			l_s := l_settings.item (s_old_feature_replication)
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_has_old_feature_replication (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name (s_old_feature_replication)
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+					-- By default we set the value to True for backwards compatibility.
+				system.set_has_old_feature_replication (True)
+			end
+
 			l_s := l_settings.item (s_old_verbatim_strings)
 			if l_s /= Void then
 				if l_s.is_boolean then

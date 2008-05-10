@@ -12,7 +12,7 @@ inherit
 	PROCEDURE_I
 		redefine
 			is_deferred, has_entry, to_generate_in, extension,
-			update_api, transfer_to, access_for_feature
+			update_api, transfer_to, transfer_from, access_for_feature
 		end
 
 feature -- Status Report
@@ -74,9 +74,16 @@ feature -- Basic Operation
 			extension := other.extension
 		end
 
+	transfer_from (other: DEF_PROC_I) is
+			-- Transfer datas form `other' into Current.
+		do
+			Precursor {PROCEDURE_I} (other)
+			extension := other.extension
+		end
+
 feature -- Access
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_DEF_PROC_I
@@ -84,8 +91,16 @@ feature -- Access
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end;
+
+	selected: DEF_PROC_I is
+			-- Selected attribute
+		do
+			create Result
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature

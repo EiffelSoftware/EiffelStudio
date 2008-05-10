@@ -10,7 +10,7 @@ class D_ATTRIBUTE_I
 inherit
 	ATTRIBUTE_I
 		redefine
-			unselected, access_in, replicated, is_unselected, transfer_to
+			unselected, set_access_in, access_in, replicated, is_unselected, transfer_to, selected
 		end
 
 create
@@ -27,7 +27,7 @@ feature
 			access_in := i
 		end
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: RD1_ATTRIBUTE_I
@@ -35,8 +35,16 @@ feature
 			create rep.make
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
+			rep.set_access_in (in)
 			Result := rep
 		end; -- replicated
+
+	selected: D_ATTRIBUTE_I is
+			-- <Precursor>
+		do
+			create Result.make
+			Result.transfer_from (Current)
+		end
 
 	unselected (i: INTEGER): FEATURE_I is
 			-- Unselected feature

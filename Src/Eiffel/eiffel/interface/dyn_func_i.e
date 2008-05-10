@@ -11,7 +11,7 @@ inherit
 	DYN_PROC_I
 		redefine
 			assigner_name_id, transfer_to, new_api_feature,
-			unselected, replicated, set_type, is_function, type
+			unselected, replicated, set_type, is_function, type, transfer_from, selected
 		end
 
 feature
@@ -32,13 +32,20 @@ feature
 	is_function: BOOLEAN is True
 
 	transfer_to (other: like Current) is
-			-- Transfer datas form `other' into Current
+			-- Transfer datas Current in to `other'
 		do
 			Precursor {DYN_PROC_I} (other)
 			other.set_type (type, assigner_name_id)
 		end
 
-	replicated: FEATURE_I is
+	transfer_from (other: like Current) is
+			-- Transfer data from `other' into Current
+		do
+			Precursor {DYN_PROC_I} (other)
+			set_type (other.type, other.assigner_name_id)
+		end
+
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_DYN_FUNC_I;
@@ -46,8 +53,16 @@ feature
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end;
+
+	selected: DYN_FUNC_I is
+			-- <Precursor>
+		do
+			create Result
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature

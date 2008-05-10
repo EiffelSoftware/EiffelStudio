@@ -172,8 +172,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Replication
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replicated feature.
+			-- Cannot be called in Current context.
+		do
+			check
+				not_called: False
+			end
+		end
+
+	selected: TYPE_FEATURE_I
+			-- <Precursor>
 			-- Cannot be called in Current context.
 		do
 			check

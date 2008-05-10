@@ -10,7 +10,7 @@ class RD1_CONSTANT_I
 inherit
 	D_CONSTANT_I
 		redefine
-			code_id, transfer_to, is_replicated, set_code_id
+			code_id, transfer_to, is_replicated, set_code_id, transfer_from
 		end;
 
 create
@@ -32,6 +32,13 @@ feature
 		do
 			Precursor {D_CONSTANT_I} (f);
 			f.set_code_id (code_id);
+		end;
+
+	transfer_from (f: like Current) is
+			-- Data transfer
+		do
+			Precursor {D_CONSTANT_I} (f);
+			set_code_id (f.code_id);
 		end;
 
     is_replicated: BOOLEAN is True;

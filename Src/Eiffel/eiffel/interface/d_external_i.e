@@ -10,7 +10,7 @@ class D_EXTERNAL_I
 inherit
 	EXTERNAL_I
 		redefine
-			unselected, access_in, replicated, is_unselected, transfer_to
+			unselected, set_access_in, access_in, replicated, is_unselected, transfer_to, transfer_from, selected
 		end
 
 feature
@@ -24,7 +24,7 @@ feature
 			access_in := i
 		end;
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: RD1_EXTERNAL_I;
@@ -32,8 +32,16 @@ feature
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end; -- replicated
+
+	selected: D_EXTERNAL_I is
+			-- <Precursor>
+		do
+			create Result
+			Result.transfer_from (Current)
+		end
 
 	unselected (i: INTEGER): FEATURE_I is
 			-- Unselected feature
@@ -51,6 +59,13 @@ feature
 		do
 			Precursor {EXTERNAL_I} (f);
 			f.set_access_in (access_in);
+		end;
+
+	transfer_from (f: like Current) is
+			-- Data transfer
+		do
+			Precursor {EXTERNAL_I} (f);
+			set_access_in (f.access_in);
 		end;
 
 	is_unselected: BOOLEAN is True;

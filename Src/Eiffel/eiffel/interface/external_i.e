@@ -10,7 +10,7 @@ class EXTERNAL_I
 inherit
 	PROCEDURE_I
 		redefine
-			transfer_to, equiv, update_api,
+			transfer_to, transfer_from, equiv, update_api,
 			generate, duplicate, extension,
 			access_for_feature, is_external,
 			set_renamed_name_id, external_name_id,
@@ -179,14 +179,22 @@ feature
 		end
 
 	transfer_to (other: like Current) is
-			-- Transfer datas form `other' into Current
+			-- Transfer datas from Current into `other'
 		do
 			Precursor {PROCEDURE_I} (other);
 			other.set_encapsulated (encapsulated);
 			other.set_extension (extension);
 		end;
 
-	replicated: FEATURE_I is
+	transfer_from (other: like Current) is
+			-- Transfer data from `other' into Current
+		do
+			Precursor {PROCEDURE_I} (other);
+			set_encapsulated (other.encapsulated);
+			set_extension (other.extension);
+		end;
+
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_EXTERNAL_I
@@ -194,8 +202,16 @@ feature
 			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
+			rep.set_access_in (in)
 			Result := rep;
 		end;
+
+	selected: EXTERNAL_I
+			-- <Precursor>
+		do
+			create Result.make (extension)
+			Result.transfer_from (Current)
+		end
 
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature

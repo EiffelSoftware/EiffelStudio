@@ -13,7 +13,7 @@ inherit
 			check_types as old_check_types,
 			equiv as basic_equiv
 		redefine
-			assigner_name_id, transfer_to, access_for_feature, melt, generate,
+			assigner_name_id, transfer_to, transfer_from, access_for_feature, melt, generate,
 			is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry, extension
@@ -21,7 +21,7 @@ inherit
 
 	ENCAPSULATED_I
 		redefine
-			assigner_name_id, transfer_to, check_types, access_for_feature, equiv,
+			assigner_name_id, transfer_to, transfer_from, check_types, access_for_feature, equiv,
 			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry, extension
@@ -444,7 +444,7 @@ feature -- Byte code generation
 			end
 		end
 
-	replicated: FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I is
 			-- Replication
 		local
 			rep: R_CONSTANT_I
@@ -452,7 +452,15 @@ feature -- Byte code generation
 			create rep.make
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
+			rep.set_access_in (in)
 			Result := rep
+		end
+
+	selected: CONSTANT_I is
+			-- Selected constant
+		do
+			create Result.make
+			Result.transfer_from (Current)
 		end
 
 	unselected (in: INTEGER): FEATURE_I is
@@ -472,6 +480,16 @@ feature -- Byte code generation
 			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type, assigner_name_id)
 			other.set_value (value)
+			extension := other.extension
+		end
+
+	transfer_from (other: like Current) is
+			-- Transfer datas form `Current' into `other'
+		do
+			Precursor {ENCAPSULATED_I} (other)
+			type := other.type
+			assigner_name_id := other.assigner_name_id
+			value := other.value
 			extension := other.extension
 		end
 

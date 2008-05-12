@@ -79,6 +79,8 @@ test	queries_of_exceptions_class_2 except017 tcf pass exception
 test	no_routine_failure_on_rescue_exception	except018 tcf pass exception
 test	memory_leak_when_retried	except019 tcf pass exception
 test	corrupted_trace			except020 tcf pass exception
+test 	top_n_call_incorrect		except021 tcf pass exception
+test	incorrect_local_restoration	except022 tcf pass exception
 
 
 -- Non Conforming Inheritance

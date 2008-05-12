@@ -7,4 +7,9 @@ copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok
 
+copy_sub	Ace2 $TEST Ace
+
+compile_melted
+compile_result	ok
+
 test_end

@@ -6,24 +6,56 @@ create
 feature {NONE} -- Creation
 
 	make
-			-- Run test.
-		local		
-			alist1: !ARRAYED_LIST [?ANY]
-			list1: !LIST [?ANY]
-			list1_b: ?LIST [?ANY]
-			
-			alist2: !ARRAYED_LIST [!ANY]
-			list2: !LIST [!ANY]
-			list2_b: ?LIST [!ANY]
+			-- Perform test
+		local
+			l_aa_list: !ARRAYED_LIST [!STRING]
+
+			l_any: ?ANY
+			l_a_any: !ANY
+
+			l_dd_al_string: ?ARRAYED_LIST [?STRING]
+			l_da_al_string: ?ARRAYED_LIST [!STRING]
+			l_ad_al_string: !ARRAYED_LIST [?STRING]
+			l_aa_al_string: !ARRAYED_LIST [!STRING]
+
+			l_dd_al_any: ?ARRAYED_LIST [?ANY]
+			l_da_al_any: ?ARRAYED_LIST [!ANY]
+			l_ad_al_any: !ARRAYED_LIST [?ANY]
+			l_aa_al_any: !ARRAYED_LIST [!ANY]
+
+			l_dd_bi_string: ?BILINEAR [?STRING]
+			l_da_bi_string: ?BILINEAR [!STRING]
+			l_ad_bi_string: !BILINEAR [?STRING]
+			l_aa_bi_string: !BILINEAR [!STRING]
+
+			l_dd_bi_any: ?BILINEAR [?ANY]
+			l_da_bi_any: ?BILINEAR [!ANY]
+			l_ad_bi_any: !BILINEAR [?ANY]
+			l_aa_bi_any: !BILINEAR [!ANY]
 		do
-			create alist1.make (0)
-			list1 := alist1
-			list1_b := alist1
-			
-			create alist2.make (0)
-			list2 := alist2
-			list2_b := alist2
-			list1_b := alist2
+			create l_aa_list.make (1)
+			l_any := l_aa_list
+			l_a_any := l_aa_list
+
+			l_dd_al_string := l_aa_list
+			l_da_al_string := l_aa_list
+			l_ad_al_string := l_aa_list
+			l_aa_al_string := l_aa_list
+
+			l_dd_al_any := l_aa_list
+			l_da_al_any := l_aa_list
+			l_ad_al_any := l_aa_list
+			l_aa_al_any := l_aa_list
+
+			l_dd_bi_string := l_aa_list
+			l_da_bi_string := l_aa_list
+			l_ad_bi_string := l_aa_list
+			l_aa_bi_string := l_aa_list
+
+			l_dd_bi_any := l_aa_list
+			l_da_bi_any := l_aa_list
+			l_ad_bi_any := l_aa_list
+			l_aa_bi_any := l_aa_list
 		end
 
 end

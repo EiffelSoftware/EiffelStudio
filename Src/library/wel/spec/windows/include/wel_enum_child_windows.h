@@ -36,12 +36,8 @@ void cwel_enum_child_windows_procedure (
 		void *fnptr,
 		HWND hWndParent);
 
-#ifdef __cplusplus
-}
-#endif
-
 /*---------------------------------------------------------------------------*/
-/* FUNC: cwel_enum_windows_procedure                                             */
+/* FUNC: cwel_enum_windows_procedure                                         */
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 void cwel_enum_windows_procedure (

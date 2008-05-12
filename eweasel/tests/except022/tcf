@@ -1,0 +1,33 @@
+test_name 	 incorrect_local_restoration
+test_description Reveals the problem `loc_set' is not properly restored after backtracking.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+setenv EIF_STACK_CHUNK 20
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output 101
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output1 101
+execute_result ok
+compare		exec_output1 output
+
+cleanup_compile
+compile_melted
+compile_result 	 ok
+execute_work	NONE exec_output2 101
+execute_result ok
+compare		exec_output2 output
+
+test_end

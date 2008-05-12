@@ -12,6 +12,7 @@
 		<!-- PROPERTIES -->
 		<Property Id="GDIPLUSNEEDED">1</Property>
 		<Property Id="PRECOMPILE">vision2</Property>
+		<Property Id="EIFFELUSERDIR" Secure="yes" />
 		<Property Id="EIFFELPROJECTSDIR" Secure="yes" />
 		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
 		<Property Id="ISELANG">en_US</Property>
@@ -188,12 +189,19 @@
 				</Directory>
 			</Directory>
 			<Directory Id="PersonalFolder" Name="PersonalFolder">
-				<Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
-					<Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
+				<Directory Id="EIFFELUSERDIR" Name="Eiffel $(var.ProductVersion) User Files">
+					<Component Id="Comp.eiffel_user_files" Guid="F939A51A-1A59-4E7B-AF9A-70D45110F87C" Win64="$(var.IsWin64)">
 						<RegistryKey Id="Reg.Dummy.4" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
-						<RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
+						<RemoveFolder Id="EIFFELUSERDIR" On="uninstall" Directory="EIFFELUSERDIR"/>
 					</Component>
+					<Directory Id="EIFFELPROJECTSDIR" Name="projects">
+						<Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
+							<RegistryKey Id="Reg.Dummy.5" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
+							<CreateFolder />
+							<RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
+						</Component>
+					</Directory>
 				</Directory>
 			</Directory>
 		</DirectoryRef>
@@ -209,6 +217,7 @@
 				<ComponentRef Id="Comp.studio_shortcuts.documentation" />
 				<ComponentRef Id="Comp.studio_shortcuts.tools" />
 				<ComponentRef Id="Comp.eiffel_protocol" />
+				<ComponentRef Id="Comp.eiffel_user_files" />
 				<ComponentRef Id="Comp.eiffel_projects" />
 				<ComponentRef Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
 				<ComponentRef Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
@@ -241,12 +250,13 @@
 			<?endif?>
 		</Feature>
 		<!-- END FEATURES -->
-	 
+
 		<!-- CUSTOM ACTIONS -->
 		<CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
 		<CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
 		<CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
 		<CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
+		<CustomAction Id="SET_EIFFELUSERDIR" Property="EIFFELUSERDIR" Value="[EIFFELUSERDIR]" Execute="firstSequence" />
 		<CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
 		<CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
 		<!-- END CUSTOM ACTIONS -->
@@ -264,17 +274,19 @@
 
 		<!-- INSTALL SEQUENCING -->
 		<AdminExecuteSequence>
-			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
+			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="CostInitialize"/>
 		</AdminExecuteSequence>
 		<InstallExecuteSequence>
-			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
+			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
 			<Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
 			<Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
 		</InstallExecuteSequence>
 		<!-- END INSTALL SEQUENCING -->
 	</Fragment>
-	
+
 	<?endif?>
 </Wix>

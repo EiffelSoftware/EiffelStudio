@@ -50,7 +50,7 @@ remtrace ---------------------------------------------------------------
 
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml
 melt all_libs.ecf
-ec -local -flatshort -filter xml -all -config all_libs.ecf
+ecb -local -flatshort -filter xml -all -config all_libs.ecf >>& %INSTALL_LOG
 
 remtrace ------------------------------------------------------
 remtrace Copy XML docs into appropriate written docs location |
@@ -61,40 +61,28 @@ fullrd *.html
 fullrd *_links.xml
 fullrd *_short.xml
 
-remtrace Removing implementation clusters
-cd vision2\implementation
-fullrd mswin
-sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
-move new_index.xml index.xml
-gvim.exe -c "set ff=dos" -c "wq" index.xml
-
-cd ..\contrib
-fullrd implementation
-sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
-move new_index.xml index.xml
-gvim.exe -c "set ff=dos" -c "wq" index.xml
-
-cd ..\..\preferences
-fullrd registry_implementation
-sed -e "s/^.*registry_implementation.*$//g" index.xml >> new_index.xml
+remtrace Removing implementation classes
+cd vision2
+fullrd *_imp_*.xml
+sed -e "s/^.*_imp_.*$//g" index.xml >> new_index.xml
 move new_index.xml index.xml
 gvim.exe -c "set ff=dos" -c "wq" index.xml
 
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
 
-move /s base %DOCUMENT_DIR\xmldoc\libraries\base\reference
-move /s wel %DOCUMENT_DIR\xmldoc\libraries\wel\reference
-move /s vision2 %DOCUMENT_DIR\xmldoc\libraries\vision2\reference
-move /s com %DOCUMENT_DIR\xmldoc\libraries\com\reference
-move /s eiffel2java %DOCUMENT_DIR\xmldoc\libraries\eiffel2java\reference
-move /s lex %DOCUMENT_DIR\xmldoc\libraries\lex\reference
-move /s parse %DOCUMENT_DIR\xmldoc\libraries\parse\reference
-move /s net %DOCUMENT_DIR\xmldoc\libraries\net\reference
-move /s thread %DOCUMENT_DIR\xmldoc\libraries\thread\reference
-move /s time %DOCUMENT_DIR\xmldoc\libraries\time\reference
-move /s web %DOCUMENT_DIR\xmldoc\libraries\web\reference
-move /s store %DOCUMENT_DIR\xmldoc\libraries\store\reference
-move /s preferences_reg %DOCUMENT_DIR\xmldoc\libraries\preferences\reference
+move /s base %DOCUMENT_DIR\xmldoc\libraries\base\reference >>& %INSTALL_LOG
+move /s wel %DOCUMENT_DIR\xmldoc\libraries\wel\reference >>& %INSTALL_LOG
+move /s vision2 %DOCUMENT_DIR\xmldoc\libraries\vision2\reference >>& %INSTALL_LOG
+move /s com %DOCUMENT_DIR\xmldoc\libraries\com\reference >>& %INSTALL_LOG
+move /s eiffel2java %DOCUMENT_DIR\xmldoc\libraries\eiffel2java\reference >>& %INSTALL_LOG
+move /s lex %DOCUMENT_DIR\xmldoc\libraries\lex\reference >>& %INSTALL_LOG
+move /s parse %DOCUMENT_DIR\xmldoc\libraries\parse\reference >>& %INSTALL_LOG
+move /s net %DOCUMENT_DIR\xmldoc\libraries\net\reference >>& %INSTALL_LOG
+move /s thread %DOCUMENT_DIR\xmldoc\libraries\thread\reference >>& %INSTALL_LOG
+move /s time %DOCUMENT_DIR\xmldoc\libraries\time\reference >>& %INSTALL_LOG
+move /s web %DOCUMENT_DIR\xmldoc\libraries\web\reference >>& %INSTALL_LOG
+move /s store %DOCUMENT_DIR\xmldoc\libraries\store\reference >>& %INSTALL_LOG
+move /s preferences_reg %DOCUMENT_DIR\xmldoc\libraries\preferences\reference >>& %INSTALL_LOG
 
 	
 remtrace ----------------------------------------------------------------------------------------

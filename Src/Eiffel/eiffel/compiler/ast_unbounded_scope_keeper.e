@@ -1,119 +1,94 @@
 indexing
-	description: "Keeper for non-void entity scopes."
+	description: "Keeper for non-void entity scopes with an unlimited range of variable positions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class AST_SCOPE_KEEPER
+class AST_UNBOUNDED_SCOPE_KEEPER
+
+inherit
+	AST_STACKED_SCOPE_KEEPER [ARRAY [BOOLEAN]]
+
+create
+	make
 
 feature -- Access
 
 	is_local_attached (position: like local_count): BOOLEAN
 			-- Is a local with the given `position' is not void?
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			Result := scope [position]
 		end
 
 	is_result_attached: BOOLEAN
-		deferred
+		do
+			Result := scope [0]
 		end
 
 feature -- Status report: variables
 
-	local_count: like max_local_count
-			-- Maximum number of locals that can be registered
-
 	max_local_count: INTEGER
 			-- Maximum value of `local_count'
-		deferred
+		do
+			Result := {INTEGER}.max_value
 		end
 
 feature -- Modification: variables
 
 	start_local_scope (position: like local_count)
 			-- Mark that a local with the given `position' is not void.
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			scope [position] := True
 		end
 
 	start_result_scope
 			-- Mark that "Result" is not void.
-		deferred
+		do
+			scope [0] := True
 		end
 
 	stop_local_scope (position: like local_count)
 			-- Mark that a local with the given `position' can be void.
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			scope [position] := False
 		end
 
 	stop_result_scope
 			-- Mark that "Result" can be void.
-		deferred
+		do
+			scope [0] := False
 		end
 
-feature -- Status report: nesting
+feature {NONE} -- Modification: nesting
 
-	nesting_level: INTEGER
-			-- Current nesting level of a compound
-		deferred
+	merge_siblings
+			-- Merge sibling scope information from `scope'
+			-- into `inner_scopes.item'.
+		local
+			s: like scope
+			i: INTEGER
+		do
+			s := inner_scopes.item
+			if s /= scope then
+				from
+					i := local_count
+				until
+					i < 0
+				loop
+						-- Mark only items that are set in both scopes
+					s [i] := s [i] and scope [i]
+					i := i - 1
+				end
+			end
 		end
 
-feature -- Modification: nesting
+feature {NONE} -- Initialization
 
-	enter_realm
-			-- Enter a new complex instruction
-			-- with inner compound parts.
-		deferred
-		ensure
-			is_nesting_level_incremented: nesting_level = old nesting_level + 1
-		end
-
-	update_realm
-			-- Update realm scope information
-			-- from the current state.
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	save_sibling
-			-- Save scope information of a sibling
-			-- in a complex instrution.
-			-- For example, Then_part of Elseif condition.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	leave_realm
-			-- Leave a complex instruction and
-			-- promote scope information to the outer compound.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
-		end
-
-	leave_optional_realm
-			-- Leave a complex instruction and
-			-- discard its scope information.
-			-- For example, Debug instruction.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
+	new_scope (n: like local_count): like scope
+		do
+				-- "Result" status is kept at index 0.
+			create Result.make (0, n)
 		end
 
 indexing

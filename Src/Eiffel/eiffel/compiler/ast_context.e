@@ -242,7 +242,7 @@ feature -- Scope state
 	init_variable_scopes
 			-- Prepare structures to track variable scopes.
 		do
-			create scope_keeper.make (locals.count)
+			scope_keeper := scope_keeper_factory.create_scope_keeper (locals.count)
 		ensure
 			scope_keeper_attached: scope_keeper /= Void
 			scope_keeper_initialized: scope_keeper.local_count = locals.count
@@ -250,6 +250,14 @@ feature -- Scope state
 
 	scope_keeper: AST_SCOPE_KEEPER
 			-- Keeper of scopes of non-void variables
+
+feature {NONE} -- Scope state
+
+	scope_keeper_factory: AST_SCOPE_KEEPER_FACTORY
+			-- Factory to create scope keepers
+		once
+			create Result
+		end
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 

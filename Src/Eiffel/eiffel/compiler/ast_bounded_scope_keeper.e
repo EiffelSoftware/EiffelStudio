@@ -1,119 +1,88 @@
 indexing
-	description: "Keeper for non-void entity scopes."
+	description: "Keeper for non-void entity scopes with a limited range of variable positions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class AST_SCOPE_KEEPER
+class AST_BOUNDED_SCOPE_KEEPER
+
+inherit
+	AST_STACKED_SCOPE_KEEPER [NATURAL_64]
+		redefine
+			duplicate
+		end
+
+create
+	make
 
 feature -- Access
 
 	is_local_attached (position: like local_count): BOOLEAN
 			-- Is a local with the given `position' is not void?
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			Result := scope.bit_test (position)
 		end
 
 	is_result_attached: BOOLEAN
-		deferred
+		do
+			Result := scope.bit_test (0)
 		end
 
 feature -- Status report: variables
 
-	local_count: like max_local_count
-			-- Maximum number of locals that can be registered
-
-	max_local_count: INTEGER
+	max_local_count: INTEGER = 62
 			-- Maximum value of `local_count'
-		deferred
-		end
+			--| One bit is reserved for result,
+			--| one bit is reserved to indicate a non-empty stack element
 
 feature -- Modification: variables
 
 	start_local_scope (position: like local_count)
 			-- Mark that a local with the given `position' is not void.
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			scope := scope | (({NATURAL_64} 1) |<< position)
 		end
 
 	start_result_scope
 			-- Mark that "Result" is not void.
-		deferred
+		do
+			scope := scope | {NATURAL_64} 1
 		end
 
 	stop_local_scope (position: like local_count)
 			-- Mark that a local with the given `position' can be void.
-		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
+		do
+			scope := scope & (({NATURAL_64} 1) |<< position).bit_not
 		end
 
 	stop_result_scope
 			-- Mark that "Result" can be void.
-		deferred
+		do
+			scope := scope & {NATURAL_64} 0xFFFFFFFFFFFFFFFE
 		end
 
-feature -- Status report: nesting
+feature {NONE} -- Modification: nesting
 
-	nesting_level: INTEGER
-			-- Current nesting level of a compound
-		deferred
+	merge_siblings
+			-- Merge sibling scope information from `scope'
+			-- into `inner_scopes.item'.
+		do
+			inner_scopes.replace (inner_scopes.item & scope)
 		end
 
-feature -- Modification: nesting
+feature {NONE} -- Initialization
 
-	enter_realm
-			-- Enter a new complex instruction
-			-- with inner compound parts.
-		deferred
-		ensure
-			is_nesting_level_incremented: nesting_level = old nesting_level + 1
+	new_scope (n: like local_count): like scope
+		do
+			Result := {NATURAL_64} 0x8000000000000000
 		end
 
-	update_realm
-			-- Update realm scope information
-			-- from the current state.
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
+feature {NONE} -- Duplication
 
-	save_sibling
-			-- Save scope information of a sibling
-			-- in a complex instrution.
-			-- For example, Then_part of Elseif condition.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	leave_realm
-			-- Leave a complex instruction and
-			-- promote scope information to the outer compound.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
-		end
-
-	leave_optional_realm
-			-- Leave a complex instruction and
-			-- discard its scope information.
-			-- For example, Debug instruction.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
+	duplicate (s: like scope): like scope
+		do
+			Result := s
 		end
 
 indexing

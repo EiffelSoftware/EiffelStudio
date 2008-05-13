@@ -1,0 +1,30 @@
+test_name 	 inlining-with-inline-externals
+test_description Inlining a routine calling a C inline routine being redefined wrongly call the ancestor version instead of calling the proper descendant version.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 child1.e  $CLUSTER child1.e
+copy_raw 	 child2.e  $CLUSTER child2.e
+copy_raw 	 parent.e  $CLUSTER parent.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work NONE exec_output_1
+execute_result	ok
+compare exec_output_1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_2
+execute_result	ok
+compare	exec_output_2 output
+
+test_end

@@ -152,6 +152,7 @@
 			  <xs:enumeration value = "exception_trace"/>
 			  <xs:enumeration value = "executable_name"/>
 			  <xs:enumeration value = "force_32bits"/>
+			  <xs:enumeration value = "old_feature_replication"/>
 			  <xs:enumeration value = "il_verifiable"/>
 			  <xs:enumeration value = "inlining"/>
 			  <xs:enumeration value = "inlining_size"/>

@@ -8,10 +8,17 @@ class A
 
 feature
 
-	f (an_array: ARRAY [like item]) is
+	f (a_arg: ARRAY [like item]) is
 		do
 			$INST
-			print (an_array.generating_type)
+			print (a_arg.generating_type)
+			print ("%N")
+		end
+
+	g (a_arg: TUPLE [like item, like item]) is
+		do
+			$INST
+			print (a_arg.generating_type)
 			print ("%N")
 		end
 

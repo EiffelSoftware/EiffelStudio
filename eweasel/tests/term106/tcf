@@ -9,7 +9,7 @@
 test_name 	print-array-anchored-generic
 test_description A system has a routine that prints its argument, where the type of he argument is `ARRAY [like item]' and item is `item: X [like toto]' where `toto' is of type A.  When the system is finalized, he compiler dies during degree -3.
 
-define INST "print (an_array)"
+define INST "print (a_arg)"
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_sub 	a.e $CLUSTER a.e
@@ -40,7 +40,7 @@ execute_final NONE exec_output3
 execute_result  ok
 compare 	exec_output3 output
 
-define INST "print (an_array)"
+define INST "print (a_arg)"
 copy_sub 	a.e $CLUSTER a.e
 compile_final
 compile_result 	ok

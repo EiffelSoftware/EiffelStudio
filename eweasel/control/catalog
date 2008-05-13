@@ -873,6 +873,7 @@ test	inlining-with-anchor-3		final055 tcf pass finalizing inlining
 test	inlining-with-formal		final056 tcf pass finalizing inlining
 test	inlining-wrong-argument-reuse	final057 tcf pass finalizing inlining
 test	inlining-missing-gc-hooks	final058 tcf pass finalizing inlining
+test	inlining-with-inline-externals	final059 tcf pass finalizing inlining
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

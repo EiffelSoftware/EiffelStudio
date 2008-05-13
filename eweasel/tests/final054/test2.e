@@ -19,10 +19,11 @@ feature
 
 	make (v: like int; g: like item) is
 		external
-			"C inline use <stdio.h>"
+			"C inline use <stdio.h>,<stdlib.h>"
 		alias
 			"[
 				printf("%d %d\n", (int) $v, (int) $g);
+				fflush(stdout);
 				return;
 			]"
 		end

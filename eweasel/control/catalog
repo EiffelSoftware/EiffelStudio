@@ -1495,6 +1495,7 @@ test	named-tuple-assignment	tuple007	tcf	pass tuple
 test	named-tuple-same-labels	tuple008	tcf	pass tuple
 test	named-tuple-same-labels-crash	tuple009	tcf	pass tuple
 test	internal-tuple-creation	tuple010	tcf	pass tuple
+test	tuple-creation-crash	tuple011	tcf pass tuple
 
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde

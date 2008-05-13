@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/sh
 
 # Remove former test directory
 cd $EWEASEL/..
@@ -10,14 +10,21 @@ svn up base time thread store
 
 #Performing single threaded precompilation
 cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base.ecf -precompile -c_compile -clean
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base.ecf -precompile -c_compile $2
 
 #Performing multithreaded precompilation
 cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-mt.ecf -precompile -c_compile -clean
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-mt.ecf -precompile -c_compile $2
 
 # Launch EiffelWeasel tests
 cd $EWEASEL/..
 
-eweasel -clean -define HOME $EWEASEL -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/../test_dir > $1
-
+if [ -n "$1" ]; then
+	if [ "$1" != "no" ]; then
+		eweasel -clean -define HOME $EWEASEL -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/../test_dir > $1
+	else
+		echo Eweasel not launched per user request
+	fi
+else
+	echo Missing output file name
+fi

@@ -22,6 +22,7 @@ feature
 			!! x2
 			!! a
 			a.f (<<x1, x2>>)
+			a.g ([x1, x2])
 		end
 
 end

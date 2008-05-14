@@ -53,7 +53,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #if !defined CUSTOM || defined NEED_HASHIN_H
 #include "rt_hashin.h"
 #endif
-#include "eif_bits.h"
+#include "rt_bits.h"
 #include "rt_struct.h"
 #include "eif_size.h"		/* For macro LNGPAD */
 #include <string.h>
@@ -754,7 +754,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
 			zone->ov_size = offset + (uint32) (obj - parent);
 			
-			*(uint32 *)(obj + offset) = type & SK_BMASK; /* Write bit size */
+			LENGTH(obj + offset) = (type & SK_BMASK); /* Write bit size */
 
 			}
 			break;

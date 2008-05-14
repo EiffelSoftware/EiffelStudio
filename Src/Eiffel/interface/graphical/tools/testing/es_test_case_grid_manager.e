@@ -461,7 +461,7 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_veto_drop (a_stone: CLASSC_STONE): BOOLEAN is
+	on_veto_drop (a_stone: CLASSI_STONE): BOOLEAN is
 			-- Veto function of `on_drop'.
 		require
 			not_void: a_stone /= Void

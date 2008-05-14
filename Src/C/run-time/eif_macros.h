@@ -294,7 +294,7 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #ifdef ISE_GC
 #define RTLI(x) \
 	{ \
-		if (l + (x) <= loc_set.st_end) \
+		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) \
 			loc_set.st_top += (x); \
 		else { \
 			ol = l; \
@@ -318,7 +318,7 @@ RT_LNK EIF_TYPE_INDEX fcount;
 
 #define RTXI(x) \
 	{ \
-		if (l + (x) <= loc_set.st_end) \
+		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) \
 			loc_set.st_top += (x); \
 		else \
 			l = eget(x); \

@@ -500,6 +500,7 @@ feature {NONE} -- File contents
 				Result.replace_substring_all ("$ROOT_CLASS_FILE_NAME", test_case_root_class_file_name)
 			else
 				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
+				Result := ""
 			end
 		ensure
 			not_void: Result /= Void
@@ -528,6 +529,13 @@ feature {NONE} -- File contents
 				Result.replace_substring_all ("$DATE", l_date_time.out)
 			else
 				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
+				Result := ""
+				Result.append ("class")
+				Result.append ("%N%T" + manager.environment_manager.test_case_root_eiffel_class_name.as_upper)
+				Result.append ("%N")
+				Result.append ("%Nfeature")
+				Result.append ("%N")
+				Result.append ("%Nend")
 			end
 		ensure
 			not_void: Result /= Void

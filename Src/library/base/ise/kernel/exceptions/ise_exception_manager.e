@@ -44,21 +44,19 @@ feature -- Raise
 			-- If the original `last_exception' needs to be reserved, `set_throwing_exception'
 			-- on `a_exception' can be called.
 		local
-			c_meaning, c_message: ANY
+			p_meaning, p_message: POINTER
 		do
 			if not a_exception.is_ignored then
 				set_last_exception (a_exception)
-				if {s: STRING} a_exception.meaning then
-					c_meaning := s.to_c
+					-- Meaning is not yet used in the runtime.
+					-- We passes NULL, until we implemented it.
+				p_meaning := default_pointer
+				if {m: C_STRING} a_exception.c_message then
+					p_message := m.item
 				else
-					c_meaning := ("").to_c
+					p_message := default_pointer
 				end
-				if {m: STRING} a_exception.message then
-					c_message := m.to_c
-				else
-					c_message := ("").to_c
-				end
-				developer_raise (a_exception.code, $c_meaning, $c_message)
+				developer_raise (a_exception.code, p_meaning, p_message)
 			end
 		end
 

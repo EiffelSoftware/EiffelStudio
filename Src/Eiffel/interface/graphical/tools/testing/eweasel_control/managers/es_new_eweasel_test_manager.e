@@ -146,7 +146,6 @@ feature {NONE} -- Implementation
 			if not l_retry then
 				add_file_ecf
 				add_file_tcf
-				add_file_notes
 				add_file_test_case_eiffel_class
 			else
 				l_error_string := interface_names.l_Cannot_create_test_case_files
@@ -214,23 +213,6 @@ feature {NONE} -- Implementation
 
 			l_io := create_file (l_file_name)
 			l_io.put_string (tcf_content)
-			l_io.close
-		ensure
-			file_created:
-		end
-
-	add_file_notes is
-			-- Add test case file which contain test case comments
-		local
-			l_io: IO_MEDIUM
-			l_file_name: FILE_NAME
-		do
-			create l_file_name.make
-			l_file_name.set_directory (full_target_test_case_folder)
-			l_file_name.set_file_name ("notes")
-
-			l_io := create_file (l_file_name)
-			l_io.put_string (notes_content)
 			l_io.close
 		ensure
 			file_created:
@@ -544,35 +526,6 @@ feature {NONE} -- File contents
 				-- Set date time
 				create l_date_time.make_now
 				Result.replace_substring_all ("$DATE", l_date_time.out)
-			else
-				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
-	notes_content: STRING is
-			-- Default test notes content
-		local
-			l_file: PLAIN_TEXT_FILE
-			l_date: DATE
-		do
-			create l_file.make (notes_content_file_name)
-			create Result.make_empty
-			if l_file.exists then
-				l_file.open_read
-
-				l_file.read_stream (l_file.count)
-				Result.append (l_file.last_string)
-
-				-- FIXIT: We should able to find current user name
-				-- On Windows, the API is "WNetGetUser"
-				-- On Linux, the API is "getlogin"
-				-- Then we can automatically have the texts like "reported by XXX"
-
-				-- Set date
-				create l_date.make_now
-				Result.replace_substring_all ("$DATE", l_date.out)
 			else
 				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
 			end

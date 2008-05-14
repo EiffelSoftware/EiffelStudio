@@ -57,6 +57,8 @@ feature {NONE} -- Implementation
 
 	message_string: STRING_GENERAL is
 			-- Message string
+		local
+			l_path: STRING
 		do
 			create {STRING_32} Result.make_from_string (interface_names.l_New_files_will_be_generated_at)
 			Result.append ("%N%N")
@@ -64,10 +66,14 @@ feature {NONE} -- Implementation
 			Result.append (interface_names.l_cluster)
 			Result.append (": ")
 			Result.append (wizard_information.cluster.cluster_name)
-			Result.append ("%N")
-			Result.append (interface_names.l_path)
-			Result.append (": ")
-			Result.append (wizard_information.cluster_path)
+
+			l_path := wizard_information.cluster_path
+			if l_path /= Void and then not l_path.is_empty then
+				Result.append ("%N")
+				Result.append (interface_names.l_path)
+				Result.append (": ")
+				Result.append (l_path)
+			end
 		end
 
 indexing

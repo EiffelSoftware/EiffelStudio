@@ -164,7 +164,10 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -fPIC -mlongcall'
+# Ideally it should use `-mlongcall' but later version of gcc crashes when used. When it is 
+# working again, we should try to see if one can link a large application like EiffelStudio
+#	ccflags='-pipe -fPIC -mlongcall'
+	ccflags='-pipe -fPIC'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

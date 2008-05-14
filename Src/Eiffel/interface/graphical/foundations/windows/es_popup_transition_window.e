@@ -13,7 +13,12 @@ class
 inherit
 	ES_POPUP_WINDOW
 		rename
-			make as make_popup_window
+			make as make_popup_window,
+			show as show_popup_window,
+			show_relative_to_widget as show_popup_window_relative_to_widget,
+			show_relative_to_window as show_popup_window_relative_to_window
+		export
+			{NONE} show_popup_window
 		redefine
 			on_after_initialized,
 			border_color,
@@ -27,30 +32,35 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text)
-			-- Initialize a new transitional window
+	make (a_text: ?like text)
+			-- Initialize a new transitional window.
 			--
 			-- `a_text': The message text to display to the use.
 		require
+			a_text_attached: a_text /= Void
 			not_a_text_is_empty: not a_text.is_empty
 		do
 			make_popup_window (True)
 			set_text (a_text)
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: a_text.is_equal (text)
 		end
 
-	make_with_icon (a_text: like text; a_icon: !like icon)
-			-- Initialize a new transitional window
+	make_with_icon (a_text: ?like text; a_icon: ?like icon)
+			-- Initialize a new transitional window with an icon.
 			--
 			-- `a_text': The message text to display to the use.
+			-- `a_icon': The icon to display the left of the message.
 		require
+			a_text_attached: a_text /= Void
 			not_a_text_is_empty: not a_text.is_empty
+			a_icon_attached: a_icon /= Void
+			not_a_icon_is_destroyed: not a_icon.is_destroyed
 		do
 			make (a_text)
 			set_icon (a_icon)
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: a_text.is_equal (text)
 			icon_set: icon = a_icon
 		end
 
@@ -117,6 +127,12 @@ feature -- Access
 			create Result.make_from_string (message_label.text)
 		end
 
+	icon: ?EV_PIXEL_BUFFER
+			-- Icon displayed adjecent to the message.
+
+	action: ?PROCEDURE [ANY, TUPLE] assign set_action
+			-- Action called when the window is shown, and hides the window when completed.
+
 feature {NONE} -- Access
 
 	padding_width: INTEGER
@@ -152,13 +168,28 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_icon (a_icon: !like icon)
+	set_action (a_action: ?like action)
+			-- Sets the window action to be performed when the window is shown. The window will be closed
+			-- automatically when the action is completed.
+			--
+			-- `a_action': The action to be performed when the window is displayed.
+		require
+			is_interface_usable: is_interface_usable
+			not_has_action: action = Void
+		do
+			action := a_action
+		ensure
+			action_set: action = a_action
+		end
+
+	set_icon (a_icon: ?like icon)
 			-- Sets icon image, appearring adjecent to the message.
 			--
 			-- `a_icon': An icon to set on the transitional window.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			a_icon_attached: a_icon /= Void
 			not_a_icon_is_detroyed: not a_icon.is_destroyed
 		local
 			l_pixmap: like icon_pixmap
@@ -202,11 +233,68 @@ feature {NONE} -- User interface elements
 	message_label: !EV_LABEL
 			-- Label used to display the message to the user.
 
-	icon: ?EV_PIXEL_BUFFER
-			-- Icon displayed adjecent to the message.
-
 	icon_pixmap: !EV_PIXMAP
 			-- Pixmap place holder to render the icon on.
+
+feature -- Basic operation
+
+	show_relative_to_widget (a_widget: ?EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
+			-- Displays the pop up window at a position relative to a widget.
+			--
+			-- `a_widget': A widget to show the window relative to.
+			-- `a_x': Relative X position to the specified widget.
+			-- `a_y': Relative Y position to the specified widget.
+			-- `a_mouse_x': Relative mouse X position to the specified widget.
+			-- `a_mouse_y': Relative mouse Y position to the specified widget.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_widget_attached: a_widget /= Void
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+		do
+			show_popup_window_relative_to_widget (a_widget, a_x, a_y, a_mouse_x, a_mouse_y)
+			if action /= Void then
+				perform_transition_action
+			end
+		end
+
+	show_relative_to_window (a_window: ?EV_WINDOW)
+			-- Shows popup window centered to a parent window.
+			--
+			-- `a_window': The window to show the popup window centered to.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_window_attached: a_window /= Void
+			a_window_is_displayed: a_window.is_displayed
+			a_window_is_detroyed: not a_window.is_destroyed
+		do
+			show_popup_window_relative_to_window (a_window)
+			if action /= Void then
+				perform_transition_action
+			end
+		end
+
+
+feature {NONE} -- Basic operations
+
+	perform_transition_action
+			-- Peforms the transistion action set on the window and then proceeds to close it.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			is_shown: is_shown
+			action_attached: action /= Void
+		do
+			action.call (Void)
+			hide
+		ensure
+			not_is_shown: not is_shown
+		rescue
+			if is_shown then
+				popup_window.hide
+			end
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

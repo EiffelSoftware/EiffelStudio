@@ -55,13 +55,13 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.testing_run_last_failed_tests_first_icon
+			Result := pixmaps.icon_pixmaps.icon_with_overlay (pixmaps.icon_pixmaps.debug_run_icon, pixmaps.icon_pixmaps.overlay_warning_icon_buffer, 0, 0)
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.testing_run_last_failed_tests_first_icon_buffer
+			Result := pixmaps.icon_pixmaps.icon_buffer_with_overlay (pixmaps.icon_pixmaps.debug_run_icon_buffer, pixmaps.icon_pixmaps.overlay_warning_icon_buffer, 0, 0)
 		end
 
 	name: STRING_GENERAL is

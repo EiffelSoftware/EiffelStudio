@@ -333,7 +333,7 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_widget (a_widget: !EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
+	show_relative_to_widget (a_widget: ?EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Displays the pop up window at a position relative to a widget.
 			--
 			-- `a_widget': A widget to show the window relative to.
@@ -344,6 +344,7 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do
 			relative_widget := a_widget
@@ -354,13 +355,14 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_window (a_window: !EV_WINDOW)
+	show_relative_to_window (a_window: ?EV_WINDOW)
 			-- Shows popup window centered to a parent window.
 			--
 			-- `a_window': The window to show the popup window centered to.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			a_window_attached: a_window /= Void
 			a_window_is_displayed: a_window.is_displayed
 			a_window_is_detroyed: not a_window.is_destroyed
 		local

@@ -1222,8 +1222,8 @@ feature {NONE} -- Stack grid implementation
 				save_call_stack_cmd.disable_sensitive
 				copy_call_stack_cmd.disable_sensitive
 				l_tooltipable_grid_row := g.grid_extended_new_row (g)
-				create glab.make_with_text ("Unable to get call stack data")
-				glab.set_tooltip ("Double click to refresh call stack")
+				create glab.make_with_text (Interface_messages.w_dbg_unable_to_get_call_stack_data)
+				glab.set_tooltip (Interface_messages.w_dbg_double_click_to_refresh_call_stack)
 				glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 				glab.pointer_double_press_actions.force_extend (agent update)
 				l_tooltipable_grid_row.set_item (1, glab)
@@ -1273,9 +1273,6 @@ feature {NONE} -- Stack grid implementation
 			dc, oc: CLASS_C
 			l_tooltip: STRING_32
 			l_nb_stack: INTEGER
-			e_cse: EIFFEL_CALL_STACK_ELEMENT
-			ext_cse: EXTERNAL_CALL_STACK_ELEMENT
-			dotnet_cse: CALL_STACK_ELEMENT_DOTNET
 			l_feature_name: STRING
 			l_is_melted: BOOLEAN
 			l_has_rescue: BOOLEAN
@@ -1289,14 +1286,17 @@ feature {NONE} -- Stack grid implementation
 			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
 		do
-			level := level_from_row (a_row).abs
-			if stack_data /= Void and then stack_data.valid_index (level) then
-				cse := stack_data [level]
-			end
-			check cse_not_void: not execution_replay_activated implies cse /= Void end
-			if cse /= Void then
+			level := level_from_row (a_row)
+			cse := stack_data_at (level)
+				--| It can occur the cse is Void, in specific context (unable to get the call stack)
+			if cse = Void then
+				if a_row.item (1) = Void then
+					create glab.make_with_text (Interface_messages.w_dbg_unable_to_get_call_stack_data)
+					glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
+					a_row.set_item (1, glab)
+				end
+			else
 				create l_tooltip.make (10)
-				e_cse ?= cse
 
 					--| Class name
 				l_class_info := cse.class_name
@@ -1324,7 +1324,7 @@ feature {NONE} -- Stack grid implementation
 					--| Object address
 				l_obj_address_info := cse.object_address
 
-				if e_cse /= Void then
+				if {e_cse: EIFFEL_CALL_STACK_ELEMENT} cse then
 						--| Origin class
 					dc := e_cse.dynamic_class
 					oc := e_cse.written_class
@@ -1348,19 +1348,17 @@ feature {NONE} -- Stack grid implementation
 						l_tooltip.append_string (interface_names.l_compilation_equal_melted)
 					end
 
-					dotnet_cse ?= e_cse
-					if dotnet_cse /= Void and then dotnet_cse.dotnet_module_name /= Void then
+					if
+						{dotnet_cse: CALL_STACK_ELEMENT_DOTNET} e_cse
+						and then dotnet_cse.dotnet_module_name /= Void
+					then
 						l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
 					end
-
-					a_row.set_data (level)
 				else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
 					l_orig_class_info := ""
-					ext_cse ?= cse
-					if ext_cse /= Void then
+					if {ext_cse: EXTERNAL_CALL_STACK_ELEMENT} cse then
 						l_extra_info := ext_cse.info
 					end
-					a_row.set_data (- level) -- This is not a valid Eiffel call stack element.
 				end
 
 				check debugger_manager.application_is_executing end
@@ -1441,7 +1439,7 @@ feature {NONE} -- Stack grid implementation
 					a_row.set_background_color (row_highlight_bg_color)
 				else
 					ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
-					if level >= 0 then
+					if is_eiffel_callstack_at (level) then
 						glab.set_pixmap (ep)
 					else
 						glab.remove_pixmap
@@ -1674,6 +1672,20 @@ feature {NONE} -- Grid Implementation
 			Result_with_rt_info: Result /= Void implies Result.rt_information_available
 		end
 
+	stack_data_at (lev: INTEGER): CALL_STACK_ELEMENT is
+			-- Stack data for level `lev'
+		do
+			if stack_data /= Void and then stack_data.valid_index (lev) then
+				Result := stack_data[lev]
+			end
+		end
+
+	is_eiffel_callstack_at (lev: INTEGER): BOOLEAN is
+			-- Is stack data related to `lev' an Eiffel call stack ?
+		do
+			Result := {s: like stack_data_at} stack_data_at (lev) and then s.is_eiffel_call_stack_element
+		end
+
 	level_associated_with (rep: REPLAYED_CALL_STACK_ELEMENT): INTEGER is
 			-- Level associated with replayed call stack
 		require
@@ -1704,12 +1716,12 @@ feature {NONE} -- Grid Implementation
 			g := stack_grid
 			n := g.row_count
 			if n > 0 then
-				l := a_level.abs
+				l := a_level
 				from r := 1 until r > n or Result /= Void loop
 					row := g.row (r)
 					if
 						row.parent_row = Void and then
-						level_from_row (row).abs = l
+						level_from_row (row) = l
 					then
 						Result := row
 					end
@@ -1742,16 +1754,14 @@ feature {NONE} -- Grid Implementation
 		local
 			l_row: EV_GRID_ROW
 			level: INTEGER
-			elem: EIFFEL_CALL_STACK_ELEMENT
 		do
 			if a_item /= Void then
 				l_row := a_item.row
 				if l_row /= Void then
 					level := level_from_row (l_row)
 					if level > 0 then
-						elem ?= Debugger_manager.application_status.current_call_stack.i_th (level)
 						if
-							elem /= Void and then
+							{elem: EIFFEL_CALL_STACK_ELEMENT} Debugger_manager.application_status.current_call_stack.i_th (level) and then
 							elem.dynamic_class /= Void and then
 							elem.dynamic_class.has_feature_table
 						then
@@ -1779,7 +1789,7 @@ feature {NONE} -- Grid Implementation
 			rst: REPLAYED_CALL_STACK_STONE
 			l: INTEGER
 		do
-			if {lev: INTEGER} level_from_row (a_row) and then lev > 0 then
+			if {lev: INTEGER} level_from_row (a_row) and then is_eiffel_callstack_at (lev) then
 				select_element_by_level (lev)
 			elseif {rep: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (a_row) then
 				if rep.rt_information_available then
@@ -1818,7 +1828,7 @@ feature {NONE} -- Grid Implementation
 						create st.make (fe)
 					end
 				end
-				if l > 0 then
+				if is_eiffel_callstack_at (l) then
 					select_element_by_level	(l)
 				end
 				if st /= Void and then st.is_valid then

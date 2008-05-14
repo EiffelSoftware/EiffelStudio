@@ -332,6 +332,11 @@ feature -- Debug warnings
 			Result := locale.formatted_string (locale.translation ("%'$1%' is an invalid or not supported syntax."), [expr])
 		end
 
+	w_dbg_unable_to_get_call_stack_data: STRING_GENERAL is do Result := locale.translation ("Unable to get call stack data") end
+
+	w_dbg_double_click_to_refresh_call_stack: STRING_GENERAL is do Result := locale.translation ("Double click to refresh call stack") end
+
+
 feature -- Cluster tree warnings
 
 	w_Cannot_move_class: STRING_GENERAL is

@@ -139,6 +139,8 @@ feature {NONE} -- Implementation
 			class_name.text_field.focus_in_actions.extend_kamikaze (agent do
 																													is_class_name_focused := True
 																												end)
+			class_name.text_field.change_actions.extend (agent on_class_name_changed)
+
 			l_h_box.extend (class_name)
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
@@ -253,6 +255,22 @@ feature {NONE}	-- Agents
 			if l_result /= Void then
 				class_under_test.set_text (l_result)
 				wizard_information.set_class_under_test (l_result)
+			end
+		end
+
+	on_class_name_changed
+			-- Handler for `class_name'.change_actions
+		local
+			l_old_position: INTEGER
+			l_text: !STRING_32
+			l_utext: !STRING_32
+		do
+			l_text := class_name.text
+			l_utext := l_text.as_upper
+			if not l_utext.is_equal (l_text)  then
+				l_old_position := class_name.text_field.caret_position
+				class_name.set_text (l_utext)
+				class_name.text_field.set_caret_position (l_old_position)
 			end
 		end
 
@@ -449,7 +467,7 @@ feature {NONE} -- Query
 
 	is_class_name_focused: BOOLEAN
 			-- If `class_name' has been focused
-			
+
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION;
 			-- <Precursor>
 

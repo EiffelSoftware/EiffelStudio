@@ -41,8 +41,8 @@
 extern "C" {
 #endif
 
-#define LENGTH(b)	(((struct bit *) b)->b_length)
-#define ARENA(b)	(((struct bit *) b)->b_value)
+#define LENGTH(b)	(((struct bit *) (b))->b_length)
+#define ARENA(b)	(((struct bit *) (b))->b_value)
 
 #ifndef TRUE
 #define TRUE		1		/* The boolean true value */

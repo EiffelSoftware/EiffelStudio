@@ -148,37 +148,13 @@ feature -- Properties
 
 	routine: E_FEATURE is
 			-- Routine being called
-			-- Note from Arnaud: Computation has been deferred for optimisation purpose
-		local
-			l_routine: like private_routine
-			eclc: EIFFEL_CLASS_C
+			-- Note: computation is deferred for optimization purpose
 		do
-			if private_routine = Void then
-					-- Get routine in `written_class'.
-				private_routine := written_class.feature_with_name (routine_name)
-				if private_routine = Void then
-					eclc ?= written_class
-					if eclc /= Void then
-						private_routine := eclc.api_inline_agent_of_name (routine_name)
-					end
-				end
-					-- Adapt `private_routine' to `dynamic_class' and handles precursor case.
-					--
-					-- Note that `dynamic_class' does not always conform to `written_class' in the
-					-- case where we do a static call to an external routine (e.g. when stepping into
-					-- `sp_count' from ISE_RUNTIME from `count' of SPECIAL.
-				if dynamic_class /= written_class and then
-					not private_routine.is_inline_agent and then
-					dynamic_class.simple_conform_to (written_class)
-				then
-					l_routine := dynamic_class.feature_with_rout_id (private_routine.rout_id_set.first)
-					if l_routine.written_in = written_class.class_id then
-							-- Not the precursor case.
-						private_routine := l_routine
-					end
-				end
-			end
 			Result := private_routine
+			if Result = Void then
+				Result := feature_from_runtime_data (dynamic_class, written_class, routine_name)
+				private_routine := Result
+			end
 		end
 
 	object_address: STRING
@@ -553,13 +529,16 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 
 	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; line_number: INTEGER) is
 			-- See: C/ipc/ewb/ewb_dumper.c: c_recv_rout_info (..)
+		local
+			dt: like dynamic_type
 		do
 			if exhausted then
 				is_exhausted := True
 			else
-				dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1, False)
-				if dynamic_type /= Void then
-					dynamic_class := dynamic_type.associated_class
+				dt := Eiffel_system.type_of_dynamic_id (type + 1, False)
+				dynamic_type := dt
+				if dt /= Void then
+					dynamic_class := dt.associated_class
 					class_name := dynamic_class.name_in_upper
 				end
 				written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)

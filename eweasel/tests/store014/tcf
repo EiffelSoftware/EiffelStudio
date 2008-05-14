@@ -16,9 +16,6 @@ copy_raw	storable_e55.e $CLUSTER storable_e55.e
 compile_melted
 compile_result ok
 
-c_compile_work
-c_compile_result	ok
-
 copy_bin	data_52 $WCODE data_52
 copy_bin	data_54 $WCODE data_54
 copy_bin	data_55 $WCODE data_55

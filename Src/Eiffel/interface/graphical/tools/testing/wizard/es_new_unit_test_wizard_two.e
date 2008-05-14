@@ -112,6 +112,10 @@ feature {NONE} -- Implementation
 			create l_tmp_text_filed
 			l_tmp_text_filed.change_actions.extend (agent on_test_case_name_change)
 			create test_case_name.make (l_tmp_text_filed, agent on_valid_test_case_name)
+			test_case_name.validate
+			test_case_name.text_field.focus_in_actions.extend_kamikaze (agent do
+																															is_test_case_name_focused := True
+																														end)
 			l_h_box.extend (test_case_name)
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
@@ -131,6 +135,10 @@ feature {NONE} -- Implementation
 			create l_tmp_text_filed
 			l_tmp_text_filed.change_actions.extend (agent on_class_name_change)
 			create class_name.make (l_tmp_text_filed, agent on_valid_class_name)
+			class_name.validate
+			class_name.text_field.focus_in_actions.extend_kamikaze (agent do
+																													is_class_name_focused := True
+																												end)
 			l_h_box.extend (class_name)
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
@@ -282,11 +290,15 @@ feature {NONE}	-- Agents
 		local
 			l_valid: BOOLEAN
 		do
-			l_valid := 	not a_string.is_empty and then
-				 		(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string) -- We use class name rule to check test case name
-			 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
-			 	Result := l_result
-			 end
+			if is_test_case_name_focused then
+				l_valid := 	not a_string.is_empty and then
+					 		(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string) -- We use class name rule to check test case name
+				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+				 	Result := l_result
+				 end
+			else
+				Result := [True, Void]
+			end
 		end
 
 	on_test_case_name_change
@@ -309,12 +321,16 @@ feature {NONE}	-- Agents
 		local
 			l_valid: BOOLEAN
 		do
-			l_valid := 	not a_string.is_empty and then
-						not is_new_class_name_already_exists and then
-			  			(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string)
-			 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
-			 	Result := l_result
-			 end
+			if is_class_name_focused then
+				l_valid := 	not a_string.is_empty and then
+							not is_new_class_name_already_exists and then
+				  			(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string)
+				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+				 	Result := l_result
+				 end
+			else
+				Result := [True, Void]
+			end
 		end
 
 	on_class_name_change
@@ -428,6 +444,12 @@ feature {NONE} -- Query
 			Result := interface_names.t_Enter_name_of_the_unit_test
 		end
 
+	is_test_case_name_focused: BOOLEAN
+			-- If `test_case_name' has been focused
+
+	is_class_name_focused: BOOLEAN
+			-- If `class_name' has been focused
+			
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION;
 			-- <Precursor>
 

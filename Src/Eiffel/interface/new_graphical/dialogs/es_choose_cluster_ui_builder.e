@@ -11,7 +11,7 @@ indexing
 class
 	ES_CHOOSE_CLUSTER_UI_BUILDER
 
-feature
+feature -- Command
 
 	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_BOX) is
 			-- Build UI widgets in `a_container'
@@ -50,12 +50,54 @@ feature
 				-- Pack the buttons_box and the controls.
 			a_container.extend (l_controls_box)
 		end
+		
+	on_ok: BOOLEAN is
+			-- Terminate the dialog.
+			-- Result False means we got wrong cluster information
+		local
+			l_entry_text: STRING
+
+			l_valid_cluster_and_path: BOOLEAN
+
+			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
+			l_cluster_name_and_path: TUPLE [a_cluster_id, a_cluster_sub_path: STRING]
+		do
+			create l_helper
+
+			l_entry_text := cluster_name_entry.text
+			l_valid_cluster_and_path := l_helper.is_cluster_full_path_valid (l_entry_text)
+			if not l_valid_cluster_and_path then -- No cluster has such a name.
+				cluster_name_entry.set_text (Interface_names.l_unknown_cluster_name)
+				cluster_name_entry.select_all
+			else
+				selected_cluster_and_path := l_entry_text
+
+				l_cluster_name_and_path ?= cluster_name_entry.data
+				if l_cluster_name_and_path /= Void then
+					cluster_id := l_cluster_name_and_path.a_cluster_id
+					cluster_sub_path := l_cluster_name_and_path.a_cluster_sub_path
+					Result := True
+				end
+			end
+		end
+
+feature -- Query
 
 	cluster_name_entry: EB_CHOOSE_CLASS_COMBO_BOX
 			-- Combo box for cluster string
 
-	classes_tree: EB_CLASSES_TREE;
+	classes_tree: EB_CLASSES_TREE
 			-- Tree where the user can choose its class.
+
+	selected_cluster_and_path: STRING
+			-- Selected cluster name and path
+			-- This value set by `On_ok'
+
+	cluster_id, cluster_sub_path: STRING
+			-- Cluster Id and its sub path.
+			-- Maybe void if end user not pressed any cluster tree node.
+
+feature {NONE} -- Agents
 
 	on_cluster_name_changed
 			-- Handle cluster name entry (combo box) text change actions.
@@ -96,44 +138,6 @@ feature
 			l_result := on_ok
 		end
 
-	on_ok: BOOLEAN is
-			-- Terminate the dialog.
-			-- Result False means we got wrong cluster information
-		local
-			l_entry_text: STRING
-
-			l_valid_cluster_and_path: BOOLEAN
-
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
-			l_cluster_name_and_path: TUPLE [a_cluster_id, a_cluster_sub_path: STRING]
-		do
-			create l_helper
-
-			l_entry_text := cluster_name_entry.text
-			l_valid_cluster_and_path := l_helper.is_cluster_full_path_valid (l_entry_text)
-			if not l_valid_cluster_and_path then -- No cluster has such a name.
-				cluster_name_entry.set_text (Interface_names.l_unknown_cluster_name)
-				cluster_name_entry.select_all
-			else
-				selected_cluster_and_path := l_entry_text
-
-				l_cluster_name_and_path ?= cluster_name_entry.data
-				if l_cluster_name_and_path /= Void then
-					cluster_id := l_cluster_name_and_path.a_cluster_id
-					cluster_sub_path := l_cluster_name_and_path.a_cluster_sub_path
-					Result := True
-				end
-			end
-		end
-
-	selected_cluster_and_path: STRING
-			-- Selected cluster name and path
-			-- This value set by `On_ok'
-
-	cluster_id, cluster_sub_path: STRING
-			-- Cluster Id and its sub path.
-			-- Maybe void if end user not pressed any cluster tree node.
-
 feature {NONE} -- Implementation
 
 	interface_names: !INTERFACE_NAMES
@@ -142,7 +146,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-indexing
+;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -56,12 +56,31 @@ feature {NONE} -- Redefine
 		local
 			l_top_container: EV_BOX
 			l_window_manager: EB_SHARED_WINDOW_MANAGER
+			l_horizontal_box: EV_HORIZONTAL_BOX
+			l_label: EV_LABEL
 		do
 			l_top_container := wizard_information.helper.parent_parent_of (choice_box)
+
+			create l_horizontal_box
+			l_horizontal_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
+			l_horizontal_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_top_container.extend (l_horizontal_box)
+			l_top_container.disable_item_expand (l_horizontal_box)
+
+			create l_label.make_with_text (interface_names.l_cluster_colon)
+			l_horizontal_box.extend (l_label)
+			l_horizontal_box.disable_item_expand (l_label)
+
+			create label.make_with_text (interface_names.l_unselected)
+			l_horizontal_box.extend (label)
+			l_horizontal_box.disable_item_expand (label)
+			l_horizontal_box.extend (create {EV_CELL})
+
 			create l_window_manager
 			if {l_a_win: EB_DEVELOPMENT_WINDOW} l_window_manager.window_manager.last_focused_development_window then
 				ui_builder.prepare (l_a_win.menus.context_menu_factory, l_top_container)
 				ui_builder.cluster_name_entry.change_actions.extend (agent on_cluster_changed)
+				ui_builder.cluster_name_entry.hide
 			else
 				check not_possible: False end
 			end
@@ -80,6 +99,9 @@ feature {NONE} -- Wizard UI Implementation
 			l_cluster_id_solution: EB_SHARED_ID_SOLUTION
 			l_conf_group: CONF_GROUP
 		do
+			-- Synchronize `label''s text with hidden combo box
+			label.set_text (ui_builder.cluster_name_entry.text)
+
 			l_cluster_name_and_path ?= ui_builder.cluster_name_entry.data
 			if l_cluster_name_and_path /= Void then
 				l_cluster_id := l_cluster_name_and_path.a_cluster_id
@@ -160,7 +182,10 @@ feature {NONE} -- Wizard UI Implementation
 			end
 		end
 
-indexing
+	label: EV_LABEL
+			-- Label to show current selected cluster
+
+;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

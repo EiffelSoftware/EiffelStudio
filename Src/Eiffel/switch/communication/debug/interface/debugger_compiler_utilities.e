@@ -11,7 +11,7 @@ class
 
 inherit
 	ANY
-	
+
 	COMPILER_EXPORTER
 			--| Just to be able to access E_FEATURE::associated_feature_i :(
 			--| and other expression evaluation purpose
@@ -250,6 +250,36 @@ feature -- Type adaptation
 		end
 
 feature -- Feature access
+
+	frozen feature_from_runtime_data (a_dynamic_class: CLASS_C; a_written_class: CLASS_C; a_featname: STRING): E_FEATURE is
+			-- Feature attached to `a_dynamic_class' from feature with name `a_feat_name' on `a_written_class'
+		local
+			f: E_FEATURE
+		do
+			Result := a_written_class.feature_with_name (a_featname)
+			if Result = Void then
+				if {eclc: EIFFEL_CLASS_C} a_written_class then
+					Result := eclc.api_inline_agent_of_name (a_featname)
+				end
+			end
+				-- Adapt `Result' to `a_dynamic_class' and handles precursor case.
+				--
+				-- Note that `a_dynamic_class' does not always conform to `a_written_class' in the
+				-- case where we do a static call to an external routine
+				-- (e.g. when stepping into `sp_count' from ISE_RUNTIME from `count' of SPECIAL.)
+			if
+				a_dynamic_class /= a_written_class and then
+				Result /= Void and then
+				not Result.is_inline_agent and then
+				a_dynamic_class.simple_conform_to (a_written_class)
+			then
+				f := a_dynamic_class.feature_with_rout_id (Result.rout_id_set.first)
+				if f.written_in = a_written_class.class_id then
+						-- Not the precursor case.
+					Result := f
+				end
+			end
+		end
 
 	frozen fi_version_of_class (fi: FEATURE_I; a_class: CLASS_C): FEATURE_I is
 			-- Feature in `a_class' of which `Current' is derived.

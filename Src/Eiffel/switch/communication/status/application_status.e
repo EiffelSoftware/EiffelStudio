@@ -19,7 +19,10 @@ inherit
 			{NONE} all
 		end
 
-	COMPILER_EXPORTER
+	DEBUGGER_COMPILER_UTILITIES
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 

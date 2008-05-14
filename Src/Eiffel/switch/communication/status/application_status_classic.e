@@ -29,7 +29,8 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			-- position in source code.
 		local
 			ccs: EIFFEL_CALL_STACK_CLASSIC
-			eclc: EIFFEL_CLASS_C
+
+			f: E_FEATURE
 		do
 			object_address := obj
 			reason := reas
@@ -46,17 +47,13 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				origin_class := Eiffel_system.class_of_dynamic_id (ot, False)
 
 					-- Compute feature (E_FEATURE)
-					--|Note: the applicaiton sends us the original name.
-				e_feature := origin_class.feature_with_name (n)
-				if e_feature = Void then
-					eclc ?= dynamic_class
-					if eclc /= Void then
-						e_feature := eclc.api_inline_agent_of_name (n)
-					end
+					--|Note: the application sends us the original name.
+
+				f := feature_from_runtime_data (dynamic_class, origin_class, n)
+				if f /= Void then
+					body_index := f.body_index
 				end
-				if e_feature /= Void then
-					body_index := e_feature.body_index
-				end
+				e_feature := f
 
 					-- Compute break position.
 				break_index := offs

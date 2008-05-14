@@ -12,7 +12,9 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
-
+		redefine
+			tooltext
+		end
 
 create
 	make
@@ -25,6 +27,14 @@ feature {NONE} -- Initialization
 			manager := a_manager
 		ensure
 			set: manager = a_manager
+		end
+
+feature -- Access
+
+	tooltext: STRING_GENERAL is
+			-- Text displayed on the toolbar button.
+		do
+			Result := interface_names.b_cancel
 		end
 
 feature -- Command
@@ -45,6 +55,7 @@ feature {ES_TESTING_TOOL_PANEL} -- Implementation
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
+			Result := "Test"
 		end
 
 	description: STRING_GENERAL is

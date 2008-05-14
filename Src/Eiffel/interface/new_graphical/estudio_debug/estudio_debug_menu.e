@@ -128,10 +128,12 @@ feature {NONE} -- Initialization
 		local
 			l_window: ES_POPUP_TRANSITION_WINDOW
 		do
-			create l_window.make_with_icon (({!STRING_32}) #? ("Scanning catalog for changes...").as_string_32, (create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_search_icon_buffer)
-			l_window.show_relative_to_window (({!EV_WINDOW}) #? window)
-			code_template_catalog.service.rescan_catalog
-			l_window.hide
+			create l_window.make_with_icon (
+				("Scanning catalog for changes...").as_string_32,
+				(create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_search_icon_buffer)
+			l_window.set_action (agent (code_template_catalog.service).rescan_catalog)
+			l_window.show_relative_to_window (window)
+
 			check l_window_is_recycled: l_window.is_recycled end
 		end
 

@@ -3745,7 +3745,7 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 /* Call `set_last_exception' in EXCEPTION_MANAGER */
 {
 	EIF_GET_CONTEXT
-	RTSN;					/* Save nstcall, Eiffel call could change the value */
+	int is_nested = nstcall;	/* Save nstcall, Eiffel call could change the value */
 
 	if (except_mnger) {	/* In case get called in `dispose' */
 #ifdef WORKBENCH
@@ -3772,7 +3772,7 @@ rt_public EIF_REFERENCE last_exception (void)
 /* Eiffel instance of last exception from EXCEPTION_MANAGER */
 {
 	EIF_GET_CONTEXT
-	RTSN;					/* Save nstcall, Eiffel call could change the value */
+	int is_nested = nstcall;		/* Save nstcall, Eiffel call could change the value */
 
 #ifdef WORKBENCH
 	EIF_TYPED_VALUE _re;

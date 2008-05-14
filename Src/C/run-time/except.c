@@ -3387,7 +3387,7 @@ rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)
 		} else { /* We are out of current chunk */
 			cur = cur->sk_prev;
 			if (cur){ /* There is a previous chunk. */
-				top = cur->sk_arena;
+				top = cur->sk_end - 1;
 				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
 					if (++found >= n) {
 						return top;
@@ -3427,7 +3427,7 @@ rt_shared struct ex_vect *draise_recipient_call (struct xstack *stk)
 		} else { /* We are out of current chunk */
 			cur = cur->sk_prev;
 			if (cur) { /* There is a previous chunk. */
-				top = cur->sk_arena;
+				top = cur->sk_end - 1;
 				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) {
 					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
 						return top;
@@ -3744,6 +3744,9 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 rt_public void set_last_exception (EIF_REFERENCE ex)
 /* Call `set_last_exception' in EXCEPTION_MANAGER */
 {
+	EIF_GET_CONTEXT
+	RTSN;					/* Save nstcall, Eiffel call could change the value */
+
 	if (except_mnger) {	/* In case get called in `dispose' */
 #ifdef WORKBENCH
 		EIF_TYPED_VALUE _ex;
@@ -3761,12 +3764,16 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 #ifdef WORKBENCH
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
+		nstcall = is_nested;	/* Restore `nstcall' */
 	}
 }
 
 rt_public EIF_REFERENCE last_exception (void)
 /* Eiffel instance of last exception from EXCEPTION_MANAGER */
 {
+	EIF_GET_CONTEXT
+	RTSN;					/* Save nstcall, Eiffel call could change the value */
+
 #ifdef WORKBENCH
 	EIF_TYPED_VALUE _re;
 #else
@@ -3782,6 +3789,7 @@ rt_public EIF_REFERENCE last_exception (void)
 #ifdef WORKBENCH
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
+	nstcall = is_nested;	/* Restore `nstcall' */
 
 #ifdef WORKBENCH
 		return _re.it_r;

@@ -393,6 +393,14 @@ rt_public void xinterp(unsigned char *icval)
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
 	RTYD;					/* Store stack contexts */
+	EIF_OBJECT se = NULL;	/* Protected existing exception object */
+	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
+
+	/* Protect the existing exception object if any */
+	la = RTLA;
+	if (la){
+		se = eif_protect (la);
+	}
 
 	IC = icval;				/* Where interpretation starts */
 	tagval++;				/* One more call to interpreter */
@@ -405,6 +413,7 @@ rt_public void xinterp(unsigned char *icval)
 	dstart();					/* Get calling record */
 	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
+
 
 	/* Recoding a pseudo execution vector in the Eiffel execution stack gives
 	 * us a hook for bactracking: the exception mechanism will honor the
@@ -424,6 +433,9 @@ rt_public void xinterp(unsigned char *icval)
 		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
+		if (se){						/* Release exception object */
+			eif_wean (se);
+		}
 		dpop();							/* Pop off our own record */
 		ereturn(MTC_NOARG);						/* Propagate exception */			
 	}
@@ -440,8 +452,14 @@ rt_public void xinterp(unsigned char *icval)
 	 * upon successful return, remove the execution vector on top of the Eiffel
 	 * stack.
 	 */
-
 	(void) interpret(MTC INTERP_CMPD, 0);	/* Start interpretation */
+
+	/* Release protection on the exception object */
+	if (se){
+		set_last_exception (eif_access (se));
+		eif_wean (se);
+	}
+
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
 }
@@ -456,6 +474,14 @@ rt_public void xiinv(unsigned char *icval, int where)
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	RTYD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
+	EIF_OBJECT se = NULL;	/* Protected existing exception object */
+	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
+
+	/* Protect the existing exception object if any */
+	la = RTLA;
+	if (la){
+		se = eif_protect (la);
+	}
 
 	IC = icval;					/* Where interpretation starts */
 	tagval++;					/* One more call to interpreter */
@@ -468,11 +494,21 @@ rt_public void xiinv(unsigned char *icval, int where)
 		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
+		if (se){						/* Release exception object */
+			eif_wean (se);
+		}
 		dpop();							/* Remove calling context */
 		ereturn(MTC_NOARG);						/* Propagate exception */
 	}
 
 	(void) interpret(MTC INTERP_INVA, where);
+
+	/* Release protection on the exception object */
+	if (se){
+		set_last_exception (eif_access (se));
+		eif_wean (se);
+	}
+
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
 }
@@ -512,9 +548,7 @@ rt_private void interpret(int flag, int where)
 	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
 	unsigned char * volatile rescue = NULL;	/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
-	EIF_REFERENCE saved_except = NULL;		/* Saved exception object for rescue clause */
 	EIF_REFERENCE saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
-	struct ex_vect exvect_t;				/* Save the vector content to avoid messing up by Eiffel calls i.e last_exception/set_last_exception */		
 	int ex_pos;								/* Exception object local position */
 	unsigned char *IC_O;						/* Backup IC for old evaluation */
 	long volatile offset_o;					/* Offset for jump to the next BC_OLD/BC_END_OLD_EVAL */
@@ -783,9 +817,6 @@ rt_private void interpret(int flag, int where)
 #endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
-				memcpy (&exvect_t, exvect, sizeof (exvect_t)); /* Protect the vector, so that the following Eiffel call does not wipe it */
-				saved_except = RTLA; /* Save `last_exception' */
-				memcpy (exvect, &exvect_t, sizeof (exvect_t));
 			}
 
 		}
@@ -3538,7 +3569,6 @@ rt_private void interpret(int flag, int where)
 #endif /* EIF_THREADS */
 		}
 		if (rescue) {
-			set_last_exception (saved_except);
 			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
 			RTEE;	/* remove execution vector from stack */

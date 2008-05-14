@@ -46,7 +46,6 @@ feature {NONE} -- Implementation
 			group_show_requested: group.is_show_requested
 		local
 			draw_item: EV_MODEL
-			g: EV_MODEL_GROUP
 			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 			i, nb: INTEGER
 		do
@@ -58,15 +57,14 @@ feature {NONE} -- Implementation
 			loop
 				draw_item := group.i_th (i)
 				if draw_item.is_show_requested then
-					g ?= draw_item
 					if draw_routines.valid_index (draw_item.draw_id) then
 						dr := draw_routines.item (draw_item.draw_id)
 					else
 						dr := Void
 					end
-					if g /= Void and then dr = Void then
+					if dr = Void and {g: EV_MODEL_GROUP} draw_item then
 						project_figure_group (g, r)
-					else	
+					else
 						project_figure (draw_item, r)
 					end
 				end
@@ -89,6 +87,8 @@ feature {NONE} -- Implementation
 			f_show_requested: f.is_show_requested
 		local
 			bbox: EV_RECTANGLE
+			l_tuple: TUPLE [EV_MODEL]
+			l_draw_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
 			if f.valid or else f.last_update_rectangle = Void then
 				bbox := f.bounding_box
@@ -96,7 +96,6 @@ feature {NONE} -- Implementation
 				bbox := f.last_update_rectangle
 			end
 			if bbox.intersects (rect) then
-				draw_routines.item (f.draw_id).call ([f])
 				-- If we paint f we have to add it
 				-- to the invalidate rectangle. That way
 				-- all figures on top of f are
@@ -107,10 +106,16 @@ feature {NONE} -- Implementation
 				--		2. If other figure intersects with f
 				--			it will be drawn since bounding_box of
 				--			f is now element of rect.
+				l_draw_routine := draw_routines.item (f.draw_id)
+				l_tuple := l_draw_routine.empty_operands
+				if l_tuple.valid_type_for_index (f, 1) then
+					l_tuple.put (f, 1)
+				end
+				l_draw_routine.call (l_tuple)
 				rect.merge (bbox)
 			end
 		end
-		
+
 	project_figure_group_full (group: EV_MODEL_GROUP) is
 			-- Draw all figures in `group'.
 		require
@@ -118,7 +123,6 @@ feature {NONE} -- Implementation
 			group_show_requested: group.is_show_requested
 		local
 			draw_item: EV_MODEL
-			g: EV_MODEL_GROUP
 			i, nb: INTEGER
 			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
@@ -130,15 +134,14 @@ feature {NONE} -- Implementation
 			loop
 				draw_item := group.i_th (i)
 				if draw_item.is_show_requested then
-					g ?= draw_item
 					if draw_routines.valid_index (draw_item.draw_id) then
 						dr := draw_routines.item (draw_item.draw_id)
 					else
 						dr := Void
 					end
-					if g /= Void and then dr = Void then
+					if dr = Void and {g: EV_MODEL_GROUP} draw_item then
 						project_figure_group_full (g)
-					else	
+					else
 						project_figure_full (draw_item)
 					end
 				end
@@ -154,8 +157,16 @@ feature {NONE} -- Implementation
 			in_draw_routines: draw_routines.valid_index (f.draw_id)
 			draw_routines_has: draw_routines.item (f.draw_id) /= Void
 			f_show_requested: f.is_show_requested
+		local
+			l_tuple: TUPLE [EV_MODEL]
+			l_draw_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
-			draw_routines.item (f.draw_id).call ([f])
+			l_draw_routine := draw_routines.item (f.draw_id)
+			l_tuple := l_draw_routine.empty_operands
+			if l_tuple.valid_type_for_index (f, 1) then
+				l_tuple.put (f, 1)
+			end
+			l_draw_routine.call (l_tuple)
 		end
 
 feature {NONE} -- Implementation

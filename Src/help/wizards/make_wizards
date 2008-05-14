@@ -8,7 +8,7 @@ read rep
 if [ $rep = y ]; then
 	echo Building the Vision2 wizard
 	# Launch the finalization.
-	ec -finalize -c_compile -config vision2_wizard.ecf
+	ecb -finalize -c_compile -config vision2_wizard.ecf
 	# Copy the file.
 	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/vision2/spec/$ISE_PLATFORM/
 	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/vision2/spec/$ISE_PLATFORM/
@@ -19,7 +19,7 @@ read rep
 if [ $rep = y ]; then
 	echo Building the Wizard wizard
 	# Launch the finalization.
-	ec -finalize -c_compile -config wizard_wizard.ecf
+	ecb -finalize -c_compile -config wizard_wizard.ecf
 	# Copy the file.
 	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/wizard/spec/$ISE_PLATFORM/
 	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/wizard/spec/$ISE_PLATFORM/
@@ -30,7 +30,7 @@ read rep
 if [ $rep = y ]; then
 	echo Building the Precompilation wizard
 	# Launch the finalization.
-	ec -finalize -c_compile -config precompile_wizard.ecf
+	ecb -finalize -c_compile -config precompile_wizard.ecf
 	# Copy the file.
 	mkdir $ISE_EIFFEL/studio/wizards/precompile/spec/$ISE_PLATFORM/
 	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/precompile/spec/$ISE_PLATFORM/

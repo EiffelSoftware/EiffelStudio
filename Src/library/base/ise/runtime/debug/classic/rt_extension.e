@@ -206,7 +206,7 @@ feature {NONE} -- Execution replay
 			r: like execution_recorder
 		do
 			r := execution_recorder
-			if r /= Void then
+			if r /= Void and then r.recording_values then
 				if {ot_ref: ANY} a_data.ref then
 					r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 				end
@@ -221,7 +221,7 @@ feature {NONE} -- Execution replay
 			r: like execution_recorder
 		do
 			r := execution_recorder
-			if r /= Void then
+			if r /= Void and then r.recording_values then
 				r.notify_rt_assign_local (a_data.a_dep, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 			end
 		end
@@ -232,28 +232,42 @@ feature {NONE} -- Execution replay
 			-- Check `{RT_DBG_EXECUTION_RECORDER}.make' to see the default values.
 			--| Note: in the future, there will be a way to set those parameter from the debugger
 		do
-			create Result.make
-				--| Uncomment on of the following lines if you want to set
-				--|		+ 10_000 as maximum number of value records
-				--|		+ 0 for unlimited number of value records.
-				--| Default: 1_000_000
---			Result.set_maximum_record_count (10_000) -- Limited to 10_000 records
---			Result.set_maximum_record_count (0)	-- No limit
-			Result.set_maximum_record_count (100_000)
-
-				--| when leaving a feature, flatten all the value record from call records, and its sub calls
-				--| Default: True
---			Result.set_flatten_when_closing (False)
-
-				--| When we flatten call records' value, do we keep the sub-call records (i.e: the execution calls history)?
-				--| Default: True
---			Result.set_keep_calls_records (False)
+			create Result.make (execution_recorder_parameters)
 		end
 
 	execution_recorder: ?RT_DBG_EXECUTION_RECORDER
 			-- Once per thread record.
 		do
 			Result := execution_recorder_cell.item
+		end
+
+	execution_recorder_parameters: RT_DBG_EXECUTION_PARAMETERS
+			-- Once per thread record parameters.
+		indexing
+			once_status: global
+		once
+			create Result.make
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	set_execution_recorder_parameters (a_maximum_record_count: INTEGER; a_flatten_when_closing: BOOLEAN;
+				a_keep_calls_record: BOOLEAN; a_recording_values: BOOLEAN)
+			-- Set execution recorder parameters
+			--| this feature might be used remotely by debugger to change parameters
+		local
+			p: like execution_recorder_parameters
+			r: like execution_recorder
+		do
+			p := execution_recorder_parameters
+			p.set_maximum_record_count (a_maximum_record_count)
+			p.set_flatten_when_closing (a_flatten_when_closing)
+			p.set_keep_calls_records (a_keep_calls_record)
+			p.set_recording_values (a_recording_values)
+			r := execution_recorder
+			if r /= Void then
+				r.update_parameters (p)
+			end
 		end
 
 	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]

@@ -1157,9 +1157,9 @@ feature -- Status setting
 				application.activate_execution_replay_mode (b)
 				levlim := application.status.replay_level_limit
 			end
+			toggle_exec_replay_mode_cmd.set_select (b)
 			if b then
 				disable_debugging_commands (False)
-
 				toggle_exec_replay_recording_mode_cmd.disable_sensitive
 				toggle_exec_replay_mode_cmd.enable_sensitive
 			else
@@ -1816,6 +1816,7 @@ feature -- Debugging events
 				--| Clean and reset debugging tools
 			reset_tools
 			assertion_checking_handler_cmd.reset
+			activate_execution_replay_mode (False)
 			toggle_exec_replay_mode_cmd.reset
 			if rt_extension_available and is_classic_project then
 				toggle_exec_replay_recording_mode_cmd.enable_sensitive
@@ -1939,6 +1940,9 @@ feature -- Application change
 				toggle_exec_replay_mode_cmd.enable_sensitive
 			else
 				toggle_exec_replay_mode_cmd.disable_sensitive
+			end
+			if not b then
+				activate_execution_replay_mode (False)
 			end
 			if
 				application_is_executing and then

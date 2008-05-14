@@ -21,15 +21,25 @@ create {RT_EXTENSION}
 
 feature {NONE} -- Initialization
 
-	make
+	make (p: RT_DBG_EXECUTION_PARAMETERS)
 			-- Creation of Current object
+		require
+			p_attached: p /= Void
 		do
-			set_maximum_record_count (1_000_000)
-			set_flatten_when_closing (True)
-			set_keep_calls_records (True)
+			update_parameters (p)
 		end
 
 feature {RT_EXTENSION} -- Change
+
+	update_parameters (p: RT_DBG_EXECUTION_PARAMETERS)
+		require
+			p_attached: p /= Void
+		do
+			maximum_record_count := p.maximum_record_count
+			flatten_when_closing := p.flatten_when_closing
+			keep_calls_records := p.keep_calls_records
+			recording_values := p.recording_values
+		end
 
 	start_recording (ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; a_break_index: INTEGER)
 			-- Start recording and
@@ -97,24 +107,6 @@ feature {RT_EXTENSION} -- Change
 			no_callstack_record: top_callstack_record = Void and bottom_callstack_record = Void
 		end
 
-	set_maximum_record_count (nb: INTEGER)
-			-- Set `maximum_record_count'
-		do
-			maximum_record_count := nb
-		end
-
-	set_flatten_when_closing (b: BOOLEAN)
-			-- Set `flatten_when_closing'
-		do
-			flatten_when_closing := b
-		end
-
-	set_keep_calls_records (b: BOOLEAN)
-			-- Set `keep_calls_records'
-		do
-			keep_calls_records := b
-		end
-
 feature -- Optimization properties
 
 	record_count: INTEGER
@@ -130,6 +122,8 @@ feature -- Optimization properties
 	keep_calls_records: BOOLEAN
 			-- Option: keep calls record even when flattening calls
 
+	recording_values: BOOLEAN
+			-- Option: record values ?
 
 feature -- Properties
 
@@ -669,6 +663,7 @@ feature -- Monitoring
 						end
 						n := bottom_callstack_record.record_count_but (p)
 						p.remove_parent
+
 							--| We may clean the current `bottom_callstack_record' to help the GC ...
 						bottom_callstack_record := p
 						c := c - n
@@ -706,7 +701,7 @@ feature -- Replay operation
 		require
 			is_replaying: is_replaying
 		local
-			n, r, p: like replayed_call
+			n, r: ?like replayed_call
 			l_records: ?LIST [RT_DBG_VALUE_RECORD]
 			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]
 		do
@@ -716,46 +711,51 @@ feature -- Replay operation
 			r := replayed_call
 			check r_not_void: r /= Void end
 
-			p := r.parent
-			last_replay_operation_failed := False
-			if replay_stack = Void then
-				create replay_stack.make
-					-- This is the first replay operation
-					-- Replay to the beginning of the current frame
-				l_records := changes_between (r, Void)
-			else
-				check replay_stack_not_empty: replay_stack.count > 0 end
-				n := replay_stack.last.call_record
-				l_records := changes_between (r, n)
-			end
-			if not last_replay_operation_failed then
-				if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
-					create chgs.make (ot_records.count)
-					from
-						ot_records.finish
-					until
-						ot_records.before
-					loop
-						debug ("RT_DBG_REPLAY")
-							print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
-						end
-						if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
-							if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
-								chgs.force ([ot_rec, val])
-								ot_rec.restore (val)
-							else
-								check should_not_occur: False end
-							end
-						end
-						ot_records.back
-					end
+			if {p: like replayed_call} r.parent then
+				last_replay_operation_failed := False
+				if replay_stack = Void then
+					create replay_stack.make
+						-- This is the first replay operation
+						-- Replay to the beginning of the current frame
+					n := Void
+				else
+					check replay_stack_not_empty: replay_stack.count > 0 end
+					n := replay_stack.last.call_record
 				end
-				replay_stack.force ([r, chgs])
-				replayed_call := p
+				l_records := changes_between (r, n)
+				if not last_replay_operation_failed then
+					if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
+						create chgs.make (ot_records.count)
+						from
+							ot_records.finish
+						until
+							ot_records.before
+						loop
+							debug ("RT_DBG_REPLAY")
+								print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
+							end
+							if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
+								if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
+									chgs.force ([ot_rec, val])
+									ot_rec.restore (val)
+								else
+									check should_not_occur: False end
+								end
+							end
+							ot_records.back
+						end
+					end
+					replay_stack.force ([r, chgs])
+					replayed_call := p
+				end
+			else
+				last_replay_operation_failed := True
 			end
 			debug ("RT_DBG_REPLAY")
 				print ("replay_back -end- %N")
 			end
+		ensure
+			replayed_call_attached: replayed_call /= Void
 		end
 
 	replay_left
@@ -810,16 +810,26 @@ feature -- Replay operation
 					end
 					replay_stack.force ([r, chgs])
 				else
-					replay_back
+					if r.parent = Void then
+						--| Revert the step left which was supposed to be a step back, 
+						--| but which wasn't since we reached the bottom
+						r.revert_left_step
+					else
+						replay_back
+					end
+					done := True
 				end
 				n := replayed_call
 				check n.replayed_position /= Void end
-				done := n /= r or else (n.replayed_position.line /= r_pos_line)
+				done := done or n /= r or else (n.replayed_position.line /= r_pos_line)
+
 				--| FIXME jfiat [2008/04/09] : do we want to step left on nested index ?
 			end
 			debug ("RT_DBG_REPLAY")
 				print ("replay_left -end- %N")
 			end
+		ensure
+			replayed_call_attached: replayed_call /= Void
 		end
 
 	replay_left_to_first
@@ -903,6 +913,8 @@ feature -- Replay operation
 			debug ("RT_DBG_REPLAY")
 				print ("replay_forth -end-%N")
 			end
+		ensure
+			replayed_call_attached: replayed_call /= Void
 		end
 
 	replay_right
@@ -981,6 +993,8 @@ feature -- Replay operation
 			debug ("RT_DBG_REPLAY")
 				print ("replay_right -end-%N")
 			end
+		ensure
+			replayed_call_attached: replayed_call /= Void
 		end
 
 	revert_replay_stack

@@ -347,6 +347,7 @@ feature {NONE} -- Factory
 			box_replay_controls.set_background_color (row_replayable_bg_color)
 			box_replay_controls.propagate_background_color
 			tb.compute_minimum_size
+			box_replay_controls.hide
 		end
 
 	replay_to_but: SD_TOOL_BAR_BUTTON
@@ -420,8 +421,10 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 		do
 			execution_replay_activated := b
 			execution_replay_level_limit := levlim
-			if b and then not box_replay_controls.is_show_requested then
-				box_replay_controls.show
+			if b then
+				if not box_replay_controls.is_show_requested then
+					box_replay_controls.show
+				end
 				replay_to_but.enable_sensitive
 				debug
 					replay_controls_label.set_text ("LevelMax=" + levlim.out)

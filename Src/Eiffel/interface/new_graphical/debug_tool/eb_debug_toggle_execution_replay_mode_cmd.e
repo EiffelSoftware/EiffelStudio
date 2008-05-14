@@ -14,7 +14,8 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND
 		redefine
 			tooltext,
-			mini_pixel_buffer, mini_pixmap
+			mini_pixel_buffer, mini_pixmap,
+			set_select
 		end
 
 	EB_CONSTANTS
@@ -36,26 +37,22 @@ feature {NONE} -- Initialization
 feature -- Execution
 
 	reset is
+			-- Reset Current
 		do
-			if execution_replay_mode_activated then
-				execution_replay_mode_activated := False
-				eb_debugger_manager.activate_execution_replay_mode (execution_replay_mode_activated)
-
-				update_graphical
-				set_select (execution_replay_mode_activated)
-			end
+			set_select (False)
 		end
 
 	execute is
 			-- Pause the execution.
+		local
+			dbg: like eb_debugger_manager
 		do
+			dbg := eb_debugger_manager
 			if
-				eb_debugger_manager.safe_application_is_stopped and then
-				eb_debugger_manager.application_status.replay_recording
+				dbg.safe_application_is_stopped and then
+				dbg.application_status.replay_recording
 			then
-				execution_replay_mode_activated := not execution_replay_mode_activated
-				set_select (execution_replay_mode_activated)
-				eb_debugger_manager.activate_execution_replay_mode (execution_replay_mode_activated)
+				dbg.activate_execution_replay_mode (not execution_replay_mode_activated)
 			end
 			update_graphical
 		end
@@ -71,16 +68,24 @@ feature -- Status
 
 feature -- Change text
 
+	set_select (b: BOOLEAN) is
+			-- <Precursor>
+		do
+			execution_replay_mode_activated := b
+			Precursor (b)
+			update_graphical
+		end
+
 	update_graphical is
 		local
 			menu_items: like internal_managed_menu_items
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
 			t: STRING_GENERAL
-			p,mp: like pixmap
+			tt: like tooltip
+			p: like pixmap
 			mpb: like mini_pixel_buffer
 		do
 			p := pixmap
-			mp := mini_pixmap
 			mpb := mini_pixel_buffer
 			t := menu_name
 
@@ -97,24 +102,28 @@ feature -- Change text
 				end
 			end
 
-			t := tooltext
-
 			sd_toolbar_items := internal_managed_sd_toolbar_items
 			if sd_toolbar_items /= Void then
+				t := tooltext
+				tt := tooltip
+				
 				from
 					sd_toolbar_items.start
 				until
 					sd_toolbar_items.after
 				loop
-					if sd_toolbar_items.item.text /= Void then
+					if {it: STRING_GENERAL} (sd_toolbar_items.item.text) and then not it.is_empty then
 						sd_toolbar_items.item.set_text (t)
+					end
+					if tt /= Void then
+						sd_toolbar_items.item.set_tooltip (tt)
 					end
 					sd_toolbar_items.item.set_pixel_buffer (mpb)
 					sd_toolbar_items.forth
 				end
 			end
 		end
-
+	
 feature {NONE} -- Properties
 
 	description: STRING_GENERAL is

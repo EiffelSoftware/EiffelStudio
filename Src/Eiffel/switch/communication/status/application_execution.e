@@ -413,7 +413,7 @@ feature -- Remote access to RT_
 
 				cid := 0
 				fid := 0
-				dep := 0
+				dep := 1
 				line := 0
 				if b then
 					if {ecse: EIFFEL_CALL_STACK_ELEMENT} status.current_eiffel_call_stack_element then
@@ -432,7 +432,7 @@ feature -- Remote access to RT_
 						end
 						line := ecse.break_index
 					end
-					dep := current_call_stack_depth
+					dep := dep.max (current_call_stack_depth)
 				end
 				if ref = Void then
 					ref := dv_fact.new_void_value (dbg.compiler_data.any_class_c)

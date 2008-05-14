@@ -2022,9 +2022,9 @@ feature -- Title part
 	t_New_unit_test_case: STRING_GENERAL is				do Result := locale.translation("New Unit Test Case")	end
 	t_Using_this_wizard: STRING_GENERAL is				do Result := locale.translation("Using this wizard you can create whole set of unit test files.%N%
 																						%%N%
-																						%After run this wizard, an Eiffel class file, an Ecf file, a Tcf%N%
-																						%file and a Note file will be generated at the cluster%N%
-																						%location which you selected.%N%
+																						%After running this wizard, an Eiffel class file (.e), a%N%
+																						%project configuration file (.ecf), a test configuration file%N%
+																						%(.tcf) will be generated in the location that you selected.%N%
 																						%%N%
 																						%To continue, click Next.%N")	end
 	t_Unit_test_files_will_be_generated: STRING_GENERAL is	do Result := locale.translation("Unit test files will be generated.")	end

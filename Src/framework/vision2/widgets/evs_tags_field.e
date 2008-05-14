@@ -15,6 +15,11 @@ inherit
 			default_create
 		end
 
+	EV_SHARED_APPLICATION
+		redefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -45,6 +50,7 @@ feature {NONE} -- Initialization
 			hb.extend (button); hb.disable_item_expand (hb.last)
 
 			button.select_actions.extend (agent open_tags_popup)
+			text_field.key_release_actions.extend (agent on_key_released)
 			text_field.return_actions.extend (agent update_text)
 
 			set_category_mode (True)
@@ -177,6 +183,16 @@ feature -- Change
 		end
 
 feature -- event
+
+	on_key_released (k: EV_KEY) is
+			-- Key released event
+		do
+			if ev_application.ctrl_pressed then
+				if k.code = {EV_KEY_CONSTANTS}.key_space then
+					open_tags_popup
+				end
+			end
+		end
 
 	update_text is
 			-- Update text with well formatted string from `used_tags'
@@ -365,16 +381,30 @@ feature -- event
 				end
 			end
 
-			g.key_press_actions.extend (agent (ak: EV_KEY; aw: EV_POPUP_WINDOW)
+			g.key_press_actions.extend (agent (ak: EV_KEY; ag: EV_GRID; aw: EV_POPUP_WINDOW)
 					do
 						inspect ak.code
-						when {EV_KEY_CONSTANTS}.key_escape then
+						when {EV_KEY_CONSTANTS}.key_escape, {EV_KEY_CONSTANTS}.key_enter then
 							aw.hide
 							aw.destroy
+						when {EV_KEY_CONSTANTS}.key_space then
+							if {its: LIST [EV_GRID_ITEM]} ag.selected_items then
+								from
+									its.start
+								until
+									its.after
+								loop
+									if {agci: EV_GRID_CHECKABLE_LABEL_ITEM} its.item then
+										agci.toggle_is_checked
+									end
+									its.forth
+								end
+							end
 						else
 						end
-					end(?,pw)
+					end(?,g, pw)
 				)
+
 			g.column (1).resize_to_content
 			w := g.column (1).width
 			g.set_minimum_width (w)

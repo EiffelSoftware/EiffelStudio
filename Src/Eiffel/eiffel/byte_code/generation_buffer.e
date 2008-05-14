@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			n_positive: n >= 0
 		do
 			create current_buffer.make (n)
-			current_buffer_size := n
 			create buffers.make (10)
 		end
 
@@ -276,27 +275,28 @@ feature -- Automatically indented output
 			l_buffer: like current_buffer
 		do
 			l_buffer := current_buffer
-			l_buffer.append_character ('0')
-			l_buffer.append_character ('x')
 				-- Complicated part: we estimate the required size depending
 				-- on the size of the integer we are given. If it is too big
 				-- to fit the `current_buffer', we resize it. We write the hex
 				-- numbers by pair.
 			if v <= 0xFF then
-				nb := 2
-			else
 				nb := 4
+			else
+				nb := 6
 			end
 			i := nb + l_buffer.count
-			if i > current_buffer_size then
+			if i > l_buffer.capacity then
 				buffers.extend (l_buffer)
-				create l_buffer.make (max_chunk_size)
+				create l_buffer.make (max_chunk_size.max (nb))
 				current_buffer := l_buffer
 				i := nb
 			end
 			l_buffer.set_count (i)
+				-- Now write the hexa decimal number in reverse order.
 			from
 				val := v
+					-- Remove the extra `0x' from `nb'
+				nb := nb - 2
 			until
 				nb = 0
 			loop
@@ -306,6 +306,8 @@ feature -- Automatically indented output
 				i := i - 1
 				nb := nb - 1
 			end
+			l_buffer.put ('x', i)
+			l_buffer.put ('0', i - 1)
 		end
 
 	put_string (s: STRING) is
@@ -317,7 +319,7 @@ feature -- Automatically indented output
 			l_buffer: like current_buffer
 		do
 			l_buffer := current_buffer
-			if (l_buffer.count + s.count) > current_buffer_size then
+			if (l_buffer.count + s.count) > l_buffer.capacity then
 				buffers.extend (l_buffer)
 				create l_buffer.make (max_chunk_size.max (s.count))
 				current_buffer := l_buffer
@@ -701,9 +703,6 @@ feature {NONE} -- Implementation: Status report
 
 	is_il_generation: BOOLEAN
 			-- Are we in IL code generation?
-
-	current_buffer_size: INTEGER
-			-- Size of buffers we will create.
 
 	max_chunk_size: INTEGER is 262144
 			-- Maximum size of chunks allocated (256KB)

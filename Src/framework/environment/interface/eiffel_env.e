@@ -972,6 +972,7 @@ feature -- Directories (user)
 			else
 				create Result.make_from_string (l_var)
 			end
+			remove_trailing_dir_separator (Result)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1487,8 +1488,6 @@ feature -- Environment update
 			value_updated: get_environment (a_var) /= Void implies get_environment (a_var).is_equal (a_value)
 		end
 
-
-
 feature -- Version limitation
 
 	has_diagram: BOOLEAN is True
@@ -1558,6 +1557,7 @@ feature -- Environment variables
 			-- ISE_EIFFEL name
 		do
 			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
+			remove_trailing_dir_separator (Result)
 		ensure
 			result_attached: is_valid_environment implies Result /= Void
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
@@ -1589,6 +1589,7 @@ feature -- Environment variables
 			is_valid_environment: is_valid_environment
 		do
 			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
+			remove_trailing_dir_separator (Result)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1751,6 +1752,26 @@ feature -- File constants (user)
 
 	eis_storage_file: !STRING_8 = "eis_storage"
 			-- EIS storage file name.
+
+feature {NONE} -- Formatting
+
+	remove_trailing_dir_separator (a_dir: ?STRING)
+			-- Removes the trailing directory separator of a directory.
+		require
+			a_dir_attached: a_dir /= Void
+		local
+			l_count: INTEGER
+		do
+			if not a_dir.is_empty then
+				l_count := a_dir.count
+				if
+					l_count > 1 and then a_dir.item (l_count) = operating_environment.directory_separator and then
+					l_count > 2 and then a_dir.item (l_count - 1) /= operating_environment.directory_separator
+				then
+					a_dir.keep_head (l_count - 1)
+				end
+			end
+		end
 
 feature {NONE} -- Externals
 

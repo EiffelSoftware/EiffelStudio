@@ -123,7 +123,7 @@ feature -- Status settings
 		do
 			message := a_message
 		ensure
-			message_set: message = a_message
+			message_set: equal (message, a_message)
 		end
 
 feature -- Status report

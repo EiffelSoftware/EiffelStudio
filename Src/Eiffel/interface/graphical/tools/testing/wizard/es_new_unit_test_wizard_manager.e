@@ -62,6 +62,11 @@ feature {NONE} -- Implementation
 			-- Redefine
 		do
 			Result := Pixmaps.bm_Wizard_testing_icon
+
+			-- Make sure satisfy the postcondition if delivery is corrupted (default pixmap created is 16X16)
+			if Result.width /= 60 or Result.height /= 60 then
+				Result.set_size (60, 60)
+			end
 		end
 
 	wizard_window_icon: EV_PIXMAP is

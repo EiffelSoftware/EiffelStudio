@@ -96,6 +96,7 @@ feature {NONE} -- Implementation
 			l_top_container: EV_BOX
 			l_button: EV_BUTTON
 			l_tmp_text_filed: EV_TEXT_FIELD
+			l_cell: EV_CELL
 		do
 			l_top_container := wizard_information.helper.parent_parent_of (choice_box)
 
@@ -106,8 +107,14 @@ feature {NONE} -- Implementation
 			create l_h_box
 
 			create l_label.make_with_text (interface_names.l_test_case_name_colon)
+			test_case_name_label := l_label
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
+
+			create l_cell
+			test_case_name_place_holder := l_cell
+			l_h_box.extend (l_cell)
+			l_h_box.disable_item_expand (l_cell)
 
 			create l_tmp_text_filed
 			l_tmp_text_filed.change_actions.extend (agent on_test_case_name_change)
@@ -129,8 +136,14 @@ feature {NONE} -- Implementation
 			create l_h_box
 
 			create l_label.make_with_text (interface_names.l_root_class_name)
+			class_name_label := l_label
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
+
+			create l_cell
+			class_name_place_holder := l_cell
+			l_h_box.extend (l_cell)
+			l_h_box.disable_item_expand (l_cell)
 
 			create l_tmp_text_filed
 			l_tmp_text_filed.change_actions.extend (agent on_class_name_change)
@@ -161,8 +174,19 @@ feature {NONE} -- Implementation
 			l_v_box.extend (l_h_box)
 
 			create l_h_box
+			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
-			l_h_box.extend (create {EV_CELL})
+			create l_cell
+			check_box_place_holder := l_cell
+			l_h_box.extend (l_cell)
+			l_h_box.disable_item_expand (l_cell)
+
+			-- We insert another cell to make sure, check box's horizontal box have TWO padding before the check boxes
+			-- So we can make sure they are correctly left aligned (same as `test_case''s horizontal box which has two padding
+			-- before the combo box)
+			create l_cell
+			l_h_box.extend (l_cell)
+			l_h_box.disable_item_expand (l_cell)
 
 			create l_v_box_2
 
@@ -177,6 +201,7 @@ feature {NONE} -- Implementation
 			l_v_box_2.extend (on_before_test_run)
 
 			l_h_box.extend (l_v_box_2)
+			l_h_box.disable_item_expand (l_v_box_2)
 
 			create l_v_box_2
 
@@ -191,6 +216,7 @@ feature {NONE} -- Implementation
 			l_v_box_2.extend (on_after_test_run)
 
 			l_h_box.extend (l_v_box_2)
+			l_h_box.disable_item_expand (l_v_box_2)
 
 			l_v_box.extend (l_h_box)
 
@@ -204,8 +230,14 @@ feature {NONE} -- Implementation
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 			create l_label.make_with_text (interface_names.l_class_under_test)
+			class_under_test_label := l_label
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
+
+			create l_cell
+			class_under_test_place_holder := l_cell
+			l_h_box.extend (l_cell)
+			l_h_box.disable_item_expand (l_cell)
 
 			create class_under_test
 			class_under_test.change_actions.extend (agent on_class_under_test_changed)
@@ -222,6 +254,8 @@ feature {NONE} -- Implementation
 			-- We want the part below an entry is expanded when resizing
 			l_top_container.extend (create {EV_CELL})
 
+			left_align_widgets
+
 			update_ui_with_wizard_information
 		end
 
@@ -236,6 +270,42 @@ feature {NONE} -- Implementation
 			else
 				first_window.disable_next_button
 			end
+		end
+
+	left_align_widgets is
+			-- Make sure `test_case_name', check boxs, `class_name' and `class_under_test' are correctly left aligned.
+		require
+			ready: test_case_name_label /= Void and class_name_label /= Void and class_under_test_label /= Void
+			ready: test_case_name_place_holder /= Void and class_name_place_holder /= Void and class_under_test_place_holder
+						/= Void and check_box_place_holder /= Void
+		local
+			l_max_label_width: INTEGER
+			l_tmp_width: INTEGER
+			l_biggest_one: EV_CELL
+		do
+			l_max_label_width := test_case_name_label.width
+			l_biggest_one := test_case_name_place_holder
+			l_tmp_width := class_name_label.width
+			if l_max_label_width < l_tmp_width then
+				l_max_label_width := l_tmp_width
+				l_biggest_one := class_name_place_holder
+			end
+			l_tmp_width := class_under_test_label.width
+			if l_max_label_width < l_tmp_width then
+				l_max_label_width := l_tmp_width
+				l_biggest_one := class_under_test_place_holder
+			end
+
+			if l_biggest_one /= test_case_name_place_holder then
+				test_case_name_place_holder.set_minimum_width (l_max_label_width - test_case_name_label.width)
+			end
+			if l_biggest_one /= class_name_place_holder then
+				class_name_place_holder.set_minimum_width (l_max_label_width - class_name_label.width)
+			end
+			if l_biggest_one /= class_under_test_place_holder then
+				class_under_test_place_holder.set_minimum_width (l_max_label_width - class_under_test_label.width)
+			end
+			check_box_place_holder.set_minimum_width (l_max_label_width)
 		end
 
 feature {NONE}	-- Agents
@@ -374,14 +444,12 @@ feature {NONE}	-- Agents
 	on_class_name_change
 			-- Handler for `class_name'.change_actions.
 		do
-
 			if not class_name.is_valid or else class_name.text.is_empty then
 				update_next_button_sensitivity (True)
 			else
 				wizard_information.set_new_class_name (class_name.text)
 				update_next_button_sensitivity (False)
 			end
-
 		end
 
 	on_run_before_all_selected is
@@ -431,6 +499,12 @@ feature {NONE} -- UI widgets
 	class_under_test: EV_TEXT_FIELD
 			-- Text field for class under test.
 
+	test_case_name_place_holder, class_name_place_holder, class_under_test_place_holder, check_box_place_holder: EV_CELL
+			-- Place holders to make sure widgets correctly left aligned
+
+	test_case_name_label, class_name_label, class_under_test_label: EV_LABEL
+			-- Labels
+			
 feature {NONE} -- Query
 
 	is_class_under_test_name_valid: BOOLEAN

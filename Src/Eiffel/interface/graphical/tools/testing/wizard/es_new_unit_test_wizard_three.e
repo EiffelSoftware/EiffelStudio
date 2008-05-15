@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Third page of new unit test wizard
+						Second page of new unit test wizard
 
 																			]"
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_NEW_UNIT_TEST_WIZARD_THREE
+	ES_NEW_UNIT_TEST_WIZARD_TWO
 
 inherit
 	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
@@ -45,7 +45,7 @@ feature {NONE} -- Redefine
 			-- <Precursor>
 		do
 			if wizard_information.is_cluster_valid then
-				proceed_with_new_state (create {ES_NEW_UNIT_TEST_WIZARD_TWO}.make (wizard_information))
+				proceed_with_new_state (create {ES_NEW_UNIT_TEST_WIZARD_THREE}.make (wizard_information))
 			end
 		end
 

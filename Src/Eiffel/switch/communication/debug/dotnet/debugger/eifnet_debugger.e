@@ -1466,8 +1466,6 @@ feature -- Exception
 
 	exception_class_name (v: ABSTRACT_REFERENCE_VALUE): STRING is
 			-- Exception's class name.
-		require
-			exception_occurred: exception_occurred
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
@@ -1481,8 +1479,6 @@ feature -- Exception
 
 	exception_module_name (v: ABSTRACT_REFERENCE_VALUE): STRING_32 is
 			-- Exception's module name.
-		require
-			exception_occurred: exception_occurred
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do

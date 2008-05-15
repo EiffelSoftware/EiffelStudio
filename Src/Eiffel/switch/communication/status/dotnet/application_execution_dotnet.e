@@ -596,6 +596,9 @@ feature -- Remote access to Exceptions
 		do
 			if {v: EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value then
 				Result ?= v.attribute_value_for (Exception_dotnet_exception_attribute_name)
+				if Result = Void then
+					Result ?= v
+				end
 			end
 		end
 

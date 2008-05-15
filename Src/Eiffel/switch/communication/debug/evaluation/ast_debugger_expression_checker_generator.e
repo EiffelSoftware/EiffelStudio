@@ -105,12 +105,14 @@ feature -- Type checking
 					l_ctx := context.twin
 					expression_context := l_ctx
 					context.initialize (l_wc, l_wc.actual_type, l_ft)
+					context.init_variable_scopes
 					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
 					an_ast.process (Current)
 					reset
 					is_inherited := True
 					context.restore (l_ctx)
 				end
+				context.init_variable_scopes
 				type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
 			end
 			if l_error_level = error_level then

@@ -316,14 +316,13 @@ feature {NONE} -- Factory
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
-			l_constants: EB_CONSTANTS
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_icons: ES_PIXMAPS_10X10
 			l_shim: ES_TESTING_RESULT_TOOL
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 		do
-			create l_constants
-			l_icons := l_constants.pixmaps.mini_pixmaps
+			l_icons := pixmaps.mini_pixmaps
+
 			create Result.make (8)
 
 			Result.force_last (unit_test_manager.new_manual_test_command.new_sd_toolbar_item (False))

@@ -307,11 +307,20 @@ feature {NONE}	-- Agents
 			-- Valid test case name `a_string'
 		local
 			l_valid: BOOLEAN
+			l_error_message: STRING_32
 		do
 			if is_test_case_name_focused then
-				l_valid := 	not a_string.is_empty and then
-					 		(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string) -- We use class name rule to check test case name
-				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+				if a_string.is_empty then
+					l_valid := False
+					l_error_message := interface_names.f_the_test_case_name_cannot_be_void
+				else
+					l_valid := 	(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string) -- We use class name rule to check test case name
+					if not l_valid then
+						l_error_message := interface_names.f_the_test_case_name_is_not_a_valid_name
+					end
+				end
+
+				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] then
 				 	Result := l_result
 				 end
 			else
@@ -338,12 +347,23 @@ feature {NONE}	-- Agents
 			-- Valid class name `a_string'
 		local
 			l_valid: BOOLEAN
+			l_error_message: STRING_32
 		do
 			if is_class_name_focused then
-				l_valid := 	not a_string.is_empty and then
-							not is_new_class_name_already_exists and then
-				  			(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string)
-				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+				if a_string.is_empty then
+					l_valid := False
+					l_error_message := interface_names.f_the_class_name_cannot_be_void
+				elseif is_new_class_name_already_exists then
+					l_valid := False
+					l_error_message := interface_names.f_the_class_name_already_exists
+				else
+					l_valid := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string)
+					if not l_valid then
+						l_error_message := interface_names.f_the_class_name_is_not_a_valid_eiffel_class_name
+					end
+				end
+
+				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] then
 				 	Result := l_result
 				 end
 			else
@@ -504,3 +524,4 @@ indexing
 		]"
 
 end
+

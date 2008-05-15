@@ -756,6 +756,11 @@ feature -- Tool tips
 	f_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Navigates to the previous warning or the last warning found if the start of the list is reached") end
 	f_filter_warnings: STRING_GENERAL is 				do Result := locale.translation ("Filter shown and navigatable warnings") end
 	f_toogle_expand_errors: STRING_GENERAL is do Result := locale.translation("Automatically expands errors to reveal the full verbose error information.")	end
+	f_the_class_name_already_exists: STRING_GENERAL is do Result := locale.translation( "The class name already exists.")	end
+	f_the_class_name_cannot_be_void: STRING_GENERAL is do Result := locale.translation( "The class name can not be void.")	end
+	f_the_class_name_is_not_a_valid_eiffel_class_name: STRING_GENERAL is do Result := locale.translation( "The class name is not a valid Eiffel class name.")	end
+	f_the_test_case_name_cannot_be_void: STRING_GENERAL is do Result := locale.translation( "The test case name cannot be void.")	end
+	f_the_test_case_name_is_not_a_valid_name: STRING_GENERAL is do Result := locale.translation( "The test case name is not a valid name.")	end
 
 	f_stack_information: STRING_GENERAL is 		do Result := locale.translation ("Specific information related to current call stack (exception,...)") end
 	f_current_object: STRING_GENERAL is 		do Result := locale.translation ("`Current' object associated to selected call stack element") end

@@ -44,10 +44,8 @@ feature {NONE} -- Redefine
 	proceed_with_current_info is
 			-- <Precursor>
 		do
-			if wizard_information.class_under_test /= Void and then not wizard_information.class_under_test.is_empty then
-				proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_FOUR}.make (wizard_information))
-			else
-				proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_FINAL}.make (wizard_information))
+			if wizard_information.is_cluster_valid then
+				proceed_with_new_state (create {ES_NEW_UNIT_TEST_WIZARD_TWO}.make (wizard_information))
 			end
 		end
 
@@ -120,7 +118,7 @@ feature {NONE} -- Wizard UI Implementation
 	update_next_button_state is
 			-- Update next button state base on current information
 		do
-			if wizard_information.is_valid then
+			if wizard_information.is_cluster_valid then
 				first_window.enable_next_button
 			else
 				first_window.disable_next_button
@@ -166,19 +164,6 @@ feature {NONE} -- Wizard UI Implementation
 					l_full_cluster.append (l_cluster_path)
 				end
 				ui_builder.cluster_name_entry.set_text (l_full_cluster)
-			end
-		end
-
-	update_next_button_sensitivity (a_force_disable: BOOLEAN) is
-			-- Update next button sensitivity base on current wizard information
-		local
-			l_enable_next: BOOLEAN
-		do
-			l_enable_next :=  wizard_information.is_valid
-			if l_enable_next and not a_force_disable then
-				first_window.enable_next_button
-			else
-				first_window.disable_next_button
 			end
 		end
 

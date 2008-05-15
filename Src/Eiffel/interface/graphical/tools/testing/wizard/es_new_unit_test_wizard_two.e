@@ -82,8 +82,10 @@ feature {NONE} -- Implementation
 	proceed_with_current_info
 			-- <Precursor>
 		do
-			if not class_name.text.is_empty and not is_new_class_name_already_exists then
-				proceed_with_new_state (create {ES_NEW_UNIT_TEST_WIZARD_THREE}.make (wizard_information))
+			if wizard_information.class_under_test /= Void and then not wizard_information.class_under_test.is_empty then
+				proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_FOUR}.make (wizard_information))
+			else
+				proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_FINAL}.make (wizard_information))
 			end
 		end
 
@@ -152,7 +154,6 @@ feature {NONE} -- Implementation
 			class_name.text_field.focus_in_actions.extend_kamikaze (agent do
 																													is_class_name_focused := True
 																												end)
-			class_name.text_field.change_actions.extend (agent on_class_name_changed)
 
 			l_h_box.extend (class_name)
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
@@ -239,7 +240,7 @@ feature {NONE} -- Implementation
 			l_h_box.extend (l_cell)
 			l_h_box.disable_item_expand (l_cell)
 
-			create class_under_test
+			build_text_field
 			class_under_test.change_actions.extend (agent on_class_under_test_changed)
 			l_h_box.extend (class_under_test)
 
@@ -264,7 +265,7 @@ feature {NONE} -- Implementation
 		local
 			l_enable_next: BOOLEAN
 		do
-			l_enable_next :=  wizard_information.is_valid_without_cluster
+			l_enable_next :=  wizard_information.is_valid
 			if l_enable_next and not a_force_disable then
 				first_window.enable_next_button
 			else
@@ -328,48 +329,25 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_class_name_changed
-			-- Handler for `class_name'.change_actions
-		local
-			l_old_position: INTEGER
-			l_text: !STRING_32
-			l_utext: !STRING_32
-		do
-			l_text := class_name.text
-			l_utext := l_text.as_upper
-			if not l_utext.is_equal (l_text)  then
-				l_old_position := class_name.text_field.caret_position
-				class_name.set_text (l_utext)
-				class_name.text_field.set_caret_position (l_old_position)
-			end
-		end
-
 	on_class_under_test_changed
 			-- Handler for `class_under_test'.change_actions.
 		local
 			l_color: EV_STOCK_COLORS
 			l_text: STRING_32
-			l_utext: STRING_32
 			l_old_position: INTEGER
 		do
 			l_text := class_under_test.text
-			l_utext := l_text.as_upper
-			if not l_utext.is_equal (l_text) then
-				l_old_position := class_under_test.caret_position
-				class_under_test.set_text (l_utext)
-				class_under_test.set_caret_position (l_old_position)
-			else
-				create l_color
-				if is_class_under_test_name_valid or class_under_test.text.is_empty then
-					class_under_test.set_foreground_color (l_color.default_foreground_color)
-					if not l_text.is_empty then
-						wizard_information.set_class_under_test (l_text.as_string_8)
-						update_next_button_sensitivity (False)
-					end
-				else
-					class_under_test.set_foreground_color (l_color.red)
-					update_next_button_sensitivity (True)
+
+			create l_color
+			if is_class_under_test_name_valid or class_under_test.text.is_empty then
+				class_under_test.set_foreground_color (l_color.default_foreground_color)
+				if not l_text.is_empty then
+					wizard_information.set_class_under_test (l_text.as_string_8)
+					update_next_button_sensitivity (False)
 				end
+			else
+				class_under_test.set_foreground_color (l_color.red)
+				update_next_button_sensitivity (True)
 			end
 		end
 
@@ -496,15 +474,41 @@ feature {NONE} -- UI widgets
 	on_after_test_run: EV_CHECK_BUTTON
 			-- Check button for `on_after_test_run'
 
-	class_under_test: EV_TEXT_FIELD
+	class_under_test: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Text field for class under test.
+
+	build_text_field is
+			-- Create `class_under_test'
+		local
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+		do
+			create l_provider.make (Void, Void)
+			l_provider.set_group_callback (agent root_group)
+			create class_under_test.make
+
+			class_under_test.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (first_window, False))
+
+			class_under_test.set_completing_feature (false)
+			class_under_test.set_completion_possibilities_provider (l_provider)
+			l_provider.set_code_completable (class_under_test)
+		end
 
 	test_case_name_place_holder, class_name_place_holder, class_under_test_place_holder, check_box_place_holder: EV_CELL
 			-- Place holders to make sure widgets correctly left aligned
 
 	test_case_name_label, class_name_label, class_under_test_label: EV_LABEL
 			-- Labels
-			
+
+	root_group: CONF_GROUP is
+			-- Group of code completion
+		require
+			valid: wizard_information.is_valid
+		local
+			l_shared: SHARED_WORKBENCH
+		do
+			Result := wizard_information.cluster
+		end
+
 feature {NONE} -- Query
 
 	is_class_under_test_name_valid: BOOLEAN

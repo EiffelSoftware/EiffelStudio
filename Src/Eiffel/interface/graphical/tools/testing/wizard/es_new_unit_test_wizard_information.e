@@ -55,12 +55,10 @@ feature -- Query
 			-- Cluster I where new test case class will be created
 		do
 			if is_valid then
-				if internal_cluster_id /= Void then
-					Result ?= id_solution.group_of_id (internal_cluster_id)
-				else
-					check not_possible: False end
-				end
+				Result ?= id_solution.group_of_id (internal_cluster_id)
 			end
+		ensure
+			is_valid: is_valid implies Result /= Void
 		end
 
 	cluster_path: STRING
@@ -131,11 +129,17 @@ feature -- Query
 					(test_case_name /= Void and then not test_case_name.is_empty)
 		end
 
+	is_cluster_valid: BOOLEAN is
+			-- If cluster information valid?
+		do
+			Result := internal_cluster_id /= Void and then not internal_cluster_id.is_empty
+		end
+
 	is_valid: BOOLEAN
 			-- If Current information valid for new eweasel test case creation?
 		do
 			if is_valid_without_cluster then
-				Result := internal_cluster_id /= Void and then not internal_cluster_id.is_empty
+				Result := is_cluster_valid
 			end
 		end
 

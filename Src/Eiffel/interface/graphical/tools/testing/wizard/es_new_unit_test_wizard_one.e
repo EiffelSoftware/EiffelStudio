@@ -39,7 +39,7 @@ feature -- Access
 	proceed_with_current_info
 			-- Redefine
 		do
-			proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_TWO}.make (wizard_information))
+			proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_THREE}.make (wizard_information))
 		end
 
 	display_state_text

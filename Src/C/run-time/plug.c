@@ -754,7 +754,8 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
 			zone->ov_size = offset + (uint32) (obj - parent);
 			
-			LENGTH(obj + offset) = (type & SK_BMASK); /* Write bit size */
+			CHECK("valid bit_size", (uint32) (type & SK_BMASK) <= 0x0000FFFF);
+			LENGTH(obj + offset) = (uint16) (type & SK_BMASK); /* Write bit size */
 
 			}
 			break;

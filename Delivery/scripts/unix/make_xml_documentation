@@ -10,7 +10,7 @@ safe_md tools
 cd $EIFFEL_SRC/tools
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
-ec -local -batch -finalize -config doc_builder.ecf -c_compile >> $INSTALL_LOG 2>&1
+ecb -local -batch -finalize -config doc_builder.ecf -c_compile >> $INSTALL_LOG 2>&1
 if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then
 	remtrace Couldnt generate doc_builder
 	CANCEL
@@ -21,31 +21,18 @@ rm -rf EIFGENs
 
 remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
-ec -local -config all_libs.ecf >> $INSTALL_LOG 2>&1
-ec -local -flatshort -filter xml -all -config all_libs.ecf >> $INSTALL_LOG 2>&1
+ecb -local -config all_libs.ecf >> $INSTALL_LOG 2>&1
+ecb -local -flatshort -filter xml -all -config all_libs.ecf >> $INSTALL_LOG 2>&1
 
 remtrace Copy XML docs into appropriate written docs location
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
 rm -rf *.html
 rm -rf *_links.xml
 rm -rf *_short.xml
-cd vision2/implementation
-rm -rf mswin
-sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
+cd vision2
+rm -rf *_imp_*.xml
+sed -e "s/^.*_imp_.*$//g" index.xml >> new_index.xml
 cp new_index.xml index.xml
-rm -rf new_index.xml
-
-cd ../contrib
-rm -rf implementation
-sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
-cp new_index.xml index.xml
-rm -rf new_index.xml
-
-cd ../../preferences
-rm -rf registry_implementation
-sed -e "s/^.*registry_implementation.*$//g" index.xml >> new_index.xml
-cp new_index.xml index.xml
-rm -rf new_index.xml
 
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
 

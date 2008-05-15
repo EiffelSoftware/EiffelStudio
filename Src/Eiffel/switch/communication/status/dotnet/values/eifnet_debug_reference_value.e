@@ -226,7 +226,6 @@ feature {APPLICATION_EXECUTION} -- Query
 		local
 			l_icd_class: ICOR_DEBUG_CLASS
 			cl: CLASS_C
-			f: FEATURE_I
 			o: like object_value
 		do
 			o := object_value
@@ -237,8 +236,7 @@ feature {APPLICATION_EXECUTION} -- Query
 				if l_icd_class /= Void then
 					cl := dynamic_class
 					if cl /= Void then
-						f := cl.feature_named (att_name)
-						if f.is_attribute then
+						if {f: FEATURE_I} cl.feature_named (att_name) and then f.is_attribute then
 							Result := attribute_value (object_value, l_icd_class, f)
 						end
 					end

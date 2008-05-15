@@ -108,9 +108,8 @@ feature {NONE} -- Implementation
 				--			f is now element of rect.
 				l_draw_routine := draw_routines.item (f.draw_id)
 				l_tuple := l_draw_routine.empty_operands
-				if l_tuple.valid_type_for_index (f, 1) then
-					l_tuple.put (f, 1)
-				end
+				check valid_entry: l_tuple.valid_type_for_index (f, 1) end
+				l_tuple.put (f, 1)
 				l_draw_routine.call (l_tuple)
 				rect.merge (bbox)
 			end
@@ -163,9 +162,8 @@ feature {NONE} -- Implementation
 		do
 			l_draw_routine := draw_routines.item (f.draw_id)
 			l_tuple := l_draw_routine.empty_operands
-			if l_tuple.valid_type_for_index (f, 1) then
-				l_tuple.put (f, 1)
-			end
+			check valid_entry: l_tuple.valid_type_for_index (f, 1) end
+			l_tuple.put (f, 1)
 			l_draw_routine.call (l_tuple)
 		end
 

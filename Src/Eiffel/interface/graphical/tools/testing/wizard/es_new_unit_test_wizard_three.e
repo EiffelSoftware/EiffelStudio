@@ -40,9 +40,12 @@ feature {NONE} -- Initialization
 	update_ui_with_wizard_information
 			-- Fill text entries if possible
 			-- This is useful when end users navigating back and forth
+		local
+			l_counter: INTEGER
+			l_exists: BOOLEAN
+			l_test_case_prefix: STRING_32
 		do
 			if wizard_information.new_class_name /= Void then
-
 				if {lt_string: STRING_32} wizard_information.test_case_name.as_string_32 then
 					test_case_name.set_text (lt_string)
 				end
@@ -66,6 +69,29 @@ feature {NONE} -- Initialization
 				end
 				if wizard_information.is_run_before_all_selected then
 					on_before_all_test_runs.enable_select
+				end
+			else
+				-- We generate default test case name for our user
+				from
+					l_exists := True
+					l_counter := 1
+					l_test_case_prefix := "TEST_CASE_"
+				until
+					not l_exists
+				loop
+					l_exists := is_class_name_eixsts (l_test_case_prefix + l_counter.out)
+
+					if l_exists then
+						l_counter := l_counter + 1
+					end
+				end
+				if {l_string: STRING_32} (l_test_case_prefix + l_counter.out) then
+					if {l_lower: STRING_32} l_string.as_lower then
+						test_case_name.set_text (l_lower)
+					end
+					if {l_upper: STRING_32} l_string.as_upper then
+						class_name.set_text (l_upper)
+					end
 				end
 			end
 		end
@@ -334,7 +360,6 @@ feature {NONE}	-- Agents
 		local
 			l_color: EV_STOCK_COLORS
 			l_text: STRING_32
-			l_old_position: INTEGER
 		do
 			l_text := class_under_test.text
 
@@ -503,8 +528,6 @@ feature {NONE} -- UI widgets
 			-- Group of code completion
 		require
 			valid: wizard_information.is_valid
-		local
-			l_shared: SHARED_WORKBENCH
 		do
 			Result := wizard_information.cluster
 		end

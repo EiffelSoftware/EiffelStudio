@@ -143,9 +143,10 @@ feature {NONE} -- Initialization
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
 			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
-			scmd.add_agent (agent open_objects_menu)
 			scmd.enable_sensitive
-			Result.force_last (scmd.new_mini_sd_toolbar_item)
+			tbb := scmd.new_mini_sd_toolbar_item
+			scmd.add_agent (agent open_objects_menu (tbb))
+			Result.force_last (tbb)
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
@@ -391,7 +392,7 @@ feature {NONE} -- Interface
 			g.set_configurable_target_menu_handler (agent context_menu_handler (?, ?, ?, ?, g))
 		end
 
-	open_objects_menu is
+	open_objects_menu (tbi: SD_TOOL_BAR_ITEM) is
 			-- Open objects tool menu
 		require
 			is_initialized: is_initialized
@@ -400,7 +401,11 @@ feature {NONE} -- Interface
 		do
 			m := tool_menu (True)
 			if m /= Void then
-				m.show_at (mini_toolbar, 0, 0)
+				if tbi /= Void and then {rect: EV_RECTANGLE} tbi.rectangle then
+					m.show_at (mini_toolbar, rect.x, rect.y)
+				else
+					m.show_at (mini_toolbar, 0, 0)
+				end
 			end
 		end
 

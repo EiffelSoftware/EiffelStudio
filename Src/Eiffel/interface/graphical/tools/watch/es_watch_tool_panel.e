@@ -106,9 +106,10 @@ feature {NONE} -- Initialization
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
 			scmd.set_tooltip (interface_names.f_Open_watch_tool_menu)
-			scmd.add_agent (agent open_watch_menu)
 			scmd.enable_sensitive
-			Result.force_last (scmd.new_mini_sd_toolbar_item)
+			tbb := scmd.new_mini_sd_toolbar_item
+			scmd.add_agent (agent open_watch_menu (tbb))
+			Result.force_last (tbb)
 
 			create toggle_auto_behavior_cmd.make
 			toggle_auto_behavior_cmd.set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
@@ -580,7 +581,9 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 
 feature {NONE} -- Event handling
 
-	open_watch_menu is
+	open_watch_menu (tbi: SD_TOOL_BAR_ITEM) is
+		require
+			is_initialized: is_initialized
 		local
 			w: EV_WIDGET
 			m: EV_MENU
@@ -611,7 +614,12 @@ feature {NONE} -- Event handling
 				m.extend (mi)
 			end
 
-			m.show_at (w, 0, 0)
+
+			if tbi /= Void and then {rect: EV_RECTANGLE} tbi.rectangle then
+				m.show_at (w, rect.x, rect.y)
+			else
+				m.show_at (w, 0, 0)
+			end
 		end
 
 	open_new_created_watch_tool is

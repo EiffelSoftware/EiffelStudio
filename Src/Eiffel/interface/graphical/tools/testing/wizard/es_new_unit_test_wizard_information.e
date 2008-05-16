@@ -160,9 +160,9 @@ feature -- Command
 		require
 			not_void: a_class_name /= Void and then not a_class_name.is_empty
 		do
-			class_under_test := a_class_name
+			class_under_test := a_class_name.as_upper
 		ensure
-			set: class_under_test = a_class_name
+			set: class_under_test.is_equal (a_class_name.as_upper)
 		end
 
 	set_new_class_name (a_class_name: STRING)

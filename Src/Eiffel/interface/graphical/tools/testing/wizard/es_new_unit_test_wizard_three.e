@@ -540,7 +540,7 @@ feature {NONE} -- Query
 			l_class_name: STRING
 		do
 			-- Valid class name
-			l_class_name := class_under_test.text
+			l_class_name := class_under_test.text.as_upper
 
 			if not l_class_name.is_empty then
 				Result := is_class_name_eixsts (l_class_name)

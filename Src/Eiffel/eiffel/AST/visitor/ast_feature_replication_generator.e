@@ -82,6 +82,9 @@ feature -- Processing
 					--| FIXME IEK We need a better mechanism for doing this.
 				l_class_as := a_current_class.ast
 				if l_class_as /= Void then
+					if l_class_as.replicated_features = Void then
+						l_class_as.set_replicated_features (create {EIFFEL_LIST [FEATURE_AS]}.make (5))
+					end
 					l_class_as.replicated_features.extend (l_feature_as)
 				end
 

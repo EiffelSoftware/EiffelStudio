@@ -190,6 +190,7 @@ feature -- Type checking
 				end
 			end
 		end
+
 	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is
 			-- Type check `a_feature'.
 		require

@@ -3,6 +3,11 @@ indexing
 		A general purpose editor document, hosted in a IDE window.
 		
 		Editor documents are hosted in a IDE window and are managed by the editor documents table service {EDITOR_DOCUMENTS_TABLE_S}.
+		
+		Note: Service is not yet in effect. This was developed early in 6.2 but was not used. Hopefully it
+		      will be available in a release post 6.2.
+		      
+		      Please do not use the service until it is available as the interface may change.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

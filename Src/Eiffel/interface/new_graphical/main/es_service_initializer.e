@@ -33,6 +33,7 @@ feature -- Services
 			a_container.add_service_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
 			a_container.add_service_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
 			a_container.add_service_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
+			a_container.add_service_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
 		end
 
 feature {NONE} -- Help registration
@@ -95,6 +96,14 @@ feature {NONE} -- Factory
 			l_contracts.extend ("eiffel")
 			Result.extend_catalog (l_contracts.string)
 			Result.extend_catalog (eiffel_layout.user_templates_path.string)
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	create_wizard_service: ?WIZARD_ENGINE_S
+			-- Create the wizard service
+		do
+			create {WIZARD_ENGINE} Result
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end

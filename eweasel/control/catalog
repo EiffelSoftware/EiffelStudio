@@ -697,6 +697,7 @@ test	change-export-create-generic-contraint-error-ignored	incr286  tcf fail incr
 test	inherit-crash-after-update		incr287  tcf pass incrementality
 test	large-formal-changes			incr288  tcf pass incrementality
 test	change-system-crash				incr289  tcf pass incrementality
+test	unresolved-c-externals			incr290  tcf pass incrementality
 
 
 -- Melting

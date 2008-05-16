@@ -93,6 +93,8 @@ test non-conforming-parent-can-be-frozen	noncon006 tcf pass
 test at-least-one-conforming-inheritance-path	noncon007 tcf fail
 test non-conforming-inheritance-client-incrementality	noncon008 tcf pass
 test non-conforming-finalization-postcondition-violation	noncon009 tcf pass
+test no-repeated-non-conforming-inheritance noncon010 tcf pass
+test repeated-non-conforming-inheritance-of-generic-type noncon011 tcf pass
 
 -- For testing only
 

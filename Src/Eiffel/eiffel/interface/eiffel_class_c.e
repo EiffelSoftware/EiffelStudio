@@ -724,7 +724,7 @@ feature -- Third pass: byte code production and type check
 
 						if not type_checked and then changed3 and then feature_i.is_routine then
 								-- Forced type check on the feature
-							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, False)
+							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 							check_local_names_needed := False
 						elseif check_local_names_needed then
 							feature_i.check_local_names (feature_i.real_body)
@@ -765,7 +765,7 @@ feature -- Third pass: byte code production and type check
 									byte_code_generated := True
 								end
 							else
-								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, False)
+								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 							end
 						end
 						record_suppliers (feature_i, dependances)

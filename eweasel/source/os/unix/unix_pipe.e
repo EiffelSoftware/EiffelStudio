@@ -7,6 +7,7 @@ indexing
 class UNIX_PIPE
 
 inherit
+	ANY
 	MEMORY
 		export
 			{NONE} all

@@ -8,6 +8,7 @@ indexing
 class INTERVAL_TIMER_SERVER
 
 inherit
+	ANY
 	UNIX_OS_ACCESS
 		export
 			{NONE} all

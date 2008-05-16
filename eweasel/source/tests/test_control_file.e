@@ -7,6 +7,7 @@ indexing
 class TEST_CONTROL_FILE
 
 inherit
+	ANY
 	STRING_UTILITIES
 		export
 			{NONE} all

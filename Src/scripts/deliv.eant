@@ -341,7 +341,7 @@
 		<geant target="_make_delivery"    arguments="$l_tgt_ISE_EIFFEL,false" />
 
 		<!-- Install generated files -->
-		<geant target="_install_binaries" arguments="$_BINARY_DIR,$l_tgt_ISE_EIFFEL" />
+		<geant target="_install_binaries" arguments="$_BINARY_DIR,$l_tgt_ISE_EIFFEL,true" />
 
 		<unset name="l_tgt_ISE_EIFFEL" />
 	</target>
@@ -438,20 +438,20 @@
 		<!-- Gobo Compilation -->
 		<argument name="a_binary_dir" />
 
-		<set name="gobo_binary_dir" value="${a_binary_dir}${path_separator}gobo" />
-		<mkdir directory="$gobo_binary_dir" />
+		<set name="binary_gobo_dir" value="${a_binary_dir}${path_separator}gobo" />
+		<mkdir directory="$binary_gobo_dir" />
 
-		<geant target="get_bin__" arguments="gobo_geant,${gobo_binary_dir},geant${exe}" />
-		<geant target="get_bin__" arguments="gobo_gec,${gobo_binary_dir},gec${exe}" />
-		<geant target="get_bin__" arguments="gobo_gelex,${gobo_binary_dir},gelex${exe}" />
-		<geant target="get_bin__" arguments="gobo_geyacc,${gobo_binary_dir},geyacc${exe}" />
-		<geant target="get_bin__" arguments="gobo_gelint,${gobo_binary_dir},gelint${exe}" />
-		<geant target="get_bin__" arguments="gobo_gepp,${gobo_binary_dir},gepp${exe}" />
-		<geant target="get_bin__" arguments="gobo_getest,${gobo_binary_dir},getest${exe}" />
-		<geant target="get_bin__" arguments="gobo_gexace,${gobo_binary_dir},gexace${exe}" />
-		<geant target="get_bin__" arguments="gobo_gexslt,${gobo_binary_dir},gexslt${exe}" />
+		<geant target="get_bin__" arguments="gobo_geant,${binary_gobo_dir},geant${exe}" />
+		<geant target="get_bin__" arguments="gobo_gec,${binary_gobo_dir},gec${exe}" />
+		<geant target="get_bin__" arguments="gobo_gelex,${binary_gobo_dir},gelex${exe}" />
+		<geant target="get_bin__" arguments="gobo_geyacc,${binary_gobo_dir},geyacc${exe}" />
+		<geant target="get_bin__" arguments="gobo_gelint,${binary_gobo_dir},gelint${exe}" />
+		<geant target="get_bin__" arguments="gobo_gepp,${binary_gobo_dir},gepp${exe}" />
+		<geant target="get_bin__" arguments="gobo_getest,${binary_gobo_dir},getest${exe}" />
+		<geant target="get_bin__" arguments="gobo_gexace,${binary_gobo_dir},gexace${exe}" />
+		<geant target="get_bin__" arguments="gobo_gexslt,${binary_gobo_dir},gexslt${exe}" />
 
-		<unset name="gobo_binary_dir" />
+		<unset name="binary_gobo_dir" />
 	</target>
 
 	<target name="_make_devpack_binaries" depend="init" if="${_INCLUDE_DEVPACK}=true" >
@@ -854,12 +854,6 @@
 			reuse_variables="true"  fork="false" />
 	</target>
 
-	<target name="compile_gobo" depend="init">
-		<argument name="A_comp_dir" />
-		<geant dir="${DELIV_SCRIPT.absdir}" file="gobo_tools.eant" target="compile_from" arguments="$A_comp_dir"
-			reuse_variables="true"  fork="false" />
-	</target>
-
 	<target name="set_ec_version" depend="init">
 		<geant file="${DELIV_SCRIPT.absdir}/set_version.eant" target="set_version" 
 			arguments="system_constants.e"
@@ -886,7 +880,7 @@
 
 	<target name="install_binaries" depend="init_deliv" >
 		<geant target="_log" arguments="Installing ES binaries into ${_TARGET_DELIV_DIR}" />
-		<geant target="_install_binaries" arguments="$_BINARY_DIR,$_TARGET_DELIV_DIR" />
+		<geant target="_install_binaries" arguments="$_BINARY_DIR,$_TARGET_DELIV_DIR,false" />
 		<geant target="_log" arguments="Installing ES binaries: completed ..." />
 	</target>
 
@@ -910,20 +904,20 @@
 		<argument name="a_binary_dir" />
 		<argument name="a_target_dir" />
 
-		<set name="gobo_binary_dir" value="${a_binary_dir}${path_separator}library${path_separator}gobo${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<mkdir directory="$gobo_binary_dir" />
+		<set name="target_gobo_bin_dir" value="${a_target_dir}${path_separator}library${path_separator}gobo${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+		<mkdir directory="$target_gobo_bin_dir" />
 
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},geant${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gec${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gelex${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},geyacc${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gelint${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gepp${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},getest${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gexace${exe}" />
-		<geant target="copy_exec_file" arguments="${gobo_binary_dir},${a_target_dir},gexslt${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},geant${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gec${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gelex${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},geyacc${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gelint${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gepp${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},getest${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gexace${exe}" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gexslt${exe}" />
 
-		<unset name="gobo_binary_dir" />
+		<unset name="target_gobo_bin_dir" />
 	</target>
 
 	<target name="_install_devpack" depend="init_deliv" if="${_INCLUDE_DEVPACK}=true" >
@@ -1002,11 +996,6 @@
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
 		<set name="return_code" value="0" />
 
-		<!-- compile gobo from $a_dir -->
-		<geant target="compile_gobo" arguments="$_COMPILE_DIR" />
-		<geant target="_fail" arguments=" -> Error occurred during 'compile_gobo' (${return_code})" unless="${return_code}=0"  />
-		<set name="return_code" value="0" />
-
 		<setenv name="ISE_LIBRARY" value="${ISE_LIBRARY_backup}" />
 		<unset name="ISE_LIBRARY_backup" />
 
@@ -1082,6 +1071,7 @@
 	<target name="_install_binaries" depend="init_deliv" >
 		<argument name="a_binary_dir" />
 		<argument name="a_dir" />
+		<argument name="a_only_core" />
 
 		<mkdir directory="$a_dir" />
 
@@ -1098,24 +1088,25 @@
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${tmp_install_dir_bin},quick_finalize${exe}" />
 
 		<!-- esbuilder --> 
-		<mkdir directory="${a_dir}/esbuilder/spec/${ISE_PLATFORM}/bin" />
-		<geant target="copy_exec_file" arguments="${a_binary_dir},${a_dir}/esbuilder/spec/${ISE_PLATFORM}/bin,esbuilder${exe}" />
+		<mkdir directory="${a_dir}/esbuilder/spec/${ISE_PLATFORM}/bin" if="$a_only_core=false" />
+		<geant target="copy_exec_file" arguments="${a_binary_dir},${a_dir}/esbuilder/spec/${ISE_PLATFORM}/bin,esbuilder${exe}"  if="$a_only_core=false" />
 
 		<!-- wizards -->
-		<available dir="${a_binary_dir}" resource="wizards" variable="tmp_wizards_available" />
+		<available dir="${a_binary_dir}" resource="wizards" variable="tmp_wizards_available" unless="$a_only_core=false" />
+		<set name="tmp_wizards_available" value="false" if="$a_only_core=false" />
 		<geant target="copy_full_tree" arguments="${a_binary_dir}${path_separator}wizards,${a_dir}${path_separator}studio${path_separator}wizards" 
 			if="${tmp_wizards_available}=true" />
 		<unset name="tmp_wizards_available" />
 
 		<!-- platform specific -->
-		<geant target="_install_executables_windows" arguments="$a_binary_dir,$a_dir"  if="${is_windows}" />
-		<geant target="_install_executables_unix"    arguments="$a_binary_dir,$a_dir"  unless="${is_windows}" />
+		<geant target="_install_executables_windows" arguments="$a_binary_dir,$a_dir,$a_only_core"  if="${is_windows}" />
+		<geant target="_install_executables_unix"    arguments="$a_binary_dir,$a_dir,$a_only_core"  unless="${is_windows}" />
 
 		<!-- Gobo -->
-		<geant target="_install_gobo" arguments="${a_binary_dir},${tmp_install_dir_bin}" />
+		<geant target="_install_gobo" arguments="${a_binary_dir}${path_separator}gobo,${a_dir}" if="$a_only_core=false"/>
 
 		<!-- Dev Pack -->
-		<geant target="_install_devpack" arguments="${a_binary_dir},${tmp_install_dir_bin}" if="$tmp_devpack_available=true" />
+		<geant target="_install_devpack" arguments="${a_binary_dir},${tmp_install_dir_bin}" if="$a_only_core=false" />
 
 		<unset name="tmp_install_dir_bin" />
 	</target>
@@ -1123,6 +1114,7 @@
 	<target name="_install_executables_windows" depend="init_deliv" if="${is_windows}" >
 		<argument name="a_binary_dir" />
 		<argument name="a_install_dir" />
+		<argument name="a_only_core" />
 
 		<set name="l_platf_dir" value="$a_install_dir${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 		<set name="l_bin_dir" value="$l_platf_dir${path_separator}bin" />
@@ -1144,7 +1136,7 @@
 		<unset name="tmp_config_fn" />
 
 		<!-- wel_hook.dll -->
-		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${a_install_dir}\esbuilder\spec\${ISE_PLATFORM}\bin,wel_hook.dll" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${a_install_dir}\esbuilder\spec\${ISE_PLATFORM}\bin,wel_hook.dll"  if="$a_only_core=false"/>
 		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${l_bin_dir},wel_hook.dll" />
 
 		<!-- finish_freezing -->
@@ -1163,6 +1155,7 @@
 	<target name="_install_executables_unix" depend="init_deliv" unless="${is_windows}" >
 		<argument name="a_binary_dir" />
 		<argument name="a_install_dir" />
+		<argument name="a_only_core" />
 
 		<set name="l_platf_dir" value="$a_install_dir${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 		<set name="l_bin_dir" value="$l_platf_dir${path_separator}bin" />
@@ -1171,7 +1164,7 @@
 		<!-- EiffelStudio binaries -->
 		<geant target="made_file_executable" arguments="*" dir="${l_bin_dir}" />
 		<!-- EsBuilder binaries -->
-		<geant target="made_file_executable" arguments="*" dir="${a_install_dir}/esbuilder/spec/${ISE_PLATFORM}/bin" />
+		<geant target="made_file_executable" arguments="*" dir="${a_install_dir}/esbuilder/spec/${ISE_PLATFORM}/bin" if="$a_only_core=false" />
 		<!-- Delivery Scripts -->
 		<geant target="made_file_executable" arguments="make_install" dir="${a_install_dir}" />
 		<!-- Gobo binaries -->

@@ -1230,7 +1230,7 @@ rt_public void eraise(char *tag, long num)
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
 			}
-			if ((type == EX_CINV && echentry) || type == EX_PRE) {
+			if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
 				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
@@ -1396,7 +1396,7 @@ rt_public void com_eraise(char *tag, long num)
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
 			}
-			if ((type == EX_CINV && echentry) || type == EX_PRE)
+			if (((type == EX_CINV) && echentry) || (type == EX_PRE))
 			{
 				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
@@ -1496,7 +1496,7 @@ rt_public void eviol(void)
 		obj = vector->ex_oid;   /*	  record object */
 	}
 
-	if ((type == EX_CINV && echentry) || type == EX_PRE) {
+	if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
 		vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
 	} else {
 		vector_call = top_n_call(&eif_stack, 1);
@@ -3536,7 +3536,7 @@ rt_public void draise(long code, char *meaning, char *message)
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
 			}
-			if ((type == EX_CINV && echentry) || type == EX_PRE) {
+			if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
 				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;

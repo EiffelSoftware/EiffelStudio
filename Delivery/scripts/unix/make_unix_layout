@@ -20,8 +20,8 @@ INCLUDE_DIR=$BASE_PATH/include/$PRODUCT
 LIB_DIR=$BASE_PATH/lib/$PRODUCT
 LIB_BIN_DIR=$LIB_DIR/studio
 SHARE_DIR=$BASE_PATH/share/$PRODUCT
-APPLICATIONS_DIR=$SHARE_DIR/applications
-ICONS_DIR=$SHARE_DIR/icons
+APPLICATIONS_DIR=$BASE_PATH/share/applications
+ICONS_DIR=$BASE_PATH/share/icons
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
 SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
 
@@ -104,8 +104,8 @@ rm -r $SHARE_DIR/studio/wizards
 mv $PACKAGING_DIR/make_install $SHARE_DIR/
 
 # Copy application information
-cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/
-cp $PACKAGING_DIR/logo.png $ICONS_DIR/
+cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/eiffelstudio.desktop
+cp $PACKAGING_DIR/logo.png $ICONS_DIR/eiffelstudio.png
 
 OLD_PWD=`pwd`
 # Create symlinks

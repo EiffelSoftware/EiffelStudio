@@ -1130,7 +1130,7 @@ feature -- Obsolete
 
 				create l_dir.make_from_string (".es")
 				if is_workbench then
-					l_dir.append ("_wkbench")
+					l_dir.append (wkbench_suffix)
 				end
 				create Result.make_from_string (l_dir)
 			end

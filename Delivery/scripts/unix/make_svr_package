@@ -1,11 +1,14 @@
 #!/bin/sh
 set -e
 
+LOG=`pwd`/svr.log
+>$LOG
 . ./packaging/config.sh
 
 
 # Make linux layout
-./make_unix_layout $SVR_DIR/$PRODUCT
+DST_DIR=$SVR_DIR/$PRODUCT
+. ./make_unix_layout
 
 
 # Helper variable and function for prototype file

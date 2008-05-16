@@ -1,12 +1,15 @@
 #!/bin/sh
 set -e
 
-echo "ISE_EIFFEL: $ISE_EIFFEL"
+
+LOG=`pwd`/debian.log
+>$LOG
 . ./packaging/config.sh
 
 
 # Create unix layout in debian directoy
-./make_unix_layout $DEBIAN_DIR/$PRODUCT
+DST_DIR=$DEBIAN_DIR/$PRODUCT
+. ./make_unix_layout
 
 
 # Prepare debian packaging files
@@ -26,8 +29,8 @@ if test -d "$PRODUCT$DOCS_DIR"; then
 	mv $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
 	rm -rf $PRODUCT$DOCS_DIR
 
+	echo "Building $PRODUCT-doc package"
 	debuild --check-dirname-level 0 binary-indep >>$LOG 2>>$LOG
-	echo Finished building package $PRODUCT-doc
 
 	# Clean up doc related build files
 	rm -rf $DEBIAN_DIR/$PRODUCT-doc
@@ -37,14 +40,14 @@ fi
 
 
 # Then we build the main package (architecture dependent)
+echo "Building $PRODUCT (`dpkg-architecture -qDEB_BUILD_ARCH`) package"
 debuild --check-dirname-level 0 binary-arch >>$LOG 2>>$LOG
-echo Finished building package $PRODUCT
 
 
 # Clean up all build files
 cd ../
 rm -r $DEBIAN_DIR/$PRODUCT
-debuild clean
+debuild clean >>$LOG 2>>$LOG
 rm $DEBIAN_DIR/$PRODUCT.postinst
 rm $DEBIAN_DIR/$PRODUCT.prerm
 rm $DEBIAN_DIR/copyright

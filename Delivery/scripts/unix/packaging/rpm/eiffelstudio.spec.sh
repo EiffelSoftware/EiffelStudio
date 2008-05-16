@@ -8,7 +8,7 @@ Summary: $SUMMARY
 Name: $PRODUCT
 Version: $VERSION
 Release: 1
-License: $license
+License: $LICENSE
 Group: Development/Tools
 Source: $DOWNLOAD
 URL: $URL

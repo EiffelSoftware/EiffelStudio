@@ -27,11 +27,11 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			grid := a_grid
-			grid.drop_actions.extend (agent on_drop)
-			grid.drop_actions.set_veto_pebble_function (agent on_veto_drop)
-			grid.enable_single_row_selection
-			grid.enable_multiple_row_selection
-			grid.key_press_actions.extend (agent on_key_press)
+			a_grid.drop_actions.extend (agent on_drop)
+			a_grid.drop_actions.set_veto_pebble_function (agent on_veto_drop)
+			a_grid.enable_single_row_selection
+			a_grid.enable_multiple_row_selection
+			a_grid.key_press_actions.extend (agent on_key_press)
 		ensure
 			set: grid = a_grid
 		end
@@ -60,6 +60,8 @@ feature -- Command
 			-- Enable grid item edit
 			create l_helper.make (l_grid)
 			l_grid.pointer_button_press_actions.extend (agent l_helper.on_pointer_press)
+			
+			l_grid.enable_auto_size_best_fit_column (1)
 
 			-- FIXIT: We have column `Runner' and `Auto Generated' for the moment, since CDD is not integrated,
 			-- it not make sense to show only one kind of texts.

@@ -16,9 +16,9 @@
 		<precursor/>
 		<geant target="set_ECF" 	
 			arguments="${EIFFEL_SRC}${path_separator}dotnet${path_separator}consumer${path_separator}consumer.ecf" />
-		<geant target="set_TARGET" 	arguments="consumer_11" />
-		<!--
 		<geant target="set_TARGET" 	arguments="consumer_20" />
+		<!--
+		<geant target="set_TARGET" 	arguments="consumer_11" />
 		<geant target="set_TARGET" 	arguments="consumer_10" />
 		-->
 		<geant target="set_NAME" 	arguments="EiffelSoftware.MetadataConsumer" />

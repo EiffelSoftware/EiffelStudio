@@ -13,16 +13,10 @@ class
 inherit
 	WIZARD_ENGINE_S
 
+	SAFE_AUTO_DISPOSABLE
+
 inherit {NONE}
 	KL_SHARED_FILE_SYSTEM
-
-feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
-		do
-			Result := True
-		end
 
 feature -- Basic operations
 

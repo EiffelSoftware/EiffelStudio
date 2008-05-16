@@ -1,24 +1,13 @@
-case $CONFIG in
-'')
-	if test ! -f $PACKAGING_DIR/config.sh; then
-		(echo "Can't find config.sh."; exit 1)
-	fi 2>/dev/null
-	. $PACKAGING_DIR/config.sh
-	;;
-esac
-case "$O" in
-*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
-esac
-$spitshell > $DEBIAN_DIR/control <<!GROK!THIS!
+$SPITSHELL > $DEBIAN_DIR/control <<!GROK!THIS!
 Source: $PRODUCT
-Maintainer: $ise_name
+Maintainer: $NAME
 
 Package: $PRODUCT
 Section: devel
 Priority: optional
 Architecture: any
 Depends: \${shlibs:Depends}, gcc, libgtk2.0-dev, libxtst-dev
-Description: $summary
+Description: $SUMMARY
 !GROK!THIS!
 
 sed -e "s/^\(.\+\)$/ \1/" -e "s/^$/ ./" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
@@ -31,7 +20,7 @@ Section: doc
 Priority: optional
 Architecture: all
 Depends: 
-Description: $summary (Documentation)
+Description: $SUMMARY (Documentation)
 !GROK!THIS!
 
 sed -e "s/^\(.\+\)$/ \1/" -e "s/^$/ ./" $PACKAGING_DIR/description >> $DEBIAN_DIR/control

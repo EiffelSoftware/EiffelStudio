@@ -1,0 +1,79 @@
+#!/bin/sh
+set -e
+
+. ./packaging/config.sh
+
+
+# Make linux layout
+./make_unix_layout $SVR_DIR/$PRODUCT
+
+
+# Helper variable and function for prototype file
+ptfile=$SVR_DIR/prototype
+create_prototype ()
+{
+	oldpwd=`pwd`
+	cd $1
+	for file in `find * -print`; do
+		if test -d $1/$file; then
+			# Only create EiffelStudio specific directories or pkgadd
+			# will complain when package is beeing installed.
+			if echo $file | grep eiffelstudio > /dev/null; then
+				echo "d none /$file 0755 root other" >> $ptfile
+			fi
+		elif test -L $1/$file; then
+			echo "l none /$file=`readlink $1/$file`" >> $ptfile
+		elif test -x $1/$file; then
+			echo "f none /$file 0755 root bin" >> $ptfile
+		else
+			echo "f none /$file 0644 root other" >> $ptfile
+		fi
+	done
+	cd $oldpwd
+}
+
+mkdir $SVR_DIR/pkg
+
+
+# If $DOCS_DIR exists, move it to a seperate directory
+if test -d $SVR_DIR/$PRODUCT/$DOCS_DIR; then
+	mkdir -p $SVR_DIR/$PRODUCT-doc/$DOCS_DIR
+	mv $SVR_DIR/$PRODUCT/$DOCS_DIR/* $SVR_DIR/$PRODUCT-doc/$DOCS_DIR
+	rm -rf $SVR_DIR/$PRODUCT/$DOCS_DIR
+	echo "i pkginfo" > $ptfile
+	create_prototype $SVR_DIR/$PRODUCT-doc
+	. $SVR_DIR/pkginfo-doc.sh
+
+	echo Creating $UNIX_NAME-doc package
+	pkgmk -d $SVR_DIR/pkg -r $SVR_DIR/$PRODUCT-doc -f $SVR_DIR/prototype >>$LOG 2>>$LOG
+
+	echo Packing $UNIX_NAME-doc into .pkg file
+	pkgtrans -o -s $SVR_DIR/pkg `pwd`/$UNIX_NAME-doc.pkg $UNIX_NAME-doc >>$LOG 2>>$LOG
+
+	# Clean up
+	rm -rf $SVR_DIR/pkginfo $ptfile $SVR_DIR/$PRODUCT-doc
+fi
+
+
+# Create prototype and pkginfo file
+echo "i pkginfo" > $ptfile
+. $SVR_DIR/request.sh
+echo "i request" >> $ptfile
+. $SVR_DIR/preremove.sh
+echo "i preremove" >> $ptfile
+create_prototype $SVR_DIR/$PRODUCT
+. $SVR_DIR/pkginfo.sh
+
+
+# Create package
+echo "Creating $UNIX_NAME (`uname -p`) package"
+pkgmk -d $SVR_DIR/pkg -r $SVR_DIR/$PRODUCT -f $SVR_DIR/prototype >>$LOG 2>>$LOG 
+echo "Packing $UNIX_NAME into .pkg file"
+pkgtrans -o -s $SVR_DIR/pkg `pwd`/$UNIX_NAME.`uname -p`.pkg $UNIX_NAME >>$LOG 2>>$LOG
+
+
+rm -rf $ptfile $SVR_DIR/pkginfo $SVR_DIR/request $SVR_DIR/preremove
+rm -rf $SVR_DIR/$PRODUCT
+rm -rf $SVR_DIR/pkg
+
+echo "Done! (see $LOG for detailed log)"

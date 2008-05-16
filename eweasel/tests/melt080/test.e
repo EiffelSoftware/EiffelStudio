@@ -34,8 +34,6 @@ feature
 				p.put_natural_8 (127, 0)
 			end
 			nan := p.read_real_64 (0)
-			print (nan)
-			print ("%N")
 			print (nan /= nan)
 			print ("%N")
 		end

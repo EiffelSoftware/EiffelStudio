@@ -727,8 +727,12 @@ feature {COMPILER_EXPORTER} -- Conformance
 			i, count: INTEGER
 			parent_actual_type: TYPE_A
 			l_conforming_parents: FIXED_LIST [CL_TYPE_A]
+			l_is_attached: like is_attached
+			l_is_implicitly_attached: like is_implicitly_attached
 		do
 			from
+				l_is_attached := is_attached
+				l_is_implicitly_attached := is_implicitly_attached
 				l_conforming_parents := associated_class.conforming_parents
 				i := 1
 				count := l_conforming_parents.count
@@ -736,6 +740,11 @@ feature {COMPILER_EXPORTER} -- Conformance
 				i > count or else Result
 			loop
 				parent_actual_type := parent_type (l_conforming_parents.i_th (i))
+				if l_is_attached and then not parent_actual_type.is_attached then
+					parent_actual_type := parent_actual_type.as_attached
+				elseif l_is_implicitly_attached and then not parent_actual_type.is_implicitly_attached then
+					parent_actual_type := parent_actual_type.as_implicitly_attached
+				end
 				Result := parent_actual_type.conform_to (gen_type)
 				i := i + 1
 			end

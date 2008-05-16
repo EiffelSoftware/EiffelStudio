@@ -913,7 +913,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 		ensure
 			value_records_cursor_valid: value_records /= Void implies not value_records.before
 			call_records_cursor_valid: call_records /= Void implies not call_records.before
-			steps_before_implies_record_first: steps /= Void and then steps.before implies ((value_records = Void or else value_records.isfirst) and (call_records = Void or else call_records.isfirst))
+			steps_before_implies_record_first: steps.before implies ((value_records = Void or else value_records.isfirst) and (call_records = Void or else call_records.isfirst))
 		end
 
 	revert_left_step

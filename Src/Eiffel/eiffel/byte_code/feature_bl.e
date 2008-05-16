@@ -414,7 +414,7 @@ end
 					end
 
 					local_argument_types := argument_types
-					if rout_table.item.written_type_id /= Context.original_class_type.type_id then
+					if rout_table.item.access_type_id /= Context.original_class_type.type_id then
 							-- Remember extern routine declaration
 						if context.workbench_mode then
 							return_type_string := "EIF_TYPED_VALUE"

@@ -47,7 +47,7 @@ feature
 					loop
 						unit := table.item;
 						old_position := table.position
-						mark (unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
+						mark (unit.body_index, unit.class_id, unit.access_in, dispose_rout_id);
 						table.go_to (old_position)
 						table.forth
 					end
@@ -79,7 +79,7 @@ feature {NONE}
 					if System.class_of_id (unit.class_id).simple_conform_to (System.class_of_id (original_class_id)) then
 						old_position := table.position;
 						if not is_alive (unit.body_index) then
-								mark (unit.body_index, unit.class_id, unit.written_in, rout_id_val);
+								mark (unit.body_index, unit.class_id, unit.access_in, rout_id_val);
 						end;
 						table.go_to (old_position);
 					end;

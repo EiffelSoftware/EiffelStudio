@@ -24,12 +24,15 @@ feature -- Access
 	body_index: INTEGER
 			-- Body index
 
-	written_type_id: INTEGER
-			-- Type id where the feature is written in
+	access_type_id: INTEGER
+			-- Type id where the feature is accessed through its routine id.
 
 	pattern_id: INTEGER
-			-- Pattern id of the entry when `written_class_type' is not specified,
+			-- Pattern id of the entry when `access_class_type' is not specified,
 			-- otherwise the C pattern ID. The later is used for finalization.
+
+	access_in: INTEGER
+			-- Id of the class where the associated feature can be access through its routine id.
 
 	written_in: INTEGER
 			-- Id of the class where the associated feature of the
@@ -48,7 +51,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := written_type_id = other.written_type_id and body_index = other.body_index
+			Result := access_type_id = other.access_type_id and body_index = other.body_index
 		end
 
 feature -- Settings
@@ -59,10 +62,10 @@ feature -- Settings
 			body_index := i
 		end
 
-	set_written_type_id (i: INTEGER) is
+	set_access_type_id (i: INTEGER) is
 			-- Assign `i' to `written_type_id'.
 		do
-			written_type_id := i
+			access_type_id := i
 		end
 
 	set_pattern_id (i: INTEGER) is
@@ -83,6 +86,12 @@ feature -- Settings
 			is_deferred_set: is_deferred = v
 		end
 
+	set_access_in (i: INTEGER) is
+			-- Assign `i' to `written_in'.
+		do
+			access_in := i
+		end
+
 	set_written_in (i: INTEGER) is
 			-- Assign `i' to `written_in'.
 		do
@@ -99,6 +108,13 @@ feature -- Settings
 
 feature -- previously in ROUT_UNIT
 
+	access_class: CLASS_C is
+
+			-- Class where the feature can be accessed through its routine ID.
+		do
+			Result := System.class_of_id (access_in)
+		end
+
 	written_class: CLASS_C is
 			-- Class where the feature is written in
 		do
@@ -107,6 +123,9 @@ feature -- previously in ROUT_UNIT
 
 	entry (class_type: CLASS_TYPE): ROUT_ENTRY is
 			-- Entry for a routine
+		local
+			l_written_type_id: INTEGER
+			l_access_type_id: INTEGER
 		do
 			create Result
 			Result.set_type_id (class_type.type_id)
@@ -118,12 +137,20 @@ io.error.put_string ("arg = ")
 io.error.put_string (class_type.type.associated_class.name)
 io.error.put_string ("   ")
 io.error.put_string ("cur = ")
-io.error.put_string (written_class.name)
+io.error.put_string (access_class.name)
 io.error.put_new_line
 end
-			Result.set_written_type_id (written_class.meta_type (class_type).type_id)
-				-- It is ok to call `written_class_type' since the above line is initializing it.
-			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, Result.written_class_type))
+			l_access_type_id := access_class.meta_type (class_type).type_id
+			Result.set_access_type_id (l_access_type_id)
+			if access_in /= written_in then
+					-- We have a replicated feature so we need to generate
+					-- the pattern info from the written in type.
+				l_written_type_id := written_class.meta_type (class_type).type_id
+			else
+				l_written_type_id := l_access_type_id
+			end
+			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
+
 			if is_attribute then
 				Result.set_is_attribute
 			end
@@ -132,11 +159,22 @@ end
 feature -- update
 
 	update (class_type: CLASS_TYPE) is
+			-- Update `Current' for `class_type'.
+		local
+			l_written_type_id: INTEGER
 		do
 			Precursor (class_type)
-			set_written_type_id (written_class.meta_type (class_type).type_id)
+			set_access_type_id (access_class.meta_type (class_type).type_id)
 				-- It is ok to call `written_class_type' since the above line is initializing it.
-			set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, written_class_type))
+
+			if access_in /= written_in then
+					-- We have a replicated feature so we need to generate
+					-- the pattern info from the written in type.
+				l_written_type_id := written_class.meta_type (class_type).type_id
+			else
+				l_written_type_id := access_type_id
+			end
+			set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
 		end
 
 feature -- from ROUT_ENTRY
@@ -160,18 +198,18 @@ feature -- from ROUT_ENTRY
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := Encoder.feature_name (written_class_type.type_id, body_index)
+			Result := Encoder.feature_name (access_type_id, body_index)
 		end
 
-	written_class_type: CLASS_TYPE is
+	access_class_type: CLASS_TYPE is
 		do
-			Result := System.class_type_of_id (written_type_id)
+			Result := System.class_type_of_id (access_type_id)
 		end
 
 	real_body_index: INTEGER is
 			-- Real body index
 		do
-			Result := Execution_table.real_body_index (body_index, written_class_type)
+			Result := Execution_table.real_body_index (body_index, access_class_type)
 		end
 
 indexing

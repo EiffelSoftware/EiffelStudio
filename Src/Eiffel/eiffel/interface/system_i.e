@@ -4820,7 +4820,7 @@ feature -- Generation
 						create rout_entry
 						rout_entry.set_type_id (i)
 						rout_entry.set_type (l_void)
-						rout_entry.set_written_type_id (i)
+						rout_entry.set_access_type_id (i)
 						rout_entry.set_pattern_id (l_c_pattern_id)
 						rout_entry.set_body_index (body_index_counter.initialization_body_index)
 						rout_table.extend (rout_entry)
@@ -4862,10 +4862,10 @@ feature -- Generation
 						create rout_entry
 						rout_entry.set_type_id (i)
 						rout_entry.set_type (l_void)
-						rout_entry.set_written_type_id (
+						rout_entry.set_access_type_id (
 							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id (Void))
 						rout_entry.set_pattern_id (pattern_table.c_pattern_id_in (l_class.creation_feature.pattern_id,
-							rout_entry.written_class_type))
+							rout_entry.access_class_type))
 						rout_entry.set_body_index (l_class.creation_feature.body_index)
 						rout_table.extend (rout_entry)
 					end

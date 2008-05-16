@@ -163,7 +163,7 @@ feature -- C code generation
 						buf.put_string (internal_name)
 
 						shared_include_queue.put (
-							System.class_type_of_id (rout_table.item.written_type_id).header_filename)
+							System.class_type_of_id (rout_table.item.access_type_id).header_filename)
 					else
 							-- Call to a deferred feature without implementation
 						buf.put_string ("NULL")

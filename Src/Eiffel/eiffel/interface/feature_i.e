@@ -1607,9 +1607,13 @@ feature -- Polymorphism
  			Result.set_type_a (type.actual_type)
 
  			if has_replicated_ast then
- 				Result.set_written_in (access_in)
+ 					-- If AST has been replicated, then we must use `access_in'
+ 					-- as this is the new written in value.
+ 				Result.set_access_in (access_in)
+ 				Result.set_written_in (written_in)
  			else
  				Result.set_written_in (written_in)
+ 				Result.set_access_in (written_in)
  			end
 
  			Result.set_pattern_id (pattern_id)

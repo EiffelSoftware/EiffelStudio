@@ -138,11 +138,14 @@ feature -- Settings
 			create Result
 			Result.set_body_index (body_index)
 			Result.set_type_a (type.actual_type)
+
 			if
 				not byte_context.workbench_mode and then generate_in /= 0
 			then
 				Result.set_written_in (generate_in)
+				Result.set_access_in (generate_in)
 			else
+				Result.set_access_in (written_in)
 				Result.set_written_in (written_in)
 			end
 			Result.set_pattern_id (pattern_id)

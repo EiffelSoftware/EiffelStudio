@@ -617,7 +617,8 @@ feature -- Conveniences
 			-- of Current
 		require
 			good_argument: a_class /= Void
-			consistency: associated_class.conform_to (a_class)
+			consistency: associated_class.conform_to (a_class) or else
+				(associated_class.non_conforming_parents_classes /= Void and then associated_class.non_conforming_parents_classes.has (a_class))
 		do
 			Result := a_class.meta_type (Current)
 		ensure

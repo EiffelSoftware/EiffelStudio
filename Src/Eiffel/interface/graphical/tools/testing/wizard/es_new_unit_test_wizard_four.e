@@ -137,31 +137,14 @@ feature {NONE} -- Wizard UI Implementation
 			l_top_container.disable_item_expand (l_h_box)
 
 			-- Feature tree
-			create l_h_box
-			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			create l_v_box
 
 			create feature_tree
 			feature_tree.check_actions.extend (agent on_item_checked)
 			feature_tree.uncheck_actions.extend (agent on_item_unchecked)
-			l_h_box.extend (feature_tree)
 
-			create l_v_box
-			l_v_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
-
-			create l_button.make_with_text (interface_names.b_check)
-			l_button.select_actions.extend (agent on_check_all)
-			l_v_box.extend (l_button)
-			l_v_box.disable_item_expand (l_button)
-
-			create l_button.make_with_text (interface_names.b_uncheck)
-			l_button.select_actions.extend (agent on_uncheck_all)
-			l_v_box.extend (l_button)
-			l_v_box.disable_item_expand (l_button)
-
-			l_h_box.extend (l_v_box)
-			l_h_box.disable_item_expand (l_v_box)
-
-			l_top_container.extend (l_h_box)
+			l_v_box.extend (feature_tree)
+			l_top_container.extend (l_v_box)
 
 			-- How many features selected
 			create l_h_box
@@ -172,6 +155,16 @@ feature {NONE} -- Wizard UI Implementation
 			l_h_box.disable_item_expand (feature_selected_counter)
 
 			l_h_box.extend (create {EV_CELL})
+
+			create l_button.make_with_text (interface_names.b_check)
+			l_button.select_actions.extend (agent on_check_all)
+			l_h_box.extend (l_button)
+			l_h_box.disable_item_expand (l_button)
+
+			create l_button.make_with_text (interface_names.b_uncheck)
+			l_button.select_actions.extend (agent on_uncheck_all)
+			l_h_box.extend (l_button)
+			l_h_box.disable_item_expand (l_button)
 
 			l_top_container.extend (l_h_box)
 			l_top_container.disable_item_expand (l_h_box)

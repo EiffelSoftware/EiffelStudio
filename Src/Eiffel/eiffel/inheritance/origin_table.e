@@ -134,8 +134,6 @@ feature
 				l_current_class := System.current_class
 				l_current_class.set_need_type_check (True)
 				l_class_as := l_current_class.ast
-				l_class_as.set_replicated_features (create {EIFFEL_LIST [FEATURE_AS]}.make (5))
-
 				create l_feature_replication_generator
 				from
 					l_replicated_feature_set.start

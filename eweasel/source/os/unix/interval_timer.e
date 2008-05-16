@@ -9,6 +9,10 @@ indexing
 class INTERVAL_TIMER
 
 inherit
+	ANY
+		redefine
+			is_equal
+		end
 	UNIX_OS_ACCESS
 		export
 			{NONE} all

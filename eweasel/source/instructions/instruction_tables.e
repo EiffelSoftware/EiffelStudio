@@ -7,6 +7,7 @@ indexing
 
 class INSTRUCTION_TABLES
 inherit
+	ANY
 	KEYWORD_CONST
 		export
 			{NONE} all

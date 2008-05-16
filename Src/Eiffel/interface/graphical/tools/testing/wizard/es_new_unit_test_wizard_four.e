@@ -58,7 +58,8 @@ feature {NONE} -- Implementation
 			l_found: BOOLEAN
 		do
 			if wizard_information.features_to_test /= Void and then not wizard_information.features_to_test.is_empty then
-				l_features_to_test := wizard_information.features_to_test
+				-- We have to twin `features_to_test' here, otherwise it will be changed by `update_features_to_test' during following loop
+				l_features_to_test := wizard_information.features_to_test.twin
 				l_tree_items := all_items_under (Void)
 				from
 					l_tree_items.start

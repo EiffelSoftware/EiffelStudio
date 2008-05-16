@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+LOG=`pwd`/rpm.log
+>$LOG
 . ./packaging/config.sh
 
 
@@ -14,14 +16,14 @@ fi
 
 
 # Create unix layout in RPM BUILD directory
-./make_unix_layout $RPM_DIR/eiffelstudio
+DST_DIR=$RPM_DIR/eiffelstudio
+. ./make_unix_layout
 
 
 # Prepare spec files
 . $RPM_DIR/eiffelstudio.spec.sh
 mkdir -p $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
-
 
 # If we have a $DOCS_DIR move it to a seperate
 # directory and build noarch doc package
@@ -30,18 +32,20 @@ if test -d $RPM_DIR/eiffelstudio$DOCS_DIR; then
 	mkdir -p $RPM_DIR/eiffelstudio-doc$DOCS_DIR
 	mv $RPM_DIR/eiffelstudio$DOCS_DIR/* $RPM_DIR/eiffelstudio-doc$DOCS_DIR
 	rm -r $RPM_DIR/eiffelstudio$DOCS_DIR
-	$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec >>$LOG 2>>$LOG
+	echo "Building RPM package for $PRODUCT-doc"
+	eval "$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec >>$LOG 2>>$LOG"
 
 	# Clean up documentation specific build files
 	rm $RPM_DIR/eiffelstudio-doc.spec
 	rm -r $RPM_DIR/eiffelstudio-doc
 else
-    echo "No $RPM_DIR/eiffelstudio$DOCS_DIR, $PRODUCT-doc package will not be created"
+	echo "No $RPM_DIR/eiffelstudio$DOCS_DIR, $PRODUCT-doc package will not be created"
 fi
 
 
 # Build main package
-$RPM_CMD $RPM_DIR/eiffelstudio.spec >>$LOG 2>>$LOG
+echo "Building RPM package for $PRODUCT"
+eval "$RPM_CMD $RPM_DIR/eiffelstudio.spec >>$LOG 2>>$LOG"
 
 
 # Move all generated .rpm files to current directory
@@ -52,5 +56,5 @@ find $RPM_DIR/RPMS -type f | xargs mv -t ./
 rm $RPM_DIR/eiffelstudio.spec
 rm -r $RPM_DIR/eiffelstudio
 rm -r $RPM_DIR/tmp
-rm -r $RPM_DIR/RPMS/*
+rm -r $RPM_DIR/RPMS/*.rpm
 

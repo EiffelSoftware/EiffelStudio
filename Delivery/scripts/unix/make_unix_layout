@@ -1,19 +1,18 @@
 #!/bin/sh
 set -e
 
-if [ $# != 1 ]; then 
-	echo Usage: $0 destination
-	exit 1
-fi
-
 if `echo $0 | grep make_unix_layout$ > /dev/null`; then
+	if [ $# != 1 ]; then
+		echo Usage: $0 destination
+		exit 1
+	fi
+	DST_DIR=$1
 	. ./packaging/config.sh
 fi
 
 # some helper variables
 UNIX_PLATFORM=unix
 UNIX_BASE_PATH=/usr
-DST_DIR=$1
 
 BASE_PATH=$DST_DIR$UNIX_BASE_PATH
 BIN_DIR=$BASE_PATH/bin
@@ -26,7 +25,8 @@ ICONS_DIR=$SHARE_DIR/icons
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
 SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
 
-echo "Creating unix layout in $DST_DIR (binaries in $BIN_DIR will have suffix $PRODUCT_VERSION -> e.g. ec$PRODUCT_VERSION)"
+echo "Creating unix layout in $DST_DIR"
+echo "(binaries in /usr/bin will have suffix $PRODUCT_VERSION -> e.g. ec$PRODUCT_VERSION)"
 
 
 # Create basic directory layout

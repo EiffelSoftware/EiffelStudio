@@ -12,7 +12,7 @@ Description: $SUMMARY
 
 sed -e "s/^\(.\+\)$/ \1/" -e "s/^$/ ./" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
 
-$spitshell >> $DEBIAN_DIR/control <<!GROK!THIS!
+$SPITSHELL >> $DEBIAN_DIR/control <<!GROK!THIS!
 
 
 Package: $PRODUCT-doc

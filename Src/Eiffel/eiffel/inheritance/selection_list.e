@@ -362,8 +362,6 @@ feature -- Conceptual Replication
 			loop
 				inh_info := item
 				replication := inh_info.a_feature.replicated (l_inheriting_class_id)
-					-- Make sure that the replicated AST flag is reset
-				replication.set_has_replicated_ast (False)
 				new_t.replace (replication, replication.feature_name_id)
 				inh_info.set_a_feature (replication)
 				forth

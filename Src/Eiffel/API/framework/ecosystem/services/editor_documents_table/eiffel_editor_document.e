@@ -1,7 +1,6 @@
 indexing
 	description: "[
-		A specialized editor document used to handle Eiffel classes.
-		
+	
 		Note: Service is not yet in effect. This was developed early in 6.2 but was not used. Hopefully it
 		      will be available in a release post 6.2.
 		      
@@ -12,28 +11,76 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
-	EIFFEL_CLASS_EDITOR_DOCUMENT_I
+class
+	EIFFEL_EDITOR_DOCUMENT
 
 inherit
 	EDITOR_DOCUMENT_I
+
+	SAFE_AUTO_DISPOSABLE
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_editor: like current_editor)
+		require
+			a_editor_attached: a_editor /= Void
+			not_a_editor_is_recycled: not a_editor.is_recycled
+		do
+			current_editor := a_editor
+			create internal_editors.make (1)
+			internal_editors.put_last (a_editor)
+		ensure
+			current_editor_set: current_editor = a_editor
+			editors_has_a_editor: editors.has (a_editor)
+		end
 
 feature -- Access
 
 	moniker: STRING_32
 			-- Document moniker
 		do
-			Result := class_i.file_name.out.as_string_32
+			Result := current_editor.file_name.out.as_string_32
 		end
 
-	class_i: CLASS_I
-			-- Class associated with open document
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			result_attached: Result /= Void
+	kind: UUID
+			-- Document kind identifier, see {EDITOR_DOCUMENT_KINDS}.
+		once
+			Result := (create {EDITOR_DOCUMENT_KINDS}).eiffel_class_editor_kind
 		end
+
+	window: EB_DEVELOPMENT_WINDOW
+			-- Document's host window
+		do
+			Result := current_editor.dev_window
+		end
+
+	current_editor: EB_SMART_EDITOR
+			-- Active editor of document, which may be Void in the case of no editor
+
+	editors: DS_BILINEAR [ANY]
+			-- List of editors modifying the document
+		do
+			Result := internal_editors
+		end
+
+	data: ANY
+			-- Document custom data
+
+feature -- Status report
+
+	is_dirty: BOOLEAN
+			-- Indicates if the document has been modified
+		do
+
+		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_editors: DS_ARRAYED_LIST [ANY]
+			-- Mutable version of `editors'
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

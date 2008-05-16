@@ -349,7 +349,7 @@ doc:	</attribute>
 rt_public int in_assertion = 0;
 
 #ifdef WORKBENCH
-RT_LNK int is_inside_rt_eiffel_code = 0;
+rt_public int is_inside_rt_eiffel_code = 0;
 #endif
 
 /*

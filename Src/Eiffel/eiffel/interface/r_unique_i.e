@@ -11,7 +11,7 @@ inherit
 	UNIQUE_I
 		redefine
 			replicated, code_id, unselected, transfer_to,
-			is_replicated, set_code_id, transfer_from
+			is_replicated, set_code_id, transfer_from, access_in, set_access_in
 		end
 
 create
@@ -50,6 +50,15 @@ feature
 			rep.set_code_id (new_code_id);
 			Result := rep;
 		end;
+
+	access_in: INTEGER
+			-- Access class id
+
+	set_access_in (i: INTEGER) is
+			-- Assign `i' to `access_in'.
+		do
+			access_in := i
+		end
 
 	transfer_to (f: like Current) is
 			-- Data transfer

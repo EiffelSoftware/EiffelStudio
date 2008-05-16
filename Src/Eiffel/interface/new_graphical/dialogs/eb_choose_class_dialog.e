@@ -58,6 +58,8 @@ feature {NONE} -- Redefine
 			check not_void: l_win /= Void end
 
 			prepare (l_win.menus.context_menu_factory, a_container)
+
+			on_class_name_entry_changed
 		ensure then
 		end
 
@@ -88,14 +90,15 @@ feature {NONE} -- Initialization
 
 				-- Create the controls.
 			create class_name_entry.make
+			class_name_entry.change_actions.extend (agent on_class_name_entry_changed)
 			create classes_tree.make_without_targets (a_context_menu_factory)
 			classes_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(300))
 			classes_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
 
-			classes_tree.associate_textable_with_classes (class_name_entry)
 			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
 
 			classes_tree.refresh
+			classes_tree.associate_textable_recursively  (class_name_entry, classes_tree)
 
 			show_actions.extend (agent class_name_entry.set_focus)
 
@@ -176,6 +179,22 @@ feature {NONE} -- Vision2 events
 			-- Call on_ok through an agent compatible with double click actions.
 		do
 			on_ok
+		end
+
+	on_class_name_entry_changed is
+			-- Handler for class name entry just changed
+		local
+			l_button: EV_BUTTON
+			l_class_i: CLASS_I
+		do
+			l_button := dialog_window_buttons.item (default_button)
+			check not_void: l_button /= Void end
+			l_class_i ?= class_name_entry.data
+			if l_class_i /= Void then
+				l_button.enable_sensitive
+			else
+				l_button.disable_sensitive
+			end
 		end
 
 feature {NONE} -- Controls

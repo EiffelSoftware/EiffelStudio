@@ -571,13 +571,13 @@ feature {NONE} -- Implementation
 				buffer.indent
 					-- Because `TYPE_C' do not carry much type information, we need to get it back
 					-- from the FEATURE_I instance.
-				l_feat := a_entry.written_class.feature_of_body_index (a_entry.body_index)
+				l_feat := a_entry.access_class.feature_of_body_index (a_entry.body_index)
 				check
 					l_feat_not_void: l_feat /= Void
 				end
 					-- Instantiate the return type of the query into the context of the CLASS_TYPE
 					-- to get the appropriate type.
-				l_type_a := l_feat.type.instantiated_in (a_entry.written_class_type.type).actual_type
+				l_type_a := l_feat.type.instantiated_in (a_entry.access_class_type.type).actual_type
 				if l_type_a.is_like_current then
 					l_type_a := l_type_a.conformance_type
 				end

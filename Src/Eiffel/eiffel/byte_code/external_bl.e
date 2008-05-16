@@ -279,7 +279,7 @@ feature
 					end
 
 					if
-						not (rout_table.item.written_type_id = Context.original_class_type.type_id) and
+						not (rout_table.item.access_type_id = Context.original_class_type.type_id) and
 						inline_ext = Void
 					then
 							-- Remember extern routine declaration if not written in same class. But no need

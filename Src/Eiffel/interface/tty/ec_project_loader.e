@@ -266,8 +266,10 @@ feature {NONE} -- User interaction
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
+			l_answer: STRING
 			l_answered: BOOLEAN
 			l_need_choice: BOOLEAN
+			i: INTEGER
 		do
 			l_need_choice := True
 			if a_targets.count = 1 then
@@ -294,12 +296,16 @@ feature {NONE} -- User interaction
 				io.put_new_line
 				from
 					a_targets.start
+					i := 1
 				until
 					a_targets.after
 				loop
-					io.put_string (" - ")
+					io.put_string (" [")
+					io.put_integer (i)
+					io.put_string ("] ")
 					io.put_string (a_targets.item_for_iteration)
 					io.put_new_line
+					i := i + 1
 					a_targets.forth
 				end
 
@@ -315,9 +321,17 @@ feature {NONE} -- User interaction
 						l_answered
 					loop
 						io.read_line
-						if a_targets.has (io.last_string) then
+						l_answer := io.last_string
+						if l_answer.is_integer then
+							i := l_answer.to_integer
+							if 1 <= i and i <= a_targets.count then
+								l_answer := a_targets.item (i)
+							end
+							a_targets.forth
+						end
+						if a_targets.has (l_answer) then
 							l_answered := True
-							target_name := io.last_string.twin
+							target_name := l_answer.twin
 						else
 							localized_print (ewb_names.invalid_target)
 						end

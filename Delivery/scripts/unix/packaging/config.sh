@@ -35,6 +35,7 @@ LICENSE=GPL
 URL=http://www.eiffel.com
 DOWNLOAD=http://download.origo.ethz.ch/download
 KEY=A03DDC5C
+PASS_PHRASE=""
 
 # Shell
 SPITSHELL='cat'

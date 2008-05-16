@@ -10,7 +10,7 @@ LOG=`pwd`/rpm.log
 RPM_CMD="rpmbuild -bb"
 if which gpg > /dev/null; then
 	if gpg --list-secret-keys | grep $KEY > /dev/null; then
-		RPM_CMD="echo \"\" | setsid $RPM_CMD --sign --define '_gpg_name $KEY'"
+		RPM_CMD="echo \"$PASS_PHRASE\" | setsid $RPM_CMD --sign --define '_gpg_name $KEY'"
 	fi
 fi
 

@@ -1,29 +1,14 @@
 #!/bin/sh
 set -e
 
-if [ ! "$ISE_EIFFEL" ]; then
-	echo '$ISE_EIFFEL not defined. Cannot continue'
-	exit 1
-fi
-
-if [ ! "$ISE_PLATFORM" ]; then
-	echo '$ISE_PLATFORM not defined. Cannot continue'
-	exit 1
-fi
-
 if [ $# != 1 ]; then 
 	echo Usage: $0 destination
 	exit 1
 fi
 
-
-# Exctract EiffelStudio version                                                                                            
-export VERSION=`$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
-MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
-MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
-PRODUCT_VERSION=$MAJOR_NUMBER$MINOR_NUMBER
-echo "Binaries in /usr/bin will have suffix $PRODUCT_VERSION (e.g. ec$PRODUCT_VERSION)"
-
+if `echo $0 | grep make_unix_layout$ > /dev/null`; then
+	. ./packaging/config.sh
+fi
 
 # some helper variables
 UNIX_PLATFORM=unix
@@ -36,8 +21,12 @@ INCLUDE_DIR=$BASE_PATH/include/$PRODUCT
 LIB_DIR=$BASE_PATH/lib/$PRODUCT
 LIB_BIN_DIR=$LIB_DIR/studio
 SHARE_DIR=$BASE_PATH/share/$PRODUCT
+APPLICATIONS_DIR=$SHARE_DIR/applications
+ICONS_DIR=$SHARE_DIR/icons
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
 SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
+
+echo "Creating unix layout in $DST_DIR (binaries in $BIN_DIR will have suffix $PRODUCT_VERSION -> e.g. ec$PRODUCT_VERSION)"
 
 
 # Create basic directory layout
@@ -51,6 +40,8 @@ mkdir -p $INCLUDE_DIR
 mkdir -p $LIB_DIR
 mkdir -p $LIB_BIN_DIR
 mkdir -p $SHARE_DIR
+mkdir -p $APPLICATIONS_DIR
+mkdir -p $ICONS_DIR
 mkdir -p $DOC_DIR
 
 # Copy runtime
@@ -107,6 +98,14 @@ cp -r $ISE_EIFFEL/studio/wizards $LIB_BIN_DIR
 cp -r $ISE_EIFFEL/studio $SHARE_DIR/studio
 rm -r $SHARE_DIR/studio/spec
 rm -r $SHARE_DIR/studio/wizards
+
+# Create make_install file and move it to share directory
+. $PACKAGING_DIR/make_install.sh
+mv $PACKAGING_DIR/make_install $SHARE_DIR/
+
+# Copy application information
+cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/
+cp $PACKAGING_DIR/logo.png $ICONS_DIR/
 
 OLD_PWD=`pwd`
 # Create symlinks

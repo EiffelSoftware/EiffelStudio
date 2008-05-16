@@ -1,38 +1,11 @@
 #!/bin/sh
 set -e
 
-
-if [ ! "$ISE_EIFFEL" ]; then
-	echo '$ISE_EIFFEL not defined. Cannot continue'
-	exit 1
-fi
-
-if [ ! "$ISE_PLATFORM" ]; then
-	echo '$ISE_PLATFORM not defined. Cannot continue'
-	exit 1
-fi
-echo "ISE_EIFFEL: $ISE_EIFFEL"
+. ./packaging/config.sh
 
 
-# Exctract EiffelStudio version
-EC="$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version"
-eval "$EC > /dev/null"
-export VERSION=`$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
-MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
-MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
-echo "EiffelStudio version: $VERSION"
-
-
-# Define environment variables
-export PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
-export PACKAGING_DIR=`pwd`/packaging
-export RPM_DIR=$PACKAGING_DIR/rpm
-DOCS_DIR=/usr/share/doc/$PRODUCT/docs
-KEY=A03DDC5C
+# Set up rpmbuild cmd
 RPM_CMD="rpmbuild -bb"
-
-
-# Check if GPG $KEY is available for signing
 if which gpg > /dev/null; then
 	if gpg --list-secret-keys | grep $KEY > /dev/null; then
 		RPM_CMD="echo \"\" | setsid $RPM_CMD --sign --define '_gpg_name $KEY'"
@@ -44,14 +17,8 @@ fi
 ./make_unix_layout $RPM_DIR/eiffelstudio
 
 
-# NOTE: this will be moved to the make_unix_layout script
-mkdir -p $RPM_DIR/eiffelstudio/usr/share/applications
-mkdir -p $RPM_DIR/eiffelstudio/usr/share/icons
-cp $PACKAGING_DIR/desktop $RPM_DIR/eiffelstudio/usr/share/applications/eiffelstudio.desktop
-cp $PACKAGING_DIR/logo.png $RPM_DIR/eiffelstudio/usr/share/icons/eiffelstudio.png
-
 # Prepare spec files
-sh $RPM_DIR/eiffelstudio.spec.sh
+. $RPM_DIR/eiffelstudio.spec.sh
 mkdir -p $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
 
@@ -59,11 +26,11 @@ cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
 # If we have a $DOCS_DIR move it to a seperate
 # directory and build noarch doc package
 if test -d $RPM_DIR/eiffelstudio$DOCS_DIR; then
-	sh $RPM_DIR/eiffelstudio-doc.spec.sh
+	. $RPM_DIR/eiffelstudio-doc.spec.sh
 	mkdir -p $RPM_DIR/eiffelstudio-doc$DOCS_DIR
 	mv $RPM_DIR/eiffelstudio$DOCS_DIR/* $RPM_DIR/eiffelstudio-doc$DOCS_DIR
 	rm -r $RPM_DIR/eiffelstudio$DOCS_DIR
-	$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec
+	$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec >>$LOG 2>>$LOG
 
 	# Clean up documentation specific build files
 	rm $RPM_DIR/eiffelstudio-doc.spec
@@ -74,7 +41,7 @@ fi
 
 
 # Build main package
-eval "$RPM_CMD $RPM_DIR/eiffelstudio.spec"
+$RPM_CMD $RPM_DIR/eiffelstudio.spec >>$LOG 2>>$LOG
 
 
 # Move all generated .rpm files to current directory

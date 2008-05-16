@@ -1,51 +1,20 @@
 #!/bin/sh
 set -e
 
-if [ ! "$ISE_EIFFEL" ]; then
-        echo '$ISE_EIFFEL not defined. Cannot continue'
-        exit 1
-fi
-
-if [ ! "$ISE_PLATFORM" ]; then
-	echo '$ISE_PLATFORM not defined. Cannot continue'
-        exit 1
-fi
 echo "ISE_EIFFEL: $ISE_EIFFEL"
-
-
-# Exctract EiffelStudio version
-EC="$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version"
-eval "$EC > /dev/null"
-export VERSION=`$EC | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
-MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
-MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
-echo "EiffelStudio version: $VERSION"
-
-
-# Define packaging directories
-export PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
-export PACKAGING_DIR=`pwd`/packaging
-export DEBIAN_DIR=$PACKAGING_DIR/debian
-DOCS_DIR=/usr/share/doc/$PRODUCT/docs
+. ./packaging/config.sh
 
 
 # Create unix layout in debian directoy
 ./make_unix_layout $DEBIAN_DIR/$PRODUCT
 
 
-# NOTE: this will be moved to the make_unix_layout script
-mkdir -p $DEBIAN_DIR/$PRODUCT/usr/share/applications
-mkdir -p $DEBIAN_DIR/$PRODUCT/usr/share/icons
-cp $PACKAGING_DIR/desktop $DEBIAN_DIR/$PRODUCT/usr/share/applications/eiffelstudio.desktop
-cp $PACKAGING_DIR/logo.png $DEBIAN_DIR/$PRODUCT/usr/share/icons/eiffelstudio.png
-
-
 # Prepare debian packaging files
-sh $DEBIAN_DIR/control.sh
-sh $DEBIAN_DIR/changelog.sh
+. $DEBIAN_DIR/control.sh
+. $DEBIAN_DIR/changelog.sh
 cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
-sh $DEBIAN_DIR/postinst.sh
-sh $DEBIAN_DIR/prerm.sh
+. $DEBIAN_DIR/postinst.sh
+. $DEBIAN_DIR/prerm.sh
 
 
 cd $DEBIAN_DIR
@@ -57,7 +26,7 @@ if test -d "$PRODUCT$DOCS_DIR"; then
 	mv $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
 	rm -rf $PRODUCT$DOCS_DIR
 
-	debuild --check-dirname-level 0 binary-indep
+	debuild --check-dirname-level 0 binary-indep >>$LOG 2>>$LOG
 	echo Finished building package $PRODUCT-doc
 
 	# Clean up doc related build files
@@ -68,7 +37,7 @@ fi
 
 
 # Then we build the main package (architecture dependent)
-debuild --check-dirname-level 0 binary-arch
+debuild --check-dirname-level 0 binary-arch >>$LOG 2>>$LOG
 echo Finished building package $PRODUCT
 
 

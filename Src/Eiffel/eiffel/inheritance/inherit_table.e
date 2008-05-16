@@ -554,10 +554,13 @@ end;
 			actual_parent_type: CL_TYPE_A
 			i: INTEGER
 			l_parent_is_non_conforming: BOOLEAN
+			l_current_class: CLASS_C
 			l_current_class_id: INTEGER
+			l_ast_feature_replication_generator: AST_FEATURE_REPLICATION_GENERATOR
 		do
 			from
-				l_current_class_id := System.current_class.class_id
+				l_current_class := System.current_class
+				l_current_class_id := l_current_class.class_id
 				l_parent_is_non_conforming := parent_c.is_non_conforming
 				create parent_type
 				actual_parent_type := parent_c.parent_type
@@ -605,6 +608,11 @@ end;
 							-- to be used in the context of the base class as it is implementation inheritance
 							-- and not conforming inheritance.
 						feature_i := feature_i.replicated (l_current_class_id)
+
+						if l_ast_feature_replication_generator = Void then
+							create l_ast_feature_replication_generator
+						end
+						l_ast_feature_replication_generator.process_replicated_feature (feature_i, parent_c, l_current_class, l_current_class.previous_feature_table, Void)
 					else
 							-- Return a duplicate to prevent aliasing.
 						feature_i := feature_i.duplicate

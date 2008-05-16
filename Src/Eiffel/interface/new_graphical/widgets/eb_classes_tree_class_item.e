@@ -14,6 +14,7 @@ inherit
 		redefine
 			data,
 			set_data,
+			print_name,
 			internal_recycle
 		end
 
@@ -154,16 +155,6 @@ feature -- Status setting
 			end
 		end
 
-	set_associated_textable (textable: EV_TEXT_COMPONENT) is
-			-- Associate `Current' with `textable' and change event handling.
-		require
-			textable /= Void
-		do
-			associated_textable := textable
-			select_actions.wipe_out
-			select_actions.extend (agent print_name)
-		end
-
 	set_associated_window (window: like associated_window) is
 			-- Associate `Current' with `window' and change event handling.
 		require
@@ -239,9 +230,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	associated_textable: EV_TEXT_COMPONENT
-			-- Text component in which `Current' writes its name when clicked on.
-
 	associated_window: EB_STONABLE
 			-- Is `Current' already associated to a window?
 
@@ -249,6 +237,7 @@ feature {NONE} -- Implementation
 			-- Print class name in textable, the associated text component.
 		do
 			if associated_textable /= Void then
+				associated_textable.set_data (data)
 				associated_textable.set_text (data.name)
 			end
 		end

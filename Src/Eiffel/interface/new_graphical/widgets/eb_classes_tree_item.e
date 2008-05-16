@@ -38,6 +38,19 @@ feature -- Access
 			Result ?= Precursor
 		end
 
+	set_associated_textable (textable: EV_TEXT_COMPONENT) is
+			-- Associate `Current' with `textable' and change event handling.
+		require
+			textable /= Void
+		do
+			associated_textable := textable
+			select_actions.wipe_out
+			select_actions.extend (agent print_name)
+		end
+
+	dummy_string: STRING is "DUMMY"
+			-- Dummy string used by `fake_load'
+
 feature {NONE} -- Context menu
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
@@ -70,6 +83,20 @@ feature {NONE} -- Recyclable
 				forth
 			end
 			destroy
+		end
+
+feature {NONE} -- Implementation
+
+	associated_textable: EV_TEXT_COMPONENT
+			-- Text component in which `Current' writes its name when clicked on.
+
+	print_name is
+			-- Print class name in textable, the associated text component.
+		do
+			if associated_textable /= Void then
+				associated_textable.set_data (Void)
+				associated_textable.set_text (text)
+			end
 		end
 
 indexing

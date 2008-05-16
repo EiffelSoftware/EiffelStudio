@@ -5,8 +5,8 @@ indexing
 																			]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-05-15 21:56:08 +0800 (Thu, 15 May 2008) $"
+	revision: "$Revision: 73546 $"
 
 class
 	ES_NEW_UNIT_TEST_WIZARD_TWO
@@ -111,6 +111,8 @@ feature {NONE} -- Wizard UI Implementation
 				else
 					wizard_information.set_cluster_id_and_path ("", "")
 				end
+			else
+				wizard_information.set_cluster_id_and_path ("", "")
 			end
 			update_next_button_state
 		end

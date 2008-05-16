@@ -205,6 +205,38 @@ feature {NONE} -- Initialization
 
 feature -- Activation
 
+	associate_textable_recursively (a_textable: EV_TEXT_COMPONENT; a_list: EV_DYNAMIC_LIST [EV_TREE_NODE]) is
+			-- Associate `a_textable' with all items in `a_list'
+		require
+			not_void: a_textable /= Void
+			not_void: a_list /= Void
+		local
+			l_item: EB_CLASSES_TREE_ITEM
+			l_actions: EV_TREE_NODE_ACTION_SEQUENCES
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				l_item ?= a_list.item
+				if l_item /= Void then
+					l_item.set_associated_textable (a_textable)
+
+					if l_item.text.is_equal (l_item.dummy_string) then
+						-- Current `a_list' contain dummy node, we set `a_textable' with it in expand actions
+						l_actions ?= a_list
+						if l_actions /= Void then
+							l_actions.expand_actions.extend_kamikaze (agent associate_textable_recursively (a_textable, a_list))
+						end
+					end
+				end
+
+				associate_textable_recursively (a_textable, a_list.item)
+				a_list.forth
+			end
+		end
+
 	associate_textable_with_classes (a_textable: EV_TEXT_COMPONENT) is
 			-- Set `textable' to `a_textable'
 		do

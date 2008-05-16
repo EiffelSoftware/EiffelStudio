@@ -14,6 +14,7 @@ inherit
 		redefine
 			data,
 			set_data,
+			print_name,
 			internal_recycle
 		end
 
@@ -162,16 +163,6 @@ feature -- Status setting
 		ensure then
 			data = a_cluster
 			name_set: name /= Void
-		end
-
-	set_associated_textable (a_textable: EV_TEXT_COMPONENT) is
-			-- Associate `Current' with `textable' and change event handling.
-		require
-			a_textable /= Void
-		do
-			associated_textable := a_textable
-			select_actions.wipe_out
-			select_actions.extend (agent print_name)
 		end
 
 	add_class (a_class: CLASS_I) is
@@ -583,9 +574,6 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Implementation
 
-	associated_textable: EV_TEXT_COMPONENT
-			-- Where should clicked classes print their names?
-
 	associated_window: EB_DEVELOPMENT_WINDOW
 			-- Where should clicked classes set a stone?
 
@@ -645,7 +633,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 			if l_has_children then
 					-- add a dummy item
 				if system.any_class /= Void then
-					extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class, "DUMMY"))
+					extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class, dummy_string))
 				end
 			end
 		end
@@ -813,7 +801,9 @@ feature {NONE} -- Implementation
 					associated_textable.set_data ([id_solution.id_of_group (data.actual_cluster), path])
 
 					associated_textable.set_text (l_current_cluster)
-
+				else
+					associated_textable.set_data (Void)
+					associated_textable.set_text (text)
 				end
 			end
 		end

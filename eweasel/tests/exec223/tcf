@@ -16,13 +16,9 @@ copy_raw	test2.e $CLUSTER test.e
 compile_melted
 compile_result	validity_warning TEST Unused_local_warning Unused_local_warning Unused_local_warning
 
-c_compile_work
-c_compile_result ok
-
 execute_work	NONE exec_output_1
 execute_result	ok
 compare		exec_output_1 output1
-
 
 copy_raw	i_sortable_array.e $CLUSTER i_sortable_array.e
 copy_raw	test3.e $CLUSTER test.e

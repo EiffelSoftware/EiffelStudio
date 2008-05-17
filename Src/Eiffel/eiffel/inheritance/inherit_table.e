@@ -193,12 +193,11 @@ feature
 			old_convert_to := a_class.convert_to
 			old_convert_from := a_class.convert_from
 
-				-- Reuse pass2 control object.
-			if pass2_control /= Void then
-				pass2_control.wipe_out
-			else
-				create pass2_control.make
-			end
+				-- A new pass2_control object has to be created each time
+				-- as this routine can be called via indirect recursion
+				-- if child classes need to be recompiled as a result
+				-- of a change in parent.
+			create pass2_control.make
 
 			l_is_il_generation := System.il_generation
 

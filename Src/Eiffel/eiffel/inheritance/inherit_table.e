@@ -195,8 +195,8 @@ feature
 
 				-- A new pass2_control object has to be created each time
 				-- as this routine can be called via indirect recursion
-				-- if child classes need to be recompiled as a result
-				-- of a change in parent.
+				-- if descendent classes need to be recompiled as a result
+				-- of a change in an ancestor.
 			create pass2_control.make
 
 			l_is_il_generation := System.il_generation

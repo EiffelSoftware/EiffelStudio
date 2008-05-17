@@ -10,7 +10,7 @@ class DLL_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_dll, is_equal, need_encapsulation
+			is_dll, same_as, need_encapsulation
 		end
 
 	EXTERNAL_CONSTANTS
@@ -69,14 +69,10 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN is
 		do
-			Result := same_type (other) and then
-				return_type = other.return_type and then
-				array_is_equal (argument_types, other.argument_types) and then
-				array_is_equal (header_files, other.header_files) and then
-				name.is_equal (other.name) and then
-				type = other.type
+			Result := Precursor {EXTERNAL_EXT_I} (other) and then
+				(name.is_equal (other.name) and type = other.type and index = other.index)
 		end
 
 feature -- Code generation

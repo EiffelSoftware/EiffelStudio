@@ -11,7 +11,7 @@ class
 inherit
 	IL_EXTENSION_I
 		redefine
-			generate_call, default_create
+			generate_call, default_create, same_as
 		end
 
 create
@@ -38,6 +38,11 @@ feature -- Settings
 			value := v
 		ensure
 			value_set: value = v
+		end
+
+	same_as (other: like Current): BOOLEAN is
+		do
+			Result := Precursor (other) and then ((value = Void and other.value = Void) or else (value.is_equivalent (other.value)))
 		end
 
 feature -- IL code generation

@@ -186,10 +186,19 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 		do
-			Result := same_type (other) and then
-				return_type = other.return_type and then
-				array_is_equal (argument_types, other.argument_types) and then
-				array_is_equal (header_files, other.header_files)
+			Result := same_type (other) and then same_as (other)
+		end
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is Current the same as `other'?
+		do
+			Result := (return_type = other.return_type and
+				array_is_equal (argument_types, other.argument_types) and
+				array_is_equal (header_files, other.header_files) and
+				is_blocking_call = other.is_blocking_call and
+				alias_name_id = other.alias_name_id and
+				is_static = other.is_static and
+				is_cpp = other.is_cpp)
 		end
 
 feature {NONE} -- Comparison
@@ -209,6 +218,29 @@ feature {NONE} -- Comparison
 						i := 1
 					until
 						not Result or else i > nb
+					loop
+						Result := a.item (i) =  o_a.item (i)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	special_is_equal (a, o_a: SPECIAL [INTEGER]): BOOLEAN is
+			-- Is `o_a' considered equal to `a'?
+		local
+			i, nb: INTEGER
+		do
+			if a = Void then
+				Result := o_a = Void
+			elseif o_a /= Void then
+				nb := a.count
+				if o_a.count = nb then
+					from
+						Result := True
+						i := 0
+					until
+						not Result or else i >= nb
 					loop
 						Result := a.item (i) =  o_a.item (i)
 						i := i + 1

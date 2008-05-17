@@ -10,7 +10,7 @@ class INLINE_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_equal, is_cpp, is_inline
+			same_as, is_cpp, is_inline
 		end
 
 create
@@ -52,12 +52,9 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN is
 		do
-			Result := same_type (other) and then
-				return_type = other.return_type and then
-				array_is_equal (argument_types, other.argument_types) and then
-				array_is_equal (header_files, other.header_files)
+			Result := Precursor (other) and then special_is_equal (argument_names, other.argument_names)
 		end
 
 feature -- Code generation

@@ -438,7 +438,7 @@ feature{NONE} -- Implementation
 			create Result.make (128)
 			if a_feature.is_il_external then
 					-- For .NET external features
-				l_classi := a_feature.associated_class.original_class
+				l_classi := a_feature.written_class.original_class
 				if consumed_types.has (l_classi.name) then
 					l_consumed_type := consumed_types.item (l_classi.name)
 				else

@@ -98,12 +98,12 @@ feature -- Server
 				l_storage := storage
 				l_server_file_id := l_server_file.file_id
 				l_server_file_descriptor := l_server_file.descriptor
-				l_server_file.add_occurrence
 				l_storage.start
 			until
 				l_storage.after
 			loop
 				l_item := l_storage.item_for_iteration
+				l_server_file.add_occurrence
 				pos := store_append (l_server_file_descriptor, $l_item, l_null, l_null, $Current)
 					-- Not that we do not perform any cleaning here. This is because, it has to
 					-- be done when the new feature table is going to replace the old one.

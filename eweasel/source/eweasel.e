@@ -25,7 +25,7 @@ feature  -- Creation
 			set_output (create {EWEASEL_OUTPUT_CONTROL}.make (io))
 			parse_arguments (args)
 			if not args_ok then
-				display_usage
+				display_help_instructions
 			else
 				check_test_suite_dir
 				if args_ok then
@@ -67,7 +67,7 @@ feature  {NONE} -- Implementation
 			-- arguments were OK.
 		local
 			k, count: INTEGER;
-			first_char, flag, type: STRING;
+			first_char, flag, type, l_filter: STRING;
 			f: EIFFEL_TEST_FILTER;
 		do
 			from
@@ -115,8 +115,8 @@ feature  {NONE} -- Implementation
 						test_suite_options.set_cleanup_requested (True)
 						k := k + 1;
 					elseif equal (flag, "help") then
-						args_ok := False
-						k := k + 1;
+						display_usage
+						die (0)
 					elseif equal (flag, "init") then
 						if count >= k + 1 then
 							initial_control_file := args.item (k + 1)
@@ -140,14 +140,27 @@ feature  {NONE} -- Implementation
 						end
 					elseif equal (flag, "filter") then
 						if count >= k + 1 then
-							f := string_to_filter (args.item (k + 1));
+							l_filter := args.item (k + 1)
+							f := string_to_filter (l_filter);
 							if f /= Void then
 								test_suite_options.set_filter (f);
 								k := k + 2;
 							else
-								output.append_error ("Filter `", False);
-								output.append_error (args.item (k + 1), False);
-								output.append_error ("' is not valid", True);
+								if filter_type = Void then
+									output.append_error ("No filter type specified", True);
+								elseif not is_filter_type_known then
+									output.append_error ("Filter type `", False);
+									output.append_error (filter_type, False);
+									output.append_error ("' is not valid", True);
+								elseif filter_count = 0 then
+									output.append_error ("No filter values specified for filter type `", False);
+									output.append_error (filter_type, False);
+									output.append_error ("'", True);
+								elseif filter_count > 1 then
+									output.append_error (filter_count.out + " filter values specified for filter type `", False);
+									output.append_error (filter_type, False);
+									output.append_error ("' - not currently supported", True);
+								end
 								args_ok := False;
 							end
 						else
@@ -270,26 +283,46 @@ feature  {NONE} -- Implementation
 			end
 		end;
 
+	display_help_instructions is
+		do
+			output.append ("Use -help option to display help", True)
+		end;
+
 	display_usage is
 		do
 			output.append_new_line
-			output.append ("Usage: eweasel [-help] [-keep {all | passed | failed}] [-filter filter]%N  [-define name value ...]%N  -init init_control_file -catalog test_catalog -output test_suite_dir", True)
-			output.append ("	-help	Display this help message", True)
+			output.append ("Usage: eweasel [-help] [-keep [{all | passed | failed}]] [-clean]%N   [-filter FILTER] [-define NAME VALUE ...] -init INIT_CONTROL_FILE%N   -catalog TEST_CATALOG -output TEST_SUITE_DIR", True)
+			output.append ("Options (may appear in any order):", True)
+			output.append ("	-help	Display this help message and exit.", True)
 			output.append ("	-keep	Keep some test directories after execution, depending", True)
-			output.append ("		on next arg (all, passed or failed)", True)
-			output.append ("	-clean	Delete EIFGEN directory after test finishes", True)
-			output.append ("	-filter	Apply filter to select tests", True)
-			output.append ("		If no filter is given all tests in catalog are executed", True)
-			output.append ("		Filter can be 'test <test_name>'", True)
-			output.append ("		or 'kw <catalog_test_keyword>'", True)
+			output.append ("		on next argument (all, passed or failed).  If the next", True)
+			output.append ("		argument is omitted, keep all test directories.", True)
+			output.append ("	-clean	Delete EIFGENs directory after test finishes.", True)
+			output.append ("		This option has no effect if -keep is not specified,", True)
+			output.append ("		since every test directory will be deleted after execution.", True)
+			output.append ("	-filter	Apply filter to select tests.", True)
+			output.append ("		If no filter is given all tests in the catalog are executed.", True)
+			output.append ("		Only one filter is supported - later -filter options override", True)
+			output.append ("		earlier ones.", True)
+			output.append ("		Filter can be one of:", True)
+			output.append ("			'test TEST_NAME'", True)
+			output.append ("			'directory TEST_DIRECTORY'", True)
+			output.append ("			'keyword TEST_KEYWORD'", True)
+			output.append ("		where TEST_NAME, TEST_DIRECTORY and TEST_KEYWORD refer", True)
+			output.append ("		to test names, test directories and test keywords in the", True)
+			output.append ("		test catalog.  You may use dir as a synonym for directory", True)
+			output.append ("		and kw as a synonym for keyword.", True)
 			output.append ("	-init	Specify initial test suite control file to be read.", True)
 			output.append ("		This file should setup the eweasel environment.", True)
-			output.append ("	-catalog Specify name of test catalog file.", True)
+			output.append ("	-catalog Specify the name of a test catalog file.", True)
 			output.append ("		This option may appear more than once", True)
 			output.append ("		to specify multiple catalogs.", True)
-			output.append ("	-output Name of test suite directory where test execution", True)
-			output.append ("		directories are created.", True)
-			output.append ("	-define	Define name to have value during tests", True)
+			output.append ("	-output Name of test suite directory.  A directory is created in this", True)
+			output.append ("		directory for each test that is executed.  Use the -keep and", True)
+			output.append ("		-clean options to control whether which created test", True)
+			output.append ("		directories are kept after execution and whether the EIFGENs", True)
+			output.append ("		directory is deleted.", True)
+			output.append ("	-define	Define name to have value during tests.", True)
 			output.append ("		You need to define:", True)
 			output.append ("			INCLUDE for directory with include files", True)
 			output.append ("			ISE_EIFFEL for directory with Eiffel installation", True)

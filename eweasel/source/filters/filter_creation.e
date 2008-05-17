@@ -16,19 +16,43 @@ feature -- Filtering
 			-- `s' is invalid).
 		local
 			words: LIST [STRING];
-			first: STRING;
 		do
 			words := broken_into_words (s);
-			if words.count = 2 then
-				first := words.first;
-				first.to_lower;
-				if equal (first, "test") then
-					create {FILTER_TEST_NAME} Result.make (words.i_th (2));
-				elseif equal (first, "kw") then
-					create {FILTER_KEYWORD} Result.make (words.i_th (2));
+			if words.count >= 1 then
+				filter_type := words.first
+				filter_type.to_lower;
+				filter_count := words.count - 1
+				is_filter_type_known := True
+				if equal (filter_type, "test") then
+					if filter_count = 1 then
+						create {FILTER_TEST_NAME} Result.make (words.i_th (2));
+					end
+				elseif equal (filter_type, "dir") or equal (filter_type, "directory") then
+					if filter_count = 1 then
+						create {FILTER_TEST_directory} Result.make (words.i_th (2));
+					end
+				elseif equal (filter_type, "kw") or equal (filter_type, "keyword") then
+					if filter_count = 1 then
+						create {FILTER_KEYWORD} Result.make (words.i_th (2));
+					end
+				else
+					is_filter_type_known := False
 				end
+			else
+				filter_type := ""
+				filter_count := 0
 			end
 		end
+
+	filter_type: STRING
+			-- Type of filter or Void if none
+
+	is_filter_type_known: BOOLEAN
+			-- Is type of filter a known type?
+
+	filter_count: INTEGER;
+			-- Number of values (test names or test directories or
+			-- test keywords) supplied with filter
 
 indexing
 	copyright: "[

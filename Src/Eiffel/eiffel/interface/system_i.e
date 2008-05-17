@@ -840,12 +840,11 @@ end
 	class_type_of_id (type_id: INTEGER): CLASS_TYPE is
 			-- Class type of type id `type_id'.
 		require
-			index_small_enough: type_id <= class_types.count
-				-- Removed: if the index is bigger than type_id_counter.value
-				-- then the corresponding entry is Void
-			--valid_index: type_id <= type_id_counter.value
+			index_small_enough: class_types.valid_index (type_id)
 		do
 			Result := class_types.item (type_id)
+		ensure
+			valid_class_type: Result /= Void implies Result.type_id = type_id
 		end
 
 	class_type_of_static_type_id (id: INTEGER): CLASS_TYPE is

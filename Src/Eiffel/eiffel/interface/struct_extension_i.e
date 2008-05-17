@@ -10,7 +10,7 @@ class STRUCT_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_struct, is_equal, is_cpp
+			is_struct, is_cpp
 		end
 
 create
@@ -40,17 +40,6 @@ feature -- Properties
 	field_name_id: INTEGER
 			-- Name ID of struct.
 			--| Can be empty if parsed through the old syntax
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-		do
-			Result := same_type (other) and then
-				return_type = other.return_type and then
-				array_is_equal (argument_types, other.argument_types) and then
-				array_is_equal (header_files, other.header_files) and then
-				field_name_id = other.field_name_id
-		end
 
 feature -- Code generation
 

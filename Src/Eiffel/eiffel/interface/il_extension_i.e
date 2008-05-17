@@ -10,7 +10,7 @@ class IL_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_il
+			is_il, same_as
 		end
 
 	SHARED_IL_CONSTANTS
@@ -60,6 +60,13 @@ feature -- Settings
 			base_class := name
 		ensure
 			base_class_set: base_class = name
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+		do
+			Result := Precursor {EXTERNAL_EXT_I} (other) and then (type = other.type and equal (base_class, other.base_class))
 		end
 
 feature -- Generation access

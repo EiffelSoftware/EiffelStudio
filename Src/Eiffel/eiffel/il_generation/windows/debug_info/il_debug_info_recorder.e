@@ -1214,6 +1214,8 @@ feature {NONE}-- Implementation for save and load task
 
 	load (a_il_info_file_name: STRING) is
 			-- Load info from saved file.
+		require
+			a_il_info_file_name_not_void: a_il_info_file_name /= Void
 		local
 			l_succeed: BOOLEAN
 			l_precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
@@ -1228,7 +1230,7 @@ feature {NONE}-- Implementation for save and load task
 			create loading_errors.make
 
 			reset
-			l_succeed := import_file_data (a_il_info_file_name, System.name, False)
+			l_succeed := import_file_data (a_il_info_file_name.string, System.name, False)
 
 			load_successful := load_successful and l_succeed
 
@@ -1246,7 +1248,7 @@ feature {NONE}-- Implementation for save and load task
 						print (l_pfn)
 						io.put_new_line
 					end
-					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
+					l_succeed := import_file_data (l_pfn.string, l_remote_project_directory.system_name, True)
 					load_successful := load_successful and l_succeed
 					l_precomp_dirs.forth
 				end

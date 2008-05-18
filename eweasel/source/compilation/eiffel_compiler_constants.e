@@ -11,6 +11,8 @@ feature {NONE} -- Input prompts
 
 	Resume_prompt: STRING is "Press <Return> to resume compilation or <Q> to quit";
 
+	Missing_precompile_prompt: STRING is "The project needs to use a precompile library, which has not been compiled.";
+
 	Overwrite_prompt: STRING is "Do you wish to overwrite it (Y-yes or N-no)?";
 
 

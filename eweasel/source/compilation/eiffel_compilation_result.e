@@ -21,6 +21,10 @@ feature -- Properties
 	last_validity_error: EIFFEL_VALIDITY_ERROR
 			-- Last validity error being inserted
 
+	missing_precompile: BOOLEAN;
+			-- Was a missing precompile detected during
+			-- compilation?
+
 	had_panic: BOOLEAN;
 			-- Did a panic occur during compilation?
 
@@ -104,6 +108,9 @@ feature -- Properties
 			if compilation_finished then
 				status.append ("completed ");
 			end;
+			if missing_precompile then
+				status.append ("missing_precompile ");
+			end;
 			if execution_failure then
 				status.append ("system_failed ");
 			end;
@@ -154,6 +161,9 @@ feature -- Update
 				analyze_validity_error (line);
 			elseif is_prefix (Resume_prompt, line)
 			    or is_prefix (C_failure_prompt, line) then
+				compilation_paused := True;
+			elseif is_prefix (Missing_precompile_prompt, line) then
+				missing_precompile := True
 				compilation_paused := True;
 			elseif is_prefix (C_failure_prefix, line) then
 				c_generation_failure := True;
@@ -245,6 +255,7 @@ feature -- Comparison
 		do
 			Result := had_panic = other.had_panic and
 				had_exception = other.had_exception and
+				missing_precompile = other.missing_precompile and
 				updt_failure = other.updt_failure and
 				c_generation_failure = other.c_generation_failure and
 				execution_failure = other.execution_failure and

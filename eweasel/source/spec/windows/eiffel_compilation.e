@@ -71,7 +71,7 @@ feature
 	quit is
 			-- Quit compilation
 		do
-			put_string ("q%N");
+			put_string (quit_reply);
 			suspended := False;
 		end;
 
@@ -96,7 +96,8 @@ feature {NONE} -- Implementation
 			-- available in `last_string'.  Set `end_of_file'
 			-- if no more lines available.
 		local
-			in_progress, is_resume_prompt: BOOLEAN;
+			in_progress, is_suspend_prompt: BOOLEAN;
+			is_resume_prompt, is_missing_precomp, is_c_failure: BOOLEAN
 			line: STRING;
 			count: INTEGER;
 			last_char: CHARACTER;
@@ -106,7 +107,7 @@ feature {NONE} -- Implementation
 					create line.make (80);
 					last_char := '%U';
 				until
-					(last_char = '%N') or else end_of_file or else is_resume_prompt
+					(last_char = '%N') or else end_of_file or else is_suspend_prompt
 				loop
 					read_character;
 					if not end_of_file then
@@ -117,17 +118,20 @@ feature {NONE} -- Implementation
 						end;
 						line.extend (last_char);
 						count := count + 1;
-						if count >= Resume_prompt.count then
-							is_resume_prompt := equal (line, Resume_prompt);
-						end;
-						if count >= C_failure_prompt.count then
-							is_resume_prompt := is_resume_prompt or equal (line, C_failure_prompt);
-						end
+						is_resume_prompt := count = Resume_prompt.count and then equal (line, Resume_prompt)
+						is_missing_precomp := count = Missing_precompile_prompt.count and then equal (line, Missing_precompile_prompt)
+						is_c_failure :=	count = C_failure_prompt.count and then equal (line, C_failure_prompt)
+						is_suspend_prompt := is_resume_prompt or is_missing_precomp or is_c_failure
 					end
 				end;
 			end;	
-			if equal (line, resume_prompt) or equal (line, C_failure_prompt) then
-				 suspended := True;
+			if is_suspend_prompt then
+				suspended := True;
+				if is_resume_prompt then
+					quit_reply := "q%N"
+				else
+					quit_reply := "n%N"
+				end
 			end;
 			last_string := line;
 		rescue
@@ -137,6 +141,9 @@ feature {NONE} -- Implementation
 				retry;
 			end
 		end;
+
+	quit_reply: STRING;
+			-- Reply to send to compiler to quit compilation
 
 indexing
 	copyright: "[

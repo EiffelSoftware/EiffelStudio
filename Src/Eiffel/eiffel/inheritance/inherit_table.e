@@ -438,6 +438,9 @@ end;
 				-- Update the assert_id_set of redefined features.
 			update_inherited_assertions;
 
+				-- Process paterns of origin features
+			process_pattern (resulting_table);
+
 			if previous_feature_table /= Void then
 					-- If there is a table in the tmp server,
 					-- the propagation is done again only if the new
@@ -454,8 +457,6 @@ end;
 								pass2_control, assert_prop_list);
 			assert_prop_list := Void;
 
-				-- Process paterns of origin features
-			process_pattern (resulting_table);
 
 				-- Ensure a wrapper is generated for attributes of a formal generic type.
 			mark_generic_attribute_seeds (resulting_table)

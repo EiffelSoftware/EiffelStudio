@@ -553,15 +553,8 @@ end;
 				-- "like Current" type of `parent_c'
 			actual_parent_type: CL_TYPE_A
 			i: INTEGER
-			l_parent_is_non_conforming: BOOLEAN
-			l_current_class: CLASS_C
-			l_current_class_id: INTEGER
-			l_ast_feature_replication_generator: AST_FEATURE_REPLICATION_GENERATOR
 		do
 			from
-				l_current_class := System.current_class
-				l_current_class_id := l_current_class.class_id
-				l_parent_is_non_conforming := parent_c.is_non_conforming
 				create parent_type
 				actual_parent_type := parent_c.parent_type
 				if not actual_parent_type.is_attached then
@@ -590,8 +583,8 @@ end;
 			until
 				i < 0
 			loop
-					-- Take one feature
-				feature_i := parent_table [i]
+					-- Duplicate feature to prevent aliasing
+				feature_i := parent_table [i].duplicate
 
 					-- Add inherited feature information to the concerned instance of INHERIT_FEAT
 				search (feature_i.feature_name_id)
@@ -599,30 +592,7 @@ end;
 				if found_item = Void then
 							-- Add new feature to the inheritance table.
 					put (create {INHERIT_FEAT}.make, feature_i.feature_name_id)
-
-						-- This is a new feature being added from `parent_c', if non-conforming then we have to perform replication.
-					if l_parent_is_non_conforming then
-							-- We have a non-conforming parent and the feature has not been added to `Current'.
-							-- Therefore it needs to be replicated and instantiated with the type of the
-							-- inheriting class, not the parent type.  This is because the routine needs
-							-- to be used in the context of the base class as it is implementation inheritance
-							-- and not conforming inheritance.
-						feature_i := feature_i.replicated (l_current_class_id)
-
-						if l_ast_feature_replication_generator = Void then
-							create l_ast_feature_replication_generator
-						end
-						l_ast_feature_replication_generator.process_replicated_feature (feature_i, parent_c, l_current_class, l_current_class.previous_feature_table, Void)
-					else
-							-- Return a duplicate to prevent aliasing.
-						feature_i := feature_i.duplicate
-					end
-				else
-						-- The feature is already present so we duplicate and let
-						-- replication occur via selection list processing.
-					feature_i := feature_i.duplicate
 				end
-
 					-- Instantiate feature for `parent_type', this is so that generics may
 					-- be processed correctly.
 				feature_i.instantiate (parent_type)

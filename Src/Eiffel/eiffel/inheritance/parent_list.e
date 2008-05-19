@@ -32,7 +32,7 @@ feature -- Merging parents
 --				i := count - 1
 				nb := count
 			until
-				i < 0
+--				i < 0
 				i = nb
 			loop
 				inherit_table.merge_features_of_parent_c (area [i])

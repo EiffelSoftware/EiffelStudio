@@ -732,8 +732,7 @@ feature -- Third pass: byte code production and type check
 					elseif not feature_i.is_routine then
 						if feature_i.body_index /= 0 then
 							if
-								feature_changed
-								or else
+								feature_changed or else
 								not (f_suppliers = Void
 									or else (propagators.empty_intersection (f_suppliers)
 									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
@@ -764,7 +763,7 @@ feature -- Third pass: byte code production and type check
 									end
 									byte_code_generated := True
 								end
-							else
+							elseif (class_id = feature_i.written_in) or else is_safe_to_check_ancestor then
 								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 							end
 						end

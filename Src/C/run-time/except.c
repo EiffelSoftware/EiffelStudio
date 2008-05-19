@@ -2815,11 +2815,11 @@ rt_private void print_top(void (*append_trace)(char *))
 		buf[0] = '\0';
 	}
 
-	if (eif_except.from >= 0) {
+	if (eif_except.from < scount) {
 		if (eif_except.obj_id) {
 			EIF_TYPE_INDEX obj_dtype = Dtype(eif_except.obj_id);
 
-			if (obj_dtype>=0 && obj_dtype < scount) {
+			if (obj_dtype < scount) {
 				print_class_feature_tag (append_trace, Class(eif_except.obj_id), rout_name_buffer, buf);
 			} else {
 				print_class_feature_tag (append_trace, "Invalid_object", rout_name_buffer, buf);
@@ -2841,7 +2841,7 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	buf[0] = '\0';
 
-	if (eif_except.from >= 0) {
+	if (eif_except.from < scount) {
 			/* We limit ourself to the first 1000 characters of class name
 			 * to avoir buffer overflow. */
 		if (eif_except.obj_id) {

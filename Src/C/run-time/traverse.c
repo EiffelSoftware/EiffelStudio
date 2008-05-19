@@ -171,10 +171,10 @@ rt_private void account_attributes (EIF_TYPE_INDEX dtype)
 					/* Skip formal position, no special treatment to be done. */
 				k = k + 1;
 			} else {
-				if (gtype >= 0) {
+				if (gtype <= MAX_DTYPE) {
 					gtype = RTUD (gtype);
 				}
-				if (gtype >= 0) {
+				if (gtype <= MAX_DTYPE) {
 					account[gtype] |= ACCOUNT_TYPE;
 				}
 			}
@@ -241,8 +241,9 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 				(dtype != LIKE_FEATURE_TYPE) && (dtype != LIKE_PFEATURE_TYPE) &&
 				(dtype != FORMAL_TYPE));
 
-			if (dtype >= 0)
+			if (dtype <= MAX_DTYPE) {
 				account[dtype] |= ACCOUNT_TYPE;
+			}
 		}
 	}
 }

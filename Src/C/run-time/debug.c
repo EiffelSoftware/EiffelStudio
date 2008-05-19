@@ -137,7 +137,7 @@ rt_public struct dbinfo d_data = {
 	0,				/* db_callstack_depth_stop */
 	0,				/* db_stepinto_mode */
 	0,				/* db_discard_breakpoints */
-	{0, 0, 0}		/* rtdata */
+	{{0, 0, 0}}		/* rtdata */
 };	/* Global debugger information */
 
 /*

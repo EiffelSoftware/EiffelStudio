@@ -2578,6 +2578,7 @@ rt_private void read_header(char rt_type)
 	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	EIF_TYPE_INDEX dtype, new_dtype;
+	int read_dtype;
 	long size;
 	uint32 nb_gen;
 	size_t bsize = 1024;
@@ -2634,8 +2635,11 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 
 		temp_buf = r_buffer;
 
-		if (4 != sscanf(r_buffer, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen))
+		if (4 != sscanf(r_buffer, "%d %s %ld %d",&read_dtype,vis_name,&size,&nb_gen)) {
 			eise_io("General retrieve: unable to read type description.");
+		}
+		CHECK("Valid dtype", (read_dtype >= 0) && (read_dtype <= MAX_DTYPE));
+		dtype = (EIF_TYPE_INDEX) read_dtype;
 
 		for (k = 1 ; k <= 4 ; k++)
 			temp_buf = next_item (temp_buf);
@@ -2734,6 +2738,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	EIF_TYPE_INDEX dtype, new_dtype;
+	int read_dtype;
 	uint32 nb_gen, bsize = 1024;
 	char vis_name[512];
 	char * temp_buf;
@@ -2798,8 +2803,11 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 
 		temp_buf = r_buffer;
 
-		if (3 != sscanf(r_buffer, "%d %s %d",&dtype,vis_name,&nb_gen))
+		if (3 != sscanf(r_buffer, "%d %s %d",&read_dtype,vis_name,&nb_gen)) {
 			eise_io("Independent retrieve: unable to read type description.");
+		}
+		CHECK("Valid dtype", (read_dtype >= 0) && (read_dtype <= MAX_DTYPE));
+		dtype = (EIF_TYPE_INDEX) read_dtype;
 
 		for (k = 1 ; k <= 3 ; k++)
 			temp_buf = next_item (temp_buf);
@@ -3185,8 +3193,8 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 #endif
 
 	int result = 1;
-	int16 dftype = **gtype;
-	int16 aftype = **atype;
+	EIF_TYPE_INDEX dftype = **gtype;
+	int16 aftype = (int16) **atype;
 
 	CHECK("version valid", rt_kind_version < INDEPENDENT_STORE_5_5);
 
@@ -3222,7 +3230,8 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 			if (dftype == egc_bit_dtype) {
 				(*atype)++;
 				(*gtype)++;
-				result = (**gtype == **atype);
+					/* Compare size of BIT. */
+				result = ((uint16) **gtype == (uint16) **atype);
 			} else {
 				result = 0;
 			}
@@ -3245,7 +3254,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 					result = 0;
 			}
 		} else {
-			if (dftype >= 0) {
+			if (dftype <= MAX_DTYPE) {
 					/* This is a normal type, nothing special to be done. */
 				if (type_defined (aftype)) {
 					result = (RTUD(dftype) == type_description (aftype)->new_type);
@@ -3409,6 +3418,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	EIF_TYPE_INDEX old_count;
 	EIF_TYPE_INDEX nb_lines;
 	EIF_TYPE_INDEX i;
+	int read_count, read_lines;
 	int bsize = 1024;
 	jmp_buf exenv;
 	RTYD;
@@ -3429,8 +3439,11 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	/* Read the old maximum dyn type */
 	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
-	if (sscanf (r_buffer,"%d\n", &old_count) != 1)
-		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
+	if (sscanf (r_buffer,"%d\n", &read_count) != 1) {
+		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");\
+	}
+	CHECK("Valid old count", (read_count >= 0) && (read_count <= MAX_DTYPE));
+	old_count = (EIF_TYPE_INDEX) read_count;
 
 			/* We need to make sure that `dtypes' and `spec_elm_size' arrays are large enough
 			 * to store all types in retrieving system. */
@@ -3458,16 +3471,20 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	/* Read the number of lines */
 	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read number of header lines.");
-	if (sscanf (r_buffer,"%d\n", &nb_lines) != 1)
+	if (sscanf (r_buffer,"%d\n", &read_lines) != 1) {
 		eise_io ("Independent retrieve: unable to read number of header lines.");
+	}
+	CHECK("Valid nb_lines", (read_lines >= 0) && (read_lines <= MAX_DTYPE));
+	nb_lines = (EIF_TYPE_INDEX) read_lines;
 	type_conversions = new_type_conversion_table (old_count, nb_lines);
 
 	for (i=0; i<nb_lines; i++) {
 		type_descriptor *conv;
 		attribute_detail *attributes = NULL;
 		EIF_TYPE_INDEX dtype, new_dtype = INVALID_DTYPE;
-		int num_attrib;
 		uint16 nb_gen;
+		int read_dtype, read_nb_gen;
+		int num_attrib;
 		char *temp_buf;
 		long j;
 		int m;
@@ -3477,8 +3494,13 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 
 		temp_buf = r_buffer;
 
-		if (3 != sscanf (r_buffer, "%d %s %d", &dtype, vis_name, &nb_gen))
+		if (3 != sscanf (r_buffer, "%d %s %d", &read_dtype, vis_name, &read_nb_gen)) {
 			eise_io ("Independent retrieve: unable to read type description.");
+		}
+		CHECK("Valid dtype", (read_dtype >= 0) && (read_dtype <= MAX_DTYPE));
+		CHECK("Valid nb_gen", (read_nb_gen >= 0) && (read_nb_gen <= 0xFFFF));
+		dtype = (EIF_TYPE_INDEX) read_dtype;
+		nb_gen = (uint16) read_nb_gen;
 
 		type_conversions->type_index[dtype] = i;
 		conv = type_conversions->descriptions + i;

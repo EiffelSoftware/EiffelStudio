@@ -268,7 +268,7 @@ rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 {
 	REQUIRE ("not expanded", (HEADER(object)->ov_flags & EO_EXP) == 0);
 		/* Returns physical size occupied by `object' including its header. */
-	return (OVERHEAD + HEADER(object)->ov_size & B_SIZE);
+	return (OVERHEAD + (HEADER(object)->ov_size & B_SIZE));
 }
 
 rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)

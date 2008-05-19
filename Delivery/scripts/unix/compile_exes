@@ -197,10 +197,13 @@ safe_md $EXPORT_DIR/ecs
 
 remtrace GPL edition
 cp ec_gpl.tar.bz2 ec.tar.bz2
-untgz_ccode ec
-bzip2 ec
-move ec.bz2 $EXPORT_DIR/ecs/ec_gpl.bz2
+untgz_ccode ec no_cancel
+if [ -f ec ]; then
+	bzip2 ec
+	move ec.bz2 $EXPORT_DIR/ecs/ec_gpl.bz2
+fi
 
+remtrace GPL batch edition
 cp ecb_gpl.tar.bz2 ecb.tar.bz2
 untgz_ccode ecb
 bzip2 ecb
@@ -213,9 +216,11 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 else
 	remtrace GPL edition
 	cp ec_ent.tar.bz2 ec.tar.bz2
-	untgz_ccode ec
-	bzip2 ec
-	move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2
+	untgz_ccode ec no_cancel
+	if [ ­f ec ]; then
+		bzip2 ec
+		move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2
+	fi
 
 	cp ecb_ent.tar.bz2 ecb.tar.bz2
 	untgz_ccode ecb

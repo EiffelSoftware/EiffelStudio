@@ -1,8 +1,10 @@
 #!/bin/sh
 
 #Let's compile for PPC on lisbon in background
-# Commented because of the R_PPC_REL24 linking error for large executable.
-#(sh ./make_for_platform lisbon.ise manus linux-ppc) &
+# Although it won't create the UI version of the compiler because of the
+# R_PPC_REL24 linking error for large executable we are still building a
+# delivery with only the batch compiler.
+(sh ./make_for_platform lisbon.ise manus linux-ppc) &
 
 #Let's compile for Solaris Sparc 64-bit on mosis in background
 (sh ./make_for_platform mosis.ise manus solaris-sparc-64) &

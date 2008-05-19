@@ -16,7 +16,6 @@ inherit
 			internal_recycle
 		end
 
-inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE}

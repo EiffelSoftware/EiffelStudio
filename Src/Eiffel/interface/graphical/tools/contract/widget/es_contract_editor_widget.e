@@ -16,7 +16,6 @@ inherit
 			on_before_initialize
 		end
 
-inherit {NONE}
 	SHARED_WORKBENCH
 		export
 			{NONE} all

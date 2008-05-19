@@ -27,7 +27,6 @@ inherit
 			on_text_fully_loaded, on_cursor_moved
 		end
 
-inherit {NONE}
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

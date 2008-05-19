@@ -1095,8 +1095,20 @@ feature {NONE} -- Implementation
 
 	close_editor_perform (a_editor: like current_editor) is
 			-- Perform closing editor.
+		local
+			l_editors: like editors_internal
+			l_fake_editors: like fake_editors
 		do
-			editors_internal.prune_all (a_editor)
+			l_editors := editors_internal
+			if l_editors.has (a_editor) then
+				l_editors.prune_all (a_editor)
+			else
+				l_fake_editors := fake_editors
+				if l_fake_editors.has (a_editor) then
+					l_fake_editors.prune_all (a_editor)
+				end
+			end
+
 			editor_number_factory.remove_editor_name (a_editor.docking_content.unique_title)
 			a_editor.docking_content.close
 			editor_closed_actions.call ([a_editor])
@@ -1207,7 +1219,7 @@ feature {NONE} -- Implementation
 				-- When fake editor first time showing, we change it to a real one.
 			register_action (Result.focus_in_actions, agent on_fake_focus (last_created_editor))
 			register_action (Result.show_actions, agent on_show (last_created_editor))
-			Result.close_request_actions.extend (agent Result.close)
+			Result.close_request_actions.extend (agent on_close (last_created_editor))
 
 			docking_manager.contents.extend (Result)
 			Result.set_type ({SD_ENUMERATION}.editor)

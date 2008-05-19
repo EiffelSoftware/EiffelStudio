@@ -10,7 +10,7 @@ c_compile_work
 c_compile_result ok
 execute_work	NONE exec_output 101
 execute_result 	ok
-compare		exec_output output
+If not DOTNET compare		exec_output output
 
 cleanup_compile
 compile_final
@@ -19,13 +19,13 @@ c_compile_final
 c_compile_result ok
 execute_final	NONE exec_output1 101
 execute_result ok
-compare		exec_output1 output
+If not DOTNET compare		exec_output1 output
 
 cleanup_compile
 compile_melted
 compile_result 	 ok
 execute_work	NONE exec_output2 101
 execute_result ok
-compare		exec_output2 output
+If not DOTNET compare		exec_output2 output
 
 test_end

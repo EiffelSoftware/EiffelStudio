@@ -23,7 +23,6 @@ inherit
 			is_interface_usable
 		end
 
-inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all

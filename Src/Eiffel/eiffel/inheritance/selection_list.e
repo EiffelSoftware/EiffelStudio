@@ -56,12 +56,19 @@ feature -- Selection
 			l_selected_feature: FEATURE_I
 			vmrc3: VMRC3
 			l_replicated_features_present: BOOLEAN
+			l_has_old_feature_replication: BOOLEAN
 		do
+			l_has_old_feature_replication := System.has_old_feature_replication
 			l_replicated_features_present := count > 1
 			if l_replicated_features_present then
 					-- There is more than one inheritance info object in `Current'
 					-- so therefore we process a feature replication.
 				process_replication (old_t, new_t)
+			elseif first.parent /= Void and then first.parent.is_non_conforming then
+					-- If the feature is solely coming from a non-conforming class
+					-- then it must be replicated in the current class
+				process_replication (old_t, new_t)
+				l_replicated_features_present := True
 			end
 				-- Set the selected feature to the first element in the selection list.
 			l_selected_feature := first.a_feature
@@ -110,6 +117,19 @@ end;
 					-- We want to leave the list of replicated features in the list so that we can
 					-- use this for inheritance branch determination.
 				wipe_out
+			elseif l_has_old_feature_replication then
+					-- We have legacy feature replication so we only replicate non-conforming features.
+				from
+					start
+				until
+					after
+				loop
+					if item.parent = Void or else not item.parent.is_non_conforming then
+						remove
+					else
+						forth
+					end
+				end
 			end
 
 			if l_selected_feature = Void then
@@ -347,8 +367,6 @@ feature -- Conceptual Replication
 			-- Process conceptual replication. The only routines left under the
 			-- same routine_id will have different feature names. Hence, all
 			-- these features will be replicated.
-		require
-			require_replication: count > 1
 		local
 			replication: FEATURE_I
 			inh_info: INHERIT_INFO

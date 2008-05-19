@@ -104,7 +104,6 @@ feature
 					-- instead of calling a needless extra 'forth'
 				i := count
 				l_keys := keys
-				l_process_replication := not System.has_old_feature_replication
 			until
 				i = 0
 			loop
@@ -114,8 +113,7 @@ feature
 
 						-- Check if replication was processed.
 						-- All non replicated features get removed during selection processing.
-					if l_process_replication and then
-					content [l_iteration_position].count > 0 then
+					if content [l_iteration_position].count > 0 then
 						if l_replicated_feature_set = Void then
 							create l_replicated_feature_set.make
 						end

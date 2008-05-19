@@ -86,7 +86,6 @@ static  void    rseq (int);
 static  char    *rbuf (int);
 static  void    print_line (void);
 static  void    print_dtype (uint32);
-static  void    print_ctype (short);
 
 /*------------------------------------------------------------------*/
 
@@ -1116,16 +1115,6 @@ static  void    print_dtype (uint32 type)
 	{
 		fprintf (mfp,"VOID");
 	}
-}
-/*------------------------------------------------------------------*/
-
-static  void    print_ctype (short type)
-
-{
-	if (type <= ctype_max)
-		fprintf (mfp, " [%d : %s]", (int) type, ctype_names [type]);
-	else
-		fprintf (mfp, " [%d : ?]", (int) type);
 }
 /*------------------------------------------------------------------*/
 

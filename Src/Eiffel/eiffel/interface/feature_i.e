@@ -506,7 +506,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in or else (is_replicated and then a_class.class_id = access_in and then not System.has_old_feature_replication)
+			Result := a_class.class_id = written_in or else (has_replicated_ast and then a_class.class_id = access_in)
 		end
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
@@ -514,7 +514,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in or else (is_replicated and then a_class.class_id = access_in and then not System.has_old_feature_replication)
+			Result := a_class.class_id = written_in or else (has_replicated_ast and then a_class.class_id = access_in)
 		end
 
 	frozen to_implement_in (a_class: CLASS_C): BOOLEAN is

@@ -82,7 +82,6 @@ test	corrupted_trace			except020 tcf pass exception
 test 	top_n_call_incorrect		except021 tcf pass exception
 test	incorrect_local_restoration	except022 tcf pass exception
 
-
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance	noncon001 tcf pass
 test non-conforming-inheritance-conformance	noncon002 tcf pass
@@ -95,6 +94,8 @@ test non-conforming-inheritance-client-incrementality	noncon008 tcf pass
 test non-conforming-finalization-postcondition-violation	noncon009 tcf pass
 test no-repeated-non-conforming-inheritance noncon010 tcf pass
 test repeated-non-conforming-inheritance-of-generic-type noncon011 tcf pass
+test repeated-non-conforming-inheritance-of-generic-type-from-parents noncon012 tcf pass
+test feature-inherits-export-status noncon013 tcf pass
 
 -- For testing only
 

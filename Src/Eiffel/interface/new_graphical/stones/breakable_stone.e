@@ -151,7 +151,7 @@ feature -- Basic operations
 			item.select_actions.extend (agent (abp: BREAKPOINT)
 					do
 						if abp /= Void then
-							(create {EV_SHARED_APPLICATION}).ev_application.clipboard.set_text (abp.to_tag_path)
+							(create {EV_SHARED_APPLICATION}).ev_application.clipboard.set_text ("bp:" + abp.to_tag_path)
 						end
 					end(bp)
 				)

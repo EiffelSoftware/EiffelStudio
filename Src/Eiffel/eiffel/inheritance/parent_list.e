@@ -17,7 +17,7 @@ feature -- Merging parents
 			-- Go through each parents and merge them into `inherit_table'
 			-- Check also the renaming clause of the parents
 		local
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			from
 					-- Add non-conforming parents to the list first.
@@ -27,18 +27,13 @@ feature -- Merging parents
 					-- We can then check to see if the parent is non-conforming, this
 					-- will mean that it needs to be replicated as a conforming version
 					-- is not present (see {INHERIT_FEAT}.process_features)
-				--| FIXME IEK The ordering should not have a difference on compilation
-				--| but the validity of redefined features seems to be checked after selection.
---				i := count - 1
-				nb := count
+				i := count - 1
 			until
---				i < 0
-				i = nb
+				i < 0
 			loop
 				inherit_table.merge_features_of_parent_c (area [i])
 					-- Renaming is checked during the merge.
-				i := i + 1
---				i := i - 1
+				i := i - 1
 			end
 		end
 

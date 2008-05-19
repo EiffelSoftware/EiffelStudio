@@ -91,7 +91,6 @@ feature
 		local
 			i, l_iteration_position: INTEGER
 			l_keys: like keys
-			l_process_replication: BOOLEAN
 			l_replicated_feature_set: LINKED_LIST [SELECTION_LIST]
 			l_selection_list: SELECTION_LIST
 			l_feature_replication_generator: AST_FEATURE_REPLICATION_GENERATOR

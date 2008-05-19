@@ -41,7 +41,7 @@ debug=''
 #optimize='-Od -GS'
 #debug='-Zi'
 
-warning_level='-W3 -D_CRT_SECURE_NO_DEPRECATE -wd4996'
+warning_level='-W3 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE'
 dll_flags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc -OUT:$@'
 dll_libs='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib'
 #

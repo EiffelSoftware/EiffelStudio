@@ -1098,8 +1098,8 @@ feature -- Access
 			a_descendant_not_void: a_descendant /= Void
 			a_descendant_valid: a_descendant.is_valid
 			a_descendant_compiled: a_descendant.has_feature_table
-			real_descendant: System.has_old_feature_replication implies a_descendant.simple_conform_to (a_ancestor)
-			a_feature_valid: (System.has_old_feature_replication and a_feature /= Void) implies
+			real_descendant: (a_feature = Void or else not a_feature.has_replicated_ast) implies a_descendant.simple_conform_to (a_ancestor)
+			a_feature_valid: (a_feature /= Void and then not a_feature.has_replicated_ast) implies
 				(a_feature.access_class.simple_conform_to (a_ancestor) and
 				a_descendant.simple_conform_to (a_feature.access_class))
 			is_feature_needed: has_like_argument implies a_feature /= Void

@@ -1696,34 +1696,6 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 	opush(item);
 	}
 
-rt_private EIF_BOOLEAN app_recv_ack (EIF_PSTREAM sp)
-{
-	Request pack;
-
-	Request_Clean (pack);
-#ifdef EIF_WINDOWS
-	if (-1 == app_recv_packet(sp, &pack, TRUE))
-#else
-	if (-1 == app_recv_packet(sp, &pack))
-#endif
-		return (EIF_BOOLEAN) 0;
-
-	switch (pack.rq_type) {
-	case ACKNLGE:
-
-		switch (pack.rq_ack.ak_type) {
-		case AK_OK:
-			return (EIF_BOOLEAN) 1;
-		case AK_ERROR:
-			return (EIF_BOOLEAN) 0;
-		default:
-			return (EIF_BOOLEAN) 0;
-		}
-	default:
-		return (EIF_BOOLEAN) 0;
-	}
-}
-
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
 {
 	/* Dump the rt_extension_obj */

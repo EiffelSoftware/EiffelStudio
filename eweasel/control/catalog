@@ -83,19 +83,20 @@ test 	top_n_call_incorrect		except021 tcf pass exception
 test	incorrect_local_restoration	except022 tcf pass exception
 
 -- Non Conforming Inheritance
-test basic-non-conforming-inheritance	noncon001 tcf pass
-test non-conforming-inheritance-conformance	noncon002 tcf pass
-test non-conforming-inheritance-incrementality	noncon003 tcf pass
-test non-conforming-inheritance-parent-incrementality	noncon004 tcf pass
-test non-conforming-inheritance-is-not-selectable	noncon005 tcf fail
-test non-conforming-parent-can-be-frozen	noncon006 tcf pass
-test at-least-one-conforming-inheritance-path	noncon007 tcf fail
-test non-conforming-inheritance-client-incrementality	noncon008 tcf pass
-test non-conforming-finalization-postcondition-violation	noncon009 tcf pass
-test no-repeated-non-conforming-inheritance noncon010 tcf pass
-test repeated-non-conforming-inheritance-of-generic-type noncon011 tcf pass
-test repeated-non-conforming-inheritance-of-generic-type-from-parents noncon012 tcf pass
-test feature-inherits-export-status noncon013 tcf pass
+test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming
+test non-conforming-inheritance-conformance		noncon002 tcf pass non-conforming
+test non-conforming-inheritance-incrementality	noncon003 tcf pass non-conforming
+test non-conforming-inheritance-parent-incrementality	noncon004 tcf pass non-conforming
+test non-conforming-inheritance-is-not-selectable	noncon005 tcf fail non-conforming
+test non-conforming-parent-can-be-frozen		noncon006 tcf pass non-conforming
+test at-least-one-conforming-inheritance-path	noncon007 tcf fail non-conforming
+test non-conforming-inheritance-client-incrementality	noncon008 tcf pass non-conforming
+test non-conforming-finalization-postcondition-violation	noncon009 tcf pass non-conforming
+test no-repeated-non-conforming-inheritance		noncon010 tcf pass non-conforming
+test repeated-non-conforming-inheritance-of-generic-type	noncon011 tcf pass
+test repeated-non-conforming-inheritance-of-generic-type-from-parents	noncon012 tcf pass non-conforming
+test feature-inherits-export-status				noncon013 tcf pass non-conforming
+test non-conform-once-inheritance				noncon014 tcf pass non-conforming
 
 -- For testing only
 

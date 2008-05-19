@@ -1,0 +1,12 @@
+test_name feature-inherits-export-status
+test_description Features received from non-conforming inheritance should inherit export status from parents.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw p1.e $CLUSTER p1.e
+copy_raw p2.e $CLUSTER p2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

@@ -60,7 +60,8 @@ feature -- Comparison
 		do
 			Result := equal (cluster_name, other.cluster_name) and
 				equal (class_type_name, other.class_type_name) and
-				equal (feature_name, other.feature_name)
+				equal (feature_name, other.feature_name) and
+				is_all_root = other.is_all_root
 		end
 
 feature -- Output

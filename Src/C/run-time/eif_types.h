@@ -435,7 +435,7 @@ struct dbinfo {
                                         /* and after the end of the root creation. it avoids the    	*/
                                         /* application to stop after its end when garbage collector 	*/
                                         /* destroys objects                                         	*/
-	union {
+	struct {
 		struct {
 			int pos; 
 			EIF_TYPE_INDEX expect; 

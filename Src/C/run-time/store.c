@@ -1902,7 +1902,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 			widr_multi_uint16 (gtypes + i, 2);
 			i += 1;
 		} else {
-			if (gtype >= 0) {
+			if (gtype <= MAX_DTYPE) {
 				gtype = RTUD (gtype);
 			}
 			widr_multi_uint16 (&gtype, 1);

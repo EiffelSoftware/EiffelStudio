@@ -264,7 +264,7 @@ int main(int argc, char **argv)
 					continue;
 				}
 				getarg(ps->c_args, buf);
-				fprintf(output_file, "%ld", (ps->c_off)());
+				fprintf(output_file, "%ld", (long) (ps->c_off)());
 				continue;
 			}
 			buf[pos++] = (char) c;
@@ -343,6 +343,7 @@ rt_private size_t nextarg(void)
 	int pos = 0;
 	char buf[BUFSIZ];
 	size_t val;
+	long read_val;
 
 	buf[pos] = '\0';
 
@@ -355,7 +356,8 @@ rt_private size_t nextarg(void)
 			if (pos == 0)
 				return INVALID_VALUE;
 			buf[pos] = '\0';
-			sscanf(buf, "%ld", &val);
+			sscanf(buf, "%ld", &read_val);
+			val = (size_t) read_val;
 			return val;
 		}
 		buf[pos++] = (char) c;

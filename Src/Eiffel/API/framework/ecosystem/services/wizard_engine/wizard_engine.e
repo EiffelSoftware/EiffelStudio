@@ -15,7 +15,6 @@ inherit
 
 	SAFE_AUTO_DISPOSABLE
 
-inherit {NONE}
 	KL_SHARED_FILE_SYSTEM
 
 feature -- Basic operations

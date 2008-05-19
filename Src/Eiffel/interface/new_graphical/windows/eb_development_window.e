@@ -121,7 +121,6 @@ inherit
 
 	HASHABLE
 
-inherit {NONE}
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

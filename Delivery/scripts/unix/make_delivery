@@ -257,7 +257,8 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_unix_layout $EXPORT_DIR
 	copy make_debian_package $EXPORT_DIR
 	copy make_rpm_package $EXPORT_DIR
-	copy packaging $EXPORT_DIR
+	# We checkout to avoid having to include the subversion specific directories
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/scripts/unix/packaging $EXPORT_DIR/packaging
 		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.
 	cd $EXPORT_DIR
 	rm -f tmp

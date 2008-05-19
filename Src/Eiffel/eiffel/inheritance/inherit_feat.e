@@ -240,7 +240,7 @@ feature
 				check_deferred (cl)
 			end
 			if features.count > 0 then
-				check_features (cl, feature_name_id)
+				process_features (cl, feature_name_id)
 			end
 		end
 
@@ -308,7 +308,7 @@ feature
 			rout_id_set.update (deferred_features)
 		end
 
-	check_features (cl: CLASS_C; feature_name_id: INTEGER) is
+	process_features (cl: CLASS_C; feature_name_id: INTEGER) is
 			-- Process the non-deferred inherited features.
 		require
 			features /= Void;

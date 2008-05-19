@@ -16,7 +16,6 @@ inherit
 			dispose as clean_up
 		end
 
-inherit {NONE}
 	SHARED_DYNAMIC_API_LOADER
 		export
 			{NONE} all

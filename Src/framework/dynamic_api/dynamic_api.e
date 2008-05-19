@@ -16,7 +16,6 @@ inherit
 			{NONE} all
 		end
 
-inherit {NONE}
 	SHARED_DYNAMIC_API_LOADER
 		export
 			{NONE} all

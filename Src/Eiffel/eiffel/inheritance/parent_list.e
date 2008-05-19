@@ -20,16 +20,20 @@ feature -- Merging parents
 			i, nb: INTEGER
 		do
 			from
-					-- Add conforming parents to the list first
-					-- When we add non-conforming parents, any features
-					-- not found in the list will be replicated.
-				nb := count
+					-- Add non-conforming parents to the list first.
+					-- This will leave any features from conforming
+					-- branches as the first item in the list which is
+					-- the version we wish to take should the features be the same.
+					-- We can then check to see if the parent is non-conforming, this
+					-- will mean that it needs to be replicated as a conforming version
+					-- is not present (see {INHERIT_FEAT}.process_features)
+				i := count - 1
 			until
-				i = nb
+				i < 0
 			loop
 				inherit_table.merge_features_of_parent_c (area [i])
 					-- Renaming is checked during the merge.
-				i := i + 1
+				i := i - 1
 			end
 		end
 

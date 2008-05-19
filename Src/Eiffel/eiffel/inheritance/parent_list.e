@@ -27,13 +27,18 @@ feature -- Merging parents
 					-- We can then check to see if the parent is non-conforming, this
 					-- will mean that it needs to be replicated as a conforming version
 					-- is not present (see {INHERIT_FEAT}.process_features)
-				i := count - 1
+				--| FIXME IEK The ordering should not have a difference on compilation
+				--| but the validity of redefined features seems to be checked after selection.
+--				i := count - 1
+				nb := count
 			until
 				i < 0
+				i = nb
 			loop
 				inherit_table.merge_features_of_parent_c (area [i])
 					-- Renaming is checked during the merge.
-				i := i - 1
+				i := i + 1
+--				i := i - 1
 			end
 		end
 

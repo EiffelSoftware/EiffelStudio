@@ -10,7 +10,7 @@ class CLASS_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
-			is_equivalent, start_location, end_location,
+			is_equivalent,
 			first_token, last_token
 		end
 

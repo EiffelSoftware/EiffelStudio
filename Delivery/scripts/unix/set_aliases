@@ -178,7 +178,10 @@ cd F_code
 $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
 if [ ! -f $1 ]; then
 	remtrace Couldnt generate $1
-	CANCEL
+	# Do not cancel if requested by providing a 2nd argument.
+	if [ -z "$2" ]; then
+		CANCEL
+	fi
 fi
 strip $1
 mv $1 ..

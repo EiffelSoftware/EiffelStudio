@@ -3,23 +3,20 @@
 <paragraph>	
 	<paragraph>This tool is used to precise whether the debugger stops or continues on specific exceptions.<line_break/>
 	    To show this tool, go to menu : <bold>Debug > Exception handling</bold> .<line_break/>
-	    Note their are two versions of this tool, one for Classic system, and one for Dotnet system.
+	    Note: now that exception are object in Eiffel too, the mechanism is unified for classic and dotnet system using the Eiffel exception class names.
 	    </paragraph>
 
-<heading><size>2</size>Exception handling for classic system</heading>
-<paragraph>		If the "exception handling" is enabled, by double clicking on a row, you choose to stop (default) or continue on the corresponding exception. 
-		In the following picture, we stop on every exception except the "Rescue exception".</paragraph>
-		<paragraph><alignment>center</alignment><image><url>../../../../images/eiffelstudio/debugger/exceptions_handling_classic.png</url><alt_text>Exception handling tool for classic</alt_text></image></paragraph>
+<heading><size>2</size>Exception handling dialog</heading>
+<paragraph>		If the "filter exceptions" is enabled, for each exception you can leave the exception action as <bold>Disabled</bold> (default behavior: catch), <bold>Catch</bold> (stop on such exception), <bold>Ignore</bold> (do not stop on such exception). 
+By double clicking on the exception name you toggle Ignore/Catch.</paragraph>
+		<paragraph>In the following picture, we stop on every exception except the "External Exception".</paragraph>
+		<paragraph><alignment>center</alignment><image><url>../../../../images/eiffelstudio/debugger/exceptions_handling_tool.png</url><alt_text>Exception handling tool</alt_text></image></paragraph>
 <paragraph>
-	    </paragraph>
+<tip>Using the "Pattern" field, you can add you own filter using regular expression.</tip>
+    </paragraph>
 	    
-<heading><size>2</size>Exception handling for dotnet system</heading>
-<paragraph>		If the "exception handling" is enabled, you can precise which exception you want to catch or to ignore, for that you add a list of rules (regular expressions) which will be evaluated from the top to the bottom if needed.
-		In the following picture, we tell the debugger to ignore any exception, but to stop if the Exception name starts by "EiffelSoftware.Runtime.", this means ignore any non Eiffel exceptions (alias Ingore external exceptions).
-		 For each line you can choose "Disabled" to <italic>comment</italic> the current rule.</paragraph>
-		<paragraph><alignment>center</alignment><image><url>../../../../images/eiffelstudio/debugger/exceptions_handling_dotnet.png</url><alt_text>Exception handling tool for dotnet</alt_text></image></paragraph>
-<paragraph>
-	    </paragraph>	    
+<heading><size>2</size>Cat call detection during the execution</heading>
+<paragraph>This dialog also provides a way to disable/enable the cat call warning on the console or in the debugger with the first two checkbox fields.</paragraph>
 		
  	</paragraph>
 </document>

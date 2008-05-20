@@ -36,15 +36,11 @@
 		</warning>
 		<warning><bold>Restriction</bold>: there are a few restrictions or known issues you should be aware of :
 		<line_break></line_break>
-		<line_break></line_break>		
-			- creation expressions are not supported (for instance "create {MY_CLASS}.make"  is not supported").
 		<line_break></line_break>
 			- agent are not supported (for instance "agent my_function" is not supported".
 			<line_break></line_break>
 			<line_break></line_break>			
 			<italic>for classic system</italic>:
-			<line_break></line_break>
-			-  expression evaluation on expanded objects are not supported for now (except for basic types)
 			<line_break></line_break>
 			- evaluate "Precusor" will result the current feature's result (not the precursor)
 		</warning>

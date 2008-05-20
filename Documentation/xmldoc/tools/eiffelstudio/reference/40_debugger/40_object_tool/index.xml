@@ -17,18 +17,6 @@
 			</item>
 			<item>
 				<link>
-					<url>05_local_view.xml</url>
-					<label>Local view</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>10_object_view.xml</url>
-					<label>Object view</label>
-				</link>
-			</item>
-			<item>
-				<link>
 					<url>15_attribute_symbols.xml</url>
 					<label>Attribute symbols</label>
 				</link>

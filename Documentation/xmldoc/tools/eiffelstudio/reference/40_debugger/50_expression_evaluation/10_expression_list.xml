@@ -1,4 +1,4 @@
-<document title="Evaluation tool" output="studio">
+<document title="Evaluation tool or Watch tool" output="studio">
 	<meta_data>
 		<help>
 			<meta>
@@ -35,7 +35,12 @@
 		</tip>
 		<paragraph>On top of the list, four buttons can be found.</paragraph>
 		<list ordered="false">
-			<item>the first button <image><url>/images/eiffelstudio/icons/10x10/toolbar_dropdown_icon.png</url></image> is used to create/close watch tools via a menu popup</item>
+			<item>the button <image><url>/images/eiffelstudio/icons/10x10/toolbar_dropdown_icon.png</url></image> is used to create/close watch tools via a menu popup</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/10x10/debugger_auto_values.png</url>
+				</image> Enable or disable auto expressions.
+			</item>			
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/10x10/new_expression_icon.png</url>
@@ -81,7 +86,12 @@
 						 Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
 				<line_break/>
 			</item>			
-
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/10x10/execution_object_storage_icon.png</url>
+				</image> This button is used to remotely store or load a "stored" object (check <link><label>remote object storage</label><url>../52_debuggee_object_storage.xml</url></link>).
+				<line_break/>
+			</item>			
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/10x10/general_delete_icon.png</url>
@@ -89,7 +99,7 @@
 				<line_break/> The associated key shortcut is Del.
 			</item>
 			<item>And the last two buttons are used to move up and down the expressions.
-			You can also move the expressions up and down using [CONTROL] + [PAGE UP] or [CONTROL] + [PAGE DOWN].
+			You can also move the expressions up and down using [CONTROL] + [-] or [CONTROL] + [+].
 			</item>
 		</list>
 		<tip>

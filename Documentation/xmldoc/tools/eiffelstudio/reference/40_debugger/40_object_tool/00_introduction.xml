@@ -6,34 +6,58 @@
 				<url>../../../../../images/eiffelstudio/debugger/object_tool.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The object tool is a debugging tool that displays extended dynamic information concerning one or several objects while debugging an application. This information includes the value of all their attributes, as well as the values of the once functions that have already been called.</paragraph>
-		<paragraph>It is mainly composed of two grids (with tree view), the 
+		<paragraph>The object tool is a debugging tool that displays extended dynamic information concerning one or several objects while debugging an application. 
+		This information includes the value of all their attributes, as well as the values of the once functions that have already been called.</paragraph>
+
+		<paragraph>By default it is composed of one grid, which gives information about the 
 			<link>
-				<url>05_local_view.xml</url>
-				<label>local view</label>
-			</link> and the 
-			<link>
-				<url>10_object_view.xml</url>
-				<label>object view</label>
-			</link>. In the toolbar are located two commands that facilitate browsing the trees: the 
+				<url>../30_call_stack_tool/00_introduction.xml</url>
+				<label>current stack element</label>
+			</link>. Namely, it provides the Current object value, the arguments' value of corresponding feature, the value of the local variables, 
+			as well as the value of the Result (if this feature is a function). 
+		</paragraph>
+
+		<paragraph>When an exception occurs (for instance, an assertion violation), the objects tool will also display the exception information:
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/objects_tool_exception.png</url>
+				</image>
+			</paragraph>
+		</paragraph>				
+
+	<paragraph><bold>Specific case for .NET system :</bold> when the system is stopped, the first item of the local view displays the module name for the feature where we are stopped.
+	</paragraph>	
+	
+<paragraph>All objects can be expanded to see the value of their attributes. 
+They are also pickable, so that it is possible to drop them onto the <bold>objects tool</bold>
+ ,  an  <link><url>../50_expression_evaluation/index.xml</url><label>expression evaluator tool</label></link> (alias Watch tools), or an editor. <line_break></line_break>
+ It is also possible to use the 
+			<link><url>20_slice_size_command.xml</url><label>set slice size command</label>
+			</link> with <link><url>/libraries/base/reference/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or 
+			<link><url>/libraries/base/reference/native_array_chart.xml</url><label><class_name>NATIVE_ARRAY</class_name></label></link> (dotnet) objects.
+		</paragraph>
+	<paragraph>	
+  </paragraph>				
+
+<paragraph><bold>The tool bar buttons:</bold><line_break></line_break>
+- the 
 			<link>
 				<url>30_remove_object_command.xml</url>
 				<label>remove object command</label>
 			</link> 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/10x10/general_delete_icon.png</url>
-			</image> and the 
+			</image>
+			<line_break></line_break>
+-  the 
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
 			</link> 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_set_sizes_icon.png</url>
-			</image>.
-</paragraph><paragraph>	
-		
-			The third command 
-			<image>
+			</image>.<line_break></line_break>
+			- the button <image>
 				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_expand_info_icon.png</url>
 			</image> can give an 
 			<link>
@@ -42,13 +66,28 @@
 			</link> 			
 			 of the string relative to an object, by dropping the object onto the button (or pressing Ctrl+E on the selected value). 
 			 Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
-</paragraph><paragraph>
-			And the last command 
+<line_break></line_break>
+			-  the button 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_show_hex_value_icon.png</url>
-			</image> switch the display of integer values between decimal and hexadecimal format.
-
+			</image> switch the display of integer values between decimal and hexadecimal format.<line_break></line_break>
+			-  and the button 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/10x10/execution_object_storage_icon.png</url>
+			</image> controls the <link><url>../52_debuggee_object_storage.xml</url><label>remote object storage</label></link>.			
 		</paragraph>
-		By default, the object tool displays the full generating type for object, but this can be changed for speed concern in the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>. The same way, through the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>, the user can enable or disable the evaluation of the <link><url>17_debug_output.xml</url><label>Debug Output</label></link> feature .
+				
 		
+	<paragraph><bold>Tips:</bold><line_break></line_break>
+	The tool's layout can be customized to have 2 side-by-side "left" and "right" grids holding the various information. This can be done using the button (<image><url>../../../../../images/eiffelstudio/icons/10x10/toolbar_dropdown_icon.png</url></image>) from the tool bar which open the objects tool menu and then select "Edit Layout".
+	</paragraph>
+		<paragraph><alignment>center</alignment>
+	<image><url>../../../../../images/eiffelstudio/debugger/object_tool_layout_editor.png</url></image>
+	</paragraph>
+	
+	<note>	By default, the object tool displays the full generating type for object, but this can be changed for speed concern in the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>. The same way, through the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>, the user can enable or disable the evaluation of the <link><url>17_debug_output.xml</url><label>Debug Output</label></link> feature .</note>
+		<note>When a row has a pink background, this indicates the value is different from previous step </note>
+		
+<tip><bold>Tip</bold>: You can use the <link><url>../50_expression_evaluation/index.xml</url><label>expression evaluator tools</label></link> (alias watch tools) to have the same features with even more functionalities</tip>		
+	
 	</paragraph></document>

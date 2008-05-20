@@ -1,27 +1,41 @@
-<document title="Expanded display" output="studio">
+<document title="Object Viewer (also known as Expanded display)" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
-		<paragraph>Located in the object tool toolbar, this command 
+		<paragraph>You can either show the "Object Viewer" tool (Menu Execution>Tools>Object Viewer, 
+		or popup the object viewer dialog thanks to the button located in the tool bar of the <link><label>objects tool</label><url>index.xml</url></link> and <link><label>watch tool</label><url>../50_expression_evaluation/index.xml</url></link>.
+		<line_break></line_break>
+		This command 
 			<image>
 				<url>/images/eiffelstudio/icons/10x10/debugger_expand_info_icon.png</url>
-			</image> opens an Expanded display dialog when an object is dropped onto the button. 
-<line_break></line_break>			
-			The dropped object needs to have a string representation of its value, for instance an object conform to <link><url>/libraries/base/reference/string_8_chart.xml</url><label><class_name>STRING</class_name></label></link>
+			</image> opens an object viewer dialog when an object is dropped onto the button. 
+		</paragraph>
+		<paragraph>
+			Depending the nature of the dropped object, you can view it with several viewers:
+			<list ordered="false">
+			<item><bold>Object dump</bold>: dump a text representation of the value</item>
+			<item><bold>String display</bold>: string representation</item>
+			<item><bold>XML display</bold>: xml viewer</item>
+			<item><bold>Object browse</bold>: browse the object, as you would do in objects or watch tools</item>
+			<item><bold>Object internal</bold>: display a few internal data such as <code>class_name</code>, <code>type_name</code>, <code>dynamic_type</code>, <code>field_count</code>, <code>deep_physicial_size</code>, and <code>physical_size</code></item>			
+			</list>
+			<note>Note that the "string display" viewer is  available for object with a string representation, for instance object conformed to <link><url>/libraries/base/reference/string_8_chart.xml</url><label><class_name>STRING</class_name></label></link>
 			 or conform to  <link><url>/libraries/base/reference/debug_output_chart.xml</url><label><class_name>DEBUG_OUTPUT</class_name></label></link> (see 
 			<link>
 				<url>17_debug_output.xml</url>
 				<label>Debug Output</label>
-			</link>)
-
+			</link>)</note>
+		<note>And the "XML display" is available for object eligible to "String display", and whose string representation has XML content. The viewer is display XML in a basic tree enabled grid.</note>
 		</paragraph>
-		<paragraph>This dialog show the object as a string, by default the displayed length is 50:</paragraph>
+		
+		<paragraph><bold>String display viewer:</bold>:<line_break></line_break>
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/expanded_display_default.png</url>
+				</image>
+			</paragraph>			
 		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/debugger/expanded_display_default.png</url>
-			</image>
-		</paragraph>
-		<paragraph>If the limits are over the current slice limits, the displayed string will end by "..." to show there is more.
-	<line_break></line_break>
+		Displays the object as a string, by default the displayed length is 50:<line_break></line_break>
+		If the limits are over the current slice limits, the displayed string will end by "..." to show there is more.<line_break></line_break>
 			 If you click on the auto expand button 
 			<image>
 				<url>/images/eiffelstudio/icons/16x16/debugger_object_expand_icon.png</url>
@@ -31,6 +45,39 @@
 			<image>
 				<url>/images/eiffelstudio/icons/16x16/general_word_wrap_icon.png</url>
 			</image>.		
-
 		</paragraph>
+		</paragraph>
+		
+		<paragraph><bold>Object dump viewer:</bold>
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/object_viewer_dump.png</url>
+				</image>
+			</paragraph>			
+		</paragraph>
+		
+		<paragraph><bold>Object browse viewer:</bold>
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/object_viewer_browse.png</url>
+				</image>
+			</paragraph>			
+		</paragraph>		
+		
+		<paragraph><bold>Object internal viewer:</bold>
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/object_viewer_internal.png</url>
+				</image>
+			</paragraph>			
+		</paragraph>			
+		
+		<paragraph><bold>XML viewer:</bold>
+			<paragraph><alignment>center</alignment>
+				<image>
+					<url>/images/eiffelstudio/debugger/object_viewer_xml.png</url>
+				</image>
+			</paragraph>			
+		</paragraph>			
+		
 	</paragraph></document>

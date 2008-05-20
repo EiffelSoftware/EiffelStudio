@@ -47,7 +47,55 @@
 			<line_break/>
 		</paragraph>
 			<paragraph>		
-			"Edit condition" allows the user to set a condition for stopping.
+			"Edit This Breakpoint" allows the user to edit the parameters of the breakpoint (condition, hit count, when hits actions...) thanks to the breakpoint dialog.
+			This dialog provides on hte first tab "Context": access to the associated tags, condition, and hit count control. And on the second tab, it allows to associate "When hits..." action(s) to the breakpoint.
+			<paragraph>	<alignment>center</alignment>
+<table>
+<row>
+<cell>
+<paragraph>Context's tab</paragraph>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_context.png</url><legend>Context's tab</legend>
+			</image>			
+</cell>
+<cell>
+<paragraph>When hits action 's tab</paragraph>
+
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_when_hits_action.png</url><legend>When hits... 's tab</legend>
+			</image>			
+
+</cell>
+</row>
+</table>			
+			</paragraph>
+			<paragraph>
+			<list ordered="false">
+			<item>The tags allow to identified a collection of breakpoints, either from the <link><url>30_breakpoint_information.xml</url><label>breakpoints tool</label></link>, or even in the parameters of "When hits .." actions. 
+			<line_break></line_break>
+			Note that any existing breakpoint can be referenced by an implicit tag with <italic>"<bold>bp:</bold>cluster.{CLASS}.feature@index"</italic> (cluster is not mandatory).<line_break></line_break>
+			<sample>For instance "<bold>bp:</bold>elks.{LINKED_LIST}.extend@2"</sample>
+			</item>
+			<item>the "Condition" allows the user to set a condition for stopping.	</item>
+			<item>the "Hit count" allows the user to set a condition on hitcount for stopping.	</item>
+			<item>And the "When Hits..." allows to associate specific actions to the breakpoint:
+				<list ordered="false">
+				<item>Print message: display the expanded message to the output (there are predefined variables, and you can also evaluate expressions).</item>
+				<item>Disable/Restore Assertion Checking: this might be useful to desactivate assertion checking on a specific part of the execution.</item>
+				<item>Record Execution: start or stop the execution recording (cf: <link><url>../35_execution_replay.xml</url><label>Execution recording and replay</label></link>)</item>
+				<item>Enable/Disable Breakpoints: either use tags or implicit tags (ex: <italic>"bp:elks.{LINKED_LIST}.extend@2"</italic>), to reference a set of existing breakpoints. 
+				This can be pretty useful to enable a breakpoint only if the execution takes a specific execution path.</item>
+				<item>Reset Hits count</item>
+				</list>		
+			</item>
+			
+			</list>
+			</paragraph>
+			
+		</paragraph>
+			
+			<paragraph>		
+			"Edit Condition" allows the user to set a condition for stopping, it opens the same dialog as "EditThis Breakpoint", but focus on the "condition" field.
 		</paragraph>
 			<paragraph>	<alignment>center</alignment>		
 			<image>

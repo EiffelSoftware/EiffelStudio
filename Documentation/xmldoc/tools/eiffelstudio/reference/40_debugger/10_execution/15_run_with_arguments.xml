@@ -50,6 +50,7 @@
 		<paragraph>The dialog allows you to manage different execution profiles to specify parameters to be passed to the system at execution time. </paragraph>
 		<paragraph>Each profile allows to set a title, the <bold>arguments</bold>, the <bold>working directory</bold>, and you can also set your own <bold>environment variables</bold>.</paragraph>
 		<paragraph>To use a profile, just select it by clicking the corresponding line in the grid..</paragraph>
-		<paragraph>Once the appropriate execution profile is selected then the system can be run with those parameters using the Run or Run &amp; Close buttons.  The latter runs the system and also closes the dialog.  To run without any particular parameter select <bold>default</bold> 's profile.</paragraph>
+		<paragraph>Once the appropriate execution profile is selected then the system can be run with those parameters using the Run button  (If "Keep Dialog Open" is selected the dialog remains opened).<line_break></line_break>
+		To run without any particular parameter select <bold>default</bold> 's profile.</paragraph>
 		<paragraph>If you click on "Run Workbench" or "Run Finalized", the system will be executed outside EiffelStudio (thus no debugging)..</paragraph>		
 	</paragraph></document>

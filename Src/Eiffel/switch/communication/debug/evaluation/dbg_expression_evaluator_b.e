@@ -1361,7 +1361,11 @@ feature {NONE} -- EXPR_B evaluation
 			if cf = Void then
 				notify_error_evaluation ("Unable to get Current call stack element's routine")
 			else
-				dv :=  cse.locals.i_th (l_local_b.position)
+				if {ot: OBJECT_TEST_LOCAL_B} l_local_b then
+					dv :=  cse.object_test_local_value (l_local_b.position)
+				else
+					dv :=  cse.local_value (l_local_b.position)
+				end
 				tmp_result_value := dv.dump_value
 				tmp_result_static_type := tmp_result_value.dynamic_class
 				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....

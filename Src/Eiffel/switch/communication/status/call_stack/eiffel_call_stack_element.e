@@ -102,6 +102,34 @@ feature -- Properties
 		deferred
 		end
 
+	local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE is
+			-- Local value at position `i'
+		require
+			routine_attached: routine /= Void
+		local
+			locs: like locals
+		do
+			locs := locals
+			if locs /= Void then
+				Result := locs.i_th (i)
+			end
+		end
+
+	object_test_local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE is
+			-- Local value at position `i'
+		require
+			routine_attached: routine /= Void
+		local
+			locs: like locals
+		do
+			locs := locals
+			if locs /= Void then
+				if {lst: EIFFEL_LIST [TYPE_DEC_AS]} routine.locals then
+					Result := locs.i_th (lst.count + i)
+				end
+			end
+		end
+
 	locals: LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Value of local variables
 		local
@@ -163,7 +191,6 @@ feature -- Properties
 				end
 			end
 		end
-
 
 feature -- Stack reset
 

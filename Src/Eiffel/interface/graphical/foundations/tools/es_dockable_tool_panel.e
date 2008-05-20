@@ -699,6 +699,13 @@ feature {NONE} -- Status report
             Result := False
         end
 
+	is_tool_bar_separated: BOOLEAN
+			-- Indicates if there should be a tool bar separator drawn on the UI to separate
+			-- the tool bar from the user widget.
+		do
+			Result := False
+		end
+
 feature {NONE} -- Action handlers
 
 	frozen on_shown
@@ -845,6 +852,7 @@ feature {NONE} -- Factory
             l_hs: EV_HORIZONTAL_SEPARATOR
             l_tool_bar: like tool_bar_widget
             l_right_tool_bar: like right_tool_bar_widget
+            l_border: EV_CELL
         do
             l_tool_bar := tool_bar_widget
             l_right_tool_bar := right_tool_bar_widget
@@ -878,12 +886,31 @@ feature {NONE} -- Factory
                 l_hs.set_minimum_height (2)
                 Result.extend (l_hs)
                 Result.disable_item_expand (l_hs)
+
+                if is_tool_bar_separated then
+                		-- Add separator
+					create l_border
+					l_border.set_minimum_height (1)
+					l_border.set_background_color (colors.stock_colors.color_3d_shadow)
+	                Result.extend (l_border)
+	                Result.disable_item_expand (l_border)
+                end
             end
+
             Result.extend (l_top_padding)
             Result.disable_item_expand (l_top_padding)
             Result.extend (l_container)
             Result.disable_item_expand (l_container)
+
             if not is_tool_bar_bottom_aligned then
+                if is_tool_bar_separated then
+                		-- Add separator
+					create l_border
+					l_border.set_minimum_height (1)
+					l_border.set_background_color (colors.stock_colors.color_3d_shadow)
+	                Result.extend (l_border)
+	                Result.disable_item_expand (l_border)
+                end
                 Result.extend (a_widget)
             end
         ensure

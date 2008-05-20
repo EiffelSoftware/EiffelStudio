@@ -231,16 +231,12 @@ feature -- Commands
 		end
 
 	set_stone (a_stone: STONE) is
-			-- Dispatch stone to tools.
+			-- Dispatch stone to tools for linking
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
-			develop_window.eb_debugger_manager.set_stone (a_stone)
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)
-			if eiffel_layout.has_diagram then
-				 diagram_tool.set_stone (a_stone)
-			end
 			set_stone_to_customized_tools (a_stone)
 
 			stone := a_stone

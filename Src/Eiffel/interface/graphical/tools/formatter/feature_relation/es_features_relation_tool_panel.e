@@ -174,9 +174,8 @@ feature -- Status setting
 				end
 			end
 
-			if widget.is_displayed or else is_auto_hide then
+			if widget.is_displayed or else is_auto_hide or else develop_window.link_tools then
 				force_last_stone
-					--| Note: this will also call `flat_formatter.show_debugged_line' if any
 			end
 		end
 

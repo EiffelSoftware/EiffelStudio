@@ -582,7 +582,7 @@ feature -- Stone process
 	toggle_unified_stone is
 			-- Change the stone management mode.
 		do
-			unified_stone := not unified_stone
+			set_unified_stone (not unified_stone)
 			if unified_stone then
 				send_stone_to_context
 				commands.send_stone_to_context_cmd.disable_sensitive
@@ -2385,6 +2385,9 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			-- Set `unified_stone'
 		do
 			unified_stone := a_bool
+
+				-- Set the preference.
+			preferences.development_window_data.context_unified_stone_preference.set_value (a_bool)
 		ensure
 			set: unified_stone = a_bool
 		end

@@ -19,4 +19,14 @@ compile_result	ok
 c_compile_final
 c_compile_result	ok
 
+-- Now we redo the test with the same code but a different lace option
+cleanup_compile
+copy_sub Ace_rev1 $TEST Ace
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
 test_end

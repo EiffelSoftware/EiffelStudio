@@ -1977,3 +1977,4 @@ if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass constructo
 if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass namespace
 if DOTNET test equal-on-dotnet-string-and-eiffel-string dotnet106	tcf pass dotnet
 if DOTNET test renaming-native-dotnet-feature-with-redefine-default-create dotnet107 tcf pass dotnet
+test anchored-creation-crash		dotnet108 tcf pass dotnet

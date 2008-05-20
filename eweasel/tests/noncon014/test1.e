@@ -8,7 +8,8 @@ feature
 
 	f is
 		do
-			any_once.do_nothing
+			print (any_once.twin)
+			print ("%N")
 		end
 
 end

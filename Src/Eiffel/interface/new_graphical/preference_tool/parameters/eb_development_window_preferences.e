@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			class_completion_preference := l_manager.new_boolean_preference_value (l_manager, class_completion_string, True)
 			last_browsed_cluster_directory_preference := l_manager.new_string_preference_value (l_manager, last_browsed_cluster_directory_string, "")
 			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
-			link_tools_preference := l_manager.new_boolean_preference_value (l_manager, link_tools_string, True)
+			link_tools_preference := l_manager.new_boolean_preference_value (l_manager, link_tools_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)

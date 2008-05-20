@@ -191,7 +191,8 @@ feature -- Setting
 				set_last_stone (l_stone)
 				develop_window.tools.set_last_stone (last_stone)
 			end
-			if widget.is_displayed or else is_auto_hide then
+			
+			if widget.is_displayed or else is_auto_hide or else develop_window.link_tools then
 				force_last_stone
 			end
 		end

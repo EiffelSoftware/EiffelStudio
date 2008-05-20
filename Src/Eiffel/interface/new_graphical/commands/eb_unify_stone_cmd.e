@@ -19,6 +19,11 @@ inherit
 
 	EB_RECYCLABLE
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -139,30 +144,6 @@ feature -- Basic operations
 			end
 		end
 
-	toggle_buttons is
-			-- Display the good tooltip on buttons.
-		local
-			l_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
-		do
-			if internal_managed_sd_toolbar_items /= Void then
-				from
-					internal_managed_sd_toolbar_items.start
-				until
-					internal_managed_sd_toolbar_items.after
-				loop
-					l_button := internal_managed_sd_toolbar_items.item
-					l_button.select_actions.block
-					if l_button.is_selected then
-						l_button.disable_select
-					else
-						l_button.enable_select
-					end
-					l_button.select_actions.resume
-					internal_managed_sd_toolbar_items.forth
-				end
-			end
-		end
-
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
 			-- Create a new sd toolbar button for this command.
 		do
@@ -170,11 +151,10 @@ feature -- Basic operations
 			create Result.make (Current)
 			check added: recycle_pool.has (Result) end
 			initialize_sd_toolbar_item (Result, display_text)
-			if window.unified_stone then
+			if window.preferences.development_window_data.context_unified_stone then
 				Result.enable_select
 			end
 			Result.select_actions.extend (agent execute)
-			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
 		end
 

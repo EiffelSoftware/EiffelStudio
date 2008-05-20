@@ -415,16 +415,21 @@ feature {NONE} -- Grid events
 			-- Move first selected row by `offset'
 		local
 			c: INTEGER
+			d: INTEGER
 		do
 			if {lst: LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) then
 				if lst.count > 0 then
 					if {row: EV_GRID_ROW} lst.first then
-						c := profiles_grid.grid_move_top_row_node_by (profiles_grid, row.index, offset)
-						if c > 0 then
-							set_changed (Void, True)
+						d := default_profile_row.index
+							--| Do not move the first row (which is the default profile)
+						if row.index /= d and row.index + offset /= d then
+							c := profiles_grid.grid_move_top_row_node_by (profiles_grid, row.index, offset)
+							if c > 0 then
+								set_changed (Void, True)
+							end
+							profiles_grid.remove_selection
+							row.enable_select
 						end
-						profiles_grid.remove_selection
-						row.enable_select
 					end
 				end
 			end

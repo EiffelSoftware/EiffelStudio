@@ -46,9 +46,15 @@
 			<item>
 				<link>
 					<url>40_object_tool/index.xml</url>
-					<label>Object state information</label>
+					<label>Objects tool (stack information)</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>40_object_tool/25_expanded_display_tool.xml</url>
+					<label>Object viewer tool (also known as expanded display)</label>
+				</link>
+			</item>			
 			<item>
 				<link>
 					<url>50_expression_evaluation/index.xml</url>

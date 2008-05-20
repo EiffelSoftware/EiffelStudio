@@ -15,8 +15,8 @@
 		<paragraph>Once done a dialog pops up where you can enter a condition:</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../../images/eiffelstudio/dialogs_and_wizards/enter_condition.png</url>
-			</image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_condition.png</url>
+			</image>		
 		</paragraph>
 		<paragraph>The condition is a Boolean expression that follows the same rule as the expression you can enter in the 
 			<link>

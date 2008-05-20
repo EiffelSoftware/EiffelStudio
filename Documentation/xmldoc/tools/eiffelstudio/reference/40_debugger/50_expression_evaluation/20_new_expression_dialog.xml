@@ -48,4 +48,5 @@
 		</list>
 		</paragraph>
 		<paragraph>The second part prompts for the expression itself. This field supports arguments, dot calls and operators (to a certain extent), but does not support creation expressions, agents or static calls (as in "feature {<class_name>MY_CLASS</class_name>}.<feature_name>my_feature</feature_name>"). Genericity is partially supported. Despite these limitations, we believe the expression evaluation tool should provide you with a lot of useful functionality.</paragraph>
+	<paragraph>And the "Keep Assertion Checking" checkbox is used to enable assertion checking during expression evaluation if wanted (by default assertions won't be checked).</paragraph>		
 	</paragraph></document>

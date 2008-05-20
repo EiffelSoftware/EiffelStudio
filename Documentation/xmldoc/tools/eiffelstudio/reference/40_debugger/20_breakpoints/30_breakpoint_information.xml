@@ -9,12 +9,35 @@
 			</image> ), displays the list of all set breakpoints in the system (enabled or disabled).
 		</paragraph>
 
-		<paragraph><alignment>center</alignment>
+		
+		<paragraph><alignment>center</alignment>Display all breakpoints in a grid<line_break></line_break>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/breakpoints_list.png</url>
 			</image>
-		</paragraph>		
-		Note: the * shows that the breakpoint has a <link><url>40_conditional_breakpoints.xml</url><label>condition</label></link>.		
+		</paragraph>
+
+<paragraph>
+		Note: the * shows that the breakpoint has a <link><url>40_conditional_breakpoints.xml</url><label>condition</label></link>.<line_break></line_break>
+		Note: you can edit the selected breakpoint by double clicking on it, or pressing [enter] which show the menu.<line_break></line_break>
+		Note: you can disable/enable the selected breakpoint(s) by pressing [space].<line_break></line_break>		
+		Note: you can sort by clicking the column, especially the first column which provide tree, flat or sorted view.		
+</paragraph>
+		
+		<paragraph><alignment>center</alignment>Display all breakpoints in a list<line_break></line_break>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoints_list_flat.png</url>
+			</image>
+		</paragraph>			
+		
+		<paragraph><alignment>center</alignment>Display all breakpoints in a list filtered by a tag using button 
+					<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoints_list_filter_button.png</url>
+			</image>
+		<line_break></line_break>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoints_list_filter.png</url>
+			</image>
+		</paragraph>			
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/> 

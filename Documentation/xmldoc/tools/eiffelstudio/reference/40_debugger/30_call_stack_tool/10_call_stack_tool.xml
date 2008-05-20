@@ -31,7 +31,8 @@
 		<paragraph><alignment>center</alignment>
 		<image><url>../../../../../images/eiffelstudio/debugger/exception_dialog.png</url></image>
 		</paragraph>
-		<paragraph>On dotnet system, when more than one thread is available to the debugger, you can switch from one to the other , for that you have to click on the thread's id "0x000..." and select from the popup list of available threads.
+		<paragraph>When more than one thread is available to the debugger, you can switch from one to the other, for that you have to click on the thread's id "0x000..." and select from the popup list of available threads. 
+		Or (recommended) you can use the <link><label>threads tool</label><url>../55_threads_tool.xml</url></link> (clicking on <bold>Show threads panel</bold> will show the threads tool).
 		<paragraph>
 			<alignment>center</alignment>
 			<image><url>../../../../../images/eiffelstudio/debugger/call_stack_tool_with_threads.png</url></image>
@@ -42,7 +43,9 @@
 			<link>
 				<url>40_save_call_stack.xml</url>
 				<label>save the call stack</label>
-			</link> to a text file. The 
+			</link> to a text file, and the button <image><url>../../../../../images/eiffelstudio/icons/10x10/general_copy_icon.png</url></image> copy to the clipboard. 
+			
+			The 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_callstack_depth_icon.png</url>
 			</image> button makes it possible to choose which call stack depth should be displayed in the list (the default is to display the 100 top stack elements, but it is configurable with the same button).

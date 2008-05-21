@@ -1,0 +1,16 @@
+test_name dotnet-polymorphism
+test_description A routine is covariantly redefined from a reference type to an expanded type. The code generation does not properly generate the case when the redefinition is done in an expanded class descendant.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_1
+execute_result	ok
+compare	exec_output_1 output
+
+test_end

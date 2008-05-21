@@ -1,4 +1,4 @@
-<document title="Breakpoint menu" output="studio">
+<document title="Breakpoint editing" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>In all flat views ( 
@@ -82,7 +82,7 @@
 				<list ordered="false">
 				<item>Print message: display the expanded message to the output (there are predefined variables, and you can also evaluate expressions).</item>
 				<item>Disable/Restore Assertion Checking: this might be useful to desactivate assertion checking on a specific part of the execution.</item>
-				<item>Record Execution: start or stop the execution recording (cf: <link><url>../35_execution_replay.xml</url><label>Execution recording and replay</label></link>)</item>
+				<item>Record Execution: start or stop the execution recording (cf: <link><url>../35_execution_record_and_replay/index.xml</url><label>Execution recording and replay</label></link>)</item>
 				<item>Enable/Disable Breakpoints: either use tags or implicit tags (ex: <italic>"bp:elks.{LINKED_LIST}.extend@2"</italic>), to reference a set of existing breakpoints. 
 				This can be pretty useful to enable a breakpoint only if the execution takes a specific execution path.</item>
 				<item>Reset Hits count</item>

@@ -735,7 +735,7 @@ feature -- Query
 			end
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is
 			-- Get Exception details
 		local
 			tn: STRING
@@ -777,7 +777,7 @@ feature -- Query
 						end
 					end
 
-					if full_details then
+					if a_details_level > 0 then
 						edv := val.dump_value
 
 							--| Module name
@@ -792,7 +792,7 @@ feature -- Query
 						if e.exception_meaning = Void then
 							s32 := string_field_evaluation_on (val, edv, cl, "meaning")
 							if (s32 = Void or else s32.is_empty) and tn /= Void then
-								e.set_exception_meaning (tn)  --| IL Type name							
+								e.set_exception_meaning (e.exception_type_name)  --| IL Type name							
 							else
 								e.set_exception_meaning (s32) --| s32 can be Void
 							end
@@ -803,19 +803,21 @@ feature -- Query
 							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "message"))
 						end
 
-							--| Text
-						if e.exception_text = Void then
-							s32 := string_field_evaluation_on (val, edv, cl, "exception_trace")
-							e.set_exception_text (s32)
+						if a_details_level > 1 then
+								--| Text
+							if e.exception_text = Void then
+								s32 := string_field_evaluation_on (val, edv, cl, "exception_trace")
+								e.set_exception_text (s32)
 
-								--| using `to_string'
-							s32 := Eifnet_debugger.exception_text (associated_dotnet_exception (e))
-							if s32 /= Void then
-								if e.exception_text /= Void and then not e.exception_text.is_empty then
-									s32.prepend ("%NIL Information:%N")
-									e.exception_text.append (s32)
-								else
-									e.set_exception_text (s32)
+									--| using `to_string'
+								s32 := Eifnet_debugger.exception_text (associated_dotnet_exception (e))
+								if s32 /= Void then
+									if e.exception_text /= Void and then not e.exception_text.is_empty then
+										s32.prepend ("%NIL Information:%N")
+										e.exception_text.append (s32)
+									else
+										e.set_exception_text (s32)
+									end
 								end
 							end
 						end

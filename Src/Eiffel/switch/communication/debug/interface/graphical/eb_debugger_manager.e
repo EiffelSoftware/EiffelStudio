@@ -291,6 +291,7 @@ feature {NONE} -- Initialization
 			stop_cmd.disable_sensitive
 			quit_cmd.disable_sensitive
 			restart_cmd.disable_sensitive
+			ignore_breakpoints_cmd.disable_sensitive
 
 			toolbarable_commands.extend (system_cmd)
 			toolbarable_commands.extend (Melt_project_cmd)
@@ -374,6 +375,9 @@ feature -- Access
 
 	debug_run_cmd: EB_DEBUG_RUN_CMD
 			-- Command to run the project under debugger.
+
+	no_stop_cmd: EB_EXEC_NO_STOP_CMD
+			-- Run without stop points command.
 
 	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 			-- Exception handler command
@@ -1224,6 +1228,7 @@ feature -- Status setting
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+			ignore_breakpoints_cmd.disable_sensitive
 
 			assertion_checking_handler_cmd.disable_sensitive
 		end
@@ -1239,6 +1244,7 @@ feature -- Status setting
 					into_cmd.enable_sensitive
 					no_stop_cmd.enable_sensitive
 					debug_cmd.enable_sensitive
+					ignore_breakpoints_cmd.enable_sensitive
 					enable_debug
 				end
 			end
@@ -2046,9 +2052,6 @@ feature {NONE} -- Implementation
 
 	restart_cmd: EB_EXEC_RESTART_DEBUG_CMD
 			-- Restart debugging without closing the interface.
-
-	no_stop_cmd: EB_EXEC_NO_STOP_CMD
-			-- Run without stop points command.
 
 	enable_commands_on_project_created is
 			-- Enable commands when a new project has been created (not yet compiled)

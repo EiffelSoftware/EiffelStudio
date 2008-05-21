@@ -401,6 +401,7 @@ feature -- Accelerator, focus label and menu name
 	m_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore Assertion Checking")	end
 	m_Dbg_exception_handler: STRING_GENERAL is	do Result := locale.translation("Exception Handling")	end
 	m_Dbg_ignore_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignore Breakpoints")	end
+	m_Dbg_ignoring_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignoring Breakpoints")	end
 	m_Dbg_disable_catcall_console_warning: STRING_GENERAL is	do Result := locale.translation("Disable Catcall Console Warning")	end
 	m_Dbg_disable_catcall_debugger_warning: STRING_GENERAL is	do Result := locale.translation("Disable Catcall Debugger Warning")	end
 

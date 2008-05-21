@@ -1,0 +1,114 @@
+<document title="Error List Tool" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>
+			The Error List Tool is a general purpose tool for logging error and warning conditions raised when compiling or using other parts of the EiffelStudio IDE. The tool can optional filter both errors and warnings to aid in the process of fixing them.
+		</paragraph>	
+
+		<anchor>accessing_the_tool</anchor>
+		<heading>
+			<size>2</size>
+			<content>Accessing the Tool</content>
+		</heading>	
+		<paragraph>
+			The contract editor tool can be accessed from the EiffelStudio tools menu <bold>View</bold> > <bold>Tools</bold> > <bold>Error List</bold>. The tool can also be accessed from the default shortcut key CTRL+ALT+E. Respecting this, the tool will be shown automatically at the end of a compilation if an error occurs during any part of the compilation.
+		</paragraph>		
+		
+		<anchor>reading_errors_and_warnings</anchor>
+		<heading>
+			<size>2</size>
+			<content>Reading Errors and Warnings</content>
+		</heading>	
+		<paragraph>
+			There are numerous ways to gather information on the errors and warnings logged to the tool. Even when the tool is not shown directly, because it is displayed tabbed behind another tool or docked as a hidden slide-in tool on one of the IDE's bounding window edges, there's enough visible information to indicate how may errors and warnings were generated during the last compilation or in another processing task.
+		</paragraph>		
+		<paragraph>
+			By default the tool's title (in the tab-docked tab or on the tool's title bar when visible) will read<italic> 'Error List'</italic>. In it's default state there are no errors or warning and the title reads as such. When performing a compilation resulting in the logging of any number of errors or warnings the tool title will be update to indicate the respective number of errors and warning as <italic>'Error List (#Errors, #Warning)'</italic> where <italic>#Errors</italic> indicates the number of logged errors and <italic>#Warnings</italic> indicates the number of logged warnings. When there are no errors or warnings the tool's title will be reset to the default title <italic>'Error List'</italic>.
+		</paragraph>
+		<paragraph>
+			When the tool is visible, not only does the tab (if docked) and the title bar reflect the number of logged errors and warnings but the tool bar <bold>Errors</bold> and  <bold>Warnings</bold> filter toggle buttons also reflect the number of respective logged errors and warnings. For more information on filtering error and warnings, see <link><url>#filtering_errors_and_warnings</url><label>Filtering Errors and Warnings</label></link>.
+		</paragraph>
+				
+		<anchor>reading_logged_error_and_warning_reports</anchor>
+		<heading>
+			<size>3</size>
+			<content>Reading Logged Error and Warning Reports</content>
+		</heading>	
+		<paragraph>
+			When performing a task that produces errors and/or warning the tool will display a number of rows containing information on the logged errors and warnings. Error rows are indicated with the error icon (<image><url>../../../../images/eiffelstudio/error_list_tool/error.png</url></image>) and warnings with the exclamation icon (<image><url>../../../../images/eiffelstudio/error_list_tool/warning.png</url></image>). Both error and warnings show a single-line terse description of the offending issue and can be expanded using the adjacent (+) to reveal a verbose description and an indication on how to possibility fix the problem. You can also press RIGHT or + (PLUS) to expand a selected row. To collapse a row either click the (-), press  LEFT or - (MINUS).
+		</paragraph>		
+		<paragraph>
+			Error can be automatically expanded to reveal the more verbose information immediately. Toggling the Expand Errors (<image><url>../../../../images/eiffelstudio/error_list_tool/expand_errors.png</url></image>) button will automatically expand or collapse when toggled on or off respectively.
+		</paragraph>
+				
+		<anchor>error_and_warning_help</anchor>
+		<heading>
+			<size>3</size>
+			<content>Error and Warning Help</content>
+		</heading>	
+		<paragraph>
+			If you are unsure what the actually error or warning code refers to then you can receive help by selecting the error and pressing the Error Info tool bar button (<image><url>../../../../images/eiffelstudio/error_list_tool/error_info.png</url></image>). Alternately <link><url>..\05_general_interface_description\10_general_interface_mechanisms\10_pick_and_drop.xml</url><label>pick and drop</label></link> may be used to pick the error code from the error or warning onto the Error Info button.
+		</paragraph>
+		
+		<anchor>filtering_errors_and_warnings</anchor>
+		<heading>
+			<size>2</size>
+			<content>Filtering Errors and Warnings</content>
+		</heading>	
+		<paragraph>
+			There is no limit set on the number of errors or warnings shown in the tool because all the errors and warnings mean something and should be addressed. However it is desirable to filter both errors and warnings whilst working through fixing the cause of them, or to temporarily set the level of warnings without modifying the project configuration.
+		</paragraph>
+		<paragraph>
+			There are two types of filtration, basic and fine-grained. Both the logged errors and warnings can be filtered using the basic filtering, which takes an all or nothing approach. However, filtering of logged errors is provided only as a convenience and as such finer-grained control over filtering is prohibited, only warnings can be filtered in this way.
+		</paragraph>
+		<paragraph>
+			Basic filtering of the errors and warnings can be achieved by toggling with tool bar <bold>Errors</bold> and/or <bold>Warnings</bold> button. Both are toggled on by default so all errors and warnings are displayed. Toggling either off will hide the error or warnings respectively.
+		</paragraph>
+		<paragraph>
+			For warnings, it might be desirable to temporarily filter out specific warnings without modifying the project's configuration file. This can be achieved using the Filter (<image><url>../../../../images/eiffelstudio/error_list_tool/filter.png</url></image>) tool bar button and unchecking those warnings undesired to be shown in the tool. When warnings are being filtered the Filter button is displayed with exclamation icon overlay (<image><url>../../../../images/eiffelstudio/error_list_tool/filter_active.png</url></image>) to indicate that some warnings may not appear in the tool because they are filtered out. The explicitly unchecked warnings configuration, of the tool, is only kept whilst the project is open. Anything more permanent should be done by way of <link><url>..\25_project_settings\index.xml</url><label>configuring</label></link> the project.
+		</paragraph>
+		<paragraph>
+			When performing any type of filtering the error and warning count information is unaffected, to indicate there are more than errors and warnings then there is seen in the tool.
+		</paragraph>	
+		
+		<anchor>navigating_errors_and_warnings</anchor>
+		<heading>
+			<size>2</size>
+			<content>Navigating Errors and Warnings</content>
+		</heading>	
+		<paragraph>
+			There are multiple ways to navigate the logged errors and warnings in the Error List Tool and for some, it doesn't even require the tool to be in view or even opened at all.
+		</paragraph>
+		<paragraph>
+			All navigation functions off of the currently selected logged error or warning. When the Error List tool is open and in view the most direct way to navigate between the errors and warnings is through the tool itself. There are four tool bar button designed for this purpose; Go to Next Error (<image><url>../../../../images/eiffelstudio/error_list_tool/next_error.png</url></image>), Go to Previous Error (<image><url>../../../../images/eiffelstudio/error_list_tool/previous_error.png</url></image>), Go to Next Warning (<image><url>../../../../images/eiffelstudio/error_list_tool/next_warning.png</url></image>) and Go to Previous Warning (<image><url>../../../../images/eiffelstudio/error_list_tool/previous_warning.png</url></image>). These tool bar buttons are mirrored in the <bold>Project</bold> main menu. Those actions mirror in the <bold>Project</bold> menu do not require the tool to be opened or be in view, proving a shortcut to their actual function.
+		</paragraph>
+		<paragraph>
+			There are also a matching number of keyboard shortcuts that can be used with or without the Error List tool being in view; To go to the next error use CTRL+F8,  To go to the previous error use CTRL+SHIFT+F8, to go to the next warning use CTRL+ALT+F8 and to go to the previous warning use CTRL+ALT+SHIFT+F8.
+		</paragraph>
+		<paragraph>
+			In the event of no visible errors or warnings, the respective Next/Previous buttons and menu items will be unavailable. This is also effective when <link><url>#filtering_errors_and_warnings</url><label>filtering errors and warnings</label></link>, as the unseen logged error and warnings are treated as if they had never been logged ensuring that, when navigating, the irrelevant errors and warnings are not navigated to.
+		</paragraph>
+		<paragraph>
+			When navigating between a logged error or warning the context where the error/warning occurred is shown. At anytime, double-left clicking on an error or warning will show the corresponding context to that logged error/warning. Pressing ENTER on the selected error or warning will also show the correspond context.
+		</paragraph>
+		<paragraph>
+			The <link><url>..\05_general_interface_description\10_general_interface_mechanisms\10_pick_and_drop.xml</url><label>pick and drop</label></link> mechanism may also be used to navigate to any part of an error's or warning's context. Any colored text in the logged error/warning description is pickable, even the <bold>Position</bold> information.
+		</paragraph>
+		
+		<anchor>copying_errors_and_warnings</anchor>
+		<heading>
+			<size>2</size>
+			<content>Copying Errors and Warnings</content>
+		</heading>	
+		<paragraph>
+			From time to time is may be necessary to copy the information in one or more logger errors and/or warnings. To perform a copy of the information select one or more logged errors and/or warning in the tool and press CTRL+C. The selected error and warning information will then be placed into the resident operating systems clipboard.
+		</paragraph>	
+		
+		<heading>
+			<size>2</size>
+			<content>Title</content>
+		</heading>	
+		<paragraph>
+			
+		</paragraph>	
+	</paragraph></document>

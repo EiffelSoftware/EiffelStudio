@@ -1,0 +1,31 @@
+<document title="Execution record and replay" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Execution record and replay</meta_content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_exec_record.xml</url>
+					<label>Execution recording</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_exec_replay.xml</url>
+					<label>Execution replaying</label>
+				</link>
+			</item>						
+		</list>
+	</paragraph></document>

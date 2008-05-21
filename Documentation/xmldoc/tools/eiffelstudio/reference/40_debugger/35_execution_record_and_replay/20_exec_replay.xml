@@ -1,0 +1,52 @@
+<document title="Replay (recorded) execution" output="studio">
+	<meta_data/>
+<paragraph>	
+	<paragraph>The replay  functionality is graphically available on the Call stack tool, or though the "Execution" menu.</paragraph>
+	<note>First, you must be sure execution recording is activated (<link><url>10_exec_record.xml</url><label>read how to record execution</label></link>).</note>
+	<paragraph>Now, whenever the application is stopped in the debugger,  you can replay the recorded execution by clicking on the "Replay" button:</paragraph>
+	<paragraph><alignment>center</alignment>
+		<image><url>../../../../../images/eiffelstudio/debugger/exec_replay_01.png</url></image>
+	</paragraph>
+	
+	<paragraph>Now we are in "execution replay" mode, as you can notice the "Replay" button is enabled, and there is a new commands bar with replay "Back", "Forth", "Previous",  "Next", and "Go to". 
+	And on the right the number indicates the call stack depth, the breakable index, and the nested breakable index
+	. <line_break></line_break>
+	<list ordered="false">
+	<item><bold>Back</bold>: means replay back to caller, i.e: down in the call stack.</item>
+	<item><bold>Forth</bold>: means replay to callee, i.e: up in the call stack.</item>
+	<item><bold>Previous</bold>: means replay to previous instruction (previous call in the same stack; i.e: similar to step previous) if possible.</item>
+	<item><bold>Previous</bold>: means replay to next instruction (next call in the same stack; i.e: similar to step next) if possible.</item>
+	<item><bold>Go to</bold>: replay to the selected call when possible.</item>	
+	</list>
+	In the first column, you will find a tree structure, which show on the root level, the effective call stacks, and for each root node, you can inspect the sub element to browse the calls history.<line_break></line_break>
+	The <bold>bold entries</bold> show the active call stacks (i,e: the current call stack when we stopped the debugger).<line_break></line_break>
+	The <bold>red arrow</bold> shows the replayed call stack level, and the call stack levels which can be replayed have a light blue background. <line_break></line_break>
+	
+	<paragraph><alignment>center</alignment>
+		<image><url>../../../../../images/eiffelstudio/debugger/exec_replay_02.png</url></image>
+	</paragraph>
+	
+	<paragraph>If you expand a node, you will be able to browse the whole recorded execution history from this stack (if you expand the bottom node, the whole recorded execution history will be available).<line_break></line_break>
+	You can still select other call stack level as you do in normal debugging mode to inspect them, in this case the red arrow stick to the replayed call, and the green arrow show you the selected call stack level.
+	</paragraph>	
+	<paragraph><alignment>center</alignment>
+		<image><url>../../../../../images/eiffelstudio/debugger/exec_replay_02-1.png</url></image>
+	</paragraph>
+	
+	<paragraph>Here we clicked on "Back" 3 times, you can now also replay "Forth" 3 times. When you execute a "Replay" operation, the debugger restores the related recorded values, and the various debugger tools are updated with tools values (including the watch tools)</paragraph>	
+	<paragraph><alignment>center</alignment>
+		<image><url>../../../../../images/eiffelstudio/debugger/exec_replay_03.png</url></image>
+	</paragraph>
+
+	<paragraph>And then if you replay "previous" twice, you rewind the execution in the same call stack frame, you will notice the "blue" dot to show the replayed execution cursor.
+</paragraph>	
+</paragraph>	
+	<paragraph><alignment>center</alignment>
+		<image><url>../../../../../images/eiffelstudio/debugger/exec_replay_04.png</url></image>
+	</paragraph>
+	<note>When replaying, you will notice the debugging tools are synchronized and refresh. <line_break></line_break>
+	This means the objects tool, the watch tools, and the feature tool will display the replayed context (values, and replayed execution cursor). <line_break></line_break>
+	If you evaluate an expression in a watch tool, it will use the recorded values, then be careful about side effects, since you can modify those values...
+	</note>
+	</paragraph>
+</document>

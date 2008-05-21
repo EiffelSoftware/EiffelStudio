@@ -1,0 +1,30 @@
+<document title="Introduction to execution record and replay" output="studio">
+	<meta_data/>
+<paragraph>	
+	<paragraph>This new feature allows the user to record the debuggee execution, and then replay this recording when the debugger is stopped.
+	 One could see this feature as a rewind/forward, or undo/redo of the execution calls.<line_break></line_break>
+	In practise, 
+	<list ordered="false">
+	<item>the debugger is <link><label>recording</label><url>10_exec_record.xml</url></link> the effective routine calls, and the attribute assignements, as well as the local variable assignments.</item>
+	<item>when the execution is stopped, you can <link><label>replay</label><url>20_exec_replay.xml</url></link> the previous execution recording.</item>
+	<item>when <link><label>replaying</label><url>20_exec_replay.xml</url></link>, the debugger restores the recorded values, and change the execution cursor to show in the debugging tool the recorded context (values, calls). </item>
+	<item>This way you can use the standard debugging tools to view, inpect the values, browse the calls, and even evaluate expression on objects (be careful, if you evaluate expression to avoid side effect).</item>
+	</list>
+	</paragraph>
+	
+	<paragraph>The execution record and replay functionalities are graphically available on the Call stack tool, or though the "Execution" menu (former "Debug" menu).
+	</paragraph>
+	
+	<paragraph>How to use it</paragraph>
+	<list ordered="false">
+	<item>control the execution <link><label>recording</label><url>10_exec_record.xml</url></link></item>
+	<item><link><label>Replay</label><url>20_exec_replay.xml</url></link> and use the debugging tools to browse, inspect, evaluate, ...</item>
+	</list>	
+
+	<warning><bold>Specific limitation</bold>: for now <bold>once</bold> routine's information (not yet called ...) are not recorded and thus not restored as one could expect (for instance, the debugger does not reset a once during replay)..</warning>				
+	<warning><bold>Limitation</bold>: a common and logic limitation of such mechanism concerns the external world, it is not possible to record everything such as file modification, or database modification and other.<line_break></line_break>
+		In the same way, if during an external routine call, some Eiffel values are changed, those are not recorded (and thus not replayed).</warning>				
+	
+	<warning>Current EiffelStudio provides this mechanism <bold>only for classic system</bold>, this is not yet supported for dotnet system.</warning>
+ 	</paragraph>
+</document>

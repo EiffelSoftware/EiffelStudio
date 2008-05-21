@@ -5792,12 +5792,14 @@ feature -- Implementation
 									l_attribute ?= l_access
 									create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
 										l_attribute.routine_id)
-									if system.il_generation then
-											-- we need to record into current class
-										context.current_class.extend_type_set (l_attribute.routine_id)
-									end
 								else
 									l_create_info := l_creation_type.create_info
+								end
+
+								if system.il_generation and {l_info: CREATE_FEAT} l_create_info then
+										-- We need to record into current class that there is a creation
+										-- using a feature, i.e. an anchor. This fixes eweasel test#dotnet100.
+									context.current_class.extend_type_set (l_info.routine_id)
 								end
 
 								create l_creation_expr

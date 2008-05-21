@@ -25,10 +25,11 @@ feature -- Initialization
 		do
 			mem_stat (memory)
 			type := memory
-			total := mem_info (1)
-			used := mem_info (2)
-			overhead := mem_info (3)
-			chunk := mem_info (4)
+				-- Not implemented.
+			total64 := 0
+			used64 := 0
+			overhead64 := 0
+			chunk := 0
 		ensure
 			Type_updated: type = memory
 		end
@@ -40,13 +41,19 @@ feature -- Access
 
 feature -- Measurement
 
-	total: INTEGER
+	total: INTEGER is
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
+		do
+			Result := total64.as_integer_32
+		end
 
-	used: INTEGER
+	used: INTEGER is
 			-- Number of bytes used for `type'
 			-- before last call to `update'
+		do
+			Result := used64.as_integer_32
+		end
 
 	free: INTEGER is
 			-- Number of bytes still free for `type'
@@ -57,35 +64,46 @@ feature -- Measurement
 			Computed: Result = total - used - overhead
 		end
 
-	overhead: INTEGER
+	overhead: INTEGER is
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
+		do
+			Result := overhead64.as_integer_32
+		end
 
 	chunk: INTEGER
 			-- Number of allocated memory chunks.
 
+feature -- Extended measurement
+
+	total64: NATURAL_64
+			-- Total number of bytes allocated for `type'
+			-- before last call to `update'
+
+	used64: NATURAL_64
+			-- Number of bytes used for `type'
+			-- before last call to `update'
+
+	free64: NATURAL_64 is
+			-- Number of bytes still free for `type'
+			-- before last call to `update'
+		do
+			Result := total64 - used64 - overhead64
+		end
+
+	overhead64: NATURAL_64
+			-- Number of bytes used by memory management
+			-- scheme for `type' before last call to `update'
+
 feature {NONE} -- Implementation
 
 	mem_stat (mem: INTEGER) is
-			-- Initialize run-time buffer used by mem_info to retrieve the
-			-- statistics frozen at the time of this call.
+			-- Retrieve the statistics.
 		do
-			check
-				False
-			end
-		end
-
-	mem_info (field: INTEGER): INTEGER is
-			-- Read memory accounting structure, field by field.
-		do
-			check
-				False
-			end
 		end
 
 invariant
-
-	consistent_memory: total = free + used + overhead
+	consistent_memory: total64 = free64 + used64 + overhead64
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

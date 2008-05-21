@@ -170,7 +170,6 @@ feature {NONE} -- Attributes
 			l_submenu: EV_MENU
 			l_cb_item: EV_CHECK_MENU_ITEM
 			profs: DEBUGGER_PROFILES
-			s32: STRING_32
 			k, pn: STRING_32
 			dbg: DEBUGGER_MANAGER
 			ecmd: EB_EXEC_FORMAT_CMD

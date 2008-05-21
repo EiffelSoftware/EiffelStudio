@@ -102,13 +102,5 @@
 		</heading>	
 		<paragraph>
 			From time to time is may be necessary to copy the information in one or more logger errors and/or warnings. To perform a copy of the information select one or more logged errors and/or warning in the tool and press CTRL+C. The selected error and warning information will then be placed into the resident operating systems clipboard.
-		</paragraph>	
-		
-		<heading>
-			<size>2</size>
-			<content>Title</content>
-		</heading>	
-		<paragraph>
-			
-		</paragraph>	
+		</paragraph>		
 	</paragraph></document>

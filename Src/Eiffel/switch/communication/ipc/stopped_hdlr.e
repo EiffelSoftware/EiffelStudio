@@ -226,7 +226,7 @@ feature -- Execution
 				-- to the application and resume it.
 				need_to := [False, True] -- Continue, but resend bp
 			when pg_overflow then
-				--Do nothing specific
+				need_to := [True, False]
 			when pg_catcall then
 				need_to := [execution_stopped_on_catcall_event (a_app), False]
 			else

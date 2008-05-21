@@ -87,11 +87,8 @@ feature {NONE} -- Initialization
 		do
 			l_system := system
 			l_static_type_id_counter := static_type_id_counter
-			if t.is_basic then
-				basic_type ?= t
-			end
-			type ?= t.generic_derivation
-			check type_not_void: type /= Void end
+			basic_type ?= t
+			type := t.generic_derivation
 				-- Set creation info as if the type is used as "like Current".
 			if type = t then
 					-- Duplicate type object to avoid modification of `t'.

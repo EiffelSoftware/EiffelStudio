@@ -1,0 +1,19 @@
+test_name non-conform-linked-list
+test_description A once inherited from a non-conforming inheritance crashes the compiler when code is execute, causes a C compilation error during finalization and possibly generate a precondition violation when you do not expect any to be violated.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_1
+execute_result	ok
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+test_end

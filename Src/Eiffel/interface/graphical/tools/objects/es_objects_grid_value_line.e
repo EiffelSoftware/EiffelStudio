@@ -230,7 +230,8 @@ feature -- Graphical changes
 						set_value (excdv.short_description)
 						gi := value_cell
 						if gi /= Void then
-							gi.set_tooltip (excdv.long_description)
+							gi.set_tooltip (Interface_names.l_exception_double_click_text)
+							gi.pointer_double_press_actions.force_extend (agent show_exception_dialog (excdv))
 						end
 						set_type (debugger_names.l_exception_data)
 						set_pixmap (Icons @ (dv.kind))
@@ -259,6 +260,17 @@ feature -- Graphical changes
 				end
 				update
 			end
+		end
+
+	show_exception_dialog (a_exc_dv: EXCEPTION_DEBUG_VALUE) is
+			-- Show `a_exc_dv' in exception dialog
+		local
+			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
+		do
+			create dlg.make
+			dlg.set_exception (a_exc_dv)
+			dlg.set_is_modal (True)
+			dlg.show_on_active_window
 		end
 
 invariant

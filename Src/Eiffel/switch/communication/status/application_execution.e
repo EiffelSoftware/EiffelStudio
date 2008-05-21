@@ -1093,7 +1093,7 @@ feature -- Query
 		deferred
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is
 			-- Code, Tag, Message from `val'.
 		require
 			e_not_void: e /= Void

@@ -183,7 +183,7 @@ feature -- Access
 			if Result = Void then
 				Result := exception_text
 				if Result = Void then
-					update_full_data
+					update_heavy_data
 					Result := exception_text
 				end
 			end
@@ -268,7 +268,7 @@ feature -- Change
 		do
 			if not data_updated then
 				if has_value then
-					debugger_manager.application.get_exception_value_details (Current, False)
+					debugger_manager.application.get_exception_value_details (Current, 0)
 				end
 				data_updated := True
 			end
@@ -278,7 +278,17 @@ feature -- Change
 			-- Update using `debug_value' if available
 		do
 			if has_value then
-				debugger_manager.application.get_exception_value_details (Current, True)
+				debugger_manager.application.get_exception_value_details (Current, 1)
+			end
+			data_updated := True
+		end
+
+	update_heavy_data is
+			-- Update using `debug_value' if available
+			-- only for exception text...
+		do
+			if has_value then
+				debugger_manager.application.get_exception_value_details (Current, 2)
 			end
 			data_updated := True
 		end
@@ -492,4 +502,5 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 		]"
 
 end
+
 

@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			es_glab: EV_GRID_LABEL_ITEM
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING_32
-			l_exception_meaning, l_exception_message, l_exception_text: STRING_32
+			l_exception_meaning, l_exception_message: STRING_32
 			appstat: APPLICATION_STATUS
 			dotnet_status: APPLICATION_STATUS_DOTNET
 			exc_dv: EXCEPTION_DEBUG_VALUE
@@ -435,21 +435,6 @@ feature {NONE} -- Implementation
 							parent_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
 							r.set_item (2, es_glab)
 						end
-					end
-
-						--| Nota/Message
-					l_exception_text := exc_dv.text
-					if l_exception_text /= Void and then not l_exception_text.is_empty then
-						r := parent_grid.extended_new_subrow (row)
-						glab := parent_grid.name_label_item (interface_names.l_note)
-						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-						r.set_item (1, glab)
-						create es_glab
-						es_glab.set_data (l_exception_text)
-						parent_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
-						parent_grid.grid_cell_set_tooltip (es_glab, l_exception_text)
-						es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (exc_dv))
-						r.set_item (2, es_glab)
 					end
 
 					r := parent_grid.extended_new_subrow (row)

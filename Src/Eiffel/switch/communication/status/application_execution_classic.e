@@ -421,7 +421,7 @@ feature -- Query
 			check False end
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is
 			-- Code, Tag, Message from `val'.
 		local
 			cl: CLASS_C
@@ -457,7 +457,7 @@ feature -- Query
 						end
 					end
 
-					if full_details then
+					if a_details_level > 0 then
 						if edv = Void then
 							edv := val.dump_value
 						end
@@ -469,8 +469,10 @@ feature -- Query
 						if e.exception_message = Void then
 							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "message"))
 						end
-						if e.exception_text = Void then
-							e.set_exception_text (string_field_evaluation_on (val, edv, cl, "exception_trace"))
+						if a_details_level > 1 then
+							if e.exception_text = Void then
+								e.set_exception_text (string_field_evaluation_on (val, edv, cl, "exception_trace"))
+							end
 						end
 					end
 				end

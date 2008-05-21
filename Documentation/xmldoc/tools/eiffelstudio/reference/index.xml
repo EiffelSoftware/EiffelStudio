@@ -52,6 +52,12 @@
 			</item>
 			<item>
 				<link>
+					<url>45_error_list_tool/index.xml</url>
+					<label>Error List Tool</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>50_diagram_tool/index.xml</url>
 					<label>Diagram tool</label>
 				</link>

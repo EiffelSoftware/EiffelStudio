@@ -109,9 +109,9 @@ feature -- Element change
 		do
 			index := i |>> 5
 			if value then
-				values.put ((values.item (i)) | (1 |<< (i & 31)), index)
+				values.put ((values.item (index)) | (1 |<< (i & 31)), index)
 			else
-				values.put ((values.item (i)) & ((1 |<< (i & 31)).bit_not ), index)
+				values.put ((values.item (index)) & ((1 |<< (i & 31)).bit_not ), index)
 			end
 		ensure
 			value_inserted: item (i) = value

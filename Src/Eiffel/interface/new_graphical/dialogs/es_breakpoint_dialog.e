@@ -390,8 +390,10 @@ feature {NONE} -- Operations
 
 			create hb
 			hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			s := interface_names.l_location.to_string_8
-			create location_lb.make_with_text (s + ": ")
+			s := interface_names.l_location.twin
+			s.append_character (':')
+			s.append_character (' ')
+			create location_lb.make_with_text (s)
 			create details_stone_hd
 			create details_class_lb
 			details_class_lb.set_foreground_color (preferences.editor_data.class_text_color)

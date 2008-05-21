@@ -455,7 +455,6 @@ feature -- Remote access to RT_
 			-- Activate or Deactivate execution replay mode
 		require
 			turned_on_when_stopped: b implies status.is_stopped
-			replay_activation_change: b /= status.replay_activated
 			replay_depth_is_valid: (b and status.replayed_depth = 0) or (not b and status.replayed_depth <= current_call_stack_depth)
 		local
 			sd,d: INTEGER
@@ -500,7 +499,7 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 			res: BOOLEAN
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				create params.make (1)
@@ -533,7 +532,7 @@ feature -- Remote access to RT_
 
 			nb := 1
 
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
@@ -572,7 +571,7 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 			prev_d,d1,d2: INTEGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				prev_d := status.replayed_depth
 
 				dbg := debugger_manager
@@ -623,7 +622,7 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 		do
 			dir := direction
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
@@ -642,7 +641,7 @@ feature -- Remote access to RT_
 			dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replayed_call_details", Void)
@@ -663,7 +662,7 @@ feature -- Remote access to RT_
 			dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				create params.make (2)

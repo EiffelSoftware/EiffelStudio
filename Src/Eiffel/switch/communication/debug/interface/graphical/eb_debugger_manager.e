@@ -1932,6 +1932,10 @@ feature -- Application change
 			then
 				toggle_exec_replay_recording_mode_cmd.set_select (execution_replay_recording_enabled)
 			end
+
+			if not b then
+				activate_execution_replay_mode (False)
+			end
 			if
 				execution_replay_recording_enabled and then
 				safe_application_is_stopped and then
@@ -1940,9 +1944,6 @@ feature -- Application change
 				toggle_exec_replay_mode_cmd.enable_sensitive
 			else
 				toggle_exec_replay_mode_cmd.disable_sensitive
-			end
-			if not b then
-				activate_execution_replay_mode (False)
 			end
 			if
 				application_is_executing and then

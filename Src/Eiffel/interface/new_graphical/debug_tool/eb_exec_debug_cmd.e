@@ -170,22 +170,31 @@ feature {NONE} -- Attributes
 			l_submenu: EV_MENU
 			l_cb_item: EV_CHECK_MENU_ITEM
 			profs: DEBUGGER_PROFILES
+			s32: STRING_32
 			k, pn: STRING_32
 			dbg: DEBUGGER_MANAGER
+			ecmd: EB_EXEC_FORMAT_CMD
 		do
 			create Result
 
 			dbg := eb_debugger_manager
 
-			create l_item.make_with_text (tooltext)
+			create l_item.make_with_text (menu_name)
 			l_item.set_pixmap (pixmap)
 			l_item.select_actions.extend (agent execute)
 			Result.extend (l_item)
 
+			ecmd := eb_debugger_manager.no_stop_cmd
+			create l_item.make_with_text (ecmd.menu_name)
+			l_item.set_pixmap (ecmd.pixmap)
+			l_item.select_actions.extend (agent ecmd.execute)
+			Result.extend (l_item)
+
+
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				--| Breakpoints status
-			create l_cb_item.make_with_text (interface_names.m_Dbg_ignore_breakpoints)
+			create l_cb_item.make_with_text (interface_names.m_Dbg_ignoring_breakpoints)
 			Result.extend (l_cb_item)
 			if dbg.execution_ignoring_breakpoints then
 				l_cb_item.enable_select

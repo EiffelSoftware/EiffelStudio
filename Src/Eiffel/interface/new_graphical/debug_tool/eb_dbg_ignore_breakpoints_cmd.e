@@ -160,7 +160,7 @@ feature {NONE} -- Attributes
 	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
-			Result := "Ignore breakpoints"
+			Result := Interface_names.m_dbg_ignoring_breakpoints
 		end
 
 	pixmap: EV_PIXMAP is

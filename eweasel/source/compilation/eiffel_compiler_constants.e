@@ -38,7 +38,7 @@ feature {NONE} -- Output constants
 
 	C_failure_prefix: STRING is "Cannot generate C code";
 
-	Aborted_prefix: STRING is "ISE Eiffel 5: Session aborted";
+	Aborted_prefix: STRING is "ISE Eiffel: Session aborted";
 
 	Exception_prefix: STRING is "Exception tag: ";
 

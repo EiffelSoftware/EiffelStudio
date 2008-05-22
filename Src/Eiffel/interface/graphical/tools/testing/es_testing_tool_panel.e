@@ -26,6 +26,7 @@ inherit
 			on_after_initialized,
 			build_tool_interface,
 			is_appliable_event,
+			build_docking_content,
 			create_right_tool_bar_items
 		end
 
@@ -76,6 +77,13 @@ feature {NONE} -- Initialization
 			enable_copy_to_clipboard
 		ensure then
 			set: test_case_grid = a_grid
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- <Precursor>
+		do
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_docking_manager)
+			content.set_long_title (interface_names.t_testing_experimental)
 		end
 
 	on_after_initialized is

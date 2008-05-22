@@ -38,8 +38,13 @@ feature -- Status Setting
 		end
 
 	get (pos: INTEGER): POINTER is
+		local
+			l_ptr: MANAGED_POINTER
 		do
-			Result := (ptr @ pos).item
+			l_ptr := ptr.item (pos)
+			if l_ptr /= Void then
+				Result := l_ptr.item
+			end
 		end
 
 	release is

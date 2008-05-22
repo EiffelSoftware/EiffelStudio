@@ -21,8 +21,6 @@ feature -- Names
 	t_space_Application_ignoring_breakpoints: STRING_GENERAL is
 			do Result := locale.translation (" (ignoring breakpoints)") end
 
-	t_Not_running: STRING_GENERAL is
-			do Result := locale.translation ("Application is not running") end
 	t_Running: STRING_GENERAL is
 			do Result := locale.translation ("Application is running") end
 	t_Running_no_stop_points: STRING_GENERAL is
@@ -111,10 +109,6 @@ feature -- Messages
 			do Result := locale.translation (" => No breakpoint addition%N") end
 	m_modify_breakpoint (a_s: STRING_GENERAL): STRING_GENERAL is
 			do Result := locale.formatted_string (locale.translation ("*** Modify breakpoint $1 ***"), [a_s]) end
-	m_condition_sep (a_s: STRING_GENERAL): STRING_GENERAL is
-			do Result := locale.formatted_string (locale.translation ("--( condition: %"$1%")--"), [a_s]) end
-	m_bp_message_sep (a_s: STRING_GENERAL): STRING_GENERAL is
-			do Result := locale.formatted_string (locale.translation ("--( message: %"$1%")--"), [a_s]) end
 	m_current_condition (a_s: STRING_GENERAL): STRING_GENERAL is
 			do Result := locale.formatted_string (locale.translation (" -> Current condition: %"$1%" %N"), [a_s]) end
 	m_current_bp_message (a_s: STRING_GENERAL): STRING_GENERAL is
@@ -277,9 +271,6 @@ feature -- Object grid line values
 	l_no_information: STRING_GENERAL is
 			do Result := locale.translation ("No information") end
 
-	l_exceptions_details: STRING_GENERAL is
-			do Result := locale.translation ("Exception's details ...") end
-
 	l_exception_data: STRING_GENERAL is
 			do Result := locale.translation ("Exception data") end
 
@@ -424,10 +415,6 @@ feature -- Expression evaluation messages
 	cst_error_not_compiled: STRING_GENERAL is
 		do Result := locale.translation ("not compiled") end
 
-	cst_error_not_yet_available: STRING_GENERAL is
-		do Result := locale.translation ("not compiled") end
-
-
 	Cst_error_evaluation_aborted: STRING_GENERAL is
 		once Result := locale.translation ("Evaluation aborted") end
 	Cst_error_exception_during_evaluation: STRING_GENERAL is
@@ -474,8 +461,8 @@ feature -- Expression evaluation messages
 		end
 
 	msg_error_evaluation_wrong_nb_of_args (fnb,pnb: INTEGER): STRING_GENERAL is
-		do 
-			Result := locale.formatted_string (locale.translation ("Wrong number of argument: $2 instead of $1 ."), [fnb, pnb]) 
+		do
+			Result := locale.formatted_string (locale.translation ("Wrong number of argument: $2 instead of $1 ."), [fnb, pnb])
 		end
 
 	msg_error_evaluation_aborted (cname,fname: STRING_GENERAL): STRING_GENERAL is

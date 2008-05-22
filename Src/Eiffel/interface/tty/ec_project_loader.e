@@ -327,7 +327,6 @@ feature {NONE} -- User interaction
 							if 1 <= i and i <= a_targets.count then
 								l_answer := a_targets.item (i)
 							end
-							a_targets.forth
 						end
 						if a_targets.has (l_answer) then
 							l_answered := True

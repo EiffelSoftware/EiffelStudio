@@ -10,6 +10,7 @@ compile_result	ok
 
 execute_work 	NONE 	exec_output
 execute_result 	ok
+compare		exec_output output
 
 cleanup_compile
 
@@ -21,7 +22,6 @@ compile_result	ok
 execute_work 	NONE 	exec_output_2
 execute_result 	ok
 
-compare		exec_output output
 compare		exec_output_2 output_2
 
 test_end

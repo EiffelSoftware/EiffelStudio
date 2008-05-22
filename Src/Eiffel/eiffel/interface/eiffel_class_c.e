@@ -1201,8 +1201,8 @@ feature -- Melting
 			l_old_group: CONF_GROUP
 			l_old_current_class: CLASS_C
 		do
---			l_old_current_class := system.current_class
---			l_old_group := inst_context.group
+			l_old_current_class := system.current_class
+			l_old_group := inst_context.group
 
 			Inst_context.set_group (cluster)
 			System.set_current_class (Current)
@@ -1242,8 +1242,8 @@ feature -- Melting
 			Degree_1.insert_class (Current)
 			Degree_2.insert_new_class (Current)
 
---			system.set_current_class (l_old_current_class)
---			inst_context.set_group (l_old_group)
+			system.set_current_class (l_old_current_class)
+			inst_context.set_group (l_old_group)
 		end
 
 	melt_feature_and_descriptor_tables is

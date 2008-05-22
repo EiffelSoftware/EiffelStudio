@@ -22,7 +22,7 @@ feature -- Access
 			-- Tool title.
 			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		do
-			Result := interface_names.to_testing_tool
+			Result := interface_names.t_testing
 		end
 
 	icon: EV_PIXEL_BUFFER

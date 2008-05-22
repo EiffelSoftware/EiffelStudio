@@ -6,6 +6,10 @@ root_cluster.TEST(TEST): on class and interface
 root_cluster.TEST(TEST): on interface
 root_cluster.TEST(method): on class and interface
 root_cluster.TEST(method): on interface
+root_cluster.TEST(property): on class and interface attribute
+root_cluster.TEST(property): on interface attribute
+root_cluster.TEST(_set_property): on class and interface attribute
+root_cluster.TEST(_set_property): on interface attribute
 root_cluster.TEST(set_property): on class and interface
 root_cluster.TEST(set_property): on interface
 root_cluster.TEST(property): on property
@@ -15,6 +19,12 @@ root_cluster.Impl.TEST(TEST): on class
 root_cluster.Impl.TEST(TEST): on class and interface
 root_cluster.Impl.TEST(method): on class
 root_cluster.Impl.TEST(method): on class and interface
+root_cluster.Impl.TEST(property): on class and interface attribute
+root_cluster.Impl.TEST(property): on class attribute
+root_cluster.Impl.TEST(_set_property): on class and interface attribute
+root_cluster.Impl.TEST(_set_property): on class attribute
 root_cluster.Impl.TEST(set_property): on class
 root_cluster.Impl.TEST(set_property): on class and interface
+root_cluster.Impl.TEST($$property): on class and interface attribute
+root_cluster.Impl.TEST($$property): on class attribute
 Execution completed

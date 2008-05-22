@@ -81,6 +81,7 @@ test	memory_leak_when_retried	except019 tcf pass exception
 test	corrupted_trace			except020 tcf pass exception
 test 	top_n_call_incorrect		except021 tcf pass exception
 test	incorrect_local_restoration	except022 tcf pass exception
+test	native_signal_number_in_exception	except023 tcf pass exeption
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

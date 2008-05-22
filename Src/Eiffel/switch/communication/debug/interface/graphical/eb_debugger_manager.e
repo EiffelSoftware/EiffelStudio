@@ -1207,6 +1207,7 @@ feature -- Status setting
 								-- We reloaded less elements than there were.
 							pos := 1
 						end
+						call_stack_tool.reset
 						call_stack_tool.request_update
 						create cst.make (pos)
 						if cst.is_valid then

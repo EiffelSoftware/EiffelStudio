@@ -1,0 +1,15 @@
+test_name 	 native_signal_number_in_exception
+test_description Test the native signal number is set in OPERATING_SYSTEM_SIGNAL_FAILUER.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

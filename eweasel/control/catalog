@@ -1982,4 +1982,5 @@ if DOTNET test renaming-native-dotnet-feature-with-redefine-default-create dotne
 test anchored-creation-crash		dotnet108 tcf pass dotnet
 test object-test-assertion-crash	dotnet109 tcf pass dotnet
 test dotnet-polymorphism			dotnet110 tcf pass dotnet
+test assigner-name-incrementality	dotnet111 tcf pass dotnet
 

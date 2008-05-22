@@ -2069,6 +2069,9 @@ feature -- Title part
 	t_target_selection: STRING_GENERAL is 				do Result := locale.translation ("Target Selection") end
 	t_features_to_test: STRING_GENERAL is				do Result := locale.translation("Features To Test")	end
 	t_test_count: STRING_GENERAL is						do Result := locale.translation("Test Count")	end
+	t_testing: STRING_GENERAL is						do Result := locale.translation("Testing")	end
+	t_testing_experimental: STRING_GENERAL is			do Result := locale.translation("Testing (experimental)")	end
+	t_testing_result: STRING_GENERAL is					do Result := locale.translation("Testing Result")	end
 	t_test_runs_history: STRING_GENERAL is				do Result := locale.translation("Test Runs History")	end
 	t_this_file_has_been_modified: STRING_GENERAL is 	do Result := locale.translation ("This file has been modified by another editor.") end
 	t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translation("Empty Development Tool")	end

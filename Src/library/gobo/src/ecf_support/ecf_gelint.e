@@ -55,12 +55,10 @@ feature -- Execution
 					is_flat := True
 				elseif arg.is_equal ("--noflatdbc") then
 					is_flat_dbc := False
-				elseif arg.is_equal ("--cat") then
-					is_cat := True
+				elseif arg.is_equal ("--catcall") then
+					is_catcall := True
 				elseif arg.is_equal ("--silent") then
 					is_silent := True
-				elseif arg.is_equal ("--void") then
-					void_feature := True
 				elseif arg.is_equal ("--ecma") then
 					ecma_version := ecma_367_latest
 				elseif arg.is_equal ("--ise") then
@@ -104,7 +102,7 @@ feature -- Execution
 				create a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
-					last_universe := Void
+					last_system := Void
 					nb := a_filename.count
 					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
 						parse_xace_file (a_file)
@@ -114,15 +112,15 @@ feature -- Execution
 						parse_ace_file (a_file)
 					end
 					a_file.close
-					if last_universe /= Void then
-						process_universe (last_universe)
+					if last_system /= Void then
+						process_system (last_system)
 						debug ("stop")
 							std.output.put_line ("Press Enter...")
 							io.read_line
 						end
-						if last_universe.error_handler.has_eiffel_error then
+						if last_system.error_handler.has_eiffel_error then
 							Exceptions.die (2)
-						elseif last_universe.error_handler.has_internal_error then
+						elseif last_system.error_handler.has_internal_error then
 							Exceptions.die (5)
 						end
 					else
@@ -146,20 +144,20 @@ feature {NONE} -- Eiffel config file parsing
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read ECF file `a_file'.
-			-- Put result in `last_universe' if no error occurred.
+			-- Put result in `last_system' if no error occurred.
 		local
 			a_ecf_parser: ET_ECF_PARSER
 		do
 			check_environment_variable
 			set_precompile (False)
-			last_universe := Void
+			last_system := Void
 			create a_ecf_parser.make_standard
 			if ecf_target /= Void then
 				a_ecf_parser.set_target (ecf_target)
 			end
 			a_ecf_parser.load (a_file.name)
 			if not a_ecf_parser.is_error then
-				last_universe := a_ecf_parser.last_universe
+				last_system := a_ecf_parser.last_universe
 			end
 		end
 

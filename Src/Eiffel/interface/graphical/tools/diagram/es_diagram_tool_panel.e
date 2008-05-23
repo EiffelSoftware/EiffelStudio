@@ -1394,8 +1394,6 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			l_tool := decide_tool_to_display (a_stone)
 			if develop_window.unified_stone then
 				develop_window.set_stone (a_stone)
-			elseif develop_window.link_tools then
-				develop_window.tools.set_stone (a_stone)
 			else
 				l_tool.set_stone (a_stone)
 			end

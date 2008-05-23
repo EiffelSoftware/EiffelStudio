@@ -121,7 +121,7 @@ feature -- Element change
 			inserted: item (index).int_value = value
 		end
 
-	put_long (value: INTEGER_16; index: INTEGER) is
+	put_long (value: INTEGER_64; index: INTEGER) is
 			-- Add "long" argument at position `index'.
 		require
 			valid_index: valid_index (index)

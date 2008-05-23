@@ -1,0 +1,45 @@
+test_name 	 wrong-polymorphic-call-with-select
+test_description A routine called polymorphically calls the wrong version.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	t_active.e $CLUSTER t_active.e
+copy_raw	t_chain.e $CLUSTER t_chain.e
+copy_raw	t_cursor_structure.e $CLUSTER t_cursor_structure.e
+copy_raw	t_dispenser.e $CLUSTER t_dispenser.e
+copy_raw	t_dynamic_chain.e $CLUSTER t_dynamic_chain.e
+copy_raw	t_linked_list.e $CLUSTER t_linked_list.e
+copy_raw	t_linked_queue.e $CLUSTER t_linked_queue.e
+copy_raw	t_list.e $CLUSTER t_list.e
+copy_raw	t_queue.e $CLUSTER t_queue.e
+copy_raw	t_sequence.e $CLUSTER t_sequence.e
+copy_raw	t_traversable.e $CLUSTER t_traversable.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+test_end

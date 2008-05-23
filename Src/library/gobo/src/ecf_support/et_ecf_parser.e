@@ -73,7 +73,7 @@ feature -- Access
 	last_system: CONF_SYSTEM
 		-- Last loaded configuration system.
 
-	last_universe: ET_ECF_UNIVERSE
+	last_universe: ET_ECF_SYSTEM
 		-- Last loaded universe.
 
 	error_handler: ET_ERROR_HANDLER
@@ -250,7 +250,9 @@ feature {NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_state: CONF_STATE
 			l_et_clusters: ET_ECF_CLUSTERS
+			l_et_cluster: ET_ECF_CLUSTER
 		do
+			create last_universe.make
 			l_et_clusters := ast_factory.new_clusters
 			l_state := state
 
@@ -286,13 +288,16 @@ feature {NONE} -- Implementation
 			loop
 				l_cluster := l_clusters.item_for_iteration
 				if l_cluster.is_enabled (l_state) then
-					l_et_clusters.put_last (gobo_cluster (l_cluster))
+					l_et_cluster := gobo_cluster (l_cluster)
+					l_et_cluster.set_override (True)
+					l_et_clusters.put_last (l_et_cluster)
 				end
 				l_clusters.forth
 			end
 
 				-- Create a universe from the clusters
-			create last_universe.make (l_et_clusters, error_handler)
+			last_universe.set_clusters (l_et_clusters)
+			last_universe.set_error_handler (error_handler)
 			last_universe.set_system_name (application_target.system.name)
 			last_universe.set_root_class_name (application_target.root.class_type_name)
 			last_universe.set_creation_procedure_name (application_target.root.feature_name)
@@ -304,10 +309,11 @@ feature {NONE} -- Implementation
 			-- EiffelStudio cluster converted to a Gobo cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
+			last_universe_not_void: last_universe /= Void
 		local
 			l_file_rule: CONF_FILE_RULE
 		do
-			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory)
+			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory, last_universe)
 			l_file_rule := a_cluster.active_file_rule (state)
 			Result.set_file_rule (ast_factory.new_file_rule (l_file_rule.exclude, l_file_rule.include))
 			Result.set_recursive (a_cluster.is_recursive)

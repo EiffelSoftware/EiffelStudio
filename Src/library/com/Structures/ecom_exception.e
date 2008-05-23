@@ -17,9 +17,14 @@ inherit
 	ECOM_EXCEPTION_CODES
 		export
 			{NONE} all
+		undefine
+			out
 		end
 
 	HRESULT_FORMATTER
+		undefine
+			out
+		end
 
 feature --  Access
 

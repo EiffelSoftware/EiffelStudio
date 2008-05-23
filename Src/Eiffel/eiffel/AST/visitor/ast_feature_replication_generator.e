@@ -29,7 +29,7 @@ feature -- Processing
 			a_feature_valid: a_feature /= Void
 			a_feature_replicated: a_feature.is_replicated
 			a_current_class_not_void: a_current_class /= Void
-			a_feature_replicated_in_current_class: a_feature.access_in = a_current_class.class_id
+			a_feature_replicated_in_current_class: not system.has_old_feature_replication implies a_feature.access_in = a_current_class.class_id
 		local
 			l_feature_as: FEATURE_AS
 			l_old_feature: FEATURE_I

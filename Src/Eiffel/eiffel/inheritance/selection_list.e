@@ -371,15 +371,21 @@ feature -- Conceptual Replication
 			replication: FEATURE_I
 			inh_info: INHERIT_INFO
 			l_inheriting_class_id: INTEGER
+			l_has_old_feature_replication: BOOLEAN
 		do
 			from
+				l_has_old_feature_replication := system.has_old_feature_replication
 				l_inheriting_class_id := new_t.feat_tbl_id
 				start
 			until
 				after
 			loop
 				inh_info := item
-				replication := inh_info.a_feature.replicated (l_inheriting_class_id)
+				if l_has_old_feature_replication then
+					replication := inh_info.a_feature.replicated (inh_info.a_feature.written_in)
+				else
+					replication := inh_info.a_feature.replicated (l_inheriting_class_id)
+				end
 				new_t.replace (replication, replication.feature_name_id)
 				inh_info.set_a_feature (replication)
 				forth

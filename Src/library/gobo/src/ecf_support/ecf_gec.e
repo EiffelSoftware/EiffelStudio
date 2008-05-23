@@ -36,20 +36,20 @@ feature {NONE} -- Eiffel config file parsing
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read ECF file `a_file'.
-			-- Put result in `last_universe' if no error occurred.
+			-- Put result in `last_system' if no error occurred.
 		local
 			a_ecf_parser: ET_ECF_PARSER
 		do
 			check_environment_variable
 			set_precompile (False)
-			last_universe := Void
+			last_system := Void
 			create a_ecf_parser.make_standard
 			if ecf_target /= Void then
 				a_ecf_parser.set_target (ecf_target)
 			end
 			a_ecf_parser.load (a_file.name)
 			if not a_ecf_parser.is_error then
-				last_universe := a_ecf_parser.last_universe
+				last_system := a_ecf_parser.last_universe
 			end
 		end
 
@@ -72,10 +72,14 @@ feature {NONE} -- Arguments
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
-				-- cat
-			create cat_flag.make_with_long_form ("cat")
-			cat_flag.set_description ("CAT-call errors should be considered as fatal errors.")
-			a_parser.options.force_last (cat_flag)
+				-- catcall
+			create catcall_option.make_with_long_form ("catcall")
+			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
+			catcall_option.extend ("no")
+			catcall_option.extend ("error")
+			catcall_option.extend ("warning")
+			catcall_option.set_parameter_description ("no|error|warning")
+			a_parser.options.force_last (catcall_option)
 				-- cc
 			create c_compile_option.make_with_long_form ("cc")
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")

@@ -31,12 +31,12 @@ feature -- AST factory
 			file_rule_not_void: Result /= Void
 		end
 
-	new_assembly (a_name: STRING; a_pathname: STRING): ET_ECF_DOTNET_ASSEMBLY is
+	new_assembly (a_name: STRING; a_pathname: STRING; a_universe: ET_ECF_SYSTEM): ET_ECF_DOTNET_ASSEMBLY is
 			-- New assembly
 		require
 			a_name_not_void: a_name /= Void
 		do
-			create Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname, a_universe)
 		ensure
 			assembly_not_void: Result /= Void
 		end
@@ -49,12 +49,12 @@ feature -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: STRING; a_pathname: STRING): ET_ECF_CLUSTER is
+	new_cluster (a_name: STRING; a_pathname: STRING; a_universe: ET_ECF_SYSTEM): ET_ECF_CLUSTER is
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
 		do
-			create Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname, a_universe)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -65,18 +65,6 @@ feature -- AST factory
 			create Result.make_empty
 		ensure
 			clusters_not_void: Result /= Void
-		end
-
-	new_universe (a_clusters: ET_ECF_CLUSTERS; a_factory: ET_AST_FACTORY;
-		an_error_handler: ET_ERROR_HANDLER): ET_ECF_UNIVERSE is
-			-- New class universe
-		require
-			an_error_handler_not_void: an_error_handler /= Void
-			a_factory_not_void: a_factory /= Void
-		do
-			create Result.make_with_factory (a_clusters, a_factory, an_error_handler)
-		ensure
-			universe_not_void: Result /= Void
 		end
 
 feature -- Eiffel AST factory

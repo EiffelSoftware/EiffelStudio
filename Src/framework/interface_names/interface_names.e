@@ -156,7 +156,7 @@ feature -- Button texts
 	b_Bkpt_stop_in_hole: STRING_GENERAL is				do Result := locale.translation("Pause")	end
 	b_Exec_kill: STRING_GENERAL is						do Result := locale.translation("Stop Application")	end
 	b_Exec_into: STRING_GENERAL is						do Result := locale.translation("Step Into")	end
-	b_Exec_no_stop: STRING_GENERAL is					do Result := locale.translation("Launch Without Stopping")	end
+	b_Exec_no_stop: STRING_GENERAL is					do Result := locale.translation("Run Without Breakpoints")	end
 	b_Exec_out: STRING_GENERAL is						do Result := locale.translation("Step Out")	end
 	b_Exec_step: STRING_GENERAL is						do Result := locale.translation("Step")	end
 	b_Exec_stop: STRING_GENERAL is						do Result := locale.translation("Pause")	end
@@ -400,6 +400,7 @@ feature -- Accelerator, focus label and menu name
 	m_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore Assertion Checking")	end
 	m_Dbg_exception_handler: STRING_GENERAL is	do Result := locale.translation("Exception Handling")	end
+	m_Dbg_stop_at_breakpoints: STRING_GENERAL is	do Result := locale.translation("Stop at Breakpoints")	end
 	m_Dbg_ignore_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignore Breakpoints")	end
 	m_Dbg_ignoring_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignoring Breakpoints")	end
 	m_Dbg_disable_catcall_console_warning: STRING_GENERAL is	do Result := locale.translation("Disable Catcall Console Warning")	end
@@ -412,7 +413,7 @@ feature -- Accelerator, focus label and menu name
 	m_Debug_dynamic_eval: STRING_GENERAL is		do Result := locale.translation("Dynamic Feature Evaluation")	end
 	m_Debug_kill: STRING_GENERAL is				do Result := locale.translation("&Stop Execution")	end
 	f_Debug_run: STRING_GENERAL is				do Result := locale.translation("Run")	end
-	m_Debug_run: STRING_GENERAL is				do Result := locale.translation("&Run%TCtrl+R")	end
+	m_Debug_run: STRING_GENERAL is				do Result := locale.translation("&Run")	end
 	m_Debug_run_new: STRING_GENERAL is			do Result := locale.translation("St&art")	end
 	m_Debug_run_continue: STRING_GENERAL is		do Result := locale.translation("Continue")	end
 
@@ -498,7 +499,7 @@ feature -- Accelerator, focus label and menu name
 	m_Enable_stop_points: STRING_GENERAL is		do Result := locale.translation("&Enable All Breakpoints")	end
 	m_environment_variables: STRING_GENERAL is		do Result := locale.translation("Environment variables")	end
 	m_Exec_last: STRING_GENERAL is				do Result := locale.translation("&Out of Routine")	end
-	m_Exec_nostop: STRING_GENERAL is			do Result := locale.translation("&Ignore Breakpoints")	end
+	m_Exec_nostop: STRING_GENERAL is			do Result := locale.translation("Run &Ignoring Breakpoints")	end
 	m_Exec_step: STRING_GENERAL is				do Result := locale.translation("&Step-by-Step")	end
 	m_Exec_into: STRING_GENERAL is				do Result := locale.translation("Step In&to")	end
 	m_Exit_project: STRING_GENERAL is			do Result := locale.translation("E&xit")	end
@@ -2409,7 +2410,7 @@ feature -- Description texts
 	e_Exec_debug_continue: STRING_GENERAL is	do Result := locale.translation("Continue execution and stop at breakpoints")	end
 	e_Exec_kill: STRING_GENERAL is				do Result := locale.translation("Stop execution")	end
 	e_Exec_into: STRING_GENERAL is				do Result := locale.translation("Step into a routine")	end
-	e_Exec_no_stop: STRING_GENERAL is			do Result := locale.translation("Start execution without stopping at breakpoints")	end
+	e_Exec_no_stop: STRING_GENERAL is			do Result := locale.translation("Run without stopping at breakpoints")	end
 	e_Exec_out: STRING_GENERAL is				do Result := locale.translation("Step out of a routine")	end
 	e_Exec_step: STRING_GENERAL is				do Result := locale.translation("Execute execution one step at a time")	end
 	e_Exec_stop: STRING_GENERAL is				do Result := locale.translation("Pause execution at current point")	end
@@ -2464,8 +2465,8 @@ feature -- Description texts
 
 	e_Dbg_exception_handler: STRING_GENERAL is do Result := locale.translation("Exception handling")	end
 	e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
-	e_Dbg_stop_at_breakpoints: STRING_GENERAL is do Result := locale.translation("Stop at breakpoint (Stop execution when the application reach a breakpoint).")	end
-	e_Dbg_Ignore_breakpoints: STRING_GENERAL is do Result := locale.translation("Ignore breakpoint (Do not stop at any breakpoint).")	end
+	e_Dbg_stop_at_breakpoints: STRING_GENERAL is do Result := locale.translation("Enable stop at breakpoint (Execution stops when a breakpoint is reached).")	end
+	e_Dbg_Ignore_breakpoints: STRING_GENERAL is do Result := locale.translation("Disable stop at breakpoint (Execution ignores breakpoints).")	end
 
 	e_open_selection_in_editor: STRING_GENERAL is do Result := locale.translation("Open selected file name in specified external editor")	end
 	e_save_c_compilation_output: STRING_GENERAL is do Result := locale.translation("Save C Compilation output to file")	end

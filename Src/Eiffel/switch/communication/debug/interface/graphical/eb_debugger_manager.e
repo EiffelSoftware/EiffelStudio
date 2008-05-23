@@ -379,6 +379,9 @@ feature -- Access
 	no_stop_cmd: EB_EXEC_NO_STOP_CMD
 			-- Run without stop points command.
 
+	ignore_breakpoints_cmd: EB_DBG_IGNORE_BREAKPOINTS_CMD
+			-- Ignore breakpoint toggle command
+
 	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 			-- Exception handler command
 
@@ -424,6 +427,54 @@ feature -- Access
 
 	force_debug_mode_cmd: EB_FORCE_DEBUG_MODE_CMD
 			-- Force debug mode command.
+
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
+
+	system_info_cmd: EB_STANDARD_CMD
+			-- Command that displays information about current system in the output tool.
+
+feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
+
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
+			-- Command controlling the object viewer tools
+
+	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
+			-- Command controlling the remove object storage operation
+
+feature {EB_EXEC_FORMAT_CMD} -- Command
+
+	bkpt_info_cmd: EB_STANDARD_CMD
+			-- Command that can display info concerning the breakpoints in the system.
+
+	set_critical_stack_depth_cmd: EB_STANDARD_CMD
+			-- Command that changes the depth at which we warn the user against a stack overflow.
+
+	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
+			-- Command to disable/restore assertion checking on the debuggee
+
+	options_cmd: EB_DEBUG_OPTIONS_CMD
+			-- Command to open the execution parameter dialog
+
+	stop_cmd: EB_EXEC_STOP_CMD
+			-- Command that can interrupt the execution.
+
+	quit_cmd: EB_EXEC_QUIT_CMD
+			-- Command that can kill the execution.
+
+	step_cmd: EB_EXEC_STEP_CMD
+			-- Step by step command.
+
+	out_cmd: EB_EXEC_OUT_CMD
+			-- Out of routine command.
+
+	into_cmd: EB_EXEC_INTO_CMD
+			-- Step into command.
+
+	debug_cmd: EB_EXEC_DEBUG_CMD
+			-- Run with stop points command.
+
+	restart_cmd: EB_EXEC_RESTART_DEBUG_CMD
+			-- Restart debugging without closing the interface.
 
 feature -- tools
 
@@ -1975,19 +2026,6 @@ feature -- Application change
 			assertion_checking_handler_cmd.set_select (False)
 		end
 
-feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
-
-	system_info_cmd: EB_STANDARD_CMD
-			-- Command that displays information about current system in the output tool.
-
-feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
-
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
-			-- Command controlling the object viewer tools
-
-	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
-			-- Command controlling the remove object storage operation
-
 feature -- Options
 
 	display_agent_details: BOOLEAN
@@ -2020,40 +2058,7 @@ feature {NONE} -- Implementation
 
 	objects_split_proportion: REAL
 			-- Position of the splitter inside the object tool.
-
-	bkpt_info_cmd: EB_STANDARD_CMD
-			-- Command that can display info concerning the breakpoints in the system.
-
-	set_critical_stack_depth_cmd: EB_STANDARD_CMD
-			-- Command that changes the depth at which we warn the user against a stack overflow.
-
-	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
-
-	ignore_breakpoints_cmd: EB_DBG_IGNORE_BREAKPOINTS_CMD
-
-	options_cmd: EB_DEBUG_OPTIONS_CMD
-
-	stop_cmd: EB_EXEC_STOP_CMD
-			-- Command that can interrupt the execution.
-
-	quit_cmd: EB_EXEC_QUIT_CMD
-			-- Command that can kill the execution.
-
-	step_cmd: EB_EXEC_STEP_CMD
-			-- Step by step command.
-
-	out_cmd: EB_EXEC_OUT_CMD
-			-- Out of routine command.
-
-	into_cmd: EB_EXEC_INTO_CMD
-			-- Step into command.
-
-	debug_cmd: EB_EXEC_DEBUG_CMD
-			-- Run with stop points command.
-
-	restart_cmd: EB_EXEC_RESTART_DEBUG_CMD
-			-- Restart debugging without closing the interface.
-
+			
 	enable_commands_on_project_created is
 			-- Enable commands when a new project has been created (not yet compiled)
 		do

@@ -25,7 +25,8 @@ inherit
 
 	DOTNET_EXCEPTION_WRAPPER
 		undefine
-			default_create
+			default_create,
+			out
 		end
 
 

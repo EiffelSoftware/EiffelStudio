@@ -26,7 +26,8 @@ inherit
 
 	DOTNET_EXCEPTION_WRAPPER
 		undefine
-			default_create
+			default_create,
+			out
 		end
 
 create
@@ -41,6 +42,17 @@ feature -- Access
 			-- Exception code
 		once
 			Result := {EXCEP_CONST}.signal_exception
+		end
+
+	signal_code: INTEGER
+			-- Signal code, not implemented.
+
+feature {EXCEPTION_MANAGER} -- Status setting
+
+	set_signal_code (a_code: like signal_code) is
+			-- Set `signal_code' with `a_code'
+		do
+			signal_code := a_code
 		end
 
 feature {NONE} -- Accesss

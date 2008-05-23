@@ -26,7 +26,8 @@ inherit
 
 	DOTNET_EXCEPTION_WRAPPER
 		undefine
-			default_create
+			default_create,
+			out
 		end
 
 create
@@ -41,6 +42,17 @@ feature -- Access
 			-- Exception code
 		once
 			Result := {EXCEP_CONST}.operating_system_exception
+		end
+		
+	error_code: INTEGER
+			-- Error code, not implemeted.
+		
+feature {EXCEPTION_MANAGER} -- Status setting
+
+	set_Error_code (a_code: like Error_code) is
+			-- Set `Error_code' with `a_code'
+		do
+			Error_code := a_code
 		end
 
 feature {NONE} -- Accesss

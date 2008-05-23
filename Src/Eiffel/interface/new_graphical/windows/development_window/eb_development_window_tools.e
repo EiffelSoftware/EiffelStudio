@@ -234,6 +234,7 @@ feature -- Commands
 			-- Dispatch stone to tools for linking
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
+			diagram_tool.set_stone (a_stone)
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)

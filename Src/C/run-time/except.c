@@ -1277,7 +1277,7 @@ rt_public void eraise(char *tag, long num)
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	/* INVARIANT_VIOLATION is not raised in here, so we don't care if entry or not. */
-	make_exception (num, 0, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); 
+	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); 
 
 #ifndef NOHOOK
 	exception(PG_RAISE);	/* Debugger hook -- explicitly raised exception */

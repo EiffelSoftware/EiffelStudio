@@ -247,6 +247,7 @@ feature -- IL code generation
 		require
 			a_context_class_not_void: a_context_class /= Void
 			a_context_class_valid: a_context_class.is_valid
+			is_valid: is_valid
 			a_context_valid_for_current: is_valid_for_class (a_context_class)
 		do
 		end
@@ -602,14 +603,11 @@ feature -- Comparison
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still
 			--| the same (problem detected for LIKE_FEATURE). Xavier
-		local
-			l_other: like Current
+		require
+			is_valid: is_valid
 		do
-			Result := other /= Void and then other.same_type (Current)
-			if Result then
-				l_other ?= other
-				check l_other_not_void: l_other /= Void end
-				Result := is_equivalent (l_other)
+			if other /= Void and then other.same_type (Current) then
+				Result := other.is_valid and then is_equivalent (other)
 			end
 		end;
 
@@ -618,20 +616,23 @@ feature -- Comparison
 			-- this feature is similar to `deep_equal'
 			-- but ARRAYs and STRINGs are processed correctly
 			-- (`deep_equal' will compare the size of the `area')
+		require
+			o1_is_valid: o1 /= Void implies o1.is_valid
 		do
 			if o1 = Void then
 				Result := o2 = Void
 			else
-				Result := o2 /= Void and then o2.same_type (o1) and then
-					o1.is_equivalent (o2)
+				Result := o1.is_safe_equivalent (o2)
 			end
 		end
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		require
+			is_valid: is_valid
 			arg_non_void: other /= Void
 			same_type: same_type (other)
+			other_is_valid: other.is_valid
 		deferred
 		end
 
@@ -697,7 +698,13 @@ feature -- Access
 			--              of 'actual_type' - but 'actual_type'
 			--              does not recurs on generics(?)!
 		do
-			Result := actual_type
+			Result := Current
+		end
+
+	context_free_type: TYPE_A is
+			-- Type where all anchors to features are removed.
+		do
+			Result := Current
 		end
 
 	has_generics: BOOLEAN is

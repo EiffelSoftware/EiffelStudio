@@ -81,13 +81,16 @@ feature -- Visitor
 		local
 			c: CL_TYPE_A
 			f: FEATURE_I
+			l_node: ACCESS_B
 		do
-			if not context.is_written_context then
+			if not context.is_written_context or (system.il_generation and then context_type.is_expanded) then
 					-- Ensure the feature is not redeclared into attribute.
 				c ?= context_type
 				f := c.associated_class.feature_of_rout_id (routine_id)
 				if not f.is_attribute then
-					f := Void
+					if not system.il_generation or else not c.is_expanded then
+						f := Void
+					end
 				end
 			end
 			if f = Void then
@@ -95,7 +98,12 @@ feature -- Visitor
 				v.process_feature_b (Current)
 			else
 					-- Create new byte node and process it instead of the current one.
-				byte_node (f).process (v)
+				l_node := byte_node (f, c)
+				if {l_feat: like Current} l_node then
+					v.process_feature_b (l_feat)
+				else
+					l_node.process (v)
+				end
 			end
 		end
 
@@ -213,7 +221,7 @@ feature -- Access
 				Result := feature_bl
 			else
 					-- Create new byte node and process it instead of the current one.
-				Result ?= byte_node (f).enlarged
+				Result ?= byte_node (f, type_i).enlarged
 			end
 		end
 
@@ -383,7 +391,7 @@ feature -- Inlining
 					-- Ensure the feature is not redeclared into attribute or external routine
 				if f.is_attribute or else f.is_external then
 						-- Create new byte node and process it instead of the current one
-					Result := byte_node (f).inlined_byte_code
+					Result := byte_node (f, type_i).inlined_byte_code
 				else
 						-- Creation of a special node for the entire
 						-- feature (descendant of STD_BYTE_CODE)

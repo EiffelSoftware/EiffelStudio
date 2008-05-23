@@ -318,7 +318,7 @@ feature -- C code generation
 				if is_qualified then
 						-- To fix eweasel test#term155 we remove all anchors from
 						-- calls after the first dot in a call chain.
-					l_type := access_type.deep_actual_type
+					l_type := access_type.context_free_type
 				else
 					l_type := access_type
 				end

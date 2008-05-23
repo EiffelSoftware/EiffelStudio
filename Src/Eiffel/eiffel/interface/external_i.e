@@ -76,8 +76,10 @@ feature -- Incrementality
 		do
 			other_ext ?= other
 			if other_ext /= Void then
-				Result := same_signature (other) and then
-					equal (external_alias_name, other_ext.external_alias_name) and then
+					-- To be equivalent means having a similar signature, same name,
+					-- same encapsulation and same extension (i.e. specification)
+				Result := pattern_id = other.pattern_id and then
+					external_alias_name_id = other_ext.external_alias_name_id and then
 					encapsulated = other_ext.encapsulated
 				if Result then
 					Result := equal (extension, other_ext.extension)
@@ -161,7 +163,7 @@ feature
 			if is_qualified then
 					-- To fix eweasel test#term155 we remove all anchors from
 					-- calls after the first dot in a call chain.
-				l_type := access_type.deep_actual_type
+				l_type := access_type.context_free_type
 			else
 				l_type := access_type
 			end

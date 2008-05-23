@@ -11,7 +11,8 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_type, deep_actual_type, associated_class, associated_class_type, conform_to, conformance_type, convert_to,
+			actual_type, deep_actual_type, context_free_type,
+			associated_class, associated_class_type, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, instantiated_in, duplicate,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
@@ -42,6 +43,13 @@ feature -- Properties
 			-- <Precursor>
 		do
 			Result := conformance_type.deep_actual_type
+		end
+
+	context_free_type: like Current is
+			-- <Precursor>
+		do
+			create Result
+			Result.set_actual_type (conformance_type.context_free_type)
 		end
 
 	conformance_type: TYPE_A
@@ -537,7 +545,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- when processing an inherited routine using `like Current'
 				-- we keep LIKE_CURRENT for the metatype, but simply replace
 				-- its `conformance_type' with its `meta_type'.
-			create {LIKE_CURRENT} Result
+			create Result
 			Result.set_actual_type (conformance_type.meta_type)
 		end
 

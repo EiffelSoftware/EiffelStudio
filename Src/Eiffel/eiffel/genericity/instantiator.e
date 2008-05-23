@@ -55,7 +55,7 @@ feature -- Attributes
 				-- Evaluation of a type class
 			type_i ?= a_type
 
-			if system.il_generation then
+			if system.il_generation and then a_type.is_valid then
 					-- If `a_type' has an anchor, we need to add them to `{CLASS_C}.type_set'.
 					-- Currently this is only needed in .NET code generation.
 				a_type.dispatch_anchors (a_class)

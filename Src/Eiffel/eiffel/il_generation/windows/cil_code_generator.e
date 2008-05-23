@@ -1576,7 +1576,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 			class_c := system.any_class.compiled_class
 			feature_i := class_c.feature_table.item_id ({PREDEFINED_NAMES}.is_equal_name_id)
 			if feature_i /= Void then
-					-- Provide implementation matching definition of feature "out" from class ANY
+					-- Provide implementation matching definition of feature "is_equal" from class ANY
 				debug ("fixme")
 					fixme ("Check that the signature of the feature is as expected.")
 				end
@@ -1618,7 +1618,9 @@ feature {NONE} -- SYSTEM_OBJECT features
 				branch_on_false (l_label)
 
 				arg_type := argument_actual_type_in (feature_i.arguments.first, class_type)
-				if arg_type.is_expanded then
+				if arg_type.is_basic then
+					generate_external_unmetamorphose (arg_type)
+				elseif arg_type.is_expanded then
 					generate_unmetamorphose (arg_type)
 				end
 				generate_feature_access (type_i, feature_i.feature_id, 1, True, True)
@@ -1893,7 +1895,7 @@ feature -- Features info
 			if inherited_feature /= Void then
 				if
 					is_method_impl_needed (local_feature, inherited_feature, class_type) or else
-					is_local_signature_changed (local_feature)
+					is_local_signature_changed (inherited_feature, local_feature)
 				then
 					generate_feature (local_feature, False, False, False)
 				else
@@ -3402,14 +3404,10 @@ feature -- IL Generation
 			if type_i.is_expanded then
 					-- Stack contains a pointer to value type object.
 					-- Load a value of the object.
-				generate_load_from_address (type_i)
-					-- Now it has to be converted to a ... (see below)
-				if result_type_in (feat, current_class_type).is_expanded then
-						-- ... unboxed value.
-						-- (Already done.)
+				if type_i.is_basic then
+					generate_load_from_address_as_basic (type_i)
 				else
-						-- ... boxed value.
-					generate_metamorphose (type_i)
+					generate_load_from_address (type_i)
 				end
 			else
 				method_body.put_call ({MD_OPCODES}.Call, current_module.memberwise_clone_token, 0, True)
@@ -3432,12 +3430,22 @@ feature -- IL Generation
 
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
+		do
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name,
+				"is_equal", Static_type,
+				<<system_object_class_name, system_object_class_name>>,
+				"System.Boolean", False)
+		end
+
+	generate_same_type_test is
+			-- Generate comparison of two objects.
 			-- (The feature is invoked with a current object on the stack,
 			-- i.e. takes 3 arguments: Current, some, other.)
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				runtime_class_name,
-				"is_equal", Static_type,
+				"same_type", Static_type,
 				<<system_object_class_name, system_object_class_name>>,
 				"System.Boolean", False)
 		end
@@ -3959,28 +3967,41 @@ feature -- IL Generation
 
 feature {NONE} -- Implementation
 
-	is_local_signature_changed (local_feature: FEATURE_I): BOOLEAN is
+	is_local_signature_changed (inherited_feature, local_feature: FEATURE_I): BOOLEAN is
 			-- Is signature of a local feature `local_feature' changed
 			-- from the one of the associated interface?
+		require
+			inherited_feature_not_void: inherited_feature /= Void
+			local_feature_not_void: local_feature /= Void
+			same_arguments_count: inherited_feature.argument_count = local_feature.argument_count
 		local
-			arguments: FEAT_ARG
+			l_inh_arguments, l_arguments: FEAT_ARG
+			l_is_expanded: BOOLEAN
 		do
-			if current_class_type.is_expanded then
-					-- Take into account signature changes due to "like Current" type
-				if local_feature.type.has_like_current then
-					Result := True
-				elseif local_feature.arguments /= Void then
+				-- Optimization as many times `inherited_feature' and `local_feature' are the same
+			if inherited_feature /= local_feature then
+				l_is_expanded := current_class_type.is_expanded
+				Result := (inherited_feature.type.is_reference and local_feature.type.is_expanded) or
+					(l_is_expanded and local_feature.type.has_like_current)
+				l_arguments := local_feature.arguments
+				if not Result and l_arguments /= Void then
 					from
-						arguments := local_feature.arguments
-						arguments.start
+						l_inh_arguments := inherited_feature.arguments
+						l_arguments.start
+						l_inh_arguments.start
 					until
-						arguments.after
+						l_arguments.after
 					loop
-						if arguments.item.has_like_current then
+						if
+							(l_inh_arguments.item.is_reference and l_arguments.item.is_expanded) or
+							(l_is_expanded and l_arguments.item.has_like_current)
+						then
 							Result := True
-							arguments.finish
+								-- Jump out of loop
+							l_arguments.finish
 						end
-						arguments.forth
+						l_inh_arguments.forth
+						l_arguments.forth
 					end
 				end
 			end

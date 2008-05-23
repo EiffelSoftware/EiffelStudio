@@ -1219,8 +1219,8 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_lt, l_rt: TYPE_A
-			l_continue_label: IL_LABEL
-			l_end_label: IL_LABEL
+			l_continue_label, l_void_label, l_end_label, l_failure_label: IL_LABEL
+			l_left_local: INTEGER
 		do
 			l_lt := context.real_type (a_node.left.type)
 			l_rt := context.real_type (a_node.right.type)
@@ -1246,42 +1246,65 @@ feature {NONE} -- Visitors
 			else
 					-- Generate left operand.
 				generate_expression_il_for_type (a_node.left, any_type)
-				if l_lt.is_reference then
-						-- Check for voidness.
-					l_continue_label := il_generator.create_label
-					l_end_label := il_generator.create_label
-					il_generator.duplicate_top
-					il_generator.branch_on_true (l_continue_label)
-					il_generator.pop
-					il_generator.put_boolean_constant (False)
-					il_generator.branch_to (l_end_label)
-					il_generator.mark_label (l_continue_label)
-				end
+					-- Store result of a left expression in a local.
+				context.add_local (any_type)
+				l_left_local := context.local_list.count
+				il_generator.put_dummy_local_info (any_type, l_left_local)
+				il_generator.generate_local_assignment (l_left_local)
 
 					-- Generate right operand.
 				generate_expression_il_for_type (a_node.right, any_type)
-				if l_rt.is_reference then
-						-- Check for voidness.
-					l_continue_label := il_generator.create_label
-					l_end_label := il_generator.create_label
-					il_generator.duplicate_top
-					il_generator.branch_on_true (l_continue_label)
-						-- Remove left operand as well.
-					il_generator.pop
-					il_generator.pop
-					il_generator.put_boolean_constant (False)
-					il_generator.branch_to (l_end_label)
-					il_generator.mark_label (l_continue_label)
-				end
+					-- Check for voidness.
+				l_continue_label := il_generator.create_label
+				l_void_label := il_generator.create_label
+				l_end_label := il_generator.create_label
+				l_failure_label := il_generator.create_label
+				il_generator.duplicate_top
+				il_generator.branch_on_false (l_void_label)
 
+					-- Right hand side is not Void, check that left hand side is not Void too.
+				il_generator.generate_local (l_left_local)
+				il_generator.put_void
+				il_generator.generate_binary_operator (il_eq, False)
+				il_generator.branch_on_false (l_continue_label)
+					-- Code when right hand side is not Void, but left is.
+					-- First remove right hand side since not needed as the answer is False.
+				il_generator.pop
+				il_generator.put_boolean_constant (False)
+				il_generator.branch_to (l_end_label)
+					-- Code when both right hand side and left hand size are not Void
+				il_generator.mark_label (l_continue_label)
+					-- First check that they have the same type.
+				il_generator.duplicate_top
+				il_generator.generate_local (l_left_local)
+				il_generator.generate_same_type_test
+				il_generator.branch_on_false (l_failure_label)
+					-- Now check equality:
+				il_generator.generate_local (l_left_local)
 					-- FIXME: This call assumes that `is_equal' from ANY always takes
 					-- `like Current' as argument, but actually it could be different.
 				il_generator.generate_object_equality_test
+				il_generator.branch_to (l_end_label)
+
+					-- Failure on same type.
+				il_generator.mark_label (l_failure_label)
+					-- Remove right hand side
+				il_generator.pop
+				il_generator.put_boolean_constant (False)
+				il_generator.branch_to (l_end_label)
+
+					-- Right hand side was Void, return True if left hand side was Void too.
+				il_generator.mark_label (l_void_label)
+					-- Remove right hand side since not needed and simply compare `left' with Void.
+				il_generator.pop
+				il_generator.generate_local (l_left_local)
+				il_generator.put_void
+				il_generator.generate_binary_operator (il_eq, False)
+				il_generator.branch_to (l_end_label)
+
 
 					-- Mark end of equality expression (if required).
-				if l_end_label /= Void then
-					il_generator.mark_label (l_end_label)
-				end
+				il_generator.mark_label (l_end_label)
 			end
 		end
 
@@ -1788,8 +1811,13 @@ feature {NONE} -- Visitors
 					check
 						precursor_not_expanded: not l_precursor_type.is_expanded
 					end
-					il_generator.generate_load_from_address (context.context_class_type.type)
-					il_generator.generate_metamorphose (context.context_class_type.type)
+					if context.context_class_type.is_basic then
+						il_generator.generate_load_from_address_as_object (context.context_cl_type)
+						il_generator.generate_metamorphose (context.context_cl_type)
+					else
+						il_generator.generate_load_from_address (context.context_class_type.type)
+						il_generator.generate_metamorphose (context.context_class_type.type)
+					end
 					il_generator.generate_check_cast (context.context_class_type.type, l_precursor_type)
 				end
 
@@ -1839,7 +1867,7 @@ feature {NONE} -- Visitors
 							if l_arg_type /= Void and then l_arg_type.is_expanded then
 								generate_expression_il_for_type (a_node.parameters.item,
 									l_arg_type.reference_type)
-							else
+					else
 								a_node.parameters.item.process (Current)
 							end
 							a_node.parameters.forth
@@ -1919,8 +1947,12 @@ feature {NONE} -- Visitors
 						-- an expanded out of it. Because the way it works, the value
 						-- we get from the Precursor call must be a boxed value.
 					il_generator.generate_check_cast (l_orig_return_type, l_return_type)
-					il_generator.generate_load_address (l_return_type)
-					il_generator.generate_load_from_address (l_return_type)
+					if l_return_type.is_basic then
+						il_generator.generate_load_address (l_return_type)
+						il_generator.generate_load_from_address_as_basic (l_return_type)
+					else
+						il_generator.generate_unmetamorphose (l_return_type)
+					end
 				elseif l_is_nested_call then
 					l_return_type := context.real_type (a_node.type)
 					if l_return_type.is_true_expanded and then not l_return_type.associated_class.is_enum then

@@ -47,7 +47,7 @@ feature -- Comparisons
 			if Precursor {ATTR_DESC} (other) then
 				l_ref ?= other
 				Result := (l_ref /= void) and then (type_i /= Void and l_ref.type_i /= Void) and then
-					type_i.equivalent (type_i, l_ref.type_i)
+					(type_i.is_valid and l_ref.type_i.is_valid) and then type_i.equivalent (type_i, l_ref.type_i)
 			end
 		end
 

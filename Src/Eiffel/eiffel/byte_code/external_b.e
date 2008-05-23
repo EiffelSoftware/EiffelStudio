@@ -47,7 +47,7 @@ feature -- Visitor
 				v.process_external_b (Current)
 			else
 					-- Create new byte node and process it instead of the current one.
-				byte_node (f).process (v)
+				byte_node (f, c).process (v)
 			end
 		end
 
@@ -234,7 +234,7 @@ feature -- Status report
 				external_bl.fill_from (Current)
 				Result := external_bl
 			else
-				Result ?= byte_node (f).enlarged
+				Result ?= byte_node (f, a_type_i).enlarged
 			end
 		end
 

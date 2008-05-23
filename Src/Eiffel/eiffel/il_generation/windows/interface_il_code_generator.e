@@ -416,13 +416,14 @@ feature -- IL Generation
 						-- Generate local definition of `feat' which
 						-- calls static definition.
 					if inh_feat /= Void then
-						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat,
-							class_type)
+						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type)
+							or else is_local_signature_changed (inh_feat, feat)
 					end
 
 					if is_expanded and then not feat.is_attribute and then not feat.is_external then
 						if is_replicated then
-							byte_context.change_class_type_context (current_class_type, current_class_type.type,
+							byte_context.change_class_type_context (current_class_type,
+								current_class_type.type,
 								written_class_type, written_class_type.type)
 						end
 						generate_feature_code (feat, False)
@@ -446,9 +447,11 @@ feature -- IL Generation
 					if is_expanded then
 						if inh_feat = Void then
 								-- Generate implementation for reference counterpart of this class.
-							impl_feat := feat
 							impl_type := current_class_type.type.reference_type
 							impl_class_type := impl_type.associated_class_type (Void)
+								-- Update `feat' in the context of the reference type and use it as `impl_feat'.
+							impl_feat := feat.duplicate
+							impl_feat.instantiation_in (impl_type)
 						else
 								-- Generate implementation for parent class type.
 							impl_feat := inh_feat
@@ -459,9 +462,8 @@ feature -- IL Generation
 						end
  					end
 					if impl_feat /= Void then
-						l_is_method_impl_generated := is_method_impl_needed (feat, impl_feat, impl_class_type) or else
-							not signature (current_type_id, feat.feature_id).is_equal (
-								signature (impl_class_type.static_type_id, impl_feat.feature_id))
+						l_is_method_impl_generated := is_method_impl_needed (feat, impl_feat, impl_class_type)
+							or is_local_signature_changed (impl_feat, feat)
 					end
 					if feat.is_c_external then
 						if is_replicated then
@@ -511,7 +513,8 @@ feature -- IL Generation
 		do
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
-					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else is_local_signature_changed (feat)
+					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else
+						is_local_signature_changed (inh_feat, feat)
 				end
 				if feat.body_index = standard_twin_body_index then
 					generate_feature_standard_twin (feat)

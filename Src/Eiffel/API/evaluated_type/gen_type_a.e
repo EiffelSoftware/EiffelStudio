@@ -17,7 +17,7 @@ inherit
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, internal_is_valid_for_class, expanded_deferred, valid_expanded_creation,
 			same_as, is_equivalent, description, instantiated_description, is_explicit,
-			deep_actual_type, instantiation_in, has_actual,
+			deep_actual_type, context_free_type, instantiation_in, has_actual,
 			actual_argument_type, update_dependance, hash_code,
 			is_full_named_type, process, evaluated_type_in_descendant,
 			generate_cid, generate_cid_array, generate_cid_init,
@@ -964,6 +964,34 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
+	context_free_type: like Current is
+			-- Actual type of Current; recursive version for generics
+		local
+			i: INTEGER
+			l_old_generics, l_new_generics: like generics
+			l_prev_type, l_new_type: TYPE_A
+		do
+			Result := Current
+			from
+				l_old_generics := Result.generics
+				i := l_old_generics.count
+			until
+				i <= 0
+			loop
+				l_prev_type := l_old_generics.item (i)
+				l_new_type := l_prev_type.context_free_type
+				if l_prev_type /= l_new_type then
+					if l_new_generics = Void then
+							-- Void modifying original type.
+						Result := Result.duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_type, i)
+				end
+				i := i - 1
+			end
+		end
+
 	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current is
 		local
 			i: INTEGER
@@ -1790,4 +1818,5 @@ indexing
 		]"
 
 end -- class GEN_TYPE_A
+
 

@@ -1154,19 +1154,7 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: current_type /= Void
 		do
-				-- If code is inherited, we first find out the type.
-			if class_type /= context_class_type then
-				if system.il_generation then
-						-- Temporary workaround.
-					Result := type.evaluated_type_in_descendant (class_type.associated_class,
-						context_class_type.associated_class, current_feature)
-				else
-					Result := type.evaluated_type_in_descendant (class_type.associated_class,
-						context_class_type.associated_class, Void)
-				end
-			else
-				Result := type
-			end
+			Result := creation_type (type)
 				-- And then we instantiate it in the context of `context_cl_type'.
 			Result := real_type_in (Result, context_cl_type)
 		ensure
@@ -1196,8 +1184,24 @@ feature -- Access
 		do
 				-- If code is inherited, we first find out the type.
 			if class_type /= context_class_type then
-				Result := type.evaluated_type_in_descendant (class_type.associated_class,
-					context_class_type.associated_class, Void)
+				if system.il_generation then
+						-- Currently our .NET code generation does things in a strange way and sometime
+						-- we already have resolved a type for the descendant class but the resolved type
+						-- does not make sense for the ancestor version (case where descendant is generic
+						-- but not the ancestor (See eweasel test#melt069 on .NET).
+					if type.is_valid_for_class (class_type.associated_class) then
+						Result := type.evaluated_type_in_descendant (class_type.associated_class,
+							context_class_type.associated_class, current_feature)
+					else
+						check
+							generating_expanded: context_class_type.is_expanded
+						end
+						Result := type
+					end
+				else
+					Result := type.evaluated_type_in_descendant (class_type.associated_class,
+						context_class_type.associated_class, Void)
+				end
 			else
 				Result := type
 			end

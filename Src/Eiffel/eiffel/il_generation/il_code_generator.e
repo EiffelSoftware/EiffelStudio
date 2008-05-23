@@ -103,6 +103,11 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_same_type_test is
+			-- Compare the type of two objects.
+		deferred
+		end
+
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)

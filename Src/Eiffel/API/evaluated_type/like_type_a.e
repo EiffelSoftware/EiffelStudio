@@ -14,7 +14,7 @@ inherit
 			same_as
 		redefine
 			actual_type,
-			deep_actual_type,
+			deep_actual_type, context_free_type,
 			conformance_type,
 			convert_to,
 			has_associated_class,
@@ -63,6 +63,12 @@ feature -- Properties
 			-- <Precursor>
 		do
 			Result := actual_type.deep_actual_type
+		end
+
+	context_free_type: TYPE_A is
+			-- <Precursor>
+		do
+			Result := actual_type.context_free_type
 		end
 
 	conformance_type: TYPE_A is

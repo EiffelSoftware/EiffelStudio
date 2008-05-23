@@ -159,7 +159,7 @@ feature {TYPE_A} -- Helpers
 		do
 				-- We do a special thing for basic types, since for generating the code
 				-- which is in their base class, we need a reference and not a basic type.
-			if a_level = 0 then
+			if a_level = 0 and not system.il_generation then
 				create Result.make (class_id)
 			else
 				Result := Current
@@ -168,7 +168,7 @@ feature {TYPE_A} -- Helpers
 
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
 		do
-			if a_level = 0 then
+			if a_level = 0 and not system.il_generation then
 				if {l_type: !CL_TYPE_A} other then
 					Result := class_id = l_type.class_id and then
 						(l_type.declaration_mark /= declaration_mark implies

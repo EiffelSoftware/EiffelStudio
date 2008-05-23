@@ -353,7 +353,8 @@ feature -- Basic operations
 							modified_data.text := l_new_text
 						end
 
-						l_editor.set_editor_text (l_new_text)
+						l_editor.select_all
+						l_editor.replace_selection (l_new_text)
 						l_set_in_editor := True
 
 						if logger.is_service_available then
@@ -562,7 +563,6 @@ feature -- Modifications (positional)
 			set_is_dirty (True)
 		ensure
 			text_count_increased: text.count = old text.count + a_code.count
-			text_inserted: a_code.as_string_8.is_equal (text.substring (a_pos, a_pos + a_code.count - 1))
 			is_dirty: is_dirty
 		end
 
@@ -590,11 +590,10 @@ feature -- Modifications (positional)
 			l_start_pos := l_data.adjusted_position (a_start_pos)
 			l_end_pos := l_data.adjusted_position (a_end_pos)
 			l_data.text.replace_substring (a_code.as_string_8, l_start_pos, l_end_pos)
-			l_data.adjust_position (a_start_pos, (a_end_pos - a_start_pos) + a_code.count)
+			l_data.adjust_position (a_start_pos, (a_start_pos - a_end_pos - 1) + a_code.count)
 			set_is_dirty (True)
 		ensure
-			text_count_increased: text.count = old text.count + a_code.count - (a_end_pos - a_start_pos - 1)
-			text_inserted: a_code.as_string_8.is_equal (text.substring (a_start_pos, a_code.count))
+			text_count_increased: text.count = old text.count + a_code.count - (a_end_pos - a_start_pos + 1)
 			is_dirty: is_dirty
 		end
 
@@ -619,7 +618,7 @@ feature -- Modifications (positional)
 			l_start_pos := l_data.adjusted_position (a_start_pos)
 			l_end_pos := l_data.adjusted_position (a_end_pos)
 			l_data.text.replace_substring ("", l_start_pos, l_end_pos)
-			l_data.adjust_position (a_start_pos, a_end_pos - a_start_pos)
+			l_data.adjust_position (a_start_pos,  a_start_pos - a_end_pos - 1)
 			set_is_dirty (True)
 		ensure
 			text_count_increased: text.count = old text.count - (a_end_pos - a_start_pos + 1)

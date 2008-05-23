@@ -168,12 +168,12 @@ feature -- Access
 					if not l_value.is_equal ({ES_EIS_TOKENS}.void_string) then
 						l_attr.append ({ES_EIS_TOKENS}.value_assignment)
 						l_attr.append (l_value)
+						l_found := True
 					end
 					Result.append (quoted_string (l_attr))
 					if i < l_count then
 						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						Result.append_character ({ES_EIS_TOKENS}.space)
-						l_found := True
 					end
 					lt_others.forth
 				end

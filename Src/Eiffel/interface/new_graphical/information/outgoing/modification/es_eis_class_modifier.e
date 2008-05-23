@@ -48,10 +48,9 @@ feature -- Modification
 		do
 			remove_class_entry (a_old_entry, False)
 			if last_entry_removed then
-				l_insertion_code := "%T"
+				l_insertion_code := "%N%T"
 				eis_output.process (a_new_entry)
 				l_insertion_code.append (eis_output.last_output_code)
-				l_insertion_code.append ("%N")
 				insert_code (last_removed_position, l_insertion_code)
 			end
 		ensure
@@ -144,12 +143,12 @@ feature -- Modification
 							if l_entry /= Void and then l_entry.same_entry (a_entry) then
 								if l_indexes.count = 1 and then a_clean_empty_clause then
 										-- Remove the entire note/indexing clause
-									remove_ast_code (l_indexes, True)
-									last_removed_position := ast_position (l_indexes).start_position - 1
+									remove_ast_code (l_indexes, remove_white_space_trailing)
+									last_removed_position := ast_position (l_indexes).start_position
 								else
 										-- Remove the note/index
-									remove_ast_code (l_index, True)
-									last_removed_position := ast_position (l_index).start_position - 1
+									remove_ast_code (l_index, remove_white_space_heading)
+									last_removed_position := ast_position (l_index).end_position
 								end
 								l_found := True
 								last_entry_removed := True

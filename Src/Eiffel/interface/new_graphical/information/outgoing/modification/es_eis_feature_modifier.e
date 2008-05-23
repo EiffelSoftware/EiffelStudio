@@ -31,11 +31,10 @@ feature -- Modification: Feature
 		do
 			remove_feature_entry (a_old_entry, False)
 			if last_entry_removed then
-				l_insertion_code := "%T%T%T"
+				l_insertion_code := "%N%T%T%T"
 				create l_output
 				l_output.process (a_new_entry)
 				l_insertion_code.append (l_output.last_output_code)
-				l_insertion_code.append ("%N")
 				insert_code (last_removed_position, l_insertion_code)
 			end
 		ensure
@@ -58,20 +57,20 @@ feature -- Modification: Feature
 			l_output: ES_EIS_ENTRY_OUTPUT
 			l_entry: !EIS_ENTRY
 			l_routine: ?ROUTINE_AS
-			l_locals: ?LOCAL_DEC_LIST_AS
 		do
 			l_entry := a_entry
 			l_ast := ast_feature
 			l_indexes := l_ast.indexes
 			if l_indexes = Void then
-				l_insertion_code := "%T%T" + keyword_note_or_indexing + "%N%T%T"
+				l_insertion_code := keyword_note_or_indexing + "%N%T%T%T"
 				l_routine ?= l_ast.body.content
 				if l_routine /= Void then
-					l_locals := l_routine.internal_locals
-					if l_locals = Void then
-						l_insertion_point := ast_position (l_routine.routine_body).start_position
+					if l_routine.precondition /= Void then
+						l_insertion_point := ast_position (l_routine.precondition).start_position
+					elseif l_routine.internal_locals /= Void then
+						l_insertion_point := ast_position (l_routine.internal_locals).start_position
 					else
-						l_insertion_point := ast_position (l_locals).start_position
+						l_insertion_point := ast_position (l_routine.routine_body).start_position
 					end
 				end
 			else
@@ -83,7 +82,7 @@ feature -- Modification: Feature
 			l_output.process (l_entry)
 			l_insertion_code.append (l_output.last_output_code)
 			if l_indexes = Void then
-				l_insertion_code.append ("%N")
+				l_insertion_code.append ("%N%T%T")
 			end
 			insert_code (l_insertion_point, l_insertion_code)
 		ensure
@@ -121,12 +120,12 @@ feature -- Modification: Feature
 						if l_entry /= Void and then l_entry.same_entry (a_entry) then
 							if l_indexes.count = 1 and then a_clean_empty_clause then
 									-- Remove the entire note/indexing clause
-								remove_ast_code (l_indexes, True)
+								remove_ast_code (l_indexes, remove_white_space_trailing)
 								last_removed_position := ast_position (l_indexes).start_position - 1
 							else
 									-- Remove the note/index
-								remove_ast_code (lt_index, True)
-								last_removed_position := ast_position (lt_index).start_position - 1
+								remove_ast_code (lt_index, remove_white_space_heading)
+								last_removed_position := ast_position (lt_index).end_position - 1
 							end
 							l_found := True
 							last_entry_removed := True

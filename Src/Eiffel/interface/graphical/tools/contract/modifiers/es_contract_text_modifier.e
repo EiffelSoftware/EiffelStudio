@@ -157,7 +157,7 @@ feature -- Basic operations
 			l_contract_ast := contract_ast
 			if l_contract_ast /= Void then
 					-- Remove the contracts, because we've added the contracts anyway.
-				remove_ast_code (l_contract_ast, True)
+				remove_ast_code (l_contract_ast, remove_white_space_trailing)
 			end
 		end
 

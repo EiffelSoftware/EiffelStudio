@@ -1,5 +1,5 @@
 test_name 	 wrong-polymorphic-call-with-select
-test_description A routine called polymorphically calls the wrong version.
+test_description A routine called polymorphically calls the wrong version. This was fixed via a change in the order in which we process merging of routines at rev#73610 of PARENT_LIST.
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e

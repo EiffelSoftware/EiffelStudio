@@ -7,6 +7,7 @@ Test date-duration (duration002): passed
 Test date-time-duration (duration003): passed
 Test large-date-time-duration (duration004): passed
 Test time-bug-reports (time001): passed
+Test date-duration-with-leap-years (time002): passed
 Test array-is-equal (array001): passed
 Test array-consistency (array002): passed
 Test array-has (array003): passed
@@ -113,6 +114,37 @@ Test raise-and-catch-user-defined-exception (except012): failed
 Test ignoring-developer-exception (except013): passed
 Test raising-catching-exception-in-once (except014): passed
 Test stack-trace-indefinitely-grows (except015): passed
+Test queries_of_exceptions_class_1 (except016): passed
+Test queries_of_exceptions_class_2 (except017): passed
+Test no_routine_failure_on_rescue_exception (except018): passed
+Test memory_leak_when_retried (except019): passed
+Test corrupted_trace (except020): passed
+Test top_n_call_incorrect (except021): passed
+Test incorrect_local_restoration (except022): passed
+Test native_signal_number_in_exception (except023): failed
+	Description: Test the native signal number is set in OPERATING_SYSTEM_SIGNAL_FAILUER.
+	Execution error in file C:\work\eweasel\eweasel\tests\except023\tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VEEN
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test native_error_number_in_exception (except024): failed
+	Description: Test the native signal number is set in OPERATING_SYSTEM_FAILURE.
+	Execution error in file C:\work\eweasel\eweasel\tests\except024\tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VEEN
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test basic-non-conforming-inheritance (noncon001): passed
 Test non-conforming-inheritance-conformance (noncon002): passed
 Test non-conforming-inheritance-incrementality (noncon003): passed
@@ -154,6 +186,56 @@ Test non-conforming-inheritance-client-incrementality (noncon008): failed
 		Final status:  completed 
 
 Test non-conforming-finalization-postcondition-violation (noncon009): passed
+Test no-repeated-non-conforming-inheritance (noncon010): failed
+	Description: Repeated inheritance should take into account only conforming parents to dispatch feature calls.
+	Execution error in file C:\work\eweasel\eweasel\tests\noncon010\tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class P1 code VMRC(2)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test repeated-non-conforming-inheritance-of-generic-type (noncon011): passed
+Test repeated-non-conforming-inheritance-of-generic-type-from-parents (noncon012): failed
+	Description: Allow shared features from repeated non-conforming inheritance of the same generaic types from parents.
+	Execution error in file C:\work\eweasel\eweasel\tests\noncon012\tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VMFN
+		Validity error in class TEST code VMFN
+		Validity error in class TEST code VMFN
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test feature-inherits-export-status (noncon013): passed
+Test non-conform-once-inheritance (noncon014): failed
+	Description: A once inherited from a non-conforming inheritance crashes the compiler when code is execute, causes a C compilation error during finalization and possibly generate a precondition violation when you do not expect any to be violated.
+	Execution error in file C:\work\eweasel\eweasel\tests\noncon014\tcf at line 14
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  silent_failure 
+	Expected result:
+		Final status:  completed 
+
+Test non-conform-linked-list (noncon015): failed
+	Description: A once inherited from a non-conforming inheritance crashes the compiler when code is execute, causes a C compilation error during finalization and possibly generate a precondition violation when you do not expect any to be violated.
+	Execution error in file C:\work\eweasel\eweasel\tests\noncon015\tcf at line 11
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  silent_failure 
+	Expected result:
+		Final status:  completed 
+
 Test test-auto-resize (fake002): passed
 Test many-similar-class-names (fake003): passed
 Test test1 (fake004): passed
@@ -329,6 +411,19 @@ Test verbatim-manifest-string (syntax045): passed
 Test integer-constant-range (syntax046): passed
 Test multi-syntax-error (syntax047): passed
 Test indexing-notes-syntax (syntax048): passed
+Test loop-variant-syntax (syntax049): failed
+	Description: Loop variant can be placed at the end of a loop.
+	Execution error in file C:\work\eweasel\eweasel\tests\syntax049\tcf at line 8
+	Original text:    compile_result syntax_warning TEST 24
+	Substituted text: compile_result syntax_warning TEST 24
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Syntax error in class TEST at line 41
+		Final status:  paused 
+	Expected result:
+		Syntax error in class TEST at line 24
+		Final status:  completed 
+
 Test bad-class-end-comment (valid001): passed
 Test bad-infix-feature (valid002): passed
 Test class-not-in-universe (valid003): passed
@@ -537,18 +632,7 @@ Test operator-feat-export-to-self (valid083): failed
 		Final status:  paused 
 
 Test vape-involving-current (valid084): passed
-Test secret-precondition-heir-export (valid085): failed
-	Description: A routine with a secret precondition does not violate VAPE because the routine itself is also exported to {NONE}.  But the class containing this routine is inherited by another class and the routine export status is changed to {ANY}, yielding a generally available routine with a secret precondition.
-	Execution error in file C:\work\eweasel\eweasel\tests\valid085\tcf at line 16
-	Original text:    compile_result validity_error TEST1 VAPE
-	Substituted text: compile_result validity_error TEST1 VAPE
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error in class TEST1 code VAPE
-		Final status:  paused 
-
+Test secret-precondition-heir-export (valid085): passed
 Test secret-func-arg-in-precondition (valid086): passed
 Test vtct-on-valid-class (valid087): passed
 Test creation-proc-secret-precond (valid088): failed
@@ -919,6 +1003,7 @@ Test precursor-once (valid217): failed
 	Reason: files being compared do not have identical contents
 
 Test freezing-like-current (valid218): passed
+Test obsolete-warning-in-obsolete-feature (valid219): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -965,6 +1050,7 @@ Test precursor-validity (svalid004): failed
 		Validity error in class TEST2 code VJAR
 		Final status:  paused 
 
+Test obsolete-warning-not-repeated (svalid005): passed
 Test simple-catcall (catcall001): failed
 	Description: Simple detection of a catcall
 	Execution error in file C:\work\eweasel\eweasel\tests\catcall001\tcf at line 12
@@ -1347,17 +1433,7 @@ Test switch-parents-assertion-order (incr124): failed
 
 Test change-numeric-formal-argument (incr125): passed
 Test generic-veen-sneak (incr126): passed
-Test add-unused-formal-generic (incr127): failed
-	Description: After initial compilation, an extra unused formal generic parameter is added to a generic class and an extra actual generic parameter is added to the only generic derivation of this class.  After recompilation, system execution output should be unchanged, but execution instead terminates with a segmentation fault.  The initial compilation and recompilation can be (melt, melt) or (freeze, freeze).
-	Execution error in file C:\work\eweasel\eweasel\tests\incr127\tcf at line 23
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test add-unused-formal-generic (incr127): passed
 Test make-generic-expanded-freeze (incr128): passed
 Test vtcg-in-generic-constraint (incr129): passed
 Test vtct-vtcg-die-degree-5 (incr130): passed
@@ -1711,6 +1787,9 @@ Test change-export-create-generic-contraint-error-ignored (incr286): failed
 
 Test inherit-crash-after-update (incr287): passed
 Test large-formal-changes (incr288): passed
+Test change-system-crash (incr289): passed
+Test unresolved-c-externals (incr290): passed
+Test unresolved-c-externals-2 (incr291): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): failed
 	Description: Operations on BIT types with class melted
@@ -2137,6 +2216,27 @@ Test change-generic-finalization-crash (final045): failed
 Test polymorphic-call-leak (final046): passed
 Test inlining-with-anchor (final047): passed
 Test inlining-deferred-from-other-branch (final048): passed
+Test polymorphic-call-on-formal-seed (final049): passed
+Test inlining-with-anchor-2 (final050): passed
+Test wrong-polymorphic-wrapper (final051): passed
+Test wrong-call-when-merging (final052): passed
+Test wrong-polymorphic-wrapper-2 (final053): failed
+	Description: When you implement a routine involving either formal generics or references with a routine only involving basic types there are some missing generic wrappers for the polymorphic calls.
+	Execution error in file C:\work\eweasel\eweasel\tests\final053\tcf at line 25
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  silent_failure 
+	Expected result:
+		Final status:  completed 
+
+Test wrong-polymorphic-external-wrapper (final054): passed
+Test inlining-with-anchor-3 (final055): passed
+Test inlining-with-formal (final056): passed
+Test inlining-wrong-argument-reuse (final057): passed
+Test inlining-missing-gc-hooks (final058): passed
+Test inlining-with-inline-externals (final059): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2152,6 +2252,7 @@ Test adopt-wean-freeze-unfreeze-multithreaded (runtime005): failed
 	Expected result:
 		Final status:  completed 
 
+Test gc-expanded-allocating-memory-in-special-2 (runtime006): passed
 Test cond-timedwait-failure (thread001): passed
 Test nested-thread-exit-failure (thread002): passed
 Test print-double (exec001): failed
@@ -2215,7 +2316,7 @@ Test variable-attr-wrong-address (exec014): manual
 Test readline-long-line-wrong (exec015): passed
 Test rescue-floating-exception (exec016): passed
 Test strip-wont-c-compile (exec017): failed
-	Description: A class with a `strip' expression
+Description: A class with a `strip' expression
 	Execution error in file C:\work\eweasel\eweasel\tests\exec017\tcf at line 21
 	Original text:    execute_result ok
 	Substituted text: execute_result ok
@@ -2355,7 +2456,17 @@ Test bit-function-explicit-creation (exec059): failed
 	Expected result:
 		Final status:  completed 
 
-Test inherit-array-of-expanded (exec060): passed
+Test inherit-array-of-expanded (exec060): failed
+	Description: A class has two attributes of type `expanded TEST1 [STRING]'.  TEST1 is a generic class with parent `ARRAY [expanded TEST1 [G]]'.  The system compiles fine, but dies with an exception trace when executed. Turning off garbage collection allows the program to run correctly.
+	Execution error in file C:\work\eweasel\eweasel\tests\exec060\tcf at line 17
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test bit-copy-panic-void-source (exec061): failed
 	Description: A system creates an ARRAY [BIT 32] and tries to print item 1 without putting any items in the array.  It compiles fine, but dies with a run-time panic when executed (bit copy panic).
 	Execution error in file C:\work\eweasel\eweasel\tests\exec061\tcf at line 21
@@ -3278,6 +3389,8 @@ Test integer-like-constant (term151): passed
 Test qualified-call-on-procedure-failure (term152): passed
 Test crash-for-redefined-feature-with-wrong-anchor (term153): passed
 Test agent-return-type-crash (term154): passed
+Test nested-like-code-generation-crash (term155): passed
+Test assertion-regeneration-crash (term156): passed
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -3285,6 +3398,7 @@ Test config-target-extends-itself (config004): passed
 Test config-remove-library (config005): passed
 Test config-debugs (config006): passed
 Test config-rename-change (config007): passed
+Test config-missing-name-attribute (config008): passed
 Test lace-no-cluster-props (lace003): passed
 Test lace-no-creation-proc (lace007): passed
 Test lace-empty-include-exclude (lace011): passed
@@ -3537,6 +3651,8 @@ Test polymorphic-feature-address-bad-code (ccomp072): failed
 		Final status:  completed 
 
 Test agent-with-like-bad-declaration (ccomp073): passed
+Test expanded-generic-wrong-c-with-multiple-ancestor (ccomp074): passed
+Test missing-undef-c-compiler-error (ccomp075): passed
 Test freeze-retrieval-mismatch (store001): passed
 Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
@@ -3592,7 +3708,7 @@ Test storable-formats (store013): failed
 
 Test storable-formats-2 (store014): failed
 	Description: Check that we can retrieve old storable formats without any problem.
-	Execution error in file C:\work\eweasel\eweasel\tests\store014\tcf at line 33
+	Execution error in file C:\work\eweasel\eweasel\tests\store014\tcf at line 30
 	Original text:    compare exec_output_52 output
 	Substituted text: compare exec_output_52 output
 	Reason: files being compared do not have identical contents
@@ -3648,6 +3764,20 @@ Test named-tuple-assignment (tuple007): passed
 Test named-tuple-same-labels (tuple008): passed
 Test named-tuple-same-labels-crash (tuple009): passed
 Test internal-tuple-creation (tuple010): passed
+Test tuple-creation-crash (tuple011): failed
+	Description: A tuple where one of the expression is a deeply nested qualified call crashes at runtime because the type of the call depends on anchors that are not part of the context where the manifest tuple is created.
+	Execution error in file C:\work\eweasel\eweasel\tests\tuple011\tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test tilde-on-basic-type (tilde001): passed
+Test tilde-on-expanded-type (tilde002): passed
+Test tilde-on-formal-type (tilde003): passed
 Test validity-vsrt1-one-generic (vsrt101): passed
 Test validity-vsrt1-two-generics (vsrt102): passed
 Test validity-vsrt1-many-generics (vsrt103): passed
@@ -3779,17 +3909,7 @@ Test repeated-rescue-panic (fixed036): passed
 Test creation-once-routine (fixed037): passed
 Test cluster-modified-viol (fixed038): passed
 Test chg-class-to-nonexistent (fixed039): passed
-Test bit-any-no-conform (fixed040): failed
-	Description: BIT type assigned to entity of type ANY
-	Execution error in file C:\work\eweasel\eweasel\tests\fixed040\tcf at line 18
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test bit-any-no-conform (fixed040): passed
 Test nonexistent-root-class (fixed041): passed
 Test missing-class-header (fixed042): passed
 Test lace-syntax-error-retry (fixed043): passed
@@ -3990,6 +4110,17 @@ Test complex-expanded-generic-inheritance-crash (expanded007): passed
 Test filename-classname-mismatch-warning (warn001): passed
 Test agent-optimization-failure (agent001): passed
 Test agent-with-like (agent002): passed
+Test agent-with-basic (agent003): failed
+	Description: When a routine taken an ANY and provided with a closed argument which is a basic type, the call simply fails.
+	Execution error in file C:\work\eweasel\eweasel\tests\agent003\tcf at line 11
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  silent_failure 
+	Expected result:
+		Final status:  completed 
+
 Test print-large-pointer (platform001): failed
 	Description: A procedure which prints out a large pointer value should not loose the upper part.
 	Execution error in file C:\work\eweasel\eweasel\tests\platform001\tcf at line 11
@@ -4004,31 +4135,9 @@ Test object-test-with-local-use-failure (attach004): passed
 Test current-is_attached-no-defaults (attach005): passed
 Test anchored-attached-type-failure-no-defaults (attach006): passed
 Test attached-formal-generic (attach007): passed
-Test object-test-in-invariant (attach008): failed
-	Description: Object tests use in invariants should generate correct code.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach008\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test object-test-in-invariant (attach008): passed
 Test attached-basic-type (attach009): passed
-Test attached-generic-type-conformance (attach010): failed
-	Description: Explicitly attached types should conform to non-attached variants
-	Execution error in file C:\work\eweasel\eweasel\tests\attach010\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VJAR
-		Validity error in class TEST code VJAR
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test attached-generic-type-conformance (attach010): passed
 Test correct-attached-predicate-precedence-semantics (attach011): passed
 Test object-test-chain (attach012): passed
 Test object-test-code-generation (attach013): passed
@@ -4046,8 +4155,22 @@ Test scope-after-combined-expression (attach015): failed
 		Validity error in class TEST code VUTA(2)
 		Validity error in class TEST code VUTA(2)
 		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test anchored-object-test-local (attach016): passed
+Test object-test-in-assertion (attach017): passed
+Test object-test-finalization-crash (attach018): passed
+Test object-test-invariant-any-to-expanded (attach019): passed
+Test detached-type-target-conversion (attach020): failed
+	Description: Ensures conversion is accepted when using explict detached mark on the target type.
+	Execution error in file C:\work\eweasel\eweasel\tests\attach020\tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VUAR(2)
 		Final status:  paused 
 	Expected result:
 		Final status:  completed 
@@ -4331,7 +4454,7 @@ Test ca-incorrect-context-usage (dotnet093): failed
 	Substituted text: compile_result validity_warning TEST NONE
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  paused 
 	Expected result:
 		Validity error in class TEST code NONE
 		Final status:  completed 
@@ -4404,9 +4527,13 @@ Test equal-on-dotnet-string-and-eiffel-string (dotnet106): failed
 		Final status:  completed 
 
 Test renaming-native-dotnet-feature-with-redefine-default-create (dotnet107): passed
+Test anchored-creation-crash (dotnet108): passed
+Test object-test-assertion-crash (dotnet109): passed
+Test dotnet-polymorphism (dotnet110): passed
+Test assigner-name-incrementality (dotnet111): passed
 
-Passed:  1478 / 1771  (84%)
-Failed:  276 / 1771  (16%)
-Manual:  14 / 1771  (1%)
-Skipped:  3 / 1771  (1%)
+Passed:  1524 / 1824  (84%)
+Failed:  283 / 1824  (17%)
+Manual:  14 / 1824  (1%)
+Skipped:  3 / 1824  (1%)
 

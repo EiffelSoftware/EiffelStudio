@@ -564,7 +564,11 @@ feature {NONE} -- Callbacks
 							-- Modify the tags in the entry when the modification is done
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
-							lt_entry.set_tags (l_tags)
+							if not l_tags.is_empty then
+								lt_entry.set_tags (l_tags)
+							else
+								lt_entry.set_tags (Void)
+							end
 							storage.register_entry (lt_entry, component_id)
 						end
 					end
@@ -605,7 +609,11 @@ feature {NONE} -- Callbacks
 							-- Modify the others in the entry when the modification is done
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
-							lt_entry.set_others (l_others)
+							if not l_others.is_empty then
+								lt_entry.set_others (l_others)
+							else
+								lt_entry.set_others (Void)
+							end
 							storage.register_entry (lt_entry, component_id)
 						end
 					end

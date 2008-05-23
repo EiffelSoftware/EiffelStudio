@@ -34,7 +34,7 @@ feature -- Others
 
 	system_separator: CHARACTER = '.'
 
-	eiffel_protocol: !STRING = "eiffel://";
+	eiffel_protocol: !STRING = "eiffel:?";
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

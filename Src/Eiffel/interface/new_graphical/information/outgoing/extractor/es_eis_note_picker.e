@@ -103,6 +103,13 @@ feature {NONE} -- Implementation
 					end
 					l_index_list.forth
 				end
+					-- Set them to Void if empty.
+				if l_entry_tuple.tags /= Void and then l_entry_tuple.tags.is_empty then
+					l_entry_tuple.tags := Void
+				end
+				if l_entry_tuple.others /= Void and then l_entry_tuple.others.is_empty then
+					l_entry_tuple.others := Void
+				end
 				create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.others)
 			end
 		end
@@ -146,6 +153,13 @@ feature {NONE} -- Implementation
 						end
 						a_note.forth
 					end
+						-- Set them to Void if empty.
+					if l_entry_tuple.tags /= Void and then l_entry_tuple.tags.is_empty then
+						l_entry_tuple.tags := Void
+					end
+					if l_entry_tuple.others /= Void and then l_entry_tuple.others.is_empty then
+						l_entry_tuple.others := Void
+					end
 					create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.others)
 				end
 			end
@@ -164,6 +178,10 @@ feature {NONE} -- Implementation
 									aa_string.right_adjust
 								end)
 					Result := lt_splitted
+						-- Empty string is not needed.
+					if Result.count = 1 and then Result.i_th (1).count = 0 then
+						Result.wipe_out
+					end
 				else
 					create Result.make (0)
 				end

@@ -95,11 +95,11 @@ feature -- Query
 
 feature -- Basic operations
 
-	remove_ast_code (a_ast: ?AST_EIFFEL; a_remove_ws: BOOLEAN)
+	remove_ast_code (a_ast: ?AST_EIFFEL; a_remove_ws: INTEGER)
 			-- Removes an AST node and sets `insertion_position' to the beginning of the removed AST position.
 			--
 			-- `a_ast': The AST node to remove from the code.
-			-- `a_remove_ws': True to intelligently remove all trailing whitespace after the AST node.
+			-- `a_remove_ws': See `Operation constants' constants feature clause. Remove nothing if not recognized.
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
@@ -112,12 +112,13 @@ feature -- Basic operations
 		do
 			l_text := original_text
 			l_position := ast_position (a_ast)
+			l_count := l_text.count
 
-			if a_remove_ws then
+			inspect a_remove_ws
+			when remove_white_space_trailing then
 					-- Locate first non whitespace character (on the first line only)
 				from
 					i := l_position.end_position + 1
-					l_count := l_text.count
 				until
 					i > l_count or not l_text.item (i).is_space or (l_nl_switched and l_text.item (i) = '%N')
 				loop
@@ -135,11 +136,43 @@ feature -- Basic operations
 					end
 					l_position.end_position := i
 				end
+			when remove_white_space_heading then
+				from
+					i := l_position.start_position - 1
+					l_count := l_text.count
+				until
+					i <= 0 or not l_text.item (i).is_space or (l_nl_switched and l_text.item (i) = '%N')
+				loop
+					if not l_nl_switched then
+						l_nl_switched := l_text.item (i) = '%N'
+					end
+					i := i - 1
+				end
+
+				if i >= 1 then
+					if l_nl_switched or l_text.item (i) /= '%N' then
+							-- Remove the last in
+						i := i + 1
+					end
+					l_position.start_position := i
+				end
+			else
 			end
 
 				-- Perform removal.
 			remove_code (l_position.start_position, l_position.end_position)
 		end
+
+feature -- Operation constants
+
+	remove_white_space_nothing: INTEGER = unique
+			-- Remove neither heading nor trailing white spaces.
+
+	remove_white_space_heading: INTEGER = unique
+			-- Remove heading white spaces until the closest leading '%N' (including '%N').
+
+	remove_white_space_trailing: INTEGER = unique
+			-- Remove trailing white spaces until the first trailing '%N' (including '%N').
 
 feature {NONE} -- Factory
 

@@ -40,9 +40,11 @@ feature {NONE} -- Initialization
 			associated_class := a_class
 			text ?= a_text.twin
 			create position_adjustments.make_default
+			original_count := text.count
 		ensure
 			associated_class_set: associated_class = a_class
 			text_set: text.is_equal (a_text)
+			original_count_set: original_count = text.count
 		end
 
 feature -- Access
@@ -50,12 +52,15 @@ feature -- Access
 	text: !STRING assign set_text
 			-- Modified text.
 
+	original_count: INTEGER
+			-- Original count of `text'.
+
 feature {NONE} -- Access
 
 	associated_class: !CLASS_I
 			-- Class associated with Current
 
-	position_adjustments: !DS_LINKED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
+	position_adjustments: !DS_ARRAYED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
 			-- Positional adjustments for batch modifications.
 
 feature {ES_CLASS_TEXT_MODIFIER} -- Element change
@@ -65,8 +70,10 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Element change
 			-- Note: Please use only when commiting changes for synchronization purposes
 		do
 			text := a_text
+			original_count := text.count
 		ensure
 			text_set: text.is_equal (a_text)
+			original_count_set: original_count = text.count
 		end
 
 feature -- Status report
@@ -85,11 +92,24 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Query
 			a_pos_positive: a_pos > 0
 		local
 			l_adjustments: like position_adjustments
+			p, v: INTEGER
+			l_adjusted_count: INTEGER
 		do
 			Result := a_pos
 			l_adjustments := position_adjustments
-			from l_adjustments.start until l_adjustments.after or l_adjustments.item_for_iteration.position > a_pos loop
-				Result := Result + l_adjustments.item_for_iteration.adjustment
+			l_adjusted_count := original_count
+			from
+				l_adjustments.start
+			until
+				l_adjustments.after
+			loop
+				P := l_adjustments.item_for_iteration.position
+				v := l_adjustments.item_for_iteration.adjustment
+				if Result >= p then
+					Result := p.max (Result + v)
+				end
+				l_adjusted_count := l_adjusted_count + v
+				Result := Result.max (1).min (l_adjusted_count)
 				l_adjustments.forth
 			end
 		ensure
@@ -125,21 +145,33 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations
 			-- Adjusts a position logging an adjustment count.
 			--
 			-- `a_pos': Original position to adjust.
-			-- `a_count': The adjustment count to log to the position.
-		require
-			a_pos_positive: a_pos > 0
+			-- `a_count': The adjustment count to log to the position. Less than zero, if chars were removed.
 		local
 			l_adjustments: like position_adjustments
+			l_pos: INTEGER
+			p, v: INTEGER
+			l_adjusted_count: INTEGER
 		do
 			l_adjustments := position_adjustments
-			from l_adjustments.start until l_adjustments.after or else l_adjustments.item_for_iteration.position > a_pos loop
+			l_adjusted_count := original_count
+			l_pos := a_pos.max (1).min (l_adjusted_count + 1)
+				-- Calculate adjusted position.
+			from
+				l_adjustments.start
+			until
+				l_adjustments.after
+			loop
+				P := l_adjustments.item_for_iteration.position
+				v := l_adjustments.item_for_iteration.adjustment
+				if l_pos >= p then
+					l_pos := p.max (l_pos + v)
+				end
+				l_adjusted_count := l_adjusted_count + v
+				l_pos := l_pos.max (1).min (l_adjusted_count + 1)
 				l_adjustments.forth
 			end
-			if l_adjustments.after then
-				l_adjustments.force_last ([a_pos, a_count])
-			else
-				l_adjustments.force_right ([a_pos, a_count])
-			end
+				-- We save adjusted position `l_pos'.
+			position_adjustments.put_last ([l_pos, a_count])
 		end
 
 ;indexing

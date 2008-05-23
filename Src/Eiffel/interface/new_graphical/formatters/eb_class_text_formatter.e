@@ -73,6 +73,7 @@ feature -- Formatting
 		do
 			if
 				associated_class /= Void and then
+				associated_class.is_valid and then
 				selected and then
 				displayed and then
 				editor /= Void and then

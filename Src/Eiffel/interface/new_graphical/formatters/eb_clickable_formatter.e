@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
-			if not retried and associated_class /= Void then
+			if not retried and (associated_class /= Void and then associated_class.is_valid) then
 				set_is_without_breakable
 				editor.handle_before_processing (false)
 				last_was_error := clickable_context_text (associated_class, editor.text_displayed)

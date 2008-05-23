@@ -136,7 +136,6 @@ feature {NONE} -- Attributes
 	tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
-			Result := "Ignore breakpoints" --Interface_names.e_Dbg_assertion_checking
 			if breakpoints_ignored then
 				Result := Interface_names.e_Dbg_stop_at_breakpoints
 			else
@@ -160,7 +159,11 @@ feature {NONE} -- Attributes
 	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
-			Result := Interface_names.m_dbg_ignoring_breakpoints
+			if breakpoints_ignored then
+				Result := Interface_names.m_dbg_stop_at_breakpoints
+			else
+				Result := Interface_names.m_dbg_ignore_breakpoints
+			end
 		end
 
 	pixmap: EV_PIXMAP is

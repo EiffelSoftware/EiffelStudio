@@ -34,8 +34,8 @@ feature -- Initialization
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			tooltext := Interface_names.b_launch
-			menu_name := Interface_names.m_Debug_run_new
+			tooltext := Interface_names.b_run
+			menu_name := Interface_names.m_Debug_run
 			internal_tooltip := Interface_names.e_Exec_debug
 
 			Precursor (a_manager)
@@ -66,12 +66,12 @@ feature -- Access
 		do
 			is_launched := a_launched
 			if a_launched then
-				tooltext := Interface_names.b_Continue
-				menu_name := Interface_names.m_Debug_run_continue
+				tooltext := Interface_names.b_run
+				menu_name := Interface_names.m_Debug_run
 				internal_tooltip := Interface_names.e_Exec_debug_continue
 			else
-				tooltext := Interface_names.b_launch
-				menu_name := Interface_names.m_Debug_run_new
+				tooltext := Interface_names.b_run
+				menu_name := Interface_names.m_Debug_run
 				internal_tooltip := Interface_names.e_Exec_debug
 			end
 			refresh_items
@@ -171,38 +171,23 @@ feature {NONE} -- Attributes
 			l_cb_item: EV_CHECK_MENU_ITEM
 			profs: DEBUGGER_PROFILES
 			k, pn: STRING_32
-			dbg: DEBUGGER_MANAGER
-			ecmd: EB_EXEC_FORMAT_CMD
+			dbg: EB_DEBUGGER_MANAGER
 		do
 			create Result
 
 			dbg := eb_debugger_manager
 
-			create l_item.make_with_text (menu_name)
-			l_item.set_pixmap (pixmap)
-			l_item.select_actions.extend (agent execute)
-			Result.extend (l_item)
-
-			ecmd := eb_debugger_manager.no_stop_cmd
-			create l_item.make_with_text (ecmd.menu_name)
-			l_item.set_pixmap (ecmd.pixmap)
-			l_item.select_actions.extend (agent ecmd.execute)
-			Result.extend (l_item)
-
+			Result.extend (new_menu_item_unmanaged)
+			Result.extend (eb_debugger_manager.no_stop_cmd.new_menu_item_unmanaged)
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				--| Breakpoints status
-			create l_cb_item.make_with_text (interface_names.m_Dbg_ignoring_breakpoints)
-			Result.extend (l_cb_item)
-			if dbg.execution_ignoring_breakpoints then
-				l_cb_item.enable_select
-				l_cb_item.select_actions.extend (agent dbg.set_execution_ignoring_breakpoints (False))
-			else
-				l_cb_item.select_actions.extend (agent dbg.set_execution_ignoring_breakpoints (True))
-			end
+			l_item := dbg.ignore_breakpoints_cmd.new_menu_item_unmanaged
+			Result.extend (l_item)
 
 				--| Catcall warning status
+--| FIXME: we should create specific _CMD for thoses		
 			if {exc_hdlr: DBG_EXCEPTION_HANDLER} (dbg.exceptions_handler) then
 				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_console_warning)
 				Result.extend (l_cb_item)
@@ -221,52 +206,24 @@ feature {NONE} -- Attributes
 				else
 					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (False))
 				end
-
 			end
 
 				--| Execution replay recording status
-			create l_cb_item.make_with_text (interface_names.b_activate_execution_recording)
-			Result.extend (l_cb_item)
-			if dbg.execution_replay_recording_enabled then
-				l_cb_item.enable_select
-				l_cb_item.select_actions.extend (agent dbg.activate_execution_replay_recording (False))
-			else
-				l_cb_item.select_actions.extend (agent dbg.activate_execution_replay_recording (True))
-			end
-
+			Result.extend (dbg.toggle_exec_replay_recording_mode_cmd.new_menu_item_unmanaged)
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				-- Run (workbench)
-			create l_item.make_with_text (interface_names.m_run_workbench)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
-			l_item.select_actions.extend (agent
-						do
-							eb_debugger_manager.run_workbench_cmd.execute
-						end
-					)
-			Result.extend (l_item)
+			Result.extend (dbg.run_workbench_cmd.new_menu_item_unmanaged)
 
 				-- Run (finalized)
-			create l_item.make_with_text (interface_names.m_run_finalized)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.debug_run_finalized_icon)
-			l_item.select_actions.extend (agent
-						do
-							eb_debugger_manager.run_finalized_cmd.execute
-						end
-					)
-			Result.extend (l_item)
-
+			Result.extend (dbg.run_finalized_cmd.new_menu_item_unmanaged)
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				--| Exception handling
-			create l_item.make_with_text (interface_names.m_Dbg_exception_handler)
-			l_item.select_actions.extend (agent open_exception_handler_dialog)
-			Result.extend (l_item)
+			Result.extend (dbg.exception_handler_cmd.new_menu_item_unmanaged)
 
 				--| Execution parameters
-			create l_item.make_with_text (interface_names.m_Edit_execution_parameters)
-			l_item.select_actions.extend (agent open_execution_parameters_dialog)
-			Result.extend (l_item)
+			Result.extend (dbg.options_cmd.new_menu_item_unmanaged)
 
 				--| Execution profiles
 			profs := dbg.profiles

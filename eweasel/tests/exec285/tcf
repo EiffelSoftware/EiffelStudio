@@ -1,5 +1,5 @@
 test_name 	 wrong-polymorphic-call-with-select
-test_description A routine called polymorphically calls the wrong version. This was fixed via a change in the order in which we process merging of routines at rev#73610 of PARENT_LIST.
+test_description A routine called polymorphically calls the wrong version. And the called version depends on the order in which the parent clauses are written.
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
@@ -14,6 +14,36 @@ copy_raw	t_list.e $CLUSTER t_list.e
 copy_raw	t_queue.e $CLUSTER t_queue.e
 copy_raw	t_sequence.e $CLUSTER t_sequence.e
 copy_raw	t_traversable.e $CLUSTER t_traversable.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+cleanup_compile
+copy_raw	t_sequence_rev1.e $CLUSTER t_sequence.e
 
 compile_melted
 compile_result	ok

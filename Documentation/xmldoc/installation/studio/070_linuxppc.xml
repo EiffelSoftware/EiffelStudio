@@ -1,4 +1,4 @@
-<document title="EiffelStudio 6.1 for LinuxPPC" output="studio">
+<document title="EiffelStudio 6.2 for LinuxPPC" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
@@ -15,38 +15,38 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Checking your environment</heading>
-		<paragraph>EiffelStudio 6.1 requires GTK+ 2.4.0 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>pkg-config --modversion gtk+-2.0</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 2.4.0 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 2.4.0.</paragraph>
+		<paragraph>EiffelStudio 6.2 requires GTK+ 2.4.0 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>pkg-config --modversion gtk+-2.0</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 2.4.0 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 2.4.0.</paragraph>
 		
 		<heading><size>2</size>Installing EiffelStudio from the Web</heading>
-		<paragraph>After downloading the installation package, you should manually extract its contents to your hard drive. For example, you can extract it into /usr/local using the following commands (assuming that you have permission to /usr/local and that the installation package was saved in /tmp/Eiffel61.tgz):</paragraph>
+		<paragraph>After downloading the installation package, you should manually extract its contents to your hard drive. For example, you can extract it into /usr/local using the following commands (assuming that you have permission to /usr/local and that the installation package was saved in /tmp/Eiffel62.tgz):</paragraph>
 		<code_block>
 cd /usr/local
-tar xvfz /tmp/Eiffel61.tgz</code_block>
+tar xvfz /tmp/Eiffel62.tgz</code_block>
 
-		<paragraph>This will install EiffelStudio 6.1 files into /usr/local/Eiffel61. Once this is done, jump to the <link><label>Setting up EiffelStudio</label><url>070_linuxppc.xml</url><anchor_name>setting_up</anchor_name></link> section in order to complete the installation of EiffelStudio.</paragraph>
+		<paragraph>This will install EiffelStudio 6.2 files into /usr/local/Eiffel62. Once this is done, jump to the <link><label>Setting up EiffelStudio</label><url>070_linuxppc.xml</url><anchor_name>setting_up</anchor_name></link> section in order to complete the installation of EiffelStudio.</paragraph>
 		
 		<heading><size>2</size>Installing EiffelStudio from a CD-ROM</heading>
 		<paragraph>Insert the CD into your CD-ROM drive. You should manually extract its contents to your hard drive. For example you can extract it in /usr/local using the following commands (assuming that you have permission to /usr/local and that the CD is mounted on /mnt/cdrom):</paragraph>
 		<code_block>cd /usr/local
-cp -r /mnt/cdrom/Eiffel61 .</code_block>
-		<paragraph>This will install the EiffelStudio 6.1 files into /usr/local/Eiffel61. To complete the installation of EiffelStudio, jump to the next section, <link><label>Setting up EiffelStudio</label><url>070_linuxppc.xml</url><anchor_name>setting_up</anchor_name></link>.</paragraph>
+cp -r /mnt/cdrom/Eiffel62 .</code_block>
+		<paragraph>This will install the EiffelStudio 6.2 files into /usr/local/Eiffel62. To complete the installation of EiffelStudio, jump to the next section, <link><label>Setting up EiffelStudio</label><url>070_linuxppc.xml</url><anchor_name>setting_up</anchor_name></link>.</paragraph>
 
 		<anchor>setting_up</anchor>
 		<heading><size>2</size>Setting up EiffelStudio</heading>
 		<paragraph>Once the files have been installed, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
-				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel61</item>
+				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel62</item>
 				<item><bold>ISE_PLATFORM</bold> to linux-ppc.</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
-export ISE_EIFFEL=/usr/local/Eiffel61
+export ISE_EIFFEL=/usr/local/Eiffel62
 export ISE_PLATFORM=linux-ppc
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
-setenv ISE_EIFFEL /usr/local/Eiffel61
+setenv ISE_EIFFEL /usr/local/Eiffel62
 setenv ISE_PLATFORM linux-ppc
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		</paragraph>

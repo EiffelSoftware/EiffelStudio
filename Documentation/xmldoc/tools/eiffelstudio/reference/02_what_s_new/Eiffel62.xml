@@ -6,23 +6,30 @@
 		<heading><size>2</size>Graphical environment</heading>
 		<heading><size>3</size>What's new</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Added new contract editor tool to ease edition of contracts on routines and classes.</item>
+			<item>Added Eiffel Information System which let you connect external documentation to your Eiffel code and vice versa.</item>
+			<item>Added ability to avoid comment duplication by using the <code>&lt;Precursor&gt;</code> in your descendant comment to reuse the parent one which is shown in all our formatter tools..</item>
+			<item>Added new light batch compiler `ecb'. It provides the same features as `ec' when using the batch mode. Currently projects compiled with `ec' are not compatible with those compiled with `ecb'. The main difference between the two is that `ec' is compiled with exception trace and multithreading support which could slow down the compiler by a factor of 20 to 40% depending on your platform.</item>
+			<item>Added experimental unit testing tool.</item>
 		</list>		
 		<heading><size>3</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Error list tool now supports multiple selection, for better copy to clipboard usage.</item>
+			<item>Enhanced some errors to report better context information.</item>
+			<item>Optimized adding of items to the Error List by circumventing an expensive search when adding single items.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Error list items context now shows the full group name but after CLASS.feature because it is of lesser importance.</item>
+			<item>Restructured layout of user files to support unification and user-override files of Eiffel compiler installation files. Relocated default Eiffel projects location into the user files folder (windows and mac only).</item>
 		</list>
 		<heading><size>3</size>Bug fixes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed the EiffelCOM wizard so that it generates C code that compiles.</item>
 		</list>
 		<heading><size>2</size>Compiler</heading>
 		<list ordered="false">
-			<item>Click <link><url>../30_compiler/60_version_history/09_61_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
+			<item>Click <link><url>../30_compiler/60_version_history/10_62_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
 		</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
@@ -35,11 +42,29 @@
 		<heading><size>2</size>Libraries</heading>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Changed signature of {<class_name>SPECIAL</class_name>}.<feature_name>same_items</feature_name> and {<class_name>SPECIAL</class_name>}.<feature_name>all_default</feature_name> to take an extra argument. Our analysis shows that it was only used by <class_name>ARRAY</class_name> and that it should be harmless. If you have a compilation error, simply add `0' as first argument of your call.</item>
+			<item>Changed <feature_name>physical_size</feature_name> in <class_name>INTERNAL</class_name> to return the real allocated size of an object along with its header size.</item>
+			<item>Added <feature_name>deep_physical_size</feature_name> in <class_name>INTERNAL</class_name> to compute the size of an object and all its dependencies.</item>
+			<item>Improved speed of <feature_name>read_stream</feature_name> in <class_name>FILE</class_name> so that it used underlying `fread' once rather than calling `getc' for each requested character. Our benchmarks show that you can save up to 2s for 1000 calls.</item>
+			<item>Added an assigner routine for <feature_name>item</feature_name> in <class_name>ARRAY2</class_name>. This might break descendant classes of <class_name>ARRAY2</class_name> redefining <feature_name>item</feature_name>.</item>
+		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+			<item>Fixed bug in {<class_name>SOCKET</class_name>}.<feature_name>read_stream</feature_name> where if there was a socket error, then it would cause a precondition violation in <class_name>C_STRING</class_name>.</item>
+		</list>
+		<heading><size>3</size>EiffelTime</heading>
+		<list ordered="false">
+			<item>Added support for <class_name>DEBUG_OUTPUT</class_name> for <class_name>DATE</class_name>, <class_name>TIME</class_name> and <class_name>DATE_TIME</class_name> objects making it easier to debug code based on them.</item>
+			<item>Fixed bug where duration in days between two dates overlapping a leap year would yield a result off by +1 or -1.</item>
+			<item>10% speed improvement on certain date operations (can be seen on eweasel test#time002).</item>
 		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
 			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
+		</list>
+		<heading><size>3</size>EiffelVision2</heading>
+		<list ordered="false">
+			<item>Fixed a bug in {<class_name>WEL_REGISTRY</class_name>}.<feature_name>enumerate_key</feature_name> where the routine would go in an infinite loop if the key name was larger than 64 characters.</item>
 		</list>
 		<paragraph>
 			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>

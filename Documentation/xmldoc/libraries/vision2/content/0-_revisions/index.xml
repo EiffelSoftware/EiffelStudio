@@ -10,6 +10,13 @@
 		<paragraph>This document contains details of modifications and bug fixes to the Vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
 	
 
+	<heading><size>2</size>EiffelStudio 6.2</heading>
+		<paragraph>
+			<bold>Improvements</bold>
+			<list ordered="false">
+				<item>Added hide actions to EiffelVision 2 windows.</item>
+			</list>
+		</paragraph>
 	<heading>
 			<size>2</size> EiffelStudio 6.1
 		</heading>

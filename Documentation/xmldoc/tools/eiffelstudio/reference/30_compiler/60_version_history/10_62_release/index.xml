@@ -1,0 +1,40 @@
+<document title="Major changes between ISE Eiffel 6.1 and ISE Eiffel 6.2">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Introduction to EiffelEnvision\History and Known Issues\Compiler History</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>What's new</heading>
+		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>2</size>Improvements</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>2</size>Changes</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>2</size>Bug fixes</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>Compiler issues</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>Runtime/code generation issues</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>Store/Retrieve issues</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+	</paragraph>
+</document>

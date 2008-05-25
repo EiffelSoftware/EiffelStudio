@@ -18,7 +18,7 @@ feature -- Initialization
 			end
 		rescue
 			is_retried := True
-			if {ex: OPERATING_SYSTEM_FAILURE}exception_manager.last_exception and then ex.error_code = 0 then
+			if not {ex: OPERATING_SYSTEM_FAILURE}exception_manager.last_exception or else ex.error_code = 0 then
 				print (exception_manager.last_exception)
 			end
 			retry

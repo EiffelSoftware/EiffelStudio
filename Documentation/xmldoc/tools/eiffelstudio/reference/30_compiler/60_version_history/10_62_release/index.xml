@@ -10,19 +10,32 @@
 		<heading><size>2</size>What's new</heading>
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
-			<item></item>
+			<item>Exceptions are objets are now implemented.</item>
+			<item>Added detection of harmful catcall at runtime (harmless one are currently ignored).</item>
+			<item>Added support for `note' keyword with a migration path in case `note' is being used as an identifier in your code.</item>
+			<item>Added `-gc_stats' option to get some information on how much CPU time is spent in GC during an Eiffel compilation.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Improved speed of compiler by a significant factor for large system.</item>
+			<item>Generated code is about 3-4% faster with a size reduction of about 2-3%.</item>
+			<item>Improved number of dynamic to static bindings in finalized code. Improved quality of inlined code for reducing even more of the dynamic calls.</item>
+			<item>Reduced the size of the AST stored in memory during a compilation by 20/25% which results in a memory usage reduction for EiffelStudio of about 15%. For example when compiling EiffelStudio on Windows 64-bit, it was taking 920MB with the previous version, and now it would be 800MB.</item>
+			<item>Fixed performance issue with {<class_name>SPECIAL</class_name>}.<feature_name>clear_all</feature_name> when handling a special of reference.</item>
 		</list>
 		<heading><size>2</size>Changes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Protected several calls to `eif_wean' on the same EIF_OBJECT. This will prevent a memory corruption for people using it incorrectly with a minor slow down since in a typical application there should not be too many protected objects.</item>
 		</list>
 		<heading><size>2</size>Bug fixes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed eweasel test#final046 by avoiding useless creation of temporary objects during dynamic dispatch. It can also dramatically speed up certain kind of code; on the compiler itself, the speed up is about 8-10%. In the worst case scenario it is 400% or more. Note this bug was introduced in version 6.0. Compared to 5.7, in 6.2 the worst case scenario is still about 10% slower.</item>
+			<item>Fixed an incorrect code generation for `is_equal' in ANY when exception trace is off which could cause a memory corruption.</item>
+			<item>Fixed various issues with compiler when inlining is enabled.</item>
+			<item>Fixed compiler crash when compiling a class where a type used in a signature of a feature has the wrong number of generic parameters. Fixed eweasel test#incr285.</item>
+			<item>Fixed an incorrect code generation for the dynamic binding of routines defined in generic classes and attribute access in general. Fixed eweasel test#exec272 and test#final039.</item>
+			<item>Fixed eweasel test#melt081 where having a redefined routine involving an anchor to a non-existing feature would crash the compiler instead of reporting a VEEN error.</item>
+			<item>Various bug fixes with respect of handling of expanded generic classes used in generic classes.</item>
 		</list>
 		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">
@@ -30,11 +43,11 @@
 		</list>
 		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Changed the usage of `eif_adopt', `eif_protect', `eif_wean', `eif_freeze' and `eif_unfreeze' so that they can be used in concurrent thread. Meaning that it is safe to use them as long as the argument is different in various threads.</item>
 		</list>
 		<heading><size>3</size>Store/Retrieve issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed some issues with the storing or retrieving of generic expanded types.</item>
 		</list>
 	</paragraph>
 </document>

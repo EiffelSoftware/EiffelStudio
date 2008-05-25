@@ -28,6 +28,11 @@
 			<item>Protected several calls to `eif_wean' on the same EIF_OBJECT. This will prevent a memory corruption for people using it incorrectly with a minor slow down since in a typical application there should not be too many protected objects.</item>
 		</list>
 		<heading><size>2</size>Bug fixes</heading>
+		<heading><size>3</size>Language issues</heading>
+		<list ordered="false">
+			<item>Fixed various limitations with support of attached types in 6.1.</item>
+		</list>		
+		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">
 			<item>Fixed eweasel test#final046 by avoiding useless creation of temporary objects during dynamic dispatch. It can also dramatically speed up certain kind of code; on the compiler itself, the speed up is about 8-10%. In the worst case scenario it is 400% or more. Note this bug was introduced in version 6.0. Compared to 5.7, in 6.2 the worst case scenario is still about 10% slower.</item>
 			<item>Fixed an incorrect code generation for `is_equal' in ANY when exception trace is off which could cause a memory corruption.</item>
@@ -36,10 +41,6 @@
 			<item>Fixed an incorrect code generation for the dynamic binding of routines defined in generic classes and attribute access in general. Fixed eweasel test#exec272 and test#final039.</item>
 			<item>Fixed eweasel test#melt081 where having a redefined routine involving an anchor to a non-existing feature would crash the compiler instead of reporting a VEEN error.</item>
 			<item>Various bug fixes with respect of handling of expanded generic classes used in generic classes.</item>
-		</list>
-		<heading><size>3</size>Compiler issues</heading>
-		<list ordered="false">
-			<item></item>
 		</list>
 		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">

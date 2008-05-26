@@ -4,8 +4,6 @@ class
 inherit
 	ARGUMENTS
 
-	EXCEPTION_MANAGER_FACTORY
-
 create
 	make
 
@@ -24,11 +22,11 @@ feature -- Initialization
 			loop
 				retrieve
 				i := i + 1
-			end
+		end
 		end
 
 
-	save
+	save is
 			-- Routine only used once for creating the object that should always be retrievable.
 		local
 			l_file: RAW_FILE
@@ -57,7 +55,7 @@ feature -- Initialization
 			retry
 		end
 
-	retrieve
+	retrieve is
 		local
 			a: ANY
 			l_file: RAW_FILE
@@ -79,6 +77,6 @@ feature -- Initialization
 			retry
 		end
 
-	file_name: STRING = "data54"
+	file_name: STRING is "data54"
 
 end

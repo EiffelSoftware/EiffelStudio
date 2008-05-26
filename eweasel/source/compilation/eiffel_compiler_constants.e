@@ -13,10 +13,6 @@ feature {NONE} -- Input prompts
 
 	Missing_precompile_prompt: STRING is "The project needs to use a precompile library, which has not been compiled.";
 
-	Overwrite_prompt: STRING is "Do you wish to overwrite it (Y-yes or N-no)?";
-
-
-	C_failure_prompt: STRING is "Press <c> to continue or <a> to abort: ";
 
 feature {NONE} -- Output constants
 
@@ -33,10 +29,6 @@ feature {NONE} -- Output constants
 	Validity_warning_prefix: STRING is "Warning code:";
 
 	Class_name_prefix: STRING is "Class:";
-
-	Updt_failure_prefix: STRING is "Error in writing .UPDT file";
-
-	C_failure_prefix: STRING is "Cannot generate C code";
 
 	Aborted_prefix: STRING is "ISE Eiffel: Session aborted";
 

@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			-- if no more lines available.
 		local
 			in_progress, is_suspend_prompt: BOOLEAN;
-			is_resume_prompt, is_missing_precomp, is_c_failure: BOOLEAN
+			is_resume_prompt, is_missing_precomp: BOOLEAN
 			line: STRING;
 			count: INTEGER;
 			last_char: CHARACTER;
@@ -134,8 +134,7 @@ feature {NONE} -- Implementation
 						count := count + 1;
 						is_resume_prompt := count = Resume_prompt.count and then equal (line, Resume_prompt)
 						is_missing_precomp := count = Missing_precompile_prompt.count and then equal (line, Missing_precompile_prompt)
-						is_c_failure :=	count = C_failure_prompt.count and then equal (line, C_failure_prompt)
-						is_suspend_prompt := is_resume_prompt or is_missing_precomp or is_c_failure
+						is_suspend_prompt := is_resume_prompt or is_missing_precomp
 					end
 				end;
 			end;	

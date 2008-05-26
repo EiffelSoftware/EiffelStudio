@@ -37,11 +37,11 @@ feature -- Disposal
 
 feature -- Exception mechanism
 
-	exception_occurred: POINTER is
+	exception_occurred: BOOLEAN is
 			-- Returns the exception object that is currently in the process of being thrown,
 			-- or null if no exception is currently being thrown
 		do
-			Result := c_exception_occurred (jvm.envp)
+			Result := c_exception_occurred (jvm.envp) /= default_pointer
 		end
 
 	exception_clear
@@ -57,10 +57,10 @@ feature -- Exception mechanism
 			p, null: POINTER
 			l_exception: EXCEPTIONS
 		do
-			p := exception_occurred
+			p := c_exception_occurred (jvm.envp)
 			if p /= null then
 				c_exception_describe (jvm.envp)
-				exception_clear
+				c_exception_clear (jvm.envp)
 				create l_exception
 				l_exception.raise ("Java Exception occurred")
 			end

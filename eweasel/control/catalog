@@ -1457,6 +1457,7 @@ test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable multithre
 test	storable-formats			store013 tcf pass storable
 test	storable-formats-2			store014 tcf pass storable
 test	retrieve-mismatch-serialization-failure	store015 tcf pass storable exception
+test	storable-formats-3			store016 tcf pass storable
 
 
 -- Flat, short, flatshort tests

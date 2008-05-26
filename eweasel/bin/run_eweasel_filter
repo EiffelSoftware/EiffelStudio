@@ -1,4 +1,4 @@
 #!/bin/tcsh
 
-eweasel -keep all  -filter "dir $1" -define HOME $EWEASEL -define EWEASEL $EWEASEL -define INCLUDE $EWEASEL/control -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/../test_dir
+eweasel -keep all  -filter "dir $1" -define EWEASEL $EWEASEL -define INCLUDE $EWEASEL/control -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/../test_dir
 

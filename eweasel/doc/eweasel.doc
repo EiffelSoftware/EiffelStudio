@@ -57,8 +57,6 @@ variables on the command line:
 			(usually $EWEASEL/control, where $EWEASEL is the
 			path name of the eweasel installation directory).
 	
-	HOME		Your home directory.
-
 The -init option lets you specify the name of the initial test suite
 control file, which is read and executed before the test catalog is
 processed and before any tests are executed.  This control file may

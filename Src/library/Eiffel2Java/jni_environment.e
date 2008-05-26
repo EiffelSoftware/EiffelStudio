@@ -37,16 +37,30 @@ feature -- Disposal
 
 feature -- Exception mechanism
 
+	exception_occurred: POINTER is
+			-- Returns the exception object that is currently in the process of being thrown,
+			-- or null if no exception is currently being thrown
+		do
+			Result := c_exception_occurred (jvm.envp)
+		end
+
+	exception_clear
+			-- Clears any exception that is currently being thrown. 
+			-- If no exception is currently being thrown, this routine has no effect.
+		do
+			c_exception_clear(jvm.envp)
+		end
+
 	check_for_exceptions is
 			-- Check if a Java exception occurred, raise Java exception occurred
 		local
 			p, null: POINTER
 			l_exception: EXCEPTIONS
 		do
-			p := c_exception_occurred (jvm.envp)
+			p := exception_occurred
 			if p /= null then
 				c_exception_describe (jvm.envp)
-				c_exception_clear (jvm.envp)
+				exception_clear
 				create l_exception
 				l_exception.raise ("Java Exception occurred")
 			end

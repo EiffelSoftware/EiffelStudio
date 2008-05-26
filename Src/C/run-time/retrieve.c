@@ -595,8 +595,13 @@ rt_private int type_defined (EIF_TYPE_INDEX old_type)
 {
 	RT_GET_CONTEXT
 	int result = 0;
-	if (old_type <= MAX_DTYPE)
+	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+		if ((int16) old_type >= 0) {
+			result = type_conversions->type_index[old_type] != TYPE_UNDEFINED;
+		}
+	} else if (old_type <= MAX_DTYPE) {
 		result = type_conversions->type_index[old_type] != TYPE_UNDEFINED;
+	}
 	return result;
 }
 

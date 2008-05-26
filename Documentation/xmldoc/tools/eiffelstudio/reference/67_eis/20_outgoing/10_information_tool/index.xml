@@ -1,0 +1,18 @@
+<document title="Informations Tool" output="studio">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_browsing_annotations.xml</url>
+					<label>Browsing Annotations</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_annotation_management.xml</url>
+					<label>Annotation Management</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

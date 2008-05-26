@@ -1,0 +1,25 @@
+<document title="Incoming" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph><code_block><bold>eiffel:?&lt;<italic>eiffel-resource</italic>&gt;</bold></code_block></paragraph>
+		<paragraph>&lt;<italic>eiffel-resource</italic>&gt; is a combination of following parts, connected by <bold>&amp;</bold> if more than one part are required:</paragraph>
+		<list ordered="false">
+		    <item> &lt;<italic>systeme</italic>&gt;, in the form of system=to_be_replaced, <bold>to_be_replaced</bold> consists of system_name or uuid of the system, or both connected by "<bold>.</bold>".</item>
+		    <item> &lt;<italic>targete</italic>&gt;, in the form of target=to_be_replaced, <bold>to_be_replaced</bold> consists of target_name or uuid of the system, or both connected by "<bold>.</bold>".</item>
+		    <item> &lt;<italic>clustere</italic>&gt;, in the form of cluster=to_be_replaced, <bold>to_be_replaced</bold> is the name of the cluster.</item>
+		    <item> &lt;<italic>classe</italic>&gt;, in the form of class=to_be_replaced, <bold>to_be_replaced</bold> is the name of the class.</item>
+		    <item> &lt;<italic>featuree</italic>&gt;, in the form of feature=to_be_replaced, <bold>to_be_replaced</bold> is the name of the feature. </item>
+		</list>
+		<note>
+			<bold>Note: </bold>All parts above are unordered.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>20_examples.xml</url>
+				<label>Examples</label>
+			</link>
+		</seealso>
+	</paragraph>
+	</document>

@@ -1,0 +1,20 @@
+<document title="EIS: Incoming" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Incoming mechanism is based on URI, and introduces a new URI scheme: <bold>eiffel</bold>. By entering the URI into address of a browser, or clicking on the hyper link, an existing EiffelStudio instance or new EiffelStudio instance will try to resolve the URI and display corresponding resources.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_eiffel_scheme_syntax.xml</url>
+					<label>Eiffel scheme Syntax</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_examples.xml</url>
+					<label>Examples</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+	</document>

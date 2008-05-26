@@ -1,0 +1,75 @@
+<document title="Browsing Information" output="studio">
+	<meta_data/>
+	<paragraph>
+		<image>
+				<url>../../../../../images/eiffelstudio/eis/information_tool.png</url>
+		</image>
+		<heading>
+			<size>2</size> Information Tree
+		</heading>
+		<paragraph>On the left of the tool window is the information tree. The tree displays all locations in which annotations are, as well as a subtree of tags by which annotations can be better organized in tag style. Double clicking or pressing enter on tree nodes opens annotation list corresponding to that node.</paragraph>
+		<paragraph>The following are types of nodes in the tree can be navigate to:</paragraph>
+		<list ordered="false">
+		          <item> Target</item>
+		          <item> Cluster</item>
+		          <item> Library</item>
+		          <item> Class</item>
+		          <item> Feature</item>
+		          <item> Targets without tags</item>
+		          <item> Listed tag</item>
+		</list>
+		<heading>
+			<size>2</size> Annotation List
+		</heading>
+		<paragraph>Double clicking on the tree node, the annotation list appears on the right of the tool window.</paragraph>
+		<paragraph>The following collumns are available in the list:</paragraph>
+		<list ordered="false">
+		          <item> Location - the place where that piece of annotation resides. Typical locations are target, cluster, class and feature.</item>
+		          <item> Name - the name of the piece of annotation, given by users.</item>
+		          <item> Protocol - type of the annotation EIS treats. 
+					<seealso>
+						<bold>See Also</bold>
+						<line_break></line_break>
+						<link>
+							<url>20_protocols.xml</url>
+							<label>Protocols</label>
+						</link>
+					</seealso>
+		          </item>
+		          <item> Source - normally the location EIS takes to open. Variables can be used.</item>
+					<seealso>
+						<bold>See Also</bold>
+						<line_break></line_break>
+						<link>
+							<url>30_variable_definition.xml</url>
+							<label>Variable Definition</label>
+						</link>
+					</seealso>
+		          <item> Tags - terms or phrases users use to categrize the piece of information. Tags are separated by <bold>","</bold></item>
+		          <item> Others - other related attributes. Attributes are separated by <bold>","</bold>
+					<note>
+						<bold>Note: </bold>Attributes used by <bold>protocol</bold> are taken into account. Otherwise, they are ignored.
+					</note>
+		          </item>
+		</list>
+		<note>
+			<bold>Hint: </bold>Clicking on title of each columns sorts that columns.
+		</note>
+		<heading>
+			<size>2</size> Openning Resources
+		</heading>
+		<paragraph>Information or resources can be opened by either double clicking into the annotation list or pressing enter on it. EIS interpretes available attributes via the given protocol and opens the target resource.</paragraph>
+		<note>
+			<bold>Note: </bold>Pressing <bold>F1</bold> in the editor, a list of all available information pops up, from which information can be accessed too.
+		</note>
+		<heading>
+			<size>2</size> Sweeping Information
+		</heading>
+		<paragraph>Sweeping information synchronizes all information of current system into the tool. This is needed when changes may occur externally and EIS may need to know full information to display a correct list of existing tags. Two ways of sweeping:</paragraph>
+		<list ordered="false">
+	          <item> Automatic - EIS automatically sweeps information when Information tool is shown. Enable the first button on the bottom toolbar activate this function.</item>
+	          <item> Manual - The second button on the bottom toolbar triggers a manual sweeping.</item>
+		</list>
+		<paragraph>The progress bar in the bottom of the tool tells current sweeping progress.</paragraph>
+	</paragraph>
+	</document>

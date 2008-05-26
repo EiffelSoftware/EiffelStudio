@@ -1,0 +1,25 @@
+<document title="Protocols" output="studio">
+	<meta_data/>
+	<paragraph>
+		EIS supports following protocols now:
+		<list ordered="false">
+			<item>
+				<paragraph>Raw URL: This protocol does not need to specified. By default, it will be taken if nothing is specified or unknown protocol is specified.</paragraph> 
+			</item>
+			<item>
+				<paragraph>PDF: PDF protocol supports three attributes for now. "type" "page" and "nameddest". (Windows only)</paragraph>
+				<list ordered="false">
+					<item>
+						type: "file" is used to open PDF files in PDF reader. Otherwise in a browser.
+					</item>
+					<item>
+						page: Specify the page number to navigate to.
+					</item>
+					<item>
+						nameddest: Specify the named destination to navigate to. 
+					</item>
+				</list>
+			</item>
+		</list>
+	</paragraph>
+	</document>

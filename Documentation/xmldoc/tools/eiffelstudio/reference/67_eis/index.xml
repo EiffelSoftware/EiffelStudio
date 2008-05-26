@@ -1,0 +1,32 @@
+<document title="EIS: Outgoing" output="studio">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_incoming/index.xml</url>
+					<label>Incoming</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_outgoing/index.xml</url>
+					<label>Outgoing</label>
+				</link>
+				<list>
+					<item>
+						<link>
+							<url>20_information_tool/10_information_tool/index.xml</url>
+							<label>Information(EIS) Tool</label>
+						</link>
+					</item>
+				</list>
+			</item>
+		</list>
+	</paragraph></document>

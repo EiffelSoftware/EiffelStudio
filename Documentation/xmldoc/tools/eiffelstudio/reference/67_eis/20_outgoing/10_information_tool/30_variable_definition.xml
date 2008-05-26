@@ -1,0 +1,44 @@
+<document title="Variable Definition" output="studio">
+	<meta_data/>
+	<paragraph>
+		EIS supports following types of variables which can be used in <bold>Source</bold> of annotation list.
+		<list ordered="false">
+			<item>
+				EiffelStudio installation built in variables
+				<list ordered="false">
+					<item>
+						ISE_WIKI = http://dev.eiffel.com
+					</item>
+					<item>
+						EIFFELROOM = http://www.eiffelroom.com
+					</item>
+				</list>
+			</item>
+			<item>
+				Context related built in variables. These variables can be used in specific context. For instance, <bold>feature_name</bold> refers to the name of the feature in which annotation is written.
+				<list ordered="false">
+					<item>
+						feature_name
+					</item>
+					<item>
+						class_name
+					</item>
+					<item>
+						group_name
+					</item>
+					<item>
+						target_name
+					</item>
+				</list>
+				<note><bold>Note: </bold>This kind of variables can only be used in components that are enclosed in those the variable name refers to. For example, <bold>feature_name</bold> has no effect if used in a target component.</note>
+			</item>
+			<item>
+				Individual system or library preferences. This kind of variables are defined in .ecf files, can be accessed via Project Setting dialog. 
+				<note>System -&gt; Target -&gt; Advanced -&gt; Variables</note>
+			</item>
+			<item>
+				Environment variables. Variables defined in the operating system environment.
+			</item>
+		</list>
+	</paragraph>
+	</document>

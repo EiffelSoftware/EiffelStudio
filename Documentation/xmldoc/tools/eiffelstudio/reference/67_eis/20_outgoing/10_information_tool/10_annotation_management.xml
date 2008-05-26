@@ -1,0 +1,44 @@
+<document title="Annotation Management" output="studio">
+	<meta_data/>
+	<paragraph>
+		Information Tool provides information management functions: adding, modifying and removing.
+		<note>
+			<bold>Note: </bold>Annotation management is only available in lists rather than those tag node related.
+		</note>
+		<heading>
+			<size>2</size>Adding
+		</heading>
+		<paragraph>For each kind of node in the information tree - rather than those in tag tree - related annotations are listed in the right annotaton list. At the end of such lists, double clicking the blank line with <bold>"..."</bold> in the <bold>Name</bold> column creates a new Unnamed annotation. One could modify the new entry into what he wants. See the following section <bold>Modifying</bold>.</paragraph>
+		<heading>
+			<size>2</size>Modifying
+		</heading>
+		<paragraph>To modify an annotation, one could modify it by Information Tool or by code.</paragraph>
+		<list ordered="false">
+		    <item> By Information Tool, first a line in the annotation list should be selected, then clicking into columns activates editing mode. Once the editing area is deactivated, the modification is done and synchronized in the code automatically.</item>
+		    <item> By code, one simply modifies code in the editor, or external editor for .ecf files (not recommented).
+				<seealso>
+					<bold>See Also</bold>
+					<line_break></line_break>
+					<link>
+						<url>../index.xml</url>
+						<label>Syntax for Annotations</label>
+					</link>
+				</seealso>
+		    </item>
+		</list>
+		<heading>
+			<size>2</size>Removing
+		</heading>
+		<paragraph>By pressing <bold>Delete</bold>, or clicking the third button on the bottom toolbar deletes all selected annotations in the list. And corresponding code is synchronized.</paragraph>
+		<note>
+			<bold>Note: </bold>Annotation list can be multi-selected.
+		</note>
+		<heading>
+			<size>2</size>Management Affection
+		</heading>
+		<paragraph>
+			<item> All means to manage annotations via the tool are inreversible, except that the location - class or feature - has been opened in the editor, thus undo can be achieved via the editor. Removing is prompted on user demands.</item>
+			<item> Tag tree is automatically updated when annotations are added/modified/removed or through system sweeping.</item>
+		</paragraph>
+	</paragraph>
+	</document>

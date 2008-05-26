@@ -129,7 +129,6 @@ feature -- Code generation
 			else
 				l_val := real_32_value.out
 			end
-			l_buf.put_string (l_val)
 			l_nb := l_val.count
 				-- Special trick when current locale decimal separator
 				-- is the coma (See bug#5659)
@@ -137,13 +136,14 @@ feature -- Code generation
 			if l_pos > 0 then
 					-- Replace the `,' with a `.'.
 				l_val.put ('.', l_pos)
-			elseif
-				l_val.last_index_of ('.', l_nb) = 0 and
-				l_val.last_index_of ('e', l_nb) = 0
-			then
+				l_buf.put_string (l_val)
+			elseif l_val.last_index_of ('.', l_nb) = 0 and l_val.last_index_of ('e', l_nb) = 0 then
 					-- It is an integer value, we need to add the '.'
 					-- as otherwise it is not a valid C identifier.
+				l_buf.put_string (l_val)
 				l_buf.put_character ('.')
+			else
+				l_buf.put_string (l_val)
 			end
 			if is_real_32 then
 				l_buf.put_character ('f')

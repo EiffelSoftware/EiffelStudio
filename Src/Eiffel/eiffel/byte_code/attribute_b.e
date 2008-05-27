@@ -158,9 +158,8 @@ feature -- Inlining
 		local
 			inlined_attr_b: INLINED_ATTR_B
 		do
-				-- Adapt type in current context for better results. We have to remove
-				-- the anchors otherwise it does not work, see eweasel test#final050.
-			type := real_type (type.deep_actual_type).instantiated_in (context.context_cl_type)
+				-- Adapt type in current context for better results.
+			type := type.instantiated_in (context.current_type)
 			if parent /= Void then
 				Result := Current
 			else

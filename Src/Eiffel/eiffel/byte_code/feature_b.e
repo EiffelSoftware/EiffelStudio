@@ -341,9 +341,8 @@ feature -- Inlining
 
 				Result := parent
 			end
-				-- Adapt type in current context for better results. We have to remove
-				-- the anchors otherwise it does not work, see eweasel test#final050.
-			type := real_type (type.deep_actual_type).instantiated_in (context.context_cl_type)
+				-- Adapt type in current context for better results.
+			type := type.instantiated_in (context.current_type)
 			if precursor_type /= Void then
 				precursor_type ?= real_type (precursor_type)
 			end
@@ -438,6 +437,8 @@ feature -- Inlining
 							written_cl_type := cl_type
 						else
 							written_cl_type := cl_type.find_class_type (f.written_class)
+								-- Ensured that formal generics in `written_cl_type' are valid for `f.written_class'.
+							written_cl_type := written_cl_type.find_descendant_type (f.written_class)
 						end
 					else
 							-- We are going to perform the inlining as if we were generating the class in

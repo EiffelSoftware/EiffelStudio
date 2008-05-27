@@ -47,6 +47,7 @@
 			<item>Added <feature_name>deep_physical_size</feature_name> in <class_name>INTERNAL</class_name> to compute the size of an object and all its dependencies.</item>
 			<item>Improved speed of <feature_name>read_stream</feature_name> in <class_name>FILE</class_name> so that it used underlying `fread' once rather than calling `getc' for each requested character. Our benchmarks show that you can save up to 2s for 1000 calls.</item>
 			<item>Added an assigner routine for <feature_name>item</feature_name> in <class_name>ARRAY2</class_name>. This might break descendant classes of <class_name>ARRAY2</class_name> redefining <feature_name>item</feature_name>.</item>
+			<item>Updated code toward Void safety.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">

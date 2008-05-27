@@ -11,6 +11,7 @@
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
 			<item>Exceptions are objets are now implemented.</item>
+			<item>Added support for new ~ operator which can compare 2 objects safely regardless of their type.</item>
 			<item>Added detection of harmful catcall at runtime (harmless one are currently ignored).</item>
 			<item>Added support for `note' keyword with a migration path in case `note' is being used as an identifier in your code.</item>
 			<item>Added `-gc_stats' option to get some information on how much CPU time is spent in GC during an Eiffel compilation.</item>
@@ -26,6 +27,7 @@
 		<heading><size>2</size>Changes</heading>
 		<list ordered="false">
 			<item>Protected several calls to `eif_wean' on the same EIF_OBJECT. This will prevent a memory corruption for people using it incorrectly with a minor slow down since in a typical application there should not be too many protected objects.</item>
+			<item>Due to new meaning of ~, the old syntax for agents is not being supported anymore. If you still have some code using the old agent syntax, compile it with 6.1 with syntax warning enabled to fix your code before upgrading to 6.2.</item>
 		</list>
 		<heading><size>2</size>Bug fixes</heading>
 		<heading><size>3</size>Language issues</heading>

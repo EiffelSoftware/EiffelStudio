@@ -843,10 +843,10 @@ test	finalize-array-opt-2		final016  tcf pass finalizing
 test	finalize-delayed-deferred-call	final017  tcf pass finalizing
 test	finalize-inline-none-proc	final018  tcf pass finalizing inlining
 test	inline-generic-assign-attempt	final019  tcf pass finalizing inlining
-test	finalize-or-else-true		final020  tcf pass execution
-test	finalize-mult-double-constant	final021  tcf pass execution
-test	expanded-generic-return-type	final022  tcf pass execution
-test	bigger-array-of-bit		final023  tcf pass execution
+test	finalize-or-else-true		final020  tcf pass finalizing execution
+test	finalize-mult-double-constant	final021  tcf pass finalizing execution
+test	expanded-generic-return-type	final022  tcf pass finalizing execution
+test	bigger-array-of-bit		final023  tcf pass finalizing execution
 test	finalize-skip-invariant		final024  tcf fail finalizing
 test	inline-pass-expanded		final025  tcf pass finalizing inlining
 test	c-inline-function-ten-args	final026  tcf pass finalizing inlining
@@ -883,6 +883,7 @@ test	inlining-with-formal		final056 tcf pass finalizing inlining
 test	inlining-wrong-argument-reuse	final057 tcf pass finalizing inlining
 test	inlining-missing-gc-hooks	final058 tcf pass finalizing inlining
 test	inlining-with-inline-externals	final059 tcf pass finalizing inlining
+test	inlining-with-formal-2		final060 tcf pass finalizing inlining
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

@@ -121,30 +121,8 @@ Test memory_leak_when_retried (except019): passed
 Test corrupted_trace (except020): passed
 Test top_n_call_incorrect (except021): passed
 Test incorrect_local_restoration (except022): passed
-Test native_signal_number_in_exception (except023): failed
-	Description: Test the native signal number is set in OPERATING_SYSTEM_SIGNAL_FAILUER.
-	Execution error in file C:\work\eweasel\eweasel\tests\except023\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEEN
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test native_error_number_in_exception (except024): failed
-	Description: Test the native signal number is set in OPERATING_SYSTEM_FAILURE.
-	Execution error in file C:\work\eweasel\eweasel\tests\except024\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEEN
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test native_signal_number_in_exception (except023): passed
+Test native_error_number_in_exception (except024): passed
 Test basic-non-conforming-inheritance (noncon001): passed
 Test non-conforming-inheritance-conformance (noncon002): passed
 Test non-conforming-inheritance-incrementality (noncon003): passed
@@ -2237,6 +2215,7 @@ Test inlining-with-formal (final056): passed
 Test inlining-wrong-argument-reuse (final057): passed
 Test inlining-missing-gc-hooks (final058): passed
 Test inlining-with-inline-externals (final059): passed
+Test inlining-with-formal-2 (final060): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2316,7 +2295,7 @@ Test variable-attr-wrong-address (exec014): manual
 Test readline-long-line-wrong (exec015): passed
 Test rescue-floating-exception (exec016): passed
 Test strip-wont-c-compile (exec017): failed
-Description: A class with a `strip' expression
+	Description: A class with a `strip' expression
 	Execution error in file C:\work\eweasel\eweasel\tests\exec017\tcf at line 21
 	Original text:    execute_result ok
 	Substituted text: execute_result ok
@@ -3186,6 +3165,13 @@ Test wrong-expanded-generic-type (exec284): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test wrong-polymorphic-call-with-select (exec285): failed
+	Description: A routine called polymorphically calls the wrong version. And the called version depends on the order in which the parent clauses are written.
+	Execution error in file C:\work\eweasel\eweasel\tests\exec285\tcf at line 53
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -3714,6 +3700,13 @@ Test storable-formats-2 (store014): failed
 	Reason: files being compared do not have identical contents
 
 Test retrieve-mismatch-serialization-failure (store015): passed
+Test storable-formats-3 (store016): failed
+	Description: Retrieve a storable from version 5.4 or older could crash the runtime upon retrieval.
+	Execution error in file C:\work\eweasel\eweasel\tests\store016\tcf at line 19
+	Original text:    compare exec_output output
+	Substituted text: compare exec_output output
+	Reason: files being compared do not have identical contents
+
 Test rename-inherited-wrong-flat (flat001): manual
 Test flat-after-change (flat002): manual
 Test flat-feature-two-defs (flat003): manual
@@ -4454,7 +4447,7 @@ Test ca-incorrect-context-usage (dotnet093): failed
 	Substituted text: compile_result validity_warning TEST NONE
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  paused 
+		Final status:  completed 
 	Expected result:
 		Validity error in class TEST code NONE
 		Final status:  completed 
@@ -4480,7 +4473,7 @@ Test ca-custom-attribute-with-property (dotnet098): failed
 	Substituted text: compile_result validity_error TEST VICA
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  had_panic 
 	Expected result:
 		Validity error in class TEST code VICA
 		Final status:  paused 
@@ -4493,7 +4486,7 @@ Test ca-custom-attribute-with-create (dotnet100): failed
 	Substituted text: compile_result validity_error TEST NONE
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  had_panic 
 	Expected result:
 		Validity error in class TEST code NONE
 		Final status:  paused 
@@ -4507,7 +4500,7 @@ Test consumable-attribute-usage-in-eiffel (dotnet103): failed
 	Substituted text: compile_result validity_error TEST VTCT
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  had_exception (Segmentation violation
+		Final status:  aborted had_exception (Segmentation violation
 	) 
 	Expected result:
 		Validity error in class TEST code VTCT
@@ -4532,8 +4525,8 @@ Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test assigner-name-incrementality (dotnet111): passed
 
-Passed:  1524 / 1824  (84%)
-Failed:  283 / 1824  (17%)
-Manual:  14 / 1824  (1%)
-Skipped:  3 / 1824  (1%)
+Passed:  1527 / 1827  (84%)
+Failed:  283 / 1827  (16%)
+Manual:  14 / 1827  (1%)
+Skipped:  3 / 1827  (1%)
 

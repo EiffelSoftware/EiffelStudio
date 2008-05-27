@@ -11,7 +11,7 @@ indexing
 
 class TEST_I inherit
 
-	TEST_ODBC
+	TEST
 
 create
 

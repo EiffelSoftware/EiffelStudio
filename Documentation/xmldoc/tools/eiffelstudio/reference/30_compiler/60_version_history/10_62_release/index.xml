@@ -15,6 +15,7 @@
 			<item>Added detection of harmful catcall at runtime (harmless one are currently ignored).</item>
 			<item>Added support for `note' keyword with a migration path in case `note' is being used as an identifier in your code.</item>
 			<item>Added `-gc_stats' option to get some information on how much CPU time is spent in GC during an Eiffel compilation.</item>
+			<item>Introduced several new much more powerful CAPs that now can be applied not only to read-only entities, but also to local variables (including <code><reserved_word>Result</reserved_word></code>), and can take into account execution paths as well as some obvious void-safe patterns.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
@@ -23,16 +24,22 @@
 			<item>Improved number of dynamic to static bindings in finalized code. Improved quality of inlined code for reducing even more of the dynamic calls.</item>
 			<item>Reduced the size of the AST stored in memory during a compilation by 20/25% which results in a memory usage reduction for EiffelStudio of about 15%. For example when compiling EiffelStudio on Windows 64-bit, it was taking 920MB with the previous version, and now it would be 800MB.</item>
 			<item>Fixed performance issue with {<class_name>SPECIAL</class_name>}.<feature_name>clear_all</feature_name> when handling a special of reference.</item>
+			<item>Removed <code><compiler_error>VUOT(2)</compiler_error></code> that required that the type of an object test local is attached.</item>
 		</list>
 		<heading><size>2</size>Changes</heading>
 		<list ordered="false">
 			<item>Protected several calls to `eif_wean' on the same EIF_OBJECT. This will prevent a memory corruption for people using it incorrectly with a minor slow down since in a typical application there should not be too many protected objects.</item>
+			<item>Removed <code><compiler_error>VFAV(4)</compiler_error></code> validity error that is no longer specified in the standard.</item>
 			<item>Due to new meaning of ~, the old syntax for agents is not being supported anymore. If you still have some code using the old agent syntax, compile it with 6.1 with syntax warning enabled to fix your code before upgrading to 6.2.</item>
 		</list>
 		<heading><size>2</size>Bug fixes</heading>
 		<heading><size>3</size>Language issues</heading>
 		<list ordered="false">
-			<item>Fixed various limitations with support of attached types in 6.1.</item>
+			<item>Fixed various limitations with support of attached types in 6.1, including support for
+				<list ordered="false">
+					<item>attachment marks for tuple types and formal generics</item>
+					<item>object tests in class invariants</item>
+				</list></item>
 		</list>		
 		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">

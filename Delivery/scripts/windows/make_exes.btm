@@ -292,6 +292,25 @@ iff not exist legacy.exe then
 endiff
 move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
+remtrace Getting eweasel source code
+safe_md %EIFFEL_SRC\eweasel
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/compilation %EIFFEL_SRC\eweasel\compilation
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/source %EIFFEL_SRC\eweasel\source
+remtrace Compiling eweasel
+safe_md %STUDIO_DIR\eweasel
+safe_md %STUDIO_DIR\eweasel\spec
+safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM
+safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+cdd %EIFFEL_SRC\eweasel\compilation
+clean_project
+set OLD_EWEASEL=%EWEASEL
+set EWEASEL=%EIFFEL_SRC\eweasel
+finalize eweasel.ecf eweasel
+cleanup_eiffel eweasel eweasel.exe
+move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+set EWEASEL=%OLD_EWEASEL
+set OLD_EWEASEL=
+
 remtrace Compiling Gobo tools
 safe_md %STUDIO_DIR\library\gobo\spec
 safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM

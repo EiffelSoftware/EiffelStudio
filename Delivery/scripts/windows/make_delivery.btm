@@ -147,6 +147,11 @@ exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
+remtrace eweasel (just the necessary)
+exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel eweasel
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/bin eweasel/bin
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
+fullrf %STUDIO_DIR\eweasel\INSTALL
 
 remtrace MinGW files
 cdd %INSTALL_DIR

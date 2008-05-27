@@ -2,14 +2,15 @@ indexing
 	description: "Progress bar example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	
+
 class
 	PROGRESS_BAR_CTL
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
-			make as make_form
+			make as make_form,
+			invoke_delegate as invoke
 		redefine
 			on_load,
 			dispose_boolean
@@ -27,9 +28,9 @@ feature {NONE} -- Initialization
 			-- Call `initialize_components'.
 		do
 			initialize_components
-			i_sleep_time := 100 
+			i_sleep_time := 100
 			cmd_step.set_selected_index (0)
-			prog_bar.set_step (1)	
+			prog_bar.set_step (1)
 			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
 			i_sleep_time_positive: i_sleep_time > 0
@@ -37,17 +38,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	components: SYSTEM_DLL_SYSTEM_CONTAINER	
+	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container
 
 	label_1, label_2, label_3, label_4: WINFORMS_LABEL
-			-- System.Windows.Forms.Label 
+			-- System.Windows.Forms.Label
 
 	lbl_completed, lbl_value: WINFORMS_LABEL
-			-- System.Windows.Forms.Label 
+			-- System.Windows.Forms.Label
 
 	sldr_speed: WINFORMS_TRACK_BAR
-			-- System.Windows.Forms.TrackBar 
+			-- System.Windows.Forms.TrackBar
 
 	prog_bar: WINFORMS_PROGRESS_BAR
 			-- System.Windows.Forms.ProgressBar
@@ -56,7 +57,7 @@ feature -- Access
 			-- System.Windows.Forms.GroupBox
 
 	cmd_step: WINFORMS_COMBO_BOX
-			-- System.Windows.Forms.ComboBox 
+			-- System.Windows.Forms.ComboBox
 
 	i_sleep_time: INTEGER
 
@@ -213,7 +214,7 @@ feature {NONE} -- Implementation
 			if timed_progress /= Void then
 				timed_progress.interrupt
 				timed_progress := Void
-			end			
+			end
 
 			if a_disposing then
 				if components /= Void then
@@ -242,16 +243,16 @@ feature {NONE} -- Implementation
 				-- Reset to start if required
 			if prog_bar.value = prog_bar.maximum then
 				prog_bar.set_value (prog_bar.minimum)
-			else 
+			else
 				prog_bar.perform_step
 			end
-	
+
 			lbl_value.set_text (prog_bar.value.out)
-	
-			min := prog_bar.minimum 
-			numerator := prog_bar.value - min 
-			denominator := prog_bar.maximum - min 
-			completed := (numerator / denominator) * 100.0 
+
+			min := prog_bar.minimum
+			numerator := prog_bar.value - min
+			denominator := prog_bar.maximum - min
+			completed := (numerator / denominator) * 100.0
 
 			lbl_completed.set_text (completed.out + "%%")
 		end
@@ -297,7 +298,7 @@ feature {NONE} -- Implementation
 			i_sleep_time := a_value
 			{MONITOR}.exit (Current)
 		ensure
-			i_sleep_time_set: i_sleep_time = a_value	
+			i_sleep_time_set: i_sleep_time = a_value
 		end
 
 	on_sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
@@ -309,9 +310,9 @@ feature {NONE} -- Implementation
 			tb: WINFORMS_TRACK_BAR
 			time: INTEGER
 		do
-			tb ?= sender 
+			tb ?= sender
 			if tb /= Void then
-				time := 110 - tb.value 
+				time := 110 - tb.value
 				set_sleep_time (time)
 			end
 		end

@@ -25,6 +25,8 @@ while test $# -gt 0; do
 		--library)
 		if echo "$ISE_PLATFORM" | grep "bsd" >/dev/null 2>&1; then
 			echo -L/usr/local/lib -liconv
+		elif echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+			echo -liconv
  		fi
 		;;
 		--include_path)

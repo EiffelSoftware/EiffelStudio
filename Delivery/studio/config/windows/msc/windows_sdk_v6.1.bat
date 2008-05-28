@@ -145,6 +145,12 @@ IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v 9.0') DO SET VCRoot=%%B
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%VSRegKeyPath%" /v 9.0') DO SET VSRoot=%%B
 
+IF NOT EXIST "%VSRoot%" (
+	IF "%TARGET_CPU%"=="x86" (
+		SET "VSRoot=%ProgramFiles%\Microsoft Visual Studio 9.0\"
+	)
+)
+
 :: Hide the error output from the call to 'REG' since VCRoot and VSRoot have already been set
 :: to a default value.
 CLS

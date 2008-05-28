@@ -29,6 +29,6 @@ echo "Building library $EWEASEL/spec/$ISE_PLATFORM/lib/eweasel.a"
 $elib eweasel.a $EWEASEL/source/*/Clib/*.o
 
 cd $EWEASEL
-untgz_ccode eweasel
+untgz_ccode eweasel no_cancel
 move eweasel $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM/bin
 

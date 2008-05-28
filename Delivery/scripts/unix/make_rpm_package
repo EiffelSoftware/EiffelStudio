@@ -56,5 +56,4 @@ find $RPM_DIR/RPMS -type f | xargs mv -t ./
 rm $RPM_DIR/eiffelstudio.spec
 rm -r $RPM_DIR/eiffelstudio
 rm -r $RPM_DIR/tmp
-rm -r $RPM_DIR/RPMS/*.rpm
-
+find $RPM_DIR/RPMS/* -type d | xargs rm -rf

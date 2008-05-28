@@ -76,6 +76,7 @@ copy %EIFFEL_SRC\C\shell\bin\rt_converter.exe %STUDIO_DIR\studio\spec\%ISE_PLATF
 copy %EIFFEL_SRC\C\shell\bin\sed.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
 copy %EIFFEL_SRC\C\shell\bin\msys-1.0.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\etc
+echo Dummy >> %STUDIO_DIR\studio\spec\%ISE_PLATFORM\etc\dummy.txt
 
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library

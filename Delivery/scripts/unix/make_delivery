@@ -83,6 +83,12 @@ fullrf studio/wizards/new_projects/dotnet.dsc
 fullrd studio/wizards/new_projects/wel
 fullrf studio/wizards/new_projects/wel.dsc
 
+remtrace eweasel
+exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel eweasel
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/bin eweasel/bin
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
+fullrf $INSTALL_DIR/eweasel/INSTALL
+
 remtrace esbuilder
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder 
 remtrace vision2_demo

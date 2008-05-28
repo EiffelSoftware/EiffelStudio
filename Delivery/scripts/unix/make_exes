@@ -13,6 +13,33 @@ safe_md $INSTALL_DIR/esbuilder/spec
 safe_md $INSTALL_DIR/esbuilder/spec/unix
 safe_md $INSTALL_DIR/esbuilder/spec/unix/bin
 
+remtrace Getting eweasel source code
+cd $EIFFEL_SRC
+safe_md $EIFFEL_SRC/eweasel
+co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/compilation $EIFFEL_SRC/eweasel/compilation
+co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/source $EIFFEL_SRC/eweasel/source
+remtrace Compiling eweasel
+safe_md $INSTALL_DIR/eweasel
+safe_md $INSTALL_DIR/eweasel/spec
+safe_md $INSTALL_DIR/eweasel/spec/unix
+safe_md $INSTALL_DIR/eweasel/spec/unix/bin
+EWEASEL=$EIFFEL_SRC/eweasel
+export EWEASEL
+cd $EIFFEL_SRC/eweasel/compilation
+clean_project
+finalize eweasel.ecf eweasel
+tgz_ccode eweasel eweasel.tar.bz2
+if [ ! -f eweasel.tar.bz2 ]; then
+	echo Could not finalize eweasel
+	CANCEL
+fi
+clean_project
+safe_md $EXPORT_DIR/eweasel
+move eweasel.tar.bz2 $EXPORT_DIR/eweasel
+cd $EIFFEL_SRC/eweasel
+tgz source
+move source.tar.bz2 $EXPORT_DIR/eweasel
+
 remtrace Recompile Vision2 Tour
 cd $EIFFEL_SRC
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_demo

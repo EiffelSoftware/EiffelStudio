@@ -1392,11 +1392,7 @@
 				<local_variable>x</local_variable> 
 				<symbol>:=</symbol> 
 				<local_variable>y</local_variable>
-			</code> of the form illustrated by the figure on page 
-			<link>
-				<url>tutorial-00.xml</url><anchor_name>35291</anchor_name>
-				<label>28</label>
-			</link> can cause objects to become unreachable.  This is the case for the object identified as OBJ2 on that figure (the object to which 
+			</code> of the form illustrated by the figure just above can cause objects to become unreachable. This is the case for the object identified as OBJ1 on that figure (the object to which 
 			<code>
 				<local_variable>x</local_variable>
 			</code> was attached before the assignment) if no other reference was attached to it.

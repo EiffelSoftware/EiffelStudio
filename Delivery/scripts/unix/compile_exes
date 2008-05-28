@@ -167,6 +167,12 @@ cd $INSTALL_DIR
 . $EXPORT_DIR/compile_libraries
 
 
+remtrace eweasel
+move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM
+cd $EXPORT_DIR/eweasel
+bunzip2 -c source.tar.bz2 | tar -xf -
+cd $EXPORT_DIR
+. ./compile_eweasel
 
 remtrace Esbuilder
 move $INSTALL_DIR/esbuilder/spec/unix $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM

@@ -15,10 +15,12 @@ echo "\n" | /bin/sh make_delivery $1
 # Let's keep an archive of this package
 if [ ! -f PorterPackage_all.tar ]; then
 	tar cvf PorterPackage_all.tar PorterPackage
+	echo $* > tmpin$$.tmp
 	awk 'index($0, "all") != 0 { exit 54 }' tmpin$$.tmp
 	if [ $? -ne 54 ] ;  then
 		scp PorterPackage_all.tar manus@eiffel.com:builds/PorterPackage_62_$ORIGO_SVN_REVISION.tar
 	fi
+	rm -f tmpin$$.tmp
 fi
 
 ./compile_for_all_platforms &

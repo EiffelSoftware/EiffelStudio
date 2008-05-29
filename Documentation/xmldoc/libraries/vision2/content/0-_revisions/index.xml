@@ -12,11 +12,29 @@
 
 	<heading><size>2</size>EiffelStudio 6.2</heading>
 		<paragraph>
-			<bold>Improvements</bold>
-			<list ordered="false">
-				<item>Added hide actions to EiffelVision 2 windows.</item>
-			</list>
+			<bold>Interface modifications</bold>
 		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>EV_WINDOW</bold> - Added hide actions.
+			</item>
+		</list>
+		<paragraph>
+			<bold>Bug fixes</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Platform independent</bold>
+				<list ordered="false">
+					<item><bold>EV_GRID</bold>
+						<list ordered="false">
+							<item>Fixed crashes when rendering child tree nodes</item>
+						</list>
+					</item>
+				</list>
+			</item>
+		</list>
+		
 	<heading>
 			<size>2</size> EiffelStudio 6.1
 		</heading>

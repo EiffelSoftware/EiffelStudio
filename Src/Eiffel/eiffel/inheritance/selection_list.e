@@ -118,18 +118,7 @@ end;
 					-- use this for inheritance branch determination.
 				wipe_out
 			elseif l_has_old_feature_replication then
-					-- We have legacy feature replication so we only replicate non-conforming features.
-				from
-					start
-				until
-					after
-				loop
-					if item.parent = Void or else not item.parent.is_non_conforming then
-						remove
-					else
-						forth
-					end
-				end
+				wipe_out
 			end
 
 			if l_selected_feature = Void then

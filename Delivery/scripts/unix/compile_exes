@@ -223,7 +223,7 @@ else
 	remtrace GPL edition
 	cp ec_ent.tar.bz2 ec.tar.bz2
 	untgz_ccode ec no_cancel
-	if [ ­f ec ]; then
+	if [ -f ec ]; then
 		bzip2 ec
 		move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2
 	fi

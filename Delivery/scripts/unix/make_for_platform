@@ -23,7 +23,7 @@ if [ $# -ge 3 ]; then
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; sh ./make_images $platform"
 
 		#Upload locally
-	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel62_enterprise*bz2" .
+	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel62_ent*bz2" .
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel62_gpl*bz2" .
 
 		#Upload to our ftp site

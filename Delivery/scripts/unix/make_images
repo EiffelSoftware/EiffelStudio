@@ -78,12 +78,12 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 
 	remtrace Building Enterprise CD image
 	mv Eiffel62 cdrom
-	./make_cd_image Eiffel62_enterprise Eiffel62_enterprise.iso cdrom
-	bzip2 Eiffel62_enterprise.iso
-	mv Eiffel62_enterprise.iso.bz2 Eiffel62_enterprise_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
+	./make_cd_image Eiffel62_enterprise Eiffel62_ent.iso cdrom
+	bzip2 Eiffel62_ent.iso
+	mv Eiffel62_ent.iso.bz2 Eiffel62_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
 	mv cdrom/Eiffel62 Eiffel62
-	tar -cf Eiffel62_enterprise_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel62 
-	bzip2 Eiffel62_enterprise_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+	tar -cf Eiffel62_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel62 
+	bzip2 Eiffel62_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi
 
 

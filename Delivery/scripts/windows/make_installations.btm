@@ -78,7 +78,7 @@ copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\g
 
 remtrace Preparing Commercial edition
 nmake /nologo enterprise_%WINNAME
-copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.msi
+copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace ----------------------------------------------
 remtrace Building the Zips
@@ -95,7 +95,7 @@ copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio
 
 copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-7z a -t7z %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+7z a -t7z %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 
 remtrace Restoring the layout to its original state
 cdd %INSTALL_DIR

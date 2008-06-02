@@ -1208,6 +1208,10 @@ rt_public void eraise(char *tag, long num)
 		eno = trace->ex_errno;
 		echtg = error_tag(trace->ex_errno);
 		break;
+	case EN_ISE_IO:			/* ISE I/O error */
+		eno = errno;
+		echtg = tag;
+		break;
 	default:
 		echtg = tag;
 	}
@@ -1373,6 +1377,10 @@ rt_public void com_eraise(char *tag, long num)
 		case EN_IO:				/* I/O error */
 			eno = trace->ex_errno;
 			echtg = error_tag(trace->ex_errno);
+			break;
+		case EN_ISE_IO:			/* ISE I/O error */
+			eno = errno;
+			echtg = tag;
 			break;
 		default:
 			echtg = tag;

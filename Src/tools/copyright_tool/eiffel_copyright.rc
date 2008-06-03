@@ -1,0 +1,7 @@
+#define Application_icon	1
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Application_icon	ICON	DISCARDABLE	"eiffel_copyright.ico"
+
+1 24 "eiffel_copyright.exe.manifest"

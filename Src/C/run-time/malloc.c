@@ -726,10 +726,6 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
 	 * All the objects smaller than `eif_gs_limit' are allocated 
 	 * in the the GSZ, otherwise they are allocated in the free-list.
-	 * We put the memory objects in the GSZ (i.e those, which inherits from class
-	 * MEMORY, otherwise they are allocated in the free-list.
-	 * All the non-special objects smaller than `eif_gs_limit' are allocated 
-	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 */
 
 	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {

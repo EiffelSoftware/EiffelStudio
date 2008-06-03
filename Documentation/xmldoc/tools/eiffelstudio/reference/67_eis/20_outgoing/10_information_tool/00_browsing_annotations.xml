@@ -2,13 +2,13 @@
 	<meta_data/>
 	<paragraph>
 		<image>
-				<url>../../../../../images/eiffelstudio/eis/information_tool.png</url>
+				<url>/images/eiffelstudio/eis/information_tool.png</url>
 		</image>
 		<heading>
 			<size>2</size> Information Tree
 		</heading>
-		<paragraph>On the left of the tool window is the information tree. The tree displays all locations in which annotations are, as well as a subtree of tags by which annotations can be better organized in tag style. Double clicking or pressing enter on tree nodes opens annotation list corresponding to that node.</paragraph>
-		<paragraph>The following are types of nodes in the tree can be navigate to:</paragraph>
+		<paragraph>On the left of the tool window is the information tree. The tree displays all locations where annotations are, as well as a subtree of tags by which annotations can be better organized in tag style. Double clicking or pressing enter on tree nodes opens annotation list corresponding to that node.</paragraph>
+		<paragraph>The following are types of nodes in the tree can be navigated to:</paragraph>
 		<list ordered="false">
 		          <item> Target</item>
 		          <item> Cluster</item>
@@ -22,9 +22,9 @@
 			<size>2</size> Annotation List
 		</heading>
 		<paragraph>Double clicking on the tree node, the annotation list appears on the right of the tool window.</paragraph>
-		<paragraph>The following collumns are available in the list:</paragraph>
+		<paragraph>The following columns are available in the list:</paragraph>
 		<list ordered="false">
-		          <item> Location - the place where that piece of annotation resides. Typical locations are target, cluster, class and feature.</item>
+		          <item> Location - the development object where that piece of annotation belongs to. Typical locations are target, cluster, class and feature.</item>
 		          <item> Name - the name of the piece of annotation, given by users.</item>
 		          <item> Protocol - type of the annotation EIS treats. 
 					<seealso>
@@ -48,12 +48,12 @@
 		          <item> Tags - terms or phrases users use to categrize the piece of information. Tags are separated by <bold>","</bold></item>
 		          <item> Others - other related attributes. Attributes are separated by <bold>","</bold>
 					<note>
-						<bold>Note: </bold>Attributes used by <bold>protocol</bold> are taken into account. Otherwise, they are ignored.
+						<bold>Note: </bold>Only attributes used by <bold>protocol</bold> are taken into account. Otherwise, ignored.
 					</note>
 		          </item>
 		</list>
 		<note>
-			<bold>Hint: </bold>Clicking on title of each columns sorts that columns.
+			<bold>Hint: </bold>Clicking on title of each column sorts that column.
 		</note>
 		<heading>
 			<size>2</size> Openning Resources
@@ -67,9 +67,9 @@
 		</heading>
 		<paragraph>Sweeping information synchronizes all information of current system into the tool. This is needed when changes may occur externally and EIS may need to know full information to display a correct list of existing tags. Two ways of sweeping:</paragraph>
 		<list ordered="false">
-	          <item> Automatic - EIS automatically sweeps information when Information tool is shown. Enable the first button on the bottom toolbar activate this function.</item>
+	          <item> Automatic - EIS automatically sweeps information when Information tool is shown. Enabling the first button on the bottom toolbar activates this function.</item>
 	          <item> Manual - The second button on the bottom toolbar triggers a manual sweeping.</item>
 		</list>
-		<paragraph>The progress bar in the bottom of the tool tells current sweeping progress.</paragraph>
+		<paragraph>The progress bar in the bottom of the tool indicates current sweeping progress.</paragraph>
 	</paragraph>
 	</document>

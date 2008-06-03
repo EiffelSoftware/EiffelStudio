@@ -2,15 +2,13 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>The following are examples of EIS incoming URIs.</paragraph>
-		<note>
-			<list ordered="false">
-			    <item> eiffel:?class=STRING_8&amp;feature=is_equal</item>
-			    <item> eiffel:?cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
-			    <item> eiffel:?target=base&amp;cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
-			    <item> eiffel:?system=ec.D398E904-E3C8-4F8A-B9E7-6FE493CEA02F&amp;target=base&amp;cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
-			    <item> eiffel:?class=STRING_8</item>
-			    <item> eiffel:?cluster=elks</item>
-			</list>
-		</note>
+		<list ordered="false">
+		    <item> eiffel:?class=STRING_8&amp;feature=is_equal</item>
+		    <item> eiffel:?cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
+		    <item> eiffel:?target=base&amp;cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
+		    <item> eiffel:?system=ec.D398E904-E3C8-4F8A-B9E7-6FE493CEA02F&amp;target=base&amp;cluster=elks&amp;class=STRING_8&amp;feature=is_equal</item>
+		    <item> eiffel:?class=STRING_8</item>
+		    <item> eiffel:?cluster=elks</item>
+		</list>
 	</paragraph>
 	</document>

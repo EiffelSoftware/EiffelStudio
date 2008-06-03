@@ -1,4 +1,4 @@
-<document title="Incoming" output="studio">
+<document title="Eiffel Scheme Syntax" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph><code_block><bold>eiffel:?&lt;<italic>eiffel-resource</italic>&gt;</bold></code_block></paragraph>

@@ -766,16 +766,18 @@ feature -- Expression evaluation
 			f: FEATURE_I
 			dv: DUMP_VALUE
 		do
-			f := cl.feature_named (fname)
-			if f /= Void then
-				dv := edv
-				if dv = Void and e /= Void then
-					dv := e.dump_value
-				end
-				if f.is_function then
-					Result := function_evaluation_on (e, dv, f, cl, params)
-				elseif f.is_attribute then
-					Result := attribute_evaluation_on (e, dv, f, cl)
+			if cl /= Void then 
+				f := cl.feature_named (fname)
+				if f /= Void then
+					dv := edv
+					if dv = Void and e /= Void then
+						dv := e.dump_value
+					end
+					if f.is_function then
+						Result := function_evaluation_on (e, dv, f, cl, params)
+					elseif f.is_attribute then
+						Result := attribute_evaluation_on (e, dv, f, cl)
+					end
 				end
 			end
 		end
@@ -791,14 +793,16 @@ feature -- Expression evaluation
 			f: FEATURE_I
 			dv: DUMP_VALUE
 		do
-			f := cl.feature_named (fname)
-			if f /= Void then
-				dv := edv
-				if dv = Void and e /= Void then
-					dv := e.dump_value
-				end
-				if f.is_routine then
-					Result := routine_evaluation_on  (e, dv, f, cl, params)
+			if cl /= Void then
+				f := cl.feature_named (fname)
+				if f /= Void then
+					dv := edv
+					if dv = Void and e /= Void then
+						dv := e.dump_value
+					end
+					if f.is_routine then
+						Result := routine_evaluation_on  (e, dv, f, cl, params)
+					end
 				end
 			end
 		end

@@ -418,6 +418,8 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 
 	activate_execution_replay_mode (b: BOOLEAN; levlim: INTEGER) is
 			-- Enable or disable execution replay
+		require
+			is_initialized: is_initialized
 		do
 			execution_replay_activated := b
 			execution_replay_level_limit := levlim

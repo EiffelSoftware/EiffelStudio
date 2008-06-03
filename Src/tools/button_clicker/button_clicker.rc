@@ -1,0 +1,7 @@
+#define Application_icon	1
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Application_icon	ICON	DISCARDABLE	"button_clicker.ico"
+
+1 24 "button_clicker.exe.manifest"

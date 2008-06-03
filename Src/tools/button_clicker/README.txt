@@ -14,6 +14,7 @@ Dependencies
 
     * EiffelBase
     * EiffelVision2
+    * WEL
     * EiffelStudio
 
 Supported Platforms

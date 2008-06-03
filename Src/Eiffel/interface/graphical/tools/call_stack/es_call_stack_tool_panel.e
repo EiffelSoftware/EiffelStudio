@@ -129,7 +129,6 @@ feature {NONE} -- Initialization
 
 			box2.extend (box_replay_controls)
 			box2.disable_item_expand (box_replay_controls)
-			activate_execution_replay_mode (False, 0)
 
 			a_widget.extend (box2)
 			a_widget.disable_item_expand (box2)
@@ -245,6 +244,7 @@ feature {NONE} -- Initialization
 			-- Use to perform additional creation initializations, after the UI has been created.
 		do
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
+			activate_execution_replay_mode (False, 0)
 			request_update
 		end
 

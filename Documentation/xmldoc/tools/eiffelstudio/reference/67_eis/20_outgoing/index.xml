@@ -1,4 +1,4 @@
-<document title="Eiffel Information System" output="studio">
+<document title="EIS: Outgoing" output="studio">
 	<meta_data/>
 	<paragraph>
 		<heading>
@@ -6,8 +6,17 @@
 		</heading>
 		<paragraph>Annotations may be applicable to:</paragraph>
 		<list ordered="false">
-		    <item> An individual class or feature. In this case the annotation figures in the class text, as part of an Eiffel "note" clause ("indexing" is still supported, it depends on which syntax level the user choose).</item>
-		    <item> A target, library or cluster. In this case the annotation figures in the associated ECF file; EiffelStudio provides support for entering it through a Information (EIS) Tool. </item>
+		    <item> An individual class or feature. In this case the annotation figures in the class text, as part of an Eiffel "note" clause ("indexing" is still supported, it depends on which syntax level users choose).</item>
+		    <item> A target, library or cluster. In this case the annotation figures in the associated ECF file; EiffelStudio provides support for entering it through a Information (EIS) Tool. 
+				<seealso>
+					<bold>See Also</bold>
+					<line_break></line_break>
+					<link>
+						<url>10_information_tool/index.xml</url>
+						<label>Information Tool</label>
+					</link>
+				</seealso>
+		    </item>
 		</list>
 		<paragraph>The basic way to specify a dependency is to include such an annotation. The required part of an annotation is:</paragraph>
 		<list ordered="false">
@@ -15,16 +24,24 @@
 		</list>
 		<paragraph>However the following parts are suggested:</paragraph>
 		<list ordered="false">
-		    <item> The "protocol", indicating the type of external information, and making it possible for EIS to determine the associated external tool. Without the "protocol" part, the source is defaulted to web page.</item>
-		    <item> The source, identification of where to find information itself, for example a URL, or a file name optionally complemented by a page number. </item>
+		    <item> The "protocol", indicating the type of external information, and making it possible for EIS to determine the associated external tool. Without the "protocol" part, the source defaults to be web page.</item>
+		    <item> The source, identification of where to find information itself, for example a URL, or a file name. </item>
 		</list>
 		<heading>
 			<size>2</size> Syntax for Annotations
 		</heading>
 		<paragraph>The following example illustrates the basic form of an EIS note entry:</paragraph>
 		<code_block>EIS: "name=Project Requirement", "src=($PROJ)/docs/requirements.pdf", "protocol=PDF", "nameddest=4.1", "tag=requirement"</code_block>
-		<paragraph>The label (Node_entry as called in the ECMA/ISO Eiffel Standard syntax) is <bold>EIS</bold>, <bold>EIS</bold> Note_value tells the Eiffel Information System that this Note_entry is of interest to EIS, as distinct from any other information that might be expressed through a Note_entry. The file name (src) includes <bold>$PROJ</bold>, referring to a variable - set at any of the above 5 levels, rather than the second one "Context related built in variables" - defining the project location. The protocol is PDF. The <bold>nameddest</bold> property (name destination) is a specific property of PDF documents. The tag <bold>requirement</bold> indicating that this entry links the enclosing Eiffel class or feature with some part of the requirements document.</paragraph>
+		<paragraph>The label (Node_entry as called in the ECMA/ISO Eiffel Standard syntax) is <bold>EIS</bold>. <bold>EIS</bold> Note_value tells the Eiffel Information System that this Note_entry is of interest to EIS, as distinct from any other information that might be expressed through a Note_entry. The file name (src) includes <bold>$PROJ</bold>, referring to a variable, defining the project location. The protocol is PDF. The <bold>nameddest</bold> property (name destination) is a specific property of PDF documents. The tag <bold>requirement</bold> indicating that this entry links the enclosing Eiffel class or feature with some parts of the requirement documents.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>10_information_tool/30_variable_definition.xml</url>
+				<label>Variable Definition</label>
+			</link>
+		</seealso>
 		<code_block>&lt;note ise_support="EIS" protocol="pdf" name="Project Requirement" src="($PROJ)/docs/requirements.pdf" nameddest="4.1"/&gt;</code_block>
-		<paragraph>There is only one major difference here, the attribute <bold>ise_support</bold>. <bold>ise_support</bold> here takes place of label of Node_entry. <bold>EIS</bold> plays the same role as the one for note entry. <bold>ise_support</bold> tells the parser of the note element is of interest of tools from ISE rather than other tool that might be developed in the future. The note element in ECF is supported in [schema 1.4].</paragraph>
+		<paragraph>There is only one major difference here - the attribute <bold>ise_support</bold>. <bold>ise_support</bold> takes place of label of Node_entry. <bold>EIS</bold> plays the same role as the one appears in note entry. <bold>ise_support</bold> tells the parser the note element is of interest of tools from ISE rather than other third-party ones. The note element in ECF is supported in [schema 1.4].</paragraph>
 	</paragraph>
 	</document>

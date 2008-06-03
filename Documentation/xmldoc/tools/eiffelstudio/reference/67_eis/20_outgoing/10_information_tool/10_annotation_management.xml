@@ -3,19 +3,19 @@
 	<paragraph>
 		Information Tool provides information management functions: adding, modifying and removing.
 		<note>
-			<bold>Note: </bold>Annotation management is only available in lists rather than those tag node related.
+			<bold>Note: </bold>Annotation management is only available in lists coresponding to nodes rather than tag nodes - all tags and "Items without tag".
 		</note>
 		<heading>
 			<size>2</size>Adding
 		</heading>
-		<paragraph>For each kind of node in the information tree - rather than those in tag tree - related annotations are listed in the right annotaton list. At the end of such lists, double clicking the blank line with <bold>"..."</bold> in the <bold>Name</bold> column creates a new Unnamed annotation. One could modify the new entry into what he wants. See the following section <bold>Modifying</bold>.</paragraph>
+		<paragraph>For each kind of nodes in the information tree, related annotations are listed in the right annotaton list. At the end of such lists, double clicking the blank line with <bold>"..."</bold> in the <bold>Name</bold> column creates a new unnamed annotation. One could modify the new entry into what he wants. See the following section <bold>Modifying</bold>.</paragraph>
 		<heading>
 			<size>2</size>Modifying
 		</heading>
-		<paragraph>To modify an annotation, one could modify it by Information Tool or by code.</paragraph>
+		<paragraph>To modify an annotation, one can use Information Tool or do it by code.</paragraph>
 		<list ordered="false">
-		    <item> By Information Tool, first a line in the annotation list should be selected, then clicking into columns activates editing mode. Once the editing area is deactivated, the modification is done and synchronized in the code automatically.</item>
-		    <item> By code, one simply modifies code in the editor, or external editor for .ecf files (not recommented).
+		    <item> By Information Tool, a line in the annotation list should be selected, then click into columns and activate editing/choosing mode. Once the editing area/drop down list is deactivated, the modification is done and synchronized into code automatically. </item>
+		    <item> By code, one simply modifies code in the editor, or .ecf files in external editor (not recommented).
 				<seealso>
 					<bold>See Also</bold>
 					<line_break></line_break>
@@ -33,12 +33,8 @@
 		<note>
 			<bold>Note: </bold>Annotation list can be multi-selected.
 		</note>
-		<heading>
-			<size>2</size>Management Affection
-		</heading>
-		<paragraph>
-			<item> All means to manage annotations via the tool are inreversible, except that the location - class or feature - has been opened in the editor, thus undo can be achieved via the editor. Removing is prompted on user demands.</item>
-			<item> Tag tree is automatically updated when annotations are added/modified/removed or through system sweeping.</item>
-		</paragraph>
+		<note>
+			All means to manage annotations via the tool are inreversible, except that the location - class or feature - has been opened in the editor, thus undo can be achieved via the editor. Removing is prompted on user demands. The tag tree is automatically updated when annotations are added/modified/removed or through system sweeping.
+		</note>
 	</paragraph>
 	</document>

@@ -23,7 +23,9 @@ feature {DEBUGGER_MANAGER} -- Access
 			-- and using `levlim' as level limit
 		do
 			if is_tool_instantiated then
-				panel.activate_execution_replay_mode (b, levlim)
+				if panel.is_initialized then
+					panel.activate_execution_replay_mode (b, levlim)
+				end
 				if b then
 					show (False)
 				end

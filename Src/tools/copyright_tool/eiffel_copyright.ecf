@@ -13,6 +13,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\copyright_tool\"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 		do
 			set_width (800)
 			set_height (600)
+			set_icon_pixmap ((create {COPYRIGHT_TOOL_ICON_SMALL}.make).to_pixmap)
+
 			read_copyright_texts_list (true)
 
 			create l_icon

@@ -6,7 +6,7 @@ Package: $PRODUCT
 Section: devel
 Priority: optional
 Architecture: any
-Depends: \${shlibs:Depends}, gcc, libgtk2.0-dev, libxtst-dev
+Depends: gcc, libatk1.0-0, libc6, libglib2.0-0, libgtk2.0-0, libgtk2.0-dev, libpango1.0-0, libx11-6, libxtst-dev, libxtst6
 Description: $SUMMARY
 !GROK!THIS!
 

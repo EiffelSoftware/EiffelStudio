@@ -257,8 +257,10 @@ feature {NONE} -- ecdbgd status
 					debug ("ipc")
 						print ("ecdbgd is not alive anymore !!! %N")
 					end
-					prompts.show_error_prompt ("The Eiffel debugger daemon is dead,%N" +
-						"If you were debugging, the session is about to be terminated", Void, Void)
+					debugger_manager.debugger_error_message (
+							"The Eiffel debugger daemon is dead,%N" +
+							"If you were debugging, the session is about to be terminated"
+						)
 					if dead_handler /= Void then
 							--| It occurs on linux, dead_handler is Void
 							--| it seems even if the debugger is stopped

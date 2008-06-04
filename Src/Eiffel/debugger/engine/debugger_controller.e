@@ -106,8 +106,7 @@ feature -- Debug Operation
 						if is_dotnet_system then
 								--| String indicating the .NET debugger to launch if specified in the
 								--| Preferences Tool.
-							check preferences.debugger_data /= Void end
-							dotnet_debugger := preferences.debugger_data.dotnet_debugger.item (1)
+							dotnet_debugger := manager.dotnet_debugger_entries.item (1)
 
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
 							if dotnet_debugger /= Void then
@@ -155,11 +154,7 @@ feature -- Debug Operation
 								then
 										--| FIXME:2008-01-11 (jfiat): do we also ignore hidden breakpoints ?
 										--| for now, yes
-									if preferences.dialog_data /= Void then
-										prefstr := preferences.dialog_data.confirm_ignore_all_breakpoints_string
-									else
-										prefstr := Void
-									end
+									prefstr := manager.confirm_ignore_all_breakpoints_preference_string
 									discardable_if_confirmed_do (Warning_messages.w_Ignoring_all_stop_points,
 														agent debug_workbench_application (param, a_execution_mode, True),
 														2, prefstr

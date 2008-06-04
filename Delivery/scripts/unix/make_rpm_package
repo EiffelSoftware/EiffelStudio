@@ -6,8 +6,24 @@ LOG=`pwd`/rpm.log
 . ./packaging/config.sh
 
 
+# Create unix layout in RPM BUILD directory
+DST_DIR=$RPM_DIR/eiffelstudio
+#. ./make_unix_layout
+
+
+# Determine architecture
+case "x$ISE_PLATFORM" in
+	"xlinux-x86") ARCH=i386;;
+	"xlinux-x86-64") ARCH=x86_64;;
+	"xlinux-ppc") ARCH=ppc;;
+	*) echo "No architecture mapping for ISE_PLATFORM=$ISE_PLATFORM"; exit 1;;
+esac
+
+
 # Set up rpmbuild cmd
-RPM_CMD="rpmbuild -bb"
+echo $ARCH
+exit;
+RPM_CMD="rpmbuild -bb --target $ARCH"
 if which gpg > /dev/null; then
 	if gpg --list-secret-keys | grep $KEY > /dev/null; then
 		RPM_CMD="echo \"$PASS_PHRASE\" | setsid $RPM_CMD --sign --define '_gpg_name $KEY'"
@@ -15,15 +31,11 @@ if which gpg > /dev/null; then
 fi
 
 
-# Create unix layout in RPM BUILD directory
-DST_DIR=$RPM_DIR/eiffelstudio
-. ./make_unix_layout
-
-
 # Prepare spec files
 . $RPM_DIR/eiffelstudio.spec.sh
 mkdir -p $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
+
 
 # If we have a $DOCS_DIR move it to a seperate
 # directory and build noarch doc package

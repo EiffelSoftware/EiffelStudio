@@ -1211,7 +1211,6 @@ feature {NONE} -- Events on notification
 	notify_execution_on_debugger_error is
 			-- Notify the system is exiting on debugger error
 		local
---			st: TEXT_FORMATTER
 			l_err_msg: STRING
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
@@ -1222,13 +1221,7 @@ feature {NONE} -- Events on notification
 						+ " - error_hr   = 0x" + dbg_info.debugger_error_hr.to_hex_string + "%N"
 						+ " - error_code = 0x" + dbg_info.debugger_error_code.to_hex_string + "%N"
 
--- FIXME JFIAT: removed because it is not used the good way
--- assertion violation
---			create st.make
---			st.add_string (l_err_msg)
---			output_manager.process_text (st)
-
-			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_err_msg, Void, Void)
+			debugger_manager.debugger_warning_message (l_err_msg)
 
 			status.set_is_stopped (True)
 			Eifnet_debugger.terminate_debugging

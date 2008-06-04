@@ -83,7 +83,7 @@
 			<cluster name="interface_shared" location="$|shared\" recursive="true"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
-		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\no_communication\" recursive="true"/>
+		<cluster name="debugger_none" location="$EIFFEL_SRC\Eiffel\debugger_interface\none" recursive="true"/>
 	</target>
 	<target name="batch_unix" extends="batch">
 		<description>Compiling UNIX batch compiler on other platforms than Windows</description>
@@ -203,58 +203,36 @@
 			</file_rule>
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
-		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
-			<cluster name="communications" location="$|communication\">
-				<cluster name="constants" location="$|constants\"/>
-				<cluster name="debug_class" location="$|debug\" recursive="true">
-					<file_rule>
-						<exclude>/dotnet$</exclude>
-						<condition>
-							<platform excluded_value="windows"/>
-						</condition>
-					</file_rule>
-					<file_rule>
-						<exclude>/gtk$</exclude>
-						<condition>
-							<platform value="windows"/>
-						</condition>
-					</file_rule>
-					<file_rule>
-						<exclude>/mswin$</exclude>
-						<condition>
-							<platform excluded_value="windows"/>
-						</condition>
-					</file_rule>
-				</cluster>
-				<cluster name="implementation_debug_gtk" location="$|spec\gtk\">
-					<condition>
-						<platform excluded_value="windows"/>
-					</condition>
-				</cluster>
-				<cluster name="implementation_debug_mswin" location="$|spec\mswin\">
-					<condition>
-						<platform value="windows"/>
-					</condition>
-				</cluster>
-				<cluster name="ipc" location="$|ipc\" recursive="true"/>
-				<cluster name="status" location="$|status\" recursive="true">
-					<file_rule>
-						<exclude>/no_dotnet$</exclude>
-						<condition>
-							<platform value="windows"/>
-						</condition>
-					</file_rule>
-					<file_rule>
-						<exclude>/dotnet$</exclude>
-						<condition>
-							<platform excluded_value="windows"/>
-						</condition>
-					</file_rule>
-				</cluster>
-			</cluster>
-			<cluster name="interface_common" location="$|interface\"/>
-			<cluster name="interface_shell" location="$|communication\shell\"/>
-			<cluster name="interface_switch" location="$|interface\new_graphical\"/>
+		<cluster name="debugger_interface" location="$EIFFEL_SRC\Eiffel\debugger_interface" recursive="true">
+			<file_rule>
+				<exclude>/none$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="debugger" location="$EIFFEL_SRC\Eiffel\debugger" recursive="true">
+			<file_rule>
+				<exclude>/dotnet_fake$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
 		</cluster>
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty\" recursive="true">
 			<file_rule>

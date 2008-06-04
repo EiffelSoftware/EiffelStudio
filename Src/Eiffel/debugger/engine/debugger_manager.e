@@ -167,6 +167,14 @@ feature -- Output helpers
 			debugger_output_message (m)
 		end
 
+	debugger_error_message (m: STRING_GENERAL) is
+			-- Display debugger error message `m'
+		require
+			m_not_void: m /= Void
+		do
+			debugger_output_message (m)
+		end
+
 	debugger_status_message (m: STRING_GENERAL) is
 			-- Display debugger message `m' on the status output
 		require
@@ -1006,10 +1014,22 @@ feature -- Settings
 			Result := True --| Default behavior for general debugging use
 		end
 
+	confirm_ignore_all_breakpoints_preference_string: STRING is
+			-- Preference string for discardable promt related to ignore all breakpoints command
+		do
+			Result := Void
+		end
+
 	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
 			-- Keep stepping into feature including non Eiffel feature (useful to step into agent call) ?
 		do
 			Result := Void --| Lazy behavior
+		end
+
+	dotnet_debugger_entries: ARRAY [STRING] is
+			-- Which dotnet debugger is used?
+		do
+			Result := <<>>
 		end
 
 feature -- Access

@@ -19,6 +19,8 @@ inherit
 			classic_debugger_location,
 			classic_close_dbg_daemon_on_end_of_debugging,
 			dotnet_keep_stepping_info_non_eiffel_feature_pref,
+			dotnet_debugger_entries,
+			confirm_ignore_all_breakpoints_preference_string,
 			change_current_thread_id,
 			activate_execution_replay_recording,
 			disable_assertion_checking, restore_assertion_checking,
@@ -33,7 +35,7 @@ inherit
 			process_breakpoint,
 			set_default_parameters,
 			set_maximum_stack_depth,
-			debugger_output_message, debugger_warning_message, debugger_status_message,
+			debugger_output_message, debugger_warning_message, debugger_error_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message
 		end
@@ -96,31 +98,36 @@ feature {NONE} -- Initialization
 	initialize is
 		local
 			pbool: BOOLEAN_PREFERENCE
+			prefs: EB_DEBUGGER_DATA
 		do
 			Precursor
-			pbool := preferences.debugger_data.debug_output_evaluation_enabled_preference
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				pbool := prefs.debug_output_evaluation_enabled_preference
+			end
 			dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
 			pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 		end
 
 	set_default_parameters
-			-- Set hard coded default parameters values
-			-- (export status {NONE})
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
 		do
 			Precursor {DEBUGGER_MANAGER}
-			if preferences.debugger_data /= Void then
-				set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
-				set_displayed_string_size (preferences.debugger_data.default_displayed_string_size)
-				set_maximum_stack_depth (preferences.debugger_data.default_maximum_stack_depth)
-				set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				set_slices (prefs.min_slice, prefs.max_slice)
+				set_displayed_string_size (prefs.default_displayed_string_size)
+				set_maximum_stack_depth (prefs.default_maximum_stack_depth)
+				set_critical_stack_depth (prefs.critical_stack_depth)
 
-				set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
-				preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
-			end
-			check
-				displayed_string_size: displayed_string_size = preferences.debugger_data.default_displayed_string_size
-				max_evaluation_duration_set: preferences.debugger_data /= Void implies
-						max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
+				set_max_evaluation_duration (prefs.max_evaluation_duration)
+				prefs.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
+				check
+					displayed_string_size: displayed_string_size = prefs.default_displayed_string_size
+					max_evaluation_duration_set: prefs /= Void implies max_evaluation_duration = prefs.max_evaluation_duration
+				end
 			end
 		end
 
@@ -331,30 +338,68 @@ feature {NONE} -- Initialization
 feature -- Settings
 
 	classic_debugger_timeout: INTEGER is
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
 		do
-			if preferences.debugger_data /= Void then
-				Result := preferences.debugger_data.classic_debugger_timeout
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				Result := prefs.classic_debugger_timeout
 			end
 		end
 
 	classic_debugger_location: STRING is
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
 		do
-			if preferences.debugger_data /= Void then
-				Result := preferences.debugger_data.classic_debugger_location
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				Result := prefs.classic_debugger_location
 			end
 		end
 
 	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
 		do
-			if preferences.debugger_data /= Void then
-				Result := preferences.debugger_data.close_classic_dbg_daemon_on_end_of_debugging
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				Result := prefs.close_classic_dbg_daemon_on_end_of_debugging
+			end
+		end
+
+	confirm_ignore_all_breakpoints_preference_string: STRING is
+			-- <Precursor>
+		local
+			prefs: EB_DIALOGS_DATA
+		do
+			prefs := preferences.dialog_data
+			if prefs /= Void then
+				Result := prefs.confirm_ignore_all_breakpoints_string
 			end
 		end
 
 	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
 		do
-			if preferences.debugger_data /= Void then
-				Result := preferences.debugger_data.keep_stepping_info_dotnet_feature_preference
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				Result := prefs.keep_stepping_info_dotnet_feature_preference
+			end
+		end
+
+	dotnet_debugger_entries: ARRAY [STRING] is
+			-- <Precursor>
+		local
+			prefs: EB_DEBUGGER_DATA
+		do
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				Result := prefs.dotnet_debugger
 			end
 		end
 
@@ -1011,6 +1056,15 @@ feature -- Output
 				Precursor {DEBUGGER_MANAGER} (m)
 			else
 				prompts.show_warning_prompt (m, Void, Void)
+			end
+		end
+
+	debugger_error_message (m: STRING_GENERAL) is
+		do
+			if ev_application = Void then
+				Precursor {DEBUGGER_MANAGER} (m)
+			else
+				prompts.show_error_prompt (m, Void, Void)
 			end
 		end
 
@@ -2058,7 +2112,7 @@ feature {NONE} -- Implementation
 
 	objects_split_proportion: REAL
 			-- Position of the splitter inside the object tool.
-			
+
 	enable_commands_on_project_created is
 			-- Enable commands when a new project has been created (not yet compiled)
 		do
@@ -2201,14 +2255,16 @@ feature {NONE} -- Implementation
 			rb2.enable_select
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)
-			if preferences.debugger_data.critical_stack_depth > 30000 then
-				element_nb.set_value (30000)
-			elseif preferences.debugger_data.critical_stack_depth = -1 then
-				element_nb.set_value (1000)
-				show_all_radio.enable_select
-				element_nb.disable_sensitive
-			else
-				element_nb.set_value (preferences.debugger_data.critical_stack_depth)
+			if {prefs: EB_DEBUGGER_DATA} preferences.debugger_data then
+				if prefs.critical_stack_depth > 30000 then
+					element_nb.set_value (30000)
+				elseif prefs.critical_stack_depth = -1 then
+					element_nb.set_value (1000)
+					show_all_radio.enable_select
+					element_nb.disable_sensitive
+				else
+					element_nb.set_value (prefs.critical_stack_depth)
+				end
 			end
 			element_nb.set_minimum_width (100)
 
@@ -2248,6 +2304,7 @@ feature {NONE} -- Implementation
 			-- Close `dialog' and change the critical stack depth.
 		local
 			nb: INTEGER
+			prefs: EB_DEBUGGER_DATA
 		do
 			if show_all_radio.is_selected then
 				nb := -1
@@ -2255,7 +2312,10 @@ feature {NONE} -- Implementation
 				nb := element_nb.value
 			end
 			close_dialog
-			preferences.debugger_data.critical_stack_depth_preference.set_value (nb)
+			prefs := preferences.debugger_data
+			if prefs /= Void then
+				prefs.critical_stack_depth_preference.set_value (nb)
+			end
 			set_critical_stack_depth (nb)
 		end
 

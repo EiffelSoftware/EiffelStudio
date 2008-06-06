@@ -698,9 +698,6 @@ feature {NONE} -- Implementation
 			-- which parent reads error input) when
 			-- `error_piped' is true
 
-	Invalid_file_descriptor: INTEGER is -1
-			-- File descriptor which is not in valid range
-
 	Stdin_descriptor: INTEGER is 0
 			-- File descriptor for standard input
 

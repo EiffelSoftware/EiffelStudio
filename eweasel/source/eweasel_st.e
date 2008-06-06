@@ -1,10 +1,32 @@
-/*
-	date:		"$Date$"
-	revision:	"$Revision$"
-	copyright:	"[
+indexing
+	description: "The EiffelWeasel automatic tester - single-threaded version"
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "2008/06/03"
+
+class EWEASEL_ST
+
+inherit
+	EWEASEL
+
+create	
+	make,
+	make_and_execute
+
+feature  {NONE} -- Implementation
+
+	new_test_suite (tests: LIST [NAMED_EIFFEL_TEST] opts: TEST_SUITE_OPTIONS): EIFFEL_TEST_SUITE
+			-- New test suite with `tests' using options `opts'
+		do
+			create {EIFFEL_TEST_SUITE_ST} Result.make (tests, test_suite_directory, environment)
+		end
+
+indexing
+	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.
 			]"
+	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
 
@@ -25,30 +47,5 @@
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-*/
 
-#include <eif_eiffel.h>
-#include <eif_except.h>
-#include <stddef.h>
-
-/* Return a pointer to newly allocated memory of at least `size' bytes
-   which won't be garbage collected or moved by the Eiffel garbage
-   collector.  If the allocation fails, raise an exception. */
-
-EIF_POINTER allocate_nongc_memory (EIF_INTEGER size) {
-  EIF_POINTER result;
-
-  result = (EIF_POINTER) malloc((unsigned) size);
-  if (result == NULL) {
-    enomem();
-  }
-  return result;
-}
-
-/* Free memory pointed to by `ptr' which is not subject to garbage
-   collection by the Eiffel garbage collector. */
-
-void free_nongc_memory (EIF_POINTER ptr) {
-  (void) free ((char *) ptr);
-}
-
+end

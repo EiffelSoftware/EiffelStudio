@@ -14,6 +14,11 @@ inherit
 		redefine
 			dispose
 		end
+	UNIX_EXTERNALS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -90,20 +95,6 @@ feature {NONE} -- Cleanup
 			close_write_descriptor
 		end
 
-feature {NONE} -- Implementation
-
-	close_file_descriptor (fd: INTEGER) is
-			-- Close existing open file descriptor `fd'
-		require
-			valid_descriptor: fd >= 0
-		external
-			"C"
-		alias
-			"unix_close"
-		end;
-
-	Invalid_file_descriptor: INTEGER is -1;
-			-- File descriptor which is not in valid range
 
 indexing
 	copyright: "[

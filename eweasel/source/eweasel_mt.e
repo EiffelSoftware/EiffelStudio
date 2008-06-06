@@ -1,10 +1,36 @@
-/*
-	date:		"$Date$"
-	revision:	"$Revision$"
-	copyright:	"[
+indexing
+	description: "The EiffelWeasel automatic tester - multi-threaded version"
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "2008/06/03"
+
+class EWEASEL_MT
+
+inherit
+	EWEASEL
+
+create	
+	make,
+	make_and_execute
+
+feature  {NONE} -- Implementation
+
+	new_test_suite (tests: LIST [NAMED_EIFFEL_TEST] opts: TEST_SUITE_OPTIONS): EIFFEL_TEST_SUITE
+			-- New test suite with `tests' using options `opts'
+		do
+			if opts.max_threads >= 0 then
+				create {EIFFEL_TEST_SUITE_MT} Result.make (tests, test_suite_directory, environment)
+			else
+				create {EIFFEL_TEST_SUITE_ST} Result.make (tests, test_suite_directory, environment)
+			end
+		end
+
+indexing
+	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.
 			]"
+	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
 
@@ -25,24 +51,5 @@
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-*/
 
-#ifndef	__mem_alloc_h
-#define	__mem_alloc_h
-
-
-/* Byte and address manipulation */
-
-#define offset(addr,n) (((char *) (addr)) + (n))
-#define pointer_size (sizeof (void *))
-#define nth_pointer(addr,n) (((void **) addr)[n])
-
-/* Memory manipulation macros. */
-
-#define copy_nongc_memory(src,dest,size) \
-  memcpy((char *) (dest), (char *) (src), (int) (size))
-
-#define store_pointer(p,dest,offset) \
-  ((void **) (dest))[offset] = ((void *) p)
-
-#endif
+end

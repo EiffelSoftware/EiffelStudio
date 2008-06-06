@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class.";
 	date: "93/09/14"
 
-class EIFFEL_TEST_SUITE
+deferred class EIFFEL_TEST_SUITE
 
 inherit
 	EIFFEL_TEST_CONSTANTS;
@@ -13,12 +13,6 @@ inherit
 	EXCEPTIONS;
 	SHARED_OBJECTS
 	REFACTORING_HELPER
-	-- FIXME: put back in for multi threaded
-	-- THREAD_CONTROL
-
-create
-
-	make
 
 feature  -- Creation
 
@@ -47,100 +41,8 @@ feature -- Execution
 			-- `fail_count'.
 		require
 			options_not_void: opts /= Void;
-		local
-			test: NAMED_EIFFEL_TEST;
-			test_dir, compiler_dir: STRING;
-		do
-			from
-				test_list.start;
-			until
-				test_list.after
-			loop
-				test := test_list.item;
-				if opts.filter.selects (test) then
-					announce_start (test);
-					if test.execution_allowed then
-						test.execute (initial_environment (test));
-						test_dir := os.full_directory_name (test_suite_directory, test.last_source_directory_component);
-						if opts.keep_all or (opts.keep_passed and test.last_ok) or (opts.keep_failed and not test.last_ok) then
-							if opts.is_cleanup_requested then
-								compiler_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
-								os.delete_directory_tree (compiler_dir)
-							end
-						else
-							os.delete_directory_tree (test_dir)
-						end
-					end;
-					update_statistics (test);
-					display_results (test);
-				end;
-				test_list.forth;
-				output.update
-			end;
-			display_summary;
-		end;
-
---	execute_multithreaded (opts: TEST_SUITE_OPTIONS threads: INTEGER) is
---			-- FIXME: put back in for multi threaded
---			-- Execute `Current' as modified by options `opts'
---			-- and display the results
---			-- of each test and pass/fail statistics on all tests.
---			-- Use `threads' threads to execute the tests
---		require
---			options_not_void: opts /= Void
---			positive_thread_count: threads > 0
---		local
---			test: NAMED_EIFFEL_TEST;
---			test_dir: STRING;
---			queue: EIFFEL_TEST_QUEUE
---			k: INTEGER
---			executor: EIFFEL_TEST_EXECUTOR
---			done: BOOLEAN
---		do
---			create queue.make
---			from
---				k := 1
---			until
---				k > threads
---			loop
---				create executor
---				executor.set_queue (queue)
---				executor.set_options (opts)
---				executor.set_test_suite (Current)
---				executor.launch
---				k := k + 1
---			end
---			
---			from
---				test_list.start;
---			until
---				test_list.after
---			loop
---				test := test_list.item;
---				if opts.filter.selects (test) then
---					queue.extend (test)
---				end;
---				test_list.forth;
---			end;
---			
---			from
---				done := False
---			until
---				done
---			loop
---				test := queue.next_completed_test
---				if test = Void then
---					done := True
---				else
---					update_statistics (test);
---					announce_start (test);
---					display_results (test);
---				end
---			end;
---			join_all
---			display_summary;
---		end;
-
+		deferred
+		end
 
 feature -- Statistics	
 
@@ -169,10 +71,7 @@ feature {NONE} -- Implementation
 			-- test suite (possibly augmented by other
 			-- definitions before each test is started).
 
-feature {NONE} -- Implementation	
-
--- feature {EIFFEL_TEST_EXECUTOR} -- Implementation	
--- FIXME: put back in for multi threaded (replace above line with {NONE})
+feature {EIFFEL_TEST_EXECUTOR} -- Implementation	
 
 	test_suite_directory: STRING;
 			-- Name of the directory in which test

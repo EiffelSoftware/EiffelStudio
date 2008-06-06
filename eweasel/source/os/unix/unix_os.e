@@ -17,6 +17,7 @@ inherit
 			{ANY} return_code ;
 			{NONE} all
 		end
+	UNIX_EXTERNALS
 
 feature -- Path names
 
@@ -65,40 +66,6 @@ feature -- Directory operations
 			cmd.append ("/bin/rm -rf ");
 			cmd.append (dir_name);
 			system (cmd);
-		end;
-
-feature -- File descriptor operations
-
-	duplicate_file_descriptor (old_fd, new_fd: INTEGER) is
-			-- Duplicate existing file descriptor `old_fd' and
-			-- give the new file descriptor the value `new_fd'.
-			-- If `new_fd' is in use, it is first deallocated
-			-- as if it were closed
-		require
-			valid_old_descriptor: valid_file_descriptor (old_fd)
-			valid_new_descriptor: valid_file_descriptor (new_fd)
-		external
-			"C"
-		alias
-			"unix_dup2"
-		end;
-	
-	close_file_descriptor (fd: INTEGER) is
-			-- Close existing open file descriptor `fd'
-		require
-			valid_descriptor: valid_file_descriptor (fd)
-		external
-			"C"
-		alias
-			"unix_close"
-		end;
-
-feature -- Interval timer
-
-	system_interval_timer: UNIX_SYSTEM_INTERVAL_TIMER is
-			-- Operating system's interval timer
-		once
-			create Result;
 		end;
 
 feature -- Pipes
@@ -223,23 +190,6 @@ feature -- Process operations
 			send_signal (Sigkill, pid)
 		end
 	
-feature -- Date and time
-	
-	current_time_in_seconds: INTEGER is
-			-- Current time in seconds since the start of
-			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
-		external
-			"C"
-		end;
-
-	current_time_in_fine_seconds: DOUBLE is
-			-- Current time in seconds since the start of
-			-- the epoch (00:00:00 GMT,  Jan.  1,  1970), with
-			-- a fine resolution
-		external
-			"C"
-		end;
-
 feature -- Sleeping
 
 	sleep_milliseconds (n: DOUBLE) is
@@ -247,111 +197,11 @@ feature -- Sleeping
 			-- Actual time could be longer or shorter
 			-- since routine is awakened by any signal
 			-- (not just the SIGALRM signal)
-		do
-			sleep_seconds (n / 1.0E3);
-		end;
-
-	sleep_seconds (n: DOUBLE) is
-			-- Suspend execution for `n' seconds.
-			-- Actual time could be longer or shorter
-			-- since routine is awakened by any signal
-			-- (not just the SIGALRM signal)
 		local
-			timer: INTERVAL_TIMER
-			tried: BOOLEAN
+			nanosecs: INTEGER_64
 		do
-			if not tried then
-				create timer.set_seconds (n);
-				unix_pause;
-			
-				-- Shouldn't ever get here since signal will
-				-- raise an exception and take us to 
-				-- rescue clause
-				timer.clear;
-			end
-		rescue
-			if timer /= Void and then not timer.is_expired then
-				timer.clear;
-			end
-			if timer /= Void and then timer.is_expiration_exception then
-				tried := True
-				retry
-			end
-		end;
-
-feature {NONE} -- Externals
-
-	str_dup (area: POINTER): POINTER is
-			-- Return new copy of C string indicated by `area'
-		external
-			"C"
-		end;
-
-	unix_pipe (read_fd, write_fd: POINTER) is
-			-- Create a new pipe and put the read file descriptor
-			-- in `read_fd' and the write file descriptor in
-			-- `write_fd'
-		external
-			"C"
-		end;
-
-	unix_kill (pid, sig: INTEGER) is
-			-- Send signal `sig' to process(es) identified by `pid'
-		external
-			"C"
-		end;
-
-	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER): INTEGER is
-			-- Wait for process specified by `pid'.  Block if
-			-- no process has status available if `block' is
-			-- true.  Set boolean at `status_avail_addr' to
-			-- indicate whether status was available
-		external
-			"C"
-		end;
-
-	unix_fork_process: INTEGER is
-			-- Create a new process.  Return the process id
-			-- to the parent and 0 to the child
-		external
-			"C"
-		end;
-
-	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN) is
-			-- Call execv or execve to overlay current process with
-			-- new one.  Does not return (raises exception
-			-- if error doing the exec)
-		external
-			"C"
-		end;
-
-	unix_get_process_id: INTEGER is
-			-- Process id of currently executing process
-		external
-			"C"
-		end;
-	
-	unix_allocate_arg_memory (count: INTEGER): POINTER is
-			-- Return pointer to newly allocated memory
-			-- for `count' arguments which is not subject
-			-- to garbage collection.  `count' must
-			-- include both argument 0 and the trailing
-			-- null pointer that terminates the argument list
-		external
-			"C"
-		end;
-
-	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER) is
-			-- Set the element of `arg_array' at position `pos' 
-			-- (relative to 0) to `arg'
-		external
-			"C"
-		end;
-
-	unix_pause is
-			-- Pause until signal is received
-		external
-			"C"
+			nanosecs := (n * 1_000_000 + 0.5).truncated_to_integer_64
+			sleep_nanoseconds (nanosecs);
 		end;
 
 indexing

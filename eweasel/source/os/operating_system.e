@@ -68,14 +68,6 @@ feature -- Process operations
 			valid_process_id: Result > 0
 		end;
 
-feature -- File descriptor operations
-
-	valid_file_descriptor (fd: INTEGER): BOOLEAN is
-			-- Is `fd' in the range of valid file descriptors?
-		do
-			Result := fd >= 0
-		end
-
 feature -- Date and time
 	
 	current_time_in_seconds: INTEGER is

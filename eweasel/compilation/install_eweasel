@@ -2,12 +2,12 @@
 
 # Note: add -v or -x option to /bin/sh line above to debug any problems
 
-# Fix permissions for test files that had to be made readable so tar
-# could access them, compile all C code needed by EiffelWeasel, build
-# library eweasel.a, compile EiffelWeasel itself (finalize it),
-# compile the generated C code and copy the executable to:
+# Compile EiffelWeasel (finalize it), both single-threaded and 
+# multi-threaded versions.
+# Compile the generated C code and copy the executable to:
 #	
 #	$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel
+#	$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel-mt
 
 # Check command line arguments
 
@@ -68,10 +68,7 @@ fi
 
 . $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh
 
-fixperm="chmod a-rwx"
 announce="echo Compiling"
-ecc="$cc $ccflags $optimize $warning_level -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include -I$EWEASEL/source/os/Clib -c"
-elib="ld $ldflags -r -o"
 rm="rm"
 
 EWEASEL_PLATFORM="$EWEASEL/spec/$ISE_PLATFORM"
@@ -82,33 +79,15 @@ export EWEASEL_PLATFORM
 version=`ec -version`
 echo "Using $version"
 
-# Compile C code
-
-cd $EWEASEL/source/utilities/Clib
-$announce mem_alloc.c
-$ecc mem_alloc.c
-
-cd $EWEASEL/source/os/Clib
-$announce timer.c
-$ecc timer.c
-$announce unix_os.c
-$ecc unix_os.c
-
-# Build libraries (.a files)
-
-cd $EWEASEL_PLATFORM/lib
-echo "Building library $EWEASEL_PLATFORM/lib/eweasel.a"
-$elib eweasel.a $EWEASEL/source/*/Clib/*.o
-
-# Compile EiffelWeasel (Eiffel and C compilations)
+# Compile single-threaded EiffelWeasel (Eiffel and C compilations)
 
 cd $EWEASEL_PLATFORM/project
-echo "Compiling EiffelWeasel"
-ec -config $EWEASEL/compilation/eweasel.ecf -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+echo "Compiling EiffelWeasel (single-threaded version)"
+ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_st -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
 
 # Check compilation results and copy executable to bin directory
 
-EWEASEL_BINARY="$EWEASEL_PLATFORM/project/EIFGENs/eweasel/F_code/eweasel"
+EWEASEL_BINARY="$EWEASEL_PLATFORM/project/EIFGENs/eweasel_st/F_code/eweasel"
 export EWEASEL_BINARY
 
 if [ ! -f "$EWEASEL_BINARY" ] ; then
@@ -120,8 +99,31 @@ fi
 cp $EWEASEL_BINARY $EWEASEL_PLATFORM/bin
 
 if [ $keep -eq 0 ] ; then
-	echo "Deleting .o files"
-	$rm  $EWEASEL/source/*/Clib/*.o
+	echo "Deleting $EWEASEL_PLATFORM/project/EIFGENs"
+	cd $EWEASEL_PLATFORM/project
+	$rm -r EIFGENs
+fi
+
+# Compile multi-threaded EiffelWeasel (Eiffel and C compilations)
+
+cd $EWEASEL_PLATFORM/project
+echo "Compiling EiffelWeasel (multi-threaded version)"
+ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_mt -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+
+# Check compilation results and copy executable to bin directory
+
+EWEASEL_BINARY="$EWEASEL_PLATFORM/project/EIFGENs/eweasel_mt/F_code/eweasel-mt"
+export EWEASEL_BINARY
+
+if [ ! -f "$EWEASEL_BINARY" ] ; then
+	echo "EiffelWeasel compilation failed"
+	echo "File $EWEASEL_BINARY not found"
+	exit
+fi
+
+cp $EWEASEL_BINARY $EWEASEL_PLATFORM/bin
+
+if [ $keep -eq 0 ] ; then
 	echo "Deleting $EWEASEL_PLATFORM/project/EIFGENs"
 	cd $EWEASEL_PLATFORM/project
 	$rm -r EIFGENs

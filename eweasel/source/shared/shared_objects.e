@@ -12,6 +12,8 @@ feature -- Access
 
 	output: EWEASEL_OUTPUT_CONTROL is
 			-- Output interface
+		indexing
+            		once_status: global 
 		do
 			Result := output_cell.item
 		end
@@ -32,6 +34,8 @@ feature {NONE} -- Implementation
 
 	output_cell: CELL [EWEASEL_OUTPUT_CONTROL] is
 			-- Output cell
+		indexing
+            		once_status: global 
 		once
 			create Result	
 		end		

@@ -8,8 +8,13 @@ indexing
 class EIFFEL_TEST_EXECUTOR
 
 inherit
+	EIFFEL_TEST_CONSTANTS
 	THREAD
 	OS_ACCESS
+		export
+			{NONE} all
+		end
+	SHARED_THREAD_DEBUGGING
 		export
 			{NONE} all
 		end
@@ -26,8 +31,12 @@ feature -- Execution
 		local
 			test: NAMED_EIFFEL_TEST;
 			done: BOOLEAN
-			test_dir: STRING;
+			test_dir, compiler_dir: STRING;
 		do
+			register
+			debug ("threaded_eweasel")
+				print_debug_worker ("Registered worker thread")
+			end
 			from
 				done := False
 			until
@@ -38,14 +47,28 @@ feature -- Execution
 					done := True
 				else
 					if test.execution_allowed then
+						debug ("threaded_eweasel")
+							print_debug_worker ("Executing test " + test.last_source_directory_component)
+						end
 						test.execute (test_suite.initial_environment (test));
-						if not options.keep_all_output then
-							test_dir := os.full_directory_name (test_suite.test_suite_directory, test.last_source_directory_component);
+						test_dir := os.full_directory_name (test_suite.test_suite_directory, test.last_source_directory_component);
+						if options.keep_all or (options.keep_passed and test.last_ok) or (options.keep_failed and not test.last_ok) then
+							if options.is_cleanup_requested then
+								compiler_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
+								os.delete_directory_tree (compiler_dir)
+							end
+						else
 							os.delete_directory_tree (test_dir)
+						end
+						debug ("threaded_eweasel")
+							print_debug_worker ("Finished test " + test.last_source_directory_component)
 						end
 					end
 					queue.mark_test_completed (test)
 				end
+			end
+			debug ("threaded_eweasel")
+				print_debug_worker ("Worker thread exiting")
 			end
 		end;
 

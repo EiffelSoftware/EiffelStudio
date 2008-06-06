@@ -900,6 +900,7 @@ test	gc-expanded-allocating-memory-in-special-2 runtime006	tcf pass runtime expa
 test	cond-timedwait-failure		thread001	tcf pass multithreaded
 test	nested-thread-exit-failure	thread002	tcf fail multithreaded
 test	memory-leak-in-eif-thr-wait	thread003	tcf pass multithreaded
+test	creating-string-runtime-panic	thread004	tcf pass multithreaded
 
 -- Execution
 

@@ -16,7 +16,7 @@ test	date-duration			duration002 tcf pass time
 test	date-time-duration		duration003 tcf pass time
 test	large-date-time-duration	duration004 tcf pass time
 test	time-bug-reports		time001 tcf pass time
-test	 date-duration-with-leap-years	time002 tcf pass time
+test	date-duration-with-leap-years	time002 tcf pass time
 
 -- EiffelBase tests
 
@@ -897,8 +897,9 @@ test	adopt-wean-freeze-unfreeze-multithreaded runtime005 tcf pass runtime multit
 test	gc-expanded-allocating-memory-in-special-2 runtime006	tcf pass runtime expanded special
 
 -- Thread
-test	 cond-timedwait-failure		thread001	tcf pass multithreaded
-test	 nested-thread-exit-failure	thread002	tcf fail multithreaded
+test	cond-timedwait-failure		thread001	tcf pass multithreaded
+test	nested-thread-exit-failure	thread002	tcf fail multithreaded
+test	memory-leak-in-eif-thr-wait	thread003	tcf pass multithreaded
 
 -- Execution
 

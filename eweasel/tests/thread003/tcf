@@ -1,0 +1,17 @@
+test_name 	 memory-leak-in-eif-thr-wait
+test_description Show memory leak in `eif_thr_wait' calling RT_GC_PROTECT(thread_object) without an RT_GC_WEAN if `eif_children_mutex' is NULL.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 300000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

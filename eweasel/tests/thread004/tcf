@@ -1,0 +1,18 @@
+test_name 	 creating-string-runtime-panic
+test_description Show crashes in the runtime when creating strings.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 worker.e  $CLUSTER worker.e
+
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	 NONE exec_output1 10 1000000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

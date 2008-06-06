@@ -85,6 +85,7 @@ test	native_signal_number_in_exception	except023 tcf pass exception
 test	native_error_number_in_exception	except024 tcf pass exception
 test	native_error_number_ise_io_error	except025 tcf pass exception
 test	buffer_overflows_printing_trace		except026 tcf pass exception
+test	static_buffer_for_trace_not_thread_safe	except027 tcf pass exception
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

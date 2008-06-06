@@ -30,9 +30,10 @@ feature
 
 			curr_dir := current_working_directory;
 			test_dir := test.environment.value (Test_dir_name);
-			if test_dir /= Void then
-				change_working_directory (test_dir);
-			end
+			-- FIXME: remove if -project_path works
+			-- if test_dir /= Void then
+			-- 	change_working_directory (test_dir);
+			-- end
 			compilation := test.e_compilation;
 			if compilation = Void or else not compilation.suspended then
 				compile_cmd := test.environment.value (Compile_command_name)
@@ -83,6 +84,11 @@ feature {NONE} -- Implementation
 				Result.extend (compilation_options.item);
 				compilation_options.forth
 			end;
+				-- Add compilation dir to avoid changing 
+				-- working directory, which does not work
+				-- with multithreaded code
+			Result.extend ("-project_path")
+			Result.extend (env.value (Test_dir_name))
 				-- Ignore user file for testing
 			Result.extend ("-local")
 				-- Path to configuration file
@@ -90,33 +96,6 @@ feature {NONE} -- Implementation
 			Result.extend (os.full_file_name (env.value (Test_dir_name), test.ace_name))
 		end;
 
-	project_file_name (env: TEST_ENVIRONMENT): STRING is
-			-- Name of first Eiffel project file (.epr file)
-			-- found in test directory or Void if none
-		local
-			dir: DIRECTORY
-			dir_entries: ARRAYED_LIST [STRING]
-			dir_name, name, ext: STRING
-			len: INTEGER
-		do
-			ext := Eiffel_project_extension;
-			len := ext.count
-			dir_name := env.value (Test_dir_name);
-			create dir.make (dir_name)
-			dir_entries := dir.linear_representation;
-			from
-				dir_entries.start
-			until
-				dir_entries.after or Result /= Void
-			loop
-				name := dir_entries.item.twin
-				name.keep_tail (len)
-				if name.is_equal (ext) then
-					Result := os.full_file_name (dir_name, dir_entries.item)
-				end
-				dir_entries.forth
-			end
-		end;
 
 indexing
 	copyright: "[

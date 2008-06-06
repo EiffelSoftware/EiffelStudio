@@ -15,6 +15,7 @@ feature  -- Creation
 	make is
 		do
 			create {FILTER_ALL} filter;
+			max_threads := -1
 		end;
 
 feature  -- Properties
@@ -35,6 +36,10 @@ feature  -- Properties
 	
 	filter: EIFFEL_TEST_FILTER;
 			-- Execute only tests selected by this filter
+	
+	max_threads: INTEGER
+			-- Maximum number of worker threads to use
+			-- to execute tests (ignored if single threaded)
 	
 feature -- Modification
 
@@ -75,6 +80,13 @@ feature -- Modification
 			filter := f;
 		ensure
 			filter_set: filter = f
+		end;
+
+	set_max_threads (n: INTEGER) is
+		do
+			max_threads := n
+		ensure
+			max_threads_set: max_threads = n
 		end;
 
 

@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class.";
 	date: "93/09/14"
 
-class EWEASEL
+deferred class EWEASEL
 
 inherit
 	INSTRUCTION_TABLES;
@@ -12,10 +12,6 @@ inherit
 	FILTER_CREATION;
 	EXCEPTIONS;
 	SHARED_OBJECTS
-
-create	
-	make,
-	make_and_execute
 
 feature  -- Creation
 
@@ -66,8 +62,9 @@ feature  {NONE} -- Implementation
 			-- Set `args_ok' to indicate whether the
 			-- arguments were OK.
 		local
-			k, count: INTEGER;
+			k, count, n: INTEGER;
 			first_char, flag, type, l_filter: STRING;
+			l_max_threads: STRING
 			f: EIFFEL_TEST_FILTER;
 		do
 			from
@@ -161,6 +158,25 @@ feature  {NONE} -- Implementation
 									output.append_error (filter_type, False);
 									output.append_error ("' - not currently supported", True);
 								end
+								args_ok := False;
+							end
+						else
+							args_ok := False;
+						end
+					elseif equal (flag, "max_threads") then
+						if count >= k + 1 then
+							l_max_threads := args.item (k + 1)
+							if l_max_threads.is_integer then
+								n := l_max_threads.to_integer
+								if n >= -1 then
+									test_suite_options.set_max_threads (n);
+									k := k + 2;
+								else
+									output.append_error ("Invalid maximum thread count " + n.out + " - must be >= -1", True);
+									args_ok := False;
+								end
+							else
+								output.append_error ("Invalid maximum thread count: " + l_max_threads, True);
 								args_ok := False;
 							end
 						else
@@ -276,10 +292,8 @@ feature  {NONE} -- Implementation
 			end
 			
 			if ok then
-				create suite.make (tests, test_suite_directory, environment);
+				suite := new_test_suite (tests, test_suite_options)
 				suite.execute (test_suite_options);
-				-- FIXME: put back in for multi threaded
-				-- suite.execute_multithreaded (test_suite_options, 1);
 			end
 		end;
 
@@ -291,9 +305,15 @@ feature  {NONE} -- Implementation
 	display_usage is
 		do
 			output.append_new_line
-			output.append ("Usage: eweasel [-help] [-keep [{all | passed | failed}]] [-clean]%N   [-filter FILTER] [-define NAME VALUE ...] -init INIT_CONTROL_FILE%N   -catalog TEST_CATALOG -output TEST_SUITE_DIR", True)
+			output.append ("Usage: eweasel [-help] [-max_threads COUNT] [-keep [{all | passed | failed}]]%N   [-clean] [-filter FILTER] [-define NAME VALUE ...] -init INIT_CONTROL_FILE%N   -catalog TEST_CATALOG -output TEST_SUITE_DIR", True)
+			output.append ("", True)
 			output.append ("Options (may appear in any order):", True)
 			output.append ("	-help	Display this help message and exit.", True)
+			output.append ("	-max_threads", True)
+			output.append ("	        Specify maximum number of worker threads for multithreaded", True)
+			output.append ("		eweasel.  Default is -1 (do all tests in main thread).", True)
+			output.append ("		Value of 0 will curently cause a hang in MT version.", True)
+			output.append ("		Ignored in single-threaded version.", True)
 			output.append ("	-keep	Keep some test directories after execution, depending", True)
 			output.append ("		on next argument (all, passed or failed).  If the next", True)
 			output.append ("		argument is omitted, keep all test directories.", True)
@@ -344,6 +364,14 @@ feature  -- Status
 			-- Were command line arguments valid?
 	
 feature  {NONE} -- Implementation
+
+	new_test_suite (tests: LIST [NAMED_EIFFEL_TEST] opts: TEST_SUITE_OPTIONS): EIFFEL_TEST_SUITE
+			-- New test suite with `tests' using options `opts'
+		require
+			tests_not_void: tests /= Void
+			opts_not_void: opts /= Void
+		deferred
+		end
 
 	initial_control_file: STRING;
 			-- Name of control file to be read initially,

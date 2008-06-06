@@ -26,6 +26,7 @@ copy EIFGENs\eweasel_st\F_code\eweasel.exe %EWEASEL%\spec\windows\bin
 copy EIFGENs\eweasel_mt\F_code\eweasel-mt.exe %EWEASEL%\spec\windows\bin
 rd /q /s EIFGENs
 del eweasel.rc
+del eweasel-mt.rc
 
 rem Convert a few test files to DOS format.
 cd /d %EWEASEL%\tests\exec081

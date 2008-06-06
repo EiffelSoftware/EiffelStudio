@@ -103,6 +103,7 @@ test repeated-non-conforming-inheritance-of-generic-type-from-parents	noncon012 
 test feature-inherits-export-status				noncon013 tcf pass non-conforming
 test non-conform-once-inheritance				noncon014 tcf pass non-conforming
 test non-conform-linked-list					noncon015 tcf pass non-conforming
+test non-conform-arguments						noncon016 tcf pass non-conforming
 
 -- For testing only
 

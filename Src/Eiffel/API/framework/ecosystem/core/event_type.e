@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Default initialization
 		do
 			subscribers := create_subscribers
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
+	safe_dispose (a_disposing: BOOLEAN)
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			--
@@ -58,19 +58,19 @@ feature -- Query
 			-- `a_action': An action to check an existing subscription for
 			-- `Result': True if the action is already subscribed, False otherwise.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 		do
 			Result := subscribers.has (a_action)
 		end
 
 feature -- Element change
 
-	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA]) is
+	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event.
 			--
 			-- `a_action': The action to subscribe.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		do
@@ -82,12 +82,12 @@ feature -- Element change
 			subscribers_cursor_unmoved: subscribers.index = old subscribers.index
 		end
 
-	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA]) is
+	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event for a single publication only.
 			--
 			-- `a_action': The action to subscribe.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		do
@@ -102,12 +102,12 @@ feature -- Element change
 			subscribers_cursor_unmoved: subscribers.index = old subscribers.index
 		end
 
-	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA]) is
+	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Unsubscribes an action from the event.
 			--
 			-- `a_action': A previously subscribed action to unsubscribe.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 			a_action_attached: a_action /= Void
 			a_action_is_subscribed: is_subscribed (a_action)
 		local
@@ -134,12 +134,12 @@ feature -- Element change
 
 feature -- Publication
 
-	publish (a_args: EVENT_DATA) is
+	publish (a_args: ?EVENT_DATA)
 			-- Publish all not suspended actions from the subscription list.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 		local
 			l_actions: like suicide_actions
 		do
@@ -175,14 +175,14 @@ feature -- Status report
 
 feature -- Status settings
 
-	suspend_subscription is
+	suspend_subscription
 			-- Ignore the call of all actions from the subscription list,
 			-- until feature `restore_subscription' is called.
 			--
 			-- Note: Suspension is based on a stacked number of calls. 3 calls to `suspend_subscription'
 			--       must be match with 3 calls to `restore_subscription' for publication to occur.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 		do
 			suspension_count := suspension_count + 1
 		ensure
@@ -190,13 +190,13 @@ feature -- Status settings
 			suspension_count_incremented: suspension_count = old suspension_count + 1
 		end
 
-	restore_subscription is
+	restore_subscription
 			-- Consider again the call of all actions from the subscription list,
 			-- until feature `suspend_subscription' is called.
 			--
 			-- Note: see `suspend_subscription' for information on stacked suspension.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 			is_suspended: is_suspended
 		do
 			suspension_count := suspension_count - 1
@@ -209,7 +209,7 @@ feature -- Status settings
 			--
 			-- `a_action': Action to call while the event is suspended.
 		require
-			not_is_zombie: not is_zombie
+			is_interface_usable: is_interface_usable
 		do
 			suspend_subscription
 			a_action.call ([])
@@ -223,35 +223,35 @@ feature -- Status settings
 
 feature {NONE} -- Factory
 
-	create_subscribers: like subscribers
+	create_subscribers: !like subscribers
 			-- Create a new subscriber list.
 			-- Note: Redefine to use an alternative list structure suited to specific needs.
 			--
 			-- `Result': A list structure used to store subscribers in.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			create {DS_LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]}Result.make
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	frozen subscribers: DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: ?DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions currently subscribed to the event
 
-	frozen suicide_actions: DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: ?DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time
 
 invariant
-	subscribers_attached: not is_zombie implies subscribers /= Void
-	suicide_actions_attached: suicide_actions /= Void
-	subscribers_equality_tester_attached: not is_zombie implies subscribers.equality_tester /= Void
-	suicide_actions_tester_attached: not is_zombie implies suicide_actions.equality_tester /= Void
+	subscribers_attached: is_interface_usable implies subscribers /= Void
+	suicide_actions_attached: is_interface_usable implies suicide_actions /= Void
+	subscribers_equality_tester_attached: is_interface_usable implies subscribers.equality_tester /= Void
+	suicide_actions_tester_attached: is_interface_usable implies suicide_actions.equality_tester /= Void
 	is_suspended_implies_has_suspensions: is_suspended implies suspension_count > 0
 	not_is_suspended_implies_has_no_suspensions: not is_suspended implies suspension_count = 0
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

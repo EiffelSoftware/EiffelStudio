@@ -14,6 +14,6 @@
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="services" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
-		<cluster name="framework" location="$EIFFEL_SRC\Eiffel\framework\" recursive="true"/>
+		<cluster name="framework" location="$EIFFEL_SRC\Eiffel\ecosystem\" recursive="true"/>
 	</target>
 </system>

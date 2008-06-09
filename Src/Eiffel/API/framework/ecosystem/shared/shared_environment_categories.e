@@ -13,12 +13,10 @@ class
 
 feature -- Access
 
-	categories: ENVIRONMENT_CATEGORIES
+	categories: !ENVIRONMENT_CATEGORIES
 			-- Environment categories
 		once
 			create Result
-		ensure
-			result_attached: Result /= Void
 		end
 
 ;indexing

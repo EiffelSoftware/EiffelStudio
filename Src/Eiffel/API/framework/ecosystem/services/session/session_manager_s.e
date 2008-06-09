@@ -85,7 +85,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): ?SESSION_I
+	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): ?SESSION_I
 			-- Retrieve's a window session based on specified paramaters.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
@@ -94,7 +94,7 @@ feature -- Retrieval
 		require
 			is_interface_usable: is_interface_usable
 			a_window_attached: a_window /= Void
-			not_a_window_is_recycled: not a_window.is_recycled
+			a_window_is_interface_usable: a_window.is_interface_usable
 		deferred
 		ensure
 			result_attached: not a_per_project implies Result /= Void
@@ -104,7 +104,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
 			-- Retrieve's a window session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
@@ -115,7 +115,7 @@ feature -- Retrieval
 		require
 			is_interface_usable: is_interface_usable
 			a_window_attached: a_window /= Void
-			not_a_window_is_recycled: not a_window.is_recycled
+			a_window_is_interface_usable: a_window.is_interface_usable
 		deferred
 		ensure
 			result_attached: not a_per_project implies Result /= Void

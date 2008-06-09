@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			manager_set: manager = a_manager
 		end
 
-	make_per_window (a_per_project: BOOLEAN; a_window: EB_DEVELOPMENT_WINDOW; a_manager: like manager)
+	make_per_window (a_per_project: BOOLEAN; a_window: SHELL_WINDOW_I; a_manager: like manager)
 			-- Initialize a session bound to a window.
 			--
 			-- `a_per_project': True to initialize a per-project session.
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- `a_manager': Session manager that owns Current.
 		require
 			a_window_attached: a_window /= Void
-			not_a_window_is_recycled: not a_window.is_recycled
+			a_window_is_interface_usable: a_window.is_interface_usable
 			a_manager_attached: a_manager /= Void
 			a_manager_is_interface_usable: a_manager.is_interface_usable
 		do

@@ -312,7 +312,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): ?SESSION_I
+	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): ?SESSION_I
 			-- <Precursor>
 		do
 			Result := retrieve_per_window_extended (a_window, a_per_project, Void)
@@ -322,7 +322,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
 			-- <Precursor>
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
@@ -434,14 +434,14 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	create_new_session (a_window: ?EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+	create_new_session (a_window: ?SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
 		require
 			is_interface_usable: is_interface_usable
-			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
+			a_window_is_interface_usable: a_window /= Void implies not a_window.is_interface_usable
 			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
 		local
 			l_inner_session: SESSION_I

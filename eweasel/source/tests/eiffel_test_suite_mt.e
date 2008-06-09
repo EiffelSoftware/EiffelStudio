@@ -30,36 +30,19 @@ feature -- Execution
 			k: INTEGER
 			executor: EIFFEL_TEST_EXECUTOR
 			done: BOOLEAN
-			max_threads: INTEGER
+			num_threads, max_threads: INTEGER
 		do
 			debug ("threaded_eweasel")
 				print_debug_main ("Starting multithreaded eweasel")
 			end
 			max_threads := opts.max_threads
 			create queue.make
-			from
-				k := 1
-			until
-				k > max_threads
-			loop
-				debug ("threaded_eweasel")
-					print_debug_main ("Creating thread "	+ k.out)
-				end
-				create executor
-				executor.set_queue (queue)
-				executor.set_options (opts)
-				executor.set_test_suite (Current)
-				executor.launch
-				debug ("threaded_eweasel")
-					print_debug_main ("Launched thread "	+ k.out)
-				end
-				k := k + 1
-			end
 			
 			debug ("threaded_eweasel")
 				print_debug_main ("Started adding tests selected by filter to test queue")
 			end
 			from
+				num_threads := 0
 				test_list.start;
 			until
 				test_list.after
@@ -72,6 +55,20 @@ feature -- Execution
 					queue.extend (test)
 					debug ("threaded_eweasel")
 						print_debug_main ("Added " + test.last_source_directory_component + " to test queue")
+					end
+					if num_threads < max_threads then
+						num_threads := num_threads + 1
+						debug ("threaded_eweasel")
+							print_debug_main ("Creating thread "	+ num_threads.out)
+						end
+						create executor
+						executor.set_queue (queue)
+						executor.set_options (opts)
+						executor.set_test_suite (Current)
+						executor.launch
+						debug ("threaded_eweasel")
+							print_debug_main ("Launched thread "	+ num_threads.out)
+						end
 					end
 				end;
 				test_list.forth;

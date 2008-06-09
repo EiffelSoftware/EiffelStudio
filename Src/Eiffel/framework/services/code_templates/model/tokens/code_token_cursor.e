@@ -1,81 +1,51 @@
 indexing
 	description: "[
-		A dictionary of code template definition file XML tag, attribute and value names.
+		A special code token to represent the complete rendered code template's cursor final position.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	CODE_TEMPLATE_ENTITY_NAMES
+frozen class
+	CODE_TOKEN_CURSOR
 
 inherit
-	CODE_TOKEN_NAMES
+	CODE_TOKEN_ID
+		rename
+			make as make_token_id
+		redefine
+			printable_text,
+			process
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initializes a cursor place-holder code token.
+		do
+			make_token_id (create {!STRING_32}.make_from_string ({CODE_TOKEN_NAMES}.cursor_token_name))
+		end
 
 feature -- Access
 
-	author_tag: !STRING_8 = "author"
+	printable_text: like text
+			-- <Precursor>
+		do
+				-- No printable text.
+			create Result.make_empty
+		end
 
-	category_tag: !STRING_8 = "category"
+feature -- Visitor
 
-	categories_tag: !STRING_8 = "categories"
-
-	code_template_tag: !STRING_8 = "code_template"
-
-	code_templates_tag: !STRING_8 = "code_templates"
-
-	declarations_tag: !STRING_8 = "declarations"
-
-	default_tag: !STRING_8 = "default"
-
-	description_tag: !STRING_8 = "description"
-
-	literal_tag: !STRING_8 = "literal"
-
-	metadata_tag: !STRING_8 = "metadata"
-
-	object_tag: !STRING_8 = "object"
-
-	template_tag: !STRING_8 = "template"
-
-	templates_tag: !STRING_8 = "templates"
-
-	title_tag: !STRING_8 = "title"
-
-	shortcut_tag: !STRING_8 = "shortcut"
-
-feature -- Attribute
-
-	conforms_to_attribute: !STRING_8 = "conforms_to"
-
-	editable_attribute: !STRING_8 = "editable"
-
-	format_attribute: !STRING_8 = "format"
-
-	id_attribute: !STRING_8 = "id"
-
-	version_attribute: !STRING_8 = "version"
-
-feature -- Values
-
-	code_category: !STRING_8 = "code"
-
-	contract_category: !STRING_8 = "contract"
-
-	precondition_category: !STRING_8 = "precondition"
-
-	postcondition_category: !STRING_8 = "postcondition"
-
-	invariant_category: !STRING_8 = "invariant"
-
-	class_category: !STRING_8 = "class"
-
-feature -- Delimiters
-
-	template_start_delimiter: !STRING_8 = "~#"
-
-	template_end_delimiter: !STRING_8 = "#~"
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_token_cursor (Current)
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

@@ -1,65 +1,23 @@
 indexing
 	description: "[
-		Abstract interface for implement help context in a help context aware section of EiffelStudio.
+		A dictionary of code token reserved names.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class
-	HELP_CONTEXT_I
+class
+	CODE_TOKEN_NAMES
 
-inherit
-	USABLE_I
+feature -- Token values
 
-feature -- Access
+	cursor_token_name: !STRING_8 = "cursor"
 
-	help_context_id: !STRING_GENERAL
-			-- A contextual identifer to link an associated help through.
-		require
-			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
-		deferred
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
-
-	help_context_section: ?HELP_CONTEXT_SECTION_I
-			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
-		require
-			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
-		deferred
-		end
-
-	help_context_description: ?STRING_GENERAL
-			-- An optional description of the context.
-		require
-			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
-		deferred
-		end
-
-	help_provider: !UUID
-			-- Help provider kind best used for the help context.
-			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
-		once
-			Result := (create {HELP_PROVIDER_KINDS}).default_help
-		end
-
-feature -- Status report
-
-	is_help_available: BOOLEAN
-			-- Indicates if any help context is available
-		do
-			Result := is_interface_usable
-		ensure
-			is_interface_usable: Result implies is_interface_usable
-		end
+	selection_token_name: !STRING_8 = "selection"
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

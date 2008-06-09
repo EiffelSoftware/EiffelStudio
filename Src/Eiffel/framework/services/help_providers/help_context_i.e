@@ -1,54 +1,66 @@
 indexing
 	description: "[
-		A special code token to represent the complete rendered code template's cursor final position.
+		Abstract interface for implement help context in a help context aware section of EiffelStudio.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision$"
+	revision: "$Revision $"
 
-frozen class
-	CODE_TOKEN_CURSOR
+deferred class
+	HELP_CONTEXT_I
 
 inherit
-	CODE_TOKEN_ID
-		rename
-			make as make_token_id
-		redefine
-			printable_text,
-			process
-		end
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initializes a cursor place-holder code token.
-		do
-			make_token_id (create {!STRING_32}.make_from_string ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name))
-		end
+	USABLE_I
 
 feature -- Access
 
-	printable_text: like text
-			-- <Precursor>
-		do
-				-- No printable text.
-			create Result.make_empty
+	help_context_id: !STRING_GENERAL
+			-- A contextual identifer to link an associated help through.
+		require
+			is_interface_usable: is_interface_usable
+			is_help_available: is_help_available
+		deferred
+		ensure
+			not_result_is_empty: not Result.is_empty
 		end
 
-feature -- Visitor
+	help_context_section: ?HELP_CONTEXT_SECTION_I
+			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
+		require
+			is_interface_usable: is_interface_usable
+			is_help_available: is_help_available
+		deferred
+		end
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
-			-- <Precursor>
+	help_context_description: ?STRING_GENERAL
+			-- An optional description of the context.
+		require
+			is_interface_usable: is_interface_usable
+			is_help_available: is_help_available
+		deferred
+		end
+
+	help_provider: !UUID
+			-- Help provider kind best used for the help context.
+			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+feature -- Status report
+
+	is_help_available: BOOLEAN
+			-- Indicates if any help context is available
 		do
-			a_visitor.process_code_token_cursor (Current)
+			Result := is_interface_usable
+		ensure
+			is_interface_usable: Result implies is_interface_usable
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

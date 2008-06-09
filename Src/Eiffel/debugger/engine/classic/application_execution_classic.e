@@ -41,8 +41,6 @@ inherit
 
 	DEBUG_VALUE_EXPORTER
 
-	EB_CONSTANTS
-
 	VALUE_TYPES
 
 create {DEBUGGER_MANAGER}
@@ -447,13 +445,9 @@ feature -- Query
 					end
 						--| Exception code
 					if e.exception_code <= 0 then
-						f := cl.feature_named ("code")
-						if f /= Void and then f.is_function then
-							edv := val.dump_value
-							dv := function_evaluation_on (val, edv, f, cl, Void)
-							if dv /= Void and then dv.is_basic then
-								e.set_exception_code (dv.as_dump_value_basic.value_integer_32)
-							end
+						dv := query_evaluation_on (val, edv, cl, "code", Void)
+						if dv /= Void and then dv.is_basic then
+							e.set_exception_code (dv.as_dump_value_basic.value_integer_32)
 						end
 					end
 

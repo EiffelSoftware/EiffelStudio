@@ -27,7 +27,6 @@ feature -- Execution
 		local
 			test: NAMED_EIFFEL_TEST;
 			queue: EIFFEL_TEST_QUEUE
-			k: INTEGER
 			executor: EIFFEL_TEST_EXECUTOR
 			done: BOOLEAN
 			num_threads, max_threads: INTEGER

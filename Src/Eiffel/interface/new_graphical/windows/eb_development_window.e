@@ -126,6 +126,9 @@ inherit
 			{NONE} all
 		end
 
+		-- ESS Interfaces
+	SHELL_WINDOW_I
+
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
 

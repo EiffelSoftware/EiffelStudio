@@ -13,12 +13,10 @@ class
 
 feature -- Access
 
-	priorities: PRIORITY_LEVELS
+	priorities: !PRIORITY_LEVELS
 			-- Priority levels
 		once
 			create Result
-		ensure
-			result_attached: Result /= Void
 		end
 
 ;indexing

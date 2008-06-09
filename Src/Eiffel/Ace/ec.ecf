@@ -49,6 +49,7 @@
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf" readonly="false" use_application_options="true"/>
+		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\framework\ecosystem.ecf"/>
 		<library name="service_coupling" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf" readonly="false" use_application_options="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>

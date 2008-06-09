@@ -97,7 +97,7 @@ feature -- Basic operations
 									Result.force_last (a_factory.create_id_ref_token (l_token_id))
 								else
 										-- Creates an editable id token
-									if l_id.as_string_8.is_equal ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name) then
+									if l_id.as_string_8.is_equal ({CODE_TOKEN_NAMES}.cursor_token_name) then
 										l_token_id := a_factory.create_cursor_token
 									else
 										l_token_id := a_factory.create_id_token (l_id)

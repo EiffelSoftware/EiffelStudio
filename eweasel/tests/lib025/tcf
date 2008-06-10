@@ -1,0 +1,13 @@
+test_name 	file-read-xxx-routines
+test_description Test proper behavior of the `read_xxx' routines in FILE.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+copy_raw	file.txt $EXEC_WORK file.txt
+execute_work 	NONE exec_output1
+execute_result 	ok
+
+test_end

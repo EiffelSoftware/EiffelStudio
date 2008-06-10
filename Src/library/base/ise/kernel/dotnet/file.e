@@ -1509,7 +1509,7 @@ feature -- Input
 			bytes_read := l_read
 		end
 
-	read_word, readword is
+	read_word, readword, read_word_thread_aware is
 			-- Read a string, excluding white space and stripping
 			-- leading white space.
 			-- Make result available in `last_string'.
@@ -1570,6 +1570,7 @@ feature -- Input
 				end
 			end
 
+			separator := last_character
 			if not end_of_file then
 				back
 			end

@@ -441,7 +441,7 @@ feature {NONE} -- Factory
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
 		require
 			is_interface_usable: is_interface_usable
-			a_window_is_interface_usable: a_window /= Void implies not a_window.is_interface_usable
+			a_window_is_interface_usable: a_window /= Void implies a_window.is_interface_usable
 			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
 		local
 			l_inner_session: SESSION_I

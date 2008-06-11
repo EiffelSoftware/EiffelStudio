@@ -163,6 +163,9 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False;
 						end
+					elseif equal (flag, "order") then
+						test_suite_options.set_results_in_catalog_order (True)
+						k := k + 1;
 					elseif equal (flag, "max_threads") then
 						if count >= k + 1 then
 							l_max_threads := args.item (k + 1)
@@ -314,6 +317,10 @@ feature  {NONE} -- Implementation
 			output.append ("		eweasel.  Default is -1 (do all tests in main thread).", True)
 			output.append ("		Value of 0 will curently cause a hang in MT version.", True)
 			output.append ("		Ignored in single-threaded version.", True)
+			output.append ("	-order", True)
+			output.append ("	        Display test execution results in catalog order.", True)
+			output.append ("	        Default is to display test results in the order", True)
+			output.append ("	        in which tests complete.  Ignored in single-threaded version.", True)
 			output.append ("	-keep	Keep some test directories after execution, depending", True)
 			output.append ("		on next argument (all, passed or failed).  If the next", True)
 			output.append ("		argument is omitted, keep all test directories.", True)
@@ -322,7 +329,7 @@ feature  {NONE} -- Implementation
 			output.append ("		since every test directory will be deleted after execution.", True)
 			output.append ("	-filter	Apply filter to select tests.", True)
 			output.append ("		If no filter is given all tests in the catalog are executed.", True)
-			output.append ("		Only one filter is supported - later -filter options override", True)
+			output.append ("		Only one filter is supported - later filter options override", True)
 			output.append ("		earlier ones.", True)
 			output.append ("		Filter can be one of:", True)
 			output.append ("			'test TEST_NAME'", True)

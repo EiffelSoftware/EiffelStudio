@@ -41,6 +41,13 @@ feature  -- Properties
 			-- Maximum number of worker threads to use
 			-- to execute tests (ignored if single threaded)
 	
+	results_in_catalog_order: BOOLEAN
+			-- Should test execution results be reported
+			-- in order tests appear in catalog?
+			-- If not, test results are reported as soon as
+			-- they are available.
+			-- Ignored if single threaded
+	
 feature -- Modification
 
 	set_keep_all is
@@ -87,6 +94,13 @@ feature -- Modification
 			max_threads := n
 		ensure
 			max_threads_set: max_threads = n
+		end;
+
+	set_results_in_catalog_order (b: BOOLEAN) is
+		do
+			results_in_catalog_order := b
+		ensure
+			results_in_catalog_order_set: results_in_catalog_order = b
 		end;
 
 

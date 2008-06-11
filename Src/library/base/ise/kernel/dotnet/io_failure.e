@@ -40,13 +40,13 @@ feature -- Access
 
 	frozen code: INTEGER is
 			-- Exception code
-		once
+		do
 			Result := {EXCEP_CONST}.io_exception
 		end
-		
+
 	error_code: INTEGER
 			-- Error code, not implemented.
-		
+
 feature {EXCEPTION_MANAGER} -- Status setting
 
 	set_Error_code (a_code: like Error_code) is

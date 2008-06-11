@@ -193,6 +193,24 @@ feature -- Access
 			is_tool_instantiated: is_tool_instantiated
 		end
 
+feature {ES_DOCKABLE_TOOL_PANEL} -- Access
+
+	associated_file_name: !STRING
+			-- The tool's associated file name part, used for modularizing development of a tool.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if {l_result: STRING} internal_associated_file_name then
+				Result := l_result
+			else
+				Result := tool_utilities.tool_associated_file_name (Current)
+				internal_associated_file_name := Result
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+			result_consistent: Result = associated_file_name
+		end
+
 feature {ES_SHELL_TOOLS} -- Element change
 
 	set_edition (a_edition: like edition)
@@ -402,14 +420,18 @@ feature {NONE} -- Factory
 			not_result_is_recycled: not Result.is_recycled
 		end
 
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Implementation: Internal cache
 
-	internal_panel: like panel
-			-- Cached version of `panel'
+	internal_panel: ?like panel
+			-- Cached version of `panel'.
 			-- Note: Do not use directly!
 
-	internal_type_id: like type_id
-			-- Cached version of `type_id'
+	internal_type_id: ?like type_id
+			-- Cached version of `type_id'.
+			-- Note: Do not use directly!
+
+	internal_associated_file_name: ?like associated_file_name
+			-- Cached version of `associated_file_name'.
 			-- Note: Do not use directly!
 
 invariant

@@ -81,6 +81,11 @@
 #define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
 #define eif_thr_cond_destroy(a_mutex_ptr)
 
+#if !defined(EIF_WINDOWS) && !defined(VXWORKS)
+/* Forking, only support on Unix platform on which `fork' is supported. */
+#define eif_thread_fork	fork
+#endif
+
 #else
 
 #include "eif_cecil.h"		/* Needed for inclusion of predefined macros */

@@ -22,13 +22,13 @@ compile_final_keep
 compile_result ok
 
 c_compile_final
-c_compile_final ok
+c_compile_result ok
 
 compile_final
 compile_result ok
 
 c_compile_final
-c_compile_final ok
+c_compile_result ok
 
 
 test_end

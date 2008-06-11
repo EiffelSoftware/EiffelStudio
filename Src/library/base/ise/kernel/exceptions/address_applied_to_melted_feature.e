@@ -18,7 +18,7 @@ feature -- Access
 
 	frozen code: INTEGER is
 			-- Exception code
-		once
+		do
 			Result := {EXCEP_CONST}.dollar_applied_to_melted_feature
 		end
 

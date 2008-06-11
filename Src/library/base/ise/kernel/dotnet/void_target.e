@@ -36,9 +36,9 @@ create
 
 feature -- Access
 
-	code: INTEGER is
+	frozen code: INTEGER is
 			-- Exception code
-		once
+		do
 			Result := {EXCEP_CONST}.void_call_target
 		end
 

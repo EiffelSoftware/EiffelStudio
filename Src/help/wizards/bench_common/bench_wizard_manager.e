@@ -21,14 +21,23 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EIFFEL_LAYOUT
+		undefine
+			default_create, copy, is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make_and_launch is
 			-- Initialize and launch application
 		local
 			retried: BOOLEAN
+			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
 			if not retried then
+				create l_layout
+				l_layout.check_environment_variable
+				set_eiffel_layout (l_layout)
 				Precursor
 			else
 				write_bench_notification_cancel
@@ -67,10 +76,8 @@ feature {NONE} -- Initialization
 			l_manager: I18N_LOCALE_MANAGER
 			l_arg: STRING
 			l_locale: like locale
-			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
-			create l_layout
-			create l_manager.make (l_layout.language_path)
+			create l_manager.make (eiffel_layout.language_path)
 			if argument_count >= 2 then
 				l_arg := argument (2)
 				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))

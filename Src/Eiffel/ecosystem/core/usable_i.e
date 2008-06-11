@@ -15,7 +15,7 @@ deferred class
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- Determines if the interface is usable
 		deferred
 		end
 

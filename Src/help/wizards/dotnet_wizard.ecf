@@ -11,7 +11,7 @@
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wizard" location="$ISE_LIBRARY\library\wizard\wizard.ecf"/>
 		<cluster name="bench_common" location="$EIFFEL_SRC\help\wizards\bench_common\"/>
 		<cluster name="dotnet_environment" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows\"/>

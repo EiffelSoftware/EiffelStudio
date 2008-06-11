@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING]]) is
 			-- Add the common parameters to the replacement pattern.
 		local
-			current_time: WEL_SYSTEM_TIME
+			current_time: DATE_TIME
 			tuple: TUPLE [STRING, STRING]
 			project_name: STRING
 			project_name_lowercase: STRING
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			map_list.extend (tuple)
 
 				-- Add the date for indexing clause.
-			create current_time.make_by_current_time
+			create current_time.make_now
 			create tuple
 			tuple.put ("${FL_DATE}", 1)
 			tuple.put (

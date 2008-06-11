@@ -30,10 +30,6 @@ feature {NONE} -- Initialization
 			l_count: INTEGER
 			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
-			create l_layout
-			l_layout.check_environment_variable
-			eiffel_layout_cell.put (l_layout)
-
 			compile_project := True
 			ace_location := ""
 

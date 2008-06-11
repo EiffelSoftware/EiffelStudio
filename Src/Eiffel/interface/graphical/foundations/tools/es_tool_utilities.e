@@ -12,14 +12,13 @@ class
 
 feature -- Query
 
-	tool_id (a_tool: ES_TOOL [EB_TOOL]): STRING_32
+	tool_id (a_tool: !ES_TOOL [EB_TOOL]): !STRING_32
 			-- Retrieves a type identifier, used in storing and retrieving layout information, for a tool
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
 			-- `Result': A unique identifier for the tool descriptor.
 		require
-			a_tool_attached: a_tool /= Void
-			not_a_tool_is_recycled: not a_tool.is_recycled
+			a_tool_is_interface_usable: a_tool.is_interface_usable
 		local
 			l_type: STRING_32
 			l_edition: NATURAL_8
@@ -35,12 +34,11 @@ feature -- Query
 				end
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_consistent: Result.is_equal (tool_id (a_tool))
 		end
 
-	tool_info (a_tool_id: STRING_32): TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
+	tool_info (a_tool_id: STRING_32): ?TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
 			-- Examines a tool identifier and splits it into a tool type and edition.
 			--
 			-- `a_tool_id': A tool identifier as created with `tool_id'
@@ -92,6 +90,32 @@ feature -- Query
 		ensure
 			result_type_attached: Result /= Void implies Result.type /= Void
 			result_edition_big_enough: Result /= Void implies Result.edition > 0
+		end
+
+	tool_associated_file_name (a_tool: !ES_TOOL [EB_TOOL]): !STRING
+			-- The tool's associated file name part, used for modularizing development of a tool.
+			--
+			-- `a_tool': A tool descriptor to retrieve a type identifier for.
+			-- `Result': A file name, sans extension.
+		require
+			a_tool_is_interface_usable: a_tool.is_interface_usable
+		do
+			Result ?= a_tool.generating_type
+			if Result.substring (1, (3).min (Result.count)).is_equal (once "es_") then
+					-- Remove ES_ prefix
+				Result.keep_tail (Result.count - 3)
+				if Result.substring ((Result.count - 5).max (1), Result.count).is_equal (once "_tool") then
+						-- Remove _TOOL suffix
+					Result.keep_head (Result.count - 5)
+				else
+					check use_standard_name_convention: False end
+				end
+			else
+				check use_standard_name_convention: False end
+			end
+			check not_result_is_empty: not Result.is_empty end
+		ensure
+			result_consistent: Result.is_equal (tool_associated_file_name (a_tool))
 		end
 
 ;indexing

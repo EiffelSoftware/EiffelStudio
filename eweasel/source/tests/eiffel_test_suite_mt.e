@@ -36,6 +36,7 @@ feature -- Execution
 			end
 			max_threads := opts.max_threads
 			create queue.make
+			queue.set_results_in_catalog_order (opts.results_in_catalog_order)
 			
 			debug ("threaded_eweasel")
 				print_debug_main ("Started adding tests selected by filter to test queue")

@@ -21,7 +21,9 @@ feature -- Creation
 	make is
 		do
 			create mutex.make
-			create queue.make (100)
+			create pending_queue.make (100)
+			create executing_queue.make (20)
+			create completed_queue.make (20)
 			create more_waiting_tests.make
 			create more_completed_tests.make
 		end
@@ -33,7 +35,22 @@ feature -- Properties
 			-- Has producer finished adding tests to
 			-- the queue?
 	
+	results_in_catalog_order: BOOLEAN
+			-- Should test execution results be reported
+			-- in order tests appear in catalog?
+			-- If not, test results are reported as soon as
+			-- they are available.
+			-- Ignored if single threaded
+	
+	
 feature -- Modification
+
+	set_results_in_catalog_order (b: BOOLEAN) is
+		do
+			results_in_catalog_order := b
+		ensure
+			results_in_catalog_order_set: results_in_catalog_order = b
+		end;
 
 	extend (t: NAMED_EIFFEL_TEST) is
 			-- Add `t' to end of list of tests
@@ -48,7 +65,7 @@ feature -- Modification
 			debug ("threaded_eweasel")
 				print_debug_main ("Locked mutex in extend" )
 			end
-			queue.extend (entry)
+			pending_queue.extend (entry)
 			debug ("threaded_eweasel")
 				print_debug_main ("Signalling more waiting tests in extend" )
 			end
@@ -68,6 +85,7 @@ feature -- Modification
 		local
 			done: BOOLEAN
 			entry: EIFFEL_TEST_QUEUE_ENTRY
+			queue: like pending_queue
 		do
 			debug ("threaded_eweasel")
 				print_debug_worker ("Trying to lock mutex in mark_test_completed" )
@@ -75,6 +93,11 @@ feature -- Modification
 			mutex.lock
 			debug ("threaded_eweasel")
 				print_debug_worker ("Locked mutex in mark_test_completed" )
+			end
+			if results_in_catalog_order then
+				queue := pending_queue
+			else
+				queue := executing_queue
 			end
 			from
 				queue.start
@@ -89,6 +112,10 @@ feature -- Modification
 					entry.set_waiting (False)
 					entry.set_in_use (False)
 					done := True
+					if not results_in_catalog_order then
+						queue.remove
+						completed_queue.extend (entry)
+					end
 				end
 				queue.forth
 			end
@@ -131,19 +158,23 @@ feature -- Modification
 					print_debug_worker ("Locked mutex in next_waiting_test" )
 				end
 				from
-					queue.start
+					pending_queue.start
 				until
-					queue.after or Result /= Void
+					pending_queue.after or Result /= Void
 				loop
-					entry := queue.item
+					entry := pending_queue.item
 					if entry.waiting and not entry.in_use then
 						entry.set_in_use (True)
 						Result := entry.test
+						if not results_in_catalog_order then
+							pending_queue.remove
+							executing_queue.extend (entry)
+						end
 						debug ("threaded_eweasel")
 							print_debug_worker ("Found waiting test " + Result.last_source_directory_component + " in next_waiting_test" )
 						end
 					end
-					queue.forth
+					pending_queue.forth
 				end
 				no_tests := Result = Void and all_tests_added
 				debug ("threaded_eweasel")
@@ -190,7 +221,7 @@ feature -- Modification
 				debug ("threaded_eweasel")
 					print_debug_main ("Locked mutex in next_completed_test" )
 				end
-				more_tests := not queue.is_empty
+				more_tests := has_more_tests
 				debug ("threaded_eweasel")
 					if more_tests then
 						print_debug_main ("Test queue is not empty in next_completed_test" )
@@ -199,12 +230,21 @@ feature -- Modification
 					end
 				end
 				if more_tests then
-					entry := queue.first
-					if not entry.waiting and not entry.in_use then
-						-- First test in queue has completed
-						Result := entry.test
-						queue.start
-						queue.remove
+					if results_in_catalog_order then
+						entry := pending_queue.first
+						if not entry.waiting and not entry.in_use then
+							-- First test in queue has completed
+							Result := entry.test
+							pending_queue.start
+							pending_queue.remove
+							debug ("threaded_eweasel")
+								print_debug_main ("Found completed test " + Result.last_source_directory_component + " in next_completed_test" )
+							end
+						end
+					elseif not completed_queue.is_empty then
+						Result := completed_queue.first.test
+						completed_queue.start
+						completed_queue.remove
 						debug ("threaded_eweasel")
 							print_debug_main ("Found completed test " + Result.last_source_directory_component + " in next_completed_test" )
 						end
@@ -272,6 +312,15 @@ feature -- Modification
 
 feature {NONE} -- Implementation
 
+	has_more_tests: BOOLEAN
+		do
+			if results_in_catalog_order then
+				Result := not pending_queue.is_empty
+			else
+				Result := not pending_queue.is_empty or not executing_queue.is_empty or not completed_queue.is_empty
+			end
+		end
+
 	mutex: MUTEX
 			-- Mutex to control access to `tests' and `waiting'
 
@@ -283,10 +332,23 @@ feature {NONE} -- Implementation
 			-- Condition variable which indicates that
 			-- there may be more completed tests
 
-	queue: ARRAYED_LIST [EIFFEL_TEST_QUEUE_ENTRY]
-			-- Tests that are either awaiting execution or
+	pending_queue: ARRAYED_LIST [EIFFEL_TEST_QUEUE_ENTRY]
+			-- If `results_in_catalog_order', this is queue of
+			-- tests that are either awaiting execution or
 			-- that have been executed but whose status
-			-- hasn't yet been reported
+			-- hasn't yet been reported.  Otherwise, it only
+			-- contaings tests that are awaiting execution
+
+	executing_queue: ARRAYED_LIST [EIFFEL_TEST_QUEUE_ENTRY]
+			-- If not `results_in_catalog_order', this is queue of
+			-- tests that are currently executing
+			-- Otherwise, it is empty (not used)
+
+	completed_queue: ARRAYED_LIST [EIFFEL_TEST_QUEUE_ENTRY] 
+			-- If not `results_in_catalog_order', this is
+			-- queue of tests that are have completed but
+			-- whose status has not yet been reported.
+			-- Otherwise, it is empty (not used).
 
 feature {NONE} -- Obsolete
 

@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			in_progress: BOOLEAN;
 		do
 			if not in_progress then
-				input.read_line;
+				input.read_line_thread_aware
 				if input.end_of_file then
 					end_of_file := True;
 				end;

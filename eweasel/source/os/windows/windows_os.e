@@ -47,24 +47,6 @@ feature -- Path name operations
 			Result := full_file_name (dir_name, subdir)
 		end
 
-feature -- File operations
-	
-	delete_directory_tree (dir_name: STRING) is
-			-- Try to delete the directory tree rooted at 
-			-- `dir_name'.  Ignore any errors
-		local
-			l_dir: DIRECTORY
-			retried: BOOLEAN
-		do
-			if not retried then
-				create l_dir.make (dir_name)
-				l_dir.recursive_delete
-			end
-		rescue
-			retried := True
-			retry
-		end
-
 feature -- Process operations
 	
 	my_process_id: INTEGER is

@@ -56,7 +56,17 @@ feature -- File operations
 			-- `dir_name'.  Ignore any errors
 		require
 			directory_not_void: dir_name /= Void;
-		deferred
+		local
+			l_dir: DIRECTORY
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_dir.make (dir_name)
+				l_dir.recursive_delete
+			end
+		rescue
+			retried := True
+			retry
 		end;
 
 feature -- Process operations

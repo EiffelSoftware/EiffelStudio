@@ -21,7 +21,10 @@ inherit
 
 	CHARACTER_ROUTINES
 
-	EB_CONSTANTS
+	SHARED_BENCH_NAMES
+		rename
+			names as interface_names
+		end
 
 	INTERNAL
 

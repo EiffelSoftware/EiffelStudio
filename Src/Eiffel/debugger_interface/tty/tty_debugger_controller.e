@@ -34,13 +34,8 @@ feature -- Access
 
 	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
 			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
 		do
-			if a_pref_string /= Void then
-				bp ?= preferences.preferences.get_preference (a_pref_string)
-			end
-			if bp /= Void and then bp.value then
+			if manager.is_true_boolean_value (a_pref_string) then
 				a_action.call (Void)
 			else
 				if_confirmed_do (msg, a_action)

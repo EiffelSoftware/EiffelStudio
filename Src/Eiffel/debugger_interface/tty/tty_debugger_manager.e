@@ -10,27 +10,20 @@ class
 	TTY_DEBUGGER_MANAGER
 
 inherit
-	DEBUGGER_MANAGER
+	ES_DEBUGGER_MANAGER
 		redefine
+			make,
 			on_application_launched,
 			on_debugging_terminated,
 			on_application_just_stopped,
-			make, set_default_parameters,
 			debugger_output_message,
 			display_system_info,
 			display_application_status,
 			display_debugger_info,
-			controller,
-			classic_debugger_timeout,
-			classic_debugger_location,
-			classic_close_dbg_daemon_on_end_of_debugging,
-			dotnet_keep_stepping_info_non_eiffel_feature_pref,
-			dotnet_debugger_entries
+			controller
 		end
 
 	EIFFEL_SYNTAX_CHECKER
-
-	EB_SHARED_PREFERENCES
 
 	OUTPUT_ROUTINES
 
@@ -45,28 +38,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 			create {TERM_WINDOW} tty_output
-		end
-
-	set_default_parameters
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			Precursor {DEBUGGER_MANAGER}
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				set_slices (prefs.min_slice, prefs.max_slice)
-				set_displayed_string_size (prefs.default_displayed_string_size)
-				set_maximum_stack_depth (prefs.default_maximum_stack_depth)
-				set_critical_stack_depth (prefs.critical_stack_depth)
-
-				set_max_evaluation_duration (prefs.max_evaluation_duration)
-				prefs.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
-				check
-					displayed_string_size: displayed_string_size = prefs.default_displayed_string_size
-					max_evaluation_duration_set: prefs /= Void implies max_evaluation_duration = prefs.max_evaluation_duration
-				end
-			end
 		end
 
 feature -- Output helpers
@@ -619,63 +590,6 @@ feature -- Events
 	leave_events_handling is
 		do
 			events_handler.stop_events_handling
-		end
-
-feature -- Settings
-
-	classic_debugger_timeout: INTEGER is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.classic_debugger_timeout
-			end
-		end
-
-	classic_debugger_location: STRING is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.classic_debugger_location
-			end
-		end
-
-	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.close_classic_dbg_daemon_on_end_of_debugging
-			end
-		end
-
-	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.keep_stepping_info_dotnet_feature_preference
-			end
-		end
-
-	dotnet_debugger_entries: ARRAY [STRING] is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.dotnet_debugger
-			end
 		end
 
 feature -- Properties

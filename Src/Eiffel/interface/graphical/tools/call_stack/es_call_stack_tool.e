@@ -91,7 +91,6 @@ feature {NONE} -- Factory
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)
-			Result.set_debugger_manager (debugger_manager)
 		end
 
 ;indexing

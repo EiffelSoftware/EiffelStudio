@@ -226,7 +226,7 @@ feature -- Bridge to dbg_expression_evaluator
 			end
 		end
 
-feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Restricted Bridge to dbg_expression
+feature {DEBUGGER_EXPORTER} -- Restricted Bridge to dbg_expression
 
 	set_expression (expr: like expression) is
 			-- Set string value for `dbg_expression'
@@ -245,7 +245,7 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Re
 			end
 		end
 
-feature {ES_WATCH_TOOL_PANEL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
+feature -- Status report: Propagate the context and the results.
 
 	as_object: BOOLEAN
 			-- Is the expression represent the context object ?

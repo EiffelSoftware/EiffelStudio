@@ -144,6 +144,15 @@ feature {NONE} -- Initialization
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
+	initialize_debugger	is
+			-- Various initialization of the debugger
+		local
+			dbg: DEBUGGER_MANAGER
+		do
+			create {EB_DEBUGGER_MANAGER} dbg.make
+			dbg.register
+		end
+
 feature {NONE} -- Access
 
 	service_initializer: !SERVICE_INITIALIZER
@@ -169,6 +178,8 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			initialize_services
 
 			compiler_initialization
+
+			initialize_debugger
 
 				-- Create a development window
 			window_manager.create_window

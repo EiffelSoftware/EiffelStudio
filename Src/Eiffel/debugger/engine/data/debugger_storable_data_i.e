@@ -1,29 +1,30 @@
 indexing
-	description: "Objects that create instance of DEBUGGER_MANAGER"
+	description: "Objects that represents a debugger's data"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	DEBUGGER_MANAGER_FACTORY
+	DEBUGGER_STORABLE_DATA_I
 
-inherit
-	SHARED_FLAGS
+feature -- Preparation
 
-feature -- Debugger manager
-
-	new_default_debugger_manager: DEBUGGER_MANAGER is
-		local
-			ttydbgm: TTY_DEBUGGER_MANAGER
+	prepare_for_storage is
+			-- Prepare for upcoming storage
 		do
-			if is_gui then
-				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create ttydbgm.make
-				ttydbgm.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
-				Result := ttydbgm
-			end
+			--| do nothing by default
+		end
+
+feature -- Duplication
+
+	duplication: like Current is
+			-- Duplicate `Current'
+		do
+			Result := deep_twin
+		ensure
+			duplication_not_void: Result /= Void
 		end
 
 indexing

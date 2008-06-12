@@ -27,17 +27,9 @@ inherit
 			{NONE} all
 		end
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 	SHARED_BENCH_NAMES
+		rename
+			Warnings as Warning_messages
 		export
 			{NONE} all
 		end

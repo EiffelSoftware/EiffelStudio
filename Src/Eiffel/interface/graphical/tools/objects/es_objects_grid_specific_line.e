@@ -346,6 +346,7 @@ feature {NONE} -- Implementation
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING_32
 			l_exception_meaning, l_exception_message: STRING_32
+			l_exception_code: INTEGER
 			appstat: APPLICATION_STATUS
 			dotnet_status: APPLICATION_STATUS_DOTNET
 			exc_dv: EXCEPTION_DEBUG_VALUE
@@ -397,7 +398,20 @@ feature {NONE} -- Implementation
 						r.set_item (2, es_glab)
 					end
 
-						--| Class
+						--| Code
+					l_exception_code := exc_dv.code
+					if l_exception_code /= 0 then
+						r := parent_grid.extended_new_subrow (row)
+						glab := parent_grid.name_label_item ("Code")
+						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+						r.set_item (1, glab)
+						create es_glab
+						es_glab.set_data (l_exception_code.out)
+						parent_grid.grid_cell_set_text (es_glab, l_exception_code.out)
+						r.set_item (2, es_glab)
+					end
+					
+						--| Type
 					l_exception_class_detail := exc_dv.type_name
 					if l_exception_class_detail /= Void then
 						r := parent_grid.extended_new_subrow (row)

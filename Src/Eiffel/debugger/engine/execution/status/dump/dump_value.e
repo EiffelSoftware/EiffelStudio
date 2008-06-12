@@ -935,7 +935,7 @@ feature {DBG_EVALUATOR} -- Convertor
 			end
 		end
 
-feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
+feature {DEBUGGER_EXPORTER, DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
 
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
 	value_string    : STRING_32 -- String value

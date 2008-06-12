@@ -1,54 +1,60 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EC_PREFERENCES
-
-inherit
-	COMPILER_PREFERENCES
-		rename
-			make as make_compiler
-		end
-
-create
-	make
+deferred class
+	DEBUGGER_STORAGE
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
-			-- Create
-		require
-			preferences_not_void: a_preferences /= Void
+	make (m: like manager) is
+			-- Instanciate Current with `m' as `manager'
 		do
-			make_compiler (a_preferences)
-			create misc_data.make (a_preferences)
-			create feature_tool_data.make (a_preferences)
-			create flat_short_data.make (a_preferences)
-			preferences := a_preferences
+			manager := m
 		end
+
+	manager: DEBUGGER_MANAGER
+			-- Associated debugger's manager
 
 feature -- Access
 
-	flat_short_data: EB_FLAT_SHORT_DATA
-		-- Preference data for class flat short.
+	breakpoints_data_from_storage: BREAK_LIST
+			-- Exceptions handler data from storage
+		deferred
+		end
 
-	feature_tool_data: EB_FEATURE_TOOL_DATA
-		-- Preference data for the feature tool.
+	exceptions_handler_data_from_storage: DBG_EXCEPTION_HANDLER
+			-- Exceptions handler data from storage
+		deferred
+		end
 
-	misc_data: EB_MISC_DATA
-		-- Misc data.  This should be removed.  neilc
+	profiles_data_from_storage: DEBUGGER_PROFILES
+			-- Profiles data from storage
+		deferred
+		end
 
-invariant
-	feature_tool_data_not_void: feature_tool_data /= Void
-	misc_data_not_void: misc_data /= Void
-	flat_short_data_not_void: flat_short_data /= Void
+feature -- Write
 
-indexing
+	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage) is
+			-- Breakpoints data to storage
+		deferred
+		end
+
+	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage) is
+			-- Exceptions handler data to storage
+		deferred
+		end
+
+	profiles_data_to_storage (a_data: like profiles_data_from_storage) is
+			-- Profiles data to storage
+		deferred
+		end
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -80,4 +86,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EC_PREFERENCES
+end

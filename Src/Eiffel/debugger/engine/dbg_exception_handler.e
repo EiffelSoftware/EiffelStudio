@@ -12,12 +12,7 @@ class
 inherit
 	EXCEP_CONST
 
-	SESSION_DATA_I
-		rename
-			notify_session_of_value_change as prepare_for_storage
-		export
-			{DEBUGGER_MANAGER} prepare_for_storage
-		end
+	DEBUGGER_STORABLE_DATA_I
 
 create
 	make_handling_by_name
@@ -199,7 +194,7 @@ feature -- Data by exception name
 			Result /= Void implies Result.equality_tester /= Void
 		end
 
-feature {ES_EXCEPTION_HANDLER_DIALOG, EB_EXCEPTION_HANDLER_CMD} -- Implementation
+feature -- Constants
 
 	Role_disabled: INTEGER is 0
 	Role_continue: INTEGER is 1

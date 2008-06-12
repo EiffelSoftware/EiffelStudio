@@ -10,12 +10,7 @@ class
 	DEBUGGER_PROFILES
 
 inherit
-	SESSION_DATA_I
-		rename
-			notify_session_of_value_change as prepare_for_storage
-		export
-			{DEBUGGER_MANAGER} prepare_for_storage
-		end
+	DEBUGGER_STORABLE_DATA_I
 
 create
 	make
@@ -64,21 +59,6 @@ feature -- Access
 				lst.forth
 			end
 			internal_storage.go_to (cursor)
-		end
-
-feature -- Duplication
-
-	duplicate: like Current is
-			-- Duplicate `Current' without `session'.
-		local
-			l_session: like session
-		do
-			l_session := session
-			session := Void
-			Result := deep_twin
-			session := l_session
-		ensure
-			duplicate_not_void: Result /= Void
 		end
 
 feature -- Element change

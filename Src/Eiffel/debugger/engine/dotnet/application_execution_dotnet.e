@@ -23,8 +23,6 @@ inherit
 
 	SHARED_EIFNET_DEBUGGER
 
-	EB_SHARED_MANAGERS
-
 	DEBUG_VALUE_EXPORTER
 
 	VALUE_TYPES
@@ -59,10 +57,10 @@ inherit
 			{NONE} all
 		end
 
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
+--	EV_SHARED_APPLICATION
+--		export
+--			{NONE} all
+--		end
 
 create {DEBUGGER_MANAGER}
 	make_with_debugger
@@ -71,33 +69,23 @@ feature {APPLICATION_EXECUTION} -- Initialization
 
 	make_with_debugger (dbg: like debugger_manager) is
 			-- Create Current
-		local
-			p: BOOLEAN_PREFERENCE
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
 
 			Eifnet_debugger.init
-
-			p := Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature_pref
-			if p /= Void then
-				if p.value then
-					eifnet_debugger.enable_keep_stepping_into_dotnet_feature
-				else
-					eifnet_debugger.disable_keep_stepping_into_dotnet_feature
-				end
-				p.typed_change_actions.extend (
-					agent (b: BOOLEAN; ed: EIFNET_DEBUGGER)
-						do
-							if b then
-								ed.enable_keep_stepping_into_dotnet_feature
-							else
-								ed.disable_keep_stepping_into_dotnet_feature
-							end
-						end (?, eifnet_debugger)
-					)
-			end
+			update_keep_stepping_into_dotnet_feature
 
 			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
+		end
+
+	update_keep_stepping_into_dotnet_feature is
+			-- Update the `{EIFNET_DEBUGGER}.keep_stepping_into_dotnet_feature_enabled' information
+		do
+			if Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature then
+				eifnet_debugger.enable_keep_stepping_into_dotnet_feature
+			else
+				eifnet_debugger.disable_keep_stepping_into_dotnet_feature
+			end
 		end
 
 feature -- recycling data
@@ -167,7 +155,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			retry
 		end
 
-feature {EIFNET_EXPORTER, EV_SHARED_APPLICATION}  -- Trigger eStudio status
+feature {DEBUGGER_EXPORTER, EIFNET_EXPORTER}  -- Trigger eStudio status
 
 	callback_notification_processing: BOOLEAN is
 			-- Is inside callback notification processing ?
@@ -838,6 +826,8 @@ feature -- Control execution
 				print ("/\/\/\/\/\/\  Process before running  /\/\/\/\/\/\/\/\/\%N")
 				print ("%N%N")
 			end
+
+			update_keep_stepping_into_dotnet_feature
 
 			send_breakpoints
 

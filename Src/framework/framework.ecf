@@ -31,7 +31,7 @@
 		</library>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
-		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
+
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<custom name="batch_framework" excluded_value="true"/>
@@ -42,6 +42,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="interface_names" location=".\interface_names\interface_names.ecf"/>
 		<cluster name="fmwk_base" location=".\base\" recursive="true"/>
 		<cluster name="fmwk_vision2" location=".\vision2\" recursive="true">
 			<condition>

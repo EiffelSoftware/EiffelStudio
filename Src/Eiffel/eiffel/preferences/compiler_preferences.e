@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 		require
 			preferences_not_void: a_preferences /= Void
 		do
+			preferences := a_preferences
 			create compiler_data.make (a_preferences)
 		end
 
@@ -31,6 +32,12 @@ feature -- Access
 			non_negative_result: Result >= 0
 		end
 
+feature -- Access
+
+	preferences: PREFERENCES
+			-- Actual preferences.  Use only to get a preference which you do not know the type
+			-- of at runtime through `get_resource'.
+
 feature {NONE} -- Implementation
 
 	compiler_data: EB_COMPILER_DATA
@@ -38,6 +45,7 @@ feature {NONE} -- Implementation
 
 invariant
 	compiler_data_attached: compiler_data /= Void
+	preferences_attached: preferences /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -12,6 +12,8 @@ class
 inherit
 	ANY
 
+	DEBUGGER_EXPORTER
+
 	EB_CONSTANTS
 		export
 			{NONE} all

@@ -44,12 +44,6 @@ feature {NONE} -- Initialization
 			preferences := a_preferences
 		end
 
-feature -- Access
-
-	preferences: PREFERENCES
-			-- Actual preferences.  Use only to get a preference which you do not know the type
-			-- of at runtime through `get_resource'.
-
 invariant
 	preferences_not_void: preferences /= Void
 

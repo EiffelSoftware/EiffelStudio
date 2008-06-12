@@ -32,7 +32,7 @@ feature {NONE} -- External
 
 	frozen ccom_hresult_code (an_hresult: INTEGER): INTEGER is
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 				#ifdef EIF_WINDOWS
@@ -45,7 +45,7 @@ feature {NONE} -- External
 
 	frozen ccom_hresult_facility (an_hresult: INTEGER): INTEGER is
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 				#ifdef EIF_WINDOWS
@@ -60,7 +60,7 @@ feature {NONE} -- External
 			-- Get text from error `a_code'. It is up to the caller to free
 			-- the returned buffer using `cwin_local_free'.
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 				#ifdef EIF_WINDOWS
@@ -84,7 +84,7 @@ feature {NONE} -- External
 	frozen c_strlen (ptr: POINTER): INTEGER_32
 			-- Number of characters in `ptr'.
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 			#ifdef EIF_WINDOWS
@@ -98,7 +98,7 @@ feature {NONE} -- External
 	frozen character_size: INTEGER_32
 			-- Number of bytes occupied by a TCHAR.
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 			#ifdef EIF_WINDOWS
@@ -112,7 +112,7 @@ feature {NONE} -- External
 	frozen cwin_local_free (a_ptr: POINTER)
 			-- Free `a_ptr' using LocalFree.
 		external
-			"C inline use %"eif_com.h%""
+			"C inline use %"eif_com_exception.h%""
 		alias
 			"[
 			#ifdef EIF_WINDOWS

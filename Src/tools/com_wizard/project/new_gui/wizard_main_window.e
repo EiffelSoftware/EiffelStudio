@@ -201,7 +201,9 @@ feature {NONE} -- Implementation
 				else
 					project_button.set_text ("New")
 				end
-				project_button.enable_default_push_button
+				if not project_button.is_default_push_button then
+					project_button.enable_default_push_button
+				end
 			end
 			initialize_generate_button
 			in_delete_mode := False

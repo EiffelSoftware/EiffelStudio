@@ -53,21 +53,6 @@ feature -- Path names
 		end;
 
 
-feature -- Directory operations
-	
-	delete_directory_tree (dir_name: STRING) is
-			-- Try to delete the directory tree rooted at 
-			-- `dir_name'.  Ignore any errors.  Leave status 
-			-- code in `return_code'
-		local
-			cmd: STRING
-		do
-			create cmd.make (dir_name.count + 12);
-			cmd.append ("/bin/rm -rf ");
-			cmd.append (dir_name);
-			system (cmd);
-		end;
-
 feature -- Pipes
 
 	new_pipe: UNIX_PIPE is

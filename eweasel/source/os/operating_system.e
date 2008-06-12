@@ -69,15 +69,6 @@ feature -- File operations
 			retry
 		end;
 
-feature -- Process operations
-
-	my_process_id: INTEGER is
-			-- Process id of currently executing process
-		deferred
-		ensure
-			valid_process_id: Result > 0
-		end;
-
 feature -- Date and time
 	
 	current_time_in_seconds: INTEGER is

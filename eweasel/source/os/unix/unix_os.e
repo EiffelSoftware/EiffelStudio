@@ -68,12 +68,6 @@ feature -- Pipes
 
 feature -- Process operations
 
-	my_process_id: INTEGER is
-			-- Process id of currently executing process
-		do
-			Result := unix_get_process_id;
-		end;
-
 	fork_process: INTEGER is
 			-- Fork a new process.  Return process id of new
 			-- process to the parent process and 0 to the child

@@ -47,6 +47,14 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	DEBUGGER_EXPORTER
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+
+
 feature {NONE} -- Initialization
 
 	make is

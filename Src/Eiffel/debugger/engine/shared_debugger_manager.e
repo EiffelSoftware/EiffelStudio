@@ -17,10 +17,6 @@ feature -- Access
 			-- Manager in charge of debugging operations.
 		do
 			Result := Debugger_manager_cell.item
-			if Result = Void then
-				Result := (create {DEBUGGER_MANAGER_FACTORY}).new_default_debugger_manager
-				set_debugger_manager (Result)
-			end
 		ensure
 			debugger_manager_not_void: Result /= Void
 		end

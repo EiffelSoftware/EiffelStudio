@@ -120,7 +120,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			if profs /= Void then
 					--| It is safer to work on a copy to be able to cancel
 					--| changes easily
-				profs := profs.duplicate
+				profs := profs.duplication
 				from
 					profs.start
 				until

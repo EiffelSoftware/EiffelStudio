@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	DEBUGGER_MANAGER
 
 inherit
@@ -22,8 +22,8 @@ inherit
 
 	SHARED_BENCH_NAMES
 
-create
-	make
+--create
+--	make
 
 feature {NONE} -- Initialization
 
@@ -44,8 +44,8 @@ feature {NONE} -- Initialization
 			create profiles.make (10)
 			create breakpoints_manager.make (Void)
 
-
 			breakpoints_manager.add_observer (Current)
+			initialize_storage
 		end
 
 	is_initialized: BOOLEAN
@@ -60,6 +60,15 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	initialize_storage is
+			-- Initialize `dbg_storage'
+		require
+			dbg_storage_not_attached: dbg_storage = Void
+		deferred
+		ensure
+			dbg_storage_attached: dbg_storage /= Void
+		end
+
 	set_default_parameters is
 			-- Set hard coded default parameters values
 		do
@@ -69,6 +78,14 @@ feature {NONE} -- Initialization
 			set_interrupt_number (1)
 			set_maximum_stack_depth (100)
 			set_max_evaluation_duration (5)
+		end
+
+feature -- Registering
+
+	register is
+			-- Register Current, and the shared debugger manager
+		do
+			(create {SHARED_DEBUGGER_MANAGER}).set_debugger_manager (Current)
 		end
 
 feature -- Application execution
@@ -134,6 +151,9 @@ feature -- Application execution
 
 	dbg_evaluator: DBG_EVALUATOR
 			-- Debugger expression evaluator.
+
+	dbg_storage: DEBUGGER_STORAGE
+			-- Debugger's storage engine
 
 	is_debugging: BOOLEAN is
 			-- Is debugger currently debugging ?
@@ -213,78 +233,6 @@ feature -- Change
 		do
 		end
 
-feature {NONE} -- Debugger session data access
-
-	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S] is
-			-- Session manager consumer
-		once
-			create Result
-		end
-
-	session_data: SESSION_I is
-			-- Session data
-		local
-			cons: like session_manager
-		do
-			Result := internal_session_data
-			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg")
-					internal_session_data := Result
-
-						-- Load debugger data when first access the session
-					load_all_debugger_data
-				end
-			end
-		end
-
-	profiles_session_data: SESSION_I is
-			-- Session data
-		local
-			cons: like session_manager
-		do
-			Result := internal_profiles_session_data
-			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg-profiles")
-					internal_profiles_session_data := Result
-
-						-- Load debugger data when first access the session
-					load_profiles_data
-				end
-			end
-		end
-
-	internal_session_data: like session_data
-			-- cached version of `session_data'
-
-	internal_profiles_session_data: like profiles_session_data
-			-- cached version of `profiles_session_data'
-
-	Profiles_session_data_id: STRING is "com.eiffel.debugger.profiles"
-			-- Id for session data related to profiles
-
-	Breakpoints_session_data_id: STRING is "com.eiffel.debugger.breakpoints"
-			-- Id for session data related to breakpoints
-
-	Exception_handler_session_data_id: STRING is "com.eiffel.debugger.exceptions_handler"
-			-- Id for session data related to exception_handler
-
-feature {NONE} -- Debugger session data change
-
-	force_save_session_data (a_session_data: SESSION_I) is
-			-- Force storing of `a_session_data'
-		local
-			cons: like session_manager
-		do
-			cons := session_manager
-			if cons.is_service_available then
-				cons.service.store (a_session_data)
-			end
-		end
-
 feature -- Debugger data change		
 
 	load_all_debugger_data is
@@ -311,12 +259,10 @@ feature -- Debugger data change
 		local
 			bplst: BREAK_LIST
 			rescued, loading_rescued: BOOLEAN
-			dbg_session: SESSION_I
 		do
 			if not rescued then
 				if not loading_rescued then
-					dbg_session := session_data
-					bplst ?= dbg_session.value (Breakpoints_session_data_id)
+					bplst := dbg_storage.breakpoints_data_from_storage
 
 					breakpoints_manager.set_breakpoints (bplst)
 							-- Reset information about the application
@@ -348,11 +294,9 @@ feature -- Debugger data change
 			-- Load exceptions_handler data
 		local
 			loading_rescued: BOOLEAN
-			dbg_session: SESSION_I
 		do
 			if not loading_rescued then
-				dbg_session := session_data
-				internal_exceptions_handler ?= dbg_session.value (Exception_handler_session_data_id)
+				internal_exceptions_handler := dbg_storage.exceptions_handler_data_from_storage
 			else
 				-- Issue !
 			end
@@ -366,12 +310,9 @@ feature -- Debugger data change
 		local
 			prof: like profiles
 			rescued: BOOLEAN
-			dbg_session: SESSION_I
 		do
 			if not rescued then
-				dbg_session := profiles_session_data
-				prof ?= dbg_session.value (Profiles_session_data_id)
-
+				prof := dbg_storage.profiles_data_from_storage
 				if prof /= Void then
 					profiles := prof
 				else
@@ -399,26 +340,19 @@ feature -- Debugger data change
 			retried: BOOLEAN
 			bplst: BREAK_LIST
 			old_bplist: BREAK_LIST
-			dbg_session: SESSION_I
 		do
 			if not retried then
 					-- backup current list
 				old_bplist := breakpoints_manager.breakpoints
-				create bplst.make_copy_for_saving (old_bplist)
+				bplst := old_bplist.duplication
+
 				breakpoints_manager.set_breakpoints (bplst)
 
 					-- Reset information about the application
 					-- contained in the breakpoints.
 				bplst.restore
 
-					-- Effective saving
-				dbg_session := session_data
-
-					--| Set breakpoints (this is a copy, thus new object, and then it will be stored)
-   				dbg_session.set_value (bplst, Breakpoints_session_data_id)
-
-   					--| Force storage
-				force_save_session_data (dbg_session)
+				dbg_storage.breakpoints_data_to_storage (bplst)
 
 				bplst := Void
 
@@ -439,20 +373,9 @@ feature -- Debugger data change
 			-- Save exceptions_handler data
 		local
 			retried: BOOLEAN
-			dbg_session: SESSION_I
 		do
 			if not retried then
-					-- Effective saving
-				dbg_session := session_data
-
-					--| Set exceptions handler
-   				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
-   				if internal_exceptions_handler /= Void then
-   					internal_exceptions_handler.prepare_for_storage
-   				end
-
-   					--| Force storage
-				force_save_session_data (dbg_session)
+				dbg_storage.exceptions_handler_data_to_storage (internal_exceptions_handler)
 			else
 				set_error_message ("Unable to save exceptions handler's data%N")
 			end
@@ -465,16 +388,9 @@ feature -- Debugger data change
 			-- Save profiles
 		local
 			retried: BOOLEAN
-			dbg_session: SESSION_I
 		do
 			if not retried then
-				dbg_session := profiles_session_data
-
-					-- Effective saving
-				dbg_session.set_value (profiles, Profiles_session_data_id)
-				profiles.prepare_for_storage
-
-				force_save_session_data (dbg_session)
+				dbg_storage.profiles_data_to_storage (profiles)
 			else
 				set_error_message ("Unable to save debugger's profiles%N")
 			end
@@ -1020,16 +936,24 @@ feature -- Settings
 			Result := Void
 		end
 
-	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
+	dotnet_keep_stepping_info_non_eiffel_feature: BOOLEAN is
 			-- Keep stepping into feature including non Eiffel feature (useful to step into agent call) ?
+			-- turning this on will have impact on debugging performance (since most of the time,
+			-- we don't want to step into non eiffel feature)
 		do
-			Result := Void --| Lazy behavior
+			Result := False
 		end
 
 	dotnet_debugger_entries: ARRAY [STRING] is
 			-- Which dotnet debugger is used?
 		do
 			Result := <<>>
+		end
+
+	is_true_boolean_value (a_string: STRING): BOOLEAN is
+			-- Boolean preferences associated to `a_string'
+		do
+			Result := False
 		end
 
 feature -- Access
@@ -1758,31 +1682,9 @@ feature -- Logger
 			-- Log message `s'
 		require
 			s_not_empty: s /= Void and then s.count > 0
-		local
-			l_logger: like logger_service
 		do
-			l_logger := logger_service
-			if l_logger.is_service_available then
-				l_logger.service.put_message_with_severity (({!STRING_32}) #? s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
-			end
+			debugger_output_message (s)
 		end
-
-feature {NONE} -- Logger
-
-	logger_service: !SERVICE_CONSUMER [LOGGER_S]
-			-- Access to logger service
-		do
-			if {l_service: SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
-				Result := l_service
-			else
-				create Result
-				internal_logger_service := Result
-			end
-		end
-
-	internal_logger_service: SERVICE_CONSUMER [LOGGER_S]
-			-- Cached version of `logger_service'
-			-- Note: Do not use directly!		
 
 feature {APPLICATION_EXECUTION} -- specific implementation
 
@@ -1795,6 +1697,7 @@ feature {APPLICATION_EXECUTION} -- specific implementation
 
 invariant
 
+	dbg_storage_attached: dbg_storage /= Void
 	implementation_not_void: implementation /= Void
 	controller_not_void: controller /= Void
 

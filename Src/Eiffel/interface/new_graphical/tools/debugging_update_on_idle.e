@@ -11,12 +11,7 @@ class
 	DEBUGGING_UPDATE_ON_IDLE
 
 inherit
-	ANY
-
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
+	DEBUGGER_EXPORTER
 
 feature -- Access
 
@@ -137,7 +132,7 @@ feature {NONE} -- Implementation change
 					--| Create update on idle agent  "on demand"
 				update_on_idle_agent := agent real_update_on_idle
 			end
-			ev_application.add_idle_action (update_on_idle_agent)
+			debugger_manager.add_idle_action (update_on_idle_agent)
 		end
 
 	frozen cancel_process_real_update_on_idle is
@@ -145,7 +140,7 @@ feature {NONE} -- Implementation change
 		do
 			real_update_on_idle_called_on_stopped := False
 			if update_on_idle_agent /= Void then
-				ev_application.remove_idle_action (update_on_idle_agent)
+				debugger_manager.remove_idle_action (update_on_idle_agent)
 			end
 		end
 

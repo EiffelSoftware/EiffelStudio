@@ -236,7 +236,7 @@ feature -- Helpers
 
 feature -- Termination monitoring ...
 
-	timer_monitor_process_termination_on_exit: EV_TIMEOUT
+	timer_monitor_process_termination_on_exit: DEBUGGER_TIMER --EV_TIMEOUT
 			-- Timer used to check if debugging is finished.
 
 	create_monitoring_of_process_termination_on_exit is
@@ -244,7 +244,8 @@ feature -- Termination monitoring ...
 		require
 			timer_void: timer_monitor_process_termination_on_exit = Void
 		do
-			create timer_monitor_process_termination_on_exit.make_with_interval (1000)
+			timer_monitor_process_termination_on_exit := debugger_manager.new_timer
+			timer_monitor_process_termination_on_exit.set_interval (1000)
 			timer_monitor_process_termination_on_exit.actions.extend (agent monitor_process_termination_on_exit)
 		end
 
@@ -252,7 +253,7 @@ feature -- Termination monitoring ...
 			-- Destroy and clean timer
 		do
 			if timer_monitor_process_termination_on_exit /= Void then
-				timer_monitor_process_termination_on_exit.destroy
+				timer_monitor_process_termination_on_exit.set_interval (0)
 				timer_monitor_process_termination_on_exit := Void
 			end
 		end

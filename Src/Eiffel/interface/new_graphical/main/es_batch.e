@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Initializes batch compiler
 		do
 			initialize_services
+			initialize_debugger
 		end
 
 feature {NONE} -- Service initialization
@@ -36,6 +37,16 @@ feature {NONE} -- Service initialization
 		do
 			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
 			l_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
+		end
+
+	initialize_debugger is
+			-- Initialize debugger
+		local
+			ttydbgm: TTY_DEBUGGER_MANAGER
+		do
+			create ttydbgm.make
+			ttydbgm.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
+			ttydbgm.register
 		end
 
 	create_session_manager_service: SESSION_MANAGER_S

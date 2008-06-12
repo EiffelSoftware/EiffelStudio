@@ -10,16 +10,11 @@ class
 	EB_DEBUGGER_MANAGER
 
 inherit
-	DEBUGGER_MANAGER
+	ES_DEBUGGER_MANAGER
 		redefine
 			make,
 			initialize,
 			controller,
-			classic_debugger_timeout,
-			classic_debugger_location,
-			classic_close_dbg_daemon_on_end_of_debugging,
-			dotnet_keep_stepping_info_non_eiffel_feature_pref,
-			dotnet_debugger_entries,
 			confirm_ignore_all_breakpoints_preference_string,
 			change_current_thread_id,
 			activate_execution_replay_recording,
@@ -33,11 +28,17 @@ inherit
 			on_debugging_terminated,
 			on_breakpoints_change_event,
 			process_breakpoint,
-			set_default_parameters,
 			set_maximum_stack_depth,
 			debugger_output_message, debugger_warning_message, debugger_error_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message
+		select
+			preferences
+		end
+
+	EB_SHARED_PREFERENCES
+		rename
+			preferences as eb_preferences
 		end
 
 	EB_CONSTANTS
@@ -45,8 +46,6 @@ inherit
 	EB_SHARED_INTERFACE_TOOLS
 
 	EB_SHARED_GRAPHICAL_COMMANDS
-
-	EB_SHARED_PREFERENCES
 
 	EB_ERROR_MANAGER
 		rename
@@ -77,10 +76,10 @@ feature {NONE} -- Initialization
 			create debug_run_cmd.make
 
 				--| Graphical Preferences settings
-			objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
+			objects_split_proportion := debug_tool_data.local_vs_object_proportion
 
-			display_agent_details := preferences.debug_tool_data.display_agent_details
-			preferences.debug_tool_data.display_agent_details_preference.typed_change_actions.extend (
+			display_agent_details := debug_tool_data.display_agent_details
+			debug_tool_data.display_agent_details_preference.typed_change_actions.extend (
 					agent (b: BOOLEAN)
 						do
 							display_agent_details := b
@@ -101,34 +100,12 @@ feature {NONE} -- Initialization
 			prefs: EB_DEBUGGER_DATA
 		do
 			Precursor
-			prefs := preferences.debugger_data
+			prefs := debugger_data
 			if prefs /= Void then
 				pbool := prefs.debug_output_evaluation_enabled_preference
 			end
 			dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
 			pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
-		end
-
-	set_default_parameters
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			Precursor {DEBUGGER_MANAGER}
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				set_slices (prefs.min_slice, prefs.max_slice)
-				set_displayed_string_size (prefs.default_displayed_string_size)
-				set_maximum_stack_depth (prefs.default_maximum_stack_depth)
-				set_critical_stack_depth (prefs.critical_stack_depth)
-
-				set_max_evaluation_duration (prefs.max_evaluation_duration)
-				prefs.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
-				check
-					displayed_string_size: displayed_string_size = prefs.default_displayed_string_size
-					max_evaluation_duration_set: prefs /= Void implies max_evaluation_duration = prefs.max_evaluation_duration
-				end
-			end
 		end
 
 	init_commands is
@@ -141,7 +118,7 @@ feature {NONE} -- Initialization
 				-- Show call stack command.
 			l_cmd := new_std_cmd (  Interface_names.t_call_stack_tool,
 									Pixmaps.icon_pixmaps.tool_call_stack_icon,
-									preferences.misc_shortcut_data.shortcuts.item ("show_call_stack_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_call_stack_tool"), True,
 									agent show_call_stack_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -150,7 +127,7 @@ feature {NONE} -- Initialization
 				-- Show objects tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_object_tool,
 									Pixmaps.icon_pixmaps.tool_objects_icon,
-									preferences.misc_shortcut_data.shortcuts.item ("show_objects_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_objects_tool"), True,
 									agent show_objects_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -159,7 +136,7 @@ feature {NONE} -- Initialization
 				-- Show thread tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_threads_tool,
 									Pixmaps.icon_pixmaps.tool_threads_icon,
-									preferences.misc_shortcut_data.shortcuts.item ("show_threads_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_threads_tool"), True,
 									agent show_thread_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -168,7 +145,7 @@ feature {NONE} -- Initialization
 				-- Show object viewer tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_Object_viewer_tool,
 									Pixmaps.icon_pixmaps.debugger_object_expand_icon,
-									preferences.misc_shortcut_data.shortcuts.item ("show_object_viewer_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_object_viewer_tool"), True,
 									agent show_object_viewer_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -335,39 +312,25 @@ feature {NONE} -- Initialization
 			Eiffel_project.manager.close_agents.extend (agent disable_commands_on_project_unloaded)
 		end
 
+feature -- Properties
+
+	controller: EB_DEBUGGER_CONTROLLER
+
 feature -- Settings
 
-	classic_debugger_timeout: INTEGER is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
+	dialog_data: EB_DIALOGS_DATA is
 		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.classic_debugger_timeout
-			end
+			Result := eb_preferences.dialog_data
 		end
 
-	classic_debugger_location: STRING is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
+	misc_shortcut_data: EB_MISC_SHORTCUT_DATA is
 		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.classic_debugger_location
-			end
+			Result := eb_preferences.misc_shortcut_data
 		end
 
-	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
+	debug_tool_data: EB_DEBUG_TOOL_DATA is
 		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.close_classic_dbg_daemon_on_end_of_debugging
-			end
+			Result := eb_preferences.debug_tool_data
 		end
 
 	confirm_ignore_all_breakpoints_preference_string: STRING is
@@ -375,37 +338,11 @@ feature -- Settings
 		local
 			prefs: EB_DIALOGS_DATA
 		do
-			prefs := preferences.dialog_data
+			prefs := dialog_data
 			if prefs /= Void then
 				Result := prefs.confirm_ignore_all_breakpoints_string
 			end
 		end
-
-	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.keep_stepping_info_dotnet_feature_preference
-			end
-		end
-
-	dotnet_debugger_entries: ARRAY [STRING] is
-			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
-		do
-			prefs := preferences.debugger_data
-			if prefs /= Void then
-				Result := prefs.dotnet_debugger
-			end
-		end
-
-feature -- Properties
-
-	controller: EB_DEBUGGER_CONTROLLER
 
 feature -- Access
 
@@ -624,7 +561,7 @@ feature -- tools management
 		local
 			l_button: EB_SD_COMMAND_TOOL_BAR_BUTTON
 		do
-			Result := preferences.debug_tool_data.retrieve_project_toolbar (toolbarable_commands)
+			Result := debug_tool_data.retrieve_project_toolbar (toolbarable_commands)
 			from
 				Result.start
 			until
@@ -1053,7 +990,7 @@ feature -- Output
 	debugger_warning_message (m: STRING_GENERAL) is
 		do
 			if ev_application = Void then
-				Precursor {DEBUGGER_MANAGER} (m)
+				Precursor (m)
 			else
 				prompts.show_warning_prompt (m, Void, Void)
 			end
@@ -1062,7 +999,7 @@ feature -- Output
 	debugger_error_message (m: STRING_GENERAL) is
 		do
 			if ev_application = Void then
-				Precursor {DEBUGGER_MANAGER} (m)
+				Precursor (m)
 			else
 				prompts.show_error_prompt (m, Void, Void)
 			end
@@ -1405,7 +1342,7 @@ feature -- Status setting
 
 				--| Grid Objects Tool
 			objects_tool.panel.set_manager (debugging_window)
-			objects_tool.update_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
+			objects_tool.update_cleaning_delay (debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 
 				--| object viewer Objects Tool
@@ -1414,7 +1351,7 @@ feature -- Status setting
 				--| Watches tool
 			l_wt_lst := watch_tool_list
 				--| At least one watch tool
-			nwt := Preferences.debug_tool_data.number_of_watch_tools
+			nwt := debug_tool_data.number_of_watch_tools
 			if l_wt_lst.count < nwt  then
 				from
 					l_tool := Void
@@ -1558,7 +1495,7 @@ feature -- Status setting
 			end
 
 			save_debug_docking_layout
-			Preferences.debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
+			debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
 
 				-- Free and recycle tools
 			raised := False
@@ -1674,7 +1611,7 @@ feature -- Debugging events
 
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
 		do
-			Result := Precursor {DEBUGGER_MANAGER} (bp)
+			Result := Precursor (bp)
 			if debugging_window /= Void then
 				refresh_breakpoints_tool
 			end
@@ -2007,7 +1944,7 @@ feature {NONE} -- Breakpoints events
 
 	on_breakpoints_change_event is
 		do
-			Precursor {DEBUGGER_MANAGER}
+			Precursor
 			display_breakpoints (False)
 			window_manager.synchronize_all_about_breakpoints
 		end
@@ -2020,7 +1957,7 @@ feature -- Application change
 			was_ignoring_bp: BOOLEAN
 		do
 			was_ignoring_bp := execution_ignoring_breakpoints
-			Precursor {DEBUGGER_MANAGER} (b)
+			Precursor (b)
 			if was_ignoring_bp /= execution_ignoring_breakpoints then
 				ignore_breakpoints_cmd.set_select (execution_ignoring_breakpoints)
 			end
@@ -2033,7 +1970,7 @@ feature -- Application change
 			error_occurred: BOOLEAN
 		do
 			was_enabled := execution_replay_recording_enabled
-			Precursor {DEBUGGER_MANAGER} (b)
+			Precursor (b)
 			error_occurred := b /= execution_replay_recording_enabled
 			if error_occurred then
 				debugger_warning_message ("Execution recording operation failed")
@@ -2069,14 +2006,14 @@ feature -- Application change
 	disable_assertion_checking is
 			-- Disable assertion checking
 		do
-			Precursor {DEBUGGER_MANAGER}
+			Precursor
 			assertion_checking_handler_cmd.set_select (True)
 		end
 
 	restore_assertion_checking is
 			-- Enable assertion checking	
 		do
-			Precursor {DEBUGGER_MANAGER}
+			Precursor
 			assertion_checking_handler_cmd.set_select (False)
 		end
 
@@ -2255,7 +2192,7 @@ feature {NONE} -- Implementation
 			rb2.enable_select
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)
-			if {prefs: EB_DEBUGGER_DATA} preferences.debugger_data then
+			if {prefs: EB_DEBUGGER_DATA} debugger_data then
 				if prefs.critical_stack_depth > 30000 then
 					element_nb.set_value (30000)
 				elseif prefs.critical_stack_depth = -1 then
@@ -2312,7 +2249,7 @@ feature {NONE} -- Implementation
 				nb := element_nb.value
 			end
 			close_dialog
-			prefs := preferences.debugger_data
+			prefs := debugger_data
 			if prefs /= Void then
 				prefs.critical_stack_depth_preference.set_value (nb)
 			end
@@ -2502,7 +2439,7 @@ feature {NONE} -- Implementation
 	show_watch_tool_preference: SHORTCUT_PREFERENCE is
 			-- Show watch tool preference
 		do
-			Result := preferences.misc_shortcut_data.shortcuts.item ("show_watch_tool")
+			Result := misc_shortcut_data.shortcuts.item ("show_watch_tool")
 		end
 
 feature {NONE} -- Memory management

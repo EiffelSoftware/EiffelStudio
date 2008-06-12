@@ -19,15 +19,17 @@ inherit
 			make as ht_make
 		end
 
-	SESSION_DATA_I
+	DEBUGGER_STORABLE_DATA_I
 		undefine
 			copy, is_equal
+		redefine
+			duplication
 		end
 
 create
 	make
 
-create {DEBUGGER_MANAGER}
+create {BREAK_LIST}
 	make_copy_for_saving
 
 feature {NONE} -- Initialization
@@ -57,6 +59,14 @@ feature {NONE} -- Initialization
 				end
 				lst.forth
 			end
+		end
+
+feature -- Duplication
+
+	duplication: like Current is
+			-- <Precursor>
+		do
+			create Result.make_copy_for_saving (Current)
 		end
 
 feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading

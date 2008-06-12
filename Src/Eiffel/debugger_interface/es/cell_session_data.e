@@ -1,55 +1,58 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+		Base interface for all session data object structures
+	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class
-	EC_PREFERENCES
+	CELL_SESSION_DATA [G -> DEBUGGER_STORABLE_DATA_I]
 
 inherit
-	COMPILER_PREFERENCES
-		rename
-			make as make_compiler
+	SESSION_DATA_I
+		export
+			{ANY} notify_session_of_value_change
 		end
 
 create
-	make
+	put
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
-			-- Create
-		require
-			preferences_not_void: a_preferences /= Void
+	put (a_item: like item) is
+			-- Make Current with `a_item'
 		do
-			make_compiler (a_preferences)
-			create misc_data.make (a_preferences)
-			create feature_tool_data.make (a_preferences)
-			create flat_short_data.make (a_preferences)
-			preferences := a_preferences
+			replace (a_item)
 		end
 
 feature -- Access
 
-	flat_short_data: EB_FLAT_SHORT_DATA
-		-- Preference data for class flat short.
+	item: G
+			-- Stored data
 
-	feature_tool_data: EB_FEATURE_TOOL_DATA
-		-- Preference data for the feature tool.
+	prepare_for_storage is
+		do
+			notify_session_of_value_change
+			if item /= Void then
+				item.prepare_for_storage
+			end
+		end
 
-	misc_data: EB_MISC_DATA
-		-- Misc data.  This should be removed.  neilc
+feature -- Change
 
-invariant
-	feature_tool_data_not_void: feature_tool_data /= Void
-	misc_data_not_void: misc_data /= Void
-	flat_short_data_not_void: flat_short_data /= Void
+	replace (a_item: like item) is
+			-- Set `item' to `a_item'
+		do
+			item := a_item
+			if item /= a_item then
+				notify_session_of_value_change
+			end
+		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -80,4 +83,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EC_PREFERENCES
+end

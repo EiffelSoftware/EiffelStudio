@@ -21,7 +21,7 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences (a_preferences)
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature {SHARED_COMPILER_PREFERENCES} -- Value
 
 	default_maximum_stack_depth: INTEGER is
 			-- 		
@@ -78,7 +78,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := max_evaluation_duration_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Classic specific
+feature {SHARED_COMPILER_PREFERENCES} -- Classic specific
 
 	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN is
 			-- Do we close the classic dbg daemon when the debugging is finished ?
@@ -96,7 +96,7 @@ feature {EB_SHARED_PREFERENCES} -- Classic specific
 			Result := classic_debugger_location_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Dotnet specific
+feature {SHARED_COMPILER_PREFERENCES} -- Dotnet specific
 
 	keep_stepping_info_dotnet_feature: BOOLEAN is
 			-- Do we keep stepping into dotnet feature or keep out as soon as possible ?
@@ -110,7 +110,7 @@ feature {EB_SHARED_PREFERENCES} -- Dotnet specific
 			Result := dotnet_debugger_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
+feature {SHARED_COMPILER_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE

@@ -766,7 +766,7 @@ feature -- Expression evaluation
 			f: FEATURE_I
 			dv: DUMP_VALUE
 		do
-			if cl /= Void then 
+			if cl /= Void then
 				f := cl.feature_named (fname)
 				if f /= Void then
 					dv := edv
@@ -825,10 +825,14 @@ feature -- Expression evaluation
 				dbg_eval := debugger_manager.dbg_evaluator
 				dbg_eval.reset
 				disable_assertion_check
-				if tgt = Void then
-					dbg_eval.evaluate_static_function (f, cl, params)
+				if f.is_once then
+					dbg_eval.evaluate_once (f)
 				else
-					dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+					if tgt = Void then
+						dbg_eval.evaluate_static_function (f, cl, params)
+					else
+						dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+					end
 				end
 				if not dbg_eval.error_occurred then
 					Result := dbg_eval.last_result_value

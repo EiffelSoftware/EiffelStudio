@@ -4385,8 +4385,6 @@ rt_private void update_memory_set ()
 			 * dispose routine on it and remove it from the stack. 
 			 */
 
-			CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
-
 			if (zone->ov_size & B_FWD)	/* Object survived GS collection. */
 			{
 				current = zone->ov_fwd;		/* Update entry. */
@@ -4400,6 +4398,8 @@ rt_private void update_memory_set ()
 			}
 			else 									/* Object is dead. */
 			{										/* Call dispose routine.*/
+				CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
+
 				dtype = zone->ov_dtype;	/* Need it for dispose.	*/ 
 
 				CHECK ("Has with dispose routine", Disp_rout (dtype));

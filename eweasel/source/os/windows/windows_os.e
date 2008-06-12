@@ -47,16 +47,6 @@ feature -- Path name operations
 			Result := full_file_name (dir_name, subdir)
 		end
 
-feature -- Process operations
-	
-	my_process_id: INTEGER is
-			-- Process id of currently executing process
-		external
-			"C inline use <windows.h>"
-		alias
-			"GetCurrentProcessId()"
-		end
-
 feature -- Date and time
 	
 	current_time_in_seconds: INTEGER is

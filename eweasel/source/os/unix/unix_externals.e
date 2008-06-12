@@ -177,16 +177,6 @@ feature -- Memory allocation and setting
 
 feature -- Process operations
 
-	unix_get_process_id: INTEGER is
-			-- Process id of currently executing process
-		external
-			"C inline use <unistd.h>"
-		alias
-			"[
-  				return (EIF_INTEGER) getpid();
-			]"
-		end;
-	
 	unix_fork_process: INTEGER is
 			-- Create a new process.  Return the process id
 			-- to the parent and 0 to the child
@@ -300,24 +290,6 @@ feature -- Sleeping
 				}
 			]"
 		end;
-
-	unix_pause is
-			-- Pause until signal is received
-		external
-			"C inline use <unistd.h>"
-		alias
-			"[
-  				int rc;
-
-  				rc = pause();
-  				/* Should never get here because when signal that is not being ignored
-     				is received, an exception should be raised.  But just in case... */
-  				if (rc == -1) {
-    					xraise(EN_SYS);
-  				}
-			]"
-		end;
-
 
 indexing
 	copyright: "[

@@ -196,7 +196,7 @@ feature -- Process operations
 			"[
   				pid_t pid;
 
-  				pid = fork();
+  				pid = eif_thread_fork();
   				if (pid == (pid_t) -1) {
     					xraise(EN_SYS);
   				}

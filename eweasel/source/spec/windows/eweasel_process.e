@@ -124,7 +124,29 @@ feature -- Control
 		end
 
 	terminate is
-			-- Terminate independent process
+			-- Terminate independent process - wait for
+			-- it to exit and get its status
+		local
+			a_boolean: BOOLEAN
+			terminated: BOOLEAN		
+		do
+			close
+			-- FIXME: Do not kill process if still active.
+			-- Just wait until process exits
+			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+			if a_boolean then
+				if last_process_result = cwin_still_active then
+					terminated := cwin_terminate_process (process_info.process_handle, 0)
+				end
+				cwin_close_handle (process_info.thread_handle)
+				cwin_close_handle (process_info.process_handle)
+			end
+			suspended := False
+		end
+
+	abort is
+			-- Abort independent process, forcibly killing
+			-- it if it is still running
 		local
 			a_boolean: BOOLEAN
 			terminated: BOOLEAN		

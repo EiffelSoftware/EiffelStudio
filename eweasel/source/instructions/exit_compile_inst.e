@@ -46,7 +46,7 @@ feature
 				execute_ok := False;
 				failure_explanation := "compilation not suspended";
 			else
-				compilation.terminate;
+				compilation.abort;
 				execute_ok := True;
 			end
 		end;

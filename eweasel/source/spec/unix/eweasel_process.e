@@ -120,7 +120,20 @@ feature -- Control
 		end;
 
 	terminate is
-			-- Terminate independent process
+			-- Terminate independent process - wait for
+			-- it to exit and get its status
+		do
+			close;
+			if child_process /= Void then
+				child_process.get_status_block;
+				child_process := Void;
+				suspended := False;
+			end;
+		end;
+
+	abort is
+			-- Abort independent process, forcibly killing
+			-- it if it is still running
 		do
 			close;
 			if child_process /= Void then

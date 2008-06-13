@@ -47,7 +47,7 @@ feature
 				execute_ok := False;
 				failure_explanation := "compilation not suspended";
 			else
-				compilation.terminate;
+				compilation.abort;
 				dir := test.environment.value (Test_dir_name); 
 				dir := os.full_directory_name (dir, Eiffel_gen_directory); 
 				os.delete_directory_tree (dir)

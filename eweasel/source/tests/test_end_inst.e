@@ -37,10 +37,10 @@ feature
 			e_comp := test.e_compilation;
 			c_comp := test.c_compilation;
 			if e_comp /= Void then
-				e_comp.terminate;
+				e_comp.abort;
 			end;
 			if c_comp /= Void then
-				c_comp.terminate;
+				c_comp.abort;
 			end
 			test.environment.unset_environment_variables
 		end;

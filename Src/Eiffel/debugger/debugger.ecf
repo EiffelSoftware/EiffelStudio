@@ -12,6 +12,11 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
 			<option>
 				<warning name="syntax" enabled="false"/>

@@ -27,8 +27,8 @@ EWEASEL=$EIFFEL_SRC/eweasel
 export EWEASEL
 cd $EIFFEL_SRC/eweasel/compilation
 clean_project
-finalize eweasel.ecf eweasel-st
-tgz_ccode eweasel-st eweasel.tar.bz2
+finalize eweasel.ecf eweasel_st
+tgz_ccode eweasel_st eweasel.tar.bz2
 if [ ! -f eweasel.tar.bz2 ]; then
 	echo Could not finalize eweasel
 	CANCEL

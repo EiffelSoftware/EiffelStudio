@@ -306,8 +306,8 @@ cdd %EIFFEL_SRC\eweasel\compilation
 clean_project
 set OLD_EWEASEL=%EWEASEL
 set EWEASEL=%EIFFEL_SRC\eweasel
-finalize eweasel.ecf eweasel-st
-cleanup_eiffel eweasel-st eweasel.exe
+finalize eweasel.ecf eweasel_st
+cleanup_eiffel eweasel_st eweasel.exe
 move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
 set EWEASEL=%OLD_EWEASEL
 set OLD_EWEASEL=

@@ -146,9 +146,9 @@ feature {NONE} -- Usage
 			-- Retrieve a list of available switch
 		once
 			create Result.make (3)
-			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional specification of a frame template file", True, False, "file", "Frame template file path.", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "file", "File name to give output file.", False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Specification of a frame template file", True, False, "file", "Frame template file path.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "A class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "An output file name", True, False, "file", "File name to give output file.", False))
 
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (slice_switch, "Indicates to perform a slicing operation on a matrix PNG file.", False, False, "file", "File name to an associated matrix PNG file.", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (pngs_switch, "Specified the location to save sliced PNGs into.", True, False, "dir", "Location to store PNG slices into.", False))
@@ -164,19 +164,19 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Option Names
 
-	frame_switch: STRING = "frame"
+	frame_switch: STRING = "f|frame"
 		-- Frame file switch
 
-	class_switch: STRING = "class"
+	class_switch: STRING = "n|class_name"
 		-- Alt class name switch
 
-	output_switch: STRING = "output"
+	output_switch: STRING = "o|output_file"
 		-- Alt output file name switch
 
-	slice_switch: STRING = "slice"
+	slice_switch: STRING = "s|slice"
 		-- Location of a PNG matix
 
-	pngs_switch: STRING = "pngs";
+	pngs_switch: STRING = "g|pngs";
 		-- Location where sliced pngs will be stored
 
 indexing

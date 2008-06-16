@@ -16,23 +16,40 @@ inherit
 create
 	make
 
-feature -- Icons
-	
-${ACCESS}		
-
 feature -- Access
 
-	pixel_width: INTEGER = ${PIXEL_WIDTH}
-			-- Element width
+	icon_width: NATURAL_8 = ${PIXEL_WIDTH}
+			-- <Precursor>
 
-	pixel_height: INTEGER = ${PIXEL_HEIGHT}
-			-- Element width
+	icon_height: NATURAL_8 = ${PIXEL_HEIGHT}
+			-- <Precursor>
 
-	width: INTEGER = ${WIDTH}
-			-- Matrix width
+	width: NATURAL_8 = ${WIDTH}
+			-- <Precursor>
 
-	height: INTEGER = ${HEIGHT}
-			-- Matrix height
+	height: NATURAL_8 = ${HEIGHT}
+			-- <Precursor>
+
+feature {NONE} -- Access
+
+	matrix_pixel_border: NATURAL_8 = ${PIXEL_BORDER}
+			-- <Precursor>
+
+feature -- Icons
+	
+${ICONS}
+
+feature -- Constants: Icon names
+
+${ICON_NAMES}
+
+feature {NONE} -- Basic operations
+
+	populate_coordinates_table (a_table: !DS_HASH_TABLE [!STRING, !TUPLE [x: NATURAL_8; y: NATURAL_8]])
+			-- <Precursor>
+		do
+${COORDINATES}
+		end
 
 ;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

@@ -36,48 +36,66 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	pixel_width: INTEGER is ${PIXEL_WIDTH}
-			-- Element width
+	icon_width: NATURAL_8 = ${PIXEL_WIDTH}
+			-- <Precursor>
 
-	pixel_height: INTEGER is ${PIXEL_HEIGHT}
-			-- Element width
+	icon_height: NATURAL_8 = ${PIXEL_HEIGHT}
+			-- <Precursor>
 
-	width: INTEGER is ${WIDTH}
-			-- Matrix width
+	width: NATURAL_8 = ${WIDTH}
+			-- <Precursor>
 
-	height: INTEGER is ${HEIGHT}
-			-- Matrix height
+	height: NATURAL_8 = ${HEIGHT}
+			-- <Precursor>
 
-${ACCESS}		
+feature {NONE} -- Access
+
+	matrix_pixel_border: NATURAL_8 = ${PIXEL_BORDER}
+			-- <Precursor>
+
+	matrix_buffer: !EV_PIXEL_BUFFER
+			-- Raw matrix pixel buffer
+
+feature -- Icons
+	
+${ICONS}
+
+feature -- Constants: Icon names
+
+${ICON_NAMES}
+
 feature {NONE} -- Query
 
-	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE is
-			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
+	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE
+			-- Retrieves a rectangle from an icon matrix coordinates.
+			--
+			-- `a_x': Icon x coordinate.
+			-- `a_y': Icon y coordinate.
+			-- `Result': A rectangle representing the icon at the supplied coordinates.
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= ${WIDTH}
+			a_x_small_enough: a_x <= width
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_y <= ${HEIGHT}
+			a_y_small_enough: a_y <= height
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
+			l_border: like matrix_pixel_border
 		do
-			l_x_offset := ((a_x - 1) * (${PIXEL_WIDTH} + 1)) + 1
-			l_y_offset := ((a_y - 1) * (${PIXEL_HEIGHT} + 1)) + 1
+			l_border := matrix_pixel_border
+			l_x_offset := ((a_x - 1) * (icon_width + l_border)) + l_border
+			l_y_offset := ((a_y - 1) * (icon_height + l_border)) + l_border
 
 			Result := rectangle
 			Result.set_x (l_x_offset)
 			Result.set_y (l_y_offset)
-			Result.set_width (${PIXEL_WIDTH})
-			Result.set_height (${PIXEL_HEIGHT})
+			Result.set_width (icon_width)
+			Result.set_height (icon_height)
 		end
+		
+feature {NONE} -- Implementation: cache
 
-feature {NONE} -- Implementation
-
-	raw_buffer: !EV_PIXEL_BUFFER
-			-- raw matrix pixel buffer
-
-	frozen rectangle: !EV_RECTANGLE is
+	frozen rectangle: !EV_RECTANGLE
 			-- Reusable rectangle for `pixmap_from_constant'.
 		once
 			create Result

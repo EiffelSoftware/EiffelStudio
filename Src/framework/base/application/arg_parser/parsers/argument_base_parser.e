@@ -1775,8 +1775,8 @@ feature {NONE} -- Internal Implementation Cache
 
 invariant
 	internal_option_values_attached: parsed implies internal_option_values /= Void
-	internal_values_attached: parsed implies internal_values /= Void
-	parsed_means_successful: parsed implies successful
+	internal_values_attached: successful implies internal_values /= Void
+	successful_means_parsed: successful implies parsed
 	max_display_width_positive: max_display_width > 0
 
 indexing

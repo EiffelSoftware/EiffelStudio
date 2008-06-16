@@ -44,10 +44,57 @@ feature -- Access
 	pixel_width: NATURAL
 			-- Tile pixel width
 
+	pixel_border: NATURAL
+			-- Border used to separate icons
+
 feature {NONE} -- Access
 
-	tile_prefix (a_literal: INI_LITERAL): STRING is
-			-- Retrieves a tile prefix for `a_literal'
+	current_x: NATURAL
+			-- Current Y position in matrix file
+
+	current_y: NATURAL
+			-- Current Y position in matrix file
+
+	suffix: STRING
+			-- Generated icon name suffix
+
+feature -- Status report
+
+	is_document_processed: BOOLEAN
+			-- Inidicates if a document has been processed, in which case `reset' should be called.
+
+feature {NONE} -- Status report
+
+	is_continuation_section (a_section: INI_SECTION): BOOLEAN
+			-- Determines if section `a_section' is a continued section (does not increate `current_y').
+		require
+			a_section_attached: a_section /= Void
+		do
+			Result := a_section.label.item (1) = continue_mark
+		end
+
+feature {NONE} -- Query
+
+	section_label (a_section: INI_SECTION): STRING
+			-- Retrieves formatted section label from `a_section'
+		require
+			a_section_attached: a_section /= Void
+		local
+			l_label: STRING
+		do
+			l_label := a_section.label
+			if is_continuation_section (a_section) and l_label.count > 1 then
+				Result := l_label.substring (2, l_label.count)
+			else
+				Result := l_label
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	icon_prefix (a_literal: INI_LITERAL): !STRING
+			-- Retrieves a icon prefix for `a_literal'
 		require
 			a_literal_attached: a_literal /= Void
 		local
@@ -63,25 +110,17 @@ feature {NONE} -- Access
 			Result.append (l_label)
 			Result.prune_all_trailing ('_')
 			Result.append_character ('_')
-		ensure
-			result_attached: Result /= Void
 		end
 
-	tile_suffix: STRING is
-			-- Retrieves buffer tile name suffix
+	icon_suffix: !STRING
+			-- Retrieves icon name suffix
 		do
-			Result := suffix
-			if Result = Void then
-				Result := default_feature_suffix
+			if suffix = Void then
+				Result := default_icon_suffix
+			else
+				Result ?= suffix
 			end
-		ensure
-			result_attached: Result /= Void
 		end
-
-feature -- Status report
-
-	document_processed: BOOLEAN
-			-- Inidicates if a document has been processed, in which case `reset' should be called.
 
 feature -- Basic Operations
 
@@ -91,7 +130,7 @@ feature -- Basic Operations
 		require
 			a_doc_attached: a_doc /= Void
 		do
-			if document_processed then
+			if is_document_processed then
 				reset
 			end
 
@@ -109,9 +148,9 @@ feature -- Basic Operations
 				end
 			end
 
-			document_processed := True
+			is_document_processed := True
 		ensure
-			document_processed: document_processed
+			is_document_processed: is_document_processed
 		end
 
 feature {NONE} -- Basic Operations
@@ -123,23 +162,25 @@ feature {NONE} -- Basic Operations
 			height := 0
 			pixel_height := 0
 			pixel_width := 0
+			pixel_border := 1
 			current_x := 0
 			current_y := 0
-			document_processed := False
+			is_document_processed := False
 			reset_error_manager
 		ensure
 			width_reset: width = 0
 			height_reset: height = 0
 			pixel_height_reset: pixel_height = 0
 			pixel_width_reset: pixel_width = 0
+			pixel_border_reset: pixel_border = 1
 			current_x_reset: current_x = 0
 			current_y_reset: current_y = 0
-			not_document_processed: not document_processed
+			not_is_document_processed: not is_document_processed
 		end
 
 feature {NONE} -- Processing
 
-	process_properties (a_properties: LIST [INI_PROPERTY]) is
+	process_properties (a_properties: LIST [INI_PROPERTY])
 			-- Process document properties
 		require
 			a_properties_attached: a_properties /= Void
@@ -156,7 +197,7 @@ feature {NONE} -- Processing
 			a_properties_unmoved: a_properties.cursor.is_equal (old a_properties.cursor)
 		end
 
-	process_property (a_property: INI_PROPERTY): BOOLEAN is
+	process_property (a_property: INI_PROPERTY): BOOLEAN
 			-- Process document properties
 		require
 			a_property_attached: a_property /= Void
@@ -183,6 +224,10 @@ feature {NONE} -- Processing
 				if l_value.is_natural then
 					height := l_value.to_natural
 				end
+			elseif l_name.is_equal (pixel_border_property) then
+				if not l_value.is_natural then
+					pixel_border := l_value.to_natural
+				end
 			elseif l_name.is_equal (suffix_property) then
 				if not l_value.is_empty then
 					suffix := l_value
@@ -192,7 +237,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_sections (a_sections: LIST [INI_SECTION]) is
+	process_sections (a_sections: LIST [INI_SECTION])
 			-- Process a section in an INI file.
 		require
 			successful: successful
@@ -225,7 +270,7 @@ feature {NONE} -- Processing
 			a_sections_unmoved: a_sections.cursor.is_equal (old a_sections.cursor)
 		end
 
-	process_section (a_section: INI_SECTION) is
+	process_section (a_section: INI_SECTION)
 			-- Process a section in an INI file.
 		require
 			successful: successful
@@ -236,14 +281,10 @@ feature {NONE} -- Processing
 			l_cursor: CURSOR
 			l_height: like height
 			l_width: like width
-			l_fsuffix: like tile_suffix
 			x, y: NATURAL
 		do
 			l_literals := a_section.literals
 			if not l_literals.is_empty then
-
-				l_fsuffix := tile_suffix
-
 				l_height := height
 				l_width := width
 				x := current_x
@@ -272,7 +313,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL; a_y: NATURAL) is
+	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL; a_y: NATURAL)
 			-- Processes a literal from an INI matrix file.
 		require
 			successful: successful
@@ -286,7 +327,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Validation
 
-	validate_properties (a_doc: INI_DOCUMENT) is
+	validate_properties (a_doc: INI_DOCUMENT)
 			-- Validates properties examined in `generate' or those that are in `a_doc' that have not been examined from some reason.
 		require
 			a_doc_attached: a_doc /= Void
@@ -305,33 +346,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-feature {NONE} -- Query
 
-	section_label (a_section: INI_SECTION): STRING is
-			-- Retrieves formatted section label from `a_section'
-		require
-			a_section_attached: a_section /= Void
-		local
-			l_label: STRING
-		do
-			l_label := a_section.label
-			if is_continuation_section (a_section) and l_label.count > 1 then
-				Result := l_label.substring (2, l_label.count)
-			else
-				Result := l_label
-			end
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end
-
-	is_continuation_section (a_section: INI_SECTION): BOOLEAN is
-			-- Determines if section `a_section' is a continued section (does not increate `current_y').
-		require
-			a_section_attached: a_section /= Void
-		do
-			Result := a_section.label.item (1) = continue_mark
-		end
 
 feature {NONE} -- Formatting
 
@@ -369,30 +384,22 @@ feature {NONE} -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Constants: Defaults
 
-	current_x: NATURAL
-			-- Current Y position in pixmap file
+	default_icon_suffix: !STRING = "_icon"
+			-- Default icon suffix for a full icon name generation.
 
-	current_y: NATURAL
-			-- Current Y position in pixmap file
+feature {NONE} -- Constants: Property Names
 
-	suffix: STRING
-			-- Generated feature name suffix
+	class_name_property: !STRING = "name"
+	width_property: !STRING = "width"
+	height_property: !STRING = "height"
+	pixel_width_property: !STRING = "pixel_width"
+	pixel_height_property: !STRING = "pixel_height"
+	pixel_border_property: !STRING = "pixel_border"
+	suffix_property: !STRING = "suffix"
 
-feature {NONE} -- Constant Property Names
-
-	default_feature_suffix: STRING is "_icon"
-
-feature {NONE} -- Constant Property Names
-
-	width_property: STRING is "width"
-	height_property: STRING is "height"
-	pixel_width_property: STRING is "pixel_width"
-	pixel_height_property: STRING is "pixel_height"
-	suffix_property: STRING is "suffix"
-
-	continue_mark: CHARACTER is '@'
+	continue_mark: CHARACTER = '@'
 			-- Character mark on sections to indication a continuation
 
 invariant

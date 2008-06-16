@@ -204,7 +204,6 @@ invariant
 	description_attached: description /= Void
 	not_description_is_empty: not description.is_empty
 	lower_case_id_attached: lower_case_id /= Void
-	lower_case_id_is_name_in_lower: name.as_lower.is_equal (lower_case_id)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

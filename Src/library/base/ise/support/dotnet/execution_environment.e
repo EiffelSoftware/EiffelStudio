@@ -146,6 +146,16 @@ feature -- Status setting
 			internal_launch (s, False)
 		end
 
+	sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
+		do
+			{SYSTEM_THREAD}.sleep_time_span
+				({TIME_SPAN}.from_ticks (nanoseconds // 100))
+		end
+
 feature {NONE} -- Implementation
 
 	last_process: SYSTEM_DLL_PROCESS

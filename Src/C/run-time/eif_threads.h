@@ -43,7 +43,6 @@
 
 #define eif_thr_yield()
 #define eif_thr_join_all()
-#define eif_thr_sleep(nanoseconds)
 #define eif_thr_wait(term)
 #define eif_thr_join(term)
 
@@ -343,7 +342,6 @@ RT_LNK unsigned int eif_thr_is_initialized(void);
 RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
 RT_LNK void eif_thr_create(EIF_OBJECT, EIF_POINTER);
 RT_LNK void eif_thr_exit(void);
-RT_LNK void eif_thr_sleep(EIF_INTEGER_64);
 RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);

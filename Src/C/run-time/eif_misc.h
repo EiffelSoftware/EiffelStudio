@@ -78,6 +78,7 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define eif_set_bit_with_mask(i,b,m)	(b ? (i) | (m) : (i) & ~(m))
 
 
+RT_LNK void eif_sleep(EIF_INTEGER_64);
 RT_LNK EIF_INTEGER eif_system (char *s);
 RT_LNK void eif_system_asynchronous (char *s);
 

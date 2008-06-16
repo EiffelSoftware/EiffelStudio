@@ -63,11 +63,12 @@ feature -- Sleep
 	sleep (nanoseconds: INTEGER_64) is
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		obsolete
+			"Use {EXECUTION_ENVIRONMENT}.sleep instead."
 		require
 			non_negative_nanoseconds: nanoseconds >= 0
 		do
-			{SYSTEM_THREAD}.sleep_time_span
-				({TIME_SPAN}.from_ticks (nanoseconds // 100))
+			(create {EXECUTION_ENVIRONMENT}).sleep (nanoseconds)
 		end
 	
 feature {NONE} -- Implementation

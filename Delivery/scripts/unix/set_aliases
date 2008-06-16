@@ -5,9 +5,9 @@ INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel62
+INSTALL_DIR=`pwd`/Eiffel63
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel62
+FINAL_INSTALL_DIR=`pwd`/Eiffel63
 # Where documentation will be generated
 DOCUMENT_DIR=`pwd`
 # Where all.tar.bz2 files should be stored

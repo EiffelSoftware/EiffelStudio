@@ -9,7 +9,7 @@ class
 inherit
 	PROCESS_TIMER
 
-	THREAD_CONTROL
+	EXECUTION_ENVIRONMENT
 
 create
 	make

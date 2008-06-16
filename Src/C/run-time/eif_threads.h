@@ -337,7 +337,7 @@ RT_LNK pid_t eif_thread_fork(void);
 
 /* Exported functions */
 RT_LNK void eif_thr_init_root(void);
-RT_LNK void eif_thr_register(void);
+RT_LNK void eif_thr_register(int is_external);
 RT_LNK unsigned int eif_thr_is_initialized(void);
 RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
 RT_LNK void eif_thr_create(EIF_OBJECT, EIF_POINTER);

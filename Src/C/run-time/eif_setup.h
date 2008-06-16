@@ -169,7 +169,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 
 #ifdef WORKBENCH
 #define EIF_REGISTER_THREAD(fail_func) \
-	eif_thr_register(); \
+	eif_thr_register(1); \
 	eif_set_thr_context ();	\
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
@@ -177,7 +177,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	init_emnger();
 #else
 #define EIF_REGISTER_THREAD(fail_func) \
-	eif_thr_register(); \
+	eif_thr_register(1); \
 	eif_set_thr_context ();\
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
@@ -198,7 +198,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 #define EIF_INITIALIZE_AUX_THREAD \
 	GTCX; \
 	if (!eif_globals) { \
-		eif_thr_register(); \
+		eif_thr_register(1); \
 		eif_set_thr_context ();\
 		initstk(); \
 	}

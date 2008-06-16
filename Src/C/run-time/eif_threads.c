@@ -79,7 +79,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 
 rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
-rt_public void eif_thr_register(void);
+rt_public void eif_thr_register(int is_external);
 rt_public unsigned int eif_thr_is_initialized(void);
 rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
@@ -319,7 +319,7 @@ rt_public void eif_thr_init_root(void)
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
 	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
 	eif_thr_init_global_mutexes();
-	eif_thr_register();
+	eif_thr_register(0);
 #ifdef ISE_GC
 	create_scavenge_zones();
 #endif
@@ -387,7 +387,7 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_TSD_DESTROY(rt_global_key, "Could not free key");
 }
 
-rt_public void eif_thr_register(void)
+rt_public void eif_thr_register(int is_external)
 {
 	/*
 	 * Allocates memory for the rt_globals structure, initializes it
@@ -400,32 +400,37 @@ rt_public void eif_thr_register(void)
 
 	rt_global_context_t *rt_globals = eif_new_context();
 
-	if (not_root_thread) {
+	{
 		EIF_GET_CONTEXT
-	
-		/* Allocate room for once manifest strings array. */
-		ALLOC_OMS (EIF_oms);
 
-		if (EIF_once_count == 0) {
-			EIF_once_values = (EIF_once_value_t *) 0;
+		if (not_root_thread) {
+		
+			/* Allocate room for once manifest strings array. */
+			ALLOC_OMS (EIF_oms);
+
+			if (EIF_once_count == 0) {
+				EIF_once_values = (EIF_once_value_t *) 0;
+			} else {
+				/*
+				 * Allocate room for once values for all threads but the initial 
+				 * because we do not have the number of onces yet
+				 * Also set value root thread id.
+				 */
+				EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
+					/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+				if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
+					enomem();
+				memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
+			}
 		} else {
-			/*
-			 * Allocate room for once values for all threads but the initial 
-			 * because we do not have the number of onces yet
-			 * Also set value root thread id.
-			 */
-			EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
-				/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-			if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
-				enomem();
-			memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
-		}
-	} else {
-		not_root_thread = 1;
-		eif_thr_id = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+			not_root_thread = 1;
+			eif_thr_id = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 #ifdef WORKBENCH
-		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
+			dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
 #endif
+		}
+			/* Is current thread created by the EiffelThread library or by a third party library */
+		eif_globals->is_external_cx = is_external;
 	}
 }
 
@@ -709,7 +714,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		 * safely later on */
 	LAUNCH_MUTEX_LOCK;
 	LAUNCH_MUTEX_UNLOCK;
-	eif_thr_register();
+	eif_thr_register(0);
 	{
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
@@ -1279,8 +1284,8 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	int is_main_thread_blocked = 0;
 #ifndef HAS_THREAD_CANCELLATION
 	int error;
-	struct stack_list running_thread_list = {0, 0, { NULL }};
 #endif
+	struct stack_list running_thread_list = {0, 0, { NULL }};
 
 		/* Block all running threads. */
 	eif_synchronize_gc (rt_globals);
@@ -1322,13 +1327,18 @@ rt_shared void eif_terminate_all_other_threads (void) {
 				{
 						/* Worst case scenario, some threads are still running. */
 					if (thread_globals->eif_thr_context_cx) {
-
+						if (!thread_globals->eif_globals->is_external_cx) {
 #ifdef HAS_THREAD_CANCELLATION
-						EIF_THR_CANCEL(*thread_globals->eif_thr_id_cx);
+							EIF_THR_CANCEL(*thread_globals->eif_thr_id_cx);
 #else
-						load_stack_in_gc (&running_thread_list, thread_globals);
-						EIF_THR_KILL(*thread_globals->eif_thr_id_cx, error);
+							load_stack_in_gc (&running_thread_list, thread_globals);
+							EIF_THR_KILL(*thread_globals->eif_thr_id_cx, error);
 #endif
+						} else {
+								/* Thread has not been created by our runtime or the EiffelThread
+								 * library, we simply record it for removing its data from the runtime. */
+							load_stack_in_gc (&running_thread_list, thread_globals);
+						}
 					} else {
 							/* Main thread is blocked this is bad. */
 						is_main_thread_blocked = 1;
@@ -1336,12 +1346,12 @@ rt_shared void eif_terminate_all_other_threads (void) {
 				}
 			}
 		}
-#ifndef HAS_THREAD_CANCELLATION
-		nb = running_thread_list.count;
-		for (i = 0; i < nb; i++) {
-			eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
+		if (running_thread_list.count > 0) {
+			nb = running_thread_list.count;
+			for (i = 0; i < nb; i++) {
+				eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
+			}
 		}
-#endif
 	}
 
 	eif_unsynchronize_gc (rt_globals);

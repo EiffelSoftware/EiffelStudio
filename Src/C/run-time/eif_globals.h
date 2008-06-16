@@ -120,7 +120,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* Polymorphism. */
 	int eif_optimize_return_cx;	/* Should caller optimize return? */
 	EIF_TYPED_VALUE eif_optimized_return_value_cx;	/* Location where data is stored. */
-	
+
+		/* eif_threads.c */
+	int is_external_cx;					/* Is current thread created by an external entity. */
+
 } eif_global_context_t;
 
 

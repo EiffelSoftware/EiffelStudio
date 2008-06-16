@@ -76,7 +76,7 @@ feature {NONE} -- Icon generation
 			if not retried then
 				create l_fn.make
 				l_fn.set_directory (a_location)
-				l_fn.set_file_name (format_eiffel_name (a_prefix + a_name + tile_suffix) + ".png")
+				l_fn.set_file_name (format_eiffel_name (a_prefix + a_name + icon_suffix) + ".png")
 				l_pixmap := a_matrix.sub_pixmap (pixel_rectangle (a_x, a_y, a_pw, a_ph))
 				retried := l_pixmap = Void
 				if not retried then
@@ -96,7 +96,7 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
 			-- Processes a literal from an INI matrix file.
 		do
-			generate_icon (a_item.name, tile_prefix (a_item), png_location, a_x, a_y, pixel_width, pixel_height, matrix)
+			generate_icon (a_item.name, icon_prefix (a_item), png_location, a_x, a_y, pixel_width, pixel_height, matrix)
 		end
 
 feature {NONE} -- Implementation

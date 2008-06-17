@@ -36,24 +36,8 @@ feature {NONE} -- Access
 	class_name: STRING
 			-- Class name specified in matrix file
 
---	icon_buffer_suffix: STRING
---			-- Retrieves buffer feature name suffix. This is either a default suffix of one set in `suffix'
---			-- This is
---		local
---			l_suffix: like suffix
---		once
---			l_suffix := suffix
---			if l_suffix /= Void then
---				create  Result.make (default_buffer_suffix.count + l_suffix.count)
---				Result.append (l_suffix)
---				Result.append (default_buffer_suffix)
---			else
---				Result := default_buffer_suffix
---			end
---		ensure
---			result_attached: Result /= Void
---			not_result_is_empty: not Result.is_empty
---		end
+	animation_pixmaps: !HASH_TABLE [!ARRAYED_LIST [!STRING], !STRING]
+			-- Table of pixmap animations
 
 feature -- Basic Operations
 
@@ -68,8 +52,14 @@ feature -- Basic Operations
 			l_cursor: CURSOR
 			l_of: STRING
 			l_buffer: STRING
+			l_temp_buffer: !STRING
 			l_buffers: like internal_buffers
 			l_fragment: STRING
+			l_anim_pixmaps: !like animation_pixmaps
+			l_animations: !ARRAYED_LIST [!STRING]
+			l_iname: !STRING
+			l_ibname: !STRING
+			l_name: !STRING
 		do
 			reset
 
@@ -115,6 +105,63 @@ feature -- Basic Operations
 						l_props.go_to (l_cursor)
 					end
 
+						-- Generate any animations
+					l_anim_pixmaps := animation_pixmaps
+					if not l_anim_pixmaps.is_empty then
+						from l_anim_pixmaps.start until l_anim_pixmaps.after loop
+							l_animations := l_anim_pixmaps.item_for_iteration
+							if l_animations.count > 1 then
+									-- More than one entry, so it must be an animation
+								l_name := l_anim_pixmaps.key_for_iteration
+
+									-- Create feature names
+								create l_iname.make_from_string (l_name)
+								l_iname.append (icon_animation_suffix)
+								l_iname := format_eiffel_name (l_iname)
+
+								create l_ibname.make_from_string (l_name)
+								l_ibname.append (icon_buffer_suffix)
+								l_ibname.append (icon_animation_suffix)
+								l_ibname := format_eiffel_name (l_ibname)
+
+									-- Pixmap icons animations
+								create l_temp_buffer.make (400)
+								from l_animations.start until l_animations.after loop
+									l_temp_buffer.append (string_formatter.format (icon_animation_registration_template , [l_animations.item, l_animations.index]))
+									l_animations.forth
+								end
+								if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+									l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+								end
+								buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
+
+									-- Pixel buffer icon animations
+								l_temp_buffer.wipe_out
+								from l_animations.start until l_animations.after loop
+									l_temp_buffer.append (string_formatter.format (icon_buffer_animation_registration_template , [l_animations.item, l_animations.index]))
+									l_animations.forth
+								end
+								if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+									l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+								end
+								buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
+							end
+							l_anim_pixmaps.forth
+						end
+					end
+
+						-- Remove extra whitespace from animation features buffer
+					l_temp_buffer := buffer (animations_token)
+					if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+						l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+					end
+
+						-- Remove extra whitespace from icon features buffer
+					l_temp_buffer := buffer (icons_token)
+					if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+						l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+					end
+
 						-- Replace the used buffers
 					l_buffers := internal_buffers
 					if not l_buffers.is_empty then
@@ -149,10 +196,12 @@ feature {NONE} -- Basic Operations
 		do
 			class_name := Void
 			create internal_buffers.make (4)
+			create animation_pixmaps.make (13)
 			Precursor {MATRIX_FILE_GENERATOR}
 		ensure then
 			class_name_reset: class_name = Void
 			internal_buffers_reset: internal_buffers.is_empty
+			animation_pixmaps_reset: animation_pixmaps.is_empty
 		end
 
 	generate_output_file (a_file_name: STRING; a_content: STRING)
@@ -207,19 +256,24 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		local
-			l_name: STRING
-			l_base: STRING
-			l_prefix: STRING
-			l_isuffix: like icon_suffix
-			l_ibsuffix: like icon_buffer_suffix
-			l_csuffix: like name_suffix
-			l_iname: STRING
-			l_ibname: STRING
-			l_cname: STRING
+			l_name: !STRING
+			l_base: !STRING
+			l_prefix: !STRING
+			l_isuffix: !like icon_suffix
+			l_ibsuffix: !like icon_buffer_suffix
+			l_csuffix: !like name_suffix
+			l_iname: !STRING
+			l_ibname: !STRING
+			l_cname: !STRING
+			l_aname: !STRING
+			l_animations: !ARRAYED_LIST [!STRING]
+			l_index: INTEGER
+			l_anim_regex: !like animation_regex
+			l_anim_pixmaps: !like animation_pixmaps
 		do
 				-- Create feature prefix
 			l_prefix := icon_prefix (a_item)
-			l_name := a_item.name
+			l_name ?= a_item.name
 			l_name.to_lower
 
 				-- Name constants
@@ -232,7 +286,7 @@ feature {NONE} -- Processing
 			buffer (icon_names_token).append (string_formatter.format (icon_name_constant_template, [l_cname, l_name]))
 
 				-- Coordinates
-			buffer (coordinates_token).append (string_formatter.format (icon_name_registration_template, [l_cname, a_x, a_y]))
+			buffer (coordinates_token).append (string_formatter.format (icon_name_registration_template, [a_x, a_y, l_cname]))
 
 			create l_base.make (l_prefix.count + l_name.count)
 			l_base.append (l_prefix)
@@ -253,6 +307,30 @@ feature {NONE} -- Processing
 			l_ibname.append (l_ibsuffix)
 			l_ibname := format_eiffel_name (l_ibname)
 			buffer (icons_token).append (string_formatter.format (icon_buffer_template, [l_ibname, a_item.name, l_cname]))
+
+				-- Check animation items
+			l_anim_regex := animation_regex
+			l_anim_regex.match (l_name)
+			if l_anim_regex.has_matched then
+				create l_aname.make (l_prefix.count + l_name.count)
+				l_aname.append (l_prefix)
+				l_aname.append (l_anim_regex.captured_substring (1))
+				l_aname := format_eiffel_name (l_aname)
+
+					-- Add item to the animation list
+				l_anim_pixmaps := animation_pixmaps
+				if l_anim_pixmaps.has (l_aname) then
+						-- An animation list already exists
+					l_animations := l_anim_pixmaps.item (l_aname)
+				else
+						-- Create a new list
+					create l_animations.make (1)
+					l_anim_pixmaps.force (l_animations, l_aname)
+				end
+
+				l_index := l_anim_regex.captured_substring (2).to_integer
+				l_animations.extend (l_cname)
+			end
 		end
 
 feature {NONE} -- Validation
@@ -263,6 +341,9 @@ feature {NONE} -- Validation
 			Precursor {MATRIX_FILE_GENERATOR} (a_doc)
 			if a_doc.property_of_name (icons_token, True) /= Void then
 				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([icons_token]), False)
+			end
+			if a_doc.property_of_name (animations_token, True) /= Void then
+				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([animations_token]), False)
 			end
 			if a_doc.property_of_name (icon_names_token, True) /= Void then
 				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([icon_names_token]), False)
@@ -315,13 +396,22 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
-feature {NONE} -- Tokens
+feature {NONE} -- Regular expressions
 
-
+	animation_regex: !RX_PCRE_MATCHER
+			-- Regular expression to match animation items
+		once
+			create Result.make
+			Result.set_caseless (True)
+			Result.compile ("^([a-z][ \t]*[a-z0-9_]*)[ \t]*([0-9]+)$")
+		ensure
+			result_is_compiled: Result.is_compiled
+		end
 
 feature {NONE} -- Constants: Defaults
 
 	icon_buffer_suffix: STRING = "_buffer"
+	icon_animation_suffix: STRING = "_anim"
 	name_suffix: STRING = "_name"
 	default_class_name: STRING = "ICON_MATRIX"
 	default_nan: STRING = "NaN"
@@ -329,6 +419,7 @@ feature {NONE} -- Constants: Defaults
 feature {NONE} -- Constants: Token names
 
 	icons_token: STRING = "ICONS"
+	animations_token: STRING = "ANIMATIONS"
 	icon_names_token: STRING = "ICON_NAMES"
 	coordinates_token: STRING = "COORDINATES"
 
@@ -337,8 +428,14 @@ feature {NONE} -- Constants: Templates
 	icon_name_constant_template: !STRING = "%T{1}: !STRING = %"{2}%"%N"
 			-- Template for icon name constants
 
-	icon_name_registration_template: !STRING = "%T%T%Ta_table.force_last ([{2}, {3}], {1})%N"
+	icon_name_registration_template: !STRING = "%T%T%Ta_table.force_last ([{{NATURAL_8}}{1}, {{NATURAL_8}}{2}], {3})%N"
 			-- Template for icon name constants
+
+	icon_animation_registration_template: !STRING = "%T%T%TResult.put (named_icon ({1}), {2})%N"
+			-- Template for icon animation indexes
+
+	icon_buffer_animation_registration_template: !STRING = "%T%T%TResult.put (named_icon_buffer ({1}), {2})%N"
+			-- Template for icon buffer animation indexes
 
 	icon_template: !STRING =
 			-- Template used for access features
@@ -347,7 +444,7 @@ feature {NONE} -- Constants: Templates
 		%%T%Trequire%N%
 		%%T%T%Thas_named_icon: has_named_icon ({3})%N%
 		%%T%Tonce%N%
-		%%T%T%TResult := named_icon_pixmap ({3})%N%
+		%%T%T%TResult := named_icon ({3})%N%
 		%%T%Tend%N%N"
 
 	icon_buffer_template: !STRING =
@@ -360,7 +457,23 @@ feature {NONE} -- Constants: Templates
 		%%T%T%TResult := named_icon_buffer ({3})%N%
 		%%T%Tend%N%N"
 
---		%%T%T%TResult := ({{!EV_PIXEL_BUFFER}}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle ({3}, {4}))%N%
+	icon_animation_template: !STRING =
+			-- Template used for access pixel buffer features
+		"%Tfrozen {1}: !ARRAY [!EV_PIXMAP]%N%
+		%%T%T%T-- Access to '{2}' pixmap animation items.%N%
+		%%T%Tonce%N%
+		%%T%T%Tcreate Result.make (1, {3})%N%
+		%{4}%N%
+		%%T%Tend%N%N"
+
+	icon_buffer_animation_template: !STRING =
+			-- Template used for access pixel buffer features
+		"%Tfrozen {1}: !ARRAY [!EV_PIXEL_BUFFER]%N%
+		%%T%T%T-- Access to '{2}' pixel buffer animation items.%N%
+		%%T%Tonce%N%
+		%%T%T%Tcreate Result.make (1, {3})%N%
+		%{4}%N%
+		%%T%Tend%N%N"
 
 feature {NONE} -- Implementation: Internal cache
 

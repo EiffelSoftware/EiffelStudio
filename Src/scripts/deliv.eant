@@ -54,7 +54,8 @@
 	<target name="check_environment" once="true">
 		<precursor/>
 		<available resource="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin/ec${exe}" variable="tmp_ecbin_available"/>
-		<echo message="Error: executable ec${exe} does not exists" if="${tmp_ecbin_available}=false" />
+		<available resource="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin/ecb${exe}" variable="tmp_ecbin_available" if="$tmp_ecbin_available=false" />
+		<echo message="Error: executable ec${exe} or (ecb${exe}) does not exists" if="${tmp_ecbin_available}=false" />
 		<set name="environment_valid" value="false" if="${tmp_ecbin_available}=false" />
 		<unset name="tmp_ecbin_available" />
 	</target>
@@ -114,6 +115,9 @@
 
 		<set name="_KEEP_F_CODE" value="false" unless="$_KEEP_F_CODE" />
 		<set name="_KEEP_F_CODE" value="false" if="-$_KEEP_F_CODE=-" />
+
+		<set name="_REUSE_F_CODE" value="false" unless="$_REUSE_F_CODE" />
+		<set name="_REUSE_F_CODE" value="false" if="-$_REUSE_F_CODE=-" />
 	</target>
 
 	<target name="load_local_config"  once="true" >
@@ -145,6 +149,7 @@
 		&lt;set name="_INCLUDE_DEVPACK" value="#_INCLUDE_DEVPACK#" unless="$_INCLUDE_DEVPACK" /&gt;
 		&lt;set name="_INCLUDE_DOTNET" value="#_INCLUDE_DOTNET#" unless="$_INCLUDE_DOTNET" /&gt;
 		&lt;set name="_KEEP_F_CODE" value="#_KEEP_F_CODE#" unless="$_KEEP_F_CODE" /&gt;
+		&lt;set name="_REUSE_F_CODE" value="#_REUSE_F_CODE#" unless="$_REUSE_F_CODE" /&gt;
 	&lt;/target&gt;
 &lt;/project&gt;</echo>
 		<replace file="$l_local_script" token="#_FORCE_CLEAN#" replace="$_FORCE_CLEAN" flags="g" />
@@ -155,6 +160,7 @@
 		<replace file="$l_local_script" token="#_INCLUDE_DEVPACK#" replace="$_INCLUDE_DEVPACK" flags="g" />
 		<replace file="$l_local_script" token="#_INCLUDE_DOTNET#" replace="$_INCLUDE_DOTNET" flags="g" />
 		<replace file="$l_local_script" token="#_KEEP_F_CODE#" replace="$_KEEP_F_CODE" flags="g" />
+		<replace file="$l_local_script" token="#_REUSE_F_CODE#" replace="$_REUSE_F_CODE" flags="g" />
 	</target>
 
 <!-- ================ -->
@@ -1319,6 +1325,14 @@
 		<set name="l_f_codes_dir" value="${a_output_dir}${path_separator}spec${path_separator}windows${path_separator}F_codes" if="$is_windows" />
 		<set name="l_f_codes_dir" value="${a_output_dir}${path_separator}spec${path_separator}unices${path_separator}F_codes" unless="$is_windows" />
 		<mkdir directory="${l_f_codes_dir}" if="$tmp_bin_res_avail=false" />
+
+		<!-- Clean F_code if needed -->
+		<!-- We delete F_code, if the binary is not yet available, and if _REUSE_F_CODE is false -->
+		<set name="tmp_keep_f_code" value="true" if="$tmp_bin_res_avail=true" /><!-- if already available, we don't mind about F_code -->
+		<set name="tmp_keep_f_code" value="$_REUSE_F_CODE" if="$tmp_bin_res_avail=false" /><!-- if not already available, and $_REUSE_F_CODE is true -->
+		<geant target="_log" arguments=" -> remove existing F_code (if any)" 	if="$tmp_keep_f_code=false" />
+		<geant target="clean_folder" arguments="$l_f_codes_dir${path_separator}$a_product_name" if="$tmp_keep_f_code=false" />
+		<unset name="tmp_keep_f_code" />
 
 		<!-- Get F_code if needed -->
 		<unset name="tmp_f_code_available" />

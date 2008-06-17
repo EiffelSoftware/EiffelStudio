@@ -266,31 +266,6 @@ feature -- Process operations
 			]"
 		end;
 
-feature -- Sleeping
-
-	sleep_nanoseconds (n: INTEGER_64) is
-			-- Suspend execution for `n' nanoseconds
-		external
-			"C inline use <time.h>"
-		alias
-			"[
-				int rc;
-				struct timespec req;
-				struct timespec rem;
-				req.tv_sec = $n / 1000000000;
-				req.tv_nsec = $n % 1000000000;
-				
-				while (((rc = nanosleep (&req, &rem)) == -1) && (errno == EINTR)) {
-					/* Function is interrupted by a signal.   */
-					/* Let's call it again to complete pause. */
-					req = rem;
-				}
-				if (rc == -1) {
-    					xraise(EN_SYS);
-				}
-			]"
-		end;
-
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

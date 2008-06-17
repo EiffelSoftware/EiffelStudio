@@ -169,20 +169,6 @@ feature -- Process operations
 			send_signal (Sigkill, pid)
 		end
 	
-feature -- Sleeping
-
-	sleep_milliseconds (n: DOUBLE) is
-			-- Suspend execution for `n' milliseconds.
-			-- Actual time could be longer or shorter
-			-- since routine is awakened by any signal
-			-- (not just the SIGALRM signal)
-		local
-			nanosecs: INTEGER_64
-		do
-			nanosecs := (n * 1_000_000 + 0.5).truncated_to_integer_64
-			sleep_nanoseconds (nanosecs);
-		end;
-
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

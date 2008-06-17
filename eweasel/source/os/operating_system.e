@@ -8,6 +8,10 @@ deferred class OPERATING_SYSTEM
 
 inherit
 	OPERATING_ENVIRONMENT
+	EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 
 feature -- Path name operations
 
@@ -80,11 +84,15 @@ feature -- Date and time
 feature -- Sleeping
 
 	sleep_milliseconds (n: DOUBLE) is
-			-- Suspend execution for `n' microseconds.
+			-- Suspend execution for `n' milliseconds.
 			-- Actual time could be longer or shorter
 		require
 			nonnegative_time: n >= 0;
-		deferred
+		local
+			nanosecs: INTEGER_64
+		do
+			nanosecs := (n * 1_000_000 + 0.5).truncated_to_integer_64
+			sleep (nanosecs)
 		end;
 
 indexing

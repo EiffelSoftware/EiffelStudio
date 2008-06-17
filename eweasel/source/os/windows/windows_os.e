@@ -65,16 +65,6 @@ feature -- Date and time
 			"time(NULL)"
 		end
 
-feature -- Sleeping
-
-	sleep_milliseconds (n: DOUBLE) is
-			-- Suspend execution for `n' microseconds.
-			-- Actual time could be longer or shorter
-		external
-			"C blocking inline use <windows.h>"
-		alias
-			"Sleep ((DWORD) $n)"
-		end
 
 indexing
 	copyright: "[

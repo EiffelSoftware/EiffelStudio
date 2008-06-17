@@ -25,7 +25,8 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 		rename
-			launch as environment_launch
+			launch as environment_launch,
+			sleep as nano_sleep
 		export
 			{NONE} all
 		undefine

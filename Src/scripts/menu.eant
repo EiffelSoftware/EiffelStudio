@@ -92,10 +92,13 @@
 		<geant target="_menu_options_entry" arguments="5,Clean before compiling,$_FORCE_CLEAN" />
 		<geant target="_menu_options_entry" arguments="6,Batch compilation,$_FORCE_BATCH" />
 		<geant target="_menu_options_entry" arguments="7,Silent compilation,$_FORCE_SILENT" />
+
+		<geant target="_menu_options_entry" arguments="8,Keep generated F_code after compilation,$_KEEP_F_CODE" />
+		<geant target="_menu_options_entry" arguments="9,Reuse existing F_code to generate binary,$_REUSE_F_CODE" />
 		<echo message=" ==== " />
 		<echo message=" S) Save settings to current folder [local_config.eant]" />
 		<echo message=" Q) back to previous menu" />
-		<input message=" -> " variable="answer_option" answer_required="true" validargs="1,2,3,4,5,6,7,s,S,q,Q" />
+		<input message=" -> " variable="answer_option" answer_required="true" validargs="1,2,3,4,5,6,7,8,9,s,S,q,Q" />
 		<geant if="$answer_option=1" target="_toggle_boolean_value" arguments="_EXIT_ON_FAILURE,$_EXIT_ON_FAILURE" />
 		<geant if="$answer_option=2" target="_toggle_boolean_value" arguments="_INCLUDE_DEVPACK,$_INCLUDE_DEVPACK" />
 		<geant if="$answer_option=3" target="_toggle_boolean_value" arguments="_INCLUDE_DOTNET,$_INCLUDE_DOTNET" />
@@ -103,6 +106,9 @@
 		<geant if="$answer_option=5" target="_toggle_boolean_value" arguments="_FORCE_CLEAN,$_FORCE_CLEAN" />
 		<geant if="$answer_option=6" target="_toggle_boolean_value" arguments="_FORCE_BATCH,$_FORCE_BATCH" />
 		<geant if="$answer_option=7" target="_toggle_boolean_value" arguments="_FORCE_SILENT,$_FORCE_SILENT" />
+
+		<geant if="$answer_option=8" target="_toggle_boolean_value" arguments="_KEEP_F_CODE,$_KEEP_F_CODE" />
+		<geant if="$answer_option=9" target="_toggle_boolean_value" arguments="_REUSE_F_CODE,$_REUSE_F_CODE" />
 
 		<set name="answer_option" value="s" if="$answer_option=S" />
 		<geant if="$answer_option=s" target="save_local_config" />

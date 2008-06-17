@@ -60,6 +60,10 @@ feature -- Icons
 	
 ${ICONS}
 
+feature -- Icons: Animations
+	
+${ANIMATIONS}
+
 feature -- Constants: Icon names
 
 ${ICON_NAMES}

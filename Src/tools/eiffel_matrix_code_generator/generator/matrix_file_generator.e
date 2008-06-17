@@ -346,11 +346,9 @@ feature {NONE} -- Validation
 			end
 		end
 
-
-
 feature {NONE} -- Formatting
 
-	format_eiffel_name (a_name: STRING): STRING is
+	format_eiffel_name (a_name: STRING): !STRING
 			-- Formats `a_name' into an Eiffel name
 		require
 			a_name_attached: a_name /= Void
@@ -380,7 +378,6 @@ feature {NONE} -- Formatting
 				l_count := Result.count
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 

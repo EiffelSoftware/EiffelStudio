@@ -10,19 +10,9 @@ class EIFFEL_COMPILATION
 inherit
 	EWEASEL_PROCESS
 		rename
-			make as process_make,
-			terminate as process_terminate
-		redefine
-			read_line
-		end;
-	
-	EWEASEL_PROCESS
-		rename
 			make as process_make
 		redefine
 			terminate, read_line
-		select
-			terminate
 		end;
 	
 	EIFFEL_COMPILER_CONSTANTS;
@@ -99,7 +89,7 @@ feature
 				e := next_compile_result;
 					-- Discard any pending compile result
 			end;
-			process_terminate;
+			Precursor {EWEASEL_PROCESS}
 		end;
 
 	

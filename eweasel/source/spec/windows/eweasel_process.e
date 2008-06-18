@@ -128,7 +128,6 @@ feature -- Control
 			-- it to exit and get its status
 		local
 			a_boolean: BOOLEAN
-			terminated: BOOLEAN
 		do
 			close
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
@@ -191,17 +190,22 @@ feature {NONE} -- Implementation
 
 	close is
 			-- Close input, output and save files
-		local
-			l_success: BOOLEAN
 		do
 			if std_output /= default_pointer then
-				l_success := file_handle.close (std_output)
+				if not file_handle.close (std_output) then
+					file_handle.display_error
+				end
+				std_output := default_pointer
 			end
 			if std_input /= default_pointer then
-				l_success := file_handle.close (std_input)
+				if not file_handle.close (std_input) then
+					file_handle.display_error
+				end
+				std_input := default_pointer
 			end
 			if savefile /= Void and then not savefile.is_closed then
 				savefile.close
+				savefile := Void
 			end
 		end
 

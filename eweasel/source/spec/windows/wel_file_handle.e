@@ -70,20 +70,38 @@ feature -- Factory
 			l_read, l_write, l_temp: POINTER
 		do
 			if cwin_create_pipe ($l_read, $l_temp, default_pointer, 0) then
-				duplicate_handle (l_temp, $l_write)
-				Result := [l_read, l_write]
+				if duplicate_handle (l_temp, $l_write) then
+					if close (l_temp) then
+						Result := [l_read, l_write]
+					else
+						display_error
+					end
+				else
+					display_error
+				end
+			else
+				display_error
 			end
 		end
 
 	create_pipe_read_inheritable: TUPLE [POINTER, POINTER] is
 			-- Create pipe where `write' part of pipe can be written to.
-			-- Actual type is TUPLE [read, write: INTEGER]
+			-- Actual type is TUPLE [read, write: POINTER]
 		local
 			l_read, l_write, l_temp: POINTER
 		do
 			if cwin_create_pipe ($l_temp, $l_write, default_pointer, 0) then
-				duplicate_handle (l_temp, $l_read)
-				Result := [l_read, l_write]
+				if duplicate_handle (l_temp, $l_read) then
+					if close (l_temp) then
+						Result := [l_read, l_write]
+					else
+						display_error
+					end
+				else
+					display_error
+				end
+			else
+				display_error
 			end
 		end
 
@@ -187,7 +205,7 @@ feature -- Input
 
 feature -- Element change
 
-	duplicate_handle (a_handle: POINTER; a_duplicated_handle: TYPED_POINTER [POINTER]) is
+	duplicate_handle (a_handle: POINTER; a_duplicated_handle: TYPED_POINTER [POINTER]): BOOLEAN is
 			-- Duplicate `a_handle', mostly used for:
 			-- We've set the SA so the pipe handles are inheritable.  However,
 			-- we only want the write end of the pipe inheritable, so we use
@@ -197,15 +215,14 @@ feature -- Element change
 			"C inline use <windows.h>"
 		alias
 			"[
-				DuplicateHandle (
+				return EIF_TEST(DuplicateHandle (
 					GetCurrentProcess(),
 					(HANDLE) $a_handle,
 					GetCurrentProcess(),
 					(HANDLE *) $a_duplicated_handle,
 					0,
 					TRUE,
-					DUPLICATE_SAME_ACCESS);
-				CloseHandle($a_handle);
+					DUPLICATE_SAME_ACCESS));
 			]"
 		end
 
@@ -227,6 +244,14 @@ feature -- Element change
 			create l_str.make (a_string)
 			last_write_successful := cwin_write_file (a_handle, l_str.item,
 				a_string.count, $last_written_bytes, default_pointer)
+		end
+
+feature -- Error reporting
+
+	display_error is
+		do
+			-- By default do nothing, it can be used for debugging
+			-- Most likely it will use {WEL_ERROR}.display_last_error
 		end
 
 feature {NONE} -- Implementation

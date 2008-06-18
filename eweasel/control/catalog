@@ -904,6 +904,7 @@ test	cond-timedwait-failure		thread001	tcf pass multithreaded
 test	nested-thread-exit-failure	thread002	tcf fail multithreaded
 test	memory-leak-in-eif-thr-wait	thread003	tcf pass multithreaded
 test	creating-string-runtime-panic	thread004	tcf pass multithreaded
+test	mem-info-update-crash-after-threads thread005	tcf pass multitheaded
 
 -- Execution
 

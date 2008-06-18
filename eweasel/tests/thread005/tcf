@@ -1,0 +1,24 @@
+test_name 	 mem-info-update-crash-after-threads
+test_description Show crashes revealed calling {MEM_INFO}.update or `full_collect' after launching empty threads.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 worker.e  $CLUSTER worker.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+-- Run it twice to make it more likely to crash.
+
+execute_work	 NONE exec_output1 100000
+execute_result	 ok
+compare		 exec_output1 output
+
+execute_work	 NONE exec_output1 100000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="test" uuid="6B9E5074-7772-420F-8CC5-2570DD5DD9C1">
+	<target name="test">
+		<root class="TEST" feature="make"/>
+		<option full_class_checking="true">
+			<assertions precondition="true"/>
+		</option>
+		<setting name="multithreaded" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="inlining" value="false"/>
+		<setting name="inlining_size" value="100"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		$EWEASEL_DOTNET_SETTING
+		<cluster name="hamster" location="$CLUSTER\">
+			<option trace="false" profile="false" warning="true">
+				<assertions precondition="true"/>
+				<warning name="option_unknown_class" enabled="false"/>
+			</option>
+		</cluster>
+	</target>
+</system>

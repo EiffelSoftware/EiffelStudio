@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DYNAMIC_API_LOADER_IMP_GTK
+	DYNAMIC_API_LOADER_IMP
 
 inherit
 	DYNAMIC_API_LOADER
@@ -21,8 +21,8 @@ feature -- Query
 			l_name: !EV_GTK_C_STRING
 			l_result: BOOLEAN
 		do
-			create l_name.make (a_api_name)
-			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_module, l_c_string.item, $Result)
+			create l_name.set_with_eiffel_string (a_api_name)
+			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
 		end
 
 feature -- Basic operations
@@ -50,10 +50,10 @@ feature -- Basic operations
 		local
 			l_path: !EV_GTK_C_STRING
 		do
-			create l_path.make (a_path)
-			Result := {EV_GTK_EXTERNALS}.g_module_open (a_path.item, 0)
+			create l_path.set_with_eiffel_string (a_path)
+			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)
 		end
-		
+
 	unload_library (a_hnd: POINTER)
 			-- <Precursor>
 		local

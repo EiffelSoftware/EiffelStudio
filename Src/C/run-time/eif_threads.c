@@ -606,6 +606,12 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 
 		/* Free allocated stacks in rt_globals. */
 	xstack_reset (&eif_trace);
+
+		/* Free allocated structure for trace printing. */
+	ex_string.used = 0;
+	ex_string.size = 0;
+	eif_free (ex_string.area);
+
 #ifdef WORKBENCH
 	opstack_reset (&op_stack);
 	dbstack_reset (&db_stack);

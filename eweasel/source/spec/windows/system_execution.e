@@ -12,7 +12,7 @@ inherit
 		rename
 			make as process_make
 		end
-	
+
 create
 	make
 
@@ -20,7 +20,7 @@ feature
 
 	make (prog: STRING; args: LINKED_LIST [STRING]; execute_cmd, dir, inf, outf, savef: STRING) is
 			-- Start a new process to execute `prog' with
-			-- arguments `args' using execution command 
+			-- arguments `args' using execution command
 			-- `execute_cmd' in directory `dir'.
 			-- `inf' is the input file to be fed into the
 			-- new process (void to set up pipe).
@@ -82,7 +82,7 @@ feature {NONE} -- Constant strings
 				Result := "cmd.exe"
 			end
 		ensure
-			shell_command_not_void: Result /= Void	
+			shell_command_not_void: Result /= Void
 		end
 
 indexing

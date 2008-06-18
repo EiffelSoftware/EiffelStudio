@@ -12,7 +12,7 @@ inherit
 		rename
 			make as process_make
 		end;
-	
+
 create
 	make
 

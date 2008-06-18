@@ -14,11 +14,11 @@ inherit
 		redefine
 			terminate, read_line
 		end;
-	
+
 	EIFFEL_COMPILER_CONSTANTS;
-	
+
 	SHARED_OBJECTS
-	
+
 create
 	make
 
@@ -88,7 +88,7 @@ feature
 			Precursor {EWEASEL_PROCESS}
 		end;
 
-	
+
 feature {NONE} -- Implementation
 
 	read_line is
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 						is_suspend_prompt := is_resume_prompt or is_missing_precomp
 					end
 				end;
-			end;	
+			end;
 			if is_suspend_prompt then
 				suspended := True;
 				if is_resume_prompt then

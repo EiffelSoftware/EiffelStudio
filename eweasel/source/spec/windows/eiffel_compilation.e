@@ -12,7 +12,7 @@ inherit
 		rename
 			make as process_make
 		redefine
-			terminate, read_line
+			terminate, read_line, abort
 		end;
 
 	EIFFEL_COMPILER_CONSTANTS;
@@ -75,6 +75,19 @@ feature
 			suspended := False;
 		end;
 
+	abort is
+			-- Terminate Eiffel compilation
+		local
+			e: EIFFEL_COMPILATION_RESULT
+		do
+			if suspended then
+				quit
+					-- Discard any pending compile result
+				e := next_compile_result
+			end
+			Precursor {EWEASEL_PROCESS}
+		end
+
 	terminate is
 			-- Terminate Eiffel compilation
 		local
@@ -82,8 +95,8 @@ feature
 		do
 			if suspended then
 				quit;
-				e := next_compile_result;
 					-- Discard any pending compile result
+				e := next_compile_result;
 			end;
 			Precursor {EWEASEL_PROCESS}
 		end;

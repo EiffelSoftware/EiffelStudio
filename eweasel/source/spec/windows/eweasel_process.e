@@ -19,17 +19,17 @@ inherit
 		redefine
 			startup_info
 		end
-		
+
 	WEL_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_OBJECTS
-	
+
 	EXECUTION_ENVIRONMENT
-		rename launch as exec_launch end	
-		
+		rename launch as exec_launch end
+
 feature -- Creation
 
 	make (cmd: STRING; args: LIST [STRING]; inf, outf, savef: STRING) is
@@ -56,7 +56,7 @@ feature -- Creation
 			l_success: BOOLEAN
 		do
 			debug
-				output.append_new_line 
+				output.append_new_line
 				output.append ("Start: ", False)
 				output.append (cmd, False)
 				output.append (" ", False)
@@ -91,17 +91,17 @@ feature -- Creation
 			input_pipe_needed := inf = Void
 			output_pipe_needed := outf = Void
 			run_hidden
-			spawn_with_console (cmd_line, current_working_directory)			
+			spawn_with_console (cmd_line, current_working_directory)
 			l_success := file_handle.close (child_input)
 			l_success := file_handle.close (child_output)
-	
+
 			if savef /= Void then
 				create savefile.make_open_write (savef)
 			end
 		end
 
 feature -- Status
-	
+
 	suspended: BOOLEAN
 			-- Is process suspended awaiting user input?
 
@@ -109,7 +109,7 @@ feature -- Status
 			-- Has end of file been reached on output from process?
 
 feature -- Control
-	
+
 	put_string (s: STRING) is
 			-- Send characters in `s' to process
 		require
@@ -128,15 +128,17 @@ feature -- Control
 			-- it to exit and get its status
 		local
 			a_boolean: BOOLEAN
-			terminated: BOOLEAN		
+			terminated: BOOLEAN
 		do
 			close
-			-- FIXME: Do not kill process if still active.
-			-- Just wait until process exits
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 			if a_boolean then
-				if last_process_result = cwin_still_active then
-					terminated := cwin_terminate_process (process_info.process_handle, 0)
+					-- Process is most likely active, we just wait until it has actually finished.
+				from
+				until
+					last_process_result /= cwin_still_active or not a_boolean
+				loop
+					a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 				end
 				cwin_close_handle (process_info.thread_handle)
 				cwin_close_handle (process_info.process_handle)
@@ -149,7 +151,7 @@ feature -- Control
 			-- it if it is still running
 		local
 			a_boolean: BOOLEAN
-			terminated: BOOLEAN		
+			terminated: BOOLEAN
 		do
 			close
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
@@ -167,20 +169,20 @@ feature {NONE} -- Implementation
 
 	input_pipe_needed: BOOLEAN
 			-- Is a pipe needed to write input from current process?
-			
+
 	output_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read output from current process?
-			
+
 	input_file_name: STRING
 			-- Name if any of input file
-			
+
 	output_file_name: STRING
 			-- Name if any of output file
 
 	savefile: RAW_FILE
-			-- File to which output read from process is written, 
+			-- File to which output read from process is written,
 			-- if not void
-			
+
 	std_input, std_output: POINTER
 			-- Handle used to read input and output from child.
 
@@ -227,7 +229,7 @@ feature {NONE} -- Implementation
 				retry
 			end
 		end
-		
+
 	read_character is
 			-- Read next line from process and make
 			-- available in `last_string'.  Set `end_of_file'
@@ -280,7 +282,7 @@ feature {NONE} -- Implementation
 				child_output := file_handle.create_file_inheritable (output_file_name, False)
 				std_output := default_pointer
 			end
-			
+
 			create Result.make
 			Result.set_flags (Startf_use_std_handles)
 			if hidden then
@@ -293,7 +295,7 @@ feature {NONE} -- Implementation
 			Result.set_std_output (child_output)
 			Result.set_std_error (child_output)
 		end
-		
+
 	file_handle: WEL_FILE_HANDLE is
 			-- Factory for managing HANDLE
 		once

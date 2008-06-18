@@ -123,11 +123,21 @@ feature -- Input
 			valid_count: a_count > 0
 		local
 			l_str: C_STRING
+			l_success: BOOLEAN
 		do
 			create l_str.make_empty (a_count)
-			if
-				cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
-			then
+			from
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
+			until
+				not l_success or else last_read_bytes > 0
+			loop
+					-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
+					-- on a successful read, which means we are beyond the current end of the file at
+					-- the time of the read operation. So we have to repeat the call until we get something.
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
+			end
+			if l_success then
+				check last_read_bytes >0 end
 				last_read_successful := True
 				l_str.set_count (last_read_bytes)
 				last_string := l_str.substring (1, last_read_bytes)
@@ -143,7 +153,7 @@ feature -- Input
 			-- Make result available in `last_string'.
 		local
 			l_str: C_STRING
-			l_done: BOOLEAN
+			l_done, l_success: BOOLEAN
 		do
 			from
 				create last_string.make (10)
@@ -152,7 +162,18 @@ feature -- Input
 			until
 				not last_read_successful or l_done
 			loop
-				if cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer) then
+				from
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer)
+				until
+					not l_success or else last_read_bytes > 0
+				loop
+						-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
+						-- on a successful read, which means we are beyond the current end of the file at
+						-- the time of the read operation. So we have to repeat the call until we get something.
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer)
+				end
+				if l_success then
+					check last_read_bytes >0 end
 					last_read_successful := True
 					l_str.set_count (last_read_bytes)
 					last_string.append (l_str.substring (1, last_read_bytes))
@@ -161,7 +182,6 @@ feature -- Input
 					last_read_successful := False
 					last_string := Void
 				end
-
 			end
 		end
 

@@ -96,6 +96,7 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
+			result_consistent: Result = all_items
 			result_contains_attached_items: not Result.has (Void)
 			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
 			result_contains_valid_items_only: Result.for_all (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN

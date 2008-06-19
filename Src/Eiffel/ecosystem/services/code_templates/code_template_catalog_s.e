@@ -95,7 +95,7 @@ feature {NONE} -- Query
 	events (a_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 			-- <Precursor>
 		do
-			create Result.make (4)
+			create Result.make (1)
 			Result.put_last ([catalog_changed_event, agent a_observer.on_catalog_changed])
 		end
 

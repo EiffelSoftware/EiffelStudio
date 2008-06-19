@@ -216,6 +216,20 @@ feature {ES_DOCKABLE_TOOL_PANEL} -- Access
 			result_consistent: Result = name
 		end
 
+feature {NONE} -- Access
+
+	frozen tool: !ES_TOOL [EB_TOOL]
+			-- Provides a reference to the actual tool.
+			-- Note, this is for ESF helper functionality that may be optionally inherited in the actual
+			--       tool. See {ES_TOOL_PIXMAPS_PROVIDER} for an example.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := Current
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
 feature {ES_SHELL_TOOLS} -- Element change
 
 	set_edition (a_edition: like edition)

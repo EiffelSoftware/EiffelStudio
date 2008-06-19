@@ -169,25 +169,42 @@ rt_public char *file_open_mode (int how, char mode)
 	static char file_type [FILE_TYPE_MAX];
 #endif
 
+	file_type[4] = '\0';
 	file_type[3] = '\0';
 	file_type[2] = '\0';
 	if (how >= 10) how -= 10;
 	switch (how) {
-	case 0: 
-	case 3: file_type[0] = 'r'; break;
-	case 1:
-	case 4: file_type[0] = 'w'; break;
-	case 2:
-	case 5: file_type[0] = 'a'; break;
-	default: file_type[0] = 'r'; break;
+		case 0: 
+		case 3: file_type[0] = 'r'; break;
+		case 1:
+		case 4: file_type[0] = 'w'; break;
+		case 2:
+		case 5: file_type[0] = 'a'; break;
+		default: file_type[0] = 'r'; break;
 	}
 	file_type[1] = mode;
 	switch (how) {
-	case 3:
-	case 4:
-	case 5: if (mode == '\0') file_type[1] = '+';
-			else file_type[2] = '+';
+		case 3:
+		case 4:
+		case 5:
+			if (mode == '\0') {
+				file_type[1] = '+';
+			} else {
+				file_type[2] = '+';
+			}
 	}
+#ifdef EIF_WINDOWS
+	/* We make sure that files created in Eiffel are not inheritable
+	 * by default as otherwise it makes things too complicated for the
+	 * end user when spawing child processes. */
+	if (file_type [1] == '\0') {
+		file_type [1] = 'N';
+	} else if (file_type [2] == '\0') {
+		file_type [2] = 'N';
+	} else {
+		file_type [3] = 'N';
+	}
+#endif
 	return file_type;
 }
 

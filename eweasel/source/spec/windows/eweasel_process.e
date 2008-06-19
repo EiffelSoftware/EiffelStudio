@@ -137,6 +137,7 @@ feature -- Control
 				until
 					last_process_result /= cwin_still_active or not a_boolean
 				loop
+					sleep (1000000)
 					a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 				end
 				cwin_close_handle (process_info.thread_handle)

@@ -32,7 +32,6 @@ feature -- Basic operations
 		local
 			l_fn: !FILE_NAME
 		do
-			create l_fn.make_from_string (a_name.as_string_8)
 			if {PLATFORM}.is_mac then
 				l_fn.add_extension (once "dylib")
 				Result := load_library_from_path (l_fn.string)

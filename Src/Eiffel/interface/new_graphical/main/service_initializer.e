@@ -12,19 +12,19 @@ class
 
 feature -- Services
 
-	add_core_services (a_container: !SERVICE_CONTAINER)
+	add_core_services (a_container: !SERVICE_CONTAINER_S)
 			-- Adds all the core services.
 			--
 			-- `a_container': The service container to add services to.
 		do
-			a_container.add_service_with_activator ({EVENT_LIST_S}, agent create_event_list_service, False)
-			a_container.add_service_with_activator ({LOGGER_S}, agent create_logger_service, False)
-			a_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
+			a_container.register_with_activator ({EVENT_LIST_S}, agent create_event_list_service, False)
+			a_container.register_with_activator ({LOGGER_S}, agent create_logger_service, False)
+			a_container.register_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
 		end
 
 feature {NONE} -- Factory
 
-	create_event_list_service: EVENT_LIST_S
+	create_event_list_service: ?EVENT_LIST_S
 			-- Creates the event list service.
 		do
 			create {EVENT_LIST} Result.make
@@ -32,7 +32,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_logger_service: LOGGER_S
+	create_logger_service: ?LOGGER_S
 			-- Creates the logger service.
 		do
 			create {LOGGER} Result.make
@@ -40,7 +40,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_session_manager_service: SESSION_MANAGER_S
+	create_session_manager_service: ?SESSION_MANAGER_S
 			-- Creates the session manager service.
 		do
 			create {SESSION_MANAGER} Result

@@ -1,10 +1,6 @@
 test_name multithreaded-once-routine
 test_description Once routines are by default per-thread rather than per-process
 
--- .NET-specific settings: workaround for different inheritance hierarchy
-if DOTNET define THREAD_CONTROL ""
-if not DOTNET define THREAD_CONTROL "THREAD_CONTROL"
-
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 copy_raw a.e $CLUSTER a.e

@@ -47,8 +47,8 @@ feature
 				execute_ok := False;
 				failure_explanation := "suspended compilation - use `abort_compile' instead";
 			else
-				dir := test.environment.value (Test_dir_name); 
-				eif_dir := os.full_directory_name (dir, Eiffel_gen_directory); 
+				dir := test.environment.value (Test_dir_name);
+				eif_dir := os.full_directory_name (dir, Eiffel_gen_directory);
 				os.delete_directory_tree (eif_dir)
 				delete_project_files (dir)
 				execute_ok := True;
@@ -57,7 +57,7 @@ feature
 
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
-	
+
 	execute_ok: BOOLEAN;
 			-- Was last call to `execute' successful?
 
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			dir_entries: ARRAYED_LIST [STRING]
 			name, ext: STRING
 			len: INTEGER
-			f: PLAIN_TEXT_FILE
+			f: RAW_FILE
 		do
 			ext := Eiffel_project_extension;
 			len := ext.count
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 				dir_entries.forth
 			end
 		end;
-	
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

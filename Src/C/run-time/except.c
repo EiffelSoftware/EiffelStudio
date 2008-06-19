@@ -2170,7 +2170,7 @@ rt_public void eif_panic(char *msg)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
-	static int done = 0;		/* Avoid panic cascade */
+	int done = 0;		/* Avoid panic cascade */
 
 	/* We flush stdout now, to avoid unprinted data being printed after the
 	 * stack trace. This is mainly indented for situations like stdout = console
@@ -2232,7 +2232,7 @@ rt_public void fatal_error(char *msg)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
-	static int done = 0;		/* Avoid fatal cascade */
+	int done = 0;		/* Avoid fatal cascade */
 
 	/* We flush stdout now, to avoid unprinted data being printed after the
 	 * stack trace. This is mainly indented for situations like stdout = console
@@ -2543,6 +2543,7 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	 */
 
 	eif_except.previous = 0;		/* Previous exception code */
+	eif_except.last = 0;			/* Clear `last', which could be set since last trace dumping */
 	recursive_dump(append_trace, 0);	/* Recursive dump, starting at level 0 */
 }
 
@@ -2634,7 +2635,7 @@ rt_private void print_class_feature_tag (
 	/* Prints first line of exception which contains `a_class_name', `a_feature_name'
 	 * and `a_tag_name' using `append_trace'. */
 {
-	static char buffer[256];
+	char buffer[256];
 	int l_class_count, l_feature_count, l_tag_count;
 
 	REQUIRE("tracing_feature_not_null", append_trace);
@@ -2649,43 +2650,77 @@ rt_private void print_class_feature_tag (
 		 * meaning that if `precision' is smaller than `width' the text is right aligned.
 		 * 
 		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
-		 * writting more than `buffer' can hold.
+		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended 
+		 * after the last character written, which should be taken into account.
 		 */
 	l_class_count = (int) strlen(a_class_name);
 	l_feature_count = (int) strlen(a_feature_name);
 	l_tag_count = (int) strlen(a_tag_name);
 
-		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
+		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
 		 *      for `a_class_name' and `a_feature_name'. */
-		/* 2 - precision of 235 = 255 - 20, 20 being number of characters written
+		/* 2 - precision of 234 = 254 - 20, 20 being number of characters written
 		 *      for `a_class_name'.*/
+		/* 3 - precision of 254, 254 being number of characters written
+		 *      excluding `\n' and null character appended at the end */
+		/* 4 - precision of 251, 231 and 208 being number of characters written
+		 *      excluding eclipse from above numbers. */
 	if (l_class_count > 19) {
-		sprintf(buffer, "%*.255s\n", l_class_count, a_class_name);
+		if (l_class_count > 251){
+			sprintf(buffer, "%.251s...\n", a_class_name);
+		} else {
+			sprintf(buffer, "%*.254s\n", l_class_count, a_class_name);
+		}
 		append_trace(buffer);
 		if (l_feature_count > 22) {
-			sprintf(buffer, "%*.235s\n", 20 + l_feature_count, a_feature_name);
+			if (l_feature_count > 231){
+				sprintf(buffer, "%.231s...\n", a_feature_name);
+			} else {
+				sprintf(buffer, "%*.234s\n", 20 + l_feature_count, a_feature_name);
+			}
 			append_trace(buffer);
 			if (l_tag_count > 0) {
-				sprintf(buffer, "%*.212s\n", 43 + l_tag_count, a_tag_name);
+				if (l_tag_count > 208) {
+					sprintf(buffer, "%.208s...\n", a_tag_name);
+				} else {
+					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
+				}
 				append_trace(buffer);
 			}
 		} else {
-			sprintf(buffer, "%*.22s %*.212s\n", 20 + l_feature_count, a_feature_name,
-					43 + l_tag_count - (20 + l_feature_count + 1), a_tag_name);
+			if (l_tag_count > 208) {
+				sprintf(buffer, "%*.22s %.208s...\n", 20 + l_feature_count, a_feature_name, a_tag_name);
+			} else {
+				sprintf(buffer, "%*.22s %*.211s\n", 20 + l_feature_count, a_feature_name,
+					(43 + l_tag_count) - (20 + l_feature_count + 1), a_tag_name);
+			}
 			append_trace(buffer);
 		}
 	} else {
 		if (l_feature_count > 22) {
-			sprintf(buffer, "%-19.19s %*.212s\n", a_class_name,
-					l_feature_count, a_feature_name);
+			if (l_feature_count > 208) {
+				sprintf(buffer, "%-19.19s %.208s...\n", a_class_name, a_feature_name);
+			} else {
+				sprintf(buffer, "%-19.19s %*.211s\n", a_class_name,
+						l_feature_count, a_feature_name);
+			}
 			append_trace(buffer);
 			if (l_tag_count > 0) {
-				sprintf(buffer, "%*.212s\n", 43 + l_tag_count, a_tag_name);
+				if (l_tag_count > 208) {
+					sprintf(buffer, "%.208s...\n", a_tag_name);
+				} else {
+					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
+				}
 				append_trace(buffer);
 			}
 		} else {
-			sprintf(buffer, "%-19.19s %-22.22s %-29.212s\n",	
-				a_class_name, a_feature_name, a_tag_name);
+			if (l_tag_count > 208) {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.208s...\n",	
+					a_class_name, a_feature_name, a_tag_name);
+			} else {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.211s\n",	
+					a_class_name, a_feature_name, a_tag_name);
+			}
 			append_trace(buffer);
 		}
 	}
@@ -2701,7 +2736,7 @@ rt_private void print_object_location_reason_effect (
 	/* Prints second line of exception which contains `a_object_addr', `a_location',
 	 * `a_reason' and `a_effect' using `append_trace'. */
 {
-	static char buffer[256];
+	char buffer[256];
 	int l_location_count, l_reason_count, l_effect_count;
 
 	REQUIRE("tracing_feature_not_null", append_trace);
@@ -2723,9 +2758,9 @@ rt_private void print_object_location_reason_effect (
 	l_reason_count = (int) strlen(a_reason);
 	l_effect_count = (int) strlen(a_effect);
 
-		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
+		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
 		 *      for `a_object_addr' and `a_location'. */
-		/* 2 - precision of 182 = 255 - 73, 73 being number of characters written
+		/* 2 - precision of 181 = 254 - 73, 73 being number of characters written
 		 *      for `a_object_addr', `a_location' and `a_reason'.*/
 
 		/* Print object address with 16 digits to be ready when pointers
@@ -2734,26 +2769,26 @@ rt_private void print_object_location_reason_effect (
 	append_trace(buffer);
 
 	if (l_location_count > 22) {
-		sprintf(buffer, "%*.255s\n", l_location_count, a_location);
+		sprintf(buffer, "%*.254s\n", l_location_count, a_location);
 		append_trace(buffer);
 		if (l_reason_count > 29) {
-			sprintf(buffer, "%*.212s\n", 43 + l_reason_count, a_reason);
+			sprintf(buffer, "%*.211s\n", 43 + l_reason_count, a_reason);
 			append_trace(buffer);
-			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
+			sprintf(buffer, "%*.181s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);
 		} else {
-			sprintf(buffer, "%*.29s %*.182s", 43 + l_reason_count, a_reason,
-						73 + l_effect_count - (43 + l_reason_count + 1), a_effect);
+			sprintf(buffer, "%*.29s %*.181s", 43 + l_reason_count, a_reason,
+					(73 + l_effect_count) - (43 + l_reason_count + 1), a_effect);
 			append_trace(buffer);
 		}
 	} else {
 		if (l_reason_count > 29) {
-			sprintf(buffer,"%-29.29s %*.212s\n", a_location, l_reason_count, a_reason);
+			sprintf(buffer,"%-29.29s %*.211s\n", a_location, l_reason_count, a_reason);
 			append_trace(buffer);
-			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
+			sprintf(buffer, "%*.181s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);
 		} else {
-			sprintf(buffer,"%-22.22s %-29.29s %*.182s", a_location, a_reason, l_effect_count,
+			sprintf(buffer,"%-22.22s %-29.29s %*.181s", a_location, a_reason, l_effect_count,
 				a_effect);
 			append_trace(buffer);
 		}
@@ -2776,6 +2811,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	int				finished = 0;
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
+	char*			class_name = NULL;		/* Class name */
 
 #ifdef DEBUG
 	dump_vector("print_top: top of trace is", eif_trace.st_bot);
@@ -2807,18 +2843,22 @@ rt_private void print_top(void (*append_trace)(char *))
 	/* element gives only the reason of crashes                                         */
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
-	/* create the 'routine_name@line_number' string. We limit ourself to the first 240
+	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
 	 * characters of `routine_name' otherwise we will do a buffer overflow. */
 	if (line_number>0) {
 		/* the line number seems valid, so we are going to print it */
-		sprintf(rout_name_buffer, "%.240s @%d", eif_except.rname, line_number);
+		if (strlen (eif_except.rname) > 189) {
+			sprintf(rout_name_buffer, "%.189s... @%d", eif_except.rname, line_number);
+		} else {
+			sprintf(rout_name_buffer, "%.192s @%d", eif_except.rname, line_number);
+		}
 	} else {
 		/* the line number is not valid, so we are forgetting it */
-		sprintf(rout_name_buffer, "%.240s", eif_except.rname);
+		sprintf(rout_name_buffer, "%.211s", eif_except.rname);
 	}
 
 	if (eif_except.tag) {
-		sprintf(buf, "%.255s:", eif_except.tag);
+		sprintf(buf, "%.254s:", eif_except.tag);
 	} else {
 		buf[0] = '\0';
 	}
@@ -2850,14 +2890,24 @@ rt_private void print_top(void (*append_trace)(char *))
 	buf[0] = '\0';
 
 	if (eif_except.from < scount) {
-			/* We limit ourself to the first 1000 characters of class name
-			 * to avoir buffer overflow. */
+			/* We limit ourself to the first 247 characters of class name
+			 * to avoid buffer overflow. */
 		if (eif_except.obj_id) {
 			if (eif_except.from != Dtype(eif_except.obj_id)) {
-				sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
+				class_name = Origin(eif_except.from);
+				if (strlen (class_name) > 244){
+					sprintf(buf, "(From %.244s...)", class_name);
+				} else {
+					sprintf(buf, "(From %.247s)", class_name);
+				}
 			}
 		} else {
-			sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
+			class_name = Origin(eif_except.from);
+			if (strlen (class_name) > 244){
+				sprintf(buf, "(From %.244s...)", class_name);
+			} else {
+				sprintf(buf, "(From %.247s)", class_name);
+			}
 		}
 	}
 

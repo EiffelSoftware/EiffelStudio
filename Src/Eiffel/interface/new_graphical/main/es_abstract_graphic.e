@@ -40,11 +40,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_SERVICE_PROVIDER
-		export
-			{NONE} all
-		end
-
 	SHARED_FORMAT_INFO
 		export
 			{NONE} all
@@ -54,9 +49,13 @@ feature {NONE} -- Initialization
 
 	initialize_services
 			-- Initializes graphical services
+		local
+			l_container: !SERVICE_CONSUMER [SERVICE_CONTAINER_S]
 		do
-			if {l_container: !SERVICE_CONTAINER} service_provider.query_service ({SERVICE_HEAP}) then
-				service_initializer.add_core_services (l_container)
+			create l_container
+			check is_service_available: l_container.is_service_available end
+			if l_container.is_service_available and then {l_service: SERVICE_CONTAINER_S} l_container.service then
+				service_initializer.add_core_services (l_service)
 			end
 		end
 
@@ -156,7 +155,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Access
 
 	service_initializer: !SERVICE_INITIALIZER
-			-- Initializer used to register all services
+			-- Initializer used to register all services.
 		once
 			create {!ES_SERVICE_INITIALIZER} Result
 		end

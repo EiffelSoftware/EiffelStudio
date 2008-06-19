@@ -24,16 +24,16 @@ inherit
 
 feature -- Services
 
-	add_core_services (a_container: !SERVICE_CONTAINER)
+	add_core_services (a_container: !SERVICE_CONTAINER_S)
 			-- Adds all the core services.
 			--
 			-- `a_container': The service container to add services to.
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
-			a_container.add_service_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
-			a_container.add_service_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
-			a_container.add_service_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
-			a_container.add_service_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
+			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
+			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
+			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
+			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
 		end
 
 feature {NONE} -- Help registration

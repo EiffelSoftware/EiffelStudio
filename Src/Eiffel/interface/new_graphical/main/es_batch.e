@@ -14,8 +14,6 @@ inherit
 			initialize
 		end
 
-	SHARED_SERVICE_PROVIDER
-
 create
 	make
 
@@ -28,15 +26,18 @@ feature {NONE} -- Initialization
 			initialize_debugger
 		end
 
-feature {NONE} -- Service initialization
+feature {NONE} -- Initialization: Services
 
-	initialize_services is
+	initialize_services
 			-- Initializes tty services
 		local
-			l_container: SERVICE_CONTAINER
+			l_container: SERVICE_CONSUMER [SERVICE_CONTAINER_S]
 		do
-			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
-			l_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
+			create l_container
+			check is_service_available: l_container.is_service_available end
+			if l_container.is_service_available and then {l_service: SERVICE_CONTAINER_S} l_container.service then
+				service_initializer.add_core_services (l_service)
+			end
 		end
 
 	initialize_debugger is
@@ -49,12 +50,12 @@ feature {NONE} -- Service initialization
 			ttydbgm.register
 		end
 
-	create_session_manager_service: SESSION_MANAGER_S
-			-- Creates the session manager service
-		do
-			create {SESSION_MANAGER} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+feature {NONE} -- Access
+
+	service_initializer: !SERVICE_INITIALIZER
+			-- Initializer used to register all services.
+		once
+			create Result
 		end
 
 indexing

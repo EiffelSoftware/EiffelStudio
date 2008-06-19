@@ -255,15 +255,15 @@ feature {NONE} -- Access
             not_result_is_empty: not Result.is_empty
         end
 
-	frozen associated_file_name: !STRING
-			-- The tool's associated file name part, used for modularizing development of a tool.
+	frozen name: !STRING
+			-- The tool's associated name, used for modularizing development of a tool.
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := tool_descriptor.associated_file_name
+			Result := tool_descriptor.name
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = associated_file_name
+			result_consistent: Result = name
 		end
 
 	frozen session_data: SESSION_I
@@ -321,22 +321,6 @@ feature {NONE} -- Helpers
         ensure
             result_attached: Result /= Void
             result_consistent: Result = Result
-        end
-
-    frozen stock_pixmaps: ES_PIXMAPS_16X16
-            -- Shared access to stock 16x16 EiffelStudio pixmaps
-        once
-            Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-        ensure
-            result_attached: Result /= Void
-        end
-
-    frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
-            -- Shared access to stock 10x10 EiffelStudio pixmaps
-        once
-            Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
-        ensure
-            result_attached: Result /= Void
         end
 
     frozen preferences: EB_PREFERENCES

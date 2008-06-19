@@ -758,6 +758,17 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	tools_path: !DIRECTORY_NAME
+			-- Path containing the modular files for Eiffel tools.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result ?= shared_application_path.twin
+			Result.extend ("tools")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Directories (top-level user)
 
 	user_application_files_path: !DIRECTORY_NAME
@@ -1510,8 +1521,6 @@ feature -- Version limitation
 
 	has_signable_generation: BOOLEAN is True;
 			-- Does this version allow the signing of .NET assemblies
-
-
 
 feature {NONE} -- Basic operations
 

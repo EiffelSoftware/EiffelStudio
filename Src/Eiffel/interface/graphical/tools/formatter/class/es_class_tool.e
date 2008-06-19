@@ -45,14 +45,6 @@ feature -- Access
 			Result := interface_names.l_tab_class_info
 		end
 
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_class_tool"
-		end
-
 	mode: NATURAL_8 assign set_mode
 			-- <Precursor>
 		do

@@ -59,9 +59,6 @@ feature -- Initialization
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
-			borland_label: EV_LABEL
-			borland_box: EV_HORIZONTAL_BOX
-			borland_image: EV_PIXMAP
 		do
 			default_create
 			set_title (Interface_names.t_About)
@@ -96,23 +93,6 @@ feature -- Initialization
 			eiffel_text_box.extend (info_label)
 			eiffel_text_box.extend (registration_label)
 
-				-- Box with image + text + Borland logo
-			if eiffel_layout.has_borland then
-				create borland_label.make_with_text (t_Borland)
-				borland_label.align_text_left
-				borland_label.set_background_color (White)
-
-				borland_image := Pixmaps.bm_Borland.twin
-				borland_image.set_minimum_size (borland_image.width, borland_image.height)
-				borland_image.set_background_color (White)
-
-				create borland_box
-				borland_box.set_background_color (White)
-				borland_box.extend (borland_label)
-				borland_box.extend (borland_image)
-				borland_box.disable_item_expand (borland_image)
-			end
-
 				-- Texts box			
 			create texts_box
 			texts_box.set_background_color (White)
@@ -121,10 +101,6 @@ feature -- Initialization
 			create white_cell
 			white_cell.set_background_color (White)
 			texts_box.extend (white_cell) -- expandable item
-			if eiffel_layout.has_borland then
-				texts_box.extend (borland_box)
-				texts_box.disable_item_expand (borland_box)
-			end
 
 				-- Box with left image + text
 			create hbox
@@ -208,17 +184,6 @@ feature {NONE} -- Constant strings
 				%Web Customer Support: http://support.eiffel.com%N%
 				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)
-		end
-
-	t_borland: STRING is
-			-- Text for Borland.
-		once
-			create Result.make (256)
-			Result.append (
-				"Includes Free Borland command-line%N%
-				%C++ compiler.%N%
-				%Visit http://www.borland.com/bcppbuilder")
-
 		end
 
 indexing

@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	wizard_window_icon: EV_PIXMAP is
 			-- Icon for the wizard window
 		do
-			Result := Pixmaps.Icon_profiler_window
+			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
 indexing

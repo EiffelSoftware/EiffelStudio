@@ -44,14 +44,6 @@ feature -- Access
 			Result := interface_names.l_tab_feature_info
 		end
 
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_feature_relation_tool"
-		end
-
 	mode: NATURAL_8 assign set_mode
 			-- The feature relation tool's view mode.
 			-- See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
@@ -62,7 +54,7 @@ feature -- Access
 				Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.basic
 			end
 		end
-		
+
 feature -- Element change
 
 	set_mode (a_mode: like mode)

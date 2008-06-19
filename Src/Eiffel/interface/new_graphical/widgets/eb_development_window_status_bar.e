@@ -378,7 +378,7 @@ feature {NONE} -- Implementation: event handling
 			else
 				debugger_icon.set_background_color (debugger_cell.background_color)
 				debugger_icon.clear
-				debugger_icon.draw_pixmap (0, 0, pixmaps.icon_running.item (1))
+				debugger_icon.draw_pixmap (0, 0, pixmaps.icon_pixmaps.run_animation_anim.item (1))
 			end
 		end
 
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			if running_icon_index > 5 then
 				running_icon_index := 1
 			end
-			p := Pixmaps.Icon_running.item (running_icon_index)
+			p := pixmaps.icon_pixmaps.run_animation_anim.item (running_icon_index)
 			debugger_icon.set_background_color (debugger_cell.background_color)
 			debugger_icon.clear
 			debugger_icon.draw_pixmap (0, 0, p)
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 			if compiling_icon_index > 10 then
 				compiling_icon_index := 1
 			end
-			p := pixmaps.icon_compiling.item (compiling_icon_index)
+			p := pixmaps.icon_pixmaps.compile_animation_anim.item (compiling_icon_index)
 			compilation_icon.set_background_color (debugger_cell.background_color)
 			compilation_icon.clear
 			compilation_icon.draw_pixmap (0, 0, p)

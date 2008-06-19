@@ -14,9 +14,9 @@ class
 
 inherit
 	EB_CLASS_BROWSER_SORTABLE_TREE_VIEW [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-		undefine
-			pixmap_from_group_path,
-			pixmap_from_group
+--		undefine
+--			pixmap_from_group_path,
+--			pixmap_from_group
 		redefine
 			make,
 			data,

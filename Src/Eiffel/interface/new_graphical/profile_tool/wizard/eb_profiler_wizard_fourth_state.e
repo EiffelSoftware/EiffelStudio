@@ -17,12 +17,12 @@ inherit
 			build,
 			is_final_state
 		end
-		
+
 	EB_PROFILER_WIZARD_SHARED_INFORMATION
 		export
 			{NONE} all
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -33,7 +33,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build is
 			-- Build entries.
 		local
 			switchbox: EV_VERTICAL_BOX -- Form to display output switches on
@@ -75,23 +75,23 @@ feature -- Basic Operation
 			language_box.disable_item_expand (recursive_switch)
 			create language_form.make_with_text (Interface_names.l_Language_type)
 			language_form.extend (language_box)
-	
+
 				--| Switches & Language Box
 			create hbox
 			hbox.set_padding (Small_padding_size)
 			hbox.extend (switch_form)
 			hbox.extend (language_form)
-			
+
 				--| Query Frame
 			create query_text.make (Current)
 			query_text.set_label_string (Interface_names.l_Query)
 			query_text.generate
-			
+
 				--| Pack Query frame with Switch&Language Box
 			choice_box.set_padding (Small_padding_size)
 			choice_box.extend (hbox)
 			choice_box.extend (query_text.widget)
-		
+
 				-- Update controls to reflect `information'
 			if information.name_switch then
 				name_switch.enable_select
@@ -125,18 +125,18 @@ feature -- Basic Operation
 			else
 				query_text.set_text (information.default_query)
 			end
-			
+
 			first_window.set_final_state (Interface_names.b_Finish)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		local
 			wizard_generator: EB_PROFILER_WIZARD_GENERATOR
 			old_cursor: EV_POINTER_STYLE
 		do
 			old_cursor := first_window.pointer_style
-			first_window.set_pointer_style (Pixmaps.Busy_cursor)
-			
+			first_window.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
+
 			create wizard_generator.make (information)
 			if information.generate_execution_profile then
 				wizard_generator.generate_execution_profile
@@ -149,7 +149,7 @@ feature -- Basic Operation
 				first_window.destroy
 			else
 				proceed_with_new_state(create {EB_PROFILER_WIZARD_GENERATION_ERROR_STATE}.make (wizard_information))
-			end				
+			end
 		end
 
 	update_state_information is
@@ -158,7 +158,7 @@ feature -- Basic Operation
 			loc_query: STRING
 		do
 			Precursor
-			
+
 			information.set_output_switches (
 				name_switch.is_selected,
 				number_of_calls_switch.is_selected,
@@ -166,12 +166,12 @@ feature -- Basic Operation
 				time_switch.is_selected,
 				descendant_switch.is_selected,
 				total_time_switch.is_selected)
-				
+
 			information.set_language_switches (
 				eiffel_switch.is_selected,
 				c_switch.is_selected,
 				recursive_switch.is_selected)
-				
+
 			loc_query := query_text.text
 			if loc_query = Void then
 				loc_query := ""
@@ -187,12 +187,12 @@ feature {NONE} -- Implementation
 			subtitle.set_text (Interface_names.ws_Switches_and_Query)
 			message_box.hide
 		end
-		
+
 	is_final_state: BOOLEAN is True
 			-- This is the last state of this wizard.
 
 feature {NONE} -- Vision2 controls
-		
+
 	name_switch: EV_CHECK_BUTTON
 			-- Switch for the feature names
 
@@ -214,7 +214,7 @@ feature {NONE} -- Vision2 controls
 			-- Switch for the amount of time
 			-- spent in both the function itself
 			-- and the called ones.
-			
+
 	eiffel_switch: EV_CHECK_BUTTON
 			-- Switch for output of eiffel features
 

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Make a new properties tool.
 		do
-			set_pixmaps (pixmaps)
+			set_pixmaps (pixmaps.configuration_pixmaps)
 			cluster_manager.extend (Current)
 			create {CONF_COMP_FACTORY} conf_factory
 

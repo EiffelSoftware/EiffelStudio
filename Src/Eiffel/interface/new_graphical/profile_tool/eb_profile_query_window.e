@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Profile_query_window)
-			set_icon_pixmap (Pixmaps.Icon_profiler_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create all_subqueries.make
 			create all_operators.make

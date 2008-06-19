@@ -924,7 +924,7 @@ feature {NONE} -- Actions
 				end
 
 				l_system := l_load.last_system
-				create l_window.make (l_system, l_fact, Void, pixmaps, agent (preferences.misc_data).external_editor_cli)
+				create l_window.make (l_system, l_fact, Void, pixmaps.configuration_pixmaps, agent (preferences.misc_data).external_editor_cli)
 
 				l_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
 				l_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)

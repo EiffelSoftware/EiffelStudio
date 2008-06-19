@@ -783,7 +783,7 @@ feature {NONE} -- Event handlers
 						check is_dirty: is_dirty end
 
 							-- Add a warning overlay to the save button
-						l_new_buffer := (create {EB_SHARED_PIXMAPS}).icon_buffer_with_overlay (stock_pixmaps.general_save_icon_buffer, stock_pixmaps.overlay_warning_icon_buffer, 0, 0)
+						l_new_buffer := stock_pixmaps.icon_buffer_with_overlay (stock_pixmaps.general_save_icon_buffer, stock_pixmaps.overlay_warning_icon_buffer, 0, 0)
 						save_modifications_button.set_pixel_buffer (l_new_buffer)
 						save_modifications_button.set_pixmap (l_new_buffer)
 					end

@@ -103,12 +103,6 @@ feature {NONE} -- Shared tools change
 
 feature {NONE} -- Implementation
 
-	Progress_dialog_cell: CELL [EB_PROGRESS_DIALOG] is
-			-- Progress dialog associated with the project.
-		once
-			create Result.put (Void)
-		end
-
 	Dynamic_lib_window_cell: CELL [EB_DYNAMIC_LIB_WINDOW] is
 			-- Cell for the dynamic library window
 		once

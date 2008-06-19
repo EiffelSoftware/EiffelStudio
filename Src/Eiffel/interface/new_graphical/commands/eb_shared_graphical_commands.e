@@ -31,13 +31,6 @@ feature -- Commands
 			Result.enable_sensitive
 		end
 
-	New_context_tool_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND is
-			-- Command used to create a new window where the context tool is maximized.
-		once
-			create Result.make_with_style (2)
-			Result.enable_sensitive
-		end
-
 	Exit_application_cmd: EB_EXIT_APPLICATION_COMMAND is
 			-- Command to end the current application.
 		once

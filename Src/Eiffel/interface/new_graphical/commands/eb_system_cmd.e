@@ -115,7 +115,7 @@ feature -- Basic operations
 							if configuration_window /= Void and then not configuration_window.is_canceled and configuration_window.conf_system.file_date = l_load.last_system.file_date then
 								configuration_window.set_debugs (l_sorted_debugs)
 							else
-								create configuration_window.make_for_target (l_load.last_system, lace.target_name , l_fact, l_sorted_debugs, pixmaps, agent (preferences.misc_data).external_editor_cli)
+								create configuration_window.make_for_target (l_load.last_system, lace.target_name , l_fact, l_sorted_debugs, pixmaps.configuration_pixmaps, agent (preferences.misc_data).external_editor_cli)
 							end
 
 							configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
@@ -176,7 +176,7 @@ feature {NONE} -- Actions
 
 						create l_sorted_debugs.make_default
 						create configuration_window.make_for_target (l_load.last_system, lace.target_name,
-							l_fact, l_sorted_debugs, pixmaps, agent (preferences.misc_data).external_editor_cli)
+							l_fact, l_sorted_debugs, pixmaps.configuration_pixmaps, agent (preferences.misc_data).external_editor_cli)
 
 						configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
 						configuration_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

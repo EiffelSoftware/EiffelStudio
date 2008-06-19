@@ -249,6 +249,24 @@ feature -- Status setting
 			end
 		end
 
+feature {NONE} -- Helpers
+
+    frozen stock_pixmaps: ES_PIXMAPS_16X16
+            -- Shared access to stock 16x16 EiffelStudio pixmaps
+        once
+            Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+        ensure
+            result_attached: Result /= Void
+        end
+
+    frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
+            -- Shared access to stock 10x10 EiffelStudio pixmaps
+        once
+            Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+        ensure
+            result_attached: Result /= Void
+        end
+
 feature {ES_TOOL} -- Event handlers
 
 	on_edition_changed

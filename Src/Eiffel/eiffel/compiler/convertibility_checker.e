@@ -36,15 +36,7 @@ inherit
 			test
 		end
 
-convert
-	to_type_as: {TYPE_AS}
-
 feature -- Initialization/Checking
-
-	to_type_as: TYPE_AS
-	do
-
-	end
 
 	init_and_check_convert_tables (
 			a_class: CLASS_C;

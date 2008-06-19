@@ -2,7 +2,9 @@ indexing
 	description: "A low-level string class to solve some garbage %
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
-	status: "See notice at end of class."
+	library: "Free implementation of ELKS library"
+	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +24,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING_GENERAL) is
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -40,7 +42,7 @@ feature --{NONE} -- Initialization
 			create managed_data.make ((a_length + 1))
 			count := 0
 		end
-	
+
 	make_by_pointer (a_ptr: POINTER) is
 			-- Make a copy of string pointed by `a_ptr'.
 		require
@@ -48,7 +50,7 @@ feature --{NONE} -- Initialization
 		do
 			make_by_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
-		
+
 	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
 			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
 		require
@@ -92,7 +94,7 @@ feature -- Access
 		require
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= count
+			end_position_not_too_big: end_pos <= capacity
 		local
 			l_count: INTEGER
 		do
@@ -103,7 +105,7 @@ feature -- Access
 		ensure
 			susbstring_not_void: Result /= Void
 		end
-		
+
 	string: STRING is
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
@@ -111,35 +113,61 @@ feature -- Access
 		ensure
 			string_not_void: Result /= Void
 		end
-		
-	read_substring_into (a_string: STRING; start_pos, end_pos: INTEGER) is
+
+	copy_to_string (a_string: STRING_GENERAL; source_index, destination_index, n: INTEGER) is
+			-- Copy `n' characters of `Current' from `source_index' position to `a_string' at
+			-- `destination_index'. Other characters of `a_string' remain unchanged.
+		require
+			a_string_not_void: a_string /= Void
+			source_index_positive: source_index >= 1
+			destination_index_positive: destination_index >= 1
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + (n - 1) <= capacity
+			n_is_small_enough_for_destination: destination_index + (n - 1) <= a_string.count
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+		do
+			from
+				i := source_index - 1
+				j := destination_index
+				nb := source_index + (n - 1)
+				l_data := managed_data
+			until
+				i = nb
+			loop
+				a_string.put_code (l_data.read_natural_8 (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		end
+
+	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= count
+			end_position_not_too_big: end_pos <= capacity
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
-			l_area: SPECIAL [CHARACTER]
 			l_data: like managed_data
 			i, nb: INTEGER
 		do
 			from
 				i := start_pos - 1
 				nb := end_pos
-				l_area := a_string.area
 				l_data := managed_data
 			until
 				i = nb
 			loop
-				l_area.put (l_data.read_natural_8 (i).to_character_8, i)
+				a_string.put_code (l_data.read_natural_8 (i), i + 1)
 				i := i + 1
 			end
 		end
 
-	read_string_into (a_string: STRING) is
+	read_string_into (a_string: STRING_GENERAL) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string' replacing any
 			-- existing characters.
@@ -158,6 +186,9 @@ feature -- Access
 			item_not_null: Result /= default_pointer
 		end
 
+	managed_data: MANAGED_POINTER
+			-- Hold data of Current.
+
 feature -- Measurement
 
 	capacity: INTEGER is
@@ -166,39 +197,56 @@ feature -- Measurement
 			Result := managed_data.count
 		end
 
+	bytes_count: INTEGER is
+			-- Number of bytes represented by the string.
+		do
+			Result := count
+		end
+
 	count: INTEGER
 			-- Number of characters in Current.
 
+	character_size: INTEGER is 1
+			-- Size of a character
+
 feature -- Element change
 
-	set_string (a_string: STRING) is
+	set_string (a_string: STRING_GENERAL) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string_8: a_string.is_valid_as_string_8
+		do
+			set_substring (a_string, 1, a_string.count)
+		end
+
+	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+			-- Set `string' with `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= a_string.count
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
-			l_area: SPECIAL [CHARACTER]
-			l_c: CHARACTER
 		do
-			nb := a_string.count
+			nb := end_pos - start_pos + 1
 			count := nb
-			
+
 			new_size := nb + 1
-			
+
 			if managed_data.count < new_size  then
 				managed_data.resize (new_size)
 			end
 
 			from
 				i := 0
-				l_area := a_string.area
 			until
 				i = nb
 			loop
-				l_c := l_area.item (i)
-				managed_data.put_natural_8 (l_c.code.to_natural_8, i)
-				i := i + 1
+				managed_data.put_natural_8 (a_string.code (i + start_pos).to_natural_8, i)
+				i := i +  1
 			end
 			managed_data.put_natural_8 (0, nb)
 		end
@@ -220,7 +268,7 @@ feature -- Element change
 		ensure
 			count_set: count = a_count
 		end
-		
+
 	fill_blank is
 			-- Fill Current with zeros.
 		do
@@ -228,7 +276,7 @@ feature -- Element change
 		ensure
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
-		
+
 	fill_value (a_value: INTEGER_8) is
 			-- Fill Current with `a_value'.
 		do
@@ -236,39 +284,18 @@ feature -- Element change
 		ensure
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'
 		end
-		
-feature {NONE} -- Implementation
 
-	managed_data: MANAGED_POINTER
-			-- Hold data of Current.
+feature {NONE} -- Implementation
 
 	c_strlen (ptr: POINTER): INTEGER is
 		external
-			"C macro signature (char *): EIF_INTEGER use <string.h>"
+			"C signature (char *): EIF_INTEGER use <string.h>"
 		alias
 			"strlen"
 		end
-		
+
 invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
 
-end -- class C_STRING
-
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (c) 1993-2006 University of Southern California and contributors.
---| All rights reserved.
---| Your use of this work is governed under the terms of the GNU General
---| Public License version 2.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support: http://support.eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+end

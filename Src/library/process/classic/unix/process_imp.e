@@ -19,11 +19,6 @@ inherit
 			{NONE}all
 		end
 
-	THREAD_CONTROL
-		export
-			{NONE}all
-		end
-
 	PROCESS_INFO_IMP
 		rename
 			command_line as environment_command_line,

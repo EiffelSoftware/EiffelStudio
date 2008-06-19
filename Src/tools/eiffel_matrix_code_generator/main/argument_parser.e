@@ -120,7 +120,7 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "1.3.1"
+			Result := "1.4.0"
 		end
 
 	loose_argument_name: STRING_8 is
@@ -180,7 +180,7 @@ feature {NONE} -- Option Names
 		-- Location where sliced pngs will be stored
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			-- `a_tool': Tool to initialize.
 		require
 			a_tool_attached: a_tool /= Void
-			not_a_tool_is_recycled: not a_tool.is_recycled
+			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
 		end
 
@@ -88,7 +88,7 @@ feature -- Access
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -99,7 +99,7 @@ feature -- Access
 			-- Tool icon pixmap
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -110,28 +110,27 @@ feature -- Access
 			-- Tool title.
 			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	edition_title: STRING_32
+	edition_title: !STRING_32
 			-- Tool title with an edition number.
 			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			if is_supporting_multiple_instances and then edition > 1 then
 				create Result.make (title.count + 3)
 				Result.append (title)
 				Result.append (" #" + edition.out)
 			else
-				Result := title
+				Result ?= title
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
@@ -140,28 +139,33 @@ feature -- Access
 			-- Note: When `is_supporting_multiple_instances' returns true this will
 			--       be set to an index greater than 1.
 
-	shortcut_preference_name: STRING_32
+	shortcut_preference_name: ?STRING
 			-- An optional shortcut preference name, for automatic preference binding.
 			-- Note: The preference should be registered in the default.xml file
 			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
 		require
-			not_is_recycled: not is_recycled
-		deferred
+			is_interface_usable: is_interface_usable
+		do
+			create Result.make (20)
+			Result.append (once "show_")
+			Result.append (name)
+			Result.append (once "_tool")
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_consistent: Result /= Void implies Result.is_equal (shortcut_preference_name)
 		end
 
-	frozen type_id: STRING_32 is
+	frozen type_id: !STRING_32
 			-- A type identifier, used to store layout information and reinstantiate the type from
 			-- a stored layout.
 		do
-			Result := internal_type_id
-			if Result = Void then
+			if {l_id: STRING_32} internal_type_id then
+				Result := l_id
+			else
 				Result := tool_utilities.tool_id (Current)
 				internal_type_id := Result
 			end
 		ensure then
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_consistent: Result = Result
 		end
@@ -195,20 +199,21 @@ feature -- Access
 
 feature {ES_DOCKABLE_TOOL_PANEL} -- Access
 
-	associated_file_name: !STRING
-			-- The tool's associated file name part, used for modularizing development of a tool.
+	name: !STRING
+			-- The tool's associated name, used for modularizing development of a tool.
+			-- Note: the name is edition independent!
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if {l_result: STRING} internal_associated_file_name then
+			if {l_result: STRING} internal_name then
 				Result := l_result
 			else
-				Result := tool_utilities.tool_associated_file_name (Current)
-				internal_associated_file_name := Result
+				Result := tool_utilities.tool_associated_name (Current)
+				internal_name := Result
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = associated_file_name
+			result_consistent: Result = name
 		end
 
 feature {ES_SHELL_TOOLS} -- Element change
@@ -218,7 +223,7 @@ feature {ES_SHELL_TOOLS} -- Element change
 			--
 			-- `a_edition': The tool edition index
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_supporting_multiple_instances: a_edition > 1 implies is_supporting_multiple_instances
 			a_edition_positive: a_edition > 0
 		local
@@ -255,7 +260,7 @@ feature -- Status report
 			-- Indicates if the tool can spawn multiple instances in the
 			-- same development window
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := False
 		end
@@ -265,7 +270,7 @@ feature {ES_SHELL_TOOLS} -- Status report
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the tool should be recycled on closing
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 				-- Keeps a single tool available always.
 			Result := is_supporting_multiple_instances and not is_hide_requested and then window.shell_tools.editions_of_tool ({like Current}, False) > 1
@@ -410,14 +415,14 @@ feature {NONE} -- Factory
 	create_tool: G
 			-- Creates the tool for first use on the development `window'
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			window_attached: window /= Void
-			not_window_is_recycled: not window.is_recycled
+			window_is_interface_usable: window.is_interface_usable
 			not_is_tool_instantiated: not is_tool_instantiated
 		deferred
 		ensure
 			result_attached: Result /= Void
-			not_result_is_recycled: not Result.is_recycled
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Implementation: Internal cache
@@ -430,8 +435,8 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `type_id'.
 			-- Note: Do not use directly!
 
-	internal_associated_file_name: ?like associated_file_name
-			-- Cached version of `associated_file_name'.
+	internal_name: ?like name
+			-- Cached version of `name'.
 			-- Note: Do not use directly!
 
 invariant

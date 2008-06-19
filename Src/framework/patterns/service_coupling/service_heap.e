@@ -3,7 +3,7 @@ indexing
 		Global service container and service provider.
 		
 		Note: There should only be one of these per application. Please use {SHARED_SERVICE_PROVIDER} to access the 
-		global service provider. From there query for the {SERVICE_CONTAINER} service to add services to the heap.
+		global service provider. From there query for the {SERVICE_CONTAINER_I} service to add services to the heap.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,94 +14,95 @@ class
 	SERVICE_HEAP
 
 inherit
-	SERVICE_I
-
-	SERVICE_CONTAINER_IMPL
+	SERVICE_PROVIDER_CONTAINER
 		rename
-			add_service as provider_add_service,
-			add_service_with_activator as provider_add_service_with_activator,
-			revoke_service as provider_revoke_service,
-			proffers_service as provider_proffers_service
+			register as provider_register,
+			register_with_activator as provider_register_with_activator,
+			revoke as provider_revoke,
+			is_service_proffered as provider_is_service_proffered
 		export {NONE}
-			provider_add_service,
-			provider_add_service_with_activator,
-			provider_revoke_service,
-			provider_proffers_service
+			provider_register,
+			provider_register_with_activator,
+			provider_revoke,
+			provider_is_service_proffered
 		redefine
-			internal_query_service
+			internal_service
 		end
-
-	SERVICE_PROVIDER
 
 create {SHARED_SERVICE_PROVIDER, SERVICE_HEAP}
 	make
 
-feature -- Extension
+feature -- Status report
 
-	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I) is
-			-- Add a service `a_service' with a linked association with type `a_type'.
-		require
-			a_type_attached: a_type /= Void
-			a_service_attached: a_service /= Void
-			not_proffers_service: not proffers_service (a_type)
-			service_conforms_to_type: service_conforms_to_type (a_type, a_service)
+	is_service_proffered (a_type: !TYPE [SERVICE_I]): BOOLEAN
+			-- Determines if a service has been registered and is offered for use. I.E. calling `service'
+			-- *should* (not guarenteed because of delayed-initialized services) yield a service object.
+			--
+			-- `a_type': The service type that the service object is associated with.
+			-- `a_promote': True to use the global service container; False to use the Current provider
+			--              only.
 		do
-			provider_add_service (a_type, a_service, False)
-		ensure
-			proffers_service: proffers_service (a_type)
+			Result := provider_is_service_proffered (a_type, False)
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I]) is
-			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instanciate
-			-- an instance of service when requested.
+feature -- Extension
+
+	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I)
+			-- Registers a service object using a identifying service type object.
+			--
+			-- `a_type': The service type that the service object conforms to.
+			-- `a_service': The actual service object to register.
 		require
-			a_type_attached: a_type /= Void
-			a_activator_attached: a_activator /= Void
-			not_proffers_service: not proffers_service (a_type)
+			not_is_service_proffered: not is_service_proffered (a_type)
+			a_service_conforms_to_a_type: (a_type #? a_service) /= Void
 		do
-			provider_add_service_with_activator (a_type, a_activator, False)
+			provider_register (a_type, a_service, False)
 		ensure
-			proffers_service: proffers_service (a_type)
+			is_service_proffered: is_service_proffered (a_type)
+		end
+
+	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I])
+			-- Registers a service activator function, used to create a service on demand, using a
+			-- identifying service type object.
+			--
+			-- `a_type': The service type that the service object conforms to.
+			-- `a_activator': The function used to attempt to retrieve a service object.
+		require
+			not_is_service_proffered: not is_service_proffered (a_type)
+		do
+			provider_register_with_activator (a_type, a_activator, False)
+		ensure
+			is_service_proffered: is_service_proffered (a_type)
 		end
 
 feature -- Removal
 
-	revoke_service (a_type: TYPE [ANY]) is
-			-- Removes service associated with type `a_type'.
-			-- If a client promote the removal services in a parent container will also be removed.
-		require
-			a_type_attached: a_type /= Void
-		do
-			provider_revoke_service (a_type, False)
-		ensure
-			not_proffers_service: not proffers_service (a_type)
-		end
-
-feature -- Query
-
-	proffers_service (a_type: TYPE [ANY]): BOOLEAN is
-			-- Determines if service associate with type `a_type' is being proffered.
-		require
-			a_type_attached: a_type /= Void
-		do
-			Result := provider_proffers_service (a_type, False)
-		end
-
-feature -- Query
-
-	internal_query_service (a_type: TYPE [ANY]): ANY
-			-- Queries for service `a_type' and returns result if service was found on Current.
+	revoke (a_type: !TYPE [SERVICE_I])
+			-- Revokes a registered service, using the service type object used when registering the service.
+			-- Note: This may not actually remove the service object because the service object may have
+			--       been registered using mulitple service type objects.
 			--
-			-- Note: Typically will retrieve a concealed service as the result, which must be
-			--       revealed using `reveal_service'
+			-- `a_type': The service type that the service object is associated with.
+		require
+			is_service_proffered: is_service_proffered (a_type)
 		do
-			if proffers_service (a_type) then
-				Result := services [type_hash_code (a_type)]
+			provider_revoke (a_type, False)
+		ensure
+			not_is_service_proffered: not is_service_proffered (a_type)
+		end
+
+feature -- Query
+
+	internal_service (a_type: !TYPE [SERVICE_I]): ?ANY
+			-- <Precursor>
+		do
+			if is_service_proffered (a_type) then
+				Result := services [type_hash (a_type)]
 			end
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

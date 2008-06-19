@@ -7,10 +7,9 @@ indexing
 		use {SHARED_SERVICE_PROVIDER} as a client.
 		
 		On first initialization a service heap {SERVICE_HEAP} will be created to store and maintain a list of services.
-		After initialization three services will be registered. 
-			* {SERVICE_CONTAINER} provides access to the global service container by-passing any chained container.
-			* {SERVICE_PROVIDER} provides access to the global service provider by-passing any chained provider.
-			* {SERVICE_HEAP} providess access to the global service heap.
+		After initialization two services will be registered. 
+			* {SERVICE_CONTAINER_S} provides access to the global service container by-passing any chained container.
+			* {SERVICE_PROVIDER_S} provides access to the global service provider by-passing any chained provider.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,27 +21,29 @@ class
 
 feature -- Access
 
-	frozen service_provider: SERVICE_PROVIDER is
-			-- Shared access to the global service provider
+	frozen service_provider: !SERVICE_PROVIDER_I
+			-- Shared access to the global service provider.
 		local
-			l_provider: SERVICE_HEAP
-			l_container: SERVICE_CONTAINER
+			l_provider: !SERVICE_HEAP
 		once
 			create l_provider.make
-
-				-- Proffer self as service container, provider and general heap access
-			l_container := l_provider
-			l_container.add_service ({SERVICE_CONTAINER}, l_provider, False)
-			l_container.add_service ({SERVICE_PROVIDER}, l_provider, False)
-			l_container.add_service ({SERVICE_HEAP}, l_provider, False)
-
 			Result := l_provider
-		ensure
-			result_attached: Result /= Void
+
+			l_provider.register_with_activator ({SERVICE_CONTAINER_S},
+				agent (ia_container: !SERVICE_CONTAINER_I): ?SERVICE_CONTAINER_S
+					do
+						create Result.make (ia_container)
+					end (l_provider))
+
+			l_provider.register_with_activator ({SERVICE_PROVIDER_S},
+				agent (ia_provider: !SERVICE_PROVIDER_I): ?SERVICE_PROVIDER_S
+					do
+						create Result.make (ia_provider)
+					end (l_provider))
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

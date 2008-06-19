@@ -1,24 +1,50 @@
 indexing
 	description: "[
-		Encapsulates a service for storage so its retrieval may be abstracted and specifically implemented.
+		The service interface for retrieving the global service provider.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class
-	SERVICE_CONCEALER
+frozen class
+	SERVICE_PROVIDER_S
 
-feature -- Access
+inherit
+	SERVICE_I
 
-	service: SERVICE_I is
-			-- Actual service
-		deferred
+	SERVICE_PROVIDER_I
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_provider: !like provider)
+			-- Initializes the service provider service with an actual provider.
+			--
+			-- `a_provider': The actual service provider use to delegate calls to.
+		do
+			provider := a_provider
+		ensure
+			provider_set: provider = a_provider
 		end
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+feature {NONE} -- Access
+
+	provider: !SERVICE_PROVIDER_I
+			-- Actual service provider to perform operations on.
+
+feature -- Query
+
+	service (a_type: !TYPE [SERVICE_I]): ?SERVICE_I
+			-- <Precursor>
+		do
+			Result := provider.service (a_type)
+		end
+
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -49,4 +75,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_CONCEALER}
+end
+

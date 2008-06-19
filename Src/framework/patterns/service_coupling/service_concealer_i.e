@@ -1,17 +1,10 @@
 indexing
 	description: "[
-		Base interface for all classes exposing a means to query for a local service.
+		Encapsulates a service for storage so its retrieval may be abstracted and specifically implemented.
 		
-		Note: Provides access to services registered in by using a {SERVICE_CONTAINER}. Services
-		are added and queried for using a service type, which is a TYPE [G]. 
-		
-		Queries are always made on a locally available service provider. Any services registered on the local
-		service provider are given priority. If no local service is available a parent service provider is
-		checked for the service all the way up to the root service provider, implemented on {SERVICE_HEAP}.
-		
-		Clients are free to query directly for the global service provider using {SERVICE_PROVIDER} or {SERVICE_CONTAINER}.
-		However, it's not guarenteed that querying for {SERVICE_PROVIDER} or {SERVICE_CONTAINER} will return
-		the global versions of those services. These may also be localized services.
+		The purpose of a concealer is to provide access to a service using a direct ({SERVICE_STATIC_CONCEALER})
+		or another indirect manner, allowing delayed initialization of a service until a client actually
+		requests the service. See descendants for more information.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,21 +12,17 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	SERVICE_PROVIDER
+	SERVICE_CONCEALER_I
 
-feature -- Query
+feature -- Access
 
-	query_service (a_type: TYPE [ANY]): SERVICE_I
-			-- Queries for service `a_type' and returns result if service was found on Current
-		require
-			a_type_attached: a_type /= Void
+	service: ?SERVICE_I
+			-- Actual service.
 		deferred
-		ensure
-			result_sited: Result /= Void implies Result.site = Current
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -64,4 +53,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_PROVIDER}
+end -- class {SERVICE_CONCEALER_I}

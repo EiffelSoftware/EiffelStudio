@@ -1,7 +1,7 @@
 indexing
 	description: "[
-		Encapsulates a service object so that the services is created, through an activator function, when requested
-		for the first time.
+		Encapsulates a service object so that the services is created, through an activator function,
+		when requested for the first time.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,17 +12,18 @@ class
 	SERVICE_DELAYED_CONCEALER
 
 inherit
-	SERVICE_CONCEALER
+	SERVICE_CONCEALER_I
 
-create
+create {SERVICE_CONTAINER_I}
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_activator: like activator) is
+	make (a_activator: !like activator)
 			-- Initialize concealer with activator function `activator'
-		require
-			a_activator_attached: a_activator /= Void
+			--
+			-- `a_activator': A function used to retrieve a service object, when the service is requested
+			--                for the first time.
 		do
 			activator := a_activator
 		ensure
@@ -31,37 +32,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: SERVICE_I is
-			-- Actual service
+	service: ?SERVICE_I
+			-- <Precursor>
+		local
+			l_activator: ?like activator
 		do
 			Result := internal_service
 			if Result = Void then
-				Result := activator.item ([])
-				if Result /= Void then
-						-- Detach activator as it is no longer required
-					activator := Void
+				l_activator := activator
+				if l_activator /= Void then
+					Result := activator.item (Void)
+					if Result /= Void then
+							-- Detach activator as it is no longer required
+						activator := Void
+					end
+					internal_service := Result
 				end
-				internal_service := Result
 			end
 		ensure then
 			internal_service_set: internal_service = Result
+			activator_detached: Result /= Void implies activator = Void
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
-	activator: FUNCTION [ANY, TUPLE, SERVICE_I]
-			-- Function used to initialize service
+	activator: ?FUNCTION [ANY, TUPLE, ?SERVICE_I]
+			-- The function use to delay-active a service.
+			-- Note: Once the service has been activated the function will not long be available.
 
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Implementation: Internal cache
 
-	internal_service: like service
-			-- Cached version of `service'
+	internal_service: ?like service
+			-- Cached version of `service'.
+			-- Note: Do not use directly!
 
 invariant
 	activator_attached: internal_service = Void implies activator /= Void
+	activator_detached: internal_service /= Void implies activator = Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

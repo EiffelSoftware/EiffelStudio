@@ -1,6 +1,7 @@
 indexing
 	description: "[
-		Encapsulates a service providing immediate access to the service.
+		Encapsulates a service providing immediate access to the service. This class is provided only
+		for type compatibility and serves no real function.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,17 +12,17 @@ class
 	SERVICE_STATIC_CONCEALER
 
 inherit
-	SERVICE_CONCEALER
+	SERVICE_CONCEALER_I
 
-create
+create {SERVICE_CONTAINER_I}
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_service: like service) is
-			-- Initialize concealer with service `a_service'
-		require
-			a_service_attached: a_service /= Void
+	make (a_service: !like service)
+			-- Initializes the service concealer with a service object.
+			--
+			-- `a_service': The services the concealer will reveal on request.
 		do
 			service := a_service
 		ensure
@@ -30,11 +31,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: SERVICE_I
-			-- Actual service
+	service: !SERVICE_I
+			-- <Precursor>
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

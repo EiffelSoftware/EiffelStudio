@@ -1,21 +1,38 @@
 indexing
 	description: "[
-		A base interface for all services.
+		Base interface for all classes exposing a means to query for a service.
 		
-		All services will be "sited" with the service provider ({SERVICE_PROVIDER_I}) the service was
-		registered on, or some other provider if the provider is not also a container
-		({SERVICE_CONTAINER_I}).
+		Note: Provides access to services registered in by using a {SERVICE_CONTAINER_I}. Services
+		are added and queried for using a service type, which is a TYPE [G]. 
+		
+		Queries are always made on a locally available service provider. Any services registered on the local
+		service provider are given priority. If no local service is available a parent service provider is
+		checked for the service all the way up to the root service provider, implemented on {SERVICE_HEAP}.
+		This is also accessible using querying for the service {SERVICE_PROVIDER_S}.
+		
+		Clients are free to query directly for the global service provider using {SERVICE_PROVIDER_S} or
+		{SERVICE_CONTAINER_S}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class
-	SERVICE_I
+	SERVICE_PROVIDER_I
 
-inherit
-	SITE [SERVICE_PROVIDER_I]
+feature -- Query
+
+	service (a_type: !TYPE [SERVICE_I]): ?SERVICE_I
+			-- Attempts to retrieve a service.
+			--
+			-- `a_type': The service type to query a compatible service for.
+			-- `Result': A service conforming to the specified type of Void if no matching service was found.
+		deferred
+		ensure
+			result_sited: Result /= Void implies Result.site = Current
+			result_compatiable: Result /= Void implies a_type.attempt (Result) /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
@@ -49,4 +66,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class {SERVICE_PROVIDER_I}

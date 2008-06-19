@@ -25,8 +25,6 @@ inherit
 			pixmap_success
 		end
 
-	EB_SHARED_PIXMAPS
-
 	EB_EXTERNAL_OUTPUT_CONSTANTS
 
 	SHARED_PLATFORM_CONSTANTS
@@ -127,41 +125,41 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_h_area_1)
 
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
-			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.command_send_to_external_editor_icon)
-			open_editor_btn.set_pixel_buffer (pixmaps.icon_pixmaps.command_send_to_external_editor_icon_buffer)
+			open_editor_btn.set_pixmap (stock_pixmaps.command_send_to_external_editor_icon)
+			open_editor_btn.set_pixel_buffer (stock_pixmaps.command_send_to_external_editor_icon_buffer)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
 
-			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
-			save_output_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_save_icon_buffer)
+			save_output_btn.set_pixmap (stock_pixmaps.general_save_icon)
+			save_output_btn.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 
 			w_code_btn.set_text (interface_names.e_w_code)
-			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
-			w_code_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_open_icon_buffer)
+			w_code_btn.set_pixmap (stock_pixmaps.general_open_icon)
+			w_code_btn.set_pixel_buffer (stock_pixmaps.general_open_icon_buffer)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
 			w_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_w_code_dir, interface_names.e_open_c_file))
 			w_code_btn.pointer_button_press_actions.extend (agent on_open_w_code_in_file_browser)
 			w_code_btn.drop_actions.extend (agent on_open_c_file (?, True))
 
 			f_code_btn.set_text (interface_names.e_f_code)
-			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
-			f_code_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_open_icon_buffer)
+			f_code_btn.set_pixmap (stock_pixmaps.general_open_icon)
+			f_code_btn.set_pixel_buffer (stock_pixmaps.general_open_icon_buffer)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
 			f_code_btn.pointer_button_press_actions.extend (agent on_open_f_code_in_file_browser)
 			f_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_f_code_dir, interface_names.e_open_c_file))
 			f_code_btn.drop_actions.extend (agent on_open_c_file (?, False))
 
 			project_dir_btn.set_text (interface_names.e_open_project)
-			project_dir_btn.set_pixmap (pixmaps.icon_pixmaps.document_eiffel_project_icon)
-			project_dir_btn.set_pixel_buffer (pixmaps.icon_pixmaps.document_eiffel_project_icon_buffer)
+			project_dir_btn.set_pixmap (stock_pixmaps.document_eiffel_project_icon)
+			project_dir_btn.set_pixel_buffer (stock_pixmaps.document_eiffel_project_icon_buffer)
 			project_dir_btn.select_actions.extend (agent on_go_to_project_dir)
 			project_dir_btn.pointer_button_press_actions.extend (agent on_open_project_dir_in_file_browser)
 			project_dir_btn.set_tooltip (interface_names.e_go_to_project_dir)
 			project_dir_btn.drop_actions.extend (agent on_pebble_drop)
 
-			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
-			clear_output_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_reset_icon_buffer)
+			clear_output_btn.set_pixmap (stock_pixmaps.general_reset_icon)
+			clear_output_btn.set_pixel_buffer (stock_pixmaps.general_reset_icon_buffer)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
@@ -188,20 +186,14 @@ feature{NONE} -- Initialization
 
 	pixmap_failure: EV_PIXMAP is
 			-- Pixmap shown when c compilation failed.
-		local
-			l_constants: EB_CONSTANTS
 		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_failed_icon
+			Result := stock_pixmaps.tool_c_output_failed_icon
 		end
 
 	pixmap_success: EV_PIXMAP is
 			-- Pixmap shown when c compilation successed.
-		local
-			l_constants: EB_CONSTANTS
 		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_successful_icon
+			Result := stock_pixmaps.tool_c_output_successful_icon
 		end
 
 feature -- Command
@@ -506,7 +498,7 @@ feature -- C output pixmap management
 	on_draw_c_output_pixmap is
 			-- Draw pixmap animation for C output.
 		do
-			draw_pixmap_on_tab (icon_compiling.item (c_output_timer_counter))
+			draw_pixmap_on_tab (stock_pixmaps.compile_animation_anim.item (c_output_timer_counter))
 			c_output_timer_counter := c_output_timer_counter + 1
 			if c_output_timer_counter > 10 then
 				c_output_timer_counter := 1

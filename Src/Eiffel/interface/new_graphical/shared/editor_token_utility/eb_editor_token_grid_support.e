@@ -70,7 +70,7 @@ feature -- Access
 		do
 			create l_token
 			l_border_height := l_token.top_border + l_token.bottom_border + l_token.border_line_width * 2
-			l_pixmap_height := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.pixel_height
+			l_pixmap_height := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.icon_height
 
 			if a_preferenced_font_used then
 				Result := (create {SHARED_EDITOR_FONT}).line_height

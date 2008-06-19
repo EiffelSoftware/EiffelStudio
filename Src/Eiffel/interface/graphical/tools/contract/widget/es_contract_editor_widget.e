@@ -879,7 +879,7 @@ feature {NONE} -- Population
 					l_pixmap := stock_pixmaps.feature_routine_icon_buffer
 				end
 				if not a_editable then
-					l_pixmap := (create {EB_SHARED_PIXMAPS}).icon_buffer_with_overlay (l_pixmap, stock_pixmaps.overlay_locked_icon_buffer, 0, 0)
+					l_pixmap := stock_pixmaps.icon_buffer_with_overlay (l_pixmap, stock_pixmaps.overlay_locked_icon_buffer, 0, 0)
 				end
 				l_item.set_pixmap (l_pixmap)
 
@@ -905,7 +905,7 @@ feature {NONE} -- Population
 				create l_item
 				l_pixmap := pixmap_factory.pixmap_from_class_i (a_class)
 				if not a_editable then
-					l_pixmap := (create {EB_SHARED_PIXMAPS}).icon_buffer_with_overlay (l_pixmap, stock_pixmaps.overlay_locked_icon_buffer, 0, 0)
+					l_pixmap := stock_pixmaps.icon_buffer_with_overlay (l_pixmap, stock_pixmaps.overlay_locked_icon_buffer, 0, 0)
 				end
 				l_item.set_pixmap (l_pixmap)
 				l_item.set_text_with_tokens (a_context.contract_keywords (True))

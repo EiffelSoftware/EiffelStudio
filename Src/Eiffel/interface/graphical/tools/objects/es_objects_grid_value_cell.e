@@ -18,8 +18,6 @@ inherit
 		end
 
 	EB_SHARED_PIXMAPS
-		rename
-			implementation as pixmaps_impl
 		undefine
 			copy, default_create
 		end

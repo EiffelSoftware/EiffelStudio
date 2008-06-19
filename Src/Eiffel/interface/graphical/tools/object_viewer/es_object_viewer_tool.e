@@ -12,7 +12,10 @@ frozen class
 
 inherit
 	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [ES_OBJECT_VIEWER_TOOL_PANEL]
-
+		redefine
+			shortcut_preference_name
+		end
+		
 create {NONE}
 	default_create
 
@@ -39,7 +42,7 @@ feature -- Access
 			Result := interface_names.t_object_viewer_tool
 		end
 
-	shortcut_preference_name: STRING_32
+	shortcut_preference_name: STRING
 			-- An optional shortcut preference name, for automatic preference binding.
 			-- Note: The preference should be registered in the default.xml file
 			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.

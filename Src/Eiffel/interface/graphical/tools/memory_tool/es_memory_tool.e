@@ -12,7 +12,7 @@ frozen class
 
 inherit
 	ES_TOOL [ES_MEMORY_TOOL_PANEL]
-	
+
 create {NONE}
 	default_create
 
@@ -37,13 +37,6 @@ feature -- Access
 			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		do
 			Result := "Memory Tool"
-		end
-
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
 		end
 
 feature {NONE} -- Factory

@@ -40,14 +40,6 @@ feature -- Access
 			Result := interface_names.l_tab_dependency_info
 		end
 
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_dependency_tool"
-		end
-
 feature -- Status report
 
 	is_customizable: BOOLEAN = True

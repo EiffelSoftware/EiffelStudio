@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initializes the resource handler
+			-- Initializes the resource handler.
 		do
 			create matrices.make_default
 		end
@@ -97,7 +97,7 @@ feature -- Query
 					create l_buffer
 					l_buffer.set_with_named_file (l_file_name)
 
-						-- Ensure only successfil loads are cached!
+						-- Ensure only successful loads are cached!
 					l_matrices.force_last (l_buffer, a_name)
 					Result := l_buffer
 				end

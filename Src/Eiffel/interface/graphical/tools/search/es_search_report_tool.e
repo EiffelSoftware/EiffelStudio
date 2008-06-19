@@ -53,14 +53,6 @@ feature -- Access
 			Result := interface_names.t_search_report_tool
 		end
 
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_search_report_tool"
-		end
-
 feature {NONE} -- Factory
 
 	create_tool: ES_SEARCH_REPORT_TOOL_PANEL

@@ -18,7 +18,7 @@ feature -- Query (Pixmap)
 		require
 			a_group_not_void: a_group /= Void
 		do
-			Result := pixmaps.pixmap_from_group (a_group)
+			Result := pixmaps.configuration_pixmaps.pixmap_from_group (a_group)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -29,7 +29,7 @@ feature -- Query (Pixmap)
 			a_path_not_void: a_path /= Void
 			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
 		do
-			Result := pixmaps.pixmap_from_group_path (a_group, a_path)
+			Result := pixmaps.configuration_pixmaps.pixmap_from_group_path (a_group, a_path)
 		ensure
 			result_not_void: Result /= Void
 		end

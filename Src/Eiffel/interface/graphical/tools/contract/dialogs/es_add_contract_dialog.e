@@ -132,7 +132,7 @@ feature -- Dialog access
 	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_buffer_with_overlay (stock_pixmaps.tool_contract_editor_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0)
+			Result := stock_pixmaps.icon_buffer_with_overlay (stock_pixmaps.tool_contract_editor_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0)
 		end
 
 	title: STRING_32

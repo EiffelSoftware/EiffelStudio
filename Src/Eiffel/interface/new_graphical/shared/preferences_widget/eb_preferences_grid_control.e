@@ -67,8 +67,6 @@ inherit
 		end
 
 	EB_SHARED_PIXMAPS
-		rename
-			implementation as px_implementation
 		undefine
 			copy,
 			default_create

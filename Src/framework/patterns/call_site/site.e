@@ -12,13 +12,15 @@ class
 
 feature -- Initialization
 
-	set_site (a_site: like site)
-			-- Sites `site' with `a_site'.
+	set_site (a_site: ?like site)
+			-- Sites, or unsites, Current with a site object.
+			--
+			-- `a_site': The site object to site Current with or Void to unsite.
 		require
 			is_valid_site: a_site /= Void implies is_valid_site (a_site)
 		local
-			l_old_site: like site
-			l_entities: like siteable_entities
+			l_old_site: ?G
+			l_entities: !like siteable_entities
 		do
 			l_old_site := site
 			site := a_site
@@ -28,10 +30,12 @@ feature -- Initialization
 
 			l_entities := siteable_entities
 			if not l_entities.is_empty then
-				l_entities.do_all (agent (a_item: like Current)
+				l_entities.do_all (agent (ia_site: !SITE [G])
 					do
-						if a_item.is_valid_site (site) then
-							a_item.set_site (site)
+						if ia_site.is_valid_site (site) then
+							ia_site.site := site
+						else
+							check False end
 						end
 					end)
 			end
@@ -42,7 +46,9 @@ feature -- Initialization
 feature {NONE} -- Initialization
 
 	on_sited
-			-- Called when Current has been sited
+			-- Called when Current has been sited with a valid site object.
+			-- Note: This is only called when Current is sited with an object, not when Current is sited
+			--       with Void.
 		require
 			site_attached: site /= Void
 		do
@@ -50,23 +56,24 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	site: G assign set_site
+	site: ?G assign set_site
 			-- Access to sited object instance (Void if unsited)
 
 feature {NONE} -- Access
 
-	siteable_entities: ARRAYED_LIST [SITE [G]]
-			-- List of siteable entities to automatically site when `Current' is sited
+	siteable_entities: !ARRAYED_LIST [!SITE [G]]
+			-- List of siteable entities to automatically site when Current is sited.
 		do
 			create Result.make (0)
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Query
 
-	is_valid_site (a_site: ANY): BOOLEAN
-			-- Determines if `a_site' is a valid site object
+	is_valid_site (a_site: ?ANY): BOOLEAN
+			-- Determines if an object is a valid site object.
+			--
+			-- `a_site': The site object to determine validity of.
+			-- `Result': True if the site object is valid; False otherwise.
 		local
 			l_ot: G
 		do
@@ -75,7 +82,7 @@ feature -- Query
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

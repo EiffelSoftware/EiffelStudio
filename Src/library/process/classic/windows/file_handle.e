@@ -1,5 +1,7 @@
 indexing
 	description: "Manipulate Windows handle to file"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -63,25 +65,43 @@ feature -- Factory
 
 	create_pipe_write_inheritable: TUPLE [POINTER, POINTER] is
 			-- Create pipe where `write' part of pipe can be written to.
-			-- Actual type is TUPLE [read, write: INTEGER]
+			-- Actual type is TUPLE [read, write: POINTER]
 		local
 			l_read, l_write, l_temp: POINTER
 		do
 			if cwin_create_pipe ($l_read, $l_temp, default_pointer, 0) then
-				duplicate_handle (l_temp, $l_write)
-				Result := [l_read, l_write]
+				if duplicate_handle (l_temp, $l_write) then
+					if close (l_temp) then
+						Result := [l_read, l_write]
+					else
+						display_error
+					end
+				else
+					display_error
+				end
+			else
+				display_error
 			end
 		end
 
 	create_pipe_read_inheritable: TUPLE [POINTER, POINTER] is
 			-- Create pipe where `write' part of pipe can be written to.
-			-- Actual type is TUPLE [read, write: INTEGER]
+			-- Actual type is TUPLE [read, write: POINTER]
 		local
 			l_read, l_write, l_temp: POINTER
 		do
 			if cwin_create_pipe ($l_temp, $l_write, default_pointer, 0) then
-				duplicate_handle (l_temp, $l_read)
-				Result := [l_read, l_write]
+				if duplicate_handle (l_temp, $l_read) then
+					if close (l_temp) then
+						Result := [l_read, l_write]
+					else
+						display_error
+					end
+				else
+					display_error
+				end
+			else
+				display_error
 			end
 		end
 
@@ -121,18 +141,30 @@ feature -- Input
 			valid_count: a_count > 0
 		local
 			l_str: C_STRING
+			l_success: BOOLEAN
+			l_bytes: like last_read_bytes
 		do
 			create l_str.make_empty (a_count)
-			if
-				cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
-			then
+			from
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $l_bytes, default_pointer)
+			until
+				not l_success or else l_bytes > 0
+			loop
+					-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
+					-- on a successful read, which means we are beyond the current end of the file at
+					-- the time of the read operation. So we have to repeat the call until we get something.
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $l_bytes, default_pointer)
+			end
+			if l_success then
+				check l_bytes > 0 end
 				last_read_successful := True
-				l_str.set_count (last_read_bytes)
-				last_string := l_str.substring (1, last_read_bytes)
+				l_str.set_count (l_bytes)
+				last_string := l_str.substring (1, l_bytes)
 			else
 				last_read_successful := False
 				last_string := Void
 			end
+			last_read_bytes := l_bytes
 		end
 
 	read_line (a_handle: POINTER) is
@@ -141,7 +173,8 @@ feature -- Input
 			-- Make result available in `last_string'.
 		local
 			l_str: C_STRING
-			l_done: BOOLEAN
+			l_done, l_success: BOOLEAN
+			l_bytes: like last_read_bytes
 		do
 			from
 				create last_string.make (10)
@@ -150,22 +183,33 @@ feature -- Input
 			until
 				not last_read_successful or l_done
 			loop
-				if cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer) then
+				from
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $l_bytes, default_pointer)
+				until
+					not l_success or else l_bytes > 0
+				loop
+						-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
+						-- on a successful read, which means we are beyond the current end of the file at
+						-- the time of the read operation. So we have to repeat the call until we get something.
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $l_bytes, default_pointer)
+				end
+				if l_success then
+					check l_bytes > 0 end
 					last_read_successful := True
-					l_str.set_count (last_read_bytes)
-					last_string.append (l_str.substring (1, last_read_bytes))
+					l_str.set_count (l_bytes)
+					last_string.append (l_str.substring (1, l_bytes))
 					l_done := last_string.item (last_string.count) = '%N'
 				else
 					last_read_successful := False
 					last_string := Void
 				end
-
 			end
+			last_read_bytes := l_bytes
 		end
 
 feature -- Element change
 
-	duplicate_handle (a_handle: POINTER; a_duplicated_handle: TYPED_POINTER [POINTER]) is
+	duplicate_handle (a_handle: POINTER; a_duplicated_handle: TYPED_POINTER [POINTER]): BOOLEAN is
 			-- Duplicate `a_handle', mostly used for:
 			-- We've set the SA so the pipe handles are inheritable.  However,
 			-- we only want the write end of the pipe inheritable, so we use
@@ -175,15 +219,14 @@ feature -- Element change
 			"C inline use <windows.h>"
 		alias
 			"[
-				DuplicateHandle (
+				return EIF_TEST(DuplicateHandle (
 					GetCurrentProcess(),
 					(HANDLE) $a_handle,
 					GetCurrentProcess(),
 					(HANDLE *) $a_duplicated_handle,
 					0,
 					TRUE,
-					DUPLICATE_SAME_ACCESS);
-				CloseHandle($a_handle);
+					DUPLICATE_SAME_ACCESS));
 			]"
 		end
 
@@ -200,11 +243,21 @@ feature -- Element change
 		require
 			non_void_string: a_string /= Void
 		local
-			a_wel_string: C_STRING
+			l_str: C_STRING
+			l_bytes: like last_written_bytes
 		do
-			create a_wel_string.make (a_string)
-			last_write_successful := cwin_write_file (a_handle, a_wel_string.item,
-				a_string.count, $last_written_bytes, default_pointer)
+			create l_str.make (a_string)
+			last_write_successful := cwin_write_file (a_handle, l_str.item,
+				a_string.count, $l_bytes, default_pointer)
+			last_written_bytes := l_bytes
+		end
+
+feature -- Error reporting
+
+	display_error is
+		do
+			-- By default do nothing, it can be used for debugging
+			-- Most likely it will use {WEL_ERROR}.display_last_error
 		end
 
 feature {NONE} -- Implementation

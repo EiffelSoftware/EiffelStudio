@@ -108,8 +108,8 @@ feature {NONE} -- Status
 			if Result = 1 then
 					-- Make sure thread 2 attempts to get result of once function
 					-- that is not yet calculated by thread 1
-				delay_sem.post
-				sleep (1_000_000_000)
+				delay_sem.post;
+				(create {EXECUTION_ENVIRONMENT}).sleep (1_000_000_000)
 			end
 		end
 

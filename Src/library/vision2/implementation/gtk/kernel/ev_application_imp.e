@@ -27,6 +27,9 @@ inherit
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
+		rename
+			sleep as nano_sleep
+		end
 
 	EV_GTK_EVENT_STRINGS
 
@@ -991,7 +994,7 @@ feature -- Basic operation
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
 		do
-			usleep (msec * 1000)
+			nano_sleep ({INTEGER_64} 1000000 * msec)
 		end
 
 	destroy is
@@ -1363,11 +1366,6 @@ feature {NONE} -- External implementation
 			-- `a_mode' = 0 means no log messages, 1 = messages, 2 = messages with exceptions.
 		external
 			"C (EIF_INTEGER) | %"ev_c_util.h%""
-		end
-
-	usleep (micro_seconds: INTEGER) is
-		external
-			"C | <unistd.h>"
 		end
 
 	gtk_init is

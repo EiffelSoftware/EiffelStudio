@@ -74,7 +74,7 @@ stats */
 	/*--------*/
 	/* file.c */
 	/*--------*/
-#define FILE_TYPE_MAX 4		/* max size of fopen type string (like "a+b") */
+#define FILE_TYPE_MAX 5		/* max size of fopen type string (like "a+b") */
 
 
 #ifdef __cplusplus

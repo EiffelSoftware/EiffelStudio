@@ -14,7 +14,7 @@ feature
 			i := 0
 			launch
 			join_all
-			sleep (5_000_000_000)
+			execution_environment.sleep (5_000_000_000)
 			print ("Hello from the GC%N")
 			exit_application (0)
 		end
@@ -49,11 +49,16 @@ feature
 					t.launch
 --					t.join
 					if i = 49 then
-						sleep (1_000_000_000)
+						execution_environment.sleep (1_000_000_000)
 						exit
 					end
 				end
 			end
+		end
+
+	execution_environment: EXECUTION_ENVIRONMENT is
+		once
+			create Result
 		end
 
 end

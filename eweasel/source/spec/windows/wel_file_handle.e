@@ -142,27 +142,29 @@ feature -- Input
 		local
 			l_str: C_STRING
 			l_success: BOOLEAN
+			l_bytes: like last_read_bytes
 		do
 			create l_str.make_empty (a_count)
 			from
-				l_success := cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $l_bytes, default_pointer)
 			until
-				not l_success or else last_read_bytes > 0
+				not l_success or else l_bytes > 0
 			loop
 					-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
 					-- on a successful read, which means we are beyond the current end of the file at
 					-- the time of the read operation. So we have to repeat the call until we get something.
-				l_success := cwin_read_file (a_handle, l_str.item, a_count, $last_read_bytes, default_pointer)
+				l_success := cwin_read_file (a_handle, l_str.item, a_count, $l_bytes, default_pointer)
 			end
 			if l_success then
-				check last_read_bytes >0 end
+				check l_bytes > 0 end
 				last_read_successful := True
-				l_str.set_count (last_read_bytes)
-				last_string := l_str.substring (1, last_read_bytes)
+				l_str.set_count (l_bytes)
+				last_string := l_str.substring (1, l_bytes)
 			else
 				last_read_successful := False
 				last_string := Void
 			end
+			last_read_bytes := l_bytes
 		end
 
 	read_line (a_handle: POINTER) is
@@ -172,6 +174,7 @@ feature -- Input
 		local
 			l_str: C_STRING
 			l_done, l_success: BOOLEAN
+			l_bytes: like last_read_bytes
 		do
 			from
 				create last_string.make (10)
@@ -181,26 +184,27 @@ feature -- Input
 				not last_read_successful or l_done
 			loop
 				from
-					l_success := cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer)
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $l_bytes, default_pointer)
 				until
-					not l_success or else last_read_bytes > 0
+					not l_success or else l_bytes > 0
 				loop
 						-- Per MSDN documentation, when we are here if the call to `ReadFile' read `0' bytes
 						-- on a successful read, which means we are beyond the current end of the file at
 						-- the time of the read operation. So we have to repeat the call until we get something.
-					l_success := cwin_read_file (a_handle, l_str.item, 1, $last_read_bytes, default_pointer)
+					l_success := cwin_read_file (a_handle, l_str.item, 1, $l_bytes, default_pointer)
 				end
 				if l_success then
-					check last_read_bytes >0 end
+					check l_bytes > 0 end
 					last_read_successful := True
-					l_str.set_count (last_read_bytes)
-					last_string.append (l_str.substring (1, last_read_bytes))
+					l_str.set_count (l_bytes)
+					last_string.append (l_str.substring (1, l_bytes))
 					l_done := last_string.item (last_string.count) = '%N'
 				else
 					last_read_successful := False
 					last_string := Void
 				end
 			end
+			last_read_bytes := l_bytes
 		end
 
 feature -- Element change
@@ -240,10 +244,12 @@ feature -- Element change
 			non_void_string: a_string /= Void
 		local
 			l_str: C_STRING
+			l_bytes: like last_written_bytes
 		do
 			create l_str.make (a_string)
 			last_write_successful := cwin_write_file (a_handle, l_str.item,
-				a_string.count, $last_written_bytes, default_pointer)
+				a_string.count, $l_bytes, default_pointer)
+			last_written_bytes := l_bytes
 		end
 
 feature -- Error reporting

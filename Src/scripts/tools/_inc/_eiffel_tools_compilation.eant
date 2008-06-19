@@ -169,7 +169,7 @@
 	</target>
 
 <!-- F_code output usage -->
-	<target name="generate_f_code" depend="init" >
+	<target name="generate_f_code" depend="init_skip" unless="$_SKIP=true" >
 		<argument name="a_comp_dir" />
 		<argument name="a_out_dir" />
 		<argument name="a_force_clean" />

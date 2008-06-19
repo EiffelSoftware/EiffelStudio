@@ -268,6 +268,7 @@ feature {NONE} -- Access
 		local
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
+			l_wm: ?EB_WINDOW_MANAGER
 		do
 			Result := internal_development_window
 			if Result = Void then
@@ -287,7 +288,10 @@ feature {NONE} -- Access
 						l_windows.forth
 					end
 				else
-					Result := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.last_focused_development_window
+					l_wm := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
+					if l_wm /= Void then
+						Result := l_wm.last_focused_development_window
+					end
 				end
 			end
 		ensure

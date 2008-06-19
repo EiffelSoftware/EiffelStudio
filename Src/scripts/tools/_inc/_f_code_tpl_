@@ -25,7 +25,7 @@
 		<exec executable="finish_freezing > /dev/null" dir="#NAME#_EIFGENs/#TARGET#/F_code" unless="$is_windows" />
 
 		<available dir="#NAME#_EIFGENs/#TARGET#/F_code" resource="#NAME#${exe}" variable="tmp_#NAME#_available" />
-		<copy dir="#NAME#_EIFGENs/#TARGET#/F_code" file="#NAME#${exe}" to_file="${F_CODE.absdir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
+		<geant dir="#NAME#_EIFGENs/#TARGET#/F_code" target="copy_file" arguments="#NAME#${exe},${F_CODE.absdir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
 		<set name="return_code" value="0" if="$tmp_#NAME#_available=true" />
 		<set name="return_code" value="1" unless="$tmp_#NAME#_available=true" />
 		<unset name="tmp_#NAME#_available" />
@@ -34,8 +34,18 @@
 	<target name="install" >
 		<argument name="a_output_dir" />
 		<available dir="#NAME#_EIFGENs/#TARGET#/F_code" resource="#NAME#${exe}" variable="tmp_#NAME#_available" />
-		<copy dir="${F_CODE.absdir}" file="#NAME#${exe}" to_file="${a_output_dir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
+		<geant target="copy_file" dir="${F_CODE.absdir}" arguments="#NAME#${exe},${a_output_dir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
 		<unset name="tmp_#NAME#_available" />
+	</target>
+
+	<target name="copy_file" >
+		<argument name="a_from" />
+		<argument name="a_to" />
+
+		<copy file="$a_from" to_file="$a_to" />
+		<exec executable="chmod 755 ${a_to}" accept_errors="true" exit_code_variable="no_return_code" unless="${is_windows}" />
+
+		<unset name="no_return_code" />
 	</target>
 
 </project>

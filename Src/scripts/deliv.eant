@@ -1174,7 +1174,7 @@
 		<!-- Delivery Scripts -->
 		<geant target="made_file_executable" arguments="make_install" dir="${a_install_dir}" />
 		<!-- Gobo binaries -->
-		<available resource="gobo/spec/${ISE_PLATFORM}/bin" dir="$a_install_dir/library" variable="tmp_gobo_bin_available" />
+		<available resource="library/gobo/spec/${ISE_PLATFORM}/bin" dir="$a_install_dir" variable="tmp_gobo_bin_available" />
 		<geant target="made_file_executable" arguments="*" dir="${a_install_dir}/library/gobo/spec/${ISE_PLATFORM}/bin" if="$tmp_gobo_bin_available=true" />
 		<unset name="tmp_gobo_bin_available" />
 

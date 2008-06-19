@@ -174,9 +174,7 @@ feature {NONE} -- Helpers
 			if {l_service: !SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
 				Result := l_service
 			else
-				check
-					sited: site /= Void
-				end
+				check sited: site /= Void end
 				create Result.make_with_provider (site)
 				internal_logger_service := Result
 			end

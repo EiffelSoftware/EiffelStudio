@@ -2,7 +2,6 @@ class C
 
 inherit
 	THREAD
-	$THREAD_CONTROL
 
 create
 	make
@@ -35,7 +34,7 @@ feature -- Basic operations
 			if not is_delayed then
 					-- Let delayed threads to start execution.
 					-- Delay execution for 0.5 second.
-				sleep (500_000_000)
+				execution_environment.sleep (500_000_000)
 			end
 				-- Test result of once function
 			report_test_result (internal_number, number = internal_number)
@@ -66,8 +65,13 @@ feature {NONE} -- Status
 			Result := internal_number
 			if is_delayed then
 					-- Delay execution for 1 second.
-				sleep (1_000_000_000)
+				execution_environment.sleep (1_000_000_000)
 			end
+		end
+
+	execution_environment: EXECUTION_ENVIRONMENT is
+		once
+			create Result
 		end
 
 	internal_number: INTEGER

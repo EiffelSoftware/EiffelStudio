@@ -241,10 +241,8 @@ feature -- Storage
 				l_file.close
 			end
 		rescue
-			if not retried then
-				retried := True
-				retry
-			end
+			retried := True
+			retry
 		end
 
 	store_all

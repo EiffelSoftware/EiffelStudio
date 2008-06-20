@@ -145,7 +145,7 @@ feature {NONE} -- Callbacks
 				customized_formatter_manager.store
 			end
 
-			window_manager.a_development_window.save_tools_docking_layout
+			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.save_tools_docking_layout)
 
 				-- Destroy all development windows.
 			window_manager.close_all

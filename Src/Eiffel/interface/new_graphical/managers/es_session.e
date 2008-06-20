@@ -9,6 +9,9 @@ indexing
 class
 	ES_SESSION
 
+obsolete
+	"Use SESSION_MANAGER instead."
+
 inherit
 	EB_SHARED_PREFERENCES
 		redefine
@@ -24,7 +27,7 @@ feature {NONE} -- Creation
 		end
 
 feature -- Access
-		
+
 	window_session_data: ARRAYED_LIST [EB_DEVELOPMENT_WINDOW_SESSION_DATA];
 		-- Meta data about each development window used for restoration between project sessions.
 

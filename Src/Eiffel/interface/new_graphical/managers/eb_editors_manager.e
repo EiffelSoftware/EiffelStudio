@@ -391,11 +391,12 @@ feature {NONE} -- Action handlers
 			-- Editor is switched.
 		require
 			a_editor_attached: a_editor /= Void
-			not_a_editor_is_recycled: not a_editor.is_recycled
 		do
-			if development_window.editors_manager /= Void then
-					-- During initialization of Current, the editor manager will be Void for the development window
-				development_window.set_stone (a_editor.stone)
+			if not a_editor.is_recycled then
+				if development_window.editors_manager /= Void then
+						-- During initialization of Current, the editor manager will be Void for the development window
+					development_window.set_stone (a_editor.stone)
+				end
 			end
 		end
 
@@ -1334,21 +1335,24 @@ feature {NONE} -- Implementation
 		end
 
 	synchronize_with_docking_manager is
-			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors datas,
+			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
 			-- we want to make sure it's synchronized here.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			from
-				l_contents := docking_manager.contents
+				l_contents := docking_manager.contents.twin
 				l_contents.start
 			until
 				l_contents.after
 			loop
 				if l_contents.item.type = {SD_ENUMERATION}.editor then
 					if not l_contents.item.is_visible then
-						-- This editor is not exists in saved docking layout, we should remove it.
+						-- This editor not exists in saved docking layout, we should remove it.
 						remove_editor_of_content (l_contents.item)
+
+						-- Remove it from docking manager too.
+						l_contents.item.close
 					end
 				end
 				l_contents.forth
@@ -1356,7 +1360,7 @@ feature {NONE} -- Implementation
 		end
 
 	remove_editor_of_content (a_content: SD_CONTENT) is
-			-- Editor which relate with `a_content'.
+			-- Remove editor related with `a_content'.
 		local
 			l_editors: like editors
 			l_editor: EB_SMART_EDITOR

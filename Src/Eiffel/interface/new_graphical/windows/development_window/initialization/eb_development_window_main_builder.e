@@ -46,17 +46,29 @@ feature -- Command
 		local
 			l_screen: EB_STUDIO_SCREEN
 			l_x, l_y: INTEGER
+			l_data: EB_DEVELOPMENT_WINDOW_DATA
 		do
+			-- There are two development window data (EB_DEVELOPMENT_WINDOW_DATA) saved.
+			-- One is saved in preferences
+			-- The other is saved in session manager
+			-- Maybe we should divide the class EB_DEVELOPMENT_WINDOW_DATA into two classes?
+			if(create {SHARED_WORKBENCH}).workbench.system_defined then
+				l_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_data_id)
+			end
+
+			if l_data = Void then
+				l_data := develop_window.development_window_data
+			end
 			create l_screen
 			develop_window.window.set_size (
-				develop_window.development_window_data.width.min (l_screen.width),
-				develop_window.development_window_data.height.min (l_screen.height))
-			l_x := develop_window.development_window_data.x_position
+				l_data.width.min (l_screen.width),
+				l_data.height.min (l_screen.height))
+			l_x := l_data.x_position
 			if l_x < l_screen.virtual_left or l_x > l_screen.virtual_right then
 					-- Somehow screens have changed, reset it to 0
 				l_x := 0
 			end
-			l_y := develop_window.development_window_data.y_position
+			l_y := l_data.y_position
 			if l_y < l_screen.virtual_top or l_y > l_screen.virtual_bottom then
 					-- Somehow screens have changed, reset it to 0
 				l_y := 0

@@ -54,10 +54,14 @@ feature -- Basic operations
 
 	execute is
 			-- Create a development window.
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			inspect style
 			when default_style then
 				window_manager.create_window
+				l_window := window_manager.last_created_window
+				window_manager.load_window_session_data (l_window)
 			when editor_style then
 				window_manager.create_editor_window
 			end

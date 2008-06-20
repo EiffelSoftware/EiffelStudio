@@ -51,9 +51,9 @@ feature -- Command
 			l_graphical_debugger ?= debugger_manager
 			if l_graphical_debugger /= Void then
 				if not l_graphical_debugger.raised then
-					l_fn := eiffel_layout.user_docking_standard_file_name
+					l_fn := eiffel_layout.user_docking_standard_file_name (develop_window.window_id)
 				else
-					l_fn := eiffel_layout.user_docking_debug_file_name
+					l_fn := eiffel_layout.user_docking_debug_file_name (develop_window.window_id)
 				end
 				develop_window.docking_manager.save_tools_config (l_fn)
 			end
@@ -69,7 +69,7 @@ feature -- Command
 			l_graphical_debugger ?= debugger_manager
 			if l_graphical_debugger /= Void then
 				if l_graphical_debugger.raised then
-					l_fn := eiffel_layout.user_docking_standard_file_name.string
+					l_fn := eiffel_layout.user_docking_standard_file_name (develop_window.window_id)
 					create l_file.make (l_fn)
 					if not l_file.exists then
 						execute

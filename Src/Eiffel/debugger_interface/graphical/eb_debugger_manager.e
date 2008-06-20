@@ -1423,9 +1423,9 @@ feature -- Status setting
 			l_result: BOOLEAN
 			l_file: RAW_FILE
 		do
-			create l_file.make (eiffel_layout.user_docking_debug_file_name)
+			create l_file.make (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
 			if l_file.exists then
-				l_result := debugging_window.docking_manager.open_tools_config (eiffel_layout.user_docking_debug_file_name)
+				l_result := debugging_window.docking_manager.open_tools_config (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
 			end
 			if not l_result then
 				restore_standard_debug_docking_layout
@@ -1441,7 +1441,7 @@ feature -- Status setting
 			-- Save debug docking layout
 		do
 			if debugging_window /= Void then
-				debugging_window.docking_manager.save_tools_config (eiffel_layout.user_docking_debug_file_name)
+				debugging_window.docking_manager.save_tools_config (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
 			end
 		end
 
@@ -1452,7 +1452,7 @@ feature -- Status setting
 			l_file: RAW_FILE
 			l_fn: STRING_8
 		do
-			l_fn := eiffel_layout.user_docking_debug_file_name.string
+			l_fn := eiffel_layout.user_docking_debug_file_name (debugging_window.window_id).string
 			create l_file.make (l_fn)
 			if l_file.exists then
 				l_result := debugging_window.docking_manager.open_tools_config (l_fn)

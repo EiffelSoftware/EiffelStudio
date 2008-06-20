@@ -148,7 +148,18 @@ feature -- Basic operations
 		deferred
 		end
 
-indexing
+feature -- Data Ids for SESSION_MANAGER
+
+	development_window_data_id: STRING_8 is "com.eiffel.develop_window_data"
+			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA}.
+
+	development_window_project_data_id: STRING_8 is "com.eiffel.develop_window_project_data"
+			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA} for one project.		
+
+	development_window_count_id: STRING_8 is "com_eiffel.develop_window_count"
+			-- Session data id for how many {EB_DEVELOPMENT_WINDOW} exists in the session.
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

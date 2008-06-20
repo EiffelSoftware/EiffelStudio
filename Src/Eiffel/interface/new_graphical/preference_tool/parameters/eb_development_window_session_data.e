@@ -13,6 +13,8 @@ inherit
 
 	ES_TOOLBAR_PREFERENCE
 
+	SESSION_DATA_I
+
 create
 	make_from_window_data
 

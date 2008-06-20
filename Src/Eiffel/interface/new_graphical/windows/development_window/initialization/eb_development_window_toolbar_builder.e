@@ -22,6 +22,7 @@ feature -- Building commands
 			l_toolbars_area: EV_VERTICAL_BOX
 			l_debugger: EB_DEBUGGER_MANAGER
 			l_file: RAW_FILE
+			l_file_name: STRING
 		do
 			create l_toolbars_area
 			develop_window.set_toolbars_area (l_toolbars_area)
@@ -36,14 +37,16 @@ feature -- Building commands
 			l_debugger ?= develop_window.debugger_manager
 			if l_debugger /= Void then
 				if not l_debugger.raised then
-					create l_file.make (eiffel_layout.user_docking_standard_file_name)
+					l_file_name := eiffel_layout.user_docking_standard_file_name (develop_window.window_id)
+					create l_file.make (l_file_name)
 					if l_file.exists then
-						develop_window.docking_manager.open_tool_bar_item_config (eiffel_layout.user_docking_standard_file_name)
+						develop_window.docking_manager.open_tool_bar_item_config (l_file_name)
 					end
 				else
-					create l_file.make (eiffel_layout.user_docking_debug_file_name)
+					l_file_name := eiffel_layout.user_docking_debug_file_name (develop_window.window_id)
+					create l_file.make (l_file_name)
 					if l_file.exists then
-						develop_window.docking_manager.open_tool_bar_item_config (eiffel_layout.user_docking_debug_file_name)
+						develop_window.docking_manager.open_tool_bar_item_config (l_file_name)
 					end
 				end
 			end

@@ -300,6 +300,29 @@ feature -- Access
 			result_consistent: Result = session_data
 		end
 
+	project_session_data: SESSION_I
+			-- Access to window session data for the current project/window
+			-- We must check if system defined here
+			-- Otherwise {SESSION_MANAGER}.session_file_path don't know the *project* UUID for project session file name
+		require
+			system_defined: (create {SHARED_WORKBENCH}).workbench.system_defined
+		local
+			l_consumer: SERVICE_CONSUMER [SESSION_MANAGER_S]
+		do
+			Result := internal_project_session_data
+			if Result = Void then
+				create l_consumer
+				if l_consumer.is_service_available then
+					Result := l_consumer.service.retrieve_per_window (Current, True)
+					internal_project_session_data := Result
+				end
+			end
+		ensure
+			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).is_service_available implies Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+			result_consistent: Result = project_session_data
+		end
+
 	frozen window_id: NATURAL_32
 			-- Unique window identifier, used to reference a window without having to hold a reference to it
 
@@ -1034,10 +1057,10 @@ feature -- Window management
 			preferences.preferences.save_preferences
 		end
 
-	save_layout_to_session (a_session: ES_SESSION) is
+	save_layout_to_session: EB_DEVELOPMENT_WINDOW_SESSION_DATA is
 			-- Save session data of `Current' to session object `a_session'.
+			-- This is project data session, not for all projects.
 		local
-			a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			a_class_stone: CLASSI_STONE
 			a_cluster_stone: CLUSTER_STONE
 			l_class_id, l_feature_id: STRING
@@ -1045,33 +1068,33 @@ feature -- Window management
 			l_class_stone: CLASSI_STONE
 		do
 			save_window_state
-			create a_window_data.make_from_window_data (preferences.development_window_data)
+			create Result.make_from_window_data (preferences.development_window_data)
 
 			a_class_stone ?= stone
 			a_cluster_stone ?= stone
 			if a_class_stone /= Void then
-				a_window_data.save_current_target (id_of_class (a_class_stone.class_i.config_class), False)
+				Result.save_current_target (id_of_class (a_class_stone.class_i.config_class), False)
 			elseif a_cluster_stone /= Void then
-				a_window_data.save_current_target (id_of_group (a_cluster_stone.group), True)
+				Result.save_current_target (id_of_group (a_cluster_stone.group), True)
 			else
-				a_window_data.save_current_target (Void, False)
+				Result.save_current_target (Void, False)
 			end
 			if a_class_stone /= Void or else a_cluster_stone /= Void then
 				if editors_manager.current_editor /= Void then
 					if not editors_manager.current_editor.text_displayed.is_empty then
-						a_window_data.save_editor_position (
+						Result.save_editor_position (
 							editors_manager.current_editor.text_displayed.current_line_number)
 					else
-						a_window_data.save_editor_position (1)
+						Result.save_editor_position (1)
 					end
 				else
-					a_window_data.save_editor_position (1)
+					Result.save_editor_position (1)
 				end
 			else
-				a_window_data.save_editor_position (1)
+				Result.save_editor_position (1)
 			end
 
-			save_editors_to_session_data (a_window_data)
+			save_editors_to_session_data (Result)
 
 			save_editors_docking_layout
 
@@ -1090,13 +1113,12 @@ feature -- Window management
 					l_class_id := id_of_class (l_class_stone.class_i.config_class)
 				end
 			end
-			a_window_data.save_context_data (l_class_id, l_feature_id, 1)
-
- 				-- Add the session data of `Current' to the session object.
-			a_session.window_session_data.extend (a_window_data)
+			Result.save_context_data (l_class_id, l_feature_id, 1)
+		ensure
+			not_void: Result /= Void
 		end
 
-	save_editors_to_session_data (a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
+	save_editors_to_session_data (a_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
 			-- Save editor number, open classes and open clusters.
 		local
 			l_open_classes: HASH_TABLE [STRING, STRING]
@@ -1106,9 +1128,11 @@ feature -- Window management
 			l_open_classes.merge (editors_manager.open_fake_classes)
 			l_open_clusters := editors_manager.open_clusters
 			l_open_clusters.merge (editors_manager.open_fake_clusters)
-			a_window_data.save_open_classes (l_open_classes)
-			a_window_data.save_open_clusters (l_open_clusters)
-			a_window_data.save_formatting_marks (editors_manager.show_formatting_marks)
+
+			a_data.save_open_classes (l_open_classes)
+			a_data.save_open_clusters (l_open_clusters)
+
+			a_data.save_formatting_marks (editors_manager.show_formatting_marks)
 		end
 
 	save_tools_docking_layout is
@@ -1121,7 +1145,7 @@ feature -- Window management
 			-- because current widgets layout is debug mode layout (not normal mode layout),
 			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
 			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
-				docking_manager.save_tools_config (eiffel_layout.user_docking_standard_file_name)
+				docking_manager.save_tools_config (eiffel_layout.user_docking_standard_file_name (window_id))
 			end
 		end
 
@@ -1229,12 +1253,15 @@ feature -- Window management
 	restore_tools_docking_layout is
 			-- Restore docking layout information.
 		local
-			l_raw_file: RAW_FILE
 			l_result: BOOLEAN
+			l_file_name: STRING
+			l_raw_file: RAW_FILE
 		do
-			create l_raw_file.make (eiffel_layout.user_docking_standard_file_name)
+			l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
+			create l_raw_file.make (l_file_name)
 			if l_raw_file.exists then
-				l_result := docking_manager.open_tools_config (eiffel_layout.user_docking_standard_file_name)
+				l_result := docking_manager.open_tools_config (l_file_name)
+
 			end
 
 			if not l_result then
@@ -1247,25 +1274,35 @@ feature -- Window management
 	restore_editors_docking_layout is
 			-- Restore docking layout information.
 		local
-			l_raw_file: RAW_FILE
+			l_file_name: STRING
+			l_file: RAW_FILE
 		do
-			create l_raw_file.make (project_docking_standard_file_name)
-			if l_raw_file.exists then
-				docking_manager.open_editors_config (project_docking_standard_file_name)
+			l_file_name := project_docking_standard_file_name
+			if l_file_name /= Void and then not l_file_name.is_empty then
+				create l_file.make (l_file_name)
+				if l_file.exists then
+					docking_manager.open_editors_config (l_file_name)
+				end
+
+				if not l_file.is_closed then
+					l_file.close
+				end
 			end
 		end
 
 	restore_standard_tools_docking_layout is
 			-- Restore statndard layout.
 		local
+			l_file_name: STRING
 			l_file: RAW_FILE
 			l_result: BOOLEAN
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make (eiffel_layout.user_docking_standard_file_name)
+				l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
+				create l_file.make (l_file_name)
 				if l_file.exists then
-					l_result := docking_manager.open_tools_config (eiffel_layout.user_docking_standard_file_name)
+					l_result := docking_manager.open_tools_config (l_file_name)
 					check l_result end
 				else
 					internal_construct_standard_layout_by_code
@@ -1427,7 +1464,6 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			if not is_destroying then
 				is_destroying := True
 
-
 					-- If a launched application is still running, kill it.
 				if
 					Eb_debugger_manager.application_is_executing
@@ -1437,7 +1473,8 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				end
 
 					-- Save width & height.
-				save_window_state
+				save_window_data
+
 				hide
 
 					-- Commit saves
@@ -1461,8 +1498,6 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 					editors_manager.recycle
 				end
 
-
-
 				managed_class_formatters := Void
 				managed_feature_formatters := Void
 				managed_main_formatters := Void
@@ -1471,7 +1506,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_size (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	save_size is
 			-- Save window size.
 		do
 			if not window.is_maximized and not window.is_minimized then
@@ -1481,7 +1516,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_position (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	save_position is
 			-- Save window position.
 		do
 			if not window.is_maximized and not window.is_minimized then
@@ -1489,6 +1524,27 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 					-- of the client area.
 				development_window_data.save_position (window.screen_x, window.screen_y)
 			end
+		end
+
+	save_window_data is
+			-- Save Window size, position and states
+		local
+			l_develop_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
+		do
+			create l_develop_window_data.make_from_window_data (development_window_data)
+			save_window_state
+			save_position
+			save_size
+			save_tools_docking_layout
+			session_data.set_value (l_develop_window_data, development_window_data.development_window_data_id)
+
+			-- Editor data save to per-project session data.
+			create l_develop_window_data.make_from_window_data (development_window_data)
+			save_editors_to_session_data (l_develop_window_data)
+			save_editors_docking_layout
+
+			-- Must use project *window* session data here.
+			project_session_data.set_value (l_develop_window_data, development_window_data.development_window_project_data_id)
 		end
 
 	 save_window_state is
@@ -2465,7 +2521,8 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEBUGGER_MANAGER, EB_WINDOW_MANAGER,
+		EB_NEW_DEVELOPMENT_WINDOW_COMMAND} -- Access
 
 	development_window_data: EB_DEVELOPMENT_WINDOW_DATA is
 			-- Meta data describing `Current'.
@@ -2515,9 +2572,10 @@ feature -- Files (project)
 
 	project_docking_standard_file_name: !FILE_NAME
 			-- Docking config file name.
+		local
 		do
 			create Result.make_from_string (project_location.target_path)
-			Result.set_file_name (eiffel_layout.docking_standard_file)
+			Result.set_file_name (eiffel_layout.docking_standard_file + "_" + window_id.out)
 		end
 
 feature {NONE} -- Window management
@@ -2540,6 +2598,10 @@ feature {NONE} -- Internal implementation cache
 
 	internal_session_data: like session_data
 			-- Cached version of `session_data'
+			-- Note: Do not use directly
+
+	internal_project_session_data: like project_session_data
+			-- Cached version of `project_session_data'
 			-- Note: Do not use directly
 
 invariant

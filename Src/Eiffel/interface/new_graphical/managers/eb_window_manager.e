@@ -130,20 +130,6 @@ feature -- Basic operations
 			initialize_window (l_window, True)
 		end
 
-	create_window_from_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW; a_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
-			-- Create a new window using `a_session_data'
-		require
-			a_session_data_not_void: a_session_data /= Void
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
-		do
-			create l_director.make
-			l_director.construct_with_session_data (a_dev_window, a_session_data)
-			l_window := l_director.develop_window
-			initialize_window (l_window, False)
-		end
-
 	create_editor_window is
 			-- Create a new editor window and update `last_created_window'.
 		local
@@ -166,6 +152,19 @@ feature -- Basic operations
 			l_director.construct_as_context_tool
 			l_window := l_director.develop_window
 			initialize_window (l_window, True)
+		end
+
+	load_window_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+			-- Load `a_dev_window''s session data.
+			-- If `a_dev_window' is void, a new development window will be created.
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
+		do
+			create l_director.make
+			l_director.construct_with_session_data (a_dev_window)
+			l_window := l_director.develop_window
+			initialize_window (l_window, False)
 		end
 
 	initialize_window (a_window: EB_DEVELOPMENT_WINDOW; a_new_window: BOOLEAN) is
@@ -259,6 +258,27 @@ feature -- Access
 			Result := managed_windows.twin
 		ensure
 			result_attached: Result /= Void
+		end
+
+	development_windows: !ARRAYED_LIST [EB_DEVELOPMENT_WINDOW] is
+			-- All development windows managed by Current
+		local
+			l_windows: like managed_windows
+		do
+			from
+				l_windows := managed_windows.twin
+				l_windows.start
+
+				create Result.make (l_windows.count)
+			until
+				l_windows.after
+			loop
+				if {lt_dev_window: EB_DEVELOPMENT_WINDOW} l_windows.item then
+					Result.extend (lt_dev_window)
+				end
+
+				l_windows.forth
+			end
 		end
 
 feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
@@ -620,17 +640,17 @@ feature -- Actions on all windows
 
 	close_all is
 			-- Close all windows.
+		local
+			l_snapshot: like managed_windows
 		do
 			from
-				managed_windows.start
+				l_snapshot := managed_windows.twin
+				l_snapshot.start
 			until
-				managed_windows.after
+				l_snapshot.after
 			loop
-				close_action (managed_windows.item)
-				if not managed_windows.after then
-						-- Since we delete elements, we might be after.
-					managed_windows.forth
-				end
+				close_action (l_snapshot.item)
+				l_snapshot.forth
 			end
 		end
 
@@ -848,11 +868,18 @@ feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events
 			-- window means exiting the application.
 		local
 			loc_development_window: EB_DEVELOPMENT_WINDOW
+			l_cosumer: SERVICE_CONSUMER [SESSION_MANAGER_S]
 		do
 			loc_development_window ?= a_window
 			if development_windows_count = 1 and then loc_development_window /= Void then
 				confirm_and_quit
 			else
+				if loc_development_window /= Void then
+					create l_cosumer
+					check l_cosumer.is_service_available end
+
+					loc_development_window.save_window_data
+				end
 				destroy_window (a_window)
 			end
 		end
@@ -983,114 +1010,108 @@ feature -- Events
 	load_session is
 			-- Try to recreate previous project session, if any.
 		local
-			i, window_count: INTEGER
-			l_raw_file: RAW_FILE
-			l_reader: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			fn: FILE_NAME
-			l_session: ES_SESSION
-			retried: BOOLEAN
+			l_i, l_window_count: INTEGER
+			l_window_count_ref: INTEGER_32_REF
+			l_retried: BOOLEAN
 			l_managed_windows: like managed_windows
 			l_dl_window: EB_DYNAMIC_LIB_WINDOW
 			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			if not retried then
-					-- Attempt to load the 'session.wb' file from the project directory.
-					-- If load fails then do nothing.
-				create fn.make_from_string (project_location.target_path)
-				fn.set_file_name ("session.wb")
-				create l_raw_file.make (fn)
-				if l_raw_file.exists then
-					l_raw_file.open_read
-					create l_reader.make (l_raw_file)
-					l_reader.set_for_reading
-					create l_sed_facilities
-					l_session ?= l_sed_facilities.retrieved (l_reader, True)
-					l_raw_file.close
+			if not l_retried then
+			-- Attempt to load the 'session.wb' file from the project directory.
+			-- If load fails then do nothing.
+			-- Recreate previous session from retrieved session data.
 
-						-- Recreate previous session from retrieved session data.
-					if l_session /= Void then
-							-- Remove any existing managed windows.
-
-						from
-							l_managed_windows := managed_windows.twin
-							l_managed_windows.start
-						until
-							l_managed_windows.after
-						loop
-							if l_managed_windows.item /= Void then
-								l_dl_window ?= l_managed_windows
-								if l_dl_window /= Void then
-									destroy_window (l_dl_window)
-								end
-							end
-							l_managed_windows.forth
+				-- Remove any existing managed windows.
+				from
+					l_managed_windows := managed_windows.twin
+					l_managed_windows.start
+				until
+					l_managed_windows.after
+				loop
+					if l_managed_windows.item /= Void then
+						l_dl_window ?= l_managed_windows.item
+						if l_dl_window /= Void then
+							destroy_window (l_dl_window)
 						end
-
-						from
-							l_managed_windows := managed_windows.twin
-							if l_managed_windows.valid_cursor_index (l_session.window_session_data.count + 1) then
-								l_managed_windows.go_i_th (l_session.window_session_data.count + 1)
-							else
-								l_managed_windows.go_i_th (l_managed_windows.index + 1)
-							end
-							-- Only destroy extra windows
-						until
-							l_managed_windows.after
-						loop
-							destroy_window (l_managed_windows.item)
-							l_managed_windows.forth
-						end
-
-						from
-							window_count := l_session.window_session_data.count
-							i := 1
-							l_managed_windows.start
-						until
-							i > window_count
-						loop
-							if not l_managed_windows.after then
-								l_dev_window ?= l_managed_windows.item
-								check l_dev_window /= Void end
-								create_window_from_session_data (l_dev_window, l_session.window_session_data.i_th (i))
-								l_managed_windows.forth
-							else
-								create_window_from_session_data (Void, l_session.window_session_data.i_th (i))
-							end
-
-							i := i + 1
+						if l_dev_window = Void then
+							l_dev_window ?= l_managed_windows.item
 						end
 					end
+					l_managed_windows.forth
+				end
+
+				check at_least_one_develop_window: l_dev_window /= Void end
+				l_window_count_ref ?= l_dev_window.project_session_data.value (l_dev_window.development_window_data.development_window_count_id)
+				if l_window_count_ref /= Void then
+					l_window_count := l_window_count_ref.item
+				end
+				if l_window_count = 0 then
+					-- At least one
+					l_window_count := 1
+				end
+
+				from
+					l_managed_windows := managed_windows.twin
+					if l_managed_windows.valid_cursor_index (l_window_count + 1) then
+						l_managed_windows.go_i_th (l_window_count + 1)
+					else
+						l_managed_windows.go_i_th (l_managed_windows.index + 1)
+					end
+					-- Only destroy extra windows
+				until
+					l_managed_windows.after
+				loop
+					destroy_window (l_managed_windows.item)
+					l_managed_windows.forth
+				end
+
+				from
+					l_i := 1
+					l_managed_windows.start
+				until
+					l_i > l_window_count
+				loop
+					if not l_managed_windows.after then
+						l_dev_window ?= l_managed_windows.item
+						check l_dev_window /= Void end
+						load_window_session_data (l_dev_window)
+						l_managed_windows.forth
+					else
+						load_window_session_data (Void)
+					end
+
+					l_i := l_i + 1
 				end
 			end
 		rescue
-			retried := True
+			l_retried := True
 			retry
 		end
 
 	save_session is
 			-- Try to store current session data.
 		local
-			l_raw_file: RAW_FILE
-			l_writer: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			fn: FILE_NAME
-			l_session: ES_SESSION
 			retried: BOOLEAN
+			l_develop_window: EB_DEVELOPMENT_WINDOW
 		do
 			if not retried then
 					-- Attempt to save the 'session.wb' file to the current project directory.
 					-- If save cannot be made then do nothing.
-				create l_session
-				for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.save_layout_to_session (l_session))
-				create fn.make_from_string (project_location.target_path)
-				fn.set_file_name ("session.wb")
-				create l_raw_file.make_open_write (fn)
-				create l_writer.make (l_raw_file)
-				l_writer.set_for_writing
-				create l_sed_facilities
-				l_sed_facilities.independent_store (l_session, l_writer, False)
-				l_raw_file.close
+				l_develop_window := a_development_window
+				if l_develop_window /= Void then
+					-- Maybe we can't save development window count data in `project_session_data' or `session_data' since they are all *window* related data?
+					l_develop_window.project_session_data.set_value (development_windows_count, l_develop_window.development_window_data.development_window_count_id)
+				end
+
+				for_all_development_windows (agent (a_develop_window: EB_DEVELOPMENT_WINDOW)
+													require
+														not_void: a_develop_window /= Void
+													do
+														a_develop_window.project_session_data.set_value (a_develop_window.save_layout_to_session,
+																		a_develop_window.development_window_data.development_window_project_data_id)
+
+													end)
 			end
 		rescue
 			retried := True

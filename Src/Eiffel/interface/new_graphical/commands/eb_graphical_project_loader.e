@@ -377,7 +377,12 @@ feature {NONE} -- Error reporting
 				-- errors or conversion.
 			output_manager.display_system_info
 
-			window_manager.last_focused_development_window.synchronize
+			if window_manager.development_windows_count = 1 then
+				-- We only do this for frist window (not `last_focused_development_window') since
+				-- if we have multi window, `synchronize' will put the stone which belong to the frist window to the last window.
+				window_manager.development_windows.first.synchronize
+			end
+
 		end
 
 	report_precompilation_error is

@@ -1104,24 +1104,26 @@ feature -- Files (user)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_docking_standard_file_name: !FILE_NAME
+	user_docking_standard_file_name (a_window_id: NATURAL_32): !FILE_NAME
 			-- Path of standard docking layout.
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		once
-			Result := user_docking_file_name (docking_standard_file)
+			valid: a_window_id > 0
+		do
+			Result := user_docking_file_name (docking_standard_file + "_" + a_window_id.out)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_docking_debug_file_name: !FILE_NAME
+	user_docking_debug_file_name (a_window_id: NATURAL_32): !FILE_NAME
 			-- Path of standard docking layout.
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		once
-			Result := user_docking_file_name (docking_debug_file)
+			valid: a_window_id > 0
+		do
+			Result := user_docking_file_name (docking_debug_file + "_" + a_window_id.out)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

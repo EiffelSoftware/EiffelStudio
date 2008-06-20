@@ -21,7 +21,7 @@ if "%ISE_PLATFORM%" == "dotnet" (
 if not defined EWEASEL set EWEASEL=%~dp0..
 if not defined EWEASEL_OUTPUT set EWEASEL_OUTPUT=%EWEASEL%\tmp
 
-set EWEASEL_COMMAND=eweasel-mt.exe
+set EWEASEL_COMMAND=eweasel.exe
 set EWEASEL_COMMAND=%EWEASEL_COMMAND% -max_threads %NUMBER_OF_PROCESSORS% -order
 set EWEASEL_COMMAND=%EWEASEL_COMMAND% -define EWEASEL "%EWEASEL%"
 set EWEASEL_COMMAND=%EWEASEL_COMMAND% -define INCLUDE "%EWEASEL%\control"

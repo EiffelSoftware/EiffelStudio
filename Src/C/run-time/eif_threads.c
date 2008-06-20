@@ -631,6 +631,10 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 
 		/* Free private per thread data */
 	eif_free (rt_globals);
+
+		/* Reset the per thread data. */
+	EIF_TSD_SET(rt_global_key, NULL, "Couldn't bind private context to TSD.");
+	EIF_TSD_SET(eif_global_key, NULL, "Couldn't bind private context to TSD.");
 }
 
 rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 

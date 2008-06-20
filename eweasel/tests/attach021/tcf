@@ -1,0 +1,11 @@
+test_name 	 explicit-attached-formal-conformance
+test_description Ensures entities using attached generic formals are type compatible.
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test_g.e $CLUSTER test_g.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

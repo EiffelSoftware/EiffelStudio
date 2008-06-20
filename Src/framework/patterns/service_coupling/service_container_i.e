@@ -50,8 +50,8 @@ feature -- Extension
 		require
 			not_proffers_service: not is_service_proffered (a_type, a_promote)
 			a_service_conforms_to_a_type: (a_type #? a_service) /= Void
-			not_a_type_is_container: is_service_proffered ({SERVICE_CONTAINER_S}, True) implies not a_type.is_equal ({SERVICE_CONTAINER_S})
-			not_a_type_is_provider: is_service_proffered ({SERVICE_PROVIDER_S}, True) implies not a_type.is_equal ({SERVICE_PROVIDER_S})
+			not_a_type_is_container: is_service_proffered ({SERVICE_CONTAINER_S}, True) implies a_type /~ {SERVICE_CONTAINER_S}
+			not_a_type_is_provider: is_service_proffered ({SERVICE_PROVIDER_S}, True) implies a_type /~ {SERVICE_PROVIDER_S}
 		deferred
 		ensure
 			is_service_proffered: is_service_proffered (a_type, a_promote)
@@ -68,8 +68,8 @@ feature -- Extension
 			--              can be queried from all service providers.
 		require
 			not_is_service_proffered: not is_service_proffered (a_type, a_promote)
-			not_a_type_is_container: is_service_proffered ({SERVICE_CONTAINER_S}, True) implies not a_type.is_equal ({SERVICE_CONTAINER_S})
-			not_a_type_is_provider: is_service_proffered ({SERVICE_PROVIDER_S}, True) implies not a_type.is_equal ({SERVICE_PROVIDER_S})
+			not_a_type_is_container: is_service_proffered ({SERVICE_CONTAINER_S}, True) implies a_type /~ {SERVICE_CONTAINER_S}
+			not_a_type_is_provider: is_service_proffered ({SERVICE_PROVIDER_S}, True) implies a_type /~ {SERVICE_PROVIDER_S}
 		deferred
 		ensure
 			is_service_proffered: is_service_proffered (a_type, a_promote)
@@ -87,8 +87,8 @@ feature -- Removal
 			--              provider only.
 		require
 			is_service_proffered: is_service_proffered (a_type, a_promote)
-			not_a_type_is_container: not a_type.is_equal ({SERVICE_CONTAINER_S})
-			not_a_type_is_provider: not a_type.is_equal ({SERVICE_PROVIDER_S})
+			not_a_type_is_container: a_type /~ {SERVICE_CONTAINER_S}
+			not_a_type_is_provider: a_type /~ {SERVICE_PROVIDER_S}
 		deferred
 		ensure
 			not_is_service_proffered: not is_service_proffered (a_type, a_promote)

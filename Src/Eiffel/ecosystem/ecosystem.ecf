@@ -8,11 +8,13 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="site" location="$EIFFEL_SRC\framework\patterns\call_site\call_site.ecf"/>
 		<library name="compiler" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="services" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf"/>
+		<library name="site" location="$EIFFEL_SRC\framework\patterns\call_site\call_site.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="framework" location="$EIFFEL_SRC\Eiffel\ecosystem\" recursive="true"/>
 	</target>

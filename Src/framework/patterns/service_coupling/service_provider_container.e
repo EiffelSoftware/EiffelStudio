@@ -15,6 +15,11 @@ inherit
 
 	SERVICE_PROVIDER_I
 
+	SHARED_SERVICE_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make
@@ -89,13 +94,23 @@ feature -- Extension
 	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			services.put (create {SERVICE_STATIC_CONCEALER}.make (a_service), type_hash (a_type))
+			if a_promote and then {l_container: SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) then
+				l_container.register (a_type, a_service, False)
+			else
+					-- Not promoted or Current is the top-level provider.
+				services.put (create {SERVICE_STATIC_CONCEALER}.make (a_service), type_hash (a_type))
+			end
 		end
 
 	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			services.put (create {SERVICE_DELAYED_CONCEALER}.make (a_activator), type_hash (a_type))
+			if a_promote and then {l_container: SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) then
+				l_container.register_with_activator (a_type, a_activator, False)
+			else
+					-- Not promoted or Current is the top-level provider.
+				services.put (create {SERVICE_DELAYED_CONCEALER}.make (a_activator), type_hash (a_type))
+			end
 		end
 
 feature -- Removal

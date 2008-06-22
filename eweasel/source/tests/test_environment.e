@@ -40,6 +40,7 @@ feature  -- Creation
 		do
 			create table.make (n);
 			create list.make (0);
+			max_c_processes := -1
 		ensure
 			table_large_enough: table.capacity >= n
 		end;
@@ -90,6 +91,13 @@ feature  -- Modification
 			end
 			list.wipe_out
 		end;
+
+	set_max_c_processes (n: INTEGER) is
+		do
+			max_c_processes := n
+		ensure
+			max_c_processes_set: max_c_processes = n
+		end
 
 feature  -- Properties
 
@@ -165,6 +173,10 @@ feature  -- Properties
 		do
 			Result := table.item (var);
 		end;
+
+	max_c_processes: INTEGER
+			-- Maximum number of processes to use for
+			-- one test for any required C compilations
 
 feature  -- Display
 

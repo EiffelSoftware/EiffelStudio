@@ -18,9 +18,11 @@ create
 
 feature
 
-	make (dir, save, freeze_cmd: STRING) is
+	make (dir, save, freeze_cmd: STRING max_procs: INTEGER) is
 			-- Start a new process to do any necessary
-			-- C compilations (freezing) in directory `dir'.
+			-- C compilations (freezing) in directory `dir',
+			-- using at most `max_procs' simultaneous processes
+			-- to do C compilations.
 			-- Write all output from the new process to
 			-- file `save'.
 		require
@@ -32,6 +34,10 @@ feature
 			create args.make;
 			args.extend (freeze_cmd);
 			args.extend (dir);
+			if max_procs > 0 then
+				args.extend ("-nproc");
+				args.extend (max_procs.out);
+			end
 			process_make (Shell_command, args, Void, Void, save);
 		end;
 

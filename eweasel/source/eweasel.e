@@ -64,7 +64,7 @@ feature  {NONE} -- Implementation
 		local
 			k, count, n: INTEGER;
 			first_char, flag, type, l_filter: STRING;
-			l_max_threads: STRING
+			l_max_threads, l_max_c_processes: STRING
 			f: EIFFEL_TEST_FILTER;
 		do
 			from
@@ -191,6 +191,25 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False;
 						end
+					elseif equal (flag, "max_c_processes") then
+						if count >= k + 1 then
+							l_max_c_processes := args.item (k + 1)
+							if l_max_c_processes.is_integer then
+								n := l_max_c_processes.to_integer
+								if n >= -1 then
+									test_suite_options.set_max_c_processes (n);
+									k := k + 2;
+								else
+									output.append_error ("Invalid maximum C processes value " + n.out + " - must be >= -1", True);
+									args_ok := False;
+								end
+							else
+								output.append_error ("Invalid maximum C processes value: " + l_max_c_processes, True);
+								args_ok := False;
+							end
+						else
+							args_ok := False;
+						end
 					else
 						output.append_error ("Unknown option: ", False)
 						output.append (args.item (k), True);
@@ -200,6 +219,8 @@ feature  {NONE} -- Implementation
 					args_ok := False
 				end
 			end;
+
+			environment.set_max_c_processes (test_suite_options.max_c_processes)
 
 			if initial_control_file = Void then
 				output.append_error ("No initial test control file specified (-init option omitted)", True)
@@ -315,10 +336,10 @@ feature  {NONE} -- Implementation
 		do
 			output.append_new_line
 			output.append ("Usage:", True)
-			output.append ("   eweasel [-help] [-max_threads COUNT] [-order | -noorder]", True)
-			output.append ("      [-keep [{all | passed | failed}]] [-clean | -noclean] [-filter FILTER]", True)
-			output.append ("      [-define NAME VALUE ...] -init INIT_CONTROL_FILE -catalog TEST_CATALOG", True)
-			output.append ("      -output TEST_SUITE_DIR", True)
+			output.append ("   eweasel [-help] [-max_threads COUNT] [-max_c_processes COUNT]", True)
+			output.append ("      [-order | -noorder] [-keep [{all | passed | failed}]] [-clean | -noclean]", True)
+			output.append ("      [-filter FILTER] [-define NAME VALUE ...]", True)
+			output.append ("      -init INIT_CONTROL_FILE -catalog TEST_CATALOG -output TEST_SUITE_DIR", True)
 			output.append ("", True)
 			output.append ("Options (may appear in any order and later options override earlier options):", True)
 			output.append ("", True)
@@ -327,6 +348,10 @@ feature  {NONE} -- Implementation
 			output.append ("                eweasel.  Default is -1 (do all tests in main thread).", True)
 			output.append ("                Value of 0 will curently cause a hang in MT version.", True)
 			output.append ("                Ignored in single-threaded version.", True)
+			output.append ("   -max_c_processes", True)
+			output.append ("                Specify maximum number of processes to use simultaneously for", True)
+			output.append ("                C compilations for any test that requires C compilations. ", True)
+			output.append ("                Default is number of processors on machine. ", True)
 			output.append ("   -order       Display test execution results in catalog order.", True)
 			output.append ("   -noorder     Display test execution results as soon as they available.", True)
 			output.append ("                This is the default.  Ignored in single-threaded version.", True)

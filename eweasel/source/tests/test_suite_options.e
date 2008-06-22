@@ -41,6 +41,10 @@ feature  -- Properties
 			-- Maximum number of worker threads to use
 			-- to execute tests (ignored if single threaded)
 	
+	max_c_processes: INTEGER
+			-- Maximum number of processes to use for
+			-- one test for any required C compilations
+	
 	results_in_catalog_order: BOOLEAN
 			-- Should test execution results be reported
 			-- in order tests appear in catalog?
@@ -94,6 +98,13 @@ feature -- Modification
 			max_threads := n
 		ensure
 			max_threads_set: max_threads = n
+		end;
+
+	set_max_c_processes (n: INTEGER) is
+		do
+			max_c_processes := n
+		ensure
+			max_c_processes_set: max_c_processes = n
 		end;
 
 	set_results_in_catalog_order (b: BOOLEAN) is

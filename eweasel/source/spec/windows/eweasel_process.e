@@ -98,6 +98,7 @@ feature -- Creation
 			if savef /= Void then
 				create savefile.make_open_write (savef)
 			end
+			savefile_name := savef
 		end
 
 feature -- Status
@@ -182,6 +183,27 @@ feature {NONE} -- Implementation
 	savefile: RAW_FILE
 			-- File to which output read from process is written,
 			-- if not void
+
+	savefile_name: STRING
+			-- Name of file to which output read from process
+			-- is written, if not Void
+
+	savefile_contents: STRING
+			-- Current contents of file named `savefile_name'
+		local
+			f: RAW_FILE
+		do
+			create f.make_open_read (savefile_name)
+			create Result.make (100)
+			from
+			until
+				f.end_of_file
+			loop
+				f.read_stream (4096)
+				Result.append (f.last_string)
+			end
+			f.close
+		end
 
 	std_input, std_output: POINTER
 			-- Handle used to read input and output from child.

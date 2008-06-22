@@ -56,6 +56,11 @@ feature
 					read_line;
 				end
 			end;
+			if not Result.is_status_known then
+				-- Save raw compiler output so it can
+				-- be displayed
+				Result.set_raw_compiler_output (savefile_contents)
+			end
 			if end_of_file then
 				terminate;
 			end;

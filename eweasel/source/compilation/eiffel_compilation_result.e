@@ -54,6 +54,18 @@ feature -- Properties
 			-- Tag of exception which aborted compilation,
 			-- if any
 
+	is_status_known: BOOLEAN
+			-- Is status of compilation known?
+		do
+			Result := compilation_paused or compilation_aborted 
+				or compilation_finished or missing_precompile
+				or execution_failure or had_exception
+				or had_panic or illegal_instruction
+		end
+
+	raw_compiler_output: STRING
+			-- Raw output of compiler, if not Void
+
 	summary: STRING is
 			-- Summary of `Current'
 		local
@@ -117,6 +129,12 @@ feature -- Properties
 			end;
 			if status.count = 0 then
 				status.append ("unknown	");
+				if raw_compiler_output /= Void then
+					status.extend ('%N')
+					status.append ("Raw compiler output:")
+					status.extend ('%N')
+					status.append (raw_compiler_output)
+				end
 			end;
 			status.prepend ("%TFinal status:  ");
 			Result.append (status);
@@ -226,6 +244,12 @@ feature -- Modification
 			last_validity_error := err
 		end;
 
+	set_raw_compiler_output (s: STRING) is
+		require
+			s_not_void: s /= Void
+		do
+			raw_compiler_output := s
+		end;
 
 feature -- Comparison
 

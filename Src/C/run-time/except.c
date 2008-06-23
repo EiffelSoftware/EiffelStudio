@@ -132,6 +132,8 @@ rt_public struct eif_exception exdata = {
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_rt */
 	0,				/* ex_class */
+	0,				/* ex_error_handled */
+	0,				/* ex_panic_handled */
 };
 
 #ifdef WORKBENCH
@@ -2170,7 +2172,6 @@ rt_public void eif_panic(char *msg)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
-	int done = 0;		/* Avoid panic cascade */
 
 	/* We flush stdout now, to avoid unprinted data being printed after the
 	 * stack trace. This is mainly indented for situations like stdout = console
@@ -2181,19 +2182,19 @@ rt_public void eif_panic(char *msg)
 	/* Some verbose stuff. Make sure however there is only one panic raised.
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
-	switch (done) {
+	switch (echpanic) {
 		case 0:
-			done = 1;
+			echpanic = 1;
 			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", egc_system_name, msg);
 			break;
 		case 1:
-			done = 2;
+			echpanic = 2;
 			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", egc_system_name, msg);
 			reclaim ();
 			exit (2);
 			break;
 		case 2:
-			done = 3;
+			echpanic = 3;
 			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", egc_system_name);
 			exit (2);
 		default:
@@ -2232,7 +2233,6 @@ rt_public void fatal_error(char *msg)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
-	int done = 0;		/* Avoid fatal cascade */
 
 	/* We flush stdout now, to avoid unprinted data being printed after the
 	 * stack trace. This is mainly indented for situations like stdout = console
@@ -2243,13 +2243,13 @@ rt_public void fatal_error(char *msg)
 	/* Some verbose stuff. Make sure however there is only one fatal raised.
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
-	switch (done) {
+	switch (echerror) {
 		case 0:
-			done = 1;
+			echerror = 1;
 			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", egc_system_name, msg);
 			break;
 		case 1:
-			done = 2;
+			echerror = 2;
 			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", egc_system_name, msg);
 			reclaim ();
 			exit (2);
@@ -2844,7 +2844,8 @@ rt_private void print_top(void (*append_trace)(char *))
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
-	 * characters of `routine_name' otherwise we will do a buffer overflow. */
+	 * characters of `routine_name' otherwise we will do a buffer overflow. 
+	 * 189 = 192 - 3, 3 being characters of "..." */
 	if (line_number>0) {
 		/* the line number seems valid, so we are going to print it */
 		if (strlen (eif_except.rname) > 189) {
@@ -2891,7 +2892,8 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	if (eif_except.from < scount) {
 			/* We limit ourself to the first 247 characters of class name
-			 * to avoid buffer overflow. */
+			 * to avoid buffer overflow.
+			 * 244 = 247 - 3, 3 being characters of "..." */
 		if (eif_except.obj_id) {
 			if (eif_except.from != Dtype(eif_except.obj_id)) {
 				class_name = Origin(eif_except.from);

@@ -497,10 +497,14 @@ feature -- C output pixmap management
 
 	on_draw_c_output_pixmap is
 			-- Draw pixmap animation for C output.
+		local
+			l_anim: !ARRAY [!EV_PIXMAP]
 		do
-			draw_pixmap_on_tab (stock_pixmaps.compile_animation_anim.item (c_output_timer_counter))
+			l_anim := stock_pixmaps.compile_animation_anim
+			draw_pixmap_on_tab (l_anim.item (c_output_timer_counter.min (l_anim.count)))
+			
 			c_output_timer_counter := c_output_timer_counter + 1
-			if c_output_timer_counter > 10 then
+			if c_output_timer_counter >l_anim.count + 2 then
 				c_output_timer_counter := 1
 			end
 		end

@@ -261,8 +261,8 @@ feature -- Access
 							-- If we are dealing with a large string, we retrieve
 							-- all characters from 0-255, for subsequent look up
 							-- as it is quicker.
-						create managed_pointer.make (255 * abc_struct_size)
-						screen_dc.cwel_get_char_abc_widths (screen_dc.item, 1, 255, managed_pointer.item)
+						create managed_pointer.make (256 * abc_struct_size)
+						screen_dc.cwel_get_char_abc_widths (screen_dc.item, 0, 255, managed_pointer.item)
 						char_pointer := managed_pointer.item
 					end
 
@@ -287,14 +287,16 @@ feature -- Access
 							cur_height := cur_height + metric_height
 							last_newline_index := counter
 						else
-							if optimize_for_short_strings then
+							if optimize_for_short_strings or else character_code > 255 then
 									-- It is quicker to retrieve the item multiple times, rather than
 									-- retrieve all 255 character indexes for short strings.
+									-- The size should also be calculated one-by-one for characters
+									-- above those for which the size has been retrieved.
 								screen_dc.cwel_get_char_abc_widths (screen_dc.item, character_code, character_code, abc_struct.item)
 							else
 									-- As we are not optimizing for short strings, look up the character
 									-- in the prefetched table.
-								create abc_struct.make_by_pointer (char_pointer + ((character_code - 1).to_integer_32 * abc_struct_size))
+								create abc_struct.make_by_pointer (char_pointer + character_code.to_integer_32 * abc_struct_size)
 							end
 
 							a := abc_struct.a

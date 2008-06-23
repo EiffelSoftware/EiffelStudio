@@ -78,6 +78,8 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define echrt		exdata.ex_rt
 #define echclass	exdata.ex_class
 #define echentry	exdata.ex_entry
+#define echerror	exdata.ex_error_handled
+#define echpanic	exdata.ex_panic_handled
 
 /* Flags for ex_nomem */
 #define MEM_FULL	0x01	/* A simple "Out of memory" condition */

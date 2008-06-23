@@ -154,6 +154,8 @@ struct eif_exception {
 	char *ex_rt;			/* Routine associated with current exception */
 	EIF_TYPE_INDEX ex_class;/* Class associated with current exception */
 	int ex_entry;			/* Is entry or exit of a routine when evaluating invariant. */
+	int ex_error_handled;	/* Used as flag in `fatal_error' to avoid fatal cascade */
+	int ex_panic_handled;	/* Used as flag in `eif_pannic' to avoid panic cascade */
 };
 
 

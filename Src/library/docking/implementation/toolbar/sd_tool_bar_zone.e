@@ -22,7 +22,7 @@ inherit
 		end
 
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -634,7 +634,7 @@ feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
-			if a_item.is_displayed then
+			if a_item /= Void and then a_item.is_displayed then
 				l_widget_item ?= a_item
 				if l_widget_item /= Void then
 					if l_widget_item.widget.parent /= Void then

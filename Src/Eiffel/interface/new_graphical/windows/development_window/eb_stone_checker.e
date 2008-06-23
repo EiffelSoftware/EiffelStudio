@@ -954,8 +954,9 @@ feature {NONE} -- Implementation functions
 				l_content := a_editor.docking_content
 				if l_class_stone /= Void and then l_class_stone.is_valid then
 					l_content.set_pixmap (l_factory.pixmap_from_class_i (l_class_stone.class_i))
-					l_content.set_short_title (l_class_stone.class_name)
-					l_content.set_long_title (l_class_stone.class_name)
+
+					-- We should synchronize title with editor saving state, see bug#14443
+					a_editor.set_title_saved (not a_editor.changed)
 				elseif l_cluster_stone /= Void then
 					l_group := l_cluster_stone.group
 					l_content.set_pixmap (l_factory.pixmap_from_group (l_group))

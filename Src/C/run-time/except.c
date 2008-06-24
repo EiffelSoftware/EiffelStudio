@@ -2433,21 +2433,21 @@ rt_private void extend_trace_string(char *line)
 	 * performed if necessary.
 	 */
 	RT_GET_CONTEXT
+	int l_buf_sz = 0;
 
 	if ((ex_string.size - ex_string.used) > strlen(line)) {
 		strcpy (ex_string.area + ex_string.used, line);
 		ex_string.used += strlen(line);
 	} else {
-		ex_string.size += strlen(line) + BUFSIZ;
+		l_buf_sz = ex_string.size + strlen(line) + BUFSIZ;
 #ifdef DEBUG
 		printf ("extend_trace_string: Going to do a realloc...\n");
 #endif
-		ex_string.area = (char *) eif_realloc(ex_string.area, ex_string.size);
+		ex_string.area = (char *) xrealloc(ex_string.area, l_buf_sz, GC_OFF);
 		if(ex_string.area) {
 			strcpy (ex_string.area + ex_string.used, line);
 			ex_string.used += strlen(line);
-		} else {
-			enomem();
+			ex_string.size = l_buf_sz; /* Set size after `xrealloc' in case exception was raised. */
 		}
 	}
 }
@@ -2459,14 +2459,15 @@ rt_public char* stack_trace_str (void)
 	RT_GET_CONTEXT
 
     /* Clean the area from a previous call. Keep TRACE_SZ of the trace */
-    if (ex_string.area || ex_string.size > TRACE_SZ) {
-		if (ex_string.area) {
-			eif_free(ex_string.area);
-		}
+	if (!ex_string.area) {
 			/* Prepare the structure for a new trace */
 		ex_string.used = 0;
+		ex_string.size = 0; /* Set with zero in case exception is thrown at allocation. */
+		ex_string.area = (char *) eif_rt_xmalloc(TRACE_SZ, C_T, GC_OFF);
 		ex_string.size = TRACE_SZ;
-		ex_string.area = (char *) eif_malloc(TRACE_SZ);
+	} else {
+		ex_string.used = 0;
+		memset (ex_string.area, 0, ex_string.size);
 	}
 
     /* Dump the exception stack into this structure by using the
@@ -2474,13 +2475,22 @@ rt_public char* stack_trace_str (void)
      */
     dump_stack(ds_string);
 
+	if (ex_string.size > TRACE_SZ && ex_string.used <= TRACE_SZ) { /* Shrink the memory block if too large */
+		ex_string.area = (char *) xrealloc(ex_string.area, TRACE_SZ, GC_OFF);
+		ex_string.size = TRACE_SZ;
+	}
+
 	return ex_string.area;
 }
 
 rt_public EIF_REFERENCE stack_trace_string (void)
+	/* Return the string to Eiffel */
 {
-    /* Return the string to Eiffel */
-    return (EIF_REFERENCE) RTMS(stack_trace_str());
+	char* l_trace = stack_trace_str();
+		/* Pass a pointer into RTMS, rather than the call,
+		 * because RTMS is a macro which may cause trace building 
+		 * more than once */
+    return (EIF_REFERENCE) RTMS(l_trace);
 }
 
 rt_private void dump_trace_stack(void)
@@ -3939,8 +3949,9 @@ rt_public void init_emnger (void)
 		except_mnger = RTLNSMART(egc_except_emnger_dtype);
 	}
 	ex_string.used = 0;
+	ex_string.size = 0; /* Set with zero in case exception is thrown at allocation. */
+	ex_string.area = (char *) eif_rt_xmalloc(TRACE_SZ, C_T, GC_OFF);
 	ex_string.size = TRACE_SZ;
-	ex_string.area = (char *) eif_malloc(TRACE_SZ);
 	if (!ex_string.area) {
 		failure(); /* No enough memory to init the application */
 	}

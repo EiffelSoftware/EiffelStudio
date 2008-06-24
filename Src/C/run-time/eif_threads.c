@@ -611,7 +611,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	ex_string.used = 0;
 	ex_string.size = 0;
 	if (ex_string.area) {
-		eif_free (ex_string.area);
+		eif_rt_xfree (ex_string.area);
 		ex_string.area = NULL;
 	}
 

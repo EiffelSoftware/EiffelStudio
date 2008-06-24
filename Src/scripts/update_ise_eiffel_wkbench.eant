@@ -105,7 +105,7 @@
 
 	<target name="update_executable_properties" depend="init" unless="${is_windows}" >
 		<echo message="Update Executable Properties on [${ISE_EIFFEL}_wkbench].." />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/studio/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/studio/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/make_install" accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code" />
@@ -216,7 +216,7 @@
 		<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="vision" />
 		<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="store" />
 
-		<geant target="copy_from_a_library" arguments="curl" />
+		<geant target="copy_from_a_library" arguments="cURL" />
 	</target>
 
 	<target name="copy_from_a_library" depend="init">

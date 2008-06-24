@@ -94,6 +94,23 @@ feature {NONE} -- Initialize
 
 feature {NONE} -- Access
 
+	editor_context_cookie: !UUID
+			-- The associated editor's context cookie for use with the event list service.
+		do
+			if {l_cookie: UUID} internal_editor_context_cookie then
+				Result := l_cookie
+			else
+				Result ?= (create {UUID_GENERATOR}).generate_uuid
+				internal_editor_context_cookie := Result
+			end
+		end
+
+	event_list: !SERVICE_CONSUMER [EVENT_LIST_S]
+			-- Access to the event list service for adding class syntax errors/warnings.
+		once
+			create Result
+		end
+
 	help_uri_scavenger: !ES_HELP_CONTEXT_SCAVENGER [!EB_SMART_EDITOR]
 			-- Scavenger used to local help contexts within the editor
 		require
@@ -818,13 +835,31 @@ feature {NONE} -- Implementation
 
 	process_click_tool_error is
 			-- Show warning corresponding to `click_tool' error.
+		local
+			l_service: SERVICE_CONSUMER [EVENT_LIST_S]
+			l_displayed: ES_ERROR_DISPLAYER
+			l_item: EVENT_LIST_ERROR_ITEM
+			l_error: SYNTAX_ERROR
 		do
+			if event_list.is_service_available then
+					-- Remove any error items associated with the editor
+				event_list.service.prune_event_items (editor_context_cookie)
+			end
+
 			if text_displayed.click_tool_status = text_displayed.class_name_changed then
 				show_warning_message (Warning_messages.w_Class_name_changed)
 			elseif text_displayed.click_tool_status = text_displayed.syntax_error then
-				show_syntax_warning
+					-- There has been a syntax error so add the item to the list
+				l_error := text_displayed.last_syntax_error
+				check l_error_attached: l_error /= Void end
+				if event_list.is_service_available then
+					create l_displayed.make (window_manager)
+					create l_item.make ({ENVIRONMENT_CATEGORIES}.editor, l_error.out, l_error)
+					event_list.service.put_event_item (editor_context_cookie, l_item)
+				end
 			end
 		end
+
 
 	complementary_character (c:CHARACTER): CHARACTER is
 			-- Character complementary to `c', i.e. closing bracket
@@ -991,6 +1026,11 @@ feature {NONE} -- Memory management
 				completion_timeout.destroy
 			end
 			completion_timeout := Void
+
+			if event_list.is_service_available then
+					-- Remove any added error items
+				event_list.service.prune_event_items (editor_context_cookie)
+			end
 		end
 
 feature {NONE} -- Factory
@@ -1528,7 +1568,14 @@ feature {NONE} -- Code completable implementation
 			completing_automatically_reset: completing_automatically = False
 		end
 
-indexing
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_editor_context_cookie: ?like editor_context_cookie
+			-- Cached version of `editor_context_cookie'
+			-- Note: Do not use directly!
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -298,13 +298,23 @@ feature {NONE} -- Click ast exploration
 			l_eiffel_class: EIFFEL_CLASS_C
 		do
 			if not c.is_precompiled and c.file_is_readable then
+				last_syntax_error := Void
 				l_eiffel_class ?= c
-				check l_eiffel_class_not_void: l_eiffel_class /= Void end
+				check
+					l_eiffel_class_not_void: l_eiffel_class /= Void
+					not_error_handler_has_error: not error_handler.has_error
+				end
 				current_class_as := l_eiffel_class.parsed_ast (after_save)
 				if current_class_as = Void then
 						-- If a syntax error ocurred, we retrieve the old ast.
 					current_class_as := c.ast
+					if error_handler.has_error and then {l_syn: SYNTAX_ERROR} error_handler.error_list.first then
+							-- Set the new syntax error
+						last_syntax_error := l_syn
+					end
 				end
+					-- Clear error handler, as per-note in parsed_ast
+				error_handler.wipe_out
 			else
 					-- Class is precompiled, we should not reparse it since its definition
 					-- is frozen for the compiler.

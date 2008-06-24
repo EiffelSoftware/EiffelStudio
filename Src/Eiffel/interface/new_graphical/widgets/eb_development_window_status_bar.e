@@ -87,6 +87,9 @@ feature {NONE} -- Initialization
 			mg.load_agents.extend (load_agent)
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
+
+			compiling_icon_index := 1
+			running_icon_index := 1
 		end
 
 	build_interface is
@@ -595,6 +598,10 @@ feature {NONE} -- Implementation
 
 	compiling_timer: EV_TIMEOUT;
 			-- Timer that updates the "compiling" icon.
+
+invariant
+	compiling_icon_index_positive: compiling_icon_index > 0
+	running_icon_index_positive: running_icon_index > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

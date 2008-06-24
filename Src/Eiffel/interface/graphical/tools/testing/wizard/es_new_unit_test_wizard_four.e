@@ -33,6 +33,11 @@ inherit
 			{NONE}
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE}
+		end
+
 create
 	make
 
@@ -415,6 +420,8 @@ feature {NONE}	-- Tree manipulation
 							l_class_ast := a_class_c.ast
 						elseif a_class_c.eiffel_class_c.file_is_readable then
 							l_class_ast := a_class_c.eiffel_class_c.parsed_ast (False)
+								-- Clear error handler, as per-note in parsed_ast
+							error_handler.wipe_out
 						end
 
 						if l_class_ast /= Void then

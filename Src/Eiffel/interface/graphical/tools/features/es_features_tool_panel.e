@@ -25,6 +25,11 @@ inherit
 			{ES_TOOL} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE}
+		end
+
 create {ES_FEATURES_TOOL}
 	make
 
@@ -283,6 +288,8 @@ feature {NONE} -- Action handlers
 							l_class_ast := l_class.ast
 						elseif l_class.eiffel_class_c.file_is_readable then
 							l_class_ast := l_class.eiffel_class_c.parsed_ast (False)
+								-- Clear error handler, as per-note in parsed_ast
+							error_handler.wipe_out
 						end
 
 						if l_class_ast /= Void then

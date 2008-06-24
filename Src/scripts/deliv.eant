@@ -986,7 +986,7 @@
 		<geant target="copy_library_to" arguments="event,${a_target_dir}"/>
 
 		<!-- C_library -->
-		<mkdir directory="C_library"/>
+		<mkdir directory="C_library" dir="${a_target_dir}" />
 		<geant target="_log" arguments=" - Copy C_library to ${a_target_dir}${path_separator}C_library" />
 		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}C_library,${a_target_dir}${path_separator}C_library" />
 
@@ -1029,7 +1029,7 @@
 		<argument name="a_target_dir" />
 
 		<available resource="docs" dir="${a_binary_dir}" variable="tmp_docs_available" />
-		<copy dir="${a_binary_dir}\docs" to_directory="${a_target_dir}\docs" if="$tmp_docs_available=true" >
+		<copy dir="${a_binary_dir}${path_separator}docs" to_directory="${a_target_dir}${path_separator}docs" if="$tmp_docs_available=true" >
 			<fileset include="@(*.*)" />
 		</copy>
 		<unset name="tmp_docs_available" />

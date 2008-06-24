@@ -215,8 +215,12 @@ feature {NONE} -- Implementation
 
 			c_updatelayerwindow (l_window.item, l_dc.item, l_point.item, l_size.item, l_dc_src.item, l_point_src.item, a_alpha, $l_result)
 
-			if l_err.last_error_code /= 0 then
-				l_err.display_last_error
+			-- In MSDN, "UpdateLayeredWindow Function" page, it says
+			-- if fails, the return value is 0
+			if l_result = 0 then
+				if l_err.last_error_code /= 0 then
+					l_err.display_last_error
+				end
 			end
 
 			l_dc.unselect_all

@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		""
+	description: "Function used as instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -18,7 +16,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1
+
+	data_type_string: STRING = "Expression used as instruction: ";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

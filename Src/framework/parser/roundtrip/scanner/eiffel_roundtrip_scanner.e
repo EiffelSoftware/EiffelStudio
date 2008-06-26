@@ -60,8 +60,9 @@ feature -- Scann
 			-- or an error occurs.
 		local
 			l_as: AST_EIFFEL
+			l_error_level: NATURAL_32
 		do
-			error_handler.wipe_out
+			l_error_level := error_handler.error_level
 			ast_factory.create_match_list (2000)
 			from
 				read_token
@@ -94,20 +95,19 @@ feature -- Scann
 					else
 				end
 			end
-			if has_syntax_error then
+			if l_error_level /= error_handler.error_level then
+				has_syntax_error := True
 				match_list := Void
 			else
+				has_syntax_error := False
 				match_list := ast_factory.match_list
 			end
 		end
 
 feature -- Status reporting
 
-	has_syntax_error: BOOLEAN is
-			-- Is there any error during last scanning?
-		do
-			Result := not error_handler.error_list.is_empty
-		end
+	has_syntax_error: BOOLEAN
+		-- Is there any error during last scanning?
 
 feature
 

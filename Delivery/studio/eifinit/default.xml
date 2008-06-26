@@ -36,10 +36,7 @@
 	<PREF NAME="debugger.grid_column_layout_debugged_objects" DESCRIPTION="Configuration of the debugged objects grid.%NCheck grid_column_layout_stack_objects for full description." RESTART="True"><STRING>1;True;False;150;Name;2;True;False;150;Value;3;True;False;200;Type;4;True;False;80;Address;5;False;False;80;</STRING></PREF>
 	<PREF NAME="debugger.grid_column_layout_watches" DESCRIPTION="Configuration of the watches objects grid. %NCheck grid_column_layout_stack_objects for full description." RESTART="True"><STRING>1;True;False;150;Expression;2;True;False;150;Value;3;True;False;100;Type;4;True;False;80;Address;5;True;False;200;Context</STRING></PREF>
 	<PREF NAME="debugger.objects_tool_layout" HIDDEN="true" DESCRIPTION="Location of main objects tool's items &lt;&lt;'Current object', 'Stack information', 'Argument(s)', 'Local(s)', 'Result', 'Dropped references'&gt;&gt;. The left grid is represented by '#1' and the right grid by '#2'"><LIST>#1;1;2;3;4;5;6;#2</LIST></PREF>
-	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.watch_tools_layout" HIDDEN="true" DESCRIPTION="Layout of watch tools."><LIST></LIST></PREF>
-	
+	<PREF NAME="debugger.watch_tools_layout" HIDDEN="true" DESCRIPTION="Layout of watch tools."><LIST></LIST></PREF>	
 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>17;3;80</COLOR></PREF>
@@ -206,15 +203,7 @@
 	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_text_in_refactoring_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_all_text_in_refactoring_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.refactoring_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in refactoring toolbar."><LIST>RF_pull__visible;RF_rename__visible;Separator;RF_undo__visible;RF_redo__visible</LIST></PREF>
-	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>ES_OUTPUT_TOOL__visible;New_tab__visible;New_window__hidden;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__hidden;New_feature__hidden;Open_shell__visible;Save_file__visible;Save_all_file__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;ES_GROUP_TOOL__hidden;ES_FEATURES_TOOL__hidden;ES_SEARCH_TOOL__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;ES_OUTPUT_TOOL__hidden;ES_DIAGRAM_TOOL__hidden;ES_CLASS_TOOL__hidden;ES_FEATURE_RELATION_TOOL__hidden;ES_DEPENDENCY_TOOL__hidden;ES_METRICS_TOOL__hidden;ES_CONSOLE_TOOL__hidden;ES_C_OUTPUT_TOOL__hidden;ES_ERROR_LIST_TOOL__hidden;ES_FAVORITES_TOOL__hidden;ES_WINDOWS_TOOL__hidden;ES_PROPERTIES_TOOL__hidden;ES_DEBUGGER_BREAKPOINTS_TOOL__hidden;ES_SEARCH_REPORT__hidden;ES_INFORMATION_TOOL__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.link_tools" DESCRIPTION="Link tools? True means that a tool propagates stone to other tools if possible."><BOOLEAN>False</BOOLEAN></PREF>

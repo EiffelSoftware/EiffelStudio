@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		""
+	description: "Procedure call used as expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -10,15 +8,16 @@ indexing
 class VKCN3
 
 inherit
-
 	VKCN
 		redefine
 			subcode
 		end
 
-feature -- Properties
+feature -- Access
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER = 3
+
+	data_type_string: STRING = "Instruction used as expression: ";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

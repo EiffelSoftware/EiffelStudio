@@ -1143,6 +1143,7 @@ feature -- Implementation
 					create l_vkcn3
 					context.init_error (l_vkcn3)
 					l_vkcn3.set_location (l_feature_name)
+					l_vkcn3.set_called_feature (a_name.name)
 					error_handler.insert_error (l_vkcn3)
 				else
 						-- Protect if constrained type is NONE.
@@ -1382,6 +1383,9 @@ feature -- Implementation
 												l_expr ?= last_byte_node
 												l_arg_nodes.extend (l_expr)
 											end
+										else
+												-- An error occurred, we reset `l_arg_types'
+											l_arg_types := Void
 										end
 										i := i + 1
 									end
@@ -3304,6 +3308,7 @@ feature -- Implementation
 	process_expr_call_as (l_as: EXPR_CALL_AS) is
 		local
 			l_vkcn3: VKCN3
+			l_list: LEAF_AS_LIST
 		do
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
@@ -3311,6 +3316,10 @@ feature -- Implementation
 				create l_vkcn3
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
+				l_list := match_list_server.item (context.current_class.class_id)
+				if l_list /= Void and then l_as.call.is_text_available (l_list) then
+					l_vkcn3.set_called_feature (l_as.call.text (l_list))
+				end
 				error_handler.insert_error (l_vkcn3)
 				reset_types
 			end
@@ -6116,6 +6125,7 @@ feature -- Implementation
 			l_vkcn1: VKCN1
 			l_call: CALL_B
 			l_call_b: INSTR_CALL_B
+			l_list: LEAF_AS_LIST
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -6126,6 +6136,10 @@ feature -- Implementation
 					create l_vkcn1
 					context.init_error (l_vkcn1)
 					l_vkcn1.set_location (l_as.call.end_location)
+					l_list := match_list_server.item (context.current_class.class_id)
+					if l_list /= Void and l_as.call.is_text_available (l_list) then
+						l_vkcn1.set_called_feature (l_as.call.text (l_list))
+					end
 					error_handler.insert_error (l_vkcn1)
 				elseif is_byte_node_enabled then
 					l_call ?= last_byte_node

@@ -1,22 +1,56 @@
 indexing
 
-	description: 
+	description:
 		"Error when a call as an instruction is used as an expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VKCN 
+deferred class VKCN
 
 inherit
-
 	FEATURE_ERROR
+		redefine
+			build_explain
+		end
 
-feature -- Property
+feature -- Access
 
-	code: STRING is "VKCN";
+	code: STRING is "VKCN"
 			-- Error code
+
+	called_feature: STRING
+			-- Routine being called as an expression
+
+	data_type_string: STRING is
+			-- String representing the kind of error we are handling.
+		deferred
+		end
+
+feature -- Error message
+
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
+			-- <Precursor>
+		do
+			if called_feature /= Void then
+				a_text_formatter.add (data_type_string)
+				a_text_formatter.add (called_feature)
+				a_text_formatter.add_new_line
+			end
+		end
+
+feature -- Settings
+
+	set_called_feature (a_feature_name: STRING) is
+			-- Assign `f' to `feature'.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+		do
+			called_feature := a_feature_name
+		ensure
+			called_feature_not_void: called_feature = a_feature_name
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

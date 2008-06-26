@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		Dialog that submit exception as bug report to http://supprt.eiffel.com
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

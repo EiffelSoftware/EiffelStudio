@@ -45,46 +45,6 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDO
 		deferred
 		end
 
-	show_general_toolbar: BOOLEAN is
-			-- Show the general toolbar (New, Save, Cut, ...)?
-		deferred
-		end
-
-	show_text_in_general_toolbar: BOOLEAN is
-			-- Show only selected text in the general toolbar?
-		deferred
-		end
-
-	show_all_text_in_general_toolbar: BOOLEAN is
-			-- Show all text in the general toolbar?
-		deferred
-		end
-
-	show_text_in_refactoring_toolbar: BOOLEAN is
-			-- Show only selected text in refactoring toolbar?
-		deferred
-		end
-
-	show_all_text_in_refactoring_toolbar: BOOLEAN is
-			-- Show all text in the refactoring toolbar?
-		deferred
-		end
-
-	show_address_toolbar: BOOLEAN is
-			-- Show the address toolbar (Back, Forward, Class, Feature, ...)?
-		deferred
-		end
-
-	show_project_toolbar: BOOLEAN is
-			-- Show the project toolbar (Breakpoints, ...)?
-		deferred
-		end
-
-	show_refactoring_toolbar: BOOLEAN is
-			-- Show the refactoring toolbar.
-		deferred
-		end
-
 	context_unified_stone: BOOLEAN is
 			-- Is the context tool linked?
 		deferred

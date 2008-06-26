@@ -31,12 +31,6 @@ feature {NONE} -- Creation
 			save_force_debug_mode (a_window_data.is_force_debug_mode)
 			general_toolbar_layout := a_window_data.general_toolbar_layout.twin
 			refactoring_toolbar_layout := a_window_data.refactoring_toolbar_layout.twin
-			show_general_toolbar := a_window_data.show_general_toolbar
-			show_refactoring_toolbar := a_window_data.show_refactoring_toolbar
-			show_project_toolbar := a_window_data.show_project_toolbar
-			show_all_text_in_general_toolbar := a_window_data.show_all_text_in_general_toolbar
-			show_text_in_general_toolbar := a_window_data.show_text_in_general_toolbar
-			show_address_toolbar := a_window_data.show_address_toolbar
 		end
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
@@ -105,30 +99,6 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	right_panel_layout: ARRAY [STRING]
 			-- Layout of the left panel of the window.
-
-	show_general_toolbar: BOOLEAN
-			-- Show the general toolbar (New, Save, Cut, ...)?
-
-	show_text_in_general_toolbar: BOOLEAN
-			-- Show only selected text in the general toolbar?
-
-	show_all_text_in_general_toolbar: BOOLEAN
-			-- Show all text in the general toolbar?
-
-	show_text_in_refactoring_toolbar: BOOLEAN
-			-- Show only selected text in the refactoring toolbar?
-
-	show_all_text_in_refactoring_toolbar: BOOLEAN
-			-- Show all text in the refactoring toolbar?
-
-	show_address_toolbar: BOOLEAN
-			-- Show the address toolbar (Back, Forward, Class, Feature, ...)?
-
-	show_project_toolbar: BOOLEAN
-			-- Show the project toolbar (Breakpoints, ...)?
-
-	show_refactoring_toolbar: BOOLEAN
-			-- Show the refactoring toolbar.
 
 	context_unified_stone: BOOLEAN
 			-- Is the context tool linked?

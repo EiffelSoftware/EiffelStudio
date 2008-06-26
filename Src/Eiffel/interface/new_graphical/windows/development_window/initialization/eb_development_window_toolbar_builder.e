@@ -87,11 +87,7 @@ feature -- Building commands
 				-- Create the command to show this toolbar.
 			create l_show_general_toolbar_command.make (l_content, develop_window.Interface_names.m_general_toolbar)
 			develop_window.commands.show_toolbar_commands.force (l_show_general_toolbar_command, l_content)
-			if develop_window.development_window_data.show_general_toolbar then
-				l_show_general_toolbar_command.enable_visible
-			else
-				l_show_general_toolbar_command.disable_visible
-			end
+
 			l_content.close_request_actions.extend (agent l_show_general_toolbar_command.execute)
 			l_content.show_request_actions.extend (agent l_show_general_toolbar_command.execute)
 			develop_window.commands.editor_commands.extend (develop_window.commands.shell_cmd)
@@ -134,12 +130,6 @@ feature -- Building commands
 			create l_show_address_toolbar_command.make (l_content, develop_window.Interface_names.m_address_toolbar)
 			develop_window.commands.show_toolbar_commands.force (l_show_address_toolbar_command, l_content)
 
-			if develop_window.development_window_data.show_address_toolbar then
-				l_show_address_toolbar_command.enable_visible
-			else
-				l_show_address_toolbar_command.disable_visible
-			end
-
 			l_content.close_request_actions.extend (agent l_show_address_toolbar_command.execute)
 			l_content.show_request_actions.extend (agent l_show_address_toolbar_command.execute)
 
@@ -177,12 +167,6 @@ feature -- Building commands
 				-- Create command to show this toolbar.
 			create l_show_project_toolbar_command.make (l_content, develop_window.Interface_names.m_project_toolbar)
 			develop_window.commands.show_toolbar_commands.force (l_show_project_toolbar_command, l_content)
-
-			if develop_window.development_window_data.show_project_toolbar then
-				l_show_project_toolbar_command.enable_visible
-			else
-				l_show_project_toolbar_command.disable_visible
-			end
 
 			l_content.close_request_actions.extend (agent l_show_project_toolbar_command.execute)
 			l_content.show_request_actions.extend (agent l_show_project_toolbar_command.execute)
@@ -222,12 +206,6 @@ feature -- Building commands
 				-- Create the command to show this toolbar.
 			create l_show_tool_bar_command.make (l_content, develop_window.Interface_names.m_refactoring_toolbar)
 			develop_window.commands.show_toolbar_commands.force (l_show_tool_bar_command, l_content)
-
-			if develop_window.development_window_data.show_refactoring_toolbar then
-				l_show_tool_bar_command.enable_visible
-			else
-				l_show_tool_bar_command.disable_visible
-			end
 
 			l_content.close_request_actions.extend (agent l_show_tool_bar_command.execute)
 			l_content.show_request_actions.extend (agent l_show_tool_bar_command.execute)

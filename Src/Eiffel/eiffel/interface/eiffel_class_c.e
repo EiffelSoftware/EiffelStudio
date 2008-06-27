@@ -421,9 +421,11 @@ feature -- Element change
 
 	parsed_ast (after_save: BOOLEAN): CLASS_AS is
 			-- Parse the AST structure of current class.
+			-- Note: Callers are responsible to clearing out any errors and warnings generated
+			--       by the last parse!
+			--
 			--| Save the AST in the temporary server for later retrieval.
 			--| if it happens after a save operation.
-			--| If there is a syntax error, set `last_syntax_error'.
 		require
 			not_precompiled: not is_precompiled
 			file_is_readable: file_is_readable
@@ -431,6 +433,16 @@ feature -- Element change
 			prev_class: CLASS_C
 			l_date: INTEGER
 		do
+			debug ("fixme")
+				fixme ("[
+						This is bad placement for this routine. It should be extract out to a general class analyzer with
+						better error reporting functionality.
+						
+						There is nothing in this routine that performs any action on this class, only information from it is
+						used.
+					]")
+			end
+
 			check no_error: not error_handler.has_error end
 			prev_class := System.current_class
 			System.set_current_class (Current)
@@ -451,14 +463,15 @@ feature -- Element change
 						-- a lot of parsing when switching back and forth between classes.
 					tmp_ast_server.put (Result)
 				else
-					error_handler.wipe_out
 					Result := Void
 				end
 			end
 			System.set_current_class (prev_class)
 		rescue
-				-- Restore context.
-			System.set_current_class (prev_class)
+			if prev_class /= Void then
+					-- Restore context.
+				System.set_current_class (prev_class)
+			end
 		end
 
 feature -- Third pass: byte code production and type check

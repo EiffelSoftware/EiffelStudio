@@ -20,16 +20,20 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_tool: !ES_TOOL [EB_TOOL])
+	make (a_tool: !ES_TOOL [EB_TOOL]; a_name: !STRING)
 			-- Initialized a tool's pixmap accessor.
 			--
 			-- `a_tool': The tool to retrieve the pixmaps for.
+			-- `a_name': An identifier/moniker used to load a pixmap image.
+		require
+			a_tool_is_interface_usable: a_tool.is_interface_usable
+			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_matrix: !FILE_NAME
 		do
 				-- Create icon file name
 			create l_matrix.make_from_string (tool_utilities.tool_associated_path (a_tool))
-			l_matrix.set_file_name (matrix_file_name)
+			l_matrix.set_file_name (a_name)
 			if {l_user_matrix: FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix) then
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
@@ -47,16 +51,6 @@ feature {NONE} -- Initialization
 
 				make_from_buffer (create {EV_PIXEL_BUFFER}.make_with_size (1, 1))
 			end
-		end
-
-feature {NONE} --- Access
-
-	matrix_file_name: !STRING
-			-- The icon matrix file name located in the tool's folder, sans extension
-		once
-			Result := "icons"
-		ensure
-			not_result_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Helpers

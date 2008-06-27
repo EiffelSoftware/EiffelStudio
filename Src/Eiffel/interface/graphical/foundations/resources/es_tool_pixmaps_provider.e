@@ -53,7 +53,7 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 		do
-			create Result.make (tool)
+			create Result.make (tool, once "icons")
 		end
 
 feature {NONE} -- Implementation: Internal cache

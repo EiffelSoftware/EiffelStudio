@@ -149,7 +149,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 					stone_change_notified := False
 					is_in_stone_synchronization := True
 					l_new_stone := l_new_stone.synchronized_stone
-					if l_new_stone /= stone and then (l_new_stone = Void or else is_stone_usable (l_new_stone)) then
+					if l_new_stone = Void or else is_stone_usable (l_new_stone) then
 						set_stone (l_new_stone)
 					end
 					is_in_stone_synchronization := False

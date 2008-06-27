@@ -13,12 +13,18 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
+--inherit {NONE}
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
 
 	ES_SHARED_FONTS_AND_COLORS
+		export
+			{NONE} all
+		end
+
+	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all
 		end

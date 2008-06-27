@@ -38,6 +38,14 @@ inherit
 			out
 		end
 
+--inherit {NONE}
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		redefine
+			out
+		end
+
 feature {NONE} -- Initialization
 
 	build_tool (a_tool: G)

@@ -186,7 +186,7 @@ feature {NONE} -- Process
 
 feature {NONE} -- Query
 
-	is_named (a_element_name: STRING_8; a_name: STRING_8): BOOLEAN
+	is_named (a_element_name: STRING; a_name: STRING): BOOLEAN
 			-- Determines if an element has a specific name.
 			--
 			-- `a_element': The XML element to check the name of.
@@ -201,7 +201,7 @@ feature {NONE} -- Query
 			Result := a_element_name.is_case_insensitive_equal (a_name)
 		end
 
-	is_xml_attribute (a_name: STRING_8): BOOLEAN
+	is_xml_attribute (a_name: STRING): BOOLEAN
 			-- Determines if a XML element attribute name is a well known XML attribute name.
 			--
 			-- `a_name': The attribute name.
@@ -212,15 +212,15 @@ feature {NONE} -- Query
 					a_name.is_case_insensitive_equal (schema_location_tag)
 		end
 
-feature {NONE} -- Actions
+feature -- Actions
 
-	frozen error_reported_actions: !ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+	frozen error_reported_actions: !ACTION_SEQUENCE [TUPLE [msg: !STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an error
 			--
-			-- `a_msg': Message and cause of the error.
-			-- `a_line': Offending one-based line index of the error.
-			-- `a_index': Offending one-base character index, on the line, of the error.
-			--            Will be zero if the line is empty.
+			-- 'msg': Message and cause of the error.
+			-- 'line': Offending one-based line index of the error.
+			-- 'index': Offending one-base character index, on the line, of the error.
+			--          Will be zero if the line is empty.
 		do
 			if internal_error_reported_actions /= Void then
 				Result ?= internal_error_reported_actions
@@ -232,13 +232,13 @@ feature {NONE} -- Actions
 			result_consistent: Result = error_reported_actions
 		end
 
-	frozen warning_reported_actions: !ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+	frozen warning_reported_actions: !ACTION_SEQUENCE [TUPLE [msg: !STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an warning
 			--
-			-- `a_msg': Message and cause of the warning.
-			-- `a_line': Offending one-based line index of the warning.
-			-- `a_index': Offending one-base character index, on the line, of the warning.
-			--            Will be zero if the line is empty.		
+			-- 'msg': Message and cause of the warning.
+			-- 'line': Offending one-based line index of the warning.
+			-- 'index': Offending one-base character index, on the line, of the warning.
+			--          Will be zero if the line is empty.		
 		do
 			if internal_warning_reported_actions /= Void then
 				Result ?= internal_warning_reported_actions
@@ -258,12 +258,12 @@ feature {NONE} -- Action handlers
 			reset
 		end
 
-	on_start_tag (a_namespace: STRING_8; a_prefix: STRING_8; a_local_part: STRING_8)
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
 		local
-			l_name: STRING_8
+			l_name: STRING
 			l_tag_transitions: like tag_state_transitions
-			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING_8]
+			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING]
 			l_current_transition_stack: like current_transition_stack
 			l_next_state: NATURAL_8
 		do
@@ -297,7 +297,7 @@ feature {NONE} -- Action handlers
 
 				if l_next_state = t_none then
 						-- Parse error
-					on_report_xml_error ("The document does not meet the expected parse rules!")
+					on_report_xml_error ("Unexpected tag '" + a_local_part + "'!")
 				else
 						-- Set next transition.
 					l_current_transition_stack.force (l_next_state)
@@ -318,13 +318,13 @@ feature {NONE} -- Action handlers
 			current_transition_stack_stack_unchanged: current_transition_stack.count = old current_transition_stack.count
 		end
 
-	on_attribute (a_namespace: STRING_8; a_prefix: STRING_8; a_local_part: STRING_8; a_value: STRING_8)
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- <Precursor>
 		local
-			l_name: STRING_8
+			l_name: STRING
 			l_cur_attributes: like current_attributes
 			l_attribute_states: like attribute_states
-			l_attributes: ?DS_HASH_TABLE [NATURAL_8, STRING_8]
+			l_attributes: ?DS_HASH_TABLE [NATURAL_8, STRING]
 			l_tag_state: NATURAL_8
 			l_state: NATURAL_8
 		do
@@ -368,13 +368,13 @@ feature {NONE} -- Action handlers
 						end
 					elseif is_strict then
 							-- Unreconginized attribute error
-						on_report_xml_error ("Unrecognized attribute '" + a_local_part + "'!")
+						on_report_xml_error ("Unexpected attribute '" + a_local_part + "'!")
 					end
 				end
 			end
 		end
 
-	on_content (a_content: STRING_8) is
+	on_content (a_content: STRING) is
 			-- <Precursor>
 		do
 			if not has_error then
@@ -386,12 +386,12 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_end_tag (a_namespace, a_prefix, a_local_part: STRING_8)
+	on_end_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- <Precursor>
 		local
-			l_name: STRING_8
+			l_name: STRING
 			l_tag_transitions: like tag_state_transitions
-			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING_8]
+			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING]
 			l_current_transition_stack: like current_transition_stack
 			l_current_state: like current_state
 			l_next_state: NATURAL_8
@@ -431,32 +431,32 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_report_xml_error (a_message: STRING_8)
+	on_report_xml_error (a_message: STRING)
 			-- Reports an XML error.
 			--
 			-- `a_message': The XML error to report.
 		do
 			if a_message /= Void and then {l_message: !STRING_32} a_message.as_string_32 then
 				internal_last_error_message := l_message
-				on_error (l_message, xml_parser.line, xml_parser.column)
+				on_error (l_message, xml_parser.line.to_natural_32, xml_parser.column.to_natural_32)
 			else
 				internal_last_error_message := "Unknown error!"
 			end
 		end
 
-	on_report_xml_warning (a_message: STRING_8)
+	on_report_xml_warning (a_message: STRING)
 			-- Reports an XML warning.
 			--
 			-- `a_message': The XML warning to report.
 		do
 			if a_message /= Void and then {l_message: !STRING_32} a_message.as_string_32 then
-				on_warning (l_message, xml_parser.line, xml_parser.column)
+				on_warning (l_message, xml_parser.line.to_natural_32, xml_parser.column.to_natural_32)
 			end
 		end
 
 feature {NONE} -- Reporting
 
-	on_error (a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32)
+	on_error (a_msg: !STRING_32; a_line: NATURAL; a_index: NATURAL)
 			-- Reports an error.
 			--
 			-- `a_msg': Message and cause of the error.
@@ -471,11 +471,14 @@ feature {NONE} -- Reporting
 			if internal_error_reported_actions /= Void then
 				internal_error_reported_actions.call ([a_msg, a_line, a_index])
 			end
+			if is_strict then
+				xml_parser.abort
+			end
 		ensure
 			has_error: has_error
 		end
 
-	on_warning (a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32)
+	on_warning (a_msg: !STRING_32; a_line: NATURAL; a_index: NATURAL)
 			-- Reports a warning.
 			--
 			-- `a_msg': Message and cause of the warning.
@@ -494,7 +497,7 @@ feature {NONE} -- Reporting
 
 feature {NONE} -- Conversion
 
-	to_boolean (a_name: STRING_8; a_value: !STRING_32; a_default: BOOLEAN): BOOLEAN
+	to_boolean (a_name: STRING; a_value: !STRING_32; a_default: BOOLEAN): BOOLEAN
 			-- Converts a value to a Boolean.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -522,7 +525,7 @@ feature {NONE} -- Conversion
 			end
 		end
 
-	to_integer (a_name: STRING_8; a_value: !STRING_32; a_default: INTEGER_32): INTEGER_32
+	to_integer (a_name: STRING; a_value: !STRING_32; a_default: INTEGER_32): INTEGER_32
 			-- Converts a value to a Integer.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -548,7 +551,7 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Formatting
 
-	unescape_text (a_text: ?STRING_8): !STRING_32
+	unescape_text (a_text: ?STRING): !STRING_32
 			-- Unescapes XML text.
 			--
 			-- `a_text':
@@ -627,14 +630,14 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING_8], NATURAL_8]
+	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		deferred
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING_8], NATURAL_8]
+	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- Mapping of possible attributes of tags.
 		deferred
 		end
@@ -645,11 +648,11 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `last_error_message'
 			-- Note: Do not use directly!
 
-	internal_error_reported_actions: ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
-			-- Cached version of `last_error_message'
+	internal_error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: !STRING_32; line: NATURAL; index: NATURAL]]
+			-- Cached version of `error_reported_actions'
 			-- Note: Do not use directly!
 
-	internal_warning_reported_actions: ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+	internal_warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: !STRING_32; line: NATURAL; index: NATURAL]]
 			-- Cached version of `warning_reported_actions'
 			-- Note: Do not use directly!
 
@@ -659,17 +662,17 @@ feature {NONE} -- Tag states
 
 feature {NONE} -- Attribute names
 
-	xmlns_tag: STRING_8 = "xmlns"
-	xsi_tag: STRING_8 = "xsi"
-	schema_location_tag: STRING_8 = "schemalocation"
+	xmlns_tag: STRING = "xmlns"
+	xsi_tag: STRING = "xsi"
+	schema_location_tag: STRING = "schemalocation"
 
 feature {NONE} -- Attribute values
 
-	v_bool_one: STRING_8 = "1"
-	v_bool_yes: STRING_8 = "yes"
+	v_bool_one: STRING = "1"
+	v_bool_yes: STRING = "yes"
 
-	v_bool_zero: STRING_8 = "0"
-	v_bool_no: STRING_8 = "no"
+	v_bool_zero: STRING = "0"
+	v_bool_no: STRING = "no"
 
 invariant
 	xml_parser_callbacks_is_current: xml_parser.callbacks = Current

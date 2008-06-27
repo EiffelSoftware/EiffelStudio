@@ -1345,6 +1345,7 @@ test	agent-return-type-crash		term154 tcf pass termination
 test	nested-like-code-generation-crash	term155 tcf pass termination
 test	assertion-regeneration-crash		term156 tcf pass termination
 test	vkcn-error-reporting-failure		term157 tcf pass termination
+test	invalid-case-crash			term158 tcf pass termination
 
 -- Config
 

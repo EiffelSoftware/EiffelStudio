@@ -170,7 +170,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_origin_date (d: DATE) is
+	set_origin_date (d: ?DATE) is
 			-- Set `origin_date' to `d'.
 		do
 			origin_date := d

@@ -207,7 +207,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_origin_date_time (dt: DATE_TIME) is
+	set_origin_date_time (dt: ?DATE_TIME) is
 			-- Set `origin_date_time' to `dt'.
 		do
 			origin_date_time := dt

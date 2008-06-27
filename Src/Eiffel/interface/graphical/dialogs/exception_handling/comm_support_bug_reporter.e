@@ -258,6 +258,10 @@ feature {NONE}
 			l_curl.formadd_string_string (Result, l_last_form, {CURL_FORM_CONSTANTS}.curlform_copyname, "ctl00$ctl00$default_main_content$main_content$to_reproduce_text", {CURL_FORM_CONSTANTS}.curlform_copycontents, "", {CURL_FORM_CONSTANTS}.curlform_end)
 			l_curl.formadd_string_string (Result, l_last_form, {CURL_FORM_CONSTANTS}.curlform_copyname, "ctl00$ctl00$default_main_content$main_content$submit_button", {CURL_FORM_CONSTANTS}.curlform_copycontents, "Preview", {CURL_FORM_CONSTANTS}.curlform_end)
 			l_curl.formadd_string_string (Result, l_last_form, {CURL_FORM_CONSTANTS}.curlform_copyname, "__EVENTVALIDATION", {CURL_FORM_CONSTANTS}.curlform_copycontents, a_event_validation_value.as_string_8, {CURL_FORM_CONSTANTS}.curlform_end)
+
+			-- This is very important!
+			-- Otherwise the same memory area will be freed twice which cause run-time crash after bug report sent
+			l_last_form.release_item
 		ensure
 			exist: Result /= Void and then Result.is_exists
 		end

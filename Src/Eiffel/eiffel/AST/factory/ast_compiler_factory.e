@@ -260,7 +260,6 @@ feature -- Access
 						end
 						if vfav /= Void then
 							error_handler.insert_error (vfav)
-							error_handler.checksum
 						end
 					end
 					f.forth

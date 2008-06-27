@@ -1344,6 +1344,7 @@ test	crash-for-redefined-feature-with-wrong-anchor	term153 tcf fail termination
 test	agent-return-type-crash		term154 tcf pass termination
 test	nested-like-code-generation-crash	term155 tcf pass termination
 test	assertion-regeneration-crash		term156 tcf pass termination
+test	vkcn-error-reporting-failure		term157 tcf pass termination
 
 -- Config
 

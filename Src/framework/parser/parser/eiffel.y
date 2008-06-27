@@ -137,7 +137,7 @@ create
 %type <FEATURE_SET_AS>		Feature_set
 %type <FORMAL_AS>			Formal_parameter
 %type <FORMAL_DEC_AS>		Formal_generic
-%type <ID_AS>				Class_or_tuple_identifier Class_identifier Identifier_as_lower Free_operator Feature_name_for_call
+%type <ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
 %type <INSPECT_AS>			Multi_branch
@@ -1726,9 +1726,9 @@ Type_list_impl: Type
 			}
 	;
 
-Tuple_type: TE_TUPLE
+Tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
-	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE TE_RSQURE
+	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
 			  	last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
@@ -1739,7 +1739,7 @@ Tuple_type: TE_TUPLE
 				remove_counter
 				remove_counter2
 			}
-	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Actual_parameter_list
+	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE Actual_parameter_list
 			{
 				if $5 /= Void then
 					$5.set_positions ($4, last_rsqure.item)
@@ -1749,7 +1749,7 @@ Tuple_type: TE_TUPLE
 				remove_counter
 				remove_counter2
 			}
-	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Named_parameter_list
+	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE Named_parameter_list
 			{
 				$$ := ast_factory.new_named_tuple_type_as (
 					$1, ast_factory.new_formal_argu_dec_list_as ($5, $4, last_rsqure.item))
@@ -2820,11 +2820,8 @@ Expression_list: Expression
 			}
 	;
 
-Class_or_tuple_identifier: TE_TUPLE
+Class_or_tuple_identifier: Tuple_identifier
 			{
-				if $1 /= Void then
-					$1.to_upper
-				end
 				$$ := $1
 			}
 	|	Class_identifier
@@ -2845,6 +2842,15 @@ Class_identifier: TE_ID
 					-- Keyword used as identifier
 				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
 				$$ := last_id_as_value
+			}
+	;
+
+Tuple_identifier: TE_TUPLE
+			{
+				if $1 /= Void then
+					$1.to_upper
+				end
+				$$ := $1
 			}
 	;
 

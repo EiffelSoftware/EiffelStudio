@@ -30,22 +30,23 @@ inherit
             build_docking_content
 		end
 
-    SHARED_SERVICE_PROVIDER
-        export
-            {NONE} all
-        end
-
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
 		end
 
-    EV_SHARED_APPLICATION
+--inherit {NONE}
+    ES_SHARED_FONTS_AND_COLORS
         export
             {NONE} all
         end
 
-    ES_SHARED_FONTS_AND_COLORS
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		end
+
+    EV_SHARED_APPLICATION
         export
             {NONE} all
         end

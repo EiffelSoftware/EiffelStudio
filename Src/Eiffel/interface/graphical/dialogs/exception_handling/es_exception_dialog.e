@@ -292,7 +292,9 @@ feature {NONE} -- Action handlers
 			create l_dialog.make (support_login)
 			l_dialog.show (dialog)
 			if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
-				submit_bug_button.disable_sensitive
+				if l_dialog.is_submit_successed then
+					submit_bug_button.disable_sensitive
+				end
 			end
 		end
 

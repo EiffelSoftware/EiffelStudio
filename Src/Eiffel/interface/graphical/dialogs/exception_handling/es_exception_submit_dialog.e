@@ -233,6 +233,11 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature -- Query
+
+	is_submit_successed: BOOLEAN
+			-- If bug report submitted successfully
+
 feature {NONE} -- Access
 
 	support_login: COMM_SUPPORT_BUG_REPORTER
@@ -427,10 +432,10 @@ feature {NONE} -- Action handlers
 		local
 			l_warning: ES_WARNING_PROMPT
 			l_error: ES_ERROR_PROMPT
-			retried: BOOLEAN
+			l_retried: BOOLEAN
 		do
 			if can_submit then
-				if not retried then
+				if not l_retried then
 					if not is_description_available then
 						create l_warning.make_standard_with_cancel ("No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?")
 						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.cancel_button, agent veto_close)
@@ -438,12 +443,16 @@ feature {NONE} -- Action handlers
 						l_warning.show (dialog)
 					else
 						execute_with_busy_cursor (agent submit_bug_report)
+						is_submit_successed := True
 					end
 				else
-					create l_error.make_standard ("There was a problem submitting the problem report. Please submit is manually at http://support.eiffel.com.")
+					create l_error.make_standard ("There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com.")
 					l_error.show (dialog)
 				end
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 	on_remember_me_toggled

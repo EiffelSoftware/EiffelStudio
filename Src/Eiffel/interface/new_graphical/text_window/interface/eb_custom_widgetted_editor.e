@@ -491,10 +491,10 @@ feature {NONE} -- Action hanlders
 						local
 							l_handler: like token_handler
 						do
+							reset_mouse_idle_timer
 							if {PLATFORM}.is_windows then
 									-- On Windows-based systems we can exit the processing immediately. On GTK this
 									-- action is fired too soon to perform the immediate exit.
-								reset_mouse_idle_timer
 								l_handler := token_handler
 								if l_handler /= Void and then l_handler.can_perform_exit (True) then
 									l_handler.perform_exit (True)
@@ -519,6 +519,7 @@ feature {NONE} -- Action hanlders
 		local
 			l_handler: like token_handler
 			l_cursor: EIFFEL_EDITOR_CURSOR
+			l_instant: BOOLEAN
 		do
 			if text_is_fully_loaded then
 				l_handler := token_handler
@@ -528,10 +529,15 @@ feature {NONE} -- Action hanlders
 						create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
 						position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
 						if {l_token: !EDITOR_TOKEN} l_cursor.token then
-							if not l_handler.is_active then
+								-- An instant key (CTRL) allows direct processing of the token.
+							l_instant := (ev_application.ctrl_pressed and then not ev_application.alt_pressed and then not ev_application.shift_pressed)
+							if l_instant or else not l_handler.is_active then
+									-- Even if the handler is active, an instant key will override it.
 								if l_handler.is_applicable_token (l_token) then
-									l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
-								else
+									l_handler.perform_on_token_with_mouse_coords (l_instant, l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
+								elseif not l_instant then
+										-- No reset is performed when using an instant key, because invalid tokens will not show
+										-- anything so we should not hide what's already there
 									l_handler.perform_reset
 								end
 							elseif l_handler.last_token_handled /= l_token and then l_handler.can_perform_exit (False) then

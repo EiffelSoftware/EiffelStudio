@@ -861,7 +861,6 @@ feature {NONE} -- Implementation
 	process_click_tool_error is
 			-- Show warning corresponding to `click_tool' error.
 		local
-			l_service: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_displayed: ES_ERROR_DISPLAYER
 			l_item: EVENT_LIST_ERROR_ITEM
 			l_error: SYNTAX_ERROR

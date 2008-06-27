@@ -102,7 +102,7 @@ feature -- Basic operations
 			-- `a_line': The line number where the token is located in the editor.
 		require
 			is_interface_usable: is_interface_usable
-			not_is_active: not is_active
+			--not_is_active: not is_active
 			a_line_positive: a_line > 0
 		do
 			last_token_handled := a_token
@@ -112,9 +112,10 @@ feature -- Basic operations
 			last_token_handled_set: last_token_handled = a_token
 		end
 
-	perform_on_token_with_mouse_coords (a_token: !EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
+	perform_on_token_with_mouse_coords (a_instant: BOOLEAN; a_token: !EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Performs an action on a token, respecting the current mouse x and y coordinates.
 			--
+			-- `a_instant': Indicates if the user held the instant-action key.
 			-- `a_token': The editor token to process.
 			-- `a_line': The line number where the token is located in the editor.
 			-- `a_x': The relative x position of the mouse pointer, to the editor,  when processing was requested.
@@ -123,7 +124,7 @@ feature -- Basic operations
 			-- `a_screen_y': The absolute screen y position of the mouse pointer when processing was requested.
 		require
 			is_interface_usable: is_interface_usable
-			not_is_active: not is_active
+			--not_is_active: not is_active
 			a_line_positive: a_line > 0
 		do
 			last_token_handled := a_token

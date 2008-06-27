@@ -730,7 +730,32 @@ feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, 
 				else
 					create l_title.make_empty
 				end
-				if not l_title.is_empty then
+
+				set_title_saved_with (a_saved, l_title)
+			end
+		end
+
+	set_title_saved_with (a_saved: BOOLEAN; a_title: STRING) is
+			-- Set '*' in the title base on `a_saved'.
+			-- `a_title' will be used as name in editor docking_content
+		require
+			not_void: a_title /= Void
+		local
+			l_short_title: STRING
+			l_title: STRING
+		do
+			if docking_content /= Void then
+				if not a_title.is_empty then
+					-- We must twin it, otherwise it will change the class name
+					l_title := a_title.twin
+
+					-- First we make sure docking_content title has `l_title'
+					l_short_title := docking_content.short_title.as_string_8
+					if l_short_title = Void or else not l_short_title.has_substring (l_title) then
+						docking_content.set_short_title (l_title)
+						docking_content.set_long_title (l_title)
+					end
+
 					if l_title.item (1).code = ('*').code then
 						if a_saved then
 							l_title.keep_tail (l_title.count - 1)
@@ -739,7 +764,7 @@ feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, 
 						end
 					else
 						if not a_saved then
-							l_title := "*" + l_title
+							l_title.insert_string ("*", 1)
 							docking_content.set_short_title (l_title)
 							docking_content.set_long_title (l_title)
 						end

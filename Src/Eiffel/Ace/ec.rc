@@ -9,3 +9,61 @@ Application_icon	ICON	DISCARDABLE	"ec.ico"
 // but on older version of VC or older version of the Platform SDK they
 // are not defined.
 1 24 "ec.exe.manifest"
+
+#include <windows.h>
+
+#define VER_FILEVERSION             6,2,0,0
+#define VER_FILEVERSION_STR         "6.2.0.0\0"
+
+#define VER_PRODUCTVERSION          6,2,0,0
+#define VER_PRODUCTVERSION_STR      "6.2\0"
+
+#ifndef DEBUG
+#define VER_DEBUG                   0
+#else
+#define VER_DEBUG                   VS_FF_DEBUG
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    	VER_FILEVERSION
+PRODUCTVERSION 	VER_PRODUCTVERSION
+FILEFLAGSMASK  	VS_FFI_FILEFLAGSMASK
+FILEFLAGS      	1
+FILEOS         	VOS__WINDOWS32
+FILETYPE       	VFT_DLL
+FILESUBTYPE    	VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "Eiffel Software - a division of ISE"
+            VALUE "FileDescription",  "Eiffel Studio 6.2"
+            VALUE "FileVersion",      "6.2"
+            VALUE "InternalName",     ""
+            VALUE "LegalCopyright",   "Eiffel Software. All rights reserved."
+            VALUE "LegalTrademarks1", ""
+            VALUE "LegalTrademarks2", ""
+            VALUE "OriginalFilename", ""
+            VALUE "ProductName",      "Eiffel Studio 6.2"
+            VALUE "ProductVersion",   "6.2"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        /* The following line should only be modified for localized versions.     */
+        /* It consists of any number of WORD,WORD pairs, with each pair           */
+        /* describing a language,codepage combination supported by the file.      */
+        /*                                                                        */
+        /* For example, a file might have values "0x409,1252" indicating that it  */
+        /* supports English language (0x409) in the Windows ANSI codepage (1252). */
+
+        VALUE "Translation", 0x409, 1252	/* English (US) */
+        VALUE "Translation", 0x804, 936		/* Chinese (PRC) */
+        VALUE "Translation", 0x40c, 1252	/* French (France) */
+        VALUE "Translation", 0x419, 1251	/* Russian (Russia) */
+        VALUE "Translation", 0x407, 1252	/* German (Germany) */
+    END
+END
+

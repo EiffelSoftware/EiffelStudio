@@ -162,6 +162,7 @@ feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 			-- receiving a WM_SETTINGCHANGE message.
 		local
 			i: INTEGER
+			l_cursor: INTEGER
 		do
 				-- Remove all items
 			from
@@ -178,7 +179,9 @@ feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 			until
 				ev_children.after
 			loop
+				l_cursor := ev_children.index
 				quick_insert_item (ev_children.item, i)
+				ev_children.go_i_th (l_cursor)
 				ev_children.forth
 				i := i + 1
 			end
@@ -231,6 +234,9 @@ feature {NONE} -- Implementation
 			-- Do not take care of radio groups, etc.
 			--
 			-- Used to quickly rebuild the control (see `rebuild_control')
+		require
+			menu_item_imp_not_void: menu_item_imp /= Void
+			valid_pos: pos > 0
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			menu_imp: EV_MENU_IMP
@@ -244,12 +250,12 @@ feature {NONE} -- Implementation
 				cwin_insert_menu (wel_item, pos - 1, Mf_separator | menu_flag,
 					default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 			else
-				menu_imp ?= menu_item_imp
 				if menu_item_imp.is_sensitive then
 					menu_flag := menu_flag | Mf_enabled
 				else
 					menu_flag := menu_flag | Mf_grayed
 				end
+				menu_imp ?= menu_item_imp
 				if menu_imp /= Void then
 					cwin_insert_menu (wel_item, pos - 1, Mf_popup | menu_flag,
 						menu_imp.wel_item, cwel_integer_to_pointer (menu_imp.object_id))

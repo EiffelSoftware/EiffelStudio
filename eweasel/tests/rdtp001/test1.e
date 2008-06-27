@@ -7,4 +7,8 @@ feature
 		end
 
 	x: G
+
+	f (t: Tuple [Any])
+		do
+		end
 end

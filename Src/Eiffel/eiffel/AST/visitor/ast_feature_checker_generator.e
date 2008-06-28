@@ -1377,7 +1377,7 @@ feature -- Implementation
 												l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										end
 										l_parameters.i_th (i).process (Current)
-										if last_type /= Void then
+										if last_type /= Void and l_arg_types /= Void then
 											l_arg_types.put (last_type, i)
 											if l_needs_byte_node then
 												l_expr ?= last_byte_node

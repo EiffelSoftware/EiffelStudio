@@ -1,21 +1,47 @@
 indexing
 	description: "[
-		
-		It is not recommended to use unless you know you are working with a focused window, or need access to shared
-		tool resources that do not rely on the window itself.
+		Provides access to a tool, given a host development window.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	ES_TOOL_PIXMAPS_PROVIDER [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
+deferred class
+	ES_TOOL_PROVIDER_I [G -> ES_TOOL [EB_TOOL]]
 
 inherit
-	ES_TOOL_PIXMAPS_PROVIDER_I [G, T]
+	USABLE_I
+		undefine
+			out,
+			copy,
+			is_equal
+		end
 
-	ES_TOOL_PROVIDER [T]
+feature -- Access
+
+	tool: !G
+			-- Provides a reference to the actual tool.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
+--feature {NONE} -- Access
+
+--	window: ?EB_DEVELOPMENT_WINDOW
+--			-- Access to the development window the tool is initialized for.
+--			--
+--			--| The result type is detachable because of the use of SITE with ESF.
+--		require
+--			is_interface_usable: is_interface_usable
+--		deferred
+--		ensure
+--			result_attached: Result /= Void
+--			result_is_interface_usable: Result.is_interface_usable
+--		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -1,21 +1,62 @@
 indexing
 	description: "[
+		A provider interface for accessing tool specific icon resources.
 		
-		It is not recommended to use unless you know you are working with a focused window, or need access to shared
-		tool resources that do not rely on the window itself.
+		Note: If implemented on a tool ({ES_TOOL}), nothing needs implementing. However, for peripheral objects
+		      use {ES_TOOL_PIXMAPS_PROVIDER} then either use {ES_TOOL_PIXMAPS_PROVIDER} or use inherit Current
+		      and implement {ES_TOOL_PROVIDER_I}'s small interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	ES_TOOL_PIXMAPS_PROVIDER [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
+deferred class
+	ES_TOOL_PIXMAPS_PROVIDER_I [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
 
 inherit
-	ES_TOOL_PIXMAPS_PROVIDER_I [G, T]
+	ES_TOOL_PROVIDER_I [T]
 
-	ES_TOOL_PROVIDER [T]
+feature {NONE} -- Access
+
+	frozen tool_pixmaps: !G
+			-- Access to the tool pixmaps
+		obsolete
+			"Use tool_icons instead"
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result ?= tool_icons
+		end
+
+	frozen tool_icons: !G
+			-- Access to the tool icons
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if {l_icons: G} internal_new_tool_icons then
+				Result := l_icons
+			else
+				Result ?= new_tool_icons
+				internal_new_tool_icons := Result
+			end
+		end
+
+feature {NONE} -- Factory
+
+	new_tool_icons: !G
+			-- Factory to create a new tool icon object.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			create Result.make (({!ES_TOOL [EB_TOOL]}) #? tool, once "icons")
+		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_new_tool_icons: ?G
+			-- Cached version of `tool_pixmaps'.
+			-- Note: Do not use directly!
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

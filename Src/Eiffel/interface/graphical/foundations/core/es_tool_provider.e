@@ -1,5 +1,6 @@
 indexing
 	description: "[
+		Default implementation for accessing a tool. This uses the last focused development window to query for a tool.
 		
 		It is not recommended to use unless you know you are working with a focused window, or need access to shared
 		tool resources that do not rely on the window itself.
@@ -10,12 +11,45 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TOOL_PIXMAPS_PROVIDER [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
+	ES_TOOL_PROVIDER [G -> ES_TOOL [EB_TOOL]]
 
 inherit
-	ES_TOOL_PIXMAPS_PROVIDER_I [G, T]
+	ES_TOOL_PROVIDER_I [G]
 
-	ES_TOOL_PROVIDER [T]
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
+feature -- Access
+
+	frozen tool: !G
+			-- <Precursor>
+		do
+			Result ?= window.shell_tools.tool ({G})
+		end
+
+feature {NONE} -- Access
+
+	window: ?EB_DEVELOPMENT_WINDOW
+			-- Access to the development window the tool is initialized for.
+			--
+			--| The result type is detachable because of the use of SITE with ESF.
+		do
+			Result ?= window_manager.last_focused_development_window
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := window /= Void
+		ensure then
+			window_attached: window /= Void
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

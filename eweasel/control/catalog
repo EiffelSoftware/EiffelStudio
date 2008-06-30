@@ -1784,6 +1784,7 @@ test	attribute-in-inherited-assertion	fixed130 tcf pass fixed
 test	external-inline-boolean	fixed131 tcf pass fixed inlining
 test	class-name-in-multiline-string	fixed132 tcf pass fixed
 test	generic-constraint-to-none	fixed133 tcf pass fixed
+test	crash-degree-minus-1		fixed134 tcf pass fixed
 
 
 test	roundtrip-test rdtp001 tcf pass fixed

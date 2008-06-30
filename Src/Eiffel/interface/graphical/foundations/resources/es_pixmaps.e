@@ -15,7 +15,8 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
+--inherit {NONE}
 	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all
@@ -37,7 +38,34 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_string (w_could_not_load_matrix, [resource_handler.matrix_file_name (a_name)]),
+						local_formatter.formatted_string (w_could_not_load_matrix, [a_name]),
+						{ENVIRONMENT_CATEGORIES}.none,
+						{PRIORITY_LEVELS}.high
+					)
+				end
+
+					-- Fail safe, use blank pixmap
+				create l_buffer.make_with_size (matrix_pixel_width.to_integer_32,
+					matrix_pixel_height.to_integer_32)
+			end
+			make_from_buffer (l_buffer)
+		end
+
+	make_from_path (a_path: !STRING)
+			-- Initialize matrix from a path.
+			--
+			-- `a_path': The path to a matrix pixmap file to load.
+		require
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			l_buffer: !EV_PIXEL_BUFFER
+		do
+			if {l_loaded_buffer: EV_PIXEL_BUFFER} resource_handler.matrix_file_name (a_path) then
+				l_buffer := l_loaded_buffer
+			else
+				if logger.is_service_available then
+					logger.service.put_message_with_severity (
+						local_formatter.formatted_string (w_could_not_load_matrix, [a_path]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)

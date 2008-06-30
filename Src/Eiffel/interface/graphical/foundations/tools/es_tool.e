@@ -205,7 +205,7 @@ feature -- Access
 			is_tool_instantiated: is_tool_instantiated
 		end
 
-feature {ES_DOCKABLE_TOOL_PANEL} -- Access
+feature -- Access
 
 	name: !STRING
 			-- The tool's associated name, used for modularizing development of a tool.
@@ -226,7 +226,7 @@ feature {ES_DOCKABLE_TOOL_PANEL} -- Access
 
 feature {NONE} -- Access
 
-	frozen tool: !ES_TOOL [EB_TOOL]
+	frozen tool: !like Current
 			-- Provides a reference to the actual tool.
 			-- Note, this is for ESF helper functionality that may be optionally inherited in the actual
 			--       tool. See {ES_TOOL_PIXMAPS_PROVIDER} for an example.

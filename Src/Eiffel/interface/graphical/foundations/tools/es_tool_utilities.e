@@ -144,7 +144,7 @@ feature -- Query
 			file_utils.create_directory (Result)
 
 				-- Build folder and create it
-			Result.extend (tool_associated_name (a_tool))
+			Result.extend (a_tool.name)
 			file_utils.create_directory (Result)
 		ensure
 			not_result_is_empty: not Result.is_empty

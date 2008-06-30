@@ -1,0 +1,10 @@
+test_name	ancestor-anchor-type
+test_description An attachment of an INTEGER to an INTEGER_REF is rejected when they target type is anchored.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

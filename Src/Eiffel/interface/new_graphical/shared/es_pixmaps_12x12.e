@@ -39,7 +39,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen bp_current_line_icon: !EV_PIXMAP
 			-- Access to 'current line' pixmap.
 		require
@@ -232,21 +232,24 @@ feature -- Icons
 			Result := named_icon_buffer (bp_disabled_conditional_name)
 		end
 
+feature -- Icons: Animations
+	
+	-- No animation frames detected.
 
 feature -- Constants: Icon names
 
-	bp_current_line_name: !STRING = "current line"
-	bp_slot_name: !STRING = "slot"
-	bp_enabled_name: !STRING = "enabled"
-	bp_disabled_name: !STRING = "disabled"
-	bp_slot_current_line_name: !STRING = "slot current line"
-	bp_enabled_current_line_name: !STRING = "enabled current line"
-	bp_disabled_current_line_name: !STRING = "disabled current line"
-	bp_slot_other_frame_name: !STRING = "slot other frame"
-	bp_enabled_other_frame_name: !STRING = "enabled other frame"
-	bp_disabled_other_frame_name: !STRING = "disabled other frame"
-	bp_enabled_conditional_name: !STRING = "enabled conditional"
-	bp_disabled_conditional_name: !STRING = "disabled conditional"
+	bp_current_line_name: !STRING = "bp current line"
+	bp_slot_name: !STRING = "bp slot"
+	bp_enabled_name: !STRING = "bp enabled"
+	bp_disabled_name: !STRING = "bp disabled"
+	bp_slot_current_line_name: !STRING = "bp slot current line"
+	bp_enabled_current_line_name: !STRING = "bp enabled current line"
+	bp_disabled_current_line_name: !STRING = "bp disabled current line"
+	bp_slot_other_frame_name: !STRING = "bp slot other frame"
+	bp_enabled_other_frame_name: !STRING = "bp enabled other frame"
+	bp_disabled_other_frame_name: !STRING = "bp disabled other frame"
+	bp_enabled_conditional_name: !STRING = "bp enabled conditional"
+	bp_disabled_conditional_name: !STRING = "bp disabled conditional"
 
 feature {NONE} -- Basic operations
 

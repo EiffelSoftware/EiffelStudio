@@ -7,9 +7,13 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			s := 'c'
-			s := new_character (19)
-			io.put_character (s)
+			c := 'c'
+			st := "c"
+			c := new_character (19)
+			st := new_string (19)
+			io.put_character (c)
+			io.put_new_line
+			io.put_string (st)
 			io.put_new_line
 		end
 
@@ -22,6 +26,16 @@ feature {NONE} -- Initialization
 			Result := 'C'
 		end
 
-	s: CHARACTER
+	new_string (i: INTEGER): STRING is
+		local
+			mem: MEMORY
+		do
+			create mem
+			mem.collect
+			Result := "C"
+		end
+
+	c: CHARACTER
+	st: STRING
 
 end

@@ -2723,7 +2723,7 @@ rt_private void init_plsc(void)
 	if (!(rt_g_data.status & GC_PART)) {
 		ps_from.sc_arena = (EIF_REFERENCE) 0;		/* Will restart from end */
 		if (ps_to.sc_arena != (EIF_REFERENCE) 0) {	/* One chunk was kept in reserve */
-			CHECK("Block is indeed busy", ((union overhead *) ps_to.sc_active_arena)->ov_size |= B_BUSY);
+			CHECK("Block is indeed busy", ((union overhead *) ps_to.sc_active_arena)->ov_size & B_BUSY);
 			eif_rt_xfree (ps_to.sc_active_arena + OVERHEAD);
 			ps_to.sc_arena = (EIF_REFERENCE) 0;	/* No to zone yet */
 		}

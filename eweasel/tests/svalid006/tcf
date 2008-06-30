@@ -1,0 +1,14 @@
+test_name	proper-conversion-validity
+test_description When a conversion occurs in an ancestor, the type of the conversion should be what the ancestor computed, it should not be like the attribute.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	b.e	$CLUSTER b.e
+copy_raw	x.e	$CLUSTER x.e
+copy_raw	y.e	$CLUSTER y.e
+
+compile_melted
+compile_result	validity_error Y VJAR
+
+test_end

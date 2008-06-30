@@ -1,0 +1,11 @@
+test_name 	 agent-crash
+test_description When using an agent on a open target compiler crashes at degree 2.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

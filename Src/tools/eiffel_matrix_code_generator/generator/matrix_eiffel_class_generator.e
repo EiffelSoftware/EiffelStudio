@@ -150,6 +150,10 @@ feature -- Basic Operations
 						end
 					end
 
+					if buffer (animations_token).is_empty then
+						buffer (animations_token).append ("%T-- No animation frames detected.")
+					end
+
 						-- Remove extra whitespace from animation features buffer
 					l_temp_buffer := buffer (animations_token)
 					if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
@@ -253,7 +257,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
+	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
 			-- Processes a literal from an INI matrix file.
 		local
 			l_name: !STRING
@@ -270,6 +274,7 @@ feature {NONE} -- Processing
 			l_index: INTEGER
 			l_anim_regex: !like animation_regex
 			l_anim_pixmaps: !like animation_pixmaps
+			l_cvalue: !STRING
 		do
 				-- Create feature prefix
 			l_prefix := icon_prefix (a_item)
@@ -283,7 +288,13 @@ feature {NONE} -- Processing
 			l_cname.append (l_name)
 			l_cname.append (l_csuffix)
 			l_cname := format_eiffel_name (l_cname)
-			buffer (icon_names_token).append (string_formatter.format (icon_name_constant_template, [l_cname, l_name]))
+			create l_cvalue.make (25)
+			if {l_section: INI_SECTION} a_item.container then
+				l_cvalue.append (section_label (l_section))
+				l_cvalue.append_character (' ')
+			end
+			l_cvalue.append (l_name)
+			buffer (icon_names_token).append (string_formatter.format (icon_name_constant_template, [l_cname, l_cvalue]))
 
 				-- Coordinates
 			buffer (coordinates_token).append (string_formatter.format (icon_name_registration_template, [a_x, a_y, l_cname]))

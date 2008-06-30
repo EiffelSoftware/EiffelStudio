@@ -248,10 +248,15 @@ feature
 					elseif target_type.is_bit then
 						is_bit_assignment := True
 					else
-							-- I can't expand because of the aging tests.
-							-- (macro RTAP evaluates its argument more than
-							-- once). This of course if target is a reference.
-						if not target.c_type.is_pointer then
+							-- Nothing to be done because:
+							-- 1 - For reference target, we need an aging test which is a macro
+							--     that might evaluate more than once its argument, so we have to
+							--     store `source' in a register.
+							-- 2 - To fix an ordering problem for assignment with gcc 4.x (see eweasel test#runtime007)
+							--     we have to do the same for basic types, but this time is to ensure
+							--     that target is actually evaluated after source. This is only needed
+							--     if source allocates some memory.
+						if not source.allocates_memory and not target.c_type.is_pointer  then
 							source.propagate (No_register)
 						end
 					end

@@ -8728,6 +8728,24 @@ feature {NONE} -- Implementation: type validation
 					Result := a_last_type.actual_type.generics.item (l_formal_type.position)
 				end
 			end
+			if l_formal_type /= Void and then {l_attachable_type: ATTACHABLE_TYPE_A} a_type then
+					-- Preserve attachment status of the original type.
+				if l_attachable_type.has_attached_mark then
+					if not Result.is_attached then
+						Result := Result.as_attached
+					end
+				elseif l_attachable_type.is_implicitly_attached then
+					if not Result.is_attached and then not Result.is_implicitly_attached then
+						Result := Result.as_implicitly_attached
+					end
+				elseif l_attachable_type.has_detachable_mark then
+					if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
+						Result := Result.as_detachable
+					end
+				elseif not l_attachable_type.is_implicitly_attached and then Result.is_implicitly_attached then
+					Result := Result.as_implicitly_detachable
+				end
+			end
 		ensure
 			adapated_type_not_void: Result /= Void
 		end

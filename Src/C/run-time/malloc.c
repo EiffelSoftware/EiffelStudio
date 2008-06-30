@@ -2713,7 +2713,6 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	 */
 	
 	r = zone->ov_size & B_SIZE;			/* Size of block */
-	CHECK("valid size", (nbytes % ALIGNMAX) <= ALIGNMAX);
 	i = (rt_uint_ptr) (nbytes % ALIGNMAX);
 	if (i != 0)
 		nbytes += ALIGNMAX - i;		/* Pad nbytes */

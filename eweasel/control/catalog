@@ -388,6 +388,7 @@ test	generic-creation-constraint			valid216 tcf fail validity
 test	precursor-once						valid217 tcf fail validity
 test	freezing-like-current				valid218 tcf fail validity
 test	obsolete-warning-in-obsolete-feature	valid219 tcf fail validity
+test	ancestor-anchor-type			valid220 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

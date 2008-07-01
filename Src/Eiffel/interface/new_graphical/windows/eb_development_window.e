@@ -1546,13 +1546,15 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			save_tools_docking_layout
 			session_data.set_value (l_develop_window_data, development_window_data.development_window_data_id)
 
-			-- Editor data save to per-project session data.
-			create l_develop_window_data.make_from_window_data (development_window_data)
-			save_editors_to_session_data (l_develop_window_data)
-			save_editors_docking_layout
+			if (create {SHARED_WORKBENCH}).workbench.system_defined then
+				-- Editor data save to per-project session data.
+				create l_develop_window_data.make_from_window_data (development_window_data)
+				save_editors_to_session_data (l_develop_window_data)
+				save_editors_docking_layout
 
-			-- Must use project *window* session data here.
-			project_session_data.set_value (l_develop_window_data, development_window_data.development_window_project_data_id)
+				-- Must use project *window* session data here.
+				project_session_data.set_value (l_develop_window_data, development_window_data.development_window_project_data_id)
+			end
 		end
 
 	 save_window_state is
@@ -2580,7 +2582,6 @@ feature -- Files (project)
 
 	project_docking_standard_file_name: !FILE_NAME
 			-- Docking config file name.
-		local
 		do
 			create Result.make_from_string (project_location.target_path)
 			Result.set_file_name (eiffel_layout.docking_standard_file + "_" + window_id.out)

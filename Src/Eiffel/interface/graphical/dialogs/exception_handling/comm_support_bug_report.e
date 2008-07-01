@@ -29,6 +29,9 @@ feature {NONE} -- Initialization
 			synopsis := a_synopsis
 			description := a_desc
 			release := a_release
+
+			-- Default value
+			severity := severtiy_serious
 		ensure
 			synopsis_set: synopsis.is_equal (a_synopsis)
 			description_set: description.is_equal (a_desc)
@@ -54,6 +57,10 @@ feature -- Query
 
 	confidential: BOOLEAN assign set_confidential
 			-- Indicates if bug report should be marked as confidential
+
+	severity: INTEGER assign set_severity
+			-- Severity
+			-- One value from severity enumeration in this class
 
 feature -- Command
 
@@ -118,6 +125,35 @@ feature -- Command
 			confidential := a_confidential
 		ensure
 			confidential_set: confidential = a_confidential
+		end
+
+	set_severity (a_value: like severity)
+			-- Set 	`severity' with `a_value'
+		require
+			valid: is_severity_valid (a_value)
+		do
+			severity := a_value
+		ensure
+			set: severity = a_value
+		end
+
+feature -- Enumeration
+
+	severity_critical: INTEGER is 1
+			-- Severtiy critical
+
+	severtiy_serious: INTEGER is 2
+			-- Severity serious
+
+	severity_non_critical: INTEGER is 3
+			-- Severity non-critical
+
+feature -- Contract support
+
+	is_severity_valid (a_value: INTEGER): BOOLEAN is
+			-- If `a_value' a valid severity value?
+		do
+			Result := a_value = severity_critical or a_value = severtiy_serious or a_value = severity_non_critical
 		end
 
 invariant

@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING] is
+	found_names: LINKED_LIST [STRING_32] is
 			-- List of found entity names.
 		deferred
 		ensure

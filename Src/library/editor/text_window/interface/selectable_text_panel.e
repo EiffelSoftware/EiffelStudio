@@ -244,7 +244,7 @@ feature {NONE} -- Handle mouse clicks
 		do
 			l_cursor := text_displayed.cursor
 			empty_word_selection := False
-			if is_for_word and then (not l_cursor.token.is_text or else not is_word (l_cursor.token.image)) then
+			if is_for_word and then (not l_cursor.token.is_text or else not is_word (l_cursor.token.wide_image)) then
 					-- Current token does not represent a word, we try the previous one only, no loops until
 					-- we find one that corresponds. This is the behavior that other editors have.
 				l_cursor.go_left_word
@@ -269,8 +269,9 @@ feature {NONE} -- Handle mouse clicks
 			invalidate_line (l_cursor.y_in_lines, False)
 		end
 
-	is_word (s: STRING): BOOLEAN is
+	is_word (s: STRING_32): BOOLEAN is
 			-- Is `s' a word?
+			-- |FIXME: Not implemented correctly for Unicode.
 		require
 			s_not_void: s /= Void
 		local
@@ -285,7 +286,8 @@ feature {NONE} -- Handle mouse clicks
 				until
 					i > nb or not Result
 				loop
-					c := s.item (i)
+						-- |FIXME: This is not the correct way for Unicode.
+					c := s.item (i).to_character_8
 					Result := c.is_alpha_numeric or c = '_'
 					i := i + 1
 				end

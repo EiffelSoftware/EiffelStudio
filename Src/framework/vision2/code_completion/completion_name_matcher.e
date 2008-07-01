@@ -11,13 +11,13 @@ class
 
 feature -- Match
 
-	prefix_string (a_prefix: STRING; a_string: STRING): BOOLEAN is
+	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN is
 			-- Is `a_prefix' start of `a_string'?
 		require
 			a_prefix_not_void: a_prefix /= Void
 			a_string_not_void: a_string /= Void
 		local
-			lower_s: STRING
+			lower_s: STRING_32
 		do
 			if a_string.count >= a_prefix.count then
 				lower_s := a_prefix.as_lower
@@ -27,7 +27,7 @@ feature -- Match
 
 feature -- Status report
 
-	binary_searchable (a_str: STRING): BOOLEAN is
+	binary_searchable (a_str: STRING_32): BOOLEAN is
 			-- With current matcher, is binary search appliable to `a_str'?
 		do
 			Result := True

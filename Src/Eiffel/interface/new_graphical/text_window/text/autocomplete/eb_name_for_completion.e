@@ -63,7 +63,7 @@ create {EB_NAME_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: like name) is
 			-- Create feature name with value `name'
 		do
 			Precursor {NAME_FOR_COMPLETION} (a_name)
@@ -207,7 +207,7 @@ feature -- Status setting
 		require
 			a_tokens_not_void: a_tokens /= Void
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			tokens := a_tokens
 			create l_string.make (50)
@@ -216,7 +216,7 @@ feature -- Status setting
 			until
 				tokens.after
 			loop
-				l_string.append (tokens.item.image)
+				l_string.append (tokens.item.wide_image)
 				tokens.forth
 			end
 			make (l_string)
@@ -238,10 +238,10 @@ feature {NONE} -- Implementation
 	child_type: EB_NAME_FOR_COMPLETION;
 		-- Child type
 
-	completion_type: STRING is
+	completion_type: STRING_32 is
 			-- The type of the feature (for a function, attribute)
 		local
-			l_desc: STRING
+			l_desc: STRING_32
 		do
 			if internal_completion_type = Void then
 				if return_type /= Void then
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	internal_completion_type: STRING
+	internal_completion_type: STRING_32
 			-- cache `completion_type'
 
 	local_style: EB_LOCAL_EDITOR_TOKEN_STYLE is

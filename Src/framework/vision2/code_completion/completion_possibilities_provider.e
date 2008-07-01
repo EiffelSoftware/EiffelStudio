@@ -21,7 +21,7 @@ feature -- Access
 		deferred
 		end
 
-	insertion: STRING is
+	insertion: STRING_32 is
 			-- String to be partially completed
 		require
 			is_prepared : is_prepared

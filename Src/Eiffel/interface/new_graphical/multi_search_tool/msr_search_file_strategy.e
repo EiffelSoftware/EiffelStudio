@@ -75,7 +75,7 @@ feature -- Basic operations
 					file.close
 				end
 			end
-			launched := true
+			launched := True
 			item_matched_internal.start
 		end
 

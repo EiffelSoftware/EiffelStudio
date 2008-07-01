@@ -105,7 +105,7 @@ feature -- Analysis preparation
 							-- string tokens (those like % .... % )
 						if split_string then
 							split_string := False
-						elseif token.image @ token.image.count /= '%"' then
+						elseif token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
 							split_string := True
 						else
 								-- It might be an operator name
@@ -119,7 +119,7 @@ feature -- Analysis preparation
 									-- we replace this text token with a "feature start token"
 								prev := token.previous
 								next := token.next
-								create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
+								create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
 									features_position.item.start_pos, features_position.item.end_pos)
 								tfs.set_is_clickable (True)
 								tfs.set_feature_index_in_table (features_position.index)
@@ -387,7 +387,7 @@ feature -- Click list update
 							-- If a string is written one several lines (more than 2 in fact),
 							-- it will be made of several token, some of which may not be
 							-- string tokens (those like % .... % )
-						if token.image @ token.image.count /= '%"' then
+						if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
 							from
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file
@@ -432,7 +432,7 @@ feature -- Click list update
 						if not features_position.after and then pos_in_file >= features_position.item.start_pos then
 							prev := token.previous
 							next := token.next
-							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
+							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
 								features_position.item.start_pos, features_position.item.end_pos)
 							token.set_is_clickable (True)
 							tfs.set_feature_index_in_table (features_position.index)
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if l_token /= Void then
-				Result := l_token.image.is_equal (":")
+				Result := token_equal (l_token, ":")
 			end
 		end
 

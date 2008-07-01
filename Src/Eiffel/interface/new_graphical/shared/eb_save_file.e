@@ -42,6 +42,11 @@ inherit
 			{NONE} all
 		end
 
+	EC_ENCODING_UTINITIES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	last_saving_date: INTEGER
@@ -60,8 +65,9 @@ feature -- Basic operations
 
 		end
 
-	save (a_file_name: STRING; a_text: STRING) is
+	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING) is
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
+			-- `a_text' should be in UTF-32 encoding.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
@@ -70,6 +76,7 @@ feature -- Basic operations
 			tmp_name: STRING
 			l_retry: BOOLEAN
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
+			l_text: STRING_32
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
@@ -105,18 +112,20 @@ feature -- Basic operations
 				if not create_backup then
 					tmp_file := new_file
 				end
+				l_text := a_text.as_string_32
 				if aok then
 					tmp_file.open_write
-					if not a_text.is_empty then
-						a_text.prune_all ('%R')
-						if a_text.item (a_text.count) /= '%N' then
+					if not l_text.is_empty then
+						l_text.prune_all ('%R')
+						if l_text.item (l_text.count) /= '%N' then
 							-- Add a carriage return like `vi' if there's none at the end
-							a_text.extend ('%N')
+							l_text.extend ('%N')
 						end
 						if preferences.misc_data.text_mode_is_windows then
-							a_text.replace_substring_all ("%N", "%R%N")
+							l_text.replace_substring_all ("%N", "%R%N")
 						end
-						tmp_file.put_string (a_text)
+
+						tmp_file.put_string (convert_to_stream (l_text, a_encoding))
 					end
 					tmp_file.close
 					if create_backup then
@@ -147,7 +156,7 @@ feature -- Basic operations
 					new_file.close
 				end
 				prompts.show_error_prompt (warning_messages.w_Not_creatable_choose_to_save (new_file.name), Void, Void)
-				file_save_as (a_text)
+				file_save_as (a_text, a_encoding)
 				last_saving_success := False
 			end
 		rescue
@@ -218,7 +227,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	file_save_as (a_text: STRING) is
+	file_save_as (a_text: STRING_GENERAL; a_encoding: ENCODING) is
 			-- Save `a_text' in a file.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -229,16 +238,16 @@ feature {NONE} -- Implementation
 				l_pref.set_value (eiffel_layout.user_projects_path)
 			end
 			create fsd.make_with_preference (l_pref)
-			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text))
+			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text, a_encoding))
 			fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
-	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING)
+	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING_GENERAL; a_encoding: ENCODING)
 		local
 			l_save_file: EB_SAVE_FILE
 		do
 			create l_save_file
-			l_save_file.save (a_fsd.file_name, a_text)
+			l_save_file.save (a_fsd.file_name, a_text, a_encoding)
 		end
 
 indexing

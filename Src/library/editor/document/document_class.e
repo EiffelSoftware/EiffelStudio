@@ -17,7 +17,7 @@ feature -- Creation
 	        -- Make new document class with `a_filetype'
 	   	require
 	   	    filetype_not_void: a_filetype /= Void
-	   	    filetype_valid: not a_filetype.is_empty	
+	   	    filetype_valid: not a_filetype.is_empty
 	  	do
 	  		name := a_name
 	  		create filetypes.make (2)
@@ -37,9 +37,9 @@ feature -- Initialization
 	    local
 	        l_error: BOOLEAN
 	  	do
-	  		if syntax_definition /= Void then		  		
+	  		if syntax_definition /= Void then
 		  		if (create {PLAIN_TEXT_FILE}.make (syntax_definition)).exists then
-    	  		    l_error := parse_syntax_file (syntax_definition)			
+    	  		    l_error := parse_syntax_file (syntax_definition)
     			else
     			    l_error := True
     	  		end
@@ -47,11 +47,11 @@ feature -- Initialization
     	  	    l_error := True
     	  	end
 	  		if l_error then
-	  			scanner := basic_lexer	    
+	  			scanner := basic_lexer
 	  		end
 	  	ensure
 	  	    scanner_not_void: scanner /= Void
-	  	end		
+	  	end
 
 feature -- Access
 
@@ -64,14 +64,17 @@ feature -- Access
 	scanner: EDITOR_SCANNER
 			-- Scanner
 
+	encoding_detector: ENCODING_DETECTOR
+			-- Encoding detector
+
 feature -- Query
 
 	known_filetype (a_type: STRING): BOOLEAN is
-	        -- 
-		do		   
-			Result := filetypes.has (a_type) 
+	        --
+		do
+			Result := filetypes.has (a_type)
 		end
-		
+
 feature -- Status setting
 
 	set_scanner (a_scanner: like scanner) is
@@ -82,7 +85,15 @@ feature -- Status setting
 	 	    scanner := a_scanner
 	 	ensure
 	 	    scanner_set: scanner = a_scanner
-	 	end		
+	 	end
+
+	 set_encoding_detector (a_encoding_detector: like encoding_detector) is
+	 		-- Set `encoding_detector' with `a_encoding_detector'.
+	 	do
+			encoding_detector := a_encoding_detector
+		ensure
+			encoding_detector_set: encoding_detector = a_encoding_detector
+	 	end
 
 feature -- Element change
 
@@ -95,8 +106,8 @@ feature -- Element change
 	  	    filetypes.extend (a_type)
 	  	ensure
 	  	    type_known: known_filetype (a_type)
-	  	end		
-	  	
+	  	end
+
 	remove_file_type (a_type: STRING) is
 	        -- Remove type
 	  	require
@@ -106,7 +117,7 @@ feature -- Element change
 	  	    filetypes.prune (a_type)
 	  	ensure
 	  	    type_not_known: not known_filetype (a_type)
-	  	end	
+	  	end
 
 feature {NONE} -- Parsing
 
@@ -119,7 +130,7 @@ feature {NONE} -- Parsing
 	   		scanner := l_syntax
 			l_syntax.analyze (a_syn_file)
 	   		Result := l_syntax.analyzer = Void
-	   	end		
+	   	end
 
 feature {NONE} -- Implementation
 

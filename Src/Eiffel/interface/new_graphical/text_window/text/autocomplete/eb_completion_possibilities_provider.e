@@ -55,7 +55,7 @@ feature -- Status report
 			-- Is current context suitable to trigger an completion?
 		local
 			l_token: EDITOR_TOKEN
-			l_image: STRING
+			l_image: STRING_32
 			l_comment: EDITOR_TOKEN_COMMENT
 			l_number: EDITOR_TOKEN_NUMBER
 			l_string: EDITOR_TOKEN_STRING
@@ -63,7 +63,7 @@ feature -- Status report
 			l_token := cursor_token
 			if l_token /= Void then
 				if l_token.is_text then
-					l_image := l_token.image
+					l_image := l_token.wide_image
 					if l_image.count > 1 and then current_pos_in_token > 1 then
 							-- Will prevent completion of '`.' or '..'
 						Result := is_completable_separator (l_image.item (current_pos_in_token - 1).out)
@@ -87,7 +87,7 @@ feature -- Status report
 							l_string ?= l_token
 							Result := l_string /= Void
 							if not Result then
-								l_image := l_token.image
+								l_image := l_token.wide_image
 								if l_image.count > 1 then
 										-- Will prevent completion of '|.' or '..'
 									Result := is_completable_separator (l_image.item (l_image.count).out)

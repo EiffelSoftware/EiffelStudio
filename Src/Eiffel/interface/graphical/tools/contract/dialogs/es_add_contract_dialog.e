@@ -24,6 +24,11 @@ inherit
 			on_text_edited
 		end
 
+	EC_ENCODINGS
+		export
+			{NONE} all
+		end
+
 --inherit {NONE}
 	SHARED_ERROR_HANDLER
 		export
@@ -208,7 +213,7 @@ feature {NONE} -- Event handlers
 			is_initialized: is_initialized
 		do
 				-- Currently only `tag_text' is a validated contract
-			if a_is_valid and then contract_editor.text_is_fully_loaded and then not contract_editor.text.is_empty then
+			if a_is_valid and then contract_editor.text_is_fully_loaded and then not contract_editor.wide_text.is_empty then
 				dialog_window_buttons.item (default_confirm_button).enable_sensitive
 			else
 				dialog_window_buttons.item (default_confirm_button).disable_sensitive
@@ -224,15 +229,18 @@ feature {NONE} -- Action handler
 			is_initialized: is_initialized
 		local
 			l_error: ES_ERROR_PROMPT
+			l_uc_string: UC_STRING
 		do
 			check not_error_handler_has_error: not error_handler.has_error end
-			expression_parser.parse_from_string ("check " + contract_editor.text)
+			utf32.convert_to (utf8, contract_editor.wide_text)
+			create l_uc_string.make_from_utf8 ("check " + utf32.last_converted_stream)
+			expression_parser.parse_from_string (l_uc_string)
 			if expression_parser.syntax_error then
 				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)
 				l_error.show_on_active_window
 				veto_close
 			else
-				contract := [({!STRING_32}) #? tag_text.text, ({!STRING_32}) #? contract_editor.text.as_string_32]
+				contract := [({!STRING_32}) #? tag_text.text, ({!STRING_32}) #? contract_editor.wide_text]
 			end
 			expression_parser.wipe_out
 			error_handler.wipe_out

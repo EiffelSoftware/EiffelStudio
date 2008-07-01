@@ -83,7 +83,7 @@ feature -- Execution
 					target.check_passed and then
 					compileok
 				then
-					save (target.file_name, target.text)
+					save (target.file_name, target.text, target.encoding)
 					if last_saving_success then
 						target.set_last_saving_date (last_saving_date)
 						target.on_text_saved

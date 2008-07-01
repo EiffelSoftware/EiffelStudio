@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING assign set_text
+	text: !STRING_32 assign set_text
 			-- Modified text.
 
 	original_count: INTEGER

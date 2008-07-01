@@ -63,7 +63,7 @@ feature -- Access
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
 
-	completion_activator_characters: ARRAYED_LIST [CHARACTER]
+	completion_activator_characters: ARRAYED_LIST [CHARACTER_32]
 			-- List of completion activating keys
 		once
 			create Result.make (1)
@@ -151,14 +151,14 @@ feature -- Text operation
 		deferred
 		end
 
-	insert_string (a_str: STRING) is
+	insert_string (a_str: STRING_32) is
 			-- Insert `a_str' at cursor position.
 		require
 			a_str_attached: a_str /= Void
 		deferred
 		end
 
-	insert_char (a_char: CHARACTER) is
+	insert_char (a_char: CHARACTER_32) is
 			-- Insert `a_char' at cursor position.
 		deferred
 		end
@@ -172,11 +172,11 @@ feature -- Cursor
 
 feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 
-	complete_from_window (cmp: STRING; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_from_window (cmp: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- `appended_character' is a character that should be appended after. '%U' if none.
 		local
-			completed: STRING
+			completed: STRING_32
 		do
 			completed := cmp
 			if completed.is_empty then
@@ -190,13 +190,13 @@ feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 			refresh
 		end
 
-	complete_call (completed: STRING; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_call (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
 			-- Finish completion process by inserting the completed expression.
 		local
 			i: INTEGER
 		do
 			if possibilities_provider.insertion /= Void and then not possibilities_provider.insertion.is_empty then
-				if completed.item (1) = ' ' then
+				if completed.as_string_32.item (1) = ' ' then
 					back_delete_char
 				end
 			end
@@ -392,7 +392,7 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			Result := l_screen.width.min (Result)
 		end
 
-	handle_character (a_char: CHARACTER) is
+	handle_character (a_char: CHARACTER_32) is
 			-- Handle `a_char'
 		deferred
 		end
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Complete essentials
 
-	name_part_to_be_completed: STRING is
+	name_part_to_be_completed: STRING_32 is
 			-- Word, which is being completed.
 		do
 			Result := possibilities_provider.insertion

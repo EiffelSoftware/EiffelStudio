@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING] is
+	found_names: LINKED_LIST [STRING_32] is
 			-- List of found entity names.
 		local
 			id_list: IDENTIFIER_LIST
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			line_not_void: line /= Void
 			found_locals_list_empty: found_locals_list.is_empty
 		local
-			l_local_string: STRING
+			l_local_string: STRING_32
 			retried: BOOLEAN
 			l_found_locals: like found_locals_list
 		do
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		require
 			found_arguments_list_empty: found_arguments_list.is_empty
 		local
-			l_arguments_string: STRING
+			l_arguments_string: STRING_32
 			retried: BOOLEAN
 			l_found_args: like found_arguments_list
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			kw: EDITOR_TOKEN_KEYWORD
 			lgth: INTEGER
 			par_found: BOOLEAN
-			img: STRING
+			img: STRING_32
 		do
 			found_arguments := False
 			from
@@ -302,10 +302,9 @@ feature {NONE} -- Implementation
 						if lgth = 2 and then token_image_is_same_as_word (kw, is_word) then
 							go_to_previous_non_blank_token
 							if internal_token /= Void then
-								img := internal_token.image
-								if img.is_equal (closing_parenthesis) then
+								if token_equal (internal_token, closing_parenthesis) then
 									par_found := True
-								elseif not img.is_equal (closing_bracket) then
+								elseif not token_equal (internal_token, closing_bracket) then
 										-- most common cases :
 										--          feature_name arguments : non_generic_class_name is (1)
 										--          feature_name : non_generic_class_name is (2)
@@ -313,15 +312,15 @@ feature {NONE} -- Implementation
 										-- we eliminate (2) and (3)
 									go_to_previous_non_blank_token
 									if internal_token /= Void then
-										if internal_token.image.is_equal (like_word) then
+										if token_equal (internal_token, like_word) then
 											go_to_previous_non_blank_token
 										end
 										if internal_token /= Void then
 												-- In case (3) there is no colon
-											if internal_token.image.is_equal (colon) then
+											if token_equal (internal_token, colon) then
 												go_to_previous_non_blank_token
 													-- in case (2) there is no parenthesis
-												if internal_token /= Void and then internal_token.image.is_equal (closing_parenthesis) then
+												if internal_token /= Void and then token_equal (internal_token, closing_parenthesis) then
 													par_found := True
 													stop := False
 												end
@@ -337,21 +336,21 @@ feature {NONE} -- Implementation
 								loop
 									go_to_previous_non_blank_token
 									if internal_token /= Void then
-										img := internal_token.image
+										img := internal_token.wide_image
 										lgth := img.count
 										if
-											(lgth = 3 and then img.is_equal (end_word))
+											(lgth = 3 and then token_equal (internal_token, end_word))
 										then
 											stop := True
 										elseif par_found then
-											if internal_token.image.is_equal (opening_parenthesis) then
+											if token_equal (internal_token, opening_parenthesis) then
 												found_arguments := True
 												stop := True
 											end
-										elseif internal_token.image.is_equal (colon) then
+										elseif token_equal (internal_token, colon) then
 											go_to_previous_non_blank_token
 											if internal_token /= Void then
-												if internal_token.image.is_equal (closing_parenthesis) then
+												if token_equal (internal_token, closing_parenthesis) then
 													par_found := True
 												else
 													stop := True
@@ -413,7 +412,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	local_string: STRING is
+	local_string: STRING_32 is
 			-- Build a string of locals starting at `internal_line' and `internal_token'.
 			-- Results will be of form `local ...locals..'
 		local
@@ -433,7 +432,7 @@ feature {NONE} -- Implementation
 					if is_stopping (internal_token) then
 						stop := True
 					else
-						Result.append (internal_token.image)
+						Result.append (internal_token.wide_image)
 					end
 					internal_token := internal_token.next
 				end
@@ -451,7 +450,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	arguments_string: STRING is
+	arguments_string: STRING_32 is
 			-- Build a string of locals starting at `internal_line' and `internal_token'.
 			-- Results will be of form `local ...locals..'
 		local
@@ -471,7 +470,7 @@ feature {NONE} -- Implementation
 					if is_stopping (internal_token) then
 						stop := True
 					else
-						Result.append (internal_token.image)
+						Result.append (internal_token.wide_image)
 					end
 					internal_token := internal_token.next
 				end
@@ -495,7 +494,7 @@ feature {NONE} -- Implementation
 			if look_for_locals then
 				Result := is_keyword (tok) and then not token_image_is_same_as_word (tok, current_word) and then not token_image_is_same_as_word (tok, like_word)
 			else
-				Result := tok.image.is_equal (closing_parenthesis)
+				Result := token_equal (tok, closing_parenthesis)
 			end
 		end
 
@@ -510,7 +509,6 @@ feature {NONE} -- Implementation
 			brackets: INTEGER
 			starting_token: EDITOR_TOKEN
 			starting_line: EDITOR_LINE
-			img: STRING
 		do
 			starting_token := internal_token
 			starting_line := internal_line
@@ -531,7 +529,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if found_end_of_class_name and then internal_token.image.is_equal (opening_bracket) then
+			if found_end_of_class_name and then token_equal (internal_token, opening_bracket) then
 				from
 					brackets := 1
 					internal_token := internal_token.next
@@ -548,10 +546,9 @@ feature {NONE} -- Implementation
 							found_end_of_class_name := False
 						end
 					else
-						img := internal_token.image
-						if img.is_equal (opening_bracket) then
+						if token_equal (internal_token, opening_bracket) then
 							brackets := brackets + 1
-						elseif img.is_equal (closing_bracket) then
+						elseif token_equal (internal_token, closing_bracket) then
 							brackets := brackets - 1
 						end
 						internal_token := internal_token.next

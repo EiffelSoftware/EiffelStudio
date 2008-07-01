@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (l: LINKED_LIST[INTEGER]; symbl: STRING; txt: EDITABLE_TEXT) is
+	make (l: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL; txt: EDITABLE_TEXT) is
 		require
 			l_is_not_void: l /= Void
 			symbl_is_not_void: symbl /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 	text : EDITABLE_TEXT
 
-	symbol: STRING;
+	symbol: STRING_32;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

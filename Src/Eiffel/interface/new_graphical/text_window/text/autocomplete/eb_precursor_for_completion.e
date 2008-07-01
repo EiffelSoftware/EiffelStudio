@@ -46,7 +46,7 @@ feature -- Access
 	arguments: like type
 			-- Arguments
 
-	insert_name: STRING
+	insert_name: STRING_32
 			-- Insert name
 
 feature -- Status report
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	calculate_insert_name is
 			-- Calculate insert name
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			create l_string.make (50)
 			l_string.append_string (precursor_string)
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			insert_name := l_string
 		end
 
-	image_of_list (a_list: LIST [EDITOR_TOKEN]): STRING is
+	image_of_list (a_list: LIST [EDITOR_TOKEN]): STRING_32 is
 			-- Image of token list
 		require
 			a_list_not_void: a_list /= Void
@@ -168,17 +168,14 @@ feature {NONE} -- Implementation
 			until
 				a_list.after
 			loop
-				Result.append (a_list.item.image)
+				Result.append (a_list.item.wide_image)
 				a_list.forth
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	precursor_string: STRING is "Precursor"
-
-invariant
-	invariant_clause: True -- Your invariant here
+	precursor_string: STRING = "Precursor";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -48,8 +48,9 @@ feature -- Initialization
 
 feature -- Access
 
-	text : STRING
+	text : STRING_32
 			-- Exact text found
+			-- In UTF-32
 
 	start_index : INTEGER
 			-- Start position of the found text
@@ -77,7 +78,7 @@ feature -- Access
 			start_index_in_context_text: Result = start_index_in_context_text_internal
 		end
 
-	context_text : STRING
+	context_text : like text
 			-- Text to be presented with surroundings
 
 	line_number : INTEGER is
@@ -92,7 +93,7 @@ feature -- Access
 			Result := percent_r_count_internal
 		end
 
-	captured_submatches: ARRAYED_LIST [STRING] is
+	captured_submatches: ARRAYED_LIST [like text] is
 			-- Submatches
 		do
 			Result := captured_submatches_internal
@@ -124,7 +125,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 			end_index_set: end_index = a_end
 		end
 
-	set_text (a_text : STRING) is
+	set_text (a_text : like text) is
 			-- Set what exactly is found.
 		require
 			a_text_attached: a_text /= Void
@@ -136,7 +137,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 
 feature -- Element Change
 
-	set_context_text (context: STRING) is
+	set_context_text (context: like context_text) is
 			-- Set `context_text' with context.
 		do
 			context_text := replace_RNT_to_space (context)
@@ -157,7 +158,7 @@ feature -- Element Change
 			percent_r_count_internal := i
 		end
 
-	set_submatches (strings: ARRAYED_LIST [STRING]) is
+	set_submatches (strings: like captured_submatches) is
 			-- Set `submatches' with strings.
 		require
 			strings_not_void: strings /= Void
@@ -177,7 +178,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	captured_submatches_internal: ARRAYED_LIST [STRING]
+	captured_submatches_internal: like captured_submatches
 			-- Submatches that are captured from between parenthesises
 
 	line_number_internal: INTEGER

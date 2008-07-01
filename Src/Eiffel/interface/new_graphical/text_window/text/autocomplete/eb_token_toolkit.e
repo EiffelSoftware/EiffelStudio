@@ -68,6 +68,15 @@ feature -- basic operations
 			Result := token_image_is_in_array (token, unary_operators)
 		end
 
+	token_equal (a_token: EDITOR_TOKEN; a_str: STRING): BOOLEAN
+			-- Is image of `a_token' the same as `a_str'?
+		require
+			a_token_not_void: a_token /= Void
+			a_str_not_void: a_str /= Void
+		do
+			Result := a_token.wide_image.as_string_8.is_equal (a_str)
+		end
+
 	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING): BOOLEAN is
 			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
@@ -79,13 +88,13 @@ feature -- basic operations
 			if token /= Void then
 				comment_token ?= token
 				if comment_token = Void then
-					image := token.image.as_lower
+					image := token.wide_image.as_string_8
 					Result := image.is_equal (word)
 				end
 			end
 		end
 
-	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY[STRING]): BOOLEAN is
+	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY [STRING]): BOOLEAN is
 			-- Does the token image belong to the list `words' ?
 		require
 			word_not_void: words /= Void
@@ -94,8 +103,10 @@ feature -- basic operations
 			i: INTEGER
 		do
 			if token /= Void then
-				image := token.image.as_lower
-				from 
+					-- Here because `words' are ACSII strings,
+					-- so it is safe to convert to STRING_8 before comparison.
+				image := token.wide_image.as_string_8.as_lower
+				from
 					i := words.lower
 				until
 					Result or else i > words.upper
@@ -109,9 +120,9 @@ feature -- basic operations
 	is_beginning_of_expression (token: EDITOR_TOKEN): BOOLEAN is
 			-- is `token' the beginning of an expression ?
 		do
-			Result := token = Void 
+			Result := token = Void
 						or else
-					not token.is_text 
+					not token.is_text
 						or else
 					token_image_is_in_array (token, opening_separators)
 						or else
@@ -128,14 +139,93 @@ feature -- basic operations
 				-- TODO: neilc.  I do not see why we should not allow complete in comments or strings, for user convenience.
 		end
 
+	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is
+			-- Make all possible char in `a_str' to lower.
+			-- |FIXME: We need real Unicode as lower.
+			-- |For the moment, only ANSII code are concerned.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			i, nb: INTEGER_32
+		do
+			create Result.make_from_string (a_str)
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb
+			loop
+				if a_str.item (i).code <= {CHARACTER_8}.max_value then
+					Result.put (a_str.item (i).to_character_8.as_lower, i)
+				else
+					Result.put (a_str.item (i), i)
+				end
+				i := i + 1
+			end
+		end
+
+	string_32_to_upper (a_str: ?STRING_32): !STRING_32 is
+			-- Make all possible char in `a_str' to upper.
+			-- |FIXME: We need real Unicode as upper.
+			-- |For the moment, only ANSII code are concerned.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			i, nb: INTEGER_32
+		do
+			create Result.make_from_string (a_str)
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb
+			loop
+				if a_str.item (i).code <= {CHARACTER_8}.max_value then
+					Result.put (a_str.item (i).to_character_8.as_upper, i)
+				else
+					Result.put (a_str.item (i), i)
+				end
+				i := i + 1
+			end
+		end
+
+	string_32_is_caseless_ascii_string (a_str_32: STRING_32; a_str: STRING): BOOLEAN is
+			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str' taken as ISO-8859-1?
+		require
+			a_str_32_not_void: a_str_32 /= Void
+			a_str_not_void: a_str /= Void
+		do
+				-- Only codes smaller than 255 are compatible to UTF32.
+				-- If not, we simply return False.
+			if a_str_32.is_valid_as_string_8 then
+				Result := a_str.is_case_insensitive_equal (a_str_32.as_string_8)
+			end
+		end
+
+feature -- Qerry
+
+	char_32_is_alpha (a_char: CHARACTER_32): BOOLEAN is
+		do
+			if a_char.is_character_8 then
+				Result := a_char.to_character_8.is_alpha
+			end
+		end
+
+	char_32_is_digit (a_char: CHARACTER_32): BOOLEAN is
+		do
+			if a_char.is_character_8 then
+				Result := a_char.to_character_8.is_digit
+			end
+		end
+
 feature {NONE} -- Constants
 
-	binary_operators: ARRAY [STRING] is 
+	binary_operators: ARRAY [STRING] is
 		once
 			Result := <<"@", "^", "*", "/", "//", "\\", "+", "-", "/=", "=", ">", ">=", "<", "<=", "and", "xor", "or", "implies">>
 		end
 
-	unary_operators: ARRAY [STRING] is 
+	unary_operators: ARRAY [STRING] is
 		once
 			Result := <<"+", "-", "not", "old">>
 		end
@@ -143,46 +233,46 @@ feature {NONE} -- Constants
 	opening_separators: ARRAY [STRING] is
 		once
 			Result := <<":=", "?=", ";", ",","(">>
-		end 
+		end
 
 	opening_bracket: STRING is "["
-	
+
 	closing_bracket: STRING is "]"
-	
+
 	opening_brace: STRING is "{"
-	
+
 	closing_brace: STRING is "}"
-	
+
 	opening_parenthesis: STRING is "("
-	
+
 	closing_parenthesis: STRING is ")"
-	
+
 	semi_colon: STRING is ";"
-	
+
 	colon: STRING is ":"
-	
+
 	comma: STRING is ","
-	
+
 	period: STRING is "."
-	
+
 	equal_sign: STRING is "="
-	
+
 	different_sign: STRING is "/="
-	
-	feature_word: STRING is "feature" 
-	
+
+	feature_word: STRING is "feature"
+
 	end_word: STRING is "end"
-	
+
 	like_word: STRING is "like"
-	
+
 	is_word: STRING is "is"
-	
+
 	current_word: STRING is "current"
-	
+
 	local_word: STRING is "local"
-	
+
 	create_word: STRING is "create"
-	
+
 	result_word: STRING is "result"
 
 	precursor_word: STRING is "precursor";

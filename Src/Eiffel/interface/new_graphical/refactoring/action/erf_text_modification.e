@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	EC_ENCODINGS
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	text_managed: BOOLEAN is
@@ -60,7 +65,7 @@ feature -- Prepare/Commit
 			diff: DIFF_TEXT
 			file_path: FILE_NAME
 			file: RAW_FILE
-			undo_patch: STRING
+			undo_patch: STRING_32
 		do
 				-- Compute and store undo if something changed
 			if is_modified then
@@ -134,7 +139,7 @@ feature -- Element change
 			not_undo_managed: not undo_managed
 		end
 
-	set_changed_text (a_text: STRING) is
+	set_changed_text (a_text: STRING_32) is
 			-- Set the changed text.
 		require
 			text_managed: text_managed
@@ -212,13 +217,13 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	original_text: STRING
+	original_text: STRING_32
 			-- Original text we loaded.
 
-	text: STRING
+	text: STRING_32
 			-- Text to work on.
 
-	undo_redo: STRING
+	undo_redo: STRING_32
 			-- Undo/redo informations
 
 invariant

@@ -80,7 +80,9 @@ feature -- Element change
 	save_text is
 			-- Save the text.
 		do
-			save (lace.file_name, text)
+				-- |FIXME: We should pass a proper encoding for XML file.
+				-- |For the moment, we use UTF8.
+			save (lace.file_name, text, utf8)
 		end
 
 feature {NONE} -- Implementation

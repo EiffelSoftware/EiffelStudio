@@ -179,7 +179,7 @@ feature {NONE} -- Visit
 
 	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH) is
 		do
-			
+
 		end
 
 feature {NONE} -- Implementation
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			l_color: EV_COLOR
 			l_font: EV_FONT
 		do
-			if not a_tok.image.is_empty then
+			if not a_tok.wide_image.is_empty then
 				l_color := a_tok.text_color
 				l_font := a_tok.font
 

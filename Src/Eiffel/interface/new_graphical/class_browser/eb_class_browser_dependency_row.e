@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_EDITOR_TOKEN_UTILITY
 
 	QL_UTILITY
@@ -59,7 +59,7 @@ feature -- Access
 	base_text: LIST [EDITOR_TOKEN]
 			-- Base text of Current row
 
-	image: STRING
+	image: STRING_32
 			-- Image of current row used in grid search
 
 	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
@@ -426,7 +426,7 @@ feature{NONE} -- Implementation
 			l_path_style: like item_path_style
 			l_class: QL_CLASS
 			l_text: like base_text
-			l_image: STRING
+			l_image: STRING_32
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
 			l_grid_item_internal: like grid_item_internal
 		do
@@ -477,7 +477,7 @@ feature{NONE} -- Implementation
 			until
 				l_text.after
 			loop
-				l_image.append (l_text.item.image)
+				l_image.append (l_text.item.wide_image)
 				l_text.forth
 			end
 			l_grid_item_internal.set_image (l_image)

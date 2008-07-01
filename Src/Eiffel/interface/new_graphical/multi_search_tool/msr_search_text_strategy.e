@@ -14,12 +14,18 @@ inherit
 			reset_all, launch, is_search_prepared
 		end
 
+	EC_ENCODING_UTINITIES
+
 create
 	make, make_empty
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_class_name: STRING; a_path: FILE_NAME; a_source_text: STRING) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			a_class_name: like class_name;
+			a_path: like text_in_file_path;
+			a_source_text: STRING_32) is
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -47,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text_to_be_searched: STRING is
+	text_to_be_searched: STRING_32 is
 			-- Text to be searched in
 		require
 			is_text_to_be_searched_set : is_text_to_be_searched_set
@@ -123,7 +129,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text_to_be_searched (text: STRING) is
+	set_text_to_be_searched (text: STRING_32) is
 			-- Set `text_to_be_searched_internal' with text.
 		require
 			text_not_void: text /= Void
@@ -187,7 +193,9 @@ feature -- Basic operations
 	launch is
 			-- Launch searching.
 		local
-			l_compile_string: STRING
+			l_compile_string: UC_UTF8_STRING
+			l_keyword: STRING
+			l_to_be_searched: UC_UTF8_STRING
 		do
 			create item_matched_internal.make (0)
 			if not is_class_name_set then
@@ -195,16 +203,18 @@ feature -- Basic operations
 			end
 			pcre_regex.set_caseless (not case_sensitive)
 			if is_regular_expression_used then
-				l_compile_string := keyword
+				l_keyword := utf32_to_utf8 (keyword)
 			else
-				l_compile_string := string_formatter.mute_escape_characters (keyword)
+				l_keyword := string_formatter.mute_escape_characters (utf32_to_utf8 (keyword))
 			end
 			if is_whole_word_matched then
-				l_compile_string := string_formatter.build_match_whole_word (l_compile_string)
+				l_keyword := string_formatter.build_match_whole_word (l_keyword)
 			end
+			create l_compile_string.make_from_utf8 (l_keyword)
+			create l_to_be_searched.make_from_utf8 (utf32_to_utf8 (text_to_be_searched))
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
-				pcre_regex.match (text_to_be_searched)
+				pcre_regex.match (l_to_be_searched)
 			end
 			if pcre_regex.has_matched then
 				from
@@ -216,7 +226,7 @@ feature -- Basic operations
 					pcre_regex.next_match
 				end
 			end
-			launched := true
+			launched := True
 			item_matched_internal.start
 		ensure then
 			class_name_internal /= Void
@@ -253,7 +263,7 @@ feature {NONE} -- Implementation
 								 text_to_be_searched_internal,
 								 pcre_regex.captured_start_position (0),
 								 pcre_regex.captured_end_position (0))
-			new_item.set_text (pcre_regex.captured_substring (0))
+			new_item.set_text (pcre_regex.captured_substring (0).as_string_32)
 			new_item.set_pcre_regex (pcre_regex)
 			if data /= Void then
 				new_item.set_data (data)

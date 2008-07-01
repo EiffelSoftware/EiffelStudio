@@ -43,7 +43,7 @@ create {EB_FEATURE_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_name: STRING; a_name_is_ambiguated, a_is_upper: BOOLEAN) is
+	make (a_feature: E_FEATURE; a_name: like name; a_name_is_ambiguated, a_is_upper: BOOLEAN) is
 			-- Create and initialize a new completion feature using `a_feature'
 			-- `a_name' is either an ambiguated name when `a_name_is_ambiguated',
 			-- or a fixed name when not `a_name_is_ambiguated'.
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_s: STRING
+			l_s: STRING_32
 		do
 			if a_feature.is_infix then
 				l_s := extract_symbol_from_infix(a_feature.name)
@@ -105,13 +105,13 @@ feature -- Access
 	is_class: BOOLEAN is False
 			-- Is completion feature a class, of course not.	
 
-	insert_name: STRING is
+	insert_name: STRING_32 is
 			-- Name to insert in editor
 		do
 			Result := insert_name_internal
 		end
 
-	full_insert_name: STRING is
+	full_insert_name: STRING_32 is
 			-- Full name to insert in editor
 		do
 			Result := full_insert_name_internal
@@ -123,7 +123,7 @@ feature -- Access
 			Result := pixmap_from_e_feature (associated_feature)
 		end
 
-	tooltip_text: STRING is
+	tooltip_text: STRING_32 is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
@@ -133,14 +133,14 @@ feature -- Access
 			Result.append (completion_type)
 		end
 
-	completion_type: STRING is
+	completion_type: STRING_32 is
 			-- The type of the feature (for a function, attribute)
 		do
 			if internal_completion_type = Void then
 				if return_type /= Void then
 					token_writer.new_line
 					return_type.ext_append_to (token_writer, associated_feature.associated_class)
-					Result := token_writer.last_line.image
+					Result := token_writer.last_line.wide_image
 				else
 					create Result.make_empty
 				end
@@ -201,7 +201,7 @@ feature -- Status report
 		end
 feature -- Comparison
 
-	begins_with (s: STRING): BOOLEAN is
+	begins_with (s: STRING_32): BOOLEAN is
 			-- Does this feature name begins with `s'?
 		do
 			if show_disambiguated_name and name_is_ambiguated then
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	associated_feature: E_FEATURE
 			-- Feature associated with completion item
 
-	feature_signature: STRING is
+	feature_signature: STRING_32 is
 			-- The signature of `associated_feature'
 		require
 			associated_feature_not_void: associated_feature /= Void
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 				if associated_feature.has_arguments then
 					token_writer.new_line
 					associated_feature.append_arguments (token_writer)
-					Result := token_writer.last_line.image
+					Result := token_writer.last_line.wide_image
 				else
 					create Result.make_empty
 				end
@@ -252,12 +252,12 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	internal_feature_signature: STRING
+	internal_feature_signature: STRING_32
 			-- cache `feature_signature'
 
-	insert_name_internal: STRING
+	insert_name_internal: STRING_32
 
-	full_insert_name_internal: STRING
+	full_insert_name_internal: STRING_32
 
 	name_is_ambiguated: BOOLEAN
 			-- Is this name ambiguated. If not we always use the received name rather than the feature name.

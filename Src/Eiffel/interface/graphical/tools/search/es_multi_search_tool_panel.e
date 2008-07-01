@@ -216,12 +216,12 @@ feature -- Access
 	first_result_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Get called when result reaches the one started.
 
-	currently_searched: STRING
+	currently_searched: STRING_32
 			-- String to be search
 
 feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Access
 
-	currently_replacing: STRING
+	currently_replacing: STRING_32
 			-- String to be search
 
 feature -- Status report
@@ -261,7 +261,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_current_searched (word: STRING) is
+	set_current_searched (word: STRING_32) is
 			-- Assign `word' to `currently_searched'
 		do
 			currently_searched := word
@@ -740,7 +740,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 								force_new_search
 								l_incremental_search := is_incremental_search
 								disable_incremental_search
-								set_current_searched (editor.text_displayed.selected_string)
+								set_current_searched (editor.text_displayed.selected_wide_string)
 								if l_incremental_search then
 									enable_incremental_search
 								end
@@ -756,7 +756,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 								force_new_search
 								l_incremental_search := is_incremental_search
 								disable_incremental_search
-								set_current_searched (editor.text_displayed.selected_string)
+								set_current_searched (editor.text_displayed.selected_wide_string)
 								if l_incremental_search then
 									enable_incremental_search
 								end
@@ -1115,7 +1115,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			end
 		end
 
-	incremental_search (a_word: STRING; a_start_pos: INTEGER; a_whole_word: BOOLEAN) is
+	incremental_search (a_word: STRING_32; a_start_pos: INTEGER; a_whole_word: BOOLEAN) is
 			-- Incremental search in the editor displayed text
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
@@ -1123,12 +1123,12 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			file_name: FILE_NAME
 			class_name: STRING
 			class_stone: CLASSI_STONE
-			l_text: STRING
+			l_text: STRING_32
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if is_editor_ready then
 				if editor.text_displayed.reading_text_finished then
-					l_text := editor.text_displayed.text
+					l_text := editor.text_displayed.wide_text
 				end
 					-- "not editor.is_empty" doesn't imply l_text is not empty string.
 				if l_text /= Void and then not l_text.is_empty then
@@ -1210,7 +1210,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				create file_name.make
 			end
 			if is_editor_ready and then not editor.is_empty then
-				create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
+				create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.wide_text)
 				multi_search_performer.set_search_strategy (text_strategy)
 				if case_sensitive_button.is_selected then
 					text_strategy.set_case_sensitive
@@ -1261,7 +1261,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					create class_name.make_empty
 				end
 				if is_editor_ready and then not editor.is_empty then
-					create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
+					create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.wide_text)
 					multi_search_performer.set_search_strategy (text_strategy)
 					if is_case_sensitive then
 						text_strategy.set_case_sensitive
@@ -1792,12 +1792,12 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	update_combo_box (word: STRING) is
+	update_combo_box (word: STRING_32) is
 			-- Add word to combo box list
 		local
-			l: LIST [STRING]
+			l: LIST [STRING_32]
 		do
-			l := keyword_field.strings_8
+			l := keyword_field.strings
 			if l /= Void then
 				l.compare_objects
 			end
@@ -1912,7 +1912,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	search_is_possible: BOOLEAN is
 			-- Is it possible to look for the current content of the "search for:" field?
 		local
-			for_test: STRING
+			for_test: STRING_32
 		do
 			for_test := keyword_field.text
 			Result := not for_test.is_empty
@@ -1990,7 +1990,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			new_search_set_set: new_search_set = a_new
 		end
 
-	old_search_key_value: STRING
+	old_search_key_value: STRING_32
 			-- Internal last search keyword.
 
 	old_editor: EB_EDITOR
@@ -2029,12 +2029,12 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING) is
+	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING_32) is
 			-- Add word to combo box list.
 		local
-			l: LIST[STRING]
+			l: LIST [STRING_32]
 		do
-			l := box.strings_8
+			l := box.strings
 			if l /= Void then
 				l.compare_objects
 			end

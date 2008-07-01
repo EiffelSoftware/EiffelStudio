@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING) is
+	make_with_name (a_name: like name) is
 			-- Initialization
 		require
 			a_name_valid: a_name /= Void and then not a_name.is_empty
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			set_local (a_name, Void, Void)
 		end
 
-	make_with_name_and_type (a_name: STRING; a_type: TYPE_A; a_feature: FEATURE_I) is
+	make_with_name_and_type (a_name: like name; a_type: like type; a_feature: like feature_i) is
 			-- Initialization
 		require
 			a_name_valid: a_name /= Void and then not a_name.is_empty
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Name of the local.
 
 	type: TYPE_A

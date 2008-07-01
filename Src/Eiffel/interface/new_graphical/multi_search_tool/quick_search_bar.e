@@ -350,12 +350,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_combo_box (word: STRING) is
+	update_combo_box (word: STRING_32) is
 			-- add word to combo box list
 		local
-			l: LIST [STRING]
+			l: LIST [STRING_32]
 		do
-			l := keyword_field.strings_8
+			l := keyword_field.strings
 			if l /= Void then
 				l.compare_objects
 			end
@@ -387,17 +387,17 @@ feature {NONE} -- Implementation
 						l_linear_representation.after or Result
 					loop
 						if l_linear_representation.item.has_focus then
-							Result := true
+							Result := True
 						else
 							Result := has_focus_on_widgets_internal (l_linear_representation.item)
 						end
 						l_linear_representation.forth
 					end
 				elseif l_container.has_focus then
-					Result := true
+					Result := True
 				end
 			elseif a_widget.has_focus then
-				Result := true
+				Result := True
 			end
 		end
 

@@ -64,6 +64,22 @@ inherit
 			default_create
 		end
 
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	ENCODING_DETECTOR
+		rename
+			detected_encoding as system_encoding
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature -- Initialization
 
 	default_create is
@@ -154,11 +170,24 @@ feature -- Access
 
 	text: STRING is
 			-- Image of the text being displayed.
+		obsolete
+			"Use `wide_text' instead, or wide characters are truncated."
+		local
+			l_text: like wide_text
+		do
+			l_text := wide_text
+			if l_text /= Void then
+				Result := wide_text.as_string_8
+			end
+		end
+
+	wide_text: STRING_32 is
+			-- Image of text in `Current'.
 		do
 			if text_displayed.is_empty then
-				create Result.make (0)
+				Result := ""
 			else
-				Result := text_displayed.text
+				Result := text_displayed.wide_text
 			end
 		end
 
@@ -192,10 +221,15 @@ feature -- Access
 	icons: EDITOR_ICONS
 			-- Editor icons
 
-	is_offset_valid: BOOLEAN is
-			-- If viewport offset vaild?
+	encoding: ENCODING is
+			-- Returns user encoding if `user_encoding' is set by `set_encoding'.
+			-- Otherwise returns encodinge valuated when text was loaded.
 		do
-			Result := editor_viewport.y_offset >= 0
+			if user_encoding /= Void then
+				Result := user_encoding
+			else
+				Result := detected_encoding
+			end
 		end
 
 feature -- Status Setting
@@ -234,6 +268,14 @@ feature -- Status Setting
 
 			text_displayed := a_text
 			create file_name.make_from_string (a_filename)
+		end
+
+	set_encoding (a_encoding: like user_encoding) is
+			-- Set `encoding' with `a_encoding'
+		do
+			user_encoding := a_encoding
+		ensure
+			encoding_set: user_encoding = a_encoding
 		end
 
 	display_line_with_context (l_number: INTEGER) is
@@ -403,6 +445,12 @@ feature -- Query
 
 	line_numbers_enabled: BOOLEAN
 			-- Is it permitted to show line numbers in Current?
+
+	is_offset_valid: BOOLEAN is
+			-- If viewport offset vaild?
+		do
+			Result := editor_viewport.y_offset >= 0
+		end
 
 feature -- Pick and Drop
 
@@ -592,24 +640,26 @@ feature -- Basic Operations
 			size_of_file_when_loaded := l_size
 		end
 
-	load_text (s: STRING) is
-			-- Display `s'.	
+	load_text (a_text: STRING_GENERAL) is
+			-- Display `a_text'.
+			-- `a_text' is not necessarily in UTF-32, it can be specified by `set_encoding'.
 		local
 			l_line: INTEGER
+			l_text: STRING
 		do
 				-- Reset the editor state
 			reset
-
-			is_unix_file :=	s.substring_index ("%R%N", 1) = 0
+			l_text := evaluate_encoding_and_convert_to_utf8 (a_text)
+			is_unix_file :=	l_text.substring_index ("%R%N", 1) = 0
 			if not is_unix_file then
-				s.replace_substring_all ("%R%N", "%N")
+				l_text.replace_substring_all ("%R%N", "%N")
 			end
 
 			file_loading_setup
 
 				-- Read and parse the file.
 			text_displayed.set_first_read_block_size (number_of_lines_in_block)
-			text_displayed.load_string (s)
+			text_displayed.load_string (l_text)
 
 				-- Setup the editor to load first page and display proper first line.
 			if first_line_displayed > 0 and then first_line_displayed <= number_of_lines then
@@ -708,7 +758,8 @@ feature -- Graphical interface
 		end
 
 	show_warning_message (a_message: STRING_GENERAL) is
-			-- show `a_message' in a dialog window		
+			-- Show `a_message' in a dialog window
+			-- |Use {STRING_GENERAL}, following Vision2 interface.
 		local
 			wd: EV_WARNING_DIALOG
 		do
@@ -1584,6 +1635,74 @@ feature {NONE} -- Implementation
 		do
 		end
 
+feature {NONE} -- Encoding conversion
+
+	user_encoding: ENCODING
+			-- User set encoding of the text
+
+	detected_encoding: ENCODING
+			-- Detected encoding of the text loaded
+			-- `user_encoding' takes higher priority.
+
+	evaluate_encoding_and_convert_to_utf8 (a_string: STRING_GENERAL): STRING is
+			-- Convert `a_string' as `user_encoding' to UTF-8.
+			-- If `user_encoding' is not set,
+			-- evaluate encoding of `a_string', set `detected_encoding' and
+			-- convert it to UTF-8.
+			-- If conversion fails, `a_string' is simply convert to STRING_8
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_str: STRING_GENERAL
+			l_encoding: ENCODING
+		do
+			if user_encoding = Void then
+				encoding_detector.detect (a_string)
+				if encoding_detector.last_detection_successful then
+					l_encoding := encoding_detector.detected_encoding
+					if encoding_detector.last_detection_successful then
+						detected_encoding := l_encoding
+					end
+				end
+			else
+				l_encoding := user_encoding
+			end
+			if l_encoding /= Void then
+				l_encoding.convert_to (utf8, a_string)
+				l_str := l_encoding.last_converted_string
+			end
+			if l_str = Void then
+				Result := a_string.as_string_8
+			else
+				Result := l_str.as_string_8
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Encoding detector
+
+	encoding_detector: ENCODING_DETECTOR
+			-- Encoding detector.
+			-- Used to detect/decide what encoding should be used.
+		do
+			if current_class /= Void and then current_class.encoding_detector /= Void then
+				Result := current_class.encoding_detector
+			else
+				Result := Current
+			end
+		ensure
+			encoding_detector_not_void: Result /= Void
+		end
+
+	detect (a_string: STRING_GENERAL) is
+			-- <precursor>
+			-- Current is used as simple encoding detector.
+			-- Only `system_encoding' is simply returned.
+			-- So `last_detection_successful' is always true.
+		do
+			last_detection_successful := True
+		end
 
 invariant
 	offset_view: is_offset_valid

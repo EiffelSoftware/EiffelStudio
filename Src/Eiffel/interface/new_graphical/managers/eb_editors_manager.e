@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	EC_ENCODING_UTINITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -1294,6 +1299,9 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			tmp_name: FILE_NAME
 			tmp_file: RAW_FILE
+			l_encoding: ENCODING
+			l_stream: STRING
+			l_text: STRING_32
 		do
 			if not retried then
 				if a_editor.changed then
@@ -1307,7 +1315,10 @@ feature {NONE} -- Implementation
 							tmp_file.is_creatable
 						then
 							tmp_file.open_append
-							tmp_file.put_string (a_editor.text)
+							l_encoding := a_editor.encoding
+							l_text := a_editor.wide_text
+							l_stream := convert_to_stream (l_text, l_encoding)
+							tmp_file.put_string (l_stream)
 							tmp_file.close
 						end
 					end

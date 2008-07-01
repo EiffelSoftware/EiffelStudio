@@ -952,7 +952,7 @@ feature {NONE} -- Implementation
 	complete is
 			-- Complete current name
 		local
-			l_name: STRING
+			l_name: STRING_GENERAL
 			l_name_item: like name_type
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]

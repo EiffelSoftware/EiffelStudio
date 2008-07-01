@@ -39,6 +39,9 @@ inherit
 		end
 
 	EB_TAB_CODE_COMPLETABLE
+		rename
+			is_word as is_word_token,
+			is_keyword as is_keyword_token
 		export
 			{NONE} all
 		undefine
@@ -156,7 +159,7 @@ feature {NONE} -- Basic operations
 
 feature -- Content change
 
-	set_editor_text (s: STRING) is
+	set_editor_text (s: STRING_32) is
 			-- load text represented by `s' in the editor
 			-- text is considered edited after load, i.e. save command
 			-- is sensitive.
@@ -228,7 +231,7 @@ feature -- Status setting
 
 feature -- Search
 
-	find_feature_named (a_name: STRING) is
+	find_feature_named (a_name: STRING_32) is
 			-- Look for a feature named `a_name' in the text and
 			-- scroll to the corresponding line.
 		local
@@ -282,7 +285,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			end
 		end
 
-	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
+	embed_in_block (keyword: STRING_32; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th character of `keyword'.
 		require
@@ -349,13 +352,13 @@ feature {NONE} -- Text loading
 
 feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 
-	handle_character (c: CHARACTER) is
+	handle_character (c: CHARACTER_32) is
  			-- Process the push on a character key.
 		local
 			t: EDITOR_TOKEN_KEYWORD
 			token: EDITOR_TOKEN
 			look_for_keyword: BOOLEAN
-			insert: CHARACTER
+			insert: CHARACTER_32
 			syntax_completed: BOOLEAN
 			cur: like cursor_type
  		do
@@ -722,11 +725,11 @@ feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, 
 	set_title_saved (a_saved: BOOLEAN) is
 			-- Set '*' in the title base on `a_saved'.
 		local
-			l_title: STRING
+			l_title: STRING_32
 		do
 			if docking_content /= Void then
 				if docking_content.short_title /= Void then
-					l_title := docking_content.short_title.as_string_8
+					l_title := docking_content.short_title.as_string_32
 				else
 					create l_title.make_empty
 				end
@@ -805,22 +808,22 @@ feature {NONE} -- syntax completion
 	latest_typed_word_is_keyword: BOOLEAN
 			-- Is the preceeding token a keyword?
 
-	previous_token_image: STRING
+	previous_token_image: STRING_32
 			-- Image of the previous token
 
-	keyword_image (token: EDITOR_TOKEN_KEYWORD): STRING is
+	keyword_image (token: EDITOR_TOKEN_KEYWORD): STRING_32 is
 			-- Image of keyword beginning by `token'.
 		local
-			test: STRING
+			test: STRING_32
 			kw: like token
 			blnk: EDITOR_TOKEN_BLANK
 			tok: EDITOR_TOKEN
 			is_else, is_then: BOOLEAN
 		do
-			Result :=token.image.twin
-			test := Result.as_lower
-			is_else := test.is_equal ("else")
-			is_then := test.is_equal ("then")
+			Result := token.wide_image.twin
+			test := Result
+			is_else := string_32_is_caseless_ascii_string (test, "else")
+			is_then := string_32_is_caseless_ascii_string (test, "then")
 			if is_else or is_then then
 				from
 					blnk ?= token.previous
@@ -833,17 +836,17 @@ feature {NONE} -- syntax completion
 				kw ?= tok
 				if kw /= Void then
 					if is_else then
-						test :=kw.image.as_lower
-						if test.is_equal ("or") then
+						test := kw.wide_image.twin
+						if string_32_is_caseless_ascii_string (test, "or") then
 							Result.prepend ("or ")
-						elseif test.is_equal ("require") then
+						elseif string_32_is_caseless_ascii_string (test, "require") then
 							Result.prepend ("require ")
 						end
 					elseif is_then then
-						test := kw.image.as_lower
-						if test.is_equal ("and") then
+						test := kw.wide_image.twin
+						if string_32_is_caseless_ascii_string (test, "and") then
 							Result.prepend ("and ")
-						elseif test.is_equal ("ensure") then
+						elseif string_32_is_caseless_ascii_string (test, "ensure") then
 							Result.prepend ("ensure ")
 						end
 					end
@@ -884,8 +887,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-	complementary_character (c:CHARACTER): CHARACTER is
+	complementary_character (c:CHARACTER_32): CHARACTER_32 is
 			-- Character complementary to `c', i.e. closing bracket
 			-- for an opening one for instance.
 		do
@@ -954,13 +956,13 @@ feature {NONE} -- Implementation
 			dev_window_is_not_void: dev_window /= Void
 		local
 			syn_error: SYNTAX_ERROR
-			txt: STRING
+			txt: STRING_32
 			retried: BOOLEAN
 			fl: RAW_FILE
 		do
 			if text_is_fully_loaded then
 				if retried then
-					show_warning_message (Warning_messages.w_Cannot_read_file (file_name).out)
+					show_warning_message (Warning_messages.w_Cannot_read_file (file_name))
 				else
 					deselect_all
 					syn_error := text_displayed.last_syntax_error
@@ -1012,8 +1014,8 @@ feature -- Text Loading
 			load_without_save := False
 		end
 
-	load_text (s: STRING) is
-			-- Load text represented by `s' in the editor.
+	load_text (s: STRING_GENERAL) is
+			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
 			l_scanner: EDITOR_EIFFEL_SCANNER
@@ -1105,7 +1107,7 @@ feature {NONE} -- Code completable implementation
 					until
 						l_line.after or l_end_loop
 					loop
-						if l_line.item.image.as_lower.is_equal ("feature") then
+						if string_32_is_caseless_ascii_string (l_line.item.wide_image, "feature") then
 							l_kt ?= l_line.item
 							if l_kt /= Void then
 								l_end_loop := True
@@ -1136,7 +1138,7 @@ feature {NONE} -- Code completable implementation
 								if l_found_blank then
 										-- We do not need signature after "like feature"
 										-- We do not need feature signature when it is a pointer reference. case: "$  feature"
-									if l_token.image.as_lower.is_equal ("like") or l_token.image.is_equal ("$") then
+									if string_32_is_caseless_ascii_string (l_token.wide_image, "like") or token_equal (l_token, "$") then
 										l_end_loop := True
 										set_discard_feature_signature (True)
 									else
@@ -1144,13 +1146,13 @@ feature {NONE} -- Code completable implementation
 									end
 								end
 									-- Prevent create {like a}.input (a, b) from signature being discarded.
-								if l_token.image.as_lower.is_equal ("}") then
+								if token_equal (l_token, "}") then
 									l_end_loop := True
 								end
 							end
 							-- We do not need feature signature when it is a pointer reference. case2: "$feature"
 							if not l_found_blank and then not l_quit and then not l_end_loop then
-								if l_token.image.is_equal ("$") then
+								if token_equal (l_token, "$") then
 									l_end_loop := True
 									set_discard_feature_signature (True)
 								end
@@ -1165,7 +1167,7 @@ feature {NONE} -- Code completable implementation
 						l_token := text_displayed.cursor.token
 						l_end_loop := False
 						if l_token /= Void then
-							if l_token.image.is_equal ("(") then
+							if token_equal (l_token, "(") then
 								l_end_loop := True
 								set_discard_feature_signature (True)
 							end
@@ -1177,7 +1179,7 @@ feature {NONE} -- Code completable implementation
 						if l_token /= Void then
 							if not l_token.is_blank then
 								l_end_loop := True
-								if l_token.image.is_equal ("(") then
+								if token_equal (l_token, "(") then
 									need_tabbing := True
 									set_discard_feature_signature (True)
 								end
@@ -1359,13 +1361,16 @@ feature {NONE} -- Code completable implementation
 					until
 						l_current_line.after or l_current_line.item = text_displayed.cursor.token
 					loop
-						if l_current_line.item.is_text and then l_current_line.item.image.is_equal ("(") then
+						if l_current_line.item.is_text and then token_equal (l_current_line.item, "(") then
 							l_has_left_brace_ahead := True
 						end
-						if l_current_line.item.is_text and then l_current_line.item.image.is_equal (")") then
+						if l_current_line.item.is_text and then token_equal (l_current_line.item, ")") then
 							l_has_right_brace_ahead := True
 						end
-						if l_current_line.item.is_text and then (l_current_line.item.image.is_equal (",") or else l_current_line.item.image.is_equal (";")) then
+						if
+							l_current_line.item.is_text and then (token_equal (l_current_line.item, ",") or else
+							token_equal (l_current_line.item, ";"))
+						then
 							seperator_ahead := True
 						end
 						l_current_line.forth
@@ -1376,7 +1381,7 @@ feature {NONE} -- Code completable implementation
 					until
 						l_current_token = Void or else l_current_token = l_current_line.eol_token
 					loop
-						if l_current_token.image.is_equal (")") then
+						if token_equal (l_current_token, ")") then
 							l_has_right_brace_following := True
 						end
 						l_current_token := l_current_token.next
@@ -1447,7 +1452,7 @@ feature {NONE} -- Code completable implementation
 			text_displayed.back_delete_char
 		end
 
-	insert_string (a_str: STRING) is
+	insert_string (a_str: STRING_32) is
 			-- Insert `a_str' at cursor position.
 		do
 			if has_selection then
@@ -1456,7 +1461,7 @@ feature {NONE} -- Code completable implementation
 			text_displayed.insert_string (a_str)
 		end
 
-	insert_char (a_char: CHARACTER) is
+	insert_char (a_char: CHARACTER_32) is
 			-- Insert `a_char' at cursor position.
 		do
 			if has_selection then
@@ -1465,7 +1470,7 @@ feature {NONE} -- Code completable implementation
 			text_displayed.insert_char (a_char)
 		end
 
-	replace_char (a_char: CHARACTER) is
+	replace_char (a_char: CHARACTER_32) is
 			-- Replace current char with `a_char'.
 		do
 			if has_selection then
@@ -1516,7 +1521,7 @@ feature {NONE} -- Code completable implementation
 
 	saved_cursor: EDITOR_CURSOR
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
+	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN) is
 			--
 		do
 			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder, not a_continue_completion)
@@ -1538,10 +1543,10 @@ feature {NONE} -- Code completable implementation
 			Result := text_displayed.cursor.token = text_displayed.cursor.line.eol_token
 		end
 
-	current_char: CHARACTER is
+	current_char: CHARACTER_32 is
 			-- Current character, to the right of the cursor.
 		do
-			Result := text_displayed.cursor.item
+			Result := text_displayed.cursor.wide_item
 		end
 
 	on_key_pressed (a_key: EV_KEY) is
@@ -1574,8 +1579,8 @@ feature {NONE} -- Code completable implementation
 					l_tok := l_tok.previous
 				end
 				if l_tok /= Void and then l_tok.is_text then
-					if not l_tok.image.is_empty then
-						Result := not completion_activator_characters.has (l_tok.image.item (1))
+					if not l_tok.wide_image.is_empty then
+						Result := not completion_activator_characters.has (l_tok.wide_image.item (1))
 					else
 						Result := True
 					end
@@ -1591,7 +1596,6 @@ feature {NONE} -- Code completable implementation
 		ensure then
 			completing_automatically_reset: completing_automatically = False
 		end
-
 
 feature {NONE} -- Implementation: Internal cache
 

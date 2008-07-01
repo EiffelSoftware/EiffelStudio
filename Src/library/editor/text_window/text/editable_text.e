@@ -121,7 +121,7 @@ feature -- Basic Operations
 			-- delete selected text.
 		local
 			begin_sel, end_sel: like cursor
-			removed: STRING
+			removed: STRING_32
 			line_number: INTEGER
 			char_num: INTEGER
 		do
@@ -143,14 +143,14 @@ feature -- Basic Operations
 			end
 		end
 
-	replace_selection (a_word: STRING) is
+	replace_selection (a_word: STRING_GENERAL) is
 			-- replace the selected text with `a_word'
 		require
 			selection_present: has_selection
 			selection_not_empty: selection_cursor /= cursor
 		local
 			begin_sel, end_sel: like cursor
-			removed: STRING
+			removed: STRING_32
 			line_number: INTEGER
 			char_num: INTEGER
 		do
@@ -172,7 +172,7 @@ feature -- Basic Operations
 			-- Change selected text to lower case if `lower',
 			-- else to upper case.
 		local
-			txt: STRING
+			txt: STRING_32
 			l1, l2, x1, x2: INTEGER
 		do
 			ignore_cursor_moves := True
@@ -181,7 +181,7 @@ feature -- Basic Operations
 				l2 := cursor.y_in_lines
 				x1 := selection_cursor.x_in_characters
 				x2 := cursor.x_in_characters
-				txt := selected_string
+				txt := selected_wide_string
 				if lower then
 					txt.to_lower
 				else
@@ -351,7 +351,7 @@ feature -- Basic Operations
 								end
 								l_token.next.set_previous_token (l_token.previous)
 								create cursor.make_from_relative_pos (l_current_line, l_token.next, 1, Current)
-								history.record_remove_trailing_blank (l_token.image)
+								history.record_remove_trailing_blank (l_token.wide_image)
 							end
 						else
 							end_loop := true
@@ -402,7 +402,7 @@ feature -- Basic Operations
 								end
 								l_token.next.set_previous_token (l_token.previous)
 								create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
-								history.record_remove_trailing_blank (l_token.image)
+								history.record_remove_trailing_blank (l_token.wide_image)
 							else
 								end_loop := true
 							end
@@ -420,7 +420,7 @@ feature -- Basic Operations
 			cursor := l_cursor
 		end
 
-	insert_char (c: CHARACTER) is
+	insert_char (c: CHARACTER_32) is
 			-- Insert `c' at the cursor position.
 			-- Delete selection if any.
 		require
@@ -439,7 +439,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string (txt: STRING) is
+	insert_string (txt: STRING_GENERAL) is
 			-- Insert `txt' at cursor position.
 			-- Delete selection, if any.
 		require
@@ -464,7 +464,7 @@ feature -- Basic Operations
 		require
 			text_not_empty: not is_empty
 		local
-			indent: STRING
+			indent: STRING_32
 		do
 			if not selection_is_empty then
 				delete_selection
@@ -472,7 +472,7 @@ feature -- Basic Operations
 			end
 			ignore_cursor_moves := True
 			if use_smart_indentation then
-				indent := cursor.line.indentation
+				indent := cursor.line.wide_indentation
 				if cursor.x_in_characters <= indent.count then
 					indent.keep_head (cursor.x_in_characters - 1)
 				end
@@ -489,7 +489,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string_as_selectable (txt: STRING) is
+	insert_string_as_selectable (txt: STRING_GENERAL) is
 			-- Insert `txt' at cursor position as a selectable token			
 		require
 			text_not_empty: not is_empty
@@ -507,7 +507,7 @@ feature -- Basic Operations
 			end
 		end
 
-	replace_char (c: CHARACTER) is
+	replace_char (c: CHARACTER_32) is
 			-- Replace character at cursor position by `c'.
 			-- Delete selection, if any.
 		require
@@ -515,7 +515,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if selection_is_empty then
-				history.record_replace (cursor.item, c)
+				history.record_replace (cursor.wide_item, c)
 				replace_char_at_cursor_pos (c)
 			else
 				delete_selection
@@ -540,7 +540,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if selection_is_empty then
-				history.record_delete (cursor.item)
+				history.record_delete (cursor.wide_item)
 				delete_char_at_cursor_pos
 			else
 				delete_selection
@@ -576,7 +576,7 @@ feature -- Basic Operations
 					remove_white_spaces
 					history.record_move
 				end
-				history.record_back_delete (cursor.item)
+				history.record_back_delete (cursor.wide_item)
 				delete_char_at_cursor_pos
 				ignore_cursor_moves := False
 			end
@@ -610,9 +610,9 @@ feature -- Basic Operations
 			selection_exists: has_selection
 		local
 			offset: INTEGER
-			local_clipboard: STRING
+			local_clipboard: STRING_32
 		do
-			local_clipboard := selected_string
+			local_clipboard := selected_wide_string
 			offset := selection_end.pos_in_text
 			if has_selection and then not cursor.is_equal (selection_cursor) then
 				delete_selection
@@ -631,9 +631,9 @@ feature -- Basic Operations
 		require
 			selection_exists: has_selection
 		local
-			local_clipboard: STRING
+			local_clipboard: STRING_32
 		do
-			local_clipboard := selected_string
+			local_clipboard := selected_wide_string
 			disable_selection
 			cursor.make_from_integer (i, Current)
 			insert_string (local_clipboard)
@@ -641,13 +641,13 @@ feature -- Basic Operations
 
 feature -- for search only
 
-	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING) is
+	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING_GENERAL) is
 			-- replace the selected text with `a_word'
 		require
 			right_order: start_pos < end_pos
 			word_is_not_void: a_word /= Void
 		local
-			removed: STRING
+			removed: STRING_32
 			line_number: INTEGER
 			char_num: INTEGER
 		do
@@ -687,7 +687,7 @@ feature -- Reinitialization
 
 feature {UNDO_CMD} -- Operations on selected text
 
-	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING) is
+	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL) is
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even if `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -697,7 +697,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			right_order: start_selection <= end_selection
 			valid_symbol: symbol /= Void and then not symbol.is_empty
 		local
-			line_image	: STRING		-- String representation of the current line
+			line_image	: STRING_32		-- String representation of the current line
 			ln			: like current_line	-- Current line
 			start_pos	: INTEGER
 			end_pos		: INTEGER
@@ -718,7 +718,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
 					-- Retrieve the string representation of the line
-				line_image := ln.image
+				line_image := ln.wide_image
 
 					-- Nothing is added in front of an empty line.
 				if not line_image.is_empty then
@@ -735,7 +735,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					if line_image.is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (line_image)
+						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, False)
 					end
 
@@ -768,7 +768,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				start_selection.is_equal (end_selection)
 			then
 					-- Retrieve the string representation of the line
-				line_image := ln.image
+				line_image := ln.wide_image
 					-- Nothing is added in front of an empty line.
 				if not line_image.is_empty then
 					record_modified_line (ln)
@@ -784,7 +784,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					if line_image.is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (line_image)
+						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, False)
 					end
 
@@ -809,7 +809,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			end
 		end
 
-	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING) is
+	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL) is
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -820,7 +820,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			right_order: start_selection <= end_selection
 			valid_symbol: symbol /= Void and then not symbol.is_empty
 		local
-			line_image	: STRING		-- String representation of the current line
+			line_image	: STRING_32		-- String representation of the current line
 			ln		: like current_line	-- Current line
 			symbol_length	: INTEGER		-- number of characters in `symbol'
 			start_pos	: INTEGER
@@ -843,7 +843,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
 					-- Retrieve the string representation of the line
-				line_image := ln.image
+				line_image := ln.wide_image
 
 					-- Remove the commentary symbol in front of the line (if any)
 				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
@@ -859,7 +859,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					if line_image.is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (line_image)
+						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 					end
 
@@ -886,7 +886,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				start_selection.is_equal (end_selection)
 			then
 					-- Retrieve the string representation of the line
-				line_image := ln.image
+				line_image := ln.wide_image
 
 					-- Remove the commentary symbol in front of the line (if any)
 				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
@@ -901,7 +901,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					if line_image.is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (line_image)
+						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 					end
 
@@ -929,7 +929,7 @@ feature {UNDO_CMD} -- Operations on selected text
 		require
 				right_order: start_selection < end_selection
 		local
-			s: STRING
+			s: STRING_32
 			ln: like current_line
 			t : EDITOR_TOKEN
 			line_number: INTEGER
@@ -950,16 +950,16 @@ feature {UNDO_CMD} -- Operations on selected text
 
 			if t /= ln.eol_token then
 				from
-					s := t.image.substring (1, start_selection.pos_in_token - 1)
+					s := t.wide_image.substring (1, start_selection.pos_in_token - 1)
 					t := t.previous
 				until
 					t = Void
 				loop
-					s.prepend (t.image)
+					s.prepend (t.wide_image)
 					t := t.previous
 				end
 			else
-				s := ln.image
+				s := ln.wide_image
 			end
 				-- Retrieving line after `end_selection'.
 			ln := end_selection.line
@@ -970,12 +970,12 @@ feature {UNDO_CMD} -- Operations on selected text
 
 			if t /= ln.eol_token then
 				from
-					s.append (t.image.substring (end_selection.pos_in_token, t.image.count))
+					s.append (t.wide_image.substring (end_selection.pos_in_token, t.wide_image.count))
 					t := t.next
 				until
 					t = ln.eol_token
 				loop
-					s.append (t.image)
+					s.append (t.wide_image)
 					t := t.next
 				end
 			end
@@ -1001,7 +1001,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			if s.is_empty then
 				ln.make_empty_line
 			else
-				lexer.execute (s)
+				execute_lexer_with_wide_string (s)
 				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 			end
 
@@ -1015,14 +1015,14 @@ feature {UNDO_CMD} -- Operations on selected text
 
 feature {UNDO_CMD} -- Basic Text changes
 
-	insert_char_at_cursor_pos (c: CHARACTER) is
+	insert_char_at_cursor_pos (c: CHARACTER_32) is
 			-- Insert `c' in text, at cursor position.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
 			text_is_not_empty: not is_empty
 		local
 			t_before, t_after: EDITOR_TOKEN
-			s: STRING
+			s: STRING_32
 			char_pos: INTEGER
 			ln: like line
 			tok: EDITOR_TOKEN
@@ -1042,10 +1042,10 @@ feature {UNDO_CMD} -- Basic Text changes
 
 					--| Add `c' in token image.
 				if tok = ln.eol_token then
-					s := c.out
+					create s.make_filled (c, 1)
 				else
-					s := tok.image.twin
-					s.insert_string (c.out, cursor.pos_in_token)
+					s := tok.wide_image.twin
+					s.insert_string (create {STRING_32}.make_filled (c, 1), cursor.pos_in_token)
 				end
 					--| As a simple insertion can change the whole line,
 					--| We are obliged to retrieve previous and following
@@ -1055,7 +1055,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				until
 					t_before = Void
 				loop
-					s.prepend (t_before.image)
+					s.prepend (t_before.wide_image)
 					t_before := t_before.previous
 				end
 				if tok.next /= Void then
@@ -1064,7 +1064,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					until
 						t_after = ln.eol_token
 					loop
-						s.append (t_after.image)
+						s.append (t_after.wide_image)
 						t_after := t_after.next
 					end
 				end
@@ -1073,7 +1073,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if s.is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (s)
+					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
 
@@ -1089,7 +1089,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			end
 		end
 
-	insert_string_at_cursor_pos (s: STRING) is
+	insert_string_at_cursor_pos (s: STRING_GENERAL) is
 			-- Insert `s' in text, at cursor position.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1097,7 +1097,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			text_is_not_empty: not is_empty
 			s_valid: s /= Void and then not s.is_empty
 		local
-			first_image, last_image, aux: STRING
+			first_image, last_image, aux: STRING_32
 			t: EDITOR_TOKEN
 			cline, new_line: like line
 			i,j : INTEGER
@@ -1120,28 +1120,28 @@ feature {UNDO_CMD} -- Basic Text changes
 			aux := s.twin
 			aux.prune_all ('%R')
 			if tok = ln.eol_token then
-				first_image := ln.image
+				first_image := ln.wide_image
 				last_image := ""
 			else
 					--| Building `first_image', i.e. line part before Current.
-				first_image := tok.image.substring (1, cursor.pos_in_token - 1)
+				first_image := tok.wide_image.substring (1, cursor.pos_in_token - 1)
 				from
 					t := tok.previous
 				until
 					t = Void
 				loop
-					first_image.prepend (t.image)
+					first_image.prepend (t.wide_image)
 					t := t.previous
 				end
 
 					--| Building `last_image', i.e. line part after Current.
-				last_image := tok.image.substring (cursor.pos_in_token, tok.length)
+				last_image := tok.wide_image.substring (cursor.pos_in_token, tok.length)
 				from
 					t := tok.next
 				until
 					t = ln.eol_token
 				loop
-					last_image.append (t.image)
+					last_image.append (t.wide_image)
 					t := t.next
 				end
 			end
@@ -1153,7 +1153,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					if (first_image + aux + last_image).is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (first_image + aux + last_image)
+						execute_lexer_with_wide_string (first_image + aux + last_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 					end
 					on_line_modified (cursor.y_in_lines)
@@ -1165,7 +1165,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if (first_image + aux.substring (1, i - 1)).is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (first_image + aux.substring (1, i - 1))
+					execute_lexer_with_wide_string (first_image + aux.substring (1, i - 1))
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
 				on_line_modified (cursor.y_in_lines)
@@ -1183,7 +1183,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					if (aux.substring (i + 1, j - 1)).is_empty then
 						create new_line.make_empty_line
 					else
-						lexer.execute (aux.substring (i + 1, j - 1))
+						execute_lexer_with_wide_string (aux.substring (i + 1, j - 1))
 						create new_line.make_from_lexer (lexer)
 					end
 					cline.add_right (new_line)
@@ -1199,7 +1199,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if (aux.substring (i + 1, aux.count) + last_image).is_empty then
 					create new_line.make_empty_line
 				else
-					lexer.execute (aux.substring (i + 1, aux.count) + last_image)
+					execute_lexer_with_wide_string (aux.substring (i + 1, aux.count) + last_image)
 					create new_line.make_from_lexer (lexer)
 				end
 				cline.add_right (new_line)
@@ -1214,16 +1214,16 @@ feature {UNDO_CMD} -- Basic Text changes
 			cursor.set_x_in_characters (end_pos)
 		end
 
-	insert_string_as_selectable_at_cursor_pos (s: STRING) is
+	insert_string_as_selectable_at_cursor_pos (s: STRING_GENERAL) is
 			-- Insert `s' in text, at cursor position as a selectable token.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
 			text_is_not_empty: not is_empty
 			s_valid: s /= Void and then not s.is_empty
-			s_single_line: s.index_of ('%N', 1) = 0
+			s_single_line: s.as_string_32.index_of ('%N', 1) = 0
 		local
-			first_image, last_image, aux: STRING
+			first_image, last_image, aux: STRING_32
 			t: EDITOR_TOKEN
 			end_pos: INTEGER
 			ln: like line
@@ -1245,28 +1245,28 @@ feature {UNDO_CMD} -- Basic Text changes
 			aux := s.twin
 			aux.prune_all ('%R')
 			if tok = ln.eol_token then
-				first_image := ln.image
+				first_image := ln.wide_image
 				last_image := ""
 			else
 					--| Building `first_image', i.e. line part before Current.
-				first_image := tok.image.substring (1, cursor.pos_in_token - 1)
+				first_image := tok.wide_image.substring (1, cursor.pos_in_token - 1)
 				from
 					t := tok.previous
 				until
 					t = Void
 				loop
-					first_image.prepend (t.image)
+					first_image.prepend (t.wide_image)
 					t := t.previous
 				end
 
 					--| Building `last_image', i.e. line part after Current.
-				last_image := tok.image.substring (cursor.pos_in_token, tok.length)
+				last_image := tok.wide_image.substring (cursor.pos_in_token, tok.length)
 				from
 					t := tok.next
 				until
 					t = ln.eol_token
 				loop
-					last_image.append (t.image)
+					last_image.append (t.wide_image)
 					t := t.next
 				end
 			end
@@ -1276,11 +1276,11 @@ feature {UNDO_CMD} -- Basic Text changes
 				if first_image.is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (first_image)
+					execute_lexer_with_wide_string (first_image)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
 
-				lexer.execute (aux)
+				execute_lexer_with_wide_string (aux)
 				create tokens_group.make_from_lexer (lexer)
 				ln.insert_token (tokens_group, ln.count - 1)
 
@@ -1299,7 +1299,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			text_is_not_empty: not is_empty
 		local
 			t_before, t_after: EDITOR_TOKEN
-			s: STRING
+			s: STRING_32
 			ln: like line
 			tok: EDITOR_TOKEN
 			char_pos: INTEGER
@@ -1321,12 +1321,13 @@ feature {UNDO_CMD} -- Basic Text changes
 						-- Must join next line and previous line together
 					record_last_modified_line (ln.next, ln.next.first_token)
 
-					s := ln.image + ln.next.image
+					s := ln.wide_image
+					s.append (ln.next.wide_image)
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if s.is_empty then
 						ln.make_empty_line
 					else
-						lexer.execute (s)
+						execute_lexer_with_wide_string (s)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 					end
 					on_line_modified (cursor.y_in_lines)
@@ -1339,14 +1340,14 @@ feature {UNDO_CMD} -- Basic Text changes
 			else
 				record_last_modified_line (ln, tok)
 
-				s := tok.image.twin
+				s := tok.wide_image.twin
 				s.remove (cursor.pos_in_token)
 				from
 					t_before := tok.previous
 				until
 					t_before = Void
 				loop
-					s.prepend (t_before.image)
+					s.prepend (t_before.wide_image)
 					t_before := t_before.previous
 				end
 				check
@@ -1357,14 +1358,14 @@ feature {UNDO_CMD} -- Basic Text changes
 				until
 					t_after = ln.eol_token
 				loop
-					s.append (t_after.image)
+					s.append (t_after.wide_image)
 					t_after := t_after.next
 				end
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (s)
+					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
 				on_line_modified (cursor.y_in_lines)
@@ -1382,7 +1383,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			text_is_not_empty: not is_empty
 			n_big_enough: n > 0
 		local
-			s: STRING
+			s: STRING_32
 			cline: like line
 			t: EDITOR_TOKEN
 			pos: INTEGER
@@ -1406,16 +1407,16 @@ feature {UNDO_CMD} -- Basic Text changes
 			t := tok
 			if t /= ln.eol_token then
 				from
-					s := t.image.substring (1, cursor.pos_in_token - 1)
+					s := t.wide_image.substring (1, cursor.pos_in_token - 1)
 					t := t.previous
 				until
 					t = Void
 				loop
-					s.prepend (t.image)
+					s.prepend (t.wide_image)
 					t := t.previous
 				end
 			else
-				s := ln.image
+				s := ln.wide_image
 			end
 				--| Computing last position (given by `cline', `t', `pos').
 				--| Erase lines as they are completely scanned
@@ -1451,18 +1452,20 @@ feature {UNDO_CMD} -- Basic Text changes
 					end
 				end
 			end
-
+			if t = Void then
+				t := cline.first_token
+			end
 			record_last_modified_line (cline, t)
 
 				--| Retrieving line after last position (given by `cline', `t', `pos').
 			if t /= Void and then t /= cline.eol_token then
 				from
-					s.append (t.image.substring (pos, t.image.count))
+					s.append (t.wide_image.substring (pos, t.wide_image.count))
 					t := t.next
 				until
 					t = cline.eol_token
 				loop
-					s.append (t.image)
+					s.append (t.wide_image)
 					t := t.next
 				end
 			end
@@ -1476,7 +1479,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			if s.is_empty then
 				ln.make_empty_line
 			else
-				lexer.execute (s)
+				execute_lexer_with_wide_string (s)
 				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 			end
 			on_line_modified(cursor.y_in_lines)
@@ -1487,13 +1490,13 @@ feature {UNDO_CMD} -- Basic Text changes
 			--cursor.update_current_char
 		end
 
-	replace_char_at_cursor_pos (c: CHARACTER) is
+	replace_char_at_cursor_pos (c: CHARACTER_32) is
 			-- Replace character at cursor position by `c'.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
 			text_is_not_empty: not is_empty
 		local
-			s: STRING
+			s: STRING_32
 			t_before, t_after: EDITOR_TOKEN
 			ln: like line
 			tok: EDITOR_TOKEN
@@ -1512,12 +1515,13 @@ feature {UNDO_CMD} -- Basic Text changes
 			elseif tok = ln.eol_token then
 				record_first_modified_line (ln, tok)
 				record_last_modified_line (ln, tok)
-				s := ln.image + c.out
+				s := ln.wide_image
+				s.extend (c)
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (s)
+					execute_lexer_with_wide_string (s)
 					ln.make_from_lexer (lexer)
 				end
 				on_line_modified (cursor.y_in_lines)
@@ -1530,14 +1534,14 @@ feature {UNDO_CMD} -- Basic Text changes
 			record_last_modified_line (ln, tok)
 			char_pos := cursor.x_in_characters
 
-			s := tok.image.twin
+			s := tok.wide_image.twin
 			s.put (c, cursor.pos_in_token)
 			from
 				t_before := tok.previous
 			until
 				t_before = Void
 			loop
-				s.prepend (t_before.image)
+				s.prepend (t_before.wide_image)
 				t_before := t_before.previous
 			end
 			check
@@ -1548,14 +1552,14 @@ feature {UNDO_CMD} -- Basic Text changes
 			until
 				t_after = ln.eol_token
 			loop
-				s.append (t_after.image)
+				s.append (t_after.wide_image)
 				t_after := t_after.next
 			end
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 			if s.is_empty then
 				ln.make_empty_line
 			else
-				lexer.execute (s)
+				execute_lexer_with_wide_string (s)
 				ln.make_from_lexer (lexer)
 			end
 			on_line_modified (cursor.y_in_lines)
@@ -1576,7 +1580,7 @@ feature {UNDO_CMD} -- Basic Text changes
 		require
 			text_is_not_empty: not is_empty
 		local
-			aux, s: STRING
+			aux, s: STRING_32
 			i_t: EDITOR_TOKEN
 			new_line : like line
 			new_pos: INTEGER
@@ -1600,7 +1604,7 @@ feature {UNDO_CMD} -- Basic Text changes
 
 			if tok = ln.eol_token then
 				if use_smart_indentation then
-					aux := ln.indentation
+					aux := ln.wide_indentation
 					if cursor.x_in_characters <= aux.count then
 						aux.keep_head (cursor.x_in_characters - 1)
 					end
@@ -1609,7 +1613,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					if aux.is_empty then
 						create new_line.make_empty_line
 					else
-						lexer.execute (aux)
+						execute_lexer_with_wide_string (aux)
 						create new_line.make_from_lexer (lexer)
 					end
 					new_line.set_auto_indented (True)
@@ -1620,21 +1624,21 @@ feature {UNDO_CMD} -- Basic Text changes
 				ln.add_right (new_line)
 				on_line_inserted (cursor.y_in_lines + 1)
 			else
-				aux := tok.image
+				aux := tok.wide_image
 				s := aux.substring (cursor.pos_in_token, aux.count)
 				from
 					i_t := tok.next
 				until
 					i_t = ln.eol_token
 				loop
-					s.append (i_t.image)
+					s.append (i_t.wide_image)
 					i_t := i_t.next
 				end
 				check
 					s_non_empty: not (s.is_empty)
 				end
 				if use_smart_indentation then
-					aux := ln.indentation
+					aux := ln.wide_indentation
 					if cursor.x_in_characters <= aux.count then
 						aux.keep_head (cursor.x_in_characters - 1)
 					end
@@ -1647,7 +1651,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if s.is_empty then
 					create new_line.make_empty_line
 				else
-					lexer.execute (s)
+					execute_lexer_with_wide_string (s)
 					create new_line.make_from_lexer (lexer)
 				end
 				ln.add_right (new_line)
@@ -1667,7 +1671,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			text_is_not_empty: not is_empty
 		local
 			t: EDITOR_TOKEN
-			s: STRING
+			s: STRING_32
 			ln: like line
 			tok: EDITOR_TOKEN
 			char_pos: INTEGER
@@ -1683,20 +1687,20 @@ feature {UNDO_CMD} -- Basic Text changes
 				record_first_modified_line (ln, tok)
 				record_last_modified_line (ln, tok)
 
-				s := tok.image.substring (1, cursor.pos_in_token - 1)
+				s := tok.wide_image.substring (1, cursor.pos_in_token - 1)
 				from
 					t := tok.previous
 				until
 					t = Void
 				loop
-					s.prepend (t.image)
+					s.prepend (t.wide_image)
 					t := t.previous
 				end
 				lexer.set_tab_size (editor_preferences.tabulation_spaces)
 				if s.is_empty then
 					ln.make_empty_line
 				else
-					lexer.execute (s)
+					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, lexer.in_verbatim_string)
 				end
 				on_line_modified (cursor.y_in_lines)
@@ -1762,7 +1766,7 @@ feature {NONE} -- Implementation
 --				selection_cursor := cursor.twin
 --				has_selection := True
 			until
-				not is_blank (cursor.item)
+				not is_blank (cursor.wide_item)
 			loop
 				cursor.go_right_char
 			end
@@ -1774,7 +1778,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_blank (ch: CHARACTER): BOOLEAN is
+	is_blank (ch: CHARACTER_32): BOOLEAN is
 			-- Is `ch' a blank space ?
 		do
 			Result  := ch = ' ' or ch = '%T'

@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			set_default_key_processing_handler (agent on_default_key_processing)
 		end
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_32) is
 			-- Initialization
 		do
 			Precursor {EV_TEXT_FIELD} (a_text)
@@ -75,7 +75,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 		require
 			a_pos_valid: a_pos >= 1 and a_pos <= text_length + 1
 			a_line_attached: a_line /= Void
-			a_line_valid: a_line.image.count = text_length
+			a_line_valid: a_line.wide_image.count = text_length
 		local
 			token_length, cursor_pos, token_start_pos: INTEGER
 			end_loop: BOOLEAN
@@ -155,11 +155,11 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			end
 		end
 
-	current_char: CHARACTER is
+	current_char: CHARACTER_32 is
 			-- Current character, to the right of the cursor.
 		do
 			if text_length > 0 and then caret_position <= text_length then
-				Result := text.item (caret_position).to_character_8
+				Result := text.item (caret_position)
 			else
 				Result := '%N'
 			end
@@ -206,7 +206,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 
-	handle_character (a_char: CHARACTER) is
+	handle_character (a_char: CHARACTER_32) is
 			-- Handle `a_char'
 		do
 			insert_char (a_char)
@@ -303,7 +303,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			right_space,
 			list_width: INTEGER
 			l_font: EV_FONT
-			l_text_before_cursor: STRING
+			l_text_before_cursor: STRING_32
 		do
 			create screen
 
@@ -568,25 +568,25 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 			end
 		end
 
-	insert_string (a_str: STRING) is
+	insert_string (a_str: STRING_32) is
 			-- Insert `a_str' at cursor position.
 		do
 			insert_text (a_str)
 			set_caret_position (caret_position + a_str.count)
 		end
 
-	insert_char (a_char: CHARACTER) is
+	insert_char (a_char: CHARACTER_32) is
 			-- Insert `a_char' at cursor position.
 		do
-			insert_text (a_char.out)
+			insert_text (create {STRING_32}.make_filled (a_char, 1))
 			set_caret_position (caret_position + 1)
 		end
 
-	replace_char (a_char: CHARACTER) is
+	replace_char (a_char: CHARACTER_32) is
 			-- Replace current char with `a_char'.
 		do
 			delete_char
-			insert_text (a_char.out)
+			insert_text (create {STRING_32}.make_filled (a_char, 1))
 		end
 
 feature {NONE} -- History

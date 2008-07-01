@@ -93,7 +93,7 @@ feature -- Basic operations
 			directory_strategy := Void
 			file_strategy:= Void
 			path_internal := Void
-			is_subdirectory_searched := true
+			is_subdirectory_searched := True
 		ensure then
 			directory_strategy_void: directory_strategy = Void
 			file_strategy_void: file_strategy = Void
@@ -163,7 +163,7 @@ feature -- Basic operations
 				end
 			l_directory.close
 			end
-			launched := true
+			launched := True
 			item_matched_internal.start
 		end
 

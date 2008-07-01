@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (begin_s, end_s: EDITOR_CURSOR; symbl: STRING; txt: EDITABLE_TEXT) is
+	make (begin_s, end_s: EDITOR_CURSOR; symbl: STRING_GENERAL; txt: EDITABLE_TEXT) is
 		require
 			begin_s_not_void: begin_s /= Void
 			end_s_not_void: end_s /= Void
@@ -28,7 +28,7 @@ feature -- Initialization
 			end_selection := end_s.twin
 			symbol := symbl
 			text := txt
-		ensure	
+		ensure
 			begin_selection_set: begin_selection.is_equal (begin_s)
 			end_selection_set: end_selection.is_equal (end_s)
 			symbol_set: symbol = symbl
@@ -43,7 +43,7 @@ feature -- Access
 	end_selection: EDITOR_CURSOR
 		-- end of the "symboled" block
 
-	symbol: STRING
+	symbol: STRING_GENERAL
 		-- symbol added at the beginning of the lines.
 
 feature -- Basic operations

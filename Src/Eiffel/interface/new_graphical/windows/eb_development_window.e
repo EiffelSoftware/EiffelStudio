@@ -436,11 +436,19 @@ feature -- Window Properties
 			Result := editors_manager = Void or else editors_manager.current_editor = Void or else editors_manager.current_editor.is_empty
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text representing Current
 		do
 			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.text
+				Result := editors_manager.current_editor.wide_text
+			end
+		end
+
+	encoding: ENCODING is
+			-- Encoding in which text is saved.
+		do
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.encoding
 			end
 		end
 

@@ -38,7 +38,7 @@ create
 					end
 					}
 [^\n\t\r ]+			{
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					curr_token := new_text_token (text)
 					update_token_list
 					}
 

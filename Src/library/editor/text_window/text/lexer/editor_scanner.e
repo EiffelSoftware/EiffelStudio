@@ -29,6 +29,8 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
+	SYSTEM_ENCODINGS
+
 feature {NONE} -- Local variables
 
 	i_, nb_: INTEGER
@@ -45,18 +47,19 @@ feature {NONE} -- Initialization
 			create eif_buffer.make (Init_buffer_size)
 		end
 
-feature -- Start Job / Reinitialization 
+feature -- Start Job / Reinitialization
 
 	execute(a_string: STRING) is
 			-- Analyze a string.
+			-- `a_string' in UTF8.
 		require
 			string_not_empty: not a_string.is_empty
-		do			
+		do
 			if end_of_verbatim_string then
 				end_of_verbatim_string := False
 			end
 			if start_of_verbatim_string then
-				start_of_verbatim_string := False				
+				start_of_verbatim_string := False
 			end
 			if in_verbatim_string then
 				set_start_condition (verbatim_st)
@@ -70,13 +73,13 @@ feature -- Start Job / Reinitialization
 	reset is
 			-- Reset scanner before scanning next input.
 		do
-			
+
 			reset_compressed_scanner_skeleton
 			eif_buffer.wipe_out
 			end_token := Void
 			first_token := Void
-			in_comments := False	
-			set_start_condition (current_start_condition)		
+			in_comments := False
+			set_start_condition (current_start_condition)
 		end
 
 feature -- Access
@@ -98,19 +101,25 @@ feature -- Access
 
 	tab_size: INTEGER
 			-- Cell that contains the size of tabulations
-			-- blank spaces.				
-			
+			-- blank spaces.
+
+	current_encoding: ENCODING is
+			-- Current encoding of the scanning text.
+		do
+			Result := utf8
+		end
+
 feature -- Query
-	
+
 	in_verbatim_string: BOOLEAN
 			-- Are we inside a verbatim string?
-		
+
 	end_of_verbatim_string: BOOLEAN
 			-- Was end of verbatim string found?
 
 	start_of_verbatim_string: BOOLEAN
 			-- Was start of verbatim string found?
-		
+
 feature -- Status Setting
 
 	set_in_verbatim_string (a_flag: BOOLEAN) is
@@ -124,8 +133,8 @@ feature -- Status Setting
 			end
 		ensure
 			value_set: in_verbatim_string = a_flag
-		end				
-		
+		end
+
 feature -- Element Change
 
 	set_tab_size (size: INTEGER) is
@@ -133,7 +142,27 @@ feature -- Element Change
 		do
 			tab_size := size
 		end
-		
+
+feature {NONE} -- Factory
+
+	new_text_token (a_text: STRING): EDITOR_TOKEN is
+			-- Create text token from `a_text'.
+		local
+			l_str: STRING_32
+		do
+			if current_encoding /= Void then
+				current_encoding.convert_to (utf32, a_text)
+				l_str := current_encoding.last_converted_string
+				if current_encoding.last_conversion_successful then
+					create {EDITOR_TOKEN_TEXT} Result.make (l_str)
+				else
+					create {EDITOR_TOKEN_TEXT} Result.make (a_text)
+				end
+			else
+				create {EDITOR_TOKEN_TEXT} Result.make (a_text)
+			end
+		end
+
 feature {NONE} -- Processing
 
 	update_token_list is
@@ -150,7 +179,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 80 
+	Init_buffer_size: INTEGER is 80
 				-- Initial size for `eif_buffer'
 
 	in_comments: BOOLEAN

@@ -107,7 +107,7 @@ feature {NONE} -- Factory
 		local
 			l_class: !like context_class
 			l_editor: like active_editor_for_class
-			l_text: !STRING
+			l_text: !STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)
@@ -115,7 +115,7 @@ feature {NONE} -- Factory
 					-- There's no open editor, use the class text from disk instead.
 				l_text := original_text
 			else
-				l_text ?= l_editor.text
+				create l_text.make_from_string (l_editor.wide_text)
 			end
 			create Result.make (l_class, context_feature, l_text)
 		end

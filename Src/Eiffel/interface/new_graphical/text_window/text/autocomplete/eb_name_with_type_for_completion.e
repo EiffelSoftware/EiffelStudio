@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_type: TYPE_A; a_feature: FEATURE_I) is
+	make (a_name: like name; a_type: TYPE_A; a_feature: like feature_i) is
 			-- Init
 		require
 			a_name_not_void: a_name /= Void

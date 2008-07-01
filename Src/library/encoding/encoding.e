@@ -36,30 +36,44 @@ feature -- Access
 	code_page: STRING
 			-- Code page/Character set name
 
+	last_converted_stream: STRING_8 is
+			-- Stream prepresentation of last converted string.
+		do
+			Result := encoding_i.last_converted_stream
+		ensure
+			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
+		end
+
+	last_converted_string: STRING_GENERAL is
+			-- Last converted string.
+		do
+			Result := encoding_i.last_converted_string
+		ensure
+			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
+		end
+
 feature -- Conversion
 
-	convert_to (a_to_encoding: ENCODING; a_string: STRING_GENERAL): STRING_GENERAL is
+	convert_to (a_to_encoding: ENCODING; a_string: STRING_GENERAL) is
 			-- Convert `a_string' from current encoding to `a_to_encoding'.
-			-- If either current or `a_to_encoding' is not `is_valid', or an error accurres,
+			-- If either current or `a_to_encoding' is not `is_valid', or an error occurs,
 			-- result can be void.
 		require
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
 		do
 			if a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
-				Result := encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
-				last_conversion_successful := encoding_i.last_conversion_successful
-			else
-				last_conversion_successful := False
+				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
 			end
-		ensure
-			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
 		end
 
 feature -- Status report
 
-	last_conversion_successful: BOOLEAN
+	last_conversion_successful: BOOLEAN is
 			-- Was last conversion successful?
+		do
+			Result := encoding_i.last_conversion_successful
+		end
 
 feature -- Comparison
 
@@ -91,9 +105,18 @@ feature {ENCODING} -- Status report
 feature {NONE} -- Implementation
 
 	encoding_i: ENCODING_I is
-		once
-			create {ENCODING_IMP}Result
+		do
+			Result := encoding_imp
+			if Result = Void then
+				create {ENCODING_IMP}Result
+				encoding_imp := Result
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
+
+	encoding_imp: ENCODING_I
+			-- Cached encoding imp
 
 invariant
 	code_page_not_void: code_page /= Void

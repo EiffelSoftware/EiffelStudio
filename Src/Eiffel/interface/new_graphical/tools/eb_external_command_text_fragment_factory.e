@@ -118,7 +118,7 @@ feature -- Access
 		local
 			l_editor: EB_SMART_EDITOR
 			l_fake_editor: EB_FAKE_SMART_EDITOR
-			l_selection: STRING
+			l_selection: STRING_32
 			l_class_name: STRING
 			l_class_i: CLASS_I
 		do
@@ -134,7 +134,7 @@ feature -- Access
 				end
 				if l_editor /= Void then
 					if l_editor.has_selection then
-						l_selection := l_editor.string_selection
+						l_selection := l_editor.wide_string_selection
 					else
 						l_selection := ""
 					end

@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (c: EDITOR_CURSOR; s: STRING; w: EDITABLE_TEXT) is
+	make_from_string (c: EDITOR_CURSOR; s: STRING_GENERAL; w: EDITABLE_TEXT) is
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature -- Access
 
-	message: STRING
+	message: STRING_32
 
 	y_start: INTEGER
 
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Element change
 
-	extend (c: CHARACTER) is
+	extend (c: CHARACTER_32) is
 		do
 			message.extend (c)
 		end

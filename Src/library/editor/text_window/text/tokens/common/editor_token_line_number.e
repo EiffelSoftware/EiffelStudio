@@ -27,9 +27,9 @@ feature -- Initialization
 	make is
 			-- Initialize
 		do
-			image := ""
+			wide_image := ""
 			internal_image := ""
-			length := image.count
+			length := wide_image.count
 		end
 
 feature -- Width & height
@@ -154,7 +154,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
 	display_with_colors (d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 			-- Display token with coloring
 		local
-			text_to_be_drawn: like image
+			text_to_be_drawn: like wide_image
 			l_pos: INTEGER
 		do
  				-- Change drawing style here.
@@ -179,7 +179,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
 	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 			-- Display token with coloring
 		local
-			text_to_be_drawn: like image
+			text_to_be_drawn: like wide_image
 			l_pos: INTEGER
 		do
  				-- Change drawing style here.

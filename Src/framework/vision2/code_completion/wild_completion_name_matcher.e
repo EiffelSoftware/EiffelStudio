@@ -18,11 +18,11 @@ inherit
 
 feature -- Match
 
-	prefix_string (a_prefix: STRING; a_string: STRING): BOOLEAN is
+	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN is
 			-- Is `a_prefix' start of `a_string'?
 		local
-			l_pattern: STRING
-			l_char: CHARACTER
+			l_pattern: STRING_32
+			l_char: CHARACTER_32
 		do
 			if a_prefix.is_empty then
 				l_pattern := "*"
@@ -33,8 +33,9 @@ feature -- Match
 					l_pattern.extend ('*')
 				end
 			end
-			wild_matcher.set_pattern (l_pattern)
-			wild_matcher.set_text (a_string.as_lower)
+				-- |FIXME: We need to ensure Unicode wildcard matching.
+			wild_matcher.set_pattern (l_pattern.as_string_8)
+			wild_matcher.set_text (a_string.as_string_8.as_lower)
 			if wild_matcher.pattern_matches then
 				Result := True
 			end
@@ -42,7 +43,7 @@ feature -- Match
 
 feature -- Status report
 
-	binary_searchable (a_str: STRING): BOOLEAN is
+	binary_searchable (a_str: STRING_32): BOOLEAN is
 		do
 			wild_matcher.set_pattern (a_str)
 			Result := not wild_matcher.has_wild_cards

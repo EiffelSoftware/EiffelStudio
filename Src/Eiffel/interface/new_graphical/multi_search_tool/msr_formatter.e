@@ -38,7 +38,7 @@ indexing
 
 class
 	MSR_FORMATTER
-	
+
 feature -- Path building
 
 	extend_file_path (a_path: FILE_NAME; file_name: STRING): FILE_NAME is
@@ -52,17 +52,17 @@ feature -- Path building
 			end
 			s.append (file_name)
 			create Result.make_from_string (s)
-		end		
-		
+		end
+
 feature -- Muter action
 
-	mute_escape_characters (string: STRING): STRING is
+	mute_escape_characters (string: STRING_32): STRING_32 is
 			-- Mute all escape characters in input string
 		require
 			string_not_void: string /= Void
 		local
-			l_item_string: STRING
-			l_string: STRING
+			l_item_string: STRING_32
+			l_string: STRING_32
 		do
 			create l_string.make_from_string (string)
 			from
@@ -70,36 +70,34 @@ feature -- Muter action
 			until
 				mute_characters.after
 			loop
-				l_item_string ?= mute_characters.item
-				if l_item_string /= Void then
-					l_string.replace_substring_all (l_item_string, "\" + l_item_string)					
-				end
+				l_item_string := mute_characters.item
+				l_string.replace_substring_all (l_item_string, ("\").as_string_32 + l_item_string)
 				mute_characters.forth
 			end
 			Result := l_string
 		end
-		
-	build_match_whole_word (p_string: STRING): STRING is
+
+	build_match_whole_word (p_string: STRING_32): STRING_32 is
 			-- Make the p_string starts and ends with "\b"
 		require
 			p_string_not_void: p_string /= Void
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			create l_string.make_from_string (p_string)
 			l_string.insert_string ("\b",1)
 			l_string.append ("\b")
 			Result := l_string
-		ensure			
+		ensure
 			build_match_whole_word_not_void: Result /= Void
 		end
-		
-	replace_RNT_to_space (p_string: STRING): STRING is
+
+	replace_RNT_to_space (p_string: STRING_32): STRING_32 is
 			-- replace all RNT in p_string to spaces
 		require
 			p_string_not_void: p_string /= Void
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			create l_string.make_from_string (p_string)
 			l_string.replace_substring_all ("%R"," ")
@@ -107,28 +105,13 @@ feature -- Muter action
 			l_string.replace_substring_all ("%T"," ")
 			Result := l_string
 		end
-		
+
 feature -- Status report
 
-	occurrences_in_bound_use_regex (c: CHARACTER; s: STRING; start_pos: INTEGER; end_pos: INTEGER) : INTEGER is
+	occurrences_in_bound (c: CHARACTER_32; s: STRING_32; start_pos: INTEGER; end_pos: INTEGER) : INTEGER is
 			-- count c occurrence in s between start_pos and end_pos
 		local
-			l_s: STRING
-			pcre_regex : RX_PCRE_REGULAR_EXPRESSION
-		do
-			l_s := s.substring (start_pos, end_pos)
-			if not s.is_empty then
-				create pcre_regex.make
-				pcre_regex.compile (c.out)
-				pcre_regex.match (l_s)
-				Result := pcre_regex.match_count
-			end
-		end
-		
-	occurrences_in_bound (c: CHARACTER; s: STRING; start_pos: INTEGER; end_pos: INTEGER) : INTEGER is
-			-- count c occurrence in s between start_pos and end_pos
-		local
-			l_s: STRING
+			l_s: STRING_32
 		do
 			l_s := s.substring (start_pos, end_pos)
 			Result := l_s.occurrences (c)

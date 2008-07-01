@@ -61,6 +61,17 @@ feature -- Access
 	not_editable_warning_message: STRING
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
+		obsolete
+			"Use `not_editable_warning_wide_message' instead"
+		do
+			if not_editable_warning_wide_message /= Void then
+				Result := not_editable_warning_wide_message.as_string_8
+			end
+		end
+
+	not_editable_warning_wide_message: STRING_32
+			-- Warning message indicating text is not editable.
+			-- If Void, default message will be used.
 
 	blinking_cursor: BOOLEAN is
 	        -- Is blinking cursor on?
@@ -79,7 +90,7 @@ feature -- Content change
 			Precursor {SELECTABLE_TEXT_PANEL}
 		end
 
-	display_message (message: STRING) is
+	display_message (message: STRING_32) is
 			-- Display `message' in the editor.
 		do
 			load_text (message)
@@ -152,10 +163,10 @@ feature -- Status setting
 
 feature -- Element Change
 
-	set_not_editable_warning_message (message: STRING) is
+	set_not_editable_warning_message (message: like not_editable_warning_wide_message) is
 			-- Assign `message' to `not_editable_warning_message'
 		do
-			not_editable_warning_message := message
+			not_editable_warning_wide_message := message
 		end
 
 feature -- File access status report
@@ -210,12 +221,12 @@ feature -- Process Vision2 events
  	on_char (character_string: STRING_32) is
    			-- Process displayable character key press event.
    		local
-   			c: CHARACTER
+   			c: CHARACTER_32
    		do
 			if not ignore_keyboard_input then
 				if not character_string.is_empty then
-		   			c := (character_string @ 1).to_character_8
-					if not ((ctrled_key xor alt_key) or else unwanted_characters.item (c.code)) then
+		   			c := character_string.as_string_32 @ 1
+					if not ((ctrled_key xor alt_key) or else not is_unwanted_characters (c.natural_32_code)) then
 							-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
 						handle_character (c)
 					end
@@ -225,7 +236,7 @@ feature -- Process Vision2 events
 
 feature {NONE} -- Handle keystokes
 
- 	handle_character (c: CHARACTER) is
+ 	handle_character (c: CHARACTER_32) is
  			-- Process push on a character key corresponding to `c'.
 		local
 			had_selection: BOOLEAN
@@ -396,7 +407,7 @@ feature {NONE} -- Handle keystokes
 					if shifted_key then
 							-- Shift + Tab = Unindent selection
 						unindent_selection
-					elseif has_selection and then text_displayed.selected_string.has ('%N') then
+					elseif has_selection and then text_displayed.selected_wide_string.has ('%N') then
 							-- Tab = indent selection
 						indent_selection
 					else
@@ -458,15 +469,30 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 
 feature -- Text selection access
 
-	string_selection: STRING is
+	wide_string_selection: STRING_32 is
 			-- Current selection string
 		require
 			has_selection: has_selection
 		do
 			if has_selection then
 				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
-					Result := text_displayed.selected_string
+					Result := text_displayed.selected_wide_string
 				end
+			end
+		end
+
+	string_selection: STRING is
+			-- Current selection string
+		obsolete
+			"Use `wide_string_selection' instead."
+		require
+			has_selection: has_selection
+		local
+			l_str: like wide_string_selection
+		do
+			l_str := wide_string_selection
+			if l_str /= Void then
+				Result := l_str.as_string_8
 			end
 		end
 
@@ -570,7 +596,7 @@ feature -- Edition Operations on text
 			text_is_not_empty: number_of_lines /= 0
 			text_is_editable: is_editable
 		local
-			a_text: STRING
+			a_text: STRING_32
 		do
 			a_text := clipboard.text
 			if not a_text.is_empty then
@@ -643,7 +669,7 @@ feature -- Edition Operations on text
 			end
 		end
 
-	replace_selection (word: STRING) is
+	replace_selection (word: STRING_32) is
 			-- Replace currently selected text with `word'.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -656,13 +682,13 @@ feature -- Edition Operations on text
 	display_not_editable_warning_message is
 				-- display warning message : text is not editable...
 		local
-			wm: STRING
+			wm: STRING_32
 		do
 			wm := "Current text is not editable"
 			if text_displayed /= Void then
 				if is_read_only then
-					if not_editable_warning_message /= Void and not not_editable_warning_message.is_empty then
-						wm := not_editable_warning_message
+					if not_editable_warning_wide_message /= Void and not not_editable_warning_wide_message.is_empty then
+						wm := not_editable_warning_wide_message
 					end
 					show_warning_message (wm)
 				else
@@ -948,6 +974,16 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Private Constants
+
+	is_unwanted_characters (a_code: NATURAL_32): BOOLEAN is
+			-- Is `a_code' unwanted characters?
+		do
+			if a_code < 256 then
+				Result := not unwanted_characters.item (a_code.as_integer_32)
+			else
+				Result := True
+			end
+		end
 
 	unwanted_characters: SPECIAL [BOOLEAN] is
 			-- Unwanted characters: backspace, tabulation, carriage return and escape.

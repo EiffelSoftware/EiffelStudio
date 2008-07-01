@@ -57,12 +57,12 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	internal_image: STRING
-		-- Image containing character data.  Used instead of `image' because a margin token is not an editable
-		-- part of a line so `image' must always be empty.
+	internal_image: like wide_image
+		-- Image containing character data.  Used instead of `wide_image' because a margin token is not an editable
+		-- part of a line so `wide_image' must always be empty.
 
 invariant
-		image_is_empty: image.is_empty
+		image_is_empty: wide_image.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

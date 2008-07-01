@@ -22,7 +22,10 @@ create
 
 feature -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; widget: ANY; only_compiled_class: BOOLEAN) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			widget: like scope_container;
+			only_compiled_class: like only_compiled_class_searched) is
 			-- Make with a scope container, a list for example
 		require
 			widget_not_void: widget /= Void
@@ -48,7 +51,7 @@ feature	-- Status report
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result := true
+			Result := True
 		end
 
 	is_subcluster_searched: BOOLEAN is
@@ -137,7 +140,7 @@ feature -- Basic operation
 					l_list.forth
 				end
 			end
-			launched := true
+			launched := True
 			item_matched.start
 		end
 

@@ -52,8 +52,13 @@ feature -- Access
 		deferred
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text representing Current
+		deferred
+		end
+
+	encoding: ENCODING
+			-- Encoding in which text is saved.
 		deferred
 		end
 

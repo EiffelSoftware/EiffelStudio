@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 	   	once
 			create Result.make ("eiffel", "e", Void)
 	   	    Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
+	   	    Result.set_encoding_detector (create {EC_SIMPLE_ENCODING_DETECTOR})
 	   	end
 
 feature -- Warning messages display
@@ -109,10 +110,10 @@ feature -- Warning messages display
 		do
 			if text_displayed /= Void then
 				if is_read_only and then not allow_edition then
-					if not_editable_warning_message = Void or else not_editable_warning_message.is_empty then
+					if not_editable_warning_wide_message = Void or else not_editable_warning_wide_message.is_empty then
 						wm := Warning_messages.w_Text_not_editable
 					else
-						wm := not_editable_warning_message
+						wm := not_editable_warning_wide_message
 					end
 					show_warning_message (wm)
 				else
@@ -195,8 +196,8 @@ feature -- Text Loading
 --			end
   	  	end
 
-	load_text (s: STRING) is
-			-- Load text
+	load_text (s: STRING_GENERAL) is
+			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
 			l_scanner: EDITOR_EIFFEL_SCANNER

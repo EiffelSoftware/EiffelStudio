@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make_with_pos (a_text: STRING; a_start_pos, a_end_pos: INTEGER) is
+	make_with_pos (a_text: like wide_image; a_start_pos, a_end_pos: INTEGER) is
 			-- Create a new token for feature starting at `a_start_pos'.
 		require
 			a_text_not_void: a_text /= Void

@@ -32,7 +32,7 @@ feature -- Initialization
 	make is
 			-- Initialize
 		do
-			image := ""
+			wide_image := ""
 			length := 0
 			width := 14
 		end

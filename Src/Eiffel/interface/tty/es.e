@@ -103,6 +103,8 @@ feature -- Initialization
 	initialize is
 			-- Initialize batch compiler
 		do
+				-- Initialize compiler encoding converter.
+			(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER})
 		end
 
 	execute is

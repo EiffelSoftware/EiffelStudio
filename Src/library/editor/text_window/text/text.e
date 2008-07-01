@@ -43,6 +43,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -62,6 +67,7 @@ feature -- Content Change
 	load_string (a_string: STRING) is
 			-- Scan `a_string' and fill the object with resulting
 			-- lines and tokens
+			-- `a_string' must be in UTF8.
 		require
 			string_not_void: a_string /= Void
 			text_has_been_reinitialized: is_empty
@@ -95,21 +101,34 @@ feature -- Access
 
 	text: STRING is
 			-- Image of text in `Current'.
+		obsolete
+			"Use `wide_text' instead, or wide characters are truncated."
+		require
+			text_loaded: reading_text_finished
+		do
+			Result := wide_text.as_string_8
+		end
+
+	wide_text: STRING_32 is
+			-- Image of text in `Current'.
+			-- In UTF-32.
 		require
 			text_loaded: reading_text_finished
 		local
 			li: like current_line
+			l_string_32: STRING_32
 		do
 			from
-				Result := first_line.image
+				l_string_32 := first_line.wide_image
 				li := first_line
 			until
 				li = last_line
 			loop
-				Result.extend ('%N')
+				l_string_32.extend ('%N')
 				li := li.next
-				Result.append (li.image)
+				l_string_32.append (li.wide_image)
 			end
+			Result := l_string_32
 		end
 
 	first_read_block_size: INTEGER
@@ -168,7 +187,7 @@ feature -- Query
 	text_length: INTEGER is
 			-- Length of displayed text
 		do
-			Result := text.count
+			Result := wide_text.count
 		end
 
 	first_non_blank_token (a_line: like line): EDITOR_TOKEN is
@@ -198,7 +217,7 @@ feature -- Query
 			until
 				a_line = current_line or after
 			loop
-				Result := Result + current_line.image.count + 1
+				Result := Result + current_line.wide_image.count + 1
 				forth
 			end
 		ensure
@@ -255,15 +274,16 @@ feature -- Status report
 
 feature -- Search
 
-	search_string (searched_string: STRING) is
+	search_string (searched_string: STRING_GENERAL) is
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
 			-- set to True and `found_string_line' &
 			-- `found_string_character_position' are set.
+			-- `searched_string' should be in UTF-32 as STRING_32 or compatible STRING_8.
 		require
 			text_is_not_empty: not is_empty
 		local
-			line_string: STRING
+			line_string: STRING_32
 			found_index: INTEGER
 			line_number: INTEGER
 		do
@@ -277,7 +297,7 @@ feature -- Search
 			until
 				found_index /= 0 or else after
 			loop
-				line_string := current_line.image
+				line_string := current_line.wide_image
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring_index(searched_string, 1)
 				end
@@ -315,36 +335,37 @@ feature {NONE} -- Text Loading
 	start_reading_string is
 			-- Read the file named `a_name' and perform a lexical analysis
 		local
-			curr_string: STRING
+			curr_string, l_current_string: STRING -- UTF-8
 			j: INTEGER
 		do
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 			lexer.set_in_verbatim_string (False)
 
 				-- read the file
+			l_current_string := current_string
 			from
-				if current_string = Void or else current_string.is_empty then
+				if l_current_string = Void or else l_current_string.is_empty then
 					j := 0
 					append_line (new_line_from_lexer (""))
 				else
 					current_pos := 1
-					j := current_string.index_of ('%N', current_pos)
+					j := l_current_string.index_of ('%N', current_pos)
 					if j = 0 then
-						j := current_string.count + 1
+						j := l_current_string.count + 1
 					end
 				end
 			until
 				number_of_lines > first_read_block_size or j = 0
 			loop
-				curr_string := current_string.substring (current_pos, j - 1)
+				curr_string := l_current_string.substring (current_pos, j - 1)
 				append_line (new_line_from_lexer (curr_string))
 				current_pos := j + 1
-				if current_pos > current_string.count then
+				if current_pos > l_current_string.count then
 					j := 0
 				else
-					j := current_string.index_of ('%N', current_pos)
+					j := l_current_string.index_of ('%N', current_pos)
 					if j = 0 then
-						j := current_string.count + 1
+						j := l_current_string.count + 1
 					end
 				end
 			end
@@ -357,8 +378,8 @@ feature {NONE} -- Text Loading
 				reading_text_finished := False
 			else
 				if
-					not current_string.is_empty and then
-					(current_string.item (current_string.count) = '%N')
+					not l_current_string.is_empty and then
+					(l_current_string.item (l_current_string.count) = '%N')
 				then
 					append_line (new_line_from_lexer (""))
 				end
@@ -371,18 +392,19 @@ feature {NONE} -- Text Loading
 	finish_reading_string is
 			-- Read the file named `a_name' and perform a lexical analysis
 		local
-			curr_string	: STRING
-			j			: INTEGER
-			lines_read	: INTEGER
+			l_current_string, curr_string: STRING -- UTF-8
+			j				: INTEGER
+			lines_read		: INTEGER
 		do
 			if not reading_text_finished then
 				lexer.set_tab_size (editor_preferences.tabulation_spaces)
 				from
 					lines_read := 1
-					if current_pos <= current_string.count then
-						j := current_string.index_of ('%N', current_pos)
+					l_current_string := current_string
+					if current_pos <= l_current_string.count then
+						j := l_current_string.index_of ('%N', current_pos)
 						if j = 0 then
-							j := current_string.count + 1
+							j := l_current_string.count + 1
 						end
 					else
 						j := 0
@@ -390,13 +412,13 @@ feature {NONE} -- Text Loading
 				until
 					lines_read > Lines_read_per_idle_action or else j = 0
 				loop
-					curr_string := current_string.substring (current_pos, j-1)
+					curr_string := l_current_string.substring (current_pos, j-1)
 					append_line (new_line_from_lexer (curr_string))
 					current_pos := j + 1
-					if current_pos <= current_string.count then
-						j := current_string.index_of ('%N', current_pos)
+					if current_pos <= l_current_string.count then
+						j := l_current_string.index_of ('%N', current_pos)
 						if j = 0 then
-							j := current_string.count + 1
+							j := l_current_string.count + 1
 						end
 					else
 						j := 0
@@ -411,7 +433,7 @@ feature {NONE} -- Text Loading
 				if j = 0 then
 						-- We have finished reading the file, so we remove
 						-- ourself from the idle actions.
-					if (current_string @ current_string.count) = '%N' then
+					if (l_current_string @ l_current_string.count) = '%N' then
 						append_line (new_line_from_lexer (""))
 					end
 					reading_text_finished := True
@@ -425,7 +447,7 @@ feature {NONE} -- Text Loading
 
 	new_line_from_lexer (line_image: STRING): like line is
 			-- create a new EDITOR_LINE from `line_image' using
-			-- `lexer'.
+			-- `line_image' is in UTF-8.
 		require
 			no_new_line_in_image: not line_image.has ('%N')
 			lexer_has_right_tab_size: editor_preferences.tabulation_spaces = lexer.tab_size
@@ -464,8 +486,26 @@ feature {NONE} -- Implementation
 		   	Result := current_class.scanner
 		end
 
+	execute_lexer_with_wide_string (a_string: STRING_GENERAL) is
+			-- Excute the lexer with wide string.
+			-- Convert the string back to `lexer.current_encoding' first.
+		local
+			l_string: STRING_GENERAL
+		do
+			if lexer.current_encoding /= Void then
+				utf32.convert_to (lexer.current_encoding, a_string)
+				l_string := utf32.last_converted_string
+				if not lexer.current_encoding.last_conversion_successful then
+					l_string := a_string
+				end
+			else
+				l_string := a_string
+			end
+			lexer.execute (l_string.as_string_8)
+		end
+
 	current_string: STRING
-			-- string to be loaded
+			-- string to be loaded, in UTF8
 
 	current_pos: INTEGER
 			-- position in current_string where loading should be resumed

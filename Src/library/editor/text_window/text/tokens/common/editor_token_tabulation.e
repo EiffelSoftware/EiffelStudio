@@ -26,10 +26,10 @@ feature -- Initialisation
 			number_valid: number > 0
 		do
 			length := number
-			create image.make (number)
-			image.fill_character('%T')
+			create wide_image.make (number)
+			wide_image.fill_character('%T')
 		ensure
-			image_not_void: image /= Void
+			wide_image_not_void: wide_image /= Void
 			length_positive: length > 0
 		end
 

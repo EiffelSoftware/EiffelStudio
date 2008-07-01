@@ -137,7 +137,7 @@ feature -- Status setting
 
 feature -- Basic Operations
 
-	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
+	embed_in_block (keyword: STRING_32; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th caracter of `keyword'.
 		require
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			pos_in_keyword_valid: pos_in_keyword > 0 and then pos_in_keyword <= keyword.count
 		local
 			cur: like cursor
-			indent: STRING
+			indent: STRING_32
 			backward_steps: INTEGER
 		do
 			on_text_edited (True)
@@ -168,7 +168,7 @@ feature -- Basic Operations
 				cursor.go_end_line
 			end
 			if cursor.y_in_lines = selection_cursor.y_in_lines then
-				indent := cursor.line.indentation
+				indent := cursor.line.wide_indentation
 			else
 				indent := smallest_indentation (selection_start, selection_end)
 			end
@@ -211,7 +211,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	smallest_indentation (start_cursor, end_cursor: EDITOR_CURSOR): STRING is
+	smallest_indentation (start_cursor, end_cursor: EDITOR_CURSOR): STRING_32 is
 			-- Smallest indentation in lines between `start_cursor' and
 			-- `end_cursor' (lines containing cursors are included).
 			-- Lines with no indentation or blank lines are not
@@ -264,7 +264,7 @@ feature -- Basic Operations
 				end
 				ln := ln .next
 			end
-			Result := r_ln.indentation
+			Result := r_ln.wide_indentation
 		end
 
 feature -- Search
@@ -503,7 +503,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_select: BOOLEAN) is
+	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_select: BOOLEAN) is
  			-- Finish completion process by inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
@@ -511,9 +511,11 @@ feature -- Completion-clickable initialization / update
 			x,
 			y,
 			i: INTEGER
+			l_completed: STRING_32
 		do
+			l_completed := completed.twin
 			if click_tool.insertion.item /= Void and then not click_tool.insertion.item.is_empty then --  valid_index (1) and then not click_tool.insertion.item (1).is_empty then
-				if completed.item (1) = ' ' then
+				if l_completed.item (1) = ' ' then
 					back_delete_char
 					history.bind_current_item_to_next
 				end
@@ -530,15 +532,15 @@ feature -- Completion-clickable initialization / update
 					i := i + 1
 				end
 			end
-			completed.replace_substring_all (";", ",")
-			completed.replace_substring_all ("#", "# ")
-			insert_string (completed)
+			l_completed.replace_substring_all (";", ",")
+			l_completed.replace_substring_all ("#", "# ")
+			insert_string (l_completed)
 
 			if appended_character /= '%U' then
 				insert_char (appended_character)
 			end
 
-			if a_select and then is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
+			if a_select and then is_feature_signature and then l_completed.last_index_of (')',completed.count) = l_completed.count then
 				selection_cursor := cursor.twin
 
 				cursor.set_y_in_lines (y)
@@ -599,13 +601,13 @@ feature -- Syntax completion
 	syntax_completed: BOOLEAN
 			-- Did latest call to `complete_syntax' modified `Current'?
 
-	insert_customized_expression (expr: STRING) is
+	insert_customized_expression (expr: STRING_32) is
 			-- Analyze syntax completion string preferences `expr', which may include "%N", "%T","%B",
 			-- "$cursor$" and "$indent$" special character sequences.
 			-- Insert the resulting expression defined by user in preferences at `cursor' position.
 		local
-			to_be_inserted: STRING
-			indent: STRING
+			to_be_inserted: STRING_32
+			indent: STRING_32
 			char_nb, line_nb, char_offset, i, start_sub: INTEGER
 			et, bt: like begin_line_tokens
 			ln: like line
@@ -615,7 +617,7 @@ feature -- Syntax completion
 					delete_selection
 				end
 				if editor_preferences.smart_indentation then
-					indent := cursor.line.indentation
+					indent := cursor.line.wide_indentation
 				else
 					indent := ""
 				end
@@ -652,7 +654,7 @@ feature -- Syntax completion
 				bt := begin_line_tokens
 				et := end_line_tokens
 				if char_nb > 0 then
-					to_be_inserted.prepend (ln.image.substring (1, char_nb))
+					to_be_inserted.prepend (ln.wide_image.substring (1, char_nb))
 
 					from
 						i := 1
@@ -707,7 +709,7 @@ feature -- Syntax completion
 
 feature {NONE} -- Possiblilities provider
 
-	insertion: STRING is
+	insertion: STRING_32 is
 			-- Strings to be partially completed : the first one is the dot or tilda if there is one
 			-- the second one is the feature name to be completed
 		do
@@ -781,7 +783,7 @@ feature {NONE}-- click information update
 			until
 				begin_line_tokens.after or else tok = Void or else stop
 			loop
-				if begin_line_tokens.item.image.is_equal (tok.image) then
+				if begin_line_tokens.item.wide_image.is_equal (tok.wide_image) then
 					tok.set_is_fake (begin_line_tokens.item.is_fake)
 					tc ?= tok
 						-- skip token if commented
@@ -816,7 +818,7 @@ feature {NONE}-- click information update
 			until
 				end_line_tokens.after or else tok = Void or else stop
 			loop
-				if end_line_tokens.item.image.is_equal (tok.image) then
+				if end_line_tokens.item.wide_image.is_equal (tok.wide_image) then
 					tok.set_is_fake (end_line_tokens.item.is_fake)
 					tc ?= tok
 						-- skip token if commented
@@ -866,8 +868,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_line_from_lexer (line_image: STRING): like line is
-			-- Create new EIFFEL_EDITOR_LINE with `lexer'.
-			-- let `click_tool' add hidden information on tokens.
+			-- <precursor>
 		do
 			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
 			if current_class_is_clickable then

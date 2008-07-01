@@ -45,6 +45,11 @@ inherit
 			on_text_fully_loaded
 		end
 
+	EC_ENCODING_UTINITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -108,9 +113,12 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 	save_file (new_file: RAW_FILE) is
 		local
-			to_write: STRING
+			to_write: STRING_32
+			to_write_stream: STRING
+			l_encoding: ENCODING
 		do
 			to_write := target.text
+			l_encoding := target.encoding
 			new_file.open_write
 			if not to_write.is_empty then
 				to_write.prune_all ('%R')
@@ -121,7 +129,8 @@ feature {EB_FILE_OPENER} -- Callbacks
 				if preferences.misc_data.text_mode_is_windows then
 					to_write.replace_substring_all ("%N", "%R%N")
 				end
-				new_file.put_string (to_write)
+				to_write_stream := convert_to_stream (to_write, l_encoding)
+				new_file.put_string (to_write_stream)
 			end
 			new_file.close
 		end

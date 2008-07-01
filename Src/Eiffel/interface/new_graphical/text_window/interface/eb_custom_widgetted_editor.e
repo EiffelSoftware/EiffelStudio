@@ -107,7 +107,7 @@ feature -- Quick search bar basic operation
 	quick_search is
 			-- Prepare and show quick search bar, switch to quick search mode.
 		local
-			l_string : STRING
+			l_string : STRING_32
 		do
 			if search_tool /= Void then
 				if search_tool.is_visible then
@@ -115,7 +115,7 @@ feature -- Quick search bar basic operation
 				end
 				show_search_bar
 				if has_selection then
-					l_string := string_selection
+					l_string := wide_string_selection
 					search_bar.keyword_field.change_actions.block
 					search_bar.keyword_field.set_text (l_string)
 					search_bar.keyword_field.change_actions.resume
@@ -213,7 +213,7 @@ feature {NONE} -- Quick search bar.
 			-- Prepare search options and keyword on search panel for quick search.
 		local
 			l_incremental_search: BOOLEAN
-			l_keyword: STRING
+			l_keyword: STRING_32
 		do
 			if search_bar.is_case_sensitive /= search_tool.case_sensitive_button.is_selected then
 				if search_bar.is_case_sensitive then
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_replace then
-				search_tool.set_current_searched (text_displayed.selected_string)
+				search_tool.set_current_searched (text_displayed.selected_wide_string)
 			end
 			if not text_displayed.is_empty then
 				check_cursor_position
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 				l_search_tool.force_new_search
 				l_incremental_search := l_search_tool.is_incremental_search
 				l_search_tool.disable_incremental_search
-				l_search_tool.set_current_searched (text_displayed.selected_string)
+				l_search_tool.set_current_searched (text_displayed.selected_wide_string)
 				if l_incremental_search then
 					l_search_tool.enable_incremental_search
 				end

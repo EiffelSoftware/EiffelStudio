@@ -99,9 +99,9 @@ feature {CODE_COMPLETABLE} -- Basic operation
 
 feature{NONE} -- Implementation
 
-	insertion_internal: STRING
+	insertion_internal: like insertion
 
-	insertion: STRING is
+	insertion: STRING_32 is
 			-- String to be partially completed
 
 		do

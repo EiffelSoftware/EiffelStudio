@@ -10,7 +10,7 @@ class
 	NAME_FOR_COMPLETION
 
 inherit
-	STRING
+	STRING_32
 		rename
 			make as make_string
 		redefine
@@ -25,7 +25,7 @@ create {NAME_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: like name) is
 			-- Initialization
 		do
 			make_from_string (a_name)
@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Completion item name
 			-- i.e. Ambiguated name
 
-	full_name: STRING
+	full_name: STRING_32
 			-- Full completion item name
 
-	insert_name: STRING is
+	insert_name: STRING_32 is
 			-- Name to insert in editor
 		do
 			Result := out
@@ -51,7 +51,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	full_insert_name: STRING is
+	full_insert_name: STRING_32 is
 			-- Full name to insert in editor
 		do
 			Result := insert_name
@@ -60,10 +60,10 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	sort_name: STRING is
+	sort_name: STRING_32 is
 			-- Name for sorting
 		do
-			Result := name.as_lower
+			Result := string_32_to_lower (name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -74,7 +74,7 @@ feature -- Access
 			Result := icon_internal
 		end
 
-	tooltip_text: STRING is
+	tooltip_text: STRING_32 is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
@@ -223,7 +223,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is name made of same character sequence as `other' (case has no importance)
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
 			l_name := sort_name
 			Result := l_name.is_equal (other.sort_name)
@@ -232,17 +232,17 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is name lexicographically lower than `other'?
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
 			l_name := sort_name
 			if l_name.is_empty then
-				Result := Precursor {STRING} (other)
+				Result := Precursor {STRING_32} (other)
 			else
 				Result := l_name < other.sort_name
 			end
 		end
 
-	begins_with (s: STRING): BOOLEAN is
+	begins_with (s: STRING_32): BOOLEAN is
 			-- Does this feature name begins with `s'?
 		require
 			s_not_void: s /= Void
@@ -275,6 +275,30 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 			-- Children index
 
 feature {NONE} -- Implementation
+
+	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is
+			-- Make all possible char in `a_str' to lower.
+			-- |FIXME: We need real Unicode as lower.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			i, nb: INTEGER_32
+		do
+			create Result.make_from_string (a_str)
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb
+			loop
+				if a_str.item (i).code <= {CHARACTER_8}.max_value then
+					Result.put (a_str.item (i).to_character_8.as_lower, i)
+				else
+					Result.put (a_str.item (i), i)
+				end
+				i := i + 1
+			end
+		end
 
 	icon_internal: EV_PIXMAP;
 			-- Icon

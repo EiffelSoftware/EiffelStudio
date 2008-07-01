@@ -14,6 +14,9 @@ indexing
 class
 	MSR_REPLACE_STRATEGY
 
+inherit
+	EC_ENCODING_UTINITIES
+
 feature -- Access
 
 	replace_items: ARRAYED_LIST [MSR_ITEM] is
@@ -26,7 +29,7 @@ feature -- Access
 			replace_item_not_void : Result = replace_item_internal
 		end
 
-	replace_string: STRING is
+	replace_string: STRING_32 is
 			-- Replacement string.
 		require
 			is_replace_string_set: is_replace_string_set
@@ -67,7 +70,7 @@ feature -- Element change
 			surrounding_text_range_internal := n
 		end
 
-	set_replace_string (string: STRING) is
+	set_replace_string (string: like replace_string) is
 			-- Set `replace_string_internal' with string.
 		require
 			string_not_void: string /= Void
@@ -108,8 +111,8 @@ feature -- Basic operations
 			replace_string_set : is_replace_string_set
 			replace_item_not_off : not replace_items.off
 		do
-			replace_current_item (true)
-			is_replace_launched_internal := true
+			replace_current_item (True)
+			is_replace_launched_internal := True
 		ensure
 			is_replace_launched: is_replace_launched
 		end
@@ -119,12 +122,14 @@ feature -- Basic operations
 		local
 			l_last_item, l_item : MSR_TEXT_ITEM
 			l_saved_item: MSR_ITEM
-			l_string : STRING
+			l_replaced_string : STRING
+			l_replace_string: UC_UTF8_STRING
 			l_index: INTEGER
 			l_refresh: BOOLEAN
 		do
-			l_refresh := false
+			l_refresh := False
 			l_index := replace_items.index
+			create l_replace_string.make_from_utf8 (utf32_to_utf8 (replace_string))
 			from
 				replace_items.start
 			until
@@ -144,8 +149,8 @@ feature -- Basic operations
 													l_last_item.pcre_regex /= l_item.pcre_regex)
 							then
 								l_item.pcre_regex.first_match
-								l_string :=	l_item.pcre_regex.replace_all (replace_string)
-								l_item.set_source_text_real_string (l_string)
+								l_replaced_string := l_item.pcre_regex.replace_all (l_replace_string)
+								l_item.set_source_text_real_string (l_replaced_string.as_string_32)
 									-- Let a way to deal with items in the same cluster. (i.e Save to files)
 								one_cluster_item_replaced (l_item)
 								l_last_item := l_item
@@ -161,7 +166,7 @@ feature -- Basic operations
 						end
 					end
 
-					l_refresh := true
+					l_refresh := True
 				end
 				if l_item = Void or else (not replace_items.off and then l_saved_item = replace_items.item) then
 					replace_items.forth
@@ -174,7 +179,7 @@ feature -- Basic operations
 			else
 				replace_report.set_class_replaced (replace_report.class_replaced.max (1))
 			end
-			is_replace_launched_internal := true
+			is_replace_launched_internal := True
 		end
 
 feature {NONE} -- Implementation
@@ -273,7 +278,7 @@ feature {NONE} -- Implementation
 	replace_item_internal: ARRAYED_LIST [MSR_ITEM]
 			-- Items to be replaced
 
-	replace_string_internal: STRING
+	replace_string_internal: like replace_string
 			-- Replacement string.
 
 	surrounding_text_range_internal : INTEGER
@@ -291,10 +296,10 @@ feature {NONE} -- Implementation
 
 	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN  is
 			-- When replacing all, should a_item be replaced as in a cluster as a fast way? Once Result returns
-			-- true, text items surrounding a_item will be replaced in cluster as fast way. Former replacing
+			-- True, text items surrounding a_item will be replaced in cluster as fast way. Former replacing
 			-- in this cluster will be discarded.
 		do
-			Result := true
+			Result := True
 		end
 
 	replace_current_item (refresh_finding: BOOLEAN) is
@@ -303,7 +308,7 @@ feature {NONE} -- Implementation
 		local
 			l_item : MSR_TEXT_ITEM
 			l_offset : INTEGER
-			l_actual_replacement: STRING
+			l_actual_replacement: STRING_32
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
@@ -441,7 +446,7 @@ feature {NONE} -- Implementation
 			not_replace_items_moved: old replace_items.index = replace_items.index
 		end
 
-	append_replacement_to_string (a_string, a_replacement: STRING; a_text_item: MSR_TEXT_ITEM) is
+	append_replacement_to_string (a_string, a_replacement: STRING_32; a_text_item: MSR_TEXT_ITEM) is
 			-- Append to `a_string' a copy of `a_replacement' where all occurrences
 			-- of \n\ have been replaced by the corresponding n-th captured substrings
 			-- if any. This code if from GOBO RX_REGULAR_EXPRESSION but changed some here.
@@ -450,7 +455,7 @@ feature {NONE} -- Implementation
 			a_replacement_not_void: a_replacement /= Void
 		local
 			i, j, nb, ref: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			nb := a_replacement.count
 			from
@@ -497,12 +502,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actual_replacement (a_item: MSR_TEXT_ITEM): STRING is
+	actual_replacement (a_item: MSR_TEXT_ITEM): STRING_32 is
 			-- All /n/ have been replaced by the corresponding n-th captured substrings if any
 		require
 			a_item_not_void: a_item /= Void
 		local
-			re: STRING
+			re: STRING_32
 		do
 			re := ""
 			if a_item.captured_submatches.count > 0 then
@@ -526,7 +531,7 @@ feature {NONE} -- Implementation
 			a_item_not_void: a_item /= Void
 		local
 			l_item: MSR_TEXT_ITEM
-			s: STRING
+			s: STRING_32
 		do
 			if not replace_items.off then
 				l_item ?= replace_items.item

@@ -41,7 +41,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	insertion: STRING is
+	insertion: STRING_32 is
 			-- String to be partially completed
 		local
 			l_text: STRING_32

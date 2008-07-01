@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			set_expression_mode
 		end
 
-	make_with_expression_text (t: STRING) is
+	make_with_expression_text (t: STRING_32) is
 			-- Initialize `Current' and set the expression string to `t'.
 		require
 			valid_string: t /= Void and not t.is_empty

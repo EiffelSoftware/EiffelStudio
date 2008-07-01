@@ -25,14 +25,14 @@ create
 
 feature -- Initialisation
 
-	make (text: STRING) is
+	make (text: like wide_image) is
 		require
 			text_not_void: text /= Void
 			no_eol_in_text: not text.has ('%N')
 		do
 			set_image (text)
 		ensure
-			image_not_void: image /= Void
+			wide_image_not_void: wide_image /= Void
 		end
 
 feature -- Miscellaneous
@@ -45,14 +45,16 @@ feature -- Miscellaneous
 			-- `n' characters of the current string.
 		local
 			i, l_font_width, l_tab_position, l_tab_width: INTEGER
-			l_string: STRING
+			l_string: STRING_32
 			l_is_fixed: BOOLEAN
 		do
 			if n = 0 then
 				Result := 0
 			else
-				l_is_fixed := is_fixed_width
-				if image.has ('%T') then
+					-- It seems width of Unicode chars can not be fixed width.
+				-- l_is_fixed := is_fixed_width
+				l_is_fixed := False
+				if wide_image.has ('%T') then
 					if previous /= Void and then not previous.is_margin_token then
 						l_tab_position := previous.position + previous.width
 					end
@@ -65,15 +67,15 @@ feature -- Miscellaneous
 						end
 						l_tab_width := tabulation_width
 					until
-						i > n or else i > image.count
+						i > n or else i > wide_image.count
 					loop
-						if image @ i = '%T' then
+						if wide_image @ i = '%T' then
 							Result := ((((l_tab_position + Result) // l_tab_width) + 1 ) * l_tab_width ) - l_tab_position
 						else
 							if l_is_fixed then
 								Result := Result + l_font_width
 							else
-								l_string.put (image.item (i), 1)
+								l_string.put (wide_image.item (i), 1)
 								Result := Result + font.string_width (l_string)
 							end
 						end
@@ -81,9 +83,9 @@ feature -- Miscellaneous
 					end
 				else
 					if l_is_fixed then
-						Result := Result + (n.min (image.count) * font_width)
+						Result := Result + (n.min (wide_image.count) * font_width)
 					else
-						Result := font.string_width (image.substring (1, n.min (image.count)))
+						Result := font.string_width (wide_image.substring (1, n.min (wide_image.count)))
 					end
 				end
 			end
@@ -106,7 +108,7 @@ feature -- Miscellaneous
 			from
 				current_width := get_substring_width (current_position)
 				next_width := get_substring_width (current_position + 1)
-				l_count := image.count
+				l_count := wide_image.count
 			until
 				(a_width >= current_width and then a_width < next_width) or current_position > l_count
 			loop
@@ -169,7 +171,7 @@ feature -- Miscellaneous
 			local_position,
 			l_start,
 			l_end: INTEGER
-			local_string: STRING
+			local_string: STRING_32
 			text_width: INTEGER
 			indx: INTEGER
 			txt_color: EV_COLOR
@@ -189,11 +191,11 @@ feature -- Miscellaneous
 			l_end := end_selection
 
 			if l_start /= 1 then
-				indx := image.index_of ('%T', 1)
+				indx := wide_image.index_of ('%T', 1)
 				if indx > 0 and then indx < l_start then
 					local_string := expanded_image_substring (1, l_start - 1)
 				else
-					local_string := image.substring (1, l_start - 1)
+					local_string := wide_image.substring (1, l_start - 1)
 				end
 
 				text_width := get_substring_width (l_start - 1)
@@ -212,18 +214,18 @@ feature -- Miscellaneous
 
 			-- Draw selected text -------------------------------------------------------------------
 
-			indx := image.index_of ('%T', l_start)
+			indx := wide_image.index_of ('%T', l_start)
 			if l_start > l_end then
 				if indx > 0 and then indx < l_end then
 					local_string := expanded_image_substring (l_end, l_start - 1)
 				else
-					local_string := image.substring (l_end, l_start - 1)
+					local_string := wide_image.substring (l_end, l_start - 1)
 				end
 			else
 				if indx > 0 and then indx < l_end then
 					local_string := expanded_image_substring (l_start, l_end - 1)
 				else
-					local_string := image.substring (l_start, l_end - 1)
+					local_string := wide_image.substring (l_start, l_end - 1)
 				end
 			end
 
@@ -260,16 +262,16 @@ feature -- Miscellaneous
 			if l_end <= length then
 
 				if l_start > l_end then
-					if image.index_of ('%T', start_selection) > 0 then
+					if wide_image.index_of ('%T', start_selection) > 0 then
 						local_string := expanded_image_substring (l_start, length)
 					else
-						local_string := image.substring (l_start, length)
+						local_string := wide_image.substring (l_start, length)
 					end
 				else
-					if image.index_of ('%T', end_selection) > 0 then
+					if wide_image.index_of ('%T', end_selection) > 0 then
 						local_string := expanded_image_substring (l_end, length)
 					else
-						local_string := image.substring (l_end, length)
+						local_string := wide_image.substring (l_end, length)
 					end
 				end
 
@@ -295,7 +297,7 @@ feature -- Status Setting
 	update_width is
 			-- update value of `width'
 		do
-			width := get_substring_width (image.count)
+			width := get_substring_width (wide_image.count)
 		end
 
 feature -- Visitor
@@ -308,16 +310,16 @@ feature -- Visitor
 
 feature -- Setting
 
-	set_image (a_image: like image) is
-			-- Set `image' with `a_image'.
+	set_image (a_image: like wide_image) is
+			-- Set `wide_image' with `a_image'.
 		require
 			a_image_not_void: a_image /= Void
 			no_eol_in_a_image: not a_image.has ('%N')
 		do
-			image := a_image
+			wide_image := a_image
 			length := a_image.count
 		ensure
-			image_not_void: image /= Void
+			wide_image_not_void: wide_image /= Void
 		end
 
 feature -- implementation of clickable and editable text
@@ -328,12 +330,12 @@ feature {NONE} -- Implementation
 
 	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 		local
-			text_to_be_drawn: STRING
+			text_to_be_drawn: STRING_32
 		do
-			if image.has ('%T') then
-				text_to_be_drawn := expanded_image_substring (1, image.count)
+			if wide_image.has ('%T') then
+				text_to_be_drawn := expanded_image_substring (1, wide_image.count)
 			else
-				text_to_be_drawn := image
+				text_to_be_drawn := wide_image
 			end
 
  				-- Change drawing style here.
@@ -342,7 +344,7 @@ feature {NONE} -- Implementation
 
 			if a_background_color /= Void then
 				device.set_background_color (a_background_color)
-				device.clear_rectangle (position, d_y, get_substring_width (image.count), height)
+				device.clear_rectangle (position, d_y, get_substring_width (wide_image.count), height)
 			end
 
  				-- Display the text.
@@ -351,12 +353,12 @@ feature {NONE} -- Implementation
 
 	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 		local
-			text_to_be_drawn: STRING
+			text_to_be_drawn: STRING_32
 		do
-			if image.has ('%T') then
-				text_to_be_drawn := expanded_image_substring (1, image.count)
+			if wide_image.has ('%T') then
+				text_to_be_drawn := expanded_image_substring (1, wide_image.count)
 			else
-				text_to_be_drawn := image
+				text_to_be_drawn := wide_image
 			end
 
  				-- Change drawing style here.
@@ -365,7 +367,7 @@ feature {NONE} -- Implementation
 
 			if a_background_color /= Void then
 				device.set_background_color (a_background_color)
-				device.clear_rectangle (x_offset, d_y, get_substring_width (image.count), height)
+				device.clear_rectangle (x_offset, d_y, get_substring_width (wide_image.count), height)
 			end
 
  				-- Display the text.
@@ -374,7 +376,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	expanded_image_substring (n1, n2: INTEGER): STRING is
+	expanded_image_substring (n1, n2: INTEGER): STRING_32 is
 		local
 			sz, i, j: INTEGER
 		do
@@ -384,7 +386,7 @@ feature {NONE} -- Implementation
 			until
 				i > n2
 			loop
-				if image @ i = '%T' then
+				if wide_image @ i = '%T' then
 					sz := (get_substring_width (i) -  get_substring_width (i - 1)) // font.string_width(" ")
 					from
 						j := 1
@@ -395,7 +397,7 @@ feature {NONE} -- Implementation
 						j := j + 1
 					end
 				else
-					Result.extend (image @ i)
+					Result.extend (wide_image @ i)
 				end
 				i := i + 1
 			end
@@ -422,7 +424,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	image_not_void: image /= Void
+	wide_image_not_void: wide_image /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

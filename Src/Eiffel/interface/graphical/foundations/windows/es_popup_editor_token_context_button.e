@@ -485,7 +485,7 @@ feature {NONE} -- Basic operations
 
 			l_glyph ?= a_token
 			if l_glyph = Void then
-				l_size := a_token.font.string_size (a_token.image)
+				l_size := a_token.font.string_size (a_token.wide_image)
 			else
 				l_size := [l_glyph.glyph.width, l_glyph.glyph.height, 0, 0]
 			end
@@ -529,7 +529,7 @@ feature {NONE} -- Basic operations
 						-- Perform drawing
 					a_dc.clear_rectangle (a_x, a_y, l_width, l_height)
 					if l_glyph = Void then
-						a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.image)
+						a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.wide_image)
 					else
 						a_dc.draw_sub_pixel_buffer (l_token_rect.x, l_token_rect.y, l_glyph.glyph, create {EV_RECTANGLE}.make (0, 0, l_glyph.glyph.width, l_glyph.glyph.height))
 					end

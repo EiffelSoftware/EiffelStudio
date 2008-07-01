@@ -114,7 +114,7 @@ feature {NONE} -- Query
 				if l_class.has_feature_table then
 					if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
 							-- Create contract viewer widget
-						l_feature := l_class.feature_with_name (l_fstart.image)
+						l_feature := l_class.feature_with_name (l_fstart.wide_image)
 						if {l_feat: !E_FEATURE} l_feature then
 							create l_viewer.make
 								-- Register the close action for the widget

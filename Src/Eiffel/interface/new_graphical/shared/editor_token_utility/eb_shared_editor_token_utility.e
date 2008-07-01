@@ -22,7 +22,7 @@ inherit
 
 feature -- Editor token
 
-	string_representation_of_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]): STRING is
+	string_representation_of_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]): STRING_32 is
 			-- String representation of `a_tokens'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -33,7 +33,7 @@ feature -- Editor token
 			until
 				a_tokens.after
 			loop
-				Result.append (a_tokens.item.image)
+				Result.append (a_tokens.item.wide_image)
 				a_tokens.forth
 			end
 		ensure
@@ -73,7 +73,7 @@ feature -- Editor token
 			a_string_attached: a_string /= Void
 		do
 			create {LINKED_LIST [EDITOR_TOKEN]} Result.make
-			Result.extend (create {EDITOR_TOKEN_TEXT}.make (a_string.to_string_8))
+			Result.extend (create {EDITOR_TOKEN_TEXT}.make (a_string.as_string_32))
 		ensure
 			result_attached: Result /= Void and then not Result.is_empty
 		end

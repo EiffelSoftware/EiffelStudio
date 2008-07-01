@@ -1,29 +1,42 @@
 indexing
-	description: "Interfaces for console code page."
-	author: ""
+	description: "Encodings used in ec."
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSOLE_CODE_PAGE_I
+	EC_ENCODINGS
 
 inherit
-	SHARED_LOCALE
+	SYSTEM_ENCODINGS
 
 feature -- Access
 
-	console_code_page: STRING is
-			-- Code page for console output
+	default_encoding: !ENCODING is
+			-- Default encoding reading/writing from file.
 		do
-			Result := system_locale.info.code_page
-		ensure
-			console_code_page_not_void: Result /= Void
+			Result := iso_8859_1
+		end
+
+feature {NONE} -- Implementation
+
+	iso_8859_1: !ENCODING is
+			-- Encoding ISO-8859-1 encoding.
+			-- TODO: This encoding should be eventually integrated
+			-- into encoding library.
+		once
+			if {PLATFORM}.is_windows then
+				create Result.make ("28591") -- Code page on Windows
+			else
+				create Result.make ("ISO-8859-1") -- Name on Unix (iconv).
+			end
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -34,15 +47,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

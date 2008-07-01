@@ -85,7 +85,7 @@ feature -- Basic operations
 			a_assertions_contains_attached_items: not a_assertions.has (Void)
 		local
 			l_code: !STRING
-			l_ws: !STRING
+			l_ws: !STRING_32
 			l_pos: INTEGER
 			l_st_builder: CODE_SYMBOL_TABLE_BUILDER
 			l_table: !CODE_SYMBOL_TABLE

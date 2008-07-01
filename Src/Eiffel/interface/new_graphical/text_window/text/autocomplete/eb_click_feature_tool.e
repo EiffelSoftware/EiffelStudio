@@ -183,7 +183,7 @@ feature -- Analysis preparation
 							-- If a string is written one several lines (more than 2 in fact),
 							-- it will be made of several token, some of which may not be
 							-- string tokens (those like % .... % )
-						if token.image @ token.image.count /= '%"' then
+						if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
 							from
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file

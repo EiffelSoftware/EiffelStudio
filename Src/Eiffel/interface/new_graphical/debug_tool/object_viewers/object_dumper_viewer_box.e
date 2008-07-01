@@ -180,7 +180,7 @@ feature {NONE} -- Event handling
 	copy_button_selected is
 			-- Called by `select_actions' of `copy_button'.
 		do
-			Ev_application.clipboard.set_text (editor.text)
+			Ev_application.clipboard.set_text (editor.wide_text)
 		end
 
 	on_stone_dropped (st: OBJECT_STONE) is

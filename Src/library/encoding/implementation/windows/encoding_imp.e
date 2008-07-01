@@ -18,15 +18,16 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
+	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			l_m_t_w: BOOLEAN
 			l_count: INTEGER
 			l_code_page: STRING
 			l_from_code_page, l_to_code_page: STRING
 			l_string_32: STRING_32
 			l_from_be, l_to_be: BOOLEAN
+			l_converted_32: STRING_32
+			l_converted_8: STRING_8
 		do
 			l_from_code_page := code_pages.item (a_from_code_page)
 			l_to_code_page := code_pages.item (a_to_code_page)
@@ -43,18 +44,24 @@ feature -- String encoding convertion
 				if four_byte_codesets.has (a_to_code_page) then
 					l_string_32 := utf16_to_utf32 (l_string_32)
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						l_converted_32 := string_32_switch_endian (l_string_32)
 					else
-						Result := l_string_32
+						l_converted_32 := l_string_32
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_32_to_stream (l_converted_32)
 				elseif two_byte_codesets.has (a_to_code_page) then
 					if l_to_be = is_little_endian then
-						Result := string_16_switch_endian (l_string_32)
+						l_converted_32 := string_16_switch_endian (l_string_32)
 					else
-						Result := l_string_32
+						l_converted_32 := l_string_32
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_16_to_stream (l_converted_32)
 				else
-					Result := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+					last_converted_string := l_converted_8
+					last_converted_stream := l_converted_8
 				end
 			elseif four_byte_codesets.has (a_from_code_page) then
 				l_string_32 := a_from_string.as_string_32
@@ -64,37 +71,49 @@ feature -- String encoding convertion
 				if two_byte_codesets.has (a_to_code_page) then
 					l_string_32 := utf32_to_utf16 (l_string_32)
 					if l_to_be = is_little_endian then
-						Result := string_16_switch_endian (l_string_32)
+						l_converted_32 := string_16_switch_endian (l_string_32)
 					else
-						Result := l_string_32
+						l_converted_32 := l_string_32
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_16_to_stream (l_converted_32)
 				elseif four_byte_codesets.has (a_to_code_page) then
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						l_converted_32 := string_32_switch_endian (l_string_32)
 					else
-						Result := l_string_32.twin
+						l_converted_32 := l_string_32.twin
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_32_to_stream (l_converted_32)
 				else
-					Result := utf32_to_utf16 (l_string_32)
-					Result := wide_char_to_multi_byte (l_to_code_page, Result)
+					l_converted_32 := utf32_to_utf16 (l_string_32)
+					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_converted_32)
+					last_converted_string := l_converted_8
+					last_converted_stream := l_converted_8
 				end
 			else
 				l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
 				if two_byte_codesets.has (a_to_code_page) then
 					if l_to_be = is_little_endian then
-						Result := string_16_switch_endian (l_string_32)
+						l_converted_32 := string_16_switch_endian (l_string_32)
 					else
-						Result := l_string_32
+						l_converted_32 := l_string_32
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_16_to_stream (l_converted_32)
 				elseif four_byte_codesets.has (a_to_code_page) then
 					l_string_32 := utf16_to_utf32 (l_string_32)
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						l_converted_32 := string_32_switch_endian (l_string_32)
 					else
-						Result := l_string_32
+						l_converted_32 := l_string_32
 					end
+					last_converted_string := l_converted_32
+					last_converted_stream := string_32_to_stream (l_converted_32)
 				else
-					Result := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+					last_converted_string := l_converted_8
+					last_converted_stream := l_converted_8
 				end
 			end
 		end

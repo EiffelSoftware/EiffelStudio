@@ -404,14 +404,17 @@ feature -- Status report
 			file_name_not_void: Result /= Void
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the Current lace file.
+			-- Convert to UTF-32 if possible.
 			-- Void if unreadable file
 		require
 			valid_file_name: file_name /= Void
 		local
 			a_file: RAW_FILE
 			retried: BOOLEAN
+			l_stream: STRING
+			l_converter: ENCODING_CONVERTER
 		do
 			if not retried then
 				create a_file.make (file_name)
@@ -422,7 +425,14 @@ feature -- Status report
 						-- No need to duplicate `last_string' since
 						-- its owner, the file will not go outside this
 						-- routine and therefore there will be no aliasing.
-					Result := a_file.last_string
+					l_stream := a_file.last_string
+					l_converter := (create {SHARED_ENCODING_CONVERTER}).encoding_converter
+					if l_converter /= Void then
+						Result := l_converter.utf32_string (l_stream)
+						encoding := l_converter.detected_encoding
+					else
+						Result := l_stream
+					end
 				end
 			else
 				Result := Void
@@ -431,6 +441,9 @@ feature -- Status report
 			retried := True
 			retry
 		end
+
+	encoding: ?ANY
+			-- Encoding of original text.
 
 feature -- Output
 

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			is_fake := True
 			is_clickable := False
 			length := 1
-			create image.make_empty
+			create wide_image.make_empty
 		ensure
 			glyph_set: glyph = a_glyph
 		end

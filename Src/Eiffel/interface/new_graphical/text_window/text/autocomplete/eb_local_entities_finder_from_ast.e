@@ -60,7 +60,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING] is
+	found_names: LINKED_LIST [STRING_32] is
 			-- List of found entity names.
 		local
 			id_list: IDENTIFIER_LIST

@@ -9,22 +9,22 @@ class
 	MSR_STRING_ADAPTER
 
 create
-	
+
 	make
-	
+
 feature -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: like real_string) is
 			-- Make with a_string
 		require
 			a_string /= Void
 		do
-			real_string := a_string	
+			real_string := a_string
 		end
-		
+
 feature -- Element change
 
-	set_real_string (a_string: STRING) is
+	set_real_string (a_string: like real_string) is
 			-- Set `real_string'
 		require
 			a_string /= Void
@@ -34,11 +34,11 @@ feature -- Element change
 
 feature -- Access
 
-	real_string : STRING
+	real_string : STRING_32
 		-- Real string adapted
-		
+
 invariant
-	
+
 	real_string_not_void: real_string /= Void
 
 indexing

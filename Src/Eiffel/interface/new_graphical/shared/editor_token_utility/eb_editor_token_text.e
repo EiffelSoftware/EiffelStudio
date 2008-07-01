@@ -526,7 +526,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	string_representation: STRING is
+	string_representation: STRING_32 is
 			-- String representation of current
 		local
 			l_cursor: CURSOR
@@ -543,7 +543,7 @@ feature -- Access
 			loop
 				l_eol ?= l_tokens.item
 				if l_eol = Void then
-					Result.append (l_tokens.item.image)
+					Result.append (l_tokens.item.wide_image)
 				else
 					Result.append_character ('%N')
 				end
@@ -600,7 +600,7 @@ feature -- Measure
 							end
 							l_cur_line_width := 0
 						else
-							l_cur_line_width := l_cur_line_width + token_width (l_token, l_token.image)
+							l_cur_line_width := l_cur_line_width + token_width (l_token, l_token.wide_image)
 						end
 						l_tokens.forth
 					end
@@ -649,7 +649,7 @@ feature -- Measure
 					l_tokens.after
 				loop
 					l_token := l_tokens.item
-					l_width := token_width (l_token, l_token.image)
+					l_width := token_width (l_token, l_token.wide_image)
 					if l_token.is_new_line or else (l_is_max_width_set and then x + l_width > l_max_width and then l_wrapped) then
 						x := 0
 						y := y + l_line_height
@@ -722,7 +722,7 @@ feature{NONE} -- Display
 					-- Do not draw the token image because it will be rendered too large
 				a_drawable.set_font (actual_token_font (a_token))
 				a_drawable.set_foreground_color (a_token.text_color)
-				a_drawable.draw_text_top_left (x, y, a_token.image)
+				a_drawable.draw_text_top_left (x, y, a_token.wide_image)
 			end
 		end
 
@@ -755,9 +755,9 @@ feature{NONE} -- Display
 			end
 			l_font := actual_token_font (a_token)
 			a_drawable.set_font (l_font)
-			a_drawable.clear_rectangle (x, y, l_font.string_width (a_token.image), actual_line_height)--l_font.height)
+			a_drawable.clear_rectangle (x, y, l_font.string_width (a_token.wide_image), actual_line_height)--l_font.height)
 			if not a_token.is_tabulation and then not a_token.is_blank then
-				a_drawable.draw_text_top_left (x, y, a_token.image)
+				a_drawable.draw_text_top_left (x, y, a_token.wide_image)
 			end
 		end
 
@@ -851,7 +851,7 @@ feature{NONE} -- Implementation
 
 					-- Flags setup.
 				l_ellipsis_token := ellipsis_token
-				l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.image)
+				l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.wide_image)
 				l_is_text_wrap_enabled := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
@@ -877,7 +877,7 @@ feature{NONE} -- Implementation
 					l_tokens.after or l_finished
 				loop
 					l_token := l_tokens.item
-					l_width := token_width (l_token, l_token.image)
+					l_width := token_width (l_token, l_token.wide_image)
 
 					if is_maximum_width_set and then l_width > l_width_left then
 						is_text_truncated := True
@@ -987,7 +987,7 @@ feature{NONE} -- Implementation
 			l_editor_token: EDITOR_TOKEN_TEXT
 			l_splited_token_position: EV_RECTANGLE
 			l_ellipsis_position: EV_RECTANGLE
-			l_image: STRING
+			l_image: STRING_32
 			l_min_count: INTEGER
 			l_image_count: INTEGER
 			l_start_x: INTEGER
@@ -1001,12 +1001,12 @@ feature{NONE} -- Implementation
 			l_start_x := a_position.x
 			l_line_height := actual_line_height
 			l_ellipsis_token := ellipsis_token
-			l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.image)
-			if l_editor_token /= Void and then not l_editor_token.image.is_empty then
+			l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.wide_image)
+			if l_editor_token /= Void and then not l_editor_token.wide_image.is_empty then
 					-- For text editor token								
 				from
 					l_x_offset := x_offset
-					l_image := l_editor_token.image.twin
+					l_image := l_editor_token.wide_image.twin
 					l_image_count := l_image.count
 					if a_position.x = l_x_offset then
 						l_min_count := 1
@@ -1042,7 +1042,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	token_width (a_token: EDITOR_TOKEN; a_image: STRING): INTEGER
+	token_width (a_token: EDITOR_TOKEN; a_image: STRING_32): INTEGER
 			-- Width in pixel of `a_image' using font in `a_token' or `overriden_fonts' if `is_overriden_font_set'.
 		require
 			a_token_attached: a_token /= Void

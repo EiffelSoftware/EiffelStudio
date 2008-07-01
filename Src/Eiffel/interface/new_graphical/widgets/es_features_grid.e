@@ -237,7 +237,7 @@ feature -- Basic operations
 			-- `a_clause': The feature clause to navigate too.
 			-- `a_focus': True to set focus, False otherwise.
 		local
-			l_text: STRING_8
+			l_text: STRING_32
 			l_line, l_pos: INTEGER
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
@@ -250,7 +250,7 @@ feature -- Basic operations
 					l_text := l_class.text
 				end
 				if l_text = Void then
-					l_text := l_editor.text
+					l_text := l_editor.wide_text
 				end
 
 				if l_text /= Void and then {l_formatter: EB_BASIC_TEXT_FORMATTER} l_window.pos_container then

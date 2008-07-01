@@ -12,8 +12,10 @@ class
 inherit
 	VIEWER_LINE
 		rename
-			image_from_start_to_cursor as dummy1,
-			image_from_cursor_to_end as dummy2
+			wide_image_from_start_to_cursor as dummy1,
+			wide_image_from_cursor_to_end as dummy2,
+			image_from_start_to_cursor as dummy3,
+			image_from_cursor_to_end as dummy4
 		end
 
 create
@@ -27,7 +29,7 @@ feature -- Initialization
 		require
 			lexer_exists: lexer /= Void
 		local
-			t_eol				: EDITOR_TOKEN_EOL			
+			t_eol				: EDITOR_TOKEN_EOL
 			t_begin				: EDITOR_TOKEN_LINE_NUMBER
 			lexer_first_token	: EDITOR_TOKEN
 			lexer_end_token		: EDITOR_TOKEN
@@ -41,7 +43,7 @@ feature -- Initialization
 				lexer_first_token := lexer.first_token
 
 				lexer_end_token.set_next_token (t_eol)
-				t_eol.set_previous_token (lexer_end_token)		
+				t_eol.set_previous_token (lexer_end_token)
 				t_begin.set_next_token (lexer_first_token)
 				lexer_first_token.set_previous_token (t_begin)
 			else
@@ -49,9 +51,9 @@ feature -- Initialization
 					-- He has not produced any token.
 				t_begin.set_next_token (t_eol)
 				t_eol.set_previous_token (t_begin)
-			end			
+			end
 			real_first_token := t_begin
-			eol_token := t_eol			
+			eol_token := t_eol
 			update_token_information
 		end
 
@@ -85,7 +87,7 @@ feature -- Transformation
 --| FIXME
 --| Christophe, 27 jan 2000
 --| Should we avoid the case "t_before = Void" or
---| redirect it to `replace_beginning_from_lexer'? 
+--| redirect it to `replace_beginning_from_lexer'?
 
 	replace_beginning_from_lexer (lexer: EDITOR_SCANNER; t_after: EDITOR_TOKEN) is
 			-- Replace tokens before `t_after' by tokens from `lexer'.
@@ -114,14 +116,14 @@ feature -- Transformation
 			if previous /= Void and then ((previous.part_of_verbatim_string and then not previous.end_of_verbatim_string) or previous.start_of_verbatim_string) then
 				lexer.set_in_verbatim_string (True)
 			else
-				lexer.set_in_verbatim_string (False)				
-			end		
+				lexer.set_in_verbatim_string (False)
+			end
 			make_from_lexer (lexer)
 		end
 
 feature -- Status Report					
 
-	image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING is
+	wide_image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING_32 is
 			-- Substring of the line starting at the beginning of
 			-- the line and ending at the cursor position (not
 			-- included)
@@ -130,9 +132,10 @@ feature -- Status Report
 		local
 			local_token		: EDITOR_TOKEN
 			cursor_token	: EDITOR_TOKEN
+			l_string_32		: STRING_32
 		do
 			cursor_token := text_cursor.token
-			create Result.make (50)
+			create l_string_32.make (50)
 
 				-- Retrieve the string in the token situated before
 				-- the cursor
@@ -141,18 +144,19 @@ feature -- Status Report
 			until
 				local_token = cursor_token or else local_token = eol_token
 			loop
-				Result.append(local_token.image)
+				l_string_32.append(local_token.wide_image)
 				local_token := local_token.next
 			end
 
 				-- Append the current string with the portion of the current
 				-- token that is before the cursor.
-			Result.append(local_token.image.substring(1, text_cursor.pos_in_token - 1))
+			l_string_32.append(local_token.wide_image.substring(1, text_cursor.pos_in_token - 1))
+			Result := l_string_32
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING is
+	wide_image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING_32 is
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		require
@@ -160,13 +164,14 @@ feature -- Status Report
 		local
 			local_token		: EDITOR_TOKEN
 			cursor_token	: EDITOR_TOKEN
+			l_string_32		: STRING_32
 		do
 			cursor_token := text_cursor.token
-			create Result.make (50)
+			create l_string_32.make (50)
 
 				-- Append the current string with the portion of the current
 				-- token that is after the cursor.
-			Result.append(cursor_token.image.substring(text_cursor.pos_in_token, cursor_token.length))
+			l_string_32.append(cursor_token.wide_image.substring(text_cursor.pos_in_token, cursor_token.length))
 
 				-- Retrieve the string in the token situated before
 				-- the cursor
@@ -175,27 +180,57 @@ feature -- Status Report
 			until
 				local_token = eol_token or else local_token = Void
 			loop
-				Result.append(local_token.image)
+				l_string_32.append(local_token.wide_image)
 				local_token := local_token.next
 			end
+			Result := l_string_32
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	auto_indented: BOOLEAN
 			-- Was this line auto-indented by the editor (i.e. extra tabs were added when created)?
-			
+
 	part_of_verbatim_string: BOOLEAN
 			-- Is Current part of a verbatim string, i.e part of a string which covers more than one line?
 			-- Redefine this and have the lexer set this flag so you can tell if indeed this is the case.
 			-- Required because gobo lexer works line by line.  Defult: False
-	
+
 	end_of_verbatim_string: BOOLEAN
 			-- Is current the end of a verbatim string?
 
 	start_of_verbatim_string: BOOLEAN
 			-- Is current the start of a verbatim string?
-				
+
+feature -- Obsolete
+
+	image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING is
+			-- Substring of the line starting at the beginning of
+			-- the line and ending at the cursor position (not
+			-- included)
+		obsolete
+			"Use `wide_image_from_start_to_cursor' instead."
+		require
+			text_cursor.line = Current
+		do
+			Result := wide_image_from_cursor_to_end (text_cursor).as_string_8
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING is
+			-- Substring of the line starting at the cursor
+			-- position (included) and ending at the end of the line
+		obsolete
+			"Use `wide_image_from_cursor_to_end' instead."
+		require
+			text_cursor.line = Current
+		do
+			Result := wide_image_from_cursor_to_end (text_cursor).as_string_8
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Status Setting
 
 	set_auto_indented (a_flag: BOOLEAN) is
@@ -205,7 +240,7 @@ feature -- Status Setting
 		ensure
 			value_set: auto_indented = a_flag
 		end
-		
+
 	set_part_of_verbatim_string (a_flag: BOOLEAN) is
 			-- Set `part_of_verbatim_string' to `a_flag'
 		do
@@ -213,7 +248,7 @@ feature -- Status Setting
 		ensure
 			value_set: part_of_verbatim_string = a_flag
 		end
-		
+
 	set_end_of_verbatim_string (a_flag: BOOLEAN) is
 			-- Set `end_of_verbatim_string' to `a_flag'
 		do
@@ -221,7 +256,7 @@ feature -- Status Setting
 		ensure
 			value_set: end_of_verbatim_string = a_flag
 		end
-		
+
 	set_start_of_verbatim_string (a_flag: BOOLEAN) is
 			-- Set `start_of_verbatim_string' to `a_flag'
 		do

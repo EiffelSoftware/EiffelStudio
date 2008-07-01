@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Completion access
 
-	insertion: CELL [STRING]
+	insertion: CELL [STRING_32]
 			-- strings to be partially completed : the first one is the dot or tilda if there is one
 			-- the second one is the feature name to be completed
 
@@ -368,12 +368,12 @@ feature -- Class names completion
 			if workbench.is_already_compiled and then (not workbench.is_compiling) then
 				token := a_token.previous
 				if
-					(token.image.is_equal (Opening_brace) or token.image.is_equal (colon)) and then can_attempt_auto_complete_from_token (token)
+					(token_equal (token, Opening_brace) or token_equal (token, colon)) and then can_attempt_auto_complete_from_token (token)
 				then
 					show_all := True
 				else
 					if token /= Void and then token.is_text then
-						insertion.put (token.image)
+						insertion.put (token.wide_image)
 					end
 				end
 			end
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			token := a_token
 			if token /= Void then
 					-- Restore faked cursor position so we can complete before '.'
-				if token.image.is_equal (".") then
+				if token_equal (token, ".") then
 					save_cursor_position
 					go_to_left_position
 					token := cursor_token
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			a_analyser_not_void: a_analyser /= Void
 		local
 			l_basic: EB_NAME_FOR_COMPLETION
-			l_names: DYNAMIC_LIST [STRING]
+			l_names: DYNAMIC_LIST [STRING_32]
 		do
 			create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ("Current"))
 			insert_in_completion_possibilities (l_basic)
@@ -1199,7 +1199,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			prev_token: EDITOR_TOKEN
-			l_char: CHARACTER
+			l_char: CHARACTER_32
 		do
 			insertion_remainder := 0
 			insertion.put ("")
@@ -1212,21 +1212,21 @@ feature {NONE} -- Implementation
 					if prev_token /= Void and current_pos_in_token = 1 then
 						if prev_token.is_text and then token_image_is_in_array (prev_token, Feature_call_separators) then
 								-- Previous token is a separator so take there is no insertion term
-							l_char := token.image.item (1)
-							if l_char.is_alpha then
+							l_char := token.wide_image.item (1)
+							if char_32_is_alpha (l_char) then
 									-- Happens when completing 'a.b.|c'
-								insertion_remainder := token.image.count
+								insertion_remainder := token.wide_image.count
 							else
 									-- Happens when completing 'a.b.|)'
 							end
 						elseif token_image_is_in_array (token, Feature_call_separators) then
 							if prev_token.is_text then
 									-- Token is a separator so take the entire previous token as insertion, if it is an Eiffel identifier							
-								l_char := prev_token.image.item (prev_token.image.count)
-								if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+								l_char := prev_token.wide_image.item (prev_token.wide_image.count)
+								if char_32_is_alpha (l_char) or char_32_is_digit (l_char) or l_char = '_' then
 										-- Previous token is an Eiffel identifier
 										-- Happens when completing 'a.b|.c'
-									insertion.put (prev_token.image)
+									insertion.put (prev_token.wide_image)
 								else
 										-- Happens when completing '|.b.c' or '(|.b.c)'
 								end
@@ -1235,11 +1235,11 @@ feature {NONE} -- Implementation
 							if token.is_blank and not prev_token.is_blank then
 									-- Previous token is a partially completed term.
 									-- Happens when completing 'a.b.c| '
-								if not prev_token.image.is_empty then
-									l_char := prev_token.image.item (prev_token.image.count)
-									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+								if not prev_token.wide_image.is_empty then
+									l_char := prev_token.wide_image.item (prev_token.wide_image.count)
+									if char_32_is_alpha (l_char) or char_32_is_digit (l_char) or l_char = '_' then
 											-- Previous token is an Eiffel identifier
-										insertion.put (prev_token.image)
+										insertion.put (prev_token.wide_image)
 									end
 								end
 --							elseif prev_token.is_blank then
@@ -1247,23 +1247,23 @@ feature {NONE} -- Implementation
 --									-- Happens when completing ' |a.b.c'
 --									-- Note: This code is commented out because completion should add the select item before
 --									--       'a' and not overwrite 'a'
---								insertion_remainder := token.image.count
+--								insertion_remainder := token.wide_image.count
 							elseif token.is_text and prev_token.is_text then
 									-- Happens when you completer '(a.b.c|)'
 									-- Also happens for '(|a.b.c)' but we do not want to replace the open parenthesis or 'a' (see previous rule)
-								if not prev_token.image.is_empty then
-									l_char := prev_token.image.item (prev_token.image.count)
-									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+								if not prev_token.wide_image.is_empty then
+									l_char := prev_token.wide_image.item (prev_token.wide_image.count)
+									if char_32_is_alpha (l_char) or char_32_is_digit (l_char) or l_char = '_' then
 											-- Previous token is an Eiffel identifier
-										insertion.put (prev_token.image)
+										insertion.put (prev_token.wide_image)
 									end
 								end
 									-- Uncomment to have 'a' be replaced when completing '(|a.b.c)'
---								if not token.image.is_empty then
---									l_char := token.image.item (token.image.count)
+--								if not token.wide_image.is_empty then
+--									l_char := token.wide_image.item (token.wide_image.count)
 --									if l_char.is_alpha then
 --											-- Token is an Eiffel identifier
---										insertion_remainder := token.image.count		
+--										insertion_remainder := token.wide_image.count		
 --									end
 --								end
 							end
@@ -1272,7 +1272,7 @@ feature {NONE} -- Implementation
 							-- Cursor is current in a token at `cursor.pos_in_token'
 						if not token.is_blank then
 								-- Happens when completing 'a.bb|bbbb.c'						
-							insertion.put (token.image.substring (1, current_pos_in_token - 1))
+							insertion.put (token.wide_image.substring (1, current_pos_in_token - 1))
 							insertion_remainder := token.length - (current_pos_in_token - 1)
 						else
 							-- Happens when completing 'if | then'
@@ -1286,11 +1286,11 @@ feature {NONE} -- Implementation
 						-- The token is not text so the insertion must be taken from the previous token IF that is text
 					prev_token := token.previous
 					if prev_token /= Void and then prev_token.is_text and then not token_image_is_in_array (prev_token, feature_call_separators) then
-						l_char := prev_token.image.item (prev_token.image.count)
-						if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+						l_char := prev_token.wide_image.item (prev_token.wide_image.count)
+						if char_32_is_alpha (l_char) or char_32_is_digit (l_char) or l_char = '_' then
 								-- Previous token is an Eiffel identifier
 								-- Happens when completing 'p|'
-							insertion.put (prev_token.image)
+							insertion.put (prev_token.wide_image)
 							insertion_remainder := 0
 						else
 								-- Happens when completing ')|.b.c'

@@ -315,9 +315,8 @@ feature {NONE} -- Basic operations
 			l_renderer.render_template (code_template, code_symbol_table)
 			create code_result.make_from_string (l_renderer.code)
 			code_result_view.load_text (code_result)
-
 		ensure
-			code_result_view_set: code_result_view.text.as_string_32.is_equal (code_result)
+			code_result_view_set: code_result_view.wide_text.is_equal (code_result)
 		end
 
 feature {NONE} -- User interface elements

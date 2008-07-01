@@ -17,7 +17,7 @@ inherit
 			reset_text,
 			on_text_block_loaded
 		end
-	
+
 create
 	make
 
@@ -89,6 +89,20 @@ feature -- Access
 		end
 
 	selected_string: STRING is
+		obsolete
+			"Use `selected_wide_string' instead."
+		require
+			text_is_not_empty: not is_empty
+		local
+			l_str: STRING_32
+		do
+			l_str := selected_wide_string
+			if l_str /= Void then
+				Result := l_str.as_string_8
+			end
+		end
+
+	selected_wide_string: STRING_32 is
 		require
 			text_is_not_empty: not is_empty
 		do
@@ -147,7 +161,7 @@ feature -- Selection Changes
 			text_is_not_empty: not is_empty
 			cursor_not_void: c /= Void
 		do
-			selection_cursor := c.twin			
+			selection_cursor := c.twin
 		ensure
 			selection_cursor.is_equal (c)
 		end
@@ -184,7 +198,7 @@ feature -- Selection Changes
 			selection_cursor.set_line (first_line)
 			selection_cursor.go_start_line
 			cursor.set_line (last_line)
-			cursor.go_end_line		
+			cursor.go_end_line
 			enable_selection
 		ensure
 			selection: has_selection
@@ -207,19 +221,19 @@ feature -- Selection Changes
 feature -- Search
 
 	search_string_from_cursor (searched_string: STRING) is
-			-- Search the text for the string `searched_string'.  
+			-- Search the text for the string `searched_string'.
 			-- Begin search from position of cursor.
 			-- If the search was successful, `successful_search' is
-			-- set to True and `found_string_line' & 
+			-- set to True and `found_string_line' &
 			-- `found_string_character_position' are set.
 		require
 			text_is_not_empty: not is_empty
 		local
-			line_string: STRING
+			line_string: STRING_32
 			found_index,
 			line_number,
-			full_found_index: INTEGER			
-		do			
+			full_found_index: INTEGER
+		do
 				-- Reset the success tag.
 			successful_search := False
 
@@ -227,7 +241,7 @@ feature -- Search
 			from
 				go_i_th (cursor.y_in_lines)
 				line_number := cursor.y_in_lines
-				line_string := current_line.image
+				line_string := current_line.wide_image
 				full_found_index := cursor.pos_in_characters
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring (cursor.x_in_characters, line_string.count).substring_index (searched_string, 1) - 1
@@ -235,13 +249,13 @@ feature -- Search
 				if found_index > 0 then
 					full_found_index := full_found_index + found_index
 				else
-					full_found_index := full_found_index + current_line.image.count - cursor.x_in_characters
-				end				
+					full_found_index := full_found_index + current_line.wide_image.count - cursor.x_in_characters
+				end
 				forth
 			until
 				found_index > 0 or else after
 			loop
-				line_string := current_line.image
+				line_string := current_line.wide_image
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring_index (searched_string, 1)
 				end
@@ -249,7 +263,7 @@ feature -- Search
 				if found_index > 0 then
 					full_found_index := full_found_index + found_index + 1
 				else
-					full_found_index := full_found_index + current_line.image.count + 1
+					full_found_index := full_found_index + current_line.wide_image.count + 1
 				end
 
 					-- Prepare next iteration.
@@ -277,28 +291,29 @@ feature {NONE} -- Implementation
 			Precursor {TEXT} (was_first_block)
 		end
 
-	string_selected (start_sel, end_sel: like cursor): STRING is
+	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL is
 			-- String between cursors `start_sel' and `end_sel'.
 		require
 				right_order: start_sel < end_sel
 		local
 			ln: like current_line
 			t, t2 : EDITOR_TOKEN
+			l_string_32: STRING_32
 		do
 				-- Retrieving line after `start_selection'.
 			t := start_sel.token
 			t2 := end_sel.token
 			if t = t2 then
 				if start_sel.pos_in_token = end_sel.pos_in_token then
-					Result := ""
+					l_string_32 := ""
 				else
-					Result := t.image.substring (start_sel.pos_in_token, end_sel.pos_in_token -1)
+					l_string_32 := t.wide_image.substring (start_sel.pos_in_token, end_sel.pos_in_token -1)
 				end
 			else
 				ln := start_sel.line
 				from
 					if t = ln.eol_token then
-						Result := "%N"
+						l_string_32 := "%N"
 						ln := ln.next
 						if ln = Void then
 							check
@@ -308,15 +323,15 @@ feature {NONE} -- Implementation
 							t := ln.first_token
 						end
 					else
-						Result := t.image.substring (start_sel.pos_in_token, t.image.count)
+						l_string_32 := t.wide_image.substring (start_sel.pos_in_token, t.wide_image.count)
 						t := t.next
 					end
 					until
 						t = t2 or t = end_sel.line.eol_token
 					loop
 						if t = Void or else t = ln.eol_token then
-							Result.extend ('%N')
-							ln := ln.next							
+							l_string_32.extend ('%N')
+							ln := ln.next
 							if ln = Void then
 								check
 									never_reached: False
@@ -324,24 +339,25 @@ feature {NONE} -- Implementation
 							else
 								t := ln.first_token
 							end
-						else	
-							Result.append (t.image)
+						else
+							l_string_32.append (t.wide_image)
 							t := t.next
 						end
 					end
 					check
 						good_line: ln = end_sel.line
 					end
-					Result.append (t2.image.substring (1, end_sel.pos_in_token -1))
+					l_string_32.append (t2.wide_image.substring (1, end_sel.pos_in_token -1))
 				end
+				Result := l_string_32
 			end
-	
+
 invariant
 	valid_selection: has_selection implies selection_cursor /= Void
 --	cursor_exists: not is_empty implies cursor /= Void
 --	selection_cursor_exists: not is_empty implies selection_cursor /= Void
 	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -357,4 +373,4 @@ indexing
 
 
 end -- class SELECTABLE_TEXT
-	
+

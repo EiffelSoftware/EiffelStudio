@@ -167,13 +167,13 @@ feature -- Status report
 			l_first_text_index := -1
 			from
 				start
-				l_end_loop := false
+				l_end_loop := False
 			until
 				after or l_end_loop
 			loop
 				l_text_item ?= item
 				if l_text_item /= Void then
-					l_end_loop := true
+					l_end_loop := True
 					l_first_text_index := index
 				end
 				forth
@@ -320,7 +320,7 @@ feature -- Status setting
 			replace_strategy_internal_set: replace_strategy_internal = p_strategy
 		end
 
-	set_keyword (text: STRING) is
+	set_keyword (text: STRING_32) is
 			-- Set keyword for searching.
 		require
 			text_not_void: text /= Void
@@ -352,7 +352,7 @@ feature -- Status setting
 			case_insensitive: not case_sensitive
 		end
 
-	set_replace_string (string: STRING) is
+	set_replace_string (string: STRING_32) is
 			-- String to replace
 		require
 			string_not_void: string /= Void
@@ -541,7 +541,7 @@ feature -- Cursor movement
 						if backwards then
 							from
 								item_matched.start
-								l_end_loop := false
+								l_end_loop := False
 								last_encounter := 0
 							until
 								item_matched.after or l_end_loop
@@ -551,7 +551,7 @@ feature -- Cursor movement
 									last_encounter := index
 									if a_position <= l_text_item.end_index_in_unix_text then
 										l_cursor := index
-										l_end_loop := true
+										l_end_loop := True
 									end
 								end
 								item_matched.forth
@@ -570,7 +570,7 @@ feature -- Cursor movement
 						else
 							from
 								item_matched.finish
-								l_end_loop := false
+								l_end_loop := False
 								last_encounter := 0
 							until
 								item_matched.before or l_end_loop
@@ -580,7 +580,7 @@ feature -- Cursor movement
 									last_encounter := index
 									if a_position > l_text_item.start_index_in_unix_text then
 										l_cursor := index
-										l_end_loop := true
+										l_end_loop := True
 									end
 								end
 								item_matched.back
@@ -602,7 +602,7 @@ feature -- Cursor movement
 					if backwards then
 						from
 							item_matched.start
-							l_end_loop := false
+							l_end_loop := False
 							last_encounter := 0
 						until
 							item_matched.after or l_end_loop
@@ -612,7 +612,7 @@ feature -- Cursor movement
 								last_encounter := index
 								if a_position <= l_text_item.end_index_in_unix_text then
 									l_cursor := index
-									l_end_loop := true
+									l_end_loop := True
 								end
 							end
 							item_matched.forth
@@ -626,7 +626,7 @@ feature -- Cursor movement
 					else
 						from
 							item_matched.finish
-							l_end_loop := false
+							l_end_loop := False
 							last_encounter := 0
 						until
 							item_matched.before or l_end_loop
@@ -636,7 +636,7 @@ feature -- Cursor movement
 								last_encounter := index
 								if a_position > l_text_item.start_index_in_unix_text then
 									l_cursor := index
-									l_end_loop := true
+									l_end_loop := True
 								end
 							end
 							item_matched.back
@@ -724,7 +724,7 @@ feature -- Sorting
 					start
 					l_item ?= item
 					if l_item = Void then
-						ds_array := sort_data (build_ds_arrayed_list (true), a_attribute)
+						ds_array := sort_data (build_ds_arrayed_list (True), a_attribute)
 					end
 					if ds_array /= Void and then not ds_array.is_empty then
 						item_matched.wipe_out

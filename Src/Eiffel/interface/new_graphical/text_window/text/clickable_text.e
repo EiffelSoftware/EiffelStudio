@@ -290,7 +290,7 @@ feature {NONE} -- Load Text handling
 		end
 
 	new_line_from_lexer (line_image: STRING): like line is
-			-- create a new like line from `line_image' using `lexer'.
+			-- <precursor>
 		do
 			if line_image.is_empty then
 				create Result.make_empty_line

@@ -97,7 +97,7 @@ feature -- Basic operation
 			class_i: CLASS_I
 			editors_manager: EB_EDITORS_MANAGER
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
-			l_string: STRING
+			l_string: STRING_32
 			l_text: SMART_TEXT
 		do
 			l_item ?= replace_items.item
@@ -119,9 +119,9 @@ feature -- Basic operation
 							l_text.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
 							editor.deselect_all
 							if not actual_replacement (l_item).is_empty then
-								search_tool.set_changed_by_replace (true)
+								search_tool.set_changed_by_replace (True)
 								l_text.insert_string (l_string)
-								search_tool.set_changed_by_replace (true)
+								search_tool.set_changed_by_replace (True)
 								if not l_string.is_empty then
 									editor.select_region (l_item.start_index_in_unix_text,
 														l_item.start_index_in_unix_text + l_string.count)
@@ -131,7 +131,7 @@ feature -- Basic operation
 							editor.select_region (l_item.start_index_in_unix_text,
 													l_item.end_index_in_unix_text + 1)
 							if editor.has_selection then
-								search_tool.set_changed_by_replace (true)
+								search_tool.set_changed_by_replace (True)
 								if not l_string.is_empty then
 									editor.replace_selection (l_string)
 									editor.select_region (l_item.start_index_in_unix_text,
@@ -139,16 +139,16 @@ feature -- Basic operation
 								else
 									l_text.delete_selection
 								end
-								search_tool.set_changed_by_replace (true)
+								search_tool.set_changed_by_replace (True)
 							end
 						end
 						editor.redraw_current_line
-						replace_current_item (true)
+						replace_current_item (True)
 						search_tool.force_not_changed
 					end
 				 end
 			end
-			is_replace_launched_internal := true
+			is_replace_launched_internal := True
 		end
 
 feature {NONE} -- Implementation
@@ -175,10 +175,12 @@ feature {NONE} -- Implementation
 			-- a_item is one of these items.
 		local
 			class_i: CLASS_I
+			l_encoding: ENCODING
 		do
 			class_i ?= a_item.data
 			if class_i /= Void then
-				save (class_i.file_name.out, a_item.source_text)
+				l_encoding ?= class_i.encoding
+				save (class_i.file_name.out, a_item.source_text, l_encoding)
 					-- Notify Eiffel Studio.
 				editor.dev_window.eiffel_system.workbench.change_class (class_i)
 				editor.dev_window.eiffel_system.workbench.set_changed
@@ -231,14 +233,14 @@ feature {NONE} -- Implementation
 					l.forth
 				end
 				if changed_editor /= Void then
-					Result := true
+					Result := True
 				elseif unchanged_editor /= Void then
-					Result := true
+					Result := True
 				else
-					Result := false
+					Result := False
 				end
 			else
-				Result := false
+				Result := False
 			end
 		end
 

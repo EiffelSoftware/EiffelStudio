@@ -1,47 +1,41 @@
 indexing
-	description: "code page of Unix console output"
-	author: ""
+	description: "Shared encoding converter."
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSOLE_CODE_PAGE_IMP
+	SHARED_ENCODING_CONVERTER
 
-inherit
-	CONSOLE_CODE_PAGE_I
-		redefine
-			console_code_page
-		end
-		
 feature -- Access
 
-	console_code_page: STRING is
-			-- Code page for console output
+	encoding_converter: ?ENCODING_CONVERTER is
+			-- Encoding converter
 		do
-			if is_utf8_activated then
-				Result := "UTF-8"
-			else
-				Result := Precursor {CONSOLE_CODE_PAGE_I}
-			end
+			Result := encoding_converter_cell.item
+		end
+
+feature -- Element change
+
+	set_encoding_converter (a_converter: like encoding_converter) is
+			-- Set `encoding_converter' with `a_converter'
+		do
+			encoding_converter_cell.put (a_converter)
 		end
 
 feature {NONE} -- Implementation
-	
-	is_utf8_activated: BOOLEAN is
-			-- Is UTF-8 activated in current system?
-		external
-			"C inline use <langinfo.h>, <locale.h>"
-		alias
-			"[
-				setlocale (LC_ALL, "");
-				return (EIF_BOOLEAN)(strcmp (nl_langinfo (CODESET), "UTF-8") == 0);
-			]"
+
+	encoding_converter_cell: CELL [ENCODING_CONVERTER] is
+			-- Cell to hold the converter.
+		once
+			create Result
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -52,15 +46,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

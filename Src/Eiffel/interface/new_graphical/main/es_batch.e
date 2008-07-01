@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initializes batch compiler
 		do
+			Precursor {ES}
 			initialize_services
 			initialize_debugger
 		end

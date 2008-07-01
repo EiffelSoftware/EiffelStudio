@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	class_text (a_class: CLASS_I): STRING is
+	class_text (a_class: CLASS_I): STRING_32 is
 			-- Most recent version of `a_class'-text.
 			-- (from a file or from an editor).
 		require
@@ -74,9 +74,9 @@ feature -- Access
 					l.forth
 				end
 				if changed_editor /= Void then
-					Result := changed_editor.text
+					Result := changed_editor.wide_text
 				elseif unchanged_editor /= Void then
-					Result := unchanged_editor.text
+					Result := unchanged_editor.wide_text
 				else
 					Result := a_class.text
 				end
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_class_text (a_class: CLASS_I; a_text: STRING) is
+	set_class_text (a_class: CLASS_I; a_text: STRING_32) is
 			-- Set class text of `a_class' to `a_text' in an editor
 			-- if open; if not, save it.
 		require
@@ -98,6 +98,7 @@ feature -- Element change
 			in_tool: BOOLEAN
 			l_editor: EB_SMART_EDITOR
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+			l_encoding: ENCODING
 		do
 			l := Window_manager.development_windows_with_class (a_class.file_name)
 			from
@@ -126,7 +127,8 @@ feature -- Element change
 				l.forth
 			end
 			if not in_tool then
-				save (a_class.file_name, a_text)
+				l_encoding ?= a_class.encoding
+				save (a_class.file_name, a_text, l_encoding)
 			end
 		end
 

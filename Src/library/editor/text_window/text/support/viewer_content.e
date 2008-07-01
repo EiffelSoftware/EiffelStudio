@@ -32,7 +32,7 @@ feature -- Initialization
 feature -- Access
 
 	first_line: VIEWER_LINE
-	
+
 	first_displayed_line: like current_line
 
 	last_displayed_line: like current_line
@@ -84,13 +84,13 @@ feature -- test features
 
 feature -- Basic operations
 
-	search_string(searched_string: STRING) is
+	search_string (searched_string: STRING_GENERAL) is
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
 			-- set to True and `found_string_line' &
 			-- `found_string_character_position' are set.
 		local
-			line_string	: STRING
+			line_string	: STRING_32
 			found_index : INTEGER
 			line_number : INTEGER
 		do
@@ -104,9 +104,9 @@ feature -- Basic operations
 			until
 				found_index /= 0 or else after
 			loop
-				line_string := current_line.image
+				line_string := current_line.wide_image
 				if line_string.count >= searched_string.count then
-					found_index := line_string.substring_index(searched_string, 1)
+					found_index := line_string.substring_index (searched_string, 1)
 				end
 				line_number := line_number + 1
 
@@ -136,7 +136,7 @@ feature -- Basic operations
 				if start_selection.pos_in_token = end_selection.pos_in_token then
 					Result := ""
 				else
-					Result := t.image.substring (start_selection.pos_in_token, end_selection.pos_in_token -1)
+					Result := t.wide_image.substring (start_selection.pos_in_token, end_selection.pos_in_token -1)
 				end
 			else
 				line := start_selection.line
@@ -152,7 +152,7 @@ feature -- Basic operations
 							t := line.first_token
 						end
 					else
-						Result := t.image.substring (start_selection.pos_in_token, t.image.count)
+						Result := t.wide_image.substring (start_selection.pos_in_token, t.wide_image.count)
 						t := t.next
 					end
 				until
@@ -169,14 +169,14 @@ feature -- Basic operations
 							t := line.first_token
 						end
 					else
-						Result.append (t.image)
+						Result.append (t.wide_image)
 						t := t.next
 					end
 				end
 				check
 					good_line: line = end_selection.line
 				end
-				Result.append (t2.image.substring (1, end_selection.pos_in_token -1))
+				Result.append (t2.wide_image.substring (1, end_selection.pos_in_token -1))
 			end
 		end
 

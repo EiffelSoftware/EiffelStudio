@@ -39,7 +39,7 @@ feature -- Initialisation
 				end
 				internal_representation.extend (lexer_end_token)
 			end
-			image := composite_image
+			wide_image := composite_image
 		end
 
 feature -- Miscellaneous
@@ -144,7 +144,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	composite_image: STRING is
+	composite_image: STRING_32 is
 			-- Image of Current as single token
 		do
 			from
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			until
 				internal_representation.after
 			loop
-				Result.append (internal_representation.item.image)
+				Result.append (internal_representation.item.wide_image)
 				internal_representation.forth
 			end
 		end

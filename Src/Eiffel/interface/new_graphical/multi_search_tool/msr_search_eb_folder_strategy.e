@@ -28,7 +28,10 @@ create
 
 feature -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_folder: EB_FOLDER; only_compiled_class: BOOLEAN) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			a_folder: like folder;
+			only_compiled_class: like only_compiled_class_searched) is
 			-- Initialization
 		require
 			a_folder_not_void: a_folder /= Void

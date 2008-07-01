@@ -3,14 +3,14 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$" 
-	
+	revision: "$Revision$"
+
 deferred class
 	MSR_SEARCH_STRATEGY
 
 feature {NONE} -- Initialization
 
-	make_search_strategy(a_keyword: STRING; a_range: INTEGER) is
+	make_search_strategy (a_keyword: like keyword; a_range: like surrounding_text_range) is
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -34,8 +34,8 @@ feature -- Access
 		ensure
 			item_matched_not_void_if_launched: is_launched implies Result /= Void
 		end
-	
-	keyword: STRING is
+
+	keyword: STRING_32 is
 			-- Search keyword.
 		require
 			is_keyword_set : is_keyword_set
@@ -44,13 +44,13 @@ feature -- Access
 		ensure
 			keyword_not_void: Result = keyword_internal
 		end
-		
+
 	surrounding_text_range : INTEGER is
 			-- Number of characters on one side of found text in a item's context text.
 		do
 			Result:= surrounding_text_range_internal
-		end		
-		
+		end
+
 feature -- Status report
 
 	case_sensitive : BOOLEAN is
@@ -60,31 +60,31 @@ feature -- Status report
 		ensure
 			case_sensitive: Result = case_sensitive_internal
 		end
-		
+
 	is_regular_expression_used : BOOLEAN is
 			-- Is regular expression used in searching?
 		do
 			Result := is_regular_expression_used_internal
-		ensure	
+		ensure
 			is_regular_expression_used: Result = is_regular_expression_used_internal
 		end
-	
+
 	is_whole_word_matched: BOOLEAN is
 			-- Is whole word matched?
 		do
 			Result := is_whole_word_matched_internal
 		ensure
 			is_whole_word_matched: Result = is_whole_word_matched_internal
-		end		
-	
+		end
+
 	is_launched: BOOLEAN is
 			-- Is searching launched?
 		do
 			Result := launched
 		ensure
 			is_launched : Result = launched
-		end		
-		
+		end
+
 	is_keyword_set: BOOLEAN is
 			-- Is search keyword set
 		do
@@ -92,25 +92,25 @@ feature -- Status report
 		ensure
 			is_keyword_set_right: Result = (keyword_internal /= Void)
 		end
-		
+
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result := true
-		end		
-	
+			Result := True
+		end
+
 feature -- Status setting
 
-	set_keyword (text: STRING) is
+	set_keyword (text: like keyword) is
 			-- Set `keyword_internal' with text for searching.
 		require
 			text_not_void: text /= Void
-		do		
+		do
 			keyword_internal := text
 		ensure
 			keyword_not_void: keyword_internal = text
 		end
-	
+
 	set_surrounding_text_range (range : INTEGER) is
 			-- Set `surrounding_text_range_internal' with range.
 		require
@@ -120,23 +120,23 @@ feature -- Status setting
 		ensure
 			range_larger_equal_than_zero: surrounding_text_range_internal = range
 		end
-		
+
 	set_case_sensitive is
 			-- Set search matching case.
 		do
-			case_sensitive_internal := true
+			case_sensitive_internal := True
 		ensure
 			case_sensitive : case_sensitive
 		end
-	
+
 	set_case_insensitive is
 			-- Set search not matching case.
 		do
-			case_sensitive_internal := false
+			case_sensitive_internal := False
 		ensure
 			not_case_sensitive : not case_sensitive
 		end
-	
+
 	set_regular_expression_used (p_regular_expression_used: BOOLEAN) is
 			-- Set `is_regular_expression_used_internel' with p_regular_expression_used.
 		do
@@ -144,28 +144,28 @@ feature -- Status setting
 		ensure
 			is_regular_expression_used_set: is_regular_expression_used = p_regular_expression_used
 		end
-		
+
 	set_whole_word_matched (p_whole_word_matched: BOOLEAN) is
 			-- Set `is_whole_word_matched_internal' with p_whole_word_matched.
 		do
-			is_whole_word_matched_internal := p_whole_word_matched	
+			is_whole_word_matched_internal := p_whole_word_matched
 		ensure
 			is_whole_word_matched_set: is_whole_word_matched = p_whole_word_matched
-		end		
-	
+		end
+
 feature -- Basic operations		
-		
+
 	reset_all is
 			-- Reset
 		do
 			item_matched_internal := Void
 			set_case_insensitive
-			set_regular_expression_used (true)
-			set_whole_word_matched (false)			
-			launched := false
+			set_regular_expression_used (True)
+			set_whole_word_matched (False)
+			launched := False
 			pcre_regex.reset
-			pcre_regex.set_multiline (true)
-			pcre_regex.set_empty_allowed (false)
+			pcre_regex.set_multiline (True)
+			pcre_regex.set_empty_allowed (False)
 			keyword_internal := Void
 			surrounding_text_range_internal := 20
 		ensure
@@ -177,7 +177,7 @@ feature -- Basic operations
 			regular_expression_used: is_regular_expression_used
 			whole_word_matched: not is_whole_word_matched_internal
 		end
-	
+
 	launch is
 			-- Launch searching
 		require
@@ -188,46 +188,43 @@ feature -- Basic operations
 			is_launched: is_launched
 			item_keep_first: (not item_matched_internal.is_empty) implies item_matched_internal.isfirst
 		end
-			
+
 feature {NONE} -- Implementation
 
-	keyword_internal : STRING
+	keyword_internal : like keyword
 			--Keywords for searching
 
-	surrounding_text_range_internal : INTEGER
+	surrounding_text_range_internal : like surrounding_text_range
 			-- Most number of charactors by oneside of the searching text.
 
-	item_matched_internal : ARRAYED_LIST[MSR_ITEM]	
+	item_matched_internal : like item_matched
 			-- All matched items in the specific location.
 
-	case_sensitive_internal : BOOLEAN	
+	case_sensitive_internal : like case_sensitive
 			-- When set search is case sensitive
-			
-	launched : BOOLEAN
+
+	launched : like is_launched
 			-- If search has been launched.
-			
-	is_regular_expression_used_internal: BOOLEAN
+
+	is_regular_expression_used_internal: like is_regular_expression_used
 			-- If regular expression is used in searching
-			
-	is_whole_word_matched_internal: BOOLEAN
+
+	is_whole_word_matched_internal: like is_whole_word_matched
 			-- If search whole word
-			
+
 	string_formatter: MSR_FORMATTER is
 			-- Mute every GOBO regular expression meta-characters in a string.
 		once
 			Result := create {MSR_FORMATTER}
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	pcre_regex : MSR_RX_PCRE_REGULAR_EXPRESSION
-	
+
 invariant
-	
 	surrounding_text_range_internal_larger_than_zero: surrounding_text_range_internal >= 0
-	
 	pcre_regex_not_void: pcre_regex /= Void
-	
 	item_matched_internal_not_void_after_launched: launched implies item_matched_internal /= Void
 
 indexing

@@ -65,7 +65,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := move
 		end
 
-	record_insert (c: CHARACTER) is
+	record_insert (c: CHARACTER_32) is
 			-- Update `Current' as `c' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
@@ -86,7 +86,7 @@ feature {EDITABLE_TEXT} -- Element change
 				check
 					udc /= Void
 				end
-				create urc.make_from_strings (text.cursor, udc.message, c.out, text)
+				create urc.make_from_strings (text.cursor, udc.message, create {STRING_32}.make_filled (c, 1), text)
 				if udc.is_bound_to_next then
 					urc.bind_to_next
 				end
@@ -102,7 +102,7 @@ feature {EDITABLE_TEXT} -- Element change
 				urc.extend_new (c)
 
 			else
-				create uic.make_from_string (text.cursor, c.out, text)
+				create uic.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (uic)
 				current_status := insert_char
 			end
@@ -110,11 +110,12 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_insert_eol (inserted_indentation: STRING) is
+	record_insert_eol (inserted_indentation: STRING_GENERAL) is
 			-- Update `Current' as a new line with indentation `inserted_indentation'
 			-- is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
+			l_string: STRING_32
 		do
 		--	Commented lines made the editor undo at the same time
 		--	the insertion of the new line and of the characters at the end
@@ -129,7 +130,9 @@ feature {EDITABLE_TEXT} -- Element change
 --				uic.extend_string ("%N" + inserted_indentation)
 --				current_status := insert_eol
 --			else
-				create uic.make_from_string	(text.cursor, "%N"  + inserted_indentation, text)
+				l_string := "%N"
+				l_string.append (inserted_indentation)
+				create uic.make_from_string	(text.cursor, l_string, text)
 				put (uic)
 				current_status := insert_eol
 --			end
@@ -137,7 +140,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_paste (s: STRING) is
+	record_paste (s: STRING_GENERAL) is
 			-- Update `Current' as `s' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
@@ -149,7 +152,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_delete (c: CHARACTER) is
+	record_delete (c: CHARACTER_32) is
 			-- Update `Current' as `c' is to be deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
@@ -161,7 +164,7 @@ feature {EDITABLE_TEXT} -- Element change
 				end
 				udc.extend (c)
 			else
-				create udc.make_from_string (text.cursor, c.out, text)
+				create udc.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (udc)
 				current_status := delete_char
 			end
@@ -169,7 +172,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_delete_selection (s: STRING) is
+	record_delete_selection (s: STRING_GENERAL) is
 			-- Update `Current' as `s' has just been deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
@@ -182,7 +185,7 @@ feature {EDITABLE_TEXT} -- Element change
 		end
 
 
-	record_replace (c1, c2: CHARACTER) is
+	record_replace (c1, c2: CHARACTER_32) is
 		local
 			urc: UNDO_REPLACE_CMD
 		do
@@ -198,9 +201,9 @@ feature {EDITABLE_TEXT} -- Element change
 				end
 			else
 				if c1 = '%N' then
-					create urc.make_from_strings (text.cursor, "", c2.out, text)
+					create urc.make_from_strings (text.cursor, "", create {STRING_32}.make_filled (c2, 1), text)
 				else
-					create urc.make_from_strings	 (text.cursor, c1.out, c2.out, text)
+					create urc.make_from_strings (text.cursor, create {STRING_32}.make_filled (c1, 1), create {STRING_32}.make_filled (c2, 1), text)
 				end
 				put (urc)
 				current_status := replace
@@ -209,7 +212,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_selection (s1, s2: STRING) is
+	record_replace_selection (s1, s2: STRING_GENERAL) is
 		local
 			urc: UNDO_REPLACE_CMD
 		do
@@ -219,7 +222,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_all (s1, s2: STRING) is
+	record_replace_all (s1, s2: STRING_GENERAL) is
 		local
 			urac: UNDO_REPLACE_ALL_CMD
 			urc: UNDO_REPLACE_CMD
@@ -238,7 +241,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_back_delete (c: CHARACTER) is
+	record_back_delete (c: CHARACTER_32) is
 		local
 			udc: UNDO_DELETE_CMD
 		do
@@ -249,7 +252,7 @@ feature {EDITABLE_TEXT} -- Element change
 				end
 				udc.prepend (text.cursor, c)
 			else
-				create udc.make_from_string (text.cursor, c.out, text)
+				create udc.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (udc)
 				current_status := back_delete
 			end
@@ -257,17 +260,17 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_symbol (begin_selection, end_selection: EDITOR_CURSOR; symbl: STRING) is
+	record_symbol (begin_selection, end_selection: EDITOR_CURSOR; symbl: STRING_GENERAL) is
 		local
 			uisc: UNDO_SYMBOL_SELECTION_CMD
 		do
-			create uisc.make(begin_selection, end_selection, symbl, text)
+			create uisc.make (begin_selection, end_selection, symbl, text)
 			put (uisc)
 			notify_observers
 			current_status := symbol
 		end
 
-	record_unsymbol (lines: LINKED_LIST[INTEGER]; symbl:STRING) is
+	record_unsymbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL) is
 			--| Warning : to be called after `unsymbol_selection'
 		local
 			uusc: UNDO_UNSYMBOL_SELECTION_CMD
@@ -278,7 +281,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := unsymbol
 		end
 
-	record_remove_trailing_blank (s: STRING) is
+	record_remove_trailing_blank (s: STRING_GENERAL) is
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
@@ -317,7 +320,7 @@ feature {EDITABLE_TEXT} -- Element change
 			end
 		end
 
-	record_uncomment (s: STRING) is
+	record_uncomment (s: STRING_GENERAL) is
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD

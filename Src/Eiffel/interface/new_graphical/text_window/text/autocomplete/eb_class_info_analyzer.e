@@ -515,7 +515,8 @@ feature {NONE} -- Implementation (`type_from')
 						end
 					end
 				else
-					name := current_token.image.as_lower
+						-- "precursor" is safe to compare to STRING_8.
+					name := string_32_to_lower (current_token.wide_image).as_string_8
 					if name.is_equal ("precursor") then
 						go_to_next_token
 						if token_image_is_same_as_word (current_token, opening_brace) then
@@ -623,7 +624,8 @@ feature {NONE} -- Implementation (`type_from')
 			until
 				error or else after_searched_token
 			loop
-				name := current_token.image.as_lower
+					-- Safe to use STRING_8 to get type.
+				name := string_32_to_lower (current_token.wide_image).as_string_8
 
 				type := internal_type_from_name (name)
 
@@ -1018,9 +1020,9 @@ feature {NONE}-- Implementation
 			if current_token /= Void then
 				if
 						-- not the "~feature" case
-					current_token.image.is_empty
+					current_token.wide_image.is_empty
 						or else
-					current_token.image @ 1 /= '%L'
+					current_token.wide_image @ 1 /= ('%L').to_character_32
 						or else
 					not is_beginning_of_expression (current_token.previous)
 				then
@@ -1128,7 +1130,8 @@ feature {NONE}-- Implementation
 						-- the infix must be in our list
 						-- otherwise, we will not analyze this expression
 					if is_known_infix (exp.item) then
-						infix_list.extend (exp.item.image)
+							-- Disallow infix rather than ASCII.
+						infix_list.extend (exp.item.wide_image.as_string_8)
 					else
 						error := True
 					end
@@ -1365,7 +1368,8 @@ feature {NONE}-- Implementation
 						end
 					else
 							-- type is Void
-						name := sub_exp.item.image.as_lower
+							-- Safe to get feature from STRING_8.
+						name := string_32_to_lower (sub_exp.item.wide_image).as_string_8
 						if l_current_class_c.has_feature_table then
 							processed_feature := l_current_class_c.feature_with_name (name)
 						end
@@ -1403,7 +1407,8 @@ feature {NONE}-- Implementation
 						if sub_exp.after then
 							error := True
 						else
-							name := sub_exp.item.image.as_lower
+								-- Safe to get feature from STRING_8.
+							name := string_32_to_lower (sub_exp.item.wide_image).as_string_8
 							if type.is_formal then
 								formal ?= type
 								if l_current_class_c.is_valid_formal_position (formal.position) then
@@ -1419,9 +1424,9 @@ feature {NONE}-- Implementation
 							if type.has_associated_class then
 									-- This case includes the ordinary case and the case were we had
 									-- a single constrained formal without a renaming (constrained_type has been called).
-							l_processed_class := type.associated_class
-							if l_processed_class /= Void and then l_processed_class.has_feature_table then
-								processed_feature := l_processed_class.feature_with_name (name)
+								l_processed_class := type.associated_class
+								if l_processed_class /= Void and then l_processed_class.has_feature_table then
+									processed_feature := l_processed_class.feature_with_name (name)
 								end
 							else
 									-- Maybe we computed a type set?
@@ -1481,7 +1486,8 @@ feature {NONE}-- Implementation
 				Result := found_class.actual_type
 			end
 			if Result = Void then
-				image := current_token.image.as_upper
+					-- Class name can only be STRING_8.
+				image := string_32_to_upper (current_token.wide_image).as_string_8
 				class_i := Universe.safe_class_named (image, group)
 				if class_i /= Void and then class_i.is_compiled then
 					found_class := class_i.compiled_class
@@ -1489,12 +1495,14 @@ feature {NONE}-- Implementation
 				end
 			end
 			if Result = Void then
-				image := current_token.image.as_lower
+					-- "like" is safe to compare to STRING_8.
+				image := string_32_to_lower (current_token.wide_image).as_string_8
 				if image.is_equal ("like") then
 					if current_token.next /= Void and then current_token.next.next /= Void then
 						l_token := current_token.next.next
 						if l_token.is_text then
-							image := l_token.image.as_lower
+								-- A feature name is safe to compare to STRING_8.
+							image := string_32_to_lower (l_token.wide_image).as_string_8
 							if current_class_c /= Void then
 								l_feat := current_class_c.feature_with_name (image)
 								if l_feat /= Void then
@@ -1511,7 +1519,8 @@ feature {NONE}-- Implementation
 					end
 				end
 				if Result = Void then
-					Result := type_of_generic (current_token.image)
+						-- Safe get type of generic by STING_8.
+					Result := type_of_generic (current_token.wide_image.as_string_8)
 				end
 				if Result /= Void then
 					if not Result.is_loose then
@@ -1659,7 +1668,7 @@ feature {NONE}-- Implementation
 			else
 				nb ?= token
 				if nb /= Void then
-					if nb.image.occurrences('.') > 0 then
+					if nb.wide_image.occurrences('.') > 0 then
 						Result := real_64_type
 					else
 						Result := integer_type
@@ -1741,9 +1750,9 @@ feature {NONE}-- Implementation
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) and then not current_token.image.is_empty then
+					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.image @ 1 = '%%' then
+						if current_token.wide_image @ 1 = ('%%').to_character_32 then
 							uncomplete_string := True
 						end
 					end
@@ -1778,9 +1787,9 @@ feature {NONE}-- Implementation
 								current_token := Void
 							end
 						else
-							if is_string (current_token) and then not current_token.image.is_empty then
+							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.image @ 1 = '%%' then
+								if current_token.wide_image @ 1 = ('%%').to_character_32 then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it
@@ -1825,9 +1834,9 @@ feature {NONE}-- Implementation
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) and then not current_token.image.is_empty then
+					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.image @ current_token.image.count = '%%' then
+						if current_token.wide_image @ current_token.wide_image.count = ('%%').to_character_32 then
 							uncomplete_string := True
 						end
 					end
@@ -1861,9 +1870,9 @@ feature {NONE}-- Implementation
 								current_token := Void
 							end
 						else
-							if is_string (current_token) and then not current_token.image.is_empty then
+							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.image @ 1 = '%%' then
+								if current_token.wide_image @ 1 = ('%%').to_character_32 then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it

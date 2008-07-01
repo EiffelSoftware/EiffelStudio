@@ -606,7 +606,7 @@ feature{NONE} -- Actions
 			l_text := input_field.text.twin
 			l_text.append ("%N")
 			if source_encoding /= Void then
-				l_string := utf16_to_console_encoding (source_encoding, l_text)
+				l_string := utf32_to_console_encoding (source_encoding, l_text)
 			end
 			if l_string = Void then
 					-- Conversion fails.

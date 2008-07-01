@@ -21,7 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_class: CLASS_I; only_compiled_class: BOOLEAN) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			a_class: like class_i;
+			only_compiled_class: like only_compiled_class_searched) is
 			-- Initialization with a class to be searched
 		require
 			a_class_not_void: a_class /= Void
@@ -89,7 +92,7 @@ feature -- Basic operation
 					end
 				end
 			end
-			launched := true
+			launched := True
 			if not item_matched_internal.is_empty then
 				item_matched_internal.start
 			end
@@ -101,8 +104,7 @@ feature -- Basic operation
 			Precursor
 			text_strategy := Void
 			class_i := Void
-			class_text := Void
-			only_compiled_class_searched := false
+			only_compiled_class_searched := False
 		end
 
 feature -- Status report
@@ -116,9 +118,7 @@ feature -- Status report
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result :=
-			Precursor and
-			is_class_set
+			Result := Precursor and	is_class_set
 		end
 
 	only_compiled_class_searched: BOOLEAN
@@ -131,13 +131,8 @@ feature -- Element change
 			a_class_not_void: a_class /= Void
 		do
 			class_i := a_class
-			class_text := class_i.text
-			if class_text = Void then
-				class_text := ""
-			end
 		ensure
-			class_i_not_void: class_i /= Void
-			class_text_attached: class_text /= Void
+			class_i_not_void: is_class_set
 		end
 
 feature {NONE} -- Implementation
@@ -148,12 +143,19 @@ feature {NONE} -- Implementation
 	class_i: CLASS_I
 			-- Class to be searched
 
-	class_text: STRING
+	class_text: STRING_32 is
 			-- String buffer to store class text temporarily
+		require
+			class_set: is_class_set
+		do
+			Result := class_i.text
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
-invariant
-	invariant_clause: True -- Your invariant here
-	class_text_not_void_after_class_set: is_class_set implies (class_text /= Void)
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

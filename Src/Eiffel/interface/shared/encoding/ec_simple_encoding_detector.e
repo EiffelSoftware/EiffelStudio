@@ -1,59 +1,38 @@
 indexing
-	description: "code page of windows console output"
-	author: ""
+	description: "[
+					Simple Encoding Detector that always returns ISO-8859-1 encoding.
+					Before we really have proper means to decide source code encoding,
+					we need to keep best compatibility of existing Eiffel code.
+					Maniputing characters as they were, for example, passing codes into Vision2,
+					Those codes were directly taken as Unicode (UTF-16/UTF-32),
+					which means we were taking all code as ISO-8859-1 (0-255 are compatible
+					to UTF-16/UTF-32).
+				]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSOLE_CODE_PAGE_IMP
+	EC_SIMPLE_ENCODING_DETECTOR
 
 inherit
-	CONSOLE_CODE_PAGE_I
-		redefine
-			console_code_page
-		end
+	ENCODING_DETECTOR
+
+	EC_ENCODINGS
 
 feature -- Access
 
-	console_code_page: STRING is
-			-- Code page for console output
+	detected_encoding: ENCODING
+			-- Detected encoding
+
+feature -- Basic operations
+
+	detect (a_string: STRING_GENERAL) is
+			-- Detect `detected_encoding' of `a_string'.
 		do
-			Result := c_console_code_page.out
-		end
-
-	set_console_code_page (a_codepage: NATURAL_32) is
-			-- Set code page for console output
-		local
-			l_result: INTEGER
-		do
-			l_result := c_set_console_code_page (a_codepage)
-			check success: l_result /= 0 end
-		end
-
-feature {NONE} -- Implementation
-
-	c_console_code_page: INTEGER is
-			-- Output codepage of the console
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-				return (EIF_INTEGER_32)GetConsoleOutputCP ();
-			]"
-		end
-
-	c_set_console_code_page (a_codepage: NATURAL_32): INTEGER is
-			-- Set output codepage with `a_codepage'
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-				EIF_INTEGER_32 l_result;
-				
-				l_result = SetConsoleOutputCP ((EIF_NATURAL_32) $a_codepage);
-				
-				return l_result;
-			]"
+			detected_encoding := default_encoding
+			last_detection_successful := True
 		end
 
 indexing

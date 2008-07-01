@@ -27,7 +27,7 @@ feature -- Initialisation
 	make is
 			-- Create the token (image is an empty string)
 		do
-			image := ""
+			wide_image := ""
 			length := 1
 		end
 

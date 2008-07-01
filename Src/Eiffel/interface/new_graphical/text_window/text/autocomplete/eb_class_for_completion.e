@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			token_writer.new_line
 			a_class.append_name (token_writer)
-			insert_name := token_writer.last_line.image
+			insert_name := token_writer.last_line.wide_image
 			make_old (insert_name)
 			associated_class := a_class
 		ensure
@@ -59,7 +59,7 @@ feature -- Access
 			Result := True
 		end
 
-	insert_name: STRING
+	insert_name: STRING_32
 			-- Name to insert in editor
 
 	icon: EV_PIXMAP is
@@ -68,11 +68,11 @@ feature -- Access
 			Result := pixmap_from_class_i (associated_class)
 		end
 
-	tooltip_text: STRING is
+	tooltip_text: STRING_32 is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
-			Result := out.twin
+			Result := string
 		end
 
 	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is

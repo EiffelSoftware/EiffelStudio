@@ -188,12 +188,20 @@ feature -- Access
 --| Other functions
 
 	item: CHARACTER is
-			-- Character `Current' points on.
+			-- Character current points on
+		obsolete
+			"Use wide_item instead"
+		do
+			Result := wide_item.to_character_8
+		end
+
+	wide_item: CHARACTER_32 is
+			-- Character current points on
 		do
 			if token = line.eol_token then
 				Result := '%N'
 			else
-				Result := token.image @ pos_in_token
+				Result := token.wide_image @ pos_in_token
 			end
 		end
 
@@ -211,7 +219,7 @@ feature -- Access
 				a_line = line
 			loop
 				--Result := Result + a_line.eol_token.x_in_characters
-				Result := Result + a_line.image.count
+				Result := Result + a_line.wide_image.count
 				a_line := a_line.next
 			end
 			Result := Result + x_in_characters
@@ -500,22 +508,22 @@ feature -- Cursor movement
 	go_start_word is
 			-- Move to beginning of word.
 		local
-			image: STRING
+			image: STRING_32
 			index: INTEGER
 		do
-			if char_is_blank (item) then
+			if char_is_blank (wide_item) then
 				from
 					internal_go_left_char
 				until
-					(not char_is_blank (item)) or else bound_reached
+					(not char_is_blank (wide_item)) or else bound_reached
 				loop
 					internal_go_left_char
 				end
-				if not char_is_blank (item) then
+				if not char_is_blank (wide_item) then
 					go_right_char
 				end
-			elseif not char_is_separator (item) then
-				image := token.image.mirrored
+			elseif not char_is_separator (wide_item) then
+				image := token.wide_image.mirrored
 				if not image.is_empty then
 					from
 						index := image.count - pos_in_token + 1
@@ -538,17 +546,17 @@ feature -- Cursor movement
 	go_end_word is
 			-- Move to end of word.
 		local
-			image: STRING
+			image: STRING_32
 			index: INTEGER
 		do
 			if token /= line.first_token or else pos_in_token /= 1 then
-				if char_is_blank (item) then
+				if char_is_blank (wide_item) then
 					internal_go_left_char
-					if char_is_blank (item) then
+					if char_is_blank (wide_item) then
 						from
 							internal_go_right_char
 						until
-							(not char_is_blank(item)) or else bound_reached
+							(not char_is_blank(wide_item)) or else bound_reached
 						loop
 							internal_go_right_char
 						end
@@ -556,7 +564,7 @@ feature -- Cursor movement
 						internal_go_right_char
 					end
 				else
-					image := token.image
+					image := token.wide_image
 					if not image.is_empty and then pos_in_token /= 1 and then not char_is_separator (image @ (pos_in_token - 1)) then
 						from
 							index := pos_in_token
@@ -628,17 +636,21 @@ feature -- Cursor movement
 			set_current_char (t, pos)
 		end
 
-	char_is_separator (char: CHARACTER): BOOLEAN is
+	char_is_separator (char: CHARACTER_32): BOOLEAN is
 			-- Is `char' considered a word separator?
 		do
-			Result := char_is_blank (char) or else
-					additional_separators.has (char)
+			if char.is_character_8 then
+				Result := char_is_blank (char) or else
+						additional_separators.has (char.to_character_8)
+			end
 		end
 
-	char_is_blank (char: CHARACTER): BOOLEAN is
+	char_is_blank (char: CHARACTER_32): BOOLEAN is
 			-- Is `char' a blank space or a tabulation?
 		do
-			Result := char = ' ' or char = '%T'
+			if char.is_character_8 then
+				Result := char = ' ' or char = '%T'
+			end
 		end
 
 feature -- Comparison

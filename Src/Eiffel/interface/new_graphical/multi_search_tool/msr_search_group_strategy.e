@@ -19,7 +19,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_group: CONF_GROUP; only_compiled_class: BOOLEAN) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			a_group: like group;
+			only_compiled_class: like only_compiled_class_searched) is
 			-- Initialization with a group.
 		require
 			a_group_not_void: a_group /= Void
@@ -48,9 +51,7 @@ feature -- Status report
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result :=
-			Precursor and
-			is_group_set
+			Result := Precursor and is_group_set
 		end
 
 	only_compiled_class_searched: BOOLEAN
@@ -176,7 +177,7 @@ feature -- Basic operatioin
 					end
 				end
 			end
-			launched := true
+			launched := True
 			if not item_matched_internal.is_empty then
 				item_matched_internal.start
 			end
@@ -188,8 +189,8 @@ feature -- Basic operatioin
 			Precursor
 			class_strategy := Void
 			group := Void
-			is_subgroup_searched_internal := false
-			only_compiled_class_searched := false
+			is_subgroup_searched_internal := False
+			only_compiled_class_searched := False
 		end
 
 feature -- Element change

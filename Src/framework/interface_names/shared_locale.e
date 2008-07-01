@@ -11,12 +11,12 @@ class
 	SHARED_LOCALE
 
 inherit
-	ANY
-
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
+
+	SYSTEM_ENCODINGS
 
 feature -- Access
 
@@ -85,12 +85,12 @@ feature -- Output
 
 	localized_print (a_str: STRING_GENERAL) is
 			-- Print `a_str' as localized encoding.
-			-- `a_str' is taken as a UTF-16 string.
+			-- `a_str' is taken as a UTF-32 string.
 		local
 			l_string: STRING_GENERAL
 		do
 			if a_str /= Void then
-				l_string := utf16_to_console_encoding (console_encoding, a_str)
+				l_string := utf32_to_console_encoding (console_encoding, a_str)
 				if l_string /= Void then
 					check
 						l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
@@ -104,11 +104,11 @@ feature -- Output
 
 	localized_print_error (a_str: STRING_GENERAL) is
 			-- Print an error, `a_str', as localized encoding.
-			-- `a_str' is taken as a UTF-16 string.
+			-- `a_str' is taken as a UTF-32 string.
 		local
 			l_string: STRING_GENERAL
 		do
-			l_string := utf16_to_console_encoding (console_encoding, a_str)
+			l_string := utf32_to_console_encoding (console_encoding, a_str)
 			if l_string /= Void then
 				check
 					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
@@ -121,38 +121,44 @@ feature -- Output
 
 feature -- Conversion
 
-	utf16_to_console_encoding (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+	utf32_to_console_encoding (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
 			-- Convert `a_str' to console encoding if possible.
-			-- `a_str' is taken as a UTF-16 string.
+			-- `a_str' is taken as a UTF-32 string.
 		require
 			a_console_encoding_not_void: a_console_encoding /= Void
 			a_str_not_void: a_str /= Void
 		do
-			Result := encoding_utf16.convert_to (a_console_encoding, a_str)
-				-- This is a hack, since some OSes don't support convertion from/to UTF-16 to `a_console_encoding'.
-				-- We convert UTF-16 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
-			if not encoding_utf16.last_conversion_successful and not encoding_utf8.is_equal (a_console_encoding) then
-				Result := encoding_utf16.convert_to (encoding_utf8, a_str)
-				if encoding_utf16.last_conversion_successful then
-					Result := encoding_utf8.convert_to (a_console_encoding, Result)
+			utf32.convert_to (a_console_encoding, a_str)
+			Result := utf32.last_converted_string
+				-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
+				-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
+			if not utf32.last_conversion_successful and not utf8.is_equal (a_console_encoding) then
+				utf32.convert_to (utf8, a_str)
+				Result := utf32.last_converted_string
+				if utf32.last_conversion_successful then
+					utf8.convert_to (a_console_encoding, Result)
+					Result := utf8.last_converted_string
 				end
 			end
 		end
 
-	console_encoding_to_utf16 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+	console_encoding_to_utf32 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
 			-- Convert `a_str' to console encoding if possible.
-			-- `a_str' is taken as a UTF-16 string.
+			-- `a_str' is taken as a UTF-32 string.
 		require
 			a_console_encoding_not_void: a_console_encoding /= Void
 			a_str_not_void: a_str /= Void
 		do
-			Result := a_console_encoding.convert_to (encoding_utf16, a_str)
-				-- This is a hack, since some OSes don't support convertion from/to UTF-16 to `a_console_encoding'.
-				-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-16.
-			if not a_console_encoding.last_conversion_successful and not encoding_utf8.is_equal (a_console_encoding) then
-				Result := a_console_encoding.convert_to (encoding_utf8, a_str)
+			a_console_encoding.convert_to (utf32, a_str)
+			Result := a_console_encoding.last_converted_string
+				-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
+				-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-32.
+			if not a_console_encoding.last_conversion_successful and not utf8.is_equal (a_console_encoding) then
+				a_console_encoding.convert_to (utf8, a_str)
+				Result := a_console_encoding.last_converted_string
 				if a_console_encoding.last_conversion_successful then
-					Result := encoding_utf8.convert_to (encoding_utf16, Result)
+					utf8.convert_to (utf32, Result)
+					Result := a_console_encoding.last_converted_string
 				end
 			end
 		end
@@ -180,59 +186,24 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	system_encoding: ENCODING is
-			-- System encoding which is from system locale.
-		once
-			create Result.make (system_locale.info.code_page)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	console_encoding: ENCODING is
-			-- Encoding of console output
-		local
-			l_cp_i: CONSOLE_CODE_PAGE_I
-		once
-			create {CONSOLE_CODE_PAGE_IMP}l_cp_i
-			create Result.make (l_cp_i.console_code_page)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	encoding_utf16: ENCODING is
-			-- UTF-16 encoding.
-		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	encoding_utf8: ENCODING is
-			-- UTF-8 encoding.
-		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
-		ensure
-			result_not_void: Result /= Void
-		end
-
 feature -- File saving
 
 	save_string_32_in_file (a_file: FILE; a_str: STRING_32) is
 			-- Save `a_str' in `a_file', according to current locale.
-			-- `a_str' should be UTF-16 string.
+			-- `a_str' should be UTF-32 string.
 		require
 			a_file_open: a_file.is_open_write
 			a_file_exist: a_file.exists
 			a_str_not_void: a_str /= Void
 		local
-			l_string: STRING_GENERAL
+			l_string: STRING_8
 		do
-			l_string := encoding_utf16.convert_to (system_encoding, a_str)
-			if l_string /= Void then
+			utf32.convert_to (system_encoding, a_str)
+			if utf32.last_conversion_successful then
 				check
 					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
 				end
-				a_file.put_string (l_string.as_string_8)
+				a_file.put_string (utf32.last_converted_stream)
 			else
 				a_file.put_string (a_str.as_string_8)
 			end

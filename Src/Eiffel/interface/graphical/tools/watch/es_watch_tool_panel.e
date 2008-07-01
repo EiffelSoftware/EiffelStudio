@@ -640,14 +640,14 @@ feature {NONE} -- Event handling
 		local
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			ce: EB_EDITOR
-			l_text: STRING
+			l_text: STRING_32
 			debwin: EB_DEVELOPMENT_WINDOW
 		do
 			debwin := debugger_manager.debugging_window
 			if debwin /= Void then
 				ce := debwin.ui.current_editor
 				if ce /= Void and then ce.has_selection then
-					l_text := ce.string_selection
+					l_text := ce.wide_string_selection
 					if l_text.has ('%N') then
 						l_text := Void
 					end

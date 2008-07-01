@@ -37,7 +37,7 @@ feature -- Access
 	path : FILE_NAME
 			-- File path `source_text' locates
 
-	source_text: STRING is
+	source_text: STRING_32 is
 			-- Once searched in this text
 		do
 			Result := source_text_internal.real_string
@@ -94,7 +94,7 @@ feature -- Element change
 			date := a_date
 		end
 
-	set_source_text_real_string (a_string: STRING) is
+	set_source_text_real_string (a_string: STRING_32) is
 			-- Set the actual string of `source_text'.
 		require
 			a_string_attached: a_string /= Void

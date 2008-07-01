@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	insertion: STRING is
+	insertion: STRING_32 is
 			-- Insertion
 		do
 			Result := insertion_cell.item
@@ -192,9 +192,9 @@ feature {NONE} -- Class info analyzer
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) and then not current_token.image.is_empty then
+					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.image @ 1 = '%%' then
+						if current_token.wide_image @ 1 = '%%' then
 							uncomplete_string := True
 						end
 					end
@@ -223,9 +223,9 @@ feature {NONE} -- Class info analyzer
 								current_token := current_line.real_first_token
 							end
 						else
-							if is_string (current_token) and then not current_token.image.is_empty then
+							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.image @ 1 = '%%' then
+								if current_token.wide_image @ 1 = '%%' then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it
@@ -261,9 +261,9 @@ feature {NONE} -- Class info analyzer
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) and then not current_token.image.is_empty then
+					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.image @ current_token.image.count = '%%' then
+						if current_token.wide_image @ current_token.wide_image.count = '%%' then
 							uncomplete_string := True
 						end
 					end
@@ -291,9 +291,9 @@ feature {NONE} -- Class info analyzer
 								current_token := current_line.eol_token
 							end
 						else
-							if is_string (current_token) and then not current_token.image.is_empty then
+							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.image @ 1 = '%%' then
+								if current_token.wide_image @ 1 = '%%' then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it

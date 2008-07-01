@@ -158,21 +158,21 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	insert_string (a_str: STRING) is
+	insert_string (a_str: STRING_32) is
 			-- Insert `a_str' at cursor position.
 		do
 			insert_text (a_str)
 			set_caret_position (caret_position + a_str.count)
 		end
 
-	insert_char (a_char: CHARACTER) is
+	insert_char (a_char: CHARACTER_32) is
 			-- Insert `a_char' at cursor position.
 		do
-			insert_text (a_char.out)
+			insert_text (create {STRING_32}.make_filled (a_char, 1))
 			set_caret_position (caret_position + 1)
 		end
 
-	replace_char (a_char: CHARACTER) is
+	replace_char (a_char: CHARACTER_32) is
 			-- Replace current char with `a_char'.
 		do
 			delete_char
@@ -203,7 +203,7 @@ feature{NONE} -- Implementation
 			focus_out_actions.resume
 		end
 
-	handle_character (a_char: CHARACTER) is
+	handle_character (a_char: CHARACTER_32) is
 			-- Handle `a_char'
 		do
 			if not unwanted_characters.item (a_char.code) then
@@ -276,7 +276,7 @@ feature{NONE} -- Position calculation
 			right_space,
 			list_width: INTEGER
 			l_font: EV_FONT
-			l_text_before_cursor: STRING
+			l_text_before_cursor: STRING_32
 		do
 			create screen
 

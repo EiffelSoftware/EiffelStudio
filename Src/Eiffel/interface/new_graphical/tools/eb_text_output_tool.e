@@ -184,7 +184,7 @@ feature -- Process
 			str ?= text_block.data
 			if str /= Void then
 				if source_encoding /= Void then
-					str_general := console_encoding_to_utf16 (source_encoding, str)
+					str_general := console_encoding_to_utf32 (source_encoding, str)
 				end
 				if str_general = Void then
 					str_general := str

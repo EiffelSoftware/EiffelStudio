@@ -24,14 +24,14 @@ feature -- Initialisation
 			-- Create a token composed of `number' spaces.
 		do
 			length := number
-			create image.make(number)
-			image.fill_character(' ')
+			create wide_image.make (number)
+			wide_image.fill_character(' ')
 			width := length * space_width
 
 			create alternate_image.make(number)
 			alternate_image.fill_character(space_symbol)
 		ensure
-			image_not_void: image /= Void
+			image_not_void: wide_image /= Void
 			alternate_image_not_void: alternate_image /= Void
 			length_positive: length > 0
 		end
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				elseif length < 11 then
 					device.draw_text_top_left (d_x, d_y, space_images.item (l_count))
 				else
-					device.draw_text_top_left (d_x, d_y, image.substring (char_start, char_end))
+					device.draw_text_top_left (d_x, d_y, wide_image.substring (char_start, char_end))
 				end
 			end
 		end
@@ -129,18 +129,18 @@ feature {NONE} -- Private Constants
 			end
 		end
 
-	space_symbol: CHARACTER is
+	space_symbol: CHARACTER_32 is
 		once
 			Result := '·'
 		end
 
-	alternate_image: STRING
+	alternate_image: like wide_image
 			-- String representation of what is displayed
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
 
-	space_images: SPECIAL [STRING] is
-			-- Quick look up for `image' when count is 10 or less
+	space_images: SPECIAL [STRING_32] is
+			-- Quick look up for `wide_image' when count is 10 or less
 		once
 			create Result.make (11)
 			Result.put (" ", 1)

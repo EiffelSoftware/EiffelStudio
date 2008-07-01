@@ -598,11 +598,11 @@ feature {NONE} -- Implementation
 
 	min_width_of_keyword_field: INTEGER is 100
 
-	currently_searched: STRING is
+	currently_searched: STRING_32 is
 		deferred
 		end
 
-	currently_replacing: STRING is
+	currently_replacing: STRING_32 is
 		deferred
 		end
 

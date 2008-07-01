@@ -42,7 +42,7 @@ feature -- Access
 	string_representation: STRING_GENERAL is
 			-- String representation of generated output
 		local
-			l_expr: STRING
+			l_expr: STRING_32
 			l_output: like generated_output
 		do
 			create l_expr.make (128)
@@ -52,7 +52,7 @@ feature -- Access
 			until
 				l_output.after
 			loop
-				l_expr.append (l_output.item.image)
+				l_expr.append (l_output.item.wide_image)
 				l_output.forth
 			end
 			Result := l_expr

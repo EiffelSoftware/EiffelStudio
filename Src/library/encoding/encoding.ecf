@@ -48,6 +48,7 @@
 					</condition>
 				</cluster>
 			</cluster>
+			<cluster name="encoding_detector" location=".\encoding_detector\"/>
 		</cluster>
 	</target>
 </system>

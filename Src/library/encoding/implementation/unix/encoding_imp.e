@@ -23,7 +23,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
+	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_managed_pointer, l_fp, l_tp: MANAGED_POINTER
@@ -37,6 +37,7 @@ feature -- String encoding convertion
 			l_error: INTEGER
 			l_failure: CONVERSION_FAILURE
 			l_retried: BOOLEAN
+			l_converted: STRING_GENERAL
 		do
 			if not l_retried then
 				l_big_endian := big_endian_codesets.has (a_from_code_page) or else (not is_little_endian and not little_endian_codesets.has (a_from_code_page))
@@ -70,43 +71,45 @@ feature -- String encoding convertion
 				if l_pointer /= Void then
 					l_no_endian := not big_endian_codesets.has (a_to_code_page) and not little_endian_codesets.has (a_to_code_page)
 					if four_byte_codesets.has (a_to_code_page) then
-						Result := pointer_to_string_32 (l_pointer, l_out_count)
-						if not Result.is_empty then
-							if bom_little_endian (Result.code (1)) then
-								Result := Result.substring (2, Result.count)
+						l_converted := pointer_to_string_32 (l_pointer, l_out_count)
+						if not l_converted.is_empty then
+							if bom_little_endian (l_converted.code (1)) then
+								l_converted := l_converted.substring (2, l_converted.count)
 								if l_no_endian and then not is_little_endian then
-									Result := string_32_switch_endian (Result)
+									l_converted := string_32_switch_endian (l_converted)
 								end
-							elseif bom_big_endian (Result.code (1)) then
-								Result := Result.substring (2, Result.count)
+							elseif bom_big_endian (l_converted.code (1)) then
+								l_converted := l_converted.substring (2, l_converted.count)
 								if l_no_endian and then is_little_endian then
-									Result := string_32_switch_endian (Result)
+									l_converted := string_32_switch_endian (l_converted)
 								end
 							end
 						end
 					elseif two_byte_codesets.has (a_to_code_page) then
-						Result := pointer_to_wide_string (l_pointer, l_out_count)
-						if not Result.is_empty then
-							if bom_little_endian (Result.code (1)) then
-								Result := Result.substring (2, Result.count)
+						l_converted := pointer_to_wide_string (l_pointer, l_out_count)
+						if not l_converted.is_empty then
+							if bom_little_endian (l_converted.code (1)) then
+								l_converted := l_converted.substring (2, l_converted.count)
 								if l_no_endian and then not is_little_endian then
-									Result := string_16_switch_endian (Result)
+									l_converted := string_16_switch_endian (l_converted)
 								end
-							elseif bom_big_endian (Result.code (1)) then
-								Result := Result.substring (2, Result.count)
+							elseif bom_big_endian (l_converted.code (1)) then
+								l_converted := l_converted.substring (2, l_converted.count)
 								if l_no_endian and then is_little_endian then
-									Result := string_16_switch_endian (Result)
+									l_converted := string_16_switch_endian (l_converted)
 								end
 							end
 						end
 					else
-						Result := pointer_to_multi_byte (l_pointer, l_out_count)
+						l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 					end
+					last_converted_stream := pointer_to_multi_byte (l_pointer, l_out_count)
 				else
 					check
 						l_pointer_not_void: l_pointer /= Void
 					end
 				end
+				last_converted_string := l_converted
 				if l_pointer /= Void then
 					l_pointer.memory_free
 				end

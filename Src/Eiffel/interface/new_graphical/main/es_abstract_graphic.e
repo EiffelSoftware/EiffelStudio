@@ -138,7 +138,10 @@ feature {NONE} -- Initialization
 			set_recent_projects_manager (l_recent_projects_manager)
 
 					-- Formatting includes breakpoints
-			set_is_with_breakable
+			set_is_with_breakable;
+
+				-- Initialize compiler encoding converter.
+			(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER})
 		ensure
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end

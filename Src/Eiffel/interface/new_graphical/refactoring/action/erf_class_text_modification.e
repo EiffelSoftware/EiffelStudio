@@ -379,10 +379,13 @@ feature -- Load/Save file
 
 	save_text is
 			-- Save the text.
+		local
+			l_encoding: ENCODING
 		do
 				-- We use `actual_class' because we want the class on which the user
 				-- is working on, not the one that he is overridding.
-			save (class_i.actual_class.file_name, text)
+			l_encoding ?= class_i.actual_class.encoding
+			save (class_i.actual_class.file_name, text, l_encoding)
 		end
 
 	discard_text is

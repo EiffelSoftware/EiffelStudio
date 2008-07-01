@@ -28,6 +28,11 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
+	EB_TOKEN_TOOLKIT
+		export
+			{NONE} all
+		end
+
 feature -- Initialize
 
 	initialize_code_complete is
@@ -86,7 +91,7 @@ feature {NONE} -- Access
 			current_line_not_void: Result /= Void
 		end
 
-	current_char: CHARACTER is
+	current_char: CHARACTER_32 is
 			-- Current character, to the right of the cursor.
 		deferred
 		end
@@ -277,11 +282,11 @@ feature -- Tab actions
 						l_cur_token := current_token_in_line (l_line)
 					end
 				until
-					start_of_line (l_cur_token, l_line) or l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = l_line.eol_token
+					start_of_line (l_cur_token, l_line) or token_equal (l_cur_token, "(") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = l_line.eol_token
 				loop
-					if l_cur_token.image.is_equal ("[") then
+					if token_equal (l_cur_token, "[") then
 						l_cur_token := skip_pairs (l_cur_token, l_line, "[", "]")
-					elseif l_cur_token.image.is_equal ("{") then
+					elseif token_equal (l_cur_token, "{") then
 						l_cur_token := skip_pairs (l_cur_token, l_line, "{", "}")
 					end
 					if l_cur_token /= l_line.eol_token then
@@ -413,12 +418,12 @@ feature -- Trigger completion
 
 feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 
-	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
+	complete_feature_from_window (cmp: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN) is
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- If `is_feature_signature' then try to complete arguments and remove the type.
 			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
 		local
-			completed: STRING
+			completed: STRING_32
 			ind: INTEGER
 			lp: INTEGER
 		do
@@ -457,7 +462,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	complete_class_from_window (completed: STRING; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_class_from_window (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
 			-- Insert `completed' in the editor.
 		local
 			i: INTEGER
@@ -483,13 +488,15 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
+	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN) is
  			-- Finish completion process by inserting the completed expression.
 		local
 			i: INTEGER
+			l_completed: STRING_32
 		do
+			l_completed := completed.twin
 			if possibilities_provider.insertion /= Void and then not possibilities_provider.insertion.is_empty then --  valid_index (1) and then not click_tool.insertion.item (1).is_empty then
-				if completed.item (1) = ' ' then
+				if l_completed.item (1) = ' ' then
 					back_delete_char
 				end
 			end
@@ -503,9 +510,9 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 					i := i + 1
 				end
 			end
-			completed.replace_substring_all (";", ",")
-			completed.replace_substring_all ("#", "# ")
-			insert_string (completed)
+			l_completed.replace_substring_all (";", ",")
+			l_completed.replace_substring_all ("#", "# ")
+			insert_string (l_completed)
 
 			if appended_character /= '%U' then
 				insert_char (appended_character)
@@ -564,9 +571,9 @@ feature {NONE} -- Implementation
 			l_cur_token: EDITOR_TOKEN
 		do
 			l_cur_token := a_token.previous
-			Result := l_cur_token = Void or else start_of_line (l_cur_token, a_line) or l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (")") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = a_line.eol_token
+			Result := l_cur_token = Void or else start_of_line (l_cur_token, a_line) or token_equal (l_cur_token, "(") or token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token
 			l_cur_token := a_token
-			Result := Result and (l_cur_token = Void or else l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (")") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = a_line.eol_token)
+			Result := Result and (l_cur_token = Void or else token_equal (l_cur_token, "(") or token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token)
 		end
 
 	seperator_following (a_line: like current_line) : BOOLEAN is
@@ -577,7 +584,7 @@ feature {NONE} -- Implementation
 			l_cur_token: EDITOR_TOKEN
 		do
 			l_cur_token := current_token_in_line (a_line)
-			Result := l_cur_token.image.is_equal (")") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = a_line.eol_token
+			Result := token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token
 		end
 
 	skip_pairs (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
@@ -587,7 +594,7 @@ feature {NONE} -- Implementation
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
 			a_left_and_a_right_attached: a_left /= Void and a_right /= Void
-			a_token_same_as_a_left: a_token.image.is_equal (a_left)
+			a_token_same_as_a_left: token_equal (a_token, a_left)
 		local
 			l_token: EDITOR_TOKEN
 			l_pair_count: INTEGER
@@ -596,11 +603,11 @@ feature {NONE} -- Implementation
 				l_token := a_token
 				l_pair_count := 0
 			until
-				l_token = a_line.eol_token or l_token = Void or else (l_pair_count = 1 and l_token.image.is_equal (a_right))
+				l_token = a_line.eol_token or l_token = Void or else (l_pair_count = 1 and token_equal (l_token, a_right))
 			loop
-				if l_token.image.is_equal (a_left) then
+				if token_equal (l_token, a_left) then
 					l_pair_count := l_pair_count + 1
-				elseif l_pair_count /= 0 and then l_token.image.is_equal (a_right) then
+				elseif l_pair_count /= 0 and then token_equal (l_token, a_right) then
 					l_pair_count := l_pair_count - 1
 				end
 				l_token := l_token.next
@@ -619,7 +626,7 @@ feature {NONE} -- Implementation
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
 			a_left_and_a_right_attached: a_left /= Void and a_right /= Void
-			a_token_same_as_a_left: a_token.image.is_equal (a_right)
+			a_token_same_as_a_left: token_equal (a_token, a_right)
 		local
 			l_token: EDITOR_TOKEN
 			l_pair_count: INTEGER
@@ -628,11 +635,11 @@ feature {NONE} -- Implementation
 				l_token := a_token
 				l_pair_count := 0
 			until
-				l_token = a_line.real_first_token or else l_token = Void or else (l_pair_count = 1 and l_token.image.is_equal (a_left))
+				l_token = a_line.real_first_token or else l_token = Void or else (l_pair_count = 1 and token_equal (l_token, a_left))
 			loop
-				if l_token.image.is_equal (a_right) then
+				if token_equal (l_token, a_right) then
 					l_pair_count := l_pair_count + 1
-				elseif l_pair_count /= 0 and then l_token.image.is_equal (a_left) then
+				elseif l_pair_count /= 0 and then token_equal (l_token, a_left) then
 					l_pair_count := l_pair_count - 1
 				end
 				l_token := l_token.previous
@@ -654,20 +661,20 @@ feature {NONE} -- Implementation
 				l_cur_token := a_token
 				pair_counted := 0
 			until
-				l_cur_token = Void or else (pair_counted = 0 and ((a_know_right_brace and l_cur_token.image.is_equal (")")) or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";"))) or l_cur_token = a_line.eol_token
+				l_cur_token = Void or else (pair_counted = 0 and ((a_know_right_brace and token_equal (l_cur_token, ")")) or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";"))) or l_cur_token = a_line.eol_token
 			loop
-				if l_cur_token.image.is_equal ("(") then
+				if token_equal (l_cur_token, "(") then
 					if not a_know_right_brace then
 						l_cur_token := skip_pairs (l_cur_token, a_line, "(", ")")
 					end
-				elseif l_cur_token.image.is_equal ("[") then
+				elseif token_equal (l_cur_token, "[") then
 					l_cur_token := skip_pairs (l_cur_token, a_line, "[", "]")
-				elseif l_cur_token.image.is_equal ("{") then
+				elseif token_equal (l_cur_token, "{") then
 					l_cur_token := skip_pairs (l_cur_token, a_line, "{", "}")
 				end
-				if l_cur_token.image.is_equal ("(") then
+				if token_equal (l_cur_token, "(") then
 					pair_counted := pair_counted + 1
-				elseif l_cur_token.image.is_equal (")") then
+				elseif token_equal (l_cur_token, ")") then
 					pair_counted := pair_counted - 1
 				end
 				l_cur_token := l_cur_token.next
@@ -683,11 +690,11 @@ feature {NONE} -- Implementation
 			from
 				l_cur_token := current_token_in_line (a_line).previous
 			until
-				l_cur_token = Void or else l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";")
+				l_cur_token = Void or else token_equal (l_cur_token, "(") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";")
 			loop
-				if l_cur_token.image.is_equal ("]") then
+				if token_equal (l_cur_token, "]") then
 					l_cur_token := skip_pairs_backward (l_cur_token, a_line, "[", "]")
-				elseif l_cur_token.image.is_equal ("}") then
+				elseif token_equal (l_cur_token, "}") then
 					l_cur_token := skip_pairs_backward (l_cur_token, a_line, "{", "}")
 				end
 				l_cur_token := l_cur_token.previous
@@ -707,7 +714,7 @@ feature {NONE} -- Implementation
 				l_end_token := selection_end_token_in_line (a_line)
 				l_cur_token := l_start_token
 			until
-				l_cur_token = Void or else l_cur_token = l_end_token or else l_cur_token.image.is_equal ("(")
+				l_cur_token = Void or else l_cur_token = l_end_token or else token_equal (l_cur_token, "(")
 			loop
 				l_cur_token := l_cur_token.next
 			end

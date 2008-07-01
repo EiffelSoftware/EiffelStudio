@@ -21,6 +21,10 @@ inherit
 			{NONE}
 		end
 
+	EC_ENCODING_CONVERTER
+
+	EC_ENCODING_UTINITIES
+
 create
 	make
 
@@ -32,7 +36,7 @@ feature {NONE} -- Initialization
 			-- `a_class': Associated context class to modify class text for.
 		local
 			l_editor: like active_editor_for_class
-			l_text: ?STRING
+			l_text: ?STRING_32
 		do
 			context_class := a_class
 
@@ -41,9 +45,12 @@ feature {NONE} -- Initialization
 			if not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text
+				detected_encoding ?= a_class.encoding
 			else
-				l_text := l_editor.text
+				l_text := l_editor.wide_text
+				detected_encoding := l_editor.encoding
 			end
+
 			if l_text = Void then
 				create l_text.make_empty
 			end
@@ -66,19 +73,19 @@ feature -- Clean up
 
 feature -- Access
 
-	original_text: !STRING
+	original_text: !STRING_32
 			-- Original class text.
 
 	context_class: !CLASS_I
 			-- Context class.
 
-	text: !STRING
+	text: !STRING_32
 			-- Modified class text, valid only when prepared.
 			-- Note: For preformance reasons, the result is not twined.
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_text: ?STRING
+			l_text: ?STRING_32
 		do
 			l_text := modified_data.text
 			if l_text /= Void then
@@ -141,7 +148,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	initial_whitespace (a_pos: INTEGER): !STRING_8
+	initial_whitespace (a_pos: INTEGER): !STRING_32
 			-- Retrieve the initial whitespace at a given position on `text'
 			--
 			-- `a_pos': Orginal position in `original_text' to retrieve the whitespace for.
@@ -162,7 +169,7 @@ feature -- Query
 			end
 
 			if i >= 0 and i < l_pos then
-				Result ?= l_text.substring (i + 1, l_pos)
+				Result := l_text.substring (i + 1, l_pos)
 				from
 					i := 1
 					l_pos := Result.count
@@ -296,7 +303,7 @@ feature -- Basic operations
 			l_editor: EB_SMART_EDITOR
 			l_recent_editor: EB_SMART_EDITOR
 			l_text: SMART_TEXT
-			l_new_text: !STRING
+			l_new_text: !STRING_32
 			l_first_line: INTEGER
 			l_line: INTEGER
 			l_col: INTEGER
@@ -342,7 +349,7 @@ feature -- Basic operations
 						end
 
 							-- Set text, always using a merge.
-						l_new_text := merge_text (l_text.text)
+						l_new_text := merge_text (l_text.wide_text)
 
 							-- Set text to `modified_data' for use in `prepare'
 						if l_recent_editor = l_editor then
@@ -389,9 +396,13 @@ feature -- Basic operations
 					-- Set text to `modified_data' for use in `prepare'
 				modified_data.text := l_new_text
 
+				if detected_encoding = Void then
+					detected_encoding := default_encoding
+				end
+
 					-- No editors, save directly to disk.
 				create l_save
-				l_save.save (context_class.file_name, l_new_text)
+				l_save.save (context_class.file_name, l_new_text, detected_encoding)
 
 					-- Update class file data time stamp
 				original_file_date := context_class.file_date
@@ -436,7 +447,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	merge_text (a_current_text: STRING): !like text
+	merge_text (a_current_text: STRING_32): !like text
 			-- Retrieves the merged text, using a modified source as the base.
 			--
 			-- `a_current_text': The text currently found on disk or in an editor.
@@ -449,12 +460,13 @@ feature {NONE} -- Basic operations
 			l_diff: DIFF_TEXT
 			l_patch: STRING
 		do
+				-- |FIXME: diff library need to support Unicode.
 			create l_diff
 			l_diff.set_text (original_text, text)
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if l_patch /= Void and then not l_patch.is_empty then
-				Result ?= l_diff.patch (a_current_text, l_patch, False)
+				Result ?= l_diff.patch (a_current_text, l_patch, False).as_string_32
 			else
 				Result ?= text
 			end
@@ -634,7 +646,7 @@ feature {NONE} -- Factory
 		local
 			l_class: !like context_class
 			l_editor: like active_editor_for_class
-			l_text: !STRING
+			l_text: !STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)
@@ -642,7 +654,7 @@ feature {NONE} -- Factory
 					-- There's no open editor, use the class text from disk instead.
 				l_text := original_text
 			else
-				l_text ?= l_editor.text
+				create l_text.make_from_string (l_editor.wide_text)
 			end
 			create Result.make (l_class, l_text)
 		end

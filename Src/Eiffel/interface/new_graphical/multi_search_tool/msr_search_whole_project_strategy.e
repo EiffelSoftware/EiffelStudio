@@ -55,7 +55,7 @@ feature -- Basic Operation
 					classes.forth
 				end
 			end
-			launched := true
+			launched := True
 			if not item_matched_internal.is_empty then
 				item_matched_internal.start
 			end

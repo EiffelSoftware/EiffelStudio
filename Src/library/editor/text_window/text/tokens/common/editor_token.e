@@ -21,8 +21,18 @@ inherit
 
 feature -- Access
 
-	image: STRING
+	wide_image: STRING_32
 			-- String representation of the token
+
+	image: STRING is
+			-- String representation of the token
+		obsolete
+			"Use `wide_image' instead."
+		do
+			if wide_image /= Void then
+				Result := wide_image.as_string_8
+			end
+		end
 
 	length: INTEGER
 			-- Number of characters represented by the token.
@@ -353,13 +363,13 @@ feature -- Implementation of clickable and editable text
 			Result := (create {PLATFORM}).is_windows
 		end
 
-	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING; device: EV_DRAWABLE) is
+	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING_32; device: EV_DRAWABLE) is
 		do
 			device.draw_text (pos, d_y + font_offset, text_to_be_drawn)
 		end
 
 invariant
-	image_not_void: image /= Void
+	wide_image_not_void: wide_image /= Void
 	width_positive_or_null: width >= 0
 	previous = Void implies position = 0
 

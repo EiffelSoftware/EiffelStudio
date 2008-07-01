@@ -21,7 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_cluster: CLUSTER_I; only_compiled_class: BOOLEAN) is
+	make (a_keyword: like keyword;
+			a_range: like surrounding_text_range;
+			a_cluster: like cluster_i;
+			only_compiled_class: like only_compiled_class_searched) is
 			-- Initialization with a cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -50,9 +53,7 @@ feature -- Status report
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result :=
-			Precursor and
-			is_cluster_set
+			Result := Precursor and is_cluster_set
 		end
 
 	only_compiled_class_searched: BOOLEAN
@@ -134,7 +135,7 @@ feature -- Basic operatioin
 					classes.forth
 				end
 			end
-			launched := true
+			launched := True
 			if not item_matched_internal.is_empty then
 				item_matched_internal.start
 			end
@@ -147,8 +148,8 @@ feature -- Basic operatioin
 			class_strategy := Void
 			cluster_strategy := Void
 			cluster_i := Void
-			is_subcluster_searched_internal := false
-			only_compiled_class_searched := false
+			is_subcluster_searched_internal := False
+			only_compiled_class_searched := False
 		end
 
 feature -- Element change

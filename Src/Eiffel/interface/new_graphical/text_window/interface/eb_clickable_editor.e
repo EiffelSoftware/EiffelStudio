@@ -342,13 +342,13 @@ feature -- Compatibility
 			text_displayed.set_position (a_position)
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING_GENERAL) is
 			-- Put string `s' at current position.
 		do
 			text_displayed.add_string (s)
 		end
 
-	put_char (c: CHARACTER) is
+	put_char (c: CHARACTER_32) is
 			-- Put a character `c' at current position.
 		do
 			text_displayed.add_char (c)
@@ -757,7 +757,7 @@ feature {NONE} -- Implementation
 	text_from_formatted_text: STRING_32 is
 			-- Temperary implementation
 		do
-			Result := text
+			Result := wide_text
 		end
 
 feature {NONE} -- Memory management

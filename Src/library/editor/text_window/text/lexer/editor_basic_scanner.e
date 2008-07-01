@@ -83,7 +83,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_basic_scanner.l' at line 40")
 end
 
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					curr_token := new_text_token (text)
 					update_token_list
 					
 when 6 then

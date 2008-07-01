@@ -103,9 +103,11 @@ feature -- Dictionary
 				end
 			end
 		ensure
-			can_handle(a_path) implies handled
-			not (can_handle(a_path) and then next /= Void) implies handled = next.handled
-			not (can_handle(a_path) and then next = Void) implies not handled
+			handled_if_can_handle: can_handle (a_path) implies handled
+			next_handeld: ((not can_handle (a_path)) and then next /= Void)
+							implies handled = next.handled
+			not_handeled: ((not can_handle (a_path)) and then next = Void)
+							implies not handled
 		end
 
 	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY is

@@ -39,9 +39,9 @@ feature	-- Access
 			-- return appropriate dictionary
 		do
 			if available_locales.has (a_locale) then
-				Result := chain.extract_dictionary (locale_file_list.item (a_locale))
+				Result := chain.get_file_dictionary (locale_file_list.item (a_locale))
 			elseif available_languages.has (a_locale.language_id) then
-				Result := chain.extract_dictionary (
+				Result := chain.get_file_dictionary (
 					language_file_list.item (a_locale.language_id))
 			else
 				create {I18N_DUMMY_DICTIONARY} Result.make(0)

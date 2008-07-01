@@ -412,7 +412,8 @@ feature {NONE} -- Action handlers
 	on_veto_tab_drop_action (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN is
 			-- Veto function for tab area drop actions
 		do
-			Result := a_content /= Void and then a_content.type = {SD_ENUMERATION}.editor
+			-- `a_content' can be void or its type is editor type
+			Result := a_content = Void or else a_content.type = {SD_ENUMERATION}.editor
 			if Result then
 				Result := default_veto_func (a_stone, a_content)
 			end

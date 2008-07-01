@@ -19,7 +19,7 @@ inherit
 		end
 
 convert
-	widget: {G}
+	widget: {EV_WIDGET, !G}
 
 feature {NONE} -- User interface initialization
 
@@ -46,8 +46,8 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
-			-- To be called when the button has became useless.
+	internal_recycle
+			-- <Precursor>
 		do
 			if is_initialized then
 				widget.destroy
@@ -59,12 +59,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	widget: G
+	widget: !G
 			-- Actual widget
 
 feature {NONE} -- Access
 
-	window: EV_WINDOW
+	window: ?EV_WINDOW
 			-- Acces to window containing widget
 		require
 			is_interface_usable: is_interface_usable
@@ -166,7 +166,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_minimum_width (a_minimum_width: like minimum_width) is
+	set_minimum_width (a_minimum_width: like minimum_width)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 			-- From now, `minimum_width' is fixed and will not be changed
@@ -181,7 +181,7 @@ feature -- Element change
 			minimum_width_assigned: (a_minimum_width > 0 implies minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (minimum_width <= 1))
 		end
 
-	set_minimum_height (a_minimum_height: like minimum_height) is
+	set_minimum_height (a_minimum_height: like minimum_height)
 			-- Set `a_minimum_height' in pixels to `minimum_height'.
 			-- If `height' is less than `a_minimum_height', resize.
 			-- From now, `minimum_height' is fixed and will not be changed
@@ -195,7 +195,7 @@ feature -- Element change
 			minimum_height_assigned: (a_minimum_height > 0 implies minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (minimum_height <= 1))
 		end
 
-	set_minimum_size (a_minimum_width: like minimum_width; a_minimum_height: like minimum_height) is
+	set_minimum_size (a_minimum_width: like minimum_width; a_minimum_height: like minimum_height)
 			-- Assign `a_minimum_height' to `minimum_height'
 			-- and `a_minimum_width' to `minimum_width' in pixels.
 			-- If `width' or `height' is less than minimum size, resize.
@@ -256,11 +256,8 @@ feature {NONE} -- Factory
 			not_result_has_parent: not Result.has_parent
 		end
 
-invariant
-	widget_attached: is_initialized implies widget /= Void
-
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

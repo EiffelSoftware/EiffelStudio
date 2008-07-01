@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			l_link: EVS_LINK_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
 			l_shrinkable: EV_FIXED
+			l_severity_label: EV_LABEL
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
@@ -204,6 +205,24 @@ feature {NONE} -- Initialization
 			create make_public_check.make_with_text ("Make bug publically available")
 			l_vbox.extend (make_public_check)
 			l_vbox.disable_item_expand (make_public_check)
+
+				-- Severity
+			create l_hbox
+			create l_severity_label.make_with_text ("Severity: ")
+			l_hbox.extend (l_severity_label)
+			l_hbox.disable_item_expand (l_severity_label)
+			create severity_critical_radio.make_with_text ("Critical")
+			l_hbox.extend (severity_critical_radio)
+			l_hbox.disable_item_expand (severity_critical_radio)
+			create severity_serious_radio.make_with_text ("Serious")
+			l_hbox.extend (severity_serious_radio)
+			l_hbox.disable_item_expand (severity_serious_radio)
+			create severity_non_critical_radio.make_with_text ("Non-critical")
+			l_hbox.extend (severity_non_critical_radio)
+			l_hbox.disable_item_expand (severity_non_critical_radio)
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
+			severity_serious_radio.enable_select
 
 				-- Add items to login context
 			--login_context_item.force_last (l_frame)
@@ -670,6 +689,15 @@ feature {NONE} -- User interface elements
 	shrink_widget: EV_FIXED
 			-- Shrink widget used to perform shinking
 
+	severity_critical_radio: EV_RADIO_BUTTON
+			-- Severity critical radio button
+
+	severity_serious_radio: EV_RADIO_BUTTON
+			-- Severity serious radio button
+
+	severity_non_critical_radio: EV_RADIO_BUTTON
+			-- Severity non-critical radio button
+
 feature {NONE} -- Reporting
 
 	synopsis: STRING_32
@@ -777,6 +805,14 @@ feature {NONE} -- Reporting
 			l_report.environment := workbench_name + " " + version_number
 			l_report.to_reproduce := "Please see description"
 			l_report.confidential := not make_public_check.is_selected
+			if severity_critical_radio.is_selected then
+				l_report.severity := l_report.severity_critical
+			elseif severity_non_critical_radio.is_selected then
+				l_report.severity := l_report.severity_non_critical
+			else
+				check severity_serious_radio.is_selected end
+				l_report.severity := l_report.severtiy_serious
+			end
 
 			support_login.report_bug (l_report)
 

@@ -1522,7 +1522,7 @@ feature -- Supplier checking
 						when 1 then
 							l_arg_type ?= l_creation_proc.arguments.first
 							l_arg_type := l_arg_type.instantiation_in (system.root_type, class_id).actual_type
-							l_error := not l_arg_type.is_safe_equivalent (Array_of_string)
+							l_error := not array_of_string.conform_to (l_arg_type)
 						else
 							l_error := True
 						end
@@ -1579,11 +1579,16 @@ feature -- Supplier checking
 			string_type: CL_TYPE_A
 		once
 			create string_type.make (System.string_8_id)
+			string_type.set_attached_mark
 			create array_generics.make (1, 1)
 			array_generics.put (string_type, 1)
 			create Result.make (System.array_id, array_generics)
+			Result.set_attached_mark
 		ensure
 			array_of_string_not_void: Result /= Void
+			result_is_attached: Result.is_attached
+			result_has_generic: Result.generics.count = 1
+			result_g_is_attached: Result.generics.item (1).is_attached
 		end
 
 feature -- Order relation for inheritance and topological sort

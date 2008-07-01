@@ -61,6 +61,10 @@ feature -- Initialization
 			development_window := a_dev_win
 			docking_manager := a_dev_win.docking_manager
 			register_action (docking_manager.tab_drop_actions, agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
+
+			set_veto_pebble_function (agent on_veto_tab_drop_action)
+			docking_manager.tab_drop_actions.set_veto_pebble_function (veto_pebble_function_internal)
+
 			if veto_pebble_function_internal = Void then
 				docking_manager.tab_drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
@@ -400,6 +404,15 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_veto_tab_drop_action (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN is
+			-- Veto function for tab area drop actions
+		do
+			Result := a_content /= Void and then a_content.type = {SD_ENUMERATION}.editor
+			if Result then
+				Result := default_veto_func (a_stone, a_content)
+			end
+		end
+
 feature -- Status report
 
 	is_class_editing (a_file_name: STRING) : BOOLEAN is
@@ -478,9 +491,9 @@ feature -- Status report
 			-- Is `a_stone' suitable for a new editor?
 		do
 			if veto_pebble_function_internal /= Void then
-				Result := veto_pebble_function_internal.item ([a_stone])
+				Result := veto_pebble_function_internal.item ([a_stone, last_focused_editor.docking_content])
 			else
-				Result := default_veto_func (a_stone)
+				Result := default_veto_func (a_stone, last_focused_editor.docking_content)
 			end
 		end
 
@@ -621,7 +634,7 @@ feature -- Element change
 			create editors_internal.make (5)
 		end
 
-	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]) is
+	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]) is
 			-- Set veto pebble_function for all editors.
 		require
 			a_func_attached: a_func /= Void
@@ -641,6 +654,8 @@ feature -- Element change
 				end
 				l_editors.forth
 			end
+		ensure
+			set: veto_pebble_function_internal = a_func
 		end
 
 	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN is
@@ -1091,7 +1106,7 @@ feature {NONE} -- Implementation
 	editor_number_factory: EB_EDITOR_NUMBER_FACTORY
 			-- Produce editor number and internal names.
 
-	veto_pebble_function_internal: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	veto_pebble_function_internal: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
 			-- Veto pebble function.
 
 	close_editor_perform (a_editor: like current_editor) is
@@ -1397,7 +1412,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_veto_func (a_stone: ANY): BOOLEAN is
+	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN is
 			-- Default veto function
 		local
 			l_cluster_stone: CLUSTER_STONE

@@ -165,30 +165,36 @@ feature {NONE} -- Implementation
 				new_class.open_write
 				new_class.put_string (
 					"indexing%N%
-					%%Tdescription%T: %"System's root class%"%N%
-					%%Tdate: %"$Da"+"te$%"%N%
-					%%Trevision: %"$Rev"+"ision$%"%N%
+					%%Tdescription : %"" + system_name + " application root class%"%N%
+					%%Tdate        : %"$Date$%"%N%
+					%%Trevision    : %"$Revision$%"%N%
 					%%N%
 					%class%N%
 					%%T" + root_class_name + "%N%
 					%%N%
+					%inherit%N%
+					%%TARGUMENTS%N%
+					%%T%Texport%N%
+					%%T%T%T{NONE} all%N%
+					%%T%Tend%N%
+					%%N%
 					%create%N%
 					%%T" + root_feature_name + "%N%
 					%%N%
-					%feature -- Initialization%N%
+					%feature {NONE} -- Initialization%N%
 					%%N%
-					%%T" + root_feature_name + " is%N%
+					%%T" + root_feature_name + "%N%
 					%%T%T%T-- Run application.%N%
 					%%T%Tdo%N%
 					%%T%T%T--| Add your code here%N%
 					%%T%Tend%N%
-					%%Nend -- class " + root_class_name + "%
+					%%Nend%
 					%%N")
 				new_class.close
 			end
 		rescue
 			add_error_message (
-				"Unable to create the root class file '"+root_class_filename+"'%N%
+				"Unable to create the root class file '"+ root_class_filename +"'%N%
 				%Check your write permissions on this file and on this directory")
 		end
 

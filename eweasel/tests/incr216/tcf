@@ -17,7 +17,7 @@ copy_sub 	string_8.e $CLUSTER string_8.e
 copy_sub 	string_32.e $CLUSTER string_32.e
 copy_sub 	string_general.e $CLUSTER string_general.e
 compile_melted
-compile_result 	validity_error TYPE VJRV(2); STRING_TO_INTEGER_CONVERTOR VEEN VEEN; FILE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN; RAW_FILE VEEN; PLAIN_TEXT_FILE VEEN; CONSOLE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN
+compile_result 	validity_error TYPE VJRV(2); STRING_TO_INTEGER_CONVERTOR VEEN VEEN; FILE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN; RAW_FILE VEEN; PLAIN_TEXT_FILE VEEN; CONSOLE VEEN VEEN VEEN
 
 define PARENT 	"TO_SPECIAL [CHARACTER] rename item as item redefine copy, is_equal, out, item, infix "@", put, valid_index end"
 copy_sub 	string_8.e $CLUSTER string_8.e

@@ -132,16 +132,27 @@ feature -- Open inner container data.
 				top_container := internal_docking_manager.query.inner_container_main.editor_parent
 				if top_container = internal_docking_manager.query.inner_container_main then
 					l_container ?= top_container
-					check not_void: l_container /= Void end
-					-- It must be only one zone in top container
-					l_only_one_item := l_container.item
-					l_container.wipe_out
-					create l_temp_split
-					l_container.extend (l_temp_split)
-					l_temp_split.extend (l_only_one_item)
-					top_container := l_temp_split
+					if l_container /= Void then
+						-- It must be only one zone in top container
+						l_only_one_item := l_container.item
+						if l_only_one_item /= Void then
+							l_container.wipe_out
+							create l_temp_split
+							l_container.extend (l_temp_split)
+							l_temp_split.extend (l_only_one_item)
+							top_container := l_temp_split
+						else
+							check not_possible: False end
+						end
+					else
+						check not_possible: False end
+					end
 				end
-				internal_docking_manager.query.inner_container_main.save_spliter_position (top_container)
+				if top_container /= Void then
+					internal_docking_manager.query.inner_container_main.save_spliter_position (top_container)
+				else
+					check not_possible: False end
+				end
 				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
 			else
 				l_has_place_holder := True
@@ -156,22 +167,36 @@ feature -- Open inner container data.
 				if l_place_holder_zone /= Void then
 				-- l_place_holder_zone maybe void because open_config fail.
 					l_parent := l_place_holder_zone.parent
+					if l_parent /= Void then
+						l_split ?= l_parent
+						if l_split /= Void then
+							l_split_position := l_split.split_position
+						end
+						l_parent.prune (l_place_holder_zone)
 
-					l_split ?= l_parent
-					if l_split /= Void then
-						l_split_position := l_split.split_position
-					end
-					l_parent.prune (l_place_holder_zone)
+						if top_container /= Void then
+							if top_container.parent /= Void then
+								top_container.parent.prune (top_container)
+							end
+							l_parent.extend (top_container)
+						else
+							check not_possible: False end
+						end
 
-					if top_container.parent /= Void then
-						top_container.parent.prune (top_container)
+						if l_split /= Void and then l_split.minimum_split_position <= l_split_position and l_split_position <= l_split.maximum_split_position then
+							l_split.set_split_position (l_split_position)
+						end
+					else
+						check not_possible: False end
 					end
-					l_parent.extend (top_container)
-					if l_split /= Void and then l_split.minimum_split_position <= l_split_position and l_split_position <= l_split.maximum_split_position then
-						l_split.set_split_position (l_split_position)
-					end
+
 				end
-				internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
+				if top_container /= Void then
+					internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
+				else
+					check not_possible: False end
+				end
+
 				internal_docking_manager.zones.place_holder_content.close
 				if l_place_holder_zone /= Void then
 					internal_docking_manager.query.inner_container_main.update_middle_container
@@ -182,7 +207,6 @@ feature -- Open inner container data.
 
 			if Result then
 				open_editor_minimized_data_minimize (l_config_data)
-
 			end
 
 			internal_docking_manager.command.resize (True)

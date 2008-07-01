@@ -121,7 +121,6 @@ feature {NONE} -- Initialization
 
 				-- Register menu item actions
 			register_action (add_manual_menu_item.select_actions, agent on_add_contract)
-			register_action (add_from_template_menu.select_actions, agent on_add_contract_from_template)
 		end
 
 	on_after_initialized

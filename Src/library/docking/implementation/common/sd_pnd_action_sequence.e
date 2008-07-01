@@ -25,7 +25,7 @@ create {SD_PND_ACTION_SEQUENCE}
 	make_filled
 
 feature {NONE} -- Initialization
-	
+
 	default_create is
 			-- Create a ready to use action sequence.
 		do
@@ -86,7 +86,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]) is
+	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]) is
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -106,10 +106,10 @@ feature -- Status report
 				cur := cursor
 				a_tuple := [a_pebble, a_content]
 				start
-			until 
+			until
 				after or Result
 			loop
-				Result := item.valid_operands (a_tuple) 
+				Result := item.valid_operands (a_tuple)
 				if
 					Result and then
 					veto_pebble_function /= Void and then
@@ -123,8 +123,9 @@ feature -- Status report
 
 		end
 
-	veto_pebble_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	veto_pebble_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
 			-- User function to determine whether dropping is allowed.
+			-- Argument {SD_CONTENT} means which {SD_CONTENT} stone will be dropped to
 
 feature -- Element change
 

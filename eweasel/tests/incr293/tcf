@@ -1,0 +1,24 @@
+test_name 	 inherited-code-checking-crash
+test_description When a class has one of its ancestor that has changed by moving an infix routine to a parent class, then the compiler crashes while processing the inherited assertions of descendant classes if they use the routine that has moved.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	str.e $CLUSTER str.e
+copy_raw 	k_str.e $CLUSTER k_str.e
+copy_raw 	uc_str.e $CLUSTER uc_str.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	str_rev1.e $CLUSTER str.e
+copy_raw 	r_str.e $CLUSTER r_str.e
+
+compile_melted
+compile_result	ok
+
+copy_raw 	uc_str_rev1.e $CLUSTER uc_str.e
+
+compile_melted
+compile_result	ok
+
+test_end

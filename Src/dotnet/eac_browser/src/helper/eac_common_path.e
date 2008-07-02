@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			-- with path to .NET Framework SDK location. Number of characters set in `path'
 			-- is given by `filled_length'.
 		external
-			"C [dllwin32 %"mscoree.dll%"] (LPWSTR, DWORD, DWORD*): BOOL"
+			"dllwin %"mscoree.dll%" signature (LPWSTR, DWORD, DWORD*): BOOL use <windows.h>"
 		alias
 			"GetCORSystemDirectory"
 		end

@@ -47,6 +47,7 @@
     <!-- END ADD REMOVE PROGRAM -->
 
     <!-- PROPERTIES -->
+    <Property Id="ALLUSERS">1</Property>                                                                                  <!-- Indicates if the installation should be for all users or not -->
     <?ifdef x64?>
       <Property Id="ISEPLATFORM">win64</Property>
     <?else?>

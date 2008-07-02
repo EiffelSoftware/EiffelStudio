@@ -21,7 +21,7 @@ feature -- Native methods
 			-- `Result': If the function succeeds, the return value is the length, in TCHARs, of the string copied to lpszShortPath,
 			--           not including the terminating null character.
 		external
-			"C [dllwin32 %"Kernel32.dll%"] (LPCTSTR, LPTSTR, DWORD): DWORD"
+			"dllwin %"kernel32.dll%" signature (LPCTSTR, LPTSTR, DWORD): DWORD use <windows.h>"
 		alias
 			"GetShortPathNameW"
 		end

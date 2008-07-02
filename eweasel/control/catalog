@@ -711,6 +711,7 @@ test	change-system-crash				incr289  tcf pass incrementality
 test	unresolved-c-externals			incr290  tcf pass incrementality
 test	unresolved-c-externals-2		incr291  tcf pass incrementality
 test	bogus-vmrc-2					incr292  tcf pass incrementality
+test	inherited-code-checking-crash	incr293  tcf fail incrementality
 
 
 -- Melting

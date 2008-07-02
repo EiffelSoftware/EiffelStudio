@@ -55,6 +55,14 @@ feature -- Access
 			"CREATE_UNICODE_ENVIRONMENT"
 		end
 
+	create_suspended: INTEGER is
+			-- The primary thread of the new process is created in a suspended state, and does not run until the ResumeThread function is called.
+		external
+			"C [macro <winbase.h>]"
+		alias
+			"CREATE_SUSPENDED"
+		end
+
  	is_valid_creation_constant (a_constant: INTEGER): BOOLEAN is
 			-- Is `a_constant' a valid process creation constant?
 		do

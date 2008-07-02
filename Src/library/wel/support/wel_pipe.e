@@ -349,8 +349,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WIZARD_PIPE
-
+end

@@ -1,5 +1,7 @@
 indexing
 	description: "Manipulate Windows handle to file"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -318,4 +320,15 @@ feature {NONE} -- Implementation
 			"SetFilePointer"
 		end
 
+indexing
+	library:   "EiffelProcess: Manipulation of processes with IO redirection."
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

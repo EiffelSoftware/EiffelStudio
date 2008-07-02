@@ -1,0 +1,27 @@
+test_name 	 missing-protection-in-inline-c-code
+test_description An Eiffel external C routine where argument is an Eiffel class should protect the argument and pass the protected argument to the C inline code, however, it does not.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+	
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

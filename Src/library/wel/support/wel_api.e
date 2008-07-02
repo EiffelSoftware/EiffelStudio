@@ -264,6 +264,16 @@ feature -- Processes
 			]"
 		end
 
+feature -- Threads
+
+	resume_thread (a_thread: POINTER): INTEGER is
+			-- SDK ResumeThread
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_INTEGER_32) ResumeThread((HANDLE) $a_thread);"
+		end
+
 feature -- Scrolling
 
 	frozen set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is

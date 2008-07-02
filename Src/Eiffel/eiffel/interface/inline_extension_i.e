@@ -76,11 +76,11 @@ feature -- Code generation
 			name := inline_name (name)
 
 			l_buffer := Context.buffer
+			l_buffer.put_new_line
 			l_ret_type := inline_byte_code.result_type
 			if not l_ret_type.is_void then
 				put_eif_test := l_ret_type.is_boolean
 				l_is_func := True
-				l_buffer.put_new_line
 				a_result.print_register
 				l_buffer.put_string (" = ")
 				if put_eif_test then
@@ -100,14 +100,14 @@ feature -- Code generation
 				end
 				l_buffer.put_character ('(')
 				l_buffer.put_string (arg_types.item (i))
-				l_buffer.put_string (") arg" + i.out)
+				l_buffer.put_two_character (')', ' ')
+				generate_i_th_parameter (Void, i)
 				i := i + 1
 			end
 			if put_eif_test then
 				l_buffer.put_character (')')
 			end
-			l_buffer.put_string (");")
-			l_buffer.put_new_line
+			l_buffer.put_two_character (')', ';')
 		end
 
 	force_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING]) is

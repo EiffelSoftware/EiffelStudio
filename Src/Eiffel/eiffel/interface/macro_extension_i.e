@@ -45,6 +45,7 @@ feature -- Code generation
 		do
 			l_ret_type := macro_byte_code.result_type
 			l_buffer := Context.buffer
+			l_buffer.put_new_line
 			if not l_ret_type.is_void then
 				a_result.print_register
 				l_buffer.put_string (" = ")
@@ -54,7 +55,6 @@ feature -- Code generation
 			nb := macro_byte_code.argument_count
 			internal_generate_access (macro_byte_code.external_name, Void, nb, l_ret_type)
 			l_buffer.put_character (';')
-			l_buffer.put_new_line
 		end
 
 	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is

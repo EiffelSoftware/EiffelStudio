@@ -1456,6 +1456,7 @@ test	polymorphic-feature-address-bad-code	ccomp072 tcf pass c_compilation
 test	agent-with-like-bad-declaration	ccomp073 tcf pass c_compilation
 test	expanded-generic-wrong-c-with-multiple-ancestor	ccomp074 tcf fail c_compilation
 test	missing-undef-c-compiler-error	ccomp075 tcf pass c_compilation
+test	missing-protection-in-inline-c-code	ccomp076 tcf pass c_compilation
 
 -- Storable tests
 

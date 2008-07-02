@@ -1,6 +1,5 @@
 indexing
 	description: "Object that represents a launched process"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ inherit
 		rename
 			launch as wel_launch
 		export
-			{ANY}process_info
+			{ANY} process_info
 		redefine
 			startup_info
 		end

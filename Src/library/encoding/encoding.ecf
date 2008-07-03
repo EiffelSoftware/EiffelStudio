@@ -28,6 +28,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_library>
+		<external_include location="$(ISE_LIBRARY)/library/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="encoding" location=".\">
 			<option namespace="Encoding">

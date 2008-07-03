@@ -16,10 +16,13 @@ inherit
 feature -- Access
 
 	system_code_page: STRING is
-			-- System code page
-			-- Take oem as default
+			-- <Precursor>
+			-- Name of character set.
+		local
+			l_p: POINTER
 		do
-			-- Not implemented.
+			l_p := c_current_codeset
+			Result := pointer_to_multi_byte (l_p, c_strlen (l_p))
 		end
 
 	console_code_page: STRING is
@@ -33,7 +36,7 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-	
+
 	is_utf8_activated: BOOLEAN is
 			-- Is UTF-8 activated in current system?
 		external
@@ -43,6 +46,28 @@ feature {NONE} -- Implementation
 				setlocale (LC_ALL, "");
 				return (EIF_BOOLEAN)(strcmp (nl_langinfo (CODESET), "UTF-8") == 0);
 			]"
+		end
+
+	c_current_codeset: POINTER is
+			-- Current codeset name.
+		external
+			"C inline use <eif_langinfo.h>"
+		alias
+			"[
+				#if EIF_OS == EIF_OS_OPENBSD
+					return locale_charset ();
+				#else
+					return nl_langinfo (CODESET);
+				#endif
+			]"
+		end
+
+	c_strlen (ptr: POINTER): INTEGER is
+				-- length of a c string
+		external
+			"C (void *): EIF_INTEGER| %"string.h%""
+		alias
+			"strlen"
 		end
 
 indexing

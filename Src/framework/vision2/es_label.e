@@ -64,6 +64,7 @@ feature {NONE} -- Implementation
 			l_maximum_string_width: INTEGER
 			l_lines_changed: BOOLEAN
 			l_all_space_indexes: ARRAYED_LIST [INTEGER]
+			l_font: like font
 		do
 			create l_all_space_indexes.make (20)
 			create l_lines.make (4)
@@ -104,7 +105,10 @@ feature {NONE} -- Implementation
 					l_counter > l_all_space_indexes.count
 				loop
 					l_temp_string := l_modified_text.substring (l_start_pos, l_all_space_indexes.i_th (l_counter) - 1)
-					l_current_width := font.string_width (l_temp_string)
+					if l_font = Void then
+						l_font := font
+					end
+					l_current_width := l_font.string_width (l_temp_string)
 					if l_current_width <= l_maximum_string_width then
 						l_last_string := l_temp_string
 						l_counter := l_counter + 1

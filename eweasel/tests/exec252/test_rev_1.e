@@ -34,7 +34,7 @@ feature
 		external
 			"C inline"
 		alias
-			"((void (*)(EIF_REFERENCE)) $p) ($c);"
+			"((void (*)(EIF_REFERENCE)) $p) (eif_access($c));"
 		end
 
 end

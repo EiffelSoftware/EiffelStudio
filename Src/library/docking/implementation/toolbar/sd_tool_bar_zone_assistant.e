@@ -318,7 +318,7 @@ feature -- Command
 			not_void: zone.content /= Void
 		local
 			l_item: SD_TOOL_BAR_ITEM
-			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_all_items, l_content_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_name: STRING_GENERAL
 			l_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; displayed: BOOLEAN]]
 			l_content: SD_TOOL_BAR_CONTENT
@@ -336,13 +336,13 @@ feature -- Command
 			loop
 				l_name := l_data.item.name
 				check not_void: l_name /= Void end
-				l_item := Void
 				if l_name.as_string_32.is_equal (l_separator.name.as_string_32) then
 					-- First check if it's a separator
 					l_content.items.extend (l_separator)
 					create l_separator.make
 				else
 					from
+						l_item := Void
 						l_all_items.start
 					until
 						l_all_items.after or l_item /= Void
@@ -365,6 +365,27 @@ feature -- Command
 				end
 				l_data.forth
 			end
+
+			-- After restored items data, content items should not less than original state items' count (state before calling this feature)
+			-- See bug#13972
+			-- SD_TOOL_BAR_SEPARATOR is ignored
+			from
+				l_content_items := l_content.items
+				l_all_items.start
+			until
+				l_all_items.after
+			loop
+				l_item := l_all_items.item
+				l_separator ?= l_item
+
+				if not l_content_items.has (l_item) and l_separator = Void then
+					l_item.disable_displayed
+					l_content_items.extend (l_item)
+				end
+				l_all_items.forth
+			end
+			-- Maybe we should check items count (ignore separator) should equal original items count
+
 			refresh_items_visible
 		end
 

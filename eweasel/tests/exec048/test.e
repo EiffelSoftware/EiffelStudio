@@ -12,7 +12,7 @@ feature
 		external "C inline use %"eif_eiffel.h%", <stdio.h>"
 		alias "[
 			printf ("Hey you weasel\n");
-  			printf ("Argument count is %ld\n", eif_field ($args, "upper", EIF_INTEGER));
+  			printf ("Argument count is %ld\n", eif_field (eif_access($args), "upper", EIF_INTEGER));
 			fflush(stdout);
 			]"
 		end

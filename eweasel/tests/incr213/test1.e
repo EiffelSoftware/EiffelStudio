@@ -9,7 +9,21 @@ feature
 	
 	value (n: G): G is 
 		external "C inline"
-		alias "$n"
+		alias 
+		"[
+#ifndef XXEWEASEL_EIF_REFERENCE
+#define XXEWEASEL_EIF_REFERENCE 1
+#endif
+#ifndef XXEWEASEL_EIF_REAL_64
+#define XXEWEASEL_EIF_REAL_64 2
+#endif
+
+#if XXEWEASEL_$$_result_type == XXEWEASEL_EIF_REFERENCE
+			return eif_access($n);
+#else
+			return $n;
+#endif
+		]"
 		end
 
 

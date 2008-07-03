@@ -459,6 +459,11 @@ feature -- Misc
 			create Result.make_with_8_bit_rgb (64, 64, 64)
 		end
 
+	dark_gray: EV_COLOR is
+		once
+			Result := (create {EV_STOCK_COLORS}).dark_grey
+		end
+
 	plain_black: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)

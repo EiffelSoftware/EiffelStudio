@@ -858,12 +858,16 @@ feature {NONE} -- Blink Cursor Management
 			end
 			media.set_xor_mode
 			if not do_show then
-				media.set_foreground_color (editor_preferences.plain_gray)
+					-- Non focus cusor color
+				media.set_foreground_color (editor_preferences.dark_gray)
 			elseif editor_preferences.blinking_cursor and has_focus then
 				if let_blink and then blink_on then
-					media.set_foreground_color (editor_preferences.plain_black)
+						-- Blink on, draw invert color.
+					media.set_foreground_color (editor_preferences.plain_white)
 				else
-					media.set_foreground_color (editor_preferences.normal_background_color)
+						-- Blink off, draw invert color twice back to what it was.
+					media.set_foreground_color (editor_preferences.plain_white)
+					media.fill_rectangle (x, y, width_cursor, ln_height)
 				end
 			else
 				media.set_foreground_color (editor_preferences.plain_white)

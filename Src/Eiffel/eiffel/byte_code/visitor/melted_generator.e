@@ -1578,6 +1578,15 @@ feature {NONE} -- Visitors
 				l_expr ?= a_node.expressions.item
 				check l_expr_not_void: l_expr /= Void end
 				l_expr.process (Current)
+				if l_expr.is_hector then
+					if {l_hector_b: HECTOR_B} l_expr then
+						make_protected_byte_code (l_hector_b, 0)
+					else
+						check
+							is_hector_expression: False
+						end
+					end
+				end
 				a_node.expressions.back
 			end
 			if l_real_ty.associated_class.is_precompiled then

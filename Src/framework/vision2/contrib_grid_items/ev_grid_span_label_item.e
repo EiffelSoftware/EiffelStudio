@@ -158,11 +158,11 @@ feature {NONE} -- Implementation
 			end
 
 			a_drawable.set_foreground_color (bg)
-			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
+			a_drawable.fill_rectangle (0, 0, width, height)
 			if not g.pre_draw_overlay_actions.is_empty then
 				g.pre_draw_overlay_actions.call ([a_drawable, Current, column.index, row.index])
 				a_drawable.set_foreground_color (bg)
-				a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height - 1)
+				a_drawable.fill_rectangle (0, 0, width, height - 1)
 			end
 
 			w := 0
@@ -171,6 +171,12 @@ feature {NONE} -- Implementation
 				if pixmap /= Void then
 					a_drawable.draw_pixmap (3 + w, 2, pixmap)
 					w := w + pixmap.width + extra_space_after_pixmap
+				end
+				if is_selected then
+					a_drawable.set_foreground_color (create {EV_COLOR})
+					a_drawable.enable_dashed_line_style
+					a_drawable.draw_rectangle (1, 1, width - 2, height - 2)
+					a_drawable.disable_dashed_line_style
 				end
 			else
 				m := master_item

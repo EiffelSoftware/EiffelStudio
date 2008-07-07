@@ -5297,10 +5297,22 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						l_make_item_visible := horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key right shouldn't affect row selection
-							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+							if not is_item_navigatable_to (prev_sel_item) then
 								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+								if a_sel_item = Void and then is_tree_enabled then
+										-- We may have a tree item so we should perform tree key handling
+										-- If node is collapsed then we expand it.
+									if prev_sel_item.row.subrow_count > 0 then
+											-- We have a subrow(s) so we select the first one if expanded
+										if not prev_sel_item.row.is_expanded then
+											prev_sel_item.row.expand
+										else
+											a_sel_item := find_next_item_in_row (prev_sel_item.row.subrow (1), prev_sel_item.column.index - 1, True)
+										end
+									end
+								end
 							end
 						elseif l_make_item_visible then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
@@ -5308,14 +5320,37 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 								(columns @ (items_spanning @ 1)).ensure_visible
 							end
 						end
+					when {EV_KEY_CONSTANTS}.key_back_space then
+						if not is_row_selection_enabled then
+							if
+								is_tree_enabled and then
+								is_item_navigatable_to (prev_sel_item) and then
+								find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False) = Void
+							then
+								if prev_sel_item.row.parent_row /= Void then
+									a_sel_item := find_next_item_in_row (prev_sel_item.row.parent_row, prev_sel_item.column.index.min (prev_sel_item.row.parent_row.count) + 1, False)
+								end
+							end
+						end
 					when {EV_KEY_CONSTANTS}.Key_left then
 						l_make_item_visible := horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key left shouldn't affect row selection
-							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+							if not is_item_navigatable_to (prev_sel_item) then
 								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+								if a_sel_item = Void and then is_tree_enabled then
+									-- We may have a tree item so we should perform tree key handling
+									-- If node is expanded then we collapse it.
+									if prev_sel_item.row.is_expanded then
+										prev_sel_item.row.collapse
+									else
+										if prev_sel_item.row.parent_row /= Void then
+											a_sel_item := find_next_item_in_row (prev_sel_item.row.parent_row, prev_sel_item.column.index.min (prev_sel_item.row.parent_row.count) + 1, False)
+										end
+									end
+								end
 							end
 						elseif l_make_item_visible then
 								-- If the row has children then

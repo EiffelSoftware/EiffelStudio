@@ -32,6 +32,20 @@ feature {ENCODING} -- String encoding convertion
 			success_implies_not_void: last_conversion_successful implies last_converted_string /= Void
 		end
 
+feature {ENCODING} -- Reset
+
+	reset is
+			-- Reset
+		do
+			last_converted_stream := Void
+			last_converted_string := Void
+			last_conversion_successful := False
+		ensure
+			last_converted_stream_reset: last_converted_stream = Void
+			last_converted_string_reset: last_converted_string = Void
+			last_conversion_successful_reset: last_conversion_successful = False
+		end
+
 feature {ENCODING} -- Access
 
 	last_converted_stream: STRING_8

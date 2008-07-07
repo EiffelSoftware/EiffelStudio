@@ -5884,7 +5884,7 @@ feature {NONE} -- Implementation
 	maximum_header_width: INTEGER is 30000
 		-- Maximium width of `header'.
 
-	default_scroll_bar_leap: INTEGER is 1
+	default_scroll_bar_leap: INTEGER is 16
 
 	enlarge_row (a_index, new_count: INTEGER) is
 			-- Enlarge the row at index `a_index' to `new_count'.

@@ -62,6 +62,7 @@ feature -- Conversion
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
 		do
+			encoding_i.reset
 			if a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
 				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
 			end

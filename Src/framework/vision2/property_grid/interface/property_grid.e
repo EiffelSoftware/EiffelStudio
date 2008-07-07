@@ -139,10 +139,10 @@ feature -- Update
 				l_item.select_actions.extend (agent clear_description)
 				l_row.set_item (name_column, l_item)
 
-				create l_item.make_span (name_column)
-				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
-				l_item.select_actions.extend (agent clear_description)
-				l_row.set_item (value_column, l_item)
+--				create l_item.make_span (name_column)
+--				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
+--				l_item.select_actions.extend (agent clear_description)
+--				l_row.set_item (value_column, l_item)
 
 				l_row.set_background_color (separator_color)
 				sections.force (l_row, a_name)
@@ -182,8 +182,8 @@ feature -- Update
 				l_name_item.set_tooltip (a_property.description)
 			end
 			l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
-			l_row.set_item (1, create {EV_GRID_ITEM})
-			l_row.item (1).set_background_color (separator_color)
+--			l_row.set_item (1, create {EV_GRID_ITEM})
+--			l_row.item (1).set_background_color (separator_color)
 			l_row.set_item (name_column, l_name_item)
 			l_row.set_item (value_column, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
@@ -276,8 +276,19 @@ feature {NONE} -- Actions
 
 	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 			-- Draw borders.
+		local
+			l_row_height: INTEGER
 		do
-			if not sections.has_item (grid_item.row) then
+			if grid_item = Void then
+					-- We have a Void item so draw an empty space.
+				if is_row_height_fixed then
+					l_row_height := row_height
+				else
+					l_row_height := row (a_row_index).height
+				end
+				drawable.set_foreground_color (separator_color)
+				drawable.fill_rectangle (0, 0, column (a_column_index).width, l_row_height)
+			elseif not sections.has_item (grid_item.row) then
 				Precursor {ES_GRID}(drawable, grid_item, a_column_index, a_row_index)
 			end
 		end
@@ -386,7 +397,7 @@ feature {NONE} -- Actions
 			remove_selection
 			if l_y >= 0 and l_y <= virtual_height then
 				l_row ?= row_at_virtual_position (l_y, False)
-				if l_row /= Void and then l_row.property /= Void then
+				if l_row /= Void then
 					l_row.item (name_column).enable_select
 				end
 			end

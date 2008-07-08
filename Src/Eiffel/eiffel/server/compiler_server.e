@@ -15,6 +15,11 @@ inherit
 			clear
 		end
 
+	SHARED_ERROR_HANDLER
+		export {NONE}
+			all
+		end
+
 feature -- Initialization
 
 	make is
@@ -150,6 +155,7 @@ end
 		local
 			info: SERVER_INFO
 			server_file: SERVER_FILE
+			vd21: VD21
 		do
 
 debug ("SERVER")
@@ -184,6 +190,13 @@ end
 						-- Insert it in the queue
 					cache.force (Result)
 				end
+			end
+		rescue
+			if server_file /= Void then
+				create vd21
+				vd21.set_file_name (server_file.name)
+				error_handler.insert_error (vd21)
+				error_handler.raise_error
 			end
 		end
 

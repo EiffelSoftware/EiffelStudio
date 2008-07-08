@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="bridge" uuid="751E4D80-AE59-4542-984D-102F797078AA" library_target="bridge">
+	<target name="bridge">
+		<description>Library used to wrap dynamic libraries.</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="bridge" location=".\"/>
+	</target>
+</system>

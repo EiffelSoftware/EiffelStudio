@@ -151,34 +151,46 @@ feature -- Access
 			-- Grab user input.
 			-- Works only on current windows thread.
 		do
-			pnd_original_parent.set_capture
+			if pnd_original_parent /= Void then
+					-- It may be possible that `Current' has been removed from parent during PND.
+				pnd_original_parent.set_capture
+			end
 		end
 
 	release_capture is
 			-- Release user input.
 			-- Works only on current windows thread.
 		do
-			pnd_original_parent.release_capture
+			if pnd_original_parent /= Void then
+					-- It may be possible that `Current' has been removed from parent during PND.
+				pnd_original_parent.release_capture
+			end
 		end
 
 	set_heavy_capture is
 			-- Grab user input.
 			-- Works on all windows threads.
 		do
-			pnd_original_parent.set_heavy_capture
+			if pnd_original_parent /= Void then
+					-- It may be possible that `Current' has been removed from parent during PND.
+				pnd_original_parent.set_heavy_capture
+			end
 		end
 
 	has_heavy_capture: BOOLEAN is
 			-- Does `parent' have a heavy capture?
 		do
-			Result := pnd_original_parent.has_heavy_capture
+			Result := pnd_original_parent /= Void and then pnd_original_parent.has_heavy_capture
 		end
 
 	release_heavy_capture is
 			-- Release user input.
 			-- Works on all windows threads.
 		do
-			pnd_original_parent.release_heavy_capture
+			if pnd_original_parent /= Void then
+					-- It may be possible that `Current' has been removed from parent during PND.
+				pnd_original_parent.release_heavy_capture
+			end
 		end
 
 indexing

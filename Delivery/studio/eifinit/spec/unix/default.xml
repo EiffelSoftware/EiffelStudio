@@ -4,7 +4,7 @@
 	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>xterm -geometry 100x40 -e vi +$line $target</STRING></PREF>
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acroread</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>firefox $url</STRING></PREF>
-	<PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>xterm -geometry 80x40 -e vi +$line $target</STRING></PREF>
+	<PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>firefox $target</STRING></PREF>
 	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Monospace-r-regular-9-sans</FONT></PREF>
 	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font." HIDDEN="True"><FONT>sans-r-regular-9-sans</FONT></PREF>
 	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Monospace-r-bold-9-sans</FONT></PREF>

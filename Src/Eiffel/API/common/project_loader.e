@@ -193,9 +193,11 @@ feature -- Loading
 
 								-- Try to retrieve project if already compiled.
 							retrieve_or_create_project (a_project_path)
-							if not has_error and then is_recompile_from_scrach then
+							if not has_error then
 									-- check if precompiles are ok, otherwise (re)create them
-								eiffel_layout.set_precompile (lace.target.setting_msil_generation)
+								if is_recompile_from_scrach then
+									eiffel_layout.set_precompile (lace.target.setting_msil_generation)
+								end
 								lace.check_precompile
 								if lace.is_precompile_invalid then
 -- print error message									
@@ -208,7 +210,7 @@ feature -- Loading
 										end
 									end
 								end
-								if is_compilation_requested then
+								if is_recompile_from_scrach and then is_compilation_requested then
 									compile_project
 								end
 							end

@@ -122,7 +122,9 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 			if internal_current_push_button = Void then
 					-- Simply remove `is_disable_default_push_button' status from our
 					-- previous `default_push_button'.
-				internal_default_push_button.disable_default_push_button
+				if internal_default_push_button /= Void then
+					internal_default_push_button.disable_default_push_button
+				end
 			else
 				-- A button is already selected for being the current push button:
 				-- nothing to be done here.

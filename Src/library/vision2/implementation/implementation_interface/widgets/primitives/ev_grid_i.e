@@ -4068,9 +4068,11 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			create vertical_scroll_bar
 			vertical_scroll_bar.hide
 			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
+			vertical_scroll_bar.set_step (default_scroll_bar_step)
 			vertical_scroll_bar.change_actions.extend (agent vertical_scroll_bar_changed)
 			create horizontal_scroll_bar
-			horizontal_scroll_bar.set_step (default_scroll_bar_leap)
+			horizontal_scroll_bar.set_step (default_scroll_bar_step)
+			horizontal_scroll_bar.set_leap (default_scroll_bar_leap)
 			horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
 			create horizontal_box
 			create vertical_box
@@ -5885,6 +5887,8 @@ feature {NONE} -- Implementation
 		-- Maximium width of `header'.
 
 	default_scroll_bar_leap: INTEGER is 16
+	default_scroll_bar_step: INTEGER is 16
+		-- Default scrolling values for scrollbars.
 
 	enlarge_row (a_index, new_count: INTEGER) is
 			-- Enlarge the row at index `a_index' to `new_count'.

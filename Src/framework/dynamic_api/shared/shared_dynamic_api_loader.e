@@ -15,7 +15,7 @@ feature -- Access
 	frozen api_loader: !DYNAMIC_API_LOADER
 			-- Shared access to the API loader
 		once
-			create {DYNAMIC_API_LOADER_IMP} Result
+			create {DYNAMIC_API_LOADER} Result
 		end
 
 ;indexing

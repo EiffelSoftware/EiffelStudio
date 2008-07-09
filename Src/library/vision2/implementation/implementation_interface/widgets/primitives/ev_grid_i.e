@@ -5709,9 +5709,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			update_grid_row_indices (a_index)
 			set_vertical_computation_required (a_index)
 
-				-- Redraw content of shifted item if not inserting at the end. Otherwise
-				-- nothing to be done since a redraw will be done as soon as new items
-				-- are inserted.
+				-- Redraw if inserting in static content or else if content if dynamic.
 			if a_index <= old_count or else is_content_partially_dynamic then
 				redraw_client_area
 			end

@@ -7,7 +7,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="bridge" location="$EIFFEL_SRC\framework\patterns\bridge\bridge.ecf" readonly="true"/>
-		<library name="dynamic_api" location="$EIFFEL_SRC\framework\api_wrapper\api_wrapper.ecf">
+		<library name="api_wrapper" location="$EIFFEL_SRC\framework\api_wrapper\api_wrapper.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>

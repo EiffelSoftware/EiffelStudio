@@ -13,7 +13,7 @@ indexing
 	revision: "$Revision$"
 
 frozen class
-	API_MARSHALLED_DATA_AUTO_CLEANER
+	API_MARSHALLER_AUTO_CLEANER
 
 inherit
 	DISPOSABLE

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	DYNAMIC_SHARED_API
+	SHARED_DYNAMIC_API
 
 inherit
 	DISPOSABLE

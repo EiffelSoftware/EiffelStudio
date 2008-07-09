@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="api_wrapper" uuid="13CEB1E2-DB7C-49F1-AD85-348F3284AA3B" library_target="api_wrapper">
+	<description>Library used to wrap external libraries.</description>
+	<target name="api_wrapper" abstract="true">
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="bridge" location="$EIFFEL_SRC\framework\patterns\bridge\bridge.ecf"/>
+		<library name="threading" location="$EIFFEL_SRC\framework\threading\threading.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="api_wrapper" location=".\" recursive="true">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+			</option>
+			<file_rule>
+				<exclude>windows</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>unix</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

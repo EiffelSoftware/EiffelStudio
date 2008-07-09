@@ -34,6 +34,9 @@
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>\.svn$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 </system>

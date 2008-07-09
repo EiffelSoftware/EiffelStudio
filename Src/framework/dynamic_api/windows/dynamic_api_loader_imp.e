@@ -11,7 +11,7 @@ class
 	DYNAMIC_API_LOADER_IMP
 
 inherit
-	DYNAMIC_API_LOADER
+	DYNAMIC_API_LOADER_I
 
 feature -- Query
 

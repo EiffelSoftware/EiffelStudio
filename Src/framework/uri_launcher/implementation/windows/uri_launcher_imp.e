@@ -24,7 +24,7 @@ feature -- Basic operations
 	launch (a_uri: !STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
-			l_cleaner: !API_MARSHALLED_DATA_AUTO_CLEANER
+			l_cleaner: !API_MARSHALLER_AUTO_CLEANER
 			l_op: POINTER
 			l_uri: POINTER
 			l_null: POINTER

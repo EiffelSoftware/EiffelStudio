@@ -5712,7 +5712,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 				-- Redraw content of shifted item if not inserting at the end. Otherwise
 				-- nothing to be done since a redraw will be done as soon as new items
 				-- are inserted.
-			if a_index <= old_count then
+			if a_index <= old_count or else is_content_partially_dynamic then
 				redraw_client_area
 			end
 		end

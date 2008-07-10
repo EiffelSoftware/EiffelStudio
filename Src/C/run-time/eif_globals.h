@@ -154,7 +154,7 @@ rt_private eif_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_k
 	eif_global_context_t * EIF_VOLATILE eif_globals = eif_pthread_getspecific(eif_global_key);
 #else /* EIF_NONPOSIX_TSD */
 #define EIF_GET_CONTEXT \
-	eif_global_context_t * EIF_VOLATILE eif_globals = pthread_getspecific (eif_global_key);
+	eif_global_context_t * EIF_VOLATILE eif_globals = (eif_global_context_t *) pthread_getspecific (eif_global_key);
 #endif /* EIF_NONPOSIX_TSD */
 
 #elif defined VXWORKS			/* VxWorks Threads */

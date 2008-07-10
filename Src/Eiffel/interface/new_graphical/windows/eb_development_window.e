@@ -1259,7 +1259,19 @@ feature -- Window management
 		end
 
 	restore_tools_docking_layout is
-			-- Restore docking layout information.
+			-- Restore docking layout information
+		do
+			-- We can't restore tools layout when `window'.`is_minimized' since EV_SPLIT_AREA can't be restored if window minimized
+			-- See bug#14309
+			if window.is_minimized then
+				window.restore_actions.extend_kamikaze (agent restore_tools_docking_layout_immediately)
+			else
+				restore_tools_docking_layout_immediately
+			end
+		end
+
+	restore_tools_docking_layout_immediately is
+			-- Restore docking layout information immediately
 		local
 			l_result: BOOLEAN
 			l_file_name: STRING
@@ -1269,7 +1281,6 @@ feature -- Window management
 			create l_raw_file.make (l_file_name)
 			if l_raw_file.exists then
 				l_result := docking_manager.open_tools_config (l_file_name)
-
 			end
 
 			if not l_result then

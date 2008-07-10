@@ -284,7 +284,9 @@ feature -- Command
 		end
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
-			-- Save tools contents config.
+			-- Save tools contents config
+			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
+			-- See bug#14309
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do

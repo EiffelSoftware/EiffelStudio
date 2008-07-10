@@ -57,13 +57,21 @@
     <Property Id="INSTALLCURL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="CHECKCCOMPILER"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>   <!-- Determines if a C/C++ compiler should be checked -->
     <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found -->
-    <Property Id="CANCCOMPILE">0</Property>                                                                               <!-- Indicates if a MSC C/C++ can actually be used -->
-    <Property Id="CANCCOMPILEERROR">Unknown reason.</Property>                                                            <!-- When CANCCOMPILE is non-zero then this is the error message -->
-    <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>                             <!-- Type of C/C++ compiler -->
-    <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
-    <Property Id="VIEWEDLICENSE">0</Property>                                                                             <!-- Indicates if the license agreement has been viewed -->
-    <!-- END PROPERTIES -->
+    <Property Id="MSCCOMPILERNAME">0</Property>
+    <Property Id="CANCCOMPILE">0</Property>                                                                            <!-- Indicates if a MSC C/C++ can actually be used -->
+    <Property Id="SELECTEDCCOMPILER">
+      <?ifdef EiffelStudio?>mingw<?else?>msc<?endif?>
+    </Property>                             <!-- Type of C/C++ compiler -->
+    <Property Id="FXINSTALLROOT">
+      0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" />
+    </Property>
+    <Property Id="VIEWEDLICENSE">0</Property>                                                                            <!-- Indicates if the license agreement has been viewed -->
 
+    <Property Id="C_CONFIG_ERROR_TEXT">Unknown Reason</Property>                                                         <!-- When CANCCOMPILE is non-zero then this is the truncated error message -->
+    <Property Id="C_CONFIG_ERROR_FULL_TEXT">Unknown Reason</Property>                                                    <!-- When CANCCOMPILE is non-zero then this is the error message -->
+    <Property Id="SHOW_VIEW_FULL_CONFIG_ERROR">0</Property>                                                              <!-- Indicates if the show full error button should be shown for the C compilers -->
+    <!-- END PROPERTIES -->
+    
     <!-- INSTALL DESCRIPTION -->
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="$(var.PrgFiles)" Name="$(var.PrgFiles)">

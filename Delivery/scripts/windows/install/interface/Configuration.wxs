@@ -30,6 +30,8 @@
     <Property Id="Button_Close">&amp;Close</Property>
     <Property Id="Button_Download">&amp;Download</Property>
     <Property Id="Button_ViewCompilerHowTo">&amp;View How To...</Property>
+    <Property Id="Button_ViewFullError">&amp;View Full Error...</Property>
+    <Property Id="Button_ViewFullWarning">&amp;View Full Warning...</Property>
     <!--END BUTTON TEXT-->
 
     <UI Id="UI.configuration">
@@ -54,7 +56,6 @@
         <?else?>
           <Custom Action="EvaluateCCompiler" After="InitializeProperties" />
         <?endif?>
-        <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"><![CDATA[NOT Installed]]></Custom>
 
         <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR=""]]></Custom>
 
@@ -74,11 +75,10 @@
         <?else?>
           <Custom Action="EvaluateCCompiler" Before="InitializeProperties" />
         <?endif?>
-        <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"><![CDATA[NOT Installed]]></Custom>
 
-        <Custom Action="SET_INSTALLDIR" After="CanPerformCCompilation"><![CDATA[INSTALLDIR=""]]></Custom>
+        <Custom Action="SET_INSTALLDIR" After="EvaluateCCompiler"><![CDATA[INSTALLDIR=""]]></Custom>
 
-        <Show Dialog="DialogWelcome" After="CanPerformCCompilation"/>
+        <Show Dialog="DialogWelcome" After="EvaluateCCompiler"/>
         <Show Dialog="DialogUserExit" OnExit="cancel" />
         <Show Dialog="DialogExitSuccess" OnExit="success" />
         <Show Dialog="DialogFatalError" OnExit="error" />

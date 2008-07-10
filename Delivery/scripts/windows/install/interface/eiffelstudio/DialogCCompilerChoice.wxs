@@ -27,7 +27,7 @@
             <Condition Action="enable"><![CDATA[SELECTEDCCOMPILER = "msc" AND HASMSCCOMPILER <> "1"]]></Condition>
           </Control>
           <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
-            <Publish Event="DoAction" Value="CanPerformCCompilation">1</Publish>
+            <Publish Event="DoAction" Value="EvaluateCCompiler">1</Publish>
             <Publish Event="NewDialog" Value="DialogMissingMsCompilerWarning"><![CDATA[SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Publish>
             <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[SELECTEDCCOMPILER <> "msc" OR CANCCOMPILE = "1"]]></Publish>
           </Control>

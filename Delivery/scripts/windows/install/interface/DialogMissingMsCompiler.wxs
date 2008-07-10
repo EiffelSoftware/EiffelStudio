@@ -13,14 +13,12 @@
         <Control Id="Description" Type="Text" X="9" Y="73" Width="356" Height="32" Transparent="yes">
           <Text>[ProductName] requires a C/C++ compiler in order to completely compile Eiffel/Eiffel for .NET projects.</Text>
         </Control>
-        <Control Id="Reason" Type="Text" Height="32" Width="295" X="40" Y="100" Transparent="yes" NoPrefix="yes">
-          <Text>[TitleFont]Reason: [CANCCOMPILEERROR]</Text>
+        <Control Id="Reason" Type="Text" Height="62" Width="328" X="26" Y="100" Transparent="yes" NoPrefix="yes">
+          <Text>[TitleFont][C_CONFIG_ERROR_TEXT]</Text>
         </Control>
-        <Control Id="Description2" Type="Text" Height="44" Width="356" X="9" Y="125" Transparent="yes" NoPrefix="yes">
-          <Text>A Microsoft C/C++ compiler is freely available to download and install. Please visit [INSTALLCURL] for up-to-date details on how to obtain and configure the Microsoft Windows SDK.</Text>
-        </Control>
-        <Control Id="View" Type="PushButton" X="276" Y="157" Width="90" Height="17" Text="[Button_ViewCompilerHowTo]">
-          <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
+        <Control Id="View" Type="PushButton" X="26" Y="157" Width="100" Height="17" Text="[Button_ViewFullError]" Hidden="yes">
+          <Publish Event="DoAction" Value="ShowCConfigurationError">1</Publish>
+          <Condition Action="show"><![CDATA[SHOW_VIEW_FULL_CONFIG_ERROR = "1"]]></Condition>
         </Control>
         <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Next]">
           <Publish Event="EndDialog" Value="Exit">1</Publish>

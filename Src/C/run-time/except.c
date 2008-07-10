@@ -204,9 +204,10 @@ rt_public EIF_REFERENCE last_exception (void);			/* Get `last_exception' of EXCE
 rt_public void draise(long code, char *meaning, char *message); /* Called by EXCEPTION_MANAGER to raise an existing exception */
 rt_private struct ex_vect *top_n_call(struct xstack *stk, int n);	/* Get the n-th topest call vector from the stack */
 rt_private struct ex_vect *draise_recipient_call (struct xstack *stk); /* Get the second topest call vector from the stack, used by `draise' */
-rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not*/
+rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not */
 rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, 
 								char *eclass, char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
+rt_private int is_ex_assert (int ex_code);				/* Is exception of `ex_code' an assertion violation? */
 
 #ifndef NOHOOK
 rt_private void exception(int how);		/* Debugger hook */
@@ -3600,7 +3601,9 @@ rt_public void draise(long code, char *meaning, char *message)
 		echclass = 0;		/* Null class name */
 		line_number = 0;	/* Invalid line number */
 	} else {
-		if (in_assertion) {
+		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
+		 * to raise once exceptions, when `in_assertion' has already been reset. */
+		if (in_assertion || is_ex_assert (code)) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
 			if (type == EX_CINV) {
@@ -3645,7 +3648,9 @@ rt_public void draise(long code, char *meaning, char *message)
 	}
 
 	if (trace) {
-		if (in_assertion) {
+		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
+		 * to raise once exceptions, when `in_assertion' has already been reset. */
+		if (in_assertion || is_ex_assert (code)) {
 			trace->ex_where = echrt;			/* Save routine in trace for exorig */
 			trace->ex_from = echclass;			/* Save class in trace for exorig */
 		} else {
@@ -3933,6 +3938,16 @@ rt_private int is_ex_ignored (int ex_code)
 #else
 	return ((result == EIF_TRUE)?1:0);
 #endif
+}
+
+rt_private int is_ex_assert (int ex_code)
+	/* Is exception of `ex_code' an assertion violation */
+{
+	return ((ex_code == EN_PRE)		|| 
+			(ex_code == EN_POST)	|| 
+			(ex_code == EN_CINV)	|| 
+			(ex_code == EN_CHECK)	|| 
+			(ex_code == EN_LINV));
 }
 
 rt_public void init_emnger (void)

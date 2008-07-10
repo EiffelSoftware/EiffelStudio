@@ -1264,30 +1264,15 @@ feature -- Window management
 			-- We can't restore tools layout when `window'.`is_minimized' since EV_SPLIT_AREA can't be restored if window minimized
 			-- See bug#14309
 			if window.is_minimized then
-				window.restore_actions.extend_kamikaze (agent restore_tools_docking_layout_immediately)
+				restore_agent_for_restore_action := agent restore_tools_docking_layout_immediately
+				window.restore_actions.extend_kamikaze (restore_agent_for_restore_action)
+
+				-- If window is minized from maximized states directly...
+				restore_agent_for_maximize_action := agent restore_tools_docking_layout_immediately
+				window.maximize_actions.extend_kamikaze (restore_agent_for_maximize_action)
 			else
 				restore_tools_docking_layout_immediately
 			end
-		end
-
-	restore_tools_docking_layout_immediately is
-			-- Restore docking layout information immediately
-		local
-			l_result: BOOLEAN
-			l_file_name: STRING
-			l_raw_file: RAW_FILE
-		do
-			l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
-			create l_raw_file.make (l_file_name)
-			if l_raw_file.exists then
-				l_result := docking_manager.open_tools_config (l_file_name)
-			end
-
-			if not l_result then
-				restore_standard_tools_docking_layout
-			end
-			menus.update_menu_lock_items
-			menus.update_show_tool_bar_items
 		end
 
 	restore_editors_docking_layout is
@@ -2612,6 +2597,42 @@ feature {NONE} -- Window management
 				do
 					Result := a_window.window_id /= a_id or else a_window = Current
 				end (?, Result))
+		end
+
+	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]
+			-- Restore agent recorded for cleanup
+
+	restore_tools_docking_layout_immediately is
+			-- Restore docking layout information immediately
+		local
+			l_result: BOOLEAN
+			l_file_name: STRING
+			l_raw_file: RAW_FILE
+
+			l_env: EV_ENVIRONMENT
+		do
+			-- Cleanup agents
+			if (restore_agent_for_maximize_action /= Void)then
+				window.maximize_actions.prune_all (restore_agent_for_maximize_action)
+				restore_agent_for_maximize_action := Void
+			end
+
+			if (restore_agent_for_restore_action /= Void) then
+				window.restore_actions.prune_all (restore_agent_for_restore_action)
+				restore_agent_for_restore_action := Void
+			end
+
+			l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
+			create l_raw_file.make (l_file_name)
+			if l_raw_file.exists then
+				l_result := docking_manager.open_tools_config (l_file_name)
+			end
+
+			if not l_result then
+				restore_standard_tools_docking_layout
+			end
+			menus.update_menu_lock_items
+			menus.update_show_tool_bar_items
 		end
 
 feature {NONE} -- Internal implementation cache

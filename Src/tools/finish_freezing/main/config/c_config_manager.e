@@ -26,47 +26,88 @@ feature -- Access
 	for_32bit: BOOLEAN
 			-- Indicates if manager is to be used in a 32bit environment
 
-	config_codes: LIST [STRING] is
+	config_codes: !LIST [!STRING]
 			-- List of available configuration codes
 		local
-			l_result: ARRAYED_LIST [STRING]
-			l_configs: like configs
+			l_codes: !ARRAYED_LIST [!STRING]
+			l_configs: !like configs
 		do
-			Result := internal_config_codes
-			if Result = Void then
-				l_configs := configs
-				create l_result.make (l_configs.count)
-				l_result.compare_objects
-
-				l_configs.do_all (agent (a_item: C_CONFIG; a_list: ARRAYED_LIST [STRING])
-					do
-						if a_item /= Void then
-							a_list.extend (a_item.code)
-						end
-					end (?, l_result))
+			if {l_result: LIST [!STRING]} internal_config_codes then
 				Result := l_result
+			else
+				l_configs := configs
+				create l_codes.make (l_configs.count)
+				l_codes.compare_objects
+				l_configs.do_all (agent (ia_item: !C_CONFIG; ia_list: !ARRAYED_LIST [!STRING])
+					do
+						if {l_code: STRING} ia_item.code.as_string_8 then
+							ia_list.extend (l_code)
+						end
+					end (?, l_codes))
+				Result := l_codes
 				internal_config_codes := Result
 			end
 		ensure
-			result_attached: Result /= Void
+			result_consistent: Result = config_codes
 			result_count_matches_config_count: Result.count = configs.count
 			result_compares_objects: Result.object_comparison
-			result_contains_attached_items: not Result.has (Void)
 			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
 		end
 
-	configs: LIST [C_CONFIG] is
+	configs: !LIST [!C_CONFIG]
 			-- List of C compiler configurations
 		do
-			Result := internal_configs
-			if Result = Void then
+			if {l_result: LIST [!C_CONFIG]} internal_configs then
+				Result := l_result
+			else
 				Result := create_configs (for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
 				internal_configs := Result
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_contains_attached_items: not Result.has (Void)
+			result_consistent: Result = configs
+		end
+
+	ordered_configs: !LIST [!C_CONFIG]
+			-- List of sorted configurations, by description.
+		local
+			l_configs: !like configs
+			l_cursor: CURSOR
+			l_item: !C_CONFIG
+			l_ordered_list: !ARRAYED_LIST [!C_CONFIG]
+		do
+			if {l_result: LIST [!C_CONFIG]} internal_ordered_configs then
+				Result := l_result
+			else
+				l_configs := configs
+				l_cursor := l_configs.cursor
+				create l_ordered_list.make (l_configs.count)
+				from l_configs.start until l_configs.after loop
+					l_item := l_configs.item
+					if l_ordered_list.is_empty then
+						l_ordered_list.put_front (l_item)
+					else
+						from
+							l_ordered_list.start
+						until
+							l_ordered_list.after or else
+							l_ordered_list.item.version < l_item.version
+						loop
+							l_ordered_list.forth
+						end
+						l_ordered_list.put_left (l_item)
+					end
+					l_configs.forth
+				end
+				l_configs.go_to (l_cursor)
+				Result := l_ordered_list
+				internal_ordered_configs := Result
+			end
+		ensure
+			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			not_result_is_empty: not Result.is_empty
+			result_count_matches_config_count: Result.count = configs.count
+			result_consistent: Result = ordered_configs
 		end
 
 	applicable_config_codes: LIST [STRING] is
@@ -207,10 +248,10 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	create_configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG] is
+	create_configs (a_use_32bit: BOOLEAN): !ARRAYED_LIST [!C_CONFIG] is
 			-- Visual Studio configuration for x64/x86 platforms
 		require
-			a_use_32bit_for_x86: not a_use_32bit implies not {PLATFORM_CONSTANTS}.is_64_bits
+			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM_CONSTANTS}.is_64_bits
 		local
 			l_32_bits: BOOLEAN
 		do
@@ -218,21 +259,21 @@ feature {NONE} -- Access
 			create Result.make (7)
 
 				-- VS 9.0
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, "WSDK61", "Microsoft Windows SDK 6.1"))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)"))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, "WSDK61", "Microsoft Windows SDK 6.1", "2008-WSDK"))
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS"))
 			if l_32_bits then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC"))
 			end
 
 				-- VS 8.0
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, "WSDK60", "Microsoft Windows SDK 6.0"))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)"))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, "WSDK60", "Microsoft Windows SDK 6.0", "2006-WSDK"))
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS"))
 
 			if l_32_bits then
 					-- VS Other
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)"))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)"))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS"))
 			end
 		ensure
 			result_attached: Result /= Void
@@ -240,12 +281,16 @@ feature {NONE} -- Access
 
 feature {NONE} -- Internal implementation cache
 
-	internal_config_codes: like config_codes
+	internal_config_codes: ?like config_codes
 			-- Cached version of `config_codes'
 			-- Note: Do not use directly
 
-	internal_configs: like configs
+	internal_configs: ?like configs
 			-- Cached version of `configs'
+			-- Note: Do not use directly
+
+	internal_ordered_configs: ?like ordered_configs
+			-- Cached version of `ordered_configs'
 			-- Note: Do not use directly
 
 	internal_applicable_config_codes: like applicable_config_codes

@@ -13,37 +13,32 @@
 		<Property Id="GDIPLUSNEEDED">1</Property>
 		<Property Id="PRECOMPILE">vision2</Property>
 		<Property Id="EIFFELUSERDIR" Secure="yes" />
-		<Property Id="EIFFELPROJECTSDIR" Secure="yes" />
 		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
 		<Property Id="ISELANG">en_US</Property>
 		<!-- END PROPERTIES -->
 
 		<!-- PACKAGE CONTENT -->
 		<DirectoryRef Id="INSTALLDIR">
-				<!-- Registry settings for installation program -->
+			<!-- Registry settings for installation program -->
 			<Component Id="Comp.app_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.uninstall_product" Root="HKLM"	Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe,0" KeyPath="yes"/>
 				</RegistryKey>
 			</Component>
-				<!-- Registry settings for EiffelStudio and other tools-->
+			<!-- Registry settings for EiffelStudio and other tools-->
 			<Component Id="Comp.studio_registries" Guid="E6817659-E601-42F7-940B-5B8B9CC50AA3" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.eiffel" Root="HKLM" Key="Software\ISE\$(var.ProductKey)" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ise_eiffel" Name="ISE_EIFFEL" Value="[INSTALLDIR]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
-					<RegistryValue Id="RegVal.eiffel.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_lang" Name="ISE_LANG" Value="[ISELANG]" Type="string"/>
 				</RegistryKey>
 				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKLM" Key="Software\ISE\$(var.ProductKey)\finish_freezing" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ff.ise_cflags" Name="ISE_CFLAGS" Value="" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ff.ise_sharedlibs" Name="ISE_SHAREDLIBS" Value="" Type="string"/>
 				</RegistryKey>
-				<RegistryKey Id="Reg.eiffel.wizards" Root="HKLM" Key="Software\ISE\$(var.ProductKey)\wizards" Action="createAndRemoveOnUninstall">
-					<RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
-				</RegistryKey>
 			</Component>
-				<!-- Registry settings for .NET consumer -->
+			<!-- Registry settings for .NET consumer -->
 			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.clsid" Root="HKCR" Key="CLSID\{E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5}" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.clsid.default" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
@@ -54,7 +49,7 @@
 						<RegistryValue Id="RegVal.clsid.inproc.3" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
 						<RegistryValue Id="RegVal.clsid.inproc.4" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
 						<RegistryValue Id="RegVal.clsid.inproc.5" Name="RuntimeVersion" Value="v1.0.3705" Type="string"/>
-						<RegistryKey Id="Reg.clsid.3" Key="6.0.6.5856" Action="createAndRemoveOnUninstall" >
+						<RegistryKey Id="Reg.clsid.3" Key="6.3" Action="createAndRemoveOnUninstall" >
 							<RegistryValue Id="RegVal.clsid.inproc.version.1" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
 							<RegistryValue Id="RegVal.clsid.inproc.version.2" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
 							<RegistryValue Id="RegVal.clsid.inproc.version.3" Name="RuntimeVersion" Value="v1.0.3705" Type="string"/>
@@ -68,7 +63,7 @@
 					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
 				</RegistryKey>
 			</Component>
-				<!-- Registry settings for eiffel protocol -->
+			<!-- Registry settings for eiffel protocol -->
 			<Component Id="Comp.eiffel_protocol" Guid="C03F5EC1-8FED-42eb-895E-14A8FDD61B17" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.eiffel_protocol" Root="HKCR" Key="eiffel" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel_protocol.default" Value="URL:Eiffel Protocol" Type="string"/>
@@ -128,7 +123,7 @@
 			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
-						<!-- Shortcuts and file association -->
+					<!-- Shortcuts and file association -->
 					<Component Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D" Win64="$(var.IsWin64)">
 						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
@@ -195,13 +190,6 @@
 						<CreateFolder />
 						<RemoveFolder Id="EIFFELUSERDIR" On="uninstall" Directory="EIFFELUSERDIR"/>
 					</Component>
-					<Directory Id="EIFFELPROJECTSDIR" Name="projects">
-						<Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
-							<RegistryKey Id="Reg.Dummy.5" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
-							<CreateFolder />
-							<RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
-						</Component>
-					</Directory>
 				</Directory>
 			</Directory>
 		</DirectoryRef>
@@ -255,7 +243,6 @@
 		<CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
 		<CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
 		<CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
-		<CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
 		<CustomAction Id="SET_EIFFELUSERDIR" Property="EIFFELUSERDIR" Value="[EIFFELUSERDIR]" Execute="firstSequence" />
 		<CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
 		<CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
@@ -275,12 +262,10 @@
 		<!-- INSTALL SEQUENCING -->
 		<AdminExecuteSequence>
 			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
-			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="CostInitialize"/>
 		</AdminExecuteSequence>
 		<InstallExecuteSequence>
 			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
-			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
 			<Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
 			<Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>

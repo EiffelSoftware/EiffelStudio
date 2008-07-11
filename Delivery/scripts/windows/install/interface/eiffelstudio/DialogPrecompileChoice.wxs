@@ -47,7 +47,7 @@
             <Condition Action="disable"><![CDATA[SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Condition>
           </Control>
           <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
-            <Publish Event="NewDialog" Value="DialogSelectProjectFolder">1</Publish>
+            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall">1</Publish>
           </Control>
           <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
             <Publish Event="NewDialog" Value="DialogCCompilerChoice"><![CDATA[(SELECTEDCCOMPILER <> "msc" OR CANCCOMPILE = "1") AND CHECKCCOMPILER <> "1" AND HASMSCCOMPILER <> "1"]]></Publish>

@@ -1,6 +1,15 @@
 indexing
 	description: "[
-		General interface for asynchronously executing a list of tests.
+		An interface of an executor taking a list of tests and queues them to later be run and determined
+		whether the implementation under test has passed or failed the test.
+		
+		When a executor is launched it will first go into preparation state. The executor represents a
+		collection of tests which are simply the tests provided as the argument. The collection is
+		synchronised with the test suite. This means when a test is changed or deleted in the test suite,
+		the executor will adopt its own collection. During the actual testing, the execution will simply
+		iterate through the list of tests.
+		
+		See {TEST_PROCESSOR_I} for details on the execution flow.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,78 +18,14 @@ deferred class
 	TEST_EXECUTOR_I
 
 inherit
-	EVENT_OBSERVER_CONNECTION_I [!TEST_EXECUTOR_OBSERVER]
-
-feature -- Status report
-
-	is_preparing: BOOLEAN
-			-- Is `Current' preparing the actual test execution?
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	is_testing: BOOLEAN
-			-- Is `Current' executing a test?
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	is_cleaning_up: BOOLEAN
-			-- Has `Current' run all tests and is performing some cleaning up?
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	is_running: BOOLEAN
-			-- Is `Current' performing any task?
-		require
-			usable: is_interface_usable
-		do
-			Result := is_preparing or is_testing or is_cleaning_up
-		end
-
-	is_ready: BOOLEAN
-			-- Are we ready to perform any testing?
-		require
-			usable: is_interface_usable
-		do
-			Result := not is_running
-		end
-
-feature -- Query
-
-	is_valid_test (a_test: !TEST_I): BOOLEAN
-			-- Can `a_test' be executed by `Current'?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_usable: Result implies a_test.is_interface_usable
-		end
-
-	is_valid_list (a_list: !DS_LINEAR [!TEST_I]): BOOLEAN is
-			-- Can all items of `a_list' be tested by `Current'?
-		require
-			usable: is_interface_usable
-		do
-			Result := a_list.for_all (agent is_valid_test)
+	TEST_PROCESSOR_I [!DS_LINEAR [!TEST_I]]
+		rename
+			is_valid_argument as is_valid_test_list
+		redefine
+			events
 		end
 
 feature -- Access
-
-	tests: !DS_LINEAR [!TEST_I]
-			-- Tests which will be or have been tested in the current run
-		require
-			usable: is_interface_usable
-			testing: is_running
-		deferred
-		ensure
-			result_consistent: Result = tests
-			result_contains_valid_items: Result.for_all (agent is_valid_test)
-		end
 
 	current_test: !TEST_I
 			-- Test currently being executed
@@ -89,66 +34,118 @@ feature -- Access
 			testing: is_testing
 		deferred
 		ensure
-			result_in_tests: tests.has (Result)
+			result_running: Result.is_running
 		end
 
-feature {TEST_SUITE_S} -- Execution
+feature -- Status report
 
-	run_tests (a_list: !DS_LINEAR [!TEST_I]) is
-			-- Execute all tests in `a_list' asynchronously.
+	is_preparing: BOOLEAN
+			-- Is the execution beeing prepared?
 		require
 			usable: is_interface_usable
-			ready: is_ready
-			a_list_contains_valid_items: a_list.for_all (agent is_valid_test)
 		deferred
 		ensure
-			run_asynchronously: is_running
-			tests_equals_a_list: tests.is_equal (a_list)
+			result_implies_no_other_state: Result implies not (is_testing or is_cleaning_up)
 		end
 
-	stop
-			-- Terminate any task.
+	is_testing: BOOLEAN
+			-- Is a test currently beeing executed?
 		require
 			usable: is_interface_usable
-			running: is_running
 		deferred
 		ensure
-			not_running: not is_running
+			result_implies_no_other_state: Result implies not (is_preparing or is_cleaning_up)
+		end
+
+	is_cleaning_up: BOOLEAN
+			-- Is any cleaning up being performed?
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_implies_no_other_state: Result implies not (is_preparing or is_testing)
+		end
+
+	is_running: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_preparing or is_testing or is_cleaning_up
+		end
+
+feature -- Query
+
+	is_valid_test_list (a_list: !DS_LINEAR [!TEST_I]): BOOLEAN
+			-- <Precursor>
+		do
+			Result := a_list.for_all (agent is_test_executable)
+		end
+
+	is_test_executable (a_test: !TEST_I): BOOLEAN is
+			-- Can test instance be executed by `Current'?
+			--
+			-- `a_test': Test to be executed.
+			-- `Result': Is True if `a_test' can be executed, False otherwise.
+		require
+			a_test_usable: a_test.is_interface_usable
+		do
+			Result := is_test_compatible (a_test) and not
+				(a_test.is_queued or a_test.is_running)
+		ensure
+			result_implies_compatible: Result implies is_test_compatible (a_test)
+			result_implies_not_queued: Result implies not a_test.is_queued
+			result_implies_not_running: Result implies not a_test.is_running
+		end
+
+	is_test_compatible (a_test: !TEST_I): BOOLEAN is
+			-- Is test compatible with current executor?
+		require
+			a_test_usable: a_test.is_interface_usable
+		do
+			Result := True
+		end
+
+feature {TEST_SUITE_S} -- Status setting
+
+	start (a_list: !DS_LINEAR [!TEST_I]; a_test_suite: !TEST_SUITE_S) is
+			-- Launch test execution for a given list of tests. Once `Current' is preparing return and
+			-- continue execution asynchronously.
+			--
+			-- Note: Implementors should respect list order.
+			--
+			-- `a_list': List containing tests to be executed
+			-- `a_test_suite': Test suite containing tests
+		require else
+			tests_belong_to_suite: a_test_suite.is_subset (a_list)
+		deferred
+		ensure then
+			preparing: is_preparing
+			a_list_queued: tests.is_equal (a_list)
 		end
 
 feature -- Events
 
-	preparing_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
-			-- Called when `Current' starts preparing execution
+	test_launched_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
+			-- Events called after a test has been launched.
+			--
+			-- executor: `Current'
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	testing_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
-			-- Called when `Current' starts executing a test
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	tested_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
-			-- Called when `Current' has finished executing a test and
-			-- some outcome is available
+	test_revealed_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
+			-- Events called after a new outcome for `current_test' has been determined.
+			--
+			-- executor: `Current'
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
 	cleaning_up_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
-			-- Called when `Current' starts cleaning up after execution
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	finished_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
-			-- Calles when `Current' is finished executing
+			-- Events called after `Current' started cleaning up after an execution session.
+			--
+			-- executor: `Current'
 		require
 			usable: is_interface_usable
 		deferred
@@ -156,15 +153,15 @@ feature -- Events
 
 feature {NONE} -- Query
 
-	events (a_observer: !TEST_EXECUTOR_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
 			-- <Precursor>
 		do
-			create Result.make (5)
-			Result.put_last ([preparing_event, agent a_observer.on_preparing])
-			Result.put_last ([testing_event, agent a_observer.on_testing])
-			Result.put_last ([tested_event, agent a_observer.on_tested])
-			Result.put_last ([cleaning_up_event, agent a_observer.on_cleaning_up])
-			Result.put_last ([finished_event, agent a_observer.on_finished])
+			Result := Precursor (a_observer)
+			if {l_observer: TEST_EXECUTOR_OBSERVER} a_observer then
+				Result.force_last ([test_launched_event, agent l_observer.on_test_launched])
+				Result.force_last ([test_revealed_event, agent l_observer.on_test_revealed])
+				Result.force_last ([cleaning_up_event, agent l_observer.on_cleaning_up])
+			end
 		end
 
 end

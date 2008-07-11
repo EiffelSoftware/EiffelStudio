@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Represents an outcome of TEST_I, which can be either pass, fail
 		or unresolved. Unresolved describes the situation in which
-		it could not be determined whether a test passed or failed.	
+		it could not be determined whether a test passed or failed.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,8 +26,18 @@ feature -- Status report
 			-- Is the test judgment unresolvable?
 		do
 			Result := not (is_pass or is_fail)
-		ensure
-			definition: Result = not (is_pass or is_fail)
+		end
+
+	status: NATURAL_8
+			-- Status indicating status of `is_pass', `is_fail' and `is_unresolved'
+		do
+			if is_pass then
+				Result := {TEST_OUTCOME_STATUS_TYPES}.passed
+			elseif is_fail then
+				Result := {TEST_OUTCOME_STATUS_TYPES}.failed
+			else
+				Result := {TEST_OUTCOME_STATUS_TYPES}.unresolved
+			end
 		end
 
 feature {NONE} -- Implementation

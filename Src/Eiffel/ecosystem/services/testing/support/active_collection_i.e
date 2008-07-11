@@ -7,23 +7,30 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ACTIVE_COLLECTION_I [G -> USABLE_I]
+	ACTIVE_COLLECTION_I [G]
 
 inherit
 	EVENT_OBSERVER_CONNECTION_I [!ACTIVE_COLLECTION_OBSERVER [G]]
-
-	USABLE_I
 
 feature -- Access
 
 	items: !DS_LINEAR [!G]
 			-- List being observed
 		require
-			interface_usable: is_interface_usable
+			usable: is_interface_usable
+			available: are_items_available
 		deferred
 		ensure
 			result_consistent: Result = items
-			result_contains_usable_items: Result.for_all (agent (v: !G): BOOLEAN do Result := v.is_interface_usable end)
+		end
+
+feature -- Status report
+
+	are_items_available: BOOLEAN
+			-- Can `items' currently be accessed?
+		require
+			usable: is_interface_usable
+		deferred
 		end
 
 feature {NONE} -- Query
@@ -35,28 +42,47 @@ feature {NONE} -- Query
 			Result.put_last ([item_added_event, agent a_observer.on_item_added])
 			Result.put_last ([item_removed_event, agent a_observer.on_item_removed])
 			Result.put_last ([item_changed_event, agent a_observer.on_item_changed])
+			Result.put_last ([items_changed_event, agent a_observer.on_items_changed])
 		end
 
 feature -- Events
 
-	item_added_event: EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called when an item is added to `items'
+	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+			-- Called after an item was added to `items'.
+			--
+			-- collection: `Current'
+			-- item: Item which was added to `items'
 		require
-			is_interface_usable: is_interface_usable
+			usable: is_interface_usable
 		deferred
 		end
 
-	item_removed_event: EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called when an item is removed from `items'
+	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+			-- Called after an item was removed from `items'.
+			--
+			-- collection: `Current'
+			-- item: Item which was removed from `items'
 		require
-			is_interface_usable: is_interface_usable
+			usable: is_interface_usable
 		deferred
 		end
 
-	item_changed_event: EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called when an item is removed from `items'
+	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+			-- Called after the state of an item has changed
+			--
+			-- collection: `Current'
+			-- item: Item in `items' which changed
 		require
-			is_interface_usable: is_interface_usable
+			usable: is_interface_usable
+		deferred
+		end
+
+	items_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
+			-- Called to indicate that `items' has changed.
+			--
+			-- collection: `Current'
+		require
+			usable: is_interface_usable
 		deferred
 		end
 

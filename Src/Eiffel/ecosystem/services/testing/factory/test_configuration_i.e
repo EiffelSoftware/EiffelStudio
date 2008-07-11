@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Query
 
-	is_valid: BOOLEAN
+	is_complete: BOOLEAN
 			-- Can the current configuration be used to create a new test?
 		do
 			Result := name.is_empty

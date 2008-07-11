@@ -17,7 +17,7 @@ deferred class
 inherit
 	TEST_CONFIGURATION_I
 		redefine
-			is_valid
+			is_complete
 		end
 
 feature -- Access
@@ -64,7 +64,7 @@ feature -- Query
 		deferred
 		end
 
-	is_valid: BOOLEAN
+	is_complete: BOOLEAN
 			-- <Precursor>
 		do
 			if Precursor then

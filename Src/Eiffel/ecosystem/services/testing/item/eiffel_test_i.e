@@ -13,6 +13,9 @@ deferred class
 
 inherit
 	TEST_I
+		redefine
+			last_outcome
+		end
 
 feature -- Access
 
@@ -24,9 +27,15 @@ feature -- Access
 		deferred
 		end
 
-	outcomes: !DS_BILINEAR [!EIFFEL_TEST_OUTCOME_I]
+	outcomes: !DS_BILINEAR [like last_outcome]
 			-- <Precursor>
 		deferred
+		end
+
+	last_outcome: !EIFFEL_TEST_OUTCOME_I
+			-- <Precursor>
+		do
+			Result ?= Precursor
 		end
 
 end

@@ -284,6 +284,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_accel_called: BOOLEAN
 			l_window_imp: EV_WINDOW_IMP
 			a_focus_widget: EV_WIDGET_IMP
+			l_standard_dialog: EV_STANDARD_DIALOG_IMP
 			l_tab_controlable: EV_TAB_CONTROLABLE_I
 			l_disable_default_processing: BOOLEAN
 			l_char: CHARACTER_32
@@ -357,6 +358,9 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			if a_focus_widget = Void then
 					-- If the focus widget is not available then set it to the current window.
 				a_focus_widget ?= l_any
+				if a_focus_widget = Void then
+					l_standard_dialog ?= l_any
+				end
 			end
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void then
@@ -388,7 +392,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 					if not l_disable_default_processing then
 							-- If `a_focus_widget' is disabling default processing then
-							-- we don't call top level window events. 
+							-- we don't call top level window events.
 						on_key_event (a_key, a_key_string, a_key_press)
 					end
 					if a_focus_widget /= l_any then
@@ -397,6 +401,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 				end
 			else
+				if l_standard_dialog /= Void and then a_key_press then
+						-- Standard dialogs are not widgets and have to be handled separately.
+					l_standard_dialog.on_key_event (a_key, a_key_string, a_key_press)
+				end
 					-- Execute the gdk event as normal.
 				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
 			end

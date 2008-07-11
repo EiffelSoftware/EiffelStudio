@@ -11,7 +11,7 @@
           <Text>The installer will guide you through the steps required to install [ProductName] on your computer, to get you up and running as soon as possible.</Text>
         </Control>
         <Control Id="MissingCCompiler" Type="Text" X="11" Y="100" Width="354" Height="74" Transparent="yes" NoPrefix="yes">
-          <Text>[TitleFont]Please note. [ProductName] requires a Microsoft C/C++ compiler to complete compilation. If you do not already have one, A Microsoft C/C++ compiler is freely available to download and install. Please click the 'View How To...' button for up-to-date details on how to obtain and configure the Microsoft Windows SDK.</Text>
+          <Text>[TitleFont]Please note that [ProductName] requires a Microsoft C/C++ compiler to complete compilation. If you do not already have one, A Microsoft C/C++ compiler is freely available to download and install. Please click the 'View How To...' button for up-to-date details on how to obtain and configure the Microsoft Windows SDK.</Text>
           <Condition Action="hide"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"]]></Condition>
         </Control>
         <Control Id="View" Type="PushButton" X="276" Y="157" Width="90" Height="17" Text="[Button_ViewCompilerHowTo]">
@@ -19,7 +19,7 @@
           <Condition Action="hide"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"]]></Condition>
         </Control>
         <Control Id="LocatedCCompiler" Type="Text" X="11" Y="100" Width="354" Height="74" Transparent="yes" NoPrefix="yes">
-          <Text>[TitleFont]The installer automatically detected an installation of [MSCCOMPILERNAME]. This C/C+ compiler will be used for when completing the compilation in [ProductName].</Text>
+          <Text>[TitleFont]The installer has automatically detected an installation of [MSCCOMPILERNAME]. This C/C+ compiler will be used for when completing the compilation in [ProductName].</Text>
           <Condition Action="hide"><![CDATA[MSCCOMPILERNAME = "0"]]></Condition>
         </Control>
         <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">

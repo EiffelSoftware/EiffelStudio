@@ -497,9 +497,17 @@ feature -- Status report
 			-- Is `a_stone' suitable for a new editor?
 		do
 			if veto_pebble_function_internal /= Void then
-				Result := veto_pebble_function_internal.item ([a_stone, last_focused_editor.docking_content])
+				if last_focused_editor /= Void then
+					Result := veto_pebble_function_internal.item ([a_stone, last_focused_editor.docking_content])
+				else
+					Result := veto_pebble_function_internal.item ([a_stone, void])
+				end
 			else
-				Result := default_veto_func (a_stone, last_focused_editor.docking_content)
+				if last_focused_editor /= Void then
+					Result := default_veto_func (a_stone, last_focused_editor.docking_content)
+				else
+					Result := default_veto_func (a_stone, void)
+				end
 			end
 		end
 
@@ -1095,6 +1103,15 @@ feature {NONE} -- Agents
 			-- Closing an editor callback.
 		do
 			if a_editor.changed then
+				if a_editor /= current_editor then
+					-- If `a_editor' changed and not focused, we must focus it, then notify our users whether to save it.
+					-- We have to give the focus to the editor (see bug#14247) since when closing an editor
+					-- we do a lot of things (see {EB_SAVE_FILE_COMMAND}.execute for details).
+
+					-- In perfect case, we should only switch to the editor if something wrong happen, but
+					-- that need to change a lot of codes...
+					select_editor (a_editor, False)
+				end
 				development_window.save_and (agent close_editor_perform (a_editor))
 			else
 				close_editor_perform (a_editor)

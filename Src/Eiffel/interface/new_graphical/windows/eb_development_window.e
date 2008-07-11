@@ -2608,8 +2608,6 @@ feature {NONE} -- Window management
 			l_result: BOOLEAN
 			l_file_name: STRING
 			l_raw_file: RAW_FILE
-
-			l_env: EV_ENVIRONMENT
 		do
 			-- Cleanup agents
 			if (restore_agent_for_maximize_action /= Void)then

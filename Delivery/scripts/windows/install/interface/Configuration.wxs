@@ -20,6 +20,7 @@
     <Property Id="Button_Resume">&amp;Resume</Property>
     <Property Id="Button_Retry">&amp;Retry</Property>
     <Property Id="Button_Return">&amp;Return</Property>
+    <Property Id="Button_Restart">&amp;Restart</Property>
 
     <Property Id="Button_Yes">&amp;Yes</Property>
     <Property Id="Button_No">&amp;No</Property>
@@ -32,6 +33,7 @@
     <Property Id="Button_ViewCompilerHowTo">&amp;View How To...</Property>
     <Property Id="Button_ViewFullError">&amp;View Full Error...</Property>
     <Property Id="Button_ViewFullWarning">&amp;View Full Warning...</Property>
+    <Property Id="Button_CheckCCompiler">Chec&amp;k for an Installed C Compiler</Property>
     <!--END BUTTON TEXT-->
 
     <UI Id="UI.configuration">

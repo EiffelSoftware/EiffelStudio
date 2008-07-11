@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		An observer for events implemented on a {TEST_EXECUTOR_I} service interface.
+		An observer for events in {TEST_EXECUTOR_I}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,55 +9,45 @@ deferred class
 	TEST_EXECUTOR_OBSERVER
 
 inherit
-	EVENT_OBSERVER_I
+	ACTIVE_COLLECTION_OBSERVER [!TEST_I]
+		rename
+			on_item_added as on_test_added,
+			on_item_changed as on_test_changed
+		end
 
 feature {TEST_EXECUTOR_I} -- Events
 
-	on_preparing (a_executor: !TEST_EXECUTOR_I)
-			-- Called when an executor starts preparing a test execution
+	on_test_launched (a_executor: !TEST_EXECUTOR_I)
+			-- Called after test has been launched
+			--
+			-- `a_executor': Executor triggering event
 		require
-			is_interface_usable: is_interface_usable
-			a_executor_usable: a_executor.is_interface_usable
-			a_executor_preparing: a_executor.is_preparing
-		do
-		end
-
-	on_testing (a_executor: !TEST_EXECUTOR_I)
-			-- Called before an executor runs a single test
-		require
-			is_interface_usable: is_interface_usable
+			usable: is_interface_usable
 			a_executor_usable: a_executor.is_interface_usable
 			a_executor_testing: a_executor.is_testing
 		do
 		end
 
-	on_tested (a_executor: !TEST_EXECUTOR_I) is
-			-- Called after an executor has ran a test and therefor
-			-- a new outcome is available for that test
+	on_test_revealed (a_executor: !TEST_EXECUTOR_I)
+			-- Called after a new outcome for current test has been produced
+			--
+			-- `a_executor': Executor triggering event
 		require
 			is_interface_usable: is_interface_usable
 			a_executor_usable: a_executor.is_interface_usable
-			a_executor_testing: a_executor.is_testing
-			test_has_outcome: not a_executor.current_test.outcomes.is_empty
+			a_executor_running: a_executor.is_testing
+			test_has_outcome: a_executor.current_test.is_outcome_available
 		do
 		end
 
 	on_cleaning_up (a_executor: TEST_EXECUTOR_I)
-			-- Called when an executor is finished executing tests
-			-- and performing some cleaning up tasks
+			-- Called after executor started cleaning up after an execution session
+			--
+			-- `a_executor': Executor triggering event
 		require
 			is_interface_usable: is_interface_usable
 			a_executor_usable: a_executor.is_interface_usable
 			a_executor_cleaning_up: a_executor.is_cleaning_up
-		do
-		end
-
-	on_finished (a_executor: TEST_EXECUTOR_I)
-			-- Called when an executor has finished testing
-		require
-			is_interface_usable: is_interface_usable
-			a_executor_usable: a_executor.is_interface_usable
-			a_executor_not_running: not a_executor.is_running
 		do
 		end
 

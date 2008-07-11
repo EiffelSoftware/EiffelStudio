@@ -1,11 +1,15 @@
 indexing
 	description: "[
-		Abstract factory for creating new tests
+		An interface of an test factory which an arbitrary number of tests.
 		
-		A factory tries to create on or more tests for a given
-		configuration. The creation of the tests is asynchronously
-		so a call back procedure if used to notify when a new test
-		has been created.
+		After a test creation sessions has been launched, the factory adds new tests automatically to
+		the test suite. A factory also makes there newly created available by representing a test
+		collection. This collection is kept synchronized with the test suite.
+		The duration of a session is be defined by the implementation or optionally by the provided
+		configuration when launching.
+		
+		See {TEST_PROCESSOR_I} for details on the execution flow.
+
 	]"
 	author: ""
 	date: "$Date$"
@@ -15,36 +19,42 @@ deferred class
 	TEST_FACTORY_I [G -> TEST_CONFIGURATION_I]
 
 inherit
-	USABLE_I
-
-feature -- Status report
-
-	can_create_test: BOOLEAN
-			-- Is `Current' in a state where it is ready to create tests?
-		require
-			is_interface_usable: is_interface_usable
-		deferred
+	TEST_PROCESSOR_I [!G]
+		rename
+			tests as created_tests,
+			is_valid_argument as is_valid_configuration
 		end
 
-	is_valid_configuration (a_config: !G): BOOLEAN
-			-- Is `a_config' a valid configuration for creating tests?
+feature -- Access
+
+	configuration: !G
+			-- Configuration used in current test creation run
 		require
-			is_interface_usable: is_interface_usable
+			usable: is_interface_usable
+			running: is_running
 		deferred
+		ensure
+			result_is_complete: Result.is_complete
 		end
 
-feature -- Factory
+feature -- Query
 
-	create_test (a_config: !G; a_call_back: ?PROCEDURE [ANY, TUPLE [TEST_I]])
-			-- Create new test asynchronously
-			--
-			-- `a_config': configuration used to create new tests
-			-- `a_call_back': procedure called each time a new test has been created
-		require
-			is_interface_usable: is_interface_usable
-			can_create_test: can_create_test
-			valid_configuration: is_valid_configuration (a_config)
+	is_valid_configuration (a_conf: !G): BOOLEAN
+			-- <Precursor>
+		do
+			Result := a_conf.is_complete
+		ensure then
+			result_implies_complete: Result implies a_conf.is_complete
+		end
+
+feature {TEST_SUITE_S} -- Factory
+
+	start (a_config: !G; a_test_suite: like test_suite)
+			-- <Precursor>
 		deferred
+		ensure then
+			configuration_set: configuration = a_config
+			no_tests_created_yet: created_tests.is_empty
 		end
 
 end

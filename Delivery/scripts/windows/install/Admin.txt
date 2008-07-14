@@ -11,7 +11,7 @@ the case of multiple installations please read the following:
 
 There are a number of variables that *have* to be set to install successfully. These are detailed below:
 
-    - SELECTEDCCOMPILER : Either "msc", for using a preinstalled Microsoft C/C++ compiler or "mingw" to install and use GCC.
+    - C_CONFIG_NAME       : Either "msc", for using a preinstalled Microsoft C/C++ compiler or "mingw" to install and use GCC.
                             NOTE: GCC can only be used for the x86 version of EiffelStudio.
 
     - PID                 : For Enterprise editions of any installer a personal identifier is require, which is in the form of a CD-KEY for the
@@ -22,9 +22,6 @@ There are a number of variables that *have* to be set to install successfully. T
 There are also a number of properties that can be optionally defined, but should be defined for they sake of sanity:
     
     - INSTALLDIR          : This is the installed location of the application being installed by the installer and should end in a directory
-                            separator character '\'
-    
-    - * EIFFELPROJECTSDIR : Use to specify and alternative EiffelStudio project's directory path. The path should end in a directory
                             separator character '\'
             
     - * PRECOMPILE        : Use to specify the level of precompilation. Either "none", for no precompilation. "base", for precompiling EiffelBase
@@ -38,7 +35,7 @@ For special purposes it may be necessary to access installer pages that may not 
 
 2.1 C/C++ Compiler Configuration
 --------------------------------
-* Setting the property SHOWCCONFIG=1 via a command line installation will show the C/C++ compiler configuration page.
+* Setting the property C_CONFIG_CHOOSE=1 via a command line installation will show the C/C++ compiler configuration page.
 
 3.0 END NOTE:
 -------------

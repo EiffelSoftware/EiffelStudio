@@ -21,5 +21,6 @@
     <!-- END CUSTOM ACTIONS -->
 
     <CustomAction Id="SET_INSTALLDIR" Property="INSTALLDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
+    <CustomAction Id="SET_IS_DOTNET_INSTALLED" Property="IS_DOTNET_INSTALLED" Value="1" Execute="firstSequence" />
 </Fragment>
 </Wix>

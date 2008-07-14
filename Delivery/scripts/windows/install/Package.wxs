@@ -56,6 +56,8 @@
     <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>
     <!-- .NET installation root -->
     <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
+    <!-- Indicates if .NET is installed -->
+    <Property Id="IS_DOTNET_INSTALLED">0</Property>
 
     <!-- Has license aggreement been viewed -->
     <Property Id="HAS_VIEWED_LICENSE">0</Property>

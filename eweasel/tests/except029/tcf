@@ -1,0 +1,15 @@
+test_name 	 exception_on_invalid_object_has_no_trace
+test_description Shows a runtime crash when building trace on an invalid object. The crash results in no trace.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output1
+execute_result ok
+compare		exec_output1 output
+
+test_end

@@ -60,7 +60,7 @@
     <!-- Has license aggreement been viewed -->
     <Property Id="HAS_VIEWED_LICENSE">0</Property>
     <!-- Indicates if a C config choice is present -->
-    <Property Id="C_CONFIG_CHOOSE"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>
+    <Property Id="C_CONFIG_CHOOSE"><?ifdef x64?>0<?else?>1<?endif?></Property>
     <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="C_CONFIG_INSTALL_URL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>
     <!-- Eiffel C configuration name -->

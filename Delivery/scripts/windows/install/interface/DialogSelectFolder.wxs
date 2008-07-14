@@ -17,13 +17,6 @@
           <Publish Property="_BrowseProperty" Value="INSTALLDIR">1</Publish>
           <Publish Event="SpawnDialog" Value="PromptBrowse">1</Publish>
         </Control>
-        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
-          <?ifdef EiffelStudio?>
-            <Publish Event="NewDialog" Value="DialogSelectLanguage">1</Publish>
-          <?else?>
-            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall">1</Publish>
-          <?endif?>
-        </Control>
         <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
           <?ifdef EiffelStudio?>
             <?ifdef Enterprise?>
@@ -37,6 +30,13 @@
             <?else?>
               <Publish Event="NewDialog" Value="DialogViewLicenseAgreement">1</Publish>
             <?endif?>
+          <?endif?>
+        </Control>
+        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
+          <?ifdef EiffelStudio?>
+          <Publish Event="NewDialog" Value="DialogSelectLanguage">1</Publish>
+          <?else?>
+          <Publish Event="NewDialog" Value="DialogVerifyReadyInstall">1</Publish>
           <?endif?>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">

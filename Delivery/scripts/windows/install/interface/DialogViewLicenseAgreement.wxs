@@ -33,16 +33,7 @@
             <?else?>
               <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
             <?endif?>
-          <?else?>
-            <?ifdef EiffelEnvision?>
-              <!-- EiffelEnvision actions -->
-              <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[CHECKCCOMPILER <> "0" AND HASMSCCOMPILER = "0"]]></Publish>
-              <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
-            <?else?>
-              <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
-            <?endif?>
-          <?endif?>
-          
+          <?endif?>          
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

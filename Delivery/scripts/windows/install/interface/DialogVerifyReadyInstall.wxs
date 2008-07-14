@@ -13,23 +13,17 @@
         <Control Id="Description2" Type="Text" Height="16" Width="354" X="9" Y="162" Transparent="yes" NoPrefix="yes">
           <Text>Click the Install button to start the installation process.</Text>
         </Control>
+        <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
+          <?ifdef EiffelStudio?>
+            <Publish Event="NewDialog" Value="DialogPrecompileChoice"></Publish>
+          <?endif?>
+        </Control>
         <Control Id="Install" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Install]">
           <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
           <Publish Event="SpawnDialog" Value="PromptOutOfRollbackDiskSpace"><![CDATA[OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)]]></Publish>
           <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"]]></Publish>
           <Publish Event="EnableRollback" Value="False"><![CDATA[OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"]]></Publish>
           <Publish Event="SpawnDialog" Value="PromptOutOfDiskSpace"><![CDATA[(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")]]></Publish>
-        </Control>
-        <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
-          <?ifdef EiffelStudio?>
-            <Publish Event="NewDialog" Value="DialogPrecompileChoice"></Publish>
-          <?else?>
-            <?ifdef Enterprise?>
-              <Publish Event="NewDialog" Value="DialogRegister"></Publish>
-            <?else?>
-              <Publish Event="NewDialog" Value="DialogViewLicenseAgreement"></Publish>
-            <?endif?>
-          <?endif?>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

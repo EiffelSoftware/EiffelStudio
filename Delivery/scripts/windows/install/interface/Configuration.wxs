@@ -6,6 +6,7 @@
     <Property Id="Button_Back">&lt; &amp;Back</Property>
     <Property Id="Button_Next">&amp;Next &gt;</Property>
     <Property Id="Button_Finish">&amp;Finish</Property>
+    <Property Id="Button_Abort">&amp;Abort</Property>
 
     <Property Id="Button_OK">OK</Property>
     <Property Id="Button_Cancel">Cancel</Property>
@@ -39,12 +40,14 @@
     <UI Id="UI.configuration">
       <!-- FONT DEFINITION -->
       <Property Id="TitleFont">{&amp;DlgFontBold8}</Property>
+      <Property Id="ErrorFont">{&amp;DlgFontBold8Red}</Property>
       <Property Id="SubTitleFont">{&amp;DlgFont8}</Property>
       <Property Id="BigFont">{&amp;VerdanaBold13}</Property>
       <Property Id="DefaultUIFont">DlgFont8</Property>
       <Property Id="ErrorDialog">PromptError</Property>
 
       <TextStyle Id="DlgFont8" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="DlgFontBold8Red" FaceName="Tahoma" Size="8" Bold="yes"  Blue="0" Green="0" Red="200"/>
       <TextStyle Id="DlgFontBold8" FaceName="Tahoma" Size="8" Bold="yes" />
       <TextStyle Id="VerdanaBold13" FaceName="Verdana" Size="13" Bold="yes" />
       <!-- END FONT DEFINITION -->

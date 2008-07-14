@@ -54,14 +54,6 @@ feature -- Commands
 		deferred
 		end
 
-	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
-			-- Desatuation `a_pixmap' with `a_k'.
-		require
-			valid: 0 <= a_k  and a_k <= 1
-			not_void: a_pixmap /= Void
-		deferred
-		end
-
 feature -- Query
 
 	is_start_draw_called: BOOLEAN is

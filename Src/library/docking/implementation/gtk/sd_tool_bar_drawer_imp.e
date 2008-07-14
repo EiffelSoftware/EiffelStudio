@@ -284,11 +284,6 @@ feature {NONE} -- Implementation
 
 		end
 
-	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
-			-- Do nothing on Linux.
-		do
-		end
-
 feature {NONE} -- Externals
 
 	c_gtk_paint_line (a_gtk_widget: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN) is

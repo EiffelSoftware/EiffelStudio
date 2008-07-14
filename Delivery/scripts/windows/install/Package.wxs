@@ -47,29 +47,36 @@
     <!-- END ADD REMOVE PROGRAM -->
 
     <!-- PROPERTIES -->
-    <Property Id="ALLUSERS">1</Property>                                                                                  <!-- Indicates if the installation should be for all users or not -->
-    <?ifdef x64?>
-      <Property Id="ISEPLATFORM">win64</Property>
-    <?else?>
-      <Property Id="ISEPLATFORM">windows</Property>
-    <?endif?>
+    <!-- Indicates if the installation should be for all users or not -->
+    <Property Id="ALLUSERS">1</Property>
+    <Property Id="ISEPLATFORM"><?ifdef x64?>win64<?else?>windows<?endif?></Property>
+    <!-- Installation directory -->
     <Property Id="INSTALLDIR" Secure="yes" />
-    <Property Id="INSTALLCURL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
-    <Property Id="CHECKCCOMPILER"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>   <!-- Determines if a C/C++ compiler should be checked -->
-    <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found -->
-    <Property Id="MSCCOMPILERNAME">0</Property>
-    <Property Id="CANCCOMPILE">0</Property>                                                                            <!-- Indicates if a MSC C/C++ can actually be used -->
-    <Property Id="SELECTEDCCOMPILER">
-      <?ifdef EiffelStudio?>mingw<?else?>msc<?endif?>
-    </Property>                             <!-- Type of C/C++ compiler -->
-    <Property Id="FXINSTALLROOT">
-      0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" />
-    </Property>
-    <Property Id="VIEWEDLICENSE">0</Property>                                                                            <!-- Indicates if the license agreement has been viewed -->
+    <!-- Type of C/C++ compiler -->
+    <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>
+    <!-- .NET installation root -->
+    <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
 
-    <Property Id="C_CONFIG_ERROR_TEXT">Unknown Reason</Property>                                                         <!-- When CANCCOMPILE is non-zero then this is the truncated error message -->
-    <Property Id="C_CONFIG_ERROR_FULL_TEXT">Unknown Reason</Property>                                                    <!-- When CANCCOMPILE is non-zero then this is the error message -->
-    <Property Id="SHOW_VIEW_FULL_CONFIG_ERROR">0</Property>                                                              <!-- Indicates if the show full error button should be shown for the C compilers -->
+    <!-- Has license aggreement been viewed -->
+    <Property Id="HAS_VIEWED_LICENSE">0</Property>
+    <!-- Indicates if a C config choice is present -->
+    <Property Id="C_CONFIG_CHOOSE"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>
+    <!-- URL for How-To-Install a C/C++ compiler -->
+    <Property Id="C_CONFIG_INSTALL_URL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>
+    <!-- Eiffel C configuration name -->
+    <Property Id="C_CONFIG_NAME">msc</Property>
+    <!-- The name of a MS compiler environment -->
+    <Property Id="C_CONFIG_MSC_ENVIRONMENT">Unused</Property>
+    <!-- Inidicates if a C compilation can be performed -->
+    <Property Id="C_CONFIG_CAN_COMPILE">0</Property>
+    <!-- Indicates if a MS C compiler has been found -->
+    <Property Id="C_CONFIG_MSC_FOUND">0</Property>
+    <!-- Last truncated error when determinine a Visual C/C++ compiler environment -->
+    <Property Id="C_CONFIG_ERROR_TEXT">Unknown Reason</Property>
+    <!-- Last error when determinine a Visual C/C++ compiler environment -->
+    <Property Id="C_CONFIG_ERROR_FULL_TEXT">Unknown Reason</Property>
+    <!-- Indicates if the View button is displayed to show a how document to install a MS C compiler -->
+    <Property Id="IS_VIEW_FULL_ERROR_BUTTON_SHOWN">0</Property>
     <!-- END PROPERTIES -->
     
     <!-- INSTALL DESCRIPTION -->

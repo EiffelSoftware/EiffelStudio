@@ -2,13 +2,13 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <?ifdef EiffelStudio?>
-    <UI Id="UI.dialog_choose_c_compiler">
-      <RadioButtonGroup Property="SELECTEDCCOMPILER">
+    <UI Id="UI.dialog_select_c_compiler">
+      <RadioButtonGroup Property="C_CONFIG_NAME">
         <RadioButton Value="mingw" X="5" Y="5" Width="213" Height="14" Text="Install and use MinGW (GCC)" />
         <RadioButton Value="msc" X="5" Y="19" Width="213" Height="14" Text="Use a &amp;Microsoft C/C++ compiler (Recommended)"/>
       </RadioButtonGroup>
 
-      <Dialog Id="DialogCCompilerChoice" Width="375" Height="220" Title="[ProductName]">
+      <Dialog Id="DialogSelectCCompiler" Width="375" Height="220" Title="[ProductName]">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_c.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]C/C++ Compiler Selection</Text>
@@ -20,20 +20,20 @@
           <Text>If you have the Microsoft Visual C++ compiler version 6.0, or above, or you have installed the latest Windows SDK then select "Use a Microsoft C/C++ compiler".</Text>
         </Control>
         <Control Id="Description2" Type="Text" Height="30" Width="354" X="12" Y="100" Text="Otherwise select &quot;Install and use MinGW (GCC)&quot;. This will install MinGW's C/C++ compiler and configure the Eiffel compiler to use it as the default C/C++ compiler." Transparent="yes" />
-        <Control Id="Choice" Type="RadioButtonGroup" X="40" Y="135" Width="218" Height="36" Property="SELECTEDCCOMPILER" TabSkip="no">
-          <Publish Event="DoAction" Value="EvaluateCCompiler" Order="1">1</Publish>
-        </Control>
+        <Control Id="Choice" Type="RadioButtonGroup" X="40" Y="135" Width="218" Height="36" Property="C_CONFIG_NAME" TabSkip="no"/>
         <Control Id="Download" Type="PushButton" Height="17" Width="68" X="266" Y="156" Text="[Button_Download]">
           <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
-          <Condition Action="disable"><![CDATA[SELECTEDCCOMPILER <> "msc"]]></Condition>
-          <Condition Action="enable"><![CDATA[SELECTEDCCOMPILER = "msc" AND HASMSCCOMPILER <> "1"]]></Condition>
-        </Control>
-        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
-          <Publish Event="NewDialog" Value="DialogMscRestartRequired" Order="2"><![CDATA[SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Publish>
-          <Publish Event="NewDialog" Value="DialogPrecompileChoice" Order="2"><![CDATA[SELECTEDCCOMPILER <> "msc" OR CANCCOMPILE = "1"]]></Publish>
+          <Condition Action="disable"><![CDATA[C_CONFIG_NAME <> "msc"]]></Condition>
+          <Condition Action="enable"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_MSC_FOUND <> "1"]]></Condition>
         </Control>
         <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
-          <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
+          <Publish Event="NewDialog" Value="DialogMissingMscWarning"><![CDATA[C_CONFIG_MSC_FOUND <> "1"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogMissingNetFx"><![CDATA[IS_DOTNET_INSTALLED <> "1" AND C_CONFIG_MSC_FOUND = "1"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogSelectLanguage"><![CDATA[IS_DOTNET_INSTALLED = "1" AND C_CONFIG_MSC_FOUND = "1"]]></Publish>
+        </Control>
+        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
+          <Publish Event="NewDialog" Value="DialogMscRestartRequired"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_CAN_COMPILE = "0"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[C_CONFIG_NAME <> "msc" OR C_CONFIG_CAN_COMPILE = "1"]]></Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

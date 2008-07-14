@@ -12,15 +12,15 @@
         </Control>
         <Control Id="MissingCCompiler" Type="Text" X="11" Y="100" Width="354" Height="74" Transparent="yes" NoPrefix="yes">
           <Text>[TitleFont]Please note that [ProductName] requires a Microsoft C/C++ compiler to complete compilation. If you do not already have one, A Microsoft C/C++ compiler is freely available to download and install. Please click the 'View How To...' button for up-to-date details on how to obtain and configure the Microsoft Windows SDK.</Text>
-          <Condition Action="hide"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"]]></Condition>
+          <Condition Action="hide"><![CDATA[C_CONFIG_CAN_COMPILE = "1"]]></Condition>
         </Control>
         <Control Id="View" Type="PushButton" X="276" Y="157" Width="90" Height="17" Text="[Button_ViewCompilerHowTo]">
           <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
-          <Condition Action="hide"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"]]></Condition>
+          <Condition Action="hide"><![CDATA[C_CONFIG_CAN_COMPILE = "1"]]></Condition>
         </Control>
         <Control Id="LocatedCCompiler" Type="Text" X="11" Y="100" Width="354" Height="74" Transparent="yes" NoPrefix="yes">
-          <Text>[TitleFont]The installer has automatically detected an installation of [MSCCOMPILERNAME]. This C/C+ compiler will be used for when completing the compilation in [ProductName].</Text>
-          <Condition Action="hide"><![CDATA[MSCCOMPILERNAME = "0"]]></Condition>
+          <Text>[TitleFont]The installer has automatically detected an installation of [C_CONFIG_MSC_ENVIRONMENT]. This C/C+ compiler will be used for when completing the compilation in [ProductName].</Text>
+          <Condition Action="hide"><![CDATA[C_CONFIG_MSC_ENVIRONMENT = "Unused"]]></Condition>
         </Control>
         <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
           <Publish Event="NewDialog" Value="DialogViewLicenseAgreement">1</Publish>

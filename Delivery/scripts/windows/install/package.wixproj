@@ -160,7 +160,6 @@
     <Compile Include="interface\Configuration.wxs" />
     <Compile Include="interface\DialogExitSuccess.wxs" />
     <Compile Include="interface\DialogFatalError.wxs" />
-    <Compile Include="interface\DialogMissingMsCompiler.wxs" />
     <Compile Include="interface\DialogProgress.wxs" />
     <Compile Include="interface\DialogSelectFolder.wxs" />
     <Compile Include="interface\DialogUserExit.wxs" />
@@ -168,10 +167,6 @@
     <Compile Include="interface\DialogVerifyReadyInstall.wxs" />
     <Compile Include="interface\DialogViewLicenseAgreement.wxs" />
     <Compile Include="interface\DialogWelcome.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogCCompilerChoice.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogMissingFx.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogPrecompileChoice.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogSelectProjectFolder.wxs" />
     <Compile Include="interface\PromptBrowse.wxs" />
     <Compile Include="interface\PromptCancelInstall.wxs" />
     <Compile Include="interface\PromptCancelLicense.wxs" />
@@ -208,9 +203,14 @@
     <Compile Include="content\eiffelstudio\studio_gpl_ec.wxs" />
     <Compile Include="content\eiffelstudio\studio_libraries.wxs" />
     <Compile Include="content\eiffelenvision\Redist.wxs" />
-    <Compile Include="interface\DialogMissingMsCompilerWarning.wxs" />
+    <Compile Include="interface\DialogMissingMscError.wxs" />
+    <Compile Include="interface\DialogMissingMscWarning.wxs" />
     <Compile Include="interface\DialogRegister.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogChooseLanguage.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogMissingNetFx.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogMscRestartRequire.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogSelectCCompiler.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogSelectLanguage.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogSelectPrecompile.wxs" />
     <Compile Include="interface\PromptInvalidCdKey.wxs" />
     <Content Include="includes\Preprocessors.wxi" />
   </ItemGroup>

@@ -15,42 +15,34 @@
         <Control Id="Description" Type="Text" Height="38" Width="356" X="9" Y="70" Transparent="yes">
           <Text>Please review the license agreement carefully for [ProductName] by clicking the View button below. Once you have reviewed the license agreement you may continue with installation for [ProductName].</Text>
         </Control>
-        <!--<Control Id="AgreementText" Type="ScrollableText" X="9" Y="70" Width="357" Height="84" Sunken="yes" TabSkip="no">
-          <Text SourceFile="licenses\$(var.Product)\$(var.LicenseFile)"></Text>
-        </Control>-->
-        
-        <!--<Control Id="ViewLarger" Type="PushButton" Height="17" Width="56" X="309" Y="158" Text="[Button_View]">
-          <Publish Event="SpawnDialog" Value="PromptViewLicenseAgreement">1</Publish>
-        </Control>-->
         <Control Id="ViewLarger" Type="PushButton" Height="17" Width="56" X="310" Y="110" Text="[Button_View]">
-          <Publish Property="VIEWEDLICENSE" Value="1">1</Publish>
+          <Publish Property="HAS_VIEWED_LICENSE" Value="1">1</Publish>
           <Publish Event="SpawnDialog" Value="PromptViewLicenseAgreement">1</Publish>
         </Control>
         <Control Id="Disagree" Type="PushButton" X="187" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Disagree]">
           <Publish Event="SpawnDialog" Value="PromptCancelLicense">1</Publish>
         </Control>
         <Control Id="Agree" Type="PushButton" X="242" Y="193" Width="56" Height="17" Text="[Button_Agree]">
-          <Condition Action="enable"><![CDATA[VIEWEDLICENSE = "1"]]></Condition>
-          <Condition Action="disable"><![CDATA[VIEWEDLICENSE <> "1"]]></Condition>
-          <?ifdef Enterprise?>
-            <!-- Have user register -->
-            <Publish Event="NewDialog" Value="DialogRegister">1</Publish>
-          <?else?>
-            <?ifdef EiffelStudio?>
-              <!-- EiffelStudio actions -->
-              <Publish Event="NewDialog" Value="DialogMissingFx"><![CDATA[FXINSTALLROOT = "0"]]></Publish>
-              <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[FXINSTALLROOT <> "0" AND CHECKCCOMPILER = "1" AND HASMSCCOMPILER <> "1"]]></Publish>
-              <Publish Event="NewDialog" Value="DialogChooseLanguage"><![CDATA[FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1")]]></Publish>
+          <Condition Action="enable"><![CDATA[HAS_VIEWED_LICENSE = "1"]]></Condition>
+          <Condition Action="disable"><![CDATA[HAS_VIEWED_LICENSE <> "1"]]></Condition>
+          <?ifdef EiffelStudio?>
+            <!-- EiffelStudio actions -->
+            <?ifdef Enterprise?>
+              <!-- Have user register -->
+              <Publish Event="NewDialog" Value="DialogRegister">1</Publish>
             <?else?>
-              <?ifdef EiffelEnvision?>
-                <!-- EiffelEnvision actions -->
-                <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[CHECKCCOMPILER <> "0" AND HASMSCCOMPILER = "0"]]></Publish>
-                <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
-              <?else?>
-                <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
-              <?endif?>
+              <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
+            <?endif?>
+          <?else?>
+            <?ifdef EiffelEnvision?>
+              <!-- EiffelEnvision actions -->
+              <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[CHECKCCOMPILER <> "0" AND HASMSCCOMPILER = "0"]]></Publish>
+              <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
+            <?else?>
+              <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
             <?endif?>
           <?endif?>
+          
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

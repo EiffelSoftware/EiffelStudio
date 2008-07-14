@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-    <UI Id="UI.dialog_missing_ms_compiler">
-      <Dialog Id="DialogMissingMsCompiler" Width="375" Height="220" Title="[ProductName]">
+    <UI Id="UI.dialog_missing_msc_error">
+      <Dialog Id="DialogMissingMscError" Width="375" Height="220" Title="[ProductName]">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_error.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]Missing Microsoft C/C++ Compiler</Text>
@@ -14,18 +14,16 @@
           <Text>[ProductName] requires a C/C++ compiler in order to completely compile Eiffel/Eiffel for .NET projects.</Text>
         </Control>
         <Control Id="Reason" Type="Text" Height="62" Width="328" X="26" Y="100" Transparent="yes" NoPrefix="yes">
-          <Text>[TitleFont][C_CONFIG_ERROR_TEXT]</Text>
+          <Text>[ErrorFont][C_CONFIG_ERROR_TEXT]</Text>
         </Control>
         <Control Id="View" Type="PushButton" X="26" Y="157" Width="100" Height="17" Text="[Button_ViewFullError]" Hidden="yes">
           <Publish Event="DoAction" Value="ShowCConfigurationError">1</Publish>
-          <Condition Action="show"><![CDATA[SHOW_VIEW_FULL_CONFIG_ERROR = "1"]]></Condition>
-        </Control>
-        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Next]">
-          <Publish Event="EndDialog" Value="Exit">1</Publish>
+          <Condition Action="show"><![CDATA[IS_VIEW_FULL_ERROR_BUTTON_SHOWN = "1"]]></Condition>
         </Control>
         <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Disabled="yes" Text="[Button_Back]" />
-        <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Text="[Button_Cancel]">
-          <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
+        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Disabled="yes" Text="[Button_Next]"/>
+        <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Abort]">
+          <Publish Event="EndDialog" Value="Exit">1</Publish>
         </Control>
       </Dialog>
     </UI>

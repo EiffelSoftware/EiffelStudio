@@ -315,13 +315,13 @@ feature {NONE} -- Implementation
 			if l_button /= Void and then l_button.pixel_buffer /= Void and l_button.tool_bar /= Void then
 				if not a_arguments.item.is_sensitive then
 					arguments := a_arguments
-					dc_to_draw := a_dc_to_draw
+
 					pixmap_coordinate := l_button.pixmap_position
-					desaturation_pixel_buffer (l_button.pixel_buffer)
+					desaturation_pixel_buffer (l_button.pixel_buffer, a_dc_to_draw)
 
 					if l_dropdown_button /= Void then
 						pixmap_coordinate.set_x (l_dropdown_button.dropdown_left)
-						desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer)
+						desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer, a_dc_to_draw)
 					end
 				else
 					create l_graphics.make_from_dc (a_dc_to_draw)
@@ -367,9 +367,9 @@ feature {NONE} -- Implementation
 					check l_imp /= Void end
 
 					arguments := a_arguments
-					dc_to_draw := a_dc_to_draw
+
 					pixmap_coordinate := l_button.pixmap_position
-					desaturation (l_grey_pixmap, 1)
+					desaturation (l_grey_pixmap, 1, a_dc_to_draw)
 
 					l_pixmap_state ?= l_grey_pixmap.implementation
 				else
@@ -396,9 +396,6 @@ feature {NONE} -- Implementation
 		end
 
 	arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS
-			-- Temp arguments during draw desartuated tool bar icons.
-
-	dc_to_draw: WEL_DC
 			-- Temp arguments during draw desartuated tool bar icons.
 
 	pixmap_coordinate: EV_COORDINATE
@@ -477,8 +474,12 @@ feature {NONE} -- Implementation
 				or Result = {WEL_THEME_PART_CONSTANTS}.tp_separator
 		end
 
-	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL; a_dc_to_draw: WEL_DC) is
 			-- Desatuation `a_pixmap' with `a_k' when Gdi+ is not available.
+		require
+			valid: 0 <= a_k  and a_k <= 1
+			not_void: a_pixmap /= Void
+			not_void: a_dc_to_draw /= Void and then a_dc_to_draw.exists
 		local
 			l_intensity: REAL
 			l_wel_dc: WEL_MEMORY_DC
@@ -516,11 +517,14 @@ feature {NONE} -- Implementation
 			end
 			l_wel_dc.delete
 
-			dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, pixmap_coordinate.x, pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
+			a_dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, pixmap_coordinate.x, pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
 		end
 
-	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dc_to_draw: WEL_DC) is
 			-- Disaturation `a_pixel_buffer' when Gdi+ is available.
+		require
+			not_void: a_pixel_buffer /= Void
+			not_void: a_dc_to_draw /= Void and then a_dc_to_draw.exists
 		local
 			l_image: WEL_GDIP_BITMAP
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -529,7 +533,7 @@ feature {NONE} -- Implementation
 			check not_void: l_imp /= Void end
 			l_image := l_imp.gdip_bitmap
 
-			grayscale_icon_drawer.draw_grayscale_bitmap (l_image, dc_to_draw, pixmap_coordinate.x, pixmap_coordinate.y)
+			grayscale_icon_drawer.draw_grayscale_bitmap (l_image, a_dc_to_draw, pixmap_coordinate.x, pixmap_coordinate.y)
 		end
 
 	grayscale_icon_drawer: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER

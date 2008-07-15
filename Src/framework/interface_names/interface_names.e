@@ -284,22 +284,22 @@ feature -- Choice original (No translation)
 
 feature -- Graphical degree output
 
-	d_Classes_to_go: STRING is					do Result := locale.translation("Classes to Go:").out	end
-	d_Class_name_already_exists: STRING is		do Result := locale.translation("Class name already exits. Please choose other names.").out	end
-	d_Class_under_test_not_valid: STRING is		do Result := locale.translation("Class under test is not valid. Please enter a valid class name or leave blank.").out	end
-	d_Clusters_to_go: STRING_GENERAL is			do Result := locale.translation("Clusters to Go:")	end
-	d_Compilation_class: STRING is				do Result := locale.translation("Class:").out	end
-	d_Compilation_cluster: STRING is			do Result := locale.translation("Cluster:").out	end
-	d_Compilation_progress: STRING is			do Result := locale.translation("Compilation Progress for ").out	end
-	d_Degree: STRING is							do Result := locale.translation("Degree:").out	end
-	d_Documentation: STRING is					do Result := locale.translation("Documentation").out	end
-	d_Features_processed: STRING is				do Result := locale.translation("Completed: ").out	end
-	d_Features_to_go: STRING is					do Result := locale.translation("Remaining: ").out	end
-	d_Generating: STRING is						do Result := locale.translation("Generating: ").out	end
-	d_Resynchronizing_breakpoints: STRING is 	do Result := locale.translation("Resynchronizing Breakpoints").out	end
-	d_Resynchronizing_tools: STRING is			do Result := locale.translation("Resynchronizing Tools").out	end
-	d_Reverse_engineering: STRING is			do Result := locale.translation("Reverse Engineering Project").out	end
-	d_Finished_removing_dead_code: STRING is	do Result := locale.translation("Dead Code Removal Completed").out	end
+	d_Classes_to_go: STRING_GENERAL is					do Result := locale.translation("Classes to Go:")	end
+	d_Class_name_already_exists: STRING_GENERAL is		do Result := locale.translation("Class name already exits. Please choose other names.")	end
+	d_Class_under_test_not_valid: STRING_GENERAL is		do Result := locale.translation("Class under test is not valid. Please enter a valid class name or leave blank.")	end
+	d_Clusters_to_go: STRING_GENERAL is					do Result := locale.translation("Clusters to Go:")	end
+	d_Compilation_class: STRING_GENERAL is				do Result := locale.translation("Class:")	end
+	d_Compilation_cluster: STRING_GENERAL is			do Result := locale.translation("Cluster:")	end
+	d_Compilation_progress: STRING_GENERAL is			do Result := locale.translation("Compilation Progress for ")	end
+	d_Degree: STRING_GENERAL is							do Result := locale.translation("Degree:")	end
+	d_Documentation: STRING_GENERAL is					do Result := locale.translation("Documentation")	end
+	d_Features_processed: STRING_GENERAL is				do Result := locale.translation("Completed: ")	end
+	d_Features_to_go: STRING_GENERAL is					do Result := locale.translation("Remaining: ")	end
+	d_Generating: STRING_GENERAL is						do Result := locale.translation("Generating: ")	end
+	d_Resynchronizing_breakpoints: STRING_GENERAL is 	do Result := locale.translation("Resynchronizing Breakpoints")	end
+	d_Resynchronizing_tools: STRING_GENERAL is			do Result := locale.translation("Resynchronizing Tools")	end
+	d_Reverse_engineering: STRING_GENERAL is			do Result := locale.translation("Reverse Engineering Project")	end
+	d_Finished_removing_dead_code: STRING_GENERAL is	do Result := locale.translation("Dead Code Removal Completed")	end
 
 feature -- Help text
 

@@ -696,10 +696,10 @@ feature -- Actions on all windows
 			for_all (agent synchronize_action)
 		end
 
-	display_message_and_percentage (m: STRING; a_value: INTEGER) is
+	display_message_and_percentage (m: STRING_GENERAL; a_value: INTEGER) is
 			-- Display message `m' and `a_value' percentage in status bars of all development windows.
 		require
-			one_line_message: m /= Void and then (not m.has ('%N') and not m.has ('%R'))
+			one_line_message: m /= Void and then (not m.has_code (('%N').natural_32_code) and not m.has_code (('%R').natural_32_code))
 			a_value_valid: a_value >= 0 and then a_value <= 100
 		local
 			l_managed_windows: like managed_windows

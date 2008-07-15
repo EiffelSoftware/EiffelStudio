@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			-- Note: This is only called when Current is sited with an object, not when Current is sited
 			--       with Void.
 		require
-			site_attached: site /= Void
+			is_sited: is_sited
 		do
 		end
 
@@ -58,6 +58,15 @@ feature -- Access
 
 	site: ?G assign set_site
 			-- Access to sited object instance (Void if unsited)
+			--| Note: Use `set_site' instead of assigning directly!
+
+	attached_site: !G
+			-- Access to an attached sited object instance.
+		require
+			is_sited: is_sited
+		do
+			Result ?= site
+		end
 
 feature {NONE} -- Access
 
@@ -67,7 +76,15 @@ feature {NONE} -- Access
 			create Result.make (0)
 		end
 
-feature -- Query
+feature -- Status report
+
+	is_sited: BOOLEAN
+			-- Indicates if Current has been sited
+		do
+			Result := site /= Void
+		ensure
+			site_attached: Result implies site /= Void
+		end
 
 	is_valid_site (a_site: ?ANY): BOOLEAN
 			-- Determines if an object is a valid site object.

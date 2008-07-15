@@ -20,17 +20,19 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	TEST_PROCESSOR_I [G]
+	EIFFEL_TEST_PROCESSOR_I [G]
 
 inherit
-	TEST_COLLECTION_I
+	EIFFEL_TEST_COLLECTION_I
 		rename
 			are_tests_available as is_test_suite_valid
+		redefine
+			events
 		end
 
 feature -- Access
 
-	test_suite: !TEST_SUITE_S
+	test_suite: !EIFFEL_TEST_SUITE_S
 			-- Test suite `Current' is synchronized with.
 		require
 			usable: is_interface_usable
@@ -38,10 +40,10 @@ feature -- Access
 		deferred
 		ensure
 			result_usable: Result.is_interface_usable
-			result_valid: Result.are_tests_available
+			result_valid: Result.is_project_initialized
 		end
 
-	tests: !DS_LINEAR [!TEST_I]
+	tests: !DS_LINEAR [!EIFFEL_TEST_I]
 			-- <Precursor>
 		deferred
 		ensure then
@@ -76,7 +78,7 @@ feature -- Status report
 			result_implies_idle: Result implies is_idle
 		end
 
-feature {TEST_SUITE_S} -- Status report
+feature {EIFFEL_TEST_SUITE_S} -- Status report
 
 	is_idle: BOOLEAN
 			-- Is `Current' in a state where it is waiting to continue with its task?
@@ -104,6 +106,17 @@ feature -- Query
 		deferred
 		end
 
+feature {NONE} -- Query
+
+	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!EIFFEL_TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			-- <Precursor>
+		do
+			Result := Precursor (a_observer)
+			if {l_observer: !EIFFEL_TEST_PROCESSOR_OBSERVER} a_observer then
+				Result.force_last ([status_changed_event, agent l_observer.on_status_changed])
+			end
+		end
+
 feature -- Status setting
 
 	request_stop
@@ -116,7 +129,7 @@ feature -- Status setting
 			stop_requested: is_stop_requested
 		end
 
-feature {TEST_SUITE_S} -- Status setting
+feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
 	start (a_arg: G; a_test_suite: like test_suite)
 			-- Start performing a task for given arguments.
@@ -147,8 +160,7 @@ feature {TEST_SUITE_S} -- Status setting
 		deferred
 		ensure
 			idle: is_idle
-			stop_request_unchanged: is_stop_requested = old is_stop_requested
-			stop_requested_implies_finished: is_stop_requested implies is_finished
+			stop_requested_implies_finished: old is_stop_requested implies is_finished
 		end
 
 	stop
@@ -159,6 +171,17 @@ feature {TEST_SUITE_S} -- Status setting
 		deferred
 		ensure
 			stopped: not is_running
+		end
+
+feature -- Event
+
+	status_changed_event: !EVENT_TYPE [TUPLE [processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
+			-- Events called when processor changes its status
+			--
+			-- processor: `Current'
+		require
+			usable: is_interface_usable
+		deferred
 		end
 
 end

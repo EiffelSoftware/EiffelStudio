@@ -15,9 +15,6 @@ indexing
 deferred class
 	EIFFEL_TEST_OUTCOME_I
 
-inherit
-	TEST_OUTCOME_I
-
 feature -- Access
 
 	date: !DATE_TIME
@@ -53,6 +50,24 @@ feature -- Status report
 		do
 			Result := test_response /= Void and then
 				(test_response.is_exceptional and not has_bad_context)
+		end
+
+	is_unresolved: BOOLEAN
+			-- Is the test judgment unresolvable?
+		do
+			Result := not (is_pass or is_fail)
+		end
+
+	status: NATURAL_8
+			-- Status indicating status of `is_pass', `is_fail' and `is_unresolved'
+		do
+			if is_pass then
+				Result := {EIFFEL_TEST_OUTCOME_STATUS_TYPES}.passed
+			elseif is_fail then
+				Result := {EIFFEL_TEST_OUTCOME_STATUS_TYPES}.failed
+			else
+				Result := {EIFFEL_TEST_OUTCOME_STATUS_TYPES}.unresolved
+			end
 		end
 
 	is_maintenance_required: BOOLEAN
@@ -121,7 +136,18 @@ feature -- Status report
 			result_implies_bad_communication: Result implies has_bad_communication
 		end
 
+feature {NONE} -- Implementation
+
+	one_of (a: BOOLEAN; b: BOOLEAN; c: BOOLEAN): BOOLEAN
+		-- Is exactly one out of the three variables `a', `b', `c' true?
+		do
+			Result := (a xor b xor c) and not (a and b and c)
+		ensure
+			definition: (a xor b xor c) and not (a and b and c)
+		end
+
 invariant
+	one_of_pass_fail_unresolved: one_of (is_pass, is_fail, is_unresolved)
 	setup_normal_equals_test_not_void: (setup_response /= Void and then setup_response.is_normal) = (test_response /= Void)
 	test_not_bad_equals_teardown_not_void: (test_response /= Void and then test_response.is_normal) = (teardown_response /= Void)
 	unresolved_implies_maintenance: is_unresolved implies is_maintenance_required

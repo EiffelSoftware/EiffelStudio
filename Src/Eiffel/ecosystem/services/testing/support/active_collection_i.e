@@ -38,7 +38,7 @@ feature {NONE} -- Query
 	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [G]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 			-- <Precursor>
 		do
-			create Result.make (3)
+			create Result.make (4)
 			Result.put_last ([item_added_event, agent a_observer.on_item_added])
 			Result.put_last ([item_removed_event, agent a_observer.on_item_removed])
 			Result.put_last ([item_changed_event, agent a_observer.on_item_changed])
@@ -48,7 +48,7 @@ feature {NONE} -- Query
 feature -- Events
 
 	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called after an item was added to `items'.
+			-- Events called after an item was added to `items'.
 			--
 			-- collection: `Current'
 			-- item: Item which was added to `items'
@@ -58,7 +58,7 @@ feature -- Events
 		end
 
 	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called after an item was removed from `items'.
+			-- Events called after an item was removed from `items'.
 			--
 			-- collection: `Current'
 			-- item: Item which was removed from `items'
@@ -68,7 +68,7 @@ feature -- Events
 		end
 
 	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
-			-- Called after the state of an item has changed
+			-- Events called after the state of an item has changed
 			--
 			-- collection: `Current'
 			-- item: Item in `items' which changed
@@ -78,7 +78,7 @@ feature -- Events
 		end
 
 	items_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
-			-- Called to indicate that `items' has changed.
+			-- Events called to indicate that `items' has changed.
 			--
 			-- collection: `Current'
 		require

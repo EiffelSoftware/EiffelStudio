@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_OUTCOME_STATUS_TYPES
+	EIFFEL_TEST_OUTCOME_STATUS_TYPES
 
 feature -- Access
 

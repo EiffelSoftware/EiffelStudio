@@ -13,10 +13,18 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	TEST_PROCESSOR_REGISTRAR_I [G -> TEST_PROCESSOR_I [ANY]]
+	EIFFEL_TEST_PROCESSOR_REGISTRAR_I [G -> EIFFEL_TEST_PROCESSOR_I [ANY]]
 
 inherit
 	ACTIVE_COLLECTION_I [G]
+		rename
+			items as processors,
+			are_items_available as is_interface_usable,
+			item_added_event as processor_added_event,
+			item_removed_event as processor_removed_event,
+			item_changed_event as processor_changed_event,
+			items_changed_event as processors_changed_event
+		end
 
 feature -- Status report
 
@@ -43,7 +51,7 @@ feature -- Query
 		deferred
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
-			items_has_result: items.has (Result)
+			items_has_result: processors.has (Result)
 			conforming_type: a_type.attempt (Result) /= Void
 		end
 
@@ -73,7 +81,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			is_registered: is_registered (a_type)
-			items_has_a_item: items.has (a_processor)
+			items_has_a_item: processors.has (a_processor)
 		end
 
 	unregister (a_type: !TYPE [!G])

@@ -7,34 +7,48 @@ indexing
 		collection of tests which are simply the tests provided as the argument. The collection is
 		synchronised with the test suite. This means when a test is changed or deleted in the test suite,
 		the executor will adopt its own collection. During the actual testing, the execution will simply
-		iterate through the list of tests.
+		iterate through the list of tests and remove each item once it starts testing it.
 		
-		See {TEST_PROCESSOR_I} for details on the execution flow.
+		See {EIFFEL_TEST_PROCESSOR_I} for details on the execution flow.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	TEST_EXECUTOR_I
+	EIFFEL_TEST_EXECUTOR_I
 
 inherit
-	TEST_PROCESSOR_I [!DS_LINEAR [!TEST_I]]
+	EIFFEL_TEST_PROCESSOR_I [!DS_LINEAR [!EIFFEL_TEST_I]]
 		rename
-			is_valid_argument as is_valid_test_list
+			is_valid_argument as is_valid_test_list,
+			tests as queued_tests
 		redefine
 			events
 		end
 
 feature -- Access
 
-	current_test: !TEST_I
+	queued_tests: !DS_LINEAR [!EIFFEL_TEST_I]
+			-- <Precursor>
+		deferred
+		ensure then
+				-- Tests queued by `Current'
+			results_queued: ({!DS_LINEAR [!EIFFEL_TEST_I]} #? Result).for_all (
+				agent (a_test: !EIFFEL_TEST_I): BOOLEAN
+					do
+						Result := a_test.is_queued and then a_test.executor = Current
+					end)
+		end
+
+	current_test: !EIFFEL_TEST_I
 			-- Test currently being executed
 		require
 			usable: is_interface_usable
 			testing: is_testing
 		deferred
 		ensure
-			result_running: Result.is_running
+				-- Test being run by `Current'
+			result_running: Result.is_running and then Result.executor = Current
 		end
 
 feature -- Status report
@@ -74,13 +88,13 @@ feature -- Status report
 
 feature -- Query
 
-	is_valid_test_list (a_list: !DS_LINEAR [!TEST_I]): BOOLEAN
+	is_valid_test_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_list.for_all (agent is_test_executable)
 		end
 
-	is_test_executable (a_test: !TEST_I): BOOLEAN is
+	is_test_executable (a_test: !EIFFEL_TEST_I): BOOLEAN is
 			-- Can test instance be executed by `Current'?
 			--
 			-- `a_test': Test to be executed.
@@ -96,7 +110,7 @@ feature -- Query
 			result_implies_not_running: Result implies not a_test.is_running
 		end
 
-	is_test_compatible (a_test: !TEST_I): BOOLEAN is
+	is_test_compatible (a_test: !EIFFEL_TEST_I): BOOLEAN is
 			-- Is test compatible with current executor?
 		require
 			a_test_usable: a_test.is_interface_usable
@@ -104,9 +118,9 @@ feature -- Query
 			Result := True
 		end
 
-feature {TEST_SUITE_S} -- Status setting
+feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
-	start (a_list: !DS_LINEAR [!TEST_I]; a_test_suite: !TEST_SUITE_S) is
+	start (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_test_suite: !EIFFEL_TEST_SUITE_S) is
 			-- Launch test execution for a given list of tests. Once `Current' is preparing return and
 			-- continue execution asynchronously.
 			--
@@ -119,12 +133,12 @@ feature {TEST_SUITE_S} -- Status setting
 		deferred
 		ensure then
 			preparing: is_preparing
-			a_list_queued: tests.is_equal (a_list)
+			a_list_queued: queued_tests.is_equal (a_list)
 		end
 
 feature -- Events
 
-	test_launched_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
+	test_launched_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
 			-- Events called after a test has been launched.
 			--
 			-- executor: `Current'
@@ -133,7 +147,7 @@ feature -- Events
 		deferred
 		end
 
-	test_revealed_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
+	test_finished_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
 			-- Events called after a new outcome for `current_test' has been determined.
 			--
 			-- executor: `Current'
@@ -142,7 +156,7 @@ feature -- Events
 		deferred
 		end
 
-	cleaning_up_event: EVENT_TYPE [TUPLE [executor: !TEST_EXECUTOR_I]]
+	cleaning_up_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
 			-- Events called after `Current' started cleaning up after an execution session.
 			--
 			-- executor: `Current'
@@ -153,13 +167,13 @@ feature -- Events
 
 feature {NONE} -- Query
 
-	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!EIFFEL_TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
 			-- <Precursor>
 		do
 			Result := Precursor (a_observer)
-			if {l_observer: TEST_EXECUTOR_OBSERVER} a_observer then
+			if {l_observer: EIFFEL_TEST_EXECUTOR_OBSERVER} a_observer then
 				Result.force_last ([test_launched_event, agent l_observer.on_test_launched])
-				Result.force_last ([test_revealed_event, agent l_observer.on_test_revealed])
+				Result.force_last ([test_finished_event, agent l_observer.on_test_finished])
 				Result.force_last ([cleaning_up_event, agent l_observer.on_cleaning_up])
 			end
 		end

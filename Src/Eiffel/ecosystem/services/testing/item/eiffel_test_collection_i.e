@@ -1,28 +1,28 @@
 indexing
 	description: "[
-		Interface representing an active collection containing a list of tests.	
+		Interface representing an active collection containing a list of tests.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	TEST_COLLECTION_I
+	EIFFEL_TEST_COLLECTION_I
 
 inherit
-	ACTIVE_COLLECTION_I [!TEST_I]
+	ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]
 		rename
 			items as tests,
 			are_items_available as are_tests_available,
 			item_added_event as test_added_event,
 			item_removed_event as test_removed_event,
 			item_changed_event as test_changed_event,
-			items_changed_event as tests_refreshed_event
+			items_changed_event as tests_changed_event
 		end
 
 feature -- Access
 
-	tests: !DS_LINEAR [!TEST_I]
+	tests: !DS_LINEAR [!EIFFEL_TEST_I]
 			-- <Precursor>
 		deferred
 		ensure then

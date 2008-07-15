@@ -14,13 +14,12 @@ indexing
 deferred class
 	EIFFEL_TEST_CONFIGURATION_I
 
-inherit
-	TEST_CONFIGURATION_I
-		redefine
-			is_complete
-		end
-
 feature -- Access
+
+	name: !STRING
+			-- Name used for new test
+		deferred
+		end
 
 	new_parent_name: !STRING
 			-- Name of the new class
@@ -57,23 +56,19 @@ feature -- Access
 			result_consistent: Result = covered_features
 		end
 
+	tags: !DS_LINEAR [!STRING]
+			-- Predefined tags for new test
+		deferred
+		ensure
+			result_consistent: Result = tags
+			not_contains_empty: not Result.there_exists (agent {!STRING}.is_empty)
+		end
+
 feature -- Query
 
 	create_new_parent: BOOLEAN
 			-- Will test be created in a new class?
 		deferred
-		end
-
-	is_complete: BOOLEAN
-			-- <Precursor>
-		do
-			if Precursor then
-				if create_new_parent then
-					Result := not (new_parent_name.is_empty or new_location.is_readonly)
-				else
-					Result := not parent.is_read_only
-				end
-			end
 		end
 
 end

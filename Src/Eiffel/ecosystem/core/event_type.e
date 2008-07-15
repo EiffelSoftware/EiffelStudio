@@ -50,7 +50,13 @@ feature {NONE} -- Clean up
 			suicide_actions_detached: suicide_actions = Void
 		end
 
-feature -- Query
+feature {NONE} -- Access
+
+	suspension_count: NATURAL_16
+			-- Number of clients requesting event publising be suspsend.
+			-- Note: Publication will be suspended as long as a single client request suspension
+
+feature -- Status report
 
 	is_subscribed (a_action: PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
 			-- Determines if the event already has a subscription for a specified action
@@ -63,7 +69,48 @@ feature -- Query
 			Result := subscribers.has (a_action)
 		end
 
-feature -- Element change
+	is_suspended: BOOLEAN
+			-- Is the publication of all actions from the subscription list suspended?
+			-- (Answer: no by default.)	
+		do
+			Result := suspension_count > 0
+		end
+
+	is_publishing: BOOLEAN
+			-- Is a publication currently being run?
+
+feature -- Status settings
+
+	suspend_subscriptions
+			-- Ignore the call of all actions from the subscription list,
+			-- until feature `restore_subscription' is called.
+			--
+			-- Note: Suspension is based on a stacked number of calls. 3 calls to `suspend_subscription'
+			--       must be match with 3 calls to `restore_subscription' for publication to occur.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			suspension_count := suspension_count + 1
+		ensure
+			subscription_suspended: is_suspended
+			suspension_count_incremented: suspension_count = old suspension_count + 1
+		end
+
+	restore_subscriptions
+			-- Consider again the call of all actions from the subscription list,
+			-- until feature `suspend_subscription' is called.
+			--
+			-- Note: see `suspend_subscription' for information on stacked suspension.
+		require
+			is_interface_usable: is_interface_usable
+			is_suspended: is_suspended
+		do
+			suspension_count := suspension_count - 1
+		ensure
+			suspension_count_incremented: suspension_count = old suspension_count - 1
+		end
+
+feature -- Subscription
 
 	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event.
@@ -137,72 +184,102 @@ feature -- Publication
 	publish (a_args: ?EVENT_DATA)
 			-- Publish all not suspended actions from the subscription list.
 			--
-			-- `a_args': Public context arguments to forward to all subscribers
+			-- `a_args': Public context arguments to forward to all subscribers.
 		require
 			is_interface_usable: is_interface_usable
+			not_is_publishing: not is_publishing
+		do
+			publish_internal (a_args, Void)
+		ensure
+			subscribers_index_unmoved: not is_zombie implies (subscribers.index = old subscribers.index)
+			suicide_actions_index_unmoved: not is_zombie implies (suicide_actions.index = old suicide_actions.index)
+			is_publishing_unchanged: is_publishing = old is_publishing
+		end
+
+	publish_if (a_args: ?EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
+			-- Publishes the event, if the subscriptions have not been suspended.
+			--
+			-- `a_args': Public context arguments to forward to all subscribers.
+			-- `a_predicate': The predicate to use to determine if a subscriber should recieve a published event.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_publishing: not is_publishing
+		do
+			publish_internal (a_args, a_predicate)
+		ensure
+			subscribers_index_unmoved: not is_zombie implies (subscribers.index = old subscribers.index)
+			suicide_actions_index_unmoved: not is_zombie implies (suicide_actions.index = old suicide_actions.index)
+			is_publishing_unchanged: is_publishing = old is_publishing
+		end
+
+feature {NONE} -- Publication
+
+	publish_internal (a_args: ?EVENT_DATA; a_predicate: ?PREDICATE [ANY, EVENT_DATA])
+			-- Publishes the event, if the subscriptions have not been suspended.
+			--
+			-- `a_args': Public context arguments to forward to all subscribers.
+			-- `a_predicate': The predicate to use to determine if a subscriber should recieve a published event.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_publishing: not is_publishing
 		local
 			l_actions: like suicide_actions
+			l_subscribers: like subscribers
+			l_suspended: BOOLEAN
 		do
 			if not is_suspended then
 					-- We cache the suicide actions because a subscriber may dispose of Current while publishing.
-				l_actions := suicide_actions
-				subscribers.do_all (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
-				if not l_actions.is_empty then
-						-- Remove actions
-					l_actions.do_all (agent unsubscribe)
-					l_actions.wipe_out
+				suspend_subscriptions
+				l_suspended := True
+				is_publishing := True
+				l_subscribers := subscribers
+				if not l_subscribers.is_empty then
+						-- A twin of the suicide actions is performed to prevent issues related to extension during
+						-- publication. The issue could cause newly subscribed suicide actions to be removed even
+						-- though they have not been called.
+					l_actions := suicide_actions.twin
+
+					if a_predicate = Void then
+							-- Twin the list to prevent issues related to extension during publication
+						l_subscribers.twin.do_all (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
+					else
+							-- Twin the list to prevent issues related to extension during publication
+						l_subscribers.twin.do_if (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args),
+							agent (ia_item: PROCEDURE [ANY, EVENT_DATA]; ia_args: EVENT_DATA; ia_predicate: ?PREDICATE [ANY, EVENT_DATA]): BOOLEAN
+									-- Agent to call the predicate with the event data arguments.		
+								do
+									if ia_predicate = Void then
+										Result := True
+									else
+										Result := ia_predicate.item (ia_args)
+									end
+								end (?, a_args, a_predicate))
+					end
+
+						-- Unsubscribe those marked as a suicide action.
+					if not l_actions.is_empty then
+
+						l_actions.do_all (agent unsubscribe)
+						l_actions.wipe_out
+					end
 				end
+
+				is_publishing := False
+				l_suspended := False
+				restore_subscriptions
 			end
 		ensure
 			subscribers_index_unmoved: not is_zombie implies (subscribers.index = old subscribers.index)
 			suicide_actions_index_unmoved: not is_zombie implies (suicide_actions.index = old suicide_actions.index)
+			is_publishing_unchanged: is_publishing = old is_publishing
+		rescue
+			is_publishing := False
+			if l_suspended then
+				restore_subscriptions
+			end
 		end
 
-feature {NONE} -- Access
-
-	suspension_count: NATURAL_16
-			-- Number of clients requesting event publising be suspsend.
-			-- Note: Publication will be suspended as long as a single client request suspension
-
-feature -- Status report
-
-	is_suspended: BOOLEAN
-			-- Is the publication of all actions from the subscription list suspended?
-			-- (Answer: no by default.)	
-		do
-			Result := suspension_count > 0
-		end
-
-feature -- Status settings
-
-	suspend_subscription
-			-- Ignore the call of all actions from the subscription list,
-			-- until feature `restore_subscription' is called.
-			--
-			-- Note: Suspension is based on a stacked number of calls. 3 calls to `suspend_subscription'
-			--       must be match with 3 calls to `restore_subscription' for publication to occur.
-		require
-			is_interface_usable: is_interface_usable
-		do
-			suspension_count := suspension_count + 1
-		ensure
-			subscription_suspended: is_suspended
-			suspension_count_incremented: suspension_count = old suspension_count + 1
-		end
-
-	restore_subscription
-			-- Consider again the call of all actions from the subscription list,
-			-- until feature `suspend_subscription' is called.
-			--
-			-- Note: see `suspend_subscription' for information on stacked suspension.
-		require
-			is_interface_usable: is_interface_usable
-			is_suspended: is_suspended
-		do
-			suspension_count := suspension_count - 1
-		ensure
-			suspension_count_incremented: suspension_count = old suspension_count - 1
-		end
+feature -- Basic operations
 
 	perform_suspended_action (a_action: PROCEDURE [ANY, TUPLE])
 			-- Performs a action whilst suspending subscriptions from recieve a publication
@@ -211,14 +288,14 @@ feature -- Status settings
 		require
 			is_interface_usable: is_interface_usable
 		do
-			suspend_subscription
+			suspend_subscriptions
 			a_action.call ([])
-			restore_subscription
+			restore_subscriptions
 		ensure
 			suspension_count_unchanged: suspension_count = old suspension_count
 		rescue
 				-- In case call raises and exception, restore the subscription
-			restore_subscription
+			restore_subscriptions
 		end
 
 feature {NONE} -- Factory

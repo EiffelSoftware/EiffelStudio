@@ -267,7 +267,8 @@ feature {NONE} -- Line analysis
 			l_words: ARRAYED_LIST [STRING_32]
 			l_word: STRING_32
 			l_count, i: INTEGER
-			l_old_c, c: CHARACTER_32
+			c: CHARACTER_32
+			l_last_is_space: BOOLEAN
 		do
 			create l_words.make (0)
 			if not a_line.is_empty then
@@ -278,9 +279,11 @@ feature {NONE} -- Line analysis
 				until
 					l_count < i
 				loop
-					l_old_c := c
+						-- We take code > 255 as non space.
+						-- This needs to improve when Unicode `is_space' is ready.
+					l_last_is_space := (c.is_character_8 and then c.is_space)
 					c := a_line.item (i)
-					if i > 1 and then c.is_space /= l_old_c.is_space then
+					if i > 1 and then (c.is_character_8 and then c.is_space) /= l_last_is_space then
 						l_words.extend (l_word)
 						create l_word.make (24)
 					end

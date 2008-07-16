@@ -54,7 +54,7 @@ feature {NONE} -- Clean up
 			end
 			Precursor {ES_TOOL_FOUNDATIONS}
 		ensure then
-			widget_is_destroyed: (old widget) /= Void implies (old widget).is_destroyed
+			widget_is_destroyed: (old widget).is_destroyed
 		end
 
 feature -- Access

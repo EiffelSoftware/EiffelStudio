@@ -1091,9 +1091,15 @@ feature {NONE} -- Agents
 					l_editor.editor_drawing_area.set_focus
 				end
 			else
+				-- Following line will change fake editor to real editor if `a_editor' is fake editor
 				a_editor.docking_content.set_focus
-				a_editor.editor_drawing_area.set_focus
+
+				-- If `a_editor' is fake editor, `editor_drawing_area' is void
+				if a_editor.editor_drawing_area /= Void then
+					a_editor.editor_drawing_area.set_focus
+				end
 			end
+
 			update_content_description (a_stone, a_editor.docking_content)
 			development_window.set_stone (a_stone)
 			development_window.set_dropping_on_editor (false)
@@ -1255,6 +1261,13 @@ feature {NONE} -- Implementation
 			create {EB_FAKE_SMART_EDITOR} last_created_editor.make (Result)
 			last_created_editor.set_docking_content (Result)
 
+				-- We must register drop actions for fake editors, see bug#14530
+				-- Note: the parameter `last_create_editor' for agent is fake editor
+			register_action (Result.drop_actions, agent on_drop (?, last_created_editor))
+			if veto_pebble_function_internal = Void then
+				Result.drop_actions.set_veto_pebble_function (agent default_veto_func)
+			end
+
 				-- When fake editor first time showing, we change it to a real one.
 			register_action (Result.focus_in_actions, agent on_fake_focus (last_created_editor))
 			register_action (Result.show_actions, agent on_show (last_created_editor))
@@ -1271,6 +1284,10 @@ feature {NONE} -- Implementation
 			not_void: a_content /= Void
 		do
 			a_content.set_user_widget (a_editor.widget)
+
+			-- We wipe out the `drop_aciton' which registered in `create_docking_content_fake_one'
+			a_content.drop_actions.wipe_out
+
 			register_action (a_content.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
 				a_content.drop_actions.set_veto_pebble_function (agent default_veto_func)

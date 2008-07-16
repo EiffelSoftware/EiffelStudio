@@ -384,7 +384,7 @@ feature -- Plug and Makefile file
 			-- Generate plug with run-time
 		local
 			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
-			arr_type_id, str_type_id, type_id: INTEGER
+			arr_type_id, type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
@@ -444,7 +444,6 @@ feature -- Plug and Makefile file
 				-- Extern declarations
 			string_cl := system.class_of_id (system.string_8_id)
 			cl_type := string_cl.types.first
-			str_type_id := cl_type.type_id
 			creators := string_cl.creators
 			creators.start
 
@@ -474,7 +473,8 @@ feature -- Plug and Makefile file
 
 				-- Make STRING declaration
 			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
-			str_make_name := Encoder.feature_name (str_type_id, str_make_feat.body_index).twin
+			str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
+				str_make_feat.body_index).twin
 			buffer.put_string ("extern void ")
 			buffer.put_string (str_make_name)
 			buffer.put_string ("();%N")
@@ -483,7 +483,8 @@ feature -- Plug and Makefile file
 				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
 			else
 				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
-				set_count_name := Encoder.feature_name (str_type_id, set_count_feat.body_index).twin
+				set_count_name := Encoder.feature_name (set_count_feat.written_class.types.first.type_id,
+					set_count_feat.body_index).twin
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_count_name)
 				buffer.put_string ("();%N")
@@ -803,7 +804,7 @@ feature -- Plug and Makefile file
 
 				-- Dynamic type of class STRING
 			buffer.put_string ("%N%Tegc_str_dtype = ")
-			buffer.put_type_id (str_type_id)
+			buffer.put_type_id (string_cl.types.first.type_id)
 			buffer.put_string (";%N")
 
 				-- Dynamic type of class ARRAY[ANY]

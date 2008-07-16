@@ -615,6 +615,12 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		ex_string.area = NULL;
 	}
 
+		/* Free allocated structure for invariant monitoring. */
+	if (inv_mark_tablep) {
+		eif_rt_xfree(inv_mark_tablep);
+		inv_mark_tablep = NULL;
+	}
+
 #ifdef WORKBENCH
 	opstack_reset (&op_stack);
 	dbstack_reset (&db_stack);

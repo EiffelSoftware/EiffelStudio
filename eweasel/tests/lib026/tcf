@@ -1,0 +1,14 @@
+test_name 	ptf-file-forth-2
+test_description Test proper behavior of the `forth' routine in FILE. `forth' must be able to set `after', or `search' will get into infinite loop.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+copy_raw	file.txt $EXEC_WORK file.txt
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare 	output exec_output1
+
+test_end

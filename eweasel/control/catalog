@@ -1517,6 +1517,7 @@ test	ptf-file-finish			lib022	 tcf pass library file
 test	ptf-file-forth			lib023	 tcf pass library file
 test	file-change-name		lib024	 tcf pass library file
 test	file-read-xxx-routines	lib025	 tcf pass library file
+test	ptf-file-forth-2		lib026	 tcf pass library file 	
 
 
 -- TUPLE tests

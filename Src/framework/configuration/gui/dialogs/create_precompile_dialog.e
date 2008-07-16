@@ -13,9 +13,9 @@ inherit
 		redefine
 			make,
 			last_group,
+			on_library_selected,
 			on_ok,
-			fill_library,
-			fill_default_libraries
+			lookup_directories
 		end
 
 create
@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_target: CONF_TARGET; a_factory: like factory) is
-			-- Create.
+			-- <Precursor>
 		do
 			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
 			set_title (conf_interface_names.dialog_create_precompile_title)
@@ -34,22 +34,44 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	last_group: CONF_PRECOMPILE
-			-- Last added precompile library.
+			-- <Precursor>
 
-feature {NONE} -- Actions
+feature {NONE} -- Access
 
-	fill_library (a_name, a_subdir, a_file: STRING) is
-			-- Fill in library informations.
-		require else
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_file_ok: a_file /= Void and then not a_file.is_empty
+	lookup_directories: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]]
+			-- A list of lookup directories
+		local
+			l_file: !FILE_NAME
 		do
-			name.set_text (a_name+"_pre")
-			location.set_text ("$ISE_PRECOMP\"+a_file)
+			create Result.make_default
+
+			l_file := eiffel_layout.precompiles_config_name
+			if file_system.file_exists (l_file) then
+				add_lookup_directories (l_file, Result)
+			end
+			if eiffel_layout.is_user_files_supported then
+				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string) and then file_system.file_exists (l_user_file) then
+					add_lookup_directories (l_user_file, Result)
+				end
+			end
+
+			if Result.is_empty then
+					-- Extend the default library path
+				Result.force_last ([{!STRING} #? eiffel_layout.precomp_platform_path (target.setting_msil_generation), 0])
+			end
+		end
+
+feature {NONE} -- Action handlers
+
+	on_library_selected (a_library: !CONF_SYSTEM; a_location: !STRING)
+			-- <Precursor>
+		do
+			name.set_text (a_library.library_target.name + "_precompile")
+			location.set_text (a_location)
 		end
 
 	on_ok is
-			-- Add library and close the dialog.
+			-- <Precursor>
 		do
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
@@ -64,14 +86,6 @@ feature {NONE} -- Actions
 					destroy
 				end
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	fill_default_libraries is
-			-- Fill in default precompiles.
-		do
-			add_configs_in_dir (eiffel_layout.precomp_platform_path (target.setting_msil_generation), Void)
 		end
 
 indexing

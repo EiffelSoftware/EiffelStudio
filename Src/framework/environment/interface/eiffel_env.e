@@ -1087,6 +1087,30 @@ feature -- Files
 			not_result_is_empty: not Result.is_empty
 		end
 
+	libraries_config_name: !FILE_NAME
+			-- Libraries lookup configuration file name
+		require
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (eifinit_path)
+			Result.set_file_name ("libraries")
+			Result.add_extension ("cfg")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	precompiles_config_name: !FILE_NAME
+			-- Precompiled libraries lookup configuration file name
+		require
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (eifinit_path)
+			Result.set_file_name ("precompiles")
+			Result.add_extension ("cfg")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Files (user)
 
 	user_docking_file_name (a_file_name: STRING): !FILE_NAME

@@ -173,10 +173,11 @@ feature {NONE}-- Initialization
 
 					-- section tree
 			create section_tree
+			section_tree.set_minimum_size (160, 230)
 			initialize_section_tree
 			split_area.set_first (section_tree)
 
-				-- configuration space
+				-- configuration space_g
 			create configuration_space
 			split_area.set_second (configuration_space)
 			configuration_space.set_padding (layout_constants.default_padding_size)

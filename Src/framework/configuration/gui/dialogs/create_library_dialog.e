@@ -56,9 +56,10 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
-			vb, vb2: EV_VERTICAL_BOX
+			vb, vb2, l_padding: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
+			l_col: EV_GRID_COLUMN
 		do
 			Precursor
 
@@ -81,11 +82,29 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
-			create default_libraries
-			vb2.extend (default_libraries)
-			default_libraries.set_minimum_height (200)
+				-- Create grid
+			create libraries_grid
+			libraries_grid.set_minimum_size (400, 200)
+			libraries_grid.enable_always_selected
+			libraries_grid.enable_single_row_selection
+			libraries_grid.set_column_count_to (location_column)
+			l_col := libraries_grid.column (name_column)
+			l_col.set_title ("Name")
+			l_col.set_width (100)
+			l_col := libraries_grid.column (location_column)
+			l_col.set_title ("Location")
+			l_col.set_width (100)
+			libraries_grid.disable_column_separators
+			libraries_grid.disable_row_separators
+			libraries_grid.enable_border
 
-			fill_default_libraries
+				-- Create border for the grid
+			create l_padding
+			l_padding.set_border_width (1)
+			l_padding.set_background_color ((create {EV_STOCK_COLORS}).color_3d_shadow)
+			l_padding.extend (libraries_grid)
+
+			vb2.extend (l_padding)
 
 				-- name
 			create vb2
@@ -148,32 +167,142 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			layout_constants.set_default_width_for_button (l_btn)
 
-			set_minimum_width (minimum_width.max (300))
+			show_actions.extend_kamikaze (agent
+				local
+					l_style: EV_POINTER_STYLE
+				do
+					l_style := pointer_style
+					set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+					populate_libraries
+					set_pointer_style (l_style)
 
-			show_actions.extend (agent default_libraries.set_focus)
+					libraries_grid.set_focus
+				end)
 		end
 
 feature {NONE} -- GUI elements
 
-	default_libraries: EV_LIST
-			-- Libraries provided by ISE.
+	libraries_grid: ES_GRID
+			-- Libraries grid
+
+	name: EV_TEXT_FIELD
+			-- Name of the library.
 
 	location: EV_TEXT_FIELD
 			-- Location of the library configuration file, choosen by the user.
 
-	name: EV_TEXT_FIELD
-			-- Name of the library.
+	browse_dialog: EV_FILE_OPEN_DIALOG
+			-- Dialog to browse to a library
+		local
+			l_dir: KL_DIRECTORY
+		once
+			create Result
+			create l_dir.make (target.system.directory)
+			if l_dir.is_readable then
+				Result.set_start_directory (l_dir.name)
+			end
+			Result.filters.extend ([config_files_filter, config_files_description])
+			Result.filters.extend ([all_files_filter, all_files_description])
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 feature -- Access
 
 	last_group: CONF_LIBRARY
 			-- Last created group.
 
+feature {NONE} -- Access
+
+	libraries: !DS_HASH_SET [!STRING]
+			-- A set of libraries to display in the dialog
+		require
+			is_eiffel_layout_defined: is_eiffel_layout_defined
+		local
+			l_dirs: !like lookup_directories
+			l_libraries: !DS_HASH_SET [!STRING]
+			l_dir: !KL_DIRECTORY
+			l_path: !STRING
+			l_location: !CONF_DIRECTORY_LOCATION
+		do
+			create Result.make_default
+			l_dirs := lookup_directories
+			from l_dirs.start until l_dirs.after loop
+				create l_location.make (l_dirs.item_for_iteration.path, target)
+				l_path ?= l_location.evaluated_path.as_string_8
+				create l_dir.make (l_path)
+				if l_dir.is_readable then
+					create l_libraries.make_default
+					add_configs_in_directory (l_dir, l_dirs.item_for_iteration.depth, l_libraries)
+					from l_libraries.start until l_libraries.after loop
+						l_libraries.item_for_iteration.replace_substring (l_dirs.item_for_iteration.path, 1, l_path.count)
+						l_libraries.forth
+					end
+					Result.merge (l_libraries)
+				end
+				l_dirs.forth
+			end
+		end
+
+	configuration_libraries: !DS_HASH_TABLE [!CONF_SYSTEM, !STRING]
+			-- A set of libraries configurations to display in the dialog
+		require
+			is_eiffel_layout_defined: is_eiffel_layout_defined
+		local
+			l_libs: !like libraries
+			l_loader: CONF_LOAD
+			l_factory: CONF_PARSE_FACTORY
+			l_location: !CONF_DIRECTORY_LOCATION
+		do
+			l_libs := libraries
+			create Result.make (l_libs.count)
+
+			create l_factory
+			from l_libs.start until l_libs.after loop
+				create l_loader.make (l_factory)
+				create l_location.make (l_libs.item_for_iteration, target)
+				l_loader.retrieve_configuration (l_location.evaluated_path)
+				if not l_loader.is_error and then {l_system: CONF_SYSTEM} l_loader.last_system and then {l_target: CONF_TARGET} l_system.library_target then
+					Result.put_last (l_system, l_libs.item_for_iteration)
+				end
+				l_libs.forth
+			end
+		end
+
+	lookup_directories: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]]
+			-- A list of lookup directories
+		require
+			is_eiffel_layout_defined: is_eiffel_layout_defined
+		local
+			l_file: !FILE_NAME
+		do
+			create Result.make_default
+
+			l_file := eiffel_layout.libraries_config_name
+			if file_system.file_exists (l_file) then
+				add_lookup_directories (l_file, Result)
+			end
+			if eiffel_layout.is_user_files_supported then
+				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string) and then file_system.file_exists (l_user_file) then
+					add_lookup_directories (l_user_file, Result)
+				end
+			end
+
+			if Result.is_empty then
+					-- Extend the default library path
+				Result.force_last ([{!STRING} #? eiffel_layout.library_path.string, 2])
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Actions
 
-	browse is
+	browse
 			-- Browse for a location.
 		local
+			l_loader: CONF_LOAD
+			l_factory: CONF_PARSE_FACTORY
 			l_loc: CONF_FILE_LOCATION
 			l_dir: DIRECTORY
 		do
@@ -185,37 +314,28 @@ feature {NONE} -- Actions
 				browse_dialog.set_start_directory (l_dir.name)
 			end
 
-			browse_dialog.open_actions.extend (agent fill_fields)
 			browse_dialog.show_modal_to_window (Current)
-		end
-
-	fill_fields is
-			-- Set location from `browse_dialog'.
-		do
-			location.set_text (browse_dialog.file_name)
-			if name.text.is_empty then
-				name.set_text (name_from_location (browse_dialog.file_name))
+			if {l_fn: STRING_32} browse_dialog.file_name and then not l_fn.is_empty then
+				create l_loader.make (create {CONF_PARSE_FACTORY})
+				l_loader.retrieve_configuration (l_fn)
+				if not l_loader.is_error and then {l_system: CONF_SYSTEM} l_loader.last_system and then {l_target: CONF_TARGET} l_system.library_target then
+					on_library_selected (l_system, ({!STRING_8}) #? l_fn.as_string_8)
+				end
 			end
 		end
 
-	fill_library (a_name, a_subdir, a_file: STRING) is
-			-- Fill in library informations.
+feature {NONE} -- Action handlers
+
+	on_library_selected (a_library: !CONF_SYSTEM; a_location: !STRING)
+			-- Called when a library is selected
 		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_subdir_ok: a_subdir /= Void and then not a_subdir.is_empty
-			a_file_ok: a_file /= Void and then not a_file.is_empty
+			has_library_target: a_library.library_target /= Void
 		do
-			name.set_text (a_name)
-			location.set_text ("$ISE_LIBRARY\"+a_subdir+"\"+a_file)
+			name.set_text (a_library.library_target.name)
+			location.set_text (a_location)
 		end
 
-	on_cancel is
-			-- Close the dialog.
-		do
-			destroy
-		end
-
-	on_ok is
+	on_ok
 			-- Add library and close the dialog.
 		local
 			l_loc: CONF_FILE_LOCATION
@@ -244,103 +364,121 @@ feature {NONE} -- Actions
 			is_ok_last_library: is_ok implies last_group /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	name_from_location (a_location: STRING_8): STRING_8 is
-			-- Get a name out of a_directory.
-		require
-			a_location_not_void: a_location /= Void
-		local
-			l_cnt, i, j: INTEGER_32
+	on_cancel
+			-- Close the dialog.
 		do
-			l_cnt := a_location.count
-			i := a_location.last_index_of (operating_environment.directory_separator, l_cnt)
-			j := a_location.last_index_of ('.', l_cnt)
-			if i > 0 and j > 0 then
-				Result := a_location.substring (i + 1, j - 1)
-			else
-				Result := a_location
-			end
-		ensure
-			result_not_void: Result /= Void
+			destroy
 		end
 
-	browse_dialog: EV_FILE_OPEN_DIALOG is
-			-- Dialog to browse to a library
-		local
-			l_dir: DIRECTORY
-		once
-			create Result
-			create l_dir.make (target.system.directory)
-			if l_dir.exists then
-				Result.set_start_directory (l_dir.name)
-			end
-			Result.filters.extend ([config_files_filter, config_files_description])
-			Result.filters.extend ([all_files_filter, all_files_description])
-		ensure
-			Result_not_void: Result /= Void
-		end
+feature {NONE} -- Basic operation
 
-	fill_default_libraries is
-			-- Fill in the default libraries.
-		require
-			default_libraries_not_void: default_libraries /= Void
+	populate_libraries
+			-- Populates the list of libraries in the UI
 		local
-			l_dir: KL_DIRECTORY
-			l_subdirs: ARRAY [STRING]
-			i, cnt: INTEGER
-			l_lib_name: STRING
+			l_libraries: !like configuration_libraries
+			l_list: !DS_ARRAYED_LIST [!STRING]
+			l_system: !CONF_SYSTEM
+			l_target: CONF_TARGET
+			l_row: EV_GRID_ROW
+			l_item: EV_GRID_LABEL_ITEM
+			l_col: EV_GRID_COLUMN
+			l_name_width: INTEGER
+			l_description: STRING
 		do
-				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
-			create l_dir.make (eiffel_layout.Library_path)
-			if l_dir.is_readable then
-				add_configs_in_dir (eiffel_layout.library_path.string, {EIFFEL_ENV}.library_name)
-				l_subdirs := l_dir.directory_names
-				if l_subdirs /= Void then
-					from
-						i := 1
-						cnt := l_subdirs.count
-					until
-						i > cnt
-					loop
-						l_lib_name := eiffel_layout.library_path.twin
-						l_lib_name.append_character (operating_environment.directory_separator)
-						l_lib_name.append (l_subdirs.item (i))
-						add_configs_in_dir (l_lib_name, {EIFFEL_ENV}.library_name + "\" + l_subdirs.item (i))
-						i := i +1
+			libraries_grid.remove_and_clear_all_rows
+			l_libraries := configuration_libraries
+
+			create l_list.make_from_linear (l_libraries.keys)
+			l_list.sort (create {DS_QUICK_SORTER [!STRING]}.make (create {KL_COMPARABLE_COMPARATOR [!STRING]}.make))
+			libraries_grid.set_row_count_to (l_list.count)
+			from l_list.start until l_list.after loop
+				l_row := libraries_grid.row (l_list.index)
+
+				l_system := l_libraries.item (l_list.item_for_iteration)
+				l_target := l_system.library_target
+				if l_target /= Void then
+						-- Extract description
+					l_description := l_system.description
+					if l_description = Void or else l_description.is_empty then
+						l_description := l_target.description
+						if l_description = Void or else l_description.is_empty then
+							l_description := once "No description available"
+						end
 					end
+
+						-- Library name
+					create l_item.make_with_text (l_system.name)
+					l_item.set_tooltip (l_description)
+					l_row.set_item (name_column, l_item)
+					l_name_width := l_name_width.max (l_item.required_width + 10)
+
+						-- Location
+					create l_item.make_with_text (l_list.item_for_iteration)
+					l_item.set_tooltip (l_list.item_for_iteration)
+					l_row.set_item (location_column, l_item)
+
+					l_row.select_actions.extend (agent on_library_selected (l_system, l_list.item_for_iteration))
 				end
+
+				l_list.forth
+			end
+
+			l_col := libraries_grid.column (name_column)
+			if l_col.width < l_name_width then
+				l_col.set_width (l_name_width)
 			end
 		end
 
-	add_configs_in_dir (a_path, a_subdir: STRING) is
-			-- Add config files in `a_path' to `default_libraries'.
+	add_configs_in_directory (a_dir: !KL_DIRECTORY; a_depth: INTEGER; a_libraries: !DS_HASH_SET [!STRING])
+			-- Add config files in `a_path' to `a_libraries'.
 		require
-			a_path_not_void: a_path /= Void
-			default_libraries_not_void: default_libraries /= Void
+			a_dir_is_readable: a_dir.is_readable
+			a_depth_big_enough: a_depth >= -1
 		local
-			l_dir: KL_DIRECTORY
-			l_files: ARRAY [STRING]
-			i, cnt: INTEGER
-			l_lib_file_name, l_lib_name: STRING
-			l_item: EV_LIST_ITEM
+			l_dir_name: !DIRECTORY_NAME
+			l_items: ARRAY [STRING]
+			l_count, i: INTEGER
+			l_lib_file: STRING
+			l_file_name: !FILE_NAME
+			l_file_string: !STRING
 		do
-			create l_dir.make (a_path)
-			if l_dir.is_readable then
-				l_files := l_dir.filenames
-				if l_files /= Void then
+			l_items := a_dir.filenames
+			if l_items /= Void then
+				from
+					i := l_items.lower
+					l_count := l_items.upper
+				until
+					i > l_count
+				loop
+					l_lib_file := l_items.item (i)
+					if valid_config_extension (l_lib_file) then
+						create l_file_name.make_from_string (a_dir.name)
+						l_file_name.extend (l_lib_file)
+						if {PLATFORM_CONSTANTS}.is_windows then
+							l_file_string ?= l_file_name.string.as_lower
+						else
+							l_file_string ?= l_file_name.string
+						end
+						if not a_libraries.has (l_file_string) then
+							a_libraries.force_last (l_file_string)
+						end
+					end
+					i := i + 1
+				end
+
+				if a_depth = -1 or a_depth > 0 then
+						-- Perform recursion
+					l_items := a_dir.directory_names
 					from
-						i := l_files.lower
-						cnt := l_files.upper
+						i := l_items.lower
+						l_count := l_items.upper
 					until
-						i > cnt
+						i > l_count
 					loop
-						l_lib_file_name := l_files.item (i)
-						if valid_config_extension (l_lib_file_name) then
-							l_lib_name := l_lib_file_name.substring (1, l_lib_file_name.last_index_of ('.', l_lib_file_name.count)-1)
-							create l_item.make_with_text (l_lib_name)
-							l_item.select_actions.extend (agent fill_library (l_lib_name, a_subdir, l_lib_file_name))
-							default_libraries.extend (l_item)
+						create l_dir_name.make_from_string (a_dir.name)
+						l_dir_name.extend (l_items.item (i))
+						if file_system.directory_exists (l_dir_name) then
+							add_configs_in_directory (create {KL_DIRECTORY}.make (l_dir_name), (a_depth - 1).max (-1), a_libraries)
 						end
 						i := i + 1
 					end
@@ -348,7 +486,55 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+	add_lookup_directories (a_path: !FILE_NAME; a_list: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]])
+			-- Adds look up directories from a file located at `a_path' into `a_list'
+		require
+			not_a_path_is_empty: not a_path.is_empty
+			a_path_exists: file_system.file_exists (a_path)
+		local
+			l_file: KI_TEXT_INPUT_FILE
+			l_line: STRING
+			l_pos: INTEGER
+			l_location: !STRING
+			l_depth_string: STRING
+			l_depth: INTEGER
+		do
+			l_file := file_system.new_input_file (a_path)
+			if l_file /= Void and then l_file.is_readable then
+				from l_file.open_read until l_file.end_of_file loop
+					l_file.read_line
+					l_line := l_file.last_string
+					if not l_line.is_empty then
+						l_line.left_adjust
+						l_line.right_adjust
+						l_pos := l_line.last_index_of ('%T', l_line.count)
+						if l_pos > 1 then
+							l_location ?= l_line.substring (1, l_pos - 1)
+							l_location.right_adjust
+							if l_pos < l_line.count then
+								l_depth_string := l_line.substring (l_pos + 1, l_line.count)
+								l_depth_string.left_adjust
+							end
+						else
+							l_location ?= l_line
+						end
+						if l_depth_string /= Void and then l_depth_string.is_integer then
+							l_depth := l_depth_string.to_integer
+						else
+							l_depth := 1
+						end
+						a_list.force_last ([l_location, l_depth])
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Constants
+
+	name_column: INTEGER = 1
+	location_column: INTEGER = 2
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

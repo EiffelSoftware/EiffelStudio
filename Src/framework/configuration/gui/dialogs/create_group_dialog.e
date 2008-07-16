@@ -17,6 +17,14 @@ inherit
 			copy
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all

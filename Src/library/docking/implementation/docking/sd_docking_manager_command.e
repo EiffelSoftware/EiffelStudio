@@ -73,29 +73,32 @@ feature -- Commands
 		require
 			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
 		do
-			if lock_call_time = 0 then
-				if ev_application.locked_window /= Void then
-						-- We should ignore these lock window update calls.
-					ignore_update := True
+			if not internal_docking_manager.is_closing_all then
+				if lock_call_time = 0 then
+					if ev_application.locked_window /= Void then
+							-- We should ignore these lock window update calls.
+						ignore_update := True
+					else
+						lock_update_internal (a_zone, a_main_window)
+					end
 				else
-					lock_update_internal (a_zone, a_main_window)
+					-- Nothing to be done, since we have already locked it, or it was already locked.
 				end
-			else
-				-- Nothing to be done, since we have already locked it, or it was already locked.
+				lock_call_time := lock_call_time + 1
 			end
-			lock_call_time := lock_call_time + 1
-
 		end
 
 	unlock_update is
 			-- Unlock window update.
 		do
-			lock_call_time := lock_call_time - 1
-			if lock_call_time = 0 then
-				if not ignore_update then
-					unlock_update_internal
+			if not internal_docking_manager.is_closing_all then
+				lock_call_time := lock_call_time - 1
+				if lock_call_time = 0 then
+					if not ignore_update then
+						unlock_update_internal
+					end
+					ignore_update := False
 				end
-				ignore_update := False
 			end
 		end
 

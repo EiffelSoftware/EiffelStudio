@@ -31,7 +31,7 @@ feature -- Access
 			else
 				create Result.make (128)
 			end
-			output_internal.do_all (agent Result.append)
+			output_internal.do_all (agent Result.append ({STRING} ?))
 		ensure
 			result_attached: Result /= Void
 		end

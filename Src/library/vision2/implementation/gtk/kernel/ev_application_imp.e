@@ -434,18 +434,18 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_CONFIGURE%N")
 						end
-						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
-						if l_top_level_window_imp /= Void then
+						l_gtk_window_imp ?= eif_object_from_gtk_object (event_widget)
+						if l_gtk_window_imp /= Void then
 							l_call_event := False
 								-- Make sure internal gtk structures are updated before firing resize event(s)
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
-							l_top_level_window_imp.on_size_allocate (
+							l_gtk_window_imp.on_size_allocate (
 								{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
 								{EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
 								{EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
 								{EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
 							)
-							l_top_level_window_imp := Void
+							l_gtk_window_imp := Void
 						end
 					when GDK_MAP then
 						debug ("GDK_EVENT")

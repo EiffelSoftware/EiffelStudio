@@ -118,7 +118,6 @@ feature -- Command
 			else
 				develop_window := a_dev_window
 				create l_builder.make (develop_window)
-				l_builder.init_size_and_position
 			end
 
 			l_session_data ?= develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)

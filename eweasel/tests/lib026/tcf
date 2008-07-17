@@ -9,6 +9,6 @@ compile_result 	ok
 copy_raw	file.txt $EXEC_WORK file.txt
 execute_work 	NONE exec_output1
 execute_result 	ok
-compare 	output exec_output1
+compare 	exec_output1 output
 
 test_end

@@ -1327,12 +1327,13 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 		zone->ov_dftype = HEADER(ptr)->ov_dftype;
 		zone->ov_dtype = HEADER(ptr)->ov_dtype;
 
-			/* Update flags of new object */
-		if ((zone->ov_flags & EO_NEW) && (zone->ov_flags & (EO_REF | EO_COMP))) 
-				/* New object has been created outside the
-				 * scavenge zone, we need to remember it
-				 * if it contains references to other objects. */
+			/* Update flags of new object if it contains references and the object is not
+			 * in the scavenge zone anymore. */
+		if ((zone->ov_flags & (EO_NEW | EO_OLD)) && (zone->ov_flags & (EO_REF | EO_COMP))) {
+				/* New object has been created outside the scavenge zone. Although it might
+				 * contains no references to young objects, we need to remember it just in case. */
 			erembq (object);	/* Usual remembrance process. */
+		}
 
 		CHECK ("Not forwarded", !(HEADER (ptr)->ov_size & B_FWD));
 
@@ -4062,7 +4063,7 @@ rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE object)
 	REQUIRE("object has EO_NEW", HEADER(object)->ov_flags & EO_NEW);
 
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		/* Check that we can actuall add something to the stack. */
+		/* Check that we can actually add something to the stack. */
 	if ((moved_set.st_top == NULL) || (moved_set.st_end != moved_set.st_top)) {
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);

@@ -2434,7 +2434,7 @@ rt_private void extend_trace_string(char *line)
 	 * performed if necessary.
 	 */
 	RT_GET_CONTEXT
-	int l_buf_sz = 0;
+	size_t l_buf_sz = 0;
 
 	if ((ex_string.size - ex_string.used) > strlen(line)) {
 		strcpy (ex_string.area + ex_string.used, line);

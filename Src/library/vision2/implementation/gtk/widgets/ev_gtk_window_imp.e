@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	width: INTEGER
 			-- Width of `Current'.
 		do
-			if configure_event_pending then
+			if configure_event_pending or not is_displayed then
 				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $Result, default_pointer)
 				Result := Result.max (minimum_width)
 			else
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	height: INTEGER
 			-- Height of `Current'.
 		do
-			if configure_event_pending then
+			if configure_event_pending or not is_displayed then
 				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $Result)
 				Result := Result.max (minimum_height)
 			else
@@ -182,6 +182,8 @@ feature {NONE} -- Implementation
 
 	hide is
 			-- Hide `Current'.
+		local
+			l_x_pos, l_y_pos, l_width, l_height: INTEGER_32
 		do
 			if is_show_requested then
 				if
@@ -192,11 +194,22 @@ feature {NONE} -- Implementation
 				then
 					internal_blocking_window.decrease_modal_window_count
 				end
+
+				l_x_pos := x_position
+				l_y_pos := y_position
+				l_width := width
+				l_height := height
+
 				is_modal := False
 				set_blocking_window (Void)
+					-- Set the default size so that the
 				{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 					-- Force an immediate hide so that the event loop is not relied upon to unmap `Current'.
 				{EV_GTK_EXTERNALS}.gdk_window_hide ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+
+					-- Reset the size and position to emulate Win32 behavior.
+				{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
+				{EV_GTK_EXTERNALS}.gtk_window_move (c_object, l_x_pos, l_y_pos)
 			end
 		end
 

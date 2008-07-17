@@ -206,7 +206,6 @@
 				<ComponentRef Id="Comp.studio_shortcuts.tools" />
 				<ComponentRef Id="Comp.eiffel_protocol" />
 				<ComponentRef Id="Comp.eiffel_user_files" />
-				<ComponentRef Id="Comp.eiffel_projects" />
 				<ComponentRef Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
 				<ComponentRef Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
 				<ComponentGroupRef Id="Core"/>

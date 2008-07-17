@@ -50,6 +50,7 @@ inherit
 		redefine
 			interface,
 			has_focus,
+			on_size_allocate,
 			show,
 			hide
 		end
@@ -461,8 +462,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 			l_x_pos, l_y_pos: INTEGER
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $l_x_pos, $l_y_pos)
-			configure_event_pending := False
-			Precursor (l_x_pos, l_y_pos, a_width, a_height)
+			Precursor {EV_GTK_WINDOW_IMP} (l_x_pos, l_y_pos, a_width, a_height)
+			Precursor {EV_CELL_IMP} (l_x_pos, l_y_pos, a_width, a_height)
 			if l_x_pos  /= previous_x_position or else l_y_pos /= previous_y_position then
 				previous_x_position := l_x_pos
 				previous_y_position := l_y_pos

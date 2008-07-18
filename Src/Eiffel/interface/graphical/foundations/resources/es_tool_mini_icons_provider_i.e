@@ -1,9 +1,9 @@
 indexing
 	description: "[
-		A provider interface for accessing tool specific icon resources.
+		A provider interface for accessing tool specific mini icon resources (icons used on the tool's title.)
 		
 		Note: If implemented on a tool ({ES_TOOL}), nothing needs implementing. However, for peripheral objects
-		      use {ES_TOOL_PIXMAPS_PROVIDER} then either use {ES_TOOL_PIXMAPS_PROVIDER} or use inherit Current
+		      use {ES_TOOL_MINI_ICONS_PROVIDER} then either use {ES_TOOL_PROVIDER_I} or use inherit Current
 		      and implement {ES_TOOL_PROVIDER_I}'s small interface.
 	]"
 	legal: "See notice at end of class."
@@ -12,54 +12,46 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_TOOL_PIXMAPS_PROVIDER_I [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
+	ES_TOOL_MINI_ICONS_PROVIDER_I [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
 
 inherit
 	ES_TOOL_PROVIDER_I [T]
 
 feature {NONE} -- Access
 
-	frozen tool_pixmaps: !G
-			-- Access to the tool pixmaps
-		obsolete
-			"Use tool_icons instead"
+	frozen mini_icons: !G
+			-- Access to the a tool's mini icons (10x10).
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result ?= tool_icons
-		end
-
-	frozen tool_icons: !G
-			-- Access to the tool icons
-		require
-			is_interface_usable: is_interface_usable
-		do
-			if {l_icons: G} internal_new_tool_icons then
+			if {l_icons: G} internal_mini_icons then
 				Result := l_icons
 			else
-				Result ?= new_tool_icons
-				internal_new_tool_icons := Result
+				Result ?= new_mini_icons
+				internal_mini_icons := Result
 			end
+		ensure
+			result_consistent: Result = mini_icons
 		end
 
 feature {NONE} -- Factory
 
-	new_tool_icons: !G
-			-- Factory to create a new tool icon object.
+	new_mini_icons: !G
+			-- Factory to create a new tool's mini icon object.
 		require
 			is_interface_usable: is_interface_usable
 		do
-			create Result.make (({!ES_TOOL [EB_TOOL]}) #? tool, once "icons")
+			create Result.make (({!ES_TOOL [EB_TOOL]}) #? tool, once "mini_icons")
 		end
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_new_tool_icons: ?G
-			-- Cached version of `tool_pixmaps'.
+	internal_mini_icons: ?G
+			-- Cached version of `mini_icons'.
 			-- Note: Do not use directly!
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

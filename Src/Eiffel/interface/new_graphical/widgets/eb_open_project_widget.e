@@ -935,14 +935,15 @@ feature {NONE} -- Actions
 				l_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
 				l_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
 				l_window.set_split_position (preferences.dialog_data.project_settings_split_position)
-
+				l_window.resize_actions.extend (agent (ia_window: CONFIGURATION_WINDOW; a_x, a_y, a_width, a_height: INTEGER)
+					do
+						preferences.dialog_data.project_settings_width_preference.set_value (a_width)
+						preferences.dialog_data.project_settings_height_preference.set_value (a_height)
+						preferences.dialog_data.project_settings_position_x_preference.set_value (a_x)
+						preferences.dialog_data.project_settings_position_y_preference.set_value (a_y)
+						preferences.dialog_data.project_settings_split_position_preference.set_value (ia_window.split_position)
+					end (l_window, ?, ?, ?, ?))
 				l_window.show_modal_to_window (parent_window)
-
-				preferences.dialog_data.project_settings_width_preference.set_value (l_window.width)
-				preferences.dialog_data.project_settings_height_preference.set_value (l_window.height)
-				preferences.dialog_data.project_settings_position_x_preference.set_value (l_window.x_position)
-				preferences.dialog_data.project_settings_position_y_preference.set_value (l_window.y_position)
-				preferences.dialog_data.project_settings_split_position_preference.set_value (l_window.split_position)
 
 				l_row := last_selected_row
 				last_selected_row := Void

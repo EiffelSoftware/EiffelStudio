@@ -29,20 +29,6 @@ feature -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
---feature {NONE} -- Access
-
---	window: ?EB_DEVELOPMENT_WINDOW
---			-- Access to the development window the tool is initialized for.
---			--
---			--| The result type is detachable because of the use of SITE with ESF.
---		require
---			is_interface_usable: is_interface_usable
---		deferred
---		ensure
---			result_attached: Result /= Void
---			result_is_interface_usable: Result.is_interface_usable
---		end
-
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

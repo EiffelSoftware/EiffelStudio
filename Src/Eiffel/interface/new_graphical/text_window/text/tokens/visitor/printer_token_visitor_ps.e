@@ -81,18 +81,18 @@ feature {NONE} -- Implementation
 			l_color: EV_COLOR
 			l_font: EV_FONT
 		do
-			if not a_tok.image.is_empty then
+			if not a_tok.wide_image.is_empty then
 				l_color := a_tok.text_color
 				l_font := a_tok.font
 					-- |Fixme: A line may exceed the margin.
---				current_line_width := current_line_width + l_font.string_width (a_tok.image)
+--				current_line_width := current_line_width + l_font.string_width (a_tok.wide_image)
 --				if current_line_width > max_line_width then
 --					process_editor_token_eol (create {EDITOR_TOKEN_EOL}.make)
 --				else
 					current_line_height := l_font.height.max (current_line_height)
 					current_line.append (color_string + current_color_number.out + ps_space + font_string + current_font_number.out + ps_space)
 					current_line.append (ps_print_next_line + new_line)
-					current_line.append (a_tok.image + new_line)
+					current_line.append (a_tok.wide_image + new_line)
 --				end
 			end
 		end

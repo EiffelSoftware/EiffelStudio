@@ -88,8 +88,7 @@ feature -- basic operations
 			if token /= Void then
 				comment_token ?= token
 				if comment_token = Void then
-					image := token.wide_image.as_string_8
-					Result := image.is_equal (word)
+					Result := string_32_is_caseless_ascii_string (token.wide_image, word)
 				end
 			end
 		end

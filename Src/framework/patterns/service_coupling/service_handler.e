@@ -11,7 +11,7 @@ class
 	SERVICE_HANDLER
 
 inherit
-	SERVICE_CONTAINER
+	SERVICE_CONTAINER_I
 
 create
 	make

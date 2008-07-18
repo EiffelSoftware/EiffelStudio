@@ -862,12 +862,12 @@ feature {NONE} -- Blink Cursor Management
 				media.set_foreground_color (editor_preferences.dark_gray)
 			elseif editor_preferences.blinking_cursor and has_focus then
 				if let_blink and then blink_on then
-						-- Blink on, draw invert color.
-					media.set_foreground_color (editor_preferences.plain_white)
-				else
-						-- Blink off, draw invert color twice back to what it was.
+						-- Blink has been on, draw invert color twice back to what it was.
 					media.set_foreground_color (editor_preferences.plain_white)
 					media.fill_rectangle (x, y, width_cursor, ln_height)
+				else
+						-- Blink has been off, draw invert color.
+					media.set_foreground_color (editor_preferences.plain_white)
 				end
 			else
 				media.set_foreground_color (editor_preferences.plain_white)

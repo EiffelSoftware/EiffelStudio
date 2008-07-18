@@ -43,11 +43,6 @@ inherit
 			{NONE} all
 		end
 
-	SYSTEM_ENCODINGS
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -489,19 +484,10 @@ feature {NONE} -- Implementation
 	execute_lexer_with_wide_string (a_string: STRING_GENERAL) is
 			-- Excute the lexer with wide string.
 			-- Convert the string back to `lexer.current_encoding' first.
-		local
-			l_string: STRING_GENERAL
+		require
+			a_string_not_void: a_string /= Void
 		do
-			if lexer.current_encoding /= Void then
-				utf32.convert_to (lexer.current_encoding, a_string)
-				l_string := utf32.last_converted_string
-				if not lexer.current_encoding.last_conversion_successful then
-					l_string := a_string
-				end
-			else
-				l_string := a_string
-			end
-			lexer.execute (l_string.as_string_8)
+			lexer.execute_with_wide_string (a_string.as_string_32)
 		end
 
 	current_string: STRING

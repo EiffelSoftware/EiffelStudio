@@ -11,19 +11,17 @@ class
 	SERVICE_CHAINED_CONTAINER
 
 inherit
-	SERVICE_CONTAINER
-
-	SERVICE_CONTAINER_IMPL
-		redefine
-			add_service,
-			add_service_with_activator,
-			revoke_service,
-			proffers_service
+	SITE [SERVICE_CONTAINER_I]
+		export
+			{SERVICE_CONTAINER_I} all
 		end
 
-	SITE [SERVICE_CONTAINER]
-		export
-			{SERVICE_CONTAINER} all
+	SERVICE_PROVIDER_CONTAINER
+		redefine
+			register,
+			register_with_activator,
+			revoke,
+			is_service_proffered
 		end
 
 create
@@ -31,67 +29,47 @@ create
 
 feature -- Extension
 
-	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I; a_promote: BOOLEAN) is
-			-- Add a service `a_service' with a linked association with type `a_type'.
-			-- If service is being promoted it will be registered with a parent service provider.
-		local
-			l_parent: SERVICE_CONTAINER
+	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
+			-- <Precursor>
 		do
-			l_parent := site
-			if a_promote and then l_parent /= Void then
-				l_parent.add_service (a_type, a_service, True)
+			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+				l_container.add_service (a_type, a_service, True)
 			else
-				Precursor {SERVICE_CONTAINER_IMPL} (a_type, a_service, a_promote)
+				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_service, False)
 			end
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I] a_promote: BOOLEAN) is
-			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
-			-- an instance of service when requested.
-			-- If service is being promoted it will be registered with a parent service provider.
-		local
-			l_parent: SERVICE_CONTAINER
+	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
+			-- <Precursor>
 		do
-			l_parent := site
-			if a_promote and then l_parent /= Void then
-				l_parent.add_service_with_creator (a_type, a_activator, True)
+			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+				l_container.add_service_with_creator (a_type, a_activator, True)
 			else
-				Precursor {SERVICE_CONTAINER_IMPL} (a_type, a_activator, a_promote)
+				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_activator, False)
 			end
 		end
 
 feature -- Removal
 
-	revoke_service (a_type: TYPE [ANY]; a_promote: BOOLEAN) is
-			-- Removes service associated with type `a_type'.
-			-- If a client promote the removal services in a parent container will also be removed.
-		local
-			l_parent: SERVICE_CONTAINER
+	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
+			-- <Precursor>
 		do
 			if proffers_service (a_type, False) then
-				Precursor {SERVICE_CONTAINER_IMPL} (a_type, a_promote)
-			elseif a_promote then
-				l_parent := site
-				if l_parent /= Void then
-					l_parent.remove_service (a_type, True)
-				end
+				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)
+			elseif a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+				l_container.revoke (a_type, True)
 			end
 		end
 
 feature -- Query
 
-	proffers_service (a_type: TYPE [ANY]; a_promote: BOOLEAN): BOOLEAN is
-			-- Determines if service associate with type `a_type' is being proffered.
-			-- If a client prompts query then parent containers will be checked if service
-			-- is not offerred locally.
-		local
-			l_parent: SERVICE_CONTAINER
+	is_service_proffered (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+			-- <Precursor>
 		do
-			Result := Precursor {SERVICE_CONTAINER_IMPL} (a_type, a_promote)
+			Result := Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)
 			if not Result and then a_promote then
-				l_parent := site
-				if l_parent /= Void then
-					Result := l_parent.proffers_service (a_type, True)
+				if {l_container: SERVICE_CONTAINER_I} site then
+					Result := l_container.is_service_proffered (a_type, True)
 				end
 			end
 		end

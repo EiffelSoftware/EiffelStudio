@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EDITOR_EIFFEL_SCANNER_SKELETON
 
 inherit
@@ -165,15 +165,13 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	utf8_to_utf32 (a_string: STRING): STRING_32 is
+feature {NONE} -- Encoding conversion
+
+	utf8_to_utf32 (a_string: STRING_8): STRING_32 is
+			-- UTF32 to UTF8 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
-		do
-			utf8.convert_to (utf32, a_string)
-			Result := utf8.last_converted_string
-			check
-				Result_not_void: Result /= Void
-			end
+		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end

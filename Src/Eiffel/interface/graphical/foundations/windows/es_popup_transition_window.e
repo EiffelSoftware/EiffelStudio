@@ -254,7 +254,7 @@ feature -- Basic operation
 		do
 			show_popup_window_relative_to_widget (a_widget, a_x, a_y, a_mouse_x, a_mouse_y)
 			if action /= Void then
-				perform_transition_action
+				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
 		end
 
@@ -271,7 +271,7 @@ feature -- Basic operation
 		do
 			show_popup_window_relative_to_window (a_window)
 			if action /= Void then
-				perform_transition_action
+				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
 		end
 

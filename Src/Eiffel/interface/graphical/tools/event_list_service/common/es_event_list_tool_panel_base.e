@@ -866,6 +866,7 @@ feature {NONE} -- Events
 			if is_initialized and then is_appliable_event (a_event_item) then
 				l_grid := grid_events
 				l_count := l_grid.row_count
+				l_grid.header.item.remove_pixmap
 
 				l_add := maximum_item_count = 0 or else item_count < maximum_item_count
 				if not l_add and then destory_old_items_automatically and then l_count > 0 then

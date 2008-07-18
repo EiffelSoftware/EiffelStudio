@@ -13,8 +13,11 @@ feature {NONE} -- Implementation
 	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER is
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_cstr: C_STRING
 		do
-			create Result.share_from_pointer (a_string.area.base_address, a_string.count)
+			create l_cstr.make (a_string)
+			Result := l_cstr.managed_data
 		ensure
 			result_not_void: Result /= Void
 		end

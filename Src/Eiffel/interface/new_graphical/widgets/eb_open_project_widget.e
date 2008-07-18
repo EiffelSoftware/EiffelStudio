@@ -51,6 +51,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -1162,7 +1167,11 @@ feature {NONE} -- Actions
 		local
 			l_item: EV_GRID_CHOICE_ITEM
 		do
-			if a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_f4 and then has_selected_item then
+			if
+				a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_f4 and then
+				not ev_application.alt_pressed and then not ev_application.ctrl_pressed and then
+				not ev_application.shift_pressed and then has_selected_item
+			then
 				l_item ?= projects_list.selected_rows.first.item (target_column_index)
 				check l_item /= Void end
 				l_item.activate

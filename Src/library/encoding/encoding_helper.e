@@ -13,33 +13,8 @@ feature {NONE} -- Implementation
 	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER is
 		require
 			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
-			new_size: INTEGER
-			l_end_pos, l_start_pos: INTEGER
-			l_managed_data: MANAGED_POINTER
 		do
-			l_start_pos := 1
-			l_end_pos := a_string.count
-			create l_managed_data.make ((l_end_pos + 1) )
-			nb := l_end_pos - l_start_pos + 1
-
-			new_size := (nb + 1)
-
-			if l_managed_data.count < new_size  then
-				l_managed_data.resize (new_size)
-			end
-
-			from
-				i := 0
-			until
-				i = nb
-			loop
-				l_managed_data.put_natural_8 (a_string.code (i + l_start_pos).to_natural_8, i)
-				i := i +  1
-			end
-			l_managed_data.put_natural_8 (0, new_size - 1)
-			Result := l_managed_data
+			create Result.share_from_pointer (a_string.area.base_address, a_string.count)
 		ensure
 			result_not_void: Result /= Void
 		end

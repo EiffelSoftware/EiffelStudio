@@ -205,22 +205,29 @@ feature -- Redefine
 		local
 			l_brush: WEL_BRUSH
 		do
-			if a_state /= {SD_TOOL_BAR_ITEM_STATE}.normal and theme_data = default_pointer then
-				if a_state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
-					draw_flat_button_edge_pressed (a_dc, a_rect)
-				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
-					a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_checked)
-					draw_flat_button_edge_hot_pressed (a_dc, a_rect)
-				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-					draw_flat_button_edge_pressed (a_dc, a_rect)
-				else
-					draw_flat_button_edge_hot (a_dc, a_rect)
+			-- If "theme_data = default_pointer" it means we are in classic theme
+			if theme_data = default_pointer then
+				if a_state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
+					if a_state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
+						draw_flat_button_edge_pressed (a_dc, a_rect)
+					elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
+						a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_checked)
+						draw_flat_button_edge_hot_pressed (a_dc, a_rect)
+					elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
+						draw_flat_button_edge_pressed (a_dc, a_rect)
+					else
+						draw_flat_button_edge_hot (a_dc, a_rect)
+					end
+				elseif a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separator or a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separatorvert then
+					draw_classic_separator (a_dc, a_rect, a_part_constant)
 				end
 			end
+
 			create l_brush.make_solid (a_dc.background_color)
 			if theme_data /= default_pointer then
 				theme_drawer.draw_theme_background (theme_data, a_dc, a_part_constant, a_state, a_rect, Void, l_brush)
 			end
+			l_brush.delete
 		end
 
 	on_wm_theme_changed is
@@ -542,6 +549,40 @@ feature {NONE} -- Implementation
 			create Result
 		ensure
 			not_void: Result /= Void
+		end
+
+	draw_classic_separator (a_dc: WEL_DC; a_rect: WEL_RECT; a_part_constant: INTEGER) is
+			-- Draw separator for classic theme
+		require
+			not_void: a_dc /= Void
+			not_void: a_rect /= Void
+			valid: a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separator or a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separatorvert
+		local
+			l_drawer: SD_CLASSIC_THEME_DRAWER
+			l_color: WEL_COLOR_REF
+			l_middle: INTEGER
+			l_border: INTEGER
+		do
+			create l_drawer
+			l_border := 3
+
+			if a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separator then
+				l_middle := a_rect.width // 2
+
+				l_color := l_drawer.rshadow
+				l_drawer.draw_line (a_dc, a_rect.left + l_middle - 1, a_rect.top + l_border, a_rect.left + l_middle - 1, a_rect.bottom - l_border, l_color)
+
+				l_color := l_drawer.rhighlight
+				l_drawer.draw_line (a_dc, a_rect.left + l_middle, a_rect.top + l_border, a_rect.left + l_middle, a_rect.bottom - l_border, l_color)
+			elseif a_part_constant = {WEL_THEME_PART_CONSTANTS}.tp_separatorvert then
+				l_middle := a_rect.height // 2
+
+				l_color := l_drawer.rshadow
+				l_drawer.draw_line (a_dc, a_rect.left + l_border, a_rect.top + l_middle - 1, a_rect.right - l_border, a_rect.top + l_middle - 1, l_color)
+
+				l_color := l_drawer.rhighlight
+				l_drawer.draw_line (a_dc, a_rect.left + l_border, a_rect.top + l_middle, a_rect.right - l_border, a_rect.top + l_middle, l_color)
+			end
 		end
 
 	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT) is

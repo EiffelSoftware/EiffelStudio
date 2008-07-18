@@ -298,7 +298,7 @@ feature -- Search
 						if feature_stone /= Void then
 							low2 := feature_stone.e_feature.name.as_lower
 						else
-							low2 := tok.image.as_lower
+							low2 := tok.wide_image.as_lower
 						end
 						found_feature := low2.is_equal (low)
 						if found_feature then

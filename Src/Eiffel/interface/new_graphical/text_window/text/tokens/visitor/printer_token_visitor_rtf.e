@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			l_color: EV_COLOR
 			l_font: EV_FONT
 		do
-			if not a_tok.image.is_empty then
+			if not a_tok.wide_image.is_empty then
 				l_color := a_tok.text_color
 				l_font := a_tok.font
 					-- Color
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 					-- End control word
 				text_processing.append (rtf_space)
 					-- Text
-				text_processing.append (rtf_escape_text (a_tok.image))
+				text_processing.append (rtf_escape_text (a_tok.wide_image))
 			end
 		end
 

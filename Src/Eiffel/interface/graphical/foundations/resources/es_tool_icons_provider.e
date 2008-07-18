@@ -10,10 +10,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TOOL_PIXMAPS_PROVIDER [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
+	ES_TOOL_ICONS_PROVIDER [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
 
 inherit
-	ES_TOOL_PIXMAPS_PROVIDER_I [G, T]
+	ES_TOOL_ICONS_PROVIDER_I [G, T]
 
 	ES_TOOL_PROVIDER [T]
 

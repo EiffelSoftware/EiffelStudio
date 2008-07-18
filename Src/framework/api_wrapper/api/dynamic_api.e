@@ -86,6 +86,13 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
+	minimum_version: ?STRING_32
+			-- The library module's minimum supported version.
+		deferred
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
@@ -115,19 +122,20 @@ feature -- Query
 
 feature {NONE} -- Basic operations
 
-	load_library (a_name: !STRING_32): POINTER
+	load_library (a_name: !STRING_32; a_version: ?STRING_32): POINTER
 			-- Attempts to load a library from a module name.
 			--
 			--| Note: Redefine if the API needs to load a library using a path, or some other special
 			--        manner.
 			--
 			-- `a_name': The name of the dynamic library.
+			-- `a_version': The minimum version of the library, or Void to load any version.
 			-- `Result': A module handle pointer of the loaded library or null if the library could
 			--           not be loaded.
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			Result := api_loader.load_library (a_name)
+			Result := api_loader.load_library (a_name, a_version)
 		end
 
 feature {DYNAMIC_SHARED_API} -- Externals

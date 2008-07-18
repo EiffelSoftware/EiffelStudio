@@ -31,14 +31,16 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL): POINTER
+	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library using a library name.
 			--
 			-- `a_name': The name of a dynamic library, without an extension.
+			-- `a_version': An optional version string of the library to load.
 			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		deferred
 		end
 

@@ -184,9 +184,27 @@ feature {NONE} -- Implementation
 			l_end_pos, l_start_pos: INTEGER
 			l_managed_data: MANAGED_POINTER
 		do
-			create Result.share_from_pointer (a_string.area.base_address, a_string.count * 4)
-		ensure
-			Result_not_void: Result /= Void
+			l_start_pos := 1
+			l_end_pos := a_string.count
+			create l_managed_data.make ((l_end_pos + 1) * 4)
+			nb := l_end_pos - l_start_pos + 1
+
+			new_size := (nb + 1) * 4
+
+			if l_managed_data.count < new_size  then
+				l_managed_data.resize (new_size)
+			end
+
+			from
+				i := 0
+			until
+				i = nb
+			loop
+				l_managed_data.put_natural_32 (a_string.code (i + l_start_pos), i * 4)
+				i := i +  1
+			end
+			l_managed_data.put_natural_32 (0, i * 4)
+			Result := l_managed_data
 		end
 
 	byte_order_mark: CHARACTER_32 is

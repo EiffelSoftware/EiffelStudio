@@ -16,10 +16,12 @@ class
 	API_MARSHALLER
 
 inherit
+	ANY
+
+-- inherit {NONE}
 	MULTI_THREADER
 		export
 			{NONE} all
-			{ANY} default_pointer
 		end
 
 feature {NONE} -- Access

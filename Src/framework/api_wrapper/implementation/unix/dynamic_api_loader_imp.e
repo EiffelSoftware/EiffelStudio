@@ -11,7 +11,7 @@ class
 	DYNAMIC_API_LOADER_IMP
 
 inherit
-	DYNAMIC_API_LOADER
+	DYNAMIC_API_LOADER_I
 
 feature -- Query
 
@@ -27,19 +27,27 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL): POINTER
+	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: !FILE_NAME
+			l_mac_fn: !FILE_NAME
 		do
+			create l_fn.make_from_string (a_name.as_string_8)
 			if {PLATFORM}.is_mac then
-				l_fn.add_extension (once "dylib")
-				Result := load_library_from_path (l_fn.string)
+				l_mac_fn ?= l_fn.twin
+				if a_version /= Void then
+					l_mac_fn.add_extension (a_version.as_string_8)
+				end
+				l_mac_fn.add_extension (once "dylib")
+				Result := load_library_from_path (l_mac_fn.string)
 			end
 			if Result = default_pointer then
 					-- Not a Mac or dylib not found, attempt so
-				create l_fn.make_from_string (a_name.as_string_8)
 				l_fn.add_extension (once "so")
+				if a_version /= Void then
+					l_fn.add_extension (a_version.as_string_8)
+				end
 				Result := load_library_from_path (l_fn.string)
 			end
 		end

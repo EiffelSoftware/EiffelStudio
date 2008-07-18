@@ -26,19 +26,29 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL): POINTER
+	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: !FILE_NAME
+			l_dll_fn: !FILE_NAME
 		do
-			create l_fn.make_from_string (a_name.as_string_8)
-			l_fn.add_extension (once "dll")
-			Result := load_library_from_path (l_fn.string)
+			if a_version = Void then
+				create l_fn.make_from_string (a_name.as_string_8)
+			else
+				create l_fn.make_from_string (a_name.as_string_8 + a_version.as_string_8)
+			end
+			l_dll_fn ?= l_fn.twin
+			l_dll_fn.add_extension (once "dll")
+			Result := load_library_from_path (l_dll_fn.string)
 			if Result = default_pointer then
 					-- No DLL found, attempt EXE
-				create l_fn.make_from_string (a_name.as_string_8)
 				l_fn.add_extension (once "exe")
 				Result := load_library_from_path (l_fn.string)
+				if Result = default_pointer and a_version /= Void then
+						-- Use an unversioned library, because Windows libraries typically do not
+						-- have a version number.
+					Result := load_library (a_name, Void)
+				end
 			end
 		end
 

@@ -1325,6 +1325,7 @@ end;
 			feature_name_id: INTEGER;
 			vdrs4: VDRS4;
 			l_count, i: INTEGER
+			l_features_list: LINKED_LIST [INHERIT_INFO]
 		do
 			from
 					-- We iterate 'count' times so as to only call 'forth' that number of times
@@ -1381,6 +1382,27 @@ debug ("ACTIVITY")
 end;
 						end;
 					end;
+				else
+						-- Inherited info has been set
+					if inherit_feat.features.count > 1 and then inherit_feat.inherited_info.a_feature.written_in /= a_class.class_id then
+							-- We have a repeatedly inherited feature that is not defined in current class.
+							-- We need to check for any erroneous redefinitions, if so then raise VDRS-4 error
+						from
+							l_features_list := inherit_feat.features
+							l_features_list.start
+						until
+							l_features_list.after
+						loop
+							if l_features_list.item.parent.is_redefining (l_features_list.item.a_feature.feature_name_id) then
+									-- We have an erroneous redefinition
+								create vdrs4;
+								vdrs4.set_class (a_class);
+								vdrs4.set_feature_name (Names_heap.item (l_features_list.item.a_feature.feature_name_id))
+								Error_handler.insert_error (vdrs4);
+							end
+							l_features_list.forth
+						end
+					end
 				end;
 			end;
 		end;

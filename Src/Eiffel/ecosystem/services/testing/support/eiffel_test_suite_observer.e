@@ -44,6 +44,20 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 		do
 		end
 
+	on_processor_proceeded (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I [ANY]) is
+			-- Called when some processor has proceeded with its task.
+			--
+			-- `a_test_suite': Test suite managing processor.
+			-- `a_processor': Processor that has proceeded with its task.
+		require
+			usable: is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_processor_usable: a_processor.is_interface_usable
+			a_processor_not_finished: a_processor.is_running and not a_processor.is_finished
+			a_test_suite_launched_a_processor: a_processor.test_suite = a_test_suite
+		do
+		end
+
 	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I [ANY])
 			-- Called when some processor finished its task.
 			--

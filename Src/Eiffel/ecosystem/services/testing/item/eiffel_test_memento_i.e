@@ -1,5 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+		Objects that describe changes occured in {EIFFEL_TEST_I}.	
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,5 +13,15 @@ inherit
 	TAGABLE_MEMENTO_I
 
 feature -- Status report
+
+	outcome_added: BOOLEAN
+			-- Has a new outcome been added?
+		deferred
+		end
+
+	execution_status_changed: BOOLEAN
+			-- Has execution status changed?
+		deferred
+		end
 
 end

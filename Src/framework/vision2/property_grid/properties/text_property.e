@@ -27,8 +27,7 @@ inherit
 		redefine
 			initialize,
 			activate_action,
-			implementation,
-			data
+			implementation
 		end
 
 feature {NONE} -- Initialization

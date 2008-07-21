@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 				i >= l_size
 			loop
 				if i * 4 <= a_count then
-					Result.append_code (l_managed_pointer.read_natural_32_be (i * 4))
+					Result.append_code (l_managed_pointer.read_natural_32 (i * 4))
 				end
 				i := i + 1
 			end

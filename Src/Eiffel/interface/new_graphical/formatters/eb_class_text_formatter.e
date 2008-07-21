@@ -21,8 +21,6 @@ inherit
 	EB_EDITOR_FORMATTER
 		undefine
 			force_stone
-		redefine
-			new_sd_button
 		end
 
 	SHARED_EIFFEL_PROJECT

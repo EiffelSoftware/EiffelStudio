@@ -26,8 +26,6 @@ inherit
 	EIFFEL_TEST_COLLECTION_I
 		rename
 			are_tests_available as is_test_suite_valid
-		redefine
-			events
 		end
 
 	ACTIVE_ITEM_I
@@ -72,7 +70,7 @@ feature -- Status report
 		end
 
 	is_finished: BOOLEAN
-			--
+			-- Has `Current' completet its task?
 		require
 			usable: is_interface_usable
 		deferred
@@ -106,17 +104,6 @@ feature -- Query
 			usable: is_interface_usable
 			running: is_running
 		deferred
-		end
-
-feature {NONE} -- Query
-
-	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!EIFFEL_TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			-- <Precursor>
-		do
-			Result := Precursor (a_observer)
-			if {l_observer: !EIFFEL_TEST_PROCESSOR_OBSERVER} a_observer then
-				Result.force_last ([status_changed_event, agent l_observer.on_status_changed])
-			end
 		end
 
 feature -- Status setting
@@ -173,17 +160,6 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 		deferred
 		ensure
 			stopped: not is_running
-		end
-
-feature -- Event
-
-	status_changed_event: !EVENT_TYPE [TUPLE [processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
-			-- Events called when processor changes its status
-			--
-			-- processor: `Current'
-		require
-			usable: is_interface_usable
-		deferred
 		end
 
 end

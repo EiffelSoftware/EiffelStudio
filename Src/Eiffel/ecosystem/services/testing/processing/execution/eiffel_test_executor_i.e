@@ -22,8 +22,6 @@ inherit
 		rename
 			is_valid_argument as is_valid_test_list,
 			tests as queued_tests
-		redefine
-			events
 		end
 
 feature -- Access
@@ -134,48 +132,6 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 		ensure then
 			preparing: is_preparing
 			a_list_queued: queued_tests.is_equal (a_list)
-		end
-
-feature -- Events
-
-	test_launched_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
-			-- Events called after a test has been launched.
-			--
-			-- executor: `Current'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	test_finished_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
-			-- Events called after a new outcome for `current_test' has been determined.
-			--
-			-- executor: `Current'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	cleaning_up_event: EVENT_TYPE [TUPLE [executor: !EIFFEL_TEST_EXECUTOR_I]]
-			-- Events called after `Current' started cleaning up after an execution session.
-			--
-			-- executor: `Current'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-feature {NONE} -- Query
-
-	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!EIFFEL_TEST_I]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
-			-- <Precursor>
-		do
-			Result := Precursor (a_observer)
-			if {l_observer: EIFFEL_TEST_EXECUTOR_OBSERVER} a_observer then
-				Result.force_last ([test_launched_event, agent l_observer.on_test_launched])
-				Result.force_last ([test_finished_event, agent l_observer.on_test_finished])
-				Result.force_last ([cleaning_up_event, agent l_observer.on_cleaning_up])
-			end
 		end
 
 end

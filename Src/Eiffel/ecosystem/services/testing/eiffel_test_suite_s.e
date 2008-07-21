@@ -9,7 +9,7 @@ indexing
 		has compiled, it assures all tests are actually valid tests.
 		
 		The test suite provides a registrar containing a number of available test processors. Test
-		processors are used to perform actions on existing tests or to produce new tests. See
+		processors are usedon_ to perform actions on existing tests or to produce new tests. See
 		{EIFFEL_TEST_PROCESSOR_I} and descendants for more details. Test processors can only be launched
 		by the test suite.
 	]"
@@ -226,6 +226,7 @@ feature {NONE} -- Query
 			if {l_observer: EIFFEL_TEST_SUITE_OBSERVER} a_observer then
 				Result.force_last ([executor_launched_event, agent l_observer.on_executor_launched])
 				Result.force_last ([factory_launched_event, agent l_observer.on_factory_launched])
+				Result.force_last ([processor_proceeded_event, agent l_observer.on_processor_proceeded])
 				Result.force_last ([processor_finished_event, agent l_observer.on_processor_finished])
 				Result.force_last ([processor_stopped_event, agent l_observer.on_processor_stopped])
 			end
@@ -248,6 +249,16 @@ feature -- Events
 			--
 			-- test_suite: `Current'
 			-- factory: Factory which was launched by `Current'.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	processor_proceeded_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
+			-- Events called after some processor has proceeded with its task.
+			--
+			-- test_suite: `Current'
+			-- processor: Processor that proceeded with its task.
 		require
 			usable: is_interface_usable
 		deferred

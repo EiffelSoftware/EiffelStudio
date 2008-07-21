@@ -30,7 +30,7 @@ feature -- Change
 				until
 					sdlst.after
 				loop
-					sdbut ?= sdlst.item
+					sdbut := sdlst.item
 					if sdbut /= Void then
 						sdbut.select_actions.block
 						if b then

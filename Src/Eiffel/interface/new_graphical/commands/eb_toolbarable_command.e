@@ -91,6 +91,7 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
+			tbi: SD_TOOL_BAR_BUTTON
 		do
 			if not is_sensitive then
 				is_sensitive := True
@@ -102,7 +103,10 @@ feature -- Status setting
 					until
 						sd_toolbar_items.after
 					loop
-						sd_toolbar_items.item.enable_sensitive
+						tbi := sd_toolbar_items.item
+						if tbi /= Void then
+							tbi.enable_sensitive
+						end
 						sd_toolbar_items.forth
 					end
 				end
@@ -113,6 +117,7 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
+			tbi: SD_TOOL_BAR_BUTTON
 		do
 			if is_sensitive then
 				sd_toolbar_items := internal_managed_sd_toolbar_items
@@ -122,11 +127,13 @@ feature -- Status setting
 					until
 						sd_toolbar_items.after
 					loop
-						sd_toolbar_items.item.disable_sensitive
+						tbi := sd_toolbar_items.item
+						if tbi /= Void then
+							tbi.disable_sensitive
+						end
 						sd_toolbar_items.forth
 					end
 				end
-
 				is_sensitive := False
 			end
 		end
@@ -185,6 +192,8 @@ feature {NONE} -- Implementation
 
 	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
 			-- Initialize `a_item'
+		require
+			a_item_attached: a_item /= Void
 		local
 			l_tt: STRING_GENERAL
 		do
@@ -243,6 +252,7 @@ feature {NONE} -- Implementation
 		local
 			l_sd_items: like managed_sd_toolbar_items
 			l_tt: STRING_GENERAL
+			tbi: SD_TOOL_BAR_BUTTON
 		do
 			if tooltip /= Void then
 				l_tt := tooltip.twin
@@ -257,8 +267,11 @@ feature {NONE} -- Implementation
 				until
 					l_sd_items.after
 				loop
-					l_sd_items.item.set_description (description)
-					l_sd_items.item.set_tooltip (l_tt)
+					tbi := l_sd_items.item
+					if tbi /= Void then
+						tbi.set_description (description)
+						tbi.set_tooltip (l_tt)
+					end
 					l_sd_items.forth
 				end
 			end

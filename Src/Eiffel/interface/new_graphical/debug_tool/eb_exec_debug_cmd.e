@@ -92,7 +92,9 @@ feature -- Access
 					l_sd_lst.after
 				loop
 					l_sd_item := l_sd_lst.item
-					initialize_sd_toolbar_item (l_sd_item, not l_sd_item.text.is_empty)
+					if l_sd_item /= Void then
+						initialize_sd_toolbar_item (l_sd_item, not l_sd_item.text.is_empty)
+					end
 					l_sd_lst.forth
 				end
 			end
@@ -104,7 +106,9 @@ feature -- Access
 					l_menu_lst.after
 				loop
 					l_menu_item := l_menu_lst.item
-					initialize_menu_item (l_menu_item)
+					if l_menu_item /= Void then
+						initialize_menu_item (l_menu_item)
+					end
 					l_menu_lst.forth
 				end
 			end

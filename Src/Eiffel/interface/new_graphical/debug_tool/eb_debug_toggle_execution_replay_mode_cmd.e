@@ -54,7 +54,7 @@ feature -- Execution
 			then
 				dbg.activate_execution_replay_mode (not execution_replay_mode_activated)
 			end
-			update_graphical
+			update_items
 		end
 
 feature -- Status
@@ -73,57 +73,9 @@ feature -- Change text
 		do
 			execution_replay_mode_activated := b
 			Precursor (b)
-			update_graphical
+			update_items
 		end
 
-	update_graphical is
-		local
-			menu_items: like internal_managed_menu_items
-			sd_toolbar_items: like internal_managed_sd_toolbar_items
-			t: STRING_GENERAL
-			tt: like tooltip
-			p: like pixmap
-			mpb: like mini_pixel_buffer
-		do
-			p := pixmap
-			mpb := mini_pixel_buffer
-			t := menu_name
-
-			menu_items := internal_managed_menu_items
-			if menu_items /= Void then
-				from
-					menu_items.start
-				until
-					menu_items.after
-				loop
-					menu_items.item.set_text (t)
-					menu_items.item.set_pixmap (p)
-					menu_items.forth
-				end
-			end
-
-			sd_toolbar_items := internal_managed_sd_toolbar_items
-			if sd_toolbar_items /= Void then
-				t := tooltext
-				tt := tooltip
-				
-				from
-					sd_toolbar_items.start
-				until
-					sd_toolbar_items.after
-				loop
-					if {it: STRING_GENERAL} (sd_toolbar_items.item.text) and then not it.is_empty then
-						sd_toolbar_items.item.set_text (t)
-					end
-					if tt /= Void then
-						sd_toolbar_items.item.set_tooltip (tt)
-					end
-					sd_toolbar_items.item.set_pixel_buffer (mpb)
-					sd_toolbar_items.forth
-				end
-			end
-		end
-	
 feature {NONE} -- Properties
 
 	description: STRING_GENERAL is

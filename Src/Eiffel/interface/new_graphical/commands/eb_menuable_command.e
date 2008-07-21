@@ -116,6 +116,8 @@ feature -- Basic operations
 
 	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
 			-- Initialize `a_menu_item'
+		require
+			a_menu_item_attached: a_menu_item /= Void
 		local
 			mname: STRING_GENERAL
 		do

@@ -88,6 +88,8 @@ test	buffer_overflows_printing_trace		except026 tcf pass exception
 test	static_buffer_for_trace_not_thread_safe	except027 tcf pass exception
 test	assertion_violations_in_onces		except028 tcf pass exception
 test	exception_on_invalid_object_has_no_trace	except029 tcf pass exception
+test	incorrect_once_trace_at_first_call	except030 tcf pass exception
+test	every_trace_has_root			except031 tcf pass exception
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

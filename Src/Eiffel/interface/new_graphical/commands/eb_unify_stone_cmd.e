@@ -94,6 +94,7 @@ feature -- Basic operations
 			-- Toggle between a unified mode and a separate mode.
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			mi: EV_MENU_ITEM
 		do
 			if not flag then
 				flag := True
@@ -104,9 +105,12 @@ feature -- Basic operations
 					until
 						internal_managed_menu_items.after
 					loop
-						internal_managed_menu_items.item.remove_text
-						internal_managed_menu_items.item.set_text (menu_name)
-						internal_managed_menu_items.item.set_pixmap (pixmap)
+						mi := internal_managed_menu_items.item
+						if mi /= Void then
+							mi.remove_text
+							mi.set_text (menu_name)
+							mi.set_pixmap (pixmap)
+						end
 						internal_managed_menu_items.forth
 					end
 				end
@@ -118,15 +122,15 @@ feature -- Basic operations
 						internal_managed_sd_toolbar_items.after
 					loop
 						l_button := internal_managed_sd_toolbar_items.item
-						l_button.select_actions.block
-						if window.unified_stone then
-							l_button.enable_select
-						else
-							l_button.disable_select
+						if l_button /= Void then
+							l_button.select_actions.block
+							if window.unified_stone then
+								l_button.enable_select
+							else
+								l_button.disable_select
+							end
+							l_button.select_actions.resume
 						end
-
-						l_button.select_actions.resume
-
 						internal_managed_sd_toolbar_items.forth
 					end
 				end

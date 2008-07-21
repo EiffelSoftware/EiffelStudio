@@ -30,6 +30,7 @@ inherit
 feature -- Access
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
+			-- New menu item
 		do
 			create Result.make (Current)
 			initialize_menu_item (Result)
@@ -39,6 +40,7 @@ feature -- Access
 feature -- Change
 
 	set_select (b: BOOLEAN) is
+			-- Set Current selected if `b' is True, otherwise set Current deselected
 		local
 			lst: like internal_managed_menu_items
 			men: like new_menu_item
@@ -62,6 +64,63 @@ feature -- Change
 						men.select_actions.resume
 					end
 					lst.forth
+				end
+			end
+		end
+
+	update_items is
+			-- Update associated items (menu items and toolbar items)
+		local
+			menu_items: like internal_managed_menu_items
+			sd_toolbar_items: like internal_managed_sd_toolbar_items
+			t: STRING_GENERAL
+			tt: like tooltip
+			p: like pixmap
+			mpb: like mini_pixel_buffer
+			mi: EV_MENU_ITEM
+			tbi: SD_TOOL_BAR_BUTTON
+		do
+			p := pixmap
+			mpb := mini_pixel_buffer
+			t := menu_name
+
+			menu_items := internal_managed_menu_items
+			if menu_items /= Void then
+				from
+					menu_items.start
+				until
+					menu_items.after
+				loop
+					mi := menu_items.item
+					if mi /= Void then
+						mi.set_text (t)
+						mi.set_pixmap (p)
+					end
+					menu_items.forth
+				end
+			end
+
+			sd_toolbar_items := internal_managed_sd_toolbar_items
+			if sd_toolbar_items /= Void then
+				t := tooltext
+				tt := tooltip
+
+				from
+					sd_toolbar_items.start
+				until
+					sd_toolbar_items.after
+				loop
+					tbi := sd_toolbar_items.item
+					if tbi /= Void then
+						if {it: STRING_GENERAL} (tbi.text) and then not it.is_empty then
+							tbi.set_text (t)
+						end
+						if tt /= Void then
+							tbi.set_tooltip (tt)
+						end
+						tbi.set_pixel_buffer (mpb)
+					end
+					sd_toolbar_items.forth
 				end
 			end
 		end

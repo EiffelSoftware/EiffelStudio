@@ -41,7 +41,7 @@ feature -- Execution
 	reset is
 		do
 			assertion_checking_changed := False
-			update_graphical
+			update_items
 			set_select (assertion_checking_changed)
 		end
 
@@ -69,7 +69,7 @@ feature -- Execution
 				end
 				set_select (assertion_checking_changed)
 			end
-			update_graphical
+			update_items
 		end
 
 	assertion_checking_changed: BOOLEAN
@@ -77,51 +77,6 @@ feature -- Execution
 	is_selected: BOOLEAN is
 		do
 			Result := assertion_checking_changed
-		end
-
-feature -- Change text
-
-	update_graphical is
-		local
-			menu_items: like internal_managed_menu_items
-			sd_toolbar_items: like internal_managed_sd_toolbar_items
-			t: STRING_GENERAL
-			p: like pixmap
-			pb: like pixel_buffer
-		do
-			p := pixmap
-			pb := pixel_buffer
-			t := menu_name
-
-			menu_items := internal_managed_menu_items
-			if menu_items /= Void then
-				from
-					menu_items.start
-				until
-					menu_items.after
-				loop
-					menu_items.item.set_text (t)
-					menu_items.item.set_pixmap (p)
-					menu_items.forth
-				end
-			end
-
-			t := tooltext
-
-			sd_toolbar_items := internal_managed_sd_toolbar_items
-			if sd_toolbar_items /= Void then
-				from
-					sd_toolbar_items.start
-				until
-					sd_toolbar_items.after
-				loop
-					if sd_toolbar_items.item.text /= Void then
-						sd_toolbar_items.item.set_text (t)
-					end
-					sd_toolbar_items.item.set_pixel_buffer (pb)
-					sd_toolbar_items.forth
-				end
-			end
 		end
 
 feature {NONE} -- Attributes

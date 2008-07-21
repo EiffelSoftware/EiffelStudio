@@ -93,8 +93,12 @@ feature -- Change
 				loop
 					mi := menu_items.item
 					if mi /= Void then
-						mi.set_text (t)
-						mi.set_pixmap (p)
+						if t = Void then
+							mi.set_text (t)
+						end
+						if p /= Void then
+							mi.set_pixmap (p)
+						end
 					end
 					menu_items.forth
 				end
@@ -115,10 +119,14 @@ feature -- Change
 						if {it: STRING_GENERAL} (tbi.text) and then not it.is_empty then
 							tbi.set_text (t)
 						end
-						if tt /= Void then
+						if tt = Void then
+							tbi.remove_tooltip
+						else
 							tbi.set_tooltip (tt)
 						end
-						tbi.set_pixel_buffer (mpb)
+						if mpb /= Void then
+							tbi.set_pixel_buffer (mpb)
+						end
 					end
 					sd_toolbar_items.forth
 				end

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Observer for events in {EIFFEL_TEST_SUITE_S}
+		Observer for events in {EIFFEL_TEST_SUITE_S}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -11,16 +11,15 @@ deferred class
 
 inherit
 	TAGABLE_I
+		redefine
+			memento
+		end
 
 feature -- Access
 
 	name: !STRING
-			-- Test routine name
-		require
-			usable: is_interface_usable
+			-- Name of the test routine
 		deferred
-		ensure
-			result_not_empty: not Result.is_empty
 		end
 
 	class_name: !STRING
@@ -53,6 +52,11 @@ feature -- Access
 			-- Executor running `Current' or having `Current' queued.
 		require
 			queued_or_running: is_queued or is_running
+		deferred
+		end
+
+	memento: !EIFFEL_TEST_MEMENTO_I
+			-- <Precursor>
 		deferred
 		end
 
@@ -106,10 +110,23 @@ feature -- Status report
 feature {EIFFEL_TEST_SUITE_S} -- Status report
 
 	have_tags_changed: BOOLEAN
-			-- Have tags changed due to call to `add_outcome' or `update_tags'.
+			-- Have tags changed during last call to `set_explicit_tags'?
 		require
 			usable: is_interface_usable
 		deferred
+		end
+
+feature {EIFFEL_TEST_SUITE_S} -- Status setting
+
+	set_explicit_tags (a_list: like tags)
+			-- Set tags in list to be explicit tags of `Current'
+		require
+			usable: is_interface_usable
+			not_a_list_has_empty: not a_list.there_exists (agent {!STRING}.is_empty)
+		deferred
+		ensure
+			tags_contains_list: a_list.for_all (agent tags.has)
+			changed_equals_tags_changed: have_tags_changed = (tags.is_equal (old (tags.twin)))
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
@@ -127,7 +144,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			executor_set: executor = a_executor
 		end
 
-	set_ran
+	set_running
 			-- Set `is_running' to True.
 		require
 			usable: is_interface_usable
@@ -158,14 +175,6 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			outcome_available: is_outcome_available
 			a_outcome_last: last_outcome = a_outcome
 			not_queued_or_running: not (is_queued or is_running)
-		end
-
-feature {EIFFEL_TEST_SUITE_S} -- Status setting
-
-	update_explicit_tags (a_list: like tags)
-		require
-			usable: is_interface_usable
-		deferred
 		end
 
 end

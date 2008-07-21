@@ -1,0 +1,34 @@
+test_name 	 incorrect_once_trace_at_first_call
+test_description Shows incorrect trace of once routines at first call.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+if DOTNET compare		exec_output output
+if not DOTNET compare		exec_output output
+
+cleanup_compile
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+if DOTNET compare		exec_output1 output
+if not DOTNET compare		exec_output1 output
+
+cleanup_compile
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2
+execute_result ok
+if DOTNET compare		exec_output2 output
+if not DOTNET compare		exec_output2 output
+
+test_end

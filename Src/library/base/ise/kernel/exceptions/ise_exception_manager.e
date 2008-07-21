@@ -63,7 +63,7 @@ feature -- Raise
 feature -- Status setting
 
 	ignore (a_exception: TYPE [EXCEPTION]) is
-			-- Make sure that any exception of code `code' will be
+			-- Make sure that any exception of type `a_exception' will be
 			-- ignored. This is not the default.
 		local
 			l_type: INTEGER
@@ -362,6 +362,12 @@ feature {NONE} -- Cells
 		once
 			create Result
 		end
+		
+	no_memory_exception_object_cell: CELL [EXCEPTION] is
+			-- No more memory exception object.
+		once
+			create Result
+		end
 
 feature {NONE} -- Implementation
 
@@ -401,36 +407,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_object: INTERNAL
-		once
-			create Result
-		end
-
 	once_raise (a_exception: EXCEPTION) is
 			-- Called by runtime to raise saved exception for once routines.
 		local
-			c_meaning, c_message: ANY
+			p_meaning, p_message: POINTER
 		do
 			if not a_exception.is_ignored then
 				set_last_exception (a_exception)
-				if {s: STRING} a_exception.meaning  then
-					c_meaning := s.to_c
+					-- Meaning is not yet used in the runtime.
+					-- We passes NULL, until we implemented it.
+				p_meaning := default_pointer
+				if {m: C_STRING} a_exception.c_message then
+					p_message := m.item
 				else
-					c_meaning := ("").to_c
+					p_message := default_pointer
 				end
-				if {m: STRING} a_exception.message  then
-					c_message := m.to_c
-				else
-					c_message := ("").to_c
-				end
-				developer_raise (a_exception.code, $c_meaning, $c_message)
+				developer_raise (a_exception.code, p_meaning, p_message)
 			end
-		end
-
-	no_memory_exception_object_cell: CELL [EXCEPTION] is
-			-- No more memory exception object.
-		once
-			create Result
 		end
 
 	frozen init_exception_manager is
@@ -454,6 +447,11 @@ feature {NONE} -- Implementation
 			create l_nomem
 			l_nomem.set_exception_trace (create {STRING_8}.make (4096))
 			no_memory_exception_object_cell.put (l_nomem)
+		end
+		
+	internal_object: INTERNAL
+		once
+			create Result
 		end
 
 	frozen free_preallocated_trace is

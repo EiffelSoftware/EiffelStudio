@@ -2,9 +2,16 @@ indexing
 	description: "[
 		Service interface for managing, creating and executing tests.
 		
-		A test suite contains a number of tests which can be executed by an descendants of {EIFFEL_TEST_EXECUTOR_I}. There
-		is only one executor running at a time, stored as the active executor in the test suite. Clients can tell
-		the test suite to activate an executor by providing a valid type.
+		Tests are added or removed by the service internally. Usually the list of tests is updated after
+		a compilation. However clients such as test factories can request that the test suite
+		synchronizes with classes changed since last compilation. Since in these cases it can not be
+		determined whether a class is a valid test class, the test suite will assume it. After the system
+		has compiled, it assures all tests are actually valid tests.
+		
+		The test suite provides a registrar containing a number of available test processors. Test
+		processors are used to perform actions on existing tests or to produce new tests. See
+		{EIFFEL_TEST_PROCESSOR_I} and descendants for more details. Test processors can only be launched
+		by the test suite.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -178,7 +185,7 @@ feature -- Basic functionality
 			usable: is_interface_usable
 			project_available: is_project_initialized
 			not_updating: not is_updating_tests
-			a_class_in_project:
+			a_class_in_project: is_class_in_project (a_class)
 		deferred
 		ensure
 			not_updating: not is_updating_tests
@@ -188,11 +195,26 @@ feature -- Query
 
 	is_class_in_project (a_class: !CLASS_I): BOOLEAN is
 			-- Does `a_class' belong to `project'?
+			--
+			-- `a_class': Class for which it should be determined whether it exists in `project'.
+			-- `Result': True is class can be found in `project', False otherwise
 		require
 			usable: is_interface_usable
 			project_available: is_project_initialized
 		do
 			Result := project.universe.class_named (a_class.name, a_class.group) /= Void
+		end
+
+	is_test_class (a_class: !CLASS_I): BOOLEAN is
+			-- Does `Current' recognize `a_class' as a valid test class?
+			--
+			-- `a_class': Class for which it should be determined whether it is a test class.
+			-- `Result': True is `a_class' is a test class, False otherwise.
+		require
+			usable: is_interface_usable
+			project_available: is_project_initialized
+			class_in_project: is_class_in_project (a_class)
+		deferred
 		end
 
 feature {NONE} -- Query

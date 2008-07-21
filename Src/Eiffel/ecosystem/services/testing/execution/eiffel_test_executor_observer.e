@@ -35,7 +35,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Events
 		require
 			is_interface_usable: is_interface_usable
 			a_executor_usable: a_executor.is_interface_usable
-			a_executor_running: a_executor.is_testing
+			a_executor_running: a_executor.is_running
 			test_has_outcome: a_test.is_outcome_available
 		do
 		end

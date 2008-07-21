@@ -17,16 +17,7 @@ inherit
 			item_added_event as test_added_event,
 			item_removed_event as test_removed_event,
 			item_changed_event as test_changed_event,
-			items_changed_event as tests_changed_event
-		end
-
-feature -- Access
-
-	tests: !DS_LINEAR [!EIFFEL_TEST_I]
-			-- <Precursor>
-		deferred
-		ensure then
-			result_contains_usables: ({!DS_LINEAR [!USABLE_I]} #? Result).for_all (agent {!USABLE_I}.is_interface_usable)
+			items_wiped_out_event as tests_wiped_out_event
 		end
 
 feature -- Query

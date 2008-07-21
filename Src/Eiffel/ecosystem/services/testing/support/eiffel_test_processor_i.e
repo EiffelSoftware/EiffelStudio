@@ -30,6 +30,8 @@ inherit
 			events
 		end
 
+	ACTIVE_ITEM_I
+
 feature -- Access
 
 	test_suite: !EIFFEL_TEST_SUITE_S

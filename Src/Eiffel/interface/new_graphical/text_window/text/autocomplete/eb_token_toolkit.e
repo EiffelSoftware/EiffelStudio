@@ -82,7 +82,6 @@ feature -- basic operations
 		require
 			word_not_void: word /= Void
 		local
-			image: STRING
 			comment_token: EDITOR_TOKEN_COMMENT
 		do
 			if token /= Void then

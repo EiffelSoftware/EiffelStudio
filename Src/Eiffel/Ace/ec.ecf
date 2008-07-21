@@ -47,6 +47,8 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf" readonly="false" use_application_options="true"/>
 		<library name="service_coupling" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$EIFFEL_SRC\library\testing\testing.ecf" readonly="false"/>
+		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>

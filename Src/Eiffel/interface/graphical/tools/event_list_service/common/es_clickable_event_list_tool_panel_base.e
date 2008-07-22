@@ -12,9 +12,12 @@ deferred class
 
 inherit
 	ES_EVENT_LIST_TOOL_PANEL_BASE
+		rename
+			show_context_menu as request_show_context_menu
 		redefine
 			build_tool_interface,
 			row_item_text,
+			request_show_context_menu,
 			internal_recycle
 		end
 
@@ -172,6 +175,37 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Basic operations
+
+	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- <Precursor>
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
+				if l_item.last_picked_item = 0 then
+						-- Only show the menu if a pick operation was not performed.
+					show_context_menu (a_item, a_x, a_y)
+				end
+			else
+				show_context_menu (a_item, a_x, a_y)
+			end
+		end
+
+	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
+			--
+			-- `a_item': The grid item to display a context menu for.
+			-- `a_x': The relative X position on `grid_events'.
+			-- `a_t': The relative Y position on `grid_events'.
+		require
+			is_interface_usable: is_interface_usable
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.row /= Void
+			a_item_parented_to_grid_events: a_item.row.parent = grid_events
+			a_x_positive: a_x > 0
+			a_y_positive: a_y > 0
+		do
+		end
 
 	tokens_list_from_lines (a_lines: LIST [EIFFEL_EDITOR_LINE]): ARRAYED_LIST [EDITOR_TOKEN]
 			-- Create a list of editor tokens from lines `a_lines'

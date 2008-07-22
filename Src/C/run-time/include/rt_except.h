@@ -56,7 +56,6 @@ extern struct ex_vect *exget(struct xstack *stk);	/* Get a new vector on stack *
 extern struct ex_vect *extop(struct xstack *stk);	/* Top of Eiffel stack */
 extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
 extern void xstack_reset (struct xstack *stk);		/* Clear content of `stk'. */
-extern void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
 extern void excatch(jmp_buf *jmp);			/* Set exception catcher from C to interpret */
 extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
 

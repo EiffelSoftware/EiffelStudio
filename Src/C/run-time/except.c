@@ -208,6 +208,7 @@ rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' s
 rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, 
 								char *eclass, char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
 rt_private int is_ex_assert (int ex_code);				/* Is exception of `ex_code' an assertion violation? */
+rt_private EIF_TYPE_INDEX safe_Dtype (char *obj);					/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
 
 #ifndef NOHOOK
 rt_private void exception(int how);		/* Debugger hook */
@@ -2402,7 +2403,7 @@ rt_private void find_call(void)
 	if (eif_except.rname == (char *) 0) {		/* Was created by main() */
 		if (root_obj != (char *) 0) {
 			eif_except.rname = "root's creation";
-			eif_except.from = Dtype(root_obj);
+			eif_except.from = safe_Dtype(root_obj);
 		} else {
 			eif_except.rname = "root's set-up";	/* Root object not created */
 			eif_except.from = INVALID_DTYPE;	/* Signals: no valid object */
@@ -2877,7 +2878,7 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	if (eif_except.from < scount) {
 		if (eif_except.obj_id) {
-			EIF_TYPE_INDEX obj_dtype = Dtype(eif_except.obj_id);
+			EIF_TYPE_INDEX obj_dtype = safe_Dtype(eif_except.obj_id);
 
 			if (obj_dtype < scount) {
 				print_class_feature_tag (append_trace, Class(eif_except.obj_id), rout_name_buffer, buf);
@@ -2906,7 +2907,7 @@ rt_private void print_top(void (*append_trace)(char *))
 			 * to avoid buffer overflow.
 			 * 244 = 247 - 3, 3 being characters of "..." */
 		if (eif_except.obj_id) {
-			if (eif_except.from != Dtype(eif_except.obj_id)) {
+			if (eif_except.from != safe_Dtype(eif_except.obj_id)) {
 				class_name = Origin(eif_except.from);
 				if (strlen (class_name) > 244){
 					sprintf(buf, "(From %.244s...)", class_name);
@@ -3979,6 +3980,43 @@ rt_public void init_emnger (void)
 #ifdef WORKBENCH
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
+}
+
+rt_private EIF_TYPE_INDEX safe_Dtype (char *obj) 
+	/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
+{
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
+	jmp_buf exenv;
+	EIF_TYPE_INDEX result = INVALID_DTYPE;
+	int prt_trace = print_history_table;
+
+	/* Do not print trace when trace print is possible to fail,
+	 * since once Dtype fails, trace printing always fails. */
+	print_history_table = 0; 
+
+	/* Recoding a pseudo execution vector in the Eiffel execution stack gives
+	 * us a hook for bactracking: the exception mechanism will honor the
+	 * setjmp buffer we place in it, so that control is transfered back here
+	 * for clean-up. But other than that, the pseudo vector is ignored.
+	 */
+
+	excatch(&exenv);	/* Record pseudo execution vector */
+
+	/* If we return from a longjmp, an exception has occurred. We restore the
+	 * saved debugging context, then extract the top record to also restore the
+	 * operational stack context. Once this clean-up is done, the exception is
+	 * propagated.
+	 */
+
+	if (setjmp(exenv)) {
+		result = INVALID_DTYPE;
+	} else {
+		result = Dtype (obj);
+	}
+	print_history_table = prt_trace; /* Resume `print_history_table' */
+	expop(&eif_stack);					/* Pop pseudo vector */
+	return result;
 }
 
 /*

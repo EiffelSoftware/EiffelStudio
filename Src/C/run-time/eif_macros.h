@@ -486,11 +486,20 @@ RT_LNK EIF_TYPE_INDEX fcount;
 				/* Record exception for future use. */       \
 			RTOFN(code_index,_failed) = eif_protect(RTLA);                  \
 			RTO_END_EXCEPT                                       \
-		}                                                            \
-		if (RTOFN(code_index,_failed)) {                             \
-			if (eif_access(RTOFN(code_index,_failed)))							\
-				oraise (eif_access(RTOFN(code_index,_failed)));                  \
-		}                                                            \
+				/* Propagate the exception if any. */				\
+			if (RTOFN(code_index,_failed)) {                             \
+				if (eif_access(RTOFN(code_index,_failed))) {							\
+					ereturn ();										\
+				}															\
+			}                                                            \
+		} else {                                                            \
+				/* Raise the saved exception if any. */					\
+			if (RTOFN(code_index,_failed)) {                             \
+				if (eif_access(RTOFN(code_index,_failed))) {							\
+					oraise (eif_access(RTOFN(code_index,_failed)));                  \
+				}															\
+			}                                                            \
+		}																\
 	}
 
 #define RTOSC(code_index, value)                                             \
@@ -623,10 +632,19 @@ RT_LNK EIF_TYPE_INDEX fcount;
 		MTOE(OResult, RTOC(0));									\
 		MTOEV(OResult, RTLA);                                       \
 		RTO_END_EXCEPT                                               \
-	}																	\
-	if (MTOF(OResult)) {                                                 \
-		if (*MTOF(OResult))												\
-			oraise (*MTOF(OResult));                                      \
+			/* Propagate the exception if any. */						\
+		if (MTOF(OResult)) {                                                 \
+			if (*MTOF(OResult))	{											\
+				ereturn ();                                      \
+			}														\
+		}															\
+	} else {																	\
+			/* Raise the saved exception if any.*/								\
+		if (MTOF(OResult)) {                                                 \
+			if (*MTOF(OResult))	{											\
+				oraise (*MTOF(OResult));                                      \
+			}																	\
+		}																		\
 	}
 
 #ifdef EIF_THREADS
@@ -731,9 +749,15 @@ RT_LNK EIF_TYPE_INDEX fcount;
 				RTOPLE (completed, failed, thread_id);                   \
 					/* Unlock mutex. */                              \
 				RTOPLU (mutex);                                          \
+					/* Propagate the exception if any. */							\
+				if (failed) {                                              \
+					ereturn ();                                             \
+				}															\
 			}                                                                \
-		}                                                                        \
-		RTOPRE(failed)
+		} else {                                                                        \
+				/* Raise the saved exception if any. */								\
+			RTOPRE(failed);														\
+		}
 
 #else /* !defined(EIF_HAS_MEMORY_BARRIER) */
 
@@ -750,9 +774,18 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #	define RTOFE(completed, failed, mutex, thread_id)                                \
 					/* Use thread-safe epilogue. */                  \
 				RTOPLE (completed, failed, thread_id);                     \
-			}                                                                \
-					/* Unlock mutex. */                              \
-			RTOPLU (mutex);                                                  \
+						/* Unlock mutex. */                              \
+				RTOPLU (mutex);                                                  \
+						/* Propagate the exception if any.*/							\
+				if (failed) {                                                        \
+					ereturn ();                                             \
+				}															\
+			} else {                                                               \
+						/* Unlock mutex. */                              \
+				RTOPLU (mutex);                                                  \
+						/* Raise the saved exception if any.*/					\
+				RTOPRE(failed);											\
+			}															\
 		}                                                                        \
 		else {                                                                   \
 				/* Mutex cannot be locked.      */                       \
@@ -760,7 +793,6 @@ RT_LNK EIF_TYPE_INDEX fcount;
 				/* Let it to complete.          */                       \
 			RTOPW (mutex, thread_id);                                        \
 		}                                                                        \
-		RTOPRE(failed)
 
 #endif /* EIF_HAS_MEMORY_BARRIER */
 

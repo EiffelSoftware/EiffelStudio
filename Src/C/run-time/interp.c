@@ -3723,8 +3723,8 @@ rt_private void interpret(int flag, int where)
 					RTOPLU (POResult -> mutex);
 				}
 #endif /* EIF_THREADS */
-					/* Raise the exception. */
-				oraise (*MTOF(OResult));
+					/* Propagate the exception. */
+				ereturn ();
 			}
 		}
 	} else {

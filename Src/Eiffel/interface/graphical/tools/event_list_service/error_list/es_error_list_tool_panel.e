@@ -20,8 +20,10 @@ inherit
 			surpress_synchronization,
 			on_event_added,
 			on_event_removed,
+			on_handle_key,
 			update_content_applicable_widgets,
-			show
+			show,
+			show_context_menu
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -73,12 +75,12 @@ feature {NONE} -- Iniitalization
 			a_widget.disable_row_height_fixed
 			a_widget.enable_auto_size_best_fit_column (error_column)
 			a_widget.enable_multiple_row_selection
-			a_widget.item_deactivate_actions.extend (agent (a_row: EV_GRID_ITEM)
+			register_action (a_widget.item_deactivate_actions, agent (a_row: EV_GRID_ITEM)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
 				end)
-			a_widget.row_select_actions.extend (agent (a_row: EV_GRID_ROW)
+			register_action (a_widget.row_select_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
@@ -411,6 +413,52 @@ feature {NONE} -- Basic operations
 						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 					end
 				end
+			end
+		end
+
+	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- <Precursor>
+		local
+			l_menu: EV_MENU
+			l_remove: EV_MENU_ITEM
+		do
+			if {l_item: EVENT_LIST_ITEM_I} a_item.row.data then
+				create l_menu
+
+					-- Remove, singluar
+				create l_remove.make_with_text (interface_names.m_remove)
+				l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
+				l_remove.select_actions.extend (agent remove_event_list_row (a_item.row))
+				l_menu.extend (l_remove)
+
+
+				if grid_events.selected_rows /= Void and then not grid_events.selected_rows.is_empty then
+						-- Remove, multiple
+					create l_remove.make_with_text (interface_names.m_remove_all)
+					l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
+					l_remove.select_actions.extend (agent remove_all_selected_event_list_rows)
+					l_menu.extend (l_remove)
+				end
+				l_menu.show_at (a_item.row.parent, a_x, a_y)
+			else
+				check False end
+			end
+
+		end
+
+feature {NONE} -- Action handlers
+
+	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			if a_released and then not a_alt and then not a_ctrl and then not a_shift then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+					remove_all_selected_event_list_rows
+					Result := True
+				end
+			end
+			if not Result then
+				Result := Precursor (a_key, a_alt, a_ctrl, a_shift, a_released)
 			end
 		end
 

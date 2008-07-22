@@ -66,6 +66,24 @@ feature {NONE} -- Initialization
 			end (?, ?, grid_events))
 			grid_events.disable_vertical_scrolling_per_item
 
+				-- Register action to display context menus.
+			register_action (grid_events.pointer_button_release_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button, ia_x_tilt, ia_y_tilt, ia_pressure, ia_screen_x, ia_screen_y: INTEGER_32)
+				local
+					l_item: EV_GRID_ITEM
+				do
+					if ia_button = 3 then
+							-- Process the right click
+						if ia_widget.is_header_displayed then
+							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y - ia_widget.header.height)
+						else
+							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y)
+						end
+						if l_item /= Void then
+							show_context_menu (l_item, ia_x, ia_y)
+						end
+					end
+				end (grid_events, ?, ?, ?, ?, ?, ?, ?, ?))
+
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 			if not surpress_synchronization then
 				synchronize_event_list_items
@@ -208,11 +226,28 @@ feature {NONE} -- Basic operations
 			--
 			-- `a_row': The row the user requested an action to be performed on.
 		require
+			is_interface_usable: is_interface_usable
 			a_row_attached: a_row /= Void
 			a_row_has_parent: a_row.parent /= Void
 			a_row_is_in_grid_events: a_row.index <= grid_events.row_count and then
 				grid_events.row (a_row.index) = a_row
 		deferred
+		end
+
+	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
+			--
+			-- `a_item': The grid item to display a context menu for.
+			-- `a_x': The relative X position on `grid_events'.
+			-- `a_t': The relative Y position on `grid_events'.
+		require
+			is_interface_usable: is_interface_usable
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.row /= Void
+			a_item_parented_to_grid_events: a_item.row.parent = grid_events
+			a_x_positive: a_x > 0
+			a_y_positive: a_y > 0
+		do
 		end
 
 	selected_text: STRING_8
@@ -263,6 +298,36 @@ feature {NONE} -- Basic operations
 		do
 			if event_list.is_service_available then
 				event_list.service.all_items.do_all (agent on_event_added (event_list.service, ?))
+			end
+		end
+
+feature {NONE} -- Removal
+
+	remove_all_selected_event_list_rows
+			-- Removes all the selected event list rows.
+		require
+			is_interface_usable: is_interface_usable
+			is_multiple_row_selection_enabled: grid_events.is_multiple_row_selection_enabled
+		local
+			l_selected: ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_selected := grid_events.selected_rows
+			if l_selected /= Void and then not l_selected.is_empty then
+				l_selected.do_all (agent remove_event_list_row)
+			end
+		end
+
+	remove_event_list_row (a_row: EV_GRID_ROW)
+			-- Removes a single event list row.
+			--
+			-- `a_row': The event list row to remove
+		require
+			is_interface_usable: is_interface_usable
+			a_row_attached: a_row /= Void
+			a_row_parented_to_grid_events: a_row.parent = grid_events
+		do
+			if event_list.is_service_available and then {l_item: EVENT_LIST_ITEM_I} a_row.data then
+				event_list.service.prune_event_item (l_item)
 			end
 		end
 

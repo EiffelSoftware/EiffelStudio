@@ -34,12 +34,7 @@ feature -- Access
 				private_font := Result
 				private_wel_font := Void
 			else
-				create Result.make_with_values (private_font.family, private_font.weight, private_font.shape, private_font.height)
-						-- We must be sure to copy `preferred_families'.
-					if private_font.preferred_families /= Void and not private_font.preferred_families.is_empty then
-						font_imp ?= Result.implementation
-						font_imp.preferred_families.append (private_font.preferred_families)
-					end
+				Result := private_font.twin
 			end
 		end
 

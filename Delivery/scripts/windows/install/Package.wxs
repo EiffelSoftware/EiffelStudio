@@ -13,7 +13,8 @@
     <!-- PACKAGE -->
     <Package Id="*" Keywords="Installer" Description="$(var.ProductDescription)"
 			Comments="$(var.ProductName) is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software Inc."
-			InstallerVersion="$(var.MsiVersion)" Platforms="$(var.MsiPlatform)" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
+			InstallerVersion="$(var.MsiVersion)" Platforms="$(var.MsiPlatform)" Languages="1033" Compressed="yes" InstallPrivileges="elevated"
+      SummaryCodepage="1252"/>
     
     <EnsureTable Id="ControlCondition"/>
     <!-- END PACKAGE -->
@@ -52,8 +53,6 @@
     <Property Id="ISEPLATFORM"><?ifdef x64?>win64<?else?>windows<?endif?></Property>
     <!-- Installation directory -->
     <Property Id="INSTALLDIR" Secure="yes" />
-    <!-- Type of C/C++ compiler -->
-    <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>
     <!-- .NET installation root -->
     <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
     <!-- Indicates if .NET is installed -->
@@ -66,7 +65,7 @@
     <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="C_CONFIG_INSTALL_URL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>
     <!-- Eiffel C configuration name -->
-    <Property Id="C_CONFIG_NAME">msc</Property>
+    <Property Id="C_CONFIG_NAME"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>
     <!-- The name of a MS compiler environment -->
     <Property Id="C_CONFIG_MSC_ENVIRONMENT">Unused</Property>
     <!-- Inidicates if a C compilation can be performed -->

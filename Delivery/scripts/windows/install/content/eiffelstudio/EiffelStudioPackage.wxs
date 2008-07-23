@@ -231,7 +231,7 @@
 
 			<?ifndef x64?>
 			<Feature Id="gcc_feature" Title="gcc" TypicalDefault="install" Display="hidden" Level="1" >
-				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "mingw"]]></Condition>
+				<Condition Level="0"><![CDATA[C_CONFIG_NAME <> "mingw"]]></Condition>
 				<ComponentGroupRef Id="gcc"/>
 			</Feature>
 			<?endif?>

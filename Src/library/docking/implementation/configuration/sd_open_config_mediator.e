@@ -104,7 +104,7 @@ feature -- Open inner container data.
 		end
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
-			-- Open tools config, excpet all editors
+			-- Open tools config, except all editors
 		require
 			not_called: top_container = Void
 		local

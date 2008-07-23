@@ -24,7 +24,8 @@ inherit
 			width,
 			height,
 			destroy,
-			drawable
+			drawable,
+			corruptable_onscreen
 		end
 
 	EV_PRIMITIVE_IMP
@@ -394,6 +395,9 @@ feature {EV_ANY_I} -- Implementation
 
 	mask: POINTER
 			-- Pointer to the GdkBitmap used for masking.
+
+	corruptable_onscreen: BOOLEAN = False
+			-- Is drawable corruptable onscreen?
 
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 

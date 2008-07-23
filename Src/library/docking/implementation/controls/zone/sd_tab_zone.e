@@ -182,9 +182,9 @@ feature -- Command
 				internal_title_bar.set_title (a_title)
 			end
 		ensure
-			set: internal_notebook.item_text (a_content) = a_title
+			set: internal_notebook.item_text (a_content).is_equal (a_title.as_string_32)
 			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
-				implies internal_title_bar.title = a_title
+				implies internal_title_bar.title.is_equal (a_title.as_string_32)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is

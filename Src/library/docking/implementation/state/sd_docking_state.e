@@ -132,7 +132,7 @@ feature -- Redefine.
 		do
 			zone.set_title (a_title)
 		ensure then
-			set: zone.title = a_title
+			set: a_title /= Void implies zone.title.is_equal (a_title.as_string_32)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is

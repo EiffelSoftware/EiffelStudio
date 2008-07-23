@@ -45,7 +45,7 @@ feature -- Floating data
 			set: a_is_floating = is_floating
 		end
 
-	title: STRING_GENERAL
+	title: STRING_32
 			-- Title of floating zone.
 
 	set_title (a_title: STRING_GENERAL) is
@@ -55,7 +55,7 @@ feature -- Floating data
 		do
 			title := a_title
 		ensure
-			set: a_title = title
+			set: a_title.as_string_32.is_equal (title)
 		end
 
 	screen_x, screen_y: INTEGER

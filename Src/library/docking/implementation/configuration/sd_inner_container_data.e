@@ -174,7 +174,7 @@ feature -- Floating data.
 
 feature -- Common properties
 
-	state: STRING_GENERAL
+	state: STRING_32
 			-- One generator type name of SD_STATE and it's descendents.
 
 	set_state (a_class_name: STRING_GENERAL) is
@@ -182,7 +182,7 @@ feature -- Common properties
 		do
 			state := a_class_name
 		ensure
-			set: state = a_class_name
+			set: a_class_name /= Void implies state.is_equal (a_class_name.as_string_32)
 		end
 
 	direction: INTEGER

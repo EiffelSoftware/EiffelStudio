@@ -79,7 +79,7 @@ feature -- Query
 			 Result := a_content = internal_docking_manager.zones.place_holder_content
 		end
 
-	title: STRING_GENERAL is
+	title: STRING_32 is
 			-- Title
 		local
 			l_shared: SD_SHARED

@@ -39,23 +39,23 @@ feature -- Properties
 				tool_bar.update_size
 			end
 		ensure
-			set: text = a_text
+			set: a_text /= Void implies text.is_equal (a_text.as_string_32)
 		end
 
-	text: STRING_GENERAL
+	text: STRING_32
 			-- Text shown on item.
 
-	set_tooltip (a_tip: like tooltip) is
+	set_tooltip (a_tip: STRING_GENERAL) is
 			-- Set `a_tooltip' with `a_tip'
 		require
 			not_void: a_tip /= Void
 		do
 			tooltip := a_tip
 		ensure
-			set: tooltip =  a_tip
+			set: tooltip.is_equal (a_tip.as_string_32)
 		end
 
-	tooltip: STRING_GENERAL
+	tooltip: STRING_32
 			-- Tooltip shown on item.
 
 feature -- Command

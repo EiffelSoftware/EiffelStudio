@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 			title := a_unique_title
 			items := a_items
 		ensure
-			set: unique_title = a_unique_title
+			set: unique_title.is_equal (a_unique_title.as_string_32)
 			set: items = a_items
 		end
 
@@ -177,7 +177,7 @@ feature -- Command
 		do
 			title := a_display_title
 		ensure
-			set: title = a_display_title
+			set: title.is_equal (a_display_title.as_string_32)
 		end
 
 	set_top (a_direction: INTEGER) is
@@ -245,11 +245,11 @@ feature -- Command
 
 feature -- Query
 
-	unique_title: STRING_GENERAL
+	unique_title: STRING_32
 			-- Unique tool bar title.
 			-- It's used for store/open layout data, so it should not be changed.
 
-	title: STRING_GENERAL
+	title: STRING_32
 			-- Title for display.
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
@@ -648,9 +648,6 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 				end
 			end
 		end
-
---	tool_bar_items_texts: ARRAYED_LIST [STRING_GENERAL];
---			-- All strings on `items'.
 
 	item_start_index (a_group_index: INTEGER; a_inclue_invisible: BOOLEAN): INTEGER is
 			-- Start index in `items' of a group. Start index not include SD_TOOL_BAR_SEPARATOR.

@@ -21,7 +21,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -109,7 +109,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	text: STRING_GENERAL is
+	text: STRING_32 is
 			-- Title.
 		do
 			Result := internal_text
@@ -158,7 +158,7 @@ feature -- Command
 			update_size_internal
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
-			set: internal_text = a_text
+			set: a_text /= Void implies internal_text.is_equal (a_text.as_string_32)
 		end
 
 	set_text_size (a_size: INTEGER) is
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area draw `internal_pixmap'.
 
-	internal_text: STRING_GENERAL
+	internal_text: STRING_32
 			-- Text on `internal_drawing_area'.
 
 	internal_shared: SD_SHARED

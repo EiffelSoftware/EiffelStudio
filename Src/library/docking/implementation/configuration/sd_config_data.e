@@ -25,7 +25,7 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name of this layout.
 
 	set_name (a_name: like name) is

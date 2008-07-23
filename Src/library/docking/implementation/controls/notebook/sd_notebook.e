@@ -128,7 +128,7 @@ feature -- Command
 			-- The text let tab size changed, so it need resize.
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
-			set:
+			set: a_text /= Void implies item_text (a_content).is_equal (a_text.as_string_32)
 		end
 
 	set_item_pixmap (a_content: SD_CONTENT; a_pixmap: EV_PIXMAP) is
@@ -488,7 +488,7 @@ feature -- Query
 			Result := internal_tabs.item.pixmap
 		end
 
-	item_text (a_content: SD_CONTENT): STRING_GENERAL is
+	item_text (a_content: SD_CONTENT): STRING_32 is
 			-- `a_content''s pixmap.
 		require
 			has: has (a_content)

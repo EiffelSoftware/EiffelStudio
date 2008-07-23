@@ -40,7 +40,7 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	title: STRING_GENERAL
+	title: STRING_32
 			-- Text showing on Current.
 
 	set_title (a_title: STRING_GENERAL) is
@@ -50,7 +50,7 @@ feature -- Properties
 		do
 			title := a_title
 		ensure
-			set: title = a_title
+			set: title.is_equal (a_title.as_string_32)
 		end
 
 	is_focus_color_enable: BOOLEAN

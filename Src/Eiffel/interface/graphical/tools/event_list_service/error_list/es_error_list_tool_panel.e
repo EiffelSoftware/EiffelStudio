@@ -18,8 +18,8 @@ inherit
 			create_right_tool_bar_items,
 			is_appliable_event,
 			surpress_synchronization,
-			on_event_added,
-			on_event_removed,
+			on_event_item_added,
+			on_event_item_removed,
 			on_handle_key,
 			update_content_applicable_widgets,
 			show,
@@ -464,7 +464,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Events
 
-	on_event_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_applicable: BOOLEAN
@@ -493,7 +493,7 @@ feature {NONE} -- Events
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_event_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
+	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
 			-- <Precursor>
 		local
 			l_applicable: BOOLEAN

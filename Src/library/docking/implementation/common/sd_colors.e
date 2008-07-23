@@ -153,11 +153,13 @@ feature -- Implementation
 			loop
 				l_tool_bar ?= l_tool_bars.item (l_i)
 				check  not_void: l_tool_bar /= Void end
-				l_tool_bar.set_background_color (internal_shared.default_background_color)
+				if not l_tool_bar.is_destroyed then
+					l_tool_bar.set_background_color (internal_shared.default_background_color)
+				end
 				l_i := l_i + 1
 			end
 		end
-		
+
 	non_focused_color_cell: CELL [EV_COLOR] is
 			-- Singelton cell for `non_focus_color'
 		once

@@ -619,87 +619,87 @@ feature -- Drawing operations
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 		local
+			l_source_full, l_source_clip, l_source_intersection: EV_RECTANGLE
+			l_dest_full, l_dest_clip, l_dest_intersection: EV_RECTANGLE
 			pixmap_imp: EV_PIXMAP_IMP
---			l_src_rect, l_dest_rect, l_src_intersection_rect, l_dest_intersection_rect: EV_RECTANGLE
---			l_adjusted_x, l_adjusted_y: INTEGER
---			l_adjusted_x_src, l_adjusted_y_src, l_adjusted_src_width, l_adjusted_src_height: INTEGER
+--			l_visible_region, l_visible_rectangle: POINTER
 		do
 			if drawable /= default_pointer then
 
---					-- Find adjusted values for source rectangle.
---				create l_dest_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
---				create l_src_rect.make (x_src, y_src, src_width, src_height)
---				l_src_intersection_rect := l_src_rect.intersection (l_dest_rect)
---				l_adjusted_x_src := l_src_intersection_rect.x
---				l_adjusted_y_src := l_src_intersection_rect.y
---				l_adjusted_src_width := l_src_intersection_rect.width
---				l_adjusted_src_height := l_src_intersection_rect.height
---				l_adjusted_x := x - x_src.min (0)
---				l_adjusted_y := y - y_src.min (0)
-
---				if l_adjusted_src_width > 0 and then l_adjusted_src_height > 0 then
---						-- Optimize destination rectangle.
---					l_dest_rect.move_and_resize (0, 0, width, height)
---					l_src_rect.move_and_resize (
---						l_adjusted_x,
---						l_adjusted_y,
---						l_adjusted_src_width,
---						l_adjusted_src_height
+					-- Get visible region of drawable
+				--| FIXME IEK Optimize for visible regions with corruptable data.
+--				l_visible_rectangle := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+--				l_visible_region := {EV_GTK_EXTERNALS}.gdk_drawable_get_visible_region (drawable)
+--				if corruptable_onscreen and l_visible_region /= default_pointer then
+--					{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (l_visible_region, l_visible_rectangle)
+--					{EV_GTK_EXTERNALS}.gdk_region_destroy (l_visible_region)
+--					l_visible_region := default_pointer
+--					create l_source_full.make (
+--						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_visible_rectangle),
+--						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_visible_rectangle),
+--						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_visible_rectangle),
+--						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_visible_rectangle)
 --					)
---					l_dest_intersection_rect := l_src_rect.intersection (l_dest_rect)
+--				else
+					create l_source_full.make (0, 0, a_pixmap.width, a_pixmap.height)
+--				end
 
---					l_adjusted_x := l_dest_intersection_rect.x
---					l_adjusted_y := l_dest_intersection_rect.y
---						-- If destination origin is negative then adjust the source origin to take this in to account.
---					if l_adjusted_x < 0 then
---						l_adjusted_x_src := l_adjusted_x_src - l_adjusted_x
---					end
---					if l_adjusted_y_src < 0 then
---						l_adjusted_y_src := l_adjusted_y_src - l_adjusted_y
---					end
---					l_adjusted_src_width := l_dest_intersection_rect.width
---					l_adjusted_src_height := l_dest_intersection_rect.height
+--				l_visible_rectangle.memory_free
 
---					if l_dest_intersection_rect.width > 0 and then l_dest_intersection_rect.height > 0 then
+				create l_source_clip.make (x_src, y_src, src_width, src_height)
+
+				l_source_intersection := l_source_full.intersection (l_source_clip)
+					-- The source intersection dimensions are used as the initial size of the clip
+					-- The source intersection origin is used as the initial origin of the clip
+
+				if l_source_intersection.width > 0 and then l_source_intersection.height > 0 then
+
+					create l_dest_full.make (0, 0, width, height)
+						-- Account for any source clipping in the destination
+					create l_dest_clip.make (x + l_source_intersection.x - l_source_clip.x, y + l_source_intersection.y - l_source_clip.y, l_source_intersection.width, l_source_intersection.height)
+
+						-- Move the source clip to the intersection position and dimensions
+					l_source_clip.move (l_source_intersection.x, l_source_intersection.y)
+					l_source_clip.resize (l_source_intersection.width, l_source_intersection.height)
+
+					l_dest_intersection := l_dest_full.intersection (l_dest_clip)
+
+					if l_dest_intersection.width > 0 and then l_dest_intersection.height > 0 then
+
+						l_source_clip.resize (l_dest_intersection.width, l_dest_intersection.height)
+
+							-- We need to account for any destination position clipping by updating the source clip accordingly.
+						l_source_clip.set_x (l_source_clip.x + (l_dest_intersection.x - l_dest_clip.x))
+						l_source_clip.set_y (l_source_clip.y + (l_dest_intersection.y - l_dest_clip.y))
+
+							-- The dimensions of the destination intersection are now the new dimensions of the source clip.
+						l_dest_clip.move (l_dest_intersection.x, l_dest_intersection.y)
+						l_dest_clip.resize (l_dest_intersection.width, l_dest_intersection.y)
+
 						pixmap_imp ?= a_pixmap.implementation
---						if pixmap_imp.mask /= default_pointer then
---							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
---							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_adjusted_x - l_adjusted_x_src, l_adjusted_y - l_adjusted_y_src)
---						end
---						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
---							drawable,
---							gc,
---							pixmap_imp.drawable,
---							l_adjusted_x_src,
---							l_adjusted_y_src,
---							l_adjusted_x,
---							l_adjusted_y,
---							l_adjusted_src_width,
---							l_adjusted_src_height
---						)
 
 						if pixmap_imp.mask /= default_pointer then
 							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x - x_src, y - y_src)
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_dest_clip.x - l_source_clip.x, l_dest_clip.y - l_source_clip.y)
 						end
 						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
 							drawable,
 							gc,
 							pixmap_imp.drawable,
-							x_src,
-							y_src,
-							x,
-							y,
-							src_width,
-							src_height
+							l_source_clip.x,
+							l_source_clip.y,
+							l_dest_clip.x,
+							l_dest_clip.y,
+							l_source_clip.width,
+							l_source_clip.height
 						)
 						update_if_needed
 						if pixmap_imp.mask /= default_pointer then
 							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
 							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
 						end
---					end
---				end
+					end
+				end
 			end
 		end
 
@@ -1053,6 +1053,13 @@ feature {NONE} -- Implementation
 	internal_background_color: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
+
+	corruptable_onscreen: BOOLEAN
+			-- Is pixel data corruptable if displayed on screen.
+			-- True if drawing area or screen.
+		do
+			Result := True
+		end
 
 	flush is
 			-- Force all queued expose events to be called.

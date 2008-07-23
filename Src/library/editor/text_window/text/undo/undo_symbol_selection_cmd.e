@@ -17,31 +17,24 @@ create
 
 feature -- Initialization
 
-	make (begin_s, end_s: EDITOR_CURSOR; symbl: STRING_GENERAL; txt: EDITABLE_TEXT) is
+	make (a_lines: like lines; symbl: STRING_GENERAL; txt: EDITABLE_TEXT) is
 		require
-			begin_s_not_void: begin_s /= Void
-			end_s_not_void: end_s /= Void
+			a_lines_not_void: a_lines /= Void
 			symbl_not_void: symbl /= Void
 			txt_not_void: txt /= Void
 		do
-			begin_selection := begin_s.twin
-			end_selection := end_s.twin
+			lines := a_lines
 			symbol := symbl
 			text := txt
 		ensure
-			begin_selection_set: begin_selection.is_equal (begin_s)
-			end_selection_set: end_selection.is_equal (end_s)
+			lines_set: lines = a_lines
 			symbol_set: symbol = symbl
 			text_set: text = txt
 		end
 
 feature -- Access
 
-	begin_selection: EDITOR_CURSOR
-		-- beginning of the "symboled" block
-
-	end_selection: EDITOR_CURSOR
-		-- end of the "symboled" block
+	lines: LINKED_LIST[INTEGER]
 
 	symbol: STRING_GENERAL
 		-- symbol added at the beginning of the lines.
@@ -51,23 +44,45 @@ feature -- Basic operations
 	undo is
 			-- undo the command
 		do
-			text.unsymbol_selection (begin_selection, end_selection, symbol)
+			do_selection (False)
 		end
 
 	redo is
 			-- redo the command
 		do
-			text.symbol_selection (begin_selection, end_selection, symbol)
+			do_selection (True)
 		end
-
 
 feature {NONE} -- Implementation
 
 	text : EDITABLE_TEXT
 
+	do_selection (a_symbol: BOOLEAN) is
+			-- Symbol or unsymbol the section.
+		local
+			b, e: EDITOR_CURSOR
+		do
+			from
+				lines.start
+				create b.make_from_character_pos (1, 1, text)
+				create e.make_from_character_pos (1, 1, text)
+			until
+				lines.after
+			loop
+				b.make_from_character_pos (1, lines.item, text)
+				e.make_from_character_pos (1, lines.item, text)
+				e.go_end_line
+				if not a_symbol then
+					text.unsymbol_selection (b, e, symbol)
+				else
+					text.symbol_selection (b, e, symbol)
+				end
+				lines.forth
+			end
+		end
+
 invariant
-	begin_selection_not_void: begin_selection /= Void
-	end_selection_not_void: end_selection /= Void
+	lines_set: lines /= Void
 	symbol_not_void: symbol /= Void
 	text_not_void: text /= Void
 

@@ -260,11 +260,11 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_symbol (begin_selection, end_selection: EDITOR_CURSOR; symbl: STRING_GENERAL) is
+	record_symbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL) is
 		local
 			uisc: UNDO_SYMBOL_SELECTION_CMD
 		do
-			create uisc.make (begin_selection, end_selection, symbl, text)
+			create uisc.make (lines, symbl, text)
 			put (uisc)
 			notify_observers
 			current_status := symbol

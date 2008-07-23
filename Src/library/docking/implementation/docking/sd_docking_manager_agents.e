@@ -17,7 +17,7 @@ inherit
 		end
 
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -152,7 +152,7 @@ feature  -- Agents
 				-- And we don't need to care about the height of `l_main_container''s item since it works fine.
 				l_main_container := internal_docking_manager.query.inner_container_main
 				l_width := internal_docking_manager.fixed_area.width
-				if l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
+				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
 					l_width := l_main_container.item.minimum_width
 				end
 				internal_docking_manager.fixed_area.set_item_width (l_main_container , l_width)

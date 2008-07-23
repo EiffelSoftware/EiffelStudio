@@ -491,6 +491,11 @@ feature -- Externals
 			"C signature (GdkDrawable*, gint, gint, gint, gint): GdkImage* use <gtk/gtk.h>"
 		end
 
+	frozen gdk_drawable_get_visible_region (a_drawable: POINTER): POINTER is
+		external
+			"C signature (GdkDrawable*): GdkRegion use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_get_focus (a_window: POINTER): POINTER is
 		external
 			"C signature (GtkWindow*): GtkWidget* use <gtk/gtk.h>"

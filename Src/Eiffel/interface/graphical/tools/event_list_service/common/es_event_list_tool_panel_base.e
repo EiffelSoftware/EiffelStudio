@@ -21,21 +21,23 @@ inherit
 			internal_recycle
 		end
 
+	EVENT_LIST_OBSERVER
+		redefine
+			on_event_item_added,
+			on_event_item_removed,
+			on_event_item_changed
+		end
+
 feature {NONE} -- Initialization
 
 	on_before_initialize
 			-- Use to perform additional creation initializations, before the UI has been created.
-		local
-			l_service: EVENT_LIST_S
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
 				-- Retrieve event list service
 			if event_list.is_service_available then
-				l_service := event_list.service
-				l_service.item_added_event.subscribe (agent on_event_added)
-				l_service.item_changed_event.subscribe (agent on_event_changed)
-				l_service.item_removed_event.subscribe (agent on_event_removed)
+				event_list.service.connect_events (Current)
 			end
 		end
 
@@ -95,26 +97,10 @@ feature {NONE} -- Clean up
 
 	internal_recycle
 			-- Recycle tool.
-		local
-			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			l_service: EVENT_LIST_S
 		do
-			if is_initialized then
-				if event_list.is_service_available then
-					l_service := event_list.service
-
-					l_agent := agent on_event_added
-					if l_service.item_added_event.is_subscribed (l_agent) then
-						l_service.item_added_event.unsubscribe (l_agent)
-					end
-					l_agent := agent on_event_removed
-					if l_service.item_removed_event.is_subscribed (l_agent) then
-						l_service.item_removed_event.unsubscribe (l_agent)
-					end
-					l_agent := agent on_event_changed
-					if l_service.item_changed_event.is_subscribed (l_agent) then
-						l_service.item_changed_event.unsubscribe (l_agent)
-					end
+			if event_list.is_service_available then
+				if event_list.service.is_connected (Current) then
+					event_list.service.disconnect_events (Current)
 				end
 			end
 
@@ -297,7 +283,7 @@ feature {NONE} -- Basic operations
 			not_surpress_synchronization: not surpress_synchronization
 		do
 			if event_list.is_service_available then
-				event_list.service.all_items.do_all (agent on_event_added (event_list.service, ?))
+				event_list.service.all_items.do_all (agent on_event_item_added (event_list.service, ?))
 			end
 		end
 
@@ -912,15 +898,8 @@ feature {NONE} -- Query
 
 feature {NONE} -- Events
 
-	on_event_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called when a event item is added to the event service.
-			--
-			-- `a_service': Event service where event was added.
-			-- `a_event_item': The event item added to the service.
-		require
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
-			a_service_contains_a_event: a_event_item.is_persistent implies a_service.all_items.has (a_event_item)
+	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+			-- <Precursor>
 		local
 			l_add: BOOLEAN
 			l_event_item: EVENT_LIST_ITEM_I
@@ -940,7 +919,7 @@ feature {NONE} -- Events
 					check
 						l_event_attached: l_event_item /= Void
 					end
-					on_event_removed (a_service, l_event_item)
+					on_event_item_removed (a_service, l_event_item)
 				end
 
 				check
@@ -975,16 +954,8 @@ feature {NONE} -- Events
 			item_count_small_enought: destory_old_items_automatically implies item_count <= maximum_item_count
 		end
 
-	on_event_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
-			-- Called after a event item has been removed from the service `a_service'
-			--
-			-- `a_service': Event service where the event was removed.
-			-- `a_event_item': The event item removed from the service.
-		require
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
-			a_event_item_is_persistent: a_event_item.is_persistent
-			not_a_service_contains_a_event: not a_service.all_items.has (a_event_item)
+	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
+			-- <Precursor>
 		local
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
@@ -1059,16 +1030,8 @@ feature {NONE} -- Events
 			item_count_increased: is_initialized and then is_appliable_event (a_event_item) implies item_count = old item_count - 1
 		end
 
-	on_event_changed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called after a event item has been changed.
-			--
-			-- `a_service': Event service where the event was changed.
-			-- `a_event_item': The event item that was changed.
-		require
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
-			a_event_item_is_persistent: a_event_item.is_persistent
-			a_service_contains_a_event: a_service.all_items.has (a_event_item)
+	on_event_item_changed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+			-- <Precursor>
 		local
 			l_row: EV_GRID_ROW
 		do

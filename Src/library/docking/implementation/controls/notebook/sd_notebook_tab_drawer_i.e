@@ -80,7 +80,7 @@ feature -- Key setting
 
 feature -- Properties
 
-	text: STRING_GENERAL
+	text: STRING_32
 			-- Text
 
 	set_text (a_text: STRING_GENERAL) is
@@ -90,7 +90,7 @@ feature -- Properties
 		do
 			text := a_text
 		ensure
-			set: text = a_text
+			set: text.is_equal (a_text.as_string_32)
 		end
 
 	pixmap: EV_PIXMAP

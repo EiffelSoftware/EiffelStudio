@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_TEXT_FINDER
+	SD_TEXT_FINDER [G -> STRING_GENERAL]
 
 create
 	make
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Access
 
-	texts: ARRAYED_LIST [like last_searched]
+	texts: ARRAYED_LIST [G]
 			-- Texts search in.
 
 	texts_found: like texts is
@@ -64,7 +64,7 @@ feature -- Status report
 	is_search_launched: BOOLEAN
 			-- Is search_launched?
 
-	last_searched: STRING_GENERAL
+	last_searched: G
 			-- Last searched string.
 
 feature -- Behavior

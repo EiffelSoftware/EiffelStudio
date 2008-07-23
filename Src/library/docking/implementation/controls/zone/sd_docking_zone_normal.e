@@ -131,7 +131,7 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING_GENERAL is
+	title: STRING_32 is
 			-- Redefine
 		do
 			Result := window.title_bar.title

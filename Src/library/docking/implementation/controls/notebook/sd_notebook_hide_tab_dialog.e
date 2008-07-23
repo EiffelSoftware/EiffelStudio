@@ -488,7 +488,7 @@ feature {NONE} -- Implementation functions.
 	init_search is
 			-- Initialize search issues.
 		local
-			l_texts: ARRAYED_LIST [STRING_GENERAL]
+			l_texts: ARRAYED_LIST [STRING_32]
 		do
 			create l_texts.make (items_and_tabs.count)
 			from
@@ -541,7 +541,7 @@ feature {NONE}  --Implementation attributes.
 	internal_text_box: EV_TEXT_FIELD
 			-- Text field for search input.
 
-	text_finder: SD_TEXT_FINDER
+	text_finder: SD_TEXT_FINDER [STRING_32]
 			-- Find text.
 
 	internal_shared: SD_SHARED

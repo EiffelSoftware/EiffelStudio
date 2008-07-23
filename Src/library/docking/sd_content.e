@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			a_title_set: internal_unique_title /= Void
 			a_pixmap_set: a_pixmap = internal_pixmap
 			state_not_void: internal_state /= Void
-			a_unique_title_set: a_unique_title = internal_unique_title
+			a_unique_title_set: a_unique_title.as_string_32.is_equal (internal_unique_title)
 			long_title_not_void: long_title /= Void
 			short_title_not_void: short_title /= Void
 		end
@@ -85,10 +85,10 @@ feature -- Access
 			result_valid: Result = internal_unique_title
 		end
 
-	long_title: STRING_GENERAL
+	long_title: STRING_32
 			-- Client programmer's widget's long title. Which is shown at SD_TITLE_BAR.
 
-	short_title: STRING_GENERAL
+	short_title: STRING_32
 			-- Client programmer's widget's short title. Which is shown at SD_TAB_STUB.		
 
 	pixmap: like internal_pixmap is
@@ -100,13 +100,13 @@ feature -- Access
 			result_valid: Result = internal_pixmap
 		end
 
-	description: STRING_GENERAL
+	description: STRING_32
 			-- When show zone navigation dialog, we use this description if exist.
 
-	detail: STRING_GENERAL
+	detail: STRING_32
 			-- When show zone navigation dialog, we use this detail if exist.
 
-	tab_tooltip: STRING_GENERAL
+	tab_tooltip: STRING_32
 			-- Tool tip displayed on notebook tab.
 
 	pixel_buffer: like internal_pixel_buffer is
@@ -229,7 +229,7 @@ feature -- Set
 			long_title := a_long_title
 			internal_state.change_title (a_long_title, Current)
 		ensure
-			set: a_long_title = long_title
+			set: a_long_title.as_string_32.is_equal (long_title)
 		end
 
 	set_short_title (a_short_title: STRING_GENERAL)	is
@@ -240,7 +240,7 @@ feature -- Set
 			short_title := a_short_title
 			internal_state.change_title (a_short_title, Current)
 		ensure
-			set: a_short_title = short_title
+			set: a_short_title.as_string_32.is_equal (short_title)
 		end
 
 	set_unique_title (a_unique_title: STRING_GENERAL) is
@@ -251,7 +251,7 @@ feature -- Set
 		do
 			internal_unique_title := a_unique_title
 		ensure
-			set: unique_title = a_unique_title
+			set: unique_title.is_equal (a_unique_title.as_string_32)
 		end
 
 	set_pixmap (a_pixmap: like internal_pixmap) is
@@ -857,7 +857,7 @@ feature {NONE}  -- Implemention.
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 
-	internal_unique_title: STRING_GENERAL
+	internal_unique_title: STRING_32
 			-- The internal_user_widget's internal_unique_title.
 
 	internal_pixmap: EV_PIXMAP

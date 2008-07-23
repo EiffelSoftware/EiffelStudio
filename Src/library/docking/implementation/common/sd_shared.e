@@ -529,7 +529,7 @@ feature -- Constants
 	Auto_hide_tab_stub_show_delay: INTEGER is 1000
 			-- Auto hide tab stub delay time in milliseconds.
 
-	Editor_place_holder_content_name: STRING_GENERAL is
+	Editor_place_holder_content_name: STRING_32 is
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
 		once
 			Result := "docking manager editor place holder"

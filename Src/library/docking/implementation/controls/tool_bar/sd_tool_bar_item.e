@@ -123,7 +123,7 @@ feature -- Properties
 	is_displayed: BOOLEAN
 			-- If it is displayed on SD_TOOL_BAR_ZONE.
 
-	description: STRING_GENERAL
+	description: STRING_32
 			-- Description when use SD_TOOL_BAR_CUSTOMIZE_DIALOG to customize SD_TOOL_BAR.
 
 	set_description (a_description: STRING_GENERAL) is
@@ -133,7 +133,7 @@ feature -- Properties
 		do
 			description := a_description
 		ensure
-			set: description = a_description
+			set: description.is_equal (a_description.as_string_32)
 		end
 
 	enable_displayed is
@@ -183,7 +183,7 @@ feature -- Properties
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name which is used for store configuration
 			-- This name should be fixed in all locales.
 
@@ -194,7 +194,7 @@ feature -- Properties
 		do
 			name := a_name
 		ensure
-			set: name = a_name
+			set: name.is_equal (a_name.as_string_32)
 		end
 
 	set_pebble_function (a_pebble: like pebble_function) is

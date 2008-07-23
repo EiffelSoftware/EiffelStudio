@@ -96,9 +96,13 @@ feature -- Command
 	set_tool_tip (a_text: STRING_GENERAL) is
 			-- Set `tool_tip' with `a_text'
 		do
-			tool_tip := a_text
+			if a_text /= Void then
+				tool_tip := a_text
+			else
+				tool_tip := Void
+			end
 		ensure
-			set: tool_tip = a_text
+			set: a_text /= Void implies tool_tip.is_equal (a_text.as_string_32)
 		end
 
 	clear_pressed_flag is
@@ -185,7 +189,7 @@ feature -- Query
 			Result := parent.height
 		end
 
-	tool_tip: STRING_GENERAL
+	tool_tip: STRING_32
 			-- Tool tip
 
 	screen_x: INTEGER is
@@ -233,7 +237,7 @@ feature -- Query
 
 feature -- Properties
 
-	text: STRING_GENERAL
+	text: STRING_32
 			-- Text shown on Current.
 
 	set_text (a_text: STRING_GENERAL) is
@@ -244,7 +248,7 @@ feature -- Properties
 			text := a_text
 			update_minmum_size
 		ensure
-			set: a_text = text
+			set: a_text.as_string_32.is_equal (text)
 		end
 
 	pixmap: EV_PIXMAP

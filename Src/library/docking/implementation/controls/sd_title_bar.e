@@ -109,7 +109,7 @@ feature -- Command
 			internal_title.set_title (a_title)
 			internal_title.refresh
 		ensure
-			set: internal_title.title = a_title
+			set: internal_title.title.is_equal (a_title.as_string_32)
 		end
 
 	set_stick (a_stick: BOOLEAN) is
@@ -312,7 +312,7 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING_GENERAL is
+	title: STRING_32 is
 			-- Title
 		do
 			Result := internal_title.title

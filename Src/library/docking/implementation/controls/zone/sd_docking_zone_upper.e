@@ -129,7 +129,7 @@ feature -- Redefine
 			Result := notebook.is_maximized
 		end
 
-	title: STRING_GENERAL is
+	title: STRING_32 is
 			-- Redefine
 		do
 			Result := notebook.item_text (internal_content)

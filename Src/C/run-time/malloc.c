@@ -3555,6 +3555,7 @@ rt_private int trigger_smart_gc_cycle (void)
 		}
 		TRIGGER_GC_UNLOCK;
 		EIF_EXIT_C;
+		RTGC;
 		return result;
 	} else {
 		return result;
@@ -3599,6 +3600,7 @@ rt_private int trigger_gc_cycle (void)
 		}
 		TRIGGER_GC_UNLOCK;
 		EIF_EXIT_C;
+		RTGC;
 		return result;
 	} else {
 		return 0;

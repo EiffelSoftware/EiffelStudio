@@ -1,0 +1,12 @@
+test_name non-conform-infinite-loop
+test_description Compiler goes into an infinite loop with certain combinations of inherit {NONE} and expanded classes.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw one.e $CLUSTER one.e
+copy_raw two.e $CLUSTER two.e
+
+compile_melted
+compile_result 	ok
+
+test_end

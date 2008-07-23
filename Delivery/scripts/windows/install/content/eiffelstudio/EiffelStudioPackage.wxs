@@ -29,7 +29,7 @@
 			<Component Id="Comp.studio_registries" Guid="E6817659-E601-42F7-940B-5B8B9CC50AA3" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.eiffel" Root="HKLM" Key="Software\ISE\$(var.ProductKey)" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ise_eiffel" Name="ISE_EIFFEL" Value="[INSTALLDIR]" Type="string"/>
-					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[C_CONFIG_NAME]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_lang" Name="ISE_LANG" Value="[ISELANG]" Type="string"/>
 				</RegistryKey>
@@ -267,6 +267,10 @@
 			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
 			<Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
+			<?ifdef Enterprise?>
+				<Custom Action="PrepareInstallCdKey" Before="InstallCdKey"><![CDATA[NOT Installed]]></Custom>
+				<Custom Action="InstallCdKey" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom> 
+			<?endif?>
 			<Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
 		</InstallExecuteSequence>
 		<!-- END INSTALL SEQUENCING -->

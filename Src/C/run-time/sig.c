@@ -791,17 +791,19 @@ rt_shared void initsig(void)
 #ifdef EIF_THREADS
 	}
 #endif
-
 #if defined(HAS_SIGALTSTACK) && defined(SIGSEGV)
 #ifdef EIF_THREADS
 	if (eif_thr_is_root()) {
 #endif
 		/* To make sure that stack overflow are properly handled, we allocate
 		 * a stack for signal handling where handler will be executed when
-		 * receiving a SIGSEGV. */
-	c_sig_stk.ss_sp = eif_rt_xcalloc(SIGSTKSZ, 1);	
+		 * receiving a SIGSEGV.
+		 * By default we allocate 4 times the default SIGSTKSZ which has
+		 * been shown to be enough. See eweasel test#excep016 as a test to
+		 * see if this is good enough. */
+	c_sig_stk.ss_sp = eif_rt_xcalloc(4 * SIGSTKSZ, 1);	
 	c_sig_stk.ss_flags = 0;
-	c_sig_stk.ss_size = SIGSTKSZ;
+	c_sig_stk.ss_size = 4 * SIGSTKSZ;
 
 	if (sigaltstack(&c_sig_stk, NULL) == 0) {
 		struct sigaction action;

@@ -546,7 +546,8 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	 * to EX_RETY to signal it has been retried. Note that the setjmp buffer
 	 * address is kept.
 	 */
-	memcpy (last_item, rout_vect, sizeof(struct ex_vect));
+	/* We use `memmove' since `rout_vect' and `last_item' could be the same. */
+	memmove (last_item, rout_vect, sizeof(struct ex_vect));
 	last_item->ex_type = EX_RETY;		/* Signals a retry */
 
 	/* Pop off the EN_ILVL record on the Eiffel trace stack. This record was
@@ -1059,7 +1060,8 @@ rt_public void exresc(struct ex_vect *rout_vect)
 		return;								/* If exception is ignored */
 	}
 
-	memcpy (trace, rout_vect, sizeof(struct ex_vect));
+	/* We use `memmove' since `rout_vect' and `trace' could be the same. */
+	memmove (trace, rout_vect, sizeof(struct ex_vect));
 	trace->ex_type = EX_RESC;		/* Physical entry in rescue clause */
 	trace->ex_rescue = 0;			/* Meaningless from now on */
 	trace->ex_retry = 0;			/* So is this */

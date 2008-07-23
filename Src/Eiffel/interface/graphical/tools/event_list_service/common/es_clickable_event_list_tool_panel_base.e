@@ -178,8 +178,6 @@ feature {NONE} -- Basic operations
 
 	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
 			-- <Precursor>
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
 				if l_item.last_picked_item = 0 then

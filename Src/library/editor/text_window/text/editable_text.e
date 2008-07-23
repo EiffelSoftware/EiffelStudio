@@ -202,8 +202,11 @@ feature -- Basic Operations
 			if not has_selection then
 				set_selection_cursor (cursor)
 			end
-			history.record_symbol (selection_start, selection_end, "--")
 			symbol_selection(selection_start, selection_end, "--")
+			if symboled_lines.count > 0 then
+					-- Some was done.
+				history.record_symbol (symboled_lines, "--")
+			end
 			ignore_cursor_moves := False
 		end
 
@@ -292,8 +295,11 @@ feature -- Basic Operations
 			if not has_selection then
 				set_selection_cursor (cursor)
 			end
-			history.record_symbol (selection_start, selection_end, tabulation_symbol)
 			symbol_selection(selection_start, selection_end, tabulation_symbol)
+			if symboled_lines.count > 0 then
+					-- something was done
+				history.record_symbol (symboled_lines, tabulation_symbol)
+			end
 			ignore_cursor_moves := False
 		end
 
@@ -711,6 +717,7 @@ feature {UNDO_CMD} -- Operations on selected text
 
 			start_pos := start_selection.x_in_characters
 			end_pos := end_selection.x_in_characters
+			create symboled_lines.make
 			from
 				ln := start_selection.line
 				y_line := start_selection.y_in_lines
@@ -723,6 +730,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					-- Nothing is added in front of an empty line.
 				if not line_image.is_empty then
 					record_modified_line (ln)
+					symboled_lines.extend(ln.index)
 
 						-- Add the commentary symbol in front of the line
 					line_image.prepend (symbol)
@@ -772,6 +780,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					-- Nothing is added in front of an empty line.
 				if not line_image.is_empty then
 					record_modified_line (ln)
+					symboled_lines.extend(ln.index)
 
 						-- Add the commentary symbol in front of the line
 					line_image.prepend(symbol)
@@ -1876,6 +1885,11 @@ feature {NONE} -- Implementation
 			-- numbers of lines which have been modified by latest
 			-- call to `unsymbol_selection'.
 			-- Used by undo commands for unindent and uncomment.
+
+	symboled_lines: LINKED_LIST[INTEGER]
+			-- numbers of lines which have been modified by latest
+			-- call to `symbol_selection'.
+			-- Used by undo commands for indent and comment.
 
 feature {TEXT_CURSOR}
 

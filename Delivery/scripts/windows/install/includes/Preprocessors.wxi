@@ -32,9 +32,9 @@
         <?define LicenseFile = "gpl.rtf"?>
       <?endif?>
       <?ifdef x64?>
-        <?define ProductGuid = "73C573FC-D414-4135-BAB4-4E951AB1001D" ?>
+        <?define ProductGuid = "3030A0BA-A13D-4C9D-BF6C-2AFB4D4F1C46" ?>
       <?else?>
-        <?define ProductGuid = "D1F9F7D8-CFCC-4048-B35A-134CDF21513F" ?>
+        <?define ProductGuid = "204A9FC9-E345-4FC7-93E3-1439C41A914B" ?>
       <?endif?>
       <?define UpgradeGuid = "C75AD30A-754A-4d6e-8E39-E48458C98315" ?>
       <?define Product = "EiffelStudio" ?>

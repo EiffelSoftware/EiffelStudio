@@ -17,8 +17,8 @@
     <?ifdef Enterprise?>
       <CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" Return="check"  Execute="immediate"/>
       <CustomAction Id="ValidateCdKey" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" Return="check"  Execute="immediate"/>
-      <CustomAction Id="PrepareInstallCdKey" BinaryKey="setup.dll" DllEntry="prepare_install_cd_key" Execute="immediate" Return="check"/>
-      <CustomAction Id="InstallCdKey" BinaryKey="setup.dll" DllEntry="install_cd_key" Impersonate="no" Execute="deferred" Return="check"/>
+      <CustomAction Id="PrepareInstallCdKey" BinaryKey="setup.dll" DllEntry="prepare_install_cd_key" Execute="immediate"/>
+      <CustomAction Id="InstallCdKey" BinaryKey="setup.dll" DllEntry="install_cd_key" Impersonate="no" Execute="deferred"/>
     <?endif?>
     <!-- END CUSTOM ACTIONS -->
 

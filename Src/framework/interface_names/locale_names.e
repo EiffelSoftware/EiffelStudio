@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	languages: HASH_TABLE [STRING_GENERAL, STRING] is
+	languages: HASH_TABLE [STRING_32, STRING] is
 		once
 			create Result.make (130)
 			Result.force (locale.translation ("Afrikaans"), "af")
@@ -139,7 +139,7 @@ feature -- Access
 			Result.force (locale.translation ("Zulu/isiZulu"), "zu")
 		end
 
-	locales: HASH_TABLE [STRING_GENERAL, STRING] is
+	locales: HASH_TABLE [STRING_32, STRING] is
 		once
 			create Result.make (300)
 			Result.force (locale.translation ("Afrikaans (South Africa)"), "af_za")
@@ -361,7 +361,7 @@ feature -- Access
 			l_array: like a_array_of_id
 			i: INTEGER
 			l_displayed_name: STRING_GENERAL
-			l_langs, l_locales: HASH_TABLE [STRING_GENERAL, STRING]
+			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
 			l_value: STRING
 		do
 			create Result.make (a_array_of_id.count)

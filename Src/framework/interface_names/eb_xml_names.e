@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	err_attribute_missing (a_attr: STRING_GENERAL): STRING_GENERAL is
+	err_attribute_missing (a_attr: STRING_GENERAL): STRING_32 is
 		require
 			a_attr_attached: a_attr /= Void
 		do
@@ -21,7 +21,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	err_invalid_attribute (a_attribute: STRING_GENERAL): STRING_GENERAL is
+	err_invalid_attribute (a_attribute: STRING_GENERAL): STRING_32 is
 			-- Invalid attribute error
 		require
 			a_attribute_attached: a_attribute /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	err_invalid_tag_position (a_tag: STRING_GENERAL): STRING_GENERAL is
+	err_invalid_tag_position (a_tag: STRING_GENERAL): STRING_32 is
 			-- Invalid tag error
 		require
 			a_tag_attached: a_tag /= Void
@@ -41,7 +41,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	err_boolean_value_invalid (a_attr_name: STRING_GENERAL; a_value: STRING_GENERAL): STRING_GENERAL is
+	err_boolean_value_invalid (a_attr_name: STRING_GENERAL; a_value: STRING_GENERAL): STRING_32 is
 		require
 			a_attr_name_attached: a_attr_name /= Void
 			a_value_attached: a_value /= Void

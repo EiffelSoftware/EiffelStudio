@@ -660,8 +660,8 @@ feature {NONE} -- Sort handling
 				end
 			end
 			if l_last_sort_column = 0 then
-				l_last_sort_column := object_column_index
-				l_last_sort_order := {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order
+				l_last_sort_column := delta_column_index
+				l_last_sort_order := {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order
 			end
 
 			a_map.sort (create {DS_QUICK_SORTER [like row_data]}.make (create {AGENT_BASED_EQUALITY_TESTER [like row_data]}.make (agent (a_data, a_other_data: like row_data; a_column, a_order: INTEGER): BOOLEAN

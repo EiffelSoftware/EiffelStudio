@@ -34,6 +34,7 @@ feature -- Services
 			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
 			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
+			a_container.register_with_activator ({EIFFEL_TEST_SUITE_S}, agent create_testing_servive, False)
 		end
 
 feature {NONE} -- Help registration
@@ -106,6 +107,14 @@ feature {NONE} -- Factory
 			create {WIZARD_ENGINE} Result
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	create_testing_servive: ?EIFFEL_TEST_SUITE_S
+			-- Create test suite service
+		do
+			create {EIFFEL_TEST_SUITE} Result.make
+		ensure
+			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 ;indexing

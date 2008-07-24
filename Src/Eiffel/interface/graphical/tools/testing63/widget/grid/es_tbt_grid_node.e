@@ -1,0 +1,100 @@
+indexing
+	description: "[
+		Objects that represent a tree node of {TAG_BASED_TREE} associated with a grid row for
+		{ES_TBT_GRID}.
+		
+		Object redefines insertion and removal of child nodes and items from {TAG_BASED_TREE_NODE}. That
+		way the grid is kept synchronized with the underlaying tree.
+		
+		See {TAG_BASED_TREE_NODE} and {ES_TBT_GRID_NODE_CONTAINER} for more information.
+	]"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	ES_TBT_GRID_NODE [G -> TAGABLE_I]
+
+inherit
+	TAG_BASED_TREE_NODE [G]
+		rename
+			make as make_node
+		undefine
+			child_for_token,
+			add_child,
+			add_item,
+			remove_child,
+			remove_item
+		redefine
+			parent,
+			tree
+		end
+
+	ES_TBT_GRID_NODE_CONTAINER [G]
+		undefine
+			token,
+			row
+		redefine
+			parent
+		end
+
+	ES_TBT_GRID_DATA [G]
+
+create
+	make
+
+feature {NONE} -- Initialize
+
+	make (a_row: like row; a_parent: like parent; a_token: like token)
+			-- Initialize `Current'
+			--
+			-- `a_row': Row representing node.
+			-- `a_parent': Parent node for `Current'.
+			-- `a_token': Token represented by node.
+		require
+			a_token_valid: is_valid_token (a_token)
+		do
+			make_node (a_parent, a_token)
+			row := a_row
+			row.set_data (Current)
+		ensure
+			parent_set: parent = a_parent
+			token_set: token.is_equal (a_token)
+			not_cached: not is_evaluated
+			descending_tags_empty: descending_tags.is_empty
+			item_count_zero: item_count = 0
+		end
+
+feature -- Access
+
+	parent: !ES_TBT_GRID_NODE_CONTAINER [G]
+			-- <Precursor>
+
+feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
+
+	tree: !ES_TBT_GRID [G]
+			-- <Precursor>
+
+feature {NONE} -- Access
+
+	first_child_index: INTEGER
+			-- <Precursor>
+		do
+			Result := row.index + 1
+		end
+
+	last_item_index: INTEGER
+			-- <Precursor>
+		do
+			Result := row.index + row.subrow_count_recursive + 1
+		end
+
+feature -- Basic functionality
+
+	populate_row (a_factory: ES_TBT_GRID_LAYOUT [G])
+			-- <Precursor>
+		do
+			a_factory.populate_node_row (row, Current)
+		end
+
+end

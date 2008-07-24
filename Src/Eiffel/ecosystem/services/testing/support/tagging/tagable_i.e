@@ -18,6 +18,15 @@ inherit
 
 feature -- Access
 
+	name: !STRING
+			-- Name describing `Current'
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			not_empty: not Result.is_empty
+		end
+
 	tags: !DS_LINEAR [!STRING]
 			-- List of tags
 		require

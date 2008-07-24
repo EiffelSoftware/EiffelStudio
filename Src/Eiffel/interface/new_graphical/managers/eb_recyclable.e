@@ -32,11 +32,13 @@ feature -- Basic operations
 		local
 			l_pool: like internal_recycle_pool
 			l_recycled: ARRAYED_LIST [EB_RECYCLABLE]
+			l_recycling: BOOLEAN
 		do
 			if not is_recycled and not is_recycling then
 					-- Prevents multiple calls.
 
 				is_recycling := True
+				l_recycling := True
 
 					-- Recycled pooled objects
 				l_pool := internal_recycle_pool
@@ -48,9 +50,8 @@ feature -- Basic operations
 								l_entity: ANY
 								l_recycable: EB_RECYCLABLE
 								l_ev: EV_ANY
-								retried: BOOLEAN
 							do
-								if not retried and a_item /= Void then
+								if a_item /= Void then
 									l_entity := reveal_recyclable_item (a_item)
 									if l_entity /= Void then
 										l_recycable ?= l_entity
@@ -67,9 +68,6 @@ feature -- Basic operations
 										end
 									end
 								end
-							rescue
-								retried := True
-								retry
 							end).call ([l_pool.item, l_recycled])
 						l_pool.forth
 					end
@@ -129,6 +127,12 @@ feature -- Basic operations
 		ensure
 			recycled: is_recycling or else is_recycled
 			internal_recycle_pool_detached: is_recycled implies internal_recycle_pool = Void
+		rescue
+			if l_recycling then
+					-- Recycling was actually performed so set the state flags, even though there was an exception.
+				is_recycling := False
+				is_recycled := True
+			end
 		end
 
 feature {NONE} -- Basic operations

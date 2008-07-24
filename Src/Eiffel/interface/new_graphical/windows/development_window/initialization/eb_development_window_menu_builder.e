@@ -1105,6 +1105,8 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
 			insert_show_tool_menu_item (Result, {ES_TESTING_RESULT_TOOL})
+			Result.extend (create {EV_MENU_SEPARATOR})
+			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL_63})
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then

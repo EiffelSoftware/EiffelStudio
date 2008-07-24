@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (container_widget, True)
 				-- Set minimum size of container widget so that inserted items do no resize on entry.
---			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, -1, -1)
+--			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, 1, 1)
 			Precursor
 		end
 
@@ -174,6 +174,7 @@ feature {EV_ANY_I} -- Implementation
 				{EV_GTK_EXTERNALS}.gtk_widget_queue_resize (c_object)
 				{EV_GTK_EXTERNALS}.g_list_free (glist)
 			end
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (container_widget)
 		end
 
 	gtk_container_remove (a_container, a_child: POINTER)

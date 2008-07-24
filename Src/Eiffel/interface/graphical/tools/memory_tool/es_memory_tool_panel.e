@@ -652,6 +652,8 @@ feature {NONE} -- Sort handling
 		local
 			l_last_sort_column: INTEGER
 			l_last_sort_order: INTEGER
+			l_sorter: DS_QUICK_SORTER [like row_data]
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like row_data]
 		do
 			if is_initialized then
 				l_last_sort_column := grid_wrapper.last_sorted_column
@@ -663,24 +665,64 @@ feature {NONE} -- Sort handling
 				l_last_sort_column := delta_column_index
 				l_last_sort_order := {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order
 			end
-
-			a_map.sort (create {DS_QUICK_SORTER [like row_data]}.make (create {AGENT_BASED_EQUALITY_TESTER [like row_data]}.make (agent (a_data, a_other_data: like row_data; a_column, a_order: INTEGER): BOOLEAN
-				do
-					inspect a_column
-					when object_column_index then
-						Result := a_data.name < a_other_data.name
-					when count_column_index then
-						Result := a_data.instances < a_other_data.instances
-					when delta_column_index then
-						Result := a_data.delta < a_other_data.delta
-					end
-					if a_order /= {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order then
-						Result := not Result
-					end
-				end (?, ?, l_last_sort_column, l_last_sort_order))))
+			inspect
+				l_last_sort_column
+			when object_column_index then create l_agent_sorter.make (agent sort_on_type_name (?, ?, l_last_sort_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order))
+			when count_column_index then create l_agent_sorter.make (agent sort_on_count (?, ?, l_last_sort_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order))
+			when delta_column_index then create l_agent_sorter.make (agent sort_on_delta (?, ?, l_last_sort_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order))
+			end
+			create l_sorter.make (l_agent_sorter)
+			l_sorter.sort (a_map)
 		end
 
 feature {NONE} -- Analysis
+
+	sort_on_type_name (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+			-- Compare u, v.
+		require
+			u_not_void: u /= Void
+			v_not_void: v /= Void
+		local
+			l_string1, l_string2: STRING
+		do
+			l_string1 := u.name
+			l_string2 := v.name
+			check
+				l_string1_not_void: l_string1 /= Void
+				l_string2_not_void: l_string2 /= Void
+			end
+			if sorting_order then
+				Result := l_string1 < l_string2
+			else
+				Result := l_string2 < l_string1
+			end
+		end
+
+	sort_on_count (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+			-- Compare u, v.
+		require
+			u_not_void: u /= Void
+			v_not_void: v /= Void
+		do
+			if sorting_order then
+				Result := u.instances < v.instances
+			else
+				Result := v.instances < u.instances
+			end
+		end
+
+	sort_on_delta (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+			-- Compare u, v.
+		require
+			u_not_void: u /= Void
+			v_not_void: v /= Void
+		do
+			if sorting_order then
+				Result := u.delta < v.delta
+			else
+				Result := v.delta < u.delta
+			end
+		end
 
 	calculate_memory_data (a_refresh: BOOLEAN) is
 			-- Calculates and analyzes the memory data.

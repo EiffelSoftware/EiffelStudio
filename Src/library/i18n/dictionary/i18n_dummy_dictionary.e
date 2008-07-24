@@ -31,7 +31,7 @@ feature -- Entries
 			Result := False -- Let's be very clear on this..
 		end
 
-	has_plural(original_singular, original_plural: STRING_32; plural_number: INTEGER): BOOLEAN is
+	has_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN is
 			-- Always False, as we don't have any entries
 		do
 			Result := False
@@ -39,13 +39,13 @@ feature -- Entries
 
 feature -- Retrieval
 
-	singular (original_singular: STRING_32): STRING_32 is
+	singular (original_singular: STRING_GENERAL): STRING_32 is
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""
 		end
 
-	plural(original_singular, original_plural: STRING_32; plural_number: INTEGER): STRING_32 is
+	plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""

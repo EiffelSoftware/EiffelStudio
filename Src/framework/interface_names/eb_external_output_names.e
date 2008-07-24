@@ -13,28 +13,28 @@ inherit
 
 feature -- Names
 
-	t_command_name: STRING_GENERAL is 				 do Result := locale.translation ("Command name: ") end
-	l_no_command_is_running: STRING_GENERAL is 		 do Result := locale.translation ("No command is running") end
-	f_Input_text_field: STRING_GENERAL is 			 do Result := locale.translation ("Type input data here") end
-	f_Input_send_button: STRING_GENERAL is    		 do Result := locale.translation ("Send input data into the running command") end
-	f_Terminate_command_button: STRING_GENERAL is 	 do Result := locale.translation ("Terminate running command") end
-	f_start_command_button: STRING_GENERAL is 		 do Result := locale.translation ("Start command") end
-	f_run_process_hidden_button: STRING_GENERAL is	 do Result := locale.translation ("Run command hidden") end
-	f_edit_cmd_detail_button: STRING_GENERAL is		 do Result := locale.translation ("Edit command") end
-	f_send_input_button: STRING_GENERAL is			 do Result := locale.translation ("Send input to command") end
-	f_delete_command: STRING_GENERAL is				 do Result := locale.translation ("Delete command") end
-	f_clear_output: STRING_GENERAL is				 do Result := locale.translation ("Clear output") end
-	l_launching: STRING_GENERAL is					 do Result := locale.translation ("Launching...") end
-	l_command_has_been_terminated: STRING_GENERAL is do Result := locale.translation ("Command terminated") end
-	l_launch_failed: STRING_GENERAL is				 do Result := locale.translation ("Launch failed") end
-	l_command_is_running: STRING_GENERAL is			 do Result := locale.translation ("Command is running") end
-	l_command: STRING_GENERAL is					 do Result := locale.translation ("Command") end
-	l_output: STRING_GENERAL is						 do Result := locale.translation ("Output") end
-	l_input: STRING_GENERAL is						 do Result := locale.translation ("Input") end
-	f_save_output_button: STRING_GENERAL is 		 do Result := locale.translation ("Save output to file") end
-	f_new_cmd_detail_button: STRING_GENERAL is		 do Result := locale.translation ("Add a new command") end
+	t_command_name: STRING_32 is 				 do Result := locale.translation ("Command name: ") end
+	l_no_command_is_running: STRING_32 is 		 do Result := locale.translation ("No command is running") end
+	f_Input_text_field: STRING_32 is 			 do Result := locale.translation ("Type input data here") end
+	f_Input_send_button: STRING_32 is    		 do Result := locale.translation ("Send input data into the running command") end
+	f_Terminate_command_button: STRING_32 is 	 do Result := locale.translation ("Terminate running command") end
+	f_start_command_button: STRING_32 is 		 do Result := locale.translation ("Start command") end
+	f_run_process_hidden_button: STRING_32 is	 do Result := locale.translation ("Run command hidden") end
+	f_edit_cmd_detail_button: STRING_32 is		 do Result := locale.translation ("Edit command") end
+	f_send_input_button: STRING_32 is			 do Result := locale.translation ("Send input to command") end
+	f_delete_command: STRING_32 is				 do Result := locale.translation ("Delete command") end
+	f_clear_output: STRING_32 is				 do Result := locale.translation ("Clear output") end
+	l_launching: STRING_32 is					 do Result := locale.translation ("Launching...") end
+	l_command_has_been_terminated: STRING_32 is	 do Result := locale.translation ("Command terminated") end
+	l_launch_failed: STRING_32 is				 do Result := locale.translation ("Launch failed") end
+	l_command_is_running: STRING_32 is			 do Result := locale.translation ("Command is running") end
+	l_command: STRING_32 is						 do Result := locale.translation ("Command") end
+	l_output: STRING_32 is						 do Result := locale.translation ("Output") end
+	l_input: STRING_32 is						 do Result := locale.translation ("Input") end
+	f_save_output_button: STRING_32 is 			 do Result := locale.translation ("Save output to file") end
+	f_new_cmd_detail_button: STRING_32 is		 do Result := locale.translation ("Add a new command") end
 
-	l_command_has_exited_with_code (a_code: INTEGER): STRING_GENERAL is
+	l_command_has_exited_with_code (a_code: INTEGER): STRING_32 is
 		do
 			Result := locale.formatted_string (locale.translation ("Command has exited with code $1"), [a_code.out])
 		end

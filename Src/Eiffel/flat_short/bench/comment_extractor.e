@@ -35,7 +35,8 @@ feature -- Query
 			-- `a_show_impl': True if the feature's implmentation comments should be displayed; False otherwise.
 			-- `Result': A list of tokens or Void if no comments were found.
 		local
-			l_parent_comments: like feature_inherited_comments
+			l_parent_comments: ?EIFFEL_COMMENTS
+			l_parent_feature: ?like find_ancestors_feature
 			l_comments: EIFFEL_COMMENTS
 			l_comment: EIFFEL_COMMENT_LINE
 			l_string: STRING_8
@@ -69,14 +70,16 @@ feature -- Query
 											-- The comment is actually a inherited comment reference
 										if original_comment_reg_ex.match_count = 3 then
 												-- The comment contains a inherited type specifier, take the comment from a particular type.
-											l_parent_comments := feature_inherited_comments (a_feature, original_comment_reg_ex.captured_substring (2))
+											l_parent_feature := find_ancestors_feature (a_feature, original_comment_reg_ex.captured_substring (2))
 										else
-											l_parent_comments := feature_inherited_comments (a_feature, Void)
+											l_parent_feature := find_ancestors_feature (a_feature, Void)
 										end
-
-										if l_parent_comments /= Void and then not l_parent_comments.is_empty then
-												-- Add parent comments and re-adjust the cursor index to skip the parent comments.
-											Result.append (l_parent_comments)
+										if l_parent_feature /= Void then
+											l_parent_comments := feature_comments_ex (l_parent_feature, False)
+											if l_parent_comments /= Void and then not l_parent_comments.is_empty then
+													-- Add parent comments and re-adjust the cursor index to skip the parent comments.
+												Result.append (l_parent_comments)
+											end
 										end
 									else
 											-- Recreate the line to remove all stored position information.
@@ -92,10 +95,14 @@ feature -- Query
 						end
 					else
 							-- There are no comments, try the parent
-						l_parent_comments := feature_inherited_comments (a_feature, Void)
-						if l_parent_comments /= Void and then not l_parent_comments.is_empty then
-							Result.append (l_parent_comments)
+						l_parent_feature := find_ancestors_feature (a_feature, Void)
+						if l_parent_feature /= Void then
+							l_parent_comments := feature_comments_ex (l_parent_feature, False)
+							if l_parent_comments /= Void and then not l_parent_comments.is_empty then
+								Result.append (l_parent_comments)
+							end
 						end
+
 					end
 
 					if not Result.is_empty then
@@ -133,62 +140,18 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	feature_inherited_comments (a_feature: !E_FEATURE; a_parent_name: ?STRING_8): ?EIFFEL_COMMENTS
-			-- Attempts to extract the inherited comments from a given feature
+	find_ancestors_feature (a_feature: !E_FEATURE; a_parent_name: ?STRING_8): ?E_FEATURE
+			-- Attepts to locate an ancestor feature. This also respects ancestor features for attributes.
 			--
-			-- `a_feature': The feature to extract the comments from.
+			-- `a_feature': The feature to locate a first parent from.
 			-- `a_parent_name': An optional parent class name to use when extracting inherited comments.
-			-- `Result': A list of tokens or Void if not comments were located.
+			-- `Result': A parent feature or Void if no match could be found.
 		require
 			not_a_parent_name_is_empty: a_parent_name /= Void implies not a_parent_name.is_empty
-		local
-			l_parents: LIST [CLASS_C]
-			l_parent_class: CLASS_C
-			l_rout_id_set: ROUT_ID_SET
-			l_count, i: INTEGER
-			l_parent_feature: E_FEATURE
 		do
-			l_parents := a_feature.precursors
-			if l_parents /= Void and then not l_parents.is_empty then
-					-- Iterate throught parents to locate a matching routine id
-				l_rout_id_set := a_feature.rout_id_set
-				from
-					l_parents.start
-				until
-					l_parents.after or
-					(Result /= Void and then not Result.is_empty)
-				loop
-					l_parent_class := l_parents.item
-					if l_parent_class /= Void then
-						if (a_parent_name = Void or else l_parent_class.name_in_upper.is_equal (a_parent_name)) then
-							from
-								l_parent_feature := Void
-								l_count := l_rout_id_set.count
-								i := 1
-							until
-								i > l_count or l_parent_feature /= Void
-							loop
-									-- Attempt to locate a parent feature and extract the comments for them.
-								l_parent_feature := l_parent_class.feature_with_rout_id (l_rout_id_set.item (i))
-								if {l_feature: !E_FEATURE} l_parent_feature then
-									Result := feature_comments_ex (l_feature, False)
-								end
-								i := i + 1
-							end
-						end
-					end
-					l_parents.forth
-				end
-
-				if a_parent_name /= Void and then l_parent_feature = Void then
-						-- The comment specification used a incorrect class name, so the redefined feature could not be located.
-					create Result.make
-					Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (" Unable to retrieve the comments from redefinition of {" + a_parent_name.as_upper + "}."))
-				end
+			if {l_class: CLASS_C} a_feature.associated_class then
+				Result := find_ancestors_feature_internal (a_feature, l_class, a_parent_name, create {ARRAYED_LIST [!CLASS_C]}.make (20))
 			end
-		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
 feature {NONE} -- Regular expressions
@@ -200,6 +163,56 @@ feature {NONE} -- Regular expressions
 			Result.compile ("^[\ \t]*<[\ \t]*[Pp][Rr][Ee][Cc][Uu][Rr][Ss][Oo][Rr][\ \t]*({([A-Z][A-Z_0-9]*)\}[\ \t]*>|>)[ \t]*$")
 		ensure
 			result_is_compiled: Result.is_compiled
+		end
+
+feature {NONE} -- Implementation: Query
+
+	find_ancestors_feature_internal (a_feature: !E_FEATURE; a_class: !CLASS_C; a_parent_name: ?STRING_8; a_processed: !ARRAYED_LIST [!CLASS_C]): ?E_FEATURE
+			-- Attepts to locate an ancestor feature. This also respects ancestor features for attributes.
+			--
+			-- `a_feature': The feature to locate a first parent from.
+			-- `a_class': A context class
+			-- `a_parent_name': An optional parent class name to use when extracting inherited comments.
+			-- `a_processed': The active list of processed parent classes.
+			-- `Result': A parent feature or Void if no match could be found.
+		require
+			a_feature_written_in_a_class: a_feature.associated_class = a_class
+			not_a_parent_name_is_empty: a_parent_name /= Void implies not a_parent_name.is_empty
+			not_a_processed_has_a_class: not a_processed.has (a_class)
+		local
+			l_rout_id_set: ROUT_ID_SET
+			l_parents: FIXED_LIST [CL_TYPE_A]
+			l_matched_parent: BOOLEAN
+			l_count, i: INTEGER
+		do
+			l_rout_id_set := a_feature.rout_id_set
+			l_parents := a_class.parents
+			if not l_parents.is_empty then
+				from l_parents.start until l_parents.after or Result /= Void or l_matched_parent loop
+					if {l_parent: CLASS_C} l_parents.item.associated_class and then not a_processed.has (l_parent) then
+							-- The parent class has not get been processed.
+						l_matched_parent := a_parent_name /= Void and then l_parent.name_in_upper.is_equal (a_parent_name)
+						if a_parent_name = Void or l_matched_parent then
+								-- Search matching parent for the associated feature
+							from
+								l_count := l_rout_id_set.count
+								i := 1
+							until
+								i > l_count or Result /= Void
+							loop
+								Result := l_parent.feature_with_rout_id (l_rout_id_set.item (i))
+								i := i + 1
+							end
+						end
+						a_processed.extend (l_parent)
+						if Result = Void and then not l_matched_parent then
+								-- If the requested parent name was match then this code should not be execute!
+							Result := find_ancestors_feature_internal (a_feature, l_parent, a_parent_name, a_processed)
+						end
+					end
+					l_parents.forth
+				end
+			end
 		end
 
 ;indexing

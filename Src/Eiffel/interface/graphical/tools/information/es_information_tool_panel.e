@@ -14,6 +14,7 @@ inherit
 			make,
 			internal_recycle,
 			create_mini_tool_bar_items,
+			on_after_initialized,
 			show
 		end
 
@@ -36,9 +37,24 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL} (a_window, a_tool)
-				-- Request EIS background visiting post project load.
-			register_action (eiffel_project.manager.load_agents, agent request_eis_visit)
+		end
+
+	on_after_initialized is
+			-- <Precursor>
+		do
+			Precursor {ES_DOCKABLE_TOOL_PANEL}
+
+			-- Request EIS background visiting post project load.
+			if eiffel_project.manager.is_project_loaded then
+				request_eis_visit
+			else
+				register_action (eiffel_project.manager.load_agents, agent request_eis_visit)
+			end
+
 			register_action (eiffel_project.manager.compile_stop_agents, agent request_eis_visit)
+
+			-- Request EIS background visiting when focusing in.
+			register_action (content.focus_in_actions, agent request_eis_visit)
 		end
 
 feature {NONE} -- User interface initialization
@@ -72,8 +88,6 @@ feature {NONE} -- User interface initialization
 					a_widget.auto_sweep_button.enable_select
 				end
 			end
-				-- Request EIS background visiting when focusing in.
-			register_action (content.focus_in_actions, agent request_eis_visit)
 		end
 
 feature -- Basic operations
@@ -216,7 +230,7 @@ feature {NONE} -- Implementation
 
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
-			
+
 	on_session_value_changed_agent: PROCEDURE [ANY, TUPLE [SESSION_I, STRING_8]]
 				-- Agent created in `build_tool_interface'
 

@@ -29,12 +29,13 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			class_name := a_class_name
-			create_internal_tags (0)
+			internal_tags := new_hash_set
 			create {!DS_ARRAYED_LIST [!EIFFEL_TEST_OUTCOME_I]} internal_outcomes.make (0)
 			add_implicit_tags
 		ensure
 			name_set: name = a_name
 			class_name_set: class_name = a_class_name
+			not_has_changed: not has_changed
 		end
 
 feature -- Access
@@ -69,24 +70,24 @@ feature -- Access
 			Result := name.hash_code
 		end
 
-	memento: !EIFFEL_TEST_MEMENTO_I
+	memento: !EIFFEL_TEST_MEMENTO_I is
+			-- <Precursor>
+		do
+			Result ?= internal_memento
+		end
 
 feature {NONE} -- Access
 
 	internal_tags: !DS_HASH_SET [!STRING]
 			-- Internal set of tags
 
-	implicit_tags_count: NATURAL_32
-			-- Number of implicit tags
-		do
-			Result := 1
-		end
-
 	internal_executor: ?EIFFEL_TEST_EXECUTOR_I
 			-- Internal storage for `executor'
 
 	internal_outcomes: !DS_LIST [like last_outcome]
 			-- Internal list of outcomes
+
+	internal_memento: ?EIFFEL_TEST_MEMENTO
 
 feature {NONE} -- Query
 
@@ -109,8 +110,11 @@ feature -- Status report
 	is_interface_usable: BOOLEAN = True
 			-- <Precursor>
 
-	has_changed: BOOLEAN = True
+	has_changed: BOOLEAN is
 			-- <Precursor>
+		do
+			Result := internal_memento /= Void
+		end
 
 	is_queued: BOOLEAN
 			-- <Precursor>
@@ -124,19 +128,13 @@ feature -- Status report
 			Result := not internal_outcomes.is_empty
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Status report
-
-	have_tags_changed: BOOLEAN
-			-- <Precursor>
-
 feature {ACTIVE_COLLECTION_I} -- Status setting
 
 	clear_changes is
 			-- <Precursor>
 		do
-
+			internal_memento := Void
 		end
-
 
 feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
@@ -146,10 +144,24 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			l_old_tags: like internal_tags
 		do
 			l_old_tags := internal_tags
-			create_internal_tags (a_list.count.to_natural_32 + implicit_tags_count)
+			internal_tags := new_hash_set
 			internal_tags.append (a_list)
 			add_implicit_tags
-			have_tags_changed := internal_tags.is_equal (l_old_tags)
+			if not l_old_tags.is_equal (internal_tags) then
+				create_memento
+				l_old_tags.do_all (agent (a_tag: !STRING)
+					do
+						if not internal_tags.has (a_tag) then
+							internal_memento.removed_tags.force (a_tag)
+						end
+					end)
+				internal_tags.do_all (agent (a_tag: !STRING; l_old: like internal_tags)
+					do
+						if not l_old.has (a_tag) then
+							internal_memento.added_tags.force (a_tag)
+						end
+					end (?, l_old_tags))
+			end
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
@@ -188,19 +200,27 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			tags_contain_outcome_tag: tags.has (outcome_tag)
 		end
 
+feature {EIFFEL_TEST_MEMENTO} -- Factory
+
+	new_hash_set: like internal_tags
+			-- Create new {DS_HASH_SET [!STRING]} with capacity `n' using a string equality tester.
+		do
+			create Result.make_default
+			Result.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? string_equality_tester)
+		end
+
 feature {NONE} -- Implementation
 
-	create_internal_tags (n: NATURAL)
-			-- Initialize new `internal_tags' with correct equality tester and capacity of `n'.
+	create_memento is
+			-- Create `internal_memento' to indicate that `Current' has changed.
 		do
-			create internal_tags.make (n.to_integer_32)
-			internal_tags.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? string_equality_tester)
+			create internal_memento.make (Current)
 		end
 
 	add_implicit_tags
 			-- Add implicit tags for `Current' to `internal_tags'.
 		do
-			internal_tags.force_last ({!STRING} #? "class." + class_name)
+			internal_tags.force_last ({!STRING} #? "class.{" + class_name + "}")
 			if is_outcome_available then
 				internal_tags.force_last (outcome_tag)
 			end

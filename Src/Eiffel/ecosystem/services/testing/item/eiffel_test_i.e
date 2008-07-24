@@ -107,15 +107,6 @@ feature -- Status report
 			Result := outcomes.last.is_fail
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Status report
-
-	have_tags_changed: BOOLEAN
-			-- Have tags changed during last call to `set_explicit_tags'?
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
 feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
 	set_explicit_tags (a_list: like tags)
@@ -126,7 +117,6 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 		deferred
 		ensure
 			tags_contains_list: a_list.for_all (agent tags.has)
-			changed_equals_tags_changed: have_tags_changed = (tags.is_equal (old (tags.twin)))
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting

@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			create test_class_map.make (0)
 			create test_routine_map.make_default
 			create modified_classes.make_default
+			modified_classes.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
 
 				-- Subscribe `Current' to project events
 			create l_project_factory
@@ -246,6 +247,9 @@ feature {NONE} -- Implementation: test map
 			if not is_updating_tests then
 				is_updating_tests := True
 				if is_project_initialized then
+						-- Evaluate all classes
+					modified_classes.extend_last (test_class_map.keys)
+
 					l_old_class_map := test_class_map
 					update_test_class_ancestor
 					if test_class_ancestor /= Void then
@@ -278,6 +282,7 @@ feature {NONE} -- Implementation: test map
 						end
 						l_old_class_map.forth
 					end
+					modified_classes.wipe_out
 				else
 					check
 							-- Note: this point should no be reached since it is not able to "unload" a project.
@@ -286,8 +291,6 @@ feature {NONE} -- Implementation: test map
 				end
 				is_updating_tests := False
 			end
-		ensure
-			modified_classes_empty: modified_classes.is_empty
 		end
 
 	update_test_class_ancestor is
@@ -429,8 +432,9 @@ feature {NONE} -- Implementation: test map
 							l_ftags := l_ctags
 						end
 						l_et.set_explicit_tags (l_ftags)
-						if l_et.have_tags_changed then
+						if l_et.has_changed then
 							test_changed_event.publish ([Current, l_et])
+							l_et.clear_changes
 						end
 						l_features.remove_found_item
 						l_cursor.forth
@@ -457,6 +461,7 @@ feature {NONE} -- Implementation: test map
 					end
 					l_et.set_explicit_tags (l_ftags)
 					test_routine_map.force (l_et, a_name + "." + l_features.key_for_iteration)
+					l_et.clear_changes
 					test_added_event.publish ([Current, l_et])
 					l_features.forth
 				end

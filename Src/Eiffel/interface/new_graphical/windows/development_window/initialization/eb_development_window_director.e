@@ -122,7 +122,9 @@ feature -- Command
 
 			l_session_data ?= develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)
 
-			l_project_session_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_project_data_id)
+			if (create {SHARED_WORKBENCH}).workbench.system_defined then
+				l_project_session_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_project_data_id)
+			end
 
 				-- Initial editors.
 			if l_session_data /= Void and then develop_window.editors_manager.show_formatting_marks /= l_session_data.show_formatter_marks then

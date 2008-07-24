@@ -1352,6 +1352,7 @@ feature {NONE} -- Factory
 		do
 				-- `contract_editor'
 			create contract_editor.make (develop_window)
+			auto_recycle (contract_editor)
 			Result := contract_editor.widget
 		end
 

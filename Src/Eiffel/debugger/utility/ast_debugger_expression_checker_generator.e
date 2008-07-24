@@ -15,7 +15,8 @@ inherit
 			process_un_old_as,
 			process_access_feat_as,
 			check_type,
-			feature_with_name_using
+			feature_with_name_using,
+			match_list_of_class
 		end
 
 feature -- Settings
@@ -130,6 +131,15 @@ feature -- Type checking
 		end
 
 feature {NONE} -- Implementation
+
+	match_list_of_class (a_class_id: INTEGER): LEAF_AS_LIST
+			-- <Precursor>
+			--| The match_list is created for a class
+			--| but expression analysing is not inside a class
+			--| thus it returns Void
+		do
+			Result := Void
+		end
 
 	check_type (a_type: TYPE_AS) is
 			-- Evaluate `a_type' into a TYPE_A instance if valid.

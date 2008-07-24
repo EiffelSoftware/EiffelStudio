@@ -3316,7 +3316,7 @@ feature -- Implementation
 				create l_vkcn3
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
-				l_list := match_list_server.item (context.current_class.class_id)
+				l_list := match_list_of_class (context.current_class.class_id)
 				if l_list /= Void and then l_as.call.is_text_available (l_list) then
 					l_vkcn3.set_called_feature (l_as.call.text (l_list))
 				end
@@ -6136,7 +6136,7 @@ feature -- Implementation
 					create l_vkcn1
 					context.init_error (l_vkcn1)
 					l_vkcn1.set_location (l_as.call.end_location)
-					l_list := match_list_server.item (context.current_class.class_id)
+					l_list := match_list_of_class (context.current_class.class_id)
 					if l_list /= Void and l_as.call.is_text_available (l_list) then
 						l_vkcn1.set_called_feature (l_as.call.text (l_list))
 					end
@@ -8623,6 +8623,14 @@ feature {NONE} -- Implementation
 								l_item.second = p.second
 				l.forth
 			end
+		end
+
+	match_list_of_class (a_class_id: INTEGER): LEAF_AS_LIST
+			-- Match list object for class id `a_class_id'
+		require
+			id_not_null: a_class_id /= 0
+		do
+			Result := match_list_server.item (a_class_id)
 		end
 
 feature {NONE} -- Implementation: Add type informations

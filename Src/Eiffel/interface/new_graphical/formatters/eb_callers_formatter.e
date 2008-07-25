@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager; a_flag: INTEGER_8) is
+	make (a_manager: like manager; a_flag: like flag) is
 			-- Create callers formatter associated with `a_manager' and which only
 			-- look for `a_flag' type callers.
 		require
@@ -109,7 +109,7 @@ feature -- Properties
 			end
 		end
 
- 	flag: INTEGER_8
+ 	flag: NATURAL_16
  			-- Flag for type of callers.
 
  	browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW

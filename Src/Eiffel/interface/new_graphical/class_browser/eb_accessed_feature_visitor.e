@@ -53,7 +53,7 @@ feature -- Access
 			-- Accessors found by last `find_accessors'
 			-- The TUPLE is in form of [accessor AST, accessor written class]
 
-	flag: INTEGER_8
+	flag: NATURAL_16
 			-- Required flag to match certain kinds of accessors such as assigner, creator..
 
 feature -- Setting
@@ -364,7 +364,7 @@ feature{NONE} -- Implementation/Process
 
 feature{NONE} -- Implementation
 
-	flag_stack: LINKED_STACK [INTEGER_8]
+	flag_stack: LINKED_STACK [like flag]
 			-- Stack of flags
 
 	set_last_class_c (a_class: like last_class_c) is

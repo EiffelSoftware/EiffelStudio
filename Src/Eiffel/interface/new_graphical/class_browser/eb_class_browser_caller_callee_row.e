@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	flag: INTEGER_8
+	flag: NATURAL_16
 			-- Flag to distinguish different accessors such as assigner, creator
 
 	feature_item: QL_FEATURE

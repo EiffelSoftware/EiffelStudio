@@ -504,7 +504,7 @@ feature -- Access
 			Result := name_id
 		end;
 
-	callees (a_flag: INTEGER_8): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]] is
+	callees (a_flag: NATURAL_16): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]] is
 			-- Callees of feature in `associated_class'
 			-- from client class `su_class'.
 		require
@@ -555,7 +555,7 @@ feature -- Access
 			valid_result: Result /= Void implies not Result.is_empty
 		end
 
-	callers (cl_class: CLASS_C; a_flag: INTEGER_8): SORTED_TWO_WAY_LIST [STRING] is
+	callers (cl_class: CLASS_C; a_flag: NATURAL_16): SORTED_TWO_WAY_LIST [STRING] is
 			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'
 		require

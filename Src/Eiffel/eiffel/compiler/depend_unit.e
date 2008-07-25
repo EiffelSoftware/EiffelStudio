@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			make_with_level (c_id, f, 0)
 		end
 
-	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: INTEGER_8) is
+	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16) is
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences in a given context.
 		do
@@ -104,7 +104,7 @@ feature -- Access
 	written_in: INTEGER
 			-- Class ID where current feature is written in.
 
-	internal_flags: INTEGER_8
+	internal_flags: NATURAL_16
 			-- Flags to store some info about current unit.
 
 	is_external: BOOLEAN is
@@ -178,20 +178,20 @@ feature -- Comparison
 
 feature {NONE} -- Implementation: flags
 
-	is_external_flag: INTEGER_8 is 0x01
-	is_special_flag: INTEGER_8 is 0x02
+	is_external_flag: NATURAL_16 is 0x0001
+	is_special_flag: NATURAL_16 is 0x0002
 
-	is_in_assertion_mask: INTEGER_8 is 0x3C
+	is_in_assertion_mask: NATURAL_16 is 0x003C
 
 feature -- Flags
 
-	is_in_require_flag: INTEGER_8 is 0x04
-	is_in_check_flag: INTEGER_8 is 0x08
-	is_in_ensure_flag: INTEGER_8 is 0x10
-	is_in_invariant_flag: INTEGER_8 is 0x20
+	is_in_require_flag: NATURAL_16 is 0x0004
+	is_in_check_flag: NATURAL_16 is 0x0008
+	is_in_ensure_flag: NATURAL_16 is 0x0010
+	is_in_invariant_flag: NATURAL_16 is 0x0020
 
-	is_in_assignment_flag: INTEGER_8 is 0x40
-	is_in_creation_flag: INTEGER_8 is 0x80
+	is_in_assignment_flag: NATURAL_16 is 0x0040
+	is_in_creation_flag: NATURAL_16 is 0x0080
 			-- Mask used for internal property.
 
 feature -- Debug

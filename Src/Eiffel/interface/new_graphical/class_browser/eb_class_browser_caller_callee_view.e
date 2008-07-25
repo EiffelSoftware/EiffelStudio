@@ -72,7 +72,7 @@ feature -- Access
 	row_count: INTEGER
 			-- Number of rows in Current view
 
-	flag: INTEGER_8
+	flag: NATURAL_16
 			-- Flag to distinguish different accessors such as assigners, creators
 
 feature -- Status report

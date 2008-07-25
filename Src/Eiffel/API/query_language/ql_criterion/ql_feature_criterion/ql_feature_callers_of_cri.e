@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like criterion_domain; a_caller_type: INTEGER_8; only_current_version: BOOLEAN) is
+	make (a_feature: like criterion_domain; a_caller_type: like caller_type; only_current_version: BOOLEAN) is
 			-- Initialize `criterion_domain' with `a_feature' and `caller_type' with `a_caller_type'.
 			-- if `only_current_version' is True, only find callers of current version of features in `a_feature'.
 		require
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	caller_type: INTEGER_8
+	caller_type: NATURAL_16
 			-- Feature caller type
 
 	only_find_current_version: BOOLEAN
@@ -127,7 +127,7 @@ feature{NONE} -- Implementation
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-	find_current_callers (l_class: CLASS_C; l_feat: E_FEATURE; a_flag: INTEGER_8) is
+	find_current_callers (l_class: CLASS_C; l_feat: E_FEATURE; a_flag: like caller_type) is
 			-- Show the callers of `l_feat' in `l_class'.
 		require
 			l_class_not_void: l_class /= Void
@@ -201,7 +201,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_all_callers (a_flag: INTEGER_8) is
+	find_all_callers (a_flag: like caller_type) is
 			-- Show all the callers of `criterion_domain' and its descendants.
 		local
 			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C]

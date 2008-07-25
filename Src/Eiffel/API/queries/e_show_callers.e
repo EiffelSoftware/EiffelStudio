@@ -38,7 +38,7 @@ feature -- Status report
 	to_show_all_callers: BOOLEAN;
 			-- Is the format going to show all callers?
 
-	flag: INTEGER_8
+	flag: NATURAL_16
 			-- Type of callers we are looking for.
 
 	is_callee_displayed: BOOLEAN
@@ -55,7 +55,7 @@ feature -- Status setting
 			show_all_callers_set: to_show_all_callers = b
 		end
 
-	set_flag (a_flag: INTEGER_8) is
+	set_flag (a_flag: like flag) is
 			-- Set `flag' with `a_flag'.
 		do
 			flag := a_flag
@@ -153,8 +153,8 @@ feature {NONE} -- Implementation
 	criterion: QL_CRITERION is
 			-- Criterion used in current command
 		local
-			l_caller_type: INTEGER_8
-			l_callee_type: INTEGER_8
+			l_caller_type: like flag
+			l_callee_type: like flag
 		do
 			if flag = {DEPEND_UNIT}.is_in_assignment_flag then
 				l_caller_type := assigner_caller_type

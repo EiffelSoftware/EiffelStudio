@@ -33,7 +33,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like criterion_domain; a_callee_type: INTEGER_8; only_current_version: BOOLEAN) is
+	make (a_feature: like criterion_domain; a_callee_type: like callee_type; only_current_version: BOOLEAN) is
 			-- Initialize `criterion_domain' with `a_feature' and `calle_type' with `a_callee_type'.
 			-- if `only_current_version' is True, only find callees of current version of features in `a_feature'.
 		require
@@ -47,7 +47,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	callee_type: INTEGER_8
+	callee_type: NATURAL_16
 			-- Feature caller type
 
 	only_find_current_version: BOOLEAN
@@ -121,7 +121,7 @@ feature{NONE} -- Implementation
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-	find_current_callees (l_feat: E_FEATURE; a_flag: INTEGER_8) is
+	find_current_callees (l_feat: E_FEATURE; a_flag: like callee_type) is
 			-- Find callees of `l_feat'.
 		require
 			l_feat_not_void: l_feat /= Void
@@ -166,7 +166,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_all_callees (a_flag: INTEGER_8) is
+	find_all_callees (a_flag: like callee_type) is
 			-- Find all callees from every feature in `criterion_domain'.
 		local
 			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C]

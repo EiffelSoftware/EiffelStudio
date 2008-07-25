@@ -184,6 +184,7 @@ feature {NONE} -- Implementation: Query
 			l_matched_parent: BOOLEAN
 			l_count, i: INTEGER
 		do
+			a_processed.extend (a_class)
 			l_rout_id_set := a_feature.rout_id_set
 			l_parents := a_class.parents
 			if not l_parents.is_empty then
@@ -203,7 +204,6 @@ feature {NONE} -- Implementation: Query
 								i := i + 1
 							end
 						end
-						a_processed.extend (l_parent)
 						if Result = Void and then not l_matched_parent then
 								-- If the requested parent name was match then this code should not be execute!
 							Result := find_ancestors_feature_internal (a_feature, l_parent, a_parent_name, a_processed)

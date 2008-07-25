@@ -176,7 +176,6 @@ feature {NONE} -- Implementation: Query
 			-- `a_processed': The active list of processed parent classes.
 			-- `Result': A parent feature or Void if no match could be found.
 		require
-			a_feature_written_in_a_class: a_feature.associated_class = a_class
 			not_a_parent_name_is_empty: a_parent_name /= Void implies not a_parent_name.is_empty
 			not_a_processed_has_a_class: not a_processed.has (a_class)
 		local

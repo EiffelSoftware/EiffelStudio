@@ -24,7 +24,7 @@ inherit
 			on_text_edited
 		end
 
-	EC_ENCODINGS
+	EC_ENCODING_UTINITIES
 		export
 			{NONE} all
 		end
@@ -232,8 +232,7 @@ feature {NONE} -- Action handler
 			l_uc_string: UC_STRING
 		do
 			check not_error_handler_has_error: not error_handler.has_error end
-			utf32.convert_to (utf8, contract_editor.wide_text)
-			create l_uc_string.make_from_utf8 ("check " + utf32.last_converted_stream)
+			create l_uc_string.make_from_utf8 (utf32_to_utf8 (("check ").as_string_32 + contract_editor.wide_text))
 			expression_parser.parse_from_string (l_uc_string)
 			if expression_parser.syntax_error then
 				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)

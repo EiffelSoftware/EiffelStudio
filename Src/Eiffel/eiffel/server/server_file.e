@@ -132,13 +132,15 @@ feature -- Status setting
 			is_closed: not is_open
 		local
 			external_name: ANY
+			l_open_write: BOOLEAN
 		do
 			external_name := name.to_c
-			if Eiffel_project.is_read_only or else precompiled then
+			if Eiffel_project.is_read_only or else precompiled or else l_open_write then
 					-- Open the file in `Read' mode only.
 				file_pointer := file_open ($external_name, 0)
 			else
 					-- Open the file in `Read-Write' mode.
+				l_open_write := True
 				file_pointer := file_open ($external_name, 3)
 			end
 			is_open := True
@@ -149,6 +151,13 @@ debug ("SERVER")
 end
 		ensure
 			opened: is_open
+		rescue
+				-- `is_writable' is True on Windows when current user (not the owner)
+				-- does not have the actual permission.
+				-- So we have to rescue and retry to reopen it in read mode. See bug#13251.
+			if l_open_write then
+				retry
+			end
 		end
 
 	server_open_write is
@@ -196,11 +205,17 @@ end
 			-- in write-only mode and closing it.
 		local
 			external_name: ANY
+			retried: BOOLEAN
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 1)
-			is_open := True
-			close
+			if not retried then
+				external_name := name.to_c
+				file_pointer := file_open ($external_name, 1)
+				is_open := True
+				close
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	update_path is

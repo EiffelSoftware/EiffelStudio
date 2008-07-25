@@ -8,26 +8,16 @@ indexing
 class
 	EB_GC_STATISTIC_WINDOW
 
-inherit
-	ANY
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
-	EV_GRID_HELPER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize current
+	make (a_font: EV_FONT) is
+			-- Initialize current with `a_font' which will be used to display GC statistics.
+		require
+			a_font_not_void: a_font /= Void
+			a_font_not_destroyed: not a_font.is_destroyed
 		local
 			l_vbar: EV_VERTICAL_BOX
 			l_toolbar: EV_TOOL_BAR
@@ -66,7 +56,7 @@ feature {NONE} -- Initialization
 
 				-- Create output
 			create output_text
-			output_text.set_font (preferences.editor_data.editor_font_preference.value)
+			output_text.set_font (a_font)
 
 				-- Create grid
 			create output_grid

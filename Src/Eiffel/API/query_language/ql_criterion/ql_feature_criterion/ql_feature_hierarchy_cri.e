@@ -170,6 +170,8 @@ feature{NONE} -- Implementation
 	query_feature_item (a_feature: E_FEATURE): QL_FEATURE is
 			-- Query feature representation of `a_feature'
 			-- Take case of both visible and invisible features.
+		require
+			a_feature_not_void: a_feature /= Void
 		local
 			l_class: QL_CLASS
 		do

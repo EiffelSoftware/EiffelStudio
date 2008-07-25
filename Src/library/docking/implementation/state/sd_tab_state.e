@@ -332,7 +332,8 @@ feature -- Redefine
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			l_parent := tab_zone.parent
-			tab_zone.prune (internal_content, True)
+			-- If we are closing all contents, we should not give focus to next content, see bug#13796
+			tab_zone.prune (internal_content, not internal_docking_manager.is_closing_all)
 			-- When Eiffel Studio exiting and recycling, `l_parent' maybe void.
 			-- This is ok since Current whole tab zone will be destroyed.
 			if l_parent /= Void then

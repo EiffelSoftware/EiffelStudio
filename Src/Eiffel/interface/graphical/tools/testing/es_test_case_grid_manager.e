@@ -60,7 +60,7 @@ feature -- Command
 			-- Enable grid item edit
 			create l_helper.make (l_grid)
 			l_grid.pointer_button_press_actions.extend (agent l_helper.on_pointer_press)
-			
+
 			l_grid.enable_auto_size_best_fit_column (1)
 
 			-- FIXIT: We have column `Runner' and `Auto Generated' for the moment, since CDD is not integrated,
@@ -273,8 +273,6 @@ feature -- Command
 					end
 				end
 			end
-
-			update_buttons_sensitivity
 		end
 
 	test_case_row_related_with (a_class: !CONF_CLASS): EV_GRID_ROW is

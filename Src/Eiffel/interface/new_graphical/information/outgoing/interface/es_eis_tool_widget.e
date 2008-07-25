@@ -227,7 +227,6 @@ feature {NONE} -- Initialization
 			-- EIS item detail panel.
 		local
 			l_vbox: EV_VERTICAL_BOX
-			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			l_border: ES_BORDERED_WIDGET [like entry_list]
 		do
 			create l_vbox
@@ -238,15 +237,18 @@ feature {NONE} -- Initialization
 			create l_border.make (entry_list)
 			l_vbox.extend (l_border)
 
-			create l_support.make_with_grid (entry_list)
-			l_support.enable_grid_item_pnd_support
-			l_support.enable_ctrl_right_click_to_open_new_window
-			l_support.synchronize_scroll_behavior_with_editor
-			l_support.set_context_menu_factory_function (agent context_menu_factory)
+			create grid_support.make_with_grid (entry_list)
+			grid_support.enable_grid_item_pnd_support
+			grid_support.enable_ctrl_right_click_to_open_new_window
+			grid_support.synchronize_scroll_behavior_with_editor
+			grid_support.set_context_menu_factory_function (agent context_menu_factory)
 		end
 
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
+
+	grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			-- Grid support for `entry_list'
 
 feature -- Synchronization
 
@@ -373,6 +375,7 @@ feature {NONE} -- Implementation
 	internal_recycle is
 			-- <precursor>
 		do
+			grid_support.desynchronize_scroll_behavior_with_editor
 			tree.recycle
 		end
 

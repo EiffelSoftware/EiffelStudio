@@ -420,7 +420,7 @@ feature {NONE} -- Implementation: State
 	check_for_vaol: BOOLEAN
 			-- Is current checking for VAOL error?
 
-	depend_unit_level: INTEGER_8
+	depend_unit_level: NATURAL_16
 			-- Current level used to create new instances of DEPEND_UNIT.
 
 	context: AST_CONTEXT
@@ -1600,29 +1600,29 @@ feature -- Implementation
 
 								-- Supplier dependances update
 							if not l_feature.is_inline_agent then
-								if l_is_target_of_creation_instruction then
-									create l_depend_unit.make_with_level (l_last_id, l_feature,
-										{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
-								else
-									if is_precursor then
-										create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
-											depend_unit_level)
-										context.supplier_ids.extend (l_depend_unit)
-									end
-
-									if not is_qualified and then l_feature.access_in /= l_feature.written_in and then system.current_class.class_id = l_feature.access_in
-										and then not system.has_old_feature_replication
-									then
-											-- We are unqualified-calling an inherited feature that is replicated in the current class.
-											-- Therefore the calling feature must also be replicated in the current class.
-										if current_feature.access_in /= system.current_class.class_id then
-											-- Invalid call to replicated feature, for now raise an error.
-											Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
-										end
-									end
-									create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+							if l_is_target_of_creation_instruction then
+								create l_depend_unit.make_with_level (l_last_id, l_feature,
+									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+							else
+								if is_precursor then
+									create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+										depend_unit_level)
+									context.supplier_ids.extend (l_depend_unit)
 								end
-								context.supplier_ids.extend (l_depend_unit)
+
+								if not is_qualified and then l_feature.access_in /= l_feature.written_in and then system.current_class.class_id = l_feature.access_in
+									and then not system.has_old_feature_replication
+								then
+										-- We are unqualified-calling an inherited feature that is replicated in the current class.
+										-- Therefore the calling feature must also be replicated in the current class.
+									if current_feature.access_in /= system.current_class.class_id then
+										-- Invalid call to replicated feature, for now raise an error.
+										Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
+									end
+								end
+								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+							end
+							context.supplier_ids.extend (l_depend_unit)
 							end
 
 							if l_is_assigner_call then
@@ -8439,13 +8439,13 @@ feature {NONE} -- Agents
 		end
 
 	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE) is
+			-- When an inline agent X of an enclosing feature f is a client of
+			-- feature g, we make the enclosing feature f a client of g.
 		local
 			l_cur_class: EIFFEL_CLASS_C
 
 		do
 			l_cur_class ?= context.current_class
-				-- When an inline agent X of an enclosing feature f is a client of
-				-- feature g, we make the enclosing feature f a client of g.
 			from
 				a_new_feat_dep.start
 			until
@@ -8456,7 +8456,7 @@ feature {NONE} -- Agents
 			end
 			a_feat.process_pattern
 			l_cur_class.insert_changed_assertion (a_feat)
-		end
+			end
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 

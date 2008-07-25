@@ -11,7 +11,7 @@ class
 
 feature -- Status_report
 
-	is_caller_type_valid (a_caller_type: INTEGER_8): BOOLEAN is
+	is_caller_type_valid (a_caller_type: NATURAL_16): BOOLEAN is
 			-- Is `a_caller_type' a valid caller type?
 		do
 			Result := a_caller_type = normal_caller_type or
@@ -19,7 +19,7 @@ feature -- Status_report
 					  a_caller_type = creator_caller_type
 		end
 
-	is_callee_type_valid (a_callee_type: INTEGER_8): BOOLEAN is
+	is_callee_type_valid (a_callee_type: NATURAL_16): BOOLEAN is
 			-- Is `a_callee_type' a valid callee type?
 		do
 			Result := a_callee_type = normal_callee_type or
@@ -29,19 +29,19 @@ feature -- Status_report
 
 feature -- Access
 
-	normal_caller_type, normal_callee_type: INTEGER_8 is
+	normal_caller_type, normal_callee_type: NATURAL_16 is
 			-- Normal caller type
 		do
 			Result := 0
 		end
 
-	assigner_caller_type, assigner_callee_type: INTEGER_8 is
+	assigner_caller_type, assigner_callee_type: NATURAL_16 is
 			-- Assigner caller type
 		do
 			Result := {DEPEND_UNIT}.is_in_assignment_flag
 		end
 
-	creator_caller_type, creator_callee_type: INTEGER_8 is
+	creator_caller_type, creator_callee_type: NATURAL_16 is
 		 	-- Creator caller
 		do
 			Result := {DEPEND_UNIT}.is_in_creation_flag

@@ -342,11 +342,8 @@ feature -- Element change
 			l_button: EV_BUTTON
 		do
 			default_button := a_id
-			l_button := dialog_window_buttons.item (a_id)
-			if l_button.is_displayed then
-				l_button.set_focus
-			else
-				dialog.show_actions.extend (agent l_button.set_focus)
+			if is_initialized then
+				dialog.set_default_push_button (dialog_window_buttons.item (a_id))
 			end
 		ensure
 			default_button_set: default_button = a_id
@@ -376,7 +373,9 @@ feature -- Element change
 			buttons_contains_a_id: buttons.has (a_id)
 		do
 			default_cancel_button := a_id
-			dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
+			if is_initialized then
+				dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
+			end
 		ensure
 			default_cancel_button_set: default_cancel_button = a_id
 		end

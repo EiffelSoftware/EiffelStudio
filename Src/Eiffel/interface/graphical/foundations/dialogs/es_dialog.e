@@ -84,6 +84,13 @@ feature {NONE} -- Initialization
 
 			Precursor {ES_WINDOW_FOUNDATIONS}
 
+			if buttons.has (default_cancel_button) then
+				dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
+			end
+			if buttons.has (default_button) then
+				dialog.set_default_push_button (dialog_window_buttons.item (default_button))
+			end
+
        		bind_help_shortcut (dialog)
 
 			if is_size_and_position_remembered then

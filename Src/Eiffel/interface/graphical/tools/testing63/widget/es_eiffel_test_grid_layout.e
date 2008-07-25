@@ -37,8 +37,30 @@ feature -- Factory
 
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !EIFFEL_TEST_I) is
 			-- <Precursor>
+		local
+			l_class: CLASS_I
+			l_feature: E_FEATURE
+			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 		do
-			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_item.name))
+			token_writer.new_line
+			l_class := class_of_name (a_item.class_name)
+			if l_class /= Void then
+				if l_class.is_compiled then
+					l_feature := l_class.compiled_class.feature_with_name (a_item.name)
+					if l_feature /= Void then
+						token_writer.add_feature (l_feature, a_item.name)
+					end
+				end
+				if token_writer.last_line.empty then
+					token_writer.add_classi (l_class, a_item.name)
+				end
+			else
+				token_writer.add (a_item.name)
+			end
+			create l_eitem
+			l_eitem.set_text_with_tokens (token_writer.last_line.content)
+			l_eitem.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
+			a_row.set_item (1, l_eitem)
 		end
 
 end

@@ -34,6 +34,26 @@ feature -- Status report
 			result_positive: Result > 0
 		end
 
+feature {NONE} -- Query
+
+	class_of_name (a_name: !STRING): ?CLASS_I
+			-- Class in `project' with `a_name'. Void if no class with name exists.
+		local
+			l_uni: UNIVERSE_I
+			l_list: LIST [CLASS_I]
+		do
+			l_uni := project.universe
+			l_list := l_uni.classes_with_name (a_name)
+			from
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				Result := l_list.item_for_iteration
+				l_list.forth
+			end
+		end
+
 feature -- Basic functionality
 
 	populate_header (a_header: !EV_GRID_HEADER) is
@@ -49,26 +69,34 @@ feature -- Basic functionality
 		require
 			valid_item_count: a_row.count.as_natural_32 = column_count
 		local
-			l_item: !EB_GRID_EDITOR_TOKEN_ITEM
+			l_item: EV_GRID_ITEM
+			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
+			l_litem: EV_GRID_LABEL_ITEM
+			l_pixmap: EV_PIXMAP
 			l_token: !STRING
-			l_universe: UNIVERSE_I
-			l_list: LIST [CLASS_I]
 		do
 			token_writer.new_line
-			create l_item
 			l_token := a_node.token
 			if l_token.item (1) = '{' and l_token.item (l_token.count) = '}' then
-				l_universe := eiffel_project.universe
-				l_list := l_universe.classes_with_name (l_token.substring (2, l_token.count - 1))
-				if not l_list.is_empty then
-					token_writer.add_class (l_list.first)
-					l_item.set_pixmap (pixmaps.icon_pixmaps.class_normal_icon)
+				if {l_class: !CLASS_I} class_of_name (l_token.substring (2, l_token.count - 1)) then
+					token_writer.add_class (l_class)
+					l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
 				end
 			end
-			if token_writer.last_line.empty then
-				token_writer.add (process_token (a_node.token))
+			if not token_writer.last_line.empty then
+				create l_eitem
+				l_eitem.set_text_with_tokens (token_writer.last_line.content)
+				if l_pixmap /= Void then
+					l_eitem.set_pixmap (l_pixmap)
+				end
+				l_item := l_eitem
+			else
+				create l_litem.make_with_text (process_token (a_node.token))
+				if l_pixmap /= Void then
+					l_litem.set_pixmap (l_pixmap)
+				end
+				l_item := l_litem
 			end
-			l_item.set_text_with_tokens (token_writer.last_line.content)
 			a_row.set_item (1, l_item)
 		end
 

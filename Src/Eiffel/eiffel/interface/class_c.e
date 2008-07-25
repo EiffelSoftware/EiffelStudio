@@ -3195,17 +3195,17 @@ feature -- Access
 			end
 		end
 
-	feature_with_name (n: STRING): E_FEATURE is
+	frozen feature_with_name (n: STRING): E_FEATURE is
 			-- Feature whose internal name is `n'
 		require
 			valid_n: n /= Void
 			has_feature_table: has_feature_table
 		local
-			f: FEATURE_I
+			l_id: INTEGER
 		do
-			f := feature_table.item (n)
-			if f /= Void then
-				Result := f.api_feature (class_id)
+			l_id := names_heap.id_of (n)
+			if l_id > 0 then
+				Result := feature_with_name_id (l_id)
 			end
 		end
 

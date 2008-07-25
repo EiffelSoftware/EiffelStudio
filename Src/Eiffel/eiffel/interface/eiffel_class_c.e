@@ -24,7 +24,8 @@ inherit
 			check_constraint_genericity,
 			check_constraint_renaming,
 			feature_of_feature_id,
-			feature_with_rout_id
+			feature_with_rout_id,
+			feature_with_name_id
 		end
 
 	CONF_CONSTANTS
@@ -99,7 +100,7 @@ feature -- Access
 					l_feat := l_inline_agent_table.item_for_iteration
 					if l_feat.enclosing_body_id = body_id then
 						if a_removed /= Void then
-								-- for each removed inline-agent feature we safe its
+								-- for each removed inline-agent feature we save its
 								-- routine id along with its inline_agent_nr
 							a_removed.force (l_feat, l_feat.inline_agent_nr)
 						end
@@ -129,13 +130,25 @@ feature -- Access
 			feat: FEATURE_I
 		do
 			Result := Precursor (rout_id)
-			if Result = Void then
+			if Result = Void and then internal_inline_agent_table /= Void then
 					-- Might be an inline agent
-				if internal_inline_agent_table /= Void then
-					feat := inline_agent_of_rout_id (rout_id)
-				end
+				feat := inline_agent_of_rout_id (rout_id)
 				if feat /= Void then
 					Result := feat.api_feature (class_id)
+				end
+			end
+		end
+
+	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE is
+			-- <Precursor>
+		local
+			f: FEATURE_I
+		do
+			Result := Precursor (a_feature_name_id)
+			if Result = Void and then internal_inline_agent_table /= Void then
+				f := inline_agent_of_name_id (a_feature_name_id)
+				if f /= Void then
+					Result := f.api_feature (class_id)
 				end
 			end
 		end

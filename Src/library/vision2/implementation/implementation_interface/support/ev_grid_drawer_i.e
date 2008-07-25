@@ -128,6 +128,8 @@ feature -- Basic operations
 			l_found_index: INTEGER
 			l_found_row_offset: INTEGER
 			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+			l_is_row_height_fixed: BOOLEAN
+			l_row_height: INTEGER
 		do
 			create Result.make (20)
 			if not grid.header.is_empty then
@@ -228,7 +230,18 @@ feature -- Basic operations
 						l_first_visible := grid.row_indexes_to_visible_indexes.i_th (l_found_index) + 1
 						l_found_index := l_visible_indexes_to_row_indexes.i_th (l_first_visible)
 						Result.extend (l_found_index)
-						l_visible_cumulative_height := l_row_offsets.i_th (l_found_index) + grid.row (l_found_index).height
+
+						l_is_row_height_fixed := grid.is_row_height_fixed
+						l_row_height := grid.row_height
+
+						l_visible_cumulative_height := l_row_offsets.i_th (l_found_index)
+						if l_is_row_height_fixed then
+								-- If the row height is fixed then we add the grid row height.
+							l_visible_cumulative_height := l_visible_cumulative_height + l_row_height
+						else
+							l_visible_cumulative_height := l_visible_cumulative_height + grid.row (l_found_index).height
+						end
+
 						from
 							i := l_first_visible + 1
 						until
@@ -236,7 +249,12 @@ feature -- Basic operations
 						loop
 							l_found_index := l_visible_indexes_to_row_indexes.i_th (i)
 							Result.extend (l_found_index)
-							l_visible_cumulative_height := l_visible_cumulative_height + grid.row (l_found_index).height
+							if l_is_row_height_fixed then
+									-- If the row height is fixed then we add the grid row height.
+								l_visible_cumulative_height := l_visible_cumulative_height + l_row_height
+							else
+								l_visible_cumulative_height := l_visible_cumulative_height + grid.row (l_found_index).height
+							end
 							i := i + 1
 						end
 					end

@@ -34,7 +34,6 @@ feature -- Command
 			l_x, l_y: INTEGER
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_window: EB_VISION_WINDOW
-			l_temp_window: EV_POPUP_WINDOW
 			l_title_bar_height, l_border_width: INTEGER
 		do
 			internal_construct
@@ -44,21 +43,6 @@ feature -- Command
 			l_y := l_window.y_position
 			l_window.set_position ({INTEGER_16}.min_value, {INTEGER_16}.min_value)
 			l_window.show
-
-			if develop_window.development_window_data.is_maximized then
-				-- We only cover main development window with a popup window if main development window maximized
-				-- Because, if main development window NOT maximized, it will NOT visible to end users since
-				-- its position is very small
-				-- see bug#14099
-
-				l_border_width := (l_window.width - l_window.client_width) // 2
-				l_title_bar_height := l_window.height - l_window.client_height - l_border_width
-
-				create l_temp_window.default_create
-				l_temp_window.set_size (l_window.width, l_window.height)
-				l_temp_window.set_position (l_window.x_position + l_border_width, l_window.y_position + l_title_bar_height)
-				l_temp_window.show_relative_to_window (l_window)
-			end
 
 			l_debugger_manager ?= develop_window.debugger_manager
 			if
@@ -86,14 +70,8 @@ feature -- Command
 			l_window.set_position (l_x, l_y)
 
 			if develop_window.development_window_data.is_maximized then
-				check not_void: l_temp_window /= Void end
-				l_temp_window.destroy
-			end
-		rescue
-			-- We destroy `l_temp_window' in case exception happen since we want to see
-			-- what's wrong exactly
-			if l_temp_window /= Void then
-				l_temp_window.destroy
+					-- Make sure that window is maximized next time we show it.
+				l_window.show_actions.extend_kamikaze (agent l_window.maximize)
 			end
 		end
 

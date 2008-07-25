@@ -209,9 +209,13 @@
 	<PREF NAME="interface.development_window.link_tools" DESCRIPTION="Link tools? True means that a tool propagates stone to other tools if possible."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>950</INTEGER></PREF>
-	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
+	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>650</INTEGER></PREF>
 	<PREF NAME="interface.development_window.x_position" DESCRIPTION="Screen x position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="interface.development_window.y_position" DESCRIPTION="Screen y position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="interface.development_window.maximized_width" DESCRIPTION="Width of development window when maximized." HIDDEN="true"><INTEGER>950</INTEGER></PREF>
+	<PREF NAME="interface.development_window.maximized_height" DESCRIPTION="Height of development window when maximized." HIDDEN="true"><INTEGER>650</INTEGER></PREF>
+	<PREF NAME="interface.development_window.maximized_x_position" DESCRIPTION="Screen x position of development window when maximized." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="interface.development_window.maximized_y_position" DESCRIPTION="Screen y position of development window when maximized." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="interface.development_window.is_force_debug_mode" DESCRIPTION="Last time when closing development window if it was forcing debug mode." HIDDEN="true"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>

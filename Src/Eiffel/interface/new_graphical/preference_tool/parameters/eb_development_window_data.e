@@ -10,22 +10,22 @@ deferred class
 
 feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Value
 
-	width: INTEGER is
+	maximized_width, width: INTEGER is
 			-- Width for the development window
 		deferred
 		end
 
-	height: INTEGER is
+	maximized_height, height: INTEGER is
 			-- Height for the development window
 		deferred
 		end
 
-	x_position: INTEGER is
+	maximized_x_position, x_position: INTEGER is
 			-- X position for development windows
 		deferred
 		end
 
-	y_position: INTEGER is
+	maximized_y_position, y_position: INTEGER is
 			-- Y position for development windows
 		deferred
 		end
@@ -63,12 +63,35 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDO
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER) is
-			-- Save the width and the height of the window.
-			-- Call `commit_save' to have the changes actually saved.
+			-- Save width and height of window.
 		deferred
 		ensure
-			width_set: a_width = width
-			height_set: a_height = height
+			width_set: width = a_width
+			height_set: height = a_height
+		end
+
+	save_position (a_x, a_y: INTEGER) is
+			-- Save position of window.
+		deferred
+		ensure
+			x_position_set: x_position = a_x
+			y_position_set: y_position = a_y
+		end
+
+	save_maximized_size (a_width, a_height: INTEGER) is
+			-- Save width and height of window when maximized.
+		deferred
+		ensure
+			maximized_width_set: maximized_width = a_width
+			maximized_height_set: maximized_height = a_height
+		end
+
+	save_maximized_position (a_x, a_y: INTEGER) is
+			-- Save position of window when maximized.
+		deferred
+		ensure
+			maximized_x_position_set: maximized_x_position = a_x
+			maximized_y_position_set: maximized_y_position = a_y
 		end
 
 	save_window_state (a_minimized, a_maximized: BOOLEAN) is
@@ -85,15 +108,6 @@ feature -- Element change
 		deferred
 		ensure
 			mode_set: is_force_debug_mode = a_bool
-		end
-
-	save_position (a_x, a_y: INTEGER) is
-			-- Save the position of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		deferred
-		ensure
-			x_set: a_x = x_position
-			y_set: a_y = y_position
 		end
 
 feature -- Basic operations

@@ -1076,6 +1076,8 @@ feature -- Window management
 			l_class_stone: CLASSI_STONE
 		do
 			save_window_state
+			save_size
+			save_position
 			create Result.make_from_window_data (preferences.development_window_data)
 
 			a_class_stone ?= stone
@@ -1513,20 +1515,24 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 	save_size is
 			-- Save window size.
 		do
-			if not window.is_maximized and not window.is_minimized then
-					-- We cannot use `a_width' and `a_height' because it corresponds to
-					-- the client width and height, not the window.
-				development_window_data.save_size (window.width, window.height)
+			if not window.is_minimized then
+				if window.is_maximized then
+					development_window_data.save_maximized_size (window.width, window.height)
+				else
+					development_window_data.save_size (window.width, window.height)
+				end
 			end
 		end
 
 	save_position is
 			-- Save window position.
 		do
-			if not window.is_maximized and not window.is_minimized then
-					-- We cannot use `a_x' and `a_y' because it corresponds to the position
-					-- of the client area.
-				development_window_data.save_position (window.screen_x, window.screen_y)
+			if not window.is_minimized then
+				if window.is_maximized then
+					development_window_data.save_maximized_position (window.screen_x, window.screen_y)
+				else
+					development_window_data.save_position (window.screen_x, window.screen_y)
+				end
 			end
 		end
 
@@ -1535,10 +1541,12 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 		local
 			l_develop_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 		do
-			create l_develop_window_data.make_from_window_data (development_window_data)
+				-- Update position.
 			save_window_state
 			save_position
 			save_size
+				-- Create session data from above saved data.
+			create l_develop_window_data.make_from_window_data (development_window_data)
 			save_tools_docking_layout
 			session_data.set_value (l_develop_window_data, development_window_data.development_window_data_id)
 

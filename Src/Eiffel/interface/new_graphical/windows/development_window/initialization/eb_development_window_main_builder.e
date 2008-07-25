@@ -47,6 +47,7 @@ feature -- Command
 			l_screen: EB_STUDIO_SCREEN
 			l_x, l_y: INTEGER
 			l_data: EB_DEVELOPMENT_WINDOW_DATA
+			l_border_width: INTEGER
 		do
 			-- There are two development window data (EB_DEVELOPMENT_WINDOW_DATA) saved.
 			-- One is saved in preferences
@@ -60,16 +61,21 @@ feature -- Command
 				l_data := develop_window.development_window_data
 			end
 			create l_screen
+				-- Take into account `border_width'
+			l_border_width := (develop_window.window.width - develop_window.window.client_width) // 2
+
+				-- When window is maximized, then the border might be slightly off screen.
 			develop_window.window.set_size (
-				l_data.width.min (l_screen.width),
-				l_data.height.min (l_screen.height))
+				l_data.width.min (l_screen.width + l_border_width * 2),
+				l_data.height.min (l_screen.height + l_border_width * 2))
+
 			l_x := l_data.x_position
-			if l_x < l_screen.virtual_left or l_x > l_screen.virtual_right then
+			if (l_x + l_border_width) < l_screen.virtual_left or (l_x + l_border_width) > l_screen.virtual_right then
 					-- Somehow screens have changed, reset it to 0
 				l_x := 0
 			end
 			l_y := l_data.y_position
-			if l_y < l_screen.virtual_top or l_y > l_screen.virtual_bottom then
+			if (l_y + l_border_width) < l_screen.virtual_top or (l_y + l_border_width) > l_screen.virtual_bottom then
 					-- Somehow screens have changed, reset it to 0
 				l_y := 0
 			end
@@ -98,17 +104,6 @@ feature -- Command
 			end
 			if l_modified then
 				develop_window.window.set_position (l_x, l_y)
-			end
-		end
-
-	window_displayed is
-			-- `Current' has been displayed on screen.
-		do
-				-- Minimize or Maximize window if needed.
-			if develop_window.development_window_data.is_maximized then
-				develop_window.window.maximize
-			elseif develop_window.development_window_data.is_minimized then
-				develop_window.window.minimize
 			end
 		end
 
@@ -727,7 +722,6 @@ feature -- Command
 				-- Vision2 initialization
 			create l_window
 			develop_window.set_window (l_window)
-			register_action (l_window.show_actions, agent window_displayed)
 			register_action (l_window.restore_actions, agent safe_restore)
 			init_size_and_position
 			l_window.close_request_actions.wipe_out

@@ -292,8 +292,8 @@ feature -- Generation
 			l_table_of_class:  like table_of_class
 			buffer: GENERATION_BUFFER
 			address_file, cecil_file: INDENT_FILE
-			a_class: CLASS_C
-			a_feature: FEATURE_I
+			l_class: CLASS_C
+			l_feature: FEATURE_I
 			table_entry: ADDRESS_TABLE_ENTRY
 			l_reordering: FEATURE_REORDERING
 		do
@@ -322,10 +322,10 @@ feature -- Generation
 				after
 			loop
 				class_id := key_for_iteration
-				a_class := System.class_of_id (class_id)
-				System.set_current_class (a_class)
-				if a_class /= Void then
-					if (final_mode implies (not a_class.is_precompiled or else a_class.is_in_system)) then
+				l_class := System.class_of_id (class_id)
+				System.set_current_class (l_class)
+				if l_class /= Void then
+					if (final_mode implies (not l_class.is_precompiled or else l_class.is_in_system)) then
 						l_table_of_class := item_for_iteration
 						from
 							l_table_of_class.start
@@ -335,29 +335,29 @@ feature -- Generation
 							feature_id := l_table_of_class.key_for_iteration
 							table_entry := l_table_of_class.item_for_iteration
 
-							a_feature := a_class.feature_table.feature_of_feature_id (feature_id)
-							if a_feature = Void and then a_class.is_eiffel_class_c then
+							l_feature := l_class.feature_table.feature_of_feature_id (feature_id)
+							if l_feature = Void and then l_class.is_eiffel_class_c then
 									-- maybe its an inline agent
-								a_feature := a_class.eiffel_class_c.inline_agent_of_id (feature_id)
+								l_feature := l_class.eiffel_class_c.inline_agent_of_id (feature_id)
 							end
-							if a_feature = Void then
+							if l_feature = Void then
 									-- Remove invalid entry or feature which has been converted
 									-- from a routine to an attribute.
 								l_table_of_class.remove (feature_id)
 							else
 									-- Feature exists
-								if a_feature.used then
+								if l_feature.used then
 										-- Feature is not dead code removed
 
 		debug ("DOLLAR")
 		io.put_string ("ADDRESS_TABLE.generate_feature ")
-		io.put_string (a_class.name)
+		io.put_string (l_class.name)
 		io.put_character (' ')
-		io.put_string (a_feature.feature_name)
+		io.put_string (l_feature.feature_name)
 		io.put_new_line
 		end
 									if table_entry.has_dollar_op then
-										generate_feature (a_class, a_feature, final_mode, buffer, False, False, Void, False)
+										generate_feature (l_class, l_feature, final_mode, buffer, False, False, Void, False)
 									end
 
 									from
@@ -366,12 +366,12 @@ feature -- Generation
 										table_entry.after
 									loop
 										l_reordering := table_entry.item_for_iteration
-										if l_reordering.is_valid_for (a_feature) then
+										if l_reordering.is_valid_for (l_feature) then
 											l_reordering.set_frozen_age (new_frozen_age)
-											generate_feature (a_class, a_feature, final_mode, buffer, True,
+											generate_feature (l_class, l_feature, final_mode, buffer, True,
 															  l_reordering.is_target_closed, l_reordering.open_map, True)
 											if final_mode then
-												generate_feature (a_class, a_feature, final_mode, buffer, True,
+												generate_feature (l_class, l_feature, final_mode, buffer, True,
 																  l_reordering.is_target_closed, l_reordering.open_map, False)
 											end
 											table_entry.forth

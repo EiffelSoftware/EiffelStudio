@@ -1,0 +1,15 @@
+test_name 	es-encoding-conversion
+test_description Test various encoding conversions EiffelStudio uses through the encoding library, excluding those will be choosable by users in the editor.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end

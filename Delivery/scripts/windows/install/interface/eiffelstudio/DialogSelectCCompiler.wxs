@@ -4,13 +4,13 @@
     <?ifdef EiffelStudio?>
     <UI Id="UI.dialog_select_c_compiler">
       <RadioButtonGroup Property="C_CONFIG_NAME">
-        <RadioButton Value="mingw" X="5" Y="5" Width="213" Height="14" Text="Install and use MinGW (GCC)" />
+        <RadioButton Value="mingw" X="5" Y="5" Width="213" Height="14" Text="Install and use Min&amp;GW (GCC)" />
         <RadioButton Value="msc" X="5" Y="19" Width="213" Height="14" Text="Use a &amp;Microsoft C/C++ compiler (Recommended)"/>
       </RadioButtonGroup>
 
       <Dialog Id="DialogSelectCCompiler" Width="375" Height="220" Title="[ProductName]">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_c.bmp" />
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]C/C++ Compiler Selection</Text>
         </Control>
         <Control Id="SubTitle" Type="Text" X="56" Y="35" Width="309" Height="13" Transparent="yes" NoPrefix="yes">
@@ -21,7 +21,7 @@
         </Control>
         <Control Id="Description2" Type="Text" Height="30" Width="354" X="12" Y="100" Text="Otherwise select &quot;Install and use MinGW (GCC)&quot;. This will install MinGW's C/C++ compiler and configure the Eiffel compiler to use it as the default C/C++ compiler." Transparent="yes" />
         <Control Id="Choice" Type="RadioButtonGroup" X="40" Y="135" Width="218" Height="36" Property="C_CONFIG_NAME" TabSkip="no"/>
-        <Control Id="Download" Type="PushButton" Height="17" Width="68" X="266" Y="156" Text="[Button_Download]">
+        <Control Id="Download" Type="PushButton" Height="17" Width="68" X="266" Y="156" Text="[Button_Download]" Disabled="yes">
           <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
           <Condition Action="disable"><![CDATA[C_CONFIG_NAME <> "msc"]]></Condition>
           <Condition Action="enable"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_MSC_FOUND <> "1"]]></Condition>

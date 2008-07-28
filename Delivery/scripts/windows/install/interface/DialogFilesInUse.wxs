@@ -4,7 +4,7 @@
     <UI Id="UI.dialog_files_in_use">
       <Dialog Id="FilesInUse" Width="375" Height="220" Title="[ProductName]" KeepModeless="yes">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_warn.bmp" />
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]Files in Use</Text>
         </Control>
         <Control Id="SubTitle" Type="Text" Height="23" Width="309" X="56" Y="35" Transparent="yes" NoPrefix="yes">

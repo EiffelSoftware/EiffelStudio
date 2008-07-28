@@ -7,7 +7,7 @@
       <UI Id="UI.dialog_register">
         <Dialog Id="DialogRegister" Width="375" Height="220" Title="[ProductName]">
           <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
-          <Control Id="Title" Type="Text" X="55" Y="14" Width="300" Height="22" Transparent="yes" NoPrefix="yes">
+          <Control Id="Title" Type="Text" X="55" Y="14" Width="300" Height="57" Transparent="yes" NoPrefix="yes">
             <Text>[BigFont]Enter License Information</Text>
           </Control>
           <Control Id="SubTitle" Type="Text" X="55" Y="37" Width="300" Height="15" Transparent="yes" NoPrefix="yes">

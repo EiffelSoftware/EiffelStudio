@@ -4,7 +4,7 @@
     <UI Id="UI.dialog_welcome">
       <Dialog Id="DialogWelcome" Width="375" Height="220" Title="[ProductName]">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="60" Transparent="yes" NoPrefix="yes">
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]Welcome to the [ProductName] Installation</Text>
         </Control>
         <Control Id="Description" Type="Text" X="11" Y="70" Width="354" Height="30" Transparent="yes" NoPrefix="yes">

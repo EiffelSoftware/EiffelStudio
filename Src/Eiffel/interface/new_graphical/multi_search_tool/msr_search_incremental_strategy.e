@@ -78,24 +78,29 @@ feature -- Basic operations
 	launch is
 			-- Launch searching.
 		local
-			l_compile_string: UC_UTF8_STRING
+				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
+			-- l_compile_string, l_to_be_searched: UC_UTF8_STRING
+			l_compile_string, l_to_be_searched: STRING
 			l_keyword: STRING
-			l_to_be_searched: UC_UTF8_STRING
 		do
 			create item_matched_internal.make (0)
 			build_class_name
 			pcre_regex.reset
 			pcre_regex.set_caseless (not case_sensitive_internal)
-			if is_regular_expression_used then
-				l_keyword := utf32_to_utf8 (keyword)
-			else
-				l_keyword := string_formatter.mute_escape_characters (utf32_to_utf8 (keyword))
+				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
+			-- l_keyword := utf32_to_utf8 (keyword)
+			l_keyword := keyword.as_string_8
+			if not is_regular_expression_used then
+				l_keyword := string_formatter.mute_escape_characters (l_keyword)
 			end
 			if is_whole_word_matched then
 				l_keyword := string_formatter.build_match_whole_word (l_keyword)
 			end
-			create l_compile_string.make_from_utf8 (l_keyword)
-			create l_to_be_searched.make_from_utf8 (utf32_to_utf8 (text_to_be_searched))
+				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
+			-- create l_to_be_searched.make_from_utf8 (utf32_to_utf8 (text_to_be_searched))
+			-- create l_compile_string.make_from_utf8 (l_keyword)
+			l_compile_string := l_keyword
+			l_to_be_searched := text_to_be_searched
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
 				pcre_regex.match_substring (l_to_be_searched, start_position, l_to_be_searched.count)

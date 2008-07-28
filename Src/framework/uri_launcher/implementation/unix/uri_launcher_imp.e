@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	URI_LAUNCHER
+	URI_LAUNCHER_IMP
 
 inherit
 	URI_LAUNCHER_I

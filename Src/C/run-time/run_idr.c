@@ -293,98 +293,7 @@ rt_public void idr_flush (void)
 	check_capacity (&idrf.i_encode, idrf_buffer_size);
 }
 
-rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
-{
-	/* Serialize a long byte */
-
-	uint32 value;		/* Value in network byte order */
-	int i = 0;
-
-	check_capacity (idrs, len * size);
-
-	if (idrs->i_op == IDR_ENCODE) {
-		while (len > i) {
-#if LNGSIZ == 4
-					/*encode for long = 4 bytes */
-			value = htonl((uint32)(*(lp + (i++))));
-			memcpy (idrs->i_ptr, &value, size);
-			idrs->i_ptr += size;
-#else
-							/*encode for long = 8bytes */
-			uint32 upper, lower;
-			unsigned long temp;
-		
-			temp = (unsigned long) *(lp + (i++));	/*split long into upper and */
-							/*lower 4 bytes */
-			lower = (uint32) (temp & 0x00000000ffffffff);
-			upper = (uint32) ((temp >> 32) & 0x00000000ffffffff);
-			value = htonl((uint32)(lower));
-			memcpy(idrs->i_ptr, &value, 4);
-			idrs->i_ptr += 4;
-
-			value = htonl((uint32)(upper));
-			memcpy (idrs->i_ptr, &value, 4);
-			idrs->i_ptr += 4;
-
-#endif
-		}
-	} else {
-		if (size == 4) {				/* decode a 4 byte long */
-			while (len > i) {
-				memcpy (&value, idrs->i_ptr, size);
-#if LNGSIZ > 4
-				*(lp + i) = (long) ntohl(value);
-				idrs->i_ptr += size;
-				if (*(lp + i) & 0x80000000) {
-					*(lp + i) &= 0xffffffff7fffffff;
-					*(lp + (i++)) |= 0x8000000000000000;
-				}
-				else
-					i++;
-#else
-				*(lp + (i++)) = (long) ntohl(value);
-				idrs->i_ptr += size;
-#endif
-			}
-		} else {				/*decode an 8 byte long */
-			while (len > i) {
-				long upper, lower; /* %%ss removed , temp;*/
-
-				memcpy (&value, idrs->i_ptr, 4);
-				lower = (long) ntohl(value);
-				idrs->i_ptr += 4;
-				memcpy (&value, idrs->i_ptr, 4);
-				upper = (long) ntohl(value);
-				idrs->i_ptr += 4;
-#if LNGSIZ == 4
-						/*if the data has come from a 8 byte */
-				*(lp + i) = lower;		/* long machine and we are only a 4 byte*/
-				if (upper & 0x80000000){
-					if (lower & 0x80000000)
-						print_err_msg(stderr, "64 bit int truncated to 32 bit \n");
-					*(lp + (i++)) |= 0x80000000;
-				} else {
-					i++;
-					if (upper)
-						print_err_msg(stderr, "64 bit int truncated to 32 bit \n");
-				}
-							/*long machine only take the lower 4 bytes*/
-							/* This will cause lost of data but l am */
-						/* assuming we do not send any longs between*/
-						/* 64 bit to 32 bit that are larger than 2^32 */
-
-#else
-						/* rejoin the upper and lower parts */ 
-
-				*(lp + (i++)) = (lower & 0x00000000ffffffff) | (upper << 32);
-#endif
-			}
-		}
-	}
-	return TRUE;
-}
-
-rt_public bool_t run_uint_ptr (IDR *idrs, void *lp, size_t len, size_t size)
+rt_private bool_t run_uint_ptr (IDR *idrs, void *lp, size_t len, size_t size)
 {
 	/* Serialize a pointer value */
 
@@ -452,7 +361,8 @@ rt_public bool_t run_uint_ptr (IDR *idrs, void *lp, size_t len, size_t size)
 	}
 	return TRUE;
 }
-rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, size_t len, size_t size)
+
+rt_private bool_t run_ulong(IDR *idrs, long unsigned int *lp, size_t len, size_t size)
 {
 	/* Serialize a long byte */
 
@@ -519,7 +429,7 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, size_t len, size_t 
 	return TRUE;
 }
 
-rt_public bool_t run_int(IDR *idrs, uint32 *ip, size_t len)
+rt_private bool_t run_int(IDR *idrs, uint32 *ip, size_t len)
 {
 	/* Serialize a int byte */
 

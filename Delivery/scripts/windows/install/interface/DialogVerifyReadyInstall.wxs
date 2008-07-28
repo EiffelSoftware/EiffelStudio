@@ -4,7 +4,7 @@
     <UI Id="UI.dialog_verify_ready_install">
       <Dialog Id="DialogVerifyReadyInstall" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="60" Transparent="yes" NoPrefix="yes">
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]About to begin the [ProductName] Installation</Text>
         </Control>
         <Control Id="Description1" Type="Text" X="9" Y="73" Width="354" Height="26" Transparent="yes" NoPrefix="yes">

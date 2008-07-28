@@ -5,7 +5,7 @@
       <Dialog Id="PromptCancelInstall" Width="260" Height="85" Title="Cancel Installation?" NoMinimize="yes">
         <Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" FixedSize="yes" IconSize="32" Text="question.ico" />
         <Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30">
-          <Text>Are you sure you want to cancel the [ProductName] installation?</Text>
+          <Text>Are you sure you want to cancel the [ProgressType3] of [ProductName]?</Text>
         </Control>
         <Control Id="Yes" Type="PushButton" X="72" Y="57" Width="56" Height="17" Text="[Button_Yes]">
           <Publish Event="EndDialog" Value="Exit">1</Publish>

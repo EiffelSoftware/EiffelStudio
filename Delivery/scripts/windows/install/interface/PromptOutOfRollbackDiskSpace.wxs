@@ -8,13 +8,13 @@
           <Text>[BigFont]Out of Disk Space</Text>
         </Control>
         <Control Id="SubTitle" Type="Text" Height="13" Width="268" X="56" Y="35" Transparent="yes" NoPrefix="yes">
-          <Text>[SubTitleFont]Disk space required for the installation exceeds available disk space.</Text>
+          <Text>[SubTitleFont]Disk space required for the [ProgressType3] exceeds available disk space.</Text>
         </Control>
         <Control Id="Description" Type="Text" X="9" Y="58" Width="315" Height="40">
-          <Text>The highlighted volumes do not have enough disk space available for the currently selected features.  You can either remove some files from the highlighted volumes, or choose to install less features onto local drive(s), or select different destination drive(s).</Text>
+          <Text>The highlighted volumes do not have enough disk space available for the currently selected features. You can either remove some files from the highlighted volumes, or choose to install less features onto local drive(s), or select different destination drive(s).</Text>
         </Control>
         <Control Id="Description2" Type="Text" X="9" Y="98" Width="315" Height="40">
-          <Text>Alternatively, you may choose to disable the installer"s rollback functionality.  This allows the installer to restore your computer"s original state should the installation be interrupted in any way.  Click Yes if you wish to take the risk to disable rollback.</Text>
+          <Text>Alternatively, you may choose to disable the installer"s rollback functionality. This allows the installer to restore your computer"s original state should the [ProgressType3] be interrupted in any way.  Click Yes if you wish to take the risk to disable rollback.</Text>
         </Control>
         <Control Id="VolumeList" Type="VolumeCostList" X="9" Y="140" Width="315" Height="71" Sunken="yes" Fixed="yes" Remote="yes" ShowRollbackCost="yes">
           <Text>{120}{70}{70}{70}{70}</Text>

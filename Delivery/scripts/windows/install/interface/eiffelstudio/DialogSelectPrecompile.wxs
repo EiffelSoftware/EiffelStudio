@@ -19,7 +19,7 @@
             <Condition Action="hide"><![CDATA[C_CONFIG_CAN_COMPILE = "1"]]></Condition>
             <Condition Action="show"><![CDATA[C_CONFIG_CAN_COMPILE <> "1"]]></Condition>
           </Control>
-          <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
+          <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
             <Text>[BigFont]Precompiled Libraries</Text>
           </Control>
           <Control Id="SubTitle" Type="Text" X="56" Y="35" Width="302" Height="13" Transparent="yes" NoPrefix="yes">

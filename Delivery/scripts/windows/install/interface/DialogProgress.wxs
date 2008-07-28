@@ -4,11 +4,11 @@
     <UI Id="UI.dialog_progress">
       <Dialog Id="DialogProgress" Width="375" Height="220" Title="[ProductName]" Modeless="yes">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />      
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="60" Transparent="yes" NoPrefix="yes">
-          <Text>[BigFont]Installing [ProductName]...</Text>
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="57" Transparent="yes" NoPrefix="yes">
+          <Text>[BigFont][ProgressType1] [ProductName]...</Text>
         </Control>
         <Control Id="Description" Type="Text" X="9" Y="73" Width="300" Height="20" Transparent="yes" NoPrefix="yes">
-          <Text>Please wait while [ProductName] is installed.</Text>
+          <Text>Please wait while [ProductName] is [ProgressType2].</Text>
         </Control>
         <Control Id="ActionText" Type="Text" X="70" Y="107" Width="265" Height="10" Transparent="yes" NoPrefix="yes">
           <Subscribe Event="ActionText" Attribute="Text" />

@@ -56,18 +56,20 @@
       <InstallUISequence>
         <Custom Action="InitializeProperties" After="AppSearch" />
         <?ifdef Enterprise?>
-          <Custom Action="RetrieveCdKey" After="InitializeProperties" />
-          <Custom Action="EvaluateCCompiler" After="RetrieveCdKey" />
+          <Custom Action="RetrieveCdKey" After="InitializeProperties"><![CDATA[NOT Installed]]></Custom>
+          <Custom Action="EvaluateCCompiler" After="RetrieveCdKey"><![CDATA[NOT Installed]]></Custom>
         <?else?>
-          <Custom Action="EvaluateCCompiler" After="InitializeProperties" />
+          <Custom Action="EvaluateCCompiler" After="InitializeProperties"><![CDATA[NOT Installed]]></Custom>
         <?endif?>
 
         <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR = ""]]></Custom>
-        <Custom Action="SET_IS_DOTNET_INSTALLED" Before="CostInitialize"><![CDATA[FXINSTALLROOT <> "0"]]></Custom>
+        <Custom Action="SET_IS_DOTNET_INSTALLED" Before="CostInitialize"><![CDATA[(FXINSTALLROOT <> "0") AND NOT Installed]]></Custom>
 
-        <Custom Action="CheckEnvironmentVariables" After="MigrateFeatureStates"><![CDATA[UILevel >= 5]]></Custom>
-        <Show Dialog="DialogWelcome" After="MigrateFeatureStates" />
-        <Show Dialog="DialogProgress" After="DialogWelcome" />
+        <Custom Action="CheckEnvironmentVariables" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Custom>
+        <Show Dialog="DialogWelcome" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Show>
+
+        <Show Dialog="DialogMaintenanceWelcome" After="DialogWelcome"><![CDATA[Installed]]></Show>
+        <Show Dialog="DialogProgress" After="DialogMaintenanceWelcome" />
 
         <Show Dialog="DialogUserExit" OnExit="cancel" />
         <Show Dialog="DialogExitSuccess" OnExit="success" />
@@ -76,16 +78,18 @@
       <AdminUISequence>
         <Custom Action="InitializeProperties" After="CostInitialize" />
         <?ifdef Enterprise?>
-          <Custom Action="RetrieveCdKey" After="InitializeProperties" />
-          <Custom Action="EvaluateCCompiler" After="RetrieveCdKey" />
+          <Custom Action="RetrieveCdKey" After="CostInitialize"><![CDATA[NOT Installed]]></Custom>
+          <Custom Action="EvaluateCCompiler" After="CostInitialize"><![CDATA[NOT Installed]]></Custom>
         <?else?>
-          <Custom Action="EvaluateCCompiler" Before="InitializeProperties" />
+          <Custom Action="EvaluateCCompiler" After="CostInitialize"><![CDATA[NOT Installed]]></Custom>
         <?endif?>
 
-        <Custom Action="SET_INSTALLDIR" After="EvaluateCCompiler"><![CDATA[INSTALLDIR = ""]]></Custom>
-        <Custom Action="SET_IS_DOTNET_INSTALLED" Before="CostInitialize"><![CDATA[FXINSTALLROOT <> "0"]]></Custom>
+        <Custom Action="SET_INSTALLDIR" After="CostInitialize"><![CDATA[INSTALLDIR = ""]]></Custom>
+        <Custom Action="SET_IS_DOTNET_INSTALLED" Before="CostInitialize"><![CDATA[(FXINSTALLROOT <> "0") AND NOT Installed]]></Custom>
 
-        <Show Dialog="DialogWelcome" After="EvaluateCCompiler"/>
+        <Show Dialog="DialogWelcome" After="CostInitialize"><![CDATA[NOT Installed]]></Show>
+        <Show Dialog="DialogMaintenanceWelcome" After="DialogWelcome"><![CDATA[Installed AND NOT RESUME AND NOT Preselected]]></Show>
+        <Show Dialog="DialogProgress" After="DialogMaintenanceWelcome" />
         <Show Dialog="DialogUserExit" OnExit="cancel" />
         <Show Dialog="DialogExitSuccess" OnExit="success" />
         <Show Dialog="DialogFatalError" OnExit="error" />
@@ -164,6 +168,11 @@
       <UIText Id="VolumeCostRequired">Required</UIText>
       <UIText Id="VolumeCostSize">Disk Size</UIText>
       <UIText Id="VolumeCostVolume">Volume</UIText>
+      <!-- The follow have to be properties to be set and used correctly in the UI -->
+      <Property Id="ProgressType1">Installing</Property>
+      <Property Id="ProgressType2">installed</Property>
+      <Property Id="ProgressType3">installation</Property>
+      <Property Id="ProgressType4">Installation</Property>
       <!-- END USER INTERFACE TEXT -->
 
       <!-- OTHER TEXT -->

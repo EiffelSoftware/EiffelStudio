@@ -47,6 +47,11 @@
     <Property Id='ARPNOMODIFY'>1</Property>
     <!-- END ADD REMOVE PROGRAM -->
 
+    <!-- BUILT-IN PROPERTIES -->
+    <Property Id='InstallMode'>Complete</Property>
+    <Property Id='MaintenanceMode'>Remove</Property>
+    <!-- END BUILT-IN PROPERTIES -->
+    
     <!-- PROPERTIES -->
     <!-- Indicates if the installation should be for all users or not -->
     <Property Id="ALLUSERS">1</Property>
@@ -96,13 +101,21 @@
 
     <!-- INSTALL SEQUENCING -->
     <InstallExecuteSequence>
+      <?ifdef Enterprise?>
+        <Custom Action="PrepareInstallCdKey" Before="InstallCdKey"><![CDATA[NOT Installed]]></Custom>
+        <Custom Action="InstallCdKey" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
+      <?endif?>
+      <RemoveExistingProducts After="InstallFinalize" />
     </InstallExecuteSequence>
     <AdminExecuteSequence>
+      <?ifdef Enterprise?>
+        <Custom Action="PrepareInstallCdKey" Before="InstallCdKey"><![CDATA[NOT Installed]]></Custom>
+        <Custom Action="InstallCdKey" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
+      <?endif?>
     </AdminExecuteSequence>
     <!-- END INSTALL SEQUENCING -->
 
     <!-- USER INTERFACE -->
-
     <UIRef Id="UI.configuration"/>
     <UIRef Id="UI.dialog_files_in_use"/>
     <!-- END USER INTERFACE -->

@@ -3242,7 +3242,7 @@ doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Synchronization done through `scollect'.</synchronization>
 doc:	</routine>
 */
-rt_private struct chunk *find_from_space()
+rt_private struct chunk *find_from_space(void)
 {
 	char *l_arena;
 	struct chunk *start, *real_start;
@@ -4312,7 +4312,7 @@ rt_private void update_rem_set(void)
 	st_truncate(&rem_set);
 }
 
-rt_private void update_memory_set ()
+rt_private void update_memory_set (void)
 	/* Traverse the memory_set which contains all the objects, which have a
 	 * dispose routine. It calls the dispose routine
 	 * on the objects thar are garbage.

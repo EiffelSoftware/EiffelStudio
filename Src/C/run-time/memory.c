@@ -51,7 +51,7 @@ extern "C" {
 #include "eif_except.h"
 #include "rt_macros.h"
 #include "rt_main.h"
-#include "eif_memory.h"
+#include "rt_memory.h"
 
 #ifdef BOEHM_GC
 #include "rt_boehm.h"

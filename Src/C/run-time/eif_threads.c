@@ -80,7 +80,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(int is_external);
-rt_public unsigned int eif_thr_is_initialized(void);
+rt_public int eif_thr_is_initialized(void);
 rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
@@ -216,13 +216,13 @@ rt_private struct stack_list rt_globals_list = {
 /* Debugger usage */
 #ifdef WORKBENCH
 /*
-doc:	<routine name="get_thread_index" export="shared">
+doc:	<routine name="get_thread_index" export="private">
 doc:		<summary>This is used to get the index of thread `th_id' in rt_globals_list.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_shared int get_thread_index(rt_uint_ptr th_id)
+rt_private int get_thread_index(rt_uint_ptr th_id)
 {
 #ifdef EIF_THREADS
 	int count;
@@ -282,7 +282,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr th_id) {
 #define LAUNCH_MUTEX_UNLOCK \
 	EIF_LW_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
 
-rt_public void eif_thr_init_global_mutexes (void)
+rt_private void eif_thr_init_global_mutexes (void)
 {
 #ifdef ISE_GC
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, 0, "Couldn't create GC mutex");
@@ -434,7 +434,7 @@ rt_public void eif_thr_register(int is_external)
 	}
 }
 
-rt_public EIF_BOOLEAN eif_thr_is_root()
+rt_public EIF_BOOLEAN eif_thr_is_root(void)
 {
 	/*
 	 * Returns True is the calling thread is the Eiffel root thread,
@@ -447,38 +447,11 @@ rt_public EIF_BOOLEAN eif_thr_is_root()
 
 	return (eif_thr_context ? EIF_FALSE : EIF_TRUE);
 }
-
-rt_public unsigned int eif_thr_is_initialized()
+/* Returns a non-zero value if the calling thread is initialized for Eiffel, zero otherwise. */
+rt_public int eif_thr_is_initialized(void)
 {
-	/*
-	 * Returns a non null value if the calling thread is initialized for
-	 * Eiffel, null otherwise.
-	 */
-
-#if !defined(VXWORKS) && !defined(EIF_HAS_TLS)
-	eif_global_context_t *x;
-#endif
-
-#if defined(EIF_HAS_TLS) || defined(VXWORKS)
-	/* With thread-local-storage and on VXWORKS,
-	   eif_global_key holds a pointer to eif_globals. If the
-	   thread isn't initialized, eif_global_key == 0 */
-	return (eif_global_key != (EIF_TSD_TYPE) 0);
-#elif defined EIF_WINDOWS
-	/* On windows, GetLastError() yields NO_ERROR if such key was initialized */
-	EIF_TSD_GET0 ((eif_global_context_t *),eif_global_key,x);
-	return (GetLastError() == NO_ERROR);
-
-#elif defined EIF_POSIX_THREADS
-#ifdef EIF_NONPOSIX_TSD
-	return (EIF_TSD_GET0((void *),eif_global_key,x) == 0); /* FIXME.. not sure */
-#else /* EIF_NONPOSIX_TSD */
-	return (EIF_TSD_GET0(0,eif_global_key,x) != 0);
-#endif
-
-#elif defined SOLARIS_THREADS
-	return (EIF_TSD_GET0((void *),eif_global_key,x) == 0);
-#endif
+	EIF_GET_CONTEXT
+	return (eif_globals != NULL);
 }
 
 rt_private rt_global_context_t *eif_new_context (void)
@@ -1114,13 +1087,13 @@ rt_public void eif_synchronize_for_gc (void)
 	}
 }
 
-rt_public int eif_is_in_eiffel_code () 
+rt_public int eif_is_in_eiffel_code (void)
 {
 	RT_GET_CONTEXT
 	return ((gc_thread_status == EIF_THREAD_RUNNING) ? 1 : 0);
 }
 
-rt_public void eif_enter_eiffel_code()
+rt_public void eif_enter_eiffel_code(void)
 	/* Synchronize current thread as we enter some Eiffel code */
 {
 	RT_GET_CONTEXT
@@ -1135,7 +1108,7 @@ rt_public void eif_enter_eiffel_code()
 	}
 }
 
-rt_public void eif_exit_eiffel_code()
+rt_public void eif_exit_eiffel_code(void)
 	/* Synchronize current thread as we exit some Eiffel code */
 {
 	RT_GET_CONTEXT

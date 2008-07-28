@@ -1993,7 +1993,7 @@ rt_private void interpret(int flag, int where)
 			}
 			stagval = tagval;
 				/* Create new object */
-			new_obj = RTLNRW(type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
+			new_obj = RTLNRW(type, NULL, NULL, NULL, class_id, feature_id, open_map, is_precompiled, 
 							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
 			
 			last = iget();				/* Push a new value onto the stack */
@@ -6000,8 +6000,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 		case IV_LOCAL:								/* Nth local */
 			if (num > ilocnum->it_uint32) {
 				value -> value.type = SK_VOID;
-				value -> value.it_ptr = 0;
-				value -> address = (void *) 0;
+				value -> value.it_ptr = NULL;
+				value -> address = NULL;
 				return;
 			}
 			else if (num == ilocnum->it_uint32){		/* Off by one */
@@ -6011,8 +6011,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 					return;
 				} else {
 					value -> value.type = SK_VOID; /* Else signal out of range */
-					value -> value.it_ptr = 0;
-					value -> address = (void *) 0;
+					value -> value.it_ptr = NULL;
+					value -> address = NULL;
 					return;
 				}
 			}
@@ -6023,8 +6023,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 		case IV_ARG:								/* Nth argument */
 			if (num >= iargnum->it_uint32) {
 				value -> value.type = SK_VOID; /* Out of range */
-				value -> value.it_ptr = 0;
-				value -> address = (void *) 0;
+				value -> value.it_ptr = NULL;
+				value -> address = NULL;
 				return;
 			}
 			value -> value = * arg(num + 1);		/* Arguments from 1 to iargnum */
@@ -6090,8 +6090,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 		/* transform the 'c_item' into an regular item (like the one used with melted features) */
 		if (result_item == (EIF_TYPED_ADDRESS *)0) {
 			value -> value.type = SK_VOID;
-			value -> value.it_ptr = 0;
-			value -> address = (void *) 0;
+			value -> value.it_ptr = NULL;
+			value -> address = NULL;
 		}
 		else {
 			value -> value.type = result_item -> type;

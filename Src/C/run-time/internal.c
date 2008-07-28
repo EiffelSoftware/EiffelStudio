@@ -210,7 +210,7 @@ rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 	EIF_TYPE_INDEX *typearr = System(To_dtype(type_id)).cn_gtypes[i];
 	
 	REQUIRE("valid type_id", rt_valid_type_index(type_id));
-	return eif_compound_id (0, (EIF_TYPE_INDEX) type_id, typearr [1], typearr);
+	return eif_compound_id (NULL, (EIF_TYPE_INDEX) type_id, typearr [1], typearr);
 }
 
 rt_public long ei_eif_type(uint32 field_type)

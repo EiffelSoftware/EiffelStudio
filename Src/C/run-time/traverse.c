@@ -360,7 +360,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 			/* Special object filled with references */
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
-				if (0 != reference)		/* Non void reference */
+				if (reference)		/* Non void reference */
 					traversal(reference, p_accounting);
 			}
 		else {
@@ -465,7 +465,7 @@ rt_shared void map_reset(int emergency)
 	 */
 
 	if (emergency) {
-		for (next = map_stack.st_hd; next != 0; /*empty */) {
+		for (next = map_stack.st_hd; next != NULL; /*empty */) {
 			cur = next;						/* Current chunk to be freed */
 			next = next->sk_next;			/* Compute next chunk... */
 			eif_rt_xfree((char *) cur);			/* ...before freeing it */

@@ -358,7 +358,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 		default: 
 			/* Object reference */
 			reference = *(EIF_REFERENCE *)o_ref;
-			if (0 != reference) {
+			if (reference) {
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
 					/* C reference */
@@ -515,7 +515,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			sprintf(buffero, "%ld: ", (long) (old_count - count));
 			write_out();
 			reference = *(EIF_REFERENCE *) o_ref;
-			if (0 == reference)
+			if (!reference)
 				sprintf(buffero, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)
 				sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);

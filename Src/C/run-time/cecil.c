@@ -618,7 +618,7 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 /*----------------------------------------*/
 
 #ifdef EIF_THREADS
-rt_shared void eif_set_thr_context () {
+rt_shared void eif_set_thr_context (void) {
 	/* Initialize thread context for non Eiffel Threads.
      * There is not much to initialize, but this is necessary
 	 * so that `eif_thr_is_root ()' can distinguish the root thread

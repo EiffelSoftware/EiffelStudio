@@ -41,7 +41,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "eif_portable.h"
 #include "eif_macros.h"
 #include "rt_struct.h"
-#include "eif_cecil.h"
+#include "rt_cecil.h"
 #include "rt_gen_types.h"
 #include "eif_gen_conf.h"
 #include "rt_assert.h"
@@ -77,14 +77,14 @@ struct rt_global_data {
 
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="eif_pre_ecma_mapping_status" return_type="int" export="public">
+doc:	<attribute name="eif_pre_ecma_mapping_status" return_type="int" export="private">
 doc:		<summary>Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). Note that the value is set to `1' by default for backward compatibility of old storables. Don't forget to updated `eif_threads.c' for the setting of the per thread data.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Only used in non-multithreaded case.</synchronization>
 doc:	</attribute>
 */
-rt_public int eif_pre_ecma_mapping_status = 1;
+rt_private int eif_pre_ecma_mapping_status = 1;
 #endif
 
 	

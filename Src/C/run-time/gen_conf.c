@@ -99,7 +99,7 @@ rt_shared EIF_TYPE_INDEX    eif_par_table2_size = 0;
 #define par_info(t) (eif_par_table2[(t)])
 
 /*
-doc:	<attribute name="rtud_inv" return_type="EIF_TYPE_INDEX *" export="private/public">
+doc:	<attribute name="rtud_inv" return_type="EIF_TYPE_INDEX *" export="private">
 doc:		<summary>Inverse RTUD table. Only used in workbench mode with changing dynamic types.</summary>
 doc:		<access>Read only</access>
 doc:		<indexing>base id; RTUD(yes)</indexing>
@@ -109,11 +109,7 @@ doc:		<synchronization>None since initialized during runtime initialization in `
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-#ifdef EIF_THREADS
 rt_private EIF_TYPE_INDEX *rtud_inv = NULL;
-#else
-rt_public EIF_TYPE_INDEX *rtud_inv = NULL;
-#endif
 #endif
 
 /*
@@ -685,7 +681,7 @@ rt_shared void eif_gen_conf_thread_cleanup (void) {
 /* Called from reclaim, and free all global variables allocated     */
 /* for the Generic Conformance.                                     */
 /*------------------------------------------------------------------*/
-rt_shared void eif_gen_conf_cleanup () 
+rt_shared void eif_gen_conf_cleanup (void) 
 {
 	/* Free in reverse order of allocation. */
 

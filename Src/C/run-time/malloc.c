@@ -1480,7 +1480,7 @@ rt_public EIF_REFERENCE bmalloc(uint16 size)
 	}
   
 	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
-	return (0); /* NOTREACHED */
+	return NULL; /* NOTREACHED */
 }
 
 /*
@@ -2010,7 +2010,7 @@ doc:		<synchronization>Call to `allocate_from_core' is safe.</synchronization>
 doc:	</routine>
 */
 
-rt_shared EIF_REFERENCE get_to_from_core ()
+rt_shared EIF_REFERENCE get_to_from_core (void)
 {
 	EIF_REFERENCE Result;
 

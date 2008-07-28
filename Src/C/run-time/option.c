@@ -49,7 +49,7 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #include <sys/machd.h>
 #endif
 #include "eif_struct.h"
-#include "eif_option.h"
+#include "rt_option.h"
 #include "rt_hashin.h"
 #include "rt_lmalloc.h"
 #include "rt_garcol.h"
@@ -619,7 +619,7 @@ void initprf(void)
 	}
 }
 
-void exitprf(void)
+rt_shared void exitprf(void)
 {
 	/* Exit profiling. Call this function only at exit of Eiffel system.
 	 * Compute the total execution time and the percentage of each feature.
@@ -960,10 +960,10 @@ struct prof_info* prof_stack_pop(void)
 			return stk_item;
 		} else {
 				/* Bad Luck! */
-			return 0;
+			return NULL;
 		}
 	} else {
-		return 0;
+		return NULL;
 	}
 }
 
@@ -992,13 +992,13 @@ struct prof_info* prof_stack_top(void)
 				top = prof_stack->st_cur->sk_prev->sk_end - 1;
 			} else {
 					/* Bad Luck! */
-				return 0;
+				return NULL;
 			}
 		}
 
 		return (struct prof_info *) (*top);
 	} else
-		return 0;
+		return NULL;
 }
 
 void prof_stack_init(void)

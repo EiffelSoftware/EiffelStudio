@@ -330,8 +330,8 @@ rt_public void rout_obj_call_procedure_dynamic (
 	int next_open = 0xFFFF;
 	int open_idx = 1;
 	int closed_idx = 1;
-	EIF_TYPED_VALUE* first_arg = 0;
-	EIF_INTEGER* open_positions = 0;
+	EIF_TYPED_VALUE* first_arg = NULL;
+	EIF_INTEGER* open_positions = NULL;
 
 	if (closed_count > 0) {
 		RT_GC_PROTECT(closed_args); /* iget() may call GC */
@@ -352,7 +352,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 			next_open = open_positions [0];
 		}
 	}
-	if (first_arg == 0) {
+	if (first_arg == NULL) {
 		first_arg = &(closed_args [1]);
 		RT_GC_PROTECT (first_arg);
 		closed_idx = 2;
@@ -401,7 +401,7 @@ rt_public void rout_obj_call_function_dynamic (
 	EIF_TYPED_VALUE* open_args, int open_count, 
 	EIF_REFERENCE open_map, void* res)
 {
-	EIF_TYPED_VALUE* it = 0;
+	EIF_TYPED_VALUE* it = NULL;
 
 	rout_obj_call_procedure_dynamic (stype_id, feature_id, is_precompiled, is_basic_type, is_inline_agent,
 									 closed_args, closed_count, open_args, open_count, open_map);

@@ -645,7 +645,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_public EIF_BOOLEAN has_reclaim_been_called = 0;
+rt_private EIF_BOOLEAN has_reclaim_been_called = 0;
 
 #ifdef ISE_GC
 

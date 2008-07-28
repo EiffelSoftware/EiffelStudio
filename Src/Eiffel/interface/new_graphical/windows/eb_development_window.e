@@ -1309,7 +1309,7 @@ feature -- Window management
 				create l_file.make (l_file_name)
 				if l_file.exists then
 					l_result := docking_manager.open_tools_config (l_file_name)
-					check l_result end
+					check open_tools_config_succeed: l_result end
 				else
 					internal_construct_standard_layout_by_code
 				end

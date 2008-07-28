@@ -34,7 +34,6 @@ feature -- Command
 			l_x, l_y: INTEGER
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_window: EB_VISION_WINDOW
-			l_title_bar_height, l_border_width: INTEGER
 		do
 			internal_construct
 			l_window := develop_window.window

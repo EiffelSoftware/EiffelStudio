@@ -141,7 +141,7 @@ feature -- Query
 feature {NONE} -- Query
 
 	find_ancestors_feature (a_feature: !E_FEATURE; a_parent_name: ?STRING_8): ?E_FEATURE
-			-- Attepts to locate an ancestor feature. This also respects ancestor features for attributes.
+			-- Attempts to locate an ancestor feature. This also respects ancestor features for attributes.
 			--
 			-- `a_feature': The feature to locate a first parent from.
 			-- `a_parent_name': An optional parent class name to use when extracting inherited comments.

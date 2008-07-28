@@ -16,7 +16,6 @@ inherit
 
 	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			make,
 			close,
 			on_before_initialize,
 			create_mini_tool_bar_items,
@@ -30,19 +29,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like develop_window; a_tool: like tool_descriptor) is
-		do
-			watch_id := a_tool.edition
-			auto_expression_enabled := False
-			Precursor (a_manager, a_tool)
-		end
-
 	on_before_initialize is
 			-- <Precursor>
 		do
-			Precursor
+			watch_id := tool_descriptor.edition
+			auto_expression_enabled := False
 			auto_expressions_deltas := [-2, +1]
 			create watched_items.make (10)
+
+			Precursor
 		end
 
 	build_tool_interface (a_widget: EV_VERTICAL_BOX) is

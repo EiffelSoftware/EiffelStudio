@@ -72,6 +72,7 @@ extern void esdpch(EIF_CONTEXT_NOARG);			/* Dispatch queued signals */
 extern char *signame(int sig);			/* Give English description of a signal */
 extern void trapsig(void (*handler) (int));			/* Set a trap for most of the signals */
 extern Signal_t exfpe(int sig);		/* Routine trapped for floating point exception */
+extern Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int);
 
 #ifndef HAS_SYS_SIGLIST
 	extern char *sys_siglist[];

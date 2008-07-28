@@ -65,7 +65,7 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 #define DESC_LEN	29		/* Maximum length for signal description */
 
 /*
-doc:	<attribute name="esig" return_type="Signal_t (*)(int) [EIF_NSIG]" export="public">
+doc:	<attribute name="esig" return_type="Signal_t (*)(int) [EIF_NSIG]" export="private">
 doc:		<summary>Array of signal handlers used by the run-time to dispatch signals as they arrive. The array is modified via class EXCEPTION. If no signal handler is provided, then the signal is delivered to the process after beeing reset to its default behaviour (of course, we do this only when the default behaviour is not SIG_IGN).</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>By signal ID value</indexing>
@@ -75,7 +75,7 @@ doc:		<fixme>It does not look like it is simply initialized once and then only r
 doc:	</attribute>
 */
 
-rt_public Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
+rt_private Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
 
 /*
 doc:	<attribute name="sig_ign" return_type="char [EIF_NSIG]" export="private">
@@ -484,7 +484,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
  * Kernel signal interface.
  */
 
-rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
+rt_shared Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
         				/* Signal to handle */
                    		/* Handler to be associated with signal */
 {
@@ -527,77 +527,6 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	return oldfunc;				/* Previous signal handler */
 }
 
-#ifndef HAS_SIGVEC
-#ifndef HAS_SIGVECTOR
-rt_public int esigvec(void)
-{
-	/* The sigvec() kernel interface (named sigvector() on HP-UX, thanks HP)
-	 * is missing. This raises an external event exception.
-	 */
-
-	eraise("sigvec() absent", EN_EXT); 
-/* NOT REACHED */
-	return -1;
-}
-#else
-#define HAS_SIGVEC
-#endif
-#endif
-
-#ifdef HAS_SIGVEC
-rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
-{
-	/* This routine is a wrapper to the kernel sigvec() routine. This is needed
-	 * since all the signals are nornally trapped by the run-time first, and
-	 * the user must not bypass that control or the semantics of signal
-	 * reception will no longer be well-defined.
-	 */
-
-	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
-	/*	int ignored;	*/			/* Ignore status for previous handler */
-
-	if (sig >= EIF_NSIG) {		/* Bad signal, don't bother issuing system call */
-		errno = EINVAL;
-		return -1;
-	}
-
-	/* The user cannot, repeat, cannot set his own routine as a signal handler.
-	 * All the handling is done through the run-time ehandler(). The user-
-	 * defined handler is recorded in the esig[] array.
-	 */
-
-	if (vec != (struct sigvec *) 0) {
-		oldfunc = esignal(sig, vec->sv_handler);	/* Record new handler */
-		vec->sv_handler = ehandler;					/* Force wrapper handler */
-	} else {
-		if (sig_ign[sig])
-			oldfunc = SIG_IGN;
-		else if (esig[sig] == (Signal_t (*)()) 0)
-			oldfunc = SIG_DFL;
-		else
-			oldfunc = esig[sig];
-	}
-
-#ifdef HAS_SIGVECTOR
-	if (-1 == sigvector(sig, vec, ovec))
-		return -1;
-#else
-	if (-1 == sigvec(sig, vec, ovec))
-		return -1;
-#endif
-
-	/* Make sure the user receives a meaningful value, i.e. not the wrapper
-	 * handler but the user-defined handler installed, thus making the
-	 * run-time layer completely transparent.
-	 */
-
-	if (ovec != (struct sigvec *) 0)
-		ovec->sv_handler = oldfunc;
-
-	return 0;		/* Call succeeded */
-}
-#endif
-
 /*
  * Initialization section.
  */
@@ -610,7 +539,7 @@ rt_shared void initsig(void)
 	 */
 	RT_GET_CONTEXT
 	int sig;				/* To loop over the signals */
-	Signal_t (*old)();	/* Old signal handler */
+	Signal_t (*old)(int);	/* Old signal handler */
 
 	/* Initialize the signal stack (circular buffer). The last read location is
 	 * set to SIGSTACK - 1 (i.e. at the end of the array) while the first free

@@ -11,7 +11,6 @@ class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [ES_EIS_TOOL_WIDGET]
 		redefine
-			make,
 			internal_recycle,
 			create_mini_tool_bar_items,
 			on_after_initialized,
@@ -23,6 +22,14 @@ inherit
 			{ES_TOOL} all
 		end
 
+	SESSION_EVENT_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_session_value_changed
+		end
+
+--inhert {NONE}
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -33,18 +40,16 @@ create {ES_INFORMATION_TOOL}
 
 feature {NONE} -- Initialization
 
-	make (a_window: like develop_window; a_tool: like tool_descriptor) is
-			-- <Precursor>
-		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL} (a_window, a_tool)
-		end
-
 	on_after_initialized is
 			-- <Precursor>
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
-			-- Request EIS background visiting post project load.
+			if session_manager.is_service_available then
+				session_data.connect_events (Current)
+			end
+
+				-- Request EIS background visiting post project load.
 			if eiffel_project.manager.is_project_loaded then
 				request_eis_visit
 			else
@@ -53,7 +58,7 @@ feature {NONE} -- Initialization
 
 			register_action (eiffel_project.manager.compile_stop_agents, agent request_eis_visit)
 
-			-- Request EIS background visiting when focusing in.
+				-- Request EIS background visiting when focusing in.
 			register_action (content.focus_in_actions, agent request_eis_visit)
 		end
 
@@ -64,20 +69,14 @@ feature {NONE} -- User interface initialization
             -- Note: This function is called prior to showing the tool for the first time.
             --
             -- `a_widget': A widget to build the tool interface using.
-        local
-        	l_session: like session_data
 		do
-			if {lt_observer: PROGRESS_OBSERVER}a_widget then
+			if {lt_observer: PROGRESS_OBSERVER} a_widget then
 				eis_manager.add_observer (lt_observer)
 			end
-			if session_manager.is_service_available then
-					-- Hook up events
-				l_session := session_data
-				on_session_value_changed_agent := agent on_session_value_changed
-				l_session.value_changed_event.subscribe (on_session_value_changed_agent)
 
+			if session_manager.is_service_available then
 					-- Retrieve session data and set button states
-				if {l_toggle: BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) then
+				if {l_toggle: BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) then
 					if l_toggle.item then
 						a_widget.auto_sweep_button.enable_select
 					else
@@ -108,8 +107,8 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					if on_session_value_changed_agent /= Void then
-						session_data.value_changed_event.unsubscribe (on_session_value_changed_agent)
+					if session_data.is_connected (Current) then
+						session_data.disconnect_events (Current)
 					end
 				end
 			end
@@ -122,16 +121,8 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
-			-- Called when the session changes
-			--
-			-- `a_session': Session object which the change occured in.
-			-- `a_id': The identifier of the changed session value.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_session_attached: a_session /= Void
-			a_session_is_interface_usable: a_session.is_interface_usable
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
@@ -230,9 +221,6 @@ feature {NONE} -- Implementation
 
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
-
-	on_session_value_changed_agent: PROCEDURE [ANY, TUPLE [SESSION_I, STRING_8]]
-				-- Agent created in `build_tool_interface'
 
 	auto_background_visiting is
 			-- Auto background visiting

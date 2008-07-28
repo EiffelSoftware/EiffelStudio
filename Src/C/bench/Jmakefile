@@ -5,7 +5,7 @@
 #include "../U/runtime.H"
 
 ;# Files used to build the daemon
-LSRC = byte.c date.c minilzo.c
+LSRC = byte.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 ;# Derived object file names

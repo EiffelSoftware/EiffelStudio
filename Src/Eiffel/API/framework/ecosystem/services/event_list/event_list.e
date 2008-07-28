@@ -14,7 +14,7 @@ class
 inherit
 	EVENT_LIST_S
 
-	EVENT_OBSERVER_CONNECTION [!EVENT_LIST_OBSERVER]
+	EVENT_OBSERVER_CONNECTION [EVENT_LIST_OBSERVER]
 
 create
 	make
@@ -205,16 +205,16 @@ feature -- Basic operations
 
 feature -- Events
 
-	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
+	item_adopted_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- <Precursor>
 
 feature {NONE} -- Events

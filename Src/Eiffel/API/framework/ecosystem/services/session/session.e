@@ -359,7 +359,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: !EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.
@@ -514,7 +514,6 @@ invariant
 	manager_attached: manager /= Void
 	manager_is_zombie: not is_zombie implies manager.is_interface_usable
 	data_attached: data /= Void
-	value_changed_events_attached: value_changed_event /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

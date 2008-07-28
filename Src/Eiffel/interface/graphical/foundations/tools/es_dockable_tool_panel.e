@@ -21,6 +21,7 @@ inherit
             pixel_buffer as icon,
             build_interface as on_before_initialize
         redefine
+        	make,
             internal_recycle,
             build_mini_toolbar,
             icon,
@@ -52,6 +53,12 @@ inherit
         end
 
 feature {NONE} -- Initialization
+
+	frozen make (a_window: like develop_window; a_tool: like tool_descriptor)
+			-- <Precursor>
+		do
+			Precursor {EB_TOOL} (a_window, a_tool)
+		end
 
     frozen initialize
             -- Initializes the creation of the tool.

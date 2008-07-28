@@ -10,7 +10,7 @@ deferred class
 	ACTIVE_COLLECTION_I [G -> ACTIVE_ITEM_I]
 
 inherit
-	EVENT_OBSERVER_CONNECTION_I [!ACTIVE_COLLECTION_OBSERVER [G]]
+	EVENT_OBSERVER_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G]]
 
 feature -- Access
 
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [G]): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [G]): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 			-- <Precursor>
 		do
 			create Result.make (4)

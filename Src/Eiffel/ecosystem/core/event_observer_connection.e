@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	EVENT_OBSERVER_CONNECTION [G -> !EVENT_OBSERVER_I]
+	EVENT_OBSERVER_CONNECTION [G -> EVENT_OBSERVER_I]
 
 inherit
 	EVENT_OBSERVER_CONNECTION_I [G]
@@ -20,11 +20,8 @@ inherit
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+	safe_dispose (a_disposing: BOOLEAN)
+			-- <Precursor>
 		do
 			if a_disposing then
 				check
@@ -33,7 +30,7 @@ feature {NONE} -- Clean up
 				end
 
 				if internal_connected_event_observers /= Void then
-					internal_connected_event_observers.do_all (agent (a_ia_observer: G)
+					internal_connected_event_observers.do_all (agent (a_ia_observer: !G)
 						do
 							disconnect_events (internal_connected_event_observers.item_for_iteration)
 						end)
@@ -47,67 +44,53 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen connected_event_observers: DS_ARRAYED_LIST [G]
+	frozen connected_event_observers: !DS_ARRAYED_LIST [!G]
 			-- Current connections to event observers
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := internal_connected_event_observers
-			if Result = Void then
+			if {l_result: DS_ARRAYED_LIST [!G]} internal_connected_event_observers then
+				Result := l_result
+			else
 				create Result.make_default
 				internal_connected_event_observers := Result
 			end
 		ensure
-			result_attached: Result /= Void
-			result_contains_attached_items: not Result.has (Void)
 			result_consistent: Result = connected_event_observers
 		end
 
 feature -- Query
 
-	frozen is_connected (a_observer: G): BOOLEAN
-			-- Determines if an event observer interface has already been connected to Current.
-			--
-			-- `a_observer': The event observer interface to test for an establish connection.
-			-- `Result': True if the event observer interface has already been connected, False otherwise.
+	frozen is_connected (a_observer: !G): BOOLEAN
+			-- <Precursor>
 		do
-			Result := connected_event_observers.has (a_observer)
+			Result := is_interface_usable and then connected_event_observers.has (a_observer)
 		ensure then
+			is_interface_usable: Result implies is_interface_usable
 			connected_event_observers_has_a_observer: Result implies connected_event_observers.has (a_observer)
 		end
 
 feature {NONE} -- Query
 
-	events (a_observer: G): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+	events (a_observer: !G): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 			-- List of events and associated action.
 			--
 			-- `a_observer': Event observer interface to bind agent actions to.
 			-- `Result': A list of event types paired with a associated action on the passed observer
 		require
 			is_interface_usable: is_interface_usable
-			a_observer_attached: a_observer /= Void
 			a_observer_is_interface_usable: a_observer.is_interface_usable
 		deferred
-		ensure
-			result_attached: Result /= Void
-			result_contains_attached_items: not Result.has (Void)
-			result_items_are_valid: Result.for_all (agent (a_ia_item: TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]; a_ia_observer: G): BOOLEAN
-				do
-					Result := a_ia_item.event /= Void and then a_ia_item.action /= Void and then
-						a_ia_item.action.target = a_ia_observer
-				end)
 		end
 
 feature -- Event connection
 
-	frozen connect_events (a_observer: G)
-			-- Connects event observer interface to Current.
-			--
-			-- `a_observer': Event observer interface to connection to current.
+	frozen connect_events (a_observer: !G)
+			-- <Precursor>
 		local
-			l_events: like events
-			l_cursor: DS_LIST_CURSOR [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			l_event: TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
+			l_events: !like events
+			l_cursor: DS_LIST_CURSOR [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_event: !TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
 		do
 			l_events := events (a_observer)
 			if not l_events.is_empty then
@@ -123,14 +106,12 @@ feature -- Event connection
 			connected_event_observers_has_a_observer: connected_event_observers.has (a_observer)
 		end
 
-	frozen disconnect_events (a_observer: G)
-			-- Connects event observer interface from Current.
-			--
-			-- `a_observer': Event observer interface to disconnection from current.
+	frozen disconnect_events (a_observer: !G)
+			-- <Precursor>
 		local
-			l_events: like events
-			l_cursor: DS_LIST_CURSOR [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			l_event: TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
+			l_events: !like events
+			l_cursor: DS_LIST_CURSOR [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_event: !TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
 		do
 			l_events := events (a_observer)
 			if not l_events.is_empty then
@@ -150,7 +131,7 @@ feature -- Event connection
 
 feature {NONE} -- Internal implementation cache
 
-	internal_connected_event_observers: like connected_event_observers
+	internal_connected_event_observers: ?like connected_event_observers
 			-- Cached version of `connected_event_observers'
 			-- Note: Do not use directly!
 

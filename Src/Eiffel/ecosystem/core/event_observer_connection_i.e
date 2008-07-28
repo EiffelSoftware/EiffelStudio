@@ -10,37 +10,35 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	EVENT_OBSERVER_CONNECTION_I [G -> !EVENT_OBSERVER_I]
+	EVENT_OBSERVER_CONNECTION_I [G -> EVENT_OBSERVER_I]
 
 inherit
 	USABLE_I
 
 feature -- Event connection
 
-	connect_events (a_observer: G)
+	connect_events (a_observer: !G)
 			-- Connects event handler interface to Current.
 			--
 			-- `a_observer': Event handler interface to connection to current.
 		require
 			is_interface_usable: is_interface_usable
-			a_observer_attached: a_observer /= Void
 			a_observer_is_interface_usable: a_observer.is_interface_usable
 			not_a_observer_is_connected: not is_connected (a_observer)
-			a_observer_is_valid: ({G}) #? a_observer /= Void
+			a_observer_is_valid: ({?G}) #? a_observer /= Void
 		deferred
 		ensure
 			a_observer_is_connected: is_connected (a_observer)
 		end
 
-	disconnect_events (a_observer: G)
+	disconnect_events (a_observer: !G)
 			-- Connects event handler interface from Current.
 			--
 			-- `a_observer': Event handler interface to disconnection from current.
 		require
 			is_interface_usable: is_interface_usable
-			a_observer_attached: a_observer /= Void
 			a_observer_is_connected: is_connected (a_observer)
-			a_observer_is_valid: ({G}) #? a_observer /= Void
+			a_observer_is_valid: ({?G}) #? a_observer /= Void
 		deferred
 		ensure
 			not_a_observer_is_connected: not is_connected (a_observer)
@@ -48,19 +46,16 @@ feature -- Event connection
 
 feature -- Query
 
-	is_connected (a_observer: G): BOOLEAN
+	is_connected (a_observer: !G): BOOLEAN
 			-- Determines if an event handler interface has already been connected to Current.
 			--
 			-- `a_observer': The event handler interface to test for an establish connection.
 			-- `Result': True if the event handler interface has already been connected, False otherwise.
-		require
-			is_interface_usable: is_interface_usable
-			a_observer_attached: a_observer /= Void
 		deferred
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

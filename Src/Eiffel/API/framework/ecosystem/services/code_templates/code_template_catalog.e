@@ -13,7 +13,7 @@ class
 inherit
 	CODE_TEMPLATE_CATALOG_S
 
-	EVENT_OBSERVER_CONNECTION [!CODE_TEMPLATE_CATALOG_OBSERVER]
+	EVENT_OBSERVER_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER]
 
 	KL_SHARED_FILE_SYSTEM
 		export
@@ -185,7 +185,7 @@ feature -- Query
 
 feature -- Events
 
-	catalog_changed_event: EVENT_TYPE [TUPLE]
+	catalog_changed_event: !EVENT_TYPE [TUPLE]
 			-- <Precursor>
 
 feature {NONE} -- Helpers

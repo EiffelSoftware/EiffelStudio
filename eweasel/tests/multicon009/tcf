@@ -23,12 +23,16 @@ compare melted_output1 output_integer_32_ref
 compile_frozen
 compile_result 	ok
 c_compile_work
+c_compile_result ok
+
 execute_work NONE frozen_output1
 compare frozen_output1 output_integer_32_ref
 
 compile_final
 compile_result 	ok
 c_compile_final
+c_compile_result ok
+
 execute_final NONE final_output1
 compare final_output1 output_integer_32_ref
 ---------------------------------------------
@@ -39,18 +43,24 @@ copy_sub 	Ace $TEST Ace
 compile_melted
 compile_result 	ok
 c_compile_work
+c_compile_result ok
+
 execute_work NONE melted_output2
 compare melted_output2 output_integer_32
 
 compile_frozen
 compile_result 	ok
 c_compile_work
+c_compile_result ok
+
 execute_work NONE frozen_output2
 compare frozen_output2 output_integer_32
 
 compile_final
 compile_result 	ok
 c_compile_final
+c_compile_result ok
+
 execute_final NONE final_output2
 compare final_output2 output_integer_32
 ---------------------------------------------

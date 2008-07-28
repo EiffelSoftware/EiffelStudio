@@ -56,6 +56,11 @@ extern void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_T
 extern void c_opstack_reset(struct c_opstack *stk);
 #endif
 
+extern uint32 critical_stack_depth;
+extern int already_warned;
+extern char *dview(EIF_REFERENCE root);
+extern void set_breakpoint_count(int num);
+
 extern void debug_initialize(void);
 extern void dbreak_free_table(void);
 extern void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/

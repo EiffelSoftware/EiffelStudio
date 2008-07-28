@@ -28,11 +28,16 @@ feature -- Access
 		do
 			detect_encoding (a_stream)
 			l_encoding := detected_encoding
-			l_encoding.convert_to (utf32, a_stream)
-			if l_encoding.last_conversion_successful then
-				Result := l_encoding.last_converted_string.as_string_32
-			else
+			if l_encoding.is_equal (iso_8859_1) then
+					-- It is safe and much faster not to convert for now.
 				Result := a_stream.as_string_32
+			else
+				l_encoding.convert_to (utf32, a_stream)
+				if l_encoding.last_conversion_successful then
+					Result := l_encoding.last_converted_string.as_string_32
+				else
+					Result := a_stream.as_string_32
+				end
 			end
 		end
 

@@ -98,11 +98,28 @@ feature -- Muter action
 			p_string_not_void: p_string /= Void
 		local
 			l_string: STRING_32
+			i, l_count: INTEGER
+			c: CHARACTER_32
 		do
-			create l_string.make_from_string (p_string)
-			l_string.replace_substring_all ("%R"," ")
-			l_string.replace_substring_all ("%N"," ")
-			l_string.replace_substring_all ("%T"," ")
+			l_count := p_string.count
+			create l_string.make (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				c := p_string.item (i)
+				if
+					c = '%N' or else
+					c = '%R' or else
+					c = '%T'
+				then
+					l_string.append_character (' ')
+				else
+					l_string.append_character (c)
+				end
+				i := i + 1
+			end
 			Result := l_string
 		end
 

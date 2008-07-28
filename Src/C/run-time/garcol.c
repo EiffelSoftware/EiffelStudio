@@ -1192,7 +1192,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</routine>
 */
-rt_shared EIF_REFERENCE ** alloc_oms ()
+rt_shared EIF_REFERENCE ** alloc_oms (void)
 {
 	EIF_REFERENCE ** result;
 	

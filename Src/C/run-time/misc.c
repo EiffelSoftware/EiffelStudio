@@ -330,6 +330,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 
 /* Obsolete but kept for backward compatibility. To remove in 6.x where x > 1 */
 /* **VMS** Required for Eiffel compiler to run on VMS -- davids. */
+extern char *eif_getenv (char * k);
 rt_public char * eif_getenv (char * k)
 {
 #if defined EIF_VMS
@@ -345,6 +346,7 @@ rt_public char * eif_getenv (char * k)
 /* reporting purposes. It is called by a variant of get in a VMS-specific   */
 /* descendant of EXECUTION_ENVIRONMENT.					    */
 /* For non-VMS platforms, it is the same as eif_getenv().		    */
+extern char *eif_getenv_native (char *name);
 rt_public char* eif_getenv_native (char* nam)
 {
 #ifdef EIF_VMS
@@ -354,6 +356,7 @@ rt_public char* eif_getenv_native (char* nam)
 	return getenv (nam);
 } /* end eif_getenv_native() */
 
+extern union overhead *eif_header (EIF_REFERENCE);
 rt_shared union overhead * eif_header (EIF_REFERENCE object) {
 	REQUIRE("object not null", object);
 

@@ -1194,7 +1194,7 @@ rt_public void eraise(char *tag, long num)
 				break;
 			default:
 				trace->ex_name = tag;	/* Record its tag */
-				trace->ex_where = 0;	/* Unknown location (yet) */
+				trace->ex_where = NULL;	/* Unknown location (yet) */
 			}
 		}
 	}
@@ -1358,7 +1358,7 @@ rt_public void com_eraise(char *tag, long num)
 				break;
 			default:
 				trace->ex_name = tag;	/* Record its tag */
-				trace->ex_where = 0;	/* Unknown location (yet) */
+				trace->ex_where = NULL;	/* Unknown location (yet) */
 			}
 		}
 	}
@@ -3430,7 +3430,7 @@ rt_public EIF_REFERENCE eename(long ex)
 		e_string = exception_string(ex);
 		return makestr(e_string, strlen(e_string));
 	}
-	return (0); /* to avoid a warning */
+	return NULL; /* to avoid a warning */
 }
 
 rt_public char eedefined(long ex)
@@ -3439,7 +3439,7 @@ rt_public char eedefined(long ex)
 	return (char) ((ex > 0 && ex <= EN_NEX)? 1 : 0);
 }
 
-rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)
+rt_private struct ex_vect *top_n_call(struct xstack *stk, int n)
 {
 	/* Get the n-th top EX_CALL, EX_RETY or EX_RESC vector from `stk'.
 	 * If not found, return 0. `n' should be greater than zero.
@@ -3476,7 +3476,7 @@ rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)
 	return (struct ex_vect *)0; /* Should never reach, just to make the c compiler happy. */
 }
 
-rt_shared struct ex_vect *draise_recipient_call (struct xstack *stk)
+rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 {
 	/* The top most call of EX_CALL, EX_RETY or EX_RESC vector from `stk'.
 	 * If not found, return 0. `n' should be greater than zero.
@@ -3582,7 +3582,7 @@ rt_public void draise(long code, char *meaning, char *message)
 			memset (trace, 0, sizeof(struct ex_vect));
 			trace->ex_type = (unsigned char) num;		/* Exception code */
 			trace->ex_name = tag;	/* Record its tag */
-			trace->ex_where = 0;	/* Unknown location (yet) */
+			trace->ex_where = NULL;	/* Unknown location (yet) */
 		}
 	}
 

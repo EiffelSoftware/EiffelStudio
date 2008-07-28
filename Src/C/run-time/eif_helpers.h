@@ -251,22 +251,22 @@ rt_private EIF_BOOLEAN eif_fpeq_real_64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 }
 
 /* NaN constants */
-rt_private EIF_REAL_32 eif_signaling_nan_real_32 () {
+rt_private EIF_REAL_32 eif_signaling_nan_real_32 (void) {
 	EIF_NATURAL_32 s_nan = 0x7FA00000;
 	EIF_NATURAL_32 *l_s_nan = &s_nan;
 	return * ((EIF_REAL_32 *) l_s_nan);
 }
-rt_private EIF_REAL_64 eif_signaling_nan_real_64 () {
+rt_private EIF_REAL_64 eif_signaling_nan_real_64 (void) {
 	EIF_NATURAL_64 s_nan = RTU64C(0x7FF4000000000000);
 	EIF_NATURAL_64 *l_s_nan = &s_nan;
 	return * ((EIF_REAL_64 *) l_s_nan);
 }
-rt_private EIF_REAL_32 eif_quiet_nan_real_32 () {
+rt_private EIF_REAL_32 eif_quiet_nan_real_32 (void) {
 	EIF_NATURAL_32 q_nan = 0x7FC00000;
 	EIF_NATURAL_32 *l_q_nan = &q_nan;
 	return * ((EIF_REAL_32 *) l_q_nan);
 }
-rt_private EIF_REAL_64 eif_quiet_nan_real_64 () {
+rt_private EIF_REAL_64 eif_quiet_nan_real_64 (void) {
 	EIF_NATURAL_64 q_nan = RTU64C(0x7FF8000000000000);
 	EIF_NATURAL_64 *l_q_nan = &q_nan;
 	return * ((EIF_REAL_64 *) l_q_nan);

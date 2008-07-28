@@ -193,8 +193,9 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	int xobjs;
 #endif
 
-	if (0 == source)
-		return (EIF_REFERENCE) 0;			/* Void source */
+	if (source == NULL) {
+		return NULL;			/* Void source */
+	}
 
 	/* The deep clone of the source will be attached in the 'boot' entry from
 	 * the anchor structure. It all happens as if we were in fact deep cloning
@@ -438,7 +439,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 			for (offset = 0; count > 0; count--, offset += REFSIZ) {
 				c_field = *(EIF_REFERENCE *) (clone + offset);
 				/* Iteration on non void references and Eiffel references */
-				if (0 == c_field || (HEADER(c_field)->ov_flags & EO_C))
+				if ((c_field == NULL) || (HEADER(c_field)->ov_flags & EO_C))
 					continue;
 				rdeepclone(c_field, clone, offset);
 			}
@@ -732,7 +733,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 		nb_ref--, t_offset += REFSIZ, s_offset += REFSIZ 
 	) {
 		t_reference = *(EIF_REFERENCE *) (t_enclosing + t_offset);
-		if (0 == t_reference)
+		if (t_reference == NULL)
 			continue;		/* Void reference */
 
 		zone = HEADER(t_reference);

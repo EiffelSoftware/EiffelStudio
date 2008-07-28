@@ -44,7 +44,7 @@ doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling
 #include "rt_garcol.h"
 #include "eif_except.h"
 #include "eif_cecil.h"
-#include "eif_hector.h"
+#include "rt_hector.h"
 #include "rt_assert.h"
 
 #ifdef ISE_GC
@@ -123,6 +123,12 @@ rt_shared EIF_LW_MUTEX_TYPE *eif_hec_saved_mutex = NULL;
 /* The following routines are just for backward compatibility.
  * Remove them in 5 years from now (i.e. in 2013/02/15)
  */
+extern EIF_REFERENCE ewean (EIF_OBJECT object);
+extern EIF_OBJECT eadopt (EIF_OBJECT object);
+extern EIF_OBJECT henter (EIF_REFERENCE object);
+extern EIF_REFERENCE efreeze (EIF_OBJECT object);
+extern void eufreeze (EIF_REFERENCE object);
+
 rt_public EIF_REFERENCE ewean (EIF_OBJECT object) {
 	return eif_wean (object);
 }

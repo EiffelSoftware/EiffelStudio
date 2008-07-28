@@ -310,7 +310,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 			/* Evaluation of two references */
 			s_field = *(EIF_REFERENCE *) s_ref;
 			t_field = *(EIF_REFERENCE *) t_ref;
-			if ((0 == s_field) && (0 == t_field))
+			if ((!s_field) && (!t_field))
 				/* Two void references */
 				continue;
 			else if (		(((EIF_REFERENCE) 0) != s_field) &&
@@ -515,12 +515,12 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 		/* One test an a de-reference is only useful since the source and
 		 * the target are isomorhic
 		 */
-		if (s_ref == 0)
-			if (t_ref == 0)
+		if (!s_ref)
+			if (!t_ref)
 				continue;
 			else
 				return EIF_FALSE;
-		else if (t_ref == 0)
+		else if (!t_ref)
 			return EIF_FALSE;
 		else if (!(rdeepiso(t_ref, s_ref)))
 			return EIF_FALSE;
@@ -792,10 +792,9 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 				if (((EIF_REFERENCE) 0 == ref1) && ((EIF_REFERENCE)0 == ref2))
 					/* Void reference */
 					continue;
-				if (	(0 != ref1) &&
-						(0 != ref2) &&
-						(Dftype(ref1) == Dftype(ref2)))
+				if ((ref1) && (ref2) && (Dftype(ref1) == Dftype(ref2))) {
 					continue;
+				}
 				return EIF_FALSE;
 			}
 		}

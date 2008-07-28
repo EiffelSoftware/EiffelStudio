@@ -50,7 +50,7 @@ doc:<file name="runtime_validation.c" version="$Id$" summary="Convert .x file in
 #include <ctype.h>
 #include <string.h>
 
-void rv_failure (char *a_msg) {
+rt_private void rv_failure (char *a_msg) {
 	printf ("%s\n", a_msg);
 	exit(1);
 }
@@ -65,7 +65,7 @@ struct align_test2 {
 	EIF_REAL_32 r;
 };
 
-void print_info() {
+rt_private void print_info(void) {
 	struct align_test t;
 	struct align_test2 t2;
 
@@ -75,11 +75,11 @@ void print_info() {
 	printf ("Computed alignment EIF_REAL_32 %d\n", (char *) &t2.r - (char *) &t2);
 }
 
-int randomizer (int i) {
+rt_private int randomizer (int i) {
 	return i % 100;
 }
 
-void double_alignment_speed_test () {
+rt_private void double_alignment_speed_test (void) {
 	double *pd = (double *) malloc (sizeof(double) * 10005);
 	double d;
 	int i, j;

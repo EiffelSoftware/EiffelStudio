@@ -52,29 +52,29 @@ doc:<file name="x2c.c" version="$Id$" summary="Convert .x file into compilable .
 #include <ctype.h>
 #include <string.h>
 
-rt_private size_t chroff();
-rt_private size_t i16off();
-rt_private size_t lngoff();
-rt_private size_t r32off();
-rt_private size_t ptroff();
-rt_private size_t r64off();
-rt_private size_t objsiz();
-rt_private size_t i64off();
-rt_private size_t bitoff();
+rt_private size_t chroff(void);
+rt_private size_t i16off(void);
+rt_private size_t lngoff(void);
+rt_private size_t r32off(void);
+rt_private size_t ptroff(void);
+rt_private size_t r64off(void);
+rt_private size_t objsiz(void);
+rt_private size_t i64off(void);
+rt_private size_t bitoff(void);
 
-rt_private size_t refacs ();
-rt_private size_t chracs ();
-rt_private size_t i16acs ();
-rt_private size_t lngacs ();
-rt_private size_t r32acs ();
-rt_private size_t r64acs ();
-rt_private size_t i64acs ();
-rt_private size_t ptracs ();
+rt_private size_t refacs (void);
+rt_private size_t chracs (void);
+rt_private size_t i16acs (void);
+rt_private size_t lngacs (void);
+rt_private size_t r32acs (void);
+rt_private size_t r64acs (void);
+rt_private size_t i64acs (void);
+rt_private size_t ptracs (void);
 
 rt_private size_t nextarg(void);
 rt_private void getarg(int n, char *name);
 
-size_t a[8];		/* Parameters array */
+rt_private size_t a[8];		/* Parameters array */
 
 #define nb_ref	a[0]
 #define nb_char	a[1]
@@ -91,7 +91,9 @@ struct parse {
 	char *c_macro;		/* Macro name */
 	int c_args;			/* Number of arguments */
 	size_t (*c_off)();	/* Function to compute value */
-} parser[] = {
+};
+
+rt_private struct parse parser[] = {
 	{ "REFACS", 1, refacs },
 	{ "CHRACS", 1, chracs },
 	{ "I16ACS", 1, i16acs },
@@ -259,7 +261,7 @@ int main(int argc, char **argv)
 			if (c == '(' || pos > MAXLEN) {
 				in_word = 0;
 				buf[pos] = '\0';
-				if (pos > MAXLEN || 0 == (ps = locate(buf))) {
+				if (pos > MAXLEN || NULL == (ps = locate(buf))) {
 					fprintf(output_file, "@%s%c", buf, c);
 					continue;
 				}
@@ -372,24 +374,24 @@ rt_private size_t nextarg(void)
  * Offset-calculation routines (take their arguments from a[] array via the `nb_xx' macros).
  */
 
-rt_private size_t chroff() { return eif_chroff(nb_ref) + CHRACS(nb_char); }
-rt_private size_t i16off() { return eif_i16off(nb_ref, nb_char) + I16ACS(nb_i16); }
-rt_private size_t lngoff() { return eif_lngoff(nb_ref, nb_char, nb_i16) + LNGACS(nb_i32); }
-rt_private size_t r32off() { return eif_r32off(nb_ref, nb_char, nb_i16, nb_i32) + R32ACS(nb_r32); }
-rt_private size_t ptroff() { return eif_ptroff(nb_ref, nb_char, nb_i16, nb_i32, nb_r32) + PTRACS(nb_ptr); }
-rt_private size_t i64off() { return eif_i64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr) + I64ACS(nb_i64); }
-rt_private size_t r64off() { return eif_r64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64) + R64ACS(nb_r64); }
-rt_private size_t objsiz() { return eif_objsiz(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64, nb_r64); }
+rt_private size_t chroff(void) { return eif_chroff(nb_ref) + CHRACS(nb_char); }
+rt_private size_t i16off(void) { return eif_i16off(nb_ref, nb_char) + I16ACS(nb_i16); }
+rt_private size_t lngoff(void) { return eif_lngoff(nb_ref, nb_char, nb_i16) + LNGACS(nb_i32); }
+rt_private size_t r32off(void) { return eif_r32off(nb_ref, nb_char, nb_i16, nb_i32) + R32ACS(nb_r32); }
+rt_private size_t ptroff(void) { return eif_ptroff(nb_ref, nb_char, nb_i16, nb_i32, nb_r32) + PTRACS(nb_ptr); }
+rt_private size_t i64off(void) { return eif_i64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr) + I64ACS(nb_i64); }
+rt_private size_t r64off(void) { return eif_r64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64) + R64ACS(nb_r64); }
+rt_private size_t objsiz(void) { return eif_objsiz(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64, nb_r64); }
 
-rt_private size_t bitoff () { return BITOFF(a[0]); }
-rt_private size_t refacs () { return REFACS(a[0]); } 
-rt_private size_t chracs () { return CHRACS(a[0]); }
-rt_private size_t i16acs () { return I16ACS(a[0]); }
-rt_private size_t lngacs () { return LNGACS(a[0]); }
-rt_private size_t r32acs () { return R32ACS(a[0]); }
-rt_private size_t r64acs () { return R64ACS(a[0]); }
-rt_private size_t i64acs () { return I64ACS(a[0]); }
-rt_private size_t ptracs () { return PTRACS(a[0]); }
+rt_private size_t bitoff (void) { return BITOFF(a[0]); }
+rt_private size_t refacs (void) { return REFACS(a[0]); } 
+rt_private size_t chracs (void) { return CHRACS(a[0]); }
+rt_private size_t i16acs (void) { return I16ACS(a[0]); }
+rt_private size_t lngacs (void) { return LNGACS(a[0]); }
+rt_private size_t r32acs (void) { return R32ACS(a[0]); }
+rt_private size_t r64acs (void) { return R64ACS(a[0]); }
+rt_private size_t i64acs (void) { return I64ACS(a[0]); }
+rt_private size_t ptracs (void) { return PTRACS(a[0]); }
 
 /*
 doc:</file>

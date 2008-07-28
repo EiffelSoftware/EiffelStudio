@@ -374,7 +374,7 @@ rt_public void update(char ignore_updt, char *argv0)
 		wread((char *) bcode, (int)(bsize * sizeof(unsigned char)));
 
 		melt[body_id] = bcode;		/* Assign Byte code array of feature of `body_id' */
-		egc_frozen [body_id] = 0;	/* Reset the frozen feature to force call on new
+		egc_frozen [body_id] = NULL;	/* Reset the frozen feature to force call on new
 									 * melted feature */
 
 		switch (*bcode) {

@@ -38,6 +38,7 @@
 #define _rt_cecil_h_
 
 #include "eif_cecil.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {

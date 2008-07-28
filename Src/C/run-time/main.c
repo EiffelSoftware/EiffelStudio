@@ -51,6 +51,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_except.h"
 #include "rt_sig.h"
 #include "rt_gen_conf.h"
+#include "rt_struct.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"		/* %%ss added for create_desc */
@@ -300,7 +301,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized and used only during start-up.</synchronization>
 doc:	</attribute>
 */
-rt_shared BODY_INDEX * EIF_once_indexes = 0;
+rt_shared BODY_INDEX * EIF_once_indexes = NULL;
 #endif
 
 #ifdef EIF_THREADS
@@ -322,7 +323,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized and used only during start-up.</synchronization>
 doc:	</attribute>
 */
-rt_shared BODY_INDEX * EIF_process_once_indexes = 0;
+rt_shared BODY_INDEX * EIF_process_once_indexes = NULL;
 
 /*
 doc:	<attribute name="EIF_process_once_values" return_type="EIF_process_once_value_t *" export="public">
@@ -811,11 +812,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #endif
 #endif
 #ifdef WORKBENCH
-	if (egc_routdisp_wb == 0) {
+	if (egc_routdisp_wb == NULL) {
 		egc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) egc_routdisp;
 	}
 #else
-	if (egc_routdisp_fl == 0) {
+	if (egc_routdisp_fl == NULL) {
 		egc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) egc_routdisp;
 	}
 #endif

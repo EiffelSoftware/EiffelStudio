@@ -143,7 +143,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	events (a_observer: !SESSION_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+	events (a_observer: !SESSION_EVENT_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 			-- List of events and associated action.
 			--
 			-- `a_observer': Event observer interface to bind agent actions to.
@@ -204,7 +204,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: !EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.

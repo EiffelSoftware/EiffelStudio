@@ -19,7 +19,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [!EVENT_LIST_OBSERVER]
+	EVENT_OBSERVER_CONNECTION_I [EVENT_LIST_OBSERVER]
 
 feature -- Access
 
@@ -119,7 +119,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	events (a_observer: !EVENT_LIST_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+	events (a_observer: !EVENT_LIST_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 			-- <Precursor>
 		do
 			create Result.make (4)
@@ -131,28 +131,28 @@ feature {NONE} -- Query
 
 feature -- Events
 
-	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is added.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is removed.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
+	item_adopted_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- Events called when an event list item is adopted by another parent.
 		require
 			is_interface_usable: is_interface_usable

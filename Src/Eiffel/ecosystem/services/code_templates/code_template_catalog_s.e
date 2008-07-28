@@ -13,7 +13,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [!CODE_TEMPLATE_CATALOG_OBSERVER]
+	EVENT_OBSERVER_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER]
 
 feature -- Access
 
@@ -92,7 +92,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	events (a_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+	events (a_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 			-- <Precursor>
 		do
 			create Result.make (1)
@@ -101,7 +101,7 @@ feature {NONE} -- Query
 
 feature -- Events
 
-	catalog_changed_event: EVENT_TYPE [TUPLE]
+	catalog_changed_event: !EVENT_TYPE [TUPLE]
 			-- Events called when the catalog is modified in some way; templates added, templates removed
 			-- or a rescan was performed
 		require

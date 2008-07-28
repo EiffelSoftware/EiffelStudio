@@ -23,18 +23,15 @@ feature {NONE} -- Initialization
 			-- Default initialization
 		do
 			subscribers := create_subscribers
-			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [PROCEDURE [ANY, EVENT_DATA]]})
+			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [!PROCEDURE [ANY, EVENT_DATA]]})
 			suicide_actions := create_subscribers
-			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [PROCEDURE [ANY, EVENT_DATA]]})
+			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [!PROCEDURE [ANY, EVENT_DATA]]})
 		end
 
 feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+			-- <Precursor>
 		do
 			if a_disposing then
 					-- Remove all subscribers to prevent potential memory leaks.
@@ -58,7 +55,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_subscribed (a_action: PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
+	is_subscribed (a_action: !PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
 			-- Determines if the event already has a subscription for a specified action
 			--
 			-- `a_action': An action to check an existing subscription for
@@ -112,7 +109,7 @@ feature -- Status settings
 
 feature -- Subscription
 
-	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
+	subscribe (a_action: !PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event.
 			--
 			-- `a_action': The action to subscribe.
@@ -129,7 +126,7 @@ feature -- Subscription
 			subscribers_cursor_unmoved: subscribers.index = old subscribers.index
 		end
 
-	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
+	subscribe_for_single_notification (a_action: !PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event for a single publication only.
 			--
 			-- `a_action': The action to subscribe.
@@ -149,8 +146,10 @@ feature -- Subscription
 			subscribers_cursor_unmoved: subscribers.index = old subscribers.index
 		end
 
-	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
+	unsubscribe (a_action: !PROCEDURE [ANY, EVENT_DATA])
 			-- Unsubscribes an action from the event.
+			-- Note: If a_action_is_subscribed fails then Freeze, you're could be comparing melted and
+			--       frozen agents which are not equal objects.
 			--
 			-- `a_action': A previously subscribed action to unsubscribe.
 		require
@@ -241,11 +240,11 @@ feature {NONE} -- Publication
 
 					if a_predicate = Void then
 							-- Twin the list to prevent issues related to extension during publication
-						l_subscribers.twin.do_all (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
+						l_subscribers.twin.do_all (agent {!PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
 					else
 							-- Twin the list to prevent issues related to extension during publication
-						l_subscribers.twin.do_if (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args),
-							agent (ia_item: PROCEDURE [ANY, EVENT_DATA]; ia_args: EVENT_DATA; ia_predicate: ?PREDICATE [ANY, EVENT_DATA]): BOOLEAN
+						l_subscribers.twin.do_if (agent {!PROCEDURE [ANY, EVENT_DATA]}.call (a_args),
+							agent (ia_item: !PROCEDURE [ANY, EVENT_DATA]; ia_args: EVENT_DATA; ia_predicate: ?PREDICATE [ANY, EVENT_DATA]): BOOLEAN
 									-- Agent to call the predicate with the event data arguments.		
 								do
 									if ia_predicate = Void then
@@ -281,7 +280,7 @@ feature {NONE} -- Publication
 
 feature -- Basic operations
 
-	perform_suspended_action (a_action: PROCEDURE [ANY, TUPLE])
+	perform_suspended_action (a_action: !PROCEDURE [ANY, TUPLE])
 			-- Performs a action whilst suspending subscriptions from recieve a publication
 			--
 			-- `a_action': Action to call while the event is suspended.
@@ -308,15 +307,15 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 		do
-			create {DS_LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]}Result.make
+			create {DS_LINKED_LIST [!PROCEDURE [ANY, EVENT_DATA]]}Result.make
 		end
 
 feature {NONE} -- Implementation
 
-	frozen subscribers: ?DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: ?DS_LIST [!PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions currently subscribed to the event
 
-	frozen suicide_actions: ?DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: ?DS_LIST [!PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time
 
 invariant

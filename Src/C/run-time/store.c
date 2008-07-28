@@ -2083,29 +2083,6 @@ rt_shared void buffer_write(char *data, size_t size)
 	current_position = l_cur_pos;
 }
 
-/* Bufferization of information on buffer. If the buffer is full
- * we write the buffer on IO_MEDIUM and flush the buffer so we can
- * do another write operation */
-rt_public void new_buffer_write(char *data, int size)
-{
-	RT_GET_CONTEXT
-	if (current_position + size >= buffer_size) {
-			/* Copy the data buffer into the general_buffer until the last one is full
-			 * launch a writing operation on the IO_MEDIUM and do a recursive call to
-			 * finish the writing of data */
-		memcpy (general_buffer + current_position, data, buffer_size - current_position);
-		current_position = buffer_size;
-		store_write_func (current_position);
-			/* Recursive call to finish the storage on the IO_MEDIUM */
-		buffer_write (data + buffer_size, size - buffer_size);
-	} else {
-			/* Copy the data buffer into the general_buffer
-			 * Set also `current_position' to the position in the general_buffer */
-		memcpy (general_buffer + current_position, data, size);
-		current_position += size;
-	}
-}
-
 rt_public void flush_st_buffer (void)
 {
 	RT_GET_CONTEXT

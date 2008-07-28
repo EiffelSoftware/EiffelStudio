@@ -64,13 +64,11 @@
 
         <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR = ""]]></Custom>
         <Custom Action="SET_IS_DOTNET_INSTALLED" Before="CostInitialize"><![CDATA[(FXINSTALLROOT <> "0") AND NOT Installed]]></Custom>
-
         <Custom Action="CheckEnvironmentVariables" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Custom>
+        
         <Show Dialog="DialogWelcome" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Show>
-
-        <Show Dialog="DialogMaintenanceWelcome" After="DialogWelcome"><![CDATA[Installed]]></Show>
+        <Show Dialog="DialogMaintenanceWelcome" After="DialogWelcome"><![CDATA[Installed AND NOT RESUME AND NOT Preselected]]></Show>
         <Show Dialog="DialogProgress" After="DialogMaintenanceWelcome" />
-
         <Show Dialog="DialogUserExit" OnExit="cancel" />
         <Show Dialog="DialogExitSuccess" OnExit="success" />
         <Show Dialog="DialogFatalError" OnExit="error" />

@@ -1419,6 +1419,8 @@ feature -- Check
 
 	body: FEATURE_AS is
 			-- Body of feature
+		require
+			not_is_inline_agent: not is_inline_agent
 		local
 			class_ast: CLASS_AS
 			bid: INTEGER
@@ -2605,16 +2607,9 @@ feature -- Dead code removal
 	used: BOOLEAN is
 			-- Is feature used ?
 		do
-			if is_inline_agent then
-				Result := enclosing_feature.used
-			else
-					-- In final mode dead code removal process is on.
-					-- In workbench mode all features are considered
-					-- used.
-				Result := 	byte_context.workbench_mode
-							or else
-							System.is_used (Current)
-			end
+				-- In final mode dead code removal process is on.
+				-- In workbench mode all features are considered used.
+			Result := byte_context.workbench_mode or else System.is_used (Current)
 		end
 
 feature -- Byte code access

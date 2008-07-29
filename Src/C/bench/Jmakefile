@@ -71,8 +71,9 @@ LIBRUN = ../run-time
 DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBRUN)/include -I$(TOP)/idrs
 CFLAGS = $(DPFLAGS)
 
-NormalLibraryTarget(compiler,$(LSRC) $(PSTORE),$(FOBJ))
-NormalLibraryTarget(wcompiler,$(LSRC) $(PSTORE),$(WOBJ))
+AddSource($(LSRC) $(PSTORE))
+CustomLibraryTarget(compiler,$(FOBJ))
+CustomLibraryTarget(wcompiler,$(WOBJ))
 CustomLibraryTarget(mtcompiler,$(MT_FOBJ))
 CustomLibraryTarget(mtwcompiler,$(MT_WOBJ))
 SimpleProgramTarget(bytedump)

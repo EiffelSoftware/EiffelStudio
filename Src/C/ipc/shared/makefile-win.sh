@@ -14,7 +14,6 @@ JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 OBJECTS = \
 	com.$obj \
 	identify.$obj \
-	lock.$obj \
 	logfile.$obj \
 	network.$obj \
 	select.$obj \
@@ -29,7 +28,6 @@ OBJECTS = \
 MT_OBJECTS = \
 	MTcom.$obj \
 	MTidentify.$obj \
-	MTlock.$obj \
 	MTlogfile.$obj \
 	MTnetwork.$obj \
 	MTselect.$obj \
@@ -61,9 +59,6 @@ MTcom.$obj: com.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidentify.$obj: identify.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
-MTlock.$obj: lock.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTlogfile.$obj: logfile.c

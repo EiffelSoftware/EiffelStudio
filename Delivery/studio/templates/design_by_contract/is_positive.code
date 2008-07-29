@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
    <metadata>
-      <title>Is Negative</title>
-      <description>Code template contract predicate for ensuring an entity is a positive numerical</description>
+      <title>Is Positive</title>
+      <description>Code template contract predicate for ensuring an entity is a positive numeric</description>
       <author>Eiffel Software</author>
       <shortcut>is_pos</shortcut>
       <categories>
@@ -16,12 +16,12 @@
    </metadata>
    
    <declarations>
-      <object id="numerical" editable="True" conforms_to="NUMERICAL">
-         <description>An numerical entity</description>
+      <object id="numeric" editable="True" conforms_to="NUMERIC">
+         <description>An numeric entity</description>
       </object>
    </declarations>
    
    <templates>
-      <template>${numerical}_is_positive: ${numerical} &gt; 0${end}</template>
+      <template>${numeric}_is_positive: ${numeric} &gt; 0${end}</template>
    </templates>
 </code_template>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
   <metadata>
-    <title>All Items Unattached</title>
+    <title>All Items Deattached</title>
     <description>Code template contract predicate to ensure a chained container structure has only detached items</description>
     <author>Eiffel Software</author>
     <shortcut>all_detached</shortcut>
@@ -22,6 +22,6 @@
   </declarations>
   
   <templates>
-    <template>${container}_items_deattached: ${container}.occurances (Void) = ${container}.count${end}</template>  
+    <template>${container}_items_deattached: ${container}.occurrences (Void) = ${container}.count${end}</template>  
   </templates>
 </code_template>

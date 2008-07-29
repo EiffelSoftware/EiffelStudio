@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
    <metadata>
-      <title>Deatached</title>
-      <description>Code template contract predicate to ensure an entity is deatached</description>
+      <title>Detached</title>
+      <description>Code template contract predicate to ensure an entity is detached</description>
       <author>Eiffel Software</author>
-      <shortcut>unattached</shortcut>
+      <shortcut>detached</shortcut>
       <categories>
          <category>Eiffel</category>
          <category>code</category>

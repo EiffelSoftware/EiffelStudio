@@ -243,8 +243,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
-		if (!(flags & EO_REF)) {			/* Special of simple types */
-		} else {
+		if (flags & EO_REF) {				/* Special of reference/composite types */
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref;
 

@@ -457,6 +457,7 @@ feature {NONE} -- Basic operations
 			if
 				has_stone and then
 				file_notifier.is_service_available and then
+				context.has_stone and then
 				{l_file_name: !FILE_NAME} context.context_class.file_name and then
 				{l_fn: !STRING_32} l_file_name.string.as_string_32
 			then

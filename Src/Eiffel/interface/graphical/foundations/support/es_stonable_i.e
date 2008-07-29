@@ -77,17 +77,37 @@ feature -- Status report
 	is_setting_stone_with_query: BOOLEAN
 			-- Indicates if a stone is currenly being set using `set_stone_with_query'
 
-feature -- Query
-
-	is_stone_usable (a_stone: ?like stone): BOOLEAN
-			-- Determines if a stone can be used by Current.
+	frozen is_stone_usable (a_stone: ?like stone): BOOLEAN
+			--  Determines if a stone can be used by Current.
+			--| Note: Redefine `internal_is_stone_usable' to extend usablity checking.
 			--
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
 		require
 			is_interface_usable: is_interface_usable
+		do
+			if {l_stone: like stone} a_stone then
+				Result := l_stone.is_valid and then internal_is_stone_usable (l_stone)
+			else
+				Result := a_stone = Void
+			end
+		ensure
+			a_stone_is_valid: Result implies (a_stone = Void or else a_stone.is_valid)
+		end
+
+feature {NONE} -- Status report
+
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		require
+			a_stone_is_valid: a_stone.is_valid
 		deferred
 		end
+
+feature -- Query
 
 	query_set_stone (a_stone: ?like stone): BOOLEAN
 			-- Determines if a stone can be set, possibly using a UI to ask the user for confirmation.

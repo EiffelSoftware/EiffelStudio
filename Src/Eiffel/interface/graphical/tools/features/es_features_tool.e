@@ -44,15 +44,12 @@ feature -- Access
 			Result := interface_names.t_features_tool
 		end
 
-feature -- Query
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
 		do
-			Result := {l_stone: !CLASSI_STONE} a_stone or {l_cluster: !CLUSTER_STONE} a_stone
+			Result := ({l_stone: !CLASSI_STONE} a_stone or {l_cluster: !CLUSTER_STONE} a_stone)
 		end
 
 feature -- Basic operations

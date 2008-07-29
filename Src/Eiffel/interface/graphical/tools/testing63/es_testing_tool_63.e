@@ -34,9 +34,10 @@ feature -- Access
 			Result := stock_pixmaps.tool_external_output_icon
 		end
 
-feature -- Status report
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: ?like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
 		do
 			Result := {l_class_stone: CLASSC_STONE} a_stone
 		end

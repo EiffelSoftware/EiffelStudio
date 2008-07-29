@@ -46,7 +46,7 @@ feature {NONE} -- Initialization: User interface
         				if {l_stone: !STONE} ia_pebble and then tool_descriptor.is_stone_usable (l_stone) then
 								-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
 							show
-							
+
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
@@ -139,13 +139,8 @@ feature {NONE} -- Status report
 			--       as ESF dictates that no interaction should be perform with the panel (Current) but
 			--       the tool descritor (`tool_descriptor').
 
-feature -- Query
-
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
 		do
 			Result := tool_descriptor.is_stone_usable (a_stone)
 		end
@@ -214,8 +209,10 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 					stone_change_notified := False
 					is_in_stone_synchronization := True
 					l_new_stone := l_new_stone.synchronized_stone
-					if l_new_stone = Void or else is_stone_usable (l_new_stone) then
+					if l_new_stone /= Void and then is_stone_usable (l_new_stone) then
 						set_stone (l_new_stone)
+					else
+						set_stone (Void)
 					end
 					is_in_stone_synchronization := False
 				end

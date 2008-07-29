@@ -16,7 +16,6 @@ inherit
 			on_after_initialized,
 			internal_recycle,
 			query_set_stone,
-			synchronize,
 			create_right_tool_bar_items,
 			on_show,
 			on_handle_key
@@ -437,6 +436,9 @@ feature {NONE} -- Basic operations
 		do
 			if has_stone and then {l_context: !like context_for_mode} context_for_mode then
 				execute_with_busy_cursor (agent contract_editor.set_context (l_context))
+			else
+					-- Clear the editor
+				contract_editor.set_context (Void)
 			end
 			update_stone_buttons
 
@@ -473,20 +475,6 @@ feature {NONE} -- Basic operations
 			set_is_dirty (False)
 		ensure
 			not_is_dirty: not is_dirty
-		end
-
-feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
-
-	synchronize
-			-- Synchronizes any new data (compiled or other wise)
-		do
-			if is_initialized then
-				is_in_stone_synchronization := True
-				update
-				is_in_stone_synchronization := False
-			end
-		rescue
-			is_in_stone_synchronization := False
 		end
 
 feature {NONE} -- Helpers

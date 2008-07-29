@@ -77,13 +77,10 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 			end
 		end
 
-feature -- Query
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
 		do
 			Result := {l_stone: CALL_STACK_STONE} a_stone
 		end
@@ -91,22 +88,19 @@ feature -- Query
 feature -- Properties
 
 	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `panel.icon' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_watch_icon_buffer
 		end
 
 	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `panel.icon' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_watch_icon
 		end
 
 	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `panel.title' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := interface_names.t_watch_tool
 		end
@@ -114,13 +108,12 @@ feature -- Properties
 feature -- Status report
 
 	is_supporting_multiple_instances: BOOLEAN = True
-			-- Indicates if the tool can spawn multiple instances in the
-			-- same development window
+			-- <Precursor>
 
 feature {NONE} -- Factory
 
 	create_tool: ES_WATCH_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 			Result.set_debugger_manager (debugger_manager)

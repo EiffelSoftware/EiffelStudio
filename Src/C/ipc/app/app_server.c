@@ -56,10 +56,9 @@
 #endif
 
 #ifdef WORKBENCH
-rt_public unsigned char interrupt_flag = 0;	/* 1=interrupt asked by user, 2=new breakpoint added while runnning */
+rt_private unsigned char interrupt_flag = 0;	/* 1=interrupt asked by user, 2=new breakpoint added while runnning */
 #endif
 
-extern STREAM *app_sp;
 #ifndef EIF_WINDOWS
 /* The USE_SIGNAL definition should be the same here and in /ipc/daemon/proto.c 
  * Otherwise a TRAP signal is sent to the application which cannot handle it and dies. */
@@ -91,7 +90,7 @@ rt_shared void dserver(void)
 #ifdef WORKBENCH
 #ifndef EIF_WINDOWS
 #ifdef USE_SIGNAL
-void sigtrap_handler (int sig)
+rt_private void sigtrap_handler (int sig)
 	{
 	int 	pid = getpid();	/* get current PID */
 	FILE	*file = NULL;

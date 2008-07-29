@@ -74,9 +74,6 @@
 This module should not be compiled in non-workbench mode
 #endif
 
-/* Unified (Windows/Unix) Stream declaration */
-extern STREAM *app_sp;
-
 rt_public int app_rqstcnt = 0;			/* Request count */
 rt_private char gc_stopped;
 rt_private IDRF app_idrf;				/* IDR filter for serialize communications */
@@ -1678,7 +1675,7 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 	switch (item->type & SK_HEAD)
 		{
 		case SK_REF:
-			if (item->it_ref != 0)
+			if (item->it_ref)
 				item->it_ref = eif_access(item->it_ref); /* unprotect this object */
 			break;
 		case SK_STRING:
@@ -1759,7 +1756,7 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 
 	exec_recording_enabled = 0; /* Disable execution recording status */
  
-	c_opush(0); /*Is needed since the stack management seems to have problems with uninitialized c stack*/
+	c_opush(NULL); /*Is needed since the stack management seems to have problems with uninitialized c stack*/
 	c_opop(); 
 	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
 

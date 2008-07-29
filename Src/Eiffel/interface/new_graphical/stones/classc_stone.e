@@ -88,9 +88,8 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result :=	e_class /= Void and then
-						e_class.is_valid and then
-						Precursor {CLASSI_STONE}
+			Result := e_class /= Void and then e_class.is_valid and then
+				Precursor {CLASSI_STONE}
 		end
 
 feature -- Synchronization

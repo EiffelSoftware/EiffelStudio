@@ -127,7 +127,7 @@ feature {NONE} -- Status report
 	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_stonable: ES_STONABLE_I} a_stone then
+			if {l_stonable: ES_STONABLE_I} tool then
 				Result := l_stonable.is_stone_usable (a_stone)
 			end
 		end

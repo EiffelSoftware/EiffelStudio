@@ -38,8 +38,8 @@
 #include "eif_portable.h"
 #include <sys/types.h>
 
-#ifdef EIF_VMS
 #include <errno.h>
+#ifdef EIF_VMS
 #include "ipcvms.h"		/* force use of select jacket on VMS */
 #endif
 
@@ -86,14 +86,9 @@ rt_public char *progname = "ram";	/* Program name */
 
 #ifndef EIF_WINDOWS
 rt_public Pid_t progpid = 0;		/* Program PID */
-#ifndef EIF_VMS		/* breaks on VMS; should not <errno.h> be used for all platforms? */
-extern int errno;				/* System error report variable */
-#endif
 #endif
 
 extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
-extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
-extern void release_lock(void);		/* Release previous lock */
 
 /* VARARGS2 */
 rt_public void add_log (int level, char *StrFmt, ...)

@@ -647,7 +647,7 @@ feature{NONE} -- Implementation/Data
 			else
 				l_domain := domain
 				if
-					l_stone /= Void and then
+					l_stone /= Void and then l_stone.is_valid and then
 					not l_domain.has_delayed_domain_item
 				then
 					l_domain_item := metric_domain_item_from_stone (l_stone)

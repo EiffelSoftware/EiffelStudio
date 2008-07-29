@@ -91,7 +91,7 @@ feature -- Formatting
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 		do
-			if associated_feature /= Void and then selected and then displayed and then actual_veto_format_result then
+			if associated_feature /= Void and then associated_feature.is_valid and then selected and then displayed and then actual_veto_format_result then
 				retrieve_sorting_order
 				display_temp_header
 				setup_viewpoint

@@ -83,13 +83,12 @@ all:: .FORCE_DEPEND
 DPFLAGS = -I$(TOP) -I$(TOP)/run-time -I$(TOP)/idrs -I$(TOP)/run-time/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 
-LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
+LSRC = com.c identify.c logfile.c network.c select.c shword.c stack.c \
 	stream.c system.c transfer.c rqst_idrs.c
 
 LOBJ = \
 	com.o \
 	identify.o \
-	lock.o \
 	logfile.o \
 	network.o \
 	select.o \
@@ -103,7 +102,6 @@ LOBJ = \
 MT_LOBJ = \
 	MTcom.o \
 	MTidentify.o \
-	MTlock.o \
 	MTlogfile.o \
 	MTnetwork.o \
 	MTselect.o \
@@ -118,9 +116,6 @@ MTcom.o: com.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTidentify.o: identify.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
-
-MTlock.o: lock.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTlogfile.o: logfile.c

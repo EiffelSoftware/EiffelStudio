@@ -13,6 +13,8 @@ deferred class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [G]
 		redefine
+			build_docking_content,
+			internal_recycle,
 			tool_descriptor,
 			on_show
 		end
@@ -22,6 +24,71 @@ inherit
 			{ES_STONABLE_I, ES_TOOL} all
 		redefine
 			set_stone
+		end
+
+feature {NONE} -- Initialization: User interface
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+            -- <Precursor>
+        do
+            Precursor (a_docking_manager)
+
+        		-- Register the same action with the docking content
+        	register_action (content.drop_actions, agent (ia_pebble: ANY)
+        			-- Propagate the stone drop actions	
+        		do
+        			if is_interface_usable and then tool_descriptor.is_interface_usable then
+        				if not is_initialized then
+        						-- Force initialization
+        					initialize
+        				end
+        				check is_initialized: is_initialized end
+        				if {l_stone: !STONE} ia_pebble and then tool_descriptor.is_stone_usable (l_stone) then
+								-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
+							show
+							
+      							-- Force stone on descriptor, which will optimize the display of the stone on Current.
+	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
+	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
+        					tool_descriptor.set_stone_with_query (l_stone)
+						else
+							if ia_pebble = Void then
+								tool_descriptor.set_stone_with_query (Void)
+								if ia_pebble = stone then
+										-- Force tool to be shown
+									show
+								end
+							end
+        				end
+					end
+        		end)
+
+				-- Set veto function
+			content.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY): BOOLEAN
+					-- Query if a pebble should be vetoed.
+				do
+					if is_interface_usable then
+						Result := ia_pebble = Void
+						if not Result and then {l_stone: STONE} ia_pebble then
+							Result := is_stone_usable (l_stone)
+						end
+					end
+				end)
+		ensure then
+			veto_action_set: content.drop_actions.veto_pebble_function /= Void
+        end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- <Precursor>
+		do
+			if content /= Void then
+				content.drop_actions.set_veto_pebble_function (Void)
+			end
+			Precursor
+		ensure then
+			content_veto_action_removed: old (content.drop_actions).veto_pebble_function = Void
 		end
 
 feature {ES_STONABLE_I, ES_TOOL} -- Access
@@ -42,9 +109,7 @@ feature {NONE} -- Access
 feature {ES_STONABLE_I, ES_TOOL} -- Element change
 
 	set_stone (a_stone: like stone)
-			-- Sets last stone.
-			--
-			-- `a_stone': Stone to set.
+			-- <Precursor>
 		do
 			if a_stone /= stone then
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}
@@ -96,11 +161,11 @@ feature {NONE} -- Basic opertations
 			is_initialized: is_initialized or is_initializing
         do
         		-- Set drop actions on all widgets
-        	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (a_pebble: ANY)
+        	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (ia_pebble: ANY)
         			-- Propagate the stone drop actions	
         		do
         			if is_interface_usable and is_initialized and then tool_descriptor.is_interface_usable then
-        				if {l_stone: !STONE} a_pebble and then tool_descriptor.is_stone_usable (l_stone) then
+        				if {l_stone: !STONE} ia_pebble and then tool_descriptor.is_stone_usable (l_stone) then
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
@@ -124,12 +189,12 @@ feature {NONE} -- Basic opertations
 			propagate_action (user_widget, agent (a_widget: EV_WIDGET)
 					-- Propagating the action to set the veto pebble function.
 				do
-					user_widget.drop_actions.set_veto_pebble_function (agent (a_pebble: ANY): BOOLEAN
+					user_widget.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY): BOOLEAN
+							-- Query if a pebble should be vetoed.
 						do
-							if {l_stone: STONE} a_pebble then
+							Result := ia_pebble = Void
+							if not Result and then {l_stone: STONE} ia_pebble then
 								Result := is_stone_usable (l_stone)
-							else
-								Result := True
 							end
 						end)
 				end, Void)

@@ -30,7 +30,8 @@ inherit
 			process_parameter_list_as,
 			process_reverse_as,
 			process_static_access_as,
-			process_tuple_as
+			process_tuple_as,
+			process_result_as
 		end
 
 	SHARED_SERVER
@@ -392,6 +393,13 @@ feature -- Processing
 			Precursor (a_as)
 			leave_brackets
 			set_can_add_auto_span (False)
+		end
+
+	process_result_as (a_as: RESULT_AS) is
+			-- <Precursor>
+		do
+			Precursor (a_as)
+			add_auto_span (a_as)
 		end
 
 	process_reverse_as (a_as: REVERSE_AS) is

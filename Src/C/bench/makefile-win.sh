@@ -20,16 +20,16 @@ JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 	$(CC) $(JCFLAGS) $<
 
 OBJECTS = pretrieve.$obj pstore.$obj \
-			date.$obj byte.$obj minilzo.$obj
+			byte.$obj minilzo.$obj
 
 WOBJECTS = pretrieve.$obj wpstore.$obj \
-			date.$obj byte.$obj minilzo.$obj
+			byte.$obj minilzo.$obj
 
 MT_OBJECTS = MTpretrieve.$obj MTpstore.$obj \
-			MTdate.$obj MTbyte.$obj MTminilzo.$obj
+			MTbyte.$obj MTminilzo.$obj
 
 MT_WOBJECTS = MTwpretrieve.$obj MTwpstore.$obj \
-			MTdate.$obj MTbyte.$obj MTminilzo.$obj
+			MTbyte.$obj MTminilzo.$obj
 
 all:: $output_libraries
 
@@ -57,9 +57,6 @@ wpstore.$obj: pstore.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?
 
 MTpretrieve.$obj: pretrieve.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
-
-MTdate.$obj: date.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTbyte.$obj: byte.c

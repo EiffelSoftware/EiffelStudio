@@ -1068,7 +1068,7 @@ feature {NONE} -- Dynamic item filling
 					if bp.has_condition then
 						t.append_character ('%N')
 						t.append_string_general (interface_names.l_condition)
-						t.append_string (": " + bp.condition.expression)
+						t.append_string (": " + bp.condition.text)
 					end
 					if bp.has_when_hits_action then
 						t.append_character ('%N')
@@ -1091,7 +1091,7 @@ feature {NONE} -- Dynamic item filling
 				a_row.set_item (Status_column_index, lab)
 
 				if bp.has_condition then
-					create lab.make_with_text (bp.condition.expression)
+					create lab.make_with_text (bp.condition.text)
 					lab.set_tooltip (lab.text)
 					lab.set_font (condition_font)
 					a_row.set_item (Details_column_index, lab)

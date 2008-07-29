@@ -63,7 +63,7 @@ create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC, APPLICATION_STATUS_CLASSIC}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: INTEGER) is
+	make (level: INTEGER; tid: like thread_id) is
 		local
 			retried: BOOLEAN
 		do
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			debug ("DEBUGGER_TRACE");
 				io.error.put_string (generator + ": receiving locals & arguments%N")
 				io.error.put_string (generator + ": sending the request%N")
-				io.error.put_string (generator + ": thread id = " + thread_id.to_hex_string + ".%N")
+				io.error.put_string (generator + ": thread id = " + thread_id.out + ".%N")
 			end
 
 				-- Init

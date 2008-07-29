@@ -157,18 +157,23 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' based on `expr'.
 		require
 			valid_expression: expr /= Void
+		local
+			ctx: DBG_EXPRESSION_CONTEXT
 		do
-			if expr.on_class then
-				make_with_class (expr.context_class)
-			elseif expr.as_object then
-				make_as_named_object (expr.context_address, expr.name)
-			elseif expr.on_object then
-				make_with_object (expr.context_address)
+			ctx := expr.context
+			if ctx.on_class then
+				make_with_class (expr.context.associated_class)
+			elseif ctx.on_object then
+				if expr.is_context_object then
+					make_as_named_object (expr.context.associated_address, expr.name)
+				else
+					make_with_object (expr.context.associated_address)
+				end
 			else
 				make_for_context
 			end
-			if expr.expression /= Void then
-				expression_field.set_text (expr.expression)
+			if expr.text /= Void then
+				expression_field.set_text (expr.text)
 			end
 			if expr.name /= Void then
 				object_name_field.set_text (expr.name)
@@ -621,10 +626,10 @@ feature {NONE} -- Event handling
 					then
 						o := debugger_manager.object_manager.debugged_object (t, 0, 0)
 						if as_object_radio.is_selected or else expression_field.text.is_empty then
-							create new_expression.make_as_object (o.dtype , o.object_address)
+							create new_expression.make_as_object (o.dynamic_class , o.object_address)
 							new_expression.set_name (object_name_field.text)
 						else
-							create new_expression.make_with_object (o, expression_field.text)
+							create new_expression.make_with_object (o.dynamic_class, o.object_address, expression_field.text)
 						end
 						if new_expression.syntax_error_occurred then
 							set_focus (expression_field)
@@ -638,28 +643,28 @@ feature {NONE} -- Event handling
 						prompts.show_error_prompt (Warning_messages.w_Invalid_address (t), dialog, Void)
 					end
 				else
-					create new_expression.make_for_context (expression_field.text)
+					create new_expression.make_with_context (expression_field.text)
 					if new_expression.syntax_error_occurred then
 						set_focus (expression_field)
 						prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 					end
 				end
 			else
-				if as_object_radio.is_selected and modified_expression.on_object then
+				if as_object_radio.is_selected and modified_expression.context.on_object then
 						--| only the name may change
 					modified_expression.set_name (object_name_field.text)
-					modified_expression.enable_as_object
+					modified_expression.is_context_object := True
 				else
-					if on_object_radio.is_selected and modified_expression.as_object then
+					if on_object_radio.is_selected and modified_expression.is_context_object then
 							--| In case, we decide to evaluate on the object
 							--| instead of pointing the object
-						modified_expression.disable_as_object
+						modified_expression.is_context_object := False
 					end
-					oe := modified_expression.expression
-					modified_expression.set_expression (expression_field.text)
+					oe := modified_expression.text
+					modified_expression.set_text (expression_field.text)
 					if modified_expression.syntax_error_occurred then
 							-- Restore the previous expression, since the new one is broken.
-						modified_expression.set_expression (oe)
+						modified_expression.set_text (oe)
 						set_focus (expression_field)
 						prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 						do_not_close_dialog := True

@@ -54,18 +54,18 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				dtype := l_val.dynamic_class
-				if dtype = Void then
+				dynamic_class := l_val.dynamic_class
+				if dynamic_class = Void then
 						-- Oops, the run-time returned a type that is not in the system.
 						-- We then default to class ANY.
-					dtype := eiffel_system.Any_class.compiled_class
+					dynamic_class := eiffel_system.Any_class.compiled_class
 				end
 
 				l_ref_val ?= l_val
 				if l_ref_val /= Void then
 					class_type := l_ref_val.dynamic_class_type
 				else
-					class_type := dtype.types.first
+					class_type := dynamic_class.types.first
 				end
 
 			end

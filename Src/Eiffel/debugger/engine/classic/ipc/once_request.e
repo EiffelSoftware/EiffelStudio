@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		end
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 	EWB_REQUEST
 		rename
 			make as old_make

@@ -249,6 +249,12 @@ feature -- Properties
 
 	thread_id: INTEGER
 
+	thread_id_as_pointer: POINTER
+			-- Thread_id converted to POINTER
+		do
+			Result := Result + thread_id
+		end
+
 	thread_name: STRING
 
 	thread_priority: INTEGER

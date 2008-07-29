@@ -847,7 +847,7 @@ feature -- change
 				check
 					bp.condition /= Void
 				end
-				condition_expression_tf.set_text (bp.condition.expression)
+				condition_expression_tf.set_text (bp.condition.text)
 				if bp.condition_as_is_true then
 					condition_is_true_rb.enable_select
 				end
@@ -1385,7 +1385,7 @@ feature -- Action
 				l_changes.extend (agent {BREAKPOINT}.remove_condition)
 				--| bp.remove_condition
 			else
-				create expr.make_for_context (s)
+				create expr.make_with_context (s)
 				if expr.syntax_error_occurred then
 					notify_error_on_text_field (condition_expression_tf)
 					err := True

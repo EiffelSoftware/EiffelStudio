@@ -60,13 +60,13 @@ feature
 					debug ("debugger_ipc")
 						print (generator + " : Thread created: " + event_data.to_hex_string + "%N")
 					end
-					s.add_thread_id (event_data)
+					s.add_thread_id (Default_pointer + event_data)
 
 				when notif_thr_exited then
 					debug ("debugger_ipc")
 						print (generator + " : Thread exited: " + event_data.to_hex_string + "%N")
 					end
-					s.remove_thread_id (event_data)
+					s.remove_thread_id (Default_pointer + event_data)
 				else
 					debug ("debugger_ipc")
 						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data.out + "%N")

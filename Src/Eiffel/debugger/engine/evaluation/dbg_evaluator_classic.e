@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 
 	IPC_SHARED
 		export
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 				if a_addr /= Void then
 					send_ref_value (hex_to_pointer (a_addr))
 				else
-					notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_non_once_call_with_any_object (
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_non_once_call_with_any_object (
 								fi.written_class.name_in_upper,
 								fi.feature_name
 								)
@@ -118,9 +118,9 @@ feature {NONE} -- Implementation
 				if is_exception then
 					if {exv: EXCEPTION_DEBUG_VALUE} exception_item then
 						exv.set_hector_addr
-						notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.long_description))
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.long_description))
 					else
-						notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
 					end
 
 					reset_recv_value
@@ -128,11 +128,15 @@ feature {NONE} -- Implementation
 					if fi.is_function then
 						if item /= Void then
 							item.set_hector_addr
-							last_result_value := item.dump_value
+							if {dv: DUMP_VALUE} item.dump_value then
+								create last_result.make_with_value (dv)
+							else
+								--FIXME: should we create last_result.failed
+							end
 							reset_recv_value
 						end
 					else
-						last_result_value := debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name))
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name)))
 					end
 				end
 			end
@@ -149,21 +153,24 @@ feature {NONE} -- Implementation
 				if f.is_function or else f.is_constant then
 					res := once_r.once_result (f)
 					if once_r.last_failed then
-						notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, once_r.last_exception_meaning))
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, once_r.last_exception_meaning))
 					else
 						if res /= Void then
-							last_result_value := res.dump_value
-							last_result_static_type := f.type.associated_class
+							create last_result.make_with_value (res.dump_value)
+							if {cl: CLASS_C} f.type.associated_class then
+								last_result.suggest_static_class (cl)
+							end
 						else
-							notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, Void))
+								--| FIXME: should we return a last_result.failed?
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, Void))
 						end
 					end
 					once_r.clear_last_values
 				else
-					notify_error_exception (Debugger_names.msg_error_once_procedure_evaluation_not_yet_available (f.feature_name))
+					dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_procedure_evaluation_not_yet_available (f.feature_name))
 				end
 			else
-				notify_error_evaluation (Debugger_names.msg_error_once_routine_not_yet_called (f.feature_name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_once_routine_not_yet_called (f.feature_name))
 			end
 		end
 
@@ -183,13 +190,17 @@ feature {NONE} -- Implementation
 			end
 			if item /= Void then
 				item.set_hector_addr
-				last_result_value := item.dump_value
+				if {dv: DUMP_VALUE} item.dump_value then
+					create last_result.make_with_value (dv)
+				else
+					--FIXME: should we create last_result.failed
+				end
 				reset_recv_value
 			else
-				notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
 --				create_empty_instance_using_internal (a_type_i)
 --				if error_occurred or last_result_value = Void then
---					notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+--					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
 --				end
 			end
 		end

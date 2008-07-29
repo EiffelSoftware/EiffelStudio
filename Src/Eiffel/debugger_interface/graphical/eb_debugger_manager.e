@@ -1551,7 +1551,7 @@ feature -- Status setting
 			end
 		end
 
-	change_current_thread_id (tid: INTEGER) is
+	change_current_thread_id (tid: like application_current_thread_id) is
 			-- Set Current thread id to `tid'
 		local
 			tid_changed: BOOLEAN

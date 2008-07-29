@@ -56,7 +56,7 @@ feature -- Properties
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; tid: INTEGER) is
+	make (n: INTEGER; tid: like thread_id) is
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			reload (n)
 		end
 
-	make_empty (tid: INTEGER) is
+	make_empty (tid: like thread_id) is
 			-- Initialize only the first call stack element.
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating Empty Eiffel Stack%N"); end
@@ -125,11 +125,11 @@ feature {APPLICATION_STATUS} -- Restricted Access
 
 feature -- Properties
 
-	thread_id: INTEGER
+	thread_id: POINTER
 
 feature {NONE} -- Externals
 
-	send_dump_stack_request (n: INTEGER; tid: INTEGER) is
+	send_dump_stack_request (n: INTEGER; tid: like thread_id) is
 		do
 			send_rqst_1 (rqst_dump_stack, n)
 		end

@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 		export
 			{NONE} all
 		end
@@ -633,7 +633,7 @@ feature {NONE} -- Classic specific
 			if a_feat /= Void and debugger_manager.application.is_valid_object_address (value_address) then
 					-- Initialize the communication.
 				l_dbg_obj := debugger_manager.object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
-				l_dtype := l_dbg_obj.dtype
+				l_dtype := l_dbg_obj.dynamic_class
 				if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
 					l_dyntype := l_dbg_obj.class_type
 					if a_feat.is_attribute then
@@ -958,6 +958,7 @@ feature {DEBUGGER_EXPORTER, DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR}
 	is_type_manifest_string: BOOLEAN is do Result := type = Type_manifest_string end
 --	is_type_expanded: BOOLEAN is do Result := type = Type_expanded_object end
 	is_type_exception: BOOLEAN is do Result := type = Type_exception end
+	is_type_procedure_return: BOOLEAN is do Result := type = Type_procedure_return end
 
 feature {NONE} -- Private Constants
 

@@ -10,6 +10,8 @@ inherit
 
 	PLATFORM
 
+	HEXADECIMAL_STRING_CONVERTER
+
 	REFACTORING_HELPER
 
 feature {NONE} -- parsing features
@@ -80,8 +82,8 @@ feature {NONE} -- parsing features
 	read_integer is
 			-- Parse integer token.
 		do
-			read_string;
-			last_integer := last_string.to_integer;
+			read_string
+			last_integer := last_string.to_integer
 		end
 
 --	read_integer_64 is
@@ -94,9 +96,8 @@ feature {NONE} -- parsing features
 	read_pointer is
 			-- Parse integer token.
 		do
-			fixme ("when POINTER are fully implemented regarding INTEGER_64, we'll use integer_64")
-			read_integer
-			last_pointer := Default_pointer + last_integer
+			read_string
+			last_pointer := hex_to_pointer (last_string)
 		end
 
 indexing

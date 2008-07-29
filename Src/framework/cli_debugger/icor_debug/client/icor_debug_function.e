@@ -43,7 +43,7 @@ feature -- Addons
 			l_cl: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
 		do
-			Result := "Function [Ox" + item.out + "] "
+			Result := "Function [" + item.out + "] "
 					+ " Token="+ get_token.out + "~0x" + get_token.to_hex_string
 			l_cl := get_class
 			if l_cl /= Void then

@@ -25,6 +25,11 @@ feature
 			"C"
 		end;
 
+	send_rqst_1_ptr (code: INTEGER; info1: POINTER) is
+		do
+			send_rqst_1 (code, info1.to_integer_32)
+		end
+
 	send_rqst_2 (code: INTEGER; info1: INTEGER; info2: INTEGER) is
 		external
 			"C"

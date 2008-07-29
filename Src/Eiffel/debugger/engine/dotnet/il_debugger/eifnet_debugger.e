@@ -1190,10 +1190,10 @@ feature {NONE} -- Stepping Implementation
 			-- Result value is the error code
 		local
 			edti: EIFNET_DEBUGGER_THREAD_INFO
-			thid: INTEGER
+			thid: POINTER
 		do
 			thid := application_status.current_thread_id
-			if thid = 0 then
+			if thid = Default_pointer then
 				thid := info.last_icd_thread_id
 			end
 			edti := info.managed_thread (thid)
@@ -1274,8 +1274,8 @@ feature -- Stepping Access
 			-- ie: we'll use a stepper for each thread
 			-- then the final Continue .. to reach the Step callback
 		local
-			thid: INTEGER
-			tids: ARRAY [INTEGER]
+			thid: POINTER
+			tids: ARRAY [POINTER]
 			i: INTEGER
 			st: APPLICATION_STATUS
 		do

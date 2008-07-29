@@ -417,7 +417,7 @@ feature -- Breakpoints management
 			bp_not_void: bp /= Void
 		local
 			expr: DBG_EXPRESSION
-			evaluator: DBG_EXPRESSION_EVALUATOR
+			evl: DBG_EXPRESSION_EVALUATION
 			bp_reached: BOOLEAN
 			bp_continue: BOOLEAN
 		do
@@ -425,12 +425,13 @@ feature -- Breakpoints management
 			if bp.has_condition then
 				expr := bp.condition
 				check expr /= Void end
-				expr.evaluate
-				evaluator := expr.expression_evaluator
-				if evaluator.error_occurred then
-					debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
+				create evl.make (expr)
+				evl.evaluate
+				if evl.error_occurred then
+					debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.text + "%".")
 				end
-				bp_reached := bp.condition_respected --| evaluator.final_result_is_true_boolean_value				
+				bp_reached := bp.condition_respected (evl) --| evaluator.final_result_is_true_boolean_value
+				evl.destroy
 			end
 
 			bp_continue := bp.continue_execution
@@ -983,14 +984,14 @@ feature -- Access
 			Result := application.is_stopped
 		end
 
-	application_active_thread_id: INTEGER is
+	application_active_thread_id: like application_current_thread_id is
 		require
 			application_is_executing: application_is_executing
 		do
 			Result := application_status.active_thread_id
 		end
 
-	application_current_thread_id: INTEGER is
+	application_current_thread_id: POINTER is
 		require
 			application_is_executing: application_is_executing
 		do
@@ -1049,14 +1050,17 @@ feature -- Expression evaluation
 			safe_application_is_stopped: safe_application_is_stopped
 		local
 			exp: DBG_EXPRESSION
+			eval: DBG_EXPRESSION_EVALUATION
 		do
 			if safe_application_is_stopped then
-				create exp.make_for_context (a_expr)
+				create exp.make_with_context (a_expr)
 				if not exp.error_occurred then
-					exp.evaluate_with_settings (False)
-					if not exp.error_occurred then
-						Result := exp.expression_evaluator.final_result_value
+					create eval.make (exp)
+					eval.evaluate
+					if not eval.error_occurred then
+						Result := eval.value
 					end
+					eval.destroy
 				end
 			end
 		end
@@ -1142,7 +1146,7 @@ feature -- Change
 							cl_i.is_compiled
 		end
 
-	change_current_thread_id (tid: INTEGER) is
+	change_current_thread_id (tid: like application_current_thread_id) is
 			-- Set Current thread id to `tid'
 		local
 			s: APPLICATION_STATUS

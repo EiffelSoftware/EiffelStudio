@@ -77,7 +77,7 @@ feature -- Properties
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; tid: INTEGER) is
+	make (n: INTEGER; tid: like thread_id) is
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			reload (n)
 		end
 
-	make_empty (tid: INTEGER) is
+	make_empty (tid: like thread_id) is
 			-- Initialize only the first call stack element.
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Empty Eiffel Stack%N"); end
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	thread_id: INTEGER
+	thread_id: POINTER
 			-- Thread ID related to `Current'.
 
 feature {APPLICATION_STATUS} -- Restricted access
@@ -143,7 +143,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
 			l_extra_info: STRING
-			tid: INTEGER
+			tid: like thread_id
 		do
 			clean
 			wipe_out

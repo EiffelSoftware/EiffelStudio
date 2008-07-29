@@ -932,13 +932,13 @@ feature {NONE} -- Implementation: threads
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		local
-			ctid: INTEGER
+			ctid: POINTER
 			s: APPLICATION_STATUS
 		do
 			s := Debugger_manager.application_status
 			if s.all_thread_ids_count > 1 then
 				ctid := s.current_thread_id
-				thread_id.set_text ("0x" + ctid.to_hex_string)
+				thread_id.set_text (ctid.out)
 				thread_id.set_data (ctid)
 				display_box_thread (True)
 			else
@@ -951,8 +951,8 @@ feature {NONE} -- Implementation: threads
 		local
 			m: EV_MENU
 			mi: EV_MENU_ITEM
-			tid: INTEGER
-			arr: LIST [INTEGER]
+			tid: POINTER
+			arr: LIST [POINTER]
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation: threads
 							arr.after
 						loop
 							tid := arr.item
-							l_item_text := "0x" + tid.to_hex_string
+							l_item_text := tid.out
 							s := l_status.thread_name (tid)
 							if s /= Void then
 								l_item_text.append_string (" - " + s)

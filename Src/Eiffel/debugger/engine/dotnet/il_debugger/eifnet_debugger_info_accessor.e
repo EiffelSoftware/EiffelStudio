@@ -156,7 +156,7 @@ feature -- Access
 			Result := Eifnet_debugger_info.icd_thread
 		end
 
-	icor_debug_thread_by_id (a_tid: INTEGER): like ICOR_DEBUG_THREAD is
+	icor_debug_thread_by_id (a_tid: POINTER): like ICOR_DEBUG_THREAD is
 		do
 			Result := eifnet_debugger_info.icd_thread_by_id (a_tid)
 		end

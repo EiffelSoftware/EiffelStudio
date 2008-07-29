@@ -9,7 +9,7 @@ deferred class CALL_STACK_ELEMENT
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: INTEGER) is
+	make (level: INTEGER; tid: like thread_id) is
 		require
 			valid_level: level >= 1
 		do
@@ -29,7 +29,7 @@ feature -- Properties
 			-- Where is this element situated in the call stack?
 			-- 1 means on the top.
 
-	thread_id: INTEGER
+	thread_id: POINTER
 			-- Thread id related to Current
 
 	break_index: INTEGER

@@ -60,7 +60,7 @@ feature -- Execution
 			address: STRING
 			stopping_reason: INTEGER
 			exception_occurred: BOOLEAN
-			thr_id: INTEGER
+			thr_id: POINTER
 
 			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS_CLASSIC
@@ -121,8 +121,8 @@ feature -- Execution
 				offset := last_integer
 
 					--| Read thread id
-				read_integer
-				thr_id := last_integer
+				read_pointer
+				thr_id := last_pointer
 
 					--| Read reason for stopping.
 				read_integer
@@ -148,11 +148,11 @@ feature -- Execution
 				check
 					application_launched: l_status /= Void
 				end
-				if thr_id = 0 then
+				if thr_id = Default_pointer then
 						--| Since our version of HASH_TABLE does not allow to have default value as key
 						--| and thr_id may be zero only in non MT system
 						--| thus we can hack this with '1' as thread id.
-					thr_id := 1
+					thr_id := thr_id + 1
 				end
 				l_status.set_is_stopped (True)
 				if not l_status.has_thread_id (thr_id) then

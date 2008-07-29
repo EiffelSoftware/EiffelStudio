@@ -13,15 +13,20 @@ create
 feature {NONE} -- Initialization
 
 	make (dbg: like debugger_manager) is
+			-- Instanciate Current with `dbg'
+		require
+			dbg_attached: dbg /= Void
 		do
 			debugger_manager := dbg
 		end
 
 	debugger_manager: DEBUGGER_MANAGER
+			-- Associated debugger
 
 feature {DEBUGGER_MANAGER} -- Change
 
 	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled) is
+			-- Set `debug_output_evaluation_enabled' to `b'
 		do
 			debug_output_evaluation_enabled := b
 		end
@@ -29,10 +34,14 @@ feature {DEBUGGER_MANAGER} -- Change
 feature {NONE} -- Properties		
 
 	debug_output_evaluation_enabled: BOOLEAN
+			-- Is `{DEBUG_OUTPUT}.debug_output' evaluation enabled?
 
 feature -- Prepare value
 
 	init_value (dv: DUMP_VALUE) is
+			-- Initialize value `dv' with optional parameters
+		require
+			dv_attached: dv /= Void
 		do
 			dv.set_debug_output_evaluation_enabled (debug_output_evaluation_enabled)
 		end
@@ -45,6 +54,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_boolean_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_character_value (value: CHARACTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -53,6 +64,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_character_8_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_character_32_value (value: CHARACTER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -61,6 +74,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_character_32_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_integer_8_value  (value: INTEGER_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -69,6 +84,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_integer_8_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_integer_16_value  (value: INTEGER_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -77,6 +94,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_integer_16_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_integer_32_value  (value: INTEGER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -85,6 +104,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_integer_32_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_integer_64_value  (value: INTEGER_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -93,6 +114,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_integer_64_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_natural_8_value  (value: NATURAL_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -101,6 +124,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_natural_8_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_natural_16_value  (value: NATURAL_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -109,6 +134,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_natural_16_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_natural_32_value  (value: NATURAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -117,6 +144,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_natural_32_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_natural_64_value  (value: NATURAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -125,6 +154,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_natural_64_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_real_32_value (value: REAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -133,6 +164,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_real_32_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_real_64_value (value: REAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -141,6 +174,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_real_64_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_bits_value  (a_value, a_type: STRING; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -154,6 +189,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_bits_value (a_value, a_type, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_pointer_value (value: POINTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
@@ -162,6 +199,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_pointer_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_void_value (dtype: CLASS_C): DUMP_VALUE is
@@ -169,6 +208,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_void_value (dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_object_value (addr: STRING; a_dtype: CLASS_C): DUMP_VALUE is
@@ -189,6 +230,8 @@ feature -- Access
 			end
 			Result.set_object_value (addr, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_expanded_object_value  (addr: STRING; dtype: CLASS_C): DUMP_VALUE is
@@ -199,6 +242,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_expanded_object_value (addr, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_manifest_string_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE is
@@ -207,6 +252,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_manifest_string_value (value, dtype)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE is
@@ -214,6 +261,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_exception_value (value)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE): DUMP_VALUE is
@@ -221,6 +270,8 @@ feature -- Access
 			create Result.make_empty (debugger_manager)
 			Result.set_procedure_return_value (value)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Dotnet creation
@@ -233,6 +284,8 @@ feature -- Dotnet creation
 			create Result.make_empty (debugger_manager)
 			Result.set_string_for_dotnet_value (a_eifnet_dsv)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE_DOTNET is
@@ -243,6 +296,8 @@ feature -- Dotnet creation
 			create Result.make_empty (debugger_manager)
 			Result.set_object_for_dotnet_value (a_eifnet_drv)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE_DOTNET is
@@ -253,6 +308,8 @@ feature -- Dotnet creation
 			create Result.make_empty (debugger_manager)
 			Result.set_native_array_object_for_dotnet_value (a_eifnet_dnav)
 			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 invariant

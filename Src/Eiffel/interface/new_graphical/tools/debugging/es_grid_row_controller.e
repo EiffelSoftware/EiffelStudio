@@ -33,6 +33,7 @@ feature -- Change
 feature -- Properties
 
 	data: ANY
+			-- Data attached to Current
 
 feature -- Settings
 

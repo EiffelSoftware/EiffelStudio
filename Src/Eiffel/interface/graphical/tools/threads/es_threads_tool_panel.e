@@ -113,17 +113,17 @@ feature -- Status setting
 
 	on_row_double_clicked (a_row: EV_GRID_ROW) is
 		local
-			ir: INTEGER_REF
+			tid: like thread_id_from_row
 		do
 			if a_row /= Void then
-				ir ?= a_row.data
-				if ir /= Void then
-					set_callstack_thread (ir.item)
+				tid := thread_id_from_row (a_row)
+				if tid /= Default_pointer then
+					set_callstack_thread (tid)
 				end
 			end
 		end
 
-	set_callstack_thread (tid: INTEGER) is
+	set_callstack_thread (tid: POINTER) is
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
 			if Debugger_manager.application_current_thread_id /= tid then
@@ -215,8 +215,8 @@ feature {NONE} -- Implementation
 			lab: EV_GRID_LABEL_ITEM
 			gedit: EV_GRID_EDITABLE_ITEM
 
-			tid: INTEGER
-			arr: LIST [INTEGER]
+			tid: POINTER
+			arr: LIST [POINTER]
 			l_status: APPLICATION_STATUS
 			s: STRING
 			prio: INTEGER
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 					loop
 						row := grid.row (r)
 						tid := arr.item
-						create lab.make_with_text ("0x" + tid.to_hex_string)
+						create lab.make_with_text (tid.out)
 						if tid = l_status.active_thread_id then
 							lab.set_font (active_thread_font)
 							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
@@ -312,20 +312,33 @@ feature {NONE} -- Implementation note
 	update_notes_from_item (gi: EV_GRID_EDITABLE_ITEM) is
 			-- Update note attached to thread
 		local
-			tid: INTEGER_REF
+			tid: like thread_id_from_row
 		do
 			if gi /= Void and then gi.parent /= Void and then gi.row /= Void then
-				tid ?= gi.row.data
-				if tid /= Void then
-					notes_on_threads.force (gi.text, tid.item)
+				tid := thread_id_from_row (gi.row)
+				if tid /= Default_pointer then
+					notes_on_threads.force (gi.text, tid)
 				end
 			end
 		end
 
-	notes_on_threads: HASH_TABLE [STRING, INTEGER]
+	notes_on_threads: HASH_TABLE [STRING, POINTER]
 			-- Notes attached to thread
 
 feature {NONE} -- Implementation, cosmetic
+
+	thread_id_from_row (r: EV_GRID_ROW): POINTER is
+			-- Thread id related to `r'
+		local
+			tid: POINTER_REF
+		do
+			if r.parent /= Void and then r /= Void then
+				tid ?= r.data
+				if tid /= Void then
+					Result := tid.item
+				end
+			end
+		end
 
 	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
 			-- Store agent for `set_row_highlight_bg_color' so that it gets properly removed

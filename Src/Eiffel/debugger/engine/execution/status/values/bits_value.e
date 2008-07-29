@@ -30,7 +30,7 @@ inherit
 			is_equal
 		end
 
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 		undefine
 			is_equal
 		end

@@ -2,7 +2,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class BEURK_HEXER
+class HEXADECIMAL_STRING_CONVERTER
 
 obsolete
 	"Beurk Beurk Beurk"
@@ -12,18 +12,17 @@ inherit
 
 feature {NONE}
 
-	hex_to_integer_32 (s: STRING): INTEGER is
+	hex_to_integer_32 (s: STRING): INTEGER_32 is
+			-- Hexadecimal string `s' converted to INTEGER_32 value
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			temp: STRING;
 			char: CHARACTER
 		do
-			temp := s.as_lower
-			nb := temp.count
+			nb := s.count
 
-			if nb >= 2 and then temp.item (2) = 'x' then
+			if nb >= 2 and then s.item (2) = 'x' then
 				i := 3
 			else
 				i := 1
@@ -34,28 +33,27 @@ feature {NONE}
 				i > nb
 			loop
 				Result := Result * 16
-				char := temp.item (i)
+				char := s.item (i)
 				if char >= '0' and then char <= '9' then
 					Result := Result + (char |-| '0')
 				else
-					Result := Result + (char |-| 'a' + 10)
+					Result := Result + (char.lower |-| 'a' + 10)
 				end
 				i:= i + 1
 			end
 		end
 
 	hex_to_integer_64 (s: STRING): INTEGER_64 is
+			-- Hexadecimal string `s' converted to INTEGER_64 value
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			temp: STRING;
 			char: CHARACTER
 		do
-			temp := s.as_lower
-			nb := temp.count
+			nb := s.count
 
-			if nb >= 2 and then temp.item (2) = 'x' then
+			if nb >= 2 and then s.item (2) = 'x' then
 				i := 3
 			else
 				i := 1
@@ -66,21 +64,22 @@ feature {NONE}
 				i > nb
 			loop
 				Result := Result * 16
-				char := temp.item (i)
+				char := s.item (i)
 				if char >= '0' and then char <= '9' then
 					Result := Result + (char |-| '0')
 				else
-					Result := Result + (char |-| 'a' + 10)
+					Result := Result + (char.lower |-| 'a' + 10)
 				end
 				i:= i + 1
 			end
 		end
 
 	hex_to_pointer (s: STRING): POINTER is
+			-- Hexadecimal string `s' converted to POINTER value
 		require
 			s_not_void: s /= Void
 		local
-			val_32: INTEGER
+			val_32: INTEGER_32
 			val_64: INTEGER_64
 		do
 			if Pointer_bytes = Integer_64_bytes then

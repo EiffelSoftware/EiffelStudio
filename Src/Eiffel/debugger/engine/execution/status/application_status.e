@@ -134,8 +134,8 @@ feature -- Call Stack List management
 			else
 				call_stack_list.wipe_out
 			end
-			current_thread_id := 0
-			active_thread_id := 0
+			current_thread_id := Default_pointer
+			active_thread_id := Default_pointer
 			current_call_stack := Void
 			dynamic_class := Void
 			origin_class := Void
@@ -166,7 +166,7 @@ feature -- Callstack
 
 feature {NONE} -- CallStack Impl
 
-	get_callstack (a_tid: INTEGER; a_stack_max_depth: INTEGER; always_reload: BOOLEAN) is
+	get_callstack (a_tid: like current_thread_id; a_stack_max_depth: INTEGER; always_reload: BOOLEAN) is
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		local
@@ -184,7 +184,7 @@ feature {NONE} -- CallStack Impl
 			end
 		end
 
-	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
 		deferred
 		end
 
@@ -306,7 +306,7 @@ feature -- Call Stack related
 			end
 		end
 
-	has_call_stack_by_thread_id (tid: INTEGER): BOOLEAN is
+	has_call_stack_by_thread_id (tid: like current_thread_id): BOOLEAN is
 		do
 			Result := call_stack_list.has (tid)
 		end
@@ -364,13 +364,13 @@ feature -- Process related change
 
 feature -- Thread related access
 
-	active_thread_id: INTEGER
+	active_thread_id: like current_thread_id
 			-- Thread ID when the execution was paused.
 
-	current_thread_id: INTEGER
+	current_thread_id: POINTER
 			-- Thread ID of the Current call stack.
 
-	all_thread_ids: ARRAYED_LIST [INTEGER]
+	all_thread_ids: ARRAYED_LIST [like current_thread_id]
 			-- All available threads' ids
 
 	all_thread_ids_count: INTEGER
@@ -385,10 +385,10 @@ feature -- Thread related access
 
 feature -- Thread related change
 
-	set_call_stack (tid: INTEGER; ecs: like current_call_stack) is
+	set_call_stack (tid: like current_thread_id; ecs: like current_call_stack) is
 			-- Associate `ecs' with thread id `tid'
 		require
-			id_valid: tid >= 0
+			id_valid: tid /= Default_pointer
 			callstack_not_void: ecs /= Void
 		do
 			call_stack_list.force (ecs, tid)
@@ -396,33 +396,34 @@ feature -- Thread related change
 			get_current_call_stack
 		end
 
-	has_thread_id (tid: INTEGER): BOOLEAN is
+	has_thread_id (tid: like current_thread_id): BOOLEAN is
 		do
 			Result := all_thread_ids /= Void and then all_thread_ids.has (tid)
 		end
+
 	refresh_current_thread_id is
 			-- Get fresh value of Thread ID from debugger
 		deferred
 		end
 
-	set_active_thread_id (tid: INTEGER) is
+	set_active_thread_id (tid: like current_thread_id) is
 			-- Set active thread id
 		require
 			id_valid: has_thread_id (tid)
 		do
 			debug ("DEBUGGER_TRACE")
-				print (generator + ".set_active_thread_id (" + tid.out + " ~ 0x" + tid.to_hex_string + ") %N")
+				print (generator + ".set_active_thread_id (" + tid.out + " ~ " + tid.to_integer_32.out + ") %N")
 			end
 			active_thread_id := tid
 		end
 
-	set_current_thread_id (tid: INTEGER) is
+	set_current_thread_id (tid: like current_thread_id) is
 			-- Set current thread id, and refresh `current_call_stack'
 		require
 			id_valid: has_thread_id (tid)
 		do
 			debug ("DEBUGGER_TRACE")
-				print (generator + ".set_current_thread_id (" + tid.out + " ~ 0x" + tid.to_hex_string + ") %N")
+				print (generator + ".set_current_thread_id (" + tid.out + " ~ " + tid.to_integer_32.out + ") %N")
 			end
 			current_thread_id := tid
 			if has_call_stack_by_thread_id (current_thread_id) then
@@ -436,7 +437,7 @@ feature -- Thread related change
 			--| Mainly use for Classical debugger purpose
 		end
 
-	add_thread_id (tid: INTEGER) is
+	add_thread_id (tid: like current_thread_id) is
 		require
 			all_thread_ids = Void or else not all_thread_ids.has (tid)
 		do
@@ -449,7 +450,7 @@ feature -- Thread related change
 			all_thread_ids.has (tid)
 		end
 
-	remove_thread_id (tid: INTEGER) is
+	remove_thread_id (tid: like current_thread_id) is
 		require
 			all_thread_ids.has (tid)
 		do
@@ -474,7 +475,7 @@ feature -- Thread related change
 
 feature {NONE} -- Call stack implementation
 
-	call_stack (tid: INTEGER): like current_call_stack is
+	call_stack (tid: like current_thread_id): like current_call_stack is
 			-- Call stack associated with thread id `tid'.
 		do
 			Result := call_stack_list.item (tid)
@@ -482,7 +483,7 @@ feature {NONE} -- Call stack implementation
 			Result /= Void implies call_stack_list.has (tid)
 		end
 
-	call_stack_list: HASH_TABLE [like current_call_stack, INTEGER]
+	call_stack_list: HASH_TABLE [like current_call_stack, like current_thread_id]
 			-- Call Stack list, associating Call Stack and their Thread Id.
 
 feature -- Access

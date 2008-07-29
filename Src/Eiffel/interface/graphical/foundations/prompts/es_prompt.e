@@ -338,8 +338,6 @@ feature -- Element change
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
-		local
-			l_button: EV_BUTTON
 		do
 			default_button := a_id
 			if is_initialized then

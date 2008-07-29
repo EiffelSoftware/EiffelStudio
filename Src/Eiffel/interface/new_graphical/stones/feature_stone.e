@@ -132,7 +132,7 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result := e_feature /= Void and then Precursor {CLASSC_STONE}
+			Result := e_feature /= Void and then e_feature.is_valid and then Precursor {CLASSC_STONE}
 		end
 
 feature -- dragging
@@ -167,10 +167,7 @@ feature -- dragging
 	file_name: FILE_NAME is
 			-- The one from class origin of `e_feature'
 		do
-			if
-				e_feature /= Void and then e_feature.written_class /= Void and then
-				e_class /= Void
-			then
+			if e_feature /= Void and then e_feature.is_valid then
 				create Result.make_from_string (e_feature.written_class.file_name)
 			end
 		end

@@ -1083,26 +1083,28 @@ feature {NONE} -- Agents
 		local
 			l_editor : like current_editor
 		do
-			development_window.set_dropping_on_editor (true)
-			l_editor := editor_with_stone (a_stone)
-			if l_editor /= Void then
-				l_editor.docking_content.set_focus
-				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
-					l_editor.editor_drawing_area.set_focus
-				end
-			else
-				-- Following line will change fake editor to real editor if `a_editor' is fake editor
-				a_editor.docking_content.set_focus
+			if a_stone /= Void and then a_stone.is_valid then
+				development_window.set_dropping_on_editor (true)
+				l_editor := editor_with_stone (a_stone)
+				if l_editor /= Void then
+					l_editor.docking_content.set_focus
+					if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
+						l_editor.editor_drawing_area.set_focus
+					end
+				else
+					-- Following line will change fake editor to real editor if `a_editor' is fake editor
+					a_editor.docking_content.set_focus
 
-				-- If `a_editor' is fake editor, `editor_drawing_area' is void
-				if a_editor.editor_drawing_area /= Void then
-					a_editor.editor_drawing_area.set_focus
+					-- If `a_editor' is fake editor, `editor_drawing_area' is void
+					if a_editor.editor_drawing_area /= Void then
+						a_editor.editor_drawing_area.set_focus
+					end
 				end
+
+				update_content_description (a_stone, a_editor.docking_content)
+				development_window.set_stone (a_stone)
+				development_window.set_dropping_on_editor (false)
 			end
-
-			update_content_description (a_stone, a_editor.docking_content)
-			development_window.set_stone (a_stone)
-			development_window.set_dropping_on_editor (false)
 		end
 
 	on_close (a_editor: like current_editor) is

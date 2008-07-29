@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			target := a_target
 			caller := a_caller
 			clsi_stone ?= target.stone
-			if clsi_stone /= Void then
+			if clsi_stone /= Void and clsi_stone.is_valid then
 				cls_name := clsi_stone.class_name
 			end
 			create l_question.make_standard_with_cancel (Warning_messages.w_File_changed (cls_name))

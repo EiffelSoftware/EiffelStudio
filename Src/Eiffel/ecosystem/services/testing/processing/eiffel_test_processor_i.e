@@ -40,7 +40,7 @@ feature -- Access
 		deferred
 		ensure
 			result_usable: Result.is_interface_usable
-			result_valid: Result.is_project_initialized
+			result_available: Result.is_project_initialized
 		end
 
 	tests: !DS_LINEAR [!EIFFEL_TEST_I]

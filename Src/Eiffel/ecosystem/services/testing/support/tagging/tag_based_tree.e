@@ -45,7 +45,7 @@ inherit
 			on_item_added,
 			on_item_removed,
 			on_item_changed,
-			on_items_wiped_out
+			on_items_reset
 		end
 
 create
@@ -53,35 +53,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_collection: like observed_collection; a_prefix: like tag_prefix)
+	make
 			-- Initialize `Current'.
-			--
-			-- `a_collection': Active collection containing items for which tree shall be built.
-			-- `a_prefix': The tree will search for tags in the collection beginning with `a_prefix'. For
-			--             each tag found, it will insert a leaf holding the corresponding item. The path to
-			--             the leaf is represented by the remaining suffix, which is the original tag
-			--             without the leading prefix.
-			--             Items which were not tagged with a tag beginning with `a_prefix', are provided
-			--             in a separate untagged list.
-		require
-			a_collection_usable: a_collection.is_interface_usable
-			a_tag_valid: is_valid_tag (a_prefix)
 		do
-			observed_collection := a_collection
-			observed_collection.connect_events (Current)
 			create internal_untagged_items.make_default
-			tag_prefix := a_prefix
-			refill
 		ensure
-			observed_collection_set: observed_collection = a_collection
-			connected: observed_collection.is_connected (Current)
-			prefix_set: tag_prefix.is_equal (a_prefix)
+			not_connected: not is_connected
 		end
 
 feature -- Access
 
 	tag_prefix: !STRING
 			-- Tag defining which tag are used to build tree
+		do
+			Result ?= internal_prefix
+		end
 
 	frozen untagged_items: like items
 			-- Items which do not contain a tag with prefix `tag'
@@ -99,6 +85,12 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 	observed_collection: !ACTIVE_COLLECTION_I [G]
 			-- Collection for which tree is maintained
+		require
+			usable: is_interface_usable
+			connected: is_connected
+		do
+			Result ?= internal_collection
+		end
 
 	tree: !TAG_BASED_TREE [G]
 			-- <Precursor>
@@ -108,15 +100,34 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 feature {NONE} -- Access
 
+	internal_prefix: ?STRING
+			-- Internal storage for `prefix'
+
+	internal_collection: ?ACTIVE_COLLECTION_I [G]
+			-- Internal storage for `observed_collection'
+
 	internal_untagged_items: !DS_HASH_SET [!G]
 			-- Items which do not contain a tag prefixed with `tag'
 
 feature -- Status report
 
+	is_connected: BOOLEAN
+			-- Is tree currently connected with an active collection?
+		do
+			Result := internal_collection /= Void and then
+				internal_prefix /= Void
+		ensure then
+			result_implies_collection_attached: Result implies internal_collection /= Void
+			result_implies_prefix_attached: Result implies internal_prefix /= Void
+			result_implies_connected: Result implies observed_collection.is_connected (Current)
+		end
+
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := observed_collection.is_interface_usable
+			Result := not is_connected or else observed_collection.is_interface_usable
+		ensure then
+			not_connected_implies_true: not is_connected implies Result
 		end
 
 	frozen is_root: BOOLEAN = True
@@ -124,30 +135,38 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_prefix (a_prefix: like tag_prefix)
-			-- Set `tag_prefix' to `a_prefix' and rebuild tree with new prefix.
+	connect (a_collection: like observed_collection; a_prefix: like tag_prefix) is
+			-- Build tree for collection and given tag.
+			--
+			-- `a_collection': Active collection containing items for which tree shall be built.
+			-- `a_prefix': The tree will search for tags in the collection beginning with `a_prefix'. For
+			--             each tag found, it will insert a leaf holding the corresponding item. The path to
+			--             the leaf is represented by the remaining suffix, which is the original tag
+			--             without the leading prefix.
+			--             Items which were not tagged with a tag beginning with `a_prefix', are provided
+			--             in a separate untagged list.
 		require
-			a_prefix_valid: is_valid_tag (a_prefix)
+			not_connected: not is_connected
+			a_collection_usable: a_collection.is_interface_usable
+			a_tag_valid: is_valid_tag (a_prefix)
 		do
-			wipe_out
-			tag_prefix := a_prefix
-			refill
-		ensure
-			prefix_set: tag_prefix.is_equal (a_prefix)
+			internal_collection := a_collection
+			internal_prefix := a_prefix
+			observed_collection.connect_events (Current)
+			fill
 		end
 
-	set_collection (a_collection: like observed_collection) is
-			-- Set `a_collection' as observed collection
+	disconnect is
+			-- Clear
 		require
-			a_collection_usable: a_collection.is_interface_usable
+			connected: is_connected
 		do
-			observed_collection.disconnect_events (Current)
 			wipe_out
-			observed_collection := a_collection
-			observed_collection.connect_events (Current)
-			refill
+			observed_collection.disconnect_events (Current)
+			internal_collection := Void
+			internal_prefix := Void
 		ensure
-			collection_set: observed_collection = a_collection
+			not_connected: not is_connected
 		end
 
 feature {NONE} -- Element change
@@ -185,12 +204,16 @@ feature {NONE} -- Element change
 			empty: is_empty
 		end
 
-	refill is
+	fill is
 			-- Add all items from `observed_collection' to tree.
 		require
 			empty: is_empty
+			connected: is_connected
+			collection_usable: observed_collection.is_interface_usable
 		do
-			observed_collection.items.do_all (agent on_item_added (observed_collection, ?))
+			if observed_collection.are_items_available then
+				observed_collection.items.do_all (agent on_item_added (observed_collection, ?))
+			end
 		end
 
 feature {NONE} -- Events
@@ -253,7 +276,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_items_wiped_out (a_collection: like observed_collection)
+	frozen on_items_reset (a_collection: like observed_collection)
 			-- <Precursor>
 		require else
 			a_collection_valid: a_collection = observed_collection

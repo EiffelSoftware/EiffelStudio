@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				-- Subscribe `Current' to project events
 			create l_project_factory
 			internal_project ?= l_project_factory.eiffel_project
-			l_manager := project.manager
+			l_manager := internal_project.manager
 			l_manager.load_agents.extend (agent refresh)
 			l_manager.compile_stop_agents.extend (agent refresh)
 
@@ -284,9 +284,10 @@ feature {NONE} -- Implementation: test map
 					end
 					modified_classes.wipe_out
 				else
-					check
-							-- Note: this point should no be reached since it is not able to "unload" a project.
-						not_implemented: False
+					if not test_class_map.is_empty then
+						test_routine_map.wipe_out
+						test_class_map.wipe_out
+						tests_reset_event.publish ([Current])
 					end
 				end
 				is_updating_tests := False

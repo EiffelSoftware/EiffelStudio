@@ -17,7 +17,7 @@ inherit
 			item_added_event as test_added_event,
 			item_removed_event as test_removed_event,
 			item_changed_event as test_changed_event,
-			items_wiped_out_event as tests_wiped_out_event
+			items_reset_event as tests_reset_event
 		end
 
 feature -- Query

@@ -13,7 +13,8 @@ inherit
 		rename
 			on_item_added as on_test_added,
 			on_item_removed as on_test_removed,
-			on_item_changed as on_test_changed
+			on_item_changed as on_test_changed,
+			on_items_reset as on_tests_reset
 		end
 
 feature {EIFFEL_TEST_SUITE_S} -- Events

@@ -24,7 +24,7 @@ inherit
 			on_item_added,
 			on_item_changed,
 			on_item_removed,
-			on_items_wiped_out
+			on_items_reset
 		end
 
 	EVENT_OBSERVER_CONNECTION [!ACTIVE_COLLECTION_OBSERVER [G]]
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			create item_added_event
 			create item_removed_event
 			create item_changed_event
-			create items_wiped_out_event
+			create items_reset_event
 
 			observed_collection := a_collection
 			set_expression (a_expression)
@@ -115,7 +115,7 @@ feature -- Events
 	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
 			-- <Precursor>
 
-	items_wiped_out_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
+	items_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
 			-- <Precursor>
 
 feature {ACTIVE_COLLECTION_I} -- Events
@@ -168,7 +168,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 			end
 		end
 
-	on_items_wiped_out (a_collection: like observed_collection)
+	on_items_reset (a_collection: like observed_collection)
 			-- <Precursor>
 		do
 			refresh
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			-- Rebuild `items' corresponding to items `observerd_collection'.
 		do
 			cached_items := Void
-			items_wiped_out_event.publish ([Current])
+			items_reset_event.publish ([Current])
 		end
 
 	fill_cache

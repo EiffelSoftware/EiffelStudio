@@ -242,7 +242,7 @@ feature -- Possibly delayed operations
 					if text_displayed.has_selection then
 						text_displayed.disable_selection
 					end
-					cursor.make_from_integer (pos.min (text_displayed.text_length), text_displayed)
+					cursor.make_from_integer (pos.min (text_displayed.text_length).max (1), text_displayed)
 					if number_of_lines > number_of_lines_displayed then
 						set_first_line_displayed (cursor.y_in_lines.min (maximum_top_line_index), True)
 						check_position (cursor)

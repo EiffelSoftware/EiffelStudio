@@ -39,6 +39,9 @@
 */
 
 #include "eif_config.h"
+
+#ifdef EIF_WINDOWS
+
 #include "eif_file.h"
 #include "rt_assert.h"
 
@@ -123,3 +126,5 @@ char *win_eif_getenv (char *k, char *app)
 		return (char *) buf;
 	}
 }
+
+#endif

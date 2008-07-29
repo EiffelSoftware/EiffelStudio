@@ -122,15 +122,12 @@ feature -- Access
 	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Mini pixel buffer
 
-feature -- Query
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: ?STONE): BOOLEAN
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
 			-- <Precursor>
-		local
-			l_stonable: ?ES_STONABLE_I
 		do
-			l_stonable ?= tool
-			if l_stonable /= Void then
+			if {l_stonable: ES_STONABLE_I} a_stone then
 				Result := l_stonable.is_stone_usable (a_stone)
 			end
 		end

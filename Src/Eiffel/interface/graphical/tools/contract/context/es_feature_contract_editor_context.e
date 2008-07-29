@@ -13,7 +13,7 @@ deferred class
 inherit
 	ES_CONTRACT_EDITOR_CONTEXT [FEATURE_STONE]
 		redefine
-			is_stone_usable
+			internal_is_stone_usable
 		end
 
 feature -- Access
@@ -105,13 +105,13 @@ feature {NONE} -- Contracts
 		deferred
 		end
 
-feature -- Status report
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: ?STONE): BOOLEAN
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_CONTRACT_EDITOR_CONTEXT} (a_stone)
-			if a_stone /= Void and then Result then
+			if Result then
 				if {l_stone: FEATURE_STONE} a_stone then
 					Result := {l_routine: E_ROUTINE} l_stone.e_feature
 				else
@@ -119,7 +119,7 @@ feature -- Status report
 				end
 			end
 		ensure then
-			is_class_stone: (Result and a_stone /= Void) implies ({E_ROUTINE}) #? (({FEATURE_STONE}) #? a_stone).e_feature /= Void
+			is_feature_stone: Result implies ({?E_ROUTINE}) #? (({!FEATURE_STONE}) #? a_stone).e_feature /= Void
 		end
 
 feature {NONE} -- Query

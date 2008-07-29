@@ -139,13 +139,13 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_context (a_context: like context)
+	set_context (a_context: ?like context)
 			-- Set contract editor context.
 			--
 			-- `a_context': A contract editor context to set.
 		require
 			is_interface_usable: is_interface_usable
-			a_context_is_interface_usable: a_context.is_interface_usable
+			a_context_is_interface_usable: a_context /= Void implies a_context.is_interface_usable
 		do
 			if context /= a_context then
 				context := a_context
@@ -240,7 +240,6 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			has_context: has_context
 		local
 			l_grid: !like edit_contract_grid
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]

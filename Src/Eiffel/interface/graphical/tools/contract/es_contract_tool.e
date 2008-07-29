@@ -19,47 +19,39 @@ create {NONE}
 feature -- Access
 
 	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_contract_editor_icon_buffer
 		end
 
 	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_contract_editor_icon
 		end
 
 	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+			-- <Precursor>
 		do
 			Result := interface_names.t_contract_tool
 		end
 
-feature -- Query
+feature {NONE} -- Status report
 
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
 		do
 			if {l_fs: !FEATURE_STONE} a_stone then
 				Result := {l_routine: !E_ROUTINE} l_fs.e_feature
 			elseif {l_bs: !CLASSI_STONE} a_stone then
 				Result := True
-			else
-				Result := a_stone = Void
 			end
 		end
 
 feature {NONE} -- Factory
 
 	create_tool: ES_CONTRACT_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 		end

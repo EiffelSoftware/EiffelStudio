@@ -13,7 +13,7 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
-	ES_STONABLE_I
+	ES_STONABLE
 		redefine
 			query_set_stone
 		end
@@ -31,9 +31,6 @@ feature {NONE} -- Clean up
 		end
 
 feature -- Access
-
-	stone: ?STONE assign set_stone
-			-- <Precursor>
 
 	context_stone: !G
 			-- Context stone
@@ -116,41 +113,7 @@ feature -- Contracts
 			result_contracts_is_empty: ((not a_live and not a_class.is_compiled) or (a_live and not Result.modifier.is_ast_available)) implies Result.contracts.is_empty
 		end
 
-feature -- Element change
-
-	set_stone (a_stone: ?STONE)
-			-- <Precursor>
-		do
-			if stone /= a_stone then
-					-- Reset any cached data
-				reset
-
-				if internal_text_modifier /= Void then
-					internal_text_modifier.recycle
-				end
-				internal_text_modifier := Void
-				stone := a_stone
-			end
-		ensure then
-			internal_text_modifier_detached: (old stone) /= a_stone implies internal_text_modifier = Void
-			internal_text_modifier_is_recycled: (old internal_text_modifier /= Void) implies not (old internal_text_modifier).is_interface_usable
-		end
-
 feature -- Status report
-
-	is_stone_usable (a_stone: ?STONE): BOOLEAN
-			-- <Precursor>
-		local
-			l_stone: ?G
-		do
-			Result := a_stone = Void
-			if not Result then
-				l_stone ?= a_stone
-				Result := l_stone /= Void
-			end
-		ensure then
-			is_class_stone: Result implies (a_stone = Void or else (({G}) #? a_stone) /= Void)
-		end
 
 	is_editable: BOOLEAN
 			-- Indicates if the context allows for modifications
@@ -161,6 +124,16 @@ feature -- Status report
 			Result := not context_class.is_read_only
 		ensure
 			context_class_is_writable: Result implies not context_class.is_read_only
+		end
+
+feature {NONE} -- Status report
+
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
+		do
+			Result := {l_g: G} a_stone
+		ensure then
+			is_class_stone: Result implies ({?G}) #? a_stone /= Void
 		end
 
 feature -- Query
@@ -234,6 +207,18 @@ feature -- Synchronization
 			-- Synchronizes any new data (compiled or other wise)
 		do
 			--| Does nothing!
+		end
+
+feature {NONE} -- Action handlers
+
+	on_stone_changed (a_old_stone: ?STONE)
+			-- <Precursor>
+		do
+				-- Reset any cached data
+			reset
+		ensure then
+			internal_text_modifier_detached: internal_text_modifier = Void
+			internal_text_modifier_is_recycled: (old internal_text_modifier /= Void) implies not (old internal_text_modifier).is_interface_usable
 		end
 
 feature {NONE} -- Factory

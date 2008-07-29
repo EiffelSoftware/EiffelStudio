@@ -46,8 +46,8 @@ feature {ACTIVE_COLLECTION_I} -- Events
 		do
 		end
 
-	on_items_wiped_out (a_collection: !ACTIVE_COLLECTION_I [G]) is
-			-- Called when items of `a_collection' have completely changed
+	on_items_reset (a_collection: !ACTIVE_COLLECTION_I [G]) is
+			-- Called when items of `a_collection' have been wiped out and may or may not be available.
 		require
 			is_interface_usable: is_interface_usable
 			a_collection_usable: a_collection.is_interface_usable

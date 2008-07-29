@@ -34,13 +34,11 @@ feature -- Access
 	project: !E_PROJECT
 		require
 			usable: is_interface_usable
-			project_available: is_project_initialized
+			initialized: is_project_initialized
 		deferred
 		ensure
-			result_initialized: project.initialized and
-				project.workbench.universe_defined and
-				project.system_defined and then
-				project.universe.target /= Void
+			project_initialized: Result.initialized and Result.workbench.universe_defined and
+			                     Result.system_defined and then Result.universe.target /= Void
 		end
 
 	default_executor: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
@@ -126,7 +124,7 @@ feature -- Status setting
 			-- and notify observers that executor has been launched.
 		require
 			usable: is_interface_usable
-			project_available: is_project_initialized
+			project_initialized: is_project_initialized
 			executor_available: processor_registrar.is_registered (a_type)
 			executor_ready: executor (a_type).is_ready
 			executor_suitable: executor (a_type).is_valid_test_list (tests)
@@ -142,7 +140,7 @@ feature -- Status setting
 			-- and notify observers that executor has been launched.
 		require
 			usable: is_interface_usable
-			project_available: is_project_initialized
+			project_initialized: is_project_initialized
 			executor_available: processor_registrar.is_registered (a_type)
 			executor_ready: executor (a_type).is_ready
 			executor_suitable: executor (a_type).is_valid_test_list (tests)
@@ -157,7 +155,7 @@ feature -- Status setting
 			-- Launch test creation and notify all observers
 		require
 			usable: is_interface_usable
-			project_available: is_project_initialized
+			project_initialized: is_project_initialized
 			factory_available: processor_registrar.is_registered (a_type)
 			factory_ready: factory (a_type).is_ready
 			factory_suitable: factory (a_type).is_valid_configuration (a_conf)

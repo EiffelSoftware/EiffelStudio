@@ -23,7 +23,7 @@ inherit
 			item_added_event as processor_added_event,
 			item_removed_event as processor_removed_event,
 			item_changed_event as processor_changed_event,
-			items_wiped_out_event as processors_changed_event
+			items_reset_event as processors_changed_event
 		end
 
 feature -- Status report

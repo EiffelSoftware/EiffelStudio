@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			create test_added_event
 			create test_removed_event
 			create test_changed_event
-			create tests_wiped_out_event
+			create tests_reset_event
 		end
 
 feature -- Events
@@ -34,7 +34,7 @@ feature -- Events
 	test_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; item: !EIFFEL_TEST_I]]
 			-- <Precursor>
 
-	tests_wiped_out_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]]]
+	tests_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]]]
 			-- <Precursor>
 
 end

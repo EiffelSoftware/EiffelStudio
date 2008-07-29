@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- `a_parent': Parent node for `Current'.
 			-- `a_token': Token which `Current' will represent in tree.
 		require
+			a_parent_active: a_parent.is_interface_usable
 			a_token_valid: is_valid_token (a_token)
 		local
 			l_cursor: !DS_HASH_TABLE_CURSOR [NATURAL, !STRING]
@@ -40,7 +41,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			token_set: token.is_equal (a_token)
-			not_cached: not is_evaluated
+			not_evaluated: not is_evaluated
 			empty: is_empty
 		end
 
@@ -62,10 +63,17 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 feature -- Status report
 
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := parent.is_interface_usable and then
+				parent.children.has (Current)
+		end
+
 	is_root: BOOLEAN = False
 			-- <Precursor>
 
 invariant
-	tag_correct: tag.is_equal (join_tags (parent.tag, token))
+	tag_correct: is_interface_usable implies tag.is_equal (join_tags (parent.tag, token))
 
 end

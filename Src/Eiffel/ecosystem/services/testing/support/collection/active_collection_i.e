@@ -43,7 +43,7 @@ feature {NONE} -- Query
 			Result.put_last ([item_added_event, agent a_observer.on_item_added])
 			Result.put_last ([item_removed_event, agent a_observer.on_item_removed])
 			Result.put_last ([item_changed_event, agent a_observer.on_item_changed])
-			Result.put_last ([items_wiped_out_event, agent a_observer.on_items_wiped_out])
+			Result.put_last ([items_reset_event, agent a_observer.on_items_reset])
 		end
 
 feature -- Events
@@ -78,8 +78,8 @@ feature -- Events
 		deferred
 		end
 
-	items_wiped_out_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
-			-- Events called to indicate that `items' has been wiped out and may not be available any more.
+	items_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
+			-- Events called to indicate that `items' is empty and may or may not be available.
 			--
 			-- collection: `Current'
 		require

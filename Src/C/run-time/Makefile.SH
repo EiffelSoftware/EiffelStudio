@@ -51,6 +51,7 @@ SHAREDLINK= $sharedlink
 L = $manext
 LIBS = $libs
 LINT = lint
+LINTFLAGS = \$(CFLAGS)
 LN = $ln
 MANSRC = $installmansrc
 MAKE = make

@@ -56,8 +56,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-SOURCES =  \$(LSRC) \$(PSTORE) \$(LSRC) \$(PSTORE) bytedump.c meltdump.c
 OBJECTS =  \$(FOBJ) \$(WOBJ) \$(MT_FOBJ) \$(MT_WOBJ) bytedump.o meltdump.o
+SOURCES =  \$(LSRC) \$(PSTORE) bytedump.c meltdump.c
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care

@@ -38,6 +38,7 @@ MT!f:\.c=.o: !f
 
 -expand
 
+AddSource($(LSRC))
 NormalObjectRule()
 NormalRelocatableTarget(network,$(OBJ))
 NormalRelocatableTarget(MTnetwork,$(MT_OBJ))

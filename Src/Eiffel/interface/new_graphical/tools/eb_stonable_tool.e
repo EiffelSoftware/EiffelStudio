@@ -130,23 +130,22 @@ feature {NONE} -- Implementation
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
 				if {l_stone: !FILED_STONE} last_monitored_stone then
-					check l_stone_has_file_name: l_stone.file_name /= Void end
-					if {l_file_name: FILE_NAME} l_stone.file_name and then {l_fn: !STRING_32} (l_file_name.out.as_string_32) then
+					if l_stone.file_name /= Void and then {l_fn: !STRING_32} l_stone.file_name.out.as_string_32 then
 						if l_notifier.service.is_monitoring (l_fn) then
 							l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
-							last_monitored_stone := Void
 						end
 					end
 				end
 			end
 
 			last_stone := a_stone
+			last_monitored_stone := Void
 			set_is_last_stone_processed (False)
 
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
 				if {l_stone2: !FILED_STONE} a_stone then
-					if {l_file_name2: FILE_NAME} l_stone2.file_name and then {l_fn2: !STRING_32} (l_file_name2.out.as_string_32) then
+					if l_stone2.file_name /= Void and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
 						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
 						last_monitored_stone := l_stone2
 					end
@@ -155,7 +154,8 @@ feature {NONE} -- Implementation
 		ensure
 			last_stone_set: last_stone = a_stone
 			last_stone_not_processed: not is_last_stone_processed
-			last_monitored_stone_set: (create {SERVICE_CONSUMER [FILE_NOTIFIER_S]}).is_service_available implies (last_monitored_stone = ({FILED_STONE}) #? a_stone)
+			last_monitored_stone_set: (create {SERVICE_CONSUMER [FILE_NOTIFIER_S]}).is_service_available implies
+				(last_monitored_stone = Void or else last_monitored_stone = ({FILED_STONE}) #? a_stone)
 		end
 
 	set_is_last_stone_processed (b: BOOLEAN) is

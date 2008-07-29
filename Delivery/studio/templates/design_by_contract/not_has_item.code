@@ -20,7 +20,7 @@
       <description>An attached container variable to check the item's absence</description>
     </object>
     <object id="item" editable="true" conforms_to="ANY">
-      <description>An entity returning the item to ensure the absense of</description>
+      <description>An entity returning the item to ensure the absence of</description>
     </object>
   </declarations>
   

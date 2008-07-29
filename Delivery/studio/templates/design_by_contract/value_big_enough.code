@@ -16,10 +16,10 @@
    </metadata>
    
    <declarations>
-      <object id="value" editable="True" conforms_to="NUMERICAL">
-         <description>A arbitary value</description>
+      <object id="value" editable="True" conforms_to="NUMERIC">
+         <description>An arbitrary value</description>
       </object>
-      <object id="lower" editable="True" conforms_to="NUMERICAL">
+      <object id="lower" editable="True" conforms_to="NUMERIC">
          <description>A range's lower bound</description>
       </object>
    </declarations>

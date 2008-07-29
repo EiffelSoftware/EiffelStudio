@@ -4,7 +4,7 @@
     <title>All Items Attached</title>
     <description>Code template contract predicate to ensure a chained container structure has only attached items</description>
     <author>Eiffel Software</author>
-    <shortcut>all_unattached</shortcut>
+    <shortcut>all_attached</shortcut>
       <categories>
          <category>Eiffel</category>
          <category>code</category>
@@ -22,6 +22,6 @@
   </declarations>
   
   <templates>
-    <template>${container}_items_unattached: ${container}.occurances (Void) = ${container}.count${end}</template>  
+    <template>${container}_items_attached: not ${container}.has (Void)</template>  
   </templates>
 </code_template>

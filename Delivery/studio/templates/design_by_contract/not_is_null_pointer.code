@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
    <metadata>
-      <title>Is null pointer</title>
+      <title>Not Is null pointer</title>
       <description>Code template contract predicate to ensure an entity represents a valid pointer</description>
       <author>Eiffel Software</author>
       <shortcut>not_is_null</shortcut>

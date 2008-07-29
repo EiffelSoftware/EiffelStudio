@@ -2,7 +2,7 @@
 <code_template format="1.0.0">
    <metadata>
       <title>Not Is Postive</title>
-      <description>Code template contract predicate for ensuring an entity is a non-negative (zero or positive) numerical</description>
+      <description>Code template contract predicate for ensuring an entity is a non-negative (zero or positive) numeric</description>
       <author>Eiffel Software</author>
       <shortcut>not_is_pos</shortcut>
       <categories>
@@ -16,12 +16,12 @@
    </metadata>
    
    <declarations>
-      <object id="numerical" editable="True" conforms_to="NUMERICAL">
-         <description>An numerical entity</description>
+      <object id="numeric" editable="True" conforms_to="NUMERIC">
+         <description>An numeric entity</description>
       </object>
    </declarations>
    
    <templates>
-      <template>not_${numerical}_is_positive: ${numerical} &lt;= 0${end}</template>
+      <template>not_${numeric}_is_positive: ${numeric} &lt;= 0${end}</template>
    </templates>
 </code_template>

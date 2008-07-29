@@ -2,7 +2,7 @@
 <code_template format="1.0.0">
    <metadata>
       <title>Not Directory Exists</title>
-      <description>Code template contract predicate to ensure a directory does not exists on a local or networked drive</description>
+      <description>Code template contract predicate to ensure a directory does not exist on a local or networked drive</description>
       <author>Eiffel Software</author>
       <shortcut>not_dir_exists</shortcut>
       <categories>

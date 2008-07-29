@@ -19,8 +19,8 @@
       <object id="array" editable="True" conforms_to="ARRAY [ANY]">
          <description>An attached array entity</description>
       </object>
-      <object id="index" editable="True" conforms_to="NUMERICAL">
-         <description>A index to the specified array item</description>
+      <object id="index" editable="True" conforms_to="NUMERIC">
+         <description>An index to the specified array item</description>
       </object>
    </declarations>
    

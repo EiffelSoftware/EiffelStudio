@@ -17,7 +17,7 @@
   
   <declarations>  
     <object id="var" editable="true" conforms_to="FINITE">
-      <description>An attached variable with access to an `is_empty' status function</description>
+      <description>A variable with access to an `is_empty' status function</description>
     </object>
   </declarations>
   

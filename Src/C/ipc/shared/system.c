@@ -115,26 +115,3 @@ rt_public int usleep(int usec)
 #endif
 #define HAS_USLEEP
 #endif
-
-#ifndef EIF_WINDOWS
-rt_public char *str_save(char *s)
-{
-	/* Save string 's' somewhere in memory */
-
-	char *new;
-
-	if (s == (char *) 0)
-		return (char *) 0;
-
-	new = (char *) malloc(strlen(s) + 1);
-	if (new == (char *) 0) {
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR cannot malloc %d bytes", strlen(s) + 1);
-#endif
-		return (char *) 0;
-	}
-
-	(void) strcpy(new, s);
-	return new;
-}
-#endif

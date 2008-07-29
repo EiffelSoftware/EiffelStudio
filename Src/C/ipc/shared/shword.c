@@ -61,7 +61,7 @@ rt_private char *ifs = " ";		/* Input field separator */
 /* Array of strings built by ipc_shword, each word being stored in one slot of the
  * argument array. This pointer can be passed as-is to the execvp() system call.
  */
-rt_private char **argv = 0;		/* Argument pointer */
+rt_private char **argv = NULL;		/* Argument pointer */
 rt_private int argc;				/* Argument count */
 rt_private int where;				/* Current position within argv[] */
 
@@ -72,11 +72,7 @@ rt_private char *add_argv(char *word);		/* Append one word to the argv[] array *
 rt_public void shfree(void);			/* Free structure used by argv[] */
 rt_public char **ipc_shword(char *cmd);			/* Parse command string and split into words */
 
-#ifdef EIF_WINDOWS
 rt_private char *str_save(char *s);		/* Save string somewhere in memory */
-#else
-extern char *str_save(char *s);			/* Save string somewhere in memory */
-#endif
 
 rt_private void free_argv(void)
 {
@@ -279,7 +275,6 @@ rt_public char **ipc_shword(char *cmd)
 	return argv;				/* Pointer to argument word array */
 }
 
-#ifdef EIF_WINDOWS
 rt_private char *str_save(char *s)
 {
 	/* Save string 's' somewhere in memory */
@@ -300,7 +295,6 @@ rt_private char *str_save(char *s)
 	(void) strcpy(new, s);
 	return new;
 }
-#endif
 
 #ifdef TEST
 print_argv(void)

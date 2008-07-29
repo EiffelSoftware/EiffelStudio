@@ -290,8 +290,6 @@ rt_public void clean_connection(void)
 #endif
 }
 
-extern STREAM *ewb_sp;
-
 #ifdef EIF_WINDOWS
 /* C routines for the communications of debugged application and debugger. */
 

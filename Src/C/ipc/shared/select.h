@@ -54,9 +54,7 @@
 
 extern int s_errno;					/* Error number */
 
-#ifdef EIF_WINDOWS
-
-/* Type definition for functions that take a HANDLE as only argument and return void */
+/* Type definition for functions that take a STREAM as only argument and return void */
 typedef void(*STREAM_FN)(STREAM*);
 
 /* Function declarations */
@@ -65,18 +63,12 @@ extern STREAM_FN new_callback(EIF_PSTREAM, STREAM_FN);	/* Change call back for a
 extern STREAM_FN rem_input(EIF_PSTREAM);				/* Remove input selection */
 extern char *s_strerror(void);							/* Return description of last error */
 extern char *s_strname(void);							/* Return symbolic name of last error */
+extern int has_input(EIF_PSTREAM);		/* Check whether file is still selected */
+
+#ifdef EIF_WINDOWS
 extern int do_select(DWORD timeout);					/* Run the select system call */
-
 #else
-
-/* Function declarations */
-extern int add_input(EIF_PSTREAM, void (*call) (/* ??? */));		/* Add file descriptor input function */
-extern void (*new_callback(EIF_PSTREAM, void (*call) (/* ??? */)))(void);	/* Change call back for a given fd */
-extern void (*rem_input(EIF_PSTREAM))(void);		/* Remove input selection */
-extern char *s_strerror(void);		/* Return description of last error */
-extern char *s_strname(void);		/* Return symbolic name of last error */
 extern int do_select(struct timeval *timeout);	/* Run the select system call */
 #endif
-extern int has_input(EIF_PSTREAM);		/* Check whether file is still selected */
 
 #endif

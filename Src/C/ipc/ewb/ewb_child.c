@@ -553,7 +553,7 @@ rt_private int comfort_child(STREAM *sp)
 	char c = '\0';
 
 #ifndef EIF_WINDOWS
-	Signal_t (*oldpipe)();
+	Signal_t (*oldpipe)(int);
 
 	FD_ZERO(&mask);
 	FD_SET(writefd(sp), &mask);				/* We want to write to child */

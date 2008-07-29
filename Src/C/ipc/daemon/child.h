@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
+
 #ifdef EIF_WINDOWS
 extern STREAM *spawn_child(char *id, int is_ec, char *exe_path, char *exe_args, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id);
 #else

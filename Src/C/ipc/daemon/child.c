@@ -78,7 +78,9 @@
 #define PIPE_READ	0		/* File descriptor used for reading */
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
-extern unsigned int TIMEOUT;	/* Time to let the child initialize */
+
+rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
+
 extern void dexit (int);
 #define SPAWN_CHILD_FAILED(i) dexit(i);
 
@@ -784,7 +786,7 @@ rt_private int comfort_child(STREAM *sp)
 	char c = '\0';
 
 #ifndef EIF_WINDOWS
-	Signal_t (*oldpipe)();
+	Signal_t (*oldpipe)(int);
 
 	FD_ZERO(&mask);
 	FD_SET(writefd(sp), &mask);				/* We want to write to child */

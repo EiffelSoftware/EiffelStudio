@@ -39,6 +39,13 @@
 
 #include "eif_io.h"
 
-rt_public EIF_REFERENCE request_dispatch (Request rqst);
+extern void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC eif_set);
+extern EIF_REFERENCE request_handler (void);
+extern EIF_REFERENCE request_dispatch (Request rqst);
+
+/* Following routines are not in use but kept in case we would use them again. */
+extern void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body_id, char *byte_array, EIF_INTEGER size);
+extern void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BOOLEAN opcode);
+extern void send_ack_end (void);
 
 #endif /* _eif_in_h_ */

@@ -90,9 +90,6 @@ rt_private void CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for
 #else
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
-#ifndef EIF_VMS
-extern int errno;	/* shouldn't this be #include <errno.h> for all platforms??? */
-#endif
 #endif
 
 rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
@@ -120,7 +117,7 @@ rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 		add_log(2, "in net_recv");
 #endif
 #else
-	Signal_t (*oldalrm)();
+	Signal_t (*oldalrm)(int);
 	int length;
 #endif
 
@@ -252,7 +249,7 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 #else
 	size_t length;
 	int error;
-	Signal_t (*oldpipe)();
+	Signal_t (*oldpipe)(int);
 #endif
 
 #ifdef USE_ADD_LOG

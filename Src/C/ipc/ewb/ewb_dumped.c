@@ -50,29 +50,28 @@
 #include <string.h>
 #include "rt_garcol.h"
 #include "stream.h"
+#include "ewb_dumped.h"
 
-extern STREAM *ewb_sp;
-
-EIF_PROC set_rout;
-EIF_PROC set_natural_8;
-EIF_PROC set_natural_16;
-EIF_PROC set_natural_32;
-EIF_PROC set_natural_64;
-EIF_PROC set_integer_8;
-EIF_PROC set_integer_16;
-EIF_PROC set_integer_32;
-EIF_PROC set_integer_64;
-EIF_PROC set_bool;
-EIF_PROC set_char;
-EIF_PROC set_wchar;
-EIF_PROC set_real;
-EIF_PROC set_double;
-EIF_PROC set_ref;
-EIF_PROC set_pointer;
-EIF_PROC set_bits;
-EIF_PROC set_error;
-EIF_PROC set_exception_ref;
-EIF_PROC set_void;
+rt_private EIF_PROC set_rout;
+rt_private EIF_PROC set_natural_8;
+rt_private EIF_PROC set_natural_16;
+rt_private EIF_PROC set_natural_32;
+rt_private EIF_PROC set_natural_64;
+rt_private EIF_PROC set_integer_8;
+rt_private EIF_PROC set_integer_16;
+rt_private EIF_PROC set_integer_32;
+rt_private EIF_PROC set_integer_64;
+rt_private EIF_PROC set_bool;
+rt_private EIF_PROC set_char;
+rt_private EIF_PROC set_wchar;
+rt_private EIF_PROC set_real;
+rt_private EIF_PROC set_double;
+rt_private EIF_PROC set_ref;
+rt_private EIF_PROC set_pointer;
+rt_private EIF_PROC set_bits;
+rt_private EIF_PROC set_error;
+rt_private EIF_PROC set_exception_ref;
+rt_private EIF_PROC set_void;
 
 
 rt_public void c_recv_rout_info (EIF_OBJ target)

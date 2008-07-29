@@ -35,13 +35,12 @@
 */
 
 #include "eif_io.h"
+#include "eif_out.h"
 #include "eif_eiffel.h"
 #include "eproto.h"
 
 #include "stack.h"
 #include "stream.h"
-
-extern STREAM *ewb_sp;
 
 #ifdef EIF_WINDOWS
 extern void start_timer(void);			/* Starts the timer for communication */
@@ -476,7 +475,7 @@ rt_public void c_twrite (char *s, long int l)
 	ewb_twrite (s, (int) l);
 }
 
-EIF_REFERENCE c_tread (void)
+rt_public EIF_REFERENCE c_tread (void)
 {
 
 	int size;
@@ -510,27 +509,3 @@ rt_public int async_shell(char *cmd)
 
 	return background(cmd);
 }
-
-rt_public void send_run_request(long int code, char *buf, long int len)
-{
-/*
-	Request rqst;
-
-	Request_Clean (rqst);
-	rqst.rq_type = code;
-
-	if (-1 == ewb_send_packet (ewb_sp, &rqst))
-		error
-
-	? = ewb_twrite (buf, size);
-
-	ACK ???
-*/
-}
-
-void request_dump (int elem_nb) {
-		/* Retrieve the elem_nb first elements from the call stack. *
-		 * Passing -1 retrieves the whole call stack. */
-	send_rqst_1 (DUMP_STACK, elem_nb);
-}
-

@@ -92,7 +92,7 @@ rt_private void set_callback (EIF_LPSTREAM, STREAM_FN);
 void set_multiple_mask (EIF_LPSTREAM, HANDLE mask[NOFILE]);
 void unset_multiple_mask (EIF_LPSTREAM, HANDLE mask[NOFILE]);
 #else
-rt_private void (*callback[NOFILE])();		/* Call backs on a per-fd basis */
+rt_private STREAM_FN callback[NOFILE];		/* Call backs on a per-fd basis */
 #endif
 
 /* The select mask is updated every time a file descriptor is added or removed,
@@ -136,23 +136,13 @@ rt_private char *s_nerrlist[] = {			/* Symbolic codes for errors */
 };
 rt_private int s_nerr = sizeof(s_errlist);	/* Number of error messages */
 
-#if !defined(EIF_WINDOWS) && !defined(EIF_VMS)	/* should not <errno.h> handle this for all platforms? */
-extern int errno;						/* System call error status */
-#endif
-
 /*
  * Setting the parameters.
  */
 
-#ifdef EIF_WINDOWS
 rt_public int add_input(EIF_PSTREAM sp, STREAM_FN call)
 		/* `sp': Stream on which select must be done */
 		/* `call': Function to be called when input is available */
-#else
-rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
-		/* File descriptor on which select must be done */
-		/* Function to be called when input is available */
-#endif
 {
 	/* Add an input condition on file descriptor 'fd', with associated call
 	 * back procedure and update internal informations.
@@ -169,11 +159,7 @@ rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
 		return -1;
 	}
 
-#ifdef EIF_WINDOWS
 	if (call == NULL) {						/* Null pointer for callback */
-#else
-	if (call == (void (*)()) 0) {			/* Null pointer for callback */
-#endif
 		s_errno = S_CALBAK;					/* Invalid callback pointer */
 		return -1;
 	}
@@ -181,7 +167,7 @@ rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
 #ifdef EIF_WINDOWS
 	if (callback(sp) != NULL) {				/* Callback already set */
 #else
-	if (callback[fd] != (void (*)()) 0) {	/* Callback already set */
+	if (callback[fd] != NULL) {				/* Callback already set */
 #endif
 		s_errno = S_CALSET;					/* Cannot override old callback */
 		return -1;
@@ -201,24 +187,18 @@ rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
 	return 0;			/* Ok status */
 }
 
-#ifdef EIF_WINDOWS
 rt_public STREAM_FN new_callback(EIF_PSTREAM sp, STREAM_FN call)
 		/* `sp': STREAM on which select must be done */
 		/* `call': New function to be called when input is available */
-#else
-rt_public void (*new_callback(EIF_PSTREAM sp, void (*call) (/* ??? */)))(void)
-		/* File descriptor on which select must be done */
-		/* New function to be called when input is available */
-#endif
 {
 	/* Change the call back associated with the file descriptor and return the
 	 * old call back. If no input was associated with that file descriptor,
 	 * it is an error and a null pointer is returned.
 	 */
 
-#ifdef EIF_WINDOWS
 	STREAM_FN old_call;					/* The old call back set for that fd */
 
+#ifdef EIF_WINDOWS
 	if (call == NULL) {					/* Null pointer for callback */
 		s_errno = S_CALBAK;				/* Invalid callback pointer */
 		return NULL;
@@ -233,42 +213,37 @@ rt_public void (*new_callback(EIF_PSTREAM sp, void (*call) (/* ??? */)))(void)
 	}
 #else
 	int fd = readfd(sp);
-	void (*old_call)();					/* The old call back set for that fd */
 
 	if (fd < 0 || fd >= NOFILE) {		/* File descriptor out of range */
 		s_errno = S_FDESC;				/* Invalid file descriptor */
-		return (void (*)()) 0;
+		return NULL;
 	}
-	if (call == (void (*)()) 0) {		/* Null pointer for callback */
+	if (call == NULL) {						/* Null pointer for callback */
 		s_errno = S_CALBAK;				/* Invalid callback pointer */
-		return (void (*)()) 0;
+		return NULL;
 	}
 	old_call = callback[fd];			/* Previously stored callback address */
-	callback[fd] = (void (*)()) 0;		/* Otherwise add_input() will fail */
+	callback[fd] = NULL;				/* Otherwise add_input() will fail */
+
 	if (-1 == add_input(sp, call)) {	/* Failed, restore old status */
 		callback[fd] = old_call;		/* Reset old callback value */
-		return (void (*)()) 0;			/* No change occurred */
+		return NULL;					/* No change occurred */
 	}
 #endif
 
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-#ifdef EIF_WINDOWS
 rt_public STREAM_FN rem_input(EIF_PSTREAM sp)
 		/* `sp': Stream on which no select is to be done */
-#else
-rt_public void (*rem_input(EIF_PSTREAM sp))(void)
-		/* File descriptor on which no select is to be done */
-#endif
 {
 	/* This function removes the input and associated callback for 'sp' and
 	 * returns the old callback value.
 	 */
 
-#ifdef EIF_WINDOWS
 	STREAM_FN old_call;					/* The old call back set for that fd */
 
+#ifdef EIF_WINDOWS
 	old_call = callback(sp);		/* Save previous callback value */
 	set_callback(sp, NULL);			/* And clear entry anyway */
 	if (old_call == NULL) {			/* No callback was set */
@@ -289,18 +264,17 @@ rt_public void (*rem_input(EIF_PSTREAM sp))(void)
 	int i;								/* To eventually update nfds */
 	int fd = readfd(sp);
 
-	void (*old_call)();					/* The old call back set for that fd */
-
 	if (fd < 0 || fd >= NOFILE) {		/* File descriptor out of range */
 		s_errno = S_FDESC;
-		return (void (*)()) 0;
+		return NULL;
 	}
 
 	old_call = callback[fd];			/* Save previous callback value */
-	callback[fd] = (void (*)()) 0;		/* And clear entry anyway */
-	if (old_call == (void (*)()) 0) {	/* No callback was set */
+	callback[fd] = NULL;				/* And clear entry anyway */
+
+	if (old_call == NULL) {				/* No callback was set */
 		s_errno = S_NOCALBAK;			/* This error does not really matter */
-		return (void (*)()) 0;			/* As we cleared the entry already */
+		return NULL;					/* As we cleared the entry already */
 	}
 
 	/* Update the reading mask and the nfds value. This is important, because
@@ -313,7 +287,7 @@ rt_public void (*rem_input(EIF_PSTREAM sp))(void)
 	if (nfds == (fd + 1)) {				/* This file was the maximum fd */
 		nfds = 0;						/* Assume no more file */
 		for (i = fd - 1; i >= 0; i--)
-			if (callback[i] != (void (*)()) 0) {
+			if (callback[i] != NULL) {
 				nfds = i + 1;			/* Number of fd still monitored */
 				break;					/* Found it, break loop */
 			}
@@ -339,7 +313,7 @@ rt_public int has_input(EIF_PSTREAM sp)
 		return -1;
 	}
 
-	if (callback[fd] != (void (*)()) 0)
+	if (callback[fd] != NULL)
 		return 1;
 #endif
 

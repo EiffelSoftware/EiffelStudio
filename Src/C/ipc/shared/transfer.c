@@ -195,7 +195,7 @@ rt_public void swallow(EIF_PSTREAM sp, size_t size)
 }
 
 /* After debugging completed, we need to free the communication buffer */
-rt_public void end_debug()
+rt_public void end_debug(void)
 {
 	if (reading_buffer != NULL) free (reading_buffer);
 	reading_buffer = NULL;

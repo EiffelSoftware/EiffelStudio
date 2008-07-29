@@ -249,7 +249,7 @@ rt_private struct dump *get_next_execution_vector(void)
 	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 	expop (&eif_stack);
 
-	if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != 0))
+	if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != NULL))
 		return (struct dump *) EIF_IGNORE;		/* This vector should not be sent */
 
 	/* Build up the dumped structure for the current vector. If this
@@ -356,7 +356,7 @@ rt_private uint32 go_ith_stack_level(int level)
 
 		if ( !( 
 				(top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) 
-				&& (top->exu.exur.exur_id != 0)
+				&& (top->exu.exur.exur_id != NULL)
 			) ) {
 			i--;		/* Rewind - This item should not be taken into account. */
 			continue;	/* This vector should be ignored */

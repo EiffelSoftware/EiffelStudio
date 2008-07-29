@@ -42,23 +42,21 @@
 #include "stream.h"
 #include "rt_assert.h"
 
-extern STREAM *ewb_sp;
-
 /*
 	Eiffel/C interface routines
 */
 
-EIF_OBJ failure_handler;
-EIF_OBJ dead_handler;
-EIF_OBJ notify_handler;
-EIF_OBJ stopped_handler;
+rt_private EIF_OBJ failure_handler;
+rt_private EIF_OBJ dead_handler;
+rt_private EIF_OBJ notify_handler;
+rt_private EIF_OBJ stopped_handler;
 
-EIF_PROC failure_hdlr_set;
-EIF_PROC dead_hdlr_set;
-EIF_PROC notify_hdlr_set;
-EIF_PROC stopped_hdlr_set;
+rt_private EIF_PROC failure_hdlr_set;
+rt_private EIF_PROC dead_hdlr_set;
+rt_private EIF_PROC notify_hdlr_set;
+rt_private EIF_PROC stopped_hdlr_set;
 
-void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC eif_set)
+rt_public void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC eif_set)
 {
 	/* Keep a reference in C to the Eiffel objects
 	 * handling the requests from ised.
@@ -118,7 +116,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 	}
 }
 
-EIF_REFERENCE request_handler (void)
+rt_public EIF_REFERENCE request_handler (void)
 {
 	/* Dispatch request from ised to
 	 * proper RQST_HANDLER Eiffel object
@@ -137,7 +135,7 @@ EIF_REFERENCE request_handler (void)
 }
 
 
-EIF_REFERENCE request_dispatch (Request rqst)
+rt_public EIF_REFERENCE request_dispatch (Request rqst)
 {
 	EIF_REFERENCE eif_string;
 
@@ -180,7 +178,7 @@ EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_offset);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "%i", stop_info.st_where.wh_thread_id);
+				sprintf (ptr, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) stop_info.st_where.wh_thread_id);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);
 				ptr += strlen (ptr) + 1;

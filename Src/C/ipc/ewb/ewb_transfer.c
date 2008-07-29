@@ -44,7 +44,7 @@
 #include "ewb_transfer.h"
 #include "ewb_proto.h"
 
-rt_shared STREAM *ewb_sp;				/* Stream used for communications */
+rt_public STREAM *ewb_sp;				/* Stream used for communications */
 
 rt_public void ewb_tpipe(STREAM *stream) {
     /* Initialize the file descriptor to be used in data exchanges with the

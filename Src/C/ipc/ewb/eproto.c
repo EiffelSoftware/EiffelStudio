@@ -53,8 +53,6 @@
 #include "ewb_transfer.h"
 #include <string.h>
 
-extern STREAM *ewb_sp;
-
 /*
  * Protocol specific routines
  */

@@ -57,6 +57,7 @@
 #include "identify.h"
 #include "com.h"
 #include "dbg_proto.h"
+#include "child.h"
 
 #include <stdlib.h>
 
@@ -83,8 +84,6 @@ extern char *win_eif_getenv(char *k, char *app);	/* Get environment variable val
 extern char *getenv(const char *);			/* Get environment variable value */
 #endif
 
-rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
-
 rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */
@@ -94,7 +93,7 @@ rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 
 /* Function */
 
-rt_public void init_dbg(int argc, char **argv)
+rt_private void init_dbg(int argc, char **argv)
 {
 	STREAM *s;		/* Stream used for communications with ised */
 	char *eif_timeout;	/* Timeout specified in environment variable */

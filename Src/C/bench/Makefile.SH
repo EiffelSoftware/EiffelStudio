@@ -44,6 +44,7 @@ JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
 JLKFLAGS = \$(LDFLAGS) $ccldflags
 LIBS = $libs
 LINT = lint
+LINTFLAGS = \$(CFLAGS)
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv

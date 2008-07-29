@@ -208,7 +208,7 @@ rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' s
 rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, 
 								char *eclass, char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
 rt_private int is_ex_assert (int ex_code);				/* Is exception of `ex_code' an assertion violation? */
-rt_private EIF_TYPE_INDEX safe_Dtype (char *obj);					/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
+rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj);					/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
 
 #ifndef NOHOOK
 rt_private void exception(int how);		/* Debugger hook */
@@ -2438,19 +2438,20 @@ rt_private void extend_trace_string(char *line)
 	 */
 	RT_GET_CONTEXT
 	size_t l_buf_sz = 0;
+	size_t l_line_length = strlen(line);
 
-	if ((ex_string.size - ex_string.used) > strlen(line)) {
+	if ((ex_string.size - ex_string.used) > l_line_length) {
 		strcpy (ex_string.area + ex_string.used, line);
-		ex_string.used += strlen(line);
+		ex_string.used += l_line_length;
 	} else {
-		l_buf_sz = ex_string.size + strlen(line) + BUFSIZ;
+		l_buf_sz = ex_string.size + l_line_length + BUFSIZ;
 #ifdef DEBUG
 		printf ("extend_trace_string: Going to do a realloc...\n");
 #endif
 		ex_string.area = (char *) xrealloc(ex_string.area, l_buf_sz, GC_OFF);
 		if(ex_string.area) {
 			strcpy (ex_string.area + ex_string.used, line);
-			ex_string.used += strlen(line);
+			ex_string.used += l_line_length;
 			ex_string.size = l_buf_sz; /* Set size after `xrealloc' in case exception was raised. */
 		}
 	}
@@ -3984,7 +3985,7 @@ rt_public void init_emnger (void)
 #endif
 }
 
-rt_private EIF_TYPE_INDEX safe_Dtype (char *obj) 
+rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj) 
 	/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
 {
 	EIF_GET_CONTEXT
@@ -4014,7 +4015,7 @@ rt_private EIF_TYPE_INDEX safe_Dtype (char *obj)
 	if (setjmp(exenv)) {
 		result = INVALID_DTYPE;
 	} else {
-		result = Dtype (obj);
+		result = Dtype(obj);
 	}
 	print_history_table = prt_trace; /* Resume `print_history_table' */
 	expop(&eif_stack);					/* Pop pseudo vector */

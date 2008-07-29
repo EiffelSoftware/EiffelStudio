@@ -135,7 +135,7 @@ int main (int argc, char **argv)
 }
 /*------------------------------------------------------------------*/
 
-static  void    prepare_types ()
+static  void    prepare_types (void)
 
 {
 	long    count, acount, i, ctype;
@@ -296,7 +296,7 @@ static  void    prepare_types ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_file ()
+static  void    analyze_file (void)
 
 {
 	if (rchar ())
@@ -350,7 +350,7 @@ static  void    analyze_file ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_cnodes ()
+static  void    analyze_cnodes (void)
 
 {
 	long    count, acount, i, ctype;
@@ -481,7 +481,7 @@ static  void    analyze_cnodes ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_routids ()
+static  void    analyze_routids (void)
 
 {
 	long    class_id, asize, hsize, i, j, dtype, orig_dtype;
@@ -593,7 +593,7 @@ static  void    analyze_routids ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    read_byte_code ()
+static  void    read_byte_code (void)
 
 {
 	long    body_id, bsize;
@@ -694,7 +694,7 @@ static  void    read_byte_code ()
 
 /*------------------------------------------------------------------*/
 
-static  void    analyze_parents ()
+static  void    analyze_parents (void)
 
 {
 	short   dtype, gcount, class_name_count;
@@ -750,7 +750,7 @@ static  void    analyze_parents ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_cecil ()
+static  void    analyze_cecil (void)
 
 {
 	int     i, j;
@@ -790,7 +790,7 @@ static  void    analyze_cecil ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_options ()
+static  void    analyze_options (void)
 
 {
 	short   dtype, dbcount, slen, i;
@@ -838,7 +838,7 @@ static  void    analyze_options ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_routinfo ()
+static  void    analyze_routinfo (void)
 
 {
 	long    count, rid, org, off;
@@ -865,7 +865,7 @@ static  void    analyze_routinfo ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_desc ()
+static  void    analyze_desc (void)
 
 {
 	long    count, tid, info, type, offset, i, j;
@@ -953,7 +953,7 @@ static  void    analyze_desc ()
 }
 /*------------------------------------------------------------------*/
 
-static EIF_CHARACTER rchar ()
+static EIF_CHARACTER rchar (void)
 {
 	EIF_CHARACTER    result;
 
@@ -967,7 +967,7 @@ static EIF_CHARACTER rchar ()
 }
 /*------------------------------------------------------------------*/
 
-static EIF_INTEGER_32 rlong ()
+static EIF_INTEGER_32 rlong (void)
 {
 	EIF_INTEGER_32 result;
 
@@ -981,7 +981,7 @@ static EIF_INTEGER_32 rlong ()
 }
 /*------------------------------------------------------------------*/
 
-static EIF_INTEGER_16 rshort ()
+static EIF_INTEGER_16 rshort (void)
 {
 	EIF_INTEGER_16 result;
 
@@ -995,7 +995,7 @@ static EIF_INTEGER_16 rshort ()
 }
 /*------------------------------------------------------------------*/
 
-static  uint32  ruint32 ()
+static  uint32  ruint32 (void)
 
 {
 	uint32    result;
@@ -1009,7 +1009,7 @@ static  uint32  ruint32 ()
 	return result;
 }
 
-static BODY_INDEX rbody_index () {
+static BODY_INDEX rbody_index (void) {
 	return ruint32 ();
 }
 /*------------------------------------------------------------------*/
@@ -1057,7 +1057,7 @@ static  char    *rbuf (int size)
 }
 /*------------------------------------------------------------------*/
 
-static  void    print_line ()
+static  void    print_line (void)
 
 {
 	fprintf (mfp,"---------------------------\n");
@@ -1118,7 +1118,7 @@ static  void    print_dtype (uint32 type)
 }
 /*------------------------------------------------------------------*/
 
-static  void    panic ()
+static  void    panic (void)
 
 {
 	if (ifp != (FILE *) 0)

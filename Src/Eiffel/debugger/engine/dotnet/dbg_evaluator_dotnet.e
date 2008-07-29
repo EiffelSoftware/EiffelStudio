@@ -19,8 +19,7 @@ inherit
 			effective_evaluate_static_function,
 			class_c_from_external_b_with_extension,
 			parameters_init,
-			parameters_reset,
-			error_code_to_message
+			parameters_reset
 		end
 
 	EIFNET_EXPORTER
@@ -86,7 +85,7 @@ feature {NONE} -- Implementation
 			l_icdv_obj := target_icor_debug_value (addr, a_target)
 
 			if l_icdv_obj = Void then
-				notify_error (Cst_error_unable_to_get_target_object, Void)
+				dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_unable_to_get_target_object)
 			else
 				nat_ct ?= l_ctype
 				if nat_ct /= Void then
@@ -96,7 +95,7 @@ feature {NONE} -- Implementation
 					if nat_edv /= Void then
 						internal_evaluate_function_on_native_array (nat_edv, realf, l_params)
 					else
-						notify_error_evaluation (Debugger_names.msg_error_native_array_partially_supported (realf.feature_name))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_native_array_partially_supported (realf.feature_name))
 					end
 				else
 						--| Get the ICorDebugFunction to call.
@@ -104,18 +103,24 @@ feature {NONE} -- Implementation
 
 						--| And then let's process the following ...
 					if l_icd_function = Void then
-						notify_error (Cst_error_unable_to_get_icd_function, Void)
+						dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_error_unable_to_get_icd_function)
 					else
-						last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function)
+						if {dv: DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function) then
+							create last_result.make_with_value (dv)
+						else
+							-- FIXME: should we return a last_result.failed?
+						end
 						if error_occurred then
-							if evaluation_aborted then
-								notify_error (cst_error_evaluation_aborted, Debugger_names.msg_error_evaluation_aborted (realf.written_class.name_in_upper, realf.feature_name))
-							elseif exception_occurred then
+							if dbg_error_handler.has_error_evaluation_aborted then
+									--| We already have the error event, but let's add description
+								dbg_error_handler.notify_error_evaluation_aborted (Debugger_names.msg_error_evaluation_aborted (realf.written_class.name_in_upper, realf.feature_name))
+							elseif dbg_error_handler.has_error_exception then
+									--| We already have the error event, but let's add description
 								exc_dv := last_result_value.value_exception
 								if exc_dv /= Void then
 									exc_dv.set_name (f.feature_name)
 									exc_dv.set_user_meaning (Debugger_names.msg_error_exception_occurred_during_evaluation (f.written_class.name_in_upper, f.feature_name, Void))
-									notify_error_exception (
+									dbg_error_handler.notify_error_exception (
 											Debugger_names.msg_error_exception_occurred_during_evaluation (
 												f.written_class.name_in_upper,
 												f.feature_name,
@@ -123,18 +128,18 @@ feature {NONE} -- Implementation
 											)
 										)
 								else
-									notify_error_evaluation (error_message)
+										--| No more data, let's raise an evaluation Error
+									dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_error_exception_during_evaluation)
 								end
-							elseif error_occurred then
-								notify_error_evaluation (error_message)
 							else
-								notify_error_evaluation (realf.feature_name)
+								dbg_error_handler.notify_error_evaluation (realf.feature_name)
 							end
 						else
 							if not f.is_function then
 								check last_result_value = Void end
-								last_result_value := debugger_manager.dump_value_factory.new_procedure_return_value (
-										create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (f.feature_name)
+								create last_result.make_with_value (debugger_manager.dump_value_factory.new_procedure_return_value (
+											create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (f.feature_name)
+										)
 									)
 							end
 						end
@@ -164,11 +169,11 @@ feature {NONE} -- Implementation
 				fn := f.feature_name
 				if fn /= Void then
 					if fn.is_equal ("count") then
-						last_result_value := debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count, system.integer_32_class.compiled_class)
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("upper") then
-						last_result_value := debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count - 1, system.integer_32_class.compiled_class)
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count - 1, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("lower") then
-						last_result_value := debugger_manager.dump_value_factory.new_integer_32_value (0, system.integer_32_class.compiled_class)
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (0, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("item") or else fn.is_equal ("infix %"@%"") then
 						if a_params /= Void and then a_params.count > 0 then
 							dv := a_params [a_params.lower]
@@ -177,17 +182,17 @@ feature {NONE} -- Implementation
 								idv := nat_edv.array_value.get_element_at_position (i)
 								if idv /= Void then
 									l_adv := debug_value_from_icdv (idv, Void)
-									last_result_value := l_adv.dump_value
+									create last_result.make_with_value (l_adv.dump_value)
 								end
 							end
 						end
 					else
-						notify_error_evaluation (Debugger_names.msg_error_native_array_partially_supported (fn));
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_native_array_partially_supported (fn));
 					end
 				end
 				nat_edv.release_array_value
 			else
-				notify_error_evaluation ("an internal error occurred during evaluation of  %"{NATIVE_ARRAY}." + f.feature_name + "%"")
+				dbg_error_handler.notify_error_evaluation ("an internal error occurred during evaluation of  %"{NATIVE_ARRAY}." + f.feature_name + "%"")
 				if nat_edv.array_value /= Void then
 					nat_edv.release_array_value
 				end
@@ -202,6 +207,7 @@ feature {NONE} -- Implementation
 				params: LIST [DUMP_VALUE]) is
 			-- Note: this feature is used only for external function
 		local
+			l_cl: CLASS_C
 			l_ct: CLASS_TYPE
 			l_params: ARRAY [DUMP_VALUE]
 			l_icdv_obj: ICOR_DEBUG_VALUE
@@ -210,7 +216,7 @@ feature {NONE} -- Implementation
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function_with_name : ")
-				print (a_feature_name + ", " + a_external_name )
+				print (a_feature_name + ", " + a_external_name)
 				if a_addr /= Void then
 					print (" on 0x" + a_addr)
 				elseif a_target /= Void and then a_target.address /= Void then
@@ -234,7 +240,7 @@ feature {NONE} -- Implementation
 				--| Get the target object : `l_icdv_obj'
 			l_icdv_obj := target_icor_debug_value (a_addr, a_target)
 			if l_icdv_obj = Void then
-				notify_error (Cst_error_unable_to_get_target_object, Void)
+				dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_unable_to_get_target_object)
 			else
 					--| Get the ICorDebugFunction to call.
 				create edvi.make (l_icdv_obj)
@@ -246,35 +252,41 @@ feature {NONE} -- Implementation
 
 					--| And then let's process the following ...
 				if l_icd_function = Void then
-					notify_error (Cst_error_unable_to_get_icd_function, Void)
+					dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_error_unable_to_get_icd_function)
 				else
 						--| The current feature is used only for external function
 						--| Then we pass `True' to set the `is_external' argument.
-					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True)
+					if {dv: DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True) then
+						create last_result.make_with_value (dv)
+					else
+						-- FIXME: should we return last_result.failed?
+					end
 				end
 			end
 
-			if last_result_value = Void or error_occurred then
+			if error_occurred or (last_result = Void or else not last_result.has_value) then
 				if a_addr = Void then
-					notify_error_evaluation ("Unable to evaluate : " + a_external_name)
+					dbg_error_handler.notify_error_evaluation ("Unable to evaluate : " + a_external_name)
 				else
-					notify_error_evaluation ("Unable to evaluate : " + a_external_name + " on <" + a_addr + ">")
+					dbg_error_handler.notify_error_evaluation ("Unable to evaluate : " + a_external_name + " on <" + a_addr + ">")
 				end
 			end
-			if not error_occurred and then last_result_value /= Void then
-				last_result_static_type := last_result_value.dynamic_class
-				if last_result_static_type = Void then
-					last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
+			if not error_occurred and then last_result /= Void and then last_result.has_value then
+				l_cl := last_result.dynamic_class
+				if l_cl = Void then
+					l_cl := Workbench.Eiffel_system.Any_class.compiled_class
 				end
 				if
-					last_result_static_type /= Void and then
-					last_result_static_type.is_basic and
-					(last_result_value.address /= Void)
+					l_cl /= Void and then
+					l_cl.is_basic and
+					(last_result.value.address /= Void)
 				then
 						-- We expected a basic type, but got a reference.
 						-- This happens in "2 + 2" because we convert the first 2
 						-- to a reference and therefore get a reference.
-					last_result_value := last_result_value.to_basic
+					last_result.value := last_result.value.to_basic
+					last_result.update
+					last_result.suggest_static_class (l_cl)
 				end
 			end
 		end
@@ -323,23 +335,23 @@ feature {NONE} -- Implementation
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_fun, l_icdv_args)
 
 				if eifnet_evaluator.last_eval_aborted then
-					notify_error (Cst_error_evaluation_aborted, Void)
+					dbg_error_handler.notify_error_evaluation_aborted (Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
 					l_result := Void
-					notify_error (Cst_error_exception_during_evaluation, Void)
+					dbg_error_handler.notify_error_exception_during_evaluation (Void)
 				elseif not eifnet_evaluator.last_call_succeed then
-					notify_error (Cst_error_occurred, Void)
+					dbg_error_handler.notify_error_evaluation (Void)
 				end
 				if not error_occurred then
 					l_adv := debug_value_from_icdv (l_result, f.type.associated_class)
-					last_result_value := l_adv.dump_value
+					create last_result.make_with_value (l_adv.dump_value)
 				end
 			end
 		end
 
 	effective_evaluate_once_function (f: FEATURE_I) is
 		local
-			l_class_c: CLASS_C
+			l_class_c, l_statcl: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_adv: ABSTRACT_DEBUG_VALUE
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
@@ -354,7 +366,7 @@ feature {NONE} -- Implementation
 				--| Reset error status
 			reset_error
 
-			last_result_static_type := f.type.associated_class
+			l_statcl := f.type.associated_class --last_result_static_type :=
 			l_class_c := f.written_class
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
@@ -362,16 +374,16 @@ feature {NONE} -- Implementation
 			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_c, f)
 
 			if l_icd_value /= Void then
-				l_adv := debug_value_from_icdv (l_icd_value, last_result_static_type)
+				l_adv := debug_value_from_icdv (l_icd_value, l_statcl)
 			end
 
 			if last_once_available then
 				if not last_once_already_called then
 					create err_dv.make_with_name (f.feature_name)
 					err_dv.set_message ("Once feature [" + f.feature_name + "]: not yet called")
-					last_result_value := err_dv.dump_value
+					create last_result.make_with_value (err_dv.dump_value)
 
-					notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
+					dbg_error_handler.notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
 					if {arv: ABSTRACT_REFERENCE_VALUE} l_adv then
 						create exc_dv.make_with_value (arv)
@@ -380,17 +392,20 @@ feature {NONE} -- Implementation
 					end
 					exc_dv.set_name (f.feature_name)
 					exc_dv.set_user_meaning ("Once feature [" + f.feature_name + "]: an exception occurred")
-					last_result_value := exc_dv.dump_value
+					create last_result.make_with_value (exc_dv.dump_value)
 
-					notify_error (cst_error_exception_during_evaluation, "Once feature [" + f.feature_name + "]: an exception occurred")
+					dbg_error_handler.notify_error_exception_during_evaluation ("Once feature [" + f.feature_name + "]: an exception occurred")
 				elseif l_adv = Void then
 						--| Is it possible ???
-					notify_error_evaluation ("Once feature [" + f.feature_name + "]: Default value (i.e: Void ...)")
+					dbg_error_handler.notify_error_evaluation ("Once feature [" + f.feature_name + "]: Default value (i.e: Void ...)")
 				else
-					last_result_value := l_adv.dump_value
+					create last_result.make_with_value (l_adv.dump_value)
 				end
 			else
-				notify_error_evaluation ("Once feature " + f.feature_name + ": Could not get information")
+				dbg_error_handler.notify_error_evaluation ("Once feature " + f.feature_name + ": Could not get information")
+			end
+			if last_result /= Void and l_statcl /= Void then
+				last_result.suggest_static_class (l_statcl)
 			end
 		end
 
@@ -417,27 +432,31 @@ feature {NONE} -- Implementation
 						l_class := eifnet_debugger.icor_debug_class (l_class_c.types.first)
 						l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 						if not eifnet_evaluator.last_call_succeed then
-							notify_error (Cst_error_occurred, Void)
+							dbg_error_handler.notify_error_evaluation (Void)
 						else
 								--| At this point l_icd_value represents an instance of INTERNAL
-							last_result_value := new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c)
+							if {dv: DUMP_VALUE} new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) then
+								create last_result.make_with_value (dv)
+							else
+								--FIXME: should we return last_result.failed?
+							end
 						end
 					else
-						notify_error (Cst_error_occurred, Void)
+						dbg_error_handler.notify_error_evaluation (Void)
 					end
 				else
 					l_class := eifnet_debugger.icor_debug_class (a_type_i.associated_class_type (Void))
 					l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 					if not eifnet_evaluator.last_call_succeed then
 						l_icd_value := Void
-						notify_error (Cst_error_occurred, Void)
+						dbg_error_handler.notify_error_evaluation (Void)
 					else
 						l_adv := debug_value_from_icdv (l_icd_value, a_type_i.associated_class)
-						last_result_value := l_adv.dump_value
+						create last_result.make_with_value (l_adv.dump_value)
 					end
 				end
 			else
-				notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
 			end
 		end
 
@@ -454,16 +473,20 @@ feature {NONE} -- Implementation
 					l_class := eifnet_debugger.icor_debug_class (l_class_c.types.first)
 					l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 					if not eifnet_evaluator.last_call_succeed then
-						notify_error (Cst_error_occurred, Void)
+						dbg_error_handler.notify_error_evaluation (Void)
 					else
 							--| At this point l_icd_value represents an instance of INTERNAL
-						last_result_value := new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c)
+							if {dv: DUMP_VALUE} new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) then
+								create last_result.make_with_value (dv)
+							else
+								-- FIXME: should we return last_result.failed?
+							end
 					end
 				else
-					notify_error (Cst_error_occurred, Void)
+					dbg_error_handler.notify_error_evaluation (Void)
 				end
 			else
-				notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
 			end
 		end
 
@@ -607,7 +630,7 @@ feature {NONE} -- Parameters operation
 						end
 						l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
 						if not eifnet_evaluator.last_call_succeed then
-							notify_error (Cst_error_occurred_during_parameters_preparation, Void)
+							dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_occurred_during_parameters_preparation)
 						end
 					end
 					debug ("debugger_trace_eval_data")
@@ -668,19 +691,6 @@ feature {NONE} -- Bridge
 			-- Default ICorDebugFrame which is the active frame
 		do
 			Result := eifnet_debugger.new_active_frame
-		end
-
-feature {NONE} -- Error code id
-
-	Cst_error_unable_to_get_icd_function: INTEGER is 0x20
-
-	error_code_to_message (a_code: INTEGER): STRING_GENERAL is
-		do
-			if a_code = Cst_error_unable_to_get_icd_function then
-				Result := Debugger_names.Cst_error_unable_to_get_icd_function
-			else
-				Result := Precursor {DBG_EVALUATOR} (a_code)
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -762,7 +772,7 @@ feature {NONE} -- Implementation
 
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, func, l_icdv_args)
 				if eifnet_evaluator.last_eval_aborted then
-					notify_error (Cst_error_evaluation_aborted, Void)
+					dbg_error_handler.notify_error_evaluation_aborted (Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
 					if {arv: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) then
 						create l_exc_dv.make_with_value (arv)
@@ -772,9 +782,9 @@ feature {NONE} -- Implementation
 					l_exc_dv.update_data
 					l_exc_dv.set_user_meaning ("An exception occurred")
 					Result := l_exc_dv.dump_value
-					notify_error (Cst_error_exception_during_evaluation, Void)
+					dbg_error_handler.notify_error_exception_during_evaluation (Void)
 				elseif not eifnet_evaluator.last_call_succeed then
-					notify_error (Cst_error_occurred, Void)
+					dbg_error_handler.notify_error_evaluation (Void)
 				end
 				if not error_occurred then
 					if l_result /= Void or expecting_result then
@@ -871,7 +881,7 @@ feature {NONE} -- Implementation
 				end
 
 				if not eifnet_evaluator.last_call_succeed then
-					notify_error (Cst_error_occurred, Void)
+					dbg_error_handler.notify_error_evaluation (Void)
 				end
 			end
 		end
@@ -965,7 +975,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not eifnet_evaluator.last_call_succeed then
-					notify_error (Cst_error_occurred, Void)
+					dbg_error_handler.notify_error_evaluation (Void)
 				end
 			end
 		end

@@ -92,12 +92,12 @@ feature -- Access
 		do
 			Precursor
 				--| At this point the ipc is/must-be initialized
-			ipc_request.send_rqst_1 (rqst_change_thread, current_thread_id)
+			ipc_request.send_rqst_1_ptr (rqst_change_thread, current_thread_id)
 		end
 
 feature {NONE} -- CallStack Impl
 
-	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do

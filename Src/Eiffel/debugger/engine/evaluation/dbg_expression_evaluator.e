@@ -19,42 +19,42 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_ERROR_TRACER
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
-	make_as_object (dm: like debugger_manager; addr: like context_address) is
-		do
-			generic_make (dm)
-			set_context_address (addr)
-			set_as_object  (True)
-			set_on_object  (True)
-			set_on_context (False)
-			set_on_class   (False)
-		end
-
-	make_with_expression (dm: like debugger_manager; expr: like dbg_expression) is
+	make (dm: like debugger_manager; expr: like expression) is
 			-- Create Current from `expr'.
 		require
-			expr_not_void: expr /= Void
-		do
-			generic_make (dm)
-			dbg_expression := expr
-		end
-
-	generic_make (dm: like debugger_manager) is
-		require
 			dm_not_void: dm /= Void
+			expr_not_void: expr /= Void
+		local
+			ctx: DBG_EXPRESSION_CONTEXT
 		do
 			debugger_manager := dm
-			error := 0
-			create error_messages.make
+
+			initialize_dbg_error_handler
 
 			debugger_manager.reset_dbg_evaluator
 			get_dbg_evaluator
+
+			expression := expr
+			ctx := expr.context
+
+			set_on_class (ctx.on_class)
+			set_on_object (ctx.on_object)
+			set_on_context (ctx.on_context)
+
+			set_context_address (ctx.associated_address)
+			set_context_class (ctx.associated_class)
+		end
+
+	initialize_dbg_error_handler
+			-- Initialize error handler
+		require
+			dbg_error_handler_not_attached: dbg_error_handler = Void
+		do
+			create dbg_error_handler.make
+		ensure
+			dbg_error_handler_attached: dbg_error_handler /= Void
 		end
 
 	get_dbg_evaluator is
@@ -65,26 +65,78 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {DBG_EXPRESSION} -- Properties
+feature -- Access
 
-	debugger_manager: DEBUGGER_MANAGER
-			-- Associated debugger manager.
+	expression: DBG_EXPRESSION
+			-- Current expression to evaluate
 
-	dbg_evaluator: DBG_EVALUATOR
-			-- cached dbg evaluator
+	dbg_error_handler: DBG_ERROR_HANDLER
+			-- Error handler
 
-feature -- change
+feature -- Status report
+
+	error_occurred: BOOLEAN
+			-- Error occurred?
+		do
+			Result := dbg_error_handler.error_occurred
+		end
+
+	expression_has_syntax_error: BOOLEAN is
+			-- has `expression' syntax error?
+		do
+			Result := expression.has_syntax_error
+		end
+
+	is_boolean_expression (f: FEATURE_I): BOOLEAN is
+			-- is feature `f' a boolean expression?
+		require
+			valid_f: f /= Void
+			no_error: not expression_has_syntax_error
+			good_state: f.written_class /= Void and then f.written_class.has_feature_table
+		deferred
+		end
+
+feature {DBG_EXPRESSION_EVALUATION} -- Evaluation: Access
+
+	final_result: DBG_EVALUATED_VALUE
+			-- Final result of evaluation
+			-- contains static_class, dynamic_class, dynamic_type, and value if any
+
+feature -- Settings
+
+	on_class: BOOLEAN
+			-- Is the expression relative to a class ?
+
+	on_object: BOOLEAN
+			-- Is the expression relative to an object ?
+
+	on_context: BOOLEAN
+			-- Is the expression relative to a context ?	
+
+	context_class_type: CLASS_TYPE
+			-- Class related to the target, in on_object context
+
+	context_class: CLASS_C
+			-- Class related to the expression
+
+	context_address: STRING
+			-- Object's address related to the expression	
+
+	side_effect_forbidden: BOOLEAN assign set_side_effect_forbidden
+			-- Forbid potential side effect during evaluation?
+			--| In practise, this mean, do we allow to evaluate routine?
+			--| ie: non attribute, non once, ...
+			--| For instance, for auto expression we don't want to evaluate
+			--|   routine since it might have side effect,
+			--|   and eventually put the debuggee in unstable state.
+
+
+feature -- Change
 
 	set_on_class (v: like on_class) is
 			-- set value of `on_class' with `v'
 		do
 			on_class := v
-		end
-
-	set_as_object (v: like as_object) is
-			-- set value of `as_object' with `v'
-		do
-			as_object := v
 		end
 
 	set_on_object (v: like on_object) is
@@ -111,349 +163,75 @@ feature -- change
 			context_address := c
 		end
 
-feature -- Properties
-
-	dbg_expression: DBG_EXPRESSION
-			-- Current expression to evaluate
-
-	dbg_expression_has_syntax_error: BOOLEAN is
-		do
-			Result := dbg_expression.has_syntax_error
-		end
-
-	on_class: BOOLEAN
-			-- Is the expression relative to a class ?
-
-	as_object: BOOLEAN
-			-- Is the expression pointing to the object ?
-
-	on_object: BOOLEAN
-			-- Is the expression relative to an object ?
-
-	on_context: BOOLEAN
-			-- Is the expression relative to a context ?	
-
-	context_class_type: CLASS_TYPE
-			-- Class related to the target, in on_object context	
-
-	context_class: CLASS_C
-			-- Class related to the expression
-
-	context_address: STRING
-			-- Object's address related to the expression	
-
-	as_auto_expression: BOOLEAN
-			-- Evaluate as auto expression ?
-
-feature -- Change
-
 	reset_error is
+			-- Reset error related data
 		do
-			error := 0
-			error_messages.wipe_out
+			dbg_error_handler.reset
 		end
 
-	set_as_auto_expression (b: like as_auto_expression) is
-			-- Set `as_auto_expression' with `b'
+	set_side_effect_forbidden (b: like side_effect_forbidden) is
+			-- Set `side_effect_forbidden' with `b'
 		do
-			as_auto_expression := b
+			side_effect_forbidden := b
 		end
 
-feature -- Error notification
+feature {DBG_EXPRESSION_EVALUATION} -- Evaluation
 
-	notify_error (a_code: INTEGER; a_tag, a_msg: STRING_GENERAL) is
-		require
-			valid_code: a_code /= 0
-		local
-			l_tag: STRING_32
-			l_msg: STRING_32
-		do
-			error := error | a_code
-			if a_tag /= Void then
-				l_tag := a_tag.as_string_32
-			end
-			if a_msg /= Void then
-				l_msg := a_msg.as_string_32
-			end
-			error_messages.extend ([a_code, l_tag, l_msg])
-		end
-
-	notify_error_evaluation (mesg: STRING_GENERAL) is
-		do
-			notify_error (cst_error_evaluation, Void, mesg)
-		end
-
-	notify_error_exception (mesg: STRING_GENERAL) is
-		do
-			notify_error (cst_error_exception, Void, mesg)
-		end
-
-	notify_error_expression_and_tag (mesg: STRING_GENERAL; t: STRING_GENERAL) is
-		do
-			notify_error (cst_error_expression, t, mesg)
-		end
-
-	notify_error_list_expression_and_tag (error_list: LINKED_LIST [ERROR]) is
-		local
-			l_error: ERROR
-			l_cursor: LINKED_LIST_CURSOR [ERROR]
-		do
-			if error_list /= Void then
-				l_cursor := error_list.cursor
-				from
-					error_list.start
-				until
-					error_list.after
-				loop
-					l_error := error_list.item
-					notify_error_expression_error (l_error)
-					error_list.forth
-				end
-				error_list.go_to (l_cursor)
-			end
-		end
-
-	notify_error_expression_error (err: ERROR) is
-		local
-			msg32: STRING_32
-			tag: STRING
-		do
-			msg32 := "Error "
-			msg32.append_string (err.code)
-			msg32.append_character ('%N')
-			msg32.append_string_general (error_to_string (err))
-			tag := err.code
-			if tag /= Void then
-				notify_error_expression_and_tag (msg32, tag.as_string_32)
-			else
-				notify_error_expression (msg32)
-			end
-		end
-
-	notify_error_expression (mesg: STRING_GENERAL) is
-		do
-			notify_error (cst_error_expression, Void, mesg)
-		end
-
-	notify_error_syntax (mesg: STRING_GENERAL) is
-		do
-			notify_error (cst_error_syntax, Void, mesg)
-		end
-
-	notify_error_not_implemented (mesg: STRING_GENERAL) is
-		do
-			notify_error (cst_error_not_implemented, Void, mesg)
-		end
-
-	notify_error_evaluation_limited_for_auto_expression is
-		do
-			notify_error (cst_error_evaluation, Void, debugger_names.cst_error_evaluation_limited_for_auto_expression)
-		end
-
-	notify_error_evaluation_call_on_void (fname: STRING_GENERAL) is
-		do
-			notify_error_evaluation (Debugger_names.msg_error_call_on_void_target (fname))
-		end
-
-	notify_error_evaluation_report_to_support (a: ANY) is
-		require
-			a_not_void: a /= Void
-		do
-			notify_error_evaluation (Debugger_names.msg_error_report_to_support (a))
-		end
-
-	notify_error_evaluation_during_call_evaluation (a: ANY; fname: STRING_GENERAL) is
-		require
-			a_not_void: a /= Void
-			fname_not_void: fname /= Void
-		do
-			notify_error_evaluation (Debugger_names.msg_error_during_evaluation_of_call (a, fname))
-		end
-
-	notify_error_not_implemented_and_ready (a: ANY; s: STRING_GENERAL; t: STRING_GENERAL) is
-		require
-			a_not_void: a /= Void
-		local
-			s32: STRING_32
-		do
-			if s = Void then
-				s32 := ""
-			else
-				s32 := s.as_string_32
-			end
-			if t = Void then
-				notify_error_not_implemented (Debugger_names.msg_error_not_yet_ready (a, s32))
-			else
-				notify_error_not_implemented (Debugger_names.msg_error_not_yet_ready_for (a, s32, t))
-			end
-		end
-
-feature {NONE} -- Utility Implementation
-
-	error_to_string (e: ERROR): STRING_32 is
-			-- Convert Error code to Error description STRING
-		require
-			error_not_void: e /= Void
-		local
-			yw: YANK_STRING_WINDOW
-		do
-			create yw.make
-			tracer.trace (yw, e, {ERROR_TRACER}.normal)
-			Result := yw.stored_output
-		end
-
-feature {NONE} -- Error code
-
-	cst_error_evaluation: INTEGER is 		0x01 		--|  0b00000001 -> 0x01
-	cst_error_expression: INTEGER is 		0x02 		--|  0b00000010 -> 0x02
-	cst_error_exception: INTEGER is  		0x04		--|  0b00000100 -> 0x04
-	cst_error_syntax: INTEGER is     		0x08		--|  0b00001000 -> 0x08
-	cst_error_not_implemented: INTEGER is 	0x10		--|  0b00010000 -> 0x10
-
-feature -- Access
-
-	has_error_evaluation: BOOLEAN is
-		do
-			Result := error & cst_error_evaluation > 0
-		end
-
-	has_error_expression: BOOLEAN is
-		do
-			Result := error & cst_error_expression > 0
-		end
-
-	has_error_exception: BOOLEAN is
-		do
-			Result := error & cst_error_exception > 0
-		end
-
-	has_error_syntax: BOOLEAN is
-		do
-			Result := error & cst_error_syntax > 0
-		end
-
-	has_error_not_implemented: BOOLEAN is
-		do
-			Result := error & cst_error_not_implemented > 0
-		end
-
-	error: INTEGER
-
-	error_messages: LINKED_LIST [TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]]
-			-- List of [Code, Tag, Message]
-			-- Error's message if any otherwise Void
-
-	short_text_from_error_messages: STRING_32 is
-		local
-			details: TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]
-		do
-			if not error_messages.is_empty then
-				details := error_messages.first
-				Result := details.tag
-			end
-		end
-
-	text_from_error_messages: STRING_32 is
-		local
-			details: TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]
-			l_code: INTEGER
-			l_tag, l_msg: STRING_32
-		do
-			create Result.make (0)
-			from
-				error_messages.start
-			until
-				error_messages.after
-			loop
-				details := error_messages.item
-				l_code := details.code
-				l_tag := details.tag
-				l_msg := details.msg
-				if l_tag /= Void then
-					Result.append_character ('[')
-					Result.append (l_tag)
-					Result.append ("] ")
-				end
-				if l_msg /= Void then
-					Result.append (l_msg)
-				end
-				error_messages.forth
-				if not error_messages.after then
-					Result.append ("%N-----------------------------------%N")
-				end
-			end
-		end
-
-	error_occurred: BOOLEAN is
-			-- Did an error occurred ?
-		do
-			Result := error /= 0
-		end
-
-	is_boolean_expression (f: FEATURE_I): BOOLEAN is
-			-- is feature `f' a boolean expression ?
-		require
-			valid_f: f /= Void
-			no_error: not dbg_expression_has_syntax_error
-			good_state: f.written_class /= Void and then f.written_class.has_feature_table
-		deferred
-		end
-
-	final_result_static_type: CLASS_C
-			-- Static type of `Current'.
-			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
-
-	final_result_type: CLASS_C
-			-- Dynamic type of `final_result'.
-			--| Should be its dynamic type, but for implementation reasons
-			--| it may be the static type instead.
-			--| Only valid after `evaluate' was called.
-
-	final_result_value: DUMP_VALUE
-			-- In case `Current' doesn't produce an ABSTRACT_DEBUG_VALUE,
-			-- it returns a DUMP_VALUE (which doesn't represent an object, just a value).
-			-- This is the case for constants.
-			-- Note: it is not possible to call features on expressions that do not
-			-- return an object.
-
-	final_result_is_true_boolean_value: BOOLEAN is
-			-- if final_result is a boolean
-			-- return its value
-			-- otherwise return False .
-		local
-			dmvb: DUMP_VALUE_BASIC
-		do
-			if final_result_type.is_basic then
-				dmvb ?= final_result_value
-				if dmvb = Void then
-					dmvb ?= final_result_value.to_basic
-				end
-				if dmvb /= Void then
-					Result := dmvb.is_type_boolean and then dmvb.value_boolean
-				end
-			end
-		end
-
-feature {DBG_EXPRESSION} -- Evaluation
-
-	evaluate (keep_assertion_checking: BOOLEAN) is
+	frozen evaluate (keep_assertion_checking: BOOLEAN)
 			-- Compute the value of the last message of `Current'.
 		require
-			dbg_expression_valid_syntax: as_object or else not dbg_expression.has_syntax_error
-			running_and_stopped: debugger_manager.safe_application_is_stopped
+			dbg_expression_valid_syntax: not expression.has_syntax_error
+			running_and_stopped: application_is_stopped
+		do
+			initialize_evaluation
+			process_evaluation (keep_assertion_checking)
+		end
+
+feature {NONE} -- Evaluation		
+
+	initialize_evaluation
+			-- Prepare Current for expression valuation
 		do
 			reset_error
 			get_dbg_evaluator
 
 				--| Clean evaluation.
-			final_result_static_type := Void
-			final_result_type := Void
-			final_result_value := Void
+			final_result := Void
 		end
 
-invariant
+	process_evaluation (keep_assertion_checking: BOOLEAN)
+		require
+			dbg_evaluator_attached: dbg_evaluator /= Void
+		deferred
+		end
 
-	error_messages_not_void: error_messages /= Void
+feature {DBG_EXPRESSION_EVALUATION} -- Implementation
+
+	application_is_stopped: BOOLEAN
+			-- Is application stopped?
+		do
+			Result := debugger_manager.safe_application_is_stopped
+		end
+
+	dump_value_at_address (addr: STRING): DUMP_VALUE is
+			-- DUNP_VALUE object associated with object address `addr'
+		require
+			addr /= Void
+		do
+			Result := dbg_evaluator.dump_value_at_address (addr)
+		end
+
+feature {NONE} -- Implementation
+
+	debugger_manager: DEBUGGER_MANAGER
+			-- Associated debugger manager.
+
+	dbg_evaluator: DBG_EVALUATOR
+			-- cached dbg evaluator		
+
+invariant
+	debugger_manager_attached: debugger_manager /= Void
+	error_handler_initialized: dbg_error_handler /= Void and then dbg_error_handler.initialized
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

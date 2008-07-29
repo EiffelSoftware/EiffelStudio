@@ -13,7 +13,6 @@ class
 	DBG_EXPRESSION
 
 inherit
-
 	DEBUG_OUTPUT
 
 	SHARED_BENCH_NAMES
@@ -29,7 +28,7 @@ inherit
 create
 	make_with_class,
 	make_with_object,
-	make_for_context,
+	make_with_context,
 	make_as_object
 
 feature {NONE} -- Initialization
@@ -39,24 +38,27 @@ feature {NONE} -- Initialization
 			valid_class: cl /= Void and then cl.is_valid
 			valid_address: addr /= Void
 		do
-			as_object := True
-			on_object := True
-			context_address := addr
-			context_class := cl
+			make_with_object (cl, addr, Void)
+			is_context_object := True
 		end
 
-	make_with_object (obj: DEBUGGED_OBJECT; new_expr: STRING_32) is
+	make_with_object (cl: CLASS_C; addr: STRING; new_expr: STRING_32) is
 			-- Initialize `Current' and link it to an object `obj' whose dynamic type is `dtype'.
 			-- Initialize the expression to `new_expr'.
 		require
-			valid_object: obj /= Void
-			valid_class: obj.dtype /= Void and then obj.dtype.is_valid
-			valid_expression: valid_expression (new_expr)
+			valid_addr: addr /= Void
+			valid_class: cl /= Void and then cl.is_valid
+			valid_expression: is_context_object or valid_expression (new_expr)
 		do
-			on_object := True
-			context_address := obj.object_address
-			context_class := obj.dtype
-			set_expression (new_expr)
+			create context.make ({DBG_EXPRESSION_CONTEXT}.kind_object)
+			context.associated_address := addr
+			context.associated_class := cl
+
+			if new_expr /= Void then
+				set_text (new_expr)
+			else
+				check is_self: is_context_object end
+			end
 		end
 
 	make_with_class (cl: CLASS_C; new_expr: STRING_32) is
@@ -66,49 +68,53 @@ feature {NONE} -- Initialization
 			valid_class: cl /= Void and then cl.is_valid
 			valid_expression: valid_expression (new_expr)
 		do
-			on_class := True
-			context_class := cl
-			set_expression (new_expr)
+			create context.make ({DBG_EXPRESSION_CONTEXT}.kind_class)
+			context.associated_class := cl
+
+			set_text (new_expr)
 		end
 
-	make_for_context (new_expr: STRING_32) is
+	make_with_context (new_expr: STRING_32) is
 			-- Initialize `Current' and link it to the context.
 			-- Initialize the expression to `new_expr'.
 		require
 			valid_expression: valid_expression (new_expr)
 		do
-			on_context := True
-			set_expression (new_expr)
+			create context.make ({DBG_EXPRESSION_CONTEXT}.kind_context)
+
+			set_text (new_expr)
 		end
 
-feature -- Recycling
+feature -- Access
 
-	reset is
-			-- Recycle data
-			-- in order to free special data (for instance dotnet references)
+	text: STRING_32
+			-- Expression to evaluate.
+
+	name: STRING_32
+			-- Optional name to qualify this expression.
+
+	context: DBG_EXPRESSION_CONTEXT
+			-- Context for expression evaluation
+
+	is_context_object: BOOLEAN assign set_is_context_object
+			-- Does Current represent the context object ?
+
+feature {DEBUGGER_EXPORTER} -- Element change
+
+	set_text (expr: like text) is
+			-- Set string value for `dbg_expression'
+		require
+			expr /= Void
 		do
-			reset_expression_evaluator
-		end
-
-feature -- debug output
-
-	debug_output: STRING is
-			--
-		local
-		do
-			create Result.make_empty
-			if expression /= Void then
-				Result.append_string_general ("exp=%"")
-				Result.append_string_general (expression)
-				Result.append_string_general ("%" ")
-			end
-			if is_evaluated then
-				Result.append_string_general (" evaluated")
+			if text = Void then
+				text := expr.twin
+				analyze_expression
+			elseif not expr.is_equal (text) then
+				text := expr.twin
+				reset_evaluations
+				analyze_expression
 			else
-				Result.append_string_general (" NOT evaluated")
-			end
-			if error_occurred then
-				Result.append_string_general (" -> ERROR")
+				--| Same expression .. no change
 			end
 		end
 
@@ -120,49 +126,20 @@ feature -- Change
 			n /= Void
 		do
 			if n.is_empty then
-				name := context_address
+				name := context.associated_address
 			else
 				name := n
 			end
 		end
 
-	disable_as_object is
+	set_is_context_object (b: BOOLEAN) is
+			-- If b is True, Current represents the associated context's object
+			-- i.e: the object related to `context.associated_address'
 		do
-			if as_object then
-				reset_expression_evaluator
-				as_object := False
+			if b /= is_context_object then
+				reset_evaluations
+				is_context_object := b
 			end
-		end
-
-	enable_as_object is
-		do
-			if not as_object then
-				reset_expression_evaluator
-				as_object := True
-			end
-		end
-
-feature -- Status
-
-	enable_evaluation is
-			-- Enable evaluation of Current expression
-		do
-			evaluation_disabled := False
-		end
-
-	disable_evaluation is
-			-- Disable evaluation of Current expression
-		do
-			evaluation_disabled := True
-		end
-
-	evaluation_disabled: BOOLEAN
-			-- Is Current expression evaluation disabled ?
-
-	evaluation_enabled: BOOLEAN is
-			-- Is Current expression evaluation enabled ?	
-		do
-			Result := not evaluation_disabled
 		end
 
 feature -- Access
@@ -173,120 +150,66 @@ feature -- Access
 			valid_f: f /= Void
 			no_error: not syntax_error_occurred
 			good_state: f.written_class /= Void and then f.written_class.has_feature_table
+		local
+			evl: DBG_EXPRESSION_EVALUATION
 		do
-			Result := expression_evaluator.is_boolean_expression (f.associated_feature_i )
+			create evl.make (Current)
+			Result := evl.is_boolean_expression (f.associated_feature_i)
+			evl.destroy
 		end
 
-	is_still_valid: BOOLEAN is
-			-- Is `Current' still valid?
+	is_reusable: BOOLEAN is
+			-- Is `Current' still valid now and for other debugging session?
 			-- Should be checked when a debugging session starts.
+			--| If `Current' relies on an object, it is clearly
+			--| no longer reusable when a new debugging session starts.	
 		do
-			Result :=
-					--| If `Current' relies on an object, it is clearly
-					--| no longer valid when a new debugging session starts.
-				not on_object and then
-					--| If `Current' relies on an class, the class it relies on
-					--| must be valid itself and correctly compiled.
-				(not on_class or else
-					(context_class.is_valid and then context_class.has_feature_table))
+			Result := {ctx: like context} context and then (
+						ctx.is_coherent and
+						not ctx.on_object and
+						ctx.is_valid
+					)
 		end
 
-	context: STRING_GENERAL is
+	context_as_string: STRING_32 is
 			-- Return a string representing `Current's context.
+		local
+			ctx: like context
 		do
-			if on_class then
-				Result := context_class.name_in_upper.twin
-			elseif as_object then
-				Result :=  interface_names.l_As_object.twin
-			elseif on_object then
-				Result := context_address.twin
+			ctx := context
+			create Result.make_empty
+			if ctx.on_class then
+				Result.append_string_general (ctx.associated_class.name_in_upper)
+			elseif ctx.on_object then
+				if is_context_object then
+					Result.append_string_general (Interface_names.l_As_object)
+				else
+					Result.append_string_general (ctx.associated_address)
+				end
 			else
-				Result := interface_names.l_Current_context.twin
+				Result.append_string_general (Interface_names.l_Current_context)
 			end
 			if keep_assertion_checking then
 				Result.append (" - ")
-				Result.append (interface_names.b_eval_keep_assertion_checking)
+				Result.append_string_general (Interface_names.b_eval_keep_assertion_checking)
 			end
 		end
 
-feature -- Bridge to dbg_expression_evaluator
-
-	error_occurred: BOOLEAN is
-		do
-			Result := evaluation_error_code /= 0 or syntax_error_occurred
-		end
-
-	evaluation_error_code: INTEGER is
-		local
-			l_evaluator: DBG_EXPRESSION_EVALUATOR
-		do
-			l_evaluator := expression_evaluator
-			if l_evaluator /= Void then
-				Result := l_evaluator.error
-			end
-		end
-
-feature {DEBUGGER_EXPORTER} -- Restricted Bridge to dbg_expression
-
-	set_expression (expr: like expression) is
-			-- Set string value for `dbg_expression'
-		require
-			expr /= Void
-		do
-			if expression = Void then
-				expression := expr.twin
-				analyze_expression
-			elseif not expr.is_equal (expression) then
-				expression := expr.twin
-				reset_expression_evaluator
-				analyze_expression
-			else
-				--| Same expression .. no change
-			end
-		end
-
-feature -- Status report: Propagate the context and the results.
-
-	as_object: BOOLEAN
-			-- Is the expression represent the context object ?
-
-	on_object: BOOLEAN
-			-- Is the expression relative to an object?
-
-	on_class: BOOLEAN
-			-- Is the expression relative to a class (the expression must be a once/constant).
-
-	on_context: BOOLEAN
-			-- Is the expression to be evaluated in the current call stack element context?
-
-	context_class: CLASS_C
-			-- Class the expression refers to (only valid if `on_class').
-
-	context_address: STRING
-			-- Address of the object the expression refers to (only valid if `on_object').
-
-	name: STRING_32
-			-- Optional name to qualify this expression.
-
-feature -- Evaluation settings
-
-	is_evaluated: BOOLEAN
-			-- Is current expression had been evaluated ?
+feature -- Evaluation: Settings
 
 	keep_assertion_checking: BOOLEAN
 			-- Do we keep assertion checking enabled during evaluation ?
 			--| Default: False.
 
-	as_auto_expression: BOOLEAN
-			-- Evaluate as auto expression ?
+feature -- Evaluation: Status report
 
-feature -- Basic operations
-
-	set_unevaluated is
-			-- Reset is_evaluated
+	error_occurred: BOOLEAN is
+			-- has error in the expression's text (syntax) or during evaluation?
 		do
-			is_evaluated := False
+			Result := syntax_error_occurred -- or evaluation_error_occurred
 		end
+
+feature -- Evaluation: Settings change
 
 	set_keep_assertion_checking	(b: like keep_assertion_checking) is
 			-- Set `keep_assertion_checking' with `b'
@@ -294,65 +217,64 @@ feature -- Basic operations
 			keep_assertion_checking := b
 		end
 
-	evaluate_as_auto_expression is
-			-- Evaluate `dbg_expression' with `expression_evaluator'
-		do
-			as_auto_expression := True
-			evaluate
-			as_auto_expression := False
-		end
+feature -- Evaluation: Access
 
-	evaluate is
-			-- Evaluate `dbg_expression' with `expression_evaluator'
+	register_evaluation (evl: DBG_EXPRESSION_EVALUATION)
+			-- Register evaluation `evl' to Current
+		require
+			evl_attached: evl /= Void
+			evl_expression_is_current: evl.expression = Current
 		do
-			evaluate_with_settings (keep_assertion_checking)
-		end
-
-	evaluate_with_settings (a_keep_assertion_checking: BOOLEAN) is
-			-- Evaluate `dbg_expression' with `expression_evaluator'
-			-- using `a_keep_assertion_checking' as settings
-		do
-			expression_evaluator.reset_error
-			if syntax_error_occurred then
-				expression_evaluator.notify_error_syntax (analysis_error_message)
-			else
-				expression_evaluator.set_as_auto_expression (as_auto_expression)
-				expression_evaluator.evaluate (a_keep_assertion_checking)
+			if evaluations = Void then
+				create evaluations.make (1)
+				evaluations.compare_objects
 			end
-			is_evaluated := True
+			evaluations.extend (evl)
 		end
 
-	reset_expression_evaluator is
-			-- Reset expression_evaluator
+	unregister_evaluation (evl: DBG_EXPRESSION_EVALUATION)
+			-- Register evaluation `evl' to Current
+		require
+			evl_attached: evl /= Void
+			evl_expression_is_current: evl.expression = Current
 		do
-			internal_evaluator := Void
-		end
-
-	expression_evaluator: DBG_EXPRESSION_EVALUATOR is
-			-- Expression_evaluator used to evaluate DBG_EXPRESSION
-		do
-			Result := internal_evaluator
-			if Result = Void then
-				create_internal_evaluator (debugger_manager)
-				Result := internal_evaluator
+			if evaluations /= Void then
+				evaluations.start
+				evaluations.search (evl)
+				if not evaluations.exhausted then
+					evaluations.remove
+				end
 			end
 		end
 
+feature {NONE} -- Evaluation: access
 
-feature -- Expression access
+	evaluations: ARRAYED_LIST [DBG_EXPRESSION_EVALUATION]
+			-- registered evaluations
+
+	reset_evaluations is
+			-- Reset expression evaluations
+		do
+			if evaluations /= Void then
+					--| We reset the evaluations data and analyses.
+				evaluations.do_all (agent {DBG_EXPRESSION_EVALUATION}.reset)
+			end
+		ensure
+			evaluations_resetted: evaluations /= Void implies evaluations.for_all (agent {DBG_EXPRESSION_EVALUATION}.unevaluated)
+		end
+
+feature -- Analysis: Status report
 
 	syntax_error_occurred: BOOLEAN is
 			-- Is there a syntax error in dbg_expression ?
 		do
-			Result := not as_object and then has_syntax_error
+			Result := not is_context_object and then has_syntax_error
 		end
 
-	expression: STRING_32
-			-- Expression to evaluate.
+feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} -- Analysis: implementation
 
-feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
-
-	expression_ast: EXPR_AS
+	ast: EXPR_AS
+			-- Abstract class representation
 
 	has_syntax_error: BOOLEAN
 			-- Is the provided expression syntactically valid?
@@ -371,9 +293,9 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
 		end
 
 	analyze_expression is
-			-- analyze `expression'
+			-- analyze `text'
 		require
-			valid_expression: valid_expression (expression)
+			valid_expression: valid_expression (text)
 		local
 			sp: SHARED_EIFFEL_PARSER
 			s8: STRING
@@ -385,23 +307,23 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
 				has_syntax_error := False
 				analysis_error_message := Void
 
-				if has_unicode_character (expression) then
+				if not is_valid_expression_string (text) then
 					has_syntax_error := True
 					create analysis_error_message.make_from_string (Cst_syntax_error)
-					analysis_error_message.append_string (": the expression contains manifest unicode string (STRING_32)")
+					analysis_error_message.append_string (": the expression is not a valid string (should not contain multibyte unicode character)")
 				else
 					create sp
 					p := sp.expression_parser
-					check expression_not_void: expression /= Void end
-					s8 := expression.as_string_8
+					check expression_not_void: text /= Void end
+					s8 := text.as_string_8
 					p.parse_from_string (once "check " + s8)
 					has_syntax_error := p.syntax_error
 					if not has_syntax_error then
 						en := p.expression_node
 						if en /= Void then
-							expression_ast ?= p.expression_node
+							ast ?= p.expression_node
 							check
-								expression_ast /= Void
+								ast /= Void
 							end
 						else
 							has_syntax_error := True
@@ -425,56 +347,42 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
 			retry
 		end
 
-	create_internal_evaluator (dm: DEBUGGER_MANAGER) is
-			-- Create internal_evaluator
+
+feature -- Recycling
+
+	reset is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
 		do
-			if internal_evaluator = Void then
-				if as_object then
-					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_as_object (dm, context_address)
-				else
-					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (dm, Current)
-					internal_evaluator.set_context_class (context_class)
-					internal_evaluator.set_context_address (context_address)
-					internal_evaluator.set_on_class (on_class)
-					internal_evaluator.set_on_context (on_context)
-					internal_evaluator.set_on_object (on_object)
-				end
-			end
+			reset_evaluations
 		end
 
-	internal_evaluator: like expression_evaluator
-			-- internal value for the once per object `expression_evaluator'
+feature -- debug output
+
+	debug_output: STRING is
+			-- <Precursor>
+		do
+			create Result.make_empty
+			if text /= Void then
+				Result.append_string_general ("exp=%"")
+				Result.append_string_general (text)
+				Result.append_string_general ("%" ")
+			end
+		end
 
 feature {NONE} -- Implementation
 
 	Cst_syntax_error: STRING is "Syntax error"
 
-	has_unicode_character (s: STRING_GENERAL): BOOLEAN is
+	is_valid_expression_string (s: STRING_GENERAL): BOOLEAN is
+			-- Is a valid expression string ?
 		do
-			Result := s /= Void and then
-						not s.is_equal (s.as_string_8.as_string_32)
-		end
-
-	flag_sum: INTEGER is
-			-- How many flags are set?
-			-- For invariant purposes only.
-		do
-			if on_object then
-				Result := Result + 1
-			end
-			if on_class then
-				Result := Result + 1
-			end
-			if on_context then
-				Result := Result + 1
-			end
+			Result := s /= Void and then s.is_valid_as_string_8
 		end
 
 invariant
-
-	good_flags: flag_sum = 1
-	valid_context: ((context_address /= Void) = on_object) and
-					(on_class implies (context_class /= Void))
+	context_attached: context /= Void
+	valid_context: context.is_coherent
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

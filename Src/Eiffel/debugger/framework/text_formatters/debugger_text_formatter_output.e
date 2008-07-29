@@ -149,7 +149,7 @@ feature -- Application status
 			n: STRING
 			add: STRING
 		do
-			dc := dobj.dtype
+			dc := dobj.dynamic_class
 			add := dobj.object_address
 			n := a_name
 

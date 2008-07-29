@@ -198,9 +198,9 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	out: STRING is
-			--
+			-- Output value
 		do
-			Result := generating_type + "[0x"+item.out+"]"
+			Result := generating_type + "[" + item.out + "]"
 		end
 
 feature -- Access status

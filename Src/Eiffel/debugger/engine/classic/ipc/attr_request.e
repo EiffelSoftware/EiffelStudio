@@ -20,7 +20,7 @@ inherit
 			send
 		end
 
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 		export
 			{NONE} all
 		end

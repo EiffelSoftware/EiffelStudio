@@ -8,7 +8,6 @@ indexing
 deferred class DEBUGGED_OBJECT
 
 inherit
-
 	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
 		export
 			{NONE} all
@@ -102,7 +101,7 @@ feature -- Properties
 			-- attributes are SPECIAL
 			-- (negative means special objects were not found)
 
-	dtype: CLASS_C
+	dynamic_class: CLASS_C
 			-- Dynamic type of `Current'.
 
 	class_type: CLASS_TYPE

@@ -9,7 +9,7 @@ deferred class EIFFEL_CALL_STACK
 
 feature -- Properties
 
-	thread_id: INTEGER is
+	thread_id: POINTER is
 			-- Thread ID related to `Current' call stack
 		deferred
 		end

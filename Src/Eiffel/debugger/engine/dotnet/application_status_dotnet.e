@@ -144,7 +144,7 @@ feature -- Changes
 
 feature -- Thread info
 
-	set_current_thread_id (tid: INTEGER) is
+	set_current_thread_id (tid: like current_thread_id) is
 			-- Set current thread ID.
 		do
 			Precursor {APPLICATION_STATUS} (tid)
@@ -163,7 +163,7 @@ feature -- Thread info
 			if not dbg_info.is_valid_managed_thread_id (current_thread_id) then
 				edti := dbg_info.default_managed_thread
 				if edti /= Void then
-					set_current_thread_id (edti.thread_id)
+					set_current_thread_id (edti.thread_id_as_pointer)
 				end
 			end
 		end
@@ -208,7 +208,7 @@ feature -- Call stack related
 
 feature {NONE} -- CallStack Impl
 
-	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do

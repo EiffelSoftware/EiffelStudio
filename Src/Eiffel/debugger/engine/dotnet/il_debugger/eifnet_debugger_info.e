@@ -66,7 +66,7 @@ feature -- Reset
 			reset_last_evaluation_icd_exception
 
 				--| Last thread id
-			last_icd_thread_id := 0
+			last_icd_thread_id := Default_pointer
 
 				--| StepComplete |--
 			last_step_complete_reason   := 0
@@ -165,7 +165,7 @@ feature -- Current CallStack
 				end
 				if
 					last_p_icd_controller /= Default_pointer
-					and then last_icd_thread_id > 0
+					and then last_icd_thread_id /= Default_pointer
 				then
 					l_thread := icd_thread
 					if l_thread /= Void then
@@ -759,7 +759,7 @@ feature -- JIT Thread
 	display_loaded_managed_threads is
 			-- Debug purpose only
 		local
-			l_id: INTEGER
+			l_id: like last_icd_thread_id
 		do
 			debug ("eifnet_debugger")
 				from
@@ -775,16 +775,16 @@ feature -- JIT Thread
 						print (" - Thread :")
 					end
 
-					print (" 0x" + l_id.to_hex_string + " (" + l_id.out + ")" + "%N")
+					print (" " + l_id.out + "%N")
 					loaded_managed_threads.forth
 				end
 			end
 		end
 
-	loaded_managed_threads: HASH_TABLE [EIFNET_DEBUGGER_THREAD_INFO, INTEGER]
+	loaded_managed_threads: HASH_TABLE [EIFNET_DEBUGGER_THREAD_INFO, POINTER]
 			-- Managed thread, indexed by Thread ID
 
-	loaded_managed_threads_ids: ARRAY [INTEGER] is
+	loaded_managed_threads_ids: ARRAY [POINTER] is
 			-- All managed threads'ids.
 		do
 			Result := loaded_managed_threads.current_keys
@@ -792,13 +792,13 @@ feature -- JIT Thread
 			Result /= Void
 		end
 
-	is_valid_managed_thread_id (thid: INTEGER): BOOLEAN is
+	is_valid_managed_thread_id (thid: POINTER): BOOLEAN is
 			-- Is `thid' a valid Thread id for a managed thread ?
 		do
 			Result := loaded_managed_threads.has (thid)
 		end
 
-	managed_thread (id: INTEGER): EIFNET_DEBUGGER_THREAD_INFO is
+	managed_thread (id: POINTER): EIFNET_DEBUGGER_THREAD_INFO is
 			-- Managed Thread info related to `id'.
 		do
 			Result := loaded_managed_threads.item (id)
@@ -821,18 +821,20 @@ feature -- JIT Thread
 			p /= Default_pointer
 		local
 			edti: EIFNET_DEBUGGER_THREAD_INFO
+			tid: like last_icd_thread_id
 		do
 			create edti.make (p)
-			loaded_managed_threads.put (edti, edti.thread_id)
-			debugger_manager.application_status.add_thread_id (edti.thread_id)
+			tid := edti.thread_id_as_pointer
+			loaded_managed_threads.put (edti, tid)
+			debugger_manager.application_status.add_thread_id (tid)
 
-			if last_icd_thread_id = 0 then
-				set_last_icd_thread_id (edti.thread_id)
+			if last_icd_thread_id = Default_pointer then
+				set_last_icd_thread_id (tid)
 			end
 
 			debug ("eifnet_debugger")
 				io.error.put_string (generator + ".add_managed_thread ("
-						+ p.out + ") -> ID=0x" + edti.thread_id.to_hex_string + "%N")
+						+ p.out + ") -> ID=" + tid.out + "%N")
 			end
 		end
 
@@ -840,9 +842,11 @@ feature -- JIT Thread
 			-- Remove `p' as ICorDebugThread
 		local
 			n: INTEGER
-			tid: INTEGER
+			tid_int: INTEGER
+			tid: like last_icd_thread_id
 		do
-			n := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
+			n := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid_int)
+			tid := integer_to_pointer (tid_int)
 			if loaded_managed_threads.has (tid) then
 				loaded_managed_threads.remove (tid)
 				debugger_manager.application_status.remove_thread_id (tid)
@@ -850,12 +854,12 @@ feature -- JIT Thread
 					-- FIXME jfiat: maybe find a better way for that .. a kind of history of selected thread ?
 				if last_icd_thread_id = tid and then not loaded_managed_threads.is_empty then
 					loaded_managed_threads.start
-					set_last_icd_thread_id (loaded_managed_threads.item_for_iteration.thread_id)
+					set_last_icd_thread_id (loaded_managed_threads.item_for_iteration.thread_id_as_pointer)
 				end
 			end
 			debug ("eifnet_debugger")
 				io.error.put_string (generator + ".remove_managed_thread_by_pointer ("
-						+ p.out + ") -> ID=0x" + tid.to_hex_string + "%N")
+						+ p.out + ") -> ID=" + tid.out + "%N")
 			end
 		end
 
@@ -874,18 +878,18 @@ feature -- JIT Thread
 			-- Set `last_icd_thread' to `p'
 		local
 			r: INTEGER
-			tid: INTEGER
+			tid_int: INTEGER
 		do
-			r := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
-			if tid > 0 then
-				set_last_icd_thread_id (tid)
+			r := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid_int)
+			if tid_int > 0 then
+				set_last_icd_thread_id (integer_to_pointer (tid_int))
 			end
 		end
 
-	set_last_icd_thread_id (id: INTEGER) is
+	set_last_icd_thread_id (id: like last_icd_thread_id) is
 			-- Set `last_icd_thread_id' to `id'
 		require
-			id_positive: id > 0
+			id_not_null: id /= Default_pointer
 		do
 			last_icd_thread_id := id
 		end
@@ -908,7 +912,7 @@ feature -- JIT Thread
 			end
 		end
 
-	icd_thread_by_id (id: INTEGER): ICOR_DEBUG_THREAD is
+	icd_thread_by_id (id: like last_icd_thread_id): ICOR_DEBUG_THREAD is
 			-- ICOR_DEBUG_THREAD for thread id `id'.
 		local
 			edti: EIFNET_DEBUGGER_THREAD_INFO
@@ -926,7 +930,7 @@ feature -- JIT Thread
 			end
 		end
 
-	last_icd_thread_id: INTEGER
+	last_icd_thread_id: POINTER
 
 feature -- JIT Module
 
@@ -1120,6 +1124,14 @@ feature -- Stepping
 			Result := last_control_mode_is_step_into
 			or else last_control_mode_is_step_out
 			or else last_control_mode_is_step_next
+		end
+
+feature {NONE} -- Implementation
+
+	integer_to_pointer (i: INTEGER): POINTER
+			-- Integer value `'i converted to POINTER value
+		do
+			Result := Result + i
 		end
 
 invariant

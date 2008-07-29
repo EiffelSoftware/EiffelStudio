@@ -272,26 +272,35 @@ feature -- Interaction
 			end
 			Result.add_entry ("E", debugger_names.e_expression_evaluation, agent
 					local
+						exp_txt: STRING
 						x: DBG_EXPRESSION
+						v: DBG_EXPRESSION_EVALUATION
 						s: STRING_GENERAL
 					do
 						localized_print (debugger_names.m_expression)
 						io.read_line
-						create x.make_for_context (io.last_string.twin)
-						x.evaluate
-						if x.error_occurred then
-							s := x.expression_evaluator.short_text_from_error_messages
+						exp_txt := io.last_string.twin
+						create x.make_with_context (exp_txt)
+						if not x.error_occurred then
+							create v.make (x)
+							v.evaluate
+						end
+						if v = Void or else v.error_occurred then
+							if v /= Void then
+								s := v.short_text_from_error_messages
+							end
 							if s /= Void then
 								localized_print (s)
 							else
 								localized_print (debugger_names.m_error_occurred)
 							end
-						elseif x.expression_evaluator.final_result_value /= Void then
-							tty_output.add_string (x.expression + " => " + x.expression_evaluator.final_result_value.output_for_debugger + "%N")
+						elseif v.value /= Void then
+							tty_output.add_string (exp_txt + " => " + v.value.output_for_debugger + "%N")
 						else
-							tty_output.add_string (x.expression + " => Returned ...%N")
+							tty_output.add_string (exp_txt + " => Returned ...%N")
 						end
 						x := Void
+						v := Void
 						io.put_new_line
 					end
 				)
@@ -449,7 +458,7 @@ feature -- Breakpoints management
 			end
 			if bp.has_condition then
 				s := "Condition = "
-				s.append_string_general (bp.condition.expression)
+				s.append_string_general (bp.condition.text)
 				m.add_separator (s)
 			end
 			if bp.has_when_hits_action_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}) then
@@ -492,14 +501,14 @@ feature -- Breakpoints management
 			d: STRING
 		do
 			if bp.has_condition then
-				s := bp.condition.expression
+				s := bp.condition.text
 				localized_print (debugger_names.m_current_condition (s))
 			end
 			localized_print (debugger_names.m_edit_new_condition)
 			s := adjusted_answer
 			if not s.is_empty then
 				fe := bp.routine
-				create exp.make_for_context (s)
+				create exp.make_with_context (s)
 				if bp.continue_on_condition_failure then
 					d := "y"
 				else

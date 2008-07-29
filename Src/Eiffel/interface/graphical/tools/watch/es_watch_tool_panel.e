@@ -330,7 +330,7 @@ feature -- Change status
 	prepare_for_debug is
 			-- Remove obsolete expressions from `Current'.
 		local
-			l_expr: DBG_EXPRESSION
+			evl: DBG_EXPRESSION_EVALUATION
 			witem: like watched_item_from
 			witems: like watched_items
 		do
@@ -349,14 +349,14 @@ feature -- Change status
 						witem.safe_unattach
 						witems.remove
 					else
-						l_expr := witem.expression
+						evl := witem.expression_evaluation
 						if
-							l_expr = Void
-							or else not l_expr.is_still_valid
+							evl = Void
+							or else not evl.expression.is_reusable
 						then
 							witems.remove
 						else
-							l_expr.set_unevaluated
+							evl.reset --| i.e: set unevaluated
 							add_watched_item_to_grid (witem, watches_grid)
 							witems.forth
 						end
@@ -412,7 +412,7 @@ feature {NONE} -- Memory management
 						witems.remove
 					else
 						check witem.expression /= Void	end
-						if not witem.expression.is_still_valid then
+						if not witem.expression.is_reusable then
 							witems.remove
 						else
 							witems.forth
@@ -465,7 +465,7 @@ feature {NONE} -- add new expression from the grid
 			expr: DBG_EXPRESSION
 		do
 			if valid_expression_text (s) then
-				create expr.make_for_context (s)
+				create expr.make_with_context (s)
 				add_expression (expr, False)
 			end
 		end
@@ -475,7 +475,7 @@ feature {NONE} -- add new expression from the grid
 			expr: DBG_EXPRESSION
 		do
 			if valid_expression_text (s) then
-				create expr.make_for_context (s)
+				create expr.make_with_context (s)
 				add_expression (expr, True)
 			end
 		end
@@ -740,7 +740,7 @@ feature {NONE} -- Event handling
 			-- Toggle state of the selected expressions from the list.
 		local
 			rows: LIST [EV_GRID_ROW]
-			l_expr: DBG_EXPRESSION
+			evl: DBG_EXPRESSION_EVALUATION
 			sel_index: INTEGER
 			l_item: like watched_item_from
 		do
@@ -758,11 +758,11 @@ feature {NONE} -- Event handling
 					if l_item = Void then
 						check False end
 					else
-						l_expr := l_item.expression
-						if l_expr /= Void and then l_expr.evaluation_disabled then
-							l_expr.enable_evaluation
+						evl := l_item.expression_evaluation
+						if evl /= Void and then evl.disabled then
+							evl.set_disabled (False)
 						else
-							l_expr.disable_evaluation
+							evl.set_disabled (True)
 						end
 						refresh_watched_item (l_item)
 					end
@@ -801,17 +801,19 @@ feature {NONE} -- Event handling
 						line ?= sel.data
 						if line /= Void then
 							witems := watched_items
-							witems.start
-							witems.search (line)
-							if not witems.exhausted then
-								check witems.item = line end
-								new_index := witems.index + offset
-								if new_index < 1 then
-									new_index := 1
-								elseif new_index > witems.count then
-									new_index := witems.count
+							if witems /= Void then
+								witems.start
+								witems.search (line)
+								if not witems.exhausted then
+									check witems.item = line end
+									new_index := witems.index + offset
+									if new_index < 1 then
+										new_index := 1
+									elseif new_index > witems.count then
+										new_index := witems.count
+									end
+									witems.swap (new_index)
 								end
-								witems.swap (new_index)
 							end
 						end
 						to_index := g.grid_move_top_row_node_by (g, sel_index, offset)
@@ -1081,22 +1083,29 @@ feature {NONE} -- Event handling
 	add_expression (expr: DBG_EXPRESSION; is_auto: BOOLEAN) is
 		local
 			expr_item: like watched_item_from
+			evl: DBG_EXPRESSION_EVALUATION
 		do
+			create evl.make (expr)
 			if is_auto then
 				if debugger_manager.safe_application_is_stopped then
-					if not expr.is_evaluated then
-						expr.evaluate_as_auto_expression
+					if not evl.evaluated then
+						evl.side_effect_forbidden := True
+						evl.evaluate
+					else
+						--| Should not occurred since `evl' has just been created
 					end
 				end
-				if not show_only_auto_expression_successfully_evaluated or else not expr.error_occurred then
-					expr_item := new_watched_item_from_expression (expr, watches_grid)
+				if not show_only_auto_expression_successfully_evaluated or else not evl.error_occurred then
+					expr_item := new_watched_item_from_expression_evaluation (evl, watches_grid)
 					expr_item.set_auto_expression (True)
 				end
 			else
-				expr_item := new_watched_item_from_expression (expr, watches_grid)
+				expr_item := new_watched_item_from_expression_evaluation (evl, watches_grid)
 			end
+
 			if expr_item /= Void then
-				if not expr.is_evaluated and debugger_manager.safe_application_is_stopped then
+				check evaluation_attached: evl /= Void end
+				if not evl.evaluated and debugger_manager.safe_application_is_stopped then
 					expr_item.request_evaluation (True)
 				end
 
@@ -1104,7 +1113,7 @@ feature {NONE} -- Event handling
 				if expr_item.row /= Void then
 					if
 						not expr_item.compute_grid_display_done
-						and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))
+						and then (evl.disabled or not evl.evaluated)
 					then
 						expr_item.compute_grid_display
 					end
@@ -1265,22 +1274,8 @@ feature -- Access
 			a_item_not_void: a_item /= Void
 			a_item_has_expression: a_item.expression /= Void
 			a_item_attached: a_item.row /= Void
-		local
-			l_row: EV_GRID_ROW
-			l_expr: DBG_EXPRESSION
 		do
-			l_row := a_item.row
-			l_expr := a_item.expression
-			if l_expr.evaluation_disabled then
-				--| nothing special
-			else
-				if debugger_manager.safe_application_is_stopped then
-					l_expr.evaluate
-				else
-					l_expr.set_unevaluated
-				end
-			end
-			a_item.refresh
+			a_item.refresh_expression
 		end
 
 	add_dump_value (dv: DUMP_VALUE) is
@@ -1289,7 +1284,7 @@ feature -- Access
 			expr: DBG_EXPRESSION
 		do
 			if dv.dynamic_class = Void then
-				create expr.make_for_context ("Void")
+				create expr.make_with_context ("Void")
 			else
 				create expr.make_as_object (dv.dynamic_class, dv.address)
 			end
@@ -1302,7 +1297,7 @@ feature -- Access
 			expr: DBG_EXPRESSION
 		do
 			if dv.dynamic_class = Void then
-				create expr.make_for_context ("Void")
+				create expr.make_with_context ("Void")
 			else
 				create expr.make_as_object (dv.dynamic_class, dv.address)
 			end
@@ -1335,7 +1330,7 @@ feature {NONE} -- Update
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		local
 			eval: BOOLEAN
-			l_expr: DBG_EXPRESSION
+			evl: DBG_EXPRESSION_EVALUATION
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
@@ -1360,14 +1355,14 @@ feature {NONE} -- Update
 			loop
 				l_item := witems.item
 				l_item.request_evaluation (False)
-				l_expr := l_item.expression
-				if l_expr.evaluation_disabled then
+				evl := l_item.expression_evaluation
+				if evl.disabled then
 					-- Nothing special
 				else
 					if eval then
 						l_item.request_evaluation (True)
 					else
-						l_expr.set_unevaluated
+						evl.evaluated := False -- | i.e: set unevaluated
 					end
 				end
 				if l_item.row = Void then
@@ -1420,13 +1415,15 @@ feature {NONE} -- Implementation
 
 	Cst_nota_col: INTEGER is 5
 
-	new_watched_item_from_expression (expr: DBG_EXPRESSION; a_grid: ES_OBJECTS_GRID): like watched_item_from is
+	new_watched_item_from_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; a_grid: ES_OBJECTS_GRID): like watched_item_from is
 		require
-			expr /= Void
-			a_grid /= Void
+			evaluation_attached: evl /= Void
+			grid_attached: a_grid /= Void
 		do
-			create Result.make_with_expression (expr, a_grid)
+			create Result.make_with_expression_evaluation (evl, a_grid)
 			add_watched_item_to_grid (Result, a_grid)
+		ensure
+			Result_evaluation_is_evl: Result.expression_evaluation = evl
 		end
 
 	add_watched_item_to_grid (witem: like watched_item_from; a_grid: ES_OBJECTS_GRID) is
@@ -1470,6 +1467,7 @@ feature {NONE} -- Implementation
 		end
 
 	watched_item_for_expression (expr: DBG_EXPRESSION): like watched_item_from is
+			-- watched item related to `expr'
 		require
 			valid_expr: expr /= Void
 		local
@@ -1490,6 +1488,7 @@ feature {NONE} -- Implementation
 		end
 
 	refresh_expression (expr: DBG_EXPRESSION) is
+			-- Refresh watched item related to `expr'
 		require
 			valid_expr: expr /= Void
 		local
@@ -1521,8 +1520,8 @@ feature {NONE} -- Implementation
 					if row.parent_row = Void then
 						l_item := watched_item_from (row)
 						if l_item /= Void then
-							expr ?= l_item.expression
-							if expr.on_context then
+							expr := l_item.expression
+							if expr.context.on_context then
 								refresh_watched_item (l_item)
 							end
 						end

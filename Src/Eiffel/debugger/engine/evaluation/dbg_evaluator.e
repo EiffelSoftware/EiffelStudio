@@ -47,12 +47,13 @@ feature {NONE} -- Initialization
 			dm_not_void: dm /= Void
 		do
 			debugger_manager := dm
-			create error_messages.make
+			create dbg_error_handler.make
 		end
 
 feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR, APPLICATION_EXECUTION} -- Init
 
 	reset is
+			-- Reset data
 		do
 			reset_error
 			clear_evaluation
@@ -60,192 +61,58 @@ feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR, APPLICATION_EXECUTION} -- I
 		end
 
 	clear_evaluation is
+			-- Clear evaluation data	
 		do
-			last_result_value := Void
-			last_result_static_type := Void
+			last_result := Void
 		end
 
 feature {NONE} -- Internal properties
 
 	debugger_manager: DEBUGGER_MANAGER
 
-feature {DBG_EXPRESSION_EVALUATOR, DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Variables
-
-	last_result_value: DUMP_VALUE
-
-	last_result_static_type: CLASS_C
-
-	error: INTEGER
-			-- Error code
-
-	error_messages: LINKED_LIST [TUPLE [code: INTEGER; msg: STRING_32]]
-			-- List of [Code, Message]
-			-- Error's message if any otherwise Void
-
-	error_message: STRING_32 is
-		do
-			Result := error_message_by (0) -- All
-		end
-
-	error_message_by (a_code_filter: INTEGER): STRING_32 is
-			-- Error message filter by `a_code_filter'.
-			-- if `a_code_filter' is zero => all messages
-			-- if `a_code_filter' is positive => all messages associated with `a_code_filter'
-			-- if `a_code_filter' is negative => all messages except the ones associated with - `a_code_filter'
-		local
-			details: TUPLE [code: INTEGER; msg: STRING_32]
-			l_msg: STRING_GENERAL
-			l_code: INTEGER
-		do
-			if error /= 0 and not error_messages.is_empty then
-				from
-					create Result.make (10)
-					error_messages.start
-				until
-					error_messages.after
-				loop
-					details := error_messages.item
-					l_code := details.code
-					if
-						a_code_filter = 0
-						or else (a_code_filter > 0 and l_code = a_code_filter )
-						or else (a_code_filter < 0 and l_code /= -a_code_filter)
-					then
-						l_msg := details.msg
-						if l_msg = Void and l_code /= 0 then
-							l_msg := error_code_to_message (l_code)
-						end
-						if l_msg /= Void then
-							Result.append_string_general (l_msg)
-						end
-						error_messages.forth
-						if not error_messages.after then
-							Result.append ("%N--------------------------%N")
-						end
-					else
-						error_messages.forth
-					end
-				end
-				if Result.is_empty then
-					Result := Void
-				end
-			end
-		end
-
-	error_evaluation_message: STRING_32 is
-		do
-			if evaluation_error_occurred then
-				Result := error_message_by (Cst_error_occurred)
-			end
-		end
-
-	error_but_exception_message: STRING_32 is
-		do
-			if error_but_exception_occurred then
-				Result := error_message_by (-Cst_error_exception_during_evaluation)
-			end
-		end
-
-	error_exception_message: STRING_32 is
-		do
-			if exception_occurred then
-				Result := error_message_by (Cst_error_exception_during_evaluation)
-			end
-		end
+feature -- Access
 
 	error_occurred: BOOLEAN is
 			-- Did an error occurred during processing ?
 		do
-			Result := error /= 0
+			Result := dbg_error_handler.error_occurred
 		end
 
-	evaluation_error_occurred: BOOLEAN is
-			-- Did the evaluation raised an error ?
+	dbg_error_handler: DBG_ERROR_HANDLER
+			-- Debugger's error handler
+
+feature {DBG_EXPRESSION_EVALUATOR, DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Variables
+
+	last_result: DBG_EVALUATED_VALUE
+			-- Last result
+
+	last_result_value: DUMP_VALUE
+			-- Value of last result
 		do
-			Result := error & Cst_error_occurred /= 0
+			Result := last_result.value
 		end
 
-	evaluation_aborted: BOOLEAN is
-			-- Did the evaluation aborted ?
+	last_result_static_type: CLASS_C
+			-- Static type of last result	
 		do
-			Result := error & cst_error_evaluation_aborted /= 0
-		end
-
-	exception_occurred: BOOLEAN is
-			-- Did the evaluation raised an exception ?
-		do
-			Result := error & cst_error_exception_during_evaluation /= 0
-		end
-
-	error_but_exception_occurred: BOOLEAN is
-			-- Error other than Exception occurred ?
-		do
-			Result := error_occurred and then error /= cst_error_exception_during_evaluation
-		end
-
-feature -- Error values
-
-	Cst_error_occurred: INTEGER is 0x1
-	Cst_error_evaluation_aborted: INTEGER is 0x2
-	Cst_error_exception_during_evaluation: INTEGER is 0x4
-	Cst_error_unable_to_get_target_object: INTEGER is 0x8
-	Cst_error_occurred_during_parameters_preparation: INTEGER is 0x10
-
-	error_code_to_message (a_code: INTEGER): STRING_GENERAL
-		require
-			code_not_zero: a_code /= 0
-		do
-			inspect a_code
-				when Cst_error_evaluation_aborted then
-					Result := Debugger_names.cst_error_evaluation_aborted
-				when Cst_error_exception_during_evaluation then
-					Result := Debugger_names.cst_error_exception_during_evaluation
-				when Cst_error_occurred then
-					Result := Debugger_names.cst_error_occurred
-				when Cst_error_unable_to_get_target_object then
-					Result := Debugger_names.cst_error_unable_to_get_target_object
-				when Cst_error_occurred_during_parameters_preparation then
-					Result := Debugger_names.cst_error_occurred_during_parameters_preparation
-				else
-			end
+			Result := last_result.static_class
 		end
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 
-	set_last_variables (trv: DUMP_VALUE; trs: CLASS_C) is
+	set_last_variables (v: DBG_EVALUATED_VALUE) is
 		do
 			reset_error
-			last_result_value := trv
-			last_result_static_type := trs
+			if v /= Void then
+				create last_result.make_clone (v)
+			else
+				clear_evaluation
+			end
 		end
 
 	reset_error is
 		do
-			error := 0
-			error_messages.wipe_out
-		end
-
-	notify_error (a_code: INTEGER; a_msg: STRING_GENERAL) is
-		require
-			a_code /= 0
-		local
-			m: STRING_32
-		do
-			if a_msg /= Void then
-				m := a_msg.as_string_32
-			end
-			error := error | a_code
-			error_messages.extend ([a_code, m])
-		end
-
-	notify_error_evaluation	(a_msg: STRING_GENERAL) is
-		do
-			notify_error (Cst_error_occurred, a_msg)
-		end
-
-	notify_error_exception (a_msg: STRING_GENERAL) is
-		do
-			notify_error (Cst_error_exception_during_evaluation, a_msg)
+			dbg_error_handler.reset
 		end
 
 feature {NONE} -- Query		
@@ -288,7 +155,7 @@ feature {NONE} -- Parameters Implementation
 		do
 				--| Prepare parameters ...
 			if f /= Void and then f.argument_count /= params.count then
-				notify_error_evaluation (debugger_names.msg_error_evaluation_wrong_nb_of_args (f.argument_count, params.count))
+				dbg_error_handler.notify_error_evaluation (debugger_names.msg_error_evaluation_wrong_nb_of_args (f.argument_count, params.count))
 			else
 				bak_cc := System.current_class
 				if dt /= Void then
@@ -344,6 +211,7 @@ feature -- Concrete evaluation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 			cl_not_void: cl /= Void
+			no_error_occurred: not error_occurred
 		local
 			l_dyntype: CLASS_TYPE
 		do
@@ -352,10 +220,11 @@ feature -- Concrete evaluation
 
 			effective_evaluate_static_function (f, l_dyntype, params)
 
-			if last_result_value /= Void then
-				last_result_static_type := class_c_from_type_a (f.type, cl)
-			else
-				notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_call (cl.name_in_upper, f.feature_name, Void, Void))
+			if last_result /= Void and then {sc: CLASS_C} class_c_from_type_a (f.type, cl) then
+				last_result.suggest_static_class (sc)
+			end
+			if last_result = Void or else not last_result.has_value then
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_call (cl.name_in_upper, f.feature_name, Void, Void))
 			end
 		end
 
@@ -363,6 +232,7 @@ feature -- Concrete evaluation
 			-- Evaluate once feature
 		require
 			feature_not_void: f /= Void
+			no_error_occurred: not error_occurred
 		do
 			check
 				f_is_once: f.is_once
@@ -376,6 +246,7 @@ feature -- Concrete evaluation
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
 			l_address: STRING
+			cl: CLASS_C
 		do
 			if a_target /= Void then
 				l_address := a_target.address
@@ -393,15 +264,18 @@ feature -- Concrete evaluation
 				lst := attributes_list_from_object (l_address)
 				dv := find_item_in_list (f.feature_name, lst)
 
-				last_result_static_type := class_c_from_type_a (f.type, c)
+				cl := class_c_from_type_a (f.type, c)
 				if dv = Void then
 					if f.feature_name.is_equal (once "Void") then
-						last_result_value := Debugger_manager.Dump_value_factory.new_void_value (last_result_static_type)
+						create last_result.make_with_value (Debugger_manager.Dump_value_factory.new_void_value (cl))
 					else
-						notify_error_evaluation (Debugger_names.msg_error_cannot_find_attribute (f.feature_name))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_attribute (f.feature_name))
 					end
 				else
-					last_result_value := dv.dump_value
+					create last_result.make_with_value (dv.dump_value)
+				end
+				if cl /= Void then
+					last_result.suggest_static_class (cl)
 				end
 --			elseif f.name.is_equal ("item") then
 --				result_object := a_target
@@ -409,9 +283,9 @@ feature -- Concrete evaluation
 			else
 				if a_target /= Void and then a_target.is_type_manifest_string then
 						-- Manifest string
-					notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_manifest_string (f.feature_name))
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_manifest_string (f.feature_name))
 				else
-					notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_expanded (f.feature_name))
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_expanded (f.feature_name))
 				end
 			end
 		end
@@ -421,7 +295,7 @@ feature -- Concrete evaluation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		local
-			l_target_dynclass: CLASS_C
+			l_target_dynclass, l_statcl: CLASS_C
 			l_dyntype: CLASS_TYPE
 			realf: FEATURE_I
 		do
@@ -453,7 +327,7 @@ feature -- Concrete evaluation
 						-- The type has generic derivations: we need to find the precise type.
 					l_dyntype := class_type_from_object_relative_to (a_addr, l_target_dynclass)
 					if l_dyntype = Void then
-						notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr))
 					elseif l_target_dynclass = Void then
 						l_target_dynclass := l_dyntype.associated_class
 					end
@@ -463,7 +337,7 @@ feature -- Concrete evaluation
 					l_dyntype := Void
 				else
 						--| Shouldn't happen: basic types are not generic.
-					notify_error_evaluation (Debugger_names.cst_error_cannot_find_complete_dynamic_type_of_expanded_type)
+					dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_cannot_find_complete_dynamic_type_of_expanded_type)
 				end
 			else
 				check l_target_dynclass /= Void and then l_target_dynclass.types.count = 0 end
@@ -471,12 +345,12 @@ feature -- Concrete evaluation
 			if f.is_once then
 				effective_evaluate_once_function (f)
 				if last_result_value = Void then
-					notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_once_call (f.written_class.name_in_upper, f.feature_name))
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_once_call (f.written_class.name_in_upper, f.feature_name))
 				end
 			elseif not error_occurred then
 				check l_target_dynclass /= Void end
 				if l_dyntype = Void then
-					notify_error_evaluation (
+					dbg_error_handler.notify_error_evaluation (
 								Debugger_names.msg_error_unable_to_evaluate_call (f.written_class.name_in_upper, f.feature_name, Void,
 										Debugger_names.msg_error_type_not_compiled (l_target_dynclass.name_in_upper)
 									)
@@ -501,32 +375,37 @@ feature -- Concrete evaluation
 						f_is_not_once: not f.is_once
 					end
 					if realf.is_deferred and f.is_deferred then
-						notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
 					else
 						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
-						if last_result_value = Void then
-							notify_error_evaluation (
+						if last_result = Void or else not last_result.has_value then
+							dbg_error_handler.notify_error_evaluation (
 										Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr, Void)
 									)
 						end
 					end
 				end
-				if not error_occurred and then last_result_value /= Void then
+				if not error_occurred and then last_result /= Void then
 					if f.is_function then
 						check l_target_dynclass /= Void end
-						last_result_static_type := class_c_from_type_a (f.type, l_target_dynclass)
-						if last_result_static_type = Void then
-							last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
+						l_statcl := class_c_from_type_a (f.type, l_target_dynclass)
+						if l_statcl = Void then
+							l_statcl := Workbench.Eiffel_system.Any_class.compiled_class
 						end
-						if
-							last_result_static_type /= Void and then
-							last_result_static_type.is_basic and
-							last_result_value.address /= Void
-						then
-								-- We expected a basic type, but got a reference.
-								-- This happens in "2 + 2" because we convert the first 2
-								-- to a reference and therefore get a reference.
-							last_result_value := last_result_value.to_basic
+						if l_statcl /= Void then
+							last_result.suggest_static_class (l_statcl)
+							if
+								l_statcl.is_basic and
+								last_result.has_value and then
+								last_result.value.address /= Void
+							then
+									-- We expected a basic type, but got a reference.
+									-- This happens in "2 + 2" because we convert the first 2
+									-- to a reference and therefore get a reference.
+								last_result.value := last_result.value.to_basic
+								last_result.update
+								last_result.suggest_static_class (l_statcl)
+							end
 						end
 					else
 						-- `f' is a procedure, so we keep the last_result_value as it is
@@ -552,6 +431,7 @@ feature -- Concrete evaluation
 			feature_not_void: f /= Void
 			f.written_class.types.count <= 1
 			f_is_once: f.is_once
+			no_error_occurred: not error_occurred
 		deferred
 		end
 
@@ -562,6 +442,7 @@ feature -- Concrete evaluation
 			) is
 		require
 			realf /= Void
+			no_error_occurred: not error_occurred
 		deferred
 		end
 
@@ -586,6 +467,7 @@ feature -- Implementation
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
+			no_error_occurred: not error_occurred
 		do
 			--| only for dotnet for now
 		end
@@ -597,6 +479,7 @@ feature -- Implementation
 		require
 			a_feature_name_not_void: a_feature_name /= Void
 			a_external_name_not_void: a_external_name /= Void
+			no_error_occurred: not error_occurred
 		do
 		end
 
@@ -684,6 +567,9 @@ feature {NONE} -- List helpers
 		ensure
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
 		end
+
+invariant
+	dbg_handler_attached: dbg_error_handler /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

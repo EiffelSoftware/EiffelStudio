@@ -39,12 +39,12 @@ feature {NONE} -- Creation
 			capacity := rqst.capacity;
 			if Eiffel_system.valid_dynamic_id (rqst.object_type_id) then
 				class_type := eiffel_system.type_of_dynamic_id (rqst.object_type_id, False)
-				dtype := eiffel_system.class_of_dynamic_id (rqst.object_type_id, False)
+				dynamic_class := eiffel_system.class_of_dynamic_id (rqst.object_type_id, False)
 			else
 					-- Oops, the run-time returned a type that is not in the system.
 					-- We then default to class ANY.
-				dtype := eiffel_system.Any_class.compiled_class
-				class_type := dtype.types.first
+				dynamic_class := eiffel_system.Any_class.compiled_class
+				class_type := dynamic_class.types.first
 				is_erroneous := True
 			end
 			object_address := addr;
@@ -67,13 +67,13 @@ feature {NONE} -- Creation
 			end
 			make (addr, 0, 0)
 			check
-				conformance: dtype.simple_conform_to (a_class)
+				conformance: dynamic_class.simple_conform_to (a_class)
 			end
-			class_type := dtype.types.first
+			class_type := dynamic_class.types.first
 		ensure
 			set: addr = object_address
-			dtype_set: dtype = a_class
-			class_type_set: class_type = dtype.types.first
+			dtype_set: dynamic_class = a_class
+			class_type_set: class_type = dynamic_class.types.first
 		end
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing

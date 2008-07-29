@@ -315,6 +315,11 @@ feature -- Expression evaluation messages
 			s_not_void: s /= Void
 		do Result := locale.formatted_string (locale.translation ("$1%N$2"), [cst_error_during_context_preparation, s]) end
 
+	msg_error_not_supported (a: ANY): STRING_32 is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("[$1] is not supported."), [a.generating_type]) end
+
 	msg_error_not_yet_ready (a: ANY; s: STRING_GENERAL): STRING_32 is
 		require
 			a_not_void: a /= Void
@@ -327,6 +332,22 @@ feature -- Expression evaluation messages
 			s_not_void: s /= Void
 			f_not_void: f /= Void
 		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generating_type, s, f]) end
+
+	msg_error_should_not_occur_during_evaluation (a: ANY): STRING_32 is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generating_type]) end
+
+	msg_error_unable_to_evaluate_creation_expression (tn: STRING_GENERAL): STRING_32 is
+		require
+			tn_attached: tn /= Void
+		do
+			if tn = Void then
+				Result := locale.formatted_string (locale.translation ("Evaluation of creation expression for type {$1} is not supported."), [tn])
+			else
+				Result := locale.translation ("Evaluation of creation expression for this type is not supported.")
+			end
+		end
 
 	msg_error_evaluating_parameter (a: ANY): STRING_32 is
 		require
@@ -385,8 +406,8 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("$1 => ERROR : other than function, constant and once : not available."), [a.generating_type]) end
 
-	cst_error_evaluation_limited_for_auto_expression: STRING_32 is
-		do Result := locale.translation ("Evaluation failed due to auto expression limitation.") end
+	cst_error_evaluation_side_effect_forbidden: STRING_32 is
+		do Result := locale.translation ("Evaluation stopped to avoid potential side effect.") end
 
 	cst_error_context_corrupted_or_not_found: STRING_32 is
 		do Result := locale.translation ("Context corrupted or not found") end

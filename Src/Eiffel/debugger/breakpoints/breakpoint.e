@@ -58,7 +58,7 @@ feature {NONE} -- Creation
 
 				--| Current part
 			if bp.condition /= Void then
-				expression := bp.condition.expression
+				expression := bp.condition.text
 			end
 			condition_type := bp.condition_type
 			continue_on_condition_failure := bp.continue_on_condition_failure
@@ -354,23 +354,22 @@ feature -- Properties
 
 feature -- Access
 
-	condition_respected: BOOLEAN is
+	condition_respected (eval: DBG_EXPRESSION_EVALUATION): BOOLEAN is
 			-- Is condition respected ?
 		require
-			condition.expression_evaluator /= Void
+			condition_attached: condition /= Void
+			eval_attached: eval /= Void
 		local
-			eval: DBG_EXPRESSION_EVALUATOR
 			ncv: like last_condition_value
 		do
-			eval := condition.expression_evaluator
 			if eval.error_occurred then
 				Result := not continue_on_condition_failure
 			else
 				inspect condition_type
 				when Condition_is_type_is_true then
-					Result := eval.final_result_is_true_boolean_value
+					Result := eval.value_is_true_boolean_value
 				when Condition_is_type_has_changed then
-					ncv := eval.final_result_value
+					ncv := eval.value
 					Result := last_condition_value = Void or ncv = Void
 						or else (not ncv.same_as (last_condition_value))
 					last_condition_value:= ncv
@@ -718,7 +717,7 @@ feature {BREAK_LIST} -- Saving protocol.
 			-- To be used after save and load operations, to restore the condition.
 		do
 			if expression /= Void then
-				create condition.make_for_context (expression)
+				create condition.make_with_context (expression)
 				if
 					condition.syntax_error_occurred
 					or else (condition_as_is_true and not condition.is_boolean_expression (location.routine) )

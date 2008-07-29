@@ -56,7 +56,7 @@ feature -- Query
 			dobj: DEBUGGED_OBJECT
 		do
 			dobj := debugged_object (addr, 0, 0)
-			Result := dobj.dtype
+			Result := dobj.dynamic_class
 		end
 
 	attributes_at_address (addr: STRING; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE] is

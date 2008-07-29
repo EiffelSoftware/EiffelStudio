@@ -66,7 +66,7 @@ create {EIFFEL_CALL_STACK}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: INTEGER) is
+	make (level: INTEGER; tid: like thread_id) is
 		do
 			Precursor (level, tid)
 			private_body_index := -1
@@ -295,7 +295,7 @@ feature -- Dotnet Properties
 			end
 			Result := private_dotnet_module_filename
 		end
-		
+
 feature -- Stack reset
 
 	reset_stack is

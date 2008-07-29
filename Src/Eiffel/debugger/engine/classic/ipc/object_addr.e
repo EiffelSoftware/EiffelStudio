@@ -17,7 +17,7 @@ inherit
 
 	DEBUG_EXT;
 
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 
 feature -- Access
 

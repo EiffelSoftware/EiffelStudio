@@ -26,9 +26,14 @@ feature -- Execution
 		require
 			valid_feature: a_feature /= Void
 			a_formatter_not_void: a_formatter /= Void
+		local
+			l_context: like new_format_context
 		do
 			text_formatter := a_formatter
-			internal_format (new_format_context (display_breakpoint, a_feature), a_feature)
+			l_context := new_format_context (display_breakpoint, a_feature)
+			if l_context /= Void then
+				internal_format (l_context, a_feature)
+			end
 		end
 
 	format_short (a_feature: E_FEATURE; display_breakpoint: BOOLEAN; a_formatter: TEXT_FORMATTER) is
@@ -38,12 +43,14 @@ feature -- Execution
 		require
 			valid_feature: a_feature /= Void
 		local
-			f: FEAT_TEXT_FORMATTER_DECORATOR
+			l_context: like new_format_context
 		do
 			text_formatter := a_formatter
-			f := new_format_context (display_breakpoint, a_feature)
-			f.set_is_short
-			internal_format (f, a_feature)
+			l_context := new_format_context (display_breakpoint, a_feature)
+			if l_context /= Void then
+				l_context.set_is_short
+				internal_format (l_context, a_feature)
+			end
 		end
 
 	simple_format_debuggable (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER) is
@@ -64,17 +71,22 @@ feature {NONE} -- Implementation
 
 	new_format_context (display_breakpoint: BOOLEAN; a_feature: E_FEATURE): FEAT_TEXT_FORMATTER_DECORATOR is
 			-- Context used by both `format' and `short_format'
+		require
+			a_feature_not_void: a_feature /= Void
 		do
-			if display_breakpoint then
-				create {DEBUG_TEXT_FORMATTER_DECORATOR} Result.make (a_feature.associated_class, text_formatter);
-			else
-				create Result.make (a_feature.associated_class, text_formatter);
+			if a_feature.is_valid then
+				if display_breakpoint then
+					create {DEBUG_TEXT_FORMATTER_DECORATOR} Result.make (a_feature.associated_class, text_formatter);
+				else
+					create Result.make (a_feature.associated_class, text_formatter);
+				end
 			end
 		end
 
 	internal_format (a_context: FEAT_TEXT_FORMATTER_DECORATOR; a_feature: E_FEATURE) is
 			-- Format implementation
 		require
+			a_context_not_void: a_context /= Void
 			valid_feature: a_feature /= Void
 		do
 			if is_clickable then

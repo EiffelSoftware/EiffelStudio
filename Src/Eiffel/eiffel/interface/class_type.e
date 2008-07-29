@@ -689,6 +689,7 @@ feature -- Generation
 
 			current_class := associated_class
 			current_eiffel_class ?= current_class
+			check current_eiffel_class_not_void: current_eiffel_class /= Void end
 
 			l_byte_context := byte_context
 
@@ -725,6 +726,19 @@ feature -- Generation
 						generate_c_code := l_feature_i.used
 					end
 					i := i + 1
+				end
+
+					-- We have to also process inline agents (see eweasel test#final063)
+				if not generate_c_code and current_eiffel_class.has_inline_agents then
+					from
+						l_inline_agent_table := current_eiffel_class.inline_agent_table
+						l_inline_agent_table.start
+					until
+						generate_c_code or l_inline_agent_table.after
+					loop
+						generate_c_code := l_inline_agent_table.item_for_iteration.used
+						l_inline_agent_table.forth
+					end
 				end
 			else
 				generate_c_code := is_modifiable
@@ -801,16 +815,15 @@ feature -- Generation
 					i := i + 1
 				end
 
-				if current_eiffel_class /= Void and then current_eiffel_class.has_inline_agents then
+				if current_eiffel_class.has_inline_agents then
 					from
 						l_inline_agent_table := current_eiffel_class.inline_agent_table
 						l_inline_agent_table.start
 					until
 						l_inline_agent_table.after
 					loop
-						l_feature_i := l_inline_agent_table.item_for_iteration
 							-- Generate the C code of `feature_i'
-						generate_feature (l_feature_i, buffer)
+						generate_feature (l_inline_agent_table.item_for_iteration, buffer)
 						l_inline_agent_table.forth
 					end
 				end

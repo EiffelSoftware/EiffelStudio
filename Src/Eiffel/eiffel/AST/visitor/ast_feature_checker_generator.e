@@ -1599,7 +1599,6 @@ feature -- Implementation
 							end
 
 								-- Supplier dependances update
-							if not l_feature.is_inline_agent then
 							if l_is_target_of_creation_instruction then
 								create l_depend_unit.make_with_level (l_last_id, l_feature,
 									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
@@ -1623,7 +1622,6 @@ feature -- Implementation
 								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 							end
 							context.supplier_ids.extend (l_depend_unit)
-							end
 
 							if l_is_assigner_call then
 								process_assigner_command (l_last_id, l_feature)
@@ -8215,6 +8213,7 @@ feature {NONE} -- Agents
 			l_tuple_type: TUPLE_TYPE_A
 			l_target_closed: BOOLEAN
 			l_rout_creation: ROUTINE_CREATION_B
+			l_depend_unit: DEPEND_UNIT
 		do
 
 			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
@@ -8318,6 +8317,12 @@ feature {NONE} -- Agents
 					False,
 					False)
 			end
+
+				-- We need to record a dependance between the fake inline agent and the
+				-- enclosing routine being analyzed.
+			create l_depend_unit.make_with_level (l_cur_class.class_id, l_func, depend_unit_level)
+			context.supplier_ids.extend (l_depend_unit)
+
 			last_byte_node := l_rout_creation
 		end
 
@@ -8456,7 +8461,7 @@ feature {NONE} -- Agents
 			end
 			a_feat.process_pattern
 			l_cur_class.insert_changed_assertion (a_feat)
-			end
+		end
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 

@@ -38,13 +38,13 @@
 #include "eif_portable.h"
 #include <sys/types.h>
 #include "app_proto.h"
+#include "app_transfer.h"
 #include "select.h"
 #include "ewbio.h"
 #include "listen.h"
 #include "eif_logfile.h"
 
 #include "stream.h"
-extern STREAM *app_sp;	/* Socket used to chat with the daemon */
 
 rt_public void wide_listen(void)
 {

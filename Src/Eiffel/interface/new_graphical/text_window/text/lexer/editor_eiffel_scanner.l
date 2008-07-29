@@ -295,8 +295,7 @@ UTF8_tail	[\x80-\xBF]
 					update_token_list
 					}
 
-\'{UTF8_char}{1,2}			|
-\'%\/[0-9]+(\/)?	{
+\'([^' \t\r\n]|{NON_ASCII})+		{
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
 						curr_token := new_text (text)

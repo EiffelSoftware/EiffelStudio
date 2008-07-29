@@ -12,26 +12,44 @@ class
 
 inherit
 	ES_TBT_GRID_LAYOUT [EIFFEL_TEST_I]
+		redefine
+			project,
+			is_project_available,
+			populate_item_row
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_project: like project)
-			-- Initialize `Current'
-			--
-			-- `a_project': Project used to retrieve class and feature instances
+	make (a_test_suite: like test_suite)
+			-- Initialize `Current'.
 		do
-			project := a_project
+			test_suite := a_test_suite
 		ensure
-			project_set: project = a_project
+			test_suite_set: test_suite = a_test_suite
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
 	project: !E_PROJECT
 			-- <Precursor>
+		do
+			Result := test_suite.service.project
+		end
+
+	test_suite: SERVICE_CONSUMER [EIFFEL_TEST_SUITE_S]
+			-- Consumer for test suite service
+
+feature -- Status report
+
+	is_project_available: BOOLEAN
+			-- <Precursor>
+		do
+			Result := test_suite.is_service_available and then
+				test_suite.service.is_project_initialized
+		end
 
 feature -- Factory
 

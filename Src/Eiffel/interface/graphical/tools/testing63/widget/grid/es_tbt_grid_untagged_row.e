@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TBT_GRID_UNTAGGED_ROW
+	ES_TBT_GRID_UNTAGGED_ROW [G -> TAGABLE_I]
 
 inherit
-	ES_TBT_GRID_DATA [TAGABLE_I]
+	ES_TBT_GRID_DATA [G]
 
 create
 	make

@@ -9,7 +9,7 @@ frozen class
 	ES_TESTING_TOOL_63
 
 inherit
-	ES_TOOL [ES_TESTING_TOOL_PANEL_63]
+	ES_STONABLE_TOOL [ES_TESTING_TOOL_PANEL_63]
 
 create {NONE}
 	default_create
@@ -19,7 +19,7 @@ feature -- Access
 	title: STRING_32
 			-- <Precursor>
 		do
-			Result := interface_names.t_testing
+			Result :=  local_formatter.translation (t_title)
 		end
 
 	icon: EV_PIXEL_BUFFER
@@ -34,6 +34,13 @@ feature -- Access
 			Result := stock_pixmaps.tool_external_output_icon
 		end
 
+feature -- Status report
+
+	is_stone_usable (a_stone: ?like stone): BOOLEAN
+		do
+			Result := {l_class_stone: CLASSC_STONE} a_stone
+		end
+
 feature {NONE} -- Factory
 
 	create_tool: ES_TESTING_TOOL_PANEL_63
@@ -41,5 +48,9 @@ feature {NONE} -- Factory
 		do
 			create Result.make (window, Current)
 		end
+
+feature {NONE} -- Internationalization
+
+	t_title: STRING = "Testing tool"
 
 end

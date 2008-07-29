@@ -16,10 +16,11 @@ class
 	ES_TBT_GRID [G -> TAGABLE_I]
 
 inherit
-	ES_GRID
-		rename
-			remove_item as remove_grid_item,
-			wipe_out as wipe_out_grid
+	ES_WIDGET [EV_CELL]
+		undefine
+			is_interface_usable
+		redefine
+			on_before_initialize
 		end
 
 	TAG_BASED_TREE [G]
@@ -27,8 +28,7 @@ inherit
 			make as make_tree,
 			parent as unused_parent
 		undefine
-			default_create,
-			copy,
+			is_interface_usable,
 			unused_parent,
 			child_for_token,
 			add_child,
@@ -38,7 +38,7 @@ inherit
 		redefine
 			tree,
 			wipe_out,
-			refill,
+			fill,
 			add_untagged_item,
 			remove_untagged_item
 		end
@@ -48,16 +48,6 @@ inherit
 			tag as tag_prefix,
 			row as unused_row,
 			parent as unused_parent
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		undefine
-			default_create, copy
 		end
 
 create
@@ -65,25 +55,10 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_collection: like observed_collection; a_prefix: like tag_prefix; a_factory: like factory)
-			-- Initialize `Current'
-			--
-			-- `a_collection': Active collection containing items for which tree shall be built.
-			-- `a_prefix': The tree will search for tags in the collection beginning with `a_prefix'. For
-			--             each tag found, it will insert a leaf holding the corresponding item. The path to
-			--             the leaf is represented by the remaining suffix, which is the original tag
-			--             without the leading prefix.
-			--             Items which were not tagged with a tag beginning with `a_prefix', are shown
-			--             in separate rows at the botton of the grid.
-			-- `a_layout': Layout defining look and functionality of grid items
-		require
-			a_collection_usable: a_collection.is_interface_usable
-			a_prefix_valid: is_valid_tag (a_prefix)
-		local
-			l_pnd_helper: EB_EDITOR_TOKEN_GRID_SUPPORT
+	on_before_initialize is
+			-- <Precursor>
 		do
-			factory := a_factory
-
+			Precursor
 				-- attach since at root level we always want to insert children and items directly
 			create cached_children.make_default
 			create cached_items.make_default
@@ -91,39 +66,44 @@ feature {NONE} --Initialization
 				-- satisfy all invariants by creating `internal_untagged_item', even though `make_tree'
 				-- will overwrite it again.
 			create internal_untagged_items.make_default
+		end
 
-				-- create grid
-			default_create
-			enable_tree
-			hide_tree_node_connectors
-			set_dynamic_content_function (agent computed_grid_item)
-			enable_partial_dynamic_content
-			enable_single_row_selection
-			row_expand_actions.extend (agent on_row_expansion)
+	build_widget_interface (a_cell: EV_CELL)
+			-- <Precursor>
+		local
+			l_pnd_helper: EB_EDITOR_TOKEN_GRID_SUPPORT
+		do
+			create grid
+			grid.enable_tree
+			grid.hide_tree_node_connectors
+			grid.set_dynamic_content_function (agent computed_grid_item)
+			grid.enable_partial_dynamic_content
+			grid.enable_single_row_selection
+			grid.row_expand_actions.extend (agent on_row_expansion)
 
 				-- grid appearance
-			set_focused_selection_color (preferences.editor_data.selection_background_color)
-			set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
-			row_select_actions.extend (agent highlight_row)
-			row_deselect_actions.extend (agent dehighlight_row)
-			focus_in_actions.extend (agent change_focus)
-			focus_out_actions.extend (agent change_focus)
-			set_focused_selection_text_color (preferences.editor_data.selection_text_color)
+			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
+			grid.row_select_actions.extend (agent highlight_row)
+			grid.row_deselect_actions.extend (agent dehighlight_row)
+			grid.focus_in_actions.extend (agent change_focus)
+			grid.focus_out_actions.extend (agent change_focus)
+			grid.set_focused_selection_text_color (preferences.editor_data.selection_text_color)
 
 				-- pick and drop support
-			create l_pnd_helper.make_with_grid (Current)
+			create l_pnd_helper.make_with_grid (grid)
 			l_pnd_helper.enable_grid_item_pnd_support
 
-				-- initialize tree
-			make_tree (a_collection, a_prefix)
+			a_cell.extend (grid)
 		end
 
 	initialize_layout
 			-- Initialize columns of `grid'.
 		do
-			set_column_count_to (factory.column_count.as_integer_32)
-			if {l_header: !EV_GRID_HEADER} header then
-				factory.populate_header (l_header)
+			grid.clear
+			grid.set_column_count_to (layout.column_count.as_integer_32)
+			if {l_header: !EV_GRID_HEADER} grid.header then
+				layout.populate_header (l_header)
 			end
 		end
 
@@ -135,10 +115,24 @@ feature -- Access
 			Result := Current
 		end
 
+feature {ES_TBT_GRID_NODE_CONTAINER} -- Access
+
+	grid: !ES_GRID
+			-- Actual grid visualizing tree as in items
+
 feature {NONE} -- Access
 
-	factory: !ES_TBT_GRID_LAYOUT [G]
-			-- Factory responsible for drawing grid items
+	layout: !ES_TBT_GRID_LAYOUT [G]
+			-- Layout responsible for drawing grid items and header
+		do
+			if internal_layout = Void then
+				create internal_layout
+			end
+			Result ?= internal_layout
+		end
+
+	internal_layout: ?like layout
+			-- Internal storage for factory
 
 	untagged_subrow: ?EV_GRID_ROW
 			-- Anchor for row where list of untagged items start
@@ -176,12 +170,39 @@ feature {NONE} -- Access
 	last_untagged_index: INTEGER
 			-- Last valid index for untagged item
 		do
-			Result := row_count + 1
+			Result := grid.row_count + 1
+		end
+
+feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_WIDGET} and Precursor {TAG_BASED_TREE}
+		end
+
+feature -- Status setting
+
+	set_layout (a_layout: ?like layout)
+			-- Define a specific layout for grid items
+			--
+			-- `a_layout': Layout which shall be used to build grid columns and items. Can be Void to make
+			--             `Current' use the default layout {ES_TBT_GRID_LAYOUT}.
+		require
+			not_connected: not is_connected
+		do
+			internal_layout := a_layout
+			if is_connected then
+				grid.clear
+				initialize_layout
+			end
+		ensure
+			internal_layout_set: internal_layout = a_layout
 		end
 
 feature {NONE} -- Element change
 
-	refill is
+	fill is
 			-- <Precursor>
 		do
 			initialize_layout
@@ -191,10 +212,12 @@ feature {NONE} -- Element change
 	wipe_out
 			-- <Precursor>
 		do
-			wipe_out_grid
+			grid.wipe_out
 			cached_children.wipe_out
 			cached_items.wipe_out
 			internal_untagged_items.wipe_out
+			untagged_subrow := Void
+			first_item_subrow := Void
 		end
 
 	add_untagged_item (a_item: !G) is
@@ -202,31 +225,36 @@ feature {NONE} -- Element change
 		local
 			i: INTEGER
 			l_row: !EV_GRID_ROW
+			l_ut_row: EV_GRID_ROW
 			l_new: ES_TBT_GRID_TAGABLE [G]
-			l_new_ut: ES_TBT_GRID_UNTAGGED_ROW
+			l_new_ut: ES_TBT_GRID_UNTAGGED_ROW [G]
 		do
 			if untagged_subrow /= Void then
 				from
 					i := first_untagged_index
 				until
-					i = last_untagged_index or else ({l_data: ES_TBT_GRID_TAGABLE [G]} row (i).data and then
+					i = last_untagged_index or else ({l_data: ES_TBT_GRID_TAGABLE [G]} grid.row (i).data and then
 					l_data.item.name > a_item.name)
 				loop
-					i := i + row (i).subrow_count_recursive + 1
+					i := i + grid.row (i).subrow_count_recursive + 1
 				end
 			else
 					-- Insert a "untagged" row
 				i := last_untagged_index
-				insert_new_row (i)
-				l_row ?= row (i)
-				create l_new_ut.make (l_row)
-				untagged_subrow := l_row
+				grid.insert_new_row (i)
+				l_ut_row ?= grid.row (i)
+				check
+					attached: l_ut_row /= Void
+				end
+				create l_new_ut.make (l_ut_row)
+				l_ut_row.ensure_expandable
+				untagged_subrow := l_ut_row
 				i := i + 1
 			end
-			insert_new_row (i)
-			l_row ?= row (i)
-			create l_new.make (l_row, a_item)
 			Precursor (a_item)
+			grid.insert_new_row_parented (i, untagged_subrow)
+			l_row ?= grid.row (i)
+			create l_new.make (l_row, a_item)
 		end
 
 	remove_untagged_item (a_item: !G)
@@ -236,17 +264,17 @@ feature {NONE} -- Element change
 		do
 			Precursor (a_item)
 			if untagged_items.is_empty then
-				remove_row (untagged_subrow.index)
+				grid.remove_row (untagged_subrow.index)
 			else
 				from
 					i := first_untagged_index
 				until
-					{l_data: ES_TBT_GRID_TAGABLE [G]} tree.row (i).data and then
+					{l_data: ES_TBT_GRID_TAGABLE [G]} tree.grid.row (i).data and then
 						l_data.item = a_item
 				loop
-					i := i + row (i).subrow_count_recursive + 1
+					i := i + grid.row (i).subrow_count_recursive + 1
 				end
-				remove_row (i)
+				grid.remove_row (i)
 			end
 		end
 
@@ -258,9 +286,9 @@ feature {NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			l_data: ES_TBT_GRID_DATA [G]
 		do
-			l_row := row (a_row_index)
+			l_row := grid.row (a_row_index)
 			l_data ?= l_row.data
-			l_data.populate_row (factory)
+			l_data.populate_row (layout)
 			Result := l_row.item (a_col_index)
 		end
 
@@ -277,7 +305,7 @@ feature {NONE} -- Implementation
 	highlight_row (a_row: !EV_GRID_ROW) is
 			-- Make `a_row' look like it is fully selected.
 		do
-			if has_focus then
+			if grid.has_focus then
 				a_row.set_background_color (preferences.editor_data.selection_background_color)
 			else
 				a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
@@ -295,8 +323,16 @@ feature {NONE} -- Implementation
 		local
 			l_selected: LIST [!EV_GRID_ROW]
 		do
-			l_selected ?= selected_rows
+			l_selected ?= grid.selected_rows
 			l_selected.do_all (agent highlight_row)
+		end
+
+feature {NONE} -- Factory
+
+	create_widget: EV_CELL
+			-- <Precursor>
+		do
+			create Result
 		end
 
 invariant

@@ -98,17 +98,17 @@ feature {NONE} -- Element change
 			from
 				i := first_child_index
 			until
-				i = last_child_index or else ({l_item: ES_TBT_GRID_NODE [G]} tree.row (i).data and then
+				i = last_child_index or else ({l_item: ES_TBT_GRID_NODE [G]} tree.grid.row (i).data and then
 					l_item.token > a_token)
 			loop
-				i := i + tree.row (i).subrow_count_recursive + 1
+				i := i + tree.grid.row (i).subrow_count_recursive + 1
 			end
 			if is_root then
-				tree.insert_new_row (i)
+				tree.grid.insert_new_row (i)
 			else
-				tree.insert_new_row_parented (i, row)
+				tree.grid.insert_new_row_parented (i, row)
 			end
-			l_row ?= tree.row (i)
+			l_row ?= tree.grid.row (i)
 			l_row.ensure_expandable
 			create l_new.make (l_row, Current, a_token)
 			cached_children.put (l_new, a_token)
@@ -124,17 +124,17 @@ feature {NONE} -- Element change
 			from
 				i := first_item_index
 			until
-				i = last_item_index or else ({l_data: ES_TBT_GRID_TAGABLE [G]} tree.row (i).data and then
+				i = last_item_index or else ({l_data: ES_TBT_GRID_TAGABLE [G]} tree.grid.row (i).data and then
 					l_data.item.name > a_item.name)
 			loop
-				i := i + tree.row (i).subrow_count_recursive + 1
+				i := i + tree.grid.row (i).subrow_count_recursive + 1
 			end
 			if is_root then
-				tree.insert_new_row (i)
+				tree.grid.insert_new_row (i)
 			else
-				tree.insert_new_row_parented (i, row)
+				tree.grid.insert_new_row_parented (i, row)
 			end
-			l_row ?= tree.row (i)
+			l_row ?= tree.grid.row (i)
 			if first_item_subrow = Void or else first_item_subrow.index > l_row.index then
 				first_item_subrow := l_row
 			end
@@ -148,7 +148,7 @@ feature {NONE} -- Element change
 			l_node: like child_for_token
 		do
 			l_node := child_for_token (a_token)
-			tree.remove_row (l_node.row.index)
+			tree.grid.remove_row (l_node.row.index)
 			Precursor (a_token)
 		end
 
@@ -161,21 +161,21 @@ feature {NONE} -- Element change
 			from
 				i := first_item_index
 			until
-				{l_data: ES_TBT_GRID_TAGABLE [G]} tree.row (i).data and then
+				{l_data: ES_TBT_GRID_TAGABLE [G]} tree.grid.row (i).data and then
 					l_data.item = a_item
 			loop
-				i := i + tree.row (i).subrow_count_recursive + 1
+				i := i + tree.grid.row (i).subrow_count_recursive + 1
 			end
 			if cached_items.is_empty then
 				first_item_subrow := Void
-			elseif tree.row (i) = first_item_subrow then
-				first_item_subrow := tree.row (i + 1)
+			elseif tree.grid.row (i) = first_item_subrow then
+				first_item_subrow := tree.grid.row (i + 1)
 			end
-			tree.remove_row (i)
+			tree.grid.remove_row (i)
 		end
 
 invariant
-	contains_items_implies_subrow_attached: (is_evaluated and then not items.is_empty) implies
-		first_item_subrow /= Void
+	items_not_empty_implies_subrow: (is_interface_usable and then is_evaluated and then not items.is_empty)
+		implies first_item_subrow /= Void
 
 end

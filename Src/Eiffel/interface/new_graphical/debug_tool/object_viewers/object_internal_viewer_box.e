@@ -120,8 +120,9 @@ feature -- Change
 		local
 			cdv, dv: DUMP_VALUE
 			info: ARRAY [TUPLE [name: STRING; value: DUMP_VALUE]]
-			i: INTEGER
+			i,r: INTEGER
 			s: STRING_32
+			glab: EV_GRID_LABEL_ITEM
 			grid: EV_GRID
 		do
 			clear
@@ -138,22 +139,29 @@ feature -- Change
 						else
 							from
 								i := info.lower
+								r := 1
 								grid.insert_new_rows (info.count, 1)
 							until
 								i > info.upper
 							loop
-								grid.set_item (1, i, create {EV_GRID_LABEL_ITEM}.make_with_text (info[i].name))
 								dv := info[i].value
+								grid.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text (info[i].name))
 								if dv /= Void then
 									if dv.has_formatted_output then
 										s := dv.string_representation
 									else
 										s := dv.output_value (True)
 									end
-									grid.set_item (2, i, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
+									create glab.make_with_text (s)
+									grid.set_item (2, r, glab)
+									r := r + 1
 								else
-									grid.set_item (2, i, create {EV_GRID_ITEM})
+									create glab
+									glab.set_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
+									grid.set_item (2, r, glab)
+									r := r + 1
 								end
+
 								i := i + 1
 							end
 							if grid.column_count > 1 then

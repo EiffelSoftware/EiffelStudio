@@ -12,5 +12,5 @@ copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 copy_raw repeated.e $CLUSTER repeated.e
 compile_melted
-compile_result validity_error TEST VDRS4
+compile_result validity_error TEST VDRS(4)
 test_end

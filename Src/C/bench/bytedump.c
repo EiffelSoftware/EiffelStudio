@@ -391,7 +391,7 @@ int main (int argc, char **argv)
 }
 /*------------------------------------------------------------------*/
 
-static  void    read_byte_code ()
+static  void    read_byte_code (void)
 
 {
 	body_id = rbody_index ();
@@ -405,7 +405,7 @@ static  void    read_byte_code ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    print_byte_code ()
+static  void    print_byte_code (void)
 
 {
 	uint32  rtype;  /* Type of routine */
@@ -578,7 +578,7 @@ static  void    advance (int where)
 }
 /*------------------------------------------------------------------*/
 
-static  void    print_instructions ()
+static  void    print_instructions (void)
 
 {
 	unsigned char   cval; /* !!! */
@@ -1435,7 +1435,7 @@ static  void    print_ctype (short type)
 }
 /*------------------------------------------------------------------*/
 
-static  void    print_cid ()
+static  void    print_cid (void)
 
 {
 	short t;
@@ -1449,7 +1449,7 @@ static  void    print_cid ()
 }
 /*------------------------------------------------------------------*/
 
-static BODY_INDEX rbody_index ()
+static BODY_INDEX rbody_index (void)
 {
 	BODY_INDEX result;
 
@@ -1464,7 +1464,7 @@ static BODY_INDEX rbody_index ()
 	return result;
 }
 
-static EIF_INTEGER_32 rlong ()
+static EIF_INTEGER_32 rlong (void)
 {
 	EIF_INTEGER_32 result;
 
@@ -1505,7 +1505,7 @@ static  unsigned char *rbuf (int size)
 }
 /*------------------------------------------------------------------*/
 
-static  EIF_CHARACTER * rstr ()
+static  EIF_CHARACTER * rstr (void)
 {
 	static char buf [1024];
 	EIF_CHARACTER * result;
@@ -1542,7 +1542,7 @@ static  EIF_CHARACTER * rstr ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    panic ()
+static  void    panic (void)
 
 {
 	if (ifp != (FILE *) 0)

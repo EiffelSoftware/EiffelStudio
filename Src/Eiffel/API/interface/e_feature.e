@@ -64,6 +64,15 @@ feature -- Initialization
 			feature_id_set: feature_id = i
 		end
 
+feature -- Status report
+
+	is_valid: BOOLEAN is
+			-- Is current feature still valid?
+		do
+			Result := (associated_class_id > 0 and then eiffel_system.class_of_id (associated_class_id) /= Void) and then
+				(written_in > 0 and then eiffel_system.class_of_id (written_in) /= Void)
+		end
+
 feature -- Properties
 
 	name_id: INTEGER
@@ -539,7 +548,9 @@ feature -- Access
 							l_class_c := l_system.class_of_id (l_depend_unit.class_id)
 							if l_class_c /= Void then
 								l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
-								if l_e_feature /= Void then
+									-- We ignore inline agents because what they called are already
+									-- propagated to the enclosing feature.
+								if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
 									Result.extend ([l_class_c, l_e_feature.name])
 								end
 							end
@@ -995,6 +1006,10 @@ feature {FEATURE_I} -- Setting
 		ensure
 			written_feature_id_set: written_feature_id = v
 		end
+
+invariant
+	associated_class_not_void: is_valid implies associated_class /= Void
+	written_class_not_void: is_valid implies written_class /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

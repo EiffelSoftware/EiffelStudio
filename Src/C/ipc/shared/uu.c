@@ -42,6 +42,8 @@
 */
 
 #include "eif_eiffel.h"
+
+#ifdef EIF_WINDOWS
 #include "rt_assert.h"
 #include "windows.h"
 #include "uu.h"
@@ -141,3 +143,5 @@ char *uuencode_str (char *s, int size)
 			uuencode (i, j);
 	return Result;
 }
+
+#endif

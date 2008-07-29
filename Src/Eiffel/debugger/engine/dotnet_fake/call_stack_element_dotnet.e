@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (level, tid: INTEGER) is
+	make (level: INTEGER; tid: like thread_id) is
 		do
 		end
 

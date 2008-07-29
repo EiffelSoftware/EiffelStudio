@@ -17,7 +17,7 @@ create
 
 feature -- Class stack creation
 
-	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do

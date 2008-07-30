@@ -148,7 +148,10 @@ feature -- Setting
 
 feature {NONE} -- Type anchor
 
-	class_type: EIFFEL_CLASS_I
+	class_type: EIFFEL_CLASS_I is
+			-- <Precursor>
+		do
+		end
 
 invariant
 	name_not_void: name /= Void

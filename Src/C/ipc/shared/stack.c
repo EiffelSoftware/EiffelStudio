@@ -560,8 +560,13 @@ rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type,
 			ivalue(&ip, IV_RESULT, 0 /*useless*/, start);
 			break;
 		default:
+				/* To ensure that we never return a non-initialized value. */
+			memset(&ip, 0, sizeof(EIF_DEBUG_VALUE));
 			break;
 		}
+	} else {
+			/* To ensure that we never return a non-initialized value. */
+		memset(&ip, 0, sizeof(EIF_DEBUG_VALUE));
 	}
 
 	restore_stacks(); /* restore context (so that RTMS can run properly) */

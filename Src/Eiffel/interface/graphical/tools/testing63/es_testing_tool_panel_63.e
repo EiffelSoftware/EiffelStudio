@@ -51,7 +51,7 @@ feature {NONE} -- Initialization: widgets
 			build_control_bar (a_widget)
 			build_view_bar (a_widget)
 
-			create tree_view.make
+			create tree_view.make (develop_window)
 
 			a_widget.extend (tree_view.widget)
 		end

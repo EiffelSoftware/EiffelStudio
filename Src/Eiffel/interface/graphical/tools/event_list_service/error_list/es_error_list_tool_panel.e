@@ -14,6 +14,7 @@ inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
 		redefine
 			build_tool_interface,
+			on_after_initialized,
 			internal_recycle,
 			create_right_tool_bar_items,
 			is_appliable_event,
@@ -24,6 +25,13 @@ inherit
 			update_content_applicable_widgets,
 			show,
 			show_context_menu
+		end
+
+	SESSION_EVENT_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_session_value_changed
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -48,7 +56,6 @@ feature {NONE} -- Iniitalization
 			-- `a_widget': A widget to build the tool interface using.
 		local
 			l_col: EV_GRID_COLUMN
-			l_session: SESSION_I
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_widget)
 			a_widget.set_column_count_to (position_column)
@@ -91,21 +98,21 @@ feature {NONE} -- Iniitalization
 				a_widget.column (error_column),
 				a_widget.column (context_column),
 				a_widget.column (position_column)>>)
+		end
 
+	on_after_initialized
+			-- <Precursor>
+		do
 				-- Enable copying to clipboard
 			enable_copy_to_clipboard
 
 				-- Bind redirecting pick and drop actions
-			stone_director.bind (a_widget)
-
-				-- Set UI based on initial state
-			update_content_applicable_navigation_buttons
+			stone_director.bind (grid_events)
 
 				-- Hook up events for session data
 			if session_manager.is_service_available then
-				l_session := session_manager.service.retrieve (False)
-				l_session.value_changed_event.subscribe (agent on_session_value_changed)
-				if {l_expand: !BOOLEAN_REF} l_session.value_or_default (expand_errors_session_id, False) then
+				session_data.connect_events (Current)
+				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
 					expand_errors := l_expand.item
 					if expand_errors then
 						expand_errors_button.enable_select
@@ -114,24 +121,30 @@ feature {NONE} -- Iniitalization
 					end
 				end
 			end
+
+				-- Set UI based on initial state
+			update_content_applicable_navigation_buttons
+
+			Precursor
 		end
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
-			-- Recycle tool.
+	internal_recycle
+			-- <Precursor>
 		do
 			if is_initialized then
+				if session_manager.is_service_available then
+					if session_data.is_connected (Current) then
+						session_data.disconnect_events (Current)
+					end
+				end
+
 				stone_director.unbind (grid_events)
 
 				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
 				errors_button.select_actions.prune (agent on_toogle_errors_button)
 				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
-
-				if session_manager.is_service_available then
-					session_manager.service.retrieve (False).value_changed_event.unsubscribe (agent on_session_value_changed)
-				end
-
 			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
@@ -746,13 +759,8 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
-			-- Called when the session changes
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_session_attached: a_session /= Void
-			a_session_is_interface_usable: a_session.is_interface_usable
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+			-- <Precursor>
 		do
 			if a_id.is_equal (expand_errors_session_id) then
 					-- Retrieve global session

@@ -46,7 +46,9 @@ feature -- Processing
 			create l_full_path.make (128)
 
 			if not l_dir.is_readable then
-				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
+				if not a_cluster.is_test_cluster then
+					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
+				end
 			else
 					-- look for classes in directory itself.
 				l_files := l_dir.filenames

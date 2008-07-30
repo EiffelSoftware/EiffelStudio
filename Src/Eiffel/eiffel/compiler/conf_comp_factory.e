@@ -15,6 +15,7 @@ inherit
 			new_class_assembly,
 			new_class_partial,
 			new_cluster,
+			new_test_cluster,
 			new_override,
 			new_physical_assembly,
 			new_assertions
@@ -41,6 +42,12 @@ feature
 		end
 
 	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I is
+			-- Create a `CONF_CLUSTER' object.
+		do
+			create Result.make (a_name, a_directory, a_target)
+		end
+
+	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): TEST_CLUSTER_I is
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)

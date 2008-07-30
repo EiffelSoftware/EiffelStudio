@@ -99,7 +99,6 @@ feature -- Status settings
 			--
 			-- Note: see `suspend_subscription' for information on stacked suspension.
 		require
-			is_interface_usable: is_interface_usable
 			is_suspended: is_suspended
 		do
 			suspension_count := suspension_count - 1

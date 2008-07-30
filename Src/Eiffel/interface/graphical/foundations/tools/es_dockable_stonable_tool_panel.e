@@ -88,13 +88,13 @@ feature {NONE} -- Clean up
 			end
 			Precursor
 		ensure then
-			content_veto_action_removed: old (content.drop_actions).veto_pebble_function = Void
+			content_veto_action_removed: (old content.drop_actions).veto_pebble_function = Void
 		end
 
 feature {ES_STONABLE_I, ES_TOOL} -- Access
 
 	frozen stone: STONE
-			-- Last set stone
+			-- <Precursor>
 		do
 			if {l_stonable: !ES_STONABLE_I} tool_descriptor then
 				Result := l_stonable.stone
@@ -104,7 +104,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Access
 feature {NONE} -- Access
 
 	tool_descriptor: ES_STONABLE_TOOL [like Current]
-			-- Descriptor used to created tool.
+			-- <Precursor>
 
 feature {ES_STONABLE_I, ES_TOOL} -- Element change
 

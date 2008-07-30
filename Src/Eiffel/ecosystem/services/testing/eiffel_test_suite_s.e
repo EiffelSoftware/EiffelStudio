@@ -2,12 +2,6 @@ indexing
 	description: "[
 		Service interface for managing, creating and executing tests.
 		
-		Tests are added or removed by the service internally. Usually the list of tests is updated after
-		a compilation. However clients such as test factories can request that the test suite
-		synchronizes with classes changed since last compilation. Since in these cases it can not be
-		determined whether a class is a valid test class, the test suite will assume it. After the system
-		has compiled, it assures all tests are actually valid tests.
-		
 		The test suite provides a registrar containing a number of available test processors. Test
 		processors are usedon_ to perform actions on existing tests or to produce new tests. See
 		{EIFFEL_TEST_PROCESSOR_I} and descendants for more details. Test processors can only be launched
@@ -22,24 +16,12 @@ deferred class
 inherit
 	SERVICE_I
 
-	EIFFEL_TEST_COLLECTION_I
-		rename
-			are_tests_available as is_project_initialized
+	EIFFEL_TEST_MANAGER_I
 		redefine
 			events
 		end
 
 feature -- Access
-
-	project: !E_PROJECT
-		require
-			usable: is_interface_usable
-			initialized: is_project_initialized
-		deferred
-		ensure
-			project_initialized: Result.initialized and Result.workbench.universe_defined and
-			                     Result.system_defined and then Result.universe.target /= Void
-		end
 
 	default_executor: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
 			-- Type for default executor
@@ -90,18 +72,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	is_project_initialized: BOOLEAN
-			-- Has `Current' already received a project for which it should manage tests?
-		deferred
-		end
-
-	is_updating_tests: BOOLEAN
-			-- Is test list currently beeing updated?
-		require
-			usable: is_interface_usable
-		deferred
-		end
 
 	count_passing: NATURAL
 			-- Number of passing tests in `tests'
@@ -163,56 +133,6 @@ feature -- Status setting
 		ensure
 			not_blocking_equals_running_conf: not a_blocking = (factory (a_type).is_running and
 				factory (a_type).configuration = a_conf)
-		end
-
-feature -- Basic functionality
-
-	synchronize_tests (a_class: !CLASS_I)
-			-- Parse class text and add test for every new test routine found. Tests found in class which
-			-- test suite is already aware of will be updated. Existing tests which can not be found in
-			-- class text will be removed.
-			--
-			-- Note: Any changes made to test collection by calling `synchronize_tests' are tempoary and might be
-			--       undone next time the system recompiles. Also it can not be guarantueed that `a_class'
-			--       is a valid test class inheriting from {TEST_SET}, so `synchronize_tests' will add or update
-			--       any tests optimistically.
-			--       If the class contains syntax errors, no changes to `tests' will be made.
-			--
-			-- `a_class': Class to be parsed for new, updated or removed tests.
-		require
-			usable: is_interface_usable
-			project_available: is_project_initialized
-			not_updating: not is_updating_tests
-			a_class_in_project: is_class_in_project (a_class)
-		deferred
-		ensure
-			not_updating: not is_updating_tests
-		end
-
-feature -- Query
-
-	is_class_in_project (a_class: !CLASS_I): BOOLEAN is
-			-- Does `a_class' belong to `project'?
-			--
-			-- `a_class': Class for which it should be determined whether it exists in `project'.
-			-- `Result': True is class can be found in `project', False otherwise
-		require
-			usable: is_interface_usable
-			project_available: is_project_initialized
-		do
-			Result := project.universe.class_named (a_class.name, a_class.group) /= Void
-		end
-
-	is_test_class (a_class: !CLASS_I): BOOLEAN is
-			-- Does `Current' recognize `a_class' as a valid test class?
-			--
-			-- `a_class': Class for which it should be determined whether it is a test class.
-			-- `Result': True is `a_class' is a test class, False otherwise.
-		require
-			usable: is_interface_usable
-			project_available: is_project_initialized
-			class_in_project: is_class_in_project (a_class)
-		deferred
 		end
 
 feature {NONE} -- Query

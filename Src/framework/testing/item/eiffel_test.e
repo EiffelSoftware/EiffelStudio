@@ -16,7 +16,7 @@ inherit
 
 	KL_SHARED_STRING_EQUALITY_TESTER
 
-create {EIFFEL_TEST_SUITE_S}
+create {EIFFEL_TEST_MANAGER_I}
 	make
 
 feature {NONE} -- Initialization

@@ -12,6 +12,8 @@ deferred class
 inherit
 	EIFFEL_TEST_COLLECTION_I
 
+	EVENT_OBSERVER_CONNECTION [!ACTIVE_COLLECTION_OBSERVER [!EIFFEL_TEST_I]]
+
 feature {NONE} -- Initialization
 
 	make_collection is

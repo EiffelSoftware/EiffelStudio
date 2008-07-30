@@ -247,6 +247,18 @@ feature
 			Result_not_void: Result /= Void
 		end
 
+	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_TEST_CLUSTER is
+			-- Create a `CONF_TEST_CLUSTER' object.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_directory_not_void: a_directory /= Void
+			a_target_not_void: a_target /= Void
+		do
+			create Result.make (a_name, a_directory, a_target)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE is
 			-- Create a `CONF_OVERRIDE' object.
 		require

@@ -94,6 +94,13 @@ feature -- Visit nodes
 		deferred
 		end
 
+	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER) is
+			-- Visit `a_cluster'.
+		require
+			a_test_cluster_not_void: a_test_cluster /= Void
+		deferred
+		end
+
 	process_override (an_override: CONF_OVERRIDE) is
 			-- Visit `an_override'.
 		require

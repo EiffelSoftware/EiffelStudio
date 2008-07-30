@@ -12,7 +12,7 @@ inherit
 	CONF_CONDITIONED
 
 	CONF_VISITABLE
-	
+
 	CONF_NOTABLE
 
 	CONF_ACCESS
@@ -82,6 +82,11 @@ feature -- Status
 
 	is_cluster: BOOLEAN is
 			-- Is this a cluster?
+		once
+		end
+
+	is_test_cluster: BOOLEAN is
+			-- Is this a test cluster?
 		once
 		end
 

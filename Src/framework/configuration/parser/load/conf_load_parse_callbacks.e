@@ -186,7 +186,9 @@ feature -- Callbacks
 				when t_assembly then
 					process_assembly_attributes
 				when t_cluster then
-					process_cluster_attributes
+					process_cluster_attributes (False)
+				when t_test_cluster then
+					process_cluster_attributes (True)
 				when t_override then
 					process_override_attributes
 				when t_debug then
@@ -342,6 +344,9 @@ feature -- Callbacks
 					current_group := Void
 					current_assembly := Void
 				when t_cluster then
+					current_group := current_cluster.parent
+					current_cluster := current_cluster.parent
+				when t_test_cluster then
 					current_group := current_cluster.parent
 					current_cluster := current_cluster.parent
 				when t_override then
@@ -850,8 +855,10 @@ feature {NONE} -- Implementation attribute processing
 			assembly_and_group: not is_error implies current_assembly /= Void and current_group /= Void
 		end
 
-	process_cluster_attributes is
+	process_cluster_attributes (a_is_test_cluster: BOOLEAN) is
 			-- Process attributes of a cluster tag.
+			--
+			-- `a_is_test_cluster': Defines whether new cluster is a test cluster or not.
 		require
 			target: current_target /= Void
 		local
@@ -870,7 +877,11 @@ feature {NONE} -- Implementation attribute processing
 			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
 				l_parent := current_cluster
 				l_loc := factory.new_location_from_path (l_location, current_target)
-				current_cluster := factory.new_cluster (l_name.as_lower, l_loc, current_target)
+				if a_is_test_cluster then
+					current_cluster := factory.new_test_cluster (l_name.as_lower, l_loc, current_target)
+				else
+					current_cluster := factory.new_cluster (l_name.as_lower, l_loc, current_target)
+				end
 				current_group := current_cluster
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then
@@ -1730,7 +1741,7 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (21)
+			create l_trans.make (22)
 			l_trans.force (t_note, "note")
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
@@ -1751,6 +1762,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_library, "library")
 			l_trans.force (t_assembly, "assembly")
 			l_trans.force (t_cluster, "cluster")
+			l_trans.force (t_test_cluster, "tests")
 			l_trans.force (t_override, "override")
 			Result.force (l_trans, t_target)
 
@@ -1835,7 +1847,13 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_uses, "uses")
 			l_trans.force (t_cluster, "cluster")
+			l_trans.force (t_test_cluster, "tests")
 			Result.force (l_trans, t_cluster)
+
+				-- tests
+				-- -everything from cluster
+			l_trans := l_trans.twin
+			Result.force (l_trans, t_test_cluster)
 
 				-- override
 				-- -everything from cluster
@@ -2041,7 +2059,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_assembly_key, "assembly_key")
 			Result.force (l_attr, t_assembly)
 
-				-- cluster/override
+				-- cluster/tests/override
 				-- -everything from library except prefix, use_application_options
 				-- * recursive
 				-- * hidden
@@ -2052,6 +2070,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_recursive, "recursive")
 			l_attr.force (at_hidden, "hidden")
 			Result.force (l_attr, t_cluster)
+			Result.force (l_attr, t_test_cluster)
 			Result.force (l_attr, t_override)
 
 				-- debug/warning
@@ -2208,6 +2227,7 @@ feature {NONE} -- Implementation constants
 	t_overrides: INTEGER is 40
 	t_mapping: INTEGER is 41
 	t_note: INTEGER is 42
+	t_test_cluster: INTEGER is 43
 
 		-- Attribute states
 	at_abstract: INTEGER is 1000

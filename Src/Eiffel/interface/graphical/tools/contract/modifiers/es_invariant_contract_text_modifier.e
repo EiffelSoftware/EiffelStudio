@@ -21,7 +21,9 @@ feature -- Access
 	contract_ast: ?INVARIANT_AS
 			-- <Precursor>
 		do
-			Result := ast.invariant_part
+				-- We use the `ast.internal_invariant' because `ast.invariant_part' is detached when there
+				-- are not invariants.
+			Result := ast.internal_invariant
 		end
 
 	contract_insertion_position: INTEGER

@@ -107,7 +107,7 @@ feature -- Status report
 			Result := outcomes.last.is_fail
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Status setting
+feature {EIFFEL_TEST_MANAGER_I} -- Status setting
 
 	set_explicit_tags (a_list: like tags)
 			-- Set tags in list to be explicit tags of `Current'

@@ -56,7 +56,7 @@ feature -- Contracts
 				check a_live: a_live end
 
 					-- Use live AST
-				l_invariant_as := l_class_as.invariant_part
+				l_invariant_as := l_class_as.internal_invariant
 			elseif not a_live then
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
 				l_class_i := l_modifier.context_class

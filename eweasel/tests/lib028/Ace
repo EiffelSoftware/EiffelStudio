@@ -12,7 +12,7 @@
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="encoding" location="$EIFFEL_SRC\library\encoding\encoding.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

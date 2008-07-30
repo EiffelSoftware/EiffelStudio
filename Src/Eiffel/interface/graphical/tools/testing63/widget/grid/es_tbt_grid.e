@@ -16,7 +16,7 @@ class
 	ES_TBT_GRID [G -> TAGABLE_I]
 
 inherit
-	ES_WIDGET [EV_CELL]
+	ES_WINDOW_WIDGET [EV_CELL]
 		undefine
 			is_interface_usable
 		redefine
@@ -71,28 +71,34 @@ feature {NONE} --Initialization
 	build_widget_interface (a_cell: EV_CELL)
 			-- <Precursor>
 		local
-			l_pnd_helper: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			create grid
 			grid.enable_tree
+			grid.enable_single_row_selection
 			grid.hide_tree_node_connectors
 			grid.set_dynamic_content_function (agent computed_grid_item)
 			grid.enable_partial_dynamic_content
-			grid.enable_single_row_selection
 			grid.row_expand_actions.extend (agent on_row_expansion)
 
 				-- grid appearance
 			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
-			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
+			grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
+			grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
+			grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			grid.row_select_actions.extend (agent highlight_row)
 			grid.row_deselect_actions.extend (agent dehighlight_row)
 			grid.focus_in_actions.extend (agent change_focus)
 			grid.focus_out_actions.extend (agent change_focus)
-			grid.set_focused_selection_text_color (preferences.editor_data.selection_text_color)
 
 				-- pick and drop support
-			create l_pnd_helper.make_with_grid (grid)
-			l_pnd_helper.enable_grid_item_pnd_support
+			create l_support.make_with_grid (grid)
+			l_support.synchronize_color_or_font_change_with_editor
+			l_support.enable_grid_item_pnd_support
+			l_support.enable_ctrl_right_click_to_open_new_window
+			l_support.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
+
+			auto_recycle (l_support)
 
 			a_cell.extend (grid)
 		end
@@ -178,7 +184,7 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {ES_WIDGET} and Precursor {TAG_BASED_TREE}
+			Result := Precursor {ES_WINDOW_WIDGET} and Precursor {TAG_BASED_TREE}
 		end
 
 feature -- Status setting

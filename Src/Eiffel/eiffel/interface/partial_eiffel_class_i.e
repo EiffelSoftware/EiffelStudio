@@ -52,7 +52,10 @@ feature -- Access
 
 feature {NONE} -- Type anchor
 
-	class_type: PARTIAL_EIFFEL_CLASS_I;
+	class_type: PARTIAL_EIFFEL_CLASS_I is
+			-- <Precursor>
+		do
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

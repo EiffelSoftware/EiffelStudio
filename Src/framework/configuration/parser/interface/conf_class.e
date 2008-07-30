@@ -493,8 +493,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchors
 
-	class_type: CONF_CLASS
+	class_type: CONF_CLASS is
 			-- Class type anchor.
+		do
+		end
 
 invariant
 	name_ok: name /= Void and then not name.is_empty

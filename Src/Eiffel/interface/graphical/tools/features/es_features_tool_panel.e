@@ -20,6 +20,13 @@ inherit
 			create_mini_tool_bar_items
 		end
 
+	SESSION_EVENT_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_session_value_changed
+		end
+
 	ES_FEATURES_TOOL_COMMANDER_I
 		export
 			{ES_TOOL} all
@@ -54,7 +61,7 @@ feature {NONE} -- User interface initialization
 			if session_manager.is_service_available then
 					-- Hook up events
 				l_session := session_data
-				l_session.value_changed_event.subscribe (agent on_session_value_changed)
+				l_session.connect_events (Current)
 
 					-- Retrieve session data and set button states
 				if {l_toggle1: !BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) then
@@ -83,12 +90,14 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
-			-- Recycle tool.
+	internal_recycle
+			-- <Precursor>
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					session_data.value_changed_event.unsubscribe (agent on_session_value_changed)
+					if session_data.is_connected (Current) then
+						session_data.disconnect_events (Current)
+					end
 				end
 			end
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
@@ -185,16 +194,8 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
-			-- Called when the session changes
-			--
-			-- `a_session': Session object which the change occured in.
-			-- `a_id': The identifier of the changed session value.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_session_attached: a_session /= Void
-			a_session_is_interface_usable: a_session.is_interface_usable
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
 		do

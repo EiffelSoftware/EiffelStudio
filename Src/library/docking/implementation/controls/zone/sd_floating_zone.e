@@ -105,6 +105,7 @@ feature {NONE} -- Initlization
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+			-- <Precursor>
 		do
 			a_config_data.add_title ("SD_FLOATING_ZONE")
 		end
@@ -551,12 +552,15 @@ feature {NONE} -- Agents
 	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Start `docker_mediator'.
 		do
-			pointer_press_offset_x := a_screen_x - screen_x
-			pointer_press_offset_y := a_screen_y - screen_y
-			docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-			enable_capture
-			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-			docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
+			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
+			if docker_mediator = Void then
+				pointer_press_offset_x := a_screen_x - screen_x
+				pointer_press_offset_y := a_screen_y - screen_y
+				docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+				enable_capture
+				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
+			end
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

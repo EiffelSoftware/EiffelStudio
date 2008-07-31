@@ -203,8 +203,8 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 			l_new_stone: STONE
 		do
 			if is_initialized then
-				l_new_stone := stone
-				if l_new_stone /= Void then
+				l_new_stone := stone.synchronized_stone
+				if l_new_stone /= stone then
 						-- Force recomputation
 					stone_change_notified := False
 					is_in_stone_synchronization := True

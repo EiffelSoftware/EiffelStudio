@@ -34,6 +34,8 @@ inherit
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
+		redefine
+			show_help
 		end
 
 --inherit {NONE}
@@ -102,7 +104,7 @@ feature {NONE} -- Initialization
         	register_action (user_widget.key_press_actions, agent on_key_pressed)
         	register_action (user_widget.key_release_actions, agent on_key_released)
 
-        	if {l_window: !EV_WINDOW} content then
+        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
         			-- Set up help shortcut binding
         		bind_help_shortcut (l_window)
         	end
@@ -409,6 +411,17 @@ feature -- Basic operations
         ensure then
             is_initialized: (develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled) implies is_initialized
         end
+
+feature {NONE} -- Basic operations
+
+	show_help
+			-- <Precursor>
+		do
+			if is_initialized and then shown and content.has_focus then
+					-- Only show help for focused tool.
+				Precursor
+			end
+		end
 
 feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDATIONS)
 

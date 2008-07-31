@@ -19,17 +19,13 @@ feature -- Access
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
 		deferred
-		ensure
-			not_result_is_empty: not Result.is_empty
 		end
 
 	help_context_section: ?HELP_CONTEXT_SECTION_I
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 		require
 			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
 		deferred
 		end
 
@@ -37,7 +33,6 @@ feature -- Access
 			-- An optional description of the context.
 		require
 			is_interface_usable: is_interface_usable
-			is_help_available: is_help_available
 		deferred
 		end
 
@@ -54,9 +49,10 @@ feature -- Status report
 	is_help_available: BOOLEAN
 			-- Indicates if any help context is available
 		do
-			Result := is_interface_usable
+			Result := is_interface_usable and then not help_context_id.is_empty
 		ensure
 			is_interface_usable: Result implies is_interface_usable
+			not_help_context_id_is_empty: not help_context_id.is_empty
 		end
 
 ;indexing

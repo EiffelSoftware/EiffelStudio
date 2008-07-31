@@ -13,6 +13,9 @@ indexing
 deferred class
 	ES_HELP_REQUEST_BINDER
 
+inherit
+	USABLE_I
+
 feature {NONE} -- Initialization
 
 	bind_help_shortcut (a_window: EV_WINDOW)
@@ -20,6 +23,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_window': The window to bind the help shortcut key to.
 		require
+			is_interface_usable: is_interface_usable
 			a_window_attached: a_window /= Void
 			not_a_window_is_destoryed: not a_window.is_destroyed
 		do
@@ -28,22 +32,23 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Helpers
 
-	frozen help_providers: SERVICE_CONSUMER [HELP_PROVIDERS_S]
+	frozen help_providers: !SERVICE_CONSUMER [HELP_PROVIDERS_S]
 			-- Access to the help providers service {HELP_PROVIDERS_S} consumer
 		once
+			check is_interface_usable: is_interface_usable end
 			create Result
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Basic operations
 
 	show_help
 			-- Attempts to show help given the current help context implemented on Current.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			if help_providers.is_service_available then
 					-- Add a help button, if help is available
-				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
+				if {l_help_context: HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
 					on_help_requested (l_help_context)
 				end
 			end
@@ -51,11 +56,12 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_help_requested (a_context: !HELP_CONTEXT_I) is
+	on_help_requested (a_context: !HELP_CONTEXT_I)
 			-- Called when help is requested for the dialog.
 			--
 			-- `a_context': The help context to show help for
 		require
+			is_interface_usable: is_interface_usable
 			a_context_is_interface_usable: a_context.is_interface_usable
 			a_context_is_help_available: a_context.is_help_available
 			is_help_providers_service_available: help_providers.is_service_available
@@ -65,13 +71,14 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	frozen create_help_request_shortcut: EV_ACCELERATOR is
+	frozen create_help_request_shortcut: !EV_ACCELERATOR
 			-- Help request shortcut accelerator key
+		require
+			is_interface_usable: is_interface_usable
 		do
 			create Result.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f1), False, False, False)
 			Result.actions.extend (agent show_help)
 		ensure
-			result_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 

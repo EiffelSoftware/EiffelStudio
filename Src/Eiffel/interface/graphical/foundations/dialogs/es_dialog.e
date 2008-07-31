@@ -91,7 +91,9 @@ feature {NONE} -- Initialization
 				dialog.set_default_push_button (dialog_window_buttons.item (default_button))
 			end
 
-       		bind_help_shortcut (dialog)
+			if help_providers.is_service_available and then {l_context: !HELP_CONTEXT_I} Current then
+				bind_help_shortcut (dialog)
+			end
 
 			if is_size_and_position_remembered then
 	       		if session_manager.is_service_available then

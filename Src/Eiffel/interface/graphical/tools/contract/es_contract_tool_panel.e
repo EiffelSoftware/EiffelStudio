@@ -21,6 +21,15 @@ inherit
 			on_handle_key
 		end
 
+	ES_MODIFIABLE
+		undefine
+			internal_detach_entities
+		redefine
+			internal_recycle,
+			query_save_modified,
+			on_dirty_state_changed
+		end
+
 	SESSION_EVENT_OBSERVER
 		export
 			{NONE} all
@@ -33,15 +42,6 @@ inherit
 			{NONE} all
 		redefine
 			on_catalog_changed
-		end
-
-	ES_MODIFIABLE
-		undefine
-			internal_detach_entities
-		redefine
-			internal_recycle,
-			query_save_modified,
-			on_dirty_state_changed
 		end
 
 create {ES_CONTRACT_TOOL}
@@ -150,6 +150,11 @@ feature {NONE} -- Initialization
 				-- Performs UI initialization
 			set_contract_mode (contract_mode)
 			set_is_showing_all_rows (is_showing_all_rows)
+
+			if has_stone then
+					-- Update the view
+				update
+			end
 
 				-- Set button states
 			update_stone_buttons

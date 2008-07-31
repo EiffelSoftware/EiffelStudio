@@ -106,11 +106,14 @@ feature {NONE} -- For redocker.
 			debug ("docking")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
-			docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
-			setter.before_enable_capture
-			enable_capture
+			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
+			if docker_mediator = Void then
+				docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+				setter.before_enable_capture
+				enable_capture
+			end
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

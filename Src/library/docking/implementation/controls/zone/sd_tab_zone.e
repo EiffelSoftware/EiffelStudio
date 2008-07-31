@@ -357,15 +357,18 @@ feature {NONE} -- Agents for docker
 			l_tab_state: SD_TAB_STATE
 		do
 			if not is_destroyed and then is_displayed then
-				is_drag_title_bar := True
-				internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-				internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				-- We should check if `internal_docker_mediator' is void since `on_drag_title_bar' will be called multi times when starting dragging on GTK			
+				if internal_docker_mediator = Void then
+					is_drag_title_bar := True
+					internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+					internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 
-				enable_capture
-				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+					enable_capture
+					internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
-				l_tab_state ?= content.state
-				check l_tab_state /= Void end
+					l_tab_state ?= content.state
+					check l_tab_state /= Void end
+				end
 			end
 		ensure
 			internal_docker_mediator_tracing_pointer: internal_docker_mediator /= Void implies internal_docker_mediator.is_tracing_pointer
@@ -390,11 +393,14 @@ feature {NONE} -- Agents for docker
 	on_notebook_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle notebook drag actions.
 		do
-			internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-			-- Enable captuer must called before start tracing pointer on GTK, otherwise, pointer realse actions may not be called on GTK.
-			enable_capture
-			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
+			-- We should check if `internal_docker_mediator' is void since `on_drag_title_bar' will be called multi times when starting dragging on GTK			
+			if internal_docker_mediator = Void then
+				internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+				internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				-- Enable captuer must called before start tracing pointer on GTK, otherwise, pointer realse actions may not be called on GTK.
+				enable_capture
+				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
+			end
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

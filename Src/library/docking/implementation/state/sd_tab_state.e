@@ -487,21 +487,33 @@ feature -- Redefine
 feature {SD_CONTENT} -- Redefine
 
 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
-			-- Redefine.
+			-- <Precursor>
 		do
-			tab_zone.set_title (a_title, a_content)
+			-- During zone transforming, `tab_zone' maybe not has `a_content'
+			-- See bug#14623
+			if tab_zone.has (a_content) then
+				tab_zone.set_title (a_title, a_content)
+			end
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
-			-- Redefine.
+			-- <Precursor>
 		do
-			tab_zone.set_pixmap (a_pixmap, a_content)
+			-- During zone transforming, `tab_zone' maybe not has `a_content'
+			-- See bug#14623
+			if tab_zone.has (a_content) then
+				tab_zone.set_pixmap (a_pixmap, a_content)
+			end
 		end
 
 	change_tab_tooltip (a_text: STRING_GENERAL) is
-			-- Redefine.
+			-- <Precursor>
 		do
-			zone.change_tab_tooltip (content, a_text)
+			-- During zone transforming, `tab_zone' maybe not has `a_content'
+			-- See bug#14623
+			if zone.has (content) then
+				zone.change_tab_tooltip (content, a_text)
+			end
 		end
 
 feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine

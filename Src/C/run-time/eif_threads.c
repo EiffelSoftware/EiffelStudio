@@ -860,7 +860,6 @@ rt_public void eif_thr_exit(void)
 		SIGBLOCK;
 		eif_synchronize_gc (rt_globals);
 		eif_remove_gc_stacks (rt_globals);
-		eif_unsynchronize_gc (rt_globals);
 #endif
 
 #ifdef LMALLOC_CHECK
@@ -872,6 +871,11 @@ rt_public void eif_thr_exit(void)
 
 			/* Clean per thread data. */
 		eif_free_context (rt_globals);
+
+#ifdef ISE_GC
+			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed. */
+		EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Cannot unlock GC mutex on thread exit");
+#endif
 
 #ifdef VXWORKS
 		/* The TSD is managed in a different way under VxWorks: each thread

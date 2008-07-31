@@ -272,7 +272,7 @@ rt_public void eif_mem_stat(EIF_POINTER item, EIF_INTEGER type)
 	 */
 	
 #ifdef ISE_GC
-	struct emallinfo *sm = meminfo(type);	/* Get structure by type */
+	struct emallinfo *sm = eif_rt_meminfo(type);	/* Get structure by type */
 
 	memcpy (item, sm, sizeof(struct emallinfo));
 #endif

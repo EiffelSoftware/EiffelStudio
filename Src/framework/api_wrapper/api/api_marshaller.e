@@ -282,9 +282,7 @@ feature {NONE} -- Externals
 		external
 			"C inline"
 		alias
-			"[
-				return (sizeof (TCHAR) == sizeof (WCHAR));
-			]"
+			"return (sizeof ("") != sizeof (T(" ")));]"
 		end
 
 ;indexing

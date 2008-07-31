@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 				-- Create icon file name
 			create l_matrix.make_from_string (tool_utilities.tool_associated_path (a_tool))
 			l_matrix.set_file_name (a_name)
-			if {l_user_matrix: FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix) then
+			if {l_user_matrix: FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix, True) then
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end

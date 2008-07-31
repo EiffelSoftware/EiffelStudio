@@ -89,7 +89,7 @@ feature -- Query
 			if Result = Void then
 					-- Load the pixmap file from disk, if it exists
 				l_file_name := matrix_file_name (a_name)
-				if {l_user_file_name: FILE_NAME} eiffel_layout.user_priority_file_name (l_file_name) then
+				if {l_user_file_name: FILE_NAME} eiffel_layout.user_priority_file_name (l_file_name, True) then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
 				end

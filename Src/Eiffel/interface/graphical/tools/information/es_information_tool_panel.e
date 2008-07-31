@@ -112,7 +112,7 @@ feature -- Access
 	help_context_id: !STRING_GENERAL
 			-- <Precursor>
 		do
-			Result := "Defining_New_Protocol"
+			Result := "Information (EIS) Tool"
 		end
 
 feature {NONE} -- Status report

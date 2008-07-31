@@ -104,10 +104,15 @@ feature {NONE} -- Initialization
         	register_action (user_widget.key_press_actions, agent on_key_pressed)
         	register_action (user_widget.key_release_actions, agent on_key_released)
 
-        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
-        			-- Set up help shortcut binding
-        		bind_help_shortcut (l_window)
-        	end
+        	register_kamikaze_action (content.show_actions, agent
+        			-- We need a widget that is parented to a window so we need to wait until after the
+        			-- docking content is attached to the window.
+        		do
+		        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
+		        			-- Set up help shortcut binding
+		        		bind_help_shortcut (l_window)
+		        	end
+        		end)
         end
 
 feature {NONE} -- Initialization: User interface
@@ -650,6 +655,7 @@ feature {NONE} -- User interface elements
         local
             l_cell: like internal_mini_tool_bar_widget
             l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
+            l_help_button: ?SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
             l_tools: ES_SHELL_TOOLS
@@ -660,29 +666,35 @@ feature {NONE} -- User interface elements
                 create l_cell
                 internal_mini_tool_bar_widget := l_cell
                 l_multi := tool_descriptor.is_supporting_multiple_instances
+				if {l_context: HELP_CONTEXT_I} Current then
+						-- Create the help button
+					l_help_button := create_help_button
+				end
 
                 l_items := create_mini_tool_bar_items
-                if l_items /= Void or else l_multi then
+                if l_items /= Void or else l_multi or else l_help_button /= Void then
                     create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
-                end
-                if l_multi then
-                        -- Add new edition button
-                    l_tools := develop_window.shell_tools
-                    l_type := l_tools.dynamic_tool_type (tool_descriptor.generating_type)
-                    check
-                        l_type_attached: l_type /= Void
-                    end
-                    create l_command.make (tool_descriptor)
-                    auto_recycle (l_command)
-                    Result.extend (l_command.new_mini_sd_toolbar_item)
-                end
-                if l_items /= Void then
-                        -- Add tool buttons
-                    l_items.do_all (agent Result.extend)
-                end
-                if Result /= Void then
-                    l_cell.put (Result)
+
+	                if l_items /= Void then
+	                        -- Add tool buttons
+	                    l_items.do_all (agent Result.extend)
+	                end
+	                if l_multi then
+	                        -- Add new edition button
+	                    l_tools := develop_window.shell_tools
+	                    l_type := l_tools.dynamic_tool_type (tool_descriptor.generating_type)
+	                    check
+	                        l_type_attached: l_type /= Void
+	                    end
+	                    create l_command.make (tool_descriptor)
+	                    auto_recycle (l_command)
+	                    Result.extend (l_command.new_mini_sd_toolbar_item)
+	                end
+					if l_help_button /= Void then
+						Result.extend (l_help_button)
+					end
                     Result.compute_minimum_size
+                    l_cell.put (Result)
                 end
             else
                 Result := l_cell.item
@@ -913,7 +925,7 @@ feature {NONE} -- Factory
 	create_help_button: SD_TOOL_BAR_BUTTON
 			-- Creates a help tool bar button for use in the mini tool bar
 		require
-			is_help_providers_service_available:
+			is_help_providers_service_available: help_providers.is_service_available
 		do
 			create Result.make
 			Result.set_pixel_buffer (stock_mini_pixmaps.callstack_send_to_external_editor_icon_buffer)

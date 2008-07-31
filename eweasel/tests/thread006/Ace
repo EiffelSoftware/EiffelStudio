@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="6e70d458-a898-44ab-aa92-3ec3a76c2533">
+	<target name="test">
+		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+</description>
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<warning name="syntax" enabled="false"/></option>
+		<setting name="multithreaded" value="True"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true">
+			<option warning="false"/>
+		</library>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

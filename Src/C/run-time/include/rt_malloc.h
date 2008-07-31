@@ -65,7 +65,7 @@ extern "C" {
 #define EIF_GSZ_ALLOC_OPTIMIZATION
 
 /*
- * Type of requests for meminfo().
+ * Type of requests for eif_rt_meminfo().
  */
 #define M_FULL		0				/* Ask for general statistics */
 #define M_EIFFEL	1				/* Ask for Eiffel chunk statistics */
@@ -158,7 +158,7 @@ extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int gc_
 
 #ifdef ISE_GC
 extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);				/* Garbage collector's allocation */
-extern struct emallinfo *meminfo(int type);	/* Memory statistics */
+extern struct emallinfo *eif_rt_meminfo(int type);	/* Memory statistics */
 
 /*
  * Shared routines

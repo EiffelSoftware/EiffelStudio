@@ -175,7 +175,7 @@ doc:	</description>
 
 /*
 doc:	<attribute name="rt_m_data" return_type="struct emallinfo" export="shared">
-doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the meminfo() routine. Only used by current and garcol.c</summary>
+doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the eif_rt_meminfo() routine. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
@@ -2926,7 +2926,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 
 #ifdef ISE_GC
 /*
-doc:	<routine name="meminfo" return_type="struct emallinfo *" export="public">
+doc:	<routine name="eif_rt_meminfo" return_type="struct emallinfo *" export="public">
 doc:		<summary>Return the pointer to the static data held in rt_m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.</summary>
 doc:		<param name="type" type="int">Type of memory (M_C or M_EIFFEL or M_ALL) to get info from.</param>
 doc:		<return>Pointer to an internal structure used by `malloc.c'.</return>
@@ -2935,7 +2935,7 @@ doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC
 doc:	</routine>
 */
 
-rt_public struct emallinfo *meminfo(int type)
+rt_public struct emallinfo *eif_rt_meminfo(int type)
 {
 	switch(type) {
 	case M_C:

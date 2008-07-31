@@ -24,12 +24,12 @@ feature -- Access
 			-- File was removed from disk
 
 	file_resurected: NATURAL_8 = 0x4
-			-- File was recreated after being delete.
+			-- File was recreated after being deleted.
 			-- Note: This will never be used by itself, it only used to bit operations to determine
 			--       types of file modifications
 
 	file_resurected_and_changed: NATURAL_8 = 0x5
-			-- File was recreated after being delete.
+			-- File was recreated after being deleted.
 			-- Flag logically OR-ed with `file_changed'
 
 ;indexing

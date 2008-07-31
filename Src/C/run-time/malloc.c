@@ -2178,7 +2178,6 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		 */
 	if (eif_max_mem > 0) {
 		if (rt_m_data.ml_total + asked > eif_max_mem) {
-			print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
 			return (union overhead *) 0;
 		}
 	}

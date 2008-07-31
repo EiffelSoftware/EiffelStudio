@@ -96,25 +96,29 @@ feature  -- Redefine
 				l_top := l_rect.top
 				l_width := l_rect.width
 				l_height := (l_rect.height * internal_shared.default_docking_height_rate).ceiling
-				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_down)
+
+				set_pointer_style (internal_shared.icons.drag_pointer_down)
 			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable  then
 				l_left := l_rect.left
 				l_top := l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling
 				l_width := l_rect.width
 				l_height := (l_rect.height * internal_shared.default_docking_height_rate).ceiling
-				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_up)
+
+				set_pointer_style (internal_shared.icons.drag_pointer_up)
 			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.left
 				l_top := l_rect.top
 				l_width := (l_rect.width * internal_shared.default_docking_width_rate).ceiling
 				l_height := l_rect.height
-				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_right)
+
+				set_pointer_style (internal_shared.icons.drag_pointer_right)
 			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling
 				l_top := l_rect.top
 				l_width := (l_rect.width * internal_shared.default_docking_width_rate).ceiling
 				l_height := l_rect.height
-				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_left)
+
+				set_pointer_style (internal_shared.icons.drag_pointer_left)
 			else
 				l_left := a_screen_x - internal_mediator.offset_x
 				l_top := a_screen_y - internal_mediator.offset_y
@@ -124,17 +128,42 @@ feature  -- Redefine
 					l_width := internal_shared.default_floating_window_width
 					l_height := internal_shared.default_floating_window_height
 				end
-				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_float)
+
+				set_pointer_style (internal_shared.icons.drag_pointer_float)
 			end
 
 			internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
 			Result := True
 		end
 
+	set_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Set GLOBAL mouse cursor
+			-- On Windows, we can just set pointer style to main window
+			-- On GTK, we must set current focused widget top window's pointer style
+			-- FIXIT: same as {SD_HOT_ZONE_OLD_MAIN} merge?
+		require
+			not_void: a_pointer_style /= Void
+		local
+			l_platform: PLATFORM
+			l_window: EV_WINDOW
+		do
+			create l_platform
+			if l_platform.is_windows then
+				internal_mediator.docking_manager.main_window.set_pointer_style (a_pointer_style)
+			else
+				l_window := internal_mediator.caller_top_window
+
+				if {lt_floating_zone: SD_FLOATING_ZONE} l_window then
+					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
+				end
+				l_window.set_pointer_style (a_pointer_style)
+			end
+		end
+
 	clear_indicator is
 			-- Redefine
 		do
-			internal_docking_manager.main_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+			set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
 	build_indicator is

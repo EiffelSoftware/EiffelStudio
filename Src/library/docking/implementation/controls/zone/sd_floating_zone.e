@@ -49,6 +49,7 @@ inherit
 			{SD_DOCKING_MANAGER_COMMAND} accelerators
 			{SD_DOCKING_STATE, SD_STATE_VOID} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
+			{SD_HOT_ZONE} set_pointer_style_for_border
 		redefine
 			hide,
 			screen_y,

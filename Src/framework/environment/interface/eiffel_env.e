@@ -307,7 +307,7 @@ feature -- IL environment
 
 feature -- Query
 
-	user_priority_file_name (a_file_name: STRING_GENERAL): ?FILE_NAME
+	user_priority_file_name (a_file_name: STRING_GENERAL; a_must_exist: BOOLEAN): ?FILE_NAME
 			-- Retrieve a Eiffel installation file, taking a user replacement as priority
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -328,7 +328,7 @@ feature -- Query
 					Result.extend (l_extension)
 
 					create l_actual_file.make (Result)
-					if not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory) then
+					if a_must_exist and then not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory) then
 							-- The file does not exist or is not actually a file.
 						Result := Void
 					end
@@ -336,10 +336,10 @@ feature -- Query
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
+			result_exists: (Result /= Void and a_must_exist) implies (create {RAW_FILE}.make (Result)).exists
 		end
 
-	user_priority_path (a_dir: STRING_GENERAL): ?DIRECTORY_NAME
+	user_priority_path (a_dir: STRING_GENERAL; a_must_exist: BOOLEAN): ?DIRECTORY_NAME
 			-- Retrieve a Eiffel installation file, taking a user replacement as priority
 		require
 			a_dir_attached: a_dir /= Void
@@ -358,7 +358,7 @@ feature -- Query
 					create Result.make_from_string (user_files_path)
 					Result.extend (l_extension)
 
-					if not (create {DIRECTORY}.make (Result)).exists then
+					if a_must_exist and then not (create {DIRECTORY}.make (Result)).exists then
 							-- The directory does not exist
 						Result := Void
 					end
@@ -366,7 +366,7 @@ feature -- Query
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies (create {DIRECTORY}.make (Result)).exists
+			result_exists: (Result /= Void and a_must_exist) implies (create {DIRECTORY}.make (Result)).exists
 		end
 
 feature -- Directories (top-level)
@@ -943,7 +943,7 @@ feature -- Directories (user)
 			l_dir: like user_priority_path
 		once
 			if is_user_files_supported then
-				l_dir := user_priority_path (shared_application_path)
+				l_dir := user_priority_path (shared_application_path, False)
 			end
 			if l_dir /= Void then
 				Result := l_dir
@@ -1046,8 +1046,6 @@ feature -- Files
 			-- ($ISE_EIFFEL/eifinit/application_name/spec/$ISE_PLATFORM)
 		require
 			is_valid_environment: is_valid_environment
-		local
-			l_user: like user_priority_file_name
 		once
 			create Result.make_from_string (eifinit_path)
 			Result.set_file_name ("general")
@@ -1055,9 +1053,8 @@ feature -- Files
 
 			if is_user_files_supported then
 					-- Check user override file.
-				l_user := user_priority_file_name (Result)
-				if l_user /= Void and then (create {RAW_FILE}.make (l_user)).exists then
-					Result ?= l_user
+				if {l_user: like user_priority_file_name} user_priority_file_name (Result, True) then
+					Result := l_user
 				end
 			end
 		ensure
@@ -1070,7 +1067,7 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 			is_windows: {PLATFORM}.is_windows
 		local
-			l_user: like user_priority_file_name
+
 		once
 			create Result.make_from_string (eifinit_path)
 			Result.extend_from_array (<<spec_name, Platform_abstraction>>)
@@ -1078,9 +1075,8 @@ feature -- Files
 
 			if is_user_files_supported then
 					-- Check user override file.
-				l_user := user_priority_file_name (Result)
-				if l_user /= Void and then (create {RAW_FILE}.make (l_user)).exists then
-					Result ?= l_user
+				if {l_user: like user_priority_file_name} user_priority_file_name (Result, True) then
+					Result := l_user
 				end
 			end
 		ensure
@@ -1900,15 +1896,12 @@ feature -- Preferences
 			-- Platform independent preferences.
 		require
 			is_valid_environment: is_valid_environment
-		local
-			l_fn: like user_priority_file_name
 		once
 			create Result.make_from_string (eifinit_path)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
-			l_fn := user_priority_file_name (Result)
-			if l_fn /= Void then
-				Result ?= l_fn
+			if {l_fn: like user_priority_file_name} user_priority_file_name (Result, True) then
+				Result := l_fn
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1916,16 +1909,13 @@ feature -- Preferences
 
 	platform_preferences: !FILE_NAME
 			-- Platform specific preferences.
-		local
-			l_fn: like user_priority_file_name
 		once
 			create Result.make_from_string (eifinit_path)
 			Result.extend_from_array (<<spec_name, platform_abstraction>>)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
-			l_fn := user_priority_file_name (Result)
-			if l_fn /= Void then
-				Result ?= l_fn
+			if {l_fn: like user_priority_file_name} user_priority_file_name (Result, True) then
+				Result := l_fn
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

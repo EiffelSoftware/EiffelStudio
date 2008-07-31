@@ -11,15 +11,20 @@ class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [ES_EIS_TOOL_WIDGET]
 		redefine
-			internal_recycle,
-			create_mini_tool_bar_items,
 			on_after_initialized,
-			show
+			internal_recycle,
+			on_show,
+			create_mini_tool_bar_items
+		end
+
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
 		end
 
 	ES_INFORMATION_TOOL_COMMANDER_I
 		export
-			{ES_TOOL} all
+			{ES_INFORMATION_TOOL_COMMANDER_I} all
 		end
 
 	SESSION_EVENT_OBSERVER
@@ -40,7 +45,29 @@ create {ES_INFORMATION_TOOL}
 
 feature {NONE} -- Initialization
 
-	on_after_initialized is
+    build_tool_interface (a_widget: like user_widget)
+            -- <Precursor>
+		do
+			if {lt_observer: PROGRESS_OBSERVER} a_widget then
+				eis_manager.add_observer (lt_observer)
+			end
+
+			if session_manager.is_service_available then
+					-- Retrieve session data and set button states
+				if {l_toggle: BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) then
+					if l_toggle.item then
+						a_widget.auto_sweep_button.enable_select
+					else
+						a_widget.auto_sweep_button.disable_select
+					end
+				else
+						-- Default to selected.
+					a_widget.auto_sweep_button.enable_select
+				end
+			end
+		end
+
+	on_after_initialized
 			-- <Precursor>
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
@@ -62,48 +89,10 @@ feature {NONE} -- Initialization
 			register_action (content.focus_in_actions, agent request_eis_visit)
 		end
 
-feature {NONE} -- User interface initialization
-
-    build_tool_interface (a_widget: like create_widget) is
-            -- Builds the tools user interface elements.
-            -- Note: This function is called prior to showing the tool for the first time.
-            --
-            -- `a_widget': A widget to build the tool interface using.
-		do
-			if {lt_observer: PROGRESS_OBSERVER} a_widget then
-				eis_manager.add_observer (lt_observer)
-			end
-
-			if session_manager.is_service_available then
-					-- Retrieve session data and set button states
-				if {l_toggle: BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) then
-					if l_toggle.item then
-						a_widget.auto_sweep_button.enable_select
-					else
-						a_widget.auto_sweep_button.disable_select
-					end
-				else
-						-- Default to selected.
-					a_widget.auto_sweep_button.enable_select
-				end
-			end
-		end
-
-feature -- Basic operations
-
-    show
-            -- Show the tool, if possible
-        do
-        	Precursor
-        	if is_visit_requested then
-				auto_background_visiting
-        	end
-        end
-
 feature {NONE} -- Clean up
 
-	internal_recycle is
-			-- Recycle tool.
+	internal_recycle
+			-- <Precursor>
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
@@ -115,8 +104,65 @@ feature {NONE} -- Clean up
 			if {lt_observer: PROGRESS_OBSERVER}user_widget then
 				eis_manager.remove_observer (lt_observer)
 			end
-			user_widget.recycle
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
+		end
+
+feature -- Access
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		do
+			Result := "Defining_New_Protocol"
+		end
+
+feature {NONE} -- Status report
+
+	is_visit_requested: BOOLEAN
+			-- Is backgroud visiting requested?
+
+feature {ES_INFORMATION_TOOL_COMMANDER_I} -- Basic operations
+
+	refresh_list
+			-- Refresh the entry list.
+		do
+			if not is_initialized then
+				initialize
+			end
+			user_widget.refresh_list
+		end
+
+	request_eis_visit
+			-- Reqest EIS background visiting to collect information into EIS storage.
+		do
+			is_visit_requested := True
+			if shown then
+				perform_auto_background_visiting
+			end
+		end
+
+feature {NONE} -- Basic operations
+
+	perform_auto_background_visiting
+			-- Auto background visiting (DONT REPEAT THE NAME AS A COMMENT, let me know what it does!)
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+        local
+        	l_session: like session_data
+		do
+			if session_manager.is_service_available and then workbench.universe_defined then
+				l_session := session_data
+				if {lt_auto: BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) then
+					if lt_auto.item then
+						if eis_manager.full_visited then
+							eis_manager.start_background_visitor
+						end
+					end
+				end
+			end
+			is_visit_requested := False
+		ensure
+			not_is_visit_requested: not is_visit_requested
 		end
 
 feature {NONE} -- Event handlers
@@ -142,10 +188,24 @@ feature {NONE} -- Event handlers
 			end
 		end
 
-feature {ES_EIS_TOOL_WIDGET} -- Event handlers
+feature {NONE} -- Action handlers
 
-	sweep_now is
+	on_show
+			-- <Precusor>
+		do
+			Precursor
+        	if is_visit_requested then
+				perform_auto_background_visiting
+        	end
+		end
+
+feature {ES_EIS_TOOL_WIDGET} -- Actions handlers
+
+	on_sweep_now
 			-- On sweep now button selected.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			if workbench.universe_defined then
 				eis_manager.start_background_visitor
@@ -155,9 +215,11 @@ feature {ES_EIS_TOOL_WIDGET} -- Event handlers
 			not_is_visit_requested: workbench.universe_defined implies not is_visit_requested
 		end
 
-	on_auto_sweep_button_selected (a_button: SD_TOOL_BAR_TOGGLE_BUTTON) is
+	on_auto_sweep_button_selected (a_button: SD_TOOL_BAR_TOGGLE_BUTTON)
 			-- On auto sweep button selected
 		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			a_button_not_void: a_button /= Void
         local
         	l_session: like session_data
@@ -172,40 +234,22 @@ feature {ES_EIS_TOOL_WIDGET} -- Event handlers
 			end
 		end
 
-feature -- Operation
-
-	refresh_list
-			-- Refresh the entry list.
-		do
-			user_widget.refresh_list
-		end
-
-	request_eis_visit
-			-- Reqest EIS background visiting to collect information into EIS storage.
-		do
-			is_visit_requested := True
-			if shown then
-				auto_background_visiting
-			end
-		end
-
 feature {NONE} -- Factory
 
     create_widget: ES_EIS_TOOL_WIDGET
-            -- Create a new container widget upon request.
-            -- Note: You may build the tool elements here or in `build_tool_interface'
+            -- <Precursor>
 		do
 			create Result.make (Current)
 		end
 
     create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-            -- Retrieves a list of tool bar items to display at the top of the tool.
+            -- <Precursor>
 		do
 			--| No tool bar
 		end
 
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-            -- Retrieves a list of tool bar items to display on the window title
+            -- <Precursor>
 		local
 			l_item: SD_TOOL_BAR_BUTTON
         do
@@ -216,31 +260,6 @@ feature {NONE} -- Factory
   			l_item.select_actions.extend (agent user_widget.on_show_editing_item)
   			Result.put_last (l_item)
         end
-
-feature {NONE} -- Implementation
-
-	is_visit_requested: BOOLEAN
-			-- Is backgroud visiting requested?
-
-	auto_background_visiting is
-			-- Auto background visiting
-        local
-        	l_session: like session_data
-		do
-			if session_manager.is_service_available and then workbench.universe_defined then
-				l_session := session_data
-				if {lt_auto: BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) then
-					if lt_auto.item then
-						if eis_manager.full_visited then
-							eis_manager.start_background_visitor
-						end
-					end
-				end
-			end
-			is_visit_requested := False
-		ensure
-			not_is_visit_requested: not is_visit_requested
-		end
 
 feature {NONE} -- Constants
 

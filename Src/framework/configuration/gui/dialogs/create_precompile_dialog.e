@@ -50,7 +50,7 @@ feature {NONE} -- Access
 				add_lookup_directories (l_file, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string) and then file_system.file_exists (l_user_file) then
+				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) and then file_system.file_exists (l_user_file) then
 					add_lookup_directories (l_user_file, Result)
 				end
 			end

@@ -282,7 +282,7 @@ feature {NONE} -- Externals
 		external
 			"C inline"
 		alias
-			"return (sizeof ("") != sizeof (T(" ")));]"
+			"return (sizeof ("") != sizeof (T(" ")));"
 		end
 
 ;indexing

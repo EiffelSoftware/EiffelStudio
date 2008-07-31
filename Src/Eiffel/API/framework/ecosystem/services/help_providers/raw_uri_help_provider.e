@@ -76,18 +76,13 @@ feature {NONE} -- Basic operations
 		require
 			not_a_url_is_empty: not a_uri.is_empty
 		local
-			l_cmd: STRING_8
+			l_url: !URI_LAUNCHER
+			l_error: ES_ERROR_PROMPT
 		do
-			if {PLATFORM}.is_windows then
-					-- Use start command to open a URI
-				l_cmd := "cmd /C start " + a_uri
-			else
-					-- Simple python script to open a URI, for now.
-				l_cmd := "python -c %"import webbrowser; webbrowser.open ('" + a_uri + "')%""
-			end
-			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher (l_cmd, Void, Void) then
-				l_process.set_hidden (True)
-				l_process.launch
+			create l_url
+			if not l_url.launch (a_uri) then
+				create l_error.make_standard ((create {ERROR_MESSAGES}).e_help_unable_to_launch)
+				l_error.show_on_active_window
 			end
 		end
 

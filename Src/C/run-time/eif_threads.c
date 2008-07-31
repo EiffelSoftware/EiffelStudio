@@ -871,6 +871,7 @@ rt_public void eif_thr_exit(void)
 
 			/* Clean per thread data. */
 		eif_free_context (rt_globals);
+		rt_globals = NULL;
 
 #ifdef ISE_GC
 			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed. */

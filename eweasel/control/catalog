@@ -1528,6 +1528,7 @@ test	file-read-xxx-routines	lib025	 tcf pass library file
 test	ptf-file-forth-2		lib026	 tcf pass library file 	
 test	ptf-read-number-routines	lib027	 tcf pass library file 	
 test	es-encoding-conversion		lib028	 tcf pass library encoding
+test	ptf-read-number-routines-2	lib029	 tcf pass library file
 
 
 -- TUPLE tests

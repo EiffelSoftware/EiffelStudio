@@ -1,15 +1,15 @@
-test_name 	ptf-read-number-routines
+test_name 	ptf-read-number-routines-2
 test_description Test proper behavior of the `read_xxx' routines in FILE where xxx is either natural, integer or double.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
+
 compile_melted
 compile_result 	ok
 
 copy_raw	file.txt $EXEC_WORK file.txt
-execute_work 	NONE exec_output1
-execute_result 	ok
-
-compare		exec_output1 output
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
 
 test_end

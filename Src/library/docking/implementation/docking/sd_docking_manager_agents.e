@@ -297,15 +297,15 @@ feature  -- Agents
 		local
 			l_widget: EV_WIDGET
 			l_screen_x, l_screen_y: INTEGER
-			l_focused: EV_WIDGET
+			l_screen: EV_SCREEN
+			l_position: EV_COORDINATE
 		do
-			l_focused := ev_application.focused_widget
-			if l_focused /= Void then
-				l_screen_x := a_x + l_focused.screen_x
-				l_screen_y := a_y + l_focused.screen_y
-			end
+			create l_screen
+			l_position := l_screen.pointer_position
 
-			l_widget ?= a_target
+			l_screen_x := l_position.x
+			l_screen_y := l_position.y
+
 			if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
 				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
 					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then

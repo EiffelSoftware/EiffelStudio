@@ -1312,7 +1312,12 @@ feature {NONE} -- String matching
 
 			if l_list.row_count > 0 then
 				l_list.remove_selection
-				l_list.row (current_index).enable_select
+					-- It is possible that there are some rows have been filtered (i.e. oboselete features)
+					-- The row count of the list is actually greater than the number of rows we created.
+				l_name ?= l_list.row (current_index).data
+				if l_name /= Void then
+					l_list.row (current_index).enable_select
+				end
 				if is_displayed then
 					l_rows := l_list.selected_rows
 					if not l_rows.is_empty then

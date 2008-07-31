@@ -31,7 +31,7 @@ feature -- Services
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
 			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
-			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
+			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent create_help_providers_service, False)
 			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
 			a_container.register_with_activator ({EIFFEL_TEST_SUITE_S}, agent create_testing_servive, False)
@@ -39,22 +39,10 @@ feature -- Services
 
 feature {NONE} -- Help registration
 
-	frozen setup_help_providers_service: HELP_PROVIDERS_S
-			-- Creates the editor documents table service
-		do
-			Result := create_help_providers_service
-			if {l_service: !HELP_PROVIDERS_S} Result then
-					-- Register all services.
-					-- Note: There is no need to perform any unregistering as the service should clean up all
-					--       help providers when the service is disposed of.
-				register_help_providers (l_service)
-			end
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
 	register_help_providers (a_service: !HELP_PROVIDERS_S)
-			-- Registers all help providers with the help providers service
+			-- Registers all help providers with the help providers service.
+			--
+			-- `a_service': The service interface to register the helper providers on.
 		require
 			a_service_is_interface_usable: a_service.is_interface_usable
 		local
@@ -68,9 +56,28 @@ feature {NONE} -- Help registration
 			a_service.register_provider (l_kinds.eis_default, {EIS_DEFAULT_HELP_PROVIDER})
 		end
 
+feature {NONE} -- Code template cataloging
+
+	extend_code_template_catalog (a_service: !CODE_TEMPLATE_CATALOG_S)
+			-- Extends the build in paths to the code template catalog service.
+			--
+			-- `a_service': The service to extend with the build in catalog paths.
+		require
+			a_service_is_interface_usable: a_service.is_interface_usable
+		local
+			l_contracts: !DIRECTORY_NAME
+		do
+				-- Top level catalog
+			l_contracts ?= eiffel_layout.templates_path.twin
+			a_service.extend_catalog (l_contracts.string)
+
+				-- User templates catalog
+			a_service.extend_catalog (eiffel_layout.user_templates_path.string)
+		end
+
 feature {NONE} -- Factory
 
-	create_file_notifier_service: FILE_NOTIFIER_S
+	create_file_notifier_service: ?FILE_NOTIFIER_S
 			-- Creates the file notifier service.
 		do
 			create {FILE_NOTIFIER} Result.make
@@ -78,25 +85,24 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_help_providers_service: HELP_PROVIDERS_S
+	create_help_providers_service: ?HELP_PROVIDERS_S
 			-- Creates the help providers service.
 		do
 			create {HELP_PROVIDERS} Result.make
+			if Result /= Void then
+				register_help_providers (Result)
+			end
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_code_template_catalog_service: CODE_TEMPLATE_CATALOG_S
+	create_code_template_catalog_service: ?CODE_TEMPLATE_CATALOG_S
 			-- Creates the code templates catalog service.
-		local
-			l_contracts: !DIRECTORY_NAME
 		do
 			create {CODE_TEMPLATE_CATALOG} Result.make
-			l_contracts ?= eiffel_layout.templates_path.twin
-			Result.extend_catalog (l_contracts.string)
-			l_contracts.extend ("eiffel")
-			Result.extend_catalog (l_contracts.string)
-			Result.extend_catalog (eiffel_layout.user_templates_path.string)
+			if Result /= Void then
+				extend_code_template_catalog (Result)
+			end
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end

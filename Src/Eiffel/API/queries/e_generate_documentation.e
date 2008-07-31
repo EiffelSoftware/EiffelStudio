@@ -104,7 +104,7 @@ feature -- Execution
 		local
 			doc: DOCUMENTATION
 			dir: DIRECTORY
-			retried: BOOLEAN
+			retried, l_dir_created: BOOLEAN
 		do
 			if eiffel_layout.has_documentation_generation and not retried then
 				create doc.make
@@ -122,14 +122,19 @@ feature -- Execution
 				doc.set_all_universe
 				create dir.make (Eiffel_system.document_path)
 				doc.set_directory (dir)
+				l_dir_created := True
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)
 				doc.set_excluded_indexing_items (preferences.flat_short_data.excluded_indexing_items.linear_representation)
 				doc.generate (generate_window)
 			end
 		rescue
-			error_window.put_string (
-				(create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (dir.name))
+			if not l_dir_created then
+				error_window.put_string ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (dir.name))
+			elseif doc /= Void and then doc.target_file_name /= Void then
+				error_window.put_string ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name))
+			end
+
 			retried := True
 			retry
 		end

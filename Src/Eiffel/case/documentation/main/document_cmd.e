@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			doc: DOCUMENTATION
-			retried: BOOLEAN
+			retried, l_dir_created: BOOLEAN
 			l_str: STRING
 		do
 			if not retried then
@@ -60,6 +60,7 @@ feature {NONE} -- Implementation
 				doc.set_filter (wizard.filter)
 				doc.set_universe (wizard.documentation_universe)
 				doc.set_directory (wizard.directory)
+				l_dir_created := True
 				doc.set_excluded_indexing_items (wizard.excluded_indexing_items)
 				doc.set_cluster_formats (
 					wizard.cluster_charts_selected,
@@ -76,7 +77,7 @@ feature {NONE} -- Implementation
 				output_manager.clear_general
 				window_manager.display_message ("")
 				l_str := "Documentation Generated in " + wizard.directory.name
-				output_manager.start_processing (true)
+				output_manager.start_processing (True)
 				doc.generate (Degree_output)
 				output_manager.add_string (l_str)
 				output_manager.add_new_line
@@ -84,7 +85,11 @@ feature {NONE} -- Implementation
 				window_manager.display_message (l_str)
 			end
 		rescue
-			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
+			if not l_dir_created then
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
+			elseif doc.target_file_name /= Void then
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name), Void, Void)
+			end
 			Error_handler.error_list.wipe_out
 			retried := True
 			retry

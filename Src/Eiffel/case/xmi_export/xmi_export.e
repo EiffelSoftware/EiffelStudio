@@ -161,6 +161,7 @@ feature -- Actions
 
 				deg.put_string ("Generating XMI")
 				generate_from_lists
+				deg.put_string ("XMI generated")
 				classes := Void
 				groups := Void
 				xmi_classes := Void

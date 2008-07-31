@@ -55,16 +55,21 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			xe: XMI_EXPORT
-			retried: BOOLEAN
+			retried, l_dir_created: BOOLEAN
 		do
 			if not retried then
 				create xe.make
 				xe.set_directory (wizard.directory)
+				l_dir_created := True
 				xe.set_universe (wizard.documentation_universe)
 				xe.generate (Degree_output)
 			end
 		rescue
-			prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
+			if not l_dir_created then
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
+			elseif xe.target_file_name /= Void then
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (xe.target_file_name), Void, Void)
+			end
 			retried := True
 			retry
 		end

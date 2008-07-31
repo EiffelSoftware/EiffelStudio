@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 			create sweep_now_button.make
 			sweep_now_button.set_tooltip (interface_names.t_sweeping_the_system_now)
 			sweep_now_button.set_pixel_buffer (pixmaps.icon_pixmaps.information_sweep_now_icon_buffer)
-			sweep_now_button.select_actions.extend (agent panel.sweep_now)
+			sweep_now_button.select_actions.extend (agent panel.on_sweep_now)
 			l_toolbar.extend (sweep_now_button)
 				-- Delete button
 			create l_button.make

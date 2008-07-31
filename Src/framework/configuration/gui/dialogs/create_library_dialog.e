@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			l_col.set_width (100)
 			libraries_grid.disable_column_separators
 			libraries_grid.disable_row_separators
-			libraries_grid.enable_border
+			libraries_grid.disable_border
 
 				-- Create border for the grid
 			create l_padding
@@ -283,7 +283,7 @@ feature {NONE} -- Access
 				add_lookup_directories (l_file, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string) and then file_system.file_exists (l_user_file) then
+				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) and then file_system.file_exists (l_user_file) then
 					add_lookup_directories (l_user_file, Result)
 				end
 			end

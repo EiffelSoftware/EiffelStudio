@@ -52,6 +52,16 @@ feature -- Command
 			internal_padding_box.extend (a_widget)
 		end
 
+	set_pointer_style_for_border (a_pointer_style: EV_POINTER_STYLE) is
+			-- Clear pointer styles before dragging on GTK
+			-- Otherwise, set pointer style to top window will not work
+		require
+			not_void: a_pointer_style /= Void
+		do
+			internal_border_box.set_pointer_style (a_pointer_style)
+			internal_padding_box.set_pointer_style (a_pointer_style)
+		end
+
 feature {NONE} -- Implementation
 
 	on_border_box_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

@@ -62,44 +62,65 @@ feature -- Redefine
 					debug ("docking")
 						print ("%NSD_HOT_ZONE_OLD_DOCKING	update_for_pointer_position_feedback icons is: " + internal_shared.icons.drag_pointer_up.out)
 					end
-					-- On GTK, following line not work sometimes?
---					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_up)
-					-- On Windows, does following line work?
-					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_up)
+
+					set_pointer_style (internal_shared.icons.drag_pointer_up)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_top.left
 					l_top := internal_rectangle_bottom.bottom - l_half_height
 					l_width := internal_zone.width
 					l_height := l_half_height
---					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_down)
-					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_down)
+
+					set_pointer_style (internal_shared.icons.drag_pointer_down)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_top.left
 					l_top := internal_rectangle_top.top
 					l_width := l_half_width
 					l_height := internal_zone.height
---					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_left)
-					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_left)
+
+					set_pointer_style (internal_shared.icons.drag_pointer_left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_right.right - l_half_width
 					l_top := internal_rectangle_top.top
 					l_width := l_half_width
 					l_height := internal_zone.height
---					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_right)
-					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_right)
+
+					set_pointer_style (internal_shared.icons.drag_pointer_right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_zone.screen_x
 					l_top := internal_zone.screen_y
 					l_width := internal_zone.width
 					l_height := internal_zone.height
---					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_center)
-					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_center)
+
+					set_pointer_style (internal_shared.icons.drag_pointer_center)
 				end
 				debug ("docking")
 					print ("%NSD_HOT_ZONE_OLD_DOCKING on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
---					print ("%N                                         internal_zone:%N" + internal_zone.out)
 				end
 				internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
+			end
+		end
+
+	set_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Set GLOBAL mouse cursor
+			-- On Windows, we can just set pointer style to main window
+			-- On GTK, we must set current focused widget top window's pointer style
+			-- FIXIT: same as {SD_HOT_ZONE_OLD_MAIN} merge?
+		require
+			not_void: a_pointer_style /= Void
+		local
+			l_platform: PLATFORM
+			l_window: EV_WINDOW
+		do
+			create l_platform
+			if l_platform.is_windows then
+				internal_mediator.docking_manager.main_window.set_pointer_style (a_pointer_style)
+			else
+				l_window := internal_mediator.caller_top_window
+
+				if {lt_floating_zone: SD_FLOATING_ZONE} l_window then
+					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
+				end
+				l_window.set_pointer_style (a_pointer_style)
 			end
 		end
 

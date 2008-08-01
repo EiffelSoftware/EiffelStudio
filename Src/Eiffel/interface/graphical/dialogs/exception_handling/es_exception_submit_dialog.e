@@ -712,13 +712,17 @@ feature {NONE} -- Reporting
 			l_exception_meaning: STRING_32
 			l_exception_code: INTEGER_32
 			l_tag_name: STRING
+			l_exception: EXCEPTION
 		do
 			create Result.make (100)
 
 			if not is_initialized or else not is_synopsis_available then
 				create l_exceptions
-				l_exception_code := l_exceptions.exception
-				l_exception_meaning := l_exceptions.meaning (l_exception_code)
+				l_exception := l_exceptions.exception_manager.last_exception
+				if l_exception /= Void then
+					l_exception_meaning := l_exception.original.meaning
+					l_exception_code := l_exception.original.code
+				end
 				if l_exception_meaning = Void then
 					l_exception_meaning := (" " + l_exception_code.out + " Unknown exception code")
 				end
@@ -728,7 +732,9 @@ feature {NONE} -- Reporting
 
 				if l_exceptions.assertion_violation then
 					Result.append ("Tag: ")
-					l_tag_name := l_exceptions.tag_name
+					if l_exception /= Void then
+						l_tag_name := l_exception.original.message
+					end
 					if l_tag_name = Void then
 						l_tag_name := "unknown tag name"
 					end
@@ -736,18 +742,19 @@ feature {NONE} -- Reporting
 					Result.append_character (' ')
 				end
 
-				l_class_name := l_exceptions.class_name
+				if l_exception /= Void then
+					l_class_name := l_exception.original.type_name
+				end
 				if l_class_name /= Void then
-					Result.append ("in [")
+					Result.append ("in {")
 					Result.append (l_class_name)
-					l_recipient := l_exceptions.recipient_name
+					Result.append_character ('}')
+					l_recipient := l_exception.original.recipient_name
 					if l_recipient /= Void then
 						Result.append_character ('.')
 						Result.append (l_recipient)
 					end
-					Result.append_character (']')
 				end
-
 				Result.append (" in ")
 				Result.append (workbench_name)
 				Result.append_character ('.')

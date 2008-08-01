@@ -200,11 +200,15 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 	synchronize
 			-- Synchronizes any new data (compiled or other wise)
 		local
+			l_stone: STONE
 			l_new_stone: STONE
 		do
 			if is_initialized then
-				l_new_stone := stone.synchronized_stone
-				if l_new_stone /= stone then
+				l_stone := stone
+				if l_stone /= Void then
+					l_new_stone := l_stone.synchronized_stone
+				end
+				if l_new_stone /= l_stone then
 						-- Force recomputation
 					stone_change_notified := False
 					is_in_stone_synchronization := True

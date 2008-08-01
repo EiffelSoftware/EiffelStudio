@@ -98,7 +98,7 @@ feature -- Query
 				loop
 					l_window := l_windows.item
 					if l_window /= Void and then not l_window.is_destroyed then
-						if l_window = caller or else l_window.has_recursive (caller) then
+						if ({l_floating_zone: EV_WINDOW} caller and then l_window = l_floating_zone) or else l_window.has_recursive (caller) then
 							last_top_window := l_window
 						end
 					end

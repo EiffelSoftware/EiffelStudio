@@ -323,6 +323,7 @@ feature -- Access
 		do
 			create l_vis.make
 			l_vis.set_directory (a_directory)
+			l_vis.set_recursive (True)
 			target.process (l_vis)
 			Result := l_vis.found_clusters
 		ensure
@@ -369,6 +370,39 @@ feature -- Access
 					Result ?= l_assembly.dotnet_classes.found_item
 				end
 			end
+		end
+
+	library_of_uuid (a_uuid: !UUID; a_recursive: BOOLEAN): !LIST [!CONF_LIBRARY] is
+			-- Return list of libraries identified by UUID
+			--
+			-- Note: Since it is possible that multiple libraries share the same UUID, a list of
+			--       {CONF_LIBRARY} is returned.
+			--
+			-- `a_uuid': UUID of requested library.
+			-- `a_recursive': If True `library_of_uuid' will also look in sub libraries.
+			-- `Result': list of libraries having `a_uuid' as its UUID, empty if no library in universe with
+			--           given uuid was found.
+		require
+			target_not_void: target /= Void
+		local
+			l_visitor: CONF_FIND_UUID_VISITOR
+		do
+			create l_visitor.make
+			l_visitor.set_uuid (a_uuid)
+			l_visitor.set_recursive (a_recursive)
+			target.process (l_visitor)
+			Result := l_visitor.found_libraries
+		ensure
+			results_valid: Result.for_all (
+				agent (a_lib: !CONF_LIBRARY; a_id: !UUID): BOOLEAN
+					do
+						Result := a_lib.library_target.system.uuid.is_equal (a_id)
+					end (?, a_uuid))
+			results_valid: a_recursive implies Result.for_all (
+				agent (a_lib: !CONF_LIBRARY): BOOLEAN
+					do
+						Result := a_lib.target = target
+					end)
 		end
 
 feature -- Update

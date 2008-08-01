@@ -31,8 +31,11 @@ feature -- Basic operations
 			-- To be called when the button has became useless.
 		local
 			l_pool: like internal_recycle_pool
+			l_recycle_actions: like internal_recycle_actions
+			l_action: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_recycled: ARRAYED_LIST [EB_RECYCLABLE]
 			l_recycling: BOOLEAN
+			l_compare: BOOLEAN
 		do
 			if not is_recycled and not is_recycling then
 					-- Prevents multiple calls.
@@ -89,19 +92,21 @@ feature -- Basic operations
 				internal_recycle
 
 					-- Remove registered actions
+				l_recycle_actions := internal_recycle_actions
 				if internal_recycle_actions /= Void then
-					internal_recycle_actions.do_all (agent (a_item: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE [ANY, TUPLE]])
-						local
-							l_compare: BOOLEAN
-						do
-							l_compare := a_item.sequence.object_comparison
-							a_item.sequence.compare_objects
-							a_item.sequence.prune_all (a_item.action)
+					from l_recycle_actions.start until l_recycle_actions.after loop
+						l_action := l_recycle_actions.item
+						if l_action /= Void then
+							l_compare := l_action.sequence.object_comparison
+							l_action.sequence.compare_objects
+							l_action.sequence.prune_all (l_action.action)
 							if not l_compare then
-								a_item.sequence.compare_references
+								l_action.sequence.compare_references
 							end
-						end)
-					internal_recycle_actions.wipe_out
+						end
+						l_recycle_actions.forth
+					end
+					l_recycle_actions.wipe_out
 				end
 
 					-- Detachment processing

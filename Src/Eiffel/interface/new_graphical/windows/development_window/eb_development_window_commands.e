@@ -126,6 +126,15 @@ feature -- Query
 	restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 			-- Command that restore all minimized editors.
 
+	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
+			-- Command that increase editor font
+
+	editor_font_zoom_out_command: EB_EDITOR_FONT_ZOOM_OUT_COMMAND
+			-- Command that decrease editor font
+
+	editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
+			-- Command that reset editor font
+
 	customized_formatter_command: EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND
 			-- Command to setup customzied formatter
 
@@ -459,6 +468,30 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: restore_editors_command = a_cmd
 		end
 
+	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command) is
+			-- Set `editor_font_zoom_in_command'
+		do
+			editor_font_zoom_in_command := a_cmd
+		ensure
+			set: editor_font_zoom_in_command = a_cmd
+		end
+
+	set_editor_font_zoom_out_command (a_cmd: like editor_font_zoom_out_command) is
+			-- Set `editor_font_zoom_out_command'
+		do
+			editor_font_zoom_out_command := a_cmd
+		ensure
+			set: editor_font_zoom_out_command = a_cmd
+		end
+
+	set_editor_font_zoom_reset_command (a_cmd: like editor_font_zoom_reset_command) is
+			-- Set `editor_font_zoom_reset_command'
+		do
+			editor_font_zoom_reset_command := a_cmd
+		ensure
+			set: editor_font_zoom_reset_command = a_cmd
+		end
+
 	set_customized_formatter_command (a_cmd: like customized_formatter_command) is
 			-- Set `customized_formatter_command' with `a_cmd'.
 		do
@@ -534,6 +567,10 @@ feature -- Recycle
 			lock_tool_bar_command.recycle
 			save_as_cmd.recycle
 
+			editor_font_zoom_in_command.recycle
+			editor_font_zoom_out_command.recycle
+			editor_font_zoom_reset_command.recycle
+			
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle
 			editor_cut_cmd.recycle

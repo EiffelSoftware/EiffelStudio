@@ -155,6 +155,10 @@ feature -- Command
 			l_minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 
+			l_editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
+			l_editor_font_zoom_out_command: EB_EDITOR_FONT_ZOOM_OUT_COMMAND
+			l_editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
+
 			l_edit_contracts_command: ES_EDIT_CONTRACTS_COMMAND
 		do
 				-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
@@ -354,6 +358,13 @@ feature -- Command
 
 			create l_restore_editors_command.make (develop_window)
 			develop_window.commands.set_restore_editors_command (l_restore_editors_command)
+
+			create l_editor_font_zoom_in_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_in_command (l_editor_font_zoom_in_command)
+			create l_editor_font_zoom_out_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_out_command (l_editor_font_zoom_out_command)
+			create l_editor_font_zoom_reset_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_reset_command (l_editor_font_zoom_reset_command)
 
 			develop_window.commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
 			develop_window.commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})

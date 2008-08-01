@@ -87,6 +87,9 @@ feature -- Query
 	tools_list_menu: EV_MENU
 			-- Menu containing list of supported tools
 
+	zoom_font_menu: EV_MENU
+			-- Menu containing items to manipulate editor zoom factor
+
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
 			-- Context menu factory
 		do
@@ -257,6 +260,14 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			set: view_menu = a_menu
 		end
 
+	set_zoom_font_menu (a_menu: like zoom_font_menu) is
+			-- Set `zoom_font_menu'
+		do
+			zoom_font_menu := a_menu
+		ensure
+			set: zoom_font_menu = a_menu
+		end
+
 	set_window_menu (a_menu: like window_menu) is
 			-- Set `a_menu'
 		do
@@ -385,6 +396,10 @@ feature -- Recycle
 				view_menu.destroy
 			end
 
+			if zoom_font_menu /= Void then
+				zoom_font_menu.destroy
+			end
+
 			tools_menu := Void
 			window_menu := Void
 			format_menu := Void
@@ -394,6 +409,7 @@ feature -- Recycle
 			debugging_tools_menu := Void
 			favorites_menu := Void
 			view_menu := Void
+			zoom_font_menu := Void
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

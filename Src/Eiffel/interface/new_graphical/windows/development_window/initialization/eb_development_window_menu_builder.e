@@ -793,6 +793,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_editor_items.extend (l_new_menu_item)
 			l_tool_items.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
+
+			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
+
+			develop_window.menus.set_zoom_font_menu (editor_font_zoom_menu)
+			develop_window.menus.view_menu.extend (develop_window.menus.zoom_font_menu)
 		end
 
 	build_favorites_menu is
@@ -1066,6 +1071,30 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				auto_recycle (l_ms.item)
 				l_ms.forth
 			end
+		end
+
+	editor_font_zoom_menu: EV_MENU is
+			-- Submenu for editor font zoom manipulation
+		local
+			l_new_menu_item: EB_COMMAND_MENU_ITEM
+		do
+			create Result.make_with_text (develop_window.Interface_names.m_zoom)
+
+			l_new_menu_item := develop_window.commands.editor_font_zoom_in_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.editor_font_zoom_out_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.editor_font_zoom_reset_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+		ensure
+			not_void: Result /= Void
 		end
 
 	tool_list_menu: EV_MENU is

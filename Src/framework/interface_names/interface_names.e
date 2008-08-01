@@ -670,6 +670,10 @@ feature -- Accelerator, focus label and menu name
 	m_Windows_tool: STRING_32 is			do Result := locale.translation("&Windows")	end
 	m_Watch_tool: STRING_32 is				do Result := locale.translation("Watch Tool")	end
 	m_Wizard_precompile: STRING_32 is 		do Result := locale.translation("Precompilation &Wizard...")	end
+	m_Zoom: STRING_32 is 					do Result := locale.translation("Zoom")	end
+	m_Zoom_in: STRING_32 is 				do Result := locale.translation("Zoom in")	end
+	m_Zoom_out: STRING_32 is 				do Result := locale.translation("Zoom out")	end
+	m_Zoom_reset: STRING_32 is 				do Result := locale.translation("Reset")	end
 	m_use_current_environment_variables: STRING_32 is 		do Result := locale.translation("Use current environment variables")	end
 	m_use_current_environment_value: STRING_32 is 		do Result := locale.translation("Use current environment value")	end
 	f_Wizard_precompile: STRING_32 is		do Result := locale.translation("Wizard to precompile libraries")	end

@@ -171,6 +171,7 @@
 			</condition>
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
+		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>

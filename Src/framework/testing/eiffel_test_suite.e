@@ -12,7 +12,7 @@ class
 inherit
 	EIFFEL_TEST_SUITE_S
 
-	EIFFEL_TEST_MANAGER
+	EIFFEL_TEST_PROJECT
 		undefine
 			events
 		end
@@ -28,21 +28,19 @@ feature {NONE} -- Initialization
 			l_project_factory: SHARED_EIFFEL_PROJECT
 			l_project: !E_PROJECT
 		do
-			make_collection
-
 				-- Create events
 			create executor_launched_event
 			create factory_launched_event
 			create processor_finished_event
 
-				-- Create storage
-			create test_class_map.make (0)
-			create test_routine_map.make_default
-
 			create l_project_factory
 			l_project ?= l_project_factory.eiffel_project
 			make_with_project (l_project)
-			refresh
+
+			register_locator (create {EIFFEL_TEST_COMPILED_LOCATOR})
+			register_locator (create {EIFFEL_TEST_UNCOMPILED_LOCATOR})
+
+			synchronize
 		end
 
 feature -- Access
@@ -116,5 +114,6 @@ feature -- Events
 
 	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
 			-- <Precursor>
+
 
 end

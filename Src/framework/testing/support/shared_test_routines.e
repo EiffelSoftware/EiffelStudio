@@ -21,7 +21,7 @@ feature -- Query
 				not a_feature_as.is_function and (test_routine_name (a_feature_as) /= Void)
 		end
 
-	is_valid_class (a_class: !CLASS_AS): BOOLEAN
+	is_valid_class_as (a_class: !CLASS_AS): BOOLEAN
 			-- Can `a_class' be a syntactical representation of a class containing tests?
 		do
 			Result := not a_class.is_deferred and then

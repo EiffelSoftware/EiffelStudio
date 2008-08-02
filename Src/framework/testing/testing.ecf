@@ -15,6 +15,7 @@
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="testing" location=".\" recursive="true">
 			<option namespace="Testing">
 			</option>

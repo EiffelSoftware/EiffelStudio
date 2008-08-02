@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-create {EIFFEL_TEST_MANAGER_I}
+create {EIFFEL_TEST_PROJECT_I}
 	make
 
 feature {NONE} -- Initialization
@@ -41,7 +41,7 @@ feature -- Access
 			correct_equality_tester: Result.equality_tester = string_equality_tester
 		end
 
-feature {EIFFEL_TEST_MANAGER_I} -- Access
+feature {EIFFEL_TEST_PROJECT_I} -- Access
 
 	internal_names: !DS_HASH_SET [!STRING]
 			-- Internal storage for `test_routine_names'

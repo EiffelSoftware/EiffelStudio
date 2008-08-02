@@ -16,7 +16,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	EIFFEL_TEST_MANAGER_I
+	EIFFEL_TEST_PROJECT_I
 		redefine
 			events
 		end

@@ -3,32 +3,6 @@
 EWEASEL=$EXPORT_DIR/eweasel
 export EWEASEL
 
-# Set up parameters to make script more readable
-
-. $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh
-
-announce="echo Compiling"
-ecc="$cc $ccflags $optimize $warning_level -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include -I$EWEASEL/source/os/Clib -c"
-elib="ld $ldflags -r -o"
-rm="rm"
-
-# Compile C code
-cd $EWEASEL/source/utilities/Clib
-$announce mem_alloc.c
-$ecc mem_alloc.c
-
-cd $EWEASEL/source/os/Clib
-$announce timer.c
-$ecc timer.c
-$announce unix_os.c
-$ecc unix_os.c
-
-safe_md $EWEASEL/spec/$ISE_PLATFORM/lib
-cd $EWEASEL/spec/$ISE_PLATFORM/lib
-echo "Building library $EWEASEL/spec/$ISE_PLATFORM/lib/eweasel.a"
-$elib eweasel.a $EWEASEL/source/*/Clib/*.o
-
 cd $EWEASEL
 untgz_ccode eweasel no_cancel
 move eweasel $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM/bin
-

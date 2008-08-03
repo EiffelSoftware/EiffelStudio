@@ -45,9 +45,9 @@ feature -- Files
 			Result.add_extension ("eif")
 
 			if is_user_files_supported then
-				l_user := user_priority_file_name (Result)
-				if l_user /= Void and (create {RAW_FILE}.make (l_user)).exists then
-					Result ?= l_user
+				l_user := user_priority_file_name (Result, True)
+				if l_user /= Void then
+					Result := l_user
 				end
 			end
 		ensure

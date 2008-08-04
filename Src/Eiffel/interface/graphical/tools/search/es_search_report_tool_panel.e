@@ -12,8 +12,6 @@ class
 inherit
 	EB_CONSTANTS
 
-	EB_RECYCLABLE
-
 	EB_TOOL
 		rename
 			widget as report_box

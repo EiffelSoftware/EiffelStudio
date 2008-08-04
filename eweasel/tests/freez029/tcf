@@ -1,0 +1,18 @@
+test_name 	object-test-with-generic-type
+test_description Generic type should be used for object test when code is frozen.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	example.e $CLUSTER example.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE output_frozen
+execute_result ok
+compare output_frozen output_empty
+
+test_end

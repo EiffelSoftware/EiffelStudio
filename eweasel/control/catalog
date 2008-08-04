@@ -836,6 +836,7 @@ test	frozen-bitwise-and-local	freez025  tcf pass freezing
 test	wrong-generic-type-caching	freez026  tcf pass freezing
 test	freeze-with-unused-locals	freez027  tcf pass freezing
 test	freeze-with-conversion		freez028  tcf pass freezing
+test	object-test-with-generic-type	freez029  tcf pass freezing
 
 -- Finalizing
 

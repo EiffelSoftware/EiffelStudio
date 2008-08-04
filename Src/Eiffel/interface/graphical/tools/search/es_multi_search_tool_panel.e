@@ -94,7 +94,6 @@ feature {NONE} -- Initialization
 			-- Build actions
 		do
 			search_button.select_actions.extend (agent new_search)
-			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent new_search))
 
 			keyword_field.change_actions.extend (agent enable_disable_search_button)
 			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
@@ -105,7 +104,6 @@ feature {NONE} -- Initialization
 			replace_combo_box.drop_actions.extend (agent display_stone_signature (replace_combo_box, ?))
 
 			replace_button.select_actions.extend (agent replace_current)
-			replace_button.key_press_actions.extend (agent handle_enter_on_button (?, agent replace_current))
 
 			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
 			case_sensitive_button.select_actions.extend (agent force_new_search)
@@ -123,7 +121,6 @@ feature {NONE} -- Initialization
 			search_backward_button.select_actions.extend (agent check_button_changed (search_backward_button))
 
 			replace_all_click_button.select_actions.extend (agent confirm_and_replace_all)
-			replace_all_click_button.key_press_actions.extend (agent handle_enter_on_button (?, agent confirm_and_replace_all))
 
 			notebook.drop_actions.set_veto_pebble_function (agent notebook_veto_pebble)
 			notebook.drop_actions.extend (agent on_drop_notebook)
@@ -375,6 +372,9 @@ feature -- Action
 				(editor.text_displayed.cursor.pos_in_text > l_end or
 				editor.text_displayed.cursor.pos_in_text < l_start)))
 			then
+				if last_was_incremental_search then
+					retrieve_cursor
+				end
 				new_search_or_go_next
 			end
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
@@ -679,12 +679,15 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			-- If new search is not necessary, go to next found.
 		do
 			check_class_succeed := True
+			last_was_incremental_search := False
 			if new_search_set or not multi_search_performer.is_search_launched then
 				dispatch_search
 				select_and_show
 			else
 				go_to_next_found
 			end
+		ensure
+			last_was_not_incremental_search: not last_was_incremental_search
 		end
 
 	on_text_fully_loaded is
@@ -768,14 +771,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 						end
 					end
 				end
-			end
-		end
-
-	handle_enter_on_button (a_key: EV_KEY; a_pro: PROCEDURE [ANY, TUPLE]) is
-			-- Handle enter on buttons.
-		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				a_pro.apply
 			end
 		end
 
@@ -1125,6 +1120,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			class_stone: CLASSI_STONE
 			l_text: STRING_32
 		do
+			last_was_incremental_search := True
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if is_editor_ready then
 				if editor.text_displayed.reading_text_finished then
@@ -1171,6 +1167,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				end
 			end
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
+		ensure
+			last_was_incremental_search: last_was_incremental_search
 		end
 
 	incremental_search_start_pos: INTEGER
@@ -1675,9 +1673,7 @@ feature {NONE} -- Recycle
 			Precursor {ES_MULTI_SEARCH_TOOL_PANEL_IMP}
 		end
 
-feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
-
-	search_history_size: INTEGER is 10
+feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Query
 
 	is_editor_ready: BOOLEAN is
 			-- Is editor ready to be searched?
@@ -1685,6 +1681,64 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			Result := editor /= Void and then
 					editor.text_displayed /= Void
 		end
+
+	last_was_incremental_search: BOOLEAN
+			-- Was last search incremental search?
+
+	is_text_changed_in_editor: BOOLEAN
+			-- Text changed in the editor?
+
+	is_text_new_loaded: BOOLEAN
+			-- Text loaded in the editor?
+
+	go_to_next_need_select_and_show :BOOLEAN
+			-- Flag for need select and show for next select.
+
+	search_is_possible: BOOLEAN is
+			-- Is it possible to look for the current content of the "search for:" field?
+		local
+			for_test: STRING_32
+		do
+			for_test := keyword_field.text
+			Result := not for_test.is_empty
+		end
+
+	temp_reverse: BOOLEAN
+			-- Go upwards or forwards to next match in report?
+
+	is_main_editor: BOOLEAN is
+			-- Is `editor' main editor?
+		do
+			Result := (editor = develop_window.editors_manager.current_editor)
+		end
+
+	is_class_i_editing (a_class : CLASS_I): BOOLEAN is
+			-- If class_i is being edited in the editor.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l: LIST [EB_DEVELOPMENT_WINDOW]
+			l_editor: EB_SMART_EDITOR
+		do
+			l := window_manager.development_windows_with_class (a_class.file_name)
+			if not l.is_empty then
+				from
+					l.start
+				until
+					l.after
+				loop
+					l_editor := l.item.editors_manager.current_editor
+					if l_editor /= Void and then l_editor.is_editable and l.item /= Void then
+						Result := True
+					end
+					l.forth
+				end
+			end
+		end
+
+feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
+
+	search_history_size: INTEGER is 10
 
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
@@ -1746,9 +1800,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				go_to_next_need_select_and_show := False
 			end
 		end
-
-	go_to_next_need_select_and_show :BOOLEAN
-			-- Flag for need select and show for next select.
 
 	check_class_file is
 			-- Check if class of current selected item is loaded. If not, load it.
@@ -1872,11 +1923,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			Result.set_pos_container (develop_window.managed_main_formatters.first)
 		end
 
-	is_text_changed_in_editor: BOOLEAN
-			-- Text changed in the editor?
-
-	is_text_new_loaded: BOOLEAN
-			-- Text loaded in the editor?
 
 	clusters_in_the_project: EB_CLUSTERS is
 			-- Clusters in the project
@@ -1907,15 +1953,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			-- Switch from the normal mode to the replace mode
 			-- or the opposite
 		do
-		end
-
-	search_is_possible: BOOLEAN is
-			-- Is it possible to look for the current content of the "search for:" field?
-		local
-			for_test: STRING_32
-		do
-			for_test := keyword_field.text
-			Result := not for_test.is_empty
 		end
 
 	select_and_show is
@@ -2002,32 +2039,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			old_editor := a_editor
 		end
 
-	temp_reverse: BOOLEAN
-			-- Go upwards or forwards to next match in report?
-
-	is_class_i_editing (a_class : CLASS_I): BOOLEAN is
-			-- If class_i is being edited in the editor.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_editor: EB_SMART_EDITOR
-		do
-			l := window_manager.development_windows_with_class (a_class.file_name)
-			if not l.is_empty then
-				from
-					l.start
-				until
-					l.after
-				loop
-					l_editor := l.item.editors_manager.current_editor
-					if l_editor /= Void and then l_editor.is_editable and l.item /= Void then
-						Result := True
-					end
-					l.forth
-				end
-			end
-		end
 
 	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING_32) is
 			-- Add word to combo box list.
@@ -2050,11 +2061,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	is_main_editor: BOOLEAN is
-			-- Is `editor' main editor?
-		do
-			Result := (editor = develop_window.editors_manager.current_editor)
-		end
 
 	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is
 			-- Display signature name of `a_stone' in `textable'.

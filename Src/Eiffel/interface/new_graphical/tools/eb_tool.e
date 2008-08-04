@@ -23,6 +23,9 @@ inherit
 	EB_DOCKING_MANAGER_ATTACHABLE
 
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
 	SHARED_CONFIGURE_RESOURCES
 		export
@@ -342,19 +345,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle tool.
 		do
 			if content /= Void then
 				content.destroy
-				content := Void
 			end
-			develop_window := Void
-			tool_descriptor := Void
 			if mini_toolbar /= Void then
 				mini_toolbar.destroy
-				mini_toolbar := Void
 			end
+		ensure then
+			content_destroyed: old content /= Void implies (old content).is_destroyed
+			mini_toolbar_destroyed: old mini_toolbar /= Void implies (old mini_toolbar).is_destroyed
+		end
+
+	internal_detach_entities
+			-- <Precusor>
+		do
+			Precursor
+			content := Void
+			develop_window := Void
+			tool_descriptor := Void
+			mini_toolbar := Void
 		ensure then
 			content_detached: content = Void
 			develop_window_detached: develop_window = Void
@@ -363,7 +375,7 @@ feature {NONE} -- Memory management
 		end
 
 invariant
-	develop_window_attached: not is_recycled implies develop_window /= Void
+	develop_window_attached: is_interface_usable implies develop_window /= Void
 		-- Customizable tool needs to be converted.
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 

@@ -18,7 +18,10 @@ inherit
 			Ev_application
 		redefine
 			make_with_tool,
-			clear, internal_recycle, scroll_to_end,set_focus,
+			clear,
+			internal_recycle,
+			internal_detach_entities,
+			scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin, is_general,
 			build_docking_content,
 			attach_to_docking_manager,
@@ -816,25 +819,24 @@ feature {NONE} -- Recycle
 	internal_recycle is
 			-- To be called before destroying this objects
 		do
-			recycle_widgets
-			external_output_manager.prune (Current)
-			toolbar.destroy
-			toolbar := Void
-			widget.destroy
-			widget := Void
-			text_area := Void
-			develop_window := Void
-			Precursor {ES_OUTPUT_TOOL_PANEL}
-		end
-
-	recycle_widgets is
-			-- Recycle widgets.
-		do
 			cmd_lst.destroy
 			state_label.destroy
 			main_frame.destroy
 			input_field.destroy
+			edit_external_commands_cmd_btn.recycle
+			external_output_manager.prune (Current)
+			toolbar.destroy
+			widget.destroy
+			Precursor {ES_OUTPUT_TOOL_PANEL}
+		end
 
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			widget := Void
+			text_area := Void
+			develop_window := Void
+			toolbar := Void
 			terminate_btn := Void
 			run_btn := Void
 			state_label := Void
@@ -847,8 +849,8 @@ feature {NONE} -- Recycle
 			save_output_btn := Void
 			clear_output_btn := Void
 			del_cmd_btn := Void
-			edit_external_commands_cmd_btn.recycle
 			edit_external_commands_cmd_btn := Void
+			Precursor {ES_OUTPUT_TOOL_PANEL}
 		end
 
 feature {NONE} -- Implementation

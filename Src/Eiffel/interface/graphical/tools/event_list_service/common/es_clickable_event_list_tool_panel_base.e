@@ -18,7 +18,8 @@ inherit
 			build_tool_interface,
 			row_item_text,
 			request_show_context_menu,
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 feature {NONE} -- Initialization
@@ -37,12 +38,18 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
-			-- Recycle tool.
+	internal_recycle
+			-- <Precursor>
 		do
 			if is_initialized then
 				grid_token_support.desynchronize_color_or_font_change_with_editor
 			end
+			Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE}
+		end
+
+	internal_detach_entities
+			-- <Precursor>
+		do
 			internal_grid_token_support := Void
 			Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE}
 		ensure then

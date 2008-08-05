@@ -13,7 +13,6 @@ inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			create_mini_tool_bar_items,
-			internal_recycle,
 			on_before_initialize,
 			build_docking_content,
 			show, close
@@ -317,13 +316,6 @@ feature -- Memory management
 	is_destroyed: BOOLEAN is
 		do
 			Result := widget = Void or else widget.is_destroyed
-		end
-
-	internal_recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			Precursor
 		end
 
 indexing

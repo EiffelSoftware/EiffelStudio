@@ -50,7 +50,7 @@ feature -- Basic operations
 			end
 		end
 
-	formatted_string (a_string: !STRING_GENERAL; a_values: !TUPLE): !STRING_32
+	formatted_translation (a_string: !STRING_GENERAL; a_values: !TUPLE): !STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'

@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 --inherit {NONE}
 	ES_SHARED_LOCALE_FORMATTER
 		export
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_string (w_could_not_load_matrix, [a_name]),
+						local_formatter.formatted_translation (w_could_not_load_matrix, [a_name]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_string (w_could_not_load_matrix, [a_path]),
+						local_formatter.formatted_translation (w_could_not_load_matrix, [a_path]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)

@@ -119,6 +119,8 @@ feature -- Open inner container data.
 			l_config_data: SD_CONFIG_DATA
 			l_env: EV_ENVIRONMENT
 		do
+			internal_docking_manager.query.set_opening_tools_layout (True)
+
 			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
 			internal_docking_manager.command.recover_normal_state
 
@@ -216,6 +218,8 @@ feature -- Open inner container data.
 			l_env.application.do_once_on_idle (agent internal_open_maximized_tool_data (l_config_data))
 
 			call_show_actions
+
+			internal_docking_manager.query.set_opening_tools_layout (False)
 		ensure
 			cleared: top_container = Void
 		end
@@ -281,6 +285,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 			l_cmd: SD_DOCKING_MANAGER_COMMAND
 		do
+			found_place_holder_already := False
 			internal_docking_manager.property.set_is_opening_config (True)
 			if not l_retried then
 				l_config_data := config_data_from_file (a_file)
@@ -722,7 +727,20 @@ feature {NONE} -- Implementation
 				check a_type_exist: l_type_id /= -1 end
 				l_state ?= l_internal.new_instance_of (l_type_id)
 				l_state.set_docking_manager (internal_docking_manager)
-				l_state.restore (a_config_data, a_container)
+
+				if a_config_data.titles /= Void and then not a_config_data.titles.is_empty
+					and then a_config_data.titles.first.is_equal (internal_shared.editor_place_holder_content_name) then
+					-- We do something special for place holder zone.
+					-- Ignore duplicated place holder zones
+					-- Because, sometimes the docking data saved is strange such as the docking data in bug#14698
+					if not found_place_holder_already then
+						found_place_holder_already := True
+						l_state.restore (a_config_data, a_container)
+					end
+				else
+					l_state.restore (a_config_data, a_container)
+				end
+
 				-- We should check if we really restored content.
 				if l_state.content /= Void then
 					l_state.set_last_floating_height (a_config_data.height)
@@ -1170,6 +1188,9 @@ feature {NONE} -- Implementation
 				l_all_contents.forth
 			end
 		end
+
+	found_place_holder_already: BOOLEAN
+			-- When executing `open_tools_config', does place holder content already restored?
 
 feature {NONE} -- Internals.
 

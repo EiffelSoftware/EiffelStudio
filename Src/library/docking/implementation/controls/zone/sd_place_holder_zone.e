@@ -65,10 +65,17 @@ feature -- Command
 		end
 
 	extend (a_content: SD_CONTENT) is
-			-- Do nothing.
+			-- <Precursor>
+		local
+			l_widget: EV_WIDGET
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
-			extend_cell (a_content.user_widget)
+			l_widget := a_content.user_widget
+
+			if l_widget.parent /= Void then
+				l_widget.parent.prune (l_widget)
+			end
+			extend_cell (l_widget)
 		end
 
 feature -- Query

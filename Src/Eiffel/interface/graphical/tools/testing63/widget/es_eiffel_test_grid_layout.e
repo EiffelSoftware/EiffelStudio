@@ -36,7 +36,7 @@ feature {NONE} -- Access
 	project: !E_PROJECT
 			-- <Precursor>
 		do
-			Result := test_suite.service.project
+			Result := test_suite.service.eiffel_project
 		end
 
 	test_suite: SERVICE_CONSUMER [EIFFEL_TEST_SUITE_S]

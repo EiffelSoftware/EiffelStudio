@@ -14,8 +14,7 @@ inherit
 		redefine
 			new_keyword_as,
 			new_filled_id_as,
-			new_parent_as,
-			new_eiffel_list_parent_as
+			new_parent_as
 		end
 
 	KL_SHARED_STRING_EQUALITY_TESTER
@@ -89,9 +88,12 @@ feature -- Query
 				   a_code = {EIFFEL_TOKENS}.te_select then
 					is_parsing_parent_clause := True
 				end
-			elseif a_code = {EIFFEL_TOKENS}.te_create or a_code = {EIFFEL_TOKENS}.te_creation or
-				   a_code = {EIFFEL_TOKENS}.te_convert or a_code = {EIFFEL_TOKENS}.te_feature or
-				   a_code = {EIFFEL_TOKENS}.te_indexing or a_code = {EIFFEL_TOKENS}.te_invariant then
+			end
+			if a_code = {EIFFEL_TOKENS}.te_create or a_code = {EIFFEL_TOKENS}.te_creation or
+			   a_code = {EIFFEL_TOKENS}.te_convert or a_code = {EIFFEL_TOKENS}.te_feature or
+			   a_code = {EIFFEL_TOKENS}.te_invariant or (is_parsing_ancestors and
+			   a_code = {EIFFEL_TOKENS}.te_indexing) then
+				is_parsing_ancestors := False
 				if {l_parser: EIFFEL_PARSER} a_scn then
 					l_parser.abort
 				end
@@ -108,7 +110,7 @@ feature -- Query
 					create l_type.make (a_scn.text_count)
 					a_scn.append_text_to_string (l_type)
 					if not l_type.is_case_insensitive_equal ("NONE") then
-						internal_ancestors.put_last (l_type)
+						internal_ancestors.put_last (l_type.as_upper)
 					end
 				end
 			end
@@ -118,12 +120,6 @@ feature -- Query
 			-- <Precursor>
 		do
 			is_parsing_parent_clause := False
-		end
-
-	new_eiffel_list_parent_as (n: INTEGER_32): PARENT_LIST_AS
-			-- <Precursor>
-		do
-			is_parsing_ancestors := False
 		end
 
 end

@@ -80,13 +80,16 @@ feature -- Visiting
 
 	process_group (a_group: CONF_GROUP)
 			-- <Precursor>
+		local
+			l_group: G
 		do
-			if {l_group: G} a_group then
+			l_group ?= a_group
+			if l_group /= Void then
 				if is_matching (l_group) then
 					found_groups.force (l_group)
 				end
 			end
-		end
+	end
 
 	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>

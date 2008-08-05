@@ -2308,21 +2308,10 @@ feature {NONE} -- Implementation
 				l_sd_button.enable_displayed
 			end
 
-			if {l_tool_bar_content: SD_TOOL_BAR_CONTENT} (debugging_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)) then
-				if l_sd_button /= Void then
-					if {l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]} l_tool_bar_content.items then
-						l_buttons.go_i_th (l_buttons.index_of (l_sd_button, 1))
-						l_buttons.put_left (create {SD_TOOL_BAR_SEPARATOR}.make)
-					end
-				end
-				l_tool_bar_content.refresh
-			end
-
 			-- Setup tools
 			debugging_window.close_all_tools
 
 			l_dyna_tools := debugging_window.shell_tools
-
 
 				--| Class tool (below the editor)
 			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel

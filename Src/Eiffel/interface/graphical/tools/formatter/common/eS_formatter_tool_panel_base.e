@@ -95,8 +95,6 @@ feature{NONE} -- Clean up
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			Precursor {EB_HISTORY_OWNER}
-
 			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
 			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
 				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)

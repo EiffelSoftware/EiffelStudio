@@ -18,7 +18,8 @@ inherit
 		redefine
 			on_before_initialize,
 			on_after_initialized,
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 	EVENT_LIST_OBSERVER
@@ -103,9 +104,14 @@ feature {NONE} -- Clean up
 					event_list.service.disconnect_events (Current)
 				end
 			end
+			Precursor
+		end
 
+	internal_detach_entities
+			-- <Precursor>
+		do
 			internal_grid_wrapper := Void
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor
 		ensure then
 			internal_grid_wrapper_deatched: internal_grid_wrapper = Void
 		end

@@ -23,6 +23,7 @@ inherit
         redefine
         	make,
             internal_recycle,
+            internal_detach_entities,
             build_mini_toolbar,
             icon,
             icon_pixmap,
@@ -171,8 +172,6 @@ feature {NONE} -- Clean up
         		tool_descriptor_recycled: tool_descriptor.is_recycled or tool_descriptor.is_recycling
         	end
 
-            internal_stone_director := Void
-
             if internal_icon_pixmap /= Void then
                 --internal_icon_pixmap.destroy
             end
@@ -198,8 +197,17 @@ feature {NONE} -- Clean up
                 l_site.set_site (Void)
             end
 
-            Precursor {EB_TOOL}
+            Precursor
         end
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			internal_stone_director := Void
+			Precursor
+		ensure then
+			internal_stone_director_detached: internal_stone_director = Void
+		end
 
 feature -- Access
 

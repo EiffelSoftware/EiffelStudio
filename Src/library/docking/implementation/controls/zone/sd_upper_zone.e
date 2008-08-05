@@ -177,6 +177,18 @@ feature -- Command
 
 	on_minimize is
 			-- Handle minimize actions.
+		do
+			restore_from_maximized
+
+			if is_minimized then
+				recover_normal_size_from_minimize
+			else
+				minimize
+			end
+		end
+
+	minimize is
+			-- Minimize current
 		local
 			l_parent: SD_MIDDLE_CONTAINER
 			l_parent_parent: EV_CONTAINER
@@ -184,65 +196,59 @@ feature -- Command
 			l_box: SD_MIDDLE_CONTAINER
 			l_last_normal_size: INTEGER
 		do
-			restore_from_maximized
+			internal_docking_manager.command.lock_update (Current, True)
+			l_parent ?= parent
+			if l_parent /= Void then
+				if not l_parent.is_minimized then
+					l_parent_parent := l_parent.parent
+					save_parent_split_position (l_parent_parent)
+					l_last_normal_size := l_parent.split_position
+					l_parent_parent.prune (l_parent)
 
-			if is_minimized then
-				recover_normal_size_from_minimize
-			else
-				internal_docking_manager.command.lock_update (Current, True)
-				l_parent ?= parent
-				if l_parent /= Void then
-					if not l_parent.is_minimized then
-						l_parent_parent := l_parent.parent
-						save_parent_split_position (l_parent_parent)
-						l_last_normal_size := l_parent.split_position
-						l_parent_parent.prune (l_parent)
+					if l_parent.first = Current then
 
-						if l_parent.first = Current then
+						l_other := l_parent.second
+						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+						l_parent.wipe_out
+						l_box := minimized_container (l_parent)
 
-							l_other := l_parent.second
-							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
-							l_parent.wipe_out
-							l_box := minimized_container (l_parent)
-
-							l_parent_parent.extend (l_box)
-							l_box.extend (Current)
-							l_box.disable_item_expand (Current)
-							l_box.extend (l_other)
-						else
-							l_other := l_parent.first
-							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
-							l_parent.wipe_out
-							l_box := minimized_container (l_parent)
-							l_parent_parent.extend (l_box)
-							l_box.extend (l_other)
-							l_box.extend (Current)
-							l_box.disable_item_expand (Current)
-						end
-						l_box.set_split_position (l_last_normal_size)
-						restore_parent_split_position (l_parent_parent)
-
+						l_parent_parent.extend (l_box)
+						l_box.extend (Current)
+						l_box.extend (l_other)
+						l_box.disable_item_expand (Current)
 					else
-						l_box ?= l_parent
-						check not_void: l_box /= Void end
+						l_other := l_parent.first
+						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+						l_parent.wipe_out
+						l_box := minimized_container (l_parent)
+						l_parent_parent.extend (l_box)
+						l_box.extend (l_other)
+						l_box.extend (Current)
 						l_box.disable_item_expand (Current)
 					end
-
-					is_minimized := True
-					show_notebook_contents (False)
-					internal_notebook.set_show_minimized (is_minimized)
-
-					internal_docking_manager.query.inner_container (Current).update_middle_container
+					l_box.set_split_position (l_last_normal_size)
+					restore_parent_split_position (l_parent_parent)
 
 				else
-					-- Current is in top level
+					l_box ?= l_parent
+					check not_void: l_box /= Void end
+					l_box.disable_item_expand (Current)
 				end
-				internal_docking_manager.command.resize (True)
-				if l_other /= Void then
-					internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
-				end
-				internal_docking_manager.command.unlock_update
+
+				is_minimized := True
+				show_notebook_contents (False)
+				internal_notebook.set_show_minimized (is_minimized)
+
+				internal_docking_manager.query.inner_container (Current).update_middle_container
+
+			else
+				-- Current is in top level
 			end
+			internal_docking_manager.command.resize (True)
+			if l_other /= Void then
+				internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
+			end
+			internal_docking_manager.command.unlock_update
 		end
 
 	minimize_for_restore is

@@ -10,7 +10,7 @@ deferred class
 
 inherit
 	SD_ACCESS
-	
+
 feature -- Properties
 
 	docking_manager: SD_DOCKING_MANAGER is
@@ -185,8 +185,8 @@ feature -- Commands
 			l_zone: SD_UPPER_ZONE
 		do
 			l_zone ?= zone
-			if l_zone /= Void and then not l_zone.is_minimized then
-				l_zone.on_minimize
+			if l_zone /= Void then
+				l_zone.minimize
 			end
 		end
 

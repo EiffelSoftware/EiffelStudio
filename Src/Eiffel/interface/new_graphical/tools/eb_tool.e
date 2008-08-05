@@ -362,11 +362,11 @@ feature {NONE} -- Memory management
 	internal_detach_entities
 			-- <Precusor>
 		do
-			Precursor
 			content := Void
 			develop_window := Void
 			tool_descriptor := Void
 			mini_toolbar := Void
+			Precursor
 		ensure then
 			content_detached: content = Void
 			develop_window_detached: develop_window = Void

@@ -52,8 +52,6 @@ feature -- Command
 			if is_minimized then
 				l_parent ?= parent
 				if l_parent /= Void then
-					check is_minimized: l_parent.is_minimized end
-
 					l_box ?= l_parent
 					-- If l_box is void here (is a split area), that means, SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.					
 					if l_box /= Void then

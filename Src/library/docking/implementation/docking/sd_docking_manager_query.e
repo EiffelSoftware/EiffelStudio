@@ -97,6 +97,9 @@ feature -- Querys
 			end
 		end
 
+	is_opening_tools_layout: BOOLEAN
+			-- If executing {SD_DOCKING_MANAGER_QUERY}.`open_tools_config'
+
 	content_by_title_for_restore (a_unique_title: STRING_GENERAL): SD_CONTENT is
 			-- Content by a_unique_title. Result = Void if not found.
 		require
@@ -112,7 +115,14 @@ feature -- Querys
 				l_contents.after or Result /= Void
 			loop
 				if l_contents.item.unique_title.as_string_32.is_equal (a_unique_title.as_string_32) then
-					Result := l_contents.item
+					if is_opening_tools_layout then
+						-- If opening tools layout, we ignore editor content
+						if l_contents.item.type /= {SD_ENUMERATION}.editor then
+							Result := l_contents.item
+						end
+					else
+						Result := l_contents.item
+					end
 				end
 				l_contents.forth
 			end
@@ -527,6 +537,16 @@ feature -- Querys
 
 	internal_restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically, actions will be invoked.
+
+feature -- Command
+
+	set_opening_tools_layout (a_bool: BOOLEAN) is
+			-- Set `is_opening_tools_layout' with `a_bool'
+		do
+			is_opening_tools_layout := a_bool
+		ensure
+			set: is_opening_tools_layout = a_bool
+		end
 
 feature {NONE} -- Implemnetation
 

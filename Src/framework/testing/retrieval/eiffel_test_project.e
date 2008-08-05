@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_project (a_project: like project)
+	make_with_project (a_project: like eiffel_project)
 			-- Initialize `Current'.
 		local
 			l_manager: EB_PROJECT_MANAGER
@@ -46,12 +46,12 @@ feature {NONE} -- Initialization
 			create test_routine_map.make_default
 			create locators.make
 		ensure
-			project_set: project = a_project
+			project_set: eiffel_project = a_project
 		end
 
 feature -- Access
 
-	project: !E_PROJECT is
+	eiffel_project: !E_PROJECT is
 			-- Project in which we look for tests
 		do
 			Result := internal_project
@@ -77,8 +77,8 @@ feature {EIFFEL_TEST_CLASS_LOCATOR_I} -- Access
 
 feature {NONE} -- Access
 
-	internal_project: like project
-			-- Internal storage of `project'
+	internal_project: like eiffel_project
+			-- Internal storage of `eiffel_project'
 
 	test_class_map: !DS_HASH_TABLE [!EIFFEL_TEST_CLASS, !EIFFEL_CLASS_I]
 			-- Hash table mapping test classes (descendants of {TEST_SET}) to a list of routines names
@@ -194,7 +194,7 @@ feature -- Status setting
 		end
 
 	synchronize_with_class (a_class: !EIFFEL_CLASS_I) is
-			--
+			-- <Precursor>
 		do
 		end
 
@@ -273,9 +273,6 @@ feature {NONE} -- Element change
 			l_ctags, l_ftags: !DS_HASH_SET [!STRING]
 		do
 			l_names := a_test_class.internal_names
-
-			-- Check timestamp & parse!
-
 			l_features := valid_features (a_class_as)
 
 			create l_ctags.make_default
@@ -351,7 +348,7 @@ feature {NONE} -- Element change
 		end
 
 	remove_old_classes is
-			--
+			-- Remove all test routines for any remaining test class in `old_class_map'.
 		require
 			old_class_map_attached: old_class_map /= Void
 		local
@@ -387,7 +384,7 @@ feature {NONE} -- Element change
 feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation
 
 	report_test_class (a_class: !EIFFEL_CLASS_I) is
-			-- Synchronize test class and routine maps
+			-- <Precursor>
 		local
 			l_ast: ?CLASS_AS
 			l_parser: EIFFEL_PARSER
@@ -414,7 +411,6 @@ feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation
 					add_test_class (a_class, {!CLASS_AS} #? l_ast)
 				end
 			end
-			error_handler.wipe_out
 		end
 
 feature {NONE} -- Implementation: tag retrieval

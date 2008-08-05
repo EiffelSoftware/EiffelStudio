@@ -1,7 +1,10 @@
 indexing
 	description: "[
-		Objects that scan a project for tests by traversing classes in testing clusters and analysing
-		their inheritance structure.
+		Objects that implement {EIFFEL_TEST_CLASS_LOCATOR_I} by traversing the parent clause and
+		analysing the inheritance structure of a potential test class.
+		
+		Note: {EIFFEL_TEST_UNCOMPILED_LOCATOR} is the counterpart to {EIFFEL_TEST_COMPILED_LOCATOR},
+		      which means they are optimized so each of them locates disjoint subsets of test classes.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,45 +61,51 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				create traversed_helpers.make_default
 
 				test_cluster_depth := 0
-				process_target (project.project.universe.target)
+				process_target (project.eiffel_project.universe.target)
 
 				traversed_descendants := Void
 				traversed_helpers := Void
 			end
 		end
 
-	add_potential_test_class (a_class: !EIFFEL_CLASS_I) is
+	report_potential_test_class (a_class: !EIFFEL_CLASS_I) is
+			-- Report class as potential test class if it inherits from {TEST_SET}
 			--
+			-- `a_class': Class to be reported.
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_class_as: !CLASS_AS
 		do
-			if is_descendant (a_class) then
+			if is_descendant (a_class, False) then
 				project.report_test_class (a_class)
 			end
 		end
 
-	is_descendant (a_class: !EIFFEL_CLASS_I): BOOLEAN is
+	is_descendant (a_class: !EIFFEL_CLASS_I; a_cache: BOOLEAN): BOOLEAN is
+			-- Is class descendant of {TEST_SET}?
 			--
+			-- `a_class': Class for which it should be determined whether it is a descendant of {TEST_SET}.
+			-- `a_cache': If True, `a_class' will be cached in either `traversed_descendants' or
+			--            `traversed_helpers'. This should be False for actual test classes, since they are
+			--            generally not parents of other test classes.
 		require
 			a_class_in_project: project.is_class_in_project (a_class)
 			ancestor_exists: cached_common_ancestor /= Void
 		local
 			l_parents: like parents_of_class
-			l_ancestor: EIFFEL_CLASS_I
 		do
-			l_ancestor := cached_common_ancestor
-			if a_class = l_ancestor then
-				Result := True
-			elseif project.is_class_in_project (a_class) then
+			if a_class = cached_common_ancestor then
+					-- `a_class' is
 				Result := True
 			elseif traversed_descendants.has (a_class) then
 				Result := True
-			elseif not (traversed_helpers.has (a_class) or a_class = project.project.system.any_class) then
-				traversed_helpers.put (a_class)
+			elseif not (traversed_helpers.has (a_class) or a_class = project.eiffel_project.system.any_class) then
+				if a_cache then
+					traversed_helpers.put (a_class)
+				end
 				if a_class.is_compiled then
-					if l_ancestor.is_compiled /= Void then
-						Result := a_class.compiled_class.conform_to (l_ancestor.compiled_class)
+					if cached_common_ancestor.is_compiled /= Void then
+						Result := a_class.compiled_class.conform_to (cached_common_ancestor.compiled_class)
 					end
 				else
 					l_parents := parents_of_class (a_class)
@@ -105,19 +114,20 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 					until
 						l_parents.after or Result
 					loop
-						Result := is_descendant (l_parents.item_for_iteration)
+						Result := is_descendant (l_parents.item_for_iteration, True)
+						l_parents.forth
 					end
 				end
-				if Result then
+				if Result and a_cache then
 					traversed_helpers.remove (a_class)
 					traversed_descendants.put (a_class)
 				end
 			end
 		ensure
-			result_equals_descendant: Result = (traversed_descendants.has (a_class) or
-				project.is_class_in_project (a_class) or a_class = cached_common_ancestor)
-			result_equals_not_helper: Result = (not traversed_helpers.has (a_class) or
-				a_class = project.project.system.any_class)
+			cached_correctly: a_cache implies
+			    (Result = (traversed_descendants.has (a_class) or a_class = cached_common_ancestor))
+			cached_correctly: a_cache implies
+				(Result = (not traversed_helpers.has (a_class) or a_class = project.eiffel_project.system.any_class))
 		end
 
 	parents_of_class (a_class: !EIFFEL_CLASS_I): !DS_LINEAR [!EIFFEL_CLASS_I] is
@@ -137,7 +147,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_list: !DS_ARRAYED_LIST [!EIFFEL_CLASS_I]
 		do
-			l_universe := project.project.universe
+			l_universe := project.eiffel_project.universe
 			l_group := a_class.cluster
 			create l_file.make (a_class.file_name)
 			l_file.open_read
@@ -183,7 +193,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				loop
 					if {l_class: !EIFFEL_CLASS_I} l_ht.item_for_iteration then
 						if not l_class.is_compiled then
-							add_potential_test_class (l_class)
+							report_potential_test_class (l_class)
 						end
 					end
 					l_ht.forth
@@ -196,6 +206,9 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 
 	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER) is
 			-- <Precursor>
+			--
+			-- `test_cluster_depth' is used to keep track whether the visitor is traversing sub items or a
+			-- test cluster.
 		require else
 			locating: is_locating
 		do

@@ -2,11 +2,10 @@ indexing
 	description: "[
 		Interface managing eiffel tests defined in classes of an eiffel project.
 		
-		Tests are added, removed or updated depending on the project state. After every compiliation the
-		interface will do this automatically by sanning the project. However one can force this action
-		not only for the whole project but also for a single class within the project.
+		Tests are added, removed or updated internally according to the project state. After every
+		compiliation the interface will do this automatically by scanning the project. However one can
+		force this action not only for the whole project but also for a single class within the project.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,7 @@ inherit
 
 feature -- Access
 
-	project: !E_PROJECT
+	eiffel_project: !E_PROJECT
 			-- Project containing actual eiffel classes
 		require
 			usable: is_interface_usable
@@ -49,7 +48,7 @@ feature -- Access
 feature -- Status report
 
 	is_project_initialized: BOOLEAN
-			-- Has `Current' already received a project for which it should manage tests?
+			-- Has `eiffel_project' been successfully compiled yet?
 		deferred
 		end
 
@@ -60,19 +59,19 @@ feature -- Status report
 		deferred
 		ensure
 			result_implies_project_initialized: Result implies is_project_initialized
-			result_implies_project_compiled: Result implies project.successful
+			result_implies_project_compiled: Result implies eiffel_project.successful
 		end
 
 	is_class_in_project (a_class: !EIFFEL_CLASS_I): BOOLEAN is
-			-- Does `a_class' belong to `project'?
+			-- Does `a_class' belong to `eiffel_project'?
 			--
-			-- `a_class': Class for which it should be determined whether it exists in `project'.
-			-- `Result': True is class can be found in `project', False otherwise
+			-- `a_class': Class for which it should be determined whether it exists in `eiffel_project'.
+			-- `Result': True is class can be found in `eiffel_project', False otherwise
 		require
 			usable: is_interface_usable
 			project_available: is_project_initialized
 		do
-			Result := project.universe.class_named (a_class.name, a_class.cluster) /= Void
+			Result := eiffel_project.universe.class_named (a_class.name, a_class.cluster) /= Void
 		end
 
 	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN is
@@ -113,10 +112,9 @@ feature -- Status report
 feature -- Status setting
 
 	synchronize is
-			-- Synchronize `tests' with test classes found in `project'
+			-- Synchronize `tests' with test classes found in `eiffel_project'
 		require
 			usable: is_interface_usable
-			project_initialized: is_project_initialized
 			not_synchronizing: not is_updating_tests
 		deferred
 		ensure
@@ -160,7 +158,7 @@ feature -- Element change
 		end
 
 	add_test_cluster (a_name, a_path: !STRING; a_parent: ?CONF_CLUSTER) is
-			-- Add a new testing cluster to `project'. Instance of new cluster will be available through
+			-- Add a new testing cluster to `eiffel_project'. Instance of new cluster will be available through
 			-- `last_created_cluster'
 			--
 			-- `a_name': Name for new cluster.
@@ -202,12 +200,14 @@ feature -- Element change
 feature {EIFFEL_TEST_CLASS_LOCATOR_I} -- Basic operations
 
 	report_test_class (a_class: !EIFFEL_CLASS_I)
-			-- Report class as potential test class
+			-- Report class as potential test class.
 			--
-			-- Note: Implementation of `report_test_class' should be protected against multiple reports for
-			--       the same class.
-			--
-			-- `a_class': Class beeing a potential test class
+			-- `a_class': Class which was identified by a {EIFFEL_TEST_CLASS_LOCATOR_I} as a descendant
+			--            of {TEST_SET}.
+		require
+			usable: is_interface_usable
+			project_available: is_project_initialized
+			synchronizing: is_updating_tests
 		deferred
 		end
 

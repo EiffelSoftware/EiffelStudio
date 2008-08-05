@@ -44,7 +44,7 @@ feature {NONE} -- Query
 			l_universe: UNIVERSE_I
 		do
 			create l_uuid.make_from_string ("B77B3A44-A1A9-4050-8DF9-053598561C33")
-			l_universe := project.project.system.universe
+			l_universe := project.eiffel_project.system.universe
 			l_lib_list := l_universe.library_of_uuid (l_uuid, False)
 			if not l_lib_list.is_empty then
 				l_lib := l_lib_list.first
@@ -74,7 +74,7 @@ feature {EIFFEL_TEST_PROJECT_I} -- Status setting
 		end
 
 	locate_classes
-			-- Locate potential test classes in `project'.
+			-- Locate potential test classes in `eiffel_project'.
 		require
 			locating: is_locating
 		deferred

@@ -75,19 +75,20 @@ feature {NONE} --Initialization
 		do
 			create grid
 			grid.enable_tree
-			grid.enable_single_row_selection
+			--grid.enable_single_row_selection
+			grid.enable_multiple_row_selection
 			grid.hide_tree_node_connectors
 			grid.set_dynamic_content_function (agent computed_grid_item)
 			grid.enable_partial_dynamic_content
 			grid.row_expand_actions.extend (agent on_row_expansion)
 
 				-- grid appearance
-			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			grid.set_focused_selection_color (colors.grid_focus_selection_color)
 			grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			grid.row_select_actions.extend (agent highlight_row)
-			grid.row_deselect_actions.extend (agent dehighlight_row)
+			grid.row_deselect_actions.extend (agent unhighlight_row)
 			grid.focus_in_actions.extend (agent change_focus)
 			grid.focus_out_actions.extend (agent change_focus)
 
@@ -270,7 +271,9 @@ feature {NONE} -- Element change
 		do
 			Precursor (a_item)
 			if untagged_items.is_empty then
+					-- This will remove `untagged_subrow' from the grid along with any remaining subrow
 				grid.remove_row (untagged_subrow.index)
+				untagged_subrow := Void
 			else
 				from
 					i := first_untagged_index
@@ -312,16 +315,16 @@ feature {NONE} -- Implementation
 			-- Make `a_row' look like it is fully selected.
 		do
 			if grid.has_focus then
-				a_row.set_background_color (preferences.editor_data.selection_background_color)
+				a_row.set_background_color (colors.grid_focus_selection_color)
 			else
-				a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+				a_row.set_background_color (colors.grid_unfocus_selection_color)
 			end
 		end
 
-	dehighlight_row (a_row: !EV_GRID_ROW) is
+	unhighlight_row (a_row: !EV_GRID_ROW) is
 			-- Make `a_row' look like it is not selected.
 		do
-			a_row.set_background_color (preferences.editor_data.class_background_color)
+			a_row.set_background_color (grid.background_color)
 		end
 
 	change_focus is

@@ -330,21 +330,21 @@ feature {NONE} -- Text loading
 				text_displayed.update_click_list (dev_window.stone, True)
 				text_displayed.clear_syntax_error
 			end
-			set_title_saved (true)
+			set_title_saved (True)
 		end
 
 	on_text_reset is
 			-- Redefine
 		do
 			Precursor
-			set_title_saved (true)
+			set_title_saved (True)
 		end
 
 	on_text_edited (directly_edited: BOOLEAN) is
 			-- Redefine
 		do
 			Precursor (directly_edited)
-			set_title_saved (false)
+			set_title_saved (False)
 		end
 
 	is_text_loaded_called: BOOLEAN
@@ -1336,7 +1336,12 @@ feature {NONE} -- Code completable implementation
 			l_current_line: like current_line
 			l_current_token, l_cur_token: EDITOR_TOKEN
 			l_comment: EDITOR_TOKEN_COMMENT
-			l_has_left_brace_ahead, l_has_right_brace_following, l_has_right_brace_ahead, seperator_ahead: BOOLEAN
+			l_has_left_brace_ahead,
+			l_has_right_brace_ahead,
+			l_has_right_brace_following,
+			l_has_left_brace_following,
+			l_seperator_ahead,
+			l_seperator_following: BOOLEAN
 			l_comment_ahead: BOOLEAN
 		do
 			if has_selection implies text_displayed.selection_start.y_in_lines = text_displayed.selection_end.y_in_lines then
@@ -1361,17 +1366,18 @@ feature {NONE} -- Code completable implementation
 					until
 						l_current_line.after or l_current_line.item = text_displayed.cursor.token
 					loop
-						if l_current_line.item.is_text and then token_equal (l_current_line.item, "(") then
+						if not l_has_left_brace_ahead and then l_current_line.item.is_text and then token_equal (l_current_line.item, "(") then
 							l_has_left_brace_ahead := True
 						end
-						if l_current_line.item.is_text and then token_equal (l_current_line.item, ")") then
+						if not l_has_right_brace_ahead and then l_current_line.item.is_text and then token_equal (l_current_line.item, ")") then
 							l_has_right_brace_ahead := True
 						end
 						if
-							l_current_line.item.is_text and then (token_equal (l_current_line.item, ",") or else
-							token_equal (l_current_line.item, ";"))
+							not l_seperator_ahead and then
+							l_current_line.item.is_text and then
+							(token_equal (l_current_line.item, ",") or else token_equal (l_current_line.item, ";"))
 						then
-							seperator_ahead := True
+							l_seperator_ahead := True
 						end
 						l_current_line.forth
 					end
@@ -1379,16 +1385,31 @@ feature {NONE} -- Code completable implementation
 					from
 						l_current_token := current_token_in_line (l_current_line)
 					until
-						l_current_token = Void or else l_current_token = l_current_line.eol_token
+						l_current_token = Void or else
+						l_current_token = l_current_line.eol_token or else
+						{lt_com: EDITOR_TOKEN_COMMENT}l_current_token
 					loop
-						if token_equal (l_current_token, ")") then
+						if
+							not l_has_right_brace_following and then
+							token_equal (l_current_token, ")")
+						then
 							l_has_right_brace_following := True
+						end
+						if
+							not l_has_left_brace_following and then
+							token_equal (l_current_token, "(") then
+							l_has_left_brace_following := True
+						end
+						if
+							not l_seperator_following and then
+							l_current_token.is_text and then
+							(token_equal (l_current_token, ",") or else token_equal (l_current_token, ";"))
+						then
+							l_seperator_following := True
 						end
 						l_current_token := l_current_token.next
 					end
-					Result := 	l_has_left_brace_ahead or
-								(l_has_right_brace_following and seperator_ahead) or
-								l_has_right_brace_ahead
+					Result := 	((l_has_left_brace_ahead or l_seperator_ahead) and then (l_has_right_brace_following or l_seperator_following))
 				end
 			end
 		end

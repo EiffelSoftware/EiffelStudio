@@ -24,7 +24,7 @@ class TIME_DURATION inherit
 		undefine
 			is_equal
 		end
-		
+
 create
 
 	make,
@@ -32,7 +32,7 @@ create
 	make_by_seconds,
 	make_by_fine_seconds
 
-feature -- Initialization 
+feature -- Initialization
 
 	make (h, m, s: INTEGER) is
 			-- Set `hour', `minute' and `second' to `h', `m', `s' respectively.
@@ -47,7 +47,7 @@ feature -- Initialization
 		end
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
-			-- Set `hour, `minute' and `second' to `h', `m' and truncated to 
+			-- Set `hour, `minute' and `second' to `h', `m' and truncated to
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
 		do
@@ -88,12 +88,12 @@ feature -- Initialization
 			fine_seconds_set: dabs (fine_seconds_count - s) <= tolerance
 		end
 
-feature -- Access 
+feature -- Access
 
 	fine_seconds_count: DOUBLE is
 			-- Number of seconds and fractionals of seconds of current duration
 		do
-			Result := hour * Seconds_in_hour + minute * Seconds_in_minute + 
+			Result := hour * Seconds_in_hour + minute * Seconds_in_minute +
 				fine_second
 		end
 
@@ -105,9 +105,9 @@ feature -- Access
 			same_count: Result = fine_seconds_count.truncated_to_integer
 		end
 
-	Zero: TIME_DURATION is
+	zero: like Current is
 			-- Neutral element for "+" and "-"
-		once
+		do
 			create Result.make (0, 0, 0)
 		end
 
@@ -122,7 +122,7 @@ feature -- Attributes
 			Result := fine_second.truncated_to_integer
 		end
 
-	fine_second: DOUBLE 
+	fine_second: DOUBLE
 
 	fractional_second: DOUBLE is
 		do
@@ -157,11 +157,11 @@ feature -- Status report
 			--		`fractional_second' between -999 and 0?
 		do
 			if fine_seconds_count >= 0 then
-				Result := fine_second < Seconds_in_minute and then 
-					fine_second >= 0 and then minute < minutes_in_hour and then 
+				Result := fine_second < Seconds_in_minute and then
+					fine_second >= 0 and then minute < minutes_in_hour and then
 					minute >= 0
 			else
-				Result := fine_second > -Seconds_in_minute and then 
+				Result := fine_second > -Seconds_in_minute and then
 					fine_second <= 0 and then minute > -Minutes_in_hour and then
 					minute <= 0
 			end
@@ -175,7 +175,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	set_second (s: INTEGER) is 
+	set_second (s: INTEGER) is
 			-- Set `second' to `s'.
 			-- `fractional_second' is cut down to 0.
 		do
@@ -195,16 +195,16 @@ feature -- Element Change
 			fine_second := second + f
 		end
 
-	set_minute (m: INTEGER) is 
+	set_minute (m: INTEGER) is
 			-- Set `minute' to `m'.
 		do
-			minute:= m 
+			minute:= m
 		end
 
-	set_hour (h: INTEGER) is 
-			-- Set `hour' to `h'. 
+	set_hour (h: INTEGER) is
+			-- Set `hour' to `h'.
 		do
-			hour := h 
+			hour := h
 		end
 
 feature -- Basic operations
@@ -243,12 +243,12 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
-			create Result.make_fine (hour + other.hour, minute + other.minute, 
+			create Result.make_fine (hour + other.hour, minute + other.minute,
 				fine_second + other.fine_second)
 		end
 
 	prefix "-": like Current is
-			-- Unary minus 
+			-- Unary minus
 		do
 			create Result.make_fine (-hour, -minute, -fine_second)
 		end
@@ -256,7 +256,7 @@ feature -- Basic operations
 feature -- Conversion
 
 	to_canonical: like Current is
-			-- A new duration 
+			-- A new duration
 		do
 			if canonical then
 				Result := twin
@@ -281,9 +281,9 @@ feature -- Conversion
 	time_modulo_day: like Current is
 			-- Duration modulo duration of a day
 		do
-			create Result.make_by_seconds (mod (fine_seconds_count.floor, 
+			create Result.make_by_seconds (mod (fine_seconds_count.floor,
 				Seconds_in_day))
-			Result.fine_second_add (fine_seconds_count - 
+			Result.fine_second_add (fine_seconds_count -
 				fine_seconds_count.floor)
 		ensure
 			Result_smaller_than_day: Result.seconds_count < Seconds_in_day
@@ -294,14 +294,14 @@ feature {NONE} -- Constants
 
 	tolerance: DOUBLE is 1.0E-06
 			-- Tolerance for floating point errors
-			
+
 invariant
 
 	fractionals_large_enough: fractional_second > -1
 	fractionals_small_enough: fractional_second < 1
 	fractional_and_second_same_sign: second * fractional_second >= 0
-	equal_signs: canonical implies (hour >= 0 and minute >= 0 and 
-			fine_second >= 0) or (hour <= 0 and minute <= 0 and 
+	equal_signs: canonical implies (hour >= 0 and minute >= 0 and
+			fine_second >= 0) or (hour <= 0 and minute <= 0 and
 			fine_second <= 0)
 
 

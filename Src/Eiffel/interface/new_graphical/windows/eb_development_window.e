@@ -1165,7 +1165,7 @@ feature -- Window management
 			docking_manager.save_editors_config (project_docking_standard_file_name)
 		end
 
-	internal_construct_standard_layout_by_code is
+	construct_standard_layout_by_code is
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
 			l_tool: EB_TOOL
@@ -1311,10 +1311,10 @@ feature -- Window management
 					l_result := docking_manager.open_tools_config (l_file_name)
 					check open_tools_config_succeed: l_result end
 				else
-					internal_construct_standard_layout_by_code
+					construct_standard_layout_by_code
 				end
 			else
-				internal_construct_standard_layout_by_code
+				construct_standard_layout_by_code
 			end
 			menus.update_menu_lock_items
 			menus.update_show_tool_bar_items

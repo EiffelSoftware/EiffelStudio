@@ -1408,11 +1408,6 @@ feature -- Status setting
 			update_all_debugging_tools_menu
 			unpopup_switching_mode
 			force_debug_mode_cmd.enable_sensitive
-
-			-- Save default debug layout file if not exists.
-			-- Because if not save, the default layout of debug mode is restored by `restore_standard_debug_docking_layout_by_code' which
-			-- put debugging tools to current layout directly. This will confuse end user.
-			debugging_window.commands.set_default_layout_command.execute_if_not_setted
 		ensure
 			raised
 		end
@@ -1435,6 +1430,153 @@ feature -- Status setting
 			debugging_window.menus.update_show_tool_bar_items
 
 			refresh_breakpoints_tool
+		end
+
+	restore_standard_debug_docking_layout_by_code is
+			-- Restore standard debug docking layout.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_dyna_tools: ES_SHELL_TOOLS
+			l_tool: EB_TOOL
+			l_last_watch_tool: ES_WATCH_TOOL
+			l_refer_tool_content: SD_CONTENT
+			l_sd_button: SD_TOOL_BAR_ITEM
+			l_wt_lst: like watch_tool_list
+		do
+			-- Setup toolbar buttons
+			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := restart_cmd.managed_sd_toolbar_items.first
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check one_button: stop_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := stop_cmd.managed_sd_toolbar_items.first
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check one_button: quit_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := quit_cmd.managed_sd_toolbar_items.first
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check one_button: assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := assertion_checking_handler_cmd.managed_sd_toolbar_items.first
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check one_button: ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := ignore_breakpoints_cmd.managed_sd_toolbar_items.first
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			-- Setup tools
+			debugging_window.close_all_tools
+
+			l_dyna_tools := debugging_window.shell_tools
+
+				--| Class tool (below the editor)
+			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_refer_tool_content := l_tool.content
+
+				--| Features relation tool (tabbed with Class tool)
+			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, True)
+
+				--| Call stack tool (on right)
+			call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
+
+				--| Objects tool			
+			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
+			objects_tool.show (True)
+			l_refer_tool_content := objects_tool.panel.content
+
+				--| Breakpoints tool
+			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
+			l_tool.content.set_relative (l_refer_tool_content, {SD_ENUMERATION}.right)
+			l_refer_tool_content := l_tool.content
+
+				--| Threads tool
+			threads_tool.panel.content.set_tab_with (l_refer_tool_content, True)
+			l_refer_tool_content := threads_tool.panel.content
+
+				--| Watch tools
+			l_wt_lst := watch_tool_list
+			from
+				l_wt_lst.finish
+			until
+				l_wt_lst.before
+			loop
+				if l_last_watch_tool = Void then
+					l_wt_lst.item.panel.content.set_tab_with (l_refer_tool_content, True)
+				else
+					l_wt_lst.item.panel.content.set_tab_with (l_last_watch_tool.panel.content, True)
+				end
+				l_last_watch_tool := l_wt_lst.item
+				l_wt_lst.back
+			end
+
+				--| Diagram tool
+			l_tool := l_dyna_tools.tool ({ES_DIAGRAM_TOOL}).panel
+			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
+				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+				--| Dependency tool
+			l_tool := l_dyna_tools.tool ({ES_DEPENDENCY_TOOL}).panel
+			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+			l_refer_tool_content := l_tool.content
+
+				--| Metrics tool
+			l_tool := l_dyna_tools.tool ({ES_METRICS_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, False)
+
+				--| Error list tool
+			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).panel
+			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
+				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
+
+			l_refer_tool_content := call_stack_tool.panel.content
+			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, False)
+			l_tool.content.hide
+
+				--| Minimize all editors
+			from
+				l_contents := debugging_window.docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					l_contents.item.minimize
+				end
+				l_contents.forth
+			end
 		end
 
 	save_debug_docking_layout is
@@ -2264,153 +2406,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			debugging_window_set: debugging_window /= Void
-		end
-
-	restore_standard_debug_docking_layout_by_code is
-			-- Restore standard debug docking layout.
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_dyna_tools: ES_SHELL_TOOLS
-			l_tool: EB_TOOL
-			l_last_watch_tool: ES_WATCH_TOOL
-			l_refer_tool_content: SD_CONTENT
-			l_sd_button: SD_TOOL_BAR_ITEM
-			l_wt_lst: like watch_tool_list
-		do
-			-- Setup toolbar buttons
-			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := restart_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: stop_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := stop_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: quit_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := quit_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := assertion_checking_handler_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := ignore_breakpoints_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			-- Setup tools
-			debugging_window.close_all_tools
-
-			l_dyna_tools := debugging_window.shell_tools
-
-				--| Class tool (below the editor)
-			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel
-			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			l_refer_tool_content := l_tool.content
-
-				--| Features relation tool (tabbed with Class tool)
-			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, True)
-
-				--| Call stack tool (on right)
-			call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
-
-				--| Objects tool			
-			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
-			objects_tool.show (True)
-			l_refer_tool_content := objects_tool.panel.content
-
-				--| Breakpoints tool
-			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
-			l_tool.content.set_relative (l_refer_tool_content, {SD_ENUMERATION}.right)
-			l_refer_tool_content := l_tool.content
-
-				--| Threads tool
-			threads_tool.panel.content.set_tab_with (l_refer_tool_content, True)
-			l_refer_tool_content := threads_tool.panel.content
-
-				--| Watch tools
-			l_wt_lst := watch_tool_list
-			from
-				l_wt_lst.finish
-			until
-				l_wt_lst.before
-			loop
-				if l_last_watch_tool = Void then
-					l_wt_lst.item.panel.content.set_tab_with (l_refer_tool_content, True)
-				else
-					l_wt_lst.item.panel.content.set_tab_with (l_last_watch_tool.panel.content, True)
-				end
-				l_last_watch_tool := l_wt_lst.item
-				l_wt_lst.back
-			end
-
-				--| Diagram tool
-			l_tool := l_dyna_tools.tool ({ES_DIAGRAM_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-				--| Dependency tool
-			l_tool := l_dyna_tools.tool ({ES_DEPENDENCY_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-			l_refer_tool_content := l_tool.content
-
-				--| Metrics tool
-			l_tool := l_dyna_tools.tool ({ES_METRICS_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
-
-				--| Error list tool
-			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
-
-			l_refer_tool_content := call_stack_tool.panel.content
-			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
-			l_tool.content.hide
-
-				--| Minimize all editors
-			from
-				l_contents := debugging_window.docking_manager.contents
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_contents.item.minimize
-				end
-				l_contents.forth
-			end
 		end
 
 	refresh_breakpoints_tool is

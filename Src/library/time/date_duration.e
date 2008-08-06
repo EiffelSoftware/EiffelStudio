@@ -55,10 +55,10 @@ feature -- Initialization
 
 feature -- Access
 
-	Zero: DATE_DURATION is
+	zero: like Current is
 			-- Neutral element for "+" and "-"
-		once
-				create Result.make_by_days (0)
+		do
+			create Result.make_by_days (0)
 		ensure then
 			definite: Result.definite
 		end

@@ -225,8 +225,6 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	union overhead *t_zone;				/* Target header */
 	uint32 s_flags;						/* Source flags */
 	/*uint32 t_flags;*/					/* Target flags */
-	rt_uint_ptr s_size;						/* Source size */
-	rt_uint_ptr t_size;						/* Target size */
 	EIF_REFERENCE s_ref;
 	EIF_REFERENCE t_ref;
 	EIF_INTEGER count;				/* Common count */
@@ -238,8 +236,6 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 
 	s_zone = HEADER(source);
 	t_zone = HEADER(target);
-	s_size = s_zone->ov_size & B_SIZE;
-	t_size = t_zone->ov_size & B_SIZE;
 
 	/* First condition: same count */
 	s_ref = RT_SPECIAL_INFO_WITH_ZONE(source, s_zone);

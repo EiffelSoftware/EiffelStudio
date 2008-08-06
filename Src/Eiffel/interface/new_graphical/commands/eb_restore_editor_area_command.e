@@ -1,21 +1,69 @@
 indexing
-	description	: "Names used in docking library."
+	description: "Commands that restore whole editor area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	EB_DOCKING_NAMES
+	EB_RESTORE_EDITOR_AREA_COMMAND
 
 inherit
-	SD_INTERFACE_NAMES
-		undefine
-			editor_area
+	EB_MENUABLE_COMMAND
+
+	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			target as develop_window
+		redefine
+			make
 		end
 
-	DOCKING_NAMES
-	
+	EB_CONSTANTS
+
+create
+	make
+
+feature {NONE} -- Initlization
+
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+			-- Creation method
+		do
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
+			a_develop_window.docking_manager.restore_editor_area_actions.extend (agent update_menu_items_state)
+			a_develop_window.docking_manager.restore_editor_area_for_minimized_actions.extend (agent update_menu_items_state)
+		end
+
+feature -- Query
+
+	menu_name: STRING_GENERAL is
+			-- Menu name
+		do
+			Result := interface_names.m_restore_editor_area
+		end
+
+feature -- Command
+
+	execute is
+			-- Execute
+		local
+			l_manager: SD_DOCKING_MANAGER
+		do
+			l_manager := develop_window.docking_manager
+
+			l_manager.restore_editor_area
+			l_manager.restore_editor_area_for_minimized
+
+			update_menu_items_state
+		end
+
+	update_menu_items_state is
+			-- Update menu items state
+		do
+			disable_sensitive
+			develop_window.commands.maximize_editor_area_command.enable_sensitive
+			develop_window.commands.minimize_editor_area_command.enable_sensitive
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -34,7 +82,7 @@ indexing
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -48,4 +96,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class EB_MAXIMIZE_EDITOR_AREA_COMMAND

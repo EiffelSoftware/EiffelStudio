@@ -538,6 +538,20 @@ feature -- Querys
 	internal_restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically, actions will be invoked.
 
+	restore_whole_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- When whole editor area restored automatically for minimized editor area, actions will be invoked.
+		do
+			if internal_restore_whole_editor_area_for_minimized_actions = Void then
+				create internal_restore_whole_editor_area_for_minimized_actions
+			end
+			Result := internal_restore_whole_editor_area_for_minimized_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_restore_whole_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- When whole editor area restored automatically for minimized editor area, actions will be invoked.
+
 feature -- Command
 
 	set_opening_tools_layout (a_bool: BOOLEAN) is

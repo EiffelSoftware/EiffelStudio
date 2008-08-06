@@ -346,7 +346,7 @@ feature -- Tool bars icons.
 		do
 		end
 
-feature -- Zone management icons.
+feature -- Editor icons
 
 	close_context_tool_bar: EV_PIXMAP  is
 			-- "Close" pixmap when user right click one SD_NOTEBOOK_TAB.
@@ -365,6 +365,14 @@ feature -- Zone management icons.
 	close_all: EV_PIXMAP is
 			-- When user click on a SD_NOTEBOOK_TAB, "close all" pixmap shown on context Tool bar.
 		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	editor_area: EV_PIXEL_BUFFER is
+			-- When whole editor area minimized, this icon shown on the editor area
+		do
+			create Result.make_with_size (16, 16)
 		ensure
 			not_void: Result /= Void
 		end

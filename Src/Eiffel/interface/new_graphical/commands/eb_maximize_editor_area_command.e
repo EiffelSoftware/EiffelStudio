@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
 			enable_sensitive
-			a_develop_window.docking_manager.restore_editor_area_actions.extend (agent update_maximized_state)
+			a_develop_window.docking_manager.restore_editor_area_actions.extend (agent update_menu_items_state)
 		end
 
 feature -- Query
@@ -38,15 +38,8 @@ feature -- Query
 	menu_name: STRING_GENERAL is
 			-- Menu name
 		do
-			if not is_maximized then
-				Result := interface_names.m_maximize_editor_area
-			else
-				Result := interface_names.m_restore_editor_area
-			end
+			Result := interface_names.m_maximize_editor_area
 		end
-
-	is_maximized: BOOLEAN
-			-- If editor area maximized?
 
 feature -- Command
 
@@ -56,29 +49,20 @@ feature -- Command
 			l_manager: SD_DOCKING_MANAGER
 		do
 			l_manager := develop_window.docking_manager
-			if l_manager.is_editor_area_maximized then
-				l_manager.restore_editor_area
-			else
+			if not l_manager.is_editor_area_maximized then
 				l_manager.maximize_editor_area
 			end
-			update_maximized_state
+
+			update_menu_items_state
 		end
 
-	update_maximized_state is
-			-- Update `is_maximized'
-		local
-			l_manager: SD_DOCKING_MANAGER
+	update_menu_items_state is
+			-- Update menu items state
 		do
-			l_manager := develop_window.docking_manager
-			if l_manager.is_editor_area_maximized then
-				is_maximized := True
-			else
-				is_maximized := False
+			if develop_window.docking_manager.is_editor_area_maximized then
+				disable_sensitive
+				develop_window.commands.restore_editor_area_command.enable_sensitive
 			end
-			managed_menu_items.do_all (agent (a_item: EB_COMMAND_MENU_ITEM)
-										do
-											a_item.set_text (menu_name)
-										end)
 		end
 
 indexing

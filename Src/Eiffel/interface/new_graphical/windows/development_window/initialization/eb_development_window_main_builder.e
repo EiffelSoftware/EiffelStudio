@@ -145,7 +145,6 @@ feature -- Command
 			l_simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
 
 			l_reset_command: EB_RESET_LAYOUT_COMMAND
-			l_set_default_layout_command: EB_SET_DEFAULT_LAYOUT_COMMAND
 			l_save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
 			l_open_layout_command: EB_OPEN_LAYOUT_COMMAND
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -335,9 +334,6 @@ feature -- Command
 			create l_reset_command.make (develop_window)
 			develop_window.commands.set_reset_layout_command (l_reset_command)
 
-			create l_set_default_layout_command.make (develop_window)
-			develop_window.commands.set_set_default_layout_command (l_set_default_layout_command)
-
 			create l_save_layout_as_command.make (develop_window)
 			develop_window.commands.set_save_layout_as_command (l_save_layout_as_command)
 
@@ -392,6 +388,8 @@ feature -- Command
 			l_go_to_previous_warning_cmd: ES_PREVIOUS_WARNING_COMMAND
 			l_ear_commander: ES_ERROR_LIST_COMMANDER_I
 			l_maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
+			l_minimize_editor_area_command: EB_MINIMIZE_EDITOR_AREA_COMMAND
+			l_restore_editor_area_command: EB_RESTORE_EDITOR_AREA_COMMAND
 		do
 				-- Error navigation
 			l_ear_commander ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
@@ -417,6 +415,12 @@ feature -- Command
 
 				create l_maximize_editor_area_command.make (develop_window)
 				develop_window.commands.set_maximize_editor_area_command (l_maximize_editor_area_command)
+
+				create l_minimize_editor_area_command.make (develop_window)
+				develop_window.commands.set_minimize_editor_area_command (l_minimize_editor_area_command)
+
+				create l_restore_editor_area_command.make (develop_window)
+				develop_window.commands.set_restore_editor_area_command (l_restore_editor_area_command)
 			end
 		end
 

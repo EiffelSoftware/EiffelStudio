@@ -224,6 +224,14 @@ feature -- Menu
 		deferred
 		end
 
+feature -- Editor
+
+	editor_area: STRING_32
+			-- For minimized editor area
+		do
+			Result := "Editor Area"
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

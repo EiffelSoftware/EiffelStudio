@@ -90,6 +90,15 @@ feature -- Query
 	zoom_font_menu: EV_MENU
 			-- Menu containing items to manipulate editor zoom factor
 
+	editor_area_manipulation_menu: EV_MENU
+			-- Menu containing items to manipulate editor area
+
+	tools_layout_menu: EV_MENU
+			-- Menu containing items for tools docking layout
+
+	docking_lock_menu: EV_MENU
+			-- Menu containing items for lock docking mechanism
+
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
 			-- Context menu factory
 		do
@@ -268,6 +277,30 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			set: zoom_font_menu = a_menu
 		end
 
+	set_editor_area_manipulation_menu (a_menu: like editor_area_manipulation_menu) is
+			-- Set `editor_area_manipulation_menu'
+		do
+			editor_area_manipulation_menu := a_menu
+		ensure
+			set: editor_area_manipulation_menu = a_menu
+		end
+
+	set_tools_layout_menu (a_menu: like tools_layout_menu) is
+			-- Set `tools_layout_menu'
+		do
+			tools_layout_menu := a_menu
+		ensure
+			set: tools_layout_menu = a_menu
+		end
+
+	set_docking_lock_menu (a_menu: like docking_lock_menu) is
+			-- Set `docking_lock_menu'
+		do
+			docking_lock_menu := a_menu
+		ensure
+			set: docking_lock_menu = a_menu
+		end
+
 	set_window_menu (a_menu: like window_menu) is
 			-- Set `a_menu'
 		do
@@ -400,6 +433,18 @@ feature -- Recycle
 				zoom_font_menu.destroy
 			end
 
+			if editor_area_manipulation_menu /= Void then
+				editor_area_manipulation_menu.destroy
+			end
+
+			if tools_layout_menu /= Void then
+				tools_layout_menu.destroy
+			end
+
+			if docking_lock_menu /= Void then
+				docking_lock_menu.destroy
+			end
+
 			tools_menu := Void
 			window_menu := Void
 			format_menu := Void
@@ -410,6 +455,9 @@ feature -- Recycle
 			favorites_menu := Void
 			view_menu := Void
 			zoom_font_menu := Void
+			editor_area_manipulation_menu := Void
+			tools_layout_menu := Void
+			docking_lock_menu := Void
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

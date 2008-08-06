@@ -175,6 +175,7 @@ feature -- Commands
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			restore_editor_area
+			restore_editor_area_for_minimized
 			from
 				l_zones := internal_docking_manager.zones.zones.twin
 				l_zones.start
@@ -197,6 +198,7 @@ feature -- Commands
 		do
 			if is_main_inner_container (a_dock_area) then
 				restore_editor_area
+				restore_editor_area_for_minimized
 			end
 
 			from
@@ -222,6 +224,7 @@ feature -- Commands
 				if l_area /= Void then
 					if is_main_inner_container (l_area) then
 						restore_editor_area
+						restore_editor_area_for_minimized
 					end
 					recover_normal_state_in (l_area)
 				end
@@ -305,6 +308,100 @@ feature -- Commands
 			end
 		end
 
+	restore_editor_area_for_minimized is
+			-- Restore editors area to normal.
+		local
+			l_main_area: SD_MULTI_DOCK_AREA
+			l_parent: EV_CONTAINER
+		do
+			if minimized_editor_area /= Void then
+
+				l_main_area := internal_docking_manager.query.inner_container_main
+
+				if {lt_upper_zone: SD_PLACE_HOLDER_ZONE} minimized_editor_area  then
+
+					if not is_minimize_orignally then
+						lt_upper_zone.recover_normal_size_from_minimize
+					end
+					-- If codes above executed, parent will change
+					l_parent := lt_upper_zone.parent
+
+					lt_upper_zone.clear_for_minimized_area
+				end
+
+				l_parent.prune (minimized_editor_area)
+				l_parent.extend (orignal_whole_item_for_minimized)
+				if is_minimize_orignally then
+					if {lt_box: EV_BOX} l_parent then
+						lt_box.disable_item_expand (orignal_whole_item_for_minimized)
+					end
+				end
+
+				internal_docking_manager.command.resize (True)
+				l_main_area.restore_spliter_position (l_parent)
+
+				orignal_whole_item_for_minimized := Void
+				minimized_editor_area := Void
+
+				if internal_docking_manager.query.internal_restore_whole_editor_area_for_minimized_actions /= Void then
+					internal_docking_manager.query.internal_restore_whole_editor_area_for_minimized_actions.call (Void)
+				end
+			end
+		ensure
+			cleared: minimized_editor_area = Void
+		end
+
+	minimize_editor_area is
+			-- Minimize whole editor area
+		local
+			l_editor_parent: EV_CONTAINER
+			l_editor_area: SD_MULTI_DOCK_AREA
+			l_has_maximized_zone: BOOLEAN
+			l_parent_parent: EV_CONTAINER
+		do
+			if not internal_docking_manager.zones.place_holder_content.is_docking_manager_attached then
+
+				if internal_docking_manager.is_editor_area_maximized then
+					restore_editor_area
+				end
+
+				l_editor_parent := internal_docking_manager.query.inner_container_main.editor_parent
+				l_editor_area := internal_docking_manager.query.inner_container_main
+
+				l_has_maximized_zone := internal_docking_manager.zones.maximized_zone_in_main_window /= Void
+
+				if l_editor_parent /= Void and not l_has_maximized_zone then
+					if l_editor_parent = l_editor_area then
+						-- Only editor zone in container main area now. Nothing to do.
+					else
+						l_parent_parent := l_editor_parent.parent
+
+						orignal_whole_item_for_minimized := l_editor_parent
+
+						l_editor_area.save_spliter_position (l_parent_parent)
+
+						if {lt_parent_parent: EV_BOX} l_parent_parent then
+							is_minimize_orignally := True
+						else
+							is_minimize_orignally := False
+						end
+
+						l_parent_parent.prune (l_editor_parent)
+
+						minimized_editor_area := internal_shared.widget_factory.docking_zone (internal_docking_manager.zones.place_holder_content)
+
+						l_parent_parent.extend (minimized_editor_area)
+						if {lt_upper_zone: SD_PLACE_HOLDER_ZONE} minimized_editor_area  then
+							lt_upper_zone.prepare_for_minimized_editor_area (internal_docking_manager)
+							lt_upper_zone.minimize
+						end
+
+						internal_docking_manager.command.resize (True)
+					end
+				end
+			end
+		end
+
 	maximize_editor_area is
 			-- Maximize whole editor area.
 		local
@@ -312,6 +409,9 @@ feature -- Commands
 			l_editor_area: SD_MULTI_DOCK_AREA
 			l_has_maximized_zone: BOOLEAN
 		do
+			if internal_docking_manager.is_editor_area_minimized then
+				restore_editor_area_for_minimized
+			end
 			-- We have to restore minimized editors first if all editors minimized.
 			-- See bug#13648.
 			restore_minimized_editors_for_maximize_editor_area
@@ -375,7 +475,8 @@ feature -- Commands
 		local
 			l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
 		do
-			if not internal_docking_manager.is_editor_area_maximized then
+			if not internal_docking_manager.is_editor_area_maximized and then
+				not internal_docking_manager.is_editor_area_minimized then
 				from
 					l_upper_zones := internal_docking_manager.zones.upper_zones
 					l_upper_zones.start
@@ -395,7 +496,8 @@ feature -- Commands
 			local
 				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
 			do
-				if not internal_docking_manager.is_editor_area_maximized then
+				if not internal_docking_manager.is_editor_area_maximized and then
+					not internal_docking_manager.is_editor_area_minimized then
 					from
 						l_upper_zones := internal_docking_manager.zones.upper_zones
 						l_upper_zones.finish
@@ -427,6 +529,12 @@ feature -- Query
 
 	orignal_whole_item: EV_WIDGET
 			-- The orignal whole widget in main docking area which stored by `maximize_editor_area'.
+
+	orignal_whole_item_for_minimized: EV_WIDGET
+			-- The orignal whole widget in main docking area which stored by `minimize_editor_area'.
+
+	minimized_editor_area: SD_DOCKING_ZONE
+			-- SD_PLACE_HOLDER_ZONE that represent minimized editor area
 
 feature -- Contract Support
 
@@ -569,6 +677,10 @@ feature {NONE}  -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
+
+	is_minimize_orignally: BOOLEAN
+			-- Used by `minimize_editor_area'
+			-- Indicate whether editor top parent's EV_BOX is minimized originally
 
 invariant
 

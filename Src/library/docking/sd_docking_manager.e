@@ -158,9 +158,17 @@ feature -- Query
 			-- Open actions when open a config.
 
 	restore_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- When whole editor area restored automatically, actions will be invoked.
+			-- When whole editor area restored automatically for maximized area, actions will be invoked.
 		do
 			Result := query.restore_whole_editor_area_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	restore_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- When whole editor area restored automatically for minimized area, actions will be invoked.
+		do
+			Result := query.restore_whole_editor_area_for_minimized_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -190,6 +198,12 @@ feature -- Query
 		do
 			Result := command.orignal_editor_parent /= Void
 			check two_item_exist_at_same_time: Result implies command.orignal_whole_item /= Void end
+		end
+
+	is_editor_area_minimized: BOOLEAN is
+			-- If editor area minimized?
+		do
+			Result := command.orignal_whole_item_for_minimized /= Void
 		end
 
 	docker_mediator: SD_DOCKER_MEDIATOR is
@@ -386,15 +400,27 @@ feature -- Command
 		end
 
 	maximize_editor_area is
-			-- Maximize whole editor area.
+			-- Maximize whole editor area
 		do
 			command.maximize_editor_area
 		end
 
 	restore_editor_area is
-			-- Restore whole editor area if the editor area maximized.
+			-- Restore whole editor area if the editor area maximized
 		do
 			command.restore_editor_area
+		end
+
+	minimize_editor_area is
+			-- Minimize whole editor area
+		do
+			command.minimize_editor_area
+		end
+
+	restore_editor_area_for_minimized is
+			-- Restore whole editor area if the editor area minimized
+		do
+			command.restore_editor_area_for_minimized
 		end
 
 	minimize_editors is

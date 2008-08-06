@@ -99,9 +99,6 @@ feature -- Query
 	reset_layout_command: EB_RESET_LAYOUT_COMMAND
 			-- Reset tools layout command
 
-	set_default_layout_command: EB_SET_DEFAULT_LAYOUT_COMMAND
-			-- Set Current layout as default layout command.
-
 	save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
 			-- Save layout as command.
 
@@ -118,13 +115,19 @@ feature -- Query
 			-- Lock editors docking mechanims command
 
 	maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
-			-- Command that maximize whole editor area.
+			-- Command that maximize whole editor area
+
+	minimize_editor_area_command: EB_MINIMIZE_EDITOR_AREA_COMMAND
+			-- Command that minimize whole editor area
+
+	restore_editor_area_command: EB_RESTORE_EDITOR_AREA_COMMAND
+			-- Command that restore editor area
 
 	minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
-			-- Command that minimized all editors.
+			-- Command that minimized all editors
 
 	restore_editors_command: EB_RESTORE_EDITORS_COMMAND
-			-- Command that restore all minimized editors.
+			-- Command that restore all minimized editors
 
 	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			-- Command that increase editor font
@@ -388,14 +391,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: reset_layout_command = a_cmd
 		end
 
-	set_set_default_layout_command (a_cmd: like set_default_layout_command) is
-			-- Set `set_default_layout_command'
-		do
-			set_default_layout_command := a_cmd
-		ensure
-			set: set_default_layout_command = a_cmd
-		end
-
 	set_open_layout_command (a_cmd: like open_layout_command) is
 			-- Set `open_layout_command'
 		do
@@ -450,6 +445,22 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			maximize_editor_area_command := a_cmd
 		ensure
 			set: maximize_editor_area_command = a_cmd
+		end
+
+	set_minimize_editor_area_command (a_cmd: like minimize_editor_area_command) is
+			-- Set `minimize_editor_area_command'
+		do
+			minimize_editor_area_command := a_cmd
+		ensure
+			set: minimize_editor_area_command = a_cmd
+		end
+
+	set_restore_editor_area_command (a_cmd: like restore_editor_area_command) is
+			-- Set `restore_editor_area_command'
+		do
+			restore_editor_area_command := a_cmd
+		ensure
+			set: restore_editor_area_command = a_cmd
 		end
 
 	set_minimize_editors_command (a_cmd: like minimize_editors_command) is
@@ -558,19 +569,20 @@ feature -- Recycle
 		do
 			new_tab_cmd.recycle
 			reset_layout_command.recycle
-			set_default_layout_command.recycle
 			save_layout_as_command.recycle
 			open_layout_command.recycle
 			lock_docking_command.recycle
 			lock_editor_docking_command.recycle
 			maximize_editor_area_command.recycle
+			minimize_editor_area_command.recycle
+			restore_editor_area_command.recycle
 			lock_tool_bar_command.recycle
 			save_as_cmd.recycle
 
 			editor_font_zoom_in_command.recycle
 			editor_font_zoom_out_command.recycle
 			editor_font_zoom_reset_command.recycle
-			
+
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle
 			editor_cut_cmd.recycle

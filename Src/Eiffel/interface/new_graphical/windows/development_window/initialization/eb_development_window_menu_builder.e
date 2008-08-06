@@ -710,24 +710,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Separator --------------------------------------
 			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
 
-			l_new_menu_item := develop_window.commands.reset_layout_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
+			develop_window.menus.set_tools_layout_menu (tools_layout_menu)
+			develop_window.menus.view_menu.extend (develop_window.menus.tools_layout_menu)
 
-			l_new_menu_item := develop_window.commands.set_default_layout_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.open_layout_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-				-- Separator --------------------------------------
-			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
+			develop_window.menus.set_docking_lock_menu (docking_lock_menu)
+			develop_window.menus.view_menu.extend (develop_window.menus.docking_lock_menu)
 
 			-- We configuare Smart Docking library right click menu here.
 			create l_shared
@@ -736,25 +723,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_editor_items.extend (create {EV_MENU_SEPARATOR})
 
 			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
 			l_editor_items.extend (l_new_menu_item)
 			l_tool_items.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
 			l_editor_items.extend (l_new_menu_item)
 			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
@@ -763,13 +738,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_new_menu_item)
 
 				-- Separator --------------------------------------
-			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
 			l_editor_items.extend (create {EV_MENU_SEPARATOR})
 			l_tool_items.extend (create {EV_MENU_SEPARATOR})
 
-			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
+			develop_window.menus.set_editor_area_manipulation_menu (editor_area_manipulation_menu)
+			develop_window.menus.view_menu.extend (develop_window.menus.editor_area_manipulation_menu)
 
 			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
 			l_editor_items.extend (l_new_menu_item)
@@ -777,16 +750,8 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
 			l_editor_items.extend (l_new_menu_item)
 			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
-			develop_window.menus.view_menu.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
@@ -1071,6 +1036,84 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				auto_recycle (l_ms.item)
 				l_ms.forth
 			end
+		end
+
+	tools_layout_menu: EV_MENU is
+			-- Tools docking layout menu
+		local
+			l_new_menu_item: EB_COMMAND_MENU_ITEM
+		do
+			create Result.make_with_text (develop_window.Interface_names.m_tools_layout)
+
+			l_new_menu_item := develop_window.commands.reset_layout_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.open_layout_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+		ensure
+			not_void: Result /= Void
+		end
+
+	docking_lock_menu: EV_MENU is
+			-- Submenu for docking lock
+		local
+			l_new_menu_item: EB_COMMAND_MENU_ITEM
+		do
+			create Result.make_with_text (develop_window.Interface_names.m_docking_lock)
+
+			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+		ensure
+			not_void: Result /= Void
+		end
+
+	editor_area_manipulation_menu: EV_MENU is
+			-- Submenu for editor area manipulation
+		local
+			l_new_menu_item: EB_COMMAND_MENU_ITEM
+		do
+			create Result.make_with_text (develop_window.Interface_names.m_Editor_area)
+
+			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.minimize_editor_area_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.restore_editor_area_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+		ensure
+			not_void: Result /= Void
 		end
 
 	editor_font_zoom_menu: EV_MENU is

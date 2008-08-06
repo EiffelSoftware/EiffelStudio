@@ -23,7 +23,18 @@ inherit
 			on_focus_in,
 			on_focus_out,
 			extend
+		select
+			implementation
 		end
+
+	SD_UPPER_ZONE
+		rename
+			extend_widget as extend_cell,
+			has_widget as has_cell,
+			prune_widget as prune,
+			internal_notebook as notebook
+		end
+
 create
 	make
 
@@ -78,6 +89,64 @@ feature -- Command
 			extend_cell (l_widget)
 		end
 
+feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
+
+	prepare_for_minimized_editor_area (a_manager: SD_DOCKING_MANAGER) is
+			-- Prepare for minimized editor area, construct widgets for minimized editor area
+			-- Such as adding an editor area button to current
+		local
+			l_tool_bar: SD_TOOL_BAR
+			l_button: SD_TOOL_BAR_BUTTON
+			l_border: SD_CELL_WITH_BORDER
+			l_ver_box: EV_VERTICAL_BOX
+			l_hor_box: EV_HORIZONTAL_BOX
+		do
+			internal_docking_manager := a_manager
+
+			create l_tool_bar.make
+			create l_button.make
+			l_button.set_text (internal_shared.interface_names.editor_area)
+			l_button.pointer_button_press_actions.force_extend (agent (internal_docking_manager.command).restore_editor_area_for_minimized)
+			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
+			l_tool_bar.extend (l_button)
+			create l_border.make
+			l_border.set_border_width (internal_shared.border_width)
+			l_border.set_border_color (internal_shared.border_color)
+			l_border.set_show_border ({SD_ENUMERATION}.top, True)
+			l_border.set_show_border ({SD_ENUMERATION}.bottom, True)
+			l_border.set_show_border ({SD_ENUMERATION}.left, True)
+			l_border.set_show_border ({SD_ENUMERATION}.right, True)
+			l_tool_bar.compute_minimum_size
+
+			-- Make the button middle align
+			create l_ver_box
+			l_ver_box.extend (create {EV_CELL})
+			create l_hor_box
+			l_ver_box.extend (l_hor_box)
+			l_ver_box.disable_item_expand (l_hor_box)
+			l_ver_box.extend (create {EV_CELL})
+
+			l_hor_box.extend (create {EV_CELL})
+			l_hor_box.extend (l_tool_bar)
+			l_hor_box.disable_item_expand (l_tool_bar)
+			l_hor_box.extend (create {EV_CELL})
+
+			l_border.extend (l_ver_box)
+
+			wipe_out
+			extend_cell (l_border)
+		ensure
+			set: internal_docking_manager = a_manager
+		end
+
+	clear_for_minimized_area is
+			-- Cleanup
+		do
+			internal_docking_manager := Void
+		ensure
+			cleared: internal_docking_manager = Void
+		end
+
 feature -- Query
 
 	has (a_content: SD_CONTENT): BOOLEAN is
@@ -113,7 +182,21 @@ feature -- Agents
 		do
 		end
 
-indexing
+feature {NONE} -- Implementation
+
+	notebook: SD_NOTEBOOK_UPPER is
+			-- <Precursor>
+		do
+			if internal_notebook = Void then
+				create internal_notebook.make (internal_docking_manager)
+			end
+			Result := internal_notebook
+		end
+
+	internal_notebook: SD_NOTEBOOK_UPPER
+			-- Fake notebook for {SD_UPPER_ZONE}
+			
+;indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -127,3 +210,4 @@ indexing
 
 
 end
+

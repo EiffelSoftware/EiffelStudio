@@ -1,9 +1,10 @@
 indexing
 	description: "Names used in docking library."
-	author: ""
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
+	
 class
 	DOCKING_NAMES
 
@@ -196,6 +197,14 @@ feature -- Menu
 			-- For editor tab area right click menu
 		do
 			Result := locale.translation ("Close All")
+		end
+
+feature -- Editor
+
+	editor_area: STRING_32
+			-- For minimized editor area
+		do
+			Result := locale.translation ("Editor Area")
 		end
 
 indexing

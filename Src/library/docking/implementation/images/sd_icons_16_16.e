@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 				create {SD_ICON_MATRIX_16_16} raw_buffer.make
 			else
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((2 * 16) + 1,(2 * 16) + 1)
+				create raw_buffer.make_with_size ((3 * 16) + 1,(1 * 16) + 1)
 			end
 		rescue
 			retried := True
@@ -37,10 +37,10 @@ feature -- Access
 	pixel_height: INTEGER is 16
 			-- Element width
 
-	width: INTEGER is 2
+	width: INTEGER is 3
 			-- Matrix width
 
-	height: INTEGER is 2
+	height: INTEGER is 1
 			-- Matrix height
 
 	frozen zone_close_icon: EV_PIXMAP is
@@ -67,15 +67,27 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
 		end
 
+	frozen editor_area_icon: EV_PIXMAP is
+			-- Access to 'editor area' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 1))
+		end
+
+	frozen editor_area_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'editor area' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 1))
+		end
+
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= 2
+			a_x_small_enough: a_x <= 3
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_y <= 2
+			a_y_small_enough: a_y <= 1
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER

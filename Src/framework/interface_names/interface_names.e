@@ -494,6 +494,7 @@ feature -- Accelerator, focus label and menu name
 	m_Execution_parameters: STRING_32 is	do Result := locale.translation ("Execution &Parameters") end
 	m_Execution_profiles: STRING_32 is		do Result := locale.translation ("Execution Pro&files") end
 	m_Editor: STRING_32 is					do Result := locale.translation("&Editor")	end
+	m_Editor_area: STRING_32 is				do Result := locale.translation("&Editor Area")	end
 	m_Eiffel_introduction: STRING_32 is		do Result := locale.translation("&Introduction to Eiffel")	end
 	f_Enable_stop_points: STRING_32 is		do Result := locale.translation("Enable all breakpoints")	end
 	m_Enable_stop_points: STRING_32 is		do Result := locale.translation("&Enable All Breakpoints")	end
@@ -608,7 +609,7 @@ feature -- Accelerator, focus label and menu name
 	m_Restore_Editor_Area: STRING_32 is		do Result := locale.translation("&Restore Editor Area")	end
 	m_Restore_Editors: STRING_32 is			do Result := locale.translation("&Restore Editors")	end
 	m_Replace: STRING_32 is					do Result := locale.translation("&Replace...")	end
-	m_reset_layout: STRING_32 is 			do Result := locale.translation ("Reset Tools layout") end
+	m_reset_layout: STRING_32 is 			do Result := locale.translation ("Reset Tools Layout") end
 	f_Retarget_diagram: STRING_32 is		do Result := locale.translation("Target to cluster or class")	end
 	f_Run_finalized: STRING_32 is			do Result := locale.translation("Run finalized system")	end
 	m_Run_finalized: STRING_32 is			do Result := locale.translation("&Run Finalized System")	end
@@ -868,6 +869,7 @@ feature -- Menu mnenomics
 	m_Minimize: STRING_32 is				do Result := locale.translation("Mi&nimize")	end
 	m_Minimize_all: STRING_32 is			do Result := locale.translation("&Minimize All")	end
 	m_Minimize_Editors: STRING_32 is		do Result := locale.translation("&Minimize Editors")	end
+	m_Minimize_Editor_Area: STRING_32 is	do Result := locale.translation("&Minimize Editor Area")	end
 	f_New_tab: STRING_32 is 				do Result := locale.translation("New Tab")	end
 	m_New_tab: STRING_32 is					do Result := locale.translation("New Ta&b")	end
 	m_New_editor: STRING_32 is				do Result := locale.translation("New Ed&itor Window")	end
@@ -896,6 +898,7 @@ feature -- Menu mnenomics
 	m_Special: STRING_32 is					do Result := locale.translation("&Special")	end
 	m_Separate_stone: STRING_32 is			do Result := locale.translation("Unlin&k Context Tool")	end
 	m_Tools: STRING_32 is					do Result := locale.translation("&Tools")	end
+	m_Tools_layout: STRING_32 is			do Result := locale.translation("&Tools Layout")	end
 	m_Unify_stone: STRING_32 is				do Result := locale.translation("Lin&k Context Tool")	end
 
 	m_When_hits: STRING_32 is				do Result := locale.translation("When Hits ...")	end
@@ -914,6 +917,7 @@ feature -- Context menu
 	m_delete: STRING_32 is					do Result := b_delete_command	end
 	m_displayed: STRING_32 is				do Result := locale.translation ("Displayed") end
 	m_diagram_with: STRING_32 is			do Result := locale.translation ("Diagram with") end
+	m_docking_lock: STRING_32 is			do Result := locale.translation ("Docking Lock") end
 	m_expanded_object_view: STRING_32 is	do Result := locale.translation ("Expanded object view") end
 	m_include_all_classes: STRING_32 is		do Result := locale.translation ("Include all classes") end
 	m_import_metrics_from_file: STRING_32 is do Result := locale.translation("Import metrics from file") end

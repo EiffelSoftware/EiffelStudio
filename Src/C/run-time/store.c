@@ -713,6 +713,9 @@ rt_public EIF_POINTER *stream_malloc (EIF_INTEGER stream_size)	/*08/04/98*/
 	else {
 		real_buffer = (EIF_POINTER *) eif_malloc (sizeof (char *));
 		if (!real_buffer) {
+				/* We could not allocate `real_buffer' so we have to free `buffer' before
+				 * raising the exception. */
+			eif_free (buffer);
 			xraise(EN_MEM);
 		} else {
 			*real_buffer = buffer;

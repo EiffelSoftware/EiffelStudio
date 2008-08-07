@@ -225,7 +225,6 @@ feature {NONE} -- Implementation attributes
 invariant
 	not_void: internal_shared /= Void
 	not_void: zone /= Void
-	not_void: internal_docking_manager /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

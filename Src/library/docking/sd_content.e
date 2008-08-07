@@ -902,7 +902,6 @@ feature {NONE}  -- Implemention.
 		end
 
 invariant
-	the_user_widget_not_void: internal_user_widget /= Void
 	internal_shared_not_void: internal_shared /= Void
 
 indexing

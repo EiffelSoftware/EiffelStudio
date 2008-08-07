@@ -34,9 +34,18 @@ feature {NONE} -- Initlization
 	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		do
+			create internal_tool_bar.make
+			create internal_minimize_button.make
+			create internal_normal_max_button.make
+			create custom_area
+			create internal_top_box
+
+			create normal_max_actions
+			create minimize_actions
+			create drag_tab_area_actions
+			
 			Precursor {SD_NOTEBOOK}	(a_docking_manager)
 
-			create internal_top_box
 			prune_vertical_box (internal_border_for_tab_area)
 			start
 			put_left (internal_border_for_tab_area)
@@ -46,18 +55,15 @@ feature {NONE} -- Initlization
 			internal_top_box.extend (internal_tab_box)
 			internal_tab_box.set_gap (True)
 
-			create custom_area
 			internal_top_box.extend (custom_area)
 			internal_top_box.disable_item_expand (custom_area)
 
-			create internal_tool_bar.make
-			create internal_minimize_button.make
 			internal_minimize_button.set_pixmap (internal_shared.icons.minimize)
 			if internal_shared.icons.minimize_buffer /= Void then
 				internal_minimize_button.set_pixel_buffer (internal_shared.icons.minimize_buffer)
 			end
 			internal_minimize_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_minimize)
-			create internal_normal_max_button.make
+
 			internal_normal_max_button.set_pixmap (internal_shared.icons.maximize)
 			if internal_shared.icons.maximize_buffer /= Void then
 				internal_normal_max_button.set_pixel_buffer (internal_shared.icons.maximize_buffer)
@@ -79,10 +85,6 @@ feature {NONE} -- Initlization
 	init_action is
 			-- Initialize actions.
 		do
-			create normal_max_actions
-			create minimize_actions
-			create drag_tab_area_actions
-
 			internal_normal_max_button.select_actions.extend (agent on_normal_max_window)
 			internal_minimize_button.select_actions.extend (agent on_minimize)
 			internal_tab_box.pointer_button_press_actions.extend (agent on_tab_area_pointer_press)

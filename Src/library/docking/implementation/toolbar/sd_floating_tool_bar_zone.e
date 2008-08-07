@@ -29,7 +29,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -46,6 +46,8 @@ feature {NONE} -- Initlization
 			internal_docking_manager := a_docking_manager
 			create internal_shared
 			disable_user_resize
+			
+			create internal_title_bar
 
 			init_border_box
 
@@ -56,7 +58,6 @@ feature {NONE} -- Initlization
 			internal_padding_box.set_pointer_style (l_pixmaps.standard_cursor)
 			internal_border_box.extend (internal_padding_box)
 
-			create internal_title_bar
 			internal_title_bar.pointer_double_press_actions.extend (agent recover_docking_state)
 			internal_title_bar.close_request_actions.extend (agent on_close_request)
 			internal_title_bar.custom_actions.extend (agent on_customize)
@@ -417,8 +418,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not_void: internal_shared /= Void
-	not_void: internal_title_bar /= Void
+	internal_shared_not_void: internal_shared /= Void
+	internal_title_bar_not_void: internal_title_bar /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

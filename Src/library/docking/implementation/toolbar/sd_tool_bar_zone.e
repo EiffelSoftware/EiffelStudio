@@ -671,7 +671,6 @@ invariant
 
 	not_void: internal_shared /= Void
 	not_void: assistant /= Void
-	tool_bar_not_void: tool_bar /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

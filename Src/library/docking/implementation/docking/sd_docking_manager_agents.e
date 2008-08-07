@@ -514,9 +514,9 @@ feature {NONE}  -- Implementation
 			-- Ingore additional pointer click after pick and drop.
 
 invariant
-	not_void: pnd_motion_actions_handler /= Void
-	not_void: theme_changed_handler /= Void
-	not_void: internal_shared /= Void
+	pnd_motion_actions_handler_not_void: pnd_motion_actions_handler /= Void
+	theme_changed_handler_not_void: theme_changed_handler /= Void
+	internal_shared_not_void: internal_shared /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

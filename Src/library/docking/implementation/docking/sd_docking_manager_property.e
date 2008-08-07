@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -190,9 +190,7 @@ feature -- Command
 		end
 
 invariant
-
 	internal_clicked_list_not_void: internal_clicked_list /= Void
-	internal_docking_manager_not_void: internal_docking_manager /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

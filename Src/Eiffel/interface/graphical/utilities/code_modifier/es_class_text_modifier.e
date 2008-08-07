@@ -12,18 +12,12 @@ class
 
 inherit
 	ES_MODIFIABLE
-		redefine
-			internal_recycle
-		end
 
+--inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE}
 		end
-
-	EC_ENCODING_CONVERTER
-
-	EC_ENCODING_UTINITIES
 
 create
 	make
@@ -37,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			l_editor: like active_editor_for_class
 			l_text: ?STRING_32
+			l_encoding: ?ENCODING
 		do
 			context_class := a_class
 
@@ -45,10 +40,18 @@ feature {NONE} -- Initialization
 			if not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text
-				detected_encoding ?= a_class.encoding
+				l_encoding ?= a_class.encoding
 			else
 				l_text := l_editor.wide_text
-				detected_encoding := l_editor.encoding
+				l_encoding ?= l_editor.encoding
+			end
+
+				-- Set detected encoding
+			if l_encoding /= Void then
+				encoding_converter.detected_encoding := l_encoding
+			else
+					-- No encoding detected, use default.
+				encoding_converter.detected_encoding := (create {EC_ENCODINGS}).default_encoding
 			end
 
 			if l_text = Void then
@@ -61,14 +64,6 @@ feature {NONE} -- Initialization
 		ensure
 			context_class_set: context_class = a_class
 			not_is_dirty: not is_dirty
-		end
-
-feature -- Clean up
-
-	internal_recycle
-			-- <Precursor>
-		do
-
 		end
 
 feature -- Access
@@ -273,6 +268,12 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
+	encoding_converter: !EC_ENCODING_CONVERTER
+			-- Access to the encoding coverter for unicode conversions.
+		once
+			create Result
+		end
+
 feature -- Basic operations
 
 	prepare
@@ -396,13 +397,9 @@ feature -- Basic operations
 					-- Set text to `modified_data' for use in `prepare'
 				modified_data.text := l_new_text
 
-				if detected_encoding = Void then
-					detected_encoding := default_encoding
-				end
-
 					-- No editors, save directly to disk.
 				create l_save
-				l_save.save (context_class.file_name, l_new_text, detected_encoding)
+				l_save.save (context_class.file_name, l_new_text, encoding_converter.detected_encoding)
 
 					-- Update class file data time stamp
 				original_file_date := context_class.file_date

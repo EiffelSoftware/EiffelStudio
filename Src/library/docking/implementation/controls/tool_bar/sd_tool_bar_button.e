@@ -47,12 +47,10 @@ feature -- Properties
 
 	set_tooltip (a_tip: STRING_GENERAL) is
 			-- Set `a_tooltip' with `a_tip'
-		require
-			not_void: a_tip /= Void
 		do
 			tooltip := a_tip
 		ensure
-			set: tooltip.is_equal (a_tip.as_string_32)
+			set: a_tip /= Void implies tooltip.is_equal (a_tip.as_string_32)
 		end
 
 	tooltip: STRING_32
@@ -76,14 +74,6 @@ feature -- Command
 			update
 		ensure
 			set: is_sensitive = False
-		end
-
-	remove_tooltip is
-			-- Remove `tooltip'
-		do
-			tooltip := Void
-		ensure
-			set: tooltip = Void
 		end
 
 feature -- Query
@@ -376,6 +366,18 @@ feature{SD_TOOL_BAR} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
+
+feature -- Obsolete
+
+	remove_tooltip is
+			-- Remove `tooltip'
+		obsolete
+			"Use set_tooltip (Void) instead"
+		do
+			tooltip := Void
+		ensure
+			set: tooltip = Void
+		end
 
 invariant
 	not_void: select_actions /= Void

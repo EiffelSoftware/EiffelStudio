@@ -163,6 +163,8 @@ feature -- Properties
 				tool_bar.need_calculate_size
 			end
 			refresh
+		ensure
+			set: pixmap = a_pixmap
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -171,8 +173,6 @@ feature -- Properties
 
 	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Set `pixel_buffer'
-		require
-			not_void: a_pixel_buffer /= Void
 		do
 			pixel_buffer := a_pixel_buffer
 			if tool_bar /= Void then

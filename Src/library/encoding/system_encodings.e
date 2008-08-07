@@ -35,7 +35,7 @@ feature -- Access
 		end
 
 	utf16: ENCODING is
-			-- UTF8 Encoding.
+			-- UTF16 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
 		ensure
@@ -43,7 +43,7 @@ feature -- Access
 		end
 
 	utf32: ENCODING is
-			-- UTF8 Encoding.
+			-- UTF32 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
 		ensure

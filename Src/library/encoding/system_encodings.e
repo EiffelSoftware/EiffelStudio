@@ -26,9 +26,8 @@ feature -- Access
 			console_encoding_not_void: Result /= Void
 		end
 
-feature -- Fixed encodings
-
 	utf8: ENCODING is
+			-- UTF8 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
 		ensure
@@ -36,6 +35,7 @@ feature -- Fixed encodings
 		end
 
 	utf16: ENCODING is
+			-- UTF8 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
 		ensure
@@ -43,6 +43,7 @@ feature -- Fixed encodings
 		end
 
 	utf32: ENCODING is
+			-- UTF8 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
 		ensure
@@ -52,6 +53,7 @@ feature -- Fixed encodings
 feature {NONE} -- Implementation
 
 	system_encodings_i: SYSTEM_ENCODINGS_I is
+			-- Implementation bridge.
 		once
 			create {SYSTEM_ENCODINGS_IMP}Result
 		end

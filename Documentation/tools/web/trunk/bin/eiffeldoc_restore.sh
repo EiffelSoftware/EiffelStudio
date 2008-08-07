@@ -76,10 +76,6 @@ tar xzvf $BACKUPDIR/files.tar.gz -C $TARGETDIR
 #	#rm $THEFILE.tmp
 #}
 #replacethisin "localhost/$DB_NAME" "localhost/$TARGETDB" "$TARGETDIR/drupal/sites/default/settings.php"
-CMD="ls -la"
-THEFILE=../drupal_backup/drupal/sites/default/settings.php
-CMD="sed -e 's|localhost/$DB_NAME|localhost/$TARGETDB|' < $THEFILE > $THEFILE.tmp; cat $THEFILE.tmp > $THEFILE; rm $THEFILE.tmp"
-TMP=`eval "$CMD"`
 
 echo "Dropping DATABASE $TARGETDB (if exists)..."
 echo "DROP DATABASE $TARGETDB;" | mysql -h localhost -u $DB_USER -p$DB_PASS
@@ -95,18 +91,31 @@ mysql -h localhost -u $DB_USER -p$DB_PASS $TARGETDB < $BACKUPDIR/$DB_NAME.sql
 
 echo "Backup ($BACKUPDIR) restored to ($TARGETDIR)"
 echo ""
-echo "Note: don't forget to update the following files:"
-echo " - $TARGETDIR/drupal/.htaccess  about RewriteBase if necessary"
+echo "Note: there are a few extra operations."
+
+THEFILE=$TARGETDIR/drupal/sites/default/settings.php
+
 if [ "$TARGETDB" != "$DB_NAME" ]; then
-	echo " - $TARGETDIR/drupal/sites/default/settings.php  about the mysql database (check, but it should be done) "
+	echo " - $TARGETDIR/drupal/sites/default/settings.php  about the mysql database "
+	echo " -> Do you want to let the script update the settings.php"
+	echo "    to use [$TARGETDB] instead of [$DB_NAME] (y|n)?"
+	read answer
+	if [ "$answer" = "y" ]; then
+		CMD="sed -e 's|localhost/$DB_NAME|localhost/$TARGETDB|' < $THEFILE > $THEFILE.tmp; cat $THEFILE.tmp > $THEFILE; rm $THEFILE.tmp"
+		TMP=`eval "$CMD"`
+	fi
 fi
 
 
-echo "Do you want to set the site name with [$BACKUPDIR] (y|n)?"
+echo " - $TARGETDIR/drupal/sites/default/settings.php  about the site name "
+echo " -> Do you want to set the site name with [$BACKUPDIR] (y|n)?"
 read answer
 if [ "$answer" = "y" ]; then
 	echo "\$conf['site_name'] = '[$BACKUPDIR]';" >> $TARGETDIR/drupal/sites/default/settings.php
 fi
+
+echo " -> Don't forget to update the .htaccess file:"
+echo " - $TARGETDIR/drupal/.htaccess  about RewriteBase if necessary"
 
 
 

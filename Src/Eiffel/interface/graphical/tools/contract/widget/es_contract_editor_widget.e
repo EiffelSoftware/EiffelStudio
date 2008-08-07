@@ -757,6 +757,7 @@ feature {NONE} -- Population
 							else
 								create l_decorator.make (l_class_c, l_token_generator)
 							end
+							l_decorator.set_source_class (l_class_c)
 
 							check l_decorator_attached: l_decorator /= Void end
 							l_decorator.format_ast (l_tagged)

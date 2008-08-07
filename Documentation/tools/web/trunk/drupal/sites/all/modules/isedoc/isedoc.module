@@ -1,0 +1,85 @@
+<?php
+// $Id$
+
+function isedoc_help($path, $arg) {
+	$output = '';
+	switch ($path) {
+		case "admin/help#isedoc":
+		$output = '<p>'.t("Import/Export books").'</p>';
+		break;
+	}
+	return $output;
+} // function isedoc_help
+
+function isedoc_block($op = 'list', $delta = 0) {
+	if ($op == 'list') {
+		$block[0]["info"] = t('ISE docs');
+		return $block;
+	} else if ($op == 'view') {
+		$block_content = '';
+		$links = array();
+		$links[] = l('Import into...','isedoc/book/import');
+		$links[] = l('Export from ...','isedoc/book/export');
+
+		$block_content .= theme('item_list', $links);
+		if ($block_content == '') {
+			return;
+		}
+		$block['subject'] = 'ISE box';
+		$block['content'] = $block_content;
+		return $block;
+	}
+} // function isedoc_block
+
+function isedoc_menu() {
+  $items = array();
+  $items['admin/settings/isedoc'] = array(
+    'title' => 'IseDoc',
+    'description' => 'ISE Documentation settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'isedoc.admin.inc',
+  );
+  $items['admin/settings/isedoc/nodes'] = array(
+    'title' => 'General',
+    'description' => 'General Settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'isedoc.admin.inc',
+    'weight' => '-10',
+  );  
+
+//  if ($may_cache) {
+//    $items[] = array('path' => 'import',
+//                     'title' => t('import'),
+//                     'callback' => 'isedoc_import_book',
+//                     'access' => user_access('Import books'),
+//                     'type' => MENU_NORMAL_ITEM);
+//    $items[] = array('path' => 'import/book',
+//                     'title' => t('book'),
+//                     'callback' => 'isedoc_import_book',
+//                     'access' => user_access('import books'),
+//                     'type' => MENU_NORMAL_ITEM);
+//  }
+  return $items;
+}
+
+//function isedoc_page() {
+//    $output = '';
+//    print theme('page', $output);
+//}
+//function isedoc_theme() {
+//  return array(
+//    'isedoc_form' => array(
+//      'arguments' => array('form' => NULL),
+//      'file' => 'isedoc.admin.inc',
+//    ),
+//  );
+//}
+
+
+?>

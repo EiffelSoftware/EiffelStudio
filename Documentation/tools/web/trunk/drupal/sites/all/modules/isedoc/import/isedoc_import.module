@@ -1,0 +1,77 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_help().
+ */
+function isedoc_import_help($path, $arg) {
+  switch ($path) {
+    case 'admin/content/isedoc_import':
+      $output = '<p>'. t("Import ISE documentation. ")
+        . t("Searching for documentation files in %dirpath.", array('%dirpath' => realpath(file_directory_path() . variable_get('isedoc_import_subfolder', '')))) .'</p>';
+      return $output;
+    case 'admin/settings/isedoc_import':
+      return t("Configure the ISE Doc import module's settings.");
+    default:
+      return null;
+  }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function isedoc_import_perm() {
+  return array('import isedoc');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function isedoc_import_menu() {
+  $items = array();
+  
+  $items['admin/content/isedoc_import'] = array(
+    'title' => '(ISE) Import documentation ...',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_import_form'),
+    'file' => 'isedoc_import.admin.inc',
+    'access arguments' => array('import isedoc'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Import ISE docs from the filesystem.',
+  );
+
+  $items['admin/settings/isedoc/isedoc_import'] = array(
+    'title' => 'Import Docs',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_import_admin_settings'),
+    'file' => 'isedoc_import.admin.inc',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+    'description' => 'Change settings for the ISE Doc Import module.',
+  );
+
+  $items['isedoc/book/import'] = array(
+    'title' => 'Import ISE documentation ...',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_isedoc_import_doc'),
+    'file' => 'isedoc_import.admin.inc',
+    'access arguments' => array('import isedoc'),
+    'type' => MENU_CALLBACK,
+    'description' => 'Import ISE docs from the filesystem.',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_theme() registry.
+ **/
+function isedoc_import_theme() {
+  return array(
+    'isedoc_import_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'isedoc_import.admin.inc',
+    ),
+  );
+}
+

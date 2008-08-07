@@ -1,0 +1,2 @@
+This tool is a temporary tool to convert the ISE's xmldoc format documentation
+into a wikitext format, in order to import it into the next to be EiffelStudio documentation web application (online doc editing based on drupal)

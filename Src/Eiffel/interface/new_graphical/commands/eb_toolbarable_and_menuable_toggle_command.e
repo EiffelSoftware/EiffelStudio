@@ -119,11 +119,7 @@ feature -- Change
 						if {it: STRING_GENERAL} (tbi.text) and then not it.is_empty then
 							tbi.set_text (t)
 						end
-						if tt = Void then
-							tbi.set_tooltip (Void)
-						else
-							tbi.set_tooltip (tt)
-						end
+						tbi.set_tooltip (tt)
 						if mpb /= Void then
 							tbi.set_pixel_buffer (mpb)
 						end

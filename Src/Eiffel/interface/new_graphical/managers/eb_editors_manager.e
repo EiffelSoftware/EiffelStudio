@@ -1120,6 +1120,12 @@ feature {NONE} -- Agents
 					-- that need to change a lot of codes...
 					select_editor (a_editor, False)
 				end
+
+				-- Editor changed, we make sure save command is sensitive
+				-- Sometimes, `save_cmd' is disabled when saving class file
+				-- See bug#13499
+				development_window.save_cmd.enable_sensitive
+
 				development_window.save_and (agent close_editor_perform (a_editor))
 			else
 				close_editor_perform (a_editor)

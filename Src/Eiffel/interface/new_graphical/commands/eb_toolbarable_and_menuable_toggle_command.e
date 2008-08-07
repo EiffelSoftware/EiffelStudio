@@ -120,7 +120,7 @@ feature -- Change
 							tbi.set_text (t)
 						end
 						if tt = Void then
-							tbi.remove_tooltip
+							tbi.set_tooltip (Void)
 						else
 							tbi.set_tooltip (tt)
 						end

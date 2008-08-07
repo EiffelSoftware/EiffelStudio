@@ -15,6 +15,19 @@ deferred class
 inherit
 	USABLE_I
 
+feature {NONE} -- Query
+
+	events (a_observer: !G): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			-- List of events and associated action.
+			--
+			-- `a_observer': Event observer interface to bind agent actions to.
+			-- `Result': A list of event types paired with a associated action on the passed observer
+		require
+			is_interface_usable: is_interface_usable
+			a_observer_is_interface_usable: a_observer.is_interface_usable
+		deferred
+		end
+
 feature -- Event connection
 
 	connect_events (a_observer: !G)

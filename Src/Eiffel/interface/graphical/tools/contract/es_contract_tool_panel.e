@@ -458,16 +458,27 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+		local
+			l_check_modifier: ES_CLASS_TEXT_MODIFIER
 		do
-			if
-				has_stone and then
-				file_notifier.is_service_available and then
-				context.has_stone and then
-				{l_file_name: !FILE_NAME} context.context_class.file_name and then
-				{l_fn: !STRING_32} l_file_name.string.as_string_32
-			then
-					-- Poll for modifications, which will call `on_file_modified' if have occurred.
-				file_notifier.service.poll_modifications (l_fn).do_nothing
+			if has_stone and then context.has_stone then
+				if
+					file_notifier.is_service_available and then
+					{l_file_name: !FILE_NAME} context.context_class.file_name and then
+					{l_fn: !STRING_32} l_file_name.string.as_string_32
+				then
+						-- Poll for modifications, which will call `on_file_modified' if have occurred.
+					file_notifier.service.poll_modifications (l_fn).do_nothing
+				end
+
+				if not is_dirty then
+					create l_check_modifier.make (context.context_class)
+					if not l_check_modifier.original_text.is_equal (context.text_modifier.text) then
+							-- Updates the current view because the text is out of sync.
+							-- This happens if the user modifies the editor, or undoes, without saving.
+						refresh_stone
+					end
+				end
 			end
 		end
 

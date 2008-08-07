@@ -15,10 +15,7 @@ inherit
 		rename
 			make as make_popup_window,
 			show as show_popup_window,
-			show_relative_to_widget as show_popup_window_relative_to_widget,
 			show_relative_to_window as show_popup_window_relative_to_window
-		export
-			{NONE} show_popup_window
 		redefine
 			on_after_initialized,
 			border_color,
@@ -32,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: ?like text)
+	make (a_text: ?STRING_GENERAL)
 			-- Initialize a new transitional window.
 			--
 			-- `a_text': The message text to display to the use.
@@ -41,12 +38,16 @@ feature {NONE} -- Initialization
 			not_a_text_is_empty: not a_text.is_empty
 		do
 			make_popup_window (True)
-			set_text (a_text)
+			if {l_text: STRING_32} a_text.as_string_32 then
+				set_text (l_text)
+			else
+				set_text (create {STRING_32}.make_from_string (local_formatter.translation (l_please_wait)))
+			end
 		ensure
 			text_set: a_text.is_equal (text)
 		end
 
-	make_with_icon (a_text: ?like text; a_icon: ?like icon)
+	make_with_icon (a_text: ?STRING_GENERAL; a_icon: ?like icon)
 			-- Initialize a new transitional window with an icon.
 			--
 			-- `a_text': The message text to display to the use.
@@ -238,24 +239,26 @@ feature {NONE} -- User interface elements
 
 feature -- Basic operation
 
-	show_relative_to_widget (a_widget: ?EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
-			-- Displays the pop up window at a position relative to a widget.
+	show (a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
+			-- Displays the pop up window at a designated position on screen.
 			--
-			-- `a_widget': A widget to show the window relative to.
-			-- `a_x': Relative X position to the specified widget.
-			-- `a_y': Relative Y position to the specified widget.
-			-- `a_mouse_x': Relative mouse X position to the specified widget.
-			-- `a_mouse_y': Relative mouse Y position to the specified widget.
+			-- `a_x': Window screen X position.
+			-- `a_y': Window screen Y position.
+			-- `a_mouse_x': Mouse screen X position. Use -1 to ignore position
+			-- `a_mouse_y': Mouse screen Y position, Use -1 to ingore position
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			a_widget_attached: a_widget /= Void
-			not_a_widget_is_destroyed: not a_widget.is_destroyed
+			a_mouse_x_big_enough: a_mouse_x >= -1
+			a_mouse_y_big_enough: a_mouse_y >= -1
 		do
-			show_popup_window_relative_to_widget (a_widget, a_x, a_y, a_mouse_x, a_mouse_y)
+			show_popup_window (a_x, a_y, a_mouse_x, a_mouse_y)
 			if action /= Void then
 				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
+		ensure
+			popup_window_is_displayed: action /= Void implies popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
 	show_relative_to_window (a_window: ?EV_WINDOW)
@@ -273,8 +276,10 @@ feature -- Basic operation
 			if action /= Void then
 				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
+		ensure
+			popup_window_is_displayed: action = Void implies popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
 		end
-
 
 feature {NONE} -- Basic operations
 
@@ -295,6 +300,10 @@ feature {NONE} -- Basic operations
 				popup_window.hide
 			end
 		end
+
+feature {NONE} -- Internationalization
+
+	l_please_wait: STRING = "Please wait..."
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

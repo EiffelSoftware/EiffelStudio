@@ -32,6 +32,12 @@ inherit
 			on_handle_key
 		end
 
+--inherit {NONE}
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
 convert
 	popup_window: {EV_POPUP_WINDOW}
 
@@ -386,6 +392,25 @@ feature -- Basic operations
 
 			on_before_show
 			popup_window.show
+		ensure
+			popup_window_is_displayed: popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
+		end
+
+	frozen show_on_active_window
+			-- Attempts to show the popup window relative to the last active host window.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_window: ?EB_WINDOW
+		do
+			l_window := window_manager.last_focused_window
+			if l_window /= Void then
+				show_relative_to_window (l_window.window)
+			else
+				check False end
+			end
 		ensure
 			popup_window_is_displayed: popup_window.is_displayed
 			not_is_committed_on_closed: not is_committed_on_closed

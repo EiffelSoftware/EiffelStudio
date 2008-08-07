@@ -378,7 +378,11 @@ feature -- Query
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- All items in Current.
 		do
-			Result := tool_bar.items
+			if tool_bar /= Void then
+				Result := tool_bar.items
+			else
+				create Result.make (0)
+			end
 		end
 
 	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
@@ -641,9 +645,6 @@ feature -- Contract support
 			-- See bug#13387.
 		do
 		end
-
-invariant
-	not_void: tool_bar /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

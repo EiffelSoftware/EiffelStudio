@@ -614,14 +614,12 @@ feature {NONE}  -- Implementation attributes
 		end
 
 invariant
-
-	not_void: internal_docking_manager /= Void
-	not_void: internal_shared /= Void
-	not_void: select_actions /= Void
-	not_void: drag_actions /= Void
-	not_void: internal_tab_drawer /= Void
-	not_void: info /= Void
-	not_void: close_actions /= Void
+	internal_shared_not_void: internal_shared /= Void
+	select_actions_not_void: select_actions /= Void
+	drag_actions_not_void: drag_actions /= Void
+	internal_tab_drawer_not_void: internal_tab_drawer /= Void
+	info_not_void: info /= Void
+	close_actions_not_void: close_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

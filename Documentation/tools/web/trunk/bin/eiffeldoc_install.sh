@@ -87,6 +87,7 @@ getdrupalcms()
 		mv $DRUPALZIPNAME/.* $DRUPALDIR/.
 		rmdir $DRUPALZIPNAME
 	fi
+
 }
 getsf3rd()
 {
@@ -94,7 +95,7 @@ getsf3rd()
 	NAME3RD=$2
 	ZIP3RD=$3
 	UNZIPPED3RD=$4
-	UNZIPCMD=$4
+	UNZIPCMD=$5
 
 	DIR3RD=$DRUPALDIR/sites/all/modules/$MOD3RD/$NAME3RD
 	if [ ! -e "$ZIP3RD" ]; then
@@ -104,6 +105,7 @@ getsf3rd()
 	echo Check existence of $DIR3RD ...
 	if [ ! -e "$DIR3RD" ]; then
 		echo Install $NAME3RD in module $MOD3RD ...
+		echo unzipping: $UNZIPCMD $ZIP3RD  to  $UNZIPPED3RD ...
 		$UNZIPCMD $ZIP3RD
 		mv $UNZIPPED3RD $DIR3RD
 	fi
@@ -114,20 +116,32 @@ cd tmp
 # First get drupal itself
 safemkdir drupal
 cd drupal
-#getdrupalcms 6.3
+getdrupalcms 6.3
+if [ ! -e $DRUPALDIR/sites/default ]; then
+	cp -rf $DRUPALDIR/sites.distrib/default $DRUPALDIR/sites/default
+fi
+if [ ! -e $DRUPALDIR/sites/default/settings.php ]; then
+	cp -rf $DRUPALDIR/sites/default/default.settings.php $DRUPALDIR/sites/default/settings.php
+fi
+if [ ! -e $DRUPALDIR/sites/default/files ]; then
+	safemkdir $DRUPALDIR/sites/default/files
+	chmod a+w $DRUPALDIR/sites/default/files
+fi
+if [ -e $DRUPALDIR/sites/default/files ]; then
+	cp $CWD/data/* 	$DRUPALDIR/sites/default/files
+fi
+
 cd ..
 
 
 #Get modules
 safemkdir modules
 cd modules
-#getdrupal_modules
+getdrupal_modules
 
 #Get 3rd party
 safemkdir 3rd
 cd 3rd
-
-
 
 getsf3rd geshifilter geshi geshi-1.0.7.21.tar.gz geshi "tar xzvf"
 getsf3rd fckeditor fckeditor FCKeditor_2.6.3.tar.gz fckeditor "tar xzvf"

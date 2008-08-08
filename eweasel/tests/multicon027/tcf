@@ -16,9 +16,6 @@ copy_sub 	multi2.e $CLUSTER multi2.e
 resume_compile
 compile_result ok
 
-c_compile_work
-c_compile_result ok
-
 execute_work NONE exec_output1
 compare exec_output1 output
 

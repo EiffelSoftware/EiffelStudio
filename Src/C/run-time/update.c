@@ -38,6 +38,8 @@
 doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update runtime data with melted information.">
 */
 
+#ifdef WORKBENCH
+
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "rt_dir.h"
@@ -1057,6 +1059,8 @@ rt_private void write_long(char *where, EIF_INTEGER value)
 {
 	memcpy (where, &value, sizeof(EIF_INTEGER));
 }
+
+#endif
 
 /*
 doc:</file>

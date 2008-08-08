@@ -38,6 +38,8 @@
 doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines used for debugging.">
 */
 
+#ifdef WORKBENCH
+
 #include "eif_portable.h"
 #include "eif_confmagic.h"	
 #include "rt_macros.h"
@@ -2139,7 +2141,6 @@ rt_public void c_wipe_out(register struct c_stochunk *chunk)
 /*
  * RT_EXTENSION interaction for debugging
  */
-#ifdef WORKBENCH
 rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3)
 {
 
@@ -2450,7 +2451,6 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 	}
 	return error_code;
 }
-
 
 #endif
 

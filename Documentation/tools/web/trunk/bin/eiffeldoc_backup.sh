@@ -22,4 +22,7 @@ safemkdir $DATE
 
 mysqldump -h localhost -u $DB_USER -p$DB_PASS -r$DATE/$DB_NAME.sql $DB_NAME
 
+rm latest
+ln -f -s $DATE latest
+
 echo "Backup completed (backup/$DATE/..)"

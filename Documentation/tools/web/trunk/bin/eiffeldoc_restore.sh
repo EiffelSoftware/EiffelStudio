@@ -12,6 +12,8 @@ CWD=`pwd`
 BACKUPDIR=$1
 TARGETDIR=$2
 TARGETDB=$3
+TARGETSITENAME=$4
+
 
 DB_USER=root
 DB_PASS=abc123
@@ -107,11 +109,24 @@ if [ "$TARGETDB" != "$DB_NAME" ]; then
 fi
 
 
+
+if [ "$TARGETSITENAME" = "" ]; then
+	echo Set TARGETSITENAME to $BACKUPDIR
+	TARGETSITENAME="[$BACKUPDIR]";
+fi
 echo " - $TARGETDIR/drupal/sites/default/settings.php  about the site name "
-echo " -> Do you want to set the site name with [$BACKUPDIR] (y|n)?"
+echo " -> Do you want to set the site name with [$TARGETSITENAME] (y|n)?"
+NEWNAME=""
 read answer
 if [ "$answer" = "y" ]; then
-	echo "\$conf['site_name'] = '[$BACKUPDIR]';" >> $TARGETDIR/drupal/sites/default/settings.php
+	NEWNAME=$TARGETSITENAME
+else
+	if [ "$answer" != "n" ]; then
+		NEWNAME=$answer
+	fi
+fi
+if [ "$NEWNAME" != "" ]; then
+	echo "\$conf['site_name'] = '$NEWNAME';" >> $TARGETDIR/drupal/sites/default/settings.php
 fi
 
 echo " -> Don't forget to update the .htaccess file:"

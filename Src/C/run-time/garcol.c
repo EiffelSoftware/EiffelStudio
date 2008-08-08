@@ -787,9 +787,9 @@ doc:	</routine>
 rt_shared int acollect(void)
 {
 	static long nb_calls = 0;		/* Number of calls to function */
-	static rt_uint_ptr eif_total = 0;		/* Total Eiffel memory allocated */
 	int status;						/* Status returned by scollect() */
 #ifdef EIF_CONDITIONAL_COLLECT
+	static rt_uint_ptr eif_total = 0;		/* Total Eiffel memory allocated */
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
 	int half_tau;					
@@ -852,7 +852,9 @@ rt_shared int acollect(void)
 				 * which happens between `0' and `plsc_per', we still wait `plsc_per'
 				 * calls before launching the next full collection. */
 			nb_calls = 0;
+#ifdef EIF_CONDITIONAL_COLLECT
 			eif_total = rt_e_data.ml_total;
+#endif
 		} else							/* Generation-base collector */
 			status = collect();
 	} else {						/* Generation-base collector called, since

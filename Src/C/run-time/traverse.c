@@ -702,7 +702,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	char gc_stopped;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;
-	uint16 flags;
 	EIF_REFERENCE Result;
 	EIF_REFERENCE ref;
 	
@@ -788,7 +787,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	for (i = 0 ; i < l_marked.count ; i++) {
 			/* Reset `EO_STORE' flags */
 		zone = HEADER(l_marked.area [i]);
-		flags = zone->ov_flags;
 		zone->ov_flags &= (~EO_STORE);
 	}
 

@@ -130,7 +130,6 @@ int main (int argc, char **argv)
 
 	printf ("Files \"melted.txt\" and \"bytecode.eif\" generated\n");
 
-	exit (0);
 	return 0;
 }
 /*------------------------------------------------------------------*/
@@ -242,11 +241,8 @@ static  void    prepare_types (void)
 
 		while (i--)
 		{
-			if (rshort ())
-			{
-				short t;
-
-				while ((t = rshort())!=-1)
+			if (rshort ()) {
+				while (rshort() != -1)
 					;
 			}
 		}
@@ -491,8 +487,6 @@ static  void    analyze_routids (void)
 
 	printf ("Analyzing Routids\n");
 
-	rids = (long *) 0;
-
 	for (;;)
 	{
 		class_id = rlong ();
@@ -506,7 +500,7 @@ static  void    analyze_routids (void)
 /*
 		fprintf (mfp,"Routine ids: %ld\n", asize);
 */
-		if (asize)
+		if (asize > 0)
 		{
 			rids = (long *) malloc (asize * sizeof (long));
 
@@ -697,7 +691,7 @@ static  void    read_byte_code (void)
 static  void    analyze_parents (void)
 
 {
-	short   dtype, gcount, class_name_count;
+	short   dtype, class_name_count;
 
 	printf ("Analyzing Parents\n");
 
@@ -718,7 +712,8 @@ static  void    analyze_parents (void)
 		if (dtype == -1)
 			break;
 
-		gcount = rshort ();
+			/* Read number of generics. */
+		(void) rshort ();
 
 		/* Read class name */
 
@@ -734,14 +729,6 @@ static  void    analyze_parents (void)
 
 		while (rshort () != -1)
 			;
-/*
-		asize = rshort ();
-
-		fprintf (mfp,"Dynamic type : %d  Generics = %d Table size = %d\n", 
-							(int) dtype, (int) gcount, (int) asize);
-		
-		rseq (asize * sizeof (short));
-*/
 	}
 
 	print_line ();
@@ -896,7 +883,7 @@ static  void    analyze_desc (void)
 
 				info_count = rshort ();
 
-				if (info_count)
+				if (info_count > 0)
 				{
 					dinfo = (short *) malloc (3*info_count * sizeof (short));
 
@@ -955,7 +942,7 @@ static  void    analyze_desc (void)
 
 static EIF_CHARACTER rchar (void)
 {
-	EIF_CHARACTER    result;
+	EIF_CHARACTER    result = 0;
 
 	if (fread (&result, sizeof (EIF_CHARACTER), 1, ifp) != 1)
 	{
@@ -969,7 +956,7 @@ static EIF_CHARACTER rchar (void)
 
 static EIF_INTEGER_32 rlong (void)
 {
-	EIF_INTEGER_32 result;
+	EIF_INTEGER_32 result = 0;
 
 	if (fread (&result, sizeof (EIF_INTEGER_32), 1, ifp) != 1)
 	{
@@ -983,7 +970,7 @@ static EIF_INTEGER_32 rlong (void)
 
 static EIF_INTEGER_16 rshort (void)
 {
-	EIF_INTEGER_16 result;
+	EIF_INTEGER_16 result = 0;
 
 	if (fread (&result, sizeof (EIF_INTEGER_16), 1, ifp) != 1)
 	{
@@ -998,7 +985,7 @@ static EIF_INTEGER_16 rshort (void)
 static  uint32  ruint32 (void)
 
 {
-	uint32    result;
+	uint32    result = 0;
 
 	if (fread (&result, sizeof (uint32), 1, ifp) != 1)
 	{
@@ -1050,6 +1037,7 @@ static  char    *rbuf (int size)
 	{
 		fprintf (stderr,"Read error (rbuf)\n");
 		free (result);
+		result = NULL;
 		panic ();
 	}
 

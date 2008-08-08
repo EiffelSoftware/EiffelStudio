@@ -1354,9 +1354,7 @@ rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
 
 rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 {
-	EIF_TYPE_INDEX   *typearr, arr_dtype, result;
-
-	arr_dtype = RTUD_INV(egc_arr_dtype);
+	EIF_TYPE_INDEX   *typearr, result;
 
 	typearr = (EIF_TYPE_INDEX *) eif_malloc (4 * sizeof(EIF_TYPE_INDEX));
 	typearr [0] = INVALID_DTYPE;			/* No static call context */

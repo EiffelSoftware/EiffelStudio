@@ -825,7 +825,6 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	EIF_GET_CONTEXT
-	uint32 len_a;		/* Length of the bit field a */
 	uint32 len_b;		/* Length of the bit field b */
 	uint32 *addr_a;	/* Pointer into the arena of 'a' */
 	uint32 *addr_b;	/* Pointer into the arena of 'b' */
@@ -834,7 +833,6 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 	RT_GC_PROTECT(b);
 	a = b_clone(a);
 	RT_GC_WEAN(b);
-	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
 	addr_a = ARENA(a);

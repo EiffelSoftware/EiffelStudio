@@ -722,7 +722,7 @@ rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%.17g", d);
-	return makestr(buffero, strlen(buffero));
+	return makestr(buffero, len);
 }
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)

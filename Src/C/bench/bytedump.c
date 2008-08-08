@@ -316,6 +316,7 @@ static  EIF_CHARACTER * rstr (void);
 int main (int argc, char **argv)
 {
 	long    i;
+	int done;
 
 	if (argc > 1)
 	{
@@ -372,14 +373,16 @@ int main (int argc, char **argv)
 		ctype_names [i] = rstr ();
 	}
 
-	while (1)
+	done = 1;
+	while (done)
 	{
 		read_byte_code ();
 
-		if (body_id == INVALID_ID)
-			break;
-
-		print_byte_code ();
+		if (body_id != INVALID_ID) {
+			print_byte_code ();
+		} else {
+			done = 0;
+		}
 	}
 
 	fclose (ifp);

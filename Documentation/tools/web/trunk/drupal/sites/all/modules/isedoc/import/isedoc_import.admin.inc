@@ -77,86 +77,14 @@ function isedoc_import_form() {
 	 * Files
 	 */
 
-	$files = file_scan_directory($dirpath, '.*', array('.', '..'), 0, TRUE); //FALSE); //TRUE, 'filename');
-	ksort($files);
-	if ($files) {
-		$fields = array('filesize', 'title', 'parent', 'titleexists','nodeid');
-		foreach ($fields as $field) {
-			$form['files'][$field][0] = NULL;
-		}
-		$filelist = array(0 => NULL);
-
-		foreach ($files as $file) {
-			$info = isedoc_file_info($file->filename, FALSE);
-			$filelist[] = substr($file->filename, strlen($dirpath) + 1);
-			$form['files']['filesize'][] = array(
-				'#type' => 'item',
-				'#value' => format_size(filesize($file->filename)),
-			);
-			$form['files']['title'][] = array(
-				'#type' => 'textfield',
-				'#size' => 20,
-				'#default_value' => $info['title'],
-			);
-			$form['files']['parent'][] = array(
-				'#type' => 'textfield',
-				'#size' => 20,
-				'#default_value' => $info['parent'],
-			);
-
-			$a_nid = book_doc_page_exists($info['title']);
-			if ($a_nid != '') {
-				$form['files']['titleexists'][] = array(
-					'#type' => 'checkbox',
-					'#title' => l('#' . $a_nid . '?', 'node/'.$a_nid ),
-					'#default_value' => TRUE,
-				);
-				$form['files']['nodeid'][] = array(
-					'#type' => 'hidden',
-					'#value' => $a_nid,
-				);
-//				$form['files']['titleexists'][] = array(
-//					'#type' => 'markup',
-//					'#value' => l('#' . $a_nid . '?', 'node/'.$a_nid ),
-//				);
-			} else {
-				$form['files']['titleexists'][] = array(
-					'#type' => 'item',
-					'#value' => '',
-				);
-				$form['files']['nodeid'][] = array(
-					'#type' => 'hidden',
-					'#value' => '0',
-				);
-			}
-//			$form['files']['titleexists'][] = array(
-//				'#type' => 'checkbox',
-//				'#title' => t('Already exists'),
-//				'#default_value' => book_doc_page_exists($info['title']),
-//			);
-
-		}
-		unset($filelist[0]);
-		foreach ($fields as $field) {
-			$form['files'][$field][0] = NULL;
-		}
-		// Put the titles into an array.
-		$form['files']['title']['#tree'] = TRUE;
-		$form['files']['parent']['#tree'] = TRUE;
-		$form['files']['titleexists']['#tree'] = TRUE;
-		$form['files']['nodeid']['#tree'] = TRUE;
-
-		// Store a copy of the list into a form value so we can compare it to what
-		// they submit and not have to worry about files being added or removed from
-		// the filesystem.
-		$form['file_list'] = array(
-			'#type' => 'value',
-			'#value' => $filelist,
-		);
-
-		$form['import_file'] = array(
-			'#type' => 'checkboxes',
-			'#options' => $filelist,
+	$book_import_log_path = $dirpath . "/" . "book.index.log";
+	$book_index_path = $dirpath . "/" . "book.index";
+	if (file_exists($book_index_path)) {
+		$form['isedoc_import_index'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Book index'),
+			'#default_value' => variable_get('isedoc_import_bookindex', $book_index_path),
+			'#description' => t('BookIndex'),
 		);
 
 		/*
@@ -201,9 +129,9 @@ function isedoc_import_form() {
 		);
 	}
 	else {
-		$form['import_file'] = array(
+		$form['isedoc_import_index'] = array(
 			'#type' => 'item',
-			'#value' => t('No files were found'),
+			'#value' => t('No book.index file found'),
 		);
 
 		$form['isedoc_import_subfolder'] = array(
@@ -219,43 +147,11 @@ function isedoc_import_form() {
 		);
 	}
 
-
-//	$form['isedoc_import_action'] = array(
-//		'#type' => 'submit',
-//		'#submit' => array('isedoc_import_form_import'),
-//		'#value' => t('Import Documentation'),
-//	);
-
 	return $form;
 }
 
 function theme_isedoc_import_form($form) {
-	//	drupal_set_message("theme_isedoc_import_form...");
-
-	$output = '';
-	if (isset($form['import_file'])) {
-		$f_import_files = &$form['import_file'];
-		if ($f_import_files['#type'] == 'checkboxes') {
-			$header = array(theme('table_select_header_cell'), t('Name'), t('Size'), t('Title'), t('Parent'), t('Note'));
-			$rows = array();
-			foreach (element_children($f_import_files) as $key) {
-				$filename = $f_import_files[$key]['#title'];
-				unset($f_import_files[$key]['#title']);
-				$rows[] = array(
-					drupal_render($f_import_files[$key]),
-					$filename,
-					drupal_render($form['files']['filesize'][$key]),
-					drupal_render($form['files']['title'][$key]),
-					drupal_render($form['files']['parent'][$key]),
-					drupal_render($form['files']['titleexists'][$key]),
-					drupal_render($form['files']['nodeid'][$key]),
-				);
-			}
-			$output .= theme('table', $header, $rows);
-		}
-		unset($f_import_files);
-	}
-	return $output . drupal_render($form);
+	return drupal_render($form);
 }
 
 
@@ -281,46 +177,16 @@ function isedoc_import_form_import($form, &$form_state) {
 			$nodes = array();
 			$files = array();
 //			drupal_set_message(var_dump_r($form_state['values']));
-			foreach (array_filter($form_state['values']['import_file']) as $index) {
-				// try to avoid php's script timeout with a bunch of large files or
-				// a slow machine
-				if (!ini_get('safe_mode')) {
-					set_time_limit(0);
-				}
-				$origname = $form_state['values']['file_list'][$index];
-				if ($origname != '__order__') {
-					$filename = file_check_location($dirpath .'/'. $origname, $dirpath);
-					if ($filename) {
-						if ($form_state['values']['titleexists'][$index]) {
-							$a_nid = $form_state['values']['nodeid'][$index];
-						} else {
-							$a_nid = '0';
-						}
-						if ($a_nid > 0) {
-							drupal_set_message(t("Merging from %filename... (#%nid)",array('%filename' => $filename, '%nid' => $a_nid)));
-						} else {
-							drupal_set_message(t("Importing %filename [%title]...(#%nid)",array('%filename' => $filename, '%title' => $form_state['values']['title'][$index], '%nid' => $a_nid)));
-						}
-						$node = isedoc_create_node_from(
-							$filename,
-							$form_state['values']['title'][$index],
-							$a_nid
-						);
-						if ($node) {
-							drupal_set_message(var_dump_r($node));
-							$nodes[] = t('%filename as <a href="!node-link">@node-title</a> <a href="!edit-link">[edit]</a>', array(
-								'%filename' => $origname,
-								'!node-link' => url('node/'. $node->nid),
-								'@node-title' => $node->title,
-								'!edit-link' => url('node/'. $node->nid .'/edit'),
-							));
-							// Remove the original image now that the import has completed.
-							//file_delete($filename);
-						} else {
-							drupal_set_message(t('Error importing %filename.', array('%filename' => $filename)));
-						}
-					}
-				}
+			$book_index_path = $form_state['values']['isedoc_import_index'];
+			drupal_set_message(t("Importing files using index %i into bookid=%bookid", array ('%i' => $book_index_path, '%bookid' => $bookid)));
+
+			// a slow machine
+			if (!ini_get('safe_mode')) {
+				set_time_limit(0);
+			}
+			isedoc_import_with_index($dirpath,$book_index_path);
+			$filename = file_check_location($dirpath .'/'. $origname, $dirpath);
+			if ($filename) {
 			}
 
 			// report back on our progress
@@ -334,7 +200,7 @@ function isedoc_import_form_import($form, &$form_state) {
 	}
 }
 
-function isedoc_create_node_from($filepath, $title = NULL, $nid=0) {
+function isedoc_create_doc_node_from($info) {
 	global $user;
 
 //	if (!user_access('create isedoc')) {
@@ -342,8 +208,7 @@ function isedoc_create_node_from($filepath, $title = NULL, $nid=0) {
 //	}
 
 	// Ensure it's a valid image.
-	$isedoc_info = isedoc_file_info($filepath,TRUE);
-	if (!$isedoc_info) {
+	if (!$info) {
 		return FALSE;
 	}
 
@@ -351,6 +216,7 @@ function isedoc_create_node_from($filepath, $title = NULL, $nid=0) {
 	$original_path = $filepath;
 
 	// Build the node.
+	$nid = 0;
 	if ($nid > 0) {
 		drupal_set_message("isedoc_create_node_from using nid=$nid");
 		$node = node_load ($nid, NULL, TRUE);
@@ -361,8 +227,8 @@ function isedoc_create_node_from($filepath, $title = NULL, $nid=0) {
 	}
 	$node->uid = $user->uid;
 	$node->name = $user->name;
-	$node->title = isset($title) ? $title : $isedoc_info['title'];
-	$node->body = $isedoc_info['body'];
+	$node->title = $info['title'];
+	$node->body = $info['body'];
 
 	// Set the node's defaults... (copied this from node and comment.module)
 	$node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
@@ -396,35 +262,97 @@ function isedoc_create_node_from($filepath, $title = NULL, $nid=0) {
  * Helpers
  */
 
-function isedoc_file_info($fn, $is_full=FALSE) {
-	$l_body = '';
-	if (basename($fn) == '__order__') {
-		$title = '#order-of-'.basename(dirname($fn));
-		if (substr($title, - 6) == '.pages') {
-			$title = substr($title, 0, - 6);
-		}
-		$parent = basename(dirname(dirname($fn)));
-	} else {
-		$fp = fopen($fn, 'r');
+function isedoc_import_with_index($dn,$fn) {
+	drupal_set_message(t("Importing using index $fn ..."),'status');
+	$logfp = fopen($fn.".log", 'w');
+	fclose ($logfp);
+
+	$fp = fopen($fn, 'r');
+	$node_ids = array();
+	$dep = 0;
+
+	while (!feof($fp)) {
 		$line = fgets($fp);
 		$line = substr($line, 0, -1);
-		if (substr($line, 0, 7) == '#title=') {
-			$title = substr($line, 7);
-		} else {
-			$title = '__'.basename($fn);
+		$i = strpos($line, "[");
+		if ($i > 0) {
+			$j = strpos($line, ":", $i);
+			$l_depth = substr($line, $i+1, 1 + ($j-1) -($i+1) );
+			$i = strpos($line, "]", $j+1);
+			$l_base_id = substr($line, $j+1, 1 + ($i-1) - ($j+1));
+			$l_title = substr($line, $i+2);
+
+			$line = fgets($fp);
+			$line = substr($line, 0, -1);
+
+			$i = strpos($line, "!src=");
+			if ($i > 0) {
+				$l_src = $dn . "/". substr($line, $i+5) . ".wiki";
+
+				$info = isedoc_file_info($l_src, TRUE);
+				if ($info) {
+					//drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'status');
+					$info['title'] = $l_title;
+					$info['src'] = $l_src;
+					$info['depth'] = $l_depth;
+					$info['baseid'] = $l_baseid;
+					$node = isedoc_create_doc_node_from ($info);
+
+					if ($dep > 0) {
+						$p_nid = $node_ids[$dep];
+					} else {
+						$p_nid = 0;
+					}
+					$node_ids[$l_depth] = $node->nid;
+					$dep = $l_depth;
+
+					drupal_set_message(t(" -> [%dep] %src -> %nid (parent=$p_nid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+				} else {
+					drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+				}
+				
+			}
 		}
-		if ($is_full) {
-			$l_body = fread($fp, filesize($fn));
-		}
-		fclose ($fp);
-		$parent = basename(dirname($fn));
 	}
-	if ((strlen($parent) > 6) and (substr($parent, - 6) == '.pages')) {
-		$parent = substr($parent, 0, - 6);
+
+/*
+	if (substr($line, 0, 7) == 'title=') {
+		$title = substr($line, 7);
+	} else {
+		$title = '__'.basename($fn);
 	}
+	if (substr($line, 0, 7) == 'src=') {
+		$src = substr($line, 5);
+	}
+	if ($is_full) {
+		$l_body = fread($fp, filesize($fn));
+	}
+*/
+	fclose ($fp);
+
+}
+
+function isedoc_file_info($fn, $is_full=FALSE) {
+	$l_body = '';
+	$fp = fopen($fn, 'r');
 	$info = array();
-	$info['title'] = $title;
-	$info['parent'] = $parent;
+	$done = 0;
+	while(!$done) {
+		$line = fgets($fp);
+		$line = substr($line, 0, -1);
+		$i = strpos ($line, "=");
+		if ($i > 0) {
+			$k = substr($line, 0, $i);
+			$v = substr($line, $i+1);
+			$info[$k] = $v;
+		} else {
+			$done = 1;
+		}
+	}
+	if ($is_full) {
+		$l_body = fread($fp, filesize($fn));
+	}
+	fclose ($fp);
 	$info['body'] = $l_body;
 	return $info;
 }

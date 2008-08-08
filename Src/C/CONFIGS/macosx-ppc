@@ -206,6 +206,7 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
+lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
 libs='-lm'

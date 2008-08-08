@@ -202,6 +202,7 @@ concurrent_prefix='c'
 cp='/usr/bin/cp'
 eiflib='finalized'
 ld='ld'
+lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -shared -o"
 libs='-lm'

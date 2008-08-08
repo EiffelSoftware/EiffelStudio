@@ -59,6 +59,7 @@ if [ -n "$CPPFLAGS" ]; then
 else
 	cppflags=''
 fi
+lintflags=''
 ldflags='-EL -X -N -warn-common'
 mtldsharedflags='-EL -X -N -warn-common -shared -o'
 ldsharedflags='-EL -X -N -warn-common -shared -o'

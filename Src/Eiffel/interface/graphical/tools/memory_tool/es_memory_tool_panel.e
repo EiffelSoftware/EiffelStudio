@@ -100,10 +100,9 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			memory_map_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			stone_director.bind (memory_map_grid)
-			register_action (memory_map_grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do execute_with_busy_cursor (agent on_row_expanded (a_row)) end)
 			register_action (memory_map_grid.pointer_button_release_item_actions, agent (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 				do
-					if a_button = {EV_POINTER_CONSTANTS}.right then
+					if a_item /= Void and a_button = {EV_POINTER_CONSTANTS}.right then
 						show_item_context_menu (a_item, a_x - a_item.parent.virtual_x_position, (a_y + a_item.parent.header.height) - a_item.parent.virtual_y_position)
 					end
 				end)
@@ -247,20 +246,8 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	row_data (a_row: EV_GRID_ROW): TUPLE [name: STRING; instances: INTEGER; delta: INTEGER; id: INTEGER] is
-			-- Retrieve a row's data
-			--
-			-- `a_row': Row to retrieve data for.
-			-- `Result': The row data
-		require
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
+	row_data: TUPLE [name: STRING; instances: INTEGER; delta: INTEGER; type_id: INTEGER] is
 		do
-			Result ?= a_row.data
-		ensure
-			result_name_attached: Result /= Void implies Result.name /= Void
-			not_result_name_is_empty: Result /= Void implies not Result.name.is_empty
-			result_id_positive: Result /= Void implies Result.id > 0
 		end
 
 feature {NONE} -- Basic operations
@@ -322,22 +309,80 @@ feature {NONE} -- Basic operations
 			memory_map_grid_row_count_is_zero: memory_map_grid.row_count = 0
 		local
 			l_grid: like memory_map_grid
-			l_data: DS_ARRAYED_LIST_CURSOR [like row_data]
+			l_data_cursor: DS_ARRAYED_LIST_CURSOR [like row_data]
+			l_data: like row_data
 			l_expression: like filter_match_expression
+			l_item: EV_GRID_LABEL_ITEM
+			l_count: INTEGER
+			l_row: EV_GRID_ROW
+			i: INTEGER
 		do
 			l_grid := memory_map_grid
 			l_grid.lock_update
-			l_grid.set_row_count_to (memory_data.count)
 
 			if is_filtering then
 				l_expression := filter_match_expression
 			end
 
-			l_data := memory_data.new_cursor
-			from l_data.start until l_data.after loop
-				populate_memory_grid_row (l_grid.row (l_data.index), l_data.item, l_expression)
-				l_data.forth
+			l_data_cursor := memory_data.new_cursor
+			from
+				i := 1
+				l_data_cursor.start
+			until
+				l_data_cursor.after
+			loop
+				l_data := l_data_cursor.item
+
+				create l_item.make_with_text (l_data.name)
+				l_grid.set_item (object_column_index, i, l_item)
+
+				l_count := l_data.instances
+				create l_item.make_with_text (l_count.out)
+				l_item.set_foreground_color (colors.stock_colors.dark_gray)
+				l_grid.set_item (count_column_index, i, l_item)
+
+				l_count := l_data.delta
+				if l_count /= 0 then
+					create l_item.make_with_text (l_count.out)
+					if l_count > 0 then
+						l_item.set_foreground_color (colors.stock_colors.red)
+					else
+						l_item.set_foreground_color (colors.stock_colors.green)
+					end
+				else
+					create l_item
+				end
+				l_grid.set_item (delta_column_index, i, l_item)
+				l_row := l_grid.row (i)
+				l_row.set_data (l_data)
+				if
+					(l_expression /= Void and then not l_expression.matches (l_data.name)) or
+					(is_showing_positive_deltas and then l_data.delta = 0)
+				then
+					l_row.hide
+				end
+
+				i := i + 1
+				l_grid.insert_new_rows_parented (2, i, l_row)
+				create l_item.make_with_text ("Clouds of referers")
+				l_grid.set_item (1, i, l_item)
+				l_row := l_grid.row (i)
+				l_row.ensure_expandable
+				l_row.expand_actions.extend (agent execute_with_busy_cursor (agent populate_memory_grid_clouds (l_data.type_id, l_row)))
+				l_row.expand_actions.extend (agent execute_with_busy_cursor (agent on_collect))
+
+				i := i + 1
+				create l_item.make_with_text ("Instances")
+				l_grid.set_item (1, i, l_item)
+				l_row := l_grid.row (i)
+				l_row.ensure_expandable
+				l_row.expand_actions.extend (agent execute_with_busy_cursor (agent populate_memory_grid_type_subrows (l_data, l_row)))
+				l_row.expand_actions.extend (agent execute_with_busy_cursor (agent on_collect))
+
+				i := i + 1
+				l_data_cursor.forth
 			end
+
 			l_grid.unlock_update
 		rescue
 			if l_grid.is_locked then
@@ -345,140 +390,96 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	populate_memory_grid_row (a_row: EV_GRID_ROW; a_data: like row_data; a_match_expression: like filter_match_expression) is
-			-- Populates a row with a object type.
-			--
-			-- `a_row': The row to populate with type subrows.
-			-- `a_match_expression': A regular expression to determine the row's default visibility
-		require
-			is_initialized: is_initialized
-			not_is_recycled: not is_recycled
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			not_a_row_is_part_of_tree_structure: not a_row.is_part_of_tree_structure
-			a_data_attached: a_data /= Void
-			a_match_expression_is_compiled: a_match_expression /= Void implies a_match_expression.is_compiled
-		local
-			l_item: EV_GRID_LABEL_ITEM
-			l_count: INTEGER
-		do
-			create l_item.make_with_text (a_data.name)
-			a_row.set_item (object_column_index, l_item)
-
-			l_count := a_data.instances
-			create l_item.make_with_text (l_count.out)
-			l_item.set_foreground_color (colors.stock_colors.dark_gray)
-			a_row.set_item (count_column_index, l_item)
-
-			l_count := a_data.delta
-			if l_count /= 0 then
-				create l_item.make_with_text (l_count.out)
-				if l_count > 0 then
-					l_item.set_foreground_color (colors.stock_colors.red)
-				else
-					l_item.set_foreground_color (colors.stock_colors.green)
-				end
-			else
-				create l_item
-			end
-			a_row.set_item (delta_column_index, l_item)
-
-			a_row.set_data (a_data)
-			a_row.ensure_expandable
-
-			if (a_match_expression /= Void and then not a_match_expression.matches (a_data.name)) or (is_showing_positive_deltas and then a_data.delta = 0) then
-				a_row.hide
-			end
-		ensure
-			a_row_data_set: a_row.data = a_data
-		end
-
-	populate_memory_grid_type_subrows (a_row: EV_GRID_ROW) is
+	populate_memory_grid_type_subrows (a_data: like row_data; a_parent_row: EV_GRID_ROW) is
 			-- Populates a row with type instances.
 			--
-			-- `a_row': The row to populate with type instance subrows.
+			-- `a_parent_row': The row to populate with type instance subrows.
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			not_a_row_is_part_of_tree_structure: not a_row.is_part_of_tree_structure
-			a_row_data_attached: a_row.data /= Void
+			a_row_attached: a_parent_row /= Void
+			not_a_row_is_destroyed: not a_parent_row.is_destroyed
+			a_data_attached: a_data /= Void
 		local
-			l_row_data: like row_data
-			l_grid: like memory_map_grid
-			l_objects: ARRAYED_LIST [ANY]
+			l_objects: SPECIAL [ANY]
 			l_object: ANY
+			i, nb: INTEGER
 		do
-			l_row_data := row_data (a_row)
-			check
-				l_row_data_attached: l_row_data /= Void
-			end
-			l_objects := memory.memory_map.item (l_row_data.id)
-			if l_objects /= Void then
-				l_grid := memory_map_grid
-				l_grid.insert_new_rows_parented (l_objects.count, a_row.index + 1, a_row)
-				from l_objects.start until l_objects.after loop
-					l_object := l_objects.item
-					populate_memory_grid_referer_row (a_row.subrow (l_objects.index), l_objects.index, l_object)
-					l_objects.forth
+			if a_parent_row.subrow_count = 0 then
+				l_objects := memory.objects_instance_of_type (a_data.type_id)
+				if l_objects /= Void then
+					from
+						i := 0
+						nb := l_objects.count
+						memory_map_grid.insert_new_rows_parented (nb, a_parent_row.index + 1, a_parent_row)
+					until
+						i >= nb
+					loop
+						l_object := l_objects.item (i)
+						populate_memory_grid_referer_row (a_parent_row.subrow (i + 1), i + 1, l_object)
+						i := i + 1
+					end
 				end
 			end
-		ensure
-			a_row_data_attached: a_row.data /= Void
 		end
 
-	populate_memory_grid_referer_subrows (a_row: EV_GRID_ROW) is
+	populate_memory_grid_referer_subrows (a_parent_row: EV_GRID_ROW) is
 			-- Populates a row with referring object (object is taken from the supplied row's user data) subrows.
 			--
-			-- `a_row': The row to populate with subrows.
+			-- `a_parent_row': The row to populate with subrows.
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_is_part_of_tree_structure: a_row.is_part_of_tree_structure
-			a_row_data_attached: a_row.data /= Void
+			a_row_attached: a_parent_row /= Void
+			not_a_row_is_destroyed: not a_parent_row.is_destroyed
+			an_obj_attached: a_parent_row.data /= Void
 		local
 			l_referers: SPECIAL [ANY]
 			l_grid: like memory_map_grid
-			l_subrow: EV_GRID_ROW
-			l_count, i: INTEGER
-			l_object: ANY
-			l_offset: INTEGER
+			l_int: INTERNAL
+			l_row: EV_GRID_ROW
+			l_row_index, l_count, i, j, nb: INTEGER
+			l_any: ANY
 		do
-			l_referers := memory.referers (a_row.data)
-			if l_referers /= Void then
-				l_count := l_referers.count
-				l_grid := memory_map_grid
-
-				from i := 1 until i > l_count  loop
-					l_object := l_referers.item (i - 1)
-					if a_row = l_object then
-						l_offset := l_offset + 1
-					end
-					i := i + 1
-				end
-				if l_count - l_offset > 0 then
-					l_grid.insert_new_rows_parented (l_count - l_offset, a_row.index + 1, a_row)
-
-					l_offset := 0
-					from i := 1 until i > l_count  loop
-						l_object := l_referers.item (i - 1)
-
-							-- Object description
-						if a_row /= l_object then
-							l_subrow := a_row.subrow (i - l_offset)
-							populate_memory_grid_referer_row (l_subrow, i - l_offset, l_object)
+			if a_parent_row.subrow_count = 0 then
+				l_referers := memory.referers (a_parent_row.data)
+				if l_referers /= Void then
+					l_grid := memory_map_grid
+					from
+						i := 0
+						nb := l_referers.count
+					until
+						i = nb
+					loop
+							-- Compute number of real elements that are going to be inserted
+							-- and discard items we do not want to see.
+						if not is_data_result_of_analyzis (l_referers.item (i)) then
+							l_count := l_count + 1
 						else
-							l_offset := l_offset + 1
+							l_referers.put (Void, i)
+						end
+						i := i + 1
+					end
+
+					from
+						create l_int
+						l_row_index := a_parent_row.index
+						j := l_row_index + 1
+						i := 0
+						l_grid.insert_new_rows_parented (l_count, j, a_parent_row)
+					until
+						i = nb
+					loop
+						l_any := l_referers.item (i)
+						if l_any /= Void then
+							l_row := l_grid.row (j)
+							populate_memory_grid_referer_row (l_row, i + 1, l_any)
+							j := j + 1
 						end
 						i := i + 1
 					end
 				end
 			end
-		ensure
-			a_row_data_attached: a_row.data /= Void
 		end
 
 	populate_memory_grid_referer_row (a_row: EV_GRID_ROW; a_index: INTEGER; a_object: ANY) is
@@ -517,9 +518,7 @@ feature {NONE} -- Basic operations
 			else
 				l_color := Void
 			end
-			if row_data (a_row.parent_row) = Void then
-				l_description.append (a_object.generating_type)
-			end
+			l_description.append (a_object.generating_type)
 
 			create l_item.make_with_text (l_description)
 			if l_color /= Void then
@@ -536,9 +535,124 @@ feature {NONE} -- Basic operations
 
 			a_row.ensure_expandable
 			a_row.set_data (a_object)
+			a_row.expand_actions.extend (agent execute_with_busy_cursor (agent populate_memory_grid_referer_subrows (a_row)))
+			a_row.expand_actions.extend (agent execute_with_busy_cursor (agent on_collect))
 		ensure
-			a_row_data_set: a_row.data = a_object
 			a_row_is_expandable: a_row.is_expandable
+		end
+
+	populate_memory_grid_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- For each object of type `a_dynamic_type' create a list of objects referencing them
+			-- ordered by increasing number of reference to objects of type `a_dynamic_type.
+			-- This list is inserted as a child node of `a_parent_row'.
+		require
+			output_grid_not_destroyed: not memory_map_grid.is_destroyed
+			a_dynamic_type_non_negative: a_dynamic_type >= 0
+			a_parent_row_not_void: a_parent_row /= Void
+		local
+			l_data: SPECIAL [ANY]
+			l_sorted_data: DS_ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_referers: SPECIAL [ANY]
+			l_item: EV_GRID_LABEL_ITEM
+			l_row_index: INTEGER
+			l_row: EV_GRID_ROW
+			l_any: ANY
+			l_table: SED_OBJECTS_TABLE
+			l_mapping: HASH_TABLE [TUPLE [obj: ANY; nb: NATURAL_32], NATURAL_32]
+			l_entry: TUPLE [obj: ANY; nb: NATURAL_32]
+			i, j, nb1, nb2: INTEGER
+			k: NATURAL_32
+			l_sorter: DS_QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+		do
+			if a_parent_row.subrow_count = 0 then
+				l_data := memory.objects_instance_of_type (a_dynamic_type)
+				if l_data /= Void then
+						-- We need to disable the GC so that we can use the SED_OBJECTS_TABLE
+						-- properly.
+					on_collect
+					memory.collection_off
+						-- Iterate through all the referers of objects in `l_data'
+						-- and insert them in `l_mapping' incrementing the count of
+						-- references when already present.
+					from
+						create l_table.make (l_data.count.as_natural_32)
+						create l_mapping.make (l_data.count)
+						i := 0
+						nb1 := l_data.count - 1
+					until
+						i > nb1
+					loop
+						l_referers := memory.referers (l_data.item (i))
+						from
+							j := 0
+							nb2 := l_referers.count - 1
+						until
+							j > nb2
+						loop
+							l_any := l_referers.item (j)
+							if l_any /= l_data and not is_data_result_of_analyzis (l_any) then
+								k := l_table.index (l_any)
+								l_entry := l_mapping.item (k)
+								if l_entry /= Void then
+									l_entry.nb := l_entry.nb + 1
+								else
+									l_mapping.put ([l_any, {NATURAL_32} 1], k)
+								end
+							end
+							j := j + 1
+						end
+						i := i + 1
+					end
+
+						-- We are done with `l_table' so we can reenable the GC.
+					l_table := Void
+					memory.collection_on
+
+						-- Put the data in a gobo container for sorting it based on the
+						-- number of reference we have.
+					create l_sorted_data.make (l_mapping.count)
+					from
+						l_mapping.start
+					until
+						l_mapping.after
+					loop
+						l_sorted_data.force_last (l_mapping.item_for_iteration)
+						l_mapping.forth
+					end
+
+					create l_agent_sorter.make (agent sort_on_cloud_entry)
+					create l_sorter.make (l_agent_sorter)
+					l_sorted_data.sort (l_sorter)
+				end
+				if l_sorted_data /= Void then
+					memory_map_grid.insert_new_rows_parented (l_sorted_data.count, a_parent_row.index + 1, a_parent_row)
+					from
+						l_sorted_data.start
+						l_row_index := a_parent_row.index
+						i := l_row_index + 1
+					until
+						l_sorted_data.after
+					loop
+						l_any := l_sorted_data.item_for_iteration.obj
+						create l_item.make_with_text (l_any.generating_type)
+						memory_map_grid.set_item (1, i, l_item)
+						create l_item.make_with_text (($l_any).out)
+						memory_map_grid.set_item (2, i, l_item)
+						create l_item.make_with_text (l_sorted_data.item_for_iteration.nb.out)
+						memory_map_grid.set_item (3, i, l_item)
+
+						l_row := memory_map_grid.row (i)
+						l_row.ensure_expandable
+						l_row.set_data (l_any)
+						l_row.expand_actions.extend (agent execute_with_busy_cursor (agent populate_memory_grid_referer_subrows (l_row)))
+						l_row.expand_actions.extend (agent execute_with_busy_cursor (agent on_collect))
+
+						i := i + 1
+						l_sorted_data.forth
+					end
+				end
+			end
 		end
 
 	show_item_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
@@ -677,6 +791,20 @@ feature {NONE} -- Sort handling
 
 feature {NONE} -- Analysis
 
+	is_data_result_of_analyzis (a_data: ANY): BOOLEAN is
+			-- Is `a_data' indirectly the result of an internal operation of Current
+		local
+			l_row: EV_GRID_ROW
+		do
+			l_row ?= a_data
+				-- If this is the row from our current grid, no need to show this object.
+			Result := l_row /= Void and then l_row.parent = memory_map_grid
+			if not Result then
+					-- If this is the closed arguments tuple of one of our agent, no need to show this object.
+				Result := ({l_discardable_data: TUPLE [like Current]} a_data)
+			end
+		end
+
 	sort_on_type_name (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
 			-- Compare u, v.
 		require
@@ -722,6 +850,15 @@ feature {NONE} -- Analysis
 			else
 				Result := v.delta < u.delta
 			end
+		end
+
+	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN is
+			-- Compare u, v
+		require
+			u_not_void: u /= Void
+			v_not_void: v /= Void
+		do
+			Result := u.nb > v.nb
 		end
 
 	calculate_memory_data (a_refresh: BOOLEAN) is
@@ -793,6 +930,7 @@ feature {NONE} -- Analysis
 			l_bytes: NATURAL
 			l_usage: REAL
 			l_stat: STRING_32
+			l_formatter: FORMAT_DOUBLE
 		do
 			l_bytes := a_bytes.to_natural_32
 			if l_bytes > stat_gb_threshold then
@@ -808,8 +946,9 @@ feature {NONE} -- Analysis
 				l_usage := l_bytes
 				l_stat := once "Bytes"
 			end
+			create l_formatter.make (10, 2)
 			create Result.make (20)
-			Result.append_real (l_usage)
+			Result.append_string (l_formatter.formatted (l_usage))
 			Result.append_character (' ')
 			Result.append (l_stat)
 		end
@@ -883,8 +1022,6 @@ feature {NONE} -- Action handlers
 			if not l_collecting then
 				memory.collection_on
 			end
-			memory.full_collect
-			memory.full_coalesce
 			memory.full_collect
 			if not l_collecting then
 				memory.collection_off
@@ -1069,24 +1206,6 @@ feature {NONE} -- Action handlers
 			filter_update_timer_reset: filter_update_timer.interval = 0
 		end
 
-	on_row_expanded (a_row: EV_GRID_ROW)
-			-- Called when a row is expanded on the memory map grid
-		require
-			not_is_recycled: not is_recycled
-			is_initialized: is_initialized
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_has_memory_map_parent: a_row.parent = memory_map_grid
-		do
-			if a_row.subrow_count = 0 then
-				if a_row.is_part_of_tree_structure then
-					populate_memory_grid_referer_subrows (a_row)
-				else
-					populate_memory_grid_type_subrows (a_row)
-				end
-			end
-		end
-
 feature {NONE} -- Memory pruning
 
 	select_object (a_object: ANY) is
@@ -1113,7 +1232,7 @@ feature {NONE} -- Memory pruning
 			l_count := l_grid.row_count
 			from i := 1 until i > l_count or l_stop loop
 				l_row := l_grid.row (i)
-				l_data := row_data (l_row)
+				l_data ?= l_row.data
 				l_stop := l_data /= Void and then l_data.name.is_equal (l_type_name)
 				if not l_stop then
 					i := i + l_row.subrow_count_recursive + 1
@@ -1124,9 +1243,11 @@ feature {NONE} -- Memory pruning
 				check
 					l_row_attached: l_row /= Void
 				end
-					-- Expand row to populate sub items
+					-- Expand row to populate sub items (Clouds + Instances)
 				l_row.expand
-				on_row_expanded (l_row)
+					-- Get `Instances' node and expand it.
+				l_row := l_grid.row (l_row.index + 2)
+				l_row.expand
 				if not l_row.is_show_requested then
 						-- Ensure the row is always shown, because the filter might hide it.
 					l_row.show
@@ -1219,7 +1340,12 @@ feature {NONE} -- Memory pruning
 							-- Attempt to row item index
 						l_index := 0
 						l_parent_row := l_row.parent_row
-						from j := 1; l_subrow_count := l_parent_row.subrow_count until j > l_subrow_count or l_index > 0 loop
+						from
+							j := 1;
+							l_subrow_count := l_parent_row.subrow_count
+						until
+							j > l_subrow_count or l_index > 0
+						loop
 							if l_parent_row.subrow (j) = l_row then
 								l_index := j
 							end

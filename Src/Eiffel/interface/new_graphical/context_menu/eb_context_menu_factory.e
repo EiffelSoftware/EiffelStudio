@@ -91,8 +91,12 @@ feature -- Editor menu
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				if a_pebble /= Void then
-					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
-					extend_separator (a_menu)
+					if not ({l_stone: STONE} a_pebble and then l_stone.same_as (a_editor.stone)) then
+							-- If the current stone is the same as the editor stone then we
+							-- do not need a Retarget menu.
+						extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+						extend_separator (a_menu)
+					end
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 				end

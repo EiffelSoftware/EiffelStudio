@@ -44,6 +44,7 @@ if [ -n "$CPPFLAGS" ]; then
 else
 	cppflags=''
 fi
+lintflags=''
 ldflags=''
 ldsharedflags=''
 mtldsharedflags=''

@@ -56,6 +56,7 @@ fi
 mtcppflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
 sharedcppflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
 mtsharedcppflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
+lintflags=''
 ldflags=''
 sharedlink='ld'
 mtldflags=''

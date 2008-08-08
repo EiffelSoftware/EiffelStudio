@@ -394,25 +394,23 @@ feature {NONE} -- Implementation
 					l_grid.set_item (3, i, l_item)
 				end
 
-				if l_count >= 1 then
-					l_row := l_grid.row (i)
-					i := i + 1
-					l_grid.insert_new_rows_parented (2, i, l_row)
-					create l_item.make_with_text ("Clouds of referers")
-					l_grid.set_item (1, i, l_item)
-					l_row := l_grid.row (i)
-					l_row.ensure_expandable
-					l_row.expand_actions.extend (agent on_expand_actions_for_clouds (l_row_data.type_id, l_row))
-					l_row.expand_actions.extend (agent collect)
+				l_row := l_grid.row (i)
+				i := i + 1
+				l_grid.insert_new_rows_parented (2, i, l_row)
+				create l_item.make_with_text ("Clouds of referers")
+				l_grid.set_item (1, i, l_item)
+				l_row := l_grid.row (i)
+				l_row.ensure_expandable
+				l_row.expand_actions.extend (agent on_expand_actions_for_clouds (l_row_data.type_id, l_row))
+				l_row.expand_actions.extend (agent collect)
 
-					i := i + 1
-					create l_item.make_with_text ("Instances")
-					l_grid.set_item (1, i, l_item)
-					l_row := l_grid.row (i)
-					l_row.ensure_expandable
-					l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
-					l_row.expand_actions.extend (agent collect)
-				end
+				i := i + 1
+				create l_item.make_with_text ("Instances")
+				l_grid.set_item (1, i, l_item)
+				l_row := l_grid.row (i)
+				l_row.ensure_expandable
+				l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
+				l_row.expand_actions.extend (agent collect)
 
 				i := i + 1
 				l_data.forth

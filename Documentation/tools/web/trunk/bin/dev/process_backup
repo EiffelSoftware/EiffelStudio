@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo sh eiffeldoc_backup.sh 

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+sudo sh ./eiffeldoc_restore.sh backup/latest ../drupal_backup eiffeldoc_backup
+
+THEFILE=../drupal_backup/drupal/.htaccess
+sed "s|RewriteBase /p|RewriteBase /b|" < $THEFILE > $THEFILE.tmp
+cat $THEFILE.tmp > $THEFILE
+rm $THEFILE.tmp

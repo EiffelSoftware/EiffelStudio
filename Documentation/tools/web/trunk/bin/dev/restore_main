@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Are you sure you want to restore MAIN site (y|n)?"
+read answer
+if [ "$answer" = "y" ]; then
+	sudo sh ./eiffeldoc_restore.sh backup/latest .. eiffeldoc
+fi

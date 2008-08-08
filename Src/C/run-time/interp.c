@@ -38,6 +38,8 @@
 doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte code interpreter for Eiffel byte code.">
 */
 
+#ifdef WORKBENCH
+
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "rt_interp.h"
@@ -6129,6 +6131,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 
 	/* NOT REACHED */
 }
+
+#endif
 
 /*
 doc:</file>

@@ -38,6 +38,8 @@
 doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbench primitives">
 */
 
+#ifdef WORKBENCH
+
 #include "eif_portable.h"
 #include "rt_wbench.h"
 #include "eif_project.h"
@@ -615,6 +617,8 @@ rt_public void create_desc(void)
 	/* Free temporary structure */
 	eif_rt_xfree((char *) mdesc_tab);
 }
+
+#endif
 
 /*
 doc:</file>

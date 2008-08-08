@@ -1,5 +1,12 @@
 indexing
-	description: "Window to perform GC statistics."
+	description: "[
+		Window to perform GC statistics.
+
+		Trick: Each time we expand a node we launch a GC cycle to get rid of the garbage
+		created to compute the information. This cannot be done within the action because
+		the generated code may have some hidden temporary locals still referencing some
+		temporary objects, this is why for all `expand_actions' we always call `collect'.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -190,8 +197,6 @@ feature -- Update
 			-- Perform a GC cycle.
 		do
 			mem.full_collect
-			mem.full_coalesce
-			mem.full_collect
 		end
 
 	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
@@ -376,11 +381,6 @@ feature {NONE} -- Implementation
 				l_count := l_row_data.nb
 				create l_item.make_with_text (l_count.out)
 				l_grid.set_item (2, i, l_item)
-				if l_count >= 1 then
-					l_row := l_grid.row (i)
-					l_row.ensure_expandable
-					l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
-				end
 
 					-- Set delta
 				l_delta := l_row_data.delta
@@ -393,12 +393,142 @@ feature {NONE} -- Implementation
 					end
 					l_grid.set_item (3, i, l_item)
 				end
+
+				if l_count >= 1 then
+					l_row := l_grid.row (i)
+					i := i + 1
+					l_grid.insert_new_rows_parented (2, i, l_row)
+					create l_item.make_with_text ("Clouds of referers")
+					l_grid.set_item (1, i, l_item)
+					l_row := l_grid.row (i)
+					l_row.ensure_expandable
+					l_row.expand_actions.extend (agent on_expand_actions_for_clouds (l_row_data.type_id, l_row))
+					l_row.expand_actions.extend (agent collect)
+
+					i := i + 1
+					create l_item.make_with_text ("Instances")
+					l_grid.set_item (1, i, l_item)
+					l_row := l_grid.row (i)
+					l_row.ensure_expandable
+					l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
+					l_row.expand_actions.extend (agent collect)
+				end
+
 				i := i + 1
 				l_data.forth
 			end
-				-- We launch a collection, so that no bad information is displayed
-				-- for referers.
-			collect
+		end
+
+	on_expand_actions_for_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- For each object of type `a_dynamic_type' create a list of objects referencing them
+			-- ordered by increasing number of reference to objects of type `a_dynamic_type.
+			-- This list is inserted as a child node of `a_parent_row'.
+		require
+			output_grid_not_destroyed: not output_grid.is_destroyed
+			a_dynamic_type_non_negative: a_dynamic_type >= 0
+			a_parent_row_not_void: a_parent_row /= Void
+		local
+			l_data: SPECIAL [ANY]
+			l_sorted_data: DS_ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_referers: SPECIAL [ANY]
+			l_item: EV_GRID_LABEL_ITEM
+			l_row_index: INTEGER
+			l_row: EV_GRID_ROW
+			l_any: ANY
+			l_table: SED_OBJECTS_TABLE
+			l_mapping: HASH_TABLE [TUPLE [obj: ANY; nb: NATURAL_32], NATURAL_32]
+			l_entry: TUPLE [obj: ANY; nb: NATURAL_32]
+			i, j, nb1, nb2: INTEGER
+			k: NATURAL_32
+			l_sorter: DS_QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+		do
+			if a_parent_row.subrow_count = 0 then
+				l_data := mem.objects_instance_of_type (a_dynamic_type)
+				if l_data /= Void then
+						-- We need to disable the GC so that we can use the SED_OBJECTS_TABLE
+						-- properly.
+					collect
+					mem.collection_off
+						-- Iterate through all the referers of objects in `l_data'
+						-- and insert them in `l_mapping' incrementing the count of
+						-- references when already present.
+					from
+						create l_table.make (l_data.count.as_natural_32)
+						create l_mapping.make (l_data.count)
+						i := 0
+						nb1 := l_data.count - 1
+					until
+						i > nb1
+					loop
+						l_referers := mem.referers (l_data.item (i))
+						from
+							j := 0
+							nb2 := l_referers.count - 1
+						until
+							j > nb2
+						loop
+							if l_referers.item (j) /= l_data then
+								k := l_table.index (l_referers.item (j))
+								l_entry := l_mapping.item (k)
+								if l_entry /= Void then
+									l_entry.nb := l_entry.nb + 1
+								else
+									l_mapping.put ([l_referers.item (j), {NATURAL_32} 1], k)
+								end
+							end
+							j := j + 1
+						end
+						i := i + 1
+					end
+
+						-- We are done with `l_table' so we can reenable the GC.
+					l_table := Void
+					mem.collection_on
+
+						-- Put the data in a gobo container for sorting it based on the
+						-- number of reference we have.
+					create l_sorted_data.make (l_mapping.count)
+					from
+						l_mapping.start
+					until
+						l_mapping.after
+					loop
+						l_sorted_data.force_last (l_mapping.item_for_iteration)
+						l_mapping.forth
+					end
+
+					create l_agent_sorter.make (agent sort_on_cloud_entry)
+					create l_sorter.make (l_agent_sorter)
+					l_sorted_data.sort (l_sorter)
+				end
+				if l_sorted_data /= Void then
+					output_grid.insert_new_rows_parented (l_sorted_data.count, a_parent_row.index + 1, a_parent_row)
+					from
+						l_sorted_data.start
+						l_row_index := a_parent_row.index
+						i := l_row_index + 1
+					until
+						l_sorted_data.after
+					loop
+						l_any := l_sorted_data.item_for_iteration.obj
+						create l_item.make_with_text (l_any.generating_type)
+						output_grid.set_item (1, i, l_item)
+						create l_item.make_with_text (($l_any).out)
+						output_grid.set_item (2, i, l_item)
+						create l_item.make_with_text (l_sorted_data.item_for_iteration.nb.out)
+						output_grid.set_item (3, i, l_item)
+
+						l_row := output_grid.row (i)
+						l_row.ensure_expandable
+						l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
+						l_row.expand_actions.extend (agent collect)
+
+						i := i + 1
+						l_sorted_data.forth
+					end
+				end
+			end
 		end
 
 	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -409,34 +539,37 @@ feature {NONE} -- Implementation
 			a_dynamic_type_non_negative: a_dynamic_type >= 0
 			a_parent_row_not_void: a_parent_row /= Void
 		local
-			l_data: ARRAYED_LIST [ANY]
+			l_data: SPECIAL [ANY]
 			l_item: EV_GRID_LABEL_ITEM
-			l_row_index, i: INTEGER
+			l_row_index, i, j, nb: INTEGER
 			l_row: EV_GRID_ROW
 			l_any: ANY
 		do
 			if a_parent_row.subrow_count = 0 then
-				l_data := mem.memory_map.item (a_dynamic_type)
+				l_data := mem.objects_instance_of_type (a_dynamic_type)
 				if l_data /= Void then
 					output_grid.insert_new_rows_parented (l_data.count, a_parent_row.index + 1, a_parent_row)
 					from
-						l_data.start
 						l_row_index := a_parent_row.index
 						i := l_row_index + 1
+						j := 0
+						nb := l_data.count - 1
 					until
-						l_data.after
+						j > nb
 					loop
 						create l_item.make_with_text ((i - l_row_index).out)
 						output_grid.set_item (1, i, l_item)
-						l_any := l_data.item
+						l_any := l_data.item (j)
 						create l_item.make_with_text (($l_any).out)
 						output_grid.set_item (2, i, l_item)
 
 						l_row := output_grid.row (i)
 						l_row.ensure_expandable
 						l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
+						l_row.expand_actions.extend (agent collect)
+
 						i := i + 1
-						l_data.forth
+						j := j + 1
 					end
 				end
 			end
@@ -453,7 +586,7 @@ feature {NONE} -- Implementation
 			l_data: SPECIAL [ANY]
 			l_item: EV_GRID_LABEL_ITEM
 			l_row_index: INTEGER
-			i, j, nb: INTEGER
+			i, j, nb, l_count: INTEGER
 			l_int: INTERNAL
 			l_any: ANY
 			l_row: EV_GRID_ROW
@@ -462,24 +595,41 @@ feature {NONE} -- Implementation
 				l_data := mem.referers (an_object)
 				if l_data /= Void then
 					from
-						create l_int
-						l_row_index := a_parent_row.index
-						i := l_row_index + 1
+						j := 0
 						nb := l_data.count
-						output_grid.insert_new_rows_parented (l_data.count, i, a_parent_row)
 					until
 						j = nb
 					loop
-						create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_data.item (j)))
-						output_grid.set_item (1, i, l_item)
-						l_any := l_data.item (j)
-						create l_item.make_with_text (($l_any).out)
-						output_grid.set_item (2, i, l_item)
+							-- Compute number of real elements that are going to be inserted.
+						if not ({l_discardable_data_1: TUPLE [like Current]} l_data.item (j)) then
+							l_count := l_count + 1
+						end
+						j := j + 1
+					end
 
-						l_row := output_grid.row (i)
-						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_data.item (j), l_row))
-						i := i + 1
+					from
+						create l_int
+						l_row_index := a_parent_row.index
+						i := l_row_index + 1
+						j := 0
+						output_grid.insert_new_rows_parented (l_count, i, a_parent_row)
+					until
+						j = nb
+					loop
+						l_any := l_data.item (j)
+							-- We are not interested in seeing objects of the grid
+						if not ({l_discardable_data_2: TUPLE [like Current]} l_any) then
+							create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_any))
+							output_grid.set_item (1, i, l_item)
+							create l_item.make_with_text (($l_any).out)
+							output_grid.set_item (2, i, l_item)
+
+							l_row := output_grid.row (i)
+							l_row.ensure_expandable
+							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
+							l_row.expand_actions.extend (agent collect)
+							i := i + 1
+						end
 						j := j + 1
 					end
 				end
@@ -549,6 +699,15 @@ feature {NONE} -- Implementation
 			else
 				Result := v.delta < u.delta
 			end
+		end
+
+	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN is
+			-- Compare u, v
+		require
+			u_not_void: u /= Void
+			v_not_void: v /= Void
+		do
+			Result := u.nb > v.nb
 		end
 
 invariant

@@ -40,7 +40,6 @@ feature {NONE} -- Clean up
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			develop_window := Void
 		end
 
 	internal_detach_entities is
@@ -58,7 +57,7 @@ feature {NONE} -- Implementation
 			-- Development window associate with.
 
 invariant
-	not_void: develop_window /= Void
+	development_window_not_void: is_interface_usable implies develop_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

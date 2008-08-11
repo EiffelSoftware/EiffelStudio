@@ -546,6 +546,7 @@ feature -- EB_TOOL features
 
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
+			auto_recycle (address_manager)
 			address_manager.set_context_menu_factory (develop_window.menus.context_menu_factory)
 		end
 
@@ -1344,6 +1345,7 @@ feature {NONE} -- Clean up
 			toggle_selected_classes_descendents_cmd := Void
 			toggle_selected_classes_clients_cmd := Void
 			toggle_selected_classes_suppliers_cmd := Void
+			address_manager := Void
 			Precursor {EB_STONABLE_TOOL}
 			Precursor {EB_HISTORY_OWNER}
 		ensure then

@@ -1,0 +1,22 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name invalid-root-procedure
+test_description During incremental compilation, if no classes have been changed or added and system is simply beeing melted, it is not checked if root class/procedure are valid. 
+
+copy_sub Ace1 $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+copy_sub Ace2 $TEST Ace
+compile_melted
+compile_result validity_error NONE VD27
+
+test_end

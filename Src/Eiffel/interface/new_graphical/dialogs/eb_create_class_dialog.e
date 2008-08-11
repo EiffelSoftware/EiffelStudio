@@ -308,6 +308,121 @@ feature -- Basic operations
 			show_modal_to_window (target.window)
 		end
 
+feature {NONE} -- Basic operations
+
+	render_class_template (a_dest_file_name: !STRING)
+			-- Renders a class name into a choose destination file
+			--
+			-- `a_dest_file_name': The destination file to render the default class template file into.
+		local
+			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
+			l_source_file: !FILE_NAME
+			l_user_file: ?FILE_NAME
+			l_params: !DS_HASH_TABLE [!ANY, !STRING]
+			l_buffer: !STRING_32
+			l_parents: EV_LIST
+			l_creation_routine: ?STRING_32
+			l_class_name: ?STRING_32
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_wizard
+				if l_wizard.is_service_available then
+					create l_source_file.make_from_string (eiffel_layout.templates_path)
+					l_source_file.extend ("defaults")
+					if not empty_check.is_selected then
+						l_source_file.set_file_name ("empty")
+					else
+						l_source_file.set_file_name ("full")
+					end
+					l_source_file.add_extension ("e")
+					l_source_file.add_extension ("tpl")
+						-- Check for user priority file.
+					l_user_file := eiffel_layout.user_priority_file_name (l_source_file, True)
+					if l_user_file /= Void then
+							-- The user has their own template file, use it.
+						l_source_file := l_user_file
+					end
+
+					create l_params.make_default
+					l_class_name := class_name.as_string_32
+					if l_class_name /= Void then
+						l_params.put_last (l_class_name, class_name_symbol)
+					end
+					if (create {RAW_FILE}.make (l_source_file)).exists then
+							-- Only render if the file exists.
+						create l_buffer.make (64)
+
+							-- Class modifiers
+						if deferred_check.is_selected then
+							l_buffer.append ("deferred ")
+						elseif expanded_check.is_selected then
+							l_buffer.append ("expanded ")
+						end
+						l_params.put_last (l_buffer.twin, class_modifiers_symbol)
+
+							-- Inheritance
+						l_buffer.wipe_out
+						l_parents := parents_list.list
+						if not l_parents.is_empty then
+							l_buffer.append ("inherit%N")
+							from l_parents.start until l_parents.after loop
+								l_buffer.append_character ('%T')
+								l_buffer.append (l_parents.item.text.as_upper)
+								l_buffer.append ("%N%N")
+								l_parents.forth
+							end
+						end
+						l_params.put_last (l_buffer.twin, inherit_clause_symbol)
+
+							-- Create
+						l_buffer.wipe_out
+						l_creation_routine := creation_entry.text
+						if not deferred_check.is_selected and then creation_check.is_selected and then not l_creation_routine.is_empty then
+							l_buffer.append ("create%N%T")
+							if expanded_check.is_selected and then not ("default_create").is_case_insensitive_equal (l_creation_routine) then
+									-- Is expanded and the creation routine is not default_creation, so add it.
+								l_buffer.append ("default_create,%N%T")
+							end
+							l_buffer.append (l_creation_routine)
+							l_buffer.append ("%N%N")
+						end
+						l_params.put_last (l_buffer.twin, create_clause_symbol)
+
+							-- Initialization
+						l_buffer.wipe_out
+						if
+							not deferred_check.is_selected and then creation_check.is_selected and then
+							not l_creation_routine.is_empty and then
+							not ("default_create").is_case_insensitive_equal (l_creation_routine)
+						then
+								-- No need to add default_create for expanded classes.
+							l_buffer.append ("feature {NONE} -- Initialization%N%N%T")
+							l_buffer.append (l_creation_routine)
+							l_buffer.append (
+									"%N%T%T%T-- Initialization for `Current'.%N%
+									%%T%Tdo%N%T%T%T%N%
+									%%T%Tend%N%N")
+						end
+						l_params.put_last (l_buffer.twin, init_clause_symbol)
+
+							-- Render the template using the defined parameters
+						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)
+					else
+						prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_source_file), target.window, Void)
+						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name)
+					end
+				end
+			else
+				prompts.show_error_prompt (Warning_messages.w_cannot_create_file (a_dest_file_name), target.window, Void)
+					-- Not the best status name, refactor when converting to ESF.
+				could_not_load_file := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature {NONE} -- Access
 
 	change_cluster is
@@ -400,7 +515,7 @@ feature {NONE} -- Implementation
 	create_new_class is
 			-- Create a new class
 		local
-			f_name: FILE_NAME
+			f_name: !FILE_NAME
 			file: RAW_FILE -- Windows specific
 			base_name: STRING
 			retried: BOOLEAN
@@ -429,7 +544,7 @@ feature {NONE} -- Implementation
 						prompts.show_error_prompt (Warning_messages.w_cannot_create_file (f_name), target.window, Void)
 					else
 						destroy
-						load_default_class_text (file)
+						render_class_template (f_name)
 						if not could_not_load_file then
 							manager.add_class_to_cluster (base_name, cluster, path)
 							class_i := manager.last_added_class
@@ -444,122 +559,6 @@ feature {NONE} -- Implementation
 				class_entry.remove_text
 				file_entry.remove_text
 				class_entry.set_focus
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	load_default_class_text (output: RAW_FILE) is
-			-- Loads the default class text.
-		local
-			input: RAW_FILE
-			in_buf: STRING
-			cr: STRING
-			retried: BOOLEAN
-			writing: BOOLEAN
-			clf: FILE_NAME
-			inheritance: STRING
-			par: STRING
-			pcnt: INTEGER
-			last: BOOLEAN
-			tmp: STRING
-		do
-			if not retried then
-				create clf.make_from_string (eiffel_layout.default_templates_path)
-				if not empty_check.is_selected then
-					clf.set_file_name ("empty")
-				else
-					clf.set_file_name ("full")
-				end
-				clf.add_extension ("cls")
-				create input.make (clf)
-				if input.exists and then input.is_readable then
-					input.open_read
-					input.read_stream (input.count)
-					in_buf := input.last_string
-					in_buf.replace_substring_all ("$classname", class_name)
-					if deferred_check.is_selected then
-						in_buf.replace_substring_all ("$class_type", "deferred ")
-					elseif expanded_check.is_selected then
-						in_buf.replace_substring_all ("$class_type", "expanded ")
-					else
-						in_buf.replace_substring_all ("$class_type", "")
-					end
-					pcnt := parents_list.count
-					if pcnt > 0 then
-							--| Ten characters for "inherit%N",
-							--| 15 for each line for each parent.
-						create inheritance.make (10 + 15 * pcnt)
-						from
-							inheritance.append ("inherit%N")
-							parents_list.list.start
-							last := parents_list.list.after
-						until
-							parents_list.list.after
-						loop
-							par := parents_list.list.item.text
-							par.to_upper
-							inheritance.append_character ('%T')
-							inheritance.append (par)
-							inheritance.append_character ('%N')
-							inheritance.append_character ('%N')
-							parents_list.list.forth
-						end
-						in_buf.replace_substring_all ("$inheritance_clause", inheritance)
-					else
-						in_buf.replace_substring_all ("$inheritance_clause", "")
-					end
-					cr := creation_entry.text
-					if not deferred_check.is_selected and then creation_check.is_selected and not cr.is_empty then
-						if expanded_check.is_selected and not cr.is_equal ("default_create") then
-							in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + ", default_create%N%N")
-						else
-							in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + "%N%N")
-						end
-					else
-						in_buf.replace_substring_all ("$creation_clause", "")
-					end
-					if not deferred_check.is_selected and then creation_check.is_selected then
-						tmp := "feature {NONE} -- Initialization%N%N%T$cr_name is%N%T%T%T-- Initialize `Current'.%N%
-								%%T%Tdo%N%T%T%T%N%T%Tend%N%N"
-						if cr.is_empty then
-							tmp.replace_substring_all ("$cr_name", "default_create")
-						else
-							tmp.replace_substring_all ("$cr_name", cr)
-						end
-						in_buf.replace_substring_all ("$initialization_clause", tmp)
-					else
-						in_buf.replace_substring_all ("$initialization_clause", "")
-					end
-						--| In case we crash later, to know where we were.
-					writing := True
-					output.open_write
-					if not in_buf.is_empty then
-						in_buf.prune_all ('%R')
-						if preferences.misc_data.text_mode_is_windows then
-							in_buf.replace_substring_all ("%N", "%R%N")
-							output.put_string (in_buf)
-						else
-							output.put_string (in_buf)
-							if in_buf.item (in_buf.count) /= '%N' then
-									-- Add a carriage return like `vi' if there's none at the end
-								output.put_new_line
-							end
-						end
-					end
-					output.close
-					could_not_load_file := False
-				else
-					prompts.show_error_prompt (Warning_messages.w_cannot_read_file (input.name), target.window, Void)
-					could_not_load_file := True
-				end
-			else
-				if not writing then
-					prompts.show_error_prompt (Warning_messages.w_cannot_read_file (input.name), target.window, Void)
-				else
-					prompts.show_error_prompt (Warning_messages.w_cannot_create_file (output.name), target.window, Void)
-				end
 			end
 		rescue
 			retried := True
@@ -769,6 +768,16 @@ feature {NONE} -- Constants
 		ensure
 			new_class_counter_not_void: new_class_counter /= Void
 		end
+
+feature {NONE} -- Constants
+
+	class_name_symbol: !STRING = "CLASS_NAME"
+	class_modifiers_symbol: !STRING = "CLASS_MODIFIERS"
+	inherit_clause_symbol: !STRING = "INHERIT_CLAUSE"
+	create_clause_symbol: !STRING = "CREATE_CLAUSE"
+	init_clause_symbol: !STRING = "INIT_CLAUSE"
+
+	default_class_template: !STRING = "class%N%T$CLASS_NAME%N%N-- Class template file not found in the installation!%N%Nend"
 
 invariant
 	create_button_valid: create_button /= Void and then not create_button.is_destroyed

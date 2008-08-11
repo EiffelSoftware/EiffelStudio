@@ -15,6 +15,8 @@ inherit
 
 	XMLDOC_WITH_WIDTH
 
+	XMLDOC_WITH_HEIGHT
+
 create
 	make
 

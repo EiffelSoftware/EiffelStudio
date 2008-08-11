@@ -152,6 +152,8 @@ feature {NONE} -- Initialize
 			else
 				base_directory_tf.set_text (url_resolver.base_directory)
 			end
+
+			create all_pages.make (1050)
 		end
 
 	customize_text (t: EV_TEXT) is
@@ -177,6 +179,34 @@ feature {NONE} -- Initialize
 			end
 		end
 
+	on_key_pressed_grid	(g: EV_GRID; k: EV_KEY) is
+		local
+			r: INTEGER
+			s: STRING
+			glab: EV_GRID_LABEL_ITEM
+		do
+			if ev_application.ctrl_pressed then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_c then
+					from
+						create s.make_empty
+						r := 1
+					until
+						r > g.row_count
+					loop
+						glab ?= g.row (r).item (1)
+						if glab /= Void then
+							s.append (glab.text)
+							s.append ("%N")
+						end
+						r := r + 1
+					end
+					ev_application.clipboard.set_text (s)
+				else
+				end
+			end
+		end
+
 	update_parameters
 		do
 			product_name := product_tf.text.as_string_8.as_lower
@@ -194,34 +224,100 @@ feature {NONE} -- Initialize
 			g.set_column_count_to (1)g.hide_header
 			g.file_drop_actions.extend (agent on_files_dropped)
 			g.row_select_actions.extend (agent on_row_selected)
+			g.key_press_actions.extend (agent on_key_pressed_grid (g, ?))
 		end
 
-	process_all is
+	all_filenames: ARRAYED_LIST [!STRING_8]
 		local
 			g: EV_GRID
 			r: INTEGER
 		do
-			discard_display
 			g := grid
 			from
+				create Result.make (g.row_count)
 				r := 1
 			until
 				r > g.row_count
 			loop
-				status_label.set_text (r.out + " / " + g.row_count.out + " items")
-				status_label.refresh_now
-				ev_application.process_events
-				on_row_selected (g.row (r))
+				if {fn: STRING_8} g.row (r).data then
+					Result.extend (fn)
+				end
 				r := r + 1
+			end
+		end
+
+	process_all is
+		do
+			discard_display
+			if {lst: like all_filenames} all_filenames then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					status_label.set_text (lst.index.out + " / " + lst.count.out + " items")
+					status_label.refresh_now
+					ev_application.process_events
+					set_xmldoc_filename (lst.item)
+					lst.forth
+				end
 			end
 			restore_display
 		end
 
 	export_all is
+		local
+			bd,td: STRING
+			wbt: WIKIBOOK_TOOL
+			s: STRING
+			pges: ARRAYED_LIST [ TUPLE [fn: STRING; page: XMLDOC_PAGE; src: STRING]]
 		do
+			bd := url_resolver.base_directory
+			td := url_resolver.base_directory + "__export"
 			set_export_status (True)
-			process_all
+			discard_display
+			if {lst: like all_filenames} all_filenames then
+				from
+					lst.start
+					create pges.make (lst.count)
+				until
+					lst.after
+				loop
+					status_label.set_text ("Get Page " + lst.index.out + " / " + lst.count.out + " items")
+					status_label.refresh_now
+					if {p: like xmldoc_page} xmldoc_page (Void, lst.item) then
+						pges.extend ([lst.item, p, url_resolver.source_url])
+						add_page (p, url_resolver.source_url)
+					else
+						check False end
+					end
+					ev_application.process_events
+					lst.forth
+				end
+
+				from
+					pges.start
+				until
+					pges.after
+				loop
+					status_label.set_text ("Save WikiText" + pges.index.out + " / " + pges.count.out + " items")
+					status_label.refresh_now
+
+					if {t: TUPLE [fn: STRING; page: XMLDOC_PAGE; src: STRING]} pges.item then
+						s := wikitext_from_page (t.page, t.src)
+						save_output (s, t.fn, url_resolver.base_directory)
+					end
+
+					ev_application.process_events
+
+					pges.forth
+				end
+			end
+			restore_display
 			set_export_status (False)
+
+			create wbt.make (td)
+			status_label.set_text (status_label.text + " Export all completed")
 		end
 
 feature -- Access
@@ -285,6 +381,9 @@ feature {NONE} -- Settings
 
 	url_resolver: URL_RESOLVER
 
+	all_pages: HASH_TABLE [XMLDOC_PAGE, STRING]
+			-- indexed by src
+
 feature {NONE} -- Settings change
 
 	reset
@@ -295,6 +394,9 @@ feature {NONE} -- Settings change
 			wikitext_text.remove_text
 			if url_resolver /= Void then
 				url_resolver.current_filename := Void
+			end
+			if all_pages /= Void then
+				all_pages.wipe_out
 			end
 		end
 
@@ -339,6 +441,11 @@ feature {NONE} -- Settings change
 		end
 
 feature -- Logs
+
+	add_page (p: XMLDOC_PAGE; s: STRING) is
+		do
+			all_pages.force (p, s)
+		end
 
 	append_error_to_log (e: ERROR)
 		local
@@ -423,19 +530,22 @@ feature -- Basic operation
 			dn_attached: dn /= Void
 		local
 			d: KL_DIRECTORY
+			fns: ARRAYED_LIST [STRING]
 		do
 			create d.make (dn)
 			if d.exists and d.is_readable then
-				d.do_all (agent (ibn, ifn: STRING)
+				create fns.make (1050)
+				d.do_all (agent (ibn, ifn: STRING; ifns: LIST [STRING])
 					local
 						fn: FILE_NAME
 					do
 						if not ifn.is_case_insensitive_equal (once ".svn") then
 							create fn.make_from_string (ibn)
 							fn.set_file_name (ifn)
-							on_pathname_dropped (fn.string)
+							ifns.extend (fn.string)
 						end
-					end (dn, ?))
+					end (dn, ?, fns))
+				fns.do_all (agent on_pathname_dropped)
 			end
 		end
 
@@ -457,20 +567,7 @@ feature -- Basic operation
 		do
 			reset
 			current_filename := fn
-			create f.make (fn)
-			if f.exists and then f.is_readable then
-				f.open_read
-				from
-					create s.make (f.count)
-					f.start
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_stream (512)
-					s.append (f.last_string)
-				end
-				f.close
-			end
+			s := text_from_filename (fn)
 			if s /= Void then
 				append_detailled_log ("Process [" + fn + "]", Void)
 				current_text := s
@@ -479,6 +576,75 @@ feature -- Basic operation
 				end
 				update_wikitext
 			end
+		end
+
+	text_from_filename (fn: STRING): STRING
+		local
+			f: PLAIN_TEXT_FILE
+			s: STRING
+		do
+			create f.make (fn)
+			if f.exists and then f.is_readable then
+				f.open_read
+				from
+					create Result.make (f.count)
+					f.start
+				until
+					f.exhausted or f.end_of_file
+				loop
+					f.read_stream (512)
+					Result.append (f.last_string)
+				end
+				f.close
+			end
+		end
+
+	xmldoc_page (txt: STRING; fn: STRING): XMLDOC_PAGE
+		local
+			x: STRING
+			vis: WIKITEXT_XMLDOC_VISITOR
+			x2w: XML2WIKITEXT
+		do
+			create x2w.make
+			update_parameters
+			url_resolver.current_filename := fn
+			x2w.url_resolver := url_resolver
+			x2w.product_name := product_name
+			if {l_xml: STRING} txt then
+				x2w.process_string (l_xml)
+			elseif {l_xml2: STRING} text_from_filename (fn) then
+				x2w.process_string (l_xml2)
+			end
+			Result := x2w.page
+			if {err: LIST [ERROR]} x2w.errors then
+				from
+					err.start
+				until
+					err.after
+				loop
+					append_error_to_log (err.item)
+					err.forth
+				end
+			end
+			if Result /= Void then
+				add_page (Result, url_resolver.source_url)
+			end
+		end
+
+	wikitext_from_page (p: XMLDOC_PAGE; src: STRING): STRING
+		local
+			vis: WIKITEXT_XMLDOC_VISITOR
+		do
+			create Result.make_empty
+			create vis.make (Result)
+			vis.set_all_pages (all_pages)
+			vis.set_url_resolver (url_resolver)
+
+			Result.append ("#src=")
+			Result.append (src)
+			Result.append ("%N")
+
+			vis.process_page (p)
 		end
 
 	update_wikitext
@@ -490,28 +656,10 @@ feature -- Basic operation
 			page: XMLDOC_PAGE
 		do
 			if {l_xml: STRING} current_text and then not l_xml.is_empty then
-				create x2w.make
-				update_parameters
-				url_resolver.current_filename := current_filename
-				x2w.url_resolver := url_resolver
-				x2w.product_name := product_name
-				x2w.process_string (l_xml)
-				page := x2w.page
-				if {err: LIST [ERROR]} x2w.errors then
-					from
-						err.start
-					until
-						err.after
-					loop
-						append_error_to_log (err.item)
-						err.forth
-					end
-				end
-
+				page := xmldoc_page (l_xml, current_filename)
 				if page /= Void then
-					create s.make_empty
-					create vis.make (s)
-					vis.process_page (page)
+					add_page (page, url_resolver.source_url)
+					s := wikitext_from_page (page, url_resolver.source_url)
 					if export_enabled then
 						save_output (s, current_filename, url_resolver.base_directory)
 					end

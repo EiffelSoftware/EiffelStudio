@@ -1705,7 +1705,7 @@ feature {NONE} -- Encoding detector
 		end
 
 invariant
-	offset_view: is_offset_valid
+	offset_view: is_initialized implies is_offset_valid
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

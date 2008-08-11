@@ -124,6 +124,24 @@ feature -- Access
 			Result := zone_navigation_accelerator_key_cell.item
 		end
 
+feature -- Right click menu items
+
+	set_notebook_tab_area_menu_items_agent (a_agent: like notebook_tab_area_menu_items_agent) is
+			-- Set `notebook_tab_area_menu_items_agent' with `a_gent'
+		do
+			notebook_tab_area_menu_items_agent_cell.put (a_agent)
+		ensure
+			set: notebook_tab_area_menu_items_agent = a_agent
+		end
+
+	notebook_tab_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]] is
+			-- Menu items shown at notebook tab area.
+			-- Client programmers can customize the menu items here.
+			-- Same as `notebook_tab_area_menu_items' but has higer priority than `notebook_tab_area_menu_items'
+		do
+			Result := notebook_tab_area_menu_items_agent_cell.item
+		end
+
 	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Menu items shown at notebook tab area.
 			-- Client programmers can customize the menu items here.
@@ -131,6 +149,23 @@ feature -- Access
 			Result := widget_factory.notebook_tab_area_menu_items
 		ensure
 			not_void: Result /= Void
+		end
+
+	set_title_bar_area_menu_items_agent (a_agent: like title_bar_area_menu_items_agent) is
+			-- Set `title_bar_area_menu_items_agent_cell' with `a_agent'
+		do
+			title_bar_area_menu_items_agent_cell.put (a_agent)
+		ensure
+			set: title_bar_area_menu_items_agent = a_agent
+		end
+
+	title_bar_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]] is
+			-- Menu items shown at {SD_CONTENT}'s title bar.
+			-- Client programmers can customize the menu items here.	
+			-- Same as `title_bar_area_menu_items' but has higer priority than `title_bar_area_menu_items
+			-- Note: parameter SD_CONTENT maybe void if not found
+		do
+			Result := title_bar_area_menu_items_agent_cell.item
 		end
 
 	title_bar_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
@@ -538,7 +573,7 @@ feature -- Constants
 		end
 
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
-		SD_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL} -- Implementation
+		SD_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY} -- Implementation
 
 	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
 			-- Set tool bar docker mediator singleton.
@@ -698,6 +733,18 @@ feature {NONE} -- Implementation
 			-- Singleton cell for `zone_navigation_accelerator_shift'
 		once
 			create Result.put (False)
+		end
+
+	title_bar_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
+			-- Singleton cell for `title_bar_area_menu_items_agent'
+		once
+			create Result
+		end
+
+	notebook_tab_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
+			-- Singleton cell for `notebook_tab_area_menu_items_agent'
+		once
+			create Result
 		end
 
 indexing

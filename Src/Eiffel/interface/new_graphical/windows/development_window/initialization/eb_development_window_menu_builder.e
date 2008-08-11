@@ -660,8 +660,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
 			l_new_basic_item: EV_MENU_ITEM
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
-			l_shared: SD_SHARED
-			l_editor_items, l_tool_items: ARRAYED_LIST [EV_MENU_ITEM]
 		do
 			create l_view_menu.make_with_text (develop_window.Interface_names.m_View)
 			develop_window.menus.set_view_menu (l_view_menu)
@@ -716,53 +714,15 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.menus.set_docking_lock_menu (docking_lock_menu)
 			develop_window.menus.view_menu.extend (develop_window.menus.docking_lock_menu)
 
-			-- We configuare Smart Docking library right click menu here.
-			create l_shared
-			l_editor_items := l_shared.notebook_tab_area_menu_items
-			l_tool_items := l_shared.title_bar_area_menu_items
-			l_editor_items.extend (create {EV_MENU_SEPARATOR})
-
-			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-				-- Separator --------------------------------------
-			l_editor_items.extend (create {EV_MENU_SEPARATOR})
-			l_tool_items.extend (create {EV_MENU_SEPARATOR})
-
 			develop_window.menus.set_editor_area_manipulation_menu (editor_area_manipulation_menu)
 			develop_window.menus.view_menu.extend (develop_window.menus.editor_area_manipulation_menu)
-
-			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
-			l_editor_items.extend (l_new_menu_item)
-			l_tool_items.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
 
 			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
 
 			develop_window.menus.set_zoom_font_menu (editor_font_zoom_menu)
 			develop_window.menus.view_menu.extend (develop_window.menus.zoom_font_menu)
+
+			set_docking_library_menu
 		end
 
 	build_favorites_menu is
@@ -1379,6 +1339,74 @@ feature -- Contract support
 			-- If help menu created?
 		do
 			Result := develop_window.menus.help_menu /= Void
+		end
+
+feature -- Docking library menu items
+
+	set_docking_library_menu is
+			-- Setup docking library notebook tab and title bar's menu items
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			if l_shared.notebook_tab_area_menu_items_agent = Void then
+				l_shared.set_notebook_tab_area_menu_items_agent (agent docking_menu_item (?, True))
+			end
+
+			if l_shared.title_bar_area_menu_items_agent = Void then
+				l_shared.set_title_bar_area_menu_items_agent (agent docking_menu_item (?, False))
+			end
+		end
+
+	docking_menu_item (a_content: SD_CONTENT; a_with_separtor: BOOLEAN): ARRAYED_LIST [EV_MENU_ITEM] is
+			-- Docking library menu items agent
+		local
+			l_new_menu_item: EV_MENU_ITEM
+		do
+			if develop_window.menus.docking_menu_items_cell.item = Void then
+				create Result.make (5)
+
+				l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+					-- Separator --------------------------------------
+				Result.extend (create {EV_MENU_SEPARATOR})
+
+				l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				develop_window.menus.docking_menu_items_cell.put (Result)
+			else
+				Result := develop_window.menus.docking_menu_items_cell.item
+				Result.do_all (agent (a_item: EV_MENU_ITEM)
+										do
+											if a_item.parent /= Void then
+												a_item.parent.prune (a_item)
+											end
+										end)
+			end
+			if a_with_separtor then
+				Result := Result.twin
+				Result.put_i_th (create {EV_MENU_SEPARATOR}, 1)
+			end
 		end
 
 indexing

@@ -165,6 +165,14 @@ feature -- Query
 			end
 		end
 
+	docking_menu_items_cell: CELL [ARRAYED_LIST [EV_MENU_ITEM]]
+			-- Docking library menu items
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Item querys
 
 	melt_menu_item: EV_MENU_ITEM
@@ -458,6 +466,9 @@ feature -- Recycle
 			editor_area_manipulation_menu := Void
 			tools_layout_menu := Void
 			docking_lock_menu := Void
+
+			docking_menu_items_cell.item.wipe_out
+			
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

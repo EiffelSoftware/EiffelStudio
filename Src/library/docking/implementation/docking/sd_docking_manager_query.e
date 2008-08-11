@@ -78,6 +78,33 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
+	zone_under_pointer: SD_ZONE
+			-- {SD_CONTENT} under mouse pointer
+			-- Result void if not found
+		local
+			l_widget: EV_WIDGET
+			l_screen: EV_SCREEN
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_item: SD_ZONE
+		do
+			create l_screen
+			l_widget := l_screen.widget_at_mouse_pointer
+			if l_widget /= Void then
+				from
+					l_zones := internal_docking_manager.zones.zones
+					l_zones.start
+				until
+					l_zones.after or Result /= Void
+				loop
+					l_item := l_zones.item
+					if l_widget = l_item or l_item.has_recursive (l_widget) then
+						Result := l_item
+					end
+					l_zones.forth
+				end
+			end
+		end
+
 	has_content_visible: BOOLEAN is
 			--  Has visible contents except editor place holder content?
 		local

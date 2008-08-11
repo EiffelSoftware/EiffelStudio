@@ -74,7 +74,7 @@
 							<url>20_overview.xml</url><anchor_name>structures</anchor_name>
 							<label>An    overview of EiffelNet, sending and receiving object structures</label>
 						</link>):    
-						<code_block>	<feature_name>struct</feature_name> <symbol>?</symbol>=<symbol></symbol> <feature_name>soc2</feature_name>.<feature_name>retrieved</feature_name></code_block>
+						<code_block>	<feature_name>struct</feature_name> <symbol>?</symbol><symbol>=</symbol> <feature_name>soc2</feature_name>.<feature_name>retrieved</feature_name></code_block>
 						<paragraph>applying to 
 							<italic>soc2</italic>, not 
 							<italic>soc1</italic>; this makes 

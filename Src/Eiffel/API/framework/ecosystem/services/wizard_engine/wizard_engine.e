@@ -17,6 +17,12 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 
+--inherit {NONE}
+	EC_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	render_template (a_template: ?STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): !STRING_32
@@ -24,12 +30,22 @@ feature -- Basic operations
 		local
 			l_templates: !like build_code_template
 			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
+			l_result: STRING_32
 		do
 			l_templates := build_code_template (a_template.as_string_32, a_parameters)
 			if {l_default_template: CODE_TEMPLATE} l_templates.template.applicable_default_item then
 				create l_renderer
 				l_renderer.render_template (l_default_template, l_templates.symbol_table)
 				Result ?= l_renderer.code
+
+					-- Remove carriage return characters
+				l_result := Result
+					-- Trickery to get around bug in conversion
+				l_result.replace_substring_all ("%R", "")
+				if preferences.misc_data.text_mode_is_windows then
+						-- Add carriage returns when requested.
+					l_result.replace_substring_all ("%N", "%N%R")
+				end
 			else
 				create Result.make_empty
 			end

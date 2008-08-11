@@ -285,16 +285,18 @@ feature -- Retrieval
 			l_session: SESSION_I
 		do
 			l_cursor := sessions.new_cursor
-			from l_cursor.start until l_cursor.after or Result /= Void loop
-				l_session := l_cursor.item
-				if l_session.is_interface_usable then
-					if a_per_project = l_session.is_per_project and not l_session.is_per_window and then equal (l_session.extension_name, a_extension) then
-						Result := l_session
+			from l_cursor.start until l_cursor.after loop
+				if Result = Void then
+						-- We need to use a conditional check because of a memory leak with Gobo data structures.
+						-- The cursor has to be run out to avoid the leak.
+					l_session := l_cursor.item
+					if l_session.is_interface_usable then
+						if a_per_project = l_session.is_per_project and not l_session.is_per_window and then equal (l_session.extension_name, a_extension) then
+							Result := l_session
+						end
 					end
 				end
-				if Result = Void then
-					l_cursor.forth
-				end
+				l_cursor.forth
 			end
 
 			if Result = Void then
@@ -327,16 +329,16 @@ feature -- Retrieval
 			l_session: SESSION_I
 		do
 			l_cursor := sessions.new_cursor
-			from l_cursor.start until l_cursor.after or Result /= Void loop
-				l_session := l_cursor.item
-				if l_session.is_interface_usable then
-					if a_per_project = l_session.is_per_project and then l_session.is_per_window and then l_session.window_id = a_window.window_id and then equal (l_session.extension_name, a_extension) then
-						Result := l_session
+			from l_cursor.start until l_cursor.after loop
+				if Result = Void then
+					l_session := l_cursor.item
+					if l_session.is_interface_usable then
+						if a_per_project = l_session.is_per_project and then l_session.is_per_window and then l_session.window_id = a_window.window_id and then equal (l_session.extension_name, a_extension) then
+							Result := l_session
+						end
 					end
 				end
-				if Result = Void then
-					l_cursor.forth
-				end
+				l_cursor.forth
 			end
 
 			if Result = Void then

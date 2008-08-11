@@ -26,11 +26,6 @@ inherit
 			command
 		end
 
-	EB_RECYCLABLE
-		undefine
-			default_create, copy
-		end
-
 create
 	make
 

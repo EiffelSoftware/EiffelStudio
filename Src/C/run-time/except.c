@@ -333,6 +333,7 @@ rt_private unsigned char ex_tagc[] = {
 	(unsigned char) EN_HDLR,		/* EX_HDLR */
 	(unsigned char) EN_CINV,		/* EX_INVC */
 	(unsigned char) EN_OSTK,		/* EX_OSTK */
+	(unsigned char) EN_OLD,			/* EX_OLD */
 };
 
 /* Strings used as separator for Eiffel stack dumps */
@@ -1709,22 +1710,21 @@ rt_private jmp_buf *backtrack(void)
 	return NULL;	/* No setjmp buffer found */
 }
 
-rt_private void build_trace(void)
-/* Build trace like it was done in previous version of `backtrack'.
- * But here more is done. skip EX_OSTK and EX_OLD, because before exception object is made,
- * the backtracking was not complete for melted code. The complete trace was actually built
- * by many `backtrack's. Now we do it before the actual backtracking, skipping invisible
- * vectors to build complete exception trace.
- */
+rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int for_full)
+	/* Traverse `from_stack' from top to build the trace stack.
+	 * Return the stopping vector.
+	 * If `for_full' is non zero, ignore any backtracking points until reaching the root feature
+	 * and return NULL. 
+	 * NOTE: `from_stack' will be changed. `eif_trace' could be changed. `echlvl' could be changed if `for_full'.
+	 */
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *top;		/* Top of calling stack */
 	struct ex_vect *trace = NULL;	/* The stack trace entry */
-	struct xstack eif_stack_cp;		/* A copy of call stack */
+	int l_level = echlvl;			/* We cannot change the value of `echlvl' when building full trace */
 
-	memcpy (&eif_stack_cp, &eif_stack, sizeof(struct xstack));
-	while ((top = extop(&eif_stack_cp))) {	/* While bottom not reached */
+	while (top = extop(from_stack)) {	/* While bottom not reached */
 
 		/* Whether or not there is a rescue clause for the top of the stack
 		 * (indicated by the jmp_buf pointer), we need to push the current
@@ -1743,7 +1743,7 @@ rt_private void build_trace(void)
 			memcpy (trace, top, sizeof(struct ex_vect));	/* Record exception */
 			trace->ex_type = xcode(top);				/* Exception code */
 		}
-		expop_helper (&eif_stack_cp, 0);			/* Vector no longer needed on stack */
+		expop_helper (from_stack, 0);			/* Vector no longer needed on stack */
 
 		/* Now analyze the contents of the topmost exception vector. 
 		 * Updating of the tracing stack is done on the fly. Note that even
@@ -1760,8 +1760,14 @@ rt_private void build_trace(void)
 			 * level. We'll jump in a rescue clause and the generated C code
 			 * will call exresc(), which will push a "New level" on stack.
 			 */
-			if (top->ex_jbuf && !(echmem & MEM_SPEC)) {	/* Not in panic */
-				return;		/* We found a valid setjmp buffer */
+			if (!for_full && (top->ex_jbuf) && !(echmem & MEM_SPEC)) {	/* Not in panic */
+				return top;		/* We found a valid setjmp buffer */
+			}
+			break;
+		case EX_OLD:
+			expop(&eif_trace);			/* hide catching old violation. */
+			if (!for_full && !(echmem & MEM_SPEC)) {	/* not in panic */
+				return top;		/* return top */
 			}
 			break;
 		case EX_OSTK:					/* Exception catcher */
@@ -1789,9 +1795,17 @@ rt_private void build_trace(void)
 				}
 				memcpy (top, trace, sizeof(struct ex_vect));	/* Shift record */
 				trace->ex_type = EN_OLVL;	/* Exit one exception level */
-				trace->ex_lvl = echlvl--;	/* Level we're comming from */
+				if (for_full){
+					trace->ex_lvl = l_level--;	/* Level we're comming from */
+				} else {
+					trace->ex_lvl = echlvl--;	/* Level we're comming from */
+				}
 			} else {
-				echlvl--;
+				if (for_full){
+					l_level--;
+				} else {
+					echlvl--;
+				}
 			}
 			break;
 		case EX_HDLR:					/* Signal handler routine failed */
@@ -1802,18 +1816,22 @@ rt_private void build_trace(void)
 			 * is why we may safely replace the existing EN_HDLR record--RAM.
 			 */
 			trace->ex_type = EN_OLVL;		/* Exit one exception level */
-			trace->ex_lvl = echlvl--;		/* Level we're comming from */
+			if (for_full){
+				trace->ex_lvl = l_level--;	/* Level we're comming from */
+			} else {
+				trace->ex_lvl = echlvl--;	/* Level we're comming from */
+			}
 #ifdef MAY_PANIC
 			if (top->ex_jbuf) {				/* There is a setjmp buffer */
-				if (!(echmem & MEM_SPEC)) {	/* Not in panic mode */
-					return;	/* Address of env buffer */
+				if (!for_full && !(echmem & MEM_SPEC)) {	/* Not in panic mode */
+					return top;	/* Address of env buffer */
 				}
 			} else {
 				eif_panic(RT_BOTCHED_MSG);				/* There has to be a buffer */
 			}
 #else
-			if (!(echmem & MEM_SPEC)) {	/* Not in panic mode */
-				return;		/* Address of env buffer */
+			if (!for_full && !(echmem & MEM_SPEC)) {	/* Not in panic mode */
+				return top;		/* Address of env buffer */
 			}
 #endif
 			break;
@@ -1825,7 +1843,7 @@ rt_private void build_trace(void)
 			 * the exception is raised in the caller hence the caller must
 			 * disappear from the stack...
 			 */
-			top = extop(&eif_stack_cp);
+			top = extop(from_stack);
 
 			CHECK ("top vector not null", top);
 
@@ -1840,8 +1858,8 @@ rt_private void build_trace(void)
 			 */
 		{
 			if (top->ex_type == EX_OSTK) {		/* Melted pre-condition */
-				expop_helper (&eif_stack_cp, 0);				/* Remove catching vector */
-				top = extop(&eif_stack_cp);		/* Update top */
+				expop_helper (from_stack, 0);				/* Remove catching vector */
+				top = extop(from_stack);		/* Update top */
 			}
 #endif
 
@@ -1849,7 +1867,7 @@ rt_private void build_trace(void)
 			trace->ex_where = top->ex_rout;	/* Save routine name */
 			trace->ex_from = top->ex_orig;	/* Where it comes from */
 			trace->ex_oid = top->ex_id;		/* And object ID */
-			expop(&eif_stack_cp);				/* Exception raised in caller */
+			expop(from_stack);				/* Exception raised in caller */
 
 #ifdef WORKBENCH
 		}
@@ -1868,12 +1886,12 @@ rt_private void build_trace(void)
 		case EX_INVC:	/* Invariant (routine entrance) violation */
 		case EX_LINV:	/* Loop invariant violation */
 		case EX_VAR:	/* Loop variant violation */
-			top = extop(&eif_stack_cp);
+			top = extop(from_stack);
 #ifdef WORKBENCH
 		{
 			if (top->ex_type == EX_OSTK) {		/* Melted invariant */
-				expop_helper (&eif_stack_cp, 0);				/* Remove catching vector */
-				top = extop(&eif_stack_cp);
+				expop_helper (from_stack, 0);				/* Remove catching vector */
+				top = extop(from_stack);
 			}
 #endif
 
@@ -1897,7 +1915,43 @@ rt_private void build_trace(void)
 
 	}
 
-	return;	/* No setjmp buffer found */
+	return NULL;	/* No setjmp buffer found or the stack is exhausted */
+}
+
+rt_private void build_full_trace_from (struct ex_vect *from_vect)
+/* Build full trace from the vector `from_vect' to the root feature of excution stack */
+{
+	EIF_GET_CONTEXT
+	struct xstack eif_stack_cp;		/* A copy of call stack */
+		/* Do nothing if `from_vect' does not exist */
+	if (!from_vect){
+		return;
+	}
+
+	memcpy (&eif_stack_cp, &eif_stack, sizeof(struct xstack));
+	 /* Find the start point */
+	while (from_vect != extop(&eif_stack_cp)){
+		expop_helper (&eif_stack_cp, 0);
+	}
+	expop_helper (&eif_stack_cp, 0); /* Pop one more, the found vector */
+
+	/* Build full trace */
+	traverse_for_trace (&eif_stack_cp, 1);
+}
+
+rt_private struct ex_vect *build_trace_to_backtrack_point(void)
+/* Build trace like it was done in previous version of `backtrack'.
+ * But here more is done. skip EX_OSTK and EX_OLD, because before exception object is made,
+ * the backtracking was not complete for melted code. The complete trace was actually built
+ * by many `backtrack's. Now we do it before the actual backtracking, skipping invisible
+ * vectors to build complete exception trace to the real backtracking point.
+ */
+{
+	EIF_GET_CONTEXT
+	struct xstack eif_stack_cp;		/* A copy of call stack */
+
+	memcpy (&eif_stack_cp, &eif_stack, sizeof(struct xstack));
+	return traverse_for_trace (&eif_stack_cp, 0);
 }
 
 rt_public void exok(void)
@@ -2459,7 +2513,7 @@ rt_private void extend_trace_string(char *line)
 rt_public char* stack_trace_str (void)
 {
     /* Initialize the SMART_STRING structure supposed to receive the exception
-     * stack, dump the exception stack into it and return a C string.
+     * stack, dump the existing exception trace stack into it and return a C string.
      */
 	RT_GET_CONTEXT
 
@@ -2489,9 +2543,34 @@ rt_public char* stack_trace_str (void)
 }
 
 rt_public EIF_REFERENCE stack_trace_string (void)
-	/* Return the string to Eiffel */
+	/* Build full exception trace back to root feature, and return an Eiffel string. */
 {
-	char* l_trace = stack_trace_str();
+		/* We need to build the full trace stack in three steps.
+		 * 1. Build trace stack to backtracking point in order to keep this part
+		 * in the stack in case excution goes into another level. Record the stack.
+		 * 2. Build full trace into the stack and construct trace string.
+		 * 3. Resume the recorded stack.
+		 *
+		 * By doing this, we can build incomplete traces for inner levels (full trace is not needed) 
+		 * before building the full one for the most outer level.
+		 */
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
+	struct ex_vect *backtrack_point = NULL;	/* Saved top node of the trace stack */
+	struct xstack saved;			/* Saved stack context */
+	char* l_trace;
+
+	backtrack_point = build_trace_to_backtrack_point();
+	memcpy (&saved, &eif_trace, sizeof(struct xstack));
+	build_full_trace_from(backtrack_point);
+		/* Build trace into string */
+	l_trace = stack_trace_str();
+		
+	SIGBLOCK;
+		/* Retrieve trace stack */
+	memcpy (&eif_trace, &saved, sizeof(struct xstack));
+	SIGRESUME;
+
 		/* Pass a pointer into RTMS, rather than the call,
 		 * because RTMS is a macro which may cause trace building 
 		 * more than once */
@@ -2606,6 +2685,9 @@ rt_private void recursive_dump(void (*append_trace)(char *), int level)
 			(void) exnext();	/* Skip pseudo-vector "Exit level" */
 			return;						/* Recursion level decreases */
 			/* NOTREACHED */
+		case EN_OLD:					/* Old violation */
+			print_top(append_trace);	/* Print exception trace */
+			break;
 		case EN_RES:					/* Resumption attempt */
 		case EN_FAIL:					/* Routine call */
 		case EN_RESC:					/* Exception in rescue */
@@ -2976,7 +3058,9 @@ rt_private void print_top(void (*append_trace)(char *))
 		} else {
 			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		}
-
+		finished = 1;
+	} else if (code == EN_OLD) {
+		sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		finished = 1;
 	}
 
@@ -3750,7 +3834,6 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 		/* This implementation is slow and expensive, but without full chain of exception objects,
 		 * the trace can only be saved here */
 		if (print_history_table) {
-			build_trace();
 			_trace = stack_trace_string();
 		} else {
 			_trace = RTMS("");

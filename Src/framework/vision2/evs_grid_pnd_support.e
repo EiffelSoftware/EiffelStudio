@@ -210,7 +210,4 @@ feature{NONE} -- Implementation
 			last_picked_item_cleared: last_picked_item = Void
 		end
 
-invariant
-	grid_attached: grid /= Void
-
 end

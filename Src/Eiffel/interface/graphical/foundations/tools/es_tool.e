@@ -92,6 +92,30 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
+	name: !STRING
+			-- The tool's associated name, used for modularizing development of a tool.
+			-- Note: the name is edition independent!
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if {l_result: STRING} internal_name then
+				Result := l_result
+			else
+				Result := tool_utilities.tool_associated_name (Current)
+				internal_name := Result
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+			result_consistent: Result = name
+		end
+
+	profile_kind: !UUID
+			-- Applicable profile kind.
+			-- See {ES_TOOL_PROFILE_KINDS} for applicable built-in types.
+		once
+			Result := (create {ES_TOOL_PROFILE_KINDS}).generic
+		end
+
 	icon: EV_PIXEL_BUFFER
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
@@ -203,25 +227,6 @@ feature -- Access
 			result_attached: Result /= Void
 			result_consistent: Result = panel
 			is_tool_instantiated: is_tool_instantiated
-		end
-
-feature -- Access
-
-	name: !STRING
-			-- The tool's associated name, used for modularizing development of a tool.
-			-- Note: the name is edition independent!
-		require
-			is_interface_usable: is_interface_usable
-		do
-			if {l_result: STRING} internal_name then
-				Result := l_result
-			else
-				Result := tool_utilities.tool_associated_name (Current)
-				internal_name := Result
-			end
-		ensure
-			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = name
 		end
 
 feature {NONE} -- Access

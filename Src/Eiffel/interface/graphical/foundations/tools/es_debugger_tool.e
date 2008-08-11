@@ -1,6 +1,13 @@
 indexing
 	description: "[
-		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
+		A shim for EiffelStudio debugger tools, providing access to information required without having to actually initialize the tool.
+		
+		Note: Descendant shim implementation are created dynamically as such:
+              (A) No creation routine should be used, so please mark `default_create' as a non exported creation routine.
+              (B) All initialization of the shim should be done by redefining `initialize', where `window' will be available
+                  as an attached entity carrying the hosted development window, as will the `edition' number.
+              (C) Recycle memory management is handled automatically so there is no need to call `recycle' on this shim or on
+                  the created tool.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,71 +15,35 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I}]
+	ES_DEBUGGER_TOOL [G -> EB_TOOL]
 
 inherit
-	ES_DEBUGGER_TOOL [G]
+	ES_TOOL [G]
+		redefine
+			profile_kind
+		end
 
 feature -- Access
 
-feature {DEBUGGER_MANAGER, EB_TOOL} -- Access		
-
-	force_update is
-			-- Update now, no delay
-		do
-			if is_visible then
-				panel.update
-			end
+	profile_kind: !UUID
+			-- <Precursor>
+		once
+			Result := (create {ES_TOOL_PROFILE_KINDS}).debugger
 		end
 
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if is_visible then
-				panel.request_update
-			end
-		end
+feature -- Access
 
-	reset is
-			-- Reset current's panel
+	frozen debugger_manager: !EB_DEBUGGER_MANAGER
+			-- Debugger manager to use for tool creation
+		require
+			is_interface_usable: is_interface_usable
+			window_is_interface_usable: window.is_interface_usable
 		do
-			if is_tool_instantiated and then panel.is_initialized then
-				panel.reset_tool
-			end
-		end
-
-	refresh is
-			-- Call refresh on panel
-		do
-			if is_visible then
-				panel.refresh
-			end
-		end
-
-feature -- Status
-
-	is_visible: BOOLEAN is
-			--  Is Current's panel visible ?
-			--| i.e: sd content exists
-		do
-			if is_tool_instantiated and then panel.is_initialized then
-				Result := panel.is_visible
-			end
-		end
-
-	shown: BOOLEAN is
-			-- Is Current's panel shown on the screen?
-		do
-			if is_tool_instantiated and then panel.is_initialized then
-				Result := panel.shown
-			end
+			Result ?= window.debugger_manager
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

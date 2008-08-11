@@ -1,78 +1,55 @@
 indexing
 	description: "[
-		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
+		Tool profile kind types for determining applicablity of presence within the EiffelStudio UI for
+		different profile configurations.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision $"
 
-deferred class
-	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I}]
+class
+	ES_TOOL_PROFILE_KINDS
 
 inherit
-	ES_DEBUGGER_TOOL [G]
+	ANY
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
-feature {DEBUGGER_MANAGER, EB_TOOL} -- Access		
-
-	force_update is
-			-- Update now, no delay
-		do
-			if is_visible then
-				panel.update
-			end
+	frozen generic: !UUID
+			-- Generic tool profile kind.
+		once
+			create Result.make_from_string (generic_uuid_string)
 		end
 
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if is_visible then
-				panel.request_update
-			end
+	frozen eiffel: !UUID
+			-- Eiffel specific tool profile kind.
+		once
+			create Result.make_from_string (eiffel_uuid_string)
 		end
 
-	reset is
-			-- Reset current's panel
-		do
-			if is_tool_instantiated and then panel.is_initialized then
-				panel.reset_tool
-			end
+	frozen debugger: !UUID
+			-- Debugger tool profile kind.
+		once
+			create Result.make_from_string (debugger_uuid_string)
 		end
 
-	refresh is
-			-- Call refresh on panel
-		do
-			if is_visible then
-				panel.refresh
-			end
-		end
+feature -- Constants
 
-feature -- Status
+	generic_uuid_string: STRING = "00000000-0000-0000-0000-000000000000"
+			-- Generic tool string UUID.
 
-	is_visible: BOOLEAN is
-			--  Is Current's panel visible ?
-			--| i.e: sd content exists
-		do
-			if is_tool_instantiated and then panel.is_initialized then
-				Result := panel.is_visible
-			end
-		end
+	eiffel_uuid_string: STRING = "E1FFE100-BA42-4E7A-803B-1A1235EA88C8"
+			-- Eiffel specific tool string UUID.
 
-	shown: BOOLEAN is
-			-- Is Current's panel shown on the screen?
-		do
-			if is_tool_instantiated and then panel.is_initialized then
-				Result := panel.shown
-			end
-		end
+	debugger_uuid_string: STRING = "E1FFE101-BA42-4E7A-803B-1A1235EA88C8"
+			-- Debugger tool string UUID.
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

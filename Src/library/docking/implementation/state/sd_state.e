@@ -514,8 +514,8 @@ feature -- Contract support
 invariant
 
 	internal_shared_not_void: initialized implies internal_shared /= Void
-	last_floating_height_valid: initialized implies last_floating_height > 0
-	last_floating_width_valid: initialized implies last_floating_width > 0
+	last_floating_height_valid: initialized implies last_floating_height >= 0
+	last_floating_width_valid: initialized implies last_floating_width >= 0
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

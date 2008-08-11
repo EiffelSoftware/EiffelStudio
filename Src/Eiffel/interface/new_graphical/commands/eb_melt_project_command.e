@@ -391,19 +391,39 @@ feature {NONE} -- Implementation
 			create Result.make (Current)
 			initialize_sd_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
-			Result.set_menu (drop_down_menu)
+			Result.set_menu (drop_down_menu (Result))
 		end
 
-	drop_down_menu: EV_MENU is
+	drop_down_menu (a_cmd: like new_sd_toolbar_item): EV_MENU is
 			-- Drop down menu for `new_sd_toolbar_item'.
+		local
+			l_item: EB_COMMAND_MENU_ITEM
 		do
 			create Result
-			Result.extend (new_menu_item)
-			Result.extend (discover_melt_cmd.new_menu_item)
-			Result.extend (override_scan_cmd.new_menu_item)
-			Result.extend (freeze_project_cmd.new_menu_item)
-			Result.extend (finalize_project_cmd.new_menu_item)
-			Result.extend (precompilation_cmd.new_menu_item)
+
+			l_item := new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
+
+			l_item := discover_melt_cmd.new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
+
+			l_item := override_scan_cmd.new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
+
+			l_item := freeze_project_cmd.new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
+
+			l_item := finalize_project_cmd.new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
+
+			l_item := precompilation_cmd.new_menu_item
+			a_cmd.auto_recycle (l_item)
+			Result.extend (l_item)
 		ensure
 			not_void: Result /= Void
 		end

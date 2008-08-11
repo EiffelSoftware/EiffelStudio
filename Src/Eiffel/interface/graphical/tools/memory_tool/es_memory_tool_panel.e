@@ -461,22 +461,24 @@ feature {NONE} -- Basic operations
 						i := i + 1
 					end
 
-					from
-						create l_int
-						l_row_index := a_parent_row.index
-						j := l_row_index + 1
-						i := 0
-						l_grid.insert_new_rows_parented (l_count, j, a_parent_row)
-					until
-						i = nb
-					loop
-						l_any := l_referers.item (i)
-						if l_any /= Void then
-							l_row := l_grid.row (j)
-							populate_memory_grid_referer_row (l_row, i + 1, l_any)
-							j := j + 1
+					if l_count > 0 then
+						from
+							create l_int
+							l_row_index := a_parent_row.index
+							j := l_row_index + 1
+							i := 0
+							l_grid.insert_new_rows_parented (l_count, j, a_parent_row)
+						until
+							i = nb
+						loop
+							l_any := l_referers.item (i)
+							if l_any /= Void then
+								l_row := l_grid.row (j)
+								populate_memory_grid_referer_row (l_row, i + 1, l_any)
+								j := j + 1
+							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
 			end
@@ -625,7 +627,7 @@ feature {NONE} -- Basic operations
 					create l_sorter.make (l_agent_sorter)
 					l_sorted_data.sort (l_sorter)
 				end
-				if l_sorted_data /= Void then
+				if l_sorted_data /= Void and then not l_sorted_data.is_empty then
 					memory_map_grid.insert_new_rows_parented (l_sorted_data.count, a_parent_row.index + 1, a_parent_row)
 					from
 						l_sorted_data.start
@@ -1245,6 +1247,10 @@ feature {NONE} -- Memory pruning
 				end
 					-- Expand row to populate sub items (Clouds + Instances)
 				l_row.expand
+				if not l_row.is_show_requested then
+						-- Ensure the row is always shown, because the filter might hide it.
+					l_row.show
+				end
 					-- Get `Instances' node and expand it.
 				l_row := l_grid.row (l_row.index + 2)
 				l_row.expand

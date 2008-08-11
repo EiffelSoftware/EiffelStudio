@@ -216,7 +216,7 @@ function isedoc_create_doc_outline_from($nid,$info) {
 
 }
 
-function isedoc_create_doc_node_from(&$info) {
+function isedoc_create_doc_node_from($info) {
 	global $user;
 
 //	if (!user_access('create isedoc')) {
@@ -353,8 +353,8 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 						$l_mlid = $node->book['mlid'];
 						drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 					} else {
-						$node = isedoc_create_doc_node_from (&$info);
-						$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
+						$node = isedoc_create_doc_node_from ($info);
+						$l_mlid = isedoc_create_doc_outline_from ($node->nid, $info);
 						drupal_set_message(t(" -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 					}
 					$node_ids[$l_depth] = $l_mlid;
@@ -381,13 +381,17 @@ function isedoc_file_info($fn, $is_full=FALSE) {
 	while(!$done) {
 		$line = fgets($fp);
 		$line = substr($line, 0, -1);
-		$i = strpos ($line, "=");
-		if ($i > 0) {
-			$k = substr($line, 0, $i);
-			$v = substr($line, $i+1);
-			$info[$k] = $v;
-		} else {
+		if (strpos ($line, "#") === false) {
 			$done = 1;
+		} else {
+			$i = strpos ($line, "=");
+			if ($i > 0) {
+				$k = substr($line, 1, $i);
+				$v = substr($line, $i+1);
+				$info[$k] = $v;
+			} else {
+				$done = 1;
+			}
 		}
 	}
 	if ($is_full) {

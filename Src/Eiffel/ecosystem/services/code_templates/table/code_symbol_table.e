@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 			-- Initializes a new symbol table for a code template edit session
 		do
 			create content_table.make_default
+				-- We currently use `attemp' from {TYPE} to get around the fact the Gobo does not yet use attachment marks.
+			content_table.set_key_equality_tester (({KL_EQUALITY_TESTER [!STRING]}) #? create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
 		end
 
 feature -- Access

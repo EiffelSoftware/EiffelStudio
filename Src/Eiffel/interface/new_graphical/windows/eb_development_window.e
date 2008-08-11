@@ -209,6 +209,7 @@ feature {NONE} -- Clean up
 			end
 				managed_class_formatters.wipe_out
 				managed_feature_formatters.wipe_out
+				managed_dependency_formatters.wipe_out
 				managed_main_formatters.wipe_out
 --				commands.toolbarable_commands.wipe_out
 			Precursor {EB_TOOL_MANAGER}
@@ -231,6 +232,7 @@ feature {NONE} -- Clean up
 			agents := Void
 			ui := Void
 			shell_tools := Void
+			address_manager := Void
 
 			Precursor {EB_TOOL_MANAGER}
 		ensure then
@@ -1506,6 +1508,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 
 				managed_class_formatters := Void
 				managed_feature_formatters := Void
+				managed_dependency_formatters := Void
 				managed_main_formatters := Void
 --				editors_manager := Void
 --				stone := Void
@@ -1979,6 +1982,17 @@ feature {NONE} -- Recycle
 					managed_feature_formatters.item.recycle
 				end
 				managed_feature_formatters.forth
+			end
+
+			from
+				managed_dependency_formatters.start
+			until
+				managed_dependency_formatters.after
+			loop
+				if managed_dependency_formatters.item /= Void then
+					managed_dependency_formatters.item.recycle
+				end
+				managed_dependency_formatters.forth
 			end
 
 			from

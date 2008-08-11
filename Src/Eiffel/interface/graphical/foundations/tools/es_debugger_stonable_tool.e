@@ -12,6 +12,11 @@ deferred class
 
 inherit
 	ES_STONABLE_TOOL [G]
+		undefine
+			profile_kind
+		end
+
+	ES_DEBUGGER_TOOL [G]
 
 	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G]
 

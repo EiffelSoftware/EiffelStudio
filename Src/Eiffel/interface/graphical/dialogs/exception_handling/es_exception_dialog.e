@@ -319,7 +319,7 @@ feature -- Button constants
 		end
 
 invariant
-	support_login_attached: support_login /= Void
+	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

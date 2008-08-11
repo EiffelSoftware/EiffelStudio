@@ -467,8 +467,10 @@ feature -- Recycle
 			tools_layout_menu := Void
 			docking_lock_menu := Void
 
-			docking_menu_items_cell.item.wipe_out
-			
+			if docking_menu_items_cell.item /= Void then
+				docking_menu_items_cell.item.wipe_out
+			end
+
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

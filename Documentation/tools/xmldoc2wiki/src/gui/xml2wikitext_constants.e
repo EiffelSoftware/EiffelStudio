@@ -10,6 +10,6 @@ deferred class
 feature -- Contants
 
 	hardcoded_base_directory: STRING = "D:\_dev\trunk\Documentation\xmldoc"
-	hardcoded_prefix_url: STRING = "/drupal/node"
+	hardcoded_prefix_url: STRING = "doc://"
 
 end

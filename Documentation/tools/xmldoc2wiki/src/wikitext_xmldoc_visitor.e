@@ -39,6 +39,63 @@ feature {NONE} -- Initialization
 	list_bullet: STRING
 			-- Bullet prefix for list item
 
+feature -- Access
+
+	all_pages: HASH_TABLE [XMLDOC_PAGE, STRING]
+
+	url_resolver: URL_RESOLVER
+
+	url_to_wiki_url (a_url: STRING): STRING
+		local
+			p: XMLDOC_PAGE
+			t: STRING
+			l: STRING
+		do
+			l := a_url.twin
+			if l.substring_index ("://", 1) > 0 then
+				Result := l
+			else
+				if
+					l.count > 4 and then
+					l.substring (l.count - 3, l.count).is_case_insensitive_equal (".xml")
+				then
+					l.remove_tail (4)
+				end
+				p := all_pages.item (l)
+				if p /= Void then
+					t := p.title
+				end
+
+				if t /= Void then
+					Result := t
+				else
+					Result := l
+				end
+			end
+		end
+
+	url_to_wiki_image_url (a_url: STRING): STRING
+		do
+			Result := a_url
+		end
+
+	url_to_eiffel_url (a_url: STRING): STRING
+		do
+			Result := a_url
+		end
+
+feature -- Element change
+
+	set_all_pages (v: like all_pages)
+		do
+			all_pages := v
+		end
+
+	set_url_resolver (v: like url_resolver)
+		do
+			url_resolver := v
+		end
+
 feature -- Visiting
 
 	process_item (i: XMLDOC_ITEM)
@@ -66,7 +123,7 @@ feature -- Visiting
 	process_image (i: XMLDOC_IMAGE)
 		do
 			output.append ("[[Image:")
-			output.append (i.url)
+			output.append (url_to_wiki_image_url (i.url))
 			if i.legend /= Void then
 				output.append ("|")
 				output.append (i.legend)
@@ -76,12 +133,15 @@ feature -- Visiting
 
 	process_anchor (i: XMLDOC_ANCHOR)
 		do
-			output.append ("<span id=%"" + i.name + "%" />")
+			if i.name /= Void then
+				output.append ("<span id=%"" + i.name + "%" />")
+			end
 		end
 
-	process_link (i: XMLDOC_LINK)
+	process_external_link (i: XMLDOC_LINK)
 		do
-			output.append ("[[")
+			check i.is_external end
+			output.append ("[")
 			if i.url /= Void then
 				output.append (i.url)
 			elseif i.anchor_name /= Void then
@@ -89,17 +149,37 @@ feature -- Visiting
 			end
 
 			if i.label /= Void then
-				output.append ("|")
+				output.append (" ")
 				output.append (i.label)
 			end
-			output.append ("]] ")
+			output.append ("] ")
+		end
+
+	process_link (i: XMLDOC_LINK)
+		do
+			if i.is_external then
+				process_external_link (i)
+			else
+				output.append ("[[")
+				if i.url /= Void then
+					output.append (url_to_wiki_url (i.url))
+				elseif i.anchor_name /= Void then
+					output.append ("#" + i.anchor_name)
+				end
+
+				if i.label /= Void then
+					output.append ("|")
+					output.append (i.label)
+				end
+				output.append ("]] ")
+			end
 		end
 
 	process_image_link (i: XMLDOC_IMAGE_LINK)
 		do
 			process_image (i.image)
 			output.append ("[[")
-			output.append (i.url)
+			output.append (url_to_wiki_image_url (i.url))
 			output.append ("|(link)")
 			output.append ("]] ")
 		end
@@ -111,7 +191,7 @@ feature -- Visiting
 		do
 			if not retried then
 				if i.title /= Void then
-					output.append ("title=")
+					output.append ("#title=")
 					output.append (i.title)
 					output.append ("%N")
 				end
@@ -142,7 +222,7 @@ feature -- Visiting
 		local
 			elts: LIST [XMLDOC_LIST_ITEM]
 		do
-			if True then
+			if False then
 				process_list_tag (i)
 			else
 				if i.ordered then
@@ -205,15 +285,18 @@ feature -- Visiting
 		local
 			n: STRING
 		do
-			process_composite_text (i)
---			if {o: like output} output then
---				create n.make_empty
---				output := n
---				process_composite_text (i)
---				n.prune_all ('%N')
---				output := o
---				output.append (n)
---			end
+			if False then
+				process_composite_text (i)
+			else
+				if {o: like output} output then
+					create n.make_empty
+					output := n
+					process_composite_text (i)
+					n.prune_all ('%N')
+					output := o
+					output.append (n)
+				end
+			end
 		end
 
 	process_with_content (i: XMLDOC_WITH_CONTENT)
@@ -307,6 +390,8 @@ feature -- Visiting
 					process_text (t)
 				elseif {tc: XMLDOC_TEXT_CONTAINER} e then
 					process_text_container (tc)
+				elseif {l: XMLDOC_LINK} e then
+					process_link (l)
 				else
 					check False end
 				end
@@ -361,7 +446,7 @@ feature -- Visiting
 				output.append ("<cluster>")
 				if i.url /= Void then
 					output.append ("[")
-					output.append (i.url)
+					output.append (url_to_eiffel_url (i.url))
 					output.append ("|")
 					process_text_container (i)
 					output.append ("]")
@@ -381,7 +466,7 @@ feature -- Visiting
 				output.append ("<class>")
 				if i.url /= Void then
 					output.append ("[")
-					output.append (i.url)
+					output.append (url_to_eiffel_url (i.url))
 					output.append ("|")
 					process_text_container (i)
 					output.append ("]")
@@ -400,7 +485,7 @@ feature -- Visiting
 				output.append ("<feature>")
 				if i.url /= Void then
 					output.append ("[")
-					output.append (i.url)
+					output.append (url_to_eiffel_url (i.url))
 					output.append ("|")
 					process_text_container (i)
 					output.append ("]")
@@ -448,7 +533,11 @@ feature -- Visiting
 
 	process_div (i: XMLDOC_DIV)
 		do
-			output.append ("<div>")
+			if i.style = Void then
+				output.append ("<div>")
+			else
+				output.append ("<div style=%"" + i.style + "%" >")
+			end
 			process_composite_text (i)
 			output.append ("</div>")
 		end
@@ -461,11 +550,11 @@ feature -- Visiting
 	process_table (i: XMLDOC_TABLE)
 		do
 			output.append ("{| ")
-			if i.legend /= Void then
-				output.append ("border=%"" + i.border.out + "%" ")
-			end
 			if i.has_border then
 				output.append ("border=%"" + i.border.out + "%" ")
+			end
+			if i.style /= Void then
+				output.append ("style=%"" + i.style.out + "%" ")
 			end
 			output.append ("%N")
 			if i.legend /= Void then
@@ -476,16 +565,45 @@ feature -- Visiting
 		end
 
 	process_table_row (i: XMLDOC_TABLE_ROW)
+		local
+			s: STRING
 		do
-			output.append ("|-")
+			output.append ("|- ")
+			if i.style /= Void or i.height /= Void then
+				s := " style=%""
+				if i.style /= Void then
+					s.append (i.style + ";")
+				end
+				if i.height /= Void then
+					s.append ("height=" + i.height + ";")
+				end
+				s.append ("%"")
+				output.append ("%N! " + s + " ")
+			end
 			output.append ("%N")
 			i.cells.do_all (agent process_table_cell)
 		end
 
 	process_table_cell (i: XMLDOC_TABLE_CELL)
+		local
+			s: STRING
 		do
 			output.append ("| ")
 			process_composite_text (i)
+			if i.style /= Void or i.width /= Void or i.height /= Void then
+				s := "|| style=%""
+				if i.style /= Void then
+					s.append (i.style + ";")
+				end
+				if i.width /= Void then
+					s.append ("width=" + i.width + ";")
+				end
+				if i.height /= Void then
+					s.append ("height=" + i.height + ";")
+				end
+				s.append ("%"")
+				output.append (s)
+			end
 			output.append ("%N")
 		end
 

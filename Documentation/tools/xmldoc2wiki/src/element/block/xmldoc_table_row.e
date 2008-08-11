@@ -15,6 +15,8 @@ inherit
 
 	XMLDOC_WITH_STYLE
 
+	XMLDOC_WITH_HEIGHT
+
 create
 	make
 

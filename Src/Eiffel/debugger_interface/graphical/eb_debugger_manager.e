@@ -589,12 +589,15 @@ feature -- tools management
 			l_item := clear_bkpt.new_menu_item
 			Result.extend (clear_bkpt.new_menu_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := disable_bkpt.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := enable_bkpt.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := bkpt_info_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -615,9 +618,11 @@ feature -- tools management
 			l_item := debug_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := no_stop_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := ignore_breakpoints_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -629,9 +634,11 @@ feature -- tools management
 			l_item := step_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := into_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := out_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -643,9 +650,11 @@ feature -- tools management
 			l_item := restart_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := stop_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := quit_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -657,18 +666,23 @@ feature -- tools management
 			l_item := toggle_exec_replay_recording_mode_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := toggle_exec_replay_mode_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := exec_replay_back_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := exec_replay_forth_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := exec_replay_right_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := exec_replay_left_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -694,6 +708,7 @@ feature -- tools management
 			l_item := assertion_checking_handler_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
 			l_item := force_debug_mode_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)

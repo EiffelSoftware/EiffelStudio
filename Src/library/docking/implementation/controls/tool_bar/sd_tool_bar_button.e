@@ -380,8 +380,8 @@ feature -- Obsolete
 		end
 
 invariant
-	not_void: select_actions /= Void
-	not_void: internal_shared /= Void
+	select_actions_not_void: select_actions /= Void
+	internal_shared_not_void: internal_shared /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

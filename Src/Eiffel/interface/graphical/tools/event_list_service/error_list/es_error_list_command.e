@@ -108,7 +108,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 invariant
-	tool_commander_attached: tool_commander /= Void
+	tool_commander_attached: is_interface_usable implies tool_commander /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

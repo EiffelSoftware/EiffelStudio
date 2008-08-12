@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			l_ancestor: EIFFEL_CLASS_I
 		do
 			l_ancestor := common_ancestor
-			if l_ancestor.is_compiled then
+			if l_ancestor /= Void and then l_ancestor.is_compiled then
 				report_descendants ({!EIFFEL_CLASS_C} #? l_ancestor.compiled_class)
 			end
 		end

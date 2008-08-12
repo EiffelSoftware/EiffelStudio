@@ -46,10 +46,10 @@ feature -- Status report
 	is_in_min_width: BOOLEAN
 			-- Is current recomputing its minimum width?
 
-	is_in_notify: BOOLEAN_REF is
+	is_in_notify: CELL [BOOLEAN] is
 			-- Is current already notified from a change in its children?
 		once
-			create Result
+			create Result.put (False)
 		end
 
 feature -- Status setting
@@ -253,12 +253,12 @@ feature -- Basic operations
 				if t /= Void and then t.is_notify_originator then
 						-- `notify_change' call has finished its work on descendants,
 						-- we go up to parents.
-					is_in_notify.set_item (False)
+					is_in_notify.put (False)
 				end
 			end
 			if not is_in_notify.item then
 				is_notify_originator := True
-				is_in_notify.set_item (True)
+				is_in_notify.put (True)
 				top_imp := top_level_window_imp
 				if top_imp /= Void and then top_imp.is_displayed then
 					inspect type
@@ -289,7 +289,7 @@ feature -- Basic operations
 					end
 				end
 				is_notify_originator := False
-				is_in_notify.set_item (False)
+				is_in_notify.put (False)
 			end
 			end
 		end

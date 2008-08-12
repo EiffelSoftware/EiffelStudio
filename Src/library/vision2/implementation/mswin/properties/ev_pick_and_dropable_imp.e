@@ -669,12 +669,14 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	internal_capture_status: BOOLEAN_REF is
+	internal_capture_status: CELL [BOOLEAN] is
 			-- System wide once, in order to always get the
 			-- same value.
 			-- True if there is the mouse is currently captured.
 		once
-			Create Result
+			create Result.put (False)
+		ensure
+			internal_capture_status_not_void: Result /= Void
 		end
 
 feature {EV_ANY_I, WEL_WINDOW} -- Implementation

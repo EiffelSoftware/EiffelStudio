@@ -1506,10 +1506,8 @@ feature {NONE} -- Constants
 	Right_address_delim: STRING is ">";
 
 invariant
-
 	debugger_manager_not_void: debugger_manager /= Void
-
-	objects_grids_not_void: objects_grids /= Void
+	objects_grids_not_void: is_initialized and then is_interface_usable implies objects_grids /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

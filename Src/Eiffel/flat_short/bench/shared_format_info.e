@@ -44,7 +44,7 @@ feature -- Setting
 	set_in_bench_mode is
 			-- Set in_bench_mode to True
 		do
-			in_bench_mode_bool.set_item (True)
+			in_bench_mode_bool.put (True)
 		ensure
 			in_bench_mode: in_bench_mode
 		end
@@ -52,7 +52,7 @@ feature -- Setting
 	set_is_short is
 			-- Set is_short to True.
 		do
-			is_short_bool.set_item (True)
+			is_short_bool.put (True)
 		ensure
 			is_short: is_short
 		end
@@ -60,7 +60,7 @@ feature -- Setting
 	set_order_same_as_text is
 			-- Set order_same_as_text to True.
 		do
-			order_same_as_text_bool.set_item (True)
+			order_same_as_text_bool.put (True)
 		ensure
 			order_same_as_text: order_same_as_text
 		end
@@ -68,7 +68,7 @@ feature -- Setting
 	set_in_assertion is
 			-- Set in_assertion to True.
 		do
-			in_assertion_bool.set_item (True)
+			in_assertion_bool.put (True)
 		ensure
 			in_assertion: in_assertion
 		end
@@ -76,7 +76,7 @@ feature -- Setting
 	set_not_in_assertion is
 			-- Set in_assertion to False
 		do
-			in_assertion_bool.set_item (False)
+			in_assertion_bool.put (False)
 		ensure
 			not_in_assertion: not in_assertion
 		end
@@ -84,7 +84,7 @@ feature -- Setting
 	set_is_with_breakable is
 			-- Set is_with_breakable to True
 		do
-			is_with_breakable_bool.set_item (True)
+			is_with_breakable_bool.put (True)
 		ensure
 			is_with_breakable: is_with_breakable
 		end
@@ -92,7 +92,7 @@ feature -- Setting
 	set_is_without_breakable is
 			-- Set is_with_breakable to False
 		do
-			is_with_breakable_bool.set_item (False)
+			is_with_breakable_bool.put (False)
 		ensure
 			is_without_breakable: not is_with_breakable
 		end
@@ -100,10 +100,10 @@ feature -- Setting
 	reset_format_booleans is
 			-- Reset all booleans to false.
 		do
-			is_short_bool.set_item (False)
-			in_bench_mode_bool.set_item (False)
-			in_assertion_bool.set_item (False)
-			order_same_as_text_bool.set_item (False)
+			is_short_bool.put (False)
+			in_bench_mode_bool.put (False)
+			in_assertion_bool.put (False)
+			order_same_as_text_bool.put (False)
 		ensure
 			not is_short
 			not in_bench_mode
@@ -113,34 +113,44 @@ feature -- Setting
 
 feature {NONE}
 
-	is_short_bool: BOOLEAN_REF is
+	is_short_bool: CELL [BOOLEAN] is
 			-- Cell to store `is_short' flag
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			is_short_bool_not_void: Result /= Void
 		end
 
-	in_bench_mode_bool: BOOLEAN_REF is
+	in_bench_mode_bool: CELL [BOOLEAN] is
 			-- Cell to store `in_bench_mode' flag
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			in_bench_mode_bool_not_void: Result /= Void
 		end
 
-	in_assertion_bool: BOOLEAN_REF is
+	in_assertion_bool: CELL [BOOLEAN] is
 			-- Cell to store `in_assertion' flag
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			in_assertion_bool_not_void: Result /= Void
 		end
 
-	order_same_as_text_bool: BOOLEAN_REF is
+	order_same_as_text_bool: CELL [BOOLEAN] is
 			-- Cell to store `order_same_as_text' flag
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			order_same_as_text_bool_not_void: Result /= Void
 		end
 
-	is_with_breakable_bool: BOOLEAN_REF is
+	is_with_breakable_bool: CELL [BOOLEAN] is
 			-- Cell to store `is_with_breakable' flag
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			is_with_breakable_bool_not_void: Result /= Void
 		end
 
 indexing

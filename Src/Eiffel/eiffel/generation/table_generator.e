@@ -24,7 +24,7 @@ feature -- Initialization
 	init (buffer: GENERATION_BUFFER) is
 			-- Initialization
 		do
-			file_counter_cell.set_item (1)
+			file_counter_cell.put (1)
 			current_buffer := buffer
 			current_buffer.clear_all
 				-- Start C code generation for next block
@@ -127,17 +127,19 @@ feature -- Settings
 	increment_file_counter is
 			-- Increment `file_counter' from 1.
 		do
-			file_counter_cell.set_item (file_counter + 1)
+			file_counter_cell.put (file_counter + 1)
 		ensure
 			file_counter_incremented: file_counter = (old file_counter + 1)
 		end
 
 feature {NONE} -- Implementation
 
-	file_counter_cell: INTEGER_REF is
+	file_counter_cell: CELL [INTEGER] is
 			-- Shared value for file name generation in final mode only.
 		once
 			create Result
+		ensure
+			file_counter_cell_not_void: Result /= Void
 		end
 
 indexing

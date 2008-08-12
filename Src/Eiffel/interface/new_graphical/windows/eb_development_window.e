@@ -482,6 +482,7 @@ feature -- Window Properties
 					end
 					l_tools.forth
 				end
+				l_tools.go_after
 
 				l_comb ?= ev_application.focused_widget
 				l_is_comb := l_comb /= Void

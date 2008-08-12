@@ -41,16 +41,18 @@ feature -- Query
 			l_versioned_template: CODE_VERSIONED_TEMPLATE
 		do
 			if {l_templates: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE]} items.new_cursor then
-				from l_templates.start until l_templates.after or Result /= Void loop
+				from l_templates.start until l_templates.after loop
 					l_template := l_templates.item
 					l_versioned_template ?= l_template
 					if l_versioned_template = Void then
 							-- Template is not versioned, so take the first non-versioned
 						Result := l_template
+						l_templates.go_after
 					else
 						l_templates.forth
 					end
 				end
+				check gobo_cursor_cleaned_up: l_templates.off end
 			end
 		ensure
 			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void

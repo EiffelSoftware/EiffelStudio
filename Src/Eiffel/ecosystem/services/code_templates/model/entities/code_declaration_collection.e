@@ -31,14 +31,16 @@ feature -- Query
 		do
 			l_items := items
 			if not l_items.is_empty and then {l_cursor: !DS_BILINEAR_CURSOR [!CODE_DECLARATION]} l_items.new_cursor then
-				from l_cursor.start until l_cursor.after or Result /= Void loop
+				from l_cursor.start until l_cursor.after loop
 					l_decl := l_cursor.item
 					if l_decl.id.is_case_insensitive_equal (a_id) then
 						Result := l_decl
+						l_cursor.go_after
 					else
 						l_cursor.forth
 					end
 				end
+				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
 		ensure
 			matching_result_id: Result /= Void implies Result.id.is_case_insensitive_equal (a_id)

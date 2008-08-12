@@ -113,13 +113,16 @@ feature -- Query
 			l_template: !CODE_TEMPLATE_DEFINITION
 		do
 			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
-				from l_cursor.finish until l_cursor.before or Result /= Void loop
+				from l_cursor.finish until l_cursor.before loop
 					l_template := l_cursor.item
 					if a_title.as_string_32.is_equal (l_template.metadata.title) then
 						Result := l_template
+						l_cursor.go_before
+					else
+						l_cursor.back
 					end
-					l_cursor.back
 				end
+				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
 		end
 
@@ -129,13 +132,16 @@ feature -- Query
 			l_template: !CODE_TEMPLATE_DEFINITION
 		do
 			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
-				from l_cursor.finish until l_cursor.before or Result /= Void loop
+				from l_cursor.finish until l_cursor.before loop
 					l_template := l_cursor.item
 					if a_shortcut.as_string_32.is_equal (l_template.metadata.shortcut) then
 						Result := l_template
+						l_cursor.go_before
+					else
+						l_cursor.back
 					end
-					l_cursor.back
 				end
+				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
 		end
 

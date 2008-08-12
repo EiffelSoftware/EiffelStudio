@@ -115,11 +115,13 @@ feature -- Removal
 
 							-- Fire events
 						on_item_removed (l_event_item)
+						l_index_cursor.go_after
 					else
 						l_index_cursor.forth
 					end
 				end
 			end
+			check gobo_cursor_cleanup: l_index_cursor.after end
 		end
 
 	prune_event_items (a_context_cookie: UUID)
@@ -182,10 +184,12 @@ feature -- Basic operations
 						l_items.search_forth (a_event_item)
 						l_items.remove_at
 					end
+					l_cursor.go_after
 				else
 					l_cursor.forth
 				end
 			end
+			check gobo_cursor_cleanup: l_cursor.after end
 
 			check
 				item_found: l_stop

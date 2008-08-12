@@ -5331,6 +5331,9 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							then
 								if prev_sel_item.row.parent_row /= Void then
 									a_sel_item := find_next_item_in_row (prev_sel_item.row.parent_row, prev_sel_item.column.index.min (prev_sel_item.row.parent_row.count) + 1, False)
+									if a_sel_item /= Void then
+										a_sel_item.ensure_visible
+									end
 								end
 							end
 						end
@@ -5342,16 +5345,23 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
-								if a_sel_item = Void and then is_tree_enabled then
-									-- We may have a tree item so we should perform tree key handling
-									-- If node is expanded then we collapse it.
-									if prev_sel_item.row.is_expanded then
-										prev_sel_item.row.collapse
-									else
-										if prev_sel_item.row.parent_row /= Void then
-											a_sel_item := find_next_item_in_row (prev_sel_item.row.parent_row, prev_sel_item.column.index.min (prev_sel_item.row.parent_row.count) + 1, False)
+								if a_sel_item = Void then
+									if is_tree_enabled then
+											-- We may have a tree item so we should perform tree key handling
+											-- If node is expanded then we collapse it.
+										if prev_sel_item.row.is_expanded then
+											prev_sel_item.row.collapse
+										else
+											if prev_sel_item.row.parent_row /= Void then
+												a_sel_item := find_next_item_in_row (prev_sel_item.row.parent_row, prev_sel_item.column.index.min (prev_sel_item.row.parent_row.count) + 1, False)
+												if a_sel_item /= Void then
+													a_sel_item.ensure_visible
+												end
+											end
 										end
 									end
+								else
+									a_sel_item.ensure_visible
 								end
 							end
 						elseif l_make_item_visible then

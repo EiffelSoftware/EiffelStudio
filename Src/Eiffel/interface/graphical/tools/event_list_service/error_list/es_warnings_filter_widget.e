@@ -266,6 +266,7 @@ feature -- Status report
 				end
 				l_cursor.forth
 			end
+			l_cursor.go_after
 
 			Result := not l_matched
 		end

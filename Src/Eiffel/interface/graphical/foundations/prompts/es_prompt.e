@@ -538,7 +538,7 @@ feature {NONE} -- Basic operations
 
 					l_buttons := buttons.new_cursor
 					l_dialog_buttons := dialog_window_buttons
-					from l_buttons.start until l_buttons.after or l_stop  loop
+					from l_buttons.start until l_buttons.after or l_stop loop
 							-- Locate button
 						l_button_id := l_buttons.item
 						l_button := l_dialog_buttons.item (l_button_id)
@@ -564,6 +564,7 @@ feature {NONE} -- Basic operations
 						end
 						l_buttons.forth
 					end
+					l_buttons.go_after
 				end
 			end
 
@@ -605,6 +606,7 @@ feature {NONE} -- Basic operations
 						l_buttons.forth
 					end
 				end
+				l_buttons.go_after
 			end
 		end
 
@@ -641,6 +643,7 @@ feature {NONE} -- Basic operations
 						l_buttons.forth
 					end
 				end
+				l_buttons.go_after
 			end
 		end
 

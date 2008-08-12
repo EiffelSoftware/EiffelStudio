@@ -863,6 +863,7 @@ feature {NONE} -- Contract
 					Result := l_cursor.item.is_valid
 					l_cursor.forth
 				end
+				l_cursor.go_after
 			end
 		end
 

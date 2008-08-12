@@ -1362,40 +1362,45 @@ feature -- Docking library menu items
 			-- Docking library menu items agent
 		local
 			l_new_menu_item: EV_MENU_ITEM
+			l_window_manager: EB_SHARED_WINDOW_MANAGER
+			l_last_development_window: EB_DEVELOPMENT_WINDOW
 		do
-			if develop_window.menus.docking_menu_items_cell.item = Void then
+			create l_window_manager
+			l_last_development_window := l_window_manager.window_manager.last_focused_development_window
+
+			if l_last_development_window.menus.docking_menu_items_cell.item = Void then
 				create Result.make (5)
 
-				l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.lock_tool_bar_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
-				l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.lock_docking_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
-				l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.lock_editor_docking_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
 					-- Separator --------------------------------------
 				Result.extend (create {EV_MENU_SEPARATOR})
 
-				l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.maximize_editor_area_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
-				l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.minimize_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
-				l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
+				l_new_menu_item := l_last_development_window.commands.restore_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
-				develop_window.menus.docking_menu_items_cell.put (Result)
+				l_last_development_window.menus.docking_menu_items_cell.put (Result)
 			else
-				Result := develop_window.menus.docking_menu_items_cell.item
+				Result := l_last_development_window.menus.docking_menu_items_cell.item
 				Result.do_all (agent (a_item: EV_MENU_ITEM)
 										do
 											if a_item.parent /= Void then

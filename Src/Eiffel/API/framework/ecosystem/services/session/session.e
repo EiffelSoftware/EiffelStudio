@@ -354,7 +354,9 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 					-- Post notification
 				is_dirty := True
 				value_changed_event.publish ([Current, l_cursor.key])
+				l_cursor.go_after
 			end
+			check gobo_cursor_cleanup: l_cursor.off end
 		end
 
 feature -- Events

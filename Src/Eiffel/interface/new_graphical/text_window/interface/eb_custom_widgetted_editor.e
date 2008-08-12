@@ -18,6 +18,7 @@ inherit
 			gain_focus,
 			lose_focus,
 			internal_recycle,
+			internal_detach_entities,
 			on_mouse_move,
 			on_mouse_button_down,
 			on_key_down
@@ -596,7 +597,6 @@ feature {NONE} -- Implementation
 		do
 			if mouse_move_idle_timer /= Void and then not mouse_move_idle_timer.is_destroyed then
 				mouse_move_idle_timer.destroy
-				mouse_move_idle_timer := Void
 			end
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
 			if search_tool /= Void then
@@ -604,7 +604,27 @@ feature {NONE} -- Implementation
 				search_tool.bottom_reached_actions.prune_all (bottom_reached_action)
 			end
 			search_bar.destroy
+			if customizable_commands /= Void then
+				customizable_commands.wipe_out
+			end
 			Precursor {EB_EDITOR}
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			right_widget := Void
+			search_bar := Void
+			bottom_reached_action := Void
+			bottom_widget := Void
+			first_result_reached_action := Void
+			customizable_commands := Void
+			left_widget := Void
+			mouse_move_idle_timer := Void
+			internal_token_handler := Void
+			check_search_bar_visible_procedure := Void
+			top_widget := Void
+			Precursor
 		end
 
 	shared_quick_search_mode: CELL [BOOLEAN] is

@@ -17,6 +17,9 @@ inherit
 		end
 
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
 	SHARED_WORKBENCH
 		export
@@ -683,6 +686,45 @@ feature -- Memory management
 				widget := Void
 			end
 			parent := Void
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			address_dialog := Void
+			choice := Void
+			class_address := Void
+			class_i := Void
+			class_label := Void
+			class_list := Void
+			class_name := Void
+			cluster_address := Void
+			cluster_label := Void
+			context_menu_factory := Void
+			current_feature := Void
+			current_group := Void
+			current_typed_class := Void
+			feature_address := Void
+			feature_label := Void
+			feature_list := Void
+			feature_name := Void
+			formatters_combo := Void
+			group_list := Void
+			header_info := Void
+			internal_recycle_actions := Void
+			internal_recycle_pool := Void
+			known_formatters := Void
+			label_changed_actions := Void
+			new_class_win := Void
+			output_line := Void
+			parent := Void
+			recycler := Void
+			tool_bar_items := Void
+			view_points_combo := Void
+			view_points_widget := Void
+			viewpoints := Void
+			widget := Void
+			Precursor
 		end
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Vision2 Controls

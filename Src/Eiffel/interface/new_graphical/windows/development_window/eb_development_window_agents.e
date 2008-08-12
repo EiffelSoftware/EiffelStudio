@@ -11,7 +11,8 @@ class
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
 		redefine
-			internal_detach_entities
+			internal_detach_entities,
+			internal_recycle
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -42,8 +43,16 @@ feature {NONE} -- Clean up
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 			on_customized_tools_changed_agent_internal := Void
+			text_observer_manager := Void
 		ensure then
 			on_customized_tools_changed_agent_internal_detached: on_customized_tools_changed_agent_internal = Void
+		end
+
+	internal_recycle is
+			-- <Precursor>
+		do
+			text_observer_manager.remove_observer (Current)
+			Precursor
 		end
 
 feature -- Text observer Agents

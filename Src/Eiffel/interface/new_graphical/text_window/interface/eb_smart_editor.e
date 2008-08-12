@@ -27,7 +27,8 @@ inherit
 			initialize_customizable_commands,
 			basic_cursor_move,
 			text_displayed,
-			internal_recycle	,
+			internal_recycle,
+			internal_detach_entities,
 			file_loading_setup,
 			on_text_back_to_its_last_saved_state,
 			on_text_edited,
@@ -1051,12 +1052,22 @@ feature {NONE} -- Memory management
 			if completion_timeout /= Void and then not completion_timeout.is_destroyed then
 				completion_timeout.destroy
 			end
-			completion_timeout := Void
 
 			if event_list.is_service_available then
 					-- Remove any added error items
 				event_list.service.prune_event_items (editor_context_cookie)
 			end
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			completion_timeout := Void
+			internal_editor_context_cookie := Void
+			auto_point_token := Void
+			previous_token_image := Void
+			saved_cursor := Void
+			Precursor
 		end
 
 feature {NONE} -- Factory

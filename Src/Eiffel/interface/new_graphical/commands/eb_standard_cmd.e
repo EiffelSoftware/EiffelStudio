@@ -19,6 +19,9 @@ inherit
 		end
 
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
 create
 	make
@@ -166,6 +169,23 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			execute_agents.wipe_out
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			pixel_buffer := Void
+			mini_pixel_buffer := Void
+			mini_pixmap := Void
+			pixmap := Void
+			execute_agents := Void
+			referred_shortcut := Void
+			managed_accelerators_internal := Void
+
+			internal_managed_menu_items := Void
+			internal_managed_sd_toolbar_items := Void
+
+			Precursor
 		end
 
 indexing

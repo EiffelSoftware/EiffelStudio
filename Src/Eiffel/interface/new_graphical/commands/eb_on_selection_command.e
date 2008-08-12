@@ -10,20 +10,19 @@ class
 	EB_ON_SELECTION_COMMAND
 
 inherit
-
 	EB_STANDARD_CMD
 		rename
-			make as make_standard,
-			internal_recycle as recycle_std
+			make as make_standard
 		redefine
-			executable
+			executable,
+			internal_recycle
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
+		undefine
+			internal_detach_entities
 		redefine
 			executable, make, internal_recycle, target
-		select
-			internal_recycle
 		end
 
 	TEXT_OBSERVER
@@ -126,7 +125,7 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
-			recycle_std
+			Precursor {EB_STANDARD_CMD}
 		end
 
 feature {NONE} -- Implementation

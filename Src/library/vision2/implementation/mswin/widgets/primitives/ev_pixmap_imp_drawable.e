@@ -55,6 +55,10 @@ feature {NONE} -- Initialization
 				-- Initialize the drawable part.
 			initialize -- from EV_DRAWABLE_IMP
 
+				-- Is_initialized should be set to True
+				-- when the bridge pattern is linked.
+			set_state_flag (is_initialized_flag, False)
+
 			copy_tab_status (other)
 
 				-- Select the palette if needed.
@@ -64,10 +68,6 @@ feature {NONE} -- Initialization
 			if palette /= Void then
 				dc.select_palette (palette)
 			end
-
-				-- Is_initialized should be set to True
-				-- when the bridge pattern is linked.
-			set_state_flag (is_initialized_flag, False)
 		end
 
 	make_with_pixel_buffer (a_dc: WEL_MEMORY_DC) is
@@ -233,9 +233,9 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			Precursor {EV_DRAWABLE_IMP}
 			disable_tabable_from
 			disable_tabable_to
+			Precursor {EV_DRAWABLE_IMP}
 		end
 
 feature {NONE} -- Saving

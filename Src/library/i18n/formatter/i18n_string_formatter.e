@@ -43,6 +43,18 @@ feature -- Access
 	escape_character: CHARACTER
 			-- Character used to escape replacement tokens
 
+feature -- Element Change
+
+	set_escape_character (a_character: like escape_character) is
+			-- Set `escape_character' with `a_character'.
+			--
+			-- `a_character': Character used to escape replacement tokens
+		do
+			escape_character := a_character
+		ensure
+			escape_character_set: escape_character = a_character
+		end
+
 feature -- Basic operations
 
 	formatted_string (a_string: STRING_32; args_tuple: TUPLE): STRING_32 is
@@ -62,7 +74,7 @@ feature -- Basic operations
 		local
 			l_list: LIST [STRING_32]
 			i : INTEGER
-			l_list_item, 
+			l_list_item,
 			l_string: STRING_32
 			l_id: INTEGER
 			test: STRING_GENERAL

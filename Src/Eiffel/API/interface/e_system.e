@@ -38,23 +38,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_class_name: STRING is
-			-- Root class name
-		do
-			Result := System.root_type_name
-		end;
-
 	name: STRING is
 			-- System name specified in Lace file
 		do
 			Result := System.name
 		end;
-
-	root_cluster: CONF_GROUP is
-			-- Root cluster of System
-		do
-			Result := System.root_cluster
-		end
 
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory for classes.
@@ -172,12 +160,6 @@ feature -- Access
 		do
 			Result := System.classes.valid_index (i)
 		end;
-
-	root_class: CLASS_I is
-			-- Root class of the system
-		do
-			Result ?= root_cluster.classes.item (root_class_name);
-		end
 
 	application_name (workbench_mode: BOOLEAN): FILE_NAME is
 			-- Get the full qualified name of the application

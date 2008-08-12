@@ -145,11 +145,16 @@ feature {NONE} -- Implementation
 			feature_set: feature_set
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
+			l_root: SYSTEM_ROOT
         do
         		-- if the class was the root class and the feature the root feature
+        		--
+        		-- Arno: this code must be updated to support multiple root features
+        		--       (appearently it is also assumed that system has a root feature defined)
+        	l_root := system.root_creators.first
         	if
-        		system.root_class.name.is_case_insensitive_equal (feature_i.written_class.name) and then
-        		system.root_creation_name.is_case_insensitive_equal (feature_i.feature_name)
+        		l_root.root_class.name.is_case_insensitive_equal (feature_i.written_class.name) and then
+        		l_root.procedure_name.is_case_insensitive_equal (feature_i.feature_name)
         	then
 	        	create project_modifier
 				project_modifier.prepare

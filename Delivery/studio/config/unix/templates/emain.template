@@ -17,6 +17,8 @@ extern void egc_rcdt_init (void);
 int main (int argc, char ** argv, char ** envp)
 {
 
+	int eif_argc = argc;
+
 	eif_alloc_init();
 #ifdef EIF_THREADS
 	eif_thr_init_root();
@@ -34,10 +36,11 @@ int main (int argc, char ** argv, char ** envp)
 	if (setjmp(exenv))
 		failure();
 
-	eif_rtinit(argc, argv, envp);
+	eif_retrieve_root (&eif_argc, argv);
+	eif_rtinit(eif_argc, argv, envp);
 	if (egc_prof_enabled) initprf();
 	egc_rcdt_init (); 
-	emain(argc, argv);
+	emain(eif_argc, argv);
 	reclaim();
 	exit(0);
 }

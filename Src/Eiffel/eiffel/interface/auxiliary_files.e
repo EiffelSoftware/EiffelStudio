@@ -407,19 +407,20 @@ feature -- Plug and Makefile file
 			plug_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 
-			has_argument: BOOLEAN
-			root_cl: CLASS_C
-			rout_info: ROUT_INFO
-			root_feat: FEATURE_I
-			rcorigin: INTEGER
-			rcoffset: INTEGER
-
-			l_create_type: CREATE_TYPE
-			l_creation_type: CL_TYPE_A
-			l_gen_type: GEN_TYPE_A
-
 			l_rt_dbg_cl: CLASS_C
 			l_rt_extension_notify_name, l_rt_extension_notify_argument_name: STRING
+
+			l_root_malloc: STRING
+			l_root: SYSTEM_ROOT
+			l_root_type: CL_TYPE_A
+			l_root_gen_type: ?GEN_TYPE_A
+			l_root_create_type: CREATE_TYPE
+			l_root_cl: CLASS_C
+			l_rout_info: ROUT_INFO
+			l_root_ft: FEATURE_I
+			l_rcorigin, l_rcoffset: INTEGER
+			cs: CURSOR
+			i: INTEGER
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -909,35 +910,119 @@ feature -- Plug and Makefile file
 				-- Generate the number of dynamic types.
 			buffer.put_string (";%N%Tscount = ")
 			buffer.put_integer (System.type_id_counter.value)
-			buffer.put_string (";%N%N")
+			buffer.put_character (';')
+			buffer.put_new_line
+
+
+				-- Generate root procedure lists
+			check
+				has_root: not system.root_creators.is_empty
+			end
+			buffer.indent
+
+			buffer.put_new_line
+			buffer.put_string ("egc_rcount = ")
+			buffer.put_integer (system.root_creators.count)
+			buffer.put_character (';')
+			buffer.put_new_line
+			buffer.put_string ("egc_ridx = 0;")
+			buffer.put_new_line
+
+			buffer.put_string ("egc_rlist = (char**) eif_malloc (sizeof(char*)*egc_rcount);");
+			buffer.put_new_line
+
+			l_root_malloc := "(int32 *) eif_malloc (sizeof(int32)*egc_rcount);"
+			buffer.put_string ("egc_rcdt = ")
+			buffer.put_string (l_root_malloc)
+			buffer.put_new_line
 
 			if not final_mode then
-				check system.root_type /= Void end
-				root_cl := System.root_type.associated_class
-				if not Compilation_modes.is_precompiling and then System.root_creation_name /= Void then
-					root_feat := root_cl.feature_table.item (System.root_creation_name)
-					has_argument := root_feat.has_arguments
-					rout_info := System.rout_info_table.item (root_feat.rout_id_set.first)
-					rcorigin := rout_info.origin
-					rcoffset := rout_info.offset
-				else
-					rcorigin := -1
-				end
-
-				buffer.put_string ("%Tegc_rcorigin = ")
-				buffer.put_integer (rcorigin)
-				buffer.put_string (";%N%Tegc_rcdt = 0")
-				buffer.put_string (";%N%Tegc_rcoffset = ")
-				buffer.put_integer (rcoffset)
-				buffer.put_string (";%N%Tegc_rcarg = ")
-				if has_argument then
-					buffer.put_string ("1")
-				else
-					buffer.put_string ("0")
-				end
-				buffer.put_string (";%N%N")
+				buffer.put_string ("egc_rcorigin = ")
+				buffer.put_string (l_root_malloc)
+				buffer.put_new_line
+				buffer.put_string ("egc_rcoffset = ")
+				buffer.put_string (l_root_malloc)
+				buffer.put_new_line
+				buffer.put_string ("egc_rcarg = ")
+				buffer.put_string (l_root_malloc)
+				buffer.put_new_line
 			end
 
+			from
+				cs := system.root_creators.cursor
+				system.root_creators.start
+				i := 0
+			until
+				system.root_creators.after
+			loop
+				l_root := system.root_creators.item_for_iteration
+				check
+					type_set: l_root.is_class_type_set
+				end
+				l_root_cl := l_root.class_type.associated_class
+				if not compilation_modes.is_precompiling then
+					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
+					l_rout_info := system.rout_info_table.item (l_root_ft.rout_id_set.first)
+					l_rcorigin := l_rout_info.origin
+					l_rcoffset := l_rout_info.offset
+				else
+					l_rcorigin := -1
+				end
+
+				buffer.put_string ("egc_rlist[")
+				buffer.put_integer (i)
+				buffer.put_string ("] = %"")
+				if not compilation_modes.is_precompiling then
+					buffer.put_string (l_root_cl.name_in_upper)
+					buffer.put_character ('.')
+					buffer.put_string (l_root.procedure_name.as_lower)
+				else
+					buffer.put_string ("ANY")
+				end
+				buffer.put_string ("%";")
+				buffer.put_new_line
+
+				buffer.put_string ("egc_rcdt[")
+				buffer.put_integer (i)
+				buffer.put_string ("] = 0;")
+				buffer.put_new_line
+
+				if not final_mode then
+					buffer.put_string ("egc_rcorigin[")
+					buffer.put_integer (i)
+					buffer.put_string ("] = ")
+					buffer.put_integer (l_rcorigin)
+					buffer.put_string (";")
+					buffer.put_new_line
+
+					buffer.put_string ("egc_rcoffset[")
+					buffer.put_integer (i)
+					buffer.put_string ("] = ")
+					buffer.put_integer (l_rcoffset)
+					buffer.put_string (";")
+					buffer.put_new_line
+
+					buffer.put_string ("egc_rcarg[")
+					buffer.put_integer (i)
+					buffer.put_string ("] = ")
+					if not compilation_modes.is_precompiling and then l_root_ft.has_arguments then
+						buffer.put_integer (1)
+					else
+						buffer.put_integer (0)
+					end
+					buffer.put_string (";")
+					buffer.put_new_line
+				end
+				buffer.put_new_line
+
+				i := i + 1
+				system.root_creators.forth
+			end
+			system.root_creators.go_to (cs)
+
+			buffer.exdent
+
+			buffer.put_new_line
 			buffer.put_string ("%Tegc_platform_level = 0x00000D00;")
 			buffer.put_new_line
 
@@ -985,44 +1070,67 @@ feature -- Plug and Makefile file
 			buffer.put_string ("void egc_rcdt_init (void)")
 			buffer.generate_block_open
 			buffer.put_new_line
-			buffer.put_string ("if (egc_rcdt == 0) {")
-			buffer.indent
-			l_creation_type := system.root_type
-			l_gen_type ?= l_creation_type
-			if l_gen_type /= Void then
-				context.set_buffer (buffer)
-				context.init (system.root_class_type)
-				buffer.put_new_line
-					-- Because generic object creation requires a context object,
-					-- we simply create a temporary one of type ANY, used to
-					-- create an instance of our generic type.
-				buffer.put_string ("EIF_REFERENCE l_root_obj, Current = RTLN(")
-				buffer.put_type_id (context.context_class_type.type_id)
-				buffer.put_string (");")
-				buffer.put_new_line
-					-- Go ahead an create our generic type.
-				create l_create_type.make (l_creation_type)
-				l_create_type.generate_start (buffer)
-				l_create_type.generate_gen_type_conversion (0)
-				buffer.put_new_line
-				buffer.put_string ("l_root_obj = ")
-				l_create_type.generate
-				buffer.put_character (';')
-				buffer.put_new_line
-				l_create_type.generate_end (buffer)
-					-- Set `egc_rcdt' to the right dynamic type
-				buffer.put_string ("egc_rcdt = Dftype(l_root_obj);")
-			else
-				buffer.put_new_line
-				buffer.put_string ("egc_rcdt = ")
-				buffer.put_type_id (l_creation_type.type_id (Void))
-				buffer.put_character (';')
-			end
-			buffer.exdent
-			buffer.put_new_line
-			buffer.put_character ('}')
-			buffer.generate_block_close
 
+			from
+				cs := system.root_creators.cursor
+				system.root_creators.start
+				i := 0
+			until
+				system.root_creators.after
+			loop
+				buffer.put_string ("if (egc_rcdt[")
+				buffer.put_integer (i)
+				buffer.put_string ("] == 0) {")
+				buffer.indent
+				buffer.put_new_line
+
+				l_root := system.root_creators.item_for_iteration
+				l_root_type := l_root.class_type
+				l_root_gen_type ?= l_root_type
+				if l_root_gen_type /= Void then
+					context.set_buffer (buffer)
+					context.init (system.root_class_type (l_root_type))
+						-- Because generic object creation requires a context object,
+						-- we simply create a temporary one of type ANY, used to
+						-- create an instance of our generic type.
+					buffer.put_string ("EIF_REFERENCE l_root_obj, Current = RTLN(")
+					buffer.put_type_id (context.context_class_type.type_id)
+					buffer.put_string (");")
+					buffer.put_new_line
+						-- Go ahead an create our generic type.
+					create l_root_create_type.make (l_root_type)
+					l_root_create_type.generate_start (buffer)
+					l_root_create_type.generate_gen_type_conversion (0)
+					buffer.put_new_line
+					buffer.put_string ("l_root_obj = ")
+					l_root_create_type.generate
+					buffer.put_character (';')
+					buffer.put_new_line
+					l_root_create_type.generate_end (buffer)
+						-- Set `egc_rcdt' to the right dynamic type
+					buffer.put_string ("egc_rcdt[")
+					buffer.put_integer (i)
+					buffer.put_string ("] = Dftype(l_root_obj);")
+				else
+					buffer.put_string ("egc_rcdt[")
+					buffer.put_integer (i)
+					buffer.put_string ("] = ")
+					buffer.put_type_id (l_root_type.type_id (Void))
+					buffer.put_string ("; /* ")
+					buffer.put_string (l_root_type.name)
+					buffer.put_string (" */")
+				end
+
+				buffer.exdent
+				buffer.put_new_line
+				buffer.put_character ('}')
+
+				i := i + 1
+				system.root_creators.forth
+			end
+			system.root_creators.go_to (cs)
+
+			buffer.generate_block_close
 			buffer.end_c_specific_code
 
 			create plug_file.make_c_code_file (gen_file_name (final_mode, Eplug));

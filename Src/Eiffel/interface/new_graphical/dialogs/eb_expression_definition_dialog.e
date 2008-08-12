@@ -574,9 +574,11 @@ feature {NONE} -- Event handling
 							--| First find the class given in `class_field'.
 						cl_i := Eiffel_universe.classes_with_name (t)
 						if cl_i.is_empty then
-							ci := Eiffel_universe.class_named (t, eiffel_system.root_cluster)
-							if ci /= Void then
-								cl := ci.compiled_class
+							if not eiffel_system.system.root_creators.is_empty then
+								ci := Eiffel_universe.class_named (t, eiffel_system.system.root_creators.first.cluster)
+								if ci /= Void then
+									cl := ci.compiled_class
+								end
 							end
 						elseif not cl_i.is_empty then
 							from

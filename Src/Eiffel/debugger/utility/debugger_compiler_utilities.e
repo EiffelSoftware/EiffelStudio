@@ -52,19 +52,18 @@ feature -- Entry point
 	frozen entry_point_class_feature: TUPLE [cl: CLASS_C; feat: FEATURE_I] is
 			-- System entry point feature
 		local
-			cl_i: CLASS_I
 			cl_c: CLASS_C
 			s: STRING
+			l_creator: SYSTEM_ROOT
 		do
-			if eiffel_project.system_defined then
-				cl_i := eiffel_system.system.root_class
-				if cl_i /= Void then
-					cl_c := cl_i.compiled_class
-					if cl_c /= Void then
-						s := eiffel_system.system.root_creation_name
-						if s /= Void then
-							Result := [cl_c, cl_c.feature_table.item (s)]
-						end
+			if eiffel_project.system_defined and then not eiffel_system.system.root_creators.is_empty then
+					-- NOTE: This code needs to be updated to support multiple root classes/features
+				l_creator := eiffel_system.system.root_creators.first
+				cl_c := l_creator.root_class.compiled_class
+				if cl_c /= Void then
+					s := l_creator.procedure_name
+					if s /= Void then
+						Result := [cl_c, cl_c.feature_table.item (s)]
 					end
 				end
 			end

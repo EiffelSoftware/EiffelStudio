@@ -18,15 +18,6 @@ feature -- Access
 	name: STRING
 			-- System name
 
-	root_cluster: CONF_GROUP
-			-- Root cluster of the system
-
-	root_type_name: STRING;
-			-- Root type name
-
-	root_creation_name: STRING;
-			-- Creation procedure name
-
 	c_file_names: LIST [STRING];
 			-- C file names to include
 
@@ -73,29 +64,6 @@ feature -- Update
 			-- Assign `s' to `system_name'.
 		do
 			name := s
-		end
-
-	set_root_cluster (c: like root_cluster) is
-			-- Assign `c' to `root_cluster'.
-		do
-			root_cluster := c
-		end
-
-	set_root_type_name (s: STRING) is
-			-- Assign `s' to `root_class_name'.
-		require
-			s_not_void: s /= Void
-			s_in_upper: s.is_equal (s.as_upper)
-		do
-			root_type_name := s
-		ensure
-			root_type_name_set: root_type_name = s
-		end
-
-	set_creation_name (s: STRING) is
-			-- Assign `s' to `creation_name'.
-		do
-			root_creation_name := s
 		end
 
 	set_c_file_names (l: like c_file_names) is

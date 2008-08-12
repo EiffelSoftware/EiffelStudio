@@ -1477,8 +1477,6 @@ feature -- Supplier checking
 
 	check_that_root_class_is_not_deferred is
 		-- Check non-genericity of root class
-		require
-			is_root_class: Current = System.root_class.compiled_class
 		local
 			l_vsrt3: VSRT3
 		do
@@ -1490,28 +1488,30 @@ feature -- Supplier checking
 			end
 		end
 
-	check_root_class_creators is
+	check_root_class_creators (a_creator: STRING; a_type: CL_TYPE_A) is
 			-- Check creation procedures of root class
+			--
+			-- Note: if `a_creator' is empty and default_create is a valid creation procedure in `Current',
+			--       `a_creator' will get the propriate default creation name appended.
 		require
-			is_root: Current = System.root_type.associated_class
+			a_creator_not_void: a_creator /= Void
+			a_type_not_void: a_type /= Void
 		local
 			l_creation_proc: FEATURE_I
-			l_system_creation: STRING
 			l_error: BOOLEAN
 			l_vsrp2: VSRP2
 			l_arg_type: TYPE_A
 			l_vd27: VD27
 			l_feat_tbl: like feature_table
 		do
-			l_system_creation := System.root_creation_name
-			if creators /= Void and l_system_creation/= Void then
+			if creators /= Void and not a_creator.is_empty then
 				l_feat_tbl := feature_table
 				from
 					creators.start
 				until
 					creators.after
 				loop
-					if l_system_creation.is_equal (creators.key_for_iteration) then
+					if a_creator.is_equal (creators.key_for_iteration) then
 							-- `creators.key_for_iteration' contains the creation_name
 						l_creation_proc := l_feat_tbl.item (creators.key_for_iteration)
 
@@ -1521,7 +1521,7 @@ feature -- Supplier checking
 							l_error := False
 						when 1 then
 							l_arg_type ?= l_creation_proc.arguments.first
-							l_arg_type := l_arg_type.instantiation_in (system.root_type, class_id).actual_type
+							l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
 							l_error := not array_of_string.conform_to (l_arg_type)
 						else
 							l_error := True
@@ -1530,11 +1530,11 @@ feature -- Supplier checking
 						if l_error then
 							create l_vsrp2
 							l_vsrp2.set_class (Current)
-							l_vsrp2.set_root_type (system.root_type)
+							l_vsrp2.set_root_type (a_type)
 								-- Need duplication otherwise we would change the original FEATURE_I
 								-- object while displaying the error.
 							l_creation_proc := l_creation_proc.duplicate
-							l_creation_proc.instantiation_in (system.root_type)
+							l_creation_proc.instantiation_in (a_type)
 							l_vsrp2.set_creation_feature (l_creation_proc)
 							Error_handler.insert_error (l_vsrp2)
 						end
@@ -1543,24 +1543,24 @@ feature -- Supplier checking
 				end
 			end
 
-			if l_system_creation /= Void and then creators = Void then
+			if not a_creator.is_empty and creators = Void then
 					-- Check default create
 				l_creation_proc := default_create_feature
-				if not l_creation_proc.feature_name.is_equal (l_system_creation) then
+				if not l_creation_proc.feature_name.is_equal (a_creator) then
 					create l_vd27
-					l_vd27.set_creation_routine (l_system_creation)
+					l_vd27.set_creation_routine (a_creator)
 					l_vd27.set_root_class (Current)
 					Error_handler.insert_error (l_vd27)
 				end
-			elseif l_system_creation /= Void and then not creators.has (l_system_creation) then
+			elseif not a_creator.is_empty and not creators.has (a_creator) then
 				create l_vd27
-				l_vd27.set_creation_routine (l_system_creation)
+				l_vd27.set_creation_routine (a_creator)
 				l_vd27.set_root_class (Current)
 				Error_handler.insert_error (l_vd27)
-			elseif l_system_creation = Void then
+			elseif a_creator.is_empty then
 				if allows_default_creation then
-						-- Set creation_name in System
-					System.set_creation_name (default_create_feature.feature_name)
+						-- Redefine creation procedure
+					a_creator.append (default_create_feature.feature_name)
 				else
 					create l_vd27
 					l_vd27.set_creation_routine ("")

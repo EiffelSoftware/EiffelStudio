@@ -688,6 +688,35 @@ rt_private void notify_root_thread (void)
 #endif
 #endif
 
+rt_public void eif_retrieve_root (int *argc, char **argv)
+{
+	egc_ridx = 0;
+	if ((*argc) > 1) {
+		if (0 == strcmp (argv[(*argc)-2], "-eif_root")) {
+			egc_ridx = -1;
+			for (int i = 0; i < egc_rcount; i++) {
+				if (0 == strcmp (argv[(*argc)-1], egc_rlist[i])) {
+					egc_ridx = i;
+					break;
+				}
+			}
+			if (egc_ridx < 0) {
+				fprintf (stderr, "%s: unknown root procedure\n", argv[(*argc)-1]);
+				exit (1);	
+			}
+			(*argc) -= 2;
+		}
+		else if (0 == strcmp (argv[(*argc)-1], "-eif_root")) {
+			fprintf (stderr, "\nPlease specify a root procedure. Valid root procedures are:\n\n");
+			for (int i = 0; i < egc_rcount; i++) {
+				fprintf (stderr, "\t- %s\n", egc_rlist[i]);
+			}
+			fprintf (stderr, "\n");
+			exit (1);
+		}
+	}
+}
+
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
 	char *eif_timeout;

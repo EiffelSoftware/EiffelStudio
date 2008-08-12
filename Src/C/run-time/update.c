@@ -440,7 +440,7 @@ rt_public void update(char ignore_updt, char *argv0)
 rt_private void root_class_updt (void)
 {
 	EIF_GET_CONTEXT
-	int32 l_rcount, l_strcount;
+	int32 l_rcount, l_strcount, i;
 	EIF_REFERENCE l_obj;
 	unsigned char *old_IC = IC;
 	/* Update the root class info */
@@ -459,7 +459,7 @@ rt_private void root_class_updt (void)
 		SAFE_ALLOC (egc_rcarg, int32, l_rcount);
 	}
 	egc_rcount = l_rcount;
-	for (int32 i = 0; i < egc_rcount; i++) {
+	for (i = 0; i < egc_rcount; i++) {
 
 			/* Read root class/feature name */
 		l_strcount = wint32();

@@ -690,11 +690,12 @@ rt_private void notify_root_thread (void)
 
 rt_public void eif_retrieve_root (int *argc, char **argv)
 {
+	int i;
 	egc_ridx = 0;
 	if ((*argc) > 1) {
 		if (0 == strcmp (argv[(*argc)-2], "-eif_root")) {
 			egc_ridx = -1;
-			for (int i = 0; i < egc_rcount; i++) {
+			for (i = 0; i < egc_rcount; i++) {
 				if (0 == strcmp (argv[(*argc)-1], egc_rlist[i])) {
 					egc_ridx = i;
 					break;
@@ -708,7 +709,7 @@ rt_public void eif_retrieve_root (int *argc, char **argv)
 		}
 		else if (0 == strcmp (argv[(*argc)-1], "-eif_root")) {
 			fprintf (stderr, "\nPlease specify a root procedure. Valid root procedures are:\n\n");
-			for (int i = 0; i < egc_rcount; i++) {
+			for (i = 0; i < egc_rcount; i++) {
 				fprintf (stderr, "\t- %s\n", egc_rlist[i]);
 			}
 			fprintf (stderr, "\n");

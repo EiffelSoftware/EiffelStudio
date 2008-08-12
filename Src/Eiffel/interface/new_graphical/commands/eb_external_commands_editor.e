@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			c: EB_EXTERNAL_COMMAND
 		do
 			if not loaded.item then
-				loaded.set_item (True)
+				loaded.put (True)
 				from
 				until
 					i > 9
@@ -59,10 +59,12 @@ feature {NONE} -- Initialization
 			enable_displayed
 		end
 
-	loaded: BOOLEAN_REF is
+	loaded: CELL [BOOLEAN] is
 			-- Has `Current' already loaded the preferences?
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			loaded_not_void: Result /= Void
 		end
 
 feature -- Status report

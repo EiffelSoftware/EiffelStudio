@@ -12,15 +12,17 @@ feature
 
 	set_stop_on_error (b: BOOLEAN) is
 		do
-			stop_mode.set_item (b)
+			stop_mode.put (b)
 		end
 
 feature {NONE}
 
-	stop_mode: BOOLEAN_REF is
+	stop_mode: CELL [BOOLEAN] is
 			-- Structure to keep `stop_on_error'.
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			stop_mode_not_void: Result /= Void
 		end
 
 indexing

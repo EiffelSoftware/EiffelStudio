@@ -854,7 +854,7 @@ feature {NONE} -- Type description
 				System.root_creation_name /= Void
 			then
 					-- Update the root class info
-				root_class_type := system.root_class_type
+				root_class_type := system.root_class_type (system.root_type)
 				a_class := root_class_type.associated_class
 				root_feat := a_class.feature_table.item (System.root_creation_name)
 				l_decl_type := root_class_type.type.implemented_type (root_feat.written_in)

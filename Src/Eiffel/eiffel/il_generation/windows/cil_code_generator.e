@@ -981,10 +981,10 @@ feature -- Generation Structure
 				if has_root_type and is_debug_info_enabled and system.root_creation_name /= Void then
 					a_class := system.root_type.associated_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
-					l_decl_type := system.root_class_type.type.implemented_type (root_feat.origin_class_id)
+					l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
 
 					entry_point_token := current_module.implementation_feature_token (
-						l_decl_type.associated_class_type (system.root_class_type.type).implementation_id,
+						l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
 						root_feat.origin_feature_id)
 						-- Debugger API does not allow to use MethodRef token for user entry point
 					if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
@@ -1187,7 +1187,7 @@ feature -- Class info
 			if System.root_type /= Void and then System.root_type.associated_class.original_class.is_compiled then
 				l_cur_mod := current_module
 				current_module := main_module
-				current_class_type := System.root_class_type
+				current_class_type := System.root_class_type (system.root_type)
 				l_class := current_class_type.associated_class
 				create l_ca_factory
 

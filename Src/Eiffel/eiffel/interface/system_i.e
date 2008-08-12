@@ -5365,6 +5365,18 @@ feature -- Access: Root creators
 			--       existing code relying on a single root will continue to work.
 			--       Additional root creation procedures can be added through `add_explicit_root'.
 
+	root_type: CL_TYPE_A is
+			--
+		do
+			Result := root_creators.first.class_type
+		end
+
+	root_creation_name: STRING is
+		do
+			Result := root_creators.first.procedure_name
+		end
+
+
 feature {NONE} -- Access: Root creators
 
 	explicit_roots: LINKED_LIST [TUPLE [STRING, STRING, STRING]]

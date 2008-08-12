@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
 -- inherit {NONE}
 	EIFFEL_LAYOUT
@@ -19,9 +22,16 @@ inherit
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_detach_entities is
+			-- <Precursor>
 		do
 			develop_window := Void
+			Precursor
+		end
+
+	internal_recycle is
+			-- <Precursor>
+		do
 		end
 
 feature{NONE} -- Initlization
@@ -36,13 +46,13 @@ feature{NONE} -- Initlization
 			set: develop_window = a_window
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 			-- Development window which commands belong to.
 
 invariant
-	not_void: develop_window /= Void
+	development_window_not_void: is_interface_usable implies develop_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -477,7 +477,7 @@ feature -- Status setting
 	enable_commands is
 			-- Enable commands execution.
 		do
-			commands_enabled_ref.set_item (True)
+			commands_enabled_ref.put (True)
 		ensure
 			commands_enabled: commands_enabled
 		end
@@ -485,7 +485,7 @@ feature -- Status setting
 	disable_commands is
 			-- Disable commands execution.
 		do
-			commands_enabled_ref.set_item (False)
+			commands_enabled_ref.put (False)
 		ensure
 			commands_disabled: not commands_enabled
 		end
@@ -1676,12 +1676,13 @@ feature {WEL_WINDOW} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	commands_enabled_ref: BOOLEAN_REF is
+	commands_enabled_ref: CELL [BOOLEAN] is
 			-- Is the commands execution enabled?
 			-- False by default.
 		once
-			create Result
-			Result.set_item (False)
+			create Result.put (False)
+		ensure
+			commands_enabled_ref_not_void: Result /= Void
 		end
 
 	on_wm_show_window (wparam, lparam: INTEGER) is

@@ -414,7 +414,7 @@ feature -- Update
 			set_error_status (ok_status)
 			degree_output.put_new_compilation
 			if not Compilation_modes.is_precompiling then
-				is_compiling_ref.set_item (True)
+				is_compiling_ref.put (True)
 				workbench.start_compilation
 				workbench.recompile
 				if not is_for_finalization then
@@ -436,7 +436,7 @@ feature -- Update
 				end
 
 				Compilation_modes.reset_modes
-				is_compiling_ref.set_item (False)
+				is_compiling_ref.put (False)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -448,7 +448,7 @@ feature -- Update
 		rescue
 				-- Reset `is_compiling' as if we are here, it means that an internal
 				-- error occurred
-			is_compiling_ref.set_item (False)
+			is_compiling_ref.put (False)
 		end
 
 	discover_melt is
@@ -533,14 +533,14 @@ feature -- Update
 			if successful then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
-				is_compiling_ref.set_item (True)
+				is_compiling_ref.put (True)
 				Comp_system.finalize_system (keep_assertions)
 				if successful then
 						-- No point on trying to save a cancelled (i.e. non successful compilation).
 						-- False because we are not precompiling here.
 					Workbench.save_project (False)
 				end
-				is_compiling_ref.set_item (False)
+				is_compiling_ref.put (False)
 				Compilation_modes.reset_modes
 			end
 			Workbench.stop_compilation
@@ -647,7 +647,7 @@ feature -- Update
 		rescue
 				-- Reset `is_compiling' as if we are here, it means that an internal
 				-- error occurred
-			is_compiling_ref.set_item (False)
+			is_compiling_ref.put (False)
 		end
 
 	finalize_precompile (keep_assertions: BOOLEAN) is
@@ -660,10 +660,10 @@ feature -- Update
 			if successful and then comp_system.il_generation then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
-				is_compiling_ref.set_item (True)
+				is_compiling_ref.put (True)
 				Comp_system.finalize_system (keep_assertions)
 				Workbench.save_project (True)
-				is_compiling_ref.set_item (False)
+				is_compiling_ref.put (False)
 			end
 			Workbench.stop_compilation
 		ensure
@@ -745,7 +745,7 @@ feature -- Output
 			Comp_system.server_controler.wipe_out
 			saved_workbench := workbench
 
-			error_status_mode.set_item (Ok_status)
+			set_error_status (Ok_status)
 			l_epr_file := project_directory.project_file
 			l_epr_file.store (Current, comp_system.compilation_id)
 
@@ -766,7 +766,7 @@ feature -- Output
 			precomp_info: PRECOMP_INFO
 			l_epr_file: PROJECT_EIFFEL_FILE
 		do
-			error_status_mode.set_item (Ok_status)
+			set_error_status (Ok_status)
 			create precomp_info.make (Precompilation_directories)
 			create l_epr_file.make (project_directory.precompilation_file_name)
 			l_epr_file.store (precomp_info, comp_system.compilation_id)
@@ -918,29 +918,33 @@ feature {NONE} -- Implementation
 			Result := file_status_mode.item
 		end
 
-	error_status_mode: INTEGER_REF is
+	error_status_mode: CELL [INTEGER] is
 			-- Structure to keep the last error status.
 		once
-			create Result
-			Result.set_item (Ok_status)
+			create Result.put (Ok_status)
+		ensure
+			error_status_mode_not_void: Result /= Void
 		end
 
-	file_status_mode: INTEGER_REF is
+	file_status_mode: CELL [INTEGER] is
 			-- Structure to keep the last file status.
 		once
-			create Result
-			Result.set_item (Write_status)
+			create Result.put (Write_status)
+		ensure
+			file_status_mode_not_void: Result /= Void
 		end
 
-	initialized_mode: BOOLEAN_REF is
+	initialized_mode: CELL [BOOLEAN] is
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			initialized_mode_not_void: Result /= Void
 		end
 
 	set_is_initialized is
 			-- Set `initialized' to `True'
 		do
-			initialized_mode.set_item (True)
+			initialized_mode.put (True)
 		ensure
 			initialized: initialized
 		end
@@ -948,7 +952,7 @@ feature {NONE} -- Implementation
 	set_error_status (status: INTEGER) is
 			-- Set `error_status' to `status'
 		do
-			error_status_mode.set_item (status)
+			error_status_mode.put (status)
 		ensure
 			set: error_status = status
 		end
@@ -956,7 +960,7 @@ feature {NONE} -- Implementation
 	set_file_status (status: INTEGER) is
 			-- Set `file_status' to `status'
 		do
-			file_status_mode.set_item (status)
+			file_status_mode.put (status)
 		ensure
 			set: file_status = status
 		end
@@ -1002,10 +1006,12 @@ feature {NONE} -- Implementation
 			-- Optional procedure that should be called when an error occurs and
 			-- `exit_on_error' is set.
 
-	is_compiling_ref: BOOLEAN_REF is
+	is_compiling_ref: CELL [BOOLEAN] is
 			-- Is it compiling?
 		once
-			create Result
+			create Result.put (False)
+		ensure
+			is_compiling_ref_not_void: Result /= Void
 		end
 
 	exit_on_error: BOOLEAN

@@ -5,7 +5,7 @@ copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result syntax_warning TEST 24
+compile_result syntax_warning TEST 25
 
 execute_work NONE exec_output_m
 execute_result ok

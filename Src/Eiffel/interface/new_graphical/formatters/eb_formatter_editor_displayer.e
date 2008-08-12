@@ -58,7 +58,7 @@ feature {NONE} -- Recycle
 		end
 
 invariant
-	editor_attached: editor /= Void
+	editor_attached: is_interface_usable implies editor /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

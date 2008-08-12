@@ -166,9 +166,14 @@ feature -- Query
 		end
 
 	docking_menu_items_cell: CELL [ARRAYED_LIST [EV_MENU_ITEM]]
-			-- Docking library menu items
-		once
-			create Result
+			-- Docking library menu items for current development window
+			-- We can't make a global list for all development windows,
+			-- otherwise there will be recycling problem if other development window closed
+		do
+			if docking_menu_items_cell_cache = Void then
+				create docking_menu_items_cell_cache
+			end
+			Result := docking_menu_items_cell_cache
 		ensure
 			not_void: Result /= Void
 		end
@@ -397,7 +402,7 @@ feature -- Command
 			end
 		end
 
-feature {NONE} -- Context menu factory
+feature {NONE} -- Implementation
 
 	build_context_menu_factory is
 			-- Build context menu factory.
@@ -409,6 +414,11 @@ feature {NONE} -- Context menu factory
 		end
 
 	context_menu_factory_internal: EB_CONTEXT_MENU_FACTORY
+			-- Context menu factory
+
+	docking_menu_items_cell_cache: like docking_menu_items_cell
+			-- Cache for docking_menu_items_cell
+			-- Note: used by `docking_menu_items_cell' only!
 
 feature -- Recycle
 

@@ -328,7 +328,7 @@ feature -- Query
 					Result.extend (l_extension)
 
 					create l_actual_file.make (Result)
-					if a_must_exist and then not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory) then
+					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
 							-- The file does not exist or is not actually a file.
 						Result := Void
 					end
@@ -673,6 +673,17 @@ feature -- Directories (distribution)
 		once
 			Result ?= shared_application_path.twin
 			Result.extend (templates_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	template_default_path: !DIRECTORY_NAME
+			-- Path containing the templates for default Eiffel files.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := templates_path.twin
+			Result.extend (defaults_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

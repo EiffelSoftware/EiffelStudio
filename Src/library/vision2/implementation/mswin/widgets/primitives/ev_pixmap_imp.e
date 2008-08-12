@@ -1443,12 +1443,18 @@ feature {NONE} -- Implementation
 					private_width := private_bitmap.width
 					private_height := private_bitmap.height
 
-						-- We keep the palette
+						-- We reused the palette, we need to temporarily share
+						-- the palette object so that it doesn't get destroyed when
+						-- we dispose the DIB, then unshare it afterwards.
 					private_palette := dib.palette
+					private_palette.set_shared
 					private_palette.enable_reference_tracking
 
 					dib.dispose
 					dib := Void
+
+						-- Reset shared status back to unshared.
+					private_palette.set_unshared
 
 						-- Let's build the mask.
 					if alpha_data /= Default_pointer then

@@ -19,6 +19,8 @@ inherit
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
+		undefine
+			internal_detach_entities
 		redefine
 			make,
 			executable,

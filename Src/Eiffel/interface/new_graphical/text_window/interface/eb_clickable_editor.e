@@ -28,6 +28,7 @@ inherit
 			text_displayed,
 			copy_selection,
 			internal_recycle,
+			internal_detach_entities,
 			margin,
 			has_margin,
 			cursor_type,
@@ -770,19 +771,21 @@ feature {NONE} -- Memory management
 				dev_window.ui.set_current_editor (Void)
 			end
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if customizable_commands /= Void then
-				customizable_commands.wipe_out
-				customizable_commands := Void
-			end
 			if after_reading_text_actions /= Void then
 				after_reading_text_actions.wipe_out
-				after_reading_text_actions := Void
 			end
 			text_observer_manager.selection_observer_list.wipe_out
 			text_observer_manager.post_notify_actions.wipe_out
 			text_observer_manager.lines_observer_list.wipe_out
 			text_observer_manager.edition_observer_list.wipe_out
 			text_observer_manager.cursor_observer_list.wipe_out
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			after_reading_text_actions := Void
+			Precursor
 		end
 
 feature {NONE} -- Implementation

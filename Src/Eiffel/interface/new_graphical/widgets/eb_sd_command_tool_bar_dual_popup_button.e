@@ -19,15 +19,13 @@ inherit
 			on_pointer_motion,
 			on_pointer_release,
 			sd_make,
-			width
+			width,
+			internal_recycle,
+			internal_detach_entities
 		redefine
 			make
 		end
 
-	EB_RECYCLABLE
-		undefine
-			default_create, copy
-		end
 create
 	make
 
@@ -38,6 +36,32 @@ feature {NONE} -- Initialization
 		do
 			sd_make
 			Precursor {EB_SD_COMMAND_TOOL_BAR_BUTTON}(a_command)
+		end
+
+feature {NONE} -- Cleanup
+
+	internal_recycle is
+			-- <Precursor>
+		do
+			if menu /= Void then
+				menu.destroy
+			end
+			if popup_imp /= Void then
+				popup_imp.destroy
+			end
+			if popup_widget /= Void then
+				popup_widget.destroy
+			end
+			Precursor
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			menu := Void
+			popup_imp := Void
+			popup_widget := Void
+			Precursor
 		end
 
 indexing

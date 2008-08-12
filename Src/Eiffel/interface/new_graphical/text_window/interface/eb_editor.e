@@ -45,6 +45,8 @@ inherit
 	EB_RECYCLABLE
 		undefine
 			default_create
+		redefine
+			internal_detach_entities
 		end
 
 	SHARED_EDITOR_FONT
@@ -280,7 +282,15 @@ feature {NONE} -- Memory Management
 			-- Destroy `Current'.
 		do
 			Precursor {EDITABLE_TEXT_PANEL}
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
 			dev_window := Void
+			stone := Void
+			docking_content := Void
+			Precursor
 		end
 
 feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text

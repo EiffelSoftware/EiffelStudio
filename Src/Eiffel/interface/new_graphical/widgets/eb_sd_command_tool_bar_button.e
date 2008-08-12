@@ -17,6 +17,8 @@ inherit
 	EB_RECYCLABLE
 		undefine
 			default_create, copy
+		redefine
+			internal_detach_entities
 		end
 
 create
@@ -48,9 +50,17 @@ feature -- Cleaning
 		do
 			command.managed_sd_toolbar_items.prune_all (Current)
 			drop_actions.wipe_out
+			pointer_button_press_actions.wipe_out
 			select_actions.wipe_out
 			-- If pick_actions available in the furture, we should do:
 			-- pick_actions.wipe_out
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			command := Void
+			Precursor
 		end
 
 feature {NONE} -- Implementation

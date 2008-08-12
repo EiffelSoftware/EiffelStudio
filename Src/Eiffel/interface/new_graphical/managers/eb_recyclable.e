@@ -88,8 +88,8 @@ feature -- Basic operations
 				end
 
 					-- Perform recycling of Current
-				is_recycled := True
 				internal_recycle
+				is_recycled := True
 
 					-- Remove registered actions
 				l_recycle_actions := internal_recycle_actions

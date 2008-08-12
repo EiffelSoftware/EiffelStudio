@@ -563,6 +563,7 @@ feature {NONE} -- List helpers
 					end
 					l_cursor.forth
 				end
+				l_cursor.go_after
 			end
 		ensure
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))

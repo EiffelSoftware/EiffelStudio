@@ -157,6 +157,7 @@ feature -- Access
 							Result.append_code (wchar_value.value.natural_32_code)
 							l_cursor.forth
 						end
+						l_cursor.go_after
 					else
 						int8_value ?= l_items.first
 						if int8_value /= Void then
@@ -171,6 +172,7 @@ feature -- Access
 								Result.append_code (int8_value.value.as_natural_32)
 								l_cursor.forth
 							end
+							l_cursor.go_after
 						else
 							int32_value ?= l_items.first
 							if int32_value /= Void then
@@ -185,6 +187,7 @@ feature -- Access
 									Result.append_code (int32_value.value.as_natural_32)
 									l_cursor.forth
 								end
+								l_cursor.go_after
 							end
 						end
 					end

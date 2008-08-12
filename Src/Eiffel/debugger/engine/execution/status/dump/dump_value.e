@@ -455,12 +455,12 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
+			done: BOOLEAN
 			int_value: DEBUG_BASIC_VALUE [INTEGER]
 			area_attribute: SPECIAL_VALUE
 			count_attribute: DEBUG_BASIC_VALUE [INTEGER]
 			l_count: INTEGER
 			sc, sc8, sc32: CLASS_C
-			done: BOOLEAN
 			l_area_name, l_count_name: STRING
 			l_slice_max: INTEGER
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
@@ -522,6 +522,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						end
 						l_attributes_cursor.forth
 					end
+					l_attributes_cursor.go_after
+
 						--| At the point `count' from STRING should have been found in
 						--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
 					check

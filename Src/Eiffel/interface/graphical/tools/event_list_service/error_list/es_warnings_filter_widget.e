@@ -111,6 +111,7 @@ feature {NONE} -- Initialization
 			l_row: EV_GRID_ROW
 			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
 			i: INTEGER
+			l_check_assert: BOOLEAN
 		do
 			l_types := warning_types
 			l_grid := grid_warnings
@@ -126,7 +127,11 @@ feature {NONE} -- Initialization
 					l_warning ?= l_internal.new_instance_of (l_id)
 				end
 				if l_warning /= Void then
+						-- In order to evaluate `code' we need to disable assertion monitoring.
+						-- This is clearly a hack and this code should be done differently.
+					l_check_assert := {ISE_RUNTIME}.check_assert (False)
 					l_name := l_warning.code
+					l_check_assert := {ISE_RUNTIME}.check_assert (l_check_assert)
 				else
 					l_name := l_internal.type_name_of_type (l_id)
 				end

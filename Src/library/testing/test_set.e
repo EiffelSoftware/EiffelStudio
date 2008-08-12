@@ -1,10 +1,56 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Sets of related testing operations."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	TEST_SET
+
+feature -- Initialization
+
+	setup is
+		deferred
+		end
+
+feature -- Access
+
+	asserter: TEST_ASSERTIONS is
+		do
+			if internal_asserter /= Void then
+				Result := internal_asserter
+			else
+				create Result
+				internal_asserter := Result
+			end
+		ensure
+			asserter_attached: Result /= Void
+		end
+
+feature -- Settings
+
+	set_asserter (a: like asserter) is
+			-- Set `asserter' with `a'.
+		require
+			a_attached: a /= Void
+		do
+			internal_asserter := a
+		ensure
+			asserter_set: asserter = a
+		end
+
+feature -- Basic operations
+
+	assert (a_tag: STRING; a_condition: BOOLEAN) is
+			-- Assert `a_condition'.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			asserter.assert (a_tag, a_condition)
+		end
+
+feature {NONE} -- Implementation: Access
+
+	internal_asserter: like asserter
+			-- Once per object storage for `asserter'.
 
 end

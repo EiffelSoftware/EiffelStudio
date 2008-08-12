@@ -32,7 +32,7 @@ feature -- Access
 		end
 
 	window: EV_WINDOW
-			-- Window to show errors modal.
+			-- Window to show errors modal. If `Void' it will be shown using the default from ES_PROMPT_PROVIDER.
 
 	properties: PROPERTY_GRID
 			-- Grid where properties get added.

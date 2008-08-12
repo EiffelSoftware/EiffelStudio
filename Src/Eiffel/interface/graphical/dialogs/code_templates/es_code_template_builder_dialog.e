@@ -370,13 +370,16 @@ feature {NONE} -- Action handlers
 			l_declaration_fields := declaration_text_fields
 			if not l_declaration_fields.is_empty then
 				l_declarations := code_template.definition.declarations.items.new_cursor
-				from l_declarations.start until l_declarations.after or l_focus_set loop
+				from l_declarations.start until l_declarations.after loop
 					if l_declaration_fields.has (l_declarations.item.id) then
 						l_declaration_fields.item (l_declarations.item.id).set_focus
 						l_focus_set := True
+						l_declarations.go_after
+					else
+						l_declarations.forth
 					end
-					l_declarations.forth
 				end
+				check gobo_cursor_cleaned_up: l_declarations.off end
 			end
 			if not l_focus_set then
 					-- No applicable declaration fields, set to the view

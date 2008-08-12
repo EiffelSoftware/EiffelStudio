@@ -41,18 +41,18 @@ feature -- AST visiting
 			s: STRING_AS
 		do
 			safe_process (l_as.internal_top_indexes)
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.deferred_keyword)
-			safe_process (l_as.expanded_keyword)
-			safe_process (l_as.separate_keyword)
-			safe_process (l_as.external_keyword)
-			safe_process (l_as.class_keyword)
+			safe_process (l_as.frozen_keyword (match_list))
+			safe_process (l_as.deferred_keyword (match_list))
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.external_keyword (match_list))
+			safe_process (l_as.class_keyword (match_list))
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
-			safe_process (l_as.alias_keyword)
+			safe_process (l_as.alias_keyword (match_list))
 			s ?= l_as.external_class_name
 			safe_process (s)
-			safe_process (l_as.obsolete_keyword)
+			safe_process (l_as.obsolete_keyword (match_list))
 			safe_process (l_as.obsolete_message)
 			safe_process (l_as.internal_conforming_parents)
 			safe_process (l_as.internal_non_conforming_parents)
@@ -93,11 +93,11 @@ feature -- AST visiting
 				safe_process (l_as.internal_redefining)
 			end
 			safe_process (l_as.internal_selecting)
-			if l_has_redefine and then l_as.end_keyword = Void then
+			if l_has_redefine and then l_as.end_keyword (match_list) = Void then
 				context.add_string ("%T%Tend")
 				process_following_breaks
 			else
-				safe_process (l_as.end_keyword)
+				safe_process (l_as.end_keyword (match_list))
 			end
 		end
 

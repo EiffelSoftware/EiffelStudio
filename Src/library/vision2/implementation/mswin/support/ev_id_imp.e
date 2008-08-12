@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 			-- Generate new ID and assign it to `id'.
 		do
 			id := counter.item
-			counter.set_item (id + 1)
+			counter.put (id + 1)
 		end
 
 feature -- Access
@@ -24,11 +24,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	counter: INTEGER_REF is
+	counter: CELL [INTEGER] is
 			-- Counter to set unique id's to items.
 		once
-			create Result
-			Result.set_item (1)
+			create Result.put (1)
 		end
 
 invariant

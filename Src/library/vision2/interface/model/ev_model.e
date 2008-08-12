@@ -96,7 +96,7 @@ feature -- Access
 			-- Unique id.
 		do
 			if internal_hash_id = 0  then
-				counter.set_item (counter.item + 1)
+				counter.put (counter.item + 1)
 				internal_hash_id := counter.item
 			end
 			Result := internal_hash_id
@@ -913,10 +913,12 @@ feature {NONE} -- Implementation
 	internal_hash_id: INTEGER
 			-- Unique id if not 0
 
-	counter: INTEGER_REF is
+	counter: CELL [INTEGER] is
 			-- Id counter.
 		once
 			create Result
+		ensure
+			counter_not_void: Result /= Void
 		end
 
 	projection_matrix: EV_MODEL_TRANSFORMATION is
@@ -943,11 +945,12 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	draw_id_counter: INTEGER_REF is
+	draw_id_counter: CELL [INTEGER] is
 			-- Last assigned `draw_id'.
 		once
-			create Result
-			Result.set_item (1)
+			create Result.put (1)
+		ensure
+			draw_id_count_not_void: Result /= Void
 		end
 
 	known_draw_ids: HASH_TABLE [INTEGER, STRING] is
@@ -963,7 +966,7 @@ feature {NONE} -- Implementation
 			draw_id := known_draw_ids.found_item
 			if draw_id = 0 then
 				draw_id := draw_id_counter.item
-				draw_id_counter.set_item (draw_id + 1)
+				draw_id_counter.put (draw_id + 1)
 				known_draw_ids.put (draw_id, generator)
 			end
 		end

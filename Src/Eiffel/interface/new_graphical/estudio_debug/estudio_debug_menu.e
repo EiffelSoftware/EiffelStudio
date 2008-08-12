@@ -26,6 +26,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	SHARED_EIFFEL_PROJECT
+		undefine
+			default_create, is_equal, copy
+		end
+
 	EB_SHARED_WINDOW_MANAGER
 		undefine
 			default_create, is_equal, copy
@@ -63,6 +68,12 @@ feature {NONE} -- Initialization
 
 				--| Recompile backups
 			create menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
+			extend (menu_item)
+
+			extend (create {EV_MENU_SEPARATOR})
+
+				--| Force compilation
+			create menu_item.make_with_text_and_action ("Force Class Compilation", agent on_force_compile_class)
 			extend (menu_item)
 
 			extend (create {EV_MENU_SEPARATOR})
@@ -225,6 +236,39 @@ feature {NONE} -- Actions
 			-- Launch tool that enables us to replay precisely a backup.
 		do
 			replay_window.window.raise
+		end
+
+	on_force_compile_class
+			-- Forces the active editor's class to be compiled.
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_editor: EB_SMART_EDITOR
+			l_class_i: CLASS_I
+			l_error: ES_ERROR_PROMPT
+		do
+			if not eiffel_project.is_compiling then
+					-- Do not process this whilst compiling
+				l_window := window_manager.last_focused_development_window
+				if l_window /= Void and then l_window.is_interface_usable then
+					l_editor := l_window.editors_manager.current_editor
+					if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+							-- We have the class stone
+						l_class_i := l_class.class_i
+						if l_class_i /= Void then
+							if l_class_i.is_compiled then
+								create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
+								l_error.show_on_active_window
+							else
+									-- Add the class
+								l_class_i.system.add_unref_class (l_class_i)
+							end
+						end
+					end
+				end
+			else
+				create l_error.make_standard ("Unable to force compilation whilst compiling.")
+				l_error.show_on_active_window
+			end
 		end
 
 	on_save_session_data

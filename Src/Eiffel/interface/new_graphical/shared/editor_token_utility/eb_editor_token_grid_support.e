@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	make_with_grid (a_grid: like grid) is
 			-- Initialize `grid' with `a_grid'.
 		do
-			Precursor {EVS_GRID_PND_SUPPORT}(a_grid)
+			Precursor {EVS_GRID_PND_SUPPORT} (a_grid)
 			a_grid.set_configurable_target_menu_mode
 			a_grid.set_configurable_target_menu_handler (agent context_menu_handler)
 		end
@@ -319,9 +319,6 @@ feature{NONE} -- Implementation
 				l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
 			end
 		end
-
-invariant
-	grid_attached: grid /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

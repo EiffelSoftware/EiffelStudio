@@ -110,9 +110,9 @@ feature {NONE} -- Usage
 			-- Version number of application
 		once
 			create Result.make (5)
-			Result.append_integer ({EIFFEL_ENV}.major_version)
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENV}.minor_version)
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
 	loose_argument_name: STRING = "folder"

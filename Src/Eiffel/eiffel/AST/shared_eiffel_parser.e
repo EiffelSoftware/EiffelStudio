@@ -78,9 +78,9 @@ feature -- Setting
 			-- Assign `v' to `il_parsing' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
-				il_parsing_cell.set_item (v)
+				il_parsing_cell.put (v)
 			else
-				il_parsing_cell.set_item ((create {SHARED_WORKBENCH}).System.il_generation)
+				il_parsing_cell.put ((create {SHARED_WORKBENCH}).System.il_generation)
 			end
 		ensure
 			il_parsing_set:
@@ -89,11 +89,11 @@ feature -- Setting
 
 feature {NONE} -- Usage
 
-	il_parsing_cell: BOOLEAN_REF is
+	il_parsing_cell: CELL [BOOLEAN] is
 			-- Keep state of which parser will be used in
 			-- `Eiffel_parser'.
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			il_parsing_not_void: Result /= Void
 		end

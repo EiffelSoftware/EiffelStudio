@@ -1069,7 +1069,7 @@ feature {NONE} -- Implementation
 						Error_handler.insert_error (vd86)
 					else
 						system.set_il_generation (l_b)
-						il_parsing_cell.set_item (l_b)
+						il_parsing_cell.put (l_b)
 					end
 				else
 					create vd15

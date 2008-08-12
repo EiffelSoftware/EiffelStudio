@@ -257,6 +257,7 @@ feature -- Access
 								lst_curs.forth
 								r := r + grid.row (r).subrow_count_recursive + 1
 							end
+							lst_curs.go_after
 						end
 						if positioning_enabled and then last_row_set_as_first_visible_row /= Void then
 							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (last_row_set_as_first_visible_row))
@@ -571,6 +572,7 @@ feature {NONE} -- Implementation
 									lst_curs.forth
 									r := r + 1
 								end
+								lst_curs.go_after
 							else
 								debug ("es_grid_layout")
 									print ("%N")

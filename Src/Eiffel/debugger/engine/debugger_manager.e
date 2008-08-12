@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			create implementation.make (Current)
 			create controller.make (Current)
 			create observer_provider.make;
-			observer_provider.attach_to_debugger (Current)
 
 			create application_quit_actions
 			create application_prelaunching_actions
@@ -44,8 +43,9 @@ feature {NONE} -- Initialization
 			create profiles.make (10)
 			create breakpoints_manager.make (Void)
 
-			breakpoints_manager.add_observer (Current)
 			initialize_storage
+			observer_provider.attach_to_debugger (Current)
+			breakpoints_manager.add_observer (Current)
 		end
 
 	is_initialized: BOOLEAN

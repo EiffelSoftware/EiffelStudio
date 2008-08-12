@@ -2176,12 +2176,34 @@ Choice: Integer_constant
 
 	;
 
-Loop: TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
+Loop:
+	TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound TE_END
 			{
+				if $3 /= Void then
+					$$ := ast_factory.new_loop_as ($2, $3.second, Void, $5, $7, $8, $1, $3.first, $4, $6)
+				else
+					$$ := ast_factory.new_loop_as ($2, Void, Void, $5, $7, $8, $1, Void, $4, $6)
+				end
+			}
+	| TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
+			{
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
+						once "Loop variant should appear just before the end keyword of the loop."))
+				end
 				if $3 /= Void then
 					$$ := ast_factory.new_loop_as ($2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7)
 				else
 					$$ := ast_factory.new_loop_as ($2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
+				end
+			}
+	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant TE_END
+			{
+				if $3 /= Void then
+					$$ := ast_factory.new_loop_as ($2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6)
+				else
+					$$ := ast_factory.new_loop_as ($2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
 			}
 	;
@@ -2205,9 +2227,9 @@ Class_invariant: -- Empty
 			}
 	;
 
-Variant: -- Empty
-			-- { $$ := Void }
-	|	TE_VARIANT Identifier_as_lower TE_COLON Expression
+
+Variant:
+		TE_VARIANT Identifier_as_lower TE_COLON Expression
 			{ $$ := ast_factory.new_variant_as ($2, $4, $1, $3) }
 	|	TE_VARIANT Expression
 			{ $$ := ast_factory.new_variant_as (Void, $2, $1, Void) }

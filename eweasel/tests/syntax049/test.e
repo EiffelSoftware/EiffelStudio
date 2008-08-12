@@ -15,7 +15,7 @@ feature {NONE} -- Creation
 			until
 				i > 1
 			loop
-				io.put_string ("TEST 1: OK")
+				io.put_string ("Test 1: OK")
 				io.put_new_line
 				i := i + 1
 			end
@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 			until
 				i > 1
 			loop
-				io.put_string ("TEST 2: OK")
+				io.put_string ("Test 2: OK")
 				io.put_new_line
 				i := i + 1
 			end
@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 			until
 				i > 1
 			loop
-				io.put_string ("TEST 3: OK")
+				io.put_string ("Test 3: OK")
 				io.put_new_line
 				i := i + 1
 			variant

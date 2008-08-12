@@ -22,6 +22,8 @@ inherit
 			copy,
 			is_equal,
 			default_create
+		redefine
+			internal_detach_entities
 		end
 
 create
@@ -110,13 +112,26 @@ feature{NONE} -- Recycle
 			-- To be called when the button has became useless.
 		do
 			synchronizer.wipe_out_hosts
+			select_actions.wipe_out
+			pointer_button_press_actions.wipe_out
+		end
+
+	internal_detach_entities is
+			-- <Precursor>
+		do
+			pointer_button_press_actions := Void
+			preference := Void
+			button_status_change_agent := Void
+			preference_status_change_agent := Void
+			synchronizer := Void
+			Precursor
 		end
 
 invariant
-	preference_attached: preference /= Void
-	synchronizer_attached: synchronizer /= Void
-	button_status_change_agent_attached: button_status_change_agent /= Void
-	preference_status_change_agent_attached: preference_status_change_agent /= Void
+	preference_attached: is_interface_usable implies preference /= Void
+	synchronizer_attached: is_interface_usable implies synchronizer /= Void
+	button_status_change_agent_attached: is_interface_usable implies button_status_change_agent /= Void
+	preference_status_change_agent_attached: is_interface_usable implies preference_status_change_agent /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

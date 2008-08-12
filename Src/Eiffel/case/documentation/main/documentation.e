@@ -162,7 +162,6 @@ feature -- Actions
 					end
 
 					if filter.is_html and then cluster_diagram_generated then
-						l_groups_cursor := groups.new_cursor
 						from
 							l_groups_cursor.start
 						until
@@ -179,7 +178,6 @@ feature -- Actions
 					if any_class_format_generated then
 						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
 						l_context_group := filter.context_group
-						l_groups_cursor := groups.new_cursor
 						from
 							l_groups_cursor.start
 						until

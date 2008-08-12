@@ -506,7 +506,7 @@ feature -- Status setting
 			valid_capture_type: a_capture_type = Capture_normal or
 								a_capture_type = Capture_heavy
 		do
-			internal_capture_type.set_item(a_capture_type)
+			internal_capture_type.put (a_capture_type)
 		ensure
 			valid_capture: capture_type = Capture_normal or
 						   capture_type = Capture_heavy
@@ -687,11 +687,13 @@ feature {NONE} -- Implementation
 			f10_accelerator_table_not_void: Result /= Void
 		end
 
-	internal_capture_type: INTEGER_REF is
+	internal_capture_type: CELL [INTEGER] is
 			-- System wide once, in order to always get the
 			-- same value.
 		once
-			Create Result
+			create Result
+		ensure
+			internal_capture_type_not_void: Result /= Void
 		end
 
 	process_handle: POINTER

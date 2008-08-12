@@ -1507,7 +1507,7 @@ feature {NONE} -- Constants
 
 invariant
 	debugger_manager_not_void: debugger_manager /= Void
-	objects_grids_not_void: is_initialized and then is_interface_usable implies objects_grids /= Void
+	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

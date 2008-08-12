@@ -61,6 +61,7 @@ int main (void)
 		if (setjmp(exenv))
 			failure();
 	
+		eif_retrieve_root (&argc, argv);
 		eif_rtinit(argc, argv, envp);
 		if (egc_prof_enabled) initprf();
 		egc_rcdt_init();

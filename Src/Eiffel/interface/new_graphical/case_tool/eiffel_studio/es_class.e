@@ -412,7 +412,11 @@ feature -- Element change
 					-- should never happen (see above)
 					set_name (class_i.name)
 				end
-				set_is_root_class (class_i.name.is_equal (system.root_type_name))
+				set_is_root_class(system.root_creators.there_exists (
+					agent (a_root: SYSTEM_ROOT): BOOLEAN
+						do
+							Result := a_root.root_class.name.is_equal (class_i.name)
+						end))
 				c := class_c
 				if c /= Void then
 					if c.has_ast then

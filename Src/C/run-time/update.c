@@ -440,21 +440,46 @@ rt_public void update(char ignore_updt, char *argv0)
 rt_private void root_class_updt (void)
 {
 	EIF_GET_CONTEXT
+	int32 l_rcount, l_strcount;
 	EIF_REFERENCE l_obj;
 	unsigned char *old_IC = IC;
 	/* Update the root class info */
 
-	egc_rcorigin = wint32();
+	l_rcount = wint32();
+	if (l_rcount > egc_rcount) {
+		free (egc_rlist);
+		free (egc_rcorigin);
+		free (egc_rcdt);
+		free (egc_rcoffset);
+		free (egc_rcarg);
+		SAFE_ALLOC (egc_rlist, char*, l_rcount);
+		SAFE_ALLOC (egc_rcorigin, int32, l_rcount);
+		SAFE_ALLOC (egc_rcdt, int32, l_rcount);
+		SAFE_ALLOC (egc_rcoffset, int32, l_rcount);
+		SAFE_ALLOC (egc_rcarg, int32, l_rcount);
+	}
+	egc_rcount = l_rcount;
+	for (int32 i = 0; i < egc_rcount; i++) {
 
-		/* Create an instance of ANY, to give us a context. */
-	l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
-		/* compute the full dynamic type for `root_obj'. */
-	IC = (unsigned char *) wtype_array(NULL);
-	egc_rcdt = get_compound_id (l_obj, get_int16(&IC));
-	IC = old_IC;
+			/* Read root class/feature name */
+		l_strcount = wint32();
+		SAFE_ALLOC(egc_rlist[i], char, l_strcount + 1);
+		wread(egc_rlist[i], l_strcount * sizeof(char));
+		egc_rlist[i][l_strcount] = '\0';
 
-	egc_rcoffset = wint32();
-	egc_rcarg = wint32();
+		egc_rcorigin[i] = wint32();
+
+			/* Create an instance of ANY, to give us a context. */
+		l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
+			/* compute the full dynamic type for `root_obj'. */
+		IC = (unsigned char *) wtype_array(NULL);
+		egc_rcdt[i] = get_compound_id (l_obj, get_int16(&IC));
+		IC = old_IC;
+
+		egc_rcoffset[i] = wint32();
+		egc_rcarg[i] = wint32();
+
+	}
 
 #ifdef DEBUG
 	dprintf(1)("Root class info:\n\tegc_rcorigin = %ld, egc_rcdt = %ld\n", egc_rcorigin, egc_rcdt);

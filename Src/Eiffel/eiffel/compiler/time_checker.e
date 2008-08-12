@@ -16,7 +16,11 @@ feature
 	time_check is
 			-- Check time stamps of compiled classes of the system
 		require
-			System.root_type.associated_class /= Void
+			system.root_creators.for_all (
+				agent (a_root: SYSTEM_ROOT): BOOLEAN
+					do
+						Result := a_root.class_type.associated_class /= Void
+					end)
 		do
 			if System.any_class.compiled_class.parents /= Void then
 				check_suppliers_of_unchanged_classes;

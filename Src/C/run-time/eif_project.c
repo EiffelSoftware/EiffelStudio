@@ -386,10 +386,14 @@ rt_public long *egc_fsize;
 	rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #endif
 
-rt_public int32 egc_rcdt;				/* E1/einit.c */
-rt_public int32 egc_rcorigin;			/* E1/einit.c */
-rt_public int32 egc_rcoffset;			/* E1/einit.c */
-rt_public int32 egc_rcarg;				/* E1/einit.c */
+rt_public int32 egc_rcount;
+rt_public int32 egc_ridx;
+rt_public char  **egc_rlist;
+rt_public int32 *egc_rcdt;				/* E1/einit.c */
+rt_public int32 *egc_rcorigin;			/* E1/einit.c */
+rt_public int32 *egc_rcoffset;			/* E1/einit.c */
+rt_public int32 *egc_rcarg;				/* E1/einit.c */
+
 
 rt_public char *egc_system_name;
 		/* Used in `misc.c' for storing and retrieving of Windows registry keys.

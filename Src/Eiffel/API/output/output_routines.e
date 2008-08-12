@@ -24,6 +24,9 @@ feature -- Miscellaneous
 			root_cluster: CONF_GROUP
 			root_class: CLASS_I
 			cr_f: E_FEATURE
+			l_creators: LIST [SYSTEM_ROOT]
+			l_root: SYSTEM_ROOT
+			cs: CURSOR
 		do
 			text.process_keyword_text ("System", Void)
 			text.add_new_line
@@ -54,10 +57,21 @@ feature -- Miscellaneous
 			text.add_new_line
 
 			if Eiffel_system.workbench.is_already_compiled then
-				root_class := Eiffel_system.root_class
-				root_cluster := Eiffel_system.root_cluster
-				text.set_context_group (root_cluster)
-				if root_class /= Void then
+				from
+					l_creators := eiffel_system.system.root_creators
+					cs := l_creators.cursor
+					l_creators.start
+				until
+					l_creators.after
+				loop
+					l_root := l_creators.item_for_iteration
+
+
+					root_class := l_root.root_class
+					root_cluster := l_root.cluster
+					text.set_context_group (root_cluster)
+
+
 					text.process_keyword_text ("Root class", Void)
 					text.add_new_line
 					text.add_indent
@@ -70,7 +84,7 @@ feature -- Miscellaneous
 						text.process_symbol_text (ti_R_parenthesis)
 					end
 
-					creation_name := Eiffel_system.system.root_creation_name
+					creation_name := l_root.procedure_name
 					if root_class.compiled_class /= Void and creation_name /= Void then
 						if root_class.compiled_class.has_feature_table then
 							cr_f := root_class.compiled_class.feature_with_name (creation_name)
@@ -91,7 +105,10 @@ feature -- Miscellaneous
 					end
 					text.add_new_line
 					text.add_new_line
+
+					l_creators.forth
 				end
+				l_creators.go_to (cs)
 			else
 				text.add_comment ("System is not yet compiled.")
 				text.add_new_line

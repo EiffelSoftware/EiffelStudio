@@ -149,15 +149,21 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
 			file_rename: ERF_CLASS_FILE_RENAME
+			l_root: SYSTEM_ROOT
         do
-        		-- if the renamed class was the root class
-        	if system.root_class.name.is_equal (preferences.new_class_name) then
-	        	create project_modifier
-				project_modifier.prepare
-				project_modifier.change_root_class (preferences.new_class_name.as_upper)
-				project_modifier.commit
-	        	current_actions.extend (project_modifier)
-	        end
+        		-- Change root class if renamed class is on of the current root classes
+        		--
+        		-- Note: this code must be updated to support multiple root features
+        	if not system.root_creators.is_empty then
+        		l_root := system.root_creators.first
+        		if l_root.root_class.name.is_equal (preferences.new_class_name) then
+        			create project_modifier
+					project_modifier.prepare
+					project_modifier.change_root_class (preferences.new_class_name.as_upper)
+					project_modifier.commit
+		        	current_actions.extend (project_modifier)
+        		end
+        	end
 
 	        	-- TODO handle other cases where the class was in the project file
 	        to_implement ("TODO handle other cases where the class was in the project file")

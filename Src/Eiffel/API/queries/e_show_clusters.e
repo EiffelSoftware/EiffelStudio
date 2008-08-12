@@ -33,11 +33,25 @@ feature -- Execution
 
 	work is
 			-- Show clusters in universe.
+		local
+			l_creators: LIST [SYSTEM_ROOT]
+			cs: CURSOR
 		do
 			text_formatter.add (output_interface_names.root_class)
 			text_formatter.add (output_interface_names.colon)
 			text_formatter.add_space
-			Eiffel_system.root_class.compiled_class.append_signature (text_formatter, True)
+			from
+				l_creators := eiffel_system.system.root_creators
+				cs := l_creators.cursor
+				l_creators.start
+			until
+				l_creators.after
+			loop
+				l_creators.item_for_iteration.root_class.compiled_class.append_signature (text_formatter, True)
+				text_formatter.add_new_line
+				l_creators.forth
+			end
+			l_creators.go_to (cs)
 			text_formatter.add_new_line
 			text_formatter.add_new_line
 			Precursor

@@ -192,11 +192,13 @@ extern "C" {
 	RT_LNK EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
 	RT_LNK EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #endif
-
-	RT_LNK int32 egc_rcdt;				/* E1/einit.c */
-	RT_LNK int32 egc_rcorigin;			/* E1/einit.c */
-	RT_LNK int32 egc_rcoffset;			/* E1/einit.c */
-	RT_LNK int32 egc_rcarg;				/* E1/einit.c */
+	RT_LNK int32 egc_rcount;			/* Number of root creation procedures */
+	RT_LNK char  **egc_rlist;			/* List of root procedures ("class name"."feature name") */
+	RT_LNK int32 egc_ridx;				/* Index of root creation procedure */
+	RT_LNK int32 *egc_rcdt;				/* E1/einit.c */
+	RT_LNK int32 *egc_rcorigin;			/* E1/einit.c */
+	RT_LNK int32 *egc_rcoffset;			/* E1/einit.c */
+	RT_LNK int32 *egc_rcarg;			/* E1/einit.c */
 
 	RT_LNK char *egc_system_name;		/* Name of the generated system */
 	RT_LNK char *egc_system_location;	/* Location of the generated system */

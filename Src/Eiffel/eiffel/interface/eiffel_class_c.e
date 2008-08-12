@@ -1116,7 +1116,7 @@ feature -- Third pass: byte code production and type check
 			else
 				class_custom_attributes := Void
 			end
-			if System.root_type /= Void and then System.root_type.associated_class = Current then
+			if system.is_compiled_root_class (Current) then
 					-- We are processing the root class, let's figure out if there are some
 					-- assembly custom attributes.
 				if l_ast.assembly_custom_attributes /= Void then

@@ -505,22 +505,25 @@ feature -- Update
 		local
 			st: STONE
 			l_text_area: EB_SMART_EDITOR
+			l_system: SYSTEM_I
+			l_root: SYSTEM_ROOT
 		do
 			during_synchronization := True
-
+			l_system := eiffel_system.system
 			if
 				stone = Void and then
 				eiffel_project.system_defined and then
 				eiffel_project.initialized and then
 				eiffel_system.workbench.is_already_compiled and then
 				eiffel_system.workbench.last_reached_degree <= 5 and then
-				eiffel_system.root_cluster /= Void and then
-				eiffel_system.root_class /= Void
+				not l_system.root_creators.is_empty
 			then
-				if eiffel_system.root_class.is_compiled then
-					stone := create {CLASSC_STONE}.make (eiffel_system.system.root_class.compiled_class)
+					-- Note: this code must be updated to support multiple root features
+				l_root := l_system.root_creators.first
+				if l_root.root_class.is_compiled then
+					stone := create {CLASSC_STONE}.make (l_root.root_class.compiled_class)
 				else
-					stone := create {CLASSI_STONE}.make (eiffel_system.system.root_class)
+					stone := create {CLASSI_STONE}.make (l_root.root_class)
 				end
 				if
 					eiffel_system.universe.target.clusters.count = 1

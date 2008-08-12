@@ -71,9 +71,11 @@ feature -- Visit
 						cache.put (l_action, l_dynamic_type)
 						l_action.call (l_args)
 						done := True
+						l_cursor.go_before
 					end
 					l_cursor.back
 				end
+				check gobo_cursor_cleaned_up: l_cursor.off end
 				if not done then
 					cache.put (catch_all_agent, l_dynamic_type)
 					catch_all_agent.call (l_args)

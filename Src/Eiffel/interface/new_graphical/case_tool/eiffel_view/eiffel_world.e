@@ -1002,6 +1002,7 @@ feature {NONE} -- Implementation
 					end
 					a_cursor.forth
 				end
+				a_cursor.go_after
 			end
 		end
 

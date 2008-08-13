@@ -1,0 +1,20 @@
+This is the location of the template license files.
+
+License files are located at $ISE_EIFFEL/studio/templates/licenses/*.tpl, and user license
+files at $ISE_USER_FILES/studio/templates/licenses/*.tpl. The * represents the license name.
+
+License files must contain the indexing/note clause text and nothing more. They will be validated
+using a parse and invalid licenses will not be merged into the associated class. Check the logger
+tool for failed merged or other errors related to the loading on license template files.
+
+The license name is extracted using the following methods, in order of priority:
+  - From the source text under an indexing term 'licence_id'.
+        note
+            licence_id: "my_license"
+  - From the class' configuration target variables, using 'license_id' or 'LICENSE_ID'
+  - Or the default 'default', when the above are not found.
+
+In the case of a license_id resulting in the license name 'my_license' the following
+will be attempted to be loaded, in order or priority:		
+  - $ISE_USER_FILES/studio/templates/licenses/my_license.tpl
+  - $ISE_EIFFEL/studio/templates/licenses/my_license.tpl

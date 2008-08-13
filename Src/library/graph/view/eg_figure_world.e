@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 				if not ev_application.ctrl_pressed and then not selected_figures.has (figure) then
 					deselect_all
 				end
-				if not figure_was_selected and then button = 1 then --and then ev_application.ctrl_pressed then
+				if not figure_was_selected and then button = 1 then --and then not ev_application.ctrl_pressed then
 					if figure.is_selected and then ev_application.ctrl_pressed then
 						selected_figures.prune_all (figure)
 						set_figure_selection_state (figure, False)
@@ -1060,11 +1060,14 @@ feature {NONE} -- Implementation
 				extend (multi_select_rectangle)
 				is_multiselection_mode := True
 				selected_figure := multi_select_rectangle
-				deselect_all
 				enable_capture
 			elseif button = 1 and then selected_figure /= Void then
 				is_figure_moved := True
 				figure_change_start_actions.call (Void)
+			else
+					-- If there is a selection and we click in a blank area
+					-- then deselect all figures.
+				deselect_all
 			end
 			figure_was_selected := False
 		end
@@ -1077,7 +1080,9 @@ feature {NONE} -- Implementation
 			if is_multiselection_mode then
 				multi_select_rectangle.set_point_b_position (ax, ay)
 				l_bbox := multi_select_rectangle.bounding_box
-				deselect_all
+				if not ev_application.ctrl_pressed then
+					deselect_all
+				end
 				from
 					nodes.start
 				until

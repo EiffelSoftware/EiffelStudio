@@ -34,7 +34,11 @@ feature -- Properties
 	set_text (a_text: STRING_GENERAL) is
 			-- Set `text', can set Void text.
 		do
-			text := a_text
+			if a_text /= Void then
+				text := a_text
+			else
+				text := Void
+			end
 			if tool_bar /= Void then
 				tool_bar.update_size
 			end
@@ -48,7 +52,11 @@ feature -- Properties
 	set_tooltip (a_tip: STRING_GENERAL) is
 			-- Set `a_tooltip' with `a_tip'
 		do
-			tooltip := a_tip
+			if a_tip /= Void then
+				tooltip := a_tip
+			else
+				tooltip := Void
+			end
 		ensure
 			set: a_tip /= Void implies tooltip.is_equal (a_tip.as_string_32)
 		end

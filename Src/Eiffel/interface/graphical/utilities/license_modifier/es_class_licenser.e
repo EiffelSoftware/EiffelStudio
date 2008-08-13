@@ -97,6 +97,16 @@ feature -- Basic operatons
 							{PRIORITY_LEVELS}.high)
 					end
 				end
+			else
+					-- The class contains sytax errors
+				if logger.is_service_available then
+						-- Log error.
+					logger.service.put_message_format_with_severity (
+						"Unable to apply license because class {1} contains syntax errors.",
+						[a_class.name],
+						{ENVIRONMENT_CATEGORIES}.editor,
+						{PRIORITY_LEVELS}.high)
+				end
 			end
 		end
 

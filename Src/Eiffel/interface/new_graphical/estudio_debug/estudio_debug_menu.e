@@ -50,30 +50,27 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (compiler_version_number.version)
 
-				--| Memory tool
-			create menu_item.make_with_text_and_action ("Memory Analyzer", agent on_launch_memory_analyzer)
-			extend (menu_item)
+				--| Tools
+			create menu.make_with_text ("Tools")
+			extend (menu)
+			build_tools_sub_menu (menu)
 
-				--| Show memory tool
-			create menu_item.make_with_text_and_action ("Show Memory Tool", agent on_show_memory_tool)
-			extend (menu_item)
-
-				--| Show logger tool
-			create menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
-			extend (menu_item)
-
-				--| UUID Generator
-			create menu_item.make_with_text_and_action ("UUID Generator", agent on_generate_uuid)
-			extend (menu_item)
-
-				--| Recompile backups
-			create menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
-			extend (menu_item)
+				--| Services
+			create menu.make_with_text ("Services")
+			extend (menu)
+			build_services_sub_menu (menu)
 
 			extend (create {EV_MENU_SEPARATOR})
 
-				--| Force compilation
-			create menu_item.make_with_text_and_action ("Force Class Compilation", agent on_force_compile_class)
+				--| Editor
+			create menu.make_with_text ("Editor")
+			extend (menu)
+			build_editor_sub_menu (menu)
+
+			extend (create {EV_MENU_SEPARATOR})
+
+				--| Recompile backups
+			create menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
 			extend (menu_item)
 
 			extend (create {EV_MENU_SEPARATOR})
@@ -86,12 +83,32 @@ feature {NONE} -- Initialization
 			create menu_item.make_with_text_and_action ("Center Floating Tools", agent on_center_floating_tools)
 			extend (menu_item)
 
-			extend (create {EV_MENU_SEPARATOR})
+		end
 
-				--| Services
-			create menu.make_with_text ("Services")
-			extend (menu)
-			build_services_sub_menu (menu)
+	build_tools_sub_menu (a_menu: !EV_MENU)
+			-- Builds the tools submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_menu_item: !EV_MENU_ITEM
+		do
+				--| UUID Generator
+			create l_menu_item.make_with_text_and_action ("UUID Generator", agent on_generate_uuid)
+			a_menu.extend (l_menu_item)
+
+				--| Memory tool
+			create l_menu_item.make_with_text_and_action ("Memory Analyzer", agent on_launch_memory_analyzer)
+			a_menu.extend (l_menu_item)
+
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+
+				--| Show memory tool
+			create l_menu_item.make_with_text_and_action ("Show Memory Tool", agent on_show_memory_tool)
+			a_menu.extend (l_menu_item)
+
+				--| Show logger tool
+			create l_menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
+			a_menu.extend (l_menu_item)
 		end
 
 	build_services_sub_menu (a_menu: !EV_MENU)
@@ -120,6 +137,22 @@ feature {NONE} -- Initialization
 			if not code_template_catalog.is_service_available then
 				l_menu_item.disable_sensitive
 			end
+		end
+
+	build_editor_sub_menu (a_menu: !EV_MENU)
+			-- Builds the editor submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_menu_item: !EV_MENU_ITEM
+		do
+				--| Set class license
+			create l_menu_item.make_with_text_and_action ("Set Class License", agent on_set_license)
+			a_menu.extend (l_menu_item)
+
+				--| Force compilation
+			create l_menu_item.make_with_text_and_action ("Force Class Compilation", agent on_force_compile_class)
+			a_menu.extend (l_menu_item)
 		end
 
 feature {NONE} -- Access
@@ -163,6 +196,35 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Actions
+
+	on_set_license
+			-- Set license on current class
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_editor: EB_SMART_EDITOR
+			l_class_i: CLASS_I
+			l_modifier: ES_CLASS_LICENSER
+			l_error: ES_ERROR_PROMPT
+		do
+			if not eiffel_project.is_compiling then
+					-- Do not process this whilst compiling
+				l_window := window_manager.last_focused_development_window
+				if l_window /= Void and then l_window.is_interface_usable then
+					l_editor := l_window.editors_manager.current_editor
+					if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+							-- We have the class stone
+						l_class_i := l_class.class_i
+						if l_class_i /= Void then
+							create l_modifier
+							l_modifier.relicense (l_class_i)
+						end
+					end
+				end
+			else
+				create l_error.make_standard ("Unable to force compilation whilst compiling.")
+				l_error.show_on_active_window
+			end
+		end
 
 	on_launch_memory_analyzer is
 			-- Launch Memory Analyzer.

@@ -66,10 +66,10 @@ feature -- Basic operatons
 			if l_mod.is_prepared and then l_mod.is_ast_available then
 					-- Parsed successfully.
 				l_name := l_mod.license_name
-				l_license := load_license (l_name, a_class.options.syntax_level /= {CONF_OPTION}.syntax_level_standard)
+				l_license := load_license (l_name, a_class.options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
 				if l_license /= Void then
 					if not l_license.is_empty then
-						if l_mod.vis_valid_license (l_license) then
+						if l_mod.is_valid_license (l_license) then
 							l_mod.set_license (l_license)
 							if l_mod.is_dirty then
 								l_mod.commit

@@ -142,7 +142,6 @@ feature -- Element change
 			not_a_name_is_empty: a_name /= Void implies not a_name.is_empty
 		local
 			l_ast: ?AST_EIFFEL
-			l_index_ast: INDEX_AS
 		do
 			if a_name = Void then
 					-- Remove the license id
@@ -240,11 +239,13 @@ feature {NONE} -- Query
 
 feature -- Status report
 
-	is_valid_license (a_license: !STRING_32): BOOLEAN
+	is_valid_license (a_license: ?STRING_GENERAL): BOOLEAN
 			-- Detemines if a license text is valid for the current modifier.
 			--
 			-- `a_license': The license to validate.
 			-- `Result': True if the license if valid; False otherwise.
+		require
+			a_license_attached: a_license /= Void
 		do
 			Result := a_license.is_empty or else is_parse_valid_license (a_license)
 		ensure
@@ -253,12 +254,13 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_parse_valid_license (a_license: !STRING_32): BOOLEAN
+	is_parse_valid_license (a_license: ?STRING_GENERAL): BOOLEAN
 			-- Detemines if a license text is Eiffel parser valid.
 			--
 			-- `a_license': The license to validate.
 			-- `Result': True if the license if valid; False otherwise.
 		require
+			a_license_attached: a_license /= Void
 			not_a_license_is_empty: not a_license.is_empty
 		local
 			l_syn_level: NATURAL_8

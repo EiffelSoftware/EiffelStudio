@@ -66,12 +66,15 @@ feature -- Command
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
 			l_parameters: POINTER
+			l_encoder_info: WEL_GDIP_IMAGE_CODEC_INFO
 		do
 			create l_wel_string.make (a_file_name)
 			if a_parameters /= Void then
 				l_parameters := a_parameters.item.item
 			end
-			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, a_format.guid.item, l_parameters, $l_result)
+			l_encoder_info := a_format.find_encoder
+			check not_void: l_encoder_info /= Void end
+			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, l_encoder_info.cls_id.item, l_parameters, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 

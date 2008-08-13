@@ -66,7 +66,7 @@ feature -- Basic operatons
 			if l_mod.is_prepared and then l_mod.is_ast_available then
 					-- Parsed successfully.
 				l_name := l_mod.license_name
-				l_license := load_license (l_name, a_class.options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
+				l_license := load_license (l_name, a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete)
 				if l_license /= Void then
 					if not l_license.is_empty then
 						if l_mod.is_valid_license (l_license) then
@@ -142,6 +142,8 @@ feature {NONE} -- Basic operation
 
 							-- Render template
 						Result := wizard_enginer.service.render_template_from_file (l_fn.string, l_parameters)
+						Result.right_adjust
+						Result.left_adjust
 						if Result.is_empty then
 								-- Wipe out, because empty licenses are not valid.
 							Result := Void

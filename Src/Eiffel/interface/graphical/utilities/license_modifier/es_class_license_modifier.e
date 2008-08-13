@@ -126,7 +126,7 @@ feature {NONE} -- Access
 			l_ast: ?like ast
 		do
 			l_ast := ast
-			Result := l_ast.bottom_indexes
+			Result := l_ast.internal_bottom_indexes
 		end
 
 feature -- Element change

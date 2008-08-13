@@ -42,21 +42,15 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 			a_win, l_null: POINTER
 		do
-			if not a_text.is_empty then
-				a_cs := app_implementation.c_string_from_eiffel_string (a_text)
-				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
-					tooltips_pointer,
-					visual_widget,
-					a_cs.item,
-					l_null
-				)
-			else
-				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
-					tooltips_pointer,
-					visual_widget,
-					l_null,
-					l_null
-				)
+			a_cs := app_implementation.c_string_from_eiffel_string (a_text)
+			{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
+				tooltips_pointer,
+				visual_widget,
+				a_cs.item,
+				l_null
+			)
+			if a_text.is_empty then
+					-- Hide the existing tooltip window.
 				a_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 				if a_win /= default_pointer then
 					{EV_GTK_EXTERNALS}.gtk_widget_hide (a_win)

@@ -54,7 +54,11 @@ feature
 
 	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 		do
-			process_class_type_as (l_as)
+			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
+				l_as.class_name.replace_text (new_class_name, match_list)
+				has_modified := True
+			end
+			Precursor (l_as)
 		end
 
 	process_class_as (l_as: CLASS_AS) is

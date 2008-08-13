@@ -21,6 +21,7 @@ create
 	make
 
 feature -- Access
+o: ES_CLASS_LICENSE_MODIFIER
 
 	ast: ?CLASS_AS
 			-- Resulting class AST node.
@@ -63,7 +64,7 @@ feature -- Status report
 
 feature -- Query
 
-	ast_position (a_ast: ?AST_EIFFEL): TUPLE [start_position: INTEGER; end_position: INTEGER]
+	ast_position (a_ast: ?AST_EIFFEL): !TUPLE [start_position: INTEGER; end_position: INTEGER]
 			-- Retrieve an AST node's position.
 			-- Note: The result is unadjusted! To account for ajustement, pass through `modified_data.adjusted_position'.
 			--
@@ -89,7 +90,6 @@ feature -- Query
 				Result := [0, 0]
 			end
 		ensure
-			result_attached: Result /= Void
 			result_start_position_small_enough: Result.start_position <= Result.end_position
 		end
 
@@ -165,13 +165,13 @@ feature -- Basic operations
 
 feature -- Operation constants
 
-	remove_white_space_nothing: INTEGER = unique
+	remove_white_space_none: INTEGER = 0
 			-- Remove neither heading nor trailing white spaces.
 
-	remove_white_space_heading: INTEGER = unique
+	remove_white_space_heading: INTEGER = 1
 			-- Remove heading white spaces until the closest leading '%N' (including '%N').
 
-	remove_white_space_trailing: INTEGER = unique
+	remove_white_space_trailing: INTEGER = 2
 			-- Remove trailing white spaces until the first trailing '%N' (including '%N').
 
 feature {NONE} -- Factory

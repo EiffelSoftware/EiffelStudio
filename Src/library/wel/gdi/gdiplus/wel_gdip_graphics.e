@@ -152,6 +152,17 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 	 	end
 
+	clear (a_color: WEL_GDIP_COLOR)
+			-- Clears the entire drawing surface and fills it with `a_color'
+		require
+			not_void: a_color /= Void
+		local
+			l_result: INTEGER
+		do
+			c_gdip_clear (gdi_plus_handle, item, a_color.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 feature -- Query
 
 	dc: WEL_MEMORY_DC  is
@@ -438,6 +449,31 @@ feature {NONE} -- C externals
 								((GpGraphics *) $a_graphics,
 								(REAL) $a_angle,
 								(GpMatrixOrder) $a_order);
+				}
+			}
+			]"
+		end
+
+	c_gdip_clear (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Clears the entire drawing surface and fills it with `a_color'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipGraphicsClear = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipGraphicsClear) {
+					GdipGraphicsClear = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGraphicsClear");
+				}
+				if (GdipGraphicsClear) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, ARGB)) GdipGraphicsClear)
+								((GpGraphics *) $a_graphics,
+								(ARGB) $a_color);
 				}
 			}
 			]"

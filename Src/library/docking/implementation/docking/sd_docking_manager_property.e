@@ -34,6 +34,8 @@ feature -- Properties
 
 	set_last_focus_content (a_content: SD_CONTENT) is
 			-- Set `last_focus_content'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			last_focus_content := a_content
 			if a_content /= Void then
@@ -45,6 +47,8 @@ feature -- Properties
 
 	contents_by_click_order: ARRAYED_LIST [SD_CONTENT] is
 			-- All contents by user click order.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_current_list, l_orignal_list: ARRAYED_LIST [SD_CONTENT]
 			l_order_list: like internal_clicked_list
@@ -83,6 +87,8 @@ feature -- Properties
 	main_area_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Main area (editor area) drop acitons.
 			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := internal_docking_manager.zones.place_holder_widget.drop_actions
 		ensure
@@ -98,6 +104,8 @@ feature -- Properties
 
 	set_docker_mediator (a_mediator: SD_DOCKER_MEDIATOR) is
 			-- Set `docker_mediator' with `a_mediator'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			docker_mediator := a_mediator
 		ensure
@@ -106,6 +114,8 @@ feature -- Properties
 
 	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]] is
 			-- SD_TOOL_BAR_RESIABLE_ITEM data.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_item: SD_TOOL_BAR_RESIZABLE_ITEM
@@ -140,6 +150,8 @@ feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 
 	set_is_opening_config (a_bool: BOOLEAN) is
 			-- Set `is_opening_config' to `a_bool'
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_opening_config := a_bool
 		ensure
@@ -150,9 +162,14 @@ feature -- Contract support
 
 	has (a_content: SD_CONTENT): BOOLEAN is
 			-- Dose docking manager has a_content?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := internal_docking_manager.contents.has (a_content)
 		end
+
+	is_destroyed: BOOLEAN
+			-- If Current destroyed?
 
 feature {NONE}  -- Implementation
 
@@ -181,10 +198,16 @@ feature -- Command
 		do
 			main_area_drop_actions.wipe_out
 			internal_docking_manager := Void
+
+			is_destroyed := True
+		ensure
+			destroyed: is_destroyed
 		end
 
 	remove_from_clicked_list (a_content: SD_CONTENT) is
 			-- Remove `a_content' from `internal_clicked_list'
+		require
+			not_destroyed: not is_destroyed
 		do
 			internal_clicked_list.prune_all (a_content)
 		end

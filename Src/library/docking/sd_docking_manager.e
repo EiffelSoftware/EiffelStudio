@@ -144,6 +144,8 @@ feature -- Query
 
 	has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If contents has a_content?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := contents.has (a_content)
 		end
@@ -154,11 +156,13 @@ feature -- Query
 	tab_drop_actions: SD_PND_ACTION_SEQUENCE
 			-- Drop action when drop on a blank tab area.
 
-	open_actions: ACTION_SEQUENCE [ TUPLE [ANY]]
+	open_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Open actions when open a config.
 
 	restore_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- When whole editor area restored automatically for maximized area, actions will be invoked.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := query.restore_whole_editor_area_actions
 		ensure
@@ -167,14 +171,30 @@ feature -- Query
 
 	restore_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- When whole editor area restored automatically for minimized area, actions will be invoked.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := query.restore_whole_editor_area_for_minimized_actions
 		ensure
 			not_void: Result /= Void
 		end
 
+	main_area_drop_action: EV_PND_ACTION_SEQUENCE is
+			-- Main area (editor area) drop acitons.
+			-- This actions will be called if there is no editor zone and end user drop
+			-- a stone to the void editor area.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := property.main_area_drop_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 	focused_content: SD_CONTENT is
 			-- Current focused content. Maybe void.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := property.last_focus_content
 		end
@@ -183,6 +203,7 @@ feature -- Query
 			-- If `a_title' unique in all contents `unique_title's ?
 		require
 			a_title: a_title /= Void
+			not_destroyed: not is_destroyed
 		do
 			Result := query.is_title_unique (a_title)
 		end
@@ -195,6 +216,8 @@ feature -- Query
 
 	is_editor_area_maximized: BOOLEAN is
 			-- If editor area maximized?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := command.orignal_editor_parent /= Void
 			check two_item_exist_at_same_time: Result implies command.orignal_whole_item /= Void end
@@ -202,6 +225,8 @@ feature -- Query
 
 	is_editor_area_minimized: BOOLEAN is
 			-- If editor area minimized?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := command.orignal_whole_item_for_minimized /= Void
 		end
@@ -209,6 +234,8 @@ feature -- Query
 	docker_mediator: SD_DOCKER_MEDIATOR is
 			-- Manager for user dragging events.
 			-- Maybe Void if user is not dragging.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := property.docker_mediator
 		end
@@ -230,12 +257,16 @@ feature -- Query
 			end
 		end
 
+	is_destroyed: BOOLEAN
+			-- If current destroyed?
+
 feature -- Command
 
 	save_config (a_file: STRING_GENERAL) is
 			-- Save current docking config.
 		require
 			a_file_not_void: a_file /= Void
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
@@ -247,6 +278,7 @@ feature -- Command
 			-- Save main window editor config.
 		require
 			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
@@ -258,6 +290,7 @@ feature -- Command
 			-- Save tools config
 		require
 			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
@@ -269,6 +302,7 @@ feature -- Command
 			-- Save tools config
 		require
 			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
@@ -281,6 +315,7 @@ feature -- Command
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -290,6 +325,8 @@ feature -- Command
 
 	open_editors_config (a_file: STRING_GENERAL) is
 			-- Open main window editor config.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -301,6 +338,8 @@ feature -- Command
 			-- Save tools contents config
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
 			-- See bug#14309
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -310,6 +349,8 @@ feature -- Command
 
 	open_maximized_tool_config (a_file: STRING_GENERAL) is
 			-- Open maximized tool config data.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -319,6 +360,8 @@ feature -- Command
 
 	open_tool_bar_item_config (a_file: STRING_GENERAL) is
 			-- Open maximized tool config data.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -330,6 +373,7 @@ feature -- Command
 			-- Set main area (editors' area) background color.
 		require
 			a_color_not_void: a_color /= Void
+			not_destroyed: not is_destroyed
 		do
 			 query.inner_container_main.set_background_color (a_color)
 			 zones.place_holder_widget.set_background_color (a_color)
@@ -337,38 +381,36 @@ feature -- Command
 			set: query.inner_container_main.background_color.is_equal (a_color)
 		end
 
-	main_area_drop_action: EV_PND_ACTION_SEQUENCE is
-			-- Main area (editor area) drop acitons.
-			-- This actions will be called if there is no editor zone and end user drop
-			-- a stone to the void editor area.
-		do
-			Result := property.main_area_drop_actions
-		ensure
-			not_void: Result /= Void
-		end
-
 	update_mini_tool_bar_size (a_content: SD_CONTENT) is
 			-- After mini tool bar widget size changes, update mini tool bar size to best
 			-- fit new size of mini tool bar widget.
 			-- `a_content' can be void if not known.
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.update_mini_tool_bar_size (a_content)
 		end
 
 	propagate_accelerators is
 			-- Proprogate `main_window' accelerators to all floating zones.
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.propagate_accelerators
 		end
 
 	close_editor_place_holder is
 			-- Close editors place holder zone.
+		require
+			not_destroyed: not is_destroyed
 		do
 			zones.place_holder_content.close
 		end
 
 	lock is
 			-- Set `is_locked' to `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_locked := True
 		ensure
@@ -377,6 +419,8 @@ feature -- Command
 
 	unlock is
 			-- Set `is_locked' to `False'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_locked := False
 		ensure
@@ -385,6 +429,8 @@ feature -- Command
 
 	lock_editor is
 			-- Set `is_editor_locked' to `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_editor_locked := True
 		ensure
@@ -393,6 +439,8 @@ feature -- Command
 
 	unlock_editor is
 			-- Set `is_editor_locked' to `False'
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_editor_locked := False
 		ensure
@@ -401,36 +449,48 @@ feature -- Command
 
 	maximize_editor_area is
 			-- Maximize whole editor area
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.maximize_editor_area
 		end
 
 	restore_editor_area is
 			-- Restore whole editor area if the editor area maximized
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.restore_editor_area
 		end
 
 	minimize_editor_area is
 			-- Minimize whole editor area
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.minimize_editor_area
 		end
 
 	restore_editor_area_for_minimized is
 			-- Restore whole editor area if the editor area minimized
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.restore_editor_area_for_minimized
 		end
 
 	minimize_editors is
 			-- Minimize all editors.
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.minimize_editors
 		end
 
 	restore_minimized_editors is
 			-- Restore all minimized editors to normal state.
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.restore_minimized_editors
 		end
@@ -438,6 +498,8 @@ feature -- Command
 	show_displayed_floating_windows_in_idle is
 			-- Show all displayed floating windows again for Solaris CDE.
 			-- This feature fix bug#13645
+		require
+			not_destroyed: not is_destroyed
 		do
 			command.show_displayed_floating_windows_in_idle
 		end
@@ -445,6 +507,8 @@ feature -- Command
 	close_all is
 			-- Close all contents.
 			-- All actions in {SD_CONTENT} will NOT be called.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -526,6 +590,10 @@ feature -- Command
 				end
 				l_notebooks.forth
 			end
+
+			is_destroyed := True
+		ensure
+			destroyed: is_destroyed
 		end
 
 feature -- Contract support

@@ -121,8 +121,8 @@ feature -- Command
 			set_y (a_screen_y)
 		end
 
-	destroy is
-			-- Redefine with fading effect.
+	clear is
+			-- Disappear with fading effect.
 		require
 			exists: exists
 		do

@@ -41,6 +41,8 @@ feature -- Agents
 
 	on_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle drag area pressed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
 				internal_pointer_pressed := True
@@ -58,6 +60,8 @@ feature -- Agents
 
 	on_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle drag area release.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
 				internal_pointer_pressed := False
@@ -73,6 +77,8 @@ feature -- Agents
 
 	on_drag_area_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle drag area motion.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 			l_offset_x, l_offset_y: INTEGER
@@ -120,6 +126,8 @@ feature -- Agents
 
 	on_drag_area_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer double press actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if not zone.is_floating then
 				if zone.drag_area_rectangle.has_x_y (a_x, a_y) then
@@ -132,6 +140,8 @@ feature -- Query
 
 	is_in_drag_area (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- If `a_screen_x' and `a_screen_y' in drag area?
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_in_docking_gripper_area, l_in_floating_tool_bar: BOOLEAN
 		do
@@ -145,18 +155,27 @@ feature -- Query
 			Result := l_in_docking_gripper_area or l_in_floating_tool_bar
 		end
 
+	is_destroyed: BOOLEAN
+			-- If Current destroyed?
+
 feature -- Command
 
 	destroy is
 			-- Clear references
 		do
 			internal_docking_manager := Void
+
+			is_destroyed := True
+		ensure
+			destroyed: is_destroyed
 		end
 
 feature {NONE} -- Implementation functions
 
 	on_cancel is
 			-- Handle user cancel dragging events.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
@@ -175,6 +194,8 @@ feature {NONE} -- Implementation functions
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if internal_docker_mediator /= Void then
 				internal_docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
@@ -185,6 +206,8 @@ feature {NONE} -- Implementation functions
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if internal_docker_mediator /= Void and a_button = {EV_POINTER_CONSTANTS}.left then
 				internal_docker_mediator.apply_change (a_screen_x, a_screen_y)
@@ -200,6 +223,8 @@ feature {NONE} -- Implementation attributes
 
 	setter: SD_SYSTEM_SETTER is
 			-- System setter singleton.
+		require
+			not_destroyed: not is_destroyed
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
 		end

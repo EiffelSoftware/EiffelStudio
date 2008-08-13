@@ -209,16 +209,16 @@ feature  -- Command
 			-- Redefine
 		do
 			if top_indicator.exists then
-				top_indicator.destroy
+				top_indicator.clear
 			end
 			if bottom_indicator.exists then
-				bottom_indicator.destroy
+				bottom_indicator.clear
 			end
 			if left_indicator.exists then
-				left_indicator.destroy
+				left_indicator.clear
 			end
 			if right_indicator.exists then
-				right_indicator.destroy
+				right_indicator.clear
 			end
 		end
 

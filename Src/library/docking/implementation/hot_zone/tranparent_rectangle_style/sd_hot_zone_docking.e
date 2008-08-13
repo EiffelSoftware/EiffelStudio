@@ -127,7 +127,7 @@ feature -- Redefine
 			-- Clear indicators.
 		do
 			if internal_indicator.exists then
-				internal_indicator.destroy
+				internal_indicator.clear
 			end
 		end
 

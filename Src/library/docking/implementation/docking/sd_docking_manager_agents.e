@@ -49,6 +49,8 @@ feature -- Command
 
 	init_actions is
 			-- Initlialize actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			internal_docking_manager.contents.add_actions.extend (agent on_added_content)
 			internal_docking_manager.contents.remove_actions.extend (agent on_prune_content)
@@ -67,6 +69,8 @@ feature  -- Agents
 
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
 			-- Handle EV_APPLICATION's pointer button press actions.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -105,6 +109,8 @@ feature  -- Agents
 
 	on_widget_pointer_press_for_upper_zone (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
 			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_upper_zone: SD_UPPER_ZONE
@@ -132,6 +138,8 @@ feature  -- Agents
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN) is
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_width: INTEGER
 			l_main_container: SD_MULTI_DOCK_AREA
@@ -166,12 +174,15 @@ feature  -- Agents
 
 	on_added_zone (a_zone: SD_ZONE) is
 			-- Handle inserted a zone event.
+		require
+			not_destroyed: not is_destroyed
 		do
 		end
 
 	on_pruned_zone (a_zone: SD_ZONE) is
 			-- Handle pruned a zone event.
 		require
+			not_destroyed: not is_destroyed
 			a_zone_not_void: a_zone /= Void
 		do
 		end
@@ -179,6 +190,7 @@ feature  -- Agents
 	on_added_content (a_content: SD_CONTENT) is
 			--  Handle added a content to contents.
 		require
+			not_destroyed: not is_destroyed
 			a_content_widget_valid: user_widget_valid (a_content)
 			title_unique: title_unique (a_content)
 		do
@@ -199,6 +211,8 @@ feature  -- Agents
 
 	on_main_window_focus_out is
 			-- Handle window lost focus event.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_content: SD_CONTENT
 			l_zone: SD_ZONE
@@ -217,6 +231,8 @@ feature  -- Agents
 
 	on_main_window_focus_in is
 			-- Handle window get focus event.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_content: SD_CONTENT
 			l_zone: SD_ZONE
@@ -235,6 +251,8 @@ feature  -- Agents
 
 	on_top_level_window_focus_out
 			-- Handle top level window focus out actions.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_has_focus: BOOLEAN
@@ -265,24 +283,32 @@ feature  -- Agents
 
 	on_top_level_window_focus_in is
 			-- Handle top level window focus in actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 --			internal_docking_manager.tool_bar_manager.show_all_floating
 		end
 
 	on_pick_actions (a_pebble: ANY) is
 			-- Handle pick actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			focused_tab_stub := Void
 		end
 
 	on_drop_actions (a_pebble: ANY) is
 			-- Handle drop actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			ignore_additional_click := True
 		end
 
 	on_theme_changed is
 			-- Handle theme changed actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).set_background_color (internal_shared.non_focused_color_lightness)
 			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_background_color (internal_shared.non_focused_color_lightness)
@@ -294,6 +320,8 @@ feature  -- Agents
 	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Handle pick and drop motion actions.
 			-- We notify all auto hide tab stubs when pick and drop shere.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_widget: EV_WIDGET
 			l_screen_x, l_screen_y: INTEGER
@@ -332,6 +360,7 @@ feature  -- Agents
 			-- Notify one auto hide
 			-- Result is if notified one tab stub
 		require
+			not_destroyed: not is_destroyed
 			vaild: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		local
 			l_panel: SD_AUTO_HIDE_PANEL
@@ -393,12 +422,18 @@ feature -- Destory
 			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
 			internal_docking_manager := Void
+
+			is_destroyed := True
+		ensure
+			destroyed: is_destroyed
 		end
 
 feature -- Contract support
 
 	user_widget_valid (a_content: SD_CONTENT): BOOLEAN is
 			-- Dose a_widget alreay in docking library?
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_container: EV_CONTAINER
 			l_found: BOOLEAN
@@ -432,6 +467,7 @@ feature -- Contract support
 	title_unique (a_content: SD_CONTENT): BOOLEAN is
 			-- If `a_unique_title' really unique?
 		require
+			not_destroyed: not is_destroyed
 			a_content_not_void: a_content /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -451,10 +487,15 @@ feature -- Contract support
 			end
 		end
 
+	is_destroyed: BOOLEAN
+			-- If Current destroyed?
+
 feature {SD_DEBUG_ACCESS} -- For debug.
 
 	show_inner_container_structure is
 			-- For debug.
+		require
+			not_destroyed: not is_destroyed
 		do
 			io.put_string ("%N --------------------- SD_DOCKING_MANAGER inner container -------------------")
 			internal_docking_manager.inner_containers.start
@@ -463,6 +504,8 @@ feature {SD_DEBUG_ACCESS} -- For debug.
 
 	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: STRING_GENERAL) is
 			-- For debug.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_split_area: EV_SPLIT_AREA
 			l_docking_zone: SD_DOCKING_ZONE

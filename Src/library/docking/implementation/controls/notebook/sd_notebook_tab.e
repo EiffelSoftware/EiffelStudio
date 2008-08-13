@@ -57,6 +57,7 @@ feature -- Command
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Set drop actions to Current.
 		require
+			not_destroyed: not is_destroyed
 			a_actions_not_void: a_actions /= Void
 		do
 			drop_actions := a_actions
@@ -67,6 +68,7 @@ feature -- Command
 	set_width_not_enough_space (a_width: INTEGER) is
 			-- Set current width.
 		require
+			not_destroyed: not is_destroyed
 			a_width_valid: a_width >= 0
 		do
 			on_expose_with_width (a_width)
@@ -77,6 +79,8 @@ feature -- Command
 
 	set_enough_space is
 			-- Set current is enought space to show.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_enough_space := True
 			update_minmum_size
@@ -89,12 +93,16 @@ feature -- Command
 
 	set_draw_pixmap is
 			-- Set `internal_draw_pixmap'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			internal_draw_pixmap := True
 		end
 
 	set_tool_tip (a_text: STRING_GENERAL) is
 			-- Set `tool_tip' with `a_text'
+		require
+			not_destroyed: not is_destroyed
 		do
 			if a_text /= Void then
 				tool_tip := a_text
@@ -107,18 +115,24 @@ feature -- Command
 
 	clear_pressed_flag is
 			-- Set `is_pointer_pressed' to False
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_pointer_pressed := False
 		end
 
 	hide is
 			-- Hide
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_displayed := False
 		end
 
 	show is
 			-- Show
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_displayed := True
 		end
@@ -131,8 +145,10 @@ feature -- Command
 				parent := Void
 			end
 			internal_docking_manager := Void
+			is_destroyed := True
 		ensure
 			cleared: parent = Void
+			destroyed: is_destroyed
 		end
 
 feature -- Query
@@ -145,6 +161,8 @@ feature -- Query
 
 	prefered_size: INTEGER is
 			-- If current is displayed, size should take.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := internal_width
 		end
@@ -170,6 +188,7 @@ feature -- Query
 	x: INTEGER is
 			-- X position relative to parent box.
 		require
+			not_destroyed: not is_destroyed
 			not_void: parent /= Void
 		do
 			Result := parent.item_x (Current)
@@ -177,6 +196,8 @@ feature -- Query
 
 	width: INTEGER is
 			-- Width
+		require
+			not_destroyed: not is_destroyed
 		do
 			if is_displayed then
 				Result := internal_width
@@ -185,6 +206,8 @@ feature -- Query
 
 	height: INTEGER is
 			-- Height
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := parent.height
 		end
@@ -195,6 +218,7 @@ feature -- Query
 	screen_x: INTEGER is
 			-- Screen x position
 		require
+			not_destroyed: not is_destroyed
 			parented: parent /= Void
 		do
 			Result := x + parent.screen_x
@@ -203,6 +227,7 @@ feature -- Query
 	screen_y: INTEGER is
 			-- Screen y position
 		require
+			not_destroyed: not is_destroyed
 			parented: parent /= Void
 		do
 			Result := parent.screen_y
@@ -210,6 +235,8 @@ feature -- Query
 
 	rectangle: EV_RECTANGLE is
 			-- Current tab rectangle relative to `parent'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			-- When closing all editor tabs by right click menu, this feature called by on_pointer_press from SD_NOTEBOOK_TAB_BOX,
 			-- parent maybe void sometimes. It's because pointer press actions delayed, the actions are executing after
@@ -224,7 +251,10 @@ feature -- Query
 		end
 
 	is_displayed: BOOLEAN
-			-- If current displayed?
+			-- If Current displayed?
+
+	is_destroyed: BOOLEAN
+			-- If Current destroyed?
 
 	parent: SD_NOTEBOOK_TAB_BOX
 			-- Parent tab box
@@ -243,6 +273,7 @@ feature -- Properties
 	set_text (a_text: STRING_GENERAL) is
 			-- Set `text'.
 		require
+			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 		do
 			text := a_text
@@ -257,6 +288,7 @@ feature -- Properties
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set `a_pixmap'.
 		require
+			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			pixmap := a_pixmap
@@ -273,6 +305,8 @@ feature -- Properties
 
 	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
 			-- Set `selected'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_selected := a_selected
 			is_focused := a_focused
@@ -288,6 +322,7 @@ feature -- Properties
 	set_selection_color (a_focused: BOOLEAN) is
 			-- Set color of selection color to focused selection color or non-focused color.
 		require
+			not_destroyed: not is_destroyed
 			selected: is_selected
 		do
 			on_expose
@@ -302,6 +337,7 @@ feature -- Properties
 	set_font (a_font: like font) is
 			-- Set `font' with `a_font'
 		require
+			not_destroyed: not is_destroyed
 			not_void: a_font /= Void
 		do
 			font := a_font
@@ -311,6 +347,8 @@ feature -- Properties
 
 	on_expose is
 			-- Handle expose actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			on_expose_with_width (drawing_width)
 		end
@@ -319,6 +357,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	set_parent (a_parent: like parent) is
 			-- Set `parent' with `a_parent'
+		require
+			not_destroyed: not is_destroyed
 		do
 			parent := a_parent
 		ensure
@@ -327,6 +367,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Hanlde pointer motion.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_has_capture: BOOLEAN
 			l_drawer: like internal_tab_drawer
@@ -379,6 +421,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_motion_for_tooltip (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion actions for setting tooltips.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if rectangle.has_x_y (a_x, a_y) then
 				if tool_tip /= Void and then not parent.tooltip.as_string_32.is_equal (tool_tip) then
@@ -391,6 +435,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer press.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_drawer: like internal_tab_drawer
 		do
@@ -427,6 +473,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_drawer: like internal_tab_drawer
 		do
@@ -451,6 +499,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_enter is
 			-- Handle pointer enter actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_hot := True
 			on_expose
@@ -460,6 +510,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_pointer_leave is
 			-- Handle pointer leave actions.
+		require
+			not_destroyed: not is_destroyed
 		do
 			is_hot := False
 			is_pointer_in_close_area := False
@@ -472,6 +524,8 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
 	redraw_selected is
 			-- Redraw selected.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_drawer: like internal_tab_drawer
 		do
@@ -483,6 +537,8 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
 	draw_focus_rect is
 			-- Draw focus rectangle.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_rect: EV_RECTANGLE
 		do
@@ -499,6 +555,7 @@ feature {NONE}  -- Implementation agents
 	on_expose_with_width (a_width: INTEGER) is
 			-- Handle expose with `a_width'. `a_width' is total width current should be.
 		require
+			not_destroyed: not is_destroyed
 			a_width_valid: a_width >= 0
 		local
 			l_drawer: like internal_tab_drawer
@@ -523,6 +580,8 @@ feature {NONE}  -- Implementation functions.
 
 	update_minmum_size is
 			-- Update minmum size of Current.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_size: INTEGER
 			l_drawer: like internal_tab_drawer
@@ -544,6 +603,8 @@ feature {NONE}  -- Implementation functions.
 	show_right_click_menu (a_pointer_release_action: BOOLEAN; a_relative_x, a_relative_y: INTEGER) is
 			-- Show right click menu
 			-- We will use pointer release action to show the menu only in the future. Larry 2007-6-7
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_menu: EV_MENU
 			l_platform: PLATFORM
@@ -565,6 +626,8 @@ feature {NONE}  -- Implementation attributes
 
 	drawing_width: INTEGER is
 			-- Width showig on the screen.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_box: SD_NOTEBOOK_TAB_AREA
 			l_avail_width: INTEGER
@@ -600,6 +663,8 @@ feature {NONE}  -- Implementation attributes
 
 	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
 			-- Drawer of Current
+		require
+			not_destroyed: not is_destroyed
 		do
 			-- `interal_shared' cannot be void, but in fact, it maybe void when running. See bug#12519.
 			if internal_shared /= Void  then

@@ -202,6 +202,7 @@ feature {NONE} -- Implementation convenience
 			compiled_class: a_class.is_compiled
 		local
 			descendants: DS_HASH_SET [CLASS_I]
+			class_i: CLASS_I
 		do
 			create Result.make (100)
 			Result.append (client_classes (a_class))
@@ -212,7 +213,10 @@ feature {NONE} -- Implementation convenience
 			until
 				descendants.after
 			loop
-				Result.append (client_classes (descendants.item_for_iteration))
+				class_i := descendants.item_for_iteration
+				if class_i /= Void and then class_i.is_compiled then
+					Result.append (client_classes (class_i))
+				end
 				descendants.forth
 			end
 		ensure

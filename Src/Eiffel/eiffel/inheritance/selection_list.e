@@ -113,20 +113,20 @@ end;
 				end
 			end
 
-			if not l_replicated_features_present then
-					-- We want to leave the list of replicated features in the list so that we can
-					-- use this for inheritance branch determination.
-				wipe_out
-			elseif l_has_old_feature_replication then
-				wipe_out
-			end
-
 			if l_selected_feature = Void then
 					-- Raise a VMRC3 error as no feature is selected.
 				create vmrc3
 				vmrc3.set_class (System.current_class)
 				vmrc3.set_selection_list (Current)
 				Error_handler.insert_error (vmrc3)
+			end
+
+			if not l_replicated_features_present then
+					-- We want to leave the list of replicated features in the list so that we can
+					-- use this for inheritance branch determination.
+				wipe_out
+			elseif l_has_old_feature_replication then
+				wipe_out
 			end
 		end;
 

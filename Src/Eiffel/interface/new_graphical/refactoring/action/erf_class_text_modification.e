@@ -430,10 +430,12 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				l_parser := heavy_eiffel_parser
+				check no_errors: not system.error_handler.has_error end
 				l_parser.parse_from_string (text)
-				if l_parser.error_count = 0 then
+				if not system.error_handler.has_error then
 					ast := l_parser.root_node
 					match_list := l_parser.match_list
+					check is_parsed: is_parsed end
 				else
 					is_parse_error := True
 				end

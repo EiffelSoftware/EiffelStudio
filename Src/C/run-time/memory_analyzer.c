@@ -57,10 +57,12 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
 	int done = 0;
-	int l_thread_once_set = 0;
 	int i = 0;
+#if defined(EIF_THREADS) && defined(ISE_GC)
 	int j = 0;
 	int l_threads_count = 0;
+	int l_thread_once_set = 0;
+#endif
 	rt_uint_ptr n;
 	char gc_stopped;
 
@@ -87,8 +89,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	l_found.index = -1;
 	l_found_p = &l_found;
 
-	while (l_once_set)
-	{
+	while (l_once_set) {
 		for (s = l_once_set->st_hd, done = 0; s && !done; s = s->sk_next) {
 			object = s->sk_arena;
 			if (s != l_once_set->st_cur) {

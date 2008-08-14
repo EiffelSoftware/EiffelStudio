@@ -64,12 +64,12 @@ feature -- Basic operation
 				l_id := topological.item
 				l_class := topological_mapping.item (l_id)
         		topological.remove
-        		topological_mapping.remove (l_id)
 				syntactical_clients.force (l_class.original_class)
 				recursive_descendants.put (l_class.class_id)
 
 				check_class (l_class)
 			end
+			topological_mapping.wipe_out
 
 			refactoring.set_affected_classes (syntactical_clients)
 			refactoring.set_recursive_descendants (recursive_descendants)
@@ -86,6 +86,7 @@ feature {NONE} -- Implementation
 			l_clients: ARRAYED_LIST [CLASS_C]
 			l_class: CLASS_C
 			l_feature: E_FEATURE
+			l_id: INTEGER_32
 		do
 			is_stop_hierarchy := false
 
@@ -125,8 +126,11 @@ feature {NONE} -- Implementation
 					l_descendants.after
 				loop
 					l_class := l_descendants.item
-					topological.force (l_class.topological_id)
-					topological_mapping.put (l_class, l_class.topological_id)
+					l_id := l_class.topological_id
+					if not topological.has (l_id) then
+						topological.force (l_id)
+						topological_mapping.put (l_class, l_id)
+					end
 					l_descendants.forth
 				end
 			end

@@ -113,10 +113,10 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
-	error.c umain.c memory.c argv.c boolstr.c search.c \
+	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
-	option.c compress.c console.c offset.c main.c except.c memory_analyzer.c
+	option.c compress.c console.c offset.c main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
 
@@ -155,6 +155,7 @@ WOBJ = \
 	werror.o \
 	wumain.o \
 	wmemory.o \
+	wmemory_analyzer.o \
 	wargv.o \
 	wboolstr.o \
 	wsearch.o \
@@ -172,8 +173,7 @@ WOBJ = \
 	wconsole.o \
 	woffset.o \
 	wmain.o \
-	wexcept.o \
-	wmemory_analyzer.o
+	wexcept.o 
 
 LOBJ = \
 	$(IDRS_OBJ) \
@@ -204,6 +204,7 @@ LOBJ = \
 	error.o \
 	umain.o \
 	memory.o \
+	memory_analyzer.o \
 	argv.o \
 	boolstr.o \
 	search.o \
@@ -221,8 +222,7 @@ LOBJ = \
 	console.o \
 	offset.o \
 	main.o \
-	except.o \
-	memory_analyzer.o
+	except.o 
 
 MT_WOBJ = \
 	$(MTIDRS_OBJ) \
@@ -259,6 +259,7 @@ MT_WOBJ = \
 	MTwerror.o \
 	MTwumain.o \
 	MTwmemory.o \
+	MTwmemory_analyzer.o \
 	MTwargv.o \
 	MTwboolstr.o \
 	MTwsearch.o \
@@ -276,8 +277,7 @@ MT_WOBJ = \
 	MTwconsole.o \
 	MTwoffset.o \
 	MTwmain.o \
-	MTwexcept.o \
-	MTwmemory_analyzer.o
+	MTwexcept.o 
 
 MT_LOBJ = \
 	$(MTIDRS_OBJ) \
@@ -308,6 +308,7 @@ MT_LOBJ = \
 	MTerror.o \
 	MTumain.o \
 	MTmemory.o \
+	MTmemory_analyzer.o \
 	MTargv.o \
 	MTboolstr.o \
 	MTsearch.o \
@@ -325,8 +326,7 @@ MT_LOBJ = \
 	MTconsole.o \
 	MToffset.o \
 	MTmain.o \
-	MTexcept.o \
-	MTmemory_analyzer.o
+	MTexcept.o 
 
 wmalloc.o: malloc.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
@@ -409,6 +409,9 @@ wumain.o: umain.c
 wmemory.o: memory.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
+wmemory_analyzer.o: memory_analyzer.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
 wargv.o: argv.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -463,8 +466,6 @@ wmain.o: main.c
 wexcept.o: except.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-wmemory_analyzer.o: memory_analyzer.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 MTmalloc.o: malloc.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
@@ -547,6 +548,9 @@ MTumain.o: umain.c
 MTmemory.o: memory.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTmemory_analyzer.o: memory_analyzer.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
 MTargv.o: argv.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -601,8 +605,6 @@ MTmain.o: main.c
 MTexcept.o: except.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTmemory_analyzer.o: memory_analyzer.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTwmalloc.o: malloc.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
@@ -685,6 +687,9 @@ MTwumain.o: umain.c
 MTwmemory.o: memory.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
+MTwmemory_analyzer.o: memory_analyzer.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 MTwargv.o: argv.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
@@ -738,9 +743,7 @@ MTwmain.o: main.c
 
 MTwexcept.o: except.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-	       
-MTwmemory_analyzer.o: memory_analyzer.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 
 debug.o: debug.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@

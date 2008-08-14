@@ -271,7 +271,7 @@ feature {NONE} -- Status report
 			l_parser.set_is_indexing_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_standard)
 			l_parser.set_is_note_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
 			l_parser.parse_from_string (a_license.as_string_8)
-			Result := l_parser.error_count = 0
+			Result := l_parser.root_node /= Void
 		end
 
 feature {NONE} -- Helpers

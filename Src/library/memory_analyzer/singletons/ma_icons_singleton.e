@@ -72,6 +72,7 @@ feature {NONE} -- Implementation
 			Result.put ([4, 4], icon_new_filter_class_name)
 			Result.put ([4, 5], icon_object_grid_class_x)
 			Result.put ([5, 1], icon_new_filter_class_name_x)
+			Result.put ([5, 2], icon_collect_statics)
 			Result.compare_objects
 		end
 
@@ -224,9 +225,17 @@ feature -- Icons
 			new_filter_class_name_x_icon_not_void: Result /= Void
 		end
 
+	collect_statics_icon: EV_PIXMAP is
+		once
+			Result := pixmap_file_content (icon_collect_statics)
+		ensure
+			collect_statics_item_not_void: Result /= Void
+		end
+
 feature {NONE} -- Icons' Names
 
 	icon_auto_refresh: STRING is "icon_auto_refresh"
+	icon_collect_statics: STRING is "icon_collect_statics"
 	icon_auto_refresh_speed: STRING is "icon_auto_refresh_speed"
 	icon_state_change: STRING is "icon_state_change"
 	icon_filter: STRING is "icon_filter"

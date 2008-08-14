@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	MA_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -31,7 +31,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1
@@ -41,6 +41,7 @@ feature {NONE}-- Initialization
 			create retreive
 			create l_ev_tool_bar_separator_1
 			create auto_refresh
+			create collect_statics
 			create refresh_speed
 			create gc_enable
 			create filter_setting
@@ -204,7 +205,9 @@ feature {NONE}-- Initialization
 			create clear_graph
 			create l_ev_horizontal_separator_1
 			create object_drawing
-			
+
+			build_object_routes_panel
+
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_tool_bar_1)
@@ -216,6 +219,7 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_1.extend (auto_refresh)
 			l_ev_tool_bar_1.extend (refresh_speed)
 			l_ev_tool_bar_1.extend (gc_enable)
+			l_ev_tool_bar_1.extend (collect_statics)
 			l_ev_tool_bar_1.extend (filter_setting)
 			l_ev_vertical_box_1.extend (main_book)
 			main_book.extend (tab_garbage_collector_info)
@@ -345,6 +349,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_23.extend (max_memory_other)
 			main_book.extend (tab_object_grid)
 			tab_object_grid.extend (object_grid)
+			main_book.extend (object_routes_panel)
 			main_book.extend (tab_states_compare)
 			tab_states_compare.extend (split_incre_horizontal)
 			split_incre_horizontal.extend (split_incre)
@@ -377,7 +382,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_9.extend (clear_graph)
 			tab_object_graph.extend (l_ev_horizontal_separator_1)
 			tab_object_graph.extend (object_drawing)
-			
+
 			l_ev_vertical_box_1.set_minimum_width (670)
 			l_ev_vertical_box_1.set_minimum_height (570)
 			l_ev_vertical_box_1.set_padding_width (padding_width)
@@ -390,6 +395,7 @@ feature {NONE}-- Initialization
 			save_datas.set_tooltip (tb_save_current_datas)
 			retreive.set_tooltip (tb_open_system_states)
 			auto_refresh.set_tooltip (tb_auto_refresh_enabled)
+			collect_statics.set_tooltip (tb_collect_statics_enabled)
 			refresh_speed.set_tooltip (tb_refresh_speed_is_normal)
 			gc_enable.set_tooltip (tb_disable_garbage_collector)
 			filter_setting.set_tooltip (tb_set_analyze_filter)
@@ -398,6 +404,7 @@ feature {NONE}-- Initialization
 			main_book.set_tab_position (4)
 			main_book.set_item_text (tab_garbage_collector_info, nb_memory_statistics)
 			main_book.set_item_text (tab_object_grid, nb_object_grid)
+			main_book.set_item_text (object_routes_panel, nb_search_route)
 			main_book.set_item_text (tab_states_compare, nb_memory_changed)
 			main_book.set_item_text (tab_object_graph, nb_object_graph)
 			tab_garbage_collector_info.set_minimum_width (main_notebook_tab_width_minimum)
@@ -820,13 +827,14 @@ feature {NONE}-- Initialization
 			l_ev_vertical_separator_5.set_minimum_width (seperator_width)
 			clear_graph.set_text (b_clear_graph)
 			set_title (wnd_memory_analyzer)
-			
+
 				--Connect events.
 			refresh.select_actions.extend (agent refresh_info_clicked)
 			gc_now.select_actions.extend (agent gc_now_clicked)
 			save_datas.select_actions.extend (agent save_data_clicked)
 			retreive.select_actions.extend (agent retreive_states)
 			auto_refresh.select_actions.extend (agent auto_refresh_enable)
+			collect_statics.select_actions.extend (agent collect_statics_enable)
 			refresh_speed.select_actions.extend (agent auto_refresh_change_speed)
 			gc_enable.select_actions.extend (agent gc_enable_click)
 			filter_setting.select_actions.extend (agent filter_clicked)
@@ -854,7 +862,21 @@ feature {NONE}-- Initialization
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
+
 			user_initialization
+		end
+
+	build_object_routes_panel is
+			-- Build object routes panel.
+		do
+			create object_routes_panel
+			create route_results_panel
+			route_results_panel.set_text ("Routes")
+			create search_route_button.make_with_text ("Search Next Route")
+
+			object_routes_panel.extend (search_route_button)
+			object_routes_panel.disable_item_expand (search_route_button)
+			object_routes_panel.extend (route_results_panel)
 		end
 
 feature -- Access
@@ -863,7 +885,7 @@ feature -- Access
 	object_grid, memory_spot_1, memory_spot_2, increased_object_result: EV_GRID
 	add_current,
 	show_diff_grid, find, find_refers, arrange_circle, clear_graph: EV_BUTTON
-	auto_refresh, gc_enable: EV_TOOL_BAR_TOGGLE_BUTTON
+	auto_refresh, gc_enable, collect_statics: EV_TOOL_BAR_TOGGLE_BUTTON
 	refresh,
 	gc_now, save_datas, retreive, refresh_speed, filter_setting: EV_TOOL_BAR_BUTTON
 	main_book, notebook_gc_info: EV_NOTEBOOK
@@ -887,6 +909,9 @@ feature -- Access
 	collection_period_other, tenure_other, memory_threshold_other, generation_object_limit_other,
 	max_memory_other: EV_TEXT_FIELD
 	eiffel_view_frame, object_drawing: EV_FRAME
+	object_routes_panel: EV_VERTICAL_BOX
+	route_results_panel: EV_FRAME
+	search_route_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -927,132 +952,137 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	refresh_info_clicked is
 			-- Called by `select_actions' of `refresh'.
 		deferred
 		end
-	
+
 	gc_now_clicked is
 			-- Called by `select_actions' of `gc_now'.
 		deferred
 		end
-	
+
 	save_data_clicked is
 			-- Called by `select_actions' of `save_datas'.
 		deferred
 		end
-	
+
 	retreive_states is
 			-- Called by `select_actions' of `retreive'.
 		deferred
 		end
-	
+
 	auto_refresh_enable is
 			-- Called by `select_actions' of `auto_refresh'.
 		deferred
 		end
-	
+
+	collect_statics_enable is
+			-- Called by `select_actions' of `collect_statics'.
+		deferred
+		end
+
 	auto_refresh_change_speed is
 			-- Called by `select_actions' of `refresh_speed'.
 		deferred
 		end
-	
+
 	gc_enable_click is
 			-- Called by `select_actions' of `gc_enable'.
 		deferred
 		end
-	
+
 	filter_clicked is
 			-- Called by `select_actions' of `filter_setting'.
 		deferred
 		end
-	
+
 	split_info_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_double_press_actions' of `tab_garbage_collector_info'.
 		deferred
 		end
-	
+
 	redraw_histogram (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `expose_actions' of `eiffel_histogram'.
 		deferred
 		end
-	
+
 	resize_histogram (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `eiffel_histogram'.
 		deferred
 		end
-	
+
 	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `eiffel_view_frame'.
 		deferred
 		end
-	
+
 	redraw_history (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `expose_actions' of `eiffel_history'.
 		deferred
 		end
-	
+
 	resize_history (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `eiffel_history'.
 		deferred
 		end
-	
+
 	split_incre_hori_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_double_press_actions' of `split_incre_horizontal'.
 		deferred
 		end
-	
+
 	split_area_incre_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_double_press_actions' of `split_incre'.
 		deferred
 		end
-	
+
 	add_current_state is
 			-- Called by `select_actions' of `add_current'.
 		deferred
 		end
-	
+
 	show_diff_in_grid is
 			-- Called by `select_actions' of `show_diff_grid'.
 		deferred
 		end
-	
+
 	find_object_by_instance_name is
 			-- Called by `select_actions' of `find'.
 		deferred
 		end
-	
+
 	find_by_type_name is
 			-- Called by `select_actions' of `l_ev_button_1'.
 		deferred
 		end
-	
+
 	find_refers_clicked is
 			-- Called by `select_actions' of `find_refers'.
 		deferred
 		end
-	
+
 	zoom_changed (a_value: INTEGER) is
 			-- Called by `change_actions' of `zoom'.
 		deferred
 		end
-	
+
 	arrange_circle_clicked is
 			-- Called by `select_actions' of `arrange_circle'.
 		deferred
 		end
-	
+
 	clear_graph_clicked is
 			-- Called by `select_actions' of `clear_graph'.
 		deferred
 		end
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

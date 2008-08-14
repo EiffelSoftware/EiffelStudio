@@ -70,7 +70,8 @@ FINAL_OBJECTS = \
 	$(INDIR)eif_type_id.$obj \
 	$(INDIR)rout_obj.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)shword.$obj \
-	$(TOP)$(DIR)console$(DIR)winconsole.$lib
+	$(TOP)$(DIR)console$(DIR)winconsole.$lib \
+	$(INDIR)memory_analyzer.$obj
 
 OBJECTS = $(FINAL_OBJECTS) \
 	$(INDIR)main.$obj
@@ -127,6 +128,7 @@ WORKBENCH_OBJECTS = \
 	$(INDIR)weif_type_id.$obj \
 	$(INDIR)wrout_obj.$obj \
 	$(TOP)$(DIR)console$(DIR)wwinconsole.$lib \
+	$(INDIR)wmemory_analyzer.$obj
 
 WOBJECTS = $(WORKBENCH_OBJECTS) \
 	$(INDIR)wmain.$obj \
@@ -180,7 +182,8 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTeif_type_id.$obj \
 	$(INDIR)MTrout_obj.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
-	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
+	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib \
+	$(INDIR)MTmemory_analyzer.$obj
 
 MT_OBJECTS = $(MT_FINAL_OBJECTS) \
 	$(INDIR)MTmain.$obj
@@ -237,6 +240,7 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTweif_type_id.$obj \
 	$(INDIR)MTwrout_obj.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib \
+	$(INDIR)MTwmemory_analyzer.$obj
 
 MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
 	$(INDIR)MTwmain.$obj \
@@ -477,6 +481,9 @@ $(INDIR)interp.$obj: $(RTSRC)interp.c
 
 $(INDIR)eif_rw_lock.$obj : $(RTSRC)eif_rw_lock.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)eif_rw_lock.c
+	
+$(INDIR)memory_analyzer.$obj : $(RTSRC)memory_analyzer.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)memory_analyzer.c
 
 $(INDIR)wargv.$obj: $(RTSRC)argv.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)argv.c
@@ -609,6 +616,9 @@ $(INDIR)wumain.$obj: $(RTSRC)umain.c
 
 $(INDIR)wurgent.$obj: $(RTSRC)urgent.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)urgent.c
+	
+$(INDIR)wmemory_analyzer.$obj : $(RTSRC)memory_analyzer.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)memory_analyzer.c
 
 final: finalized.$lib
 work: wkbench.$lib
@@ -760,6 +770,9 @@ $(INDIR)MTinterp.$obj: $(RTSRC)interp.c
 
 $(INDIR)MTeif_rw_lock.$obj : $(RTSRC)eif_rw_lock.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)eif_rw_lock.c
+	
+$(INDIR)MTmemory_analyzer.$obj : $(RTSRC)memory_analyzer.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)memory_analyzer.c
 
 $(INDIR)MTwargv.$obj: $(RTSRC)argv.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)argv.c
@@ -892,6 +905,9 @@ $(INDIR)MTwumain.$obj: $(RTSRC)umain.c
 
 $(INDIR)MTwurgent.$obj: $(RTSRC)urgent.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)urgent.c
+	
+$(INDIR)MTwmemory_analyzer.$obj : $(RTSRC)memory_analyzer.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)memory_analyzer.c
 
 TESTS = mram gram lram eram sram
 

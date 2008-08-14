@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			create analyze_gc.make
 			create analyze_object_gra.make_with_drawable (object_drawing)
 			create analyze_object_snap.make_with_grid (object_grid)
+			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
 			create increase_detector.make
 
 			create timer
@@ -73,6 +74,8 @@ feature {NONE} -- Initialization
 			split_incre.resize_actions.force_extend (agent update_splitter_proportion_once (split_incre, 0.5))
 
 			gc_graphs.resize_actions.force_extend (agent analyze_gc.redraw_for_resize)
+
+			search_route_button.select_actions.extend (agent search_route)
 		ensure then
 			main_window_set: main_window_not_void
 			timer_action_set: timer.actions.count > 0
@@ -96,6 +99,7 @@ feature {NONE} -- Initialization
 		do
 			main_book.item_tab (tab_garbage_collector_info).set_pixmap (icons.gabage_collector_info_icon)
 			main_book.item_tab (tab_object_grid).set_pixmap (icons.object_grid_icon)
+			main_book.item_tab (object_routes_panel).set_pixmap (icons.collect_statics_icon)
 			main_book.item_tab (tab_object_graph).set_pixmap (icons.object_graph_icon)
 			main_book.item_tab (tab_states_compare).set_pixmap (icons.state_change_icon)
 
@@ -107,6 +111,7 @@ feature {NONE} -- Initialization
 			gc_enable.set_pixmap (icons.gabage_clean_enable_icon)
 			filter_setting.set_pixmap (icons.filter_icon)
 			retreive.set_pixmap (icons.open_system_states_icon)
+			collect_statics.set_pixmap (icons.collect_statics_icon)
 		ensure
 			tab_garbage_collector_info_pixmap_set: main_book.item_tab (tab_garbage_collector_info).pixmap /= Void
 			tab_object_grid_pixmap_set: main_book.item_tab (tab_object_grid).pixmap /= Void
@@ -193,6 +198,21 @@ feature {NONE} -- Implementation for agents
 			else
 				timer.set_interval (0)
 				auto_refresh.set_tooltip ("Auto refresh disabled")
+			end
+		ensure then
+			timer_state_changed: old timer.interval /= timer.interval
+			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
+		end
+
+	collect_statics_enable is
+			-- Enable or disable collect static memory object references.
+		do
+			if collect_statics.is_selected then
+				collect_statics.set_tooltip ("Statics Collection enabled")
+				analyze_object_snap.set_finding_route_to_once (True)
+			else
+				collect_statics.set_tooltip ("Statics Collection disabled")
+				analyze_object_snap.set_finding_route_to_once (False)
 			end
 		ensure then
 			timer_state_changed: old timer.interval /= timer.interval
@@ -345,6 +365,9 @@ feature {NONE} -- Implementation for agents
 			-- Clients want to refresh all the infomation .
 		do
 			analyze_gc.redraw
+				-- Disconnect object references.
+			clear_graph_clicked
+			analyze_route_searcher.reset
 			analyze_object_snap.show_memory_map
 		end
 
@@ -384,6 +407,12 @@ feature {NONE} -- Implementation for agents
 			system_util.toggle_gc (gc_enable)
 		end
 
+	search_route is
+			-- Start search a route
+		do
+			analyze_route_searcher.build_next_route
+		end
+
 feature {NONE} -- Implementation
 
 	increase_detector: MA_MEMORY_CHANGE_MEDIATOR
@@ -397,6 +426,9 @@ feature {NONE} -- Implementation
 
 	analyze_object_snap: MA_OBJECT_SNAPSHOT_MEDIATOR
 			-- The mediator repsonse for show all the objects in the MEMORY's objects map.
+
+	analyze_route_searcher: MA_ROUTE_TO_ONCE_SEARCHER
+			-- Searcher for routes to once object.
 
 	timer: EV_TIMEOUT
 			-- The timer used for update histogram and history.

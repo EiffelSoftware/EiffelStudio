@@ -7,7 +7,7 @@ indexing
 
 class
 	MA_CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants is
@@ -49,7 +49,7 @@ feature -- Access
 			Result := "System Time"
 		end
 
-	padding_width: INTEGER is 
+	padding_width: INTEGER is
 			-- `Result' is INTEGER constant named padding_width.
 		once
 			Result := 2
@@ -73,7 +73,7 @@ feature -- Access
 			Result := "Clear Except Selected"
 		end
 
-	seperator_width: INTEGER is 
+	seperator_width: INTEGER is
 			-- `Result' is INTEGER constant named seperator_width.
 		once
 			Result := 10
@@ -163,13 +163,13 @@ feature -- Access
 			Result := "Real Time Average"
 		end
 
-	main_notebook_tab_width_minimum: INTEGER is 
+	main_notebook_tab_width_minimum: INTEGER is
 			-- `Result' is INTEGER constant named main_notebook_tab_width_minimum.
 		once
 			Result := 690
 		end
 
-	dlg_max_width_speed: INTEGER is 
+	dlg_max_width_speed: INTEGER is
 			-- `Result' is INTEGER constant named dlg_max_width_speed.
 		once
 			Result := 38
@@ -235,7 +235,7 @@ feature -- Access
 			Result := "Set analyze filter"
 		end
 
-	main_notebook_tab_height_minimum: INTEGER is 
+	main_notebook_tab_height_minimum: INTEGER is
 			-- `Result' is INTEGER constant named main_notebook_tab_height_minimum.
 		once
 			Result := 450
@@ -289,7 +289,7 @@ feature -- Access
 			Result := "System Iinterval Time"
 		end
 
-	dlg_max_height_speed: INTEGER is 
+	dlg_max_height_speed: INTEGER is
 			-- `Result' is INTEGER constant named dlg_max_height_speed.
 		once
 			Result := 100
@@ -331,7 +331,7 @@ feature -- Access
 			Result := "Collected Average"
 		end
 
-	border_width: INTEGER is 
+	border_width: INTEGER is
 			-- `Result' is INTEGER constant named border_width.
 		once
 			Result := 2
@@ -359,6 +359,11 @@ feature -- Access
 			-- `Result' is STRING constant named `nb_object_grid'.
 		once
 			Result := "Object Grid"
+		end
+
+	nb_search_route: STRING is
+		once
+			Result := "Search Route"
 		end
 
 	lb_real_interval_time_average: STRING is
@@ -421,6 +426,11 @@ feature -- Access
 			Result := "Auto refresh enabled"
 		end
 
+	tb_collect_statics_enabled: STRING is
+			-- `Result' is STRING constant named `tb_auto_refresh_enabled'.
+		once
+			Result := "Statics Collection disabled"
+		end
 
 feature -- Access
 
@@ -434,7 +444,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING is
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -444,9 +454,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER is
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -458,10 +468,10 @@ feature -- Access
 			check
 				is_integer: l_string.is_integer
 			end
-			
+
 			Result := l_string.to_integer
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN is
 			-- Does constant `a_name' exist?
 		require
@@ -478,20 +488,20 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING] is
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING is "constants.txt"
 		-- File name from which constants must be loaded.
-		
+
 	String_constant: STRING is "STRING"
-	
+
 	Integer_constant: STRING is "INTEGER"
-		
+
 	parse_file_contents (content: STRING) is
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -521,7 +531,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING is
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -529,7 +539,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then

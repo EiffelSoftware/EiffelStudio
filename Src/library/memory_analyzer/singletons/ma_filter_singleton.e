@@ -35,7 +35,7 @@ feature  -- Filter
 				item_and_filter_names.after or
 				Result = True
 			loop
-				if (item_and_filter_names.item_for_iteration.class_name).is_equal (a_class_name) and
+				if (item_and_filter_names.item_for_iteration.class_name.as_string_8).is_equal (a_class_name) and
 					 item_and_filter_names.item_for_iteration.selected then
 					Result := True
 				end

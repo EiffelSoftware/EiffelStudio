@@ -29,8 +29,8 @@ feature -- Initlization
 			object_grid.insert_new_column (2)
 			object_grid.insert_new_column (3)
 			object_grid.column (1).set_title ("Object type")
-			object_grid.column (2).set_title ("Count")
-			object_grid.column (3).set_title ("Delta")
+			object_grid.column (2).set_title ("Count/Address")
+			object_grid.column (3).set_title ("Delta/Start Object")
 			object_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
 			object_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
 			object_grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (3))
@@ -71,7 +71,17 @@ feature -- Command
 			l_name: STRING
 			l_count, l_delta: INTEGER
 			l_data: like grid_data
+			l_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]
 		do
+				-- Reduce as much as possible relations.
+			name_table := Void
+			reference_table := Void
+			selected_item := Void
+			grid_data := Void
+			once_object_table := Void
+			selected_index := 0
+			grid_util.grid_remove_and_clear_all_rows (object_grid)
+
 				-- Get the data right away.
 			system_util.collect
 			l_new_table := memory.memory_count_map
@@ -82,6 +92,14 @@ feature -- Command
 				l_new_table.start
 				l_old_table := last_table
 				create l_data.make (l_new_table.count)
+				if finding_route_to_once then
+					create name_table.make (l_new_table.count * 40)
+					create reference_table.make (l_new_table.count * 100)
+					create object_table.make (1000)
+					build_once_object_table
+					l_map := memory.memory_map
+					memory.collection_off
+				end
 				i := 1
 			until
 				l_new_table.after
@@ -89,6 +107,10 @@ feature -- Command
 				l_name := l_int.type_name_of_type (l_new_table.key_for_iteration)
 
 				l_count := l_new_table.item_for_iteration
+
+				if finding_route_to_once then
+					add_to_reference_table (l_new_table.key_for_iteration, l_map)
+				end
 
 					-- Compute `l_delta' now.
 				if l_old_table /= Void then
@@ -122,10 +144,21 @@ feature -- Command
 				end
 			end
 
+			if finding_route_to_once then
+				memory.collection_on
+				last_selected_object := Void
+			end
+
 			last_table := l_new_table
 			grid_data := l_data
 
 			update_grid_content
+		end
+
+	set_finding_route_to_once (a_b: BOOLEAN) is
+			-- Set `finding_route_to_once' with `b'.
+		do
+			finding_route_to_once := a_b
 		end
 
 feature {NONE} -- Implementation
@@ -194,7 +227,7 @@ feature {NONE} -- Implementation
 		local
 			l_data: like grid_data
 			l_row_data: like row_data
-			l_item: EV_GRID_LABEL_ITEM
+			l_item: MA_GRID_LABEL_ITEM
 			i, l_count, l_delta: INTEGER
 			l_str: STRING
 			l_row: EV_GRID_ROW
@@ -260,7 +293,8 @@ feature {NONE} -- Implementation
 			a_parent_row_not_void: a_parent_row /= Void
 		local
 			l_data: ARRAYED_LIST [ANY]
-			l_item: EV_GRID_LABEL_ITEM
+			l_item: MA_GRID_LABEL_ITEM
+			l_check_item: MA_GRID_CHECK_BOX_ITEM
 			l_row_index, i: INTEGER
 			l_row: EV_GRID_ROW
 			l_any: ANY
@@ -292,6 +326,10 @@ feature {NONE} -- Implementation
 							l_item.set_data (l_data.item)
 							object_grid.set_item (2, i, l_item)
 
+							create l_check_item.make_with_boolean (False)
+							l_check_item.selected_changed_actions.extend (agent on_check_box_selected (?, l_any))
+							object_grid.set_item (3, i, l_check_item)
+
 							l_row := object_grid.row (i)
 							l_row.ensure_expandable
 							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
@@ -312,51 +350,211 @@ feature {NONE} -- Implementation
 			a_parent_row_not_void: a_parent_row /= Void
 		local
 			l_data: SPECIAL [ANY]
-			l_item: EV_GRID_LABEL_ITEM
+			l_item: MA_GRID_LABEL_ITEM
+			l_check_item: MA_GRID_CHECK_BOX_ITEM
 			l_row_index: INTEGER
 			i, j, nb: INTEGER
 			l_int: INTERNAL
 			l_any: ANY
 			l_row: EV_GRID_ROW
+			l_string: STRING
+			l_count: INTEGER
 		do
 			if a_parent_row.subrow_count = 0 then
 				l_data := memory.referers (an_object)
 				if l_data /= Void then
+					create l_int
 					from
-						create l_int
-						l_row_index := a_parent_row.index
-						i := l_row_index + 1
+						j := 0
 						nb := l_data.count
-						object_grid.insert_new_rows_parented (l_data.count, i, a_parent_row)
 					until
 						j = nb
 					loop
-						create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_data.item (j)))
-						l_item.set_data (l_data.item (j))
-						l_item.set_pixmap (icons.object_grid_icon)
-						object_grid.set_item (1, i, l_item)
-						l_any := l_data.item (j)
-						create l_item.make_with_text (($l_any).out)
-						l_item.set_data (l_data.item (j))
-						object_grid.set_item (2, i, l_item)
-
-						l_row := object_grid.row (i)
-						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_data.item (j), l_row))
-						i := i + 1
+						l_string := l_int.type_name (l_data.item (j))
+						if not is_object_from_ma (l_string) then
+							l_count := l_count + 1
+						end
+						j := j + 1
+					end
+					from
+						l_row_index := a_parent_row.index
+						i := l_row_index + 1
+						j := 0
+						nb := l_data.count
+						object_grid.insert_new_rows_parented (l_count, i, a_parent_row)
+					until
+						j = nb
+					loop
+						l_string := l_int.type_name (l_data.item (j))
+						if not is_object_from_ma (l_string) then
+							create l_item.make_with_text ((i - l_row_index).out + ": " + l_string)
+							l_item.set_data (l_data.item (j))
+							l_item.set_pixmap (icons.object_grid_icon)
+							object_grid.set_item (1, i, l_item)
+							l_any := l_data.item (j)
+							create l_item.make_with_text (($l_any).out)
+							l_item.set_data (l_data.item (j))
+							object_grid.set_item (2, i, l_item)
+							create l_check_item.make_with_boolean (False)
+							l_check_item.selected_changed_actions.extend (agent on_check_box_selected (?, l_any))
+							object_grid.set_item (3, i, l_check_item)
+							l_row := object_grid.row (i)
+							l_row.ensure_expandable
+							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_data.item (j), l_row))
+							i := i + 1
+						end
 						j := j + 1
 					end
 				end
 			end
 		end
 
+	on_check_box_selected (a_check_item: MA_GRID_CHECK_BOX_ITEM; a_object: ANY) is
+			-- On check box selected.
+		require
+			a_check_item_not_void: a_check_item /= Void
+		do
+			if a_check_item.selected then
+				last_selected_object := a_object
+				if selected_item /= Void then
+					selected_item.set_selected (False)
+				end
+				selected_item := a_check_item
+			end
+		end
+
+	add_to_reference_table (a_object_id: INTEGER; a_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]) is
+			-- Added all referer relations of objects of `a_object_id'.
+		require
+			tables_created: reference_table /= Void and name_table /= Void
+			a_map_not_void: a_map /= Void
+		local
+			l_name, l_field_name: STRING
+			l_int: INTERNAL
+			l_objects_of_type: ARRAYED_LIST [ANY]
+			l_data: SPECIAL [ANY]
+			l_index, l_referrer_index: NATURAL
+			l_item, l_referrer, l_referee: ANY
+			l_field_count: INTEGER
+			i: INTEGER
+			l_special: SPECIAL [ANY]
+			l_tuple: TUPLE
+			l_is_special, l_is_tuple: BOOLEAN
+		do
+			create l_int
+			l_name := l_int.type_name_of_type (a_object_id)
+			l_objects_of_type := a_map.item (a_object_id)
+			l_field_count := l_int.field_count_of_type (a_object_id)
+			l_is_special := l_int.is_special_any_type (a_object_id)
+			l_is_tuple := l_int.is_tuple_type (a_object_id)
+			from
+				l_objects_of_type.start
+			until
+				l_objects_of_type.after
+			loop
+				l_item := l_objects_of_type.item
+				l_index := object_table.index (l_item)
+				if last_selected_object /= Void and then l_item = last_selected_object then
+					selected_index := l_index
+					last_selected_object := Void
+				end
+					--| Fixme: we don't know whether it is an once object or not.
+				name_table.put (l_name, l_index)
+				check
+					not name_table.conflict
+				end
+				if l_is_special then
+					l_special ?= l_item
+					l_field_name := once "(special_field)"
+					from
+						i := l_special.lower
+					until
+						i > l_special.upper
+					loop
+						l_referee := l_special.item (i)
+						if l_referee /= Void then
+							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+						end
+						i := i + 1
+					end
+				elseif l_is_tuple then
+					l_tuple ?= l_item
+					l_field_name := once "(tuple_field)"
+					from
+						i := l_tuple.lower
+					until
+						i > l_tuple.upper
+					loop
+						l_referee := l_tuple.item (i)
+						if l_referee /= Void then
+							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+						end
+						i := i + 1
+					end
+				else
+					from
+						i := 1
+					until
+						i > l_field_count or l_item = Current
+					loop
+						l_referee := l_int.field (i, l_item)
+						if l_referee /= Void then
+							l_field_name := l_int.field_name (i, l_item)
+							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+						end
+						i := i + 1
+					end
+				end
+				l_objects_of_type.forth
+			end
+		end
+
+	build_once_object_table is
+			-- Record once object in `once_object_table'.
+		local
+			l_obj: like once_objects
+			i: INTEGER
+			l_item: ANY
+			l_index: like selected_index
+			l_int: INTERNAL
+		do
+			create l_int
+			create once_object_table.make (100)
+			l_obj := once_objects
+			from
+				i := l_obj.lower
+			until
+				i > l_obj.upper
+			loop
+				l_item := l_obj.item (i)
+				if l_item /= Void then
+					l_index := object_table.index (l_item)
+					once_object_table.force (l_index, l_index)
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Status report
+
+	is_object_from_ma (a_str: STRING): BOOLEAN is
+			-- If the type of object is from MA.
+		do
+			if a_str /= Void then
+				Result := a_str.is_equal (once "MA_GRID_LABEL_ITEM") or else
+						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY, EV_GRID_ROW]") or else
+						--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
+						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]")
+			end
+		end
 
 	column_index_valid (a_column_index: INTEGER): BOOLEAN  is
 			-- Validate a column index.
 		do
 			Result := a_column_index > 0 and a_column_index <= object_grid.column_count
 		end
+
+	finding_route_to_once: BOOLEAN
 
 feature {NONE} -- Fields
 
@@ -380,6 +578,31 @@ feature {NONE} -- Fields
 
 	grid_data: DS_ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
+
+feature -- Access
+
+	reference_table: MA_REFERENCES_TABLE [like selected_index, like selected_index]
+			-- Reference addresses mapping at a certain time. [referrer index, referee index]
+
+	object_table: SED_OBJECTS_TABLE
+			-- Table to store all indice of objects.
+
+	once_object_table: HASH_TABLE [like selected_index, like selected_index]
+			-- Table to store all once objects.
+
+	name_table: HASH_TABLE [STRING, like selected_index]
+			-- Names of objects of addresses at a certain time. [Name, index]
+
+	selected_index: NATURAL
+			-- Index of `last_selected_object' at a time.
+
+feature {NONE} -- Route building.
+
+	last_selected_object: ANY
+			-- A selected object.
+
+	selected_item: MA_GRID_CHECK_BOX_ITEM
+			-- All selected items.		
 
 feature {NONE} -- Sorting Implemention
 
@@ -428,6 +651,26 @@ feature {NONE} -- Sorting Implemention
 			else
 				Result := v.variation_since_last_time < u.variation_since_last_time
 			end
+		end
+
+feature {NONE} -- Internal
+
+	once_objects: SPECIAL [ANY] is
+		do
+			Result := {ISE_RUNTIME}.once_objects (special_any_dynamic_type)
+		end
+
+	special_any_dynamic_type: INTEGER is
+			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
+		local
+			a: ARRAY [ANY]
+			spec: SPECIAL [ANY]
+			l_inte: INTERNAL
+		once
+			create a.make (0, 0)
+			spec := a.area
+			create l_inte
+			Result := l_inte.dynamic_type (spec)
 		end
 
 invariant

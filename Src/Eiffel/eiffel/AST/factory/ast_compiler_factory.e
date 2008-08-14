@@ -266,10 +266,13 @@ feature -- Access
 				end
 				create Result.initialize (f, b, i, system.feature_as_counter.next_id, next_pos)
 
-				if b.is_built_in then
-					-- We have a built in so we set the replacement feature inside if available.
+				if b.is_built_in and then system.eiffel_project.is_compiling then
+						-- The system.eiffel_project.is_compiling needs to be checked here because refactoring uses this factory.
+						-- When working with uncompiled classes system.current_class will be Void. See fix_me below
+
+						-- We have a built in so we set the replacement feature inside if available.
 					l_built_in_processor := built_in_processor
-					l_built_in_processor.parse_current_class (system.current_class, system.il_generation)
+					l_built_in_processor.parse_current_class (system.current_class, system.il_generation) -- FIXME! Use {EIFFEL_PARSER}.current_class instead.
 					l_built_in_class_as := l_built_in_processor.class_as
 					if l_built_in_class_as /= Void then
 							-- We have an associating built in class.

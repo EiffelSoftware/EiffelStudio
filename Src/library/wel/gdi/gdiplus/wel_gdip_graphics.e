@@ -58,6 +58,17 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	draw_rectangle (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER) is
+			-- Draw a rectangle with the specified `a_x'/`a_y' and `a_width'/`a_height'
+		require
+			not_void: a_pen /= Void
+		local
+			l_result: INTEGER
+		do
+			c_gdip_draw_rectangle_i (gdi_plus_handle, item, a_pen.item, a_x, a_y, a_width, a_height, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 	draw_image (a_image: WEL_GDIP_IMAGE; a_dest_x, a_dest_y: INTEGER) is
 			-- Draw `a_image' at `a_dest_x' `a_dest_y'
 		require
@@ -151,6 +162,26 @@ feature -- Command
 			c_gdip_rotate_world_transform (gdi_plus_handle, item, a_angle, {WEL_GDIP_MATRIX_ORDER}.prepend, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 	 	end
+
+	translate_transform (a_dx, a_dy: REAL)
+			-- Updates Current's world transformation matrix with the product of itself and a translation matrix (`a_dx', `a_dy').
+		local
+			l_result: INTEGER
+		do
+			c_gdip_translate_world_transform (gdi_plus_handle, item, a_dx, a_dy, {WEL_GDIP_MATRIX_ORDER}.prepend, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	scale_transform (a_sx, a_sy: REAL)
+			-- Updates Current's world transformation matrix with the product of itself and a scaling matrix (`a_sx', `a_sy').
+		require
+			valid: a_sx > 0 and a_sy > 0
+		local
+			l_result: INTEGER
+		do
+			c_gdip_scale_world_transform (gdi_plus_handle, item, a_sx, a_sy, {WEL_GDIP_MATRIX_ORDER}.prepend, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
 
 	clear (a_color: WEL_GDIP_COLOR)
 			-- Clears the entire drawing surface and fills it with `a_color'
@@ -360,6 +391,36 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_draw_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Draw a rectangle on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawRectangleI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDrawRectangleI) {
+					GdipDrawRectangleI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawRectangleI");
+				}
+				
+				if (GdipDrawRectangleI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawRectangleI)
+								((GpGraphics *) $a_graphics,
+								(GpPen *) $a_pen,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height);
+				}
+			}
+			]"
+		end
+
 	c_gdip_draw_image_rect_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Draw `a_image' on `a_graphics'.
 		require
@@ -448,6 +509,62 @@ feature {NONE} -- C externals
 					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, REAL, GpMatrixOrder)) GdipRotateWorldTransform)
 								((GpGraphics *) $a_graphics,
 								(REAL) $a_angle,
+								(GpMatrixOrder) $a_order);
+				}
+			}
+			]"
+		end
+
+	c_gdip_translate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dx, a_dy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Updates Current's world transformation matrix with the product of itself and a translation matrix.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_order_valid: (create {WEL_GDIP_MATRIX_ORDER}).is_valid (a_order)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipTranslateWorldTransform = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipTranslateWorldTransform) {
+					GdipTranslateWorldTransform = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipTranslateWorldTransform");
+				}
+				if (GdipTranslateWorldTransform) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, REAL, REAL, GpMatrixOrder)) GdipTranslateWorldTransform)
+								((GpGraphics *) $a_graphics,
+								(REAL) $a_dx,
+								(REAL) $a_dy,
+								(GpMatrixOrder) $a_order);
+				}
+			}
+			]"
+		end
+
+	c_gdip_scale_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_sx, a_sy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Updates Current's world transformation matrix with the product of itself and a scaling matrix.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_order_valid: (create {WEL_GDIP_MATRIX_ORDER}).is_valid (a_order)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipScaleWorldTransform = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipScaleWorldTransform) {
+					GdipScaleWorldTransform = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipScaleWorldTransform");
+				}
+				if (GdipScaleWorldTransform) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, REAL, REAL, GpMatrixOrder)) GdipScaleWorldTransform)
+								((GpGraphics *) $a_graphics,
+								(REAL) $a_sx,
+								(REAL) $a_sy,
 								(GpMatrixOrder) $a_order);
 				}
 			}

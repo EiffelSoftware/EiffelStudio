@@ -154,7 +154,7 @@ feature -- Properties
 		end
 
 	all_possible_client_classes (a_class: CLASS_I): !DS_HASH_SET [!CLASS_I]
-			-- Retieves all classes that could potential be a client to the class `a_class'.
+			-- Retrieves all classes that could potential be a client to the class `a_class'.
 		require
 			a_class_attached: a_class /= Void
 		local
@@ -174,7 +174,7 @@ feature -- Properties
 		do
 			check is_eiffel_class: ({?EIFFEL_CLASS_I}) #? a_class /= Void end
 
-				-- Step #2
+				-- Step #1
 				-- Retrieve class target and applicable extended targets for the supplied class.
 			l_class_target := a_class.target
 			l_target_system := l_class_target.system
@@ -270,7 +270,7 @@ feature -- Properties
 				end
 			end
 
-				-- Add the classes from applicable targets.
+				-- Analyze all targets and retrieve clusters, and then add the result classes.
 			create Result.make (100)
 			from l_apt_targets.start until l_apt_targets.after loop
 				l_target := l_apt_targets.item

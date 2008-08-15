@@ -409,7 +409,8 @@ feature {NONE} -- Implementation
 				-- only when necessary
 			if ast = Void then
 				l_compiled := class_i.compiled_class
-				if is_parsing and then l_compiled = Void then
+				if is_parsing or else l_compiled = Void then
+					system.error_handler.wipe_out
 					recompute_ast
 				else
 					ast := l_compiled.ast
@@ -438,6 +439,7 @@ feature {NONE} -- Implementation
 					check is_parsed: is_parsed end
 				else
 					is_parse_error := True
+					system.error_handler.wipe_out
 				end
 			else
 				is_parse_error := True

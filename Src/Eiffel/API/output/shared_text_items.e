@@ -129,6 +129,9 @@ feature -- Keywords
 	ti_not_keyword: STRING is "not"
 			-- "not" keyword
 
+	ti_note_keyword: STRING is "note"
+			-- "note" keyword
+
 	ti_Obsolete_keyword: STRING is "obsolete"
 			-- "obsolete" keyword
 

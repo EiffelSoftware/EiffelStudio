@@ -13,7 +13,6 @@ class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_HORIZONTAL_SPLIT_AREA]
 		redefine
-			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
 			create_right_tool_bar_items
@@ -24,20 +23,20 @@ create {ES_MEMORY_TOOL}
 
 feature {NONE} -- Initialization
 
-	on_before_initialize
-			-- Use to perform additional creation initializations, before the UI has been created.
-		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
-		end
-
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
 		local
 			l_bool: BOOLEAN_REF
 			l_filter: STRING_GENERAL
 		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor
+
+				-- Set up column sorting
 			enable_sorting_on_columns (<<memory_map_grid.column (object_column_index), memory_map_grid.column (count_column_index), memory_map_grid.column (delta_column_index)>>)
+
+				-- Bind redirecting pick and drop actions
+			stone_director.bind (memory_stats_text, Current)
+			stone_director.bind (memory_map_grid, Current)
 
 				-- Set button states based on session data
 			if session_manager.is_service_available then
@@ -99,7 +98,6 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			memory_map_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			memory_map_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
-			stone_director.bind (memory_map_grid)
 			register_action (memory_map_grid.pointer_button_release_item_actions, agent (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 				do
 					if a_item /= Void and a_button = {EV_POINTER_CONSTANTS}.right then
@@ -122,7 +120,6 @@ feature {NONE} -- User interface initialization
 			create memory_stats_text
 			memory_stats_text.set_minimum_width (300)
 			memory_stats_text.set_font (preferences.editor_data.editor_font_preference.value)
-			stone_director.bind (memory_stats_text)
 			a_widget.extend (memory_stats_text)
 			a_widget.disable_item_expand (memory_stats_text)
 
@@ -142,8 +139,6 @@ feature {NONE} -- Clean up
 			-- Recycle tool.
 		do
 			if is_initialized then
-				stone_director.unbind (memory_map_grid)
-				stone_director.unbind (memory_stats_text)
 				memory_update_timer.destroy
 				filter_update_timer.destroy
 			end

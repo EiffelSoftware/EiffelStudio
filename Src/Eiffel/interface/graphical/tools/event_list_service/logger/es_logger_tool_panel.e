@@ -13,8 +13,8 @@ class
 inherit
 	ES_EVENT_LIST_TOOL_PANEL_BASE
 		redefine
-			internal_recycle,
 			is_appliable_event,
+			on_after_initialized,
 			update_content_applicable_widgets
 		end
 
@@ -23,7 +23,18 @@ create
 
 feature {NONE} -- Iniitalization
 
-	 build_tool_interface (a_widget: ES_GRID) is
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+
+				-- Bind redirecting pick and drop actions
+			stone_director.bind (grid_events, Current)
+		end
+
+feature {NONE} -- User interface initialization
+
+	 build_tool_interface (a_widget: ES_GRID)
 			-- Builds the tools user interface elements.
 			-- Note: This function is called prior to showing the tool for the first time.
 			--
@@ -46,20 +57,6 @@ feature {NONE} -- Iniitalization
 
 				-- Enable copying to clipboard
 			enable_copy_to_clipboard
-
-				-- Bind redirecting pick and drop actions
-			stone_director.bind (a_widget)
-		end
-
-feature {NONE} -- Clean up
-
-	internal_recycle
-			-- Recycle tool.
-		do
-			if is_initialized then
-				stone_director.unbind (grid_events)
-			end
-			Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE}
 		end
 
 feature {NONE} -- Query

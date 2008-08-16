@@ -49,6 +49,36 @@ create
 
 feature {NONE} -- Iniitalization
 
+	on_after_initialized
+			-- <Precursor>
+		do
+				-- Enable copying to clipboard
+			enable_copy_to_clipboard
+
+				-- Bind redirecting pick and drop actions
+			stone_director.bind (grid_events, Current)
+
+				-- Hook up events for session data
+			if session_manager.is_service_available then
+				session_data.connect_events (Current)
+				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
+					expand_errors := l_expand.item
+					if expand_errors then
+						expand_errors_button.enable_select
+					else
+						expand_errors_button.disable_select
+					end
+				end
+			end
+
+				-- Set UI based on initial state
+			update_content_applicable_navigation_buttons
+
+			Precursor
+		end
+
+feature {NONE} -- User interface initialization
+
 	 build_tool_interface (a_widget: ES_GRID) is
 			-- Builds the tools user interface elements.
 			-- Note: This function is called prior to showing the tool for the first time.
@@ -100,34 +130,6 @@ feature {NONE} -- Iniitalization
 				a_widget.column (position_column)>>)
 		end
 
-	on_after_initialized
-			-- <Precursor>
-		do
-				-- Enable copying to clipboard
-			enable_copy_to_clipboard
-
-				-- Bind redirecting pick and drop actions
-			stone_director.bind (grid_events)
-
-				-- Hook up events for session data
-			if session_manager.is_service_available then
-				session_data.connect_events (Current)
-				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
-					expand_errors := l_expand.item
-					if expand_errors then
-						expand_errors_button.enable_select
-					else
-						expand_errors_button.disable_select
-					end
-				end
-			end
-
-				-- Set UI based on initial state
-			update_content_applicable_navigation_buttons
-
-			Precursor
-		end
-
 feature {NONE} -- Clean up
 
 	internal_recycle
@@ -139,8 +141,6 @@ feature {NONE} -- Clean up
 						session_data.disconnect_events (Current)
 					end
 				end
-
-				stone_director.unbind (grid_events)
 
 				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
 				errors_button.select_actions.prune (agent on_toogle_errors_button)

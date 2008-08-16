@@ -1390,7 +1390,11 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			text_formatter_decorator.process_filter_item (f_indexing, True)
-			text_formatter_decorator.process_keyword_text (ti_indexing_keyword, Void)
+			if current_class.lace_class.is_syntax_standard then
+				text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
+			else
+				text_formatter_decorator.process_keyword_text (ti_indexing_keyword, Void)
+			end
 			text_formatter_decorator.indent
 			text_formatter_decorator.put_new_line
 			text_formatter_decorator.set_separator (Void)
@@ -2642,7 +2646,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_new_line
 				text_formatter_decorator.exdent
 			end
-			if l_as.variant_part /= Void then
+			if l_as.variant_part /= Void and then not current_class.lace_class.is_syntax_standard then
 				text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
 				text_formatter_decorator.indent
 				text_formatter_decorator.put_new_line
@@ -2666,6 +2670,14 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.exdent
 			end
 			text_formatter_decorator.put_new_line
+			if l_as.variant_part /= Void and then current_class.lace_class.is_syntax_standard then
+				text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+				text_formatter_decorator.indent
+				text_formatter_decorator.put_new_line
+				l_as.variant_part.process (Current)
+				text_formatter_decorator.put_new_line
+				text_formatter_decorator.exdent
+			end
 			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 

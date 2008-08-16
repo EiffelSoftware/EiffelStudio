@@ -164,7 +164,7 @@ feature -- Processing
 					text_formatter.add (" in class ")
 					text_formatter.add_class_syntax (a_value, l_class1, l_class1.class_signature)
 				end
-					if not a_value.warning_message.is_empty then
+				if not a_value.warning_message.is_empty then
 					text_formatter.add_new_line
 					text_formatter.add (a_value.warning_message)
 					text_formatter.add_new_line

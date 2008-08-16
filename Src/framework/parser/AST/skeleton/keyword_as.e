@@ -283,6 +283,12 @@ feature -- Status report
 			Result := (code = {EIFFEL_TOKENS}.te_not)
 		end
 
+	is_note_keyword: BOOLEAN is
+			-- Is current keyword 'note'?
+		do
+			Result := (code = {EIFFEL_TOKENS}.te_note)
+		end
+
 	is_obsolete_keyword: BOOLEAN is
 			-- Is current keyword 'obsolete'?
 		do

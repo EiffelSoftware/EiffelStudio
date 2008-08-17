@@ -167,6 +167,7 @@ UTF8_tail	[\x80-\xBF]
 [lL][oO][cC][aA][lL]					|
 [lL][oO][oO][pP]						|
 [nN][oO][tT]							|
+[nN][oO][tT][eE]							|
 [oO][bB][sS][oO][lL][eE][tT][eE]		|
 [oO][lL][dD]							|
 [oO][nN][cC][eE]						|

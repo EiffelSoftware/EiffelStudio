@@ -44,7 +44,7 @@ feature -- Command
 	close is
 			-- Redefine
 		do
-			layered_window.destroy
+			layered_window.clear
 		end
 
 feature -- Query

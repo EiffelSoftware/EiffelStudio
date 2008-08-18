@@ -23,11 +23,6 @@ inherit
 create {ES_TESTING_TOOL_63}
 	make
 
-
-feature -- TO BE REMOVED
-
-	interpreter: ?TEST_INTERPRETER
-
 feature {NONE} -- Initialization
 
 	on_before_initialize

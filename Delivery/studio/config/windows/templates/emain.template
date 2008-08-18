@@ -16,6 +16,7 @@ extern void emain(int, char **);
 extern int main(void);
 extern void egc_init_plug (void); 
 extern void egc_rcdt_init (void); 
+extern void eif_retrieve_root (int *argc, char **argv);
 
 #ifndef GetEnvironmentStringsA 
  extern LPVOID WINAPI GetEnvironmentStringsA(void);

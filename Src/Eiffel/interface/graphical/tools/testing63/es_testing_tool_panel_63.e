@@ -17,14 +17,16 @@ inherit
 		end
 
 	EIFFEL_TEST_SUITE_OBSERVER
-		redefine
-			on_tests_reset
-		end
 
 	TAG_UTILITIES
 
 create {ES_TESTING_TOOL_63}
 	make
+
+
+feature -- TO BE REMOVED
+
+	interpreter: ?TEST_INTERPRETER
 
 feature {NONE} -- Initialization
 
@@ -48,18 +50,11 @@ feature {NONE} -- Initialization: widgets
 	build_tool_interface (a_widget: like create_widget) is
 			-- <Precursor>
 		do
-			build_control_bar (a_widget)
 			build_view_bar (a_widget)
 
 			create tree_view.make (develop_window)
 
 			a_widget.extend (tree_view.widget)
-		end
-
-	build_control_bar (a_widget: like create_widget) is
-			-- Build tool bar with control buttons
-		do
-
 		end
 
 	build_view_bar (a_widget: like create_widget) is
@@ -100,10 +95,19 @@ feature {NONE} -- Initialization: widget status
 			Precursor
 			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT}.make (test_suite))
 			propagate_drop_actions (Void)
+
+			initialize_tool_bar
 			initialize_view_bar
 		end
 
+	initialize_tool_bar
+			-- Initialize tool bar buttons
+		do
+			--register_action (a_sequence: ACTION_SEQUENCE [TUPLE], a_action: PROCEDURE [ANY, TUPLE])
+		end
+
 	initialize_view_bar
+			-- Initialize view bar combo boxes
 		do
 			view_templates.put_last ("")
 			view_template_descriptions.put_last ("")
@@ -150,6 +154,14 @@ feature {NONE} -- Access: view
 
 	view_history: !DS_LINKED_LIST [!STRING]
 			-- List of tags user has entered recently
+
+feature {NONE} -- Access: buttons
+
+	run_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			-- Button for launching the test executor
+
+	stop_button: SD_TOOL_BAR_BUTTON
+			-- Button for stopping any current test execution
 
 feature {NONE} -- Status setting: view
 
@@ -275,17 +287,34 @@ feature {NONE} -- Status setting: stones
 			end
 		end
 
-feature {ACTIVE_COLLECTION_I} -- Events
+feature {NONE} -- Action handlers
 
-	on_tests_reset (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I])
-			-- <Precursor>
-		require else
-			--a_collection_is_test_suite: a_collection = test_suite
+	on_run_all_tests is
+			-- Called when user selects "run all" item of `run_button'.
 		do
 
 		end
 
-feature -- Factory
+	on_run_failing is
+			-- Called when user selectes "run failing" item of `run_button'.
+		do
+
+		end
+
+	on_run_filtered is
+			-- Called when user selects "run filteres" item of `run_button'.
+		do
+
+		end
+
+	on_run_selected is
+			-- Called when user selects "run selected" item of `run_button'.
+		do
+
+		end
+
+
+feature {NONE} -- Factory
 
 	create_widget: !EV_VERTICAL_BOX
 			-- <Precursor>
@@ -295,9 +324,53 @@ feature -- Factory
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
+		local
+			l_menu: EV_MENU
+			l_menu_item: EV_MENU_ITEM
 		do
+			create Result.make (2)
+
+				-- Create run btton
+			create run_button.make
+			run_button.set_tooltip (local_formatter.translation (f_run_button))
+			run_button.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
+			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
+
+			create l_menu.default_create
+			create l_menu_item.make_with_text (local_formatter.translation (m_run_all))
+
+			l_menu.extend (l_menu_item)
+			create l_menu_item.make_with_text (local_formatter.translation (m_run_failing))
+			l_menu.extend (l_menu_item)
+			create l_menu_item.make_with_text (local_formatter.translation (m_run_filtered))
+			l_menu.extend (l_menu_item)
+			create l_menu_item.make_with_text (local_formatter.translation (m_run_selected))
+			l_menu.extend (l_menu_item)
+			run_button.set_menu (l_menu)
+
+			Result.put_last (run_button)
+
+				-- Create stop button
+			create stop_button.make
+			stop_button.set_tooltip (local_formatter.translation (f_stop_button))
+			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
+			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
+
+			Result.put_last (stop_button)
+
+
 			--create Result.make (0)
 		end
+
+feature {NONE} -- Internationalization
+
+	f_run_button: STRING = "Run tests in background"
+	m_run_all: STRING = "Run all"
+	m_run_failing: STRING = "Run failing"
+	m_run_filtered: STRING = "Run filtered"
+	m_run_selected: STRING = "Run selected"
+
+	f_stop_button: STRING = "Stop all execution"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

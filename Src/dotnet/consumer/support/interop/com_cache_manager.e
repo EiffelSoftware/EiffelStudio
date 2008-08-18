@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 				check
 					app_domain_not_exists: app_domain = Void
 				end
-				app_domain := {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + {GUID}.new_guid.to_string, Void, Void)
+				app_domain := {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + create {STRING_8}.make_from_cil ({GUID}.new_guid.to_string), Void, Void)
 
 					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
 				l_type := {COM_CACHE_MANAGER}

@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 					folder_name := a_id.twin
 				else
 					create folder_name.make (l_name.name.length + a_id.count + 1)
-					folder_name.append (l_name.name)
+					folder_name.append (create {STRING_8}.make_from_cil (l_name.name))
 					folder_name.append_character ('!')
 					folder_name.append (a_id)
 				end

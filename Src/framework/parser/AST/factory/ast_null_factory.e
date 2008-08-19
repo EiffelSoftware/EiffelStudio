@@ -11,8 +11,8 @@ inherit
 	AST_FACTORY
 		redefine
 			new_access_assert_as, new_access_feat_as, new_access_id_as, new_access_inv_as,
-			new_address_as, new_address_current_as, new_address_result_as, new_all_as,
-			new_array_as, new_assign_as, new_bin_and_as, new_bin_and_then_as, new_bin_div_as,
+			new_address_as, new_address_current_as, new_address_result_as, new_all_as, new_array_as,
+			new_assign_as, new_attribute_as, new_bin_and_as, new_bin_and_then_as, new_bin_div_as,
 			new_bin_eq_as, new_bin_free_as, new_bin_ge_as, new_bin_gt_as, new_bin_implies_as,
 			new_bin_le_as, new_bin_lt_as, new_bin_minus_as, new_bin_mod_as, new_bin_ne_as,
 			new_bin_not_tilde_as, new_bin_or_as, new_bin_or_else_as, new_bin_plus_as,
@@ -362,6 +362,11 @@ feature -- Access
 
 	new_assign_as (t: ACCESS_AS; s: EXPR_AS; a_as: SYMBOL_AS): ASSIGN_AS is
 			-- New ASSIGN AST node
+		do
+		end
+
+	new_attribute_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ATTRIBUTE_AS is
+			-- New ATTRIBUTE AST node
 		do
 		end
 

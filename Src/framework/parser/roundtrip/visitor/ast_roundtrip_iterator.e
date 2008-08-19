@@ -911,6 +911,12 @@ feature
 			safe_process (l_as.alias_name_literal)
 		end
 
+	process_attribute_as (l_as: ATTRIBUTE_AS) is
+		do
+			safe_process (l_as.attribute_keyword (match_list))
+			safe_process (l_as.compound)
+		end
+
 	process_do_as (l_as: DO_AS) is
 		do
 			safe_process (l_as.do_keyword (match_list))

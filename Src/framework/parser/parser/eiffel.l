@@ -263,13 +263,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
-				last_token := TE_ID
-				process_id_as
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
+				last_keyword_as_value := ast_factory.new_keyword_as (TE_ASSIGN, Current)
+				if last_keyword_as_value /= Void then
+					last_keyword_as_id_index := last_keyword_as_value.index
 				end
+				last_token := TE_ATTRIBUTE
 			}
 [bB][iI][tT]	{			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)

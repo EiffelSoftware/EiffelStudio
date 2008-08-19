@@ -134,6 +134,7 @@ UTF8_tail	[\x80-\xBF]
 [aA][nN][dD]						|
 [aA][sS]						|
 [aA][sS][sS][iI][gG][nN]				|
+[aA][tT][tT][rR][iI][bB][uU][tT][eE]		|
 [bB][iI][tT]					|
 [cC][hH][eE][cC][kK]					|
 [cC][lL][aA][sS][sS]					|
@@ -487,7 +488,7 @@ UTF8_tail	[\x80-\xBF]
 %%
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

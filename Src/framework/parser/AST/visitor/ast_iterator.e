@@ -618,6 +618,11 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_attribute_as (l_as: ATTRIBUTE_AS) is
+		do
+			safe_process (l_as.compound)
+		end
+
 	process_do_as (l_as: DO_AS) is
 		do
 			safe_process (l_as.compound)
@@ -899,7 +904,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

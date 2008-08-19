@@ -95,6 +95,7 @@ inherit
 			process_loop_as,
 			process_retry_as,
 			process_external_as,
+			process_attribute_as,
 			process_do_as,
 			process_once_as,
 			process_type_dec_as,
@@ -1647,6 +1648,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_attribute_as (l_as: ATTRIBUTE_AS) is
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			if l_as.compound /= Void then
+				format_compound (l_as.compound)
+			end
+		end
+
 	process_do_as (l_as: DO_AS) is
 		do
 			check
@@ -2757,7 +2768,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

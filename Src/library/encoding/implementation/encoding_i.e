@@ -16,6 +16,9 @@ inherit
 		end
 
 	ENCODING_HELPER
+		export
+			{NONT} all
+		end
 
 feature {ENCODING} -- String encoding convertion
 
@@ -37,19 +40,30 @@ feature {ENCODING} -- Reset
 	reset is
 			-- Reset
 		do
-			last_converted_stream := Void
 			last_converted_string := Void
 			last_conversion_successful := False
+			last_was_wide_string := False
 		ensure
-			last_converted_stream_reset: last_converted_stream = Void
 			last_converted_string_reset: last_converted_string = Void
 			last_conversion_successful_reset: last_conversion_successful = False
 		end
 
 feature {ENCODING} -- Access
 
-	last_converted_stream: STRING_8
+	last_converted_stream: STRING_8 is
 			-- Stream prepresentation of last converted string.
+		do
+			if last_converted_string /= Void then
+				if last_was_wide_string then
+					Result := string_16_to_stream (last_converted_string.as_string_32)
+				else
+					Result := string_general_to_stream (last_converted_string)
+				end
+			end
+		ensure
+			last_converted_string_syn_with_last_converted_stream:
+					(last_converted_string /= Void) = (Result /= Void)
+		end
 
 	last_converted_string: STRING_GENERAL
 			-- Last converted string.
@@ -71,6 +85,9 @@ feature {ENCODING} -- Status report
 
 	last_conversion_successful: BOOLEAN
 			-- Was last conversion successful?
+
+	last_was_wide_string: BOOLEAN
+			-- Last conversion result was wide string?
 
 feature {NONE} -- Status report
 
@@ -126,6 +143,8 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	utf16_to_utf32 (a_str: STRING_32): STRING_32 is
@@ -162,6 +181,8 @@ feature {NONE} -- Implementation
 					Result.append_code (l_temp)
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

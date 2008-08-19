@@ -84,14 +84,10 @@ feature -- Start Job / Reinitialization
 			l_string: STRING
 		do
 			if current_encoding /= Void then
-				if not current_encoding_is_utf8 then
-					utf32.convert_to (current_encoding, a_string)
-					l_string := utf32.last_converted_stream
-					if not current_encoding.last_conversion_successful then
-						l_string := a_string.as_string_8
-					end
-				else
-					l_string := utf32_to_utf8 (a_string)
+				utf32.convert_to (current_encoding, a_string)
+				l_string := utf32.last_converted_stream
+				if not current_encoding.last_conversion_successful then
+					l_string := a_string.as_string_8
 				end
 			else
 				l_string := a_string.as_string_8
@@ -193,175 +189,18 @@ feature {NONE} -- Encoding implementation
 			l_str: STRING_32
 		do
 			if current_encoding /= Void then
-					-- We use Eiffel implementation to convert UTF-8 to UTF-32
-					-- instead of the encoding library.
-					-- This is twice faster.
-				if not current_encoding_is_utf8 then
-					current_encoding.convert_to (utf32, a_text)
-					l_str := current_encoding.last_converted_string
-					if current_encoding.last_conversion_successful then
-						Result := l_str
-					else
-						Result := a_text
-					end
+				current_encoding.convert_to (utf32, a_text)
+				l_str := current_encoding.last_converted_string
+				if current_encoding.last_conversion_successful then
+					Result := l_str
 				else
-					Result := utf8_to_utf32 (a_text)
+					Result := a_text
 				end
 			else
 				Result := a_text
 			end
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-	current_encoding_is_utf8: BOOLEAN is
-			-- Is `current_encoding' UTF8?
-			-- Use once to optimize, since the encoding is not going to change.
-		once
-			if current_encoding /= Void then
-				Result := current_encoding.is_equal (utf8)
-			end
-		end
-
-	utf8_to_utf32 (a_string: STRING_8): STRING_32 is
-			-- UTF32 to UTF8 conversion, Eiffel implementation.
-		local
-			l_ptr: MANAGED_POINTER
-			l_nat8: NATURAL_8
-			l_code: NATURAL_32
-			i, nb, cnt: INTEGER
-		do
-			from
-				i := 0
-				cnt := 0
-				nb := a_string.count
-				create l_ptr.share_from_pointer (a_string.area.base_address, nb)
-				create Result.make (nb)
-				Result.set_count (nb)
-			until
-				i = nb
-			loop
-				l_nat8 := l_ptr.read_natural_8 (i)
-				cnt := cnt + 1
-				if l_nat8 <= 127 then
-						-- Form 0xxxxxxx.
-					Result.put (l_nat8.to_character_8, cnt)
-
-				elseif (l_nat8 & 0xE0) = 0xC0 then
-						-- Form 110xxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
-					i := i + 1
-					l_nat8 := l_ptr.read_natural_8 (i)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-
-				elseif (l_nat8 & 0xF0) = 0xE0 then
-					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
-					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := l_ptr.read_natural_8 (i + 2)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 2
-
-				elseif (l_nat8 & 0xF8) = 0xF0 then
-					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
-					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
-					l_nat8 := l_ptr.read_natural_8 (i + 2)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := l_ptr.read_natural_8 (i + 3)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 3
-
-				elseif (l_nat8 & 0xFC) = 0xF8 then
-					-- Starts with 111110xx
-					-- This seems to be a 5 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 4
-
-				else
-					-- Starts with 1111110x
-					-- This seems to be a 6 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 5
-
-				end
-				i := i + 1
-			end
-			Result.set_count (cnt)
-		end
-
-	utf32_to_utf8 (a_string: STRING_32): STRING_8 is
-			-- Convert UTF32 to UTF8.
-		require
-			a_string_not_void: a_string /= Void
-		local
-			bytes_written: INTEGER
-			i: INTEGER
-			l_code: NATURAL_32
-			l_string_length: INTEGER
-		do
-			l_string_length := a_string.count
-
-				-- First compute how many bytes we need to convert `a_string' to UTF-8.
-			from
-				i := l_string_length
-				bytes_written := 0
-			until
-				i = 0
-			loop
-				l_code := a_string.code (i)
-				if l_code <= 127 then
-					bytes_written := bytes_written + 1
-				elseif l_code <= 0x7FF then
-					bytes_written := bytes_written + 2
-				elseif l_code <= 0xFFFF then
-					bytes_written := bytes_written + 3
-				else -- l_code <= 0x10FFFF
-					bytes_written := bytes_written + 4
-				end
-				i := i - 1
-			end
-
-				-- Fill `utf_ptr8' with the converted data.
-			from
-				i := 1
-				create Result.make (bytes_written)
-			until
-				i > l_string_length
-			loop
-				l_code := a_string.code (i)
-				if l_code <= 127 then
-						-- Of the form 0xxxxxxx.
-					Result.append_code (l_code)
-				elseif l_code <= 0x7FF then
-						-- Insert 110xxxxx 10xxxxxx.
-					Result.append_code (0xC0 | (l_code |>> 6))
-					Result.append_code (0x80 | (l_code & 0x3F))
-				elseif l_code <= 0xFFFF then
-						-- Start with 1110xxxx
-					Result.append_code (0xE0 | (l_code |>> 12))
-					Result.append_code (0x80 | ((l_code |>> 6) & 0x3F))
-					Result.append_code (0x80 | (l_code & 0x3F))
-				else -- l_code <= 0x10FFFF then
-						-- Start with 11110xxx
-					check
-						max_4_bytes: l_code <= 0x10FFFF
-						-- UTF-8 has been restricted to 4 bytes characters
-					end
-					Result.append_code (0xF0 | (l_code |>> 18))
-					Result.append_code (0x80 | ((l_code |>> 12) & 0x3F))
-					Result.append_code (0x80 | ((l_code |>> 6) & 0x3F))
-					Result.append_code (0x80 | (l_code & 0x3F))
-				end
-				i := i + 1
-			end
 		end
 
 feature {NONE} -- Processing

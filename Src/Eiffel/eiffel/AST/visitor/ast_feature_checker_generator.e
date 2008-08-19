@@ -6293,6 +6293,29 @@ feature -- Implementation
 			end
 		end
 
+	process_attribute_as (l_as: ATTRIBUTE_AS) is
+		local
+			l_list: BYTE_LIST [BYTE_NODE]
+			l_std_byte_code: STD_BYTE_CODE
+			l_needs_byte_node: BOOLEAN
+		do
+			l_needs_byte_node := is_byte_node_enabled
+			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
+
+			if l_as.compound /= Void then
+				process_compound (l_as.compound)
+				if l_needs_byte_node then
+					l_list ?= last_byte_node
+				end
+			end
+			if l_needs_byte_node then
+				create l_std_byte_code
+				l_std_byte_code.set_compound (l_list)
+				last_byte_node := l_std_byte_code
+			end
+			break_point_slot_count := break_point_slot_count + 1
+		end
+
 	process_do_as (l_as: DO_AS) is
 		local
 			l_list: BYTE_LIST [BYTE_NODE]

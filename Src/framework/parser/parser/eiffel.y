@@ -73,8 +73,8 @@ create
 %token <KEYWORD_AS> TE_PREFIX
 
 %token <KEYWORD_AS> TE_IS
-%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
-%token <KEYWORD_AS> TE_ASSIGN TE_BIT TE_CHECK TE_CLASS TE_CONVERT
+%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS TE_ASSIGN
+%token <KEYWORD_AS> TE_ATTRIBUTE TE_BIT TE_CHECK TE_CLASS TE_CONVERT
 %token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
@@ -1401,6 +1401,8 @@ Internal: TE_DO Compound
 			{ $$ := ast_factory.new_do_as ($2, $1) }
 	|	TE_ONCE Compound
 			{ $$ := ast_factory.new_once_as ($2, $1) }
+	|	TE_ATTRIBUTE Compound
+			{ $$ := ast_factory.new_attribute_as ($2, $1) }
 	;
 
 Local_declarations: -- Empty

@@ -2720,6 +2720,21 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.put_new_line
 		end
 
+	process_attribute_as (l_as: ATTRIBUTE_AS) is
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			text_formatter_decorator.process_keyword_text (ti_attribute_keyword, Void)
+			text_formatter_decorator.put_new_line
+			if l_as.compound /= Void then
+				text_formatter_decorator.indent
+				format_compound (l_as.compound)
+				text_formatter_decorator.put_new_line
+				text_formatter_decorator.exdent
+			end
+		end
+
 	process_do_as (l_as: DO_AS) is
 		do
 			check

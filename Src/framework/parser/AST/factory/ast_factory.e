@@ -614,6 +614,12 @@ feature -- Access
 			end
 		end
 
+	new_attribute_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ATTRIBUTE_AS is
+			-- New ATTRIBUTE AST node
+		do
+			create Result.make (c, k_as)
+		end
+
 	new_bin_and_as (l, r: EXPR_AS; o: LEAF_AS): BIN_AND_AS is
 			-- New binary and AST node
 		do

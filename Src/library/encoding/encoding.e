@@ -61,9 +61,24 @@ feature -- Conversion
 		require
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
+		local
+			l_unicode_conversion: BOOLEAN
 		do
+			if
+				unicode_conversion.is_code_page_valid (a_to_encoding.code_page) and then
+				unicode_conversion.is_code_page_valid (code_page) and then
+				unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
+			then
+				encoding_imp := unicode_conversion
+				l_unicode_conversion := True
+			else
+				encoding_imp := regular_encoding_imp
+			end
+
 			encoding_i.reset
-			if a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
+			if l_unicode_conversion then
+				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
+			elseif a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
 				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
 			end
 		end
@@ -106,18 +121,31 @@ feature {ENCODING} -- Status report
 feature {NONE} -- Implementation
 
 	encoding_i: ENCODING_I is
+			-- Current encoding implementation
 		do
 			Result := encoding_imp
 			if Result = Void then
-				create {ENCODING_IMP}Result
+				Result := regular_encoding_imp
 				encoding_imp := Result
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	encoding_imp: ENCODING_I
-			-- Cached encoding imp
+	encoding_imp: like encoding_i
+			-- Cached current encoding implementation
+
+	unicode_conversion: UNICODE_CONVERSION is
+			-- Unicode conversion
+		once
+			create Result
+		end
+
+	regular_encoding_imp: ENCODING_I is
+			-- Regular encoding implementation (Distinguashed from Unicode conversion)
+		once
+			create {ENCODING_IMP}Result
+		end
 
 invariant
 	code_page_not_void: code_page /= Void

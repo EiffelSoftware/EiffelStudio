@@ -100,10 +100,10 @@ feature -- String encoding convertion
 								end
 							end
 						end
+						last_was_wide_string := True
 					else
 						l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 					end
-					last_converted_stream := pointer_to_multi_byte (l_pointer, l_out_count)
 				else
 					check
 						l_pointer_not_void: l_pointer /= Void

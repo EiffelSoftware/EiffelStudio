@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Helper routines for encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -155,6 +155,20 @@ feature {NONE} -- Implementation
 			loop
 				Result.put (l_managed_pointer.read_natural_8 (i).to_character_8, i + 1)
 				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	string_general_to_stream (a_string: STRING_GENERAL): STRING is
+			-- Streamize `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			if a_string.is_string_8 then
+				Result := a_string.as_string_8
+			else
+				Result := string_32_to_stream (a_string.as_string_32)
 			end
 		ensure
 			Result_not_void: Result /= Void

@@ -149,6 +149,8 @@ feature {NONE} -- Initialization
 			auto_recycle (shell_tools)
 			create ui.make (Current)
 			auto_recycle (ui)
+			create docking_layout_manager.make (Current)
+			auto_recycle (docking_layout_manager)
 
 			window_id := next_window_id
 		end
@@ -1112,7 +1114,7 @@ feature -- Window management
 
 			save_editors_to_session_data (Result)
 
-			save_editors_docking_layout
+			docking_layout_manager.save_editors_docking_layout
 
 			if tools.features_relation_tool /= Void then
 				l_feature_stone ?= tools.features_relation_tool.stone
@@ -1151,185 +1153,8 @@ feature -- Window management
 			a_data.save_formatting_marks (editors_manager.show_formatting_marks)
 		end
 
-	save_tools_docking_layout is
-			-- Save all tools docking layout.
-		local
-			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
-		do
-			l_eb_debugger_manager ?= debugger_manager
-			-- If directly exiting Eiffel Studio from EB_DEBUGGER_MANAGER, then we don't save the tools layout,
-			-- because current widgets layout is debug mode layout (not normal mode layout),
-			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
-			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
-				docking_manager.save_tools_config (eiffel_layout.user_docking_standard_file_name (window_id))
-			end
-		end
-
-	save_editors_docking_layout is
-			-- Save all editors docking layout.
-		do
-			docking_manager.save_editors_config (project_docking_standard_file_name)
-		end
-
-	construct_standard_layout_by_code is
-			-- After docking manager have all widgets, set all tools to standard default layout.
-		local
-			l_tool: EB_TOOL
-			l_last_tool: EB_TOOL
-			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
-			l_no_locked_window: BOOLEAN
-			l_features_tool: ES_FEATURES_TOOL
-		do
-			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
-			if l_no_locked_window then
-				window.lock_update
-			end
-			close_all_tools
-
-			-- Right bottom tools
-			l_tool := tools.c_output_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-
-			l_tool := shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			l_tool.content.set_tab_with (tools.c_output_tool.content, True)
-			l_last_tool := l_tool
-
-			l_tool := tools.output_tool
-			l_tool.content.set_tab_with (l_last_tool.content, True)
-
-			l_tool := tools.features_relation_tool
-			l_tool.content.set_tab_with (tools.output_tool.content, True)
-
-			l_tool := tools.class_tool
-			l_tool.content.set_tab_with (tools.features_relation_tool.content, True)
-
-			l_tool.content.set_split_proportion (0.6)
-
-			-- Right tools
-			l_features_tool ?= shell_tools.tool ({ES_FEATURES_TOOL})
-
-			l_tool := tools.favorites_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.right)
-			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (tools.favorites_tool.content, True)
-			l_tool := tools.cluster_tool
-			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
-			l_tool.content.set_split_proportion (0.73)
-
-			-- Auto hide tools
-			l_tool := tools.diagram_tool
-			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				-- Docking library will add a feature to set auto hide tab stub order directly in the future. -- Larry 2007/7/13
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			l_tool := tools.dependency_tool
-			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			l_tool := tools.metric_tool
-			l_tool.content.set_tab_with (tools.dependency_tool.content, False)
-
-			shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
-
-			-- Tool bars
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
-			l_tool_bar_content_2 := l_tool_bar_content
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_address_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top_with (l_tool_bar_content_2)
-
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_refactory_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-			-- We first call `set_top' because we want set a default location for the tool bar.
-			l_tool_bar_content.hide
-
-			if l_no_locked_window then
-				window.unlock_update
-			end
-		end
-
-	restore_tools_docking_layout is
-			-- Restore docking layout information
-		do
-			-- We can't restore tools layout when `window'.`is_minimized' since EV_SPLIT_AREA can't be restored if window minimized
-			-- See bug#14309
-			if window.is_minimized then
-				restore_agent_for_restore_action := agent restore_tools_docking_layout_immediately
-				window.restore_actions.extend_kamikaze (restore_agent_for_restore_action)
-
-				-- If window is minized from maximized states directly...
-				restore_agent_for_maximize_action := agent restore_tools_docking_layout_immediately
-				window.maximize_actions.extend_kamikaze (restore_agent_for_maximize_action)
-			else
-				restore_tools_docking_layout_immediately
-			end
-		end
-
-	restore_editors_docking_layout is
-			-- Restore docking layout information.
-		local
-			l_file_name: STRING
-			l_file: RAW_FILE
-		do
-			l_file_name := project_docking_standard_file_name
-			if l_file_name /= Void and then not l_file_name.is_empty then
-				create l_file.make (l_file_name)
-				if l_file.exists then
-					docking_manager.open_editors_config (l_file_name)
-				end
-
-				if not l_file.is_closed then
-					l_file.close
-				end
-			end
-		end
-
-	restore_standard_tools_docking_layout is
-			-- Restore statndard layout.
-		local
-			l_file_name: STRING
-			l_file: RAW_FILE
-			l_result: BOOLEAN
-			retried: BOOLEAN
-		do
-			if not retried then
-				l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
-				create l_file.make (l_file_name)
-				if l_file.exists then
-					l_result := docking_manager.open_tools_config (l_file_name)
-					check open_tools_config_succeed: l_result end
-				else
-					construct_standard_layout_by_code
-				end
-			else
-				construct_standard_layout_by_code
-			end
-			menus.update_menu_lock_items
-			menus.update_show_tool_bar_items
-		rescue
-			if not retried then
-				retried := True
-				retry
-			end
-		end
+	docking_layout_manager: EB_DOCKING_LAYOUT_MANAGER
+			-- Docking layout manager
 
 	close_all_tools is
 			-- Close all tools.
@@ -1554,14 +1379,14 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			save_size
 				-- Create session data from above saved data.
 			create l_develop_window_data.make_from_window_data (development_window_data)
-			save_tools_docking_layout
+			docking_layout_manager.save_tools_docking_layout
 			session_data.set_value (l_develop_window_data, development_window_data.development_window_data_id)
 
 			if (create {SHARED_WORKBENCH}).workbench.system_defined then
 				-- Editor data save to per-project session data.
 				create l_develop_window_data.make_from_window_data (development_window_data)
 				save_editors_to_session_data (l_develop_window_data)
-				save_editors_docking_layout
+				docking_layout_manager.save_editors_docking_layout
 
 				-- Must use project *window* session data here.
 				project_session_data.set_value (l_develop_window_data, development_window_data.development_window_project_data_id)
@@ -2600,15 +2425,6 @@ feature {EB_DEVELOPMENT_WINDOW_PART}
 			set: context_refreshing_timer = a_timer
 		end
 
-feature -- Files (project)
-
-	project_docking_standard_file_name: !FILE_NAME
-			-- Docking config file name.
-		do
-			create Result.make_from_string (project_location.target_path)
-			Result.set_file_name (eiffel_layout.docking_standard_file + "_" + window_id.out)
-		end
-
 feature {NONE} -- Window management
 
 	frozen next_window_id: like window_id
@@ -2623,40 +2439,6 @@ feature {NONE} -- Window management
 				do
 					Result := a_window.window_id /= a_id or else a_window = Current
 				end (?, Result))
-		end
-
-	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]
-			-- Restore agent recorded for cleanup
-
-	restore_tools_docking_layout_immediately is
-			-- Restore docking layout information immediately
-		local
-			l_result: BOOLEAN
-			l_file_name: STRING
-			l_raw_file: RAW_FILE
-		do
-			-- Cleanup agents
-			if (restore_agent_for_maximize_action /= Void)then
-				window.maximize_actions.prune_all (restore_agent_for_maximize_action)
-				restore_agent_for_maximize_action := Void
-			end
-
-			if (restore_agent_for_restore_action /= Void) then
-				window.restore_actions.prune_all (restore_agent_for_restore_action)
-				restore_agent_for_restore_action := Void
-			end
-
-			l_file_name := eiffel_layout.user_docking_standard_file_name (window_id)
-			create l_raw_file.make (l_file_name)
-			if l_raw_file.exists then
-				l_result := docking_manager.open_tools_config (l_file_name)
-			end
-
-			if not l_result then
-				restore_standard_tools_docking_layout
-			end
-			menus.update_menu_lock_items
-			menus.update_show_tool_bar_items
 		end
 
 feature {NONE} -- Internal implementation cache

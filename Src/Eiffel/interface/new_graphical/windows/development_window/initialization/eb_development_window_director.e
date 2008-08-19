@@ -50,7 +50,7 @@ feature -- Command
 				not develop_window.docking_manager.is_config_data_valid (eiffel_layout.user_docking_standard_file_name (develop_window.window_id)) or else
 				l_debugger_manager.debug_mode_forced -- There is already a window forced debug mode. We open an normal window.
 			then
-				develop_window.restore_tools_docking_layout
+				develop_window.docking_layout_manager.restore_tools_docking_layout
 				if l_debugger_manager /= Void then
 					l_debugger_manager.force_debug_mode_cmd.synchronize_items
 				end
@@ -144,7 +144,7 @@ feature -- Command
 				l_has_editor_restored := develop_window.editors_manager.restore_editors (l_project_session_data.open_classes, l_project_session_data.open_clusters)
 			end
 			if l_has_editor_restored then
-				develop_window.restore_editors_docking_layout
+				develop_window.docking_layout_manager.restore_editors_docking_layout
 				develop_window.editors_manager.show_editors_possible
 				l_debugger_manager ?= develop_window.debugger_manager
 				if not l_debugger_manager.raised then

@@ -186,22 +186,31 @@ feature {NONE} -- Implementation functions
 			-- On `ok' button pressed.
 		local
 			l_str: STRING_GENERAL
+			l_result: BOOLEAN
 		do
 			l_str := text_for_name.text
 			if l_str /= Void and then not l_str.as_string_8.is_equal ("") then
 				if manager.layouts.has (l_str) then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt_with_cancel (interface_names.l_overwrite_layout (l_str), Current, agent on_overwirte_and_destory (l_str), Void, agent destroy)
 				else
-					manager.add_layout (l_str)
+					l_result := manager.add_layout (l_str)
+					if not l_result then
+						show_last_error
+					end
 					destroy
 				end
 			end
 		end
 
 	on_overwirte_and_destory (a_name: STRING_GENERAL) is
-			-- Hanle overwrite and destory actions.
+			-- Handle overwrite and destory actions.
+		local
+			l_result: BOOLEAN
 		do
-			manager.add_layout (a_name)
+			l_result := manager.add_layout (a_name)
+			if not l_result then
+				show_last_error
+			end
 			destroy
 		end
 
@@ -246,6 +255,22 @@ feature {NONE} -- Implementation functions
 			else
 
 			end
+		end
+
+	show_last_error is
+			-- Show last exception error
+		local
+			l_information: ES_PROMPT_PROVIDER
+			l_exception: EXCEPTION_MANAGER
+			l_meaning: STRING_GENERAL
+		do
+			create l_exception
+			l_meaning := l_exception.last_exception.meaning
+			if l_meaning = Void then
+				l_meaning := interface_names.l_unknown_error
+			end
+			create l_information
+			l_information.show_error_prompt (interface_names.l_saving_docking_data_error (l_meaning), Current, void)
 		end
 
 feature {NONE} -- Implementation

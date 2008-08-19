@@ -262,8 +262,8 @@ feature -- Query
 
 feature -- Command
 
-	save_config (a_file: STRING_GENERAL) is
-			-- Save current docking config.
+	save_data (a_file: STRING_GENERAL): BOOLEAN is
+			-- Save current docking config data.
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -271,10 +271,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.save_config (a_file)
+			Result := l_config.save_config (a_file)
 		end
 
-	save_editors_config (a_file: STRING_GENERAL) is
+	save_editors_data (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save main window editor config.
 		require
 			not_void: a_file /= Void
@@ -283,10 +283,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.save_editors_config (a_file)
+			Result := l_config.save_editors_config (a_file)
 		end
 
-	save_tools_config (a_file: STRING_GENERAL) is
+	save_tools_data (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save tools config
 		require
 			not_void: a_file /= Void
@@ -295,10 +295,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.save_tools_config (a_file)
+			Result := l_config.save_tools_config (a_file)
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+	save_tools_data_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
 			-- Save tools config
 		require
 			not_void: a_file /= Void
@@ -307,7 +307,7 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.save_tools_config_with_name (a_file, a_name)
+			Result := l_config.save_tools_config_with_name (a_file, a_name)
 		end
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN is
@@ -687,6 +687,60 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 	internal_auto_hide_panel_top,
 	internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
+
+feature -- Obsolete
+
+	save_config (a_file: STRING_GENERAL) is
+			-- Save current docking config.
+		obsolete
+			"Use save_data instead"
+		require
+			a_file_not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		local
+			l_result: BOOLEAN
+		do
+			l_result := save_data (a_file)
+		end
+
+	save_editors_config (a_file: STRING_GENERAL) is
+			-- Save main window editor config.
+		obsolete
+			"Use save_editors_data instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		local
+			l_result: BOOLEAN
+		do
+			l_result := save_editors_data (a_file)
+		end
+
+	save_tools_config (a_file: STRING_GENERAL) is
+			-- Save tools config
+		obsolete
+			"Use save_tools_data instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		local
+			l_result: BOOLEAN
+		do
+			l_result := save_tools_data (a_file)
+		end
+
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+			-- Save tools config
+		obsolete
+			"Use save_tools_data_with_name instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		local
+			l_result: BOOLEAN
+		do
+			l_result := save_tools_data_with_name (a_file, a_name)
+		end
 
 invariant
 

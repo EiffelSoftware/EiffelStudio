@@ -49,10 +49,10 @@ feature -- Command
 				create l_stock_pixmaps
 				develop_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
 
-				develop_window.construct_standard_layout_by_code
+				develop_window.docking_layout_manager.construct_standard_layout_by_code
 
 				if l_graphical_debugger.raised then
-					l_graphical_debugger.restore_standard_debug_docking_layout_by_code
+					develop_window.docking_layout_manager.restore_standard_debug_docking_layout_by_code
 				end
 
 				develop_window.window.set_pointer_style (l_pointer_style)

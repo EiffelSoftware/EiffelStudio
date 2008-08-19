@@ -1545,6 +1545,7 @@ feature -- Label texts
 		end
 	l_Unknown_status: STRING_32 is			do Result := locale.translation("Unknown application status")	end
 	l_Unknown_cluster_name: STRING_32 is	do Result := locale.translation("Unknown cluster name")	end
+	l_Unknown_error: STRING_32 is			do Result := locale.translation("Unknown error")	end
 	l_unhandled: STRING_32 is 				do Result := locale.translation ("UnHandled") end
 	l_unselected: STRING_32 is 				do Result := locale.translation ("Unselected") end
 	l_up_to_depth_of: STRING_32 is 			do Result := locale.translation ("Up to depth of") end
@@ -1892,6 +1893,14 @@ feature -- Label texts
 
 	h_search_for_class_recursively: STRING_32 is do Result := locale.translation ("Search folder for classes recursively?") end
 	l_save_layout_name: STRING_32 is do Result := locale.translation ("Enter or select a name to save the current layout as.") end
+
+	l_saving_docking_data_error (a_expression: STRING_GENERAL): STRING_32 is
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Saving docking data error: %"$1%""), [a_expression])
+		end
+
 	l_shortcut_modification_denied: STRING_32 is do Result := locale.translation ("Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system.") end
 	l_layout_name: STRING_32 is do Result := locale.translation ("Name:") end
 	l_existing_layout_names: STRING_32 is do Result := locale.translation ("Existing Layouts:") end

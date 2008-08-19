@@ -9,7 +9,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Save inner container data.
 
-	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
@@ -38,7 +38,7 @@ feature -- Save inner container data.
 		do
 			create l_config_data.make
 			save_config_with_name_maximized_data (l_config_data, a_name, True)
-			save_config_data_to_file (l_config_data, a_file)
+			Result := save_config_data_to_file (l_config_data, a_file)
 		end
 
 	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN) is
@@ -77,15 +77,15 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_config (a_file: STRING_GENERAL) is
+	save_config (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save all docking library data to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			save_config_with_name (a_file, "")
+			Result := save_config_with_name (a_file, "")
 		end
 
-	save_editors_config (a_file: STRING_GENERAL)is
+	save_editors_config (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save main window editor config data.
 		require
 			not_void: a_file /= Void
@@ -94,9 +94,6 @@ feature -- Save inner container data.
 			l_dock_area: SD_MULTI_DOCK_AREA
 			l_container: EV_CONTAINER
 			l_config_data: SD_INNER_CONTAINER_DATA
-			l_file: RAW_FILE
-			l_facility: SED_STORABLE_FACILITIES
-			l_writer: SED_MEDIUM_READER_WRITER
 			l_maximized_zone: SD_ZONE
 		do
 			if not internal_docking_manager.contents.has (internal_docking_manager.zones.place_holder_content) then
@@ -128,26 +125,22 @@ feature -- Save inner container data.
 				save_place_holder_data (l_config_data)
 			end
 			if l_config_data /= Void then
-				create l_file.make_create_read_write (a_file.as_string_8)
-				create l_writer.make (l_file)
-				create l_facility
-				l_facility.independent_store (l_config_data, l_writer, True)
-				l_file.close
+				Result := save_config_data_to_file (l_config_data, a_file.as_string_8)
 			end
 			top_container := Void
 		ensure
 			cleared: top_container = Void
 		end
 
-	save_tools_config (a_file: STRING_GENERAL) is
+	save_tools_config (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save tools config, except all editors.
 		require
 			not_void: a_file /= Void
 		do
-			save_tools_config_with_name (a_file, "")
+			Result := save_tools_config_with_name (a_file, "")
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
 			-- Save tools config to `a_file' with `a_name'
 		require
 			not_called: top_container = Void
@@ -184,7 +177,7 @@ feature -- Save inner container data.
 
 			top_container := Void
 
-			save_config_data_to_file (l_config_data, a_file)
+			Result := save_config_data_to_file (l_config_data, a_file)
 		ensure
 			cleared: top_container = Void
 		end
@@ -542,8 +535,10 @@ feature {NONE} -- Implementation
 			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end
 
-	save_config_data_to_file (a_config_data: SD_CONFIG_DATA; a_file: STRING_GENERAL) is
+	save_config_data_to_file (a_config_data: ANY; a_file: STRING_GENERAL): BOOLEAN is
 			-- Save `a_config_data' to `a_file'
+			-- Result true means saving successed
+			-- Result false means saving failed
 		require
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_file /= Void
@@ -551,12 +546,23 @@ feature {NONE} -- Implementation
 			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
+			l_retried: BOOLEAN
 		do
-			create l_file.make_create_read_write (a_file.as_string_8)
-			create l_writer.make (l_file)
-			create l_facility
-			l_facility.independent_store (a_config_data, l_writer, True)
-			l_file.close
+			if not l_retried then
+				create l_file.make_create_read_write (a_file.as_string_8)
+				create l_writer.make (l_file)
+				create l_facility
+				l_facility.independent_store (a_config_data, l_writer, True)
+				l_file.close
+				Result := True
+			end
+		rescue
+			l_retried := True
+			-- see bug#14426
+			if l_file /= Void and then not l_file.is_closed then
+				l_file.close
+			end
+			retry
 		end
 
 feature {NONE} -- Implementation attributes

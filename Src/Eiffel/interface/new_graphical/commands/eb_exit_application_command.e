@@ -117,7 +117,7 @@ feature {NONE} -- Callbacks
 				Debugger_manager.application.kill
 			end
 			if Eb_debugger_manager.debug_mode_forced then
-				Eb_debugger_manager.save_debug_docking_layout
+				Eb_debugger_manager.debugging_window.docking_layout_manager.save_debug_docking_layout
 			end
 
 				-- If we are going to kill the application, we'd better warn project observers that the project will
@@ -145,7 +145,10 @@ feature {NONE} -- Callbacks
 				customized_formatter_manager.store
 			end
 
-			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.save_tools_docking_layout)
+			window_manager.for_all_development_windows (agent (a_window: EB_DEVELOPMENT_WINDOW)
+																	do
+																		a_window.docking_layout_manager.save_tools_docking_layout
+																	end)
 
 				-- Destroy all development windows.
 			window_manager.close_all

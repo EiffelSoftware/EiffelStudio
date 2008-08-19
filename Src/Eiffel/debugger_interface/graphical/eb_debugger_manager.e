@@ -344,6 +344,18 @@ feature -- Settings
 			end
 		end
 
+	refresh_breakpoints_tool is
+			-- Refresh breakpoint tool if needed.
+		do
+			if debugging_window /= Void then
+				if {l_tool: ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
+					if l_tool.shown then
+						l_tool.refresh
+					end
+				end
+			end
+		end
+		
 feature -- Access
 
 	clear_bkpt: EB_CLEAR_STOP_POINTS_COMMAND
@@ -423,7 +435,7 @@ feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 			-- Command controlling the remove object storage operation
 
-feature {EB_EXEC_FORMAT_CMD} -- Command
+feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER} -- Command
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.
@@ -1344,7 +1356,7 @@ feature -- Status setting
 			end
 
 			if a_save then
-				debugging_window.save_tools_docking_layout
+				debugging_window.docking_layout_manager.save_tools_docking_layout
 			end
 
 				-- Change the state of the debugging window.
@@ -1403,7 +1415,7 @@ feature -- Status setting
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
-			restore_debug_docking_layout
+			debugging_window.docking_layout_manager.restore_debug_docking_layout
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
@@ -1427,197 +1439,6 @@ feature -- Status setting
 			raised
 		end
 
-	restore_debug_docking_layout is
-			-- Restore debug docking layout
-		local
-			l_result: BOOLEAN
-			l_file: RAW_FILE
-		do
-			create l_file.make (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
-			if l_file.exists then
-				l_result := debugging_window.docking_manager.open_tools_config (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
-			end
-			if not l_result then
-				restore_standard_debug_docking_layout
-			end
-
-			debugging_window.menus.update_menu_lock_items
-			debugging_window.menus.update_show_tool_bar_items
-
-			refresh_breakpoints_tool
-		end
-
-	restore_standard_debug_docking_layout_by_code is
-			-- Restore standard debug docking layout.
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_dyna_tools: ES_SHELL_TOOLS
-			l_tool: EB_TOOL
-			l_last_watch_tool: ES_WATCH_TOOL
-			l_refer_tool_content: SD_CONTENT
-			l_sd_button: SD_TOOL_BAR_ITEM
-			l_wt_lst: like watch_tool_list
-		do
-			-- Setup toolbar buttons
-			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := restart_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: stop_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := stop_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: quit_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := quit_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := assertion_checking_handler_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := ignore_breakpoints_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			-- Setup tools
-			debugging_window.close_all_tools
-
-			l_dyna_tools := debugging_window.shell_tools
-
-				--| Class tool (below the editor)
-			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel
-			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			l_refer_tool_content := l_tool.content
-
-				--| Features relation tool (tabbed with Class tool)
-			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, True)
-
-				--| Call stack tool (on right)
-			call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
-
-				--| Objects tool			
-			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
-			objects_tool.show (True)
-			l_refer_tool_content := objects_tool.panel.content
-
-				--| Breakpoints tool
-			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
-			l_tool.content.set_relative (l_refer_tool_content, {SD_ENUMERATION}.right)
-			l_refer_tool_content := l_tool.content
-
-				--| Threads tool
-			threads_tool.panel.content.set_tab_with (l_refer_tool_content, True)
-			l_refer_tool_content := threads_tool.panel.content
-
-				--| Watch tools
-			l_wt_lst := watch_tool_list
-			from
-				l_wt_lst.finish
-			until
-				l_wt_lst.before
-			loop
-				if l_last_watch_tool = Void then
-					l_wt_lst.item.panel.content.set_tab_with (l_refer_tool_content, True)
-				else
-					l_wt_lst.item.panel.content.set_tab_with (l_last_watch_tool.panel.content, True)
-				end
-				l_last_watch_tool := l_wt_lst.item
-				l_wt_lst.back
-			end
-
-				--| Diagram tool
-			l_tool := l_dyna_tools.tool ({ES_DIAGRAM_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-				--| Dependency tool
-			l_tool := l_dyna_tools.tool ({ES_DEPENDENCY_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-			l_refer_tool_content := l_tool.content
-
-				--| Metrics tool
-			l_tool := l_dyna_tools.tool ({ES_METRICS_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
-
-				--| Error list tool
-			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
-				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
-
-			l_refer_tool_content := call_stack_tool.panel.content
-			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
-			l_tool.content.hide
-
-				--| Minimize all editors
-			from
-				l_contents := debugging_window.docking_manager.contents
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_contents.item.minimize
-				end
-				l_contents.forth
-			end
-		end
-
-	save_debug_docking_layout is
-			-- Save debug docking layout
-		do
-			if debugging_window /= Void then
-				debugging_window.docking_manager.save_tools_config (eiffel_layout.user_docking_debug_file_name (debugging_window.window_id))
-			end
-		end
-
-	restore_standard_debug_docking_layout is
-			-- Restore standard debug docking layout.
-		local
-			l_result: BOOLEAN
-			l_file: RAW_FILE
-			l_fn: STRING_8
-		do
-			l_fn := eiffel_layout.user_docking_debug_file_name (debugging_window.window_id).string
-			create l_file.make (l_fn)
-			if l_file.exists then
-				l_result := debugging_window.docking_manager.open_tools_config (l_fn)
-			end
-			if not l_result then
-				restore_standard_debug_docking_layout_by_code
-			end
-		end
 
 	unraise is
 			-- Make the debug tools disappear from `a_window'.
@@ -1651,13 +1472,13 @@ feature -- Status setting
 				end
 			end
 
-			save_debug_docking_layout
+			debugging_window.docking_layout_manager.save_debug_docking_layout
 			debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
 
 				-- Free and recycle tools
 			raised := False
 
-			debugging_window.restore_tools_docking_layout
+			debugging_window.docking_layout_manager.restore_tools_docking_layout
 			refresh_breakpoints_tool
 			if l_unlock then
 				debugging_window.window.unlock_update
@@ -2036,7 +1857,7 @@ feature -- Debugging events
 					debug_mode_forced := False
 					force_debug_mode_cmd.set_select (False)
 				elseif is_exiting_eiffel_studio then
-					save_debug_docking_layout
+					debugging_window.docking_layout_manager.save_debug_docking_layout
 					debugging_window := Void
 				elseif not debug_mode_forced then
 					unraise
@@ -2421,18 +2242,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			debugging_window_set: debugging_window /= Void
-		end
-
-	refresh_breakpoints_tool is
-			-- Refresh breakpoint tool if needed.
-		do
-			if debugging_window /= Void then
-				if {l_tool: ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
-					if l_tool.shown then
-						l_tool.refresh
-					end
-				end
-			end
 		end
 
 	show_watch_tool_preference: SHORTCUT_PREFERENCE is

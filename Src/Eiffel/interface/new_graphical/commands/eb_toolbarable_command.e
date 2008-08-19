@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			managed_sd_toolbar_items_not_has_item: not managed_sd_toolbar_items.has (a_toolbar_item)
 		end
 
-feature {EB_SD_COMMAND_TOOL_BAR_BUTTON, EB_DEBUGGER_MANAGER} -- Implementaiton
+feature {EB_SD_COMMAND_TOOL_BAR_BUTTON, EB_DOCKING_LAYOUT_MANAGER} -- Implementaiton
 
 	managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item] is
 			-- Managed Smart Docking lib tool bar items.

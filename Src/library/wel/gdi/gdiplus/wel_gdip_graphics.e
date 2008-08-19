@@ -1,5 +1,10 @@
 indexing
-	description: "Grapics functions in Gdi+."
+	description: "[
+					Grapics functions in Gdi+.
+					For more information, please see:
+					MSDN Graphics Functions:					
+					http://msdn.microsoft.com/en-us/library/ms534038(VS.85).aspx
+																			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

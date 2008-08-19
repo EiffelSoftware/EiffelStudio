@@ -1,5 +1,10 @@
 indexing
-	description: "Bitmap functions in Gdi+."
+	description: "[
+					Bitmap functions in Gdi+.
+					For more information, please see:
+					MSDN Bitmap Functions:
+					http://msdn.microsoft.com/en-us/library/ms533971(VS.85).aspx
+																					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -17,6 +22,7 @@ inherit
 
 create
 	make_with_size,
+	make_formatted,
 	make_with_graphics,
 	make_from_icon,
 	make_from_bitmap,
@@ -30,11 +36,21 @@ feature {NONE} -- Initlization
 		require
 			larger_than_0: a_width > 0
 			larger_than_0: a_height > 0
+		do
+			make_formatted (a_width, a_height, {WEL_GDIP_PIXEL_FORMAT}.Format32bppARGB)
+		end
+
+	make_formatted (a_width, a_height: INTEGER; a_format: INTEGER) is
+			-- Creation method
+		require
+			larger_than_0: a_width > 0
+			larger_than_0: a_height > 0
+			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (a_format)
 		local
 			l_result: INTEGER
 		do
 			default_create
-			item := c_gdip_create_bitmap_from_scan0 (gdi_plus_handle, a_width, a_height, $l_result)
+			item := c_gdip_create_bitmap_from_scan0 (gdi_plus_handle, a_width, a_height, a_format, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -263,10 +279,11 @@ feature {NONE} -- Implementation
 
 feature -- C externals
 
-	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
 			-- Create a bitmap object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (a_pixel_format)
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
@@ -284,7 +301,7 @@ feature -- C externals
 								((INT) $a_width,
 								(INT) $a_height,
 								(INT) 0,
-								(PixelFormat) PixelFormat32bppARGB,
+								(PixelFormat) $a_pixel_format,
 								(BYTE*) NULL,
 								(GpBitmap **) &l_result);
 				}

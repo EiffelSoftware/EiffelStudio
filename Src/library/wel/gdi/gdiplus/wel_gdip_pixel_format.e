@@ -109,6 +109,25 @@ feature -- Query
 				or a_format = Undefined
 		end
 
+	is_valid_format (a_format: INTEGER): BOOLEAN is
+			-- If `a_format' valid pixel format enumeration
+		do
+			Result := a_format = Format16bppArgb1555
+				or a_format = Format16bppGrayScale
+				or a_format = Format16bppRgb555
+				or a_format = Format16bppRgb565
+				or a_format = Format1bppIndexed
+				or a_format = Format24bppRgb
+				or a_format = Format32bppArgb
+				or a_format = Format32bppPArgb
+				or a_format = Format32bppRgb
+				or a_format = Format48bppRgb
+				or a_format = Format4bppIndexed
+				or a_format = Format64bppArgb
+				or a_format = Format64bppPArgb
+				or a_format = Format8bppIndexed
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

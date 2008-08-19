@@ -1,5 +1,10 @@
 indexing
-	description: "Image functions in GDI+."
+	description: "[
+					Image functions in GDI+."
+					For more information, please see:
+					MSDN Image Functions:
+					http://msdn.microsoft.com/en-us/library/ms534041(VS.85).aspx
+																					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -78,6 +83,25 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	clone_rectangle_pixel_format (a_rectangle: WEL_GDIP_RECT; a_format: INTEGER): WEL_GDIP_BITMAP is
+			-- Close Current with option `a_rectangle' and `a_format'
+		require
+			valid: a_rectangle /= Void and then (a_rectangle.width > 0 and a_rectangle.height > 0)
+			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (a_format)
+		local
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_src_rect, l_dest_rect: WEL_RECT
+		do
+			create Result.make_formatted (a_rectangle.width, a_rectangle.height, a_format)
+			create l_graphics.make_from_image (Result)
+			create l_src_rect.make (a_rectangle.x, a_rectangle.y, a_rectangle.width, a_rectangle.height)
+			create l_dest_rect.make (0, 0, a_rectangle.width, a_rectangle.height)
+			l_graphics.draw_image_with_dest_rect_src_rect (Current, l_dest_rect ,l_src_rect)
+		ensure
+			not_void: Result /= Void
+			size_correct: Result.width = a_rectangle.width and Result.height = a_rectangle.height
+		end
+
 feature -- Query
 
 	width: INTEGER is
@@ -102,6 +126,17 @@ feature -- Query
 			-- Image format guid.
 		do
 			Result := raw_format_orignal
+		end
+
+	pixel_format: INTEGER is
+			-- Pixel format in memory
+		local
+			l_result_status: INTEGER
+		do
+			Result := c_gdip_get_image_pixel_format (gdi_plus_handle, item, $l_result_status)
+			check ok: l_result_status = {WEL_GDIP_STATUS}.ok end
+		ensure
+			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (Result)
 		end
 
 	all_image_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO] is
@@ -327,6 +362,35 @@ feature {NONE} -- C externals
 				
 				if (GdipGetImageHeight) {
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, UINT *)) GdipGetImageHeight)
+								((GpImage *) $a_item,
+								(UINT *) &l_result);
+				}
+				return l_result;
+			}
+			]"
+		end
+
+	c_gdip_get_image_pixel_format (a_gdiplus_handle: POINTER; a_item: POINTER; a_result_status: TYPED_POINTER [INTEGER]): INTEGER  is
+			-- Get pixel format information
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_item_not_null: a_item /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipGetImagePixelFormat = NULL;
+				EIF_NATURAL_32 l_result;
+				
+				*(EIF_NATURAL_32 *) $a_result_status = 1;
+				
+				if (!GdipGetImagePixelFormat) {
+					GdipGetImagePixelFormat = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetImagePixelFormat");
+				}			
+				
+				if (GdipGetImagePixelFormat) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, UINT *)) GdipGetImagePixelFormat)
 								((GpImage *) $a_item,
 								(UINT *) &l_result);
 				}

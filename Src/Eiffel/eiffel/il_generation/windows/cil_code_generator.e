@@ -6269,7 +6269,7 @@ feature -- Constants generation
 			create_object (string_implementation_id)
 			duplicate_top
 			generate_local (n)
-			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
+			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
 	put_manifest_string (s: STRING) is
@@ -6278,7 +6278,7 @@ feature -- Constants generation
 			create_object (string_implementation_id)
 			duplicate_top
 			put_system_string (s)
-			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
+			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
 	put_system_string (s: STRING) is
@@ -6717,10 +6717,7 @@ feature -- Basic feature
 			put_dummy_local_info (System_string_type, local_number)
 			generate_local_assignment (local_number)
 
-			create_object (string_implementation_id)
-			duplicate_top
-			generate_local (local_number)
-			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
+			put_manifest_string_from_system_string_local (local_number)
 
 			if type.is_pointer or type.is_typed_pointer then
 					-- Handling a POINTER type, we need to prepend `0x' to the output.

@@ -5895,7 +5895,7 @@ feature {NONE} -- Implementation
 		-- Maximium width of `header'.
 
 	default_scroll_bar_leap: INTEGER is 16
-	default_scroll_bar_step: INTEGER is 16
+	default_scroll_bar_step: INTEGER is 1
 		-- Default scrolling values for scrollbars.
 
 	enlarge_row (a_index, new_count: INTEGER) is

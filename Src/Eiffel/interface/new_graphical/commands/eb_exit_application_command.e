@@ -113,15 +113,15 @@ feature {NONE} -- Callbacks
 				l_eb_debugger_manager.enable_exiting_eiffel_studio
 			end
 				-- If an application was being debugged, kill it.			
-			if Debugger_manager.application_is_executing then
-				Debugger_manager.application.kill
+			if l_eb_debugger_manager.debug_mode_forced then
+				l_eb_debugger_manager.debugging_window.docking_layout_manager.save_debug_docking_layout
 			end
-			if Eb_debugger_manager.debug_mode_forced then
-				Eb_debugger_manager.debugging_window.docking_layout_manager.save_debug_docking_layout
+			if l_eb_debugger_manager.application_is_executing then
+				l_eb_debugger_manager.application.kill
 			end
 
-				-- If we are going to kill the application, we'd better warn project observers that the project will
-				-- soon be unloaded before EiffelStudio is destroyed.
+				-- If we are going to kill the application, we'd better warn project observers
+				-- that the project will soon be unloaded before EiffelStudio is destroyed.
 			if Workbench.Eiffel_project.initialized then
 				Workbench.Eiffel_project.manager.on_project_close;
 			end

@@ -157,6 +157,7 @@ feature -- Status report
 				(create {INTERNAL}).type_conforms_to (
 					(create {INTERNAL}).dynamic_type (Result),
 					(create {INTERNAL}).dynamic_type_from_string ("WEL_WINDOW"))
+			is_proper_wel_window: Result /= Void implies Result.item = hwnd
 		rescue
 			retried := True
 			retry

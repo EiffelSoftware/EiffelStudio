@@ -1,5 +1,5 @@
 indexing
-	description: "Small wrapper around the EIF_WEL_USERDATA C structure."
+	description: "Small wrapper around an Eiffel INTEGER C structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,17 +11,19 @@ class
 feature -- Access
 
 	frozen structure_size: INTEGER is
-			-- Size of EIF_WEL_USERDATA C structure.
+			-- Size of an Eiffel INTEGER at the C level.
 		external
-			"C macro use %"disptchr.h%""
+			"C inline"
 		alias
-			"sizeof(struct EIF_WEL_USERDATA)"
+			"sizeof(EIF_INTEGER)"
 		end
 
 	frozen object_id (p: POINTER): INTEGER is
 			-- Retrieve `object_id' from `p'
 		external
-			"C struct struct EIF_WEL_USERDATA access object_id use %"disptchr.h%""
+			"C inline"
+		alias
+			"return *(EIF_INTEGER *) $p;"
 		end
 
 feature -- Setting
@@ -29,7 +31,9 @@ feature -- Setting
 	frozen set_object_id (p: POINTER; id: INTEGER) is
 			-- Set `object_id' from `p' with `id'.
 		external
-			"C struct struct EIF_WEL_USERDATA access object_id type EIF_INTEGER use %"disptchr.h%""
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"*(EIF_INTEGER *) $p = $id;"
 		end
 
 indexing
@@ -43,8 +47,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class WEL_INTERNAL_DATA
-

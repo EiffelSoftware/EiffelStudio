@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		local
 			locale_str: STRING
 			l_image: POINTER
+			l_supports_composite_symbol: POINTER
 		do
 			base_make (an_interface)
 
@@ -100,11 +101,30 @@ feature {NONE} -- Initialization
 				if not is_display_remote then
 					{EV_GTK_EXTERNALS}.object_unref (l_image)
 				end
+
+					-- Check whether display supports transparency
+				l_supports_composite_symbol := gdk_display_supports_composite_symbol
+				if l_supports_composite_symbol /= default_pointer then
+					is_display_alpha_capable := gdk_display_supports_composite_call (l_supports_composite_symbol, {EV_GTK_EXTERNALS}.gdk_display_get_default)
+				end
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
 				die (0)
 			end
+		end
+
+	gdk_display_supports_composite_symbol: POINTER
+			-- Symbol for `gdk_display_supports_composite'
+		once
+			Result := symbol_from_symbol_name ("gdk_display_supports_composite")
+		end
+
+	gdk_display_supports_composite_call (a_function: POINTER; a_display: POINTER): BOOLEAN
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
 		end
 
 feature {NONE} -- Event loop
@@ -122,6 +142,9 @@ feature {NONE} -- Event loop
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	is_display_alpha_capable: BOOLEAN
+			-- Is application display capable of displaying transparent windows?
 
 	is_display_remote: BOOLEAN
 			-- Is application display remote?

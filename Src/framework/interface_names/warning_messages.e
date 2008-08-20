@@ -269,7 +269,7 @@ feature -- Debug warnings
 
 	w_apply_debugger_profiles_before_closing: STRING_32 is do Result := locale.translation ("The execution profiles have been modified.%NDo you want to apply the changes before closing?") end
 
-	w_Compile_before_debug: STRING_32 is do Result := locale.translation ("Do you want to compile before debugging?") end
+	w_Compile_before_debug: STRING_32 is do Result := locale.translation ("Do you want to compile before executing?") end
 
 	w_Cannot_debug: STRING_32 is do Result := locale.translation ("The current version of system has not been successfully compiled.%N%
 						%As a result, you cannot use the debugging facilities.") end

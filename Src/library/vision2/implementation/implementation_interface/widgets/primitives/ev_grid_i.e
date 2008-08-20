@@ -2720,7 +2720,6 @@ feature -- Removal
 				end
 				i := i + 1
 			end
-			locked_indexes.wipe_out
 			from
 				i := 1
 			until
@@ -2728,6 +2727,10 @@ feature -- Removal
 			loop
 				current_row := rows.i_th (i)
 				if current_row /= Void then
+					if current_row.is_locked then
+							-- Make sure that row is unlocked before removal.
+						current_row.unlock
+					end
 					current_row.unparent
 				end
 				i := i + 1
@@ -2738,6 +2741,10 @@ feature -- Removal
 				i > l_column_count
 			loop
 				current_column := columns.i_th (i)
+				if current_column.is_locked then
+						-- Make sure that column is unlocked before removal.
+					current_column.unlock
+				end
 				if current_column.is_show_requested then
 						-- Now remove associated header item.
 					header.go_i_th (1)

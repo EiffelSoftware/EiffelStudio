@@ -2048,6 +2048,14 @@ feature {NONE} -- Removal
 					l_object_id_valid: l_object_id > 0
 				end
 				eif_object_id_free (l_object_id)
+					-- To mark that area as been freed
+				{WEL_INTERNAL_DATA}.set_object_id (l_data, -1)
+				if item /= l_null then
+						-- The data is not usable anymore so we need to
+						-- remove it from GWLP_USERDATA otherwise bad things
+						-- might happen.
+					cwin_set_window_long (item, gwlp_userdata, l_null)
+				end
 				l_data.memory_free
 				internal_data := l_null
 			end

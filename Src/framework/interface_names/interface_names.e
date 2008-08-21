@@ -1834,6 +1834,7 @@ feature -- Label texts
 	l_callers_from_client_class: STRING_32 is do Result := locale.translation("Callers from client class") end
 	l_callees_from_supplier_class: STRING_32 is do Result := locale.translation("Callees from supplier class") end
 	l_from_x: STRING_32 is do Result := locale.translation ("From ") end
+	l_from_padded: STRING_32 is do Result := locale.translation (" from ") end
 	h_categorize_folder: STRING_32 is do Result := locale.translation("Categorize classes in folder?") end
 	h_show_syntactical_classes: STRING_32 is do Result := locale.translation("Show only syntactically referenced classes?") end
 	h_show_normal_referenced_classes: STRING_32 is do Result := locale.translation("Show normal referenced classes?") end

@@ -47,7 +47,7 @@ feature -- Access
 	related_feature: QL_FEATURE
 			-- related_feature
 
-	image: STRING
+	image: STRING_32
 			-- String representation of Current row, used in sorting
 
 	row_type: INTEGER
@@ -360,15 +360,10 @@ feature{NONE} -- Implementation/Data
 	grid_item_internal: like grid_item
 			-- Implementation of `grid_item'
 
-	from_string: STRING is
+	from_string: STRING_32 is
 			-- String " from "
 		do
-			Result := interface_names.l_from_x.twin
-			Result.to_lower
-			Result.right_adjust
-			Result.left_adjust
-			Result.prepend (" ")
-			Result.append (" ")
+			Result := interface_names.l_from_padded.twin
 		ensure
 			result_attached: Result /= Void
 		end

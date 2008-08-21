@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			filename := ""
 			is_indexing_keyword := True
 			is_note_keyword := False
+			is_attribute_keyword := False
 		ensure
 			ast_factory_set: ast_factory = a_factory
 		end
@@ -73,6 +74,7 @@ feature -- Initialization
 			verbatim_marker.clear_all
 			is_indexing_keyword := True
 			is_note_keyword := False
+			is_attribute_keyword := False
 		end
 
 feature -- Roundtrip
@@ -163,6 +165,9 @@ feature {NONE} -- Status
 	is_indexing_keyword: BOOLEAN
 			-- Is "indexing" keyword allowed in current context?
 
+	is_attribute_keyword: BOOLEAN
+			-- Is "attribute" keyword allowed in current context?
+
 feature -- Convenience
 
 	token_line (a_node: AST_EIFFEL): like line is
@@ -231,6 +236,14 @@ feature -- Settings
 			is_note_keyword := value
 		ensure
 			is_note_keyword_set: is_note_keyword = value
+		end
+
+	set_is_attribute_keyword (value: BOOLEAN)
+			-- Set `is_attribute_keyword' to `value'
+		do
+			is_attribute_keyword := value
+		ensure
+			is_attribute_keyword_set: is_attribute_keyword = value
 		end
 
 feature {NONE} -- Error handling

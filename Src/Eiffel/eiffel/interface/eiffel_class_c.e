@@ -305,6 +305,7 @@ feature -- Action
 				end
 				parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
 				parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
+				parser.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
 				Result := parser.root_node

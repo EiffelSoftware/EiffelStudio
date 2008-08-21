@@ -116,6 +116,10 @@ feature -- Basic operations: Standard persona
 		require
 			is_interface_usable: is_interface_usable
 		local
+			l_tool: EB_TOOL
+			l_last_tool: EB_TOOL
+			l_features_tool: ES_FEATURES_TOOL
+
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_is_unlocked: BOOLEAN
@@ -128,40 +132,40 @@ feature -- Basic operations: Standard persona
 				--
 				-- TO BE REMOVED: Use personas instead
 				--
-			develop_window.close_all_tools
+			development_window.close_all_tools
 
 				-- Right bottom tools
-			l_tool := develop_window.tools.c_output_tool
+			l_tool := development_window.tools.c_output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 
-			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			l_tool.content.set_tab_with (develop_window.tools.c_output_tool.content, True)
+			l_tool := development_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
+			l_tool.content.set_tab_with (development_window.tools.c_output_tool.content, True)
 			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.output_tool
+			l_tool := development_window.tools.output_tool
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 
-			l_tool := develop_window.tools.features_relation_tool
-			l_tool.content.set_tab_with (develop_window.tools.output_tool.content, True)
+			l_tool := development_window.tools.features_relation_tool
+			l_tool.content.set_tab_with (development_window.tools.output_tool.content, True)
 
-			l_tool := develop_window.tools.class_tool
-			l_tool.content.set_tab_with (develop_window.tools.features_relation_tool.content, True)
+			l_tool := development_window.tools.class_tool
+			l_tool.content.set_tab_with (development_window.tools.features_relation_tool.content, True)
 
 			l_tool.content.set_split_proportion (0.6)
 
 				-- Right tools
-			l_features_tool ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
+			l_features_tool ?= development_window.shell_tools.tool ({ES_FEATURES_TOOL})
 
-			l_tool := develop_window.tools.favorites_tool
+			l_tool := development_window.tools.favorites_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
 			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (develop_window.tools.favorites_tool.content, True)
-			l_tool := develop_window.tools.cluster_tool
+			l_tool.content.set_tab_with (development_window.tools.favorites_tool.content, True)
+			l_tool := development_window.tools.cluster_tool
 			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
 			l_tool.content.set_split_proportion (0.73)
 
 				-- Auto hide tools
-			l_tool := develop_window.tools.diagram_tool
+			l_tool := development_window.tools.diagram_tool
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -171,7 +175,7 @@ feature -- Basic operations: Standard persona
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
 
-			l_tool := develop_window.tools.dependency_tool
+			l_tool := development_window.tools.dependency_tool
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -180,10 +184,10 @@ feature -- Basic operations: Standard persona
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
 
-			l_tool := develop_window.tools.metric_tool
-			l_tool.content.set_tab_with (develop_window.tools.dependency_tool.content, False)
+			l_tool := development_window.tools.metric_tool
+			l_tool.content.set_tab_with (development_window.tools.dependency_tool.content, False)
 
-			develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
+			development_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
 				--
 				-- End TO BE REMOVED
 				--

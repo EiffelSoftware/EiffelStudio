@@ -125,8 +125,72 @@ feature -- Basic operations: Standard persona
 				development_window.window.lock_update
 			end
 
+				--
+				-- TO BE REMOVED: Use personas instead
+				--
+			develop_window.close_all_tools
+
+				-- Right bottom tools
+			l_tool := develop_window.tools.c_output_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+
+			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
+			l_tool.content.set_tab_with (develop_window.tools.c_output_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := develop_window.tools.output_tool
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+
+			l_tool := develop_window.tools.features_relation_tool
+			l_tool.content.set_tab_with (develop_window.tools.output_tool.content, True)
+
+			l_tool := develop_window.tools.class_tool
+			l_tool.content.set_tab_with (develop_window.tools.features_relation_tool.content, True)
+
+			l_tool.content.set_split_proportion (0.6)
+
+				-- Right tools
+			l_features_tool ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
+
+			l_tool := develop_window.tools.favorites_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.right)
+			l_tool := l_features_tool.panel
+			l_tool.content.set_tab_with (develop_window.tools.favorites_tool.content, True)
+			l_tool := develop_window.tools.cluster_tool
+			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
+			l_tool.content.set_split_proportion (0.73)
+
+				-- Auto hide tools
+			l_tool := develop_window.tools.diagram_tool
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				-- Docking library will add a feature to set auto hide tab stub order directly in the future. -- Larry 2007/7/13
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+			l_tool := develop_window.tools.dependency_tool
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+			l_tool := develop_window.tools.metric_tool
+			l_tool.content.set_tab_with (develop_window.tools.dependency_tool.content, False)
+
+			develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
+				--
+				-- End TO BE REMOVED
+				--
+
 				-- Load the standard layout
-			load_persona ({EIFFEL_ENV}.docking_standard_file)
+				-- FIXME: Persona descriptions are not ready for prime time yet.
+			--load_persona ({EIFFEL_ENV}.docking_standard_file)
 
 				-- Tool bars construction is not yet handled in persona layout files.
 			l_tool_bar_content := development_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)

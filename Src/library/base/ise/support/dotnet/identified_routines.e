@@ -24,6 +24,10 @@ feature -- Basic operations
 				wr := xyz_reference_list.i_th (an_id)
 				if wr /= Void then
 					Result ?= wr.target
+					if Result = Void then
+							-- Object was collected, let's discard the weak reference object
+						xyz_reference_list.put_i_th (Void, an_id)
+					end
 				end
 			end
 			xyz_mutex.release_mutex
@@ -38,6 +42,9 @@ feature -- Basic operations
 			xyz_reference_list.extend (create {WEAK_REFERENCE}.make_from_target (Current))
 			Result := xyz_reference_list.count
 			xyz_mutex.release_mutex
+		ensure
+			eif_object_id_positive: Result > 0
+			inserted: eif_id_object (Result) = an_object
 		end
 
 	eif_object_id_free (an_id: INTEGER) is
@@ -52,6 +59,8 @@ feature -- Basic operations
 				xyz_reference_list.put_i_th (Void, an_id)
 			end
 			xyz_mutex.release_mutex
+		ensure
+			removed: eif_id_object (an_id) = Void
 		end
 
 feature {IDENTIFIED_CONTROLLER} -- Implementation
@@ -68,7 +77,7 @@ feature {IDENTIFIED_CONTROLLER} -- Implementation
 		end
 
 	xyz_mutex: SYSTEM_MUTEX is
-			--
+			-- Mutex to protect access to global list `xyz_reference_list'.
 		indexing
 			once_status: global
 		once

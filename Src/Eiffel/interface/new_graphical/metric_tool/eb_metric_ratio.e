@@ -135,6 +135,7 @@ feature -- Metric calculation
 			l_num_metric: EB_METRIC
 			l_den_metric: EB_METRIC
 			l_den_value: DOUBLE
+			l_unicode_ex: UNICODE_MESSAGE_EXCEPTION
 		do
 			l_num_metric := manager.metric_with_name (numerator_metric_name)
 			l_den_metric := manager.metric_with_name (denominator_metric_name)
@@ -146,11 +147,15 @@ feature -- Metric calculation
 				l_den_metric.disable_filter_result
 			end
 			if denominator_coefficient =0.0 then
-				raise ("Divided by 0")
+				create l_unicode_ex
+				l_unicode_ex.set_unicode_message (metric_names.err_divided_by_zero)
+				l_unicode_ex.raise
 			else
 				l_den_value := l_den_metric.value_item (a_scope)
 				if l_den_value = 0.0 then
-					raise ("Divided by 0")
+					create l_unicode_ex
+					l_unicode_ex.set_unicode_message (metric_names.err_divided_by_zero)
+					l_unicode_ex.raise
 				else
 					create Result.make
 					Result.extend (create {QL_QUANTITY}.make_with_value ((numerator_coefficient * (l_num_metric.value_item (a_scope))) /  (denominator_coefficient * l_den_value)))

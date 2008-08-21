@@ -1162,6 +1162,8 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
+	err_divided_by_zero: STRING_32 is do Result := locale.translation ("Divided by 0") end
+
 feature -- To do messages
 
 	variable_metric_missing_to_do: STRING_32 is

@@ -10,7 +10,7 @@ class
 
 feature -- Windows
 
-	frozen window_from_point (point: POINTER): POINTER is
+	window_from_point (point: POINTER): POINTER is
 			-- SDK WindowFromPoint
 		external
 			"C inline use <windows.h>"
@@ -18,7 +18,7 @@ feature -- Windows
 			"WindowFromPoint (* ((POINT*) $point))"
 		end
 
-	frozen child_window_from_point (hwnd_parent: POINTER; point: POINTER): POINTER is
+	child_window_from_point (hwnd_parent: POINTER; point: POINTER): POINTER is
 			-- SDK ChildWindowFromPoint
 		external
 			"C inline use <windows.h>"
@@ -26,7 +26,7 @@ feature -- Windows
 			"ChildWindowFromPoint ((HWND) $hwnd_parent, * ((POINT*) $point))"
 		end
 
-	frozen set_foreground_window (hwnd: POINTER): BOOLEAN is
+	set_foreground_window (hwnd: POINTER): BOOLEAN is
 			-- The SetForegroundWindow function puts the thread that created the specified
 			-- window into the foreground and activates the window. Keyboard input is
 			-- directed to the window, and various visual cues are changed for the user.
@@ -38,7 +38,7 @@ feature -- Windows
 			"SetForegroundWindow ((HWND)$hwnd)"
 		end
 
-	frozen set_window_text (hwnd, str: POINTER)
+	set_window_text (hwnd, str: POINTER)
 			-- SDK SetWindowText
 		external
 			"C inline use <windows.h>"
@@ -46,7 +46,7 @@ feature -- Windows
 			"SetWindowText ((HWND)$hwnd, (LPCTSTR)$str)"
 		end
 
-	frozen set_parent (hwnd_child, hwnd_parent: POINTER): POINTER is
+	set_parent (hwnd_child, hwnd_parent: POINTER): POINTER is
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.
 		external
@@ -55,7 +55,7 @@ feature -- Windows
 			"return (EIF_POINTER) SetParent ((HWND) $hwnd_child, (HWND) $hwnd_parent);"
 		end
 
-	frozen move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER; repaint: BOOLEAN): BOOLEAN is
+	move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER; repaint: BOOLEAN): BOOLEAN is
 			-- SDK MoveWindow
 		external
 			"C inline use <windows.h>"
@@ -63,7 +63,7 @@ feature -- Windows
 			"return EIF_TEST(MoveWindow((HWND) $hwnd, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (BOOL) $repaint));"
 		end
 
-	frozen set_window_pos (hwnd, hwnd_after: POINTER; a_x, a_y, a_w, a_h, flags: INTEGER): BOOLEAN is
+	set_window_pos (hwnd, hwnd_after: POINTER; a_x, a_y, a_w, a_h, flags: INTEGER): BOOLEAN is
 			-- SDK SetWindowPos
 		external
 			"C inline use <windows.h>"
@@ -71,7 +71,7 @@ feature -- Windows
 			"return EIF_TEST(SetWindowPos((HWND) $hwnd, (HWND) $hwnd_after, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (UINT) $flags));"
 		end
 
-	frozen get_focus: POINTER
+	get_focus: POINTER
 			-- SDK GetFocus
 		external
 			"C inline use <windows.h>"
@@ -79,9 +79,27 @@ feature -- Windows
 			"return (EIF_POINTER) GetFocus();"
 		end
 
+	destroy_window (hwnd: POINTER): BOOLEAN is
+			-- SDK DestroyWindow
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(DestroyWindow((HWND) $hwnd));"
+		end
+
+feature -- Dialogs
+
+	end_dialog (hwnd, return_value: POINTER): BOOLEAN is
+			-- SDK EndDialog
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(EndDialog((HWND) $hwnd, (INT_PTR) $return_value));"
+		end
+
 feature -- Menus
 
-	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is
+	set_menu (hwnd, hmenu: POINTER): INTEGER is
 			-- SDK SetMenu
 		external
 			"C inline use <windows.h>"
@@ -89,7 +107,7 @@ feature -- Menus
 			"SetMenu ((HWND) $hwnd, (HMENU) $hmenu)"
 		end
 
-	frozen track_popup_menu (hmenu: POINTER; flags, x, y, reserved: INTEGER; hwnd, rect: POINTER) is
+	track_popup_menu (hmenu: POINTER; flags, x, y, reserved: INTEGER; hwnd, rect: POINTER) is
 			-- SDK TrackPopupMenu
 		external
 			"C inline use <windows.h>"
@@ -97,7 +115,7 @@ feature -- Menus
 			"TrackPopupMenu((HMENU) $hmenu, (UINT) $flags, (int) $x, (int) $y, (int) $reserved, (HWND) $hwnd, (RECT *) $rect)"
 		end
 
-	frozen get_menu (hwnd: POINTER): POINTER is
+	get_menu (hwnd: POINTER): POINTER is
 			-- SDK GetMenu
 		external
 			"C inline use <windows.h>"
@@ -105,7 +123,7 @@ feature -- Menus
 			"GetMenu ((HWND) $hwnd)"
 		end
 
-	frozen get_menu_bar_info (hwnd: POINTER; id_object, id_item: INTEGER; menu_bar_info: POINTER): INTEGER is
+	get_menu_bar_info (hwnd: POINTER; id_object, id_item: INTEGER; menu_bar_info: POINTER): INTEGER is
 			-- SDK GetMenuBarInfo
 		external
 			"C inline use <windows.h>"
@@ -113,7 +131,7 @@ feature -- Menus
 			"GetMenuBarInfo((HWND) $hwnd, (LONG) $id_object, (LONG) $id_item, (PMENUBARINFO) $menu_bar_info)"
 		end
 
-	frozen get_menu_item_rect (hwnd, hmenu: POINTER; uitem: INTEGER; rect: POINTER): INTEGER is
+	get_menu_item_rect (hwnd, hmenu: POINTER; uitem: INTEGER; rect: POINTER): INTEGER is
 			-- SDK GetMenuItemRect
 		external
 			"C inline use <windows.h>"
@@ -121,9 +139,27 @@ feature -- Menus
 			"GetMenuItemRect((HWND) $hwnd, (HMENU) $hmenu, (UINT) $uitem, (RECT *) $rect)"
 		end
 
+feature -- Window class
+
+	set_window_long (hwnd: POINTER; offset: INTEGER_32; value: POINTER): POINTER
+			-- SDK SetWindowLongPtr
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) SetWindowLongPtr ((HWND) $hwnd, (int) $offset, (LONG_PTR) $value);"
+		end
+
+	get_window_long (hwnd: POINTER; offset: INTEGER_32): POINTER
+			-- SDK GetWindowLongPtr
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) GetWindowLongPtr ((HWND) $hwnd, (int) $offset);"
+		end
+
 feature -- Messages
 
-	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -131,7 +167,7 @@ feature -- Messages
 			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen post_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+	post_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -139,7 +175,7 @@ feature -- Messages
 			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
+	post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK PostMessage (without the result)
 		external
 			"C inline use <windows.h>"
@@ -147,7 +183,7 @@ feature -- Messages
 			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen register_window_message (a_message_name: POINTER): INTEGER is
+	register_window_message (a_message_name: POINTER): INTEGER is
 			-- Register a custom window message named `message_name'.
 			-- `Result' is id of new message.
 		external
@@ -156,7 +192,7 @@ feature -- Messages
 			"RegisterWindowMessage ((LPCTSTR) $a_message_name)"
 		end
 
-	frozen send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK SendMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -164,7 +200,7 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
+	send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
 			-- SDK SendMessage (with an integer result)
 		external
 			"C inline use <windows.h>"
@@ -172,7 +208,7 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+	send_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK SendMessage (with a boolean result)
 		external
 			"C inline use <windows.h>"
@@ -180,7 +216,7 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
+	send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK SendMessage
 		external
 			"C inline use <windows.h>"
@@ -188,7 +224,7 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message_timeout (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; fuflags, utimeout: INTEGER; lpdwresult: TYPED_POINTER [INTEGER]) is
+	send_message_timeout (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; fuflags, utimeout: INTEGER; lpdwresult: TYPED_POINTER [INTEGER]) is
 			-- SDK SendMessageTimeout
 		external
 			"C inline use <windows.h>"
@@ -198,7 +234,7 @@ feature -- Messages
 
 feature -- File Drop Handling
 
-	frozen drag_query_file (hdrop: POINTER; ifile: INTEGER; buffer_pointer: POINTER; buffer_size: INTEGER): INTEGER is
+	drag_query_file (hdrop: POINTER; ifile: INTEGER; buffer_pointer: POINTER; buffer_size: INTEGER): INTEGER is
 			-- SDK DragQueryFile
 		external
 			"C inline use %"wel.h%""
@@ -208,7 +244,7 @@ feature -- File Drop Handling
 
 feature -- Processes
 
-	frozen duplicate_handle (hsourceprocess, hsource, htargetprocess: POINTER; htarget: TYPED_POINTER [POINTER]; access: INTEGER; inherithandle: BOOLEAN; options: INTEGER): INTEGER is
+	duplicate_handle (hsourceprocess, hsource, htargetprocess: POINTER; htarget: TYPED_POINTER [POINTER]; access: INTEGER; inherithandle: BOOLEAN; options: INTEGER): INTEGER is
 			-- SDK DuplicateHandle
 		external
 			"C inline use <windows.h>"
@@ -225,7 +261,7 @@ feature -- Processes
 			]"
 		end
 
-	frozen close_handle (a_handle: POINTER): INTEGER is
+	close_handle (a_handle: POINTER): INTEGER is
 			-- SDK CloseHandle
 		external
 			"C inline use <windows.h>"
@@ -233,7 +269,7 @@ feature -- Processes
 			"return (EIF_INTEGER) CloseHandle ((HANDLE) $a_handle);"
 		end
 
-	frozen get_current_process: POINTER is
+	get_current_process: POINTER is
 			-- SDK GetCurrentProcess
 		external
 			"C inline use <windows.h>"
@@ -241,7 +277,7 @@ feature -- Processes
 			"return (EIF_POINTER) GetCurrentProcess();"
 		end
 
-	frozen wait_for_input_idle (hprocess: POINTER; ms: INTEGER): INTEGER is
+	wait_for_input_idle (hprocess: POINTER; ms: INTEGER): INTEGER is
 			-- SDK WaitForInputIdle
 		external
 			"C blocking inline use <windows.h>"
@@ -249,7 +285,7 @@ feature -- Processes
 			"return (EIF_INTEGER) WaitForInputIdle ((HANDLE) $hprocess, (DWORD) $ms);"
 		end
 
-	frozen msg_wait_for_multiple_objects (n: INTEGER; phandles: POINTER; waitall: BOOLEAN; ms, mask: INTEGER): INTEGER is
+	msg_wait_for_multiple_objects (n: INTEGER; phandles: POINTER; waitall: BOOLEAN; ms, mask: INTEGER): INTEGER is
 			-- SDK MsgWaitForMultipleObjects
 		external
 			"C blocking inline use <windows.h>"
@@ -276,7 +312,7 @@ feature -- Threads
 
 feature -- Scrolling
 
-	frozen set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is
+	set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is
 			-- Sets the parameters of a control scroll bar, including the minimum and maximum
 			-- scrolling positions, the page size, and the position of the scroll box (thumb).
 			-- The function also redraws the scroll bar, if requested.
@@ -291,7 +327,7 @@ feature -- Scrolling
 --			"return (EIF_INTEGER) SendMessage ((HWND) $hwnd, SBM_SETSCROLLINFO, (WPARAM) $redraw, (LPARAM) $info);"
 		end
 
-	frozen get_control_scroll_info (hwnd: POINTER; info: POINTER): INTEGER is
+	get_control_scroll_info (hwnd: POINTER; info: POINTER): INTEGER is
 			-- Retrieves the parameters of a control scroll bar, including the minimum and maximum
 			-- scrolling positions, the page size, and the position of the scroll box (thumb).
 			--
@@ -306,7 +342,7 @@ feature -- Scrolling
 
 feature -- Shell
 
-	frozen shell_notify_icon (a_message: INTEGER; a_notify_icon_data_ptr: POINTER): INTEGER is
+	shell_notify_icon (a_message: INTEGER; a_notify_icon_data_ptr: POINTER): INTEGER is
 			-- Sends a message to the taskbar's status area.
 		external
 			"C inline use <shellapi.h>"
@@ -316,7 +352,7 @@ feature -- Shell
 
 feature -- Character codes
 
-	frozen vk_key_scan (a_char: CHARACTER_32): INTEGER_32 is
+	vk_key_scan (a_char: CHARACTER_32): INTEGER_32 is
 			-- Given a character `a_char' gives us the key that triggers its generation.
 		external
 			"C inline use <windows.h>"
@@ -326,7 +362,7 @@ feature -- Character codes
 
 feature -- Error
 
-	frozen get_last_error: INTEGER is
+	get_last_error: INTEGER is
 			-- SDK GetLastError
 
 		external
@@ -337,7 +373,7 @@ feature -- Error
 
 feature -- API
 
-	frozen load_module (a_name: POINTER): POINTER is
+	load_module (a_name: POINTER): POINTER is
 			-- Load module with `a_name'.
 			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
 		external
@@ -346,7 +382,7 @@ feature -- API
 			"return (EIF_POINTER) LoadLibrary ((LPCTSTR) $a_name);"
 		end
 
-	frozen free_module (a_module: POINTER): BOOLEAN is
+	free_module (a_module: POINTER): BOOLEAN is
 			-- Free module which instance is `a_module'
 		external
 			"C inline use <windows.h>"
@@ -354,7 +390,7 @@ feature -- API
 			"return (BOOL) FreeLibrary ((HMODULE) $a_module);"
 		end
 
-	frozen loal_api (a_module: POINTER; a_name: POINTER): POINTER is
+	loal_api (a_module: POINTER; a_name: POINTER): POINTER is
 			-- Load api which name is `a_name' in `a_module'
 		external
 			"C inline use <windows.h>"

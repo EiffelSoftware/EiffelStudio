@@ -200,7 +200,7 @@ feature -- Agents
 				if l_history_manager.is_forth_possible then
 					l_history_manager.forth_command.execute
 					if {l_tool: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner then
-						l_tool.tool_descriptor.show (False)
+						l_tool.show
 					end
 				end
 			end

@@ -42,7 +42,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	last_error_message: STRING
+	last_error_message: STRING_32
 			-- Last error message
 
 	calculated_archives: LIST [EB_METRIC_ARCHIVE_NODE] is
@@ -161,9 +161,13 @@ feature -- Calculation
 			l_retried := True
 			destroy_calculation_context (l_domain_generator)
 			if l_domain_generator.error_handler.has_error then
-				set_last_error_message (l_domain_generator.error_handler.error_list.last.out)
+				set_last_error_message (l_domain_generator.error_handler.error_list.last.text.as_string_32)
 			else
-				set_last_error_message (tag_name)
+				if {lt_ex: UNICODE_MESSAGE_EXCEPTION}exception_manager.last_exception.original then
+					set_last_error_message (lt_ex.unicode_message)
+				else
+					set_last_error_message (tag_name)
+				end
 			end
 			retry
 		end

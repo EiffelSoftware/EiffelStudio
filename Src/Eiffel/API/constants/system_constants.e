@@ -168,6 +168,8 @@ feature {NONE}
 	data_directory: STRING is "Data"
 			-- Directory name `Data'
 
+	eifgens_cluster_directory: STRING is "Cluster"
+
 feature-- Versioning
 
 	Compiler_version_number: CONF_VERSION is

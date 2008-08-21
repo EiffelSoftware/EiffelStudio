@@ -934,13 +934,14 @@ end
 				lace.recompile
 			end
 
+			create l_factory
 			l_target := universe.new_target
+			add_eifgens_cluster (l_target, l_factory)
 			check
 				l_target_not_void: l_target /= Void
 			end
 
 				-- let the configuration system build "everything"
-			create l_factory
 			l_state := universe.conf_state_from_target (l_target)
 			if universe.target /= Void then
 				create l_vis_build.make_build_from_old (l_state,
@@ -1314,6 +1315,34 @@ end
 					-- before! (Dino, that's an allusion to you, -- FRED)
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
+			end
+		end
+
+	add_eifgens_cluster (a_target: CONF_TARGET; a_factory: CONF_PARSE_FACTORY) is
+			-- Add cluster for classes created in EIFGENs directory
+			--
+			-- Note: Cluster is only added if `eifgens_cluster_path' in {PROJECT_DIRECTORY} exists. The
+			--       cluster is marked as internal, so it should not be visisble to user.
+		local
+			l_path: DIRECTORY_NAME
+			l_dir: DIRECTORY
+			l_vis: CONF_FIND_LOCATION_VISITOR
+			l_cluster: CONF_CLUSTER
+			l_loc: CONF_DIRECTORY_LOCATION
+		do
+			l_path := project_location.eifgens_cluster_path
+			create l_vis.make
+			l_vis.set_directory (l_path)
+			l_vis.process_target (a_target)
+			if l_vis.found_clusters.is_empty then
+				create l_dir.make (l_path)
+				if l_dir.exists then
+					l_loc := a_factory.new_location_from_path (l_path, a_target)
+					l_cluster := a_factory.new_cluster ("internal_eifgen_cluster", l_loc, a_target)
+					l_cluster.set_recursive (True)
+					l_cluster.set_internal (True)
+					a_target.add_cluster (l_cluster)
+				end
 			end
 		end
 
@@ -5379,12 +5408,12 @@ feature -- Access: Root creators
 
 feature {NONE} -- Access: Root creators
 
-	explicit_roots: LINKED_LIST [TUPLE [STRING, STRING, STRING]]
+	explicit_roots: LINKED_LIST [TUPLE [cluster_name: STRING; class_name: STRING; feature_name: STRING]]
 			-- Root creation procedures added internally.
 			--
-			-- STRING #1: Cluster name in which root class is located
-			-- STRING #2: Class name in which creation procedure is defined
-			-- STRING #3: Feature name of creation procedure
+			-- cluster_name: Cluster name in which root class is located
+			-- class_name: Class name in which creation procedure is defined
+			-- feature_name: Name of creation procedure
 
 feature -- Status report: Root creators
 

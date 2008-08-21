@@ -2867,6 +2867,12 @@ Class_identifier: TE_ID
 				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
 				$$ := last_id_as_value
 			}
+	|	TE_ATTRIBUTE
+			{
+					-- Keyword used as identifier
+				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
+				$$ := last_id_as_value
+			}
 	;
 
 Tuple_identifier: TE_TUPLE

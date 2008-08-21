@@ -263,7 +263,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ASSIGN, Current)
+				last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTRIBUTE, Current)
 				if last_keyword_as_value /= Void then
 					last_keyword_as_id_index := last_keyword_as_value.index
 				end

@@ -30,7 +30,7 @@ feature -- Basic operations
 
 feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
-	process_folder (a_name: STRING; a_path: STRING; a_group: CONF_GROUP) is
+	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP) is
 			-- Process folder.
 			-- `a_name' is name of that folder, `a_path' is related path of that folder, such as "/abc/def".
 			-- `a_group' is the group where that folder is located.

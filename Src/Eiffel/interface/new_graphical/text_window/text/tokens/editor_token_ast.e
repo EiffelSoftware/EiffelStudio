@@ -28,7 +28,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_appearance (a_text: STRING; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
+	make_with_appearance (a_text: STRING_32; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
 			-- Initialize.
 		require
 			a_text_attached: a_text /= Void

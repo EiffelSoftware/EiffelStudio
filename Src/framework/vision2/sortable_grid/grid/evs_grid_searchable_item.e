@@ -53,7 +53,7 @@ feature -- Setting
 
 feature -- Replacement
 
-	replace (original, new: STRING) is
+	replace (original, new: like image) is
 			-- Replace every occurrence of `original' with `new' in `image'.
 		require
 			original_exists: original /= Void
@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Access
 
-	image: STRING is
+	image: STRING_32 is
 			-- String representation of current used in search
 		deferred
 		ensure
@@ -118,8 +118,8 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	veto_replace_function: FUNCTION [ANY, TUPLE [original: STRING; new: STRING], BOOLEAN]
-			-- Parameter [TUPLE [original, new: STRING]]
+	veto_replace_function: FUNCTION [ANY, TUPLE [original, new: like image], BOOLEAN]
+			-- Parameter [TUPLE [original, new: like image]]
 			-- (ETL3 TUPLE with named parameters)	
 			-- Function used to determine whether or not replacement of every occurrence of `original'
 			-- by `new' in `image' can be applied.
@@ -157,7 +157,7 @@ feature{NONE} -- Implementation
 	replace_failed_actions_internal: like replace_failed_actions
 			-- Internal `replace_failed_actions'
 
-	internal_replace (original, new: STRING) is
+	internal_replace (original, new: like image) is
 			-- Replace every occurrence of `original' with `new' in `image'.
 		require
 			original_exists: original /= Void

@@ -814,34 +814,36 @@ feature {NONE} -- Implementation
 				a_grps.after
 			loop
 				l_group := a_grps.item_for_iteration
-				create l_item.make_with_option (l_group, is_show_classes)
-				
-				if textable /= void and not is_show_classes then
-				l_item.set_associated_textable (textable)
-				end
+				if not l_group.actual_group.is_internal then
+					create l_item.make_with_option (l_group, is_show_classes)
 
-				a_header.extend (l_item)
-				if window /= Void then
-					l_item.associate_with_window (window)
-				end
-				if textable /= Void then
-					l_item.associate_textable_with_classes (textable)
-				end
-				from
-					classes_double_click_agents.start
-				until
-					classes_double_click_agents.after
-				loop
-					l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
-					classes_double_click_agents.forth
-				end
-				from
-					cluster_double_click_agents.start
-				until
-					cluster_double_click_agents.after
-				loop
-					l_item.add_double_click_action_to_cluster (cluster_double_click_agents.item)
-					cluster_double_click_agents.forth
+					if textable /= void and not is_show_classes then
+					l_item.set_associated_textable (textable)
+					end
+
+					a_header.extend (l_item)
+					if window /= Void then
+						l_item.associate_with_window (window)
+					end
+					if textable /= Void then
+						l_item.associate_textable_with_classes (textable)
+					end
+					from
+						classes_double_click_agents.start
+					until
+						classes_double_click_agents.after
+					loop
+						l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
+						classes_double_click_agents.forth
+					end
+					from
+						cluster_double_click_agents.start
+					until
+						cluster_double_click_agents.after
+					loop
+						l_item.add_double_click_action_to_cluster (cluster_double_click_agents.item)
+						cluster_double_click_agents.forth
+					end
 				end
 				a_grps.forth
 			end

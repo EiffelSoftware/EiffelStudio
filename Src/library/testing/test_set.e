@@ -8,8 +8,12 @@ deferred class
 
 feature -- Initialization
 
-	setup is
-		deferred
+	set_up is
+		do
+		end
+
+	tear_down is
+		do
 		end
 
 feature -- Access

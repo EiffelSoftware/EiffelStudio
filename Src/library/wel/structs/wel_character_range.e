@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 			-- `minimum', with `a_maximum', `a_minimum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_maximum: a_minimum = 0 implies a_maximum >= -1
-			positive_maximum: a_minimum > 0 implies a_maximum >= 0
+			valid_bounds: a_minimum <= a_maximum + 1
 		do
 			structure_make
 			set_range (a_minimum, a_maximum)
@@ -66,8 +65,7 @@ feature -- Element change
 			-- `maximum' with `a_maximum'
 		require
 			positive_minimum: a_minimum >= 0
-			valid_maximum: a_minimum = 0 implies a_maximum >= -1
-			positive_maximum: a_minimum > 0 implies a_maximum >= 0
+			valid_bounds: a_minimum <= a_maximum + 1
 		do
 			cwel_charrange_set_cpmin (item, a_minimum)
 			cwel_charrange_set_cpmax (item, a_maximum)
@@ -116,7 +114,7 @@ feature {NONE} -- Externals
 
 invariant
 	positive_minimum: minimum >= 0
-	valid_minumum_maximum: maximum >= minimum
+	valid_minumum_maximum: minimum <= maximum + 1
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

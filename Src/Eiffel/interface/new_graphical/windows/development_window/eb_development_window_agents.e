@@ -166,78 +166,42 @@ feature -- Text observer Agents
 
 feature -- Agents
 
-	on_back is
+	on_back
 			-- User pressed Alt+left.
 			-- Go back in the history (or the context history).
 		local
+			l_history_owner: EB_HISTORY_OWNER
 			l_history_manager: EB_HISTORY_MANAGER
-			l_tool: EB_TOOL
 		do
-			if develop_window.tools.class_tool.has_focus then
-				if develop_window.tools.class_tool.history_manager.is_back_possible then
-					l_history_manager := develop_window.tools.class_tool.history_manager
-					l_tool := develop_window.tools.class_tool
-				end
-			elseif develop_window.tools.features_relation_tool.has_focus then
-				if develop_window.tools.features_relation_tool.history_manager.is_back_possible then
-					l_history_manager := develop_window.tools.features_relation_tool.history_manager
-					l_tool := develop_window.tools.features_relation_tool
-				end
-			elseif develop_window.tools.dependency_tool.has_focus then
-				if develop_window.tools.dependency_tool.history_manager.is_back_possible then
-					l_history_manager := develop_window.tools.dependency_tool.history_manager
-					l_tool := develop_window.tools.dependency_tool
-				end
-			elseif develop_window.tools.diagram_tool.has_focus then
-				if develop_window.tools.diagram_tool.history_manager.is_back_possible then
-					l_history_manager := develop_window.tools.diagram_tool.history_manager
-					l_tool := develop_window.tools.diagram_tool
-				end
-			elseif develop_window.history_manager.is_back_possible then
-				develop_window.history_manager.back_command.execute
-			end
-			if l_history_manager /= Void then
-				l_history_manager.back_command.execute
-				if l_tool /= Void then
-					l_tool.show
+			l_history_owner := active_history_owner
+			if l_history_owner /= Void then
+				l_history_manager := l_history_owner.history_manager
+				check l_history_manager_is_interface_usable: l_history_manager.is_interface_usable end
+				if l_history_manager.is_back_possible then
+					l_history_manager.back_command.execute
+					if {l_tool: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner then
+						l_tool.show
+					end
 				end
 			end
 		end
 
-	on_forth is
+	on_forth
 			-- User pressed Alt+right.
 			-- Go forth in the history (or the context history).
 		local
+			l_history_owner: EB_HISTORY_OWNER
 			l_history_manager: EB_HISTORY_MANAGER
-			l_tool: EB_TOOL
 		do
-			if develop_window.tools.class_tool.has_focus then
-				if develop_window.tools.class_tool.history_manager.is_forth_possible then
-					l_history_manager := develop_window.tools.class_tool.history_manager
-					l_tool := develop_window.tools.class_tool
-				end
-			elseif develop_window.tools.features_relation_tool.has_focus then
-				if develop_window.tools.features_relation_tool.history_manager.is_forth_possible then
-					l_history_manager := develop_window.tools.features_relation_tool.history_manager
-					l_tool := develop_window.tools.features_relation_tool
-				end
-			elseif develop_window.tools.dependency_tool.has_focus then
-				if develop_window.tools.dependency_tool.history_manager.is_forth_possible then
-					l_history_manager := develop_window.tools.dependency_tool.history_manager
-					l_tool := develop_window.tools.dependency_tool
-				end
-			elseif develop_window.tools.diagram_tool.has_focus then
-				if develop_window.tools.diagram_tool.history_manager.is_forth_possible then
-					l_history_manager := develop_window.tools.diagram_tool.history_manager
-					l_tool := develop_window.tools.diagram_tool
-				end
-			elseif develop_window.history_manager.is_forth_possible then
-				develop_window.history_manager.forth_command.execute
-			end
-			if l_history_manager /= Void then
-				l_history_manager.forth_command.execute
-				if l_tool /= Void then
-					l_tool.show
+			l_history_owner := active_history_owner
+			if l_history_owner /= Void then
+				l_history_manager := l_history_owner.history_manager
+				check l_history_manager_is_interface_usable: l_history_manager.is_interface_usable end
+				if l_history_manager.is_forth_possible then
+					l_history_manager.forth_command.execute
+					if {l_tool: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner then
+						l_tool.tool_descriptor.show (False)
+					end
 				end
 			end
 		end
@@ -382,6 +346,43 @@ feature -- Agents
 				on_customized_tools_changed_agent_internal := agent on_customized_tools_changed
 			end
 			Result := on_customized_tools_changed_agent_internal
+		end
+
+feature {NONE} -- Query
+
+	active_history_owner: ?EB_HISTORY_OWNER is
+			-- A history owner for an active tool in the UI.
+		require
+			is_interface_usable: is_interface_usable
+			develop_window_is_interface_usable: develop_window.is_interface_usable
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_shell_tools: ES_SHELL_TOOLS
+			l_tool_types: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
+			l_tool: ES_TOOL [EB_TOOL]
+		do
+			l_window := develop_window
+			l_shell_tools := l_window.shell_tools
+			if l_shell_tools.is_interface_usable then
+				l_tool_types := l_shell_tools.all_requested_tools
+				from l_tool_types.start until l_tool_types.after or Result /= Void loop
+					l_tool := l_tool_types.item_for_iteration
+					if l_tool.is_interface_usable and then l_tool.is_tool_instantiated then
+						if {l_ho: EB_HISTORY_OWNER} l_tool.panel then
+							if l_tool.panel.has_focus then
+								Result := l_ho
+							end
+						end
+					end
+					l_tool_types.forth
+				end
+			end
+			if Result = Void then
+					-- No tool history owner, use IDE window.
+				Result := develop_window
+			end
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Implementation

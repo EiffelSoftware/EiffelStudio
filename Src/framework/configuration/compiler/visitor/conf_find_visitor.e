@@ -83,6 +83,7 @@ feature -- Visiting
 		local
 			l_group: G
 		do
+				-- TODO: use object test after bug #14696 has been fixed
 			l_group ?= a_group
 			if l_group /= Void then
 				if is_matching (l_group) then
@@ -99,10 +100,14 @@ feature -- Visiting
 		do
 			if is_recursive then
 				l_target := a_library.library_target
-				l_uuid := l_target.system.uuid
-				if not visited_targets.has (l_uuid) then
-					visited_targets.force (l_uuid)
-					process_target (l_target)
+					-- Ensure that library has been included in project as it is
+					-- Void when it does not meet the conditions.
+				if l_target /= Void then
+					l_uuid := l_target.system.uuid
+					if not visited_targets.has (l_uuid) then
+						visited_targets.force (l_uuid)
+						process_target (l_target)
+					end
 				end
 			end
 		end

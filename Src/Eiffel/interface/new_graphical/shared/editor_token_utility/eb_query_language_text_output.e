@@ -23,7 +23,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	last_output: STRING is
+	last_output: STRING_32 is
 			-- Last output
 		do
 			if count > 0 then
@@ -31,7 +31,7 @@ feature -- Access
 			else
 				create Result.make (128)
 			end
-			output_internal.do_all (agent Result.append ({STRING} ?))
+			output_internal.do_all (agent Result.append ({STRING_32} ?))
 		ensure
 			result_attached: Result /= Void
 		end
@@ -70,7 +70,7 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Process
 		require
 			a_item_attached: a_item /= Void
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
 			l_name := a_item.name
 			count := count + l_name.count
@@ -154,7 +154,7 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Process
 
 feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
-	process_folder (a_name: STRING; a_path: STRING; a_group: CONF_GROUP) is
+	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP) is
 			-- Process folder.
 			-- `a_name' is name of that folder, `a_path' is related path of that folder, such as "/abc/def".
 			-- `a_group' is the group where that folder is located.
@@ -169,7 +169,7 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 	process_dot_separator is
 			-- Process dot separator, i.e, put a dot in output.
 		local
-			l_dot: STRING
+			l_dot: STRING_32
 		do
 			l_dot := ti_dot
 			count := count + l_dot.count
@@ -178,7 +178,7 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
 feature{NONE} -- Implemenation
 
-	output_internal: LINKED_LIST [STRING]
+	output_internal: LINKED_LIST [STRING_32]
 			-- Implementation of `output'
 
 	count: INTEGER

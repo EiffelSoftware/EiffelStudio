@@ -52,7 +52,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: like text) is
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_attached: a_text /= Void
@@ -88,7 +88,7 @@ feature -- Access
 			-- Spacing between `text' and `pixmap' in pixels.
 			-- If both are not visible, this value does not affect appearance of `Current'.
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of current item.
 		do
 			Result := editor_token_text.string_representation
@@ -270,7 +270,7 @@ feature -- Setting
 			try_call_setting_change_actions
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: like text) is
 			-- Set `text' with `a_text'.
 		require
 			a_text_attached: a_text /= Void
@@ -415,7 +415,7 @@ feature -- Searchable
 			image_set: image /= Void and then image.is_equal (a_image)
 		end
 
-	image: STRING is
+	image: STRING_32 is
 			-- Image of current used in search
 		do
 			Result := image_internal
@@ -429,7 +429,7 @@ feature{NONE} -- Implementation
 	image_internal: like image
 			-- Implementation of `image'
 
-	internal_replace (original, new: STRING) is
+	internal_replace (original, new: like image) is
 			-- Replace every occurrence of `original' with `new' in `image'.
 		do
 		end

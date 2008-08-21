@@ -147,10 +147,10 @@ feature -- Access
 	parent: like Current
 			-- Parent row of current
 
-	summary: STRING is
+	summary: STRING_32 is
 			-- Summary of current row
 		do
-			Result := interface_names.l_feature_count (children_count + 1).as_string_8
+			Result := interface_names.l_feature_count (children_count + 1)
 		ensure
 			result_attached: Result /= Void
 		end

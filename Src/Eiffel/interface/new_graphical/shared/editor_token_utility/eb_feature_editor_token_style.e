@@ -373,10 +373,10 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	invariant_name: STRING is
+	invariant_name: STRING_32 is
 			-- Name of current item
 		once
-			Result := "invariant"
+			create Result.make_from_string ("invariant")
 		ensure then
 			good_result: Result /= Void and then Result.is_equal ("invariant")
 		end
@@ -428,7 +428,7 @@ feature{NONE} -- Implementation
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_tokens: LINKED_LIST [EDITOR_TOKEN]
-			l_comment: STRING
+			l_comment: STRING_32
 			l_feature_text_formatter: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR
 			l_classi: CLASS_I
 			l_consumed_type: CONSUMED_TYPE

@@ -1800,7 +1800,7 @@ feature -- Label texts
 	l_version_from: STRING_32 is do Result := locale.translation("Declared in class")	end
 	l_version_in (a_class: STRING_GENERAL): STRING_32 is do Result := locale.formatted_string (locale.translation("Version from class $1"), [a_class])	end
 	l_branch (a_bra: INTEGER): STRING_32 is do Result := locale.formatted_string (locale.translation("Branch #$1"), [a_bra.out]) end
-	l_version_from_message: STRING is " (version from)"
+	l_version_from_message: STRING_32 is do Result := locale.translation(" (version from)")	end
 	l_expand_layer: STRING_32 is do Result := locale.translation("Expand selected level(s)")	end
 	l_collapse_layer: STRING_32 is do Result := locale.translation("Collapse selected level(s)")	end
 	l_collapse_all_layers: STRING_32 is do Result := locale.translation("Collapse all selected level(s)")	end

@@ -10,7 +10,7 @@ class
 	EB_CLASS_BROWSER_DOMAIN_VIEW
 
 inherit
-	EB_CLASS_BROWSER_GRID_VIEW [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+	EB_CLASS_BROWSER_GRID_VIEW [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 		redefine
 			data,
 			update,
@@ -153,7 +153,7 @@ feature{NONE} -- Implementation/Data
 			Result := item_to_put_in_editor_for_single_item_grid
 		end
 
-	domain: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+	domain: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			-- Domain to be displayed in Current
 
 	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -247,7 +247,7 @@ feature{NONE} -- Implementation/Data
 			y_valid: y > 0 and y <= domain.count
 		local
 			i, j: INTEGER
-			l_content: DS_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+			l_content: DS_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			l_tbl: HASH_TABLE [EV_GRID_ITEM, INTEGER]
 		do
 			from
@@ -325,10 +325,10 @@ feature{NONE} -- Implementation/Data
 			end
 		end
 
-	invisible_items: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+	invisible_items: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			-- List of invisible result rows
 
-	last_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+	last_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			-- Last comparator
 
 feature{NONE} -- Implementation
@@ -372,7 +372,7 @@ feature{NONE} -- Implementation
 			l_domain: like domain
 			a_domain: like data
 			l_item: QL_ITEM
-			l_empty_path: STRING
+			l_empty_path: STRING_32
 		do
 			l_empty_path := ""
 			grid.set_row_height (default_row_height)
@@ -445,8 +445,8 @@ feature{NONE} -- Implementation
 	build_sortable_and_searchable is
 			-- Build sortable and searchable facilities
 		local
-			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
-			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
+			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 		do
 			old_make (grid)
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
@@ -467,7 +467,7 @@ feature{NONE} -- Implementation
 			enable_direct_start_search
 		end
 
-	generate_grid_item (a_y: INTEGER; a_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]) is
+	generate_grid_item (a_y: INTEGER; a_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32]) is
 			-- Generate grid items for row `a_y' from `a_item'.
 		require
 			domain_attached: domain /= Void
@@ -552,7 +552,7 @@ feature{NONE} -- Implementation/Sorting
 			all_path_retrieved_set: all_path_retrieved = b
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -562,7 +562,7 @@ feature{NONE} -- Implementation/Sorting
 			l_domain: like domain
 			l_printer: EB_QUERY_LANGUAGE_PRINTER_VISITOR
 			l_output: EB_QUERY_LANGUAGE_TEXT_OUTPUT
-			l_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]
+			l_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32]
 		do
 			if not all_path_retrieved then
 					-- Retrieve all missing path information.
@@ -598,12 +598,12 @@ feature{NONE} -- Implementation/Sorting
 			fill_rows
 		end
 
-	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]) is
+	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]) is
 			-- Sort `domain' using `a_comparator'.
 		require
 			a_comparator_attached: a_comparator /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+			l_sorter: DS_QUICK_SORTER [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			l_domain: like domain
 		do
 			l_domain := domain
@@ -613,7 +613,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	item_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]; a_order: INTEGER): BOOLEAN
+	item_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32]; a_order: INTEGER): BOOLEAN
 			-- Order tester for `a_item' and `b_item' using item name
 		require
 			a_item_attached: a_item /= Void
@@ -626,7 +626,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	path_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]; a_order: INTEGER): BOOLEAN
+	path_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32]; a_order: INTEGER): BOOLEAN
 			-- Order tester for `a_item' and `b_item' using item path
 		require
 			a_item_attached: a_item /= Void

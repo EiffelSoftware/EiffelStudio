@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text_function (a_function: FUNCTION [ANY, TUPLE, STRING]) is
+	set_text_function (a_function: FUNCTION [ANY, TUPLE, STRING_32]) is
 			-- Set `text_function' with `a_function'.
 		require
 			a_text_function_attached: a_function /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	editor_token_function_internal (a_string_agent: FUNCTION [ANY, TUPLE, STRING]): LIST [EDITOR_TOKEN] is
+	editor_token_function_internal (a_string_agent: FUNCTION [ANY, TUPLE, STRING_32]): LIST [EDITOR_TOKEN] is
 			-- Editor token representation of `a_string'.
 		require
 			a_string_agent_attached: a_string_agent /= Void

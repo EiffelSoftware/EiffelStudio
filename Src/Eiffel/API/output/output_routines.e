@@ -24,9 +24,7 @@ feature -- Miscellaneous
 			root_cluster: CONF_GROUP
 			root_class: CLASS_I
 			cr_f: E_FEATURE
-			l_creators: LIST [SYSTEM_ROOT]
 			l_root: SYSTEM_ROOT
-			cs: CURSOR
 		do
 			text.process_keyword_text ("System", Void)
 			text.add_new_line
@@ -57,15 +55,8 @@ feature -- Miscellaneous
 			text.add_new_line
 
 			if Eiffel_system.workbench.is_already_compiled then
-				from
-					l_creators := eiffel_system.system.root_creators
-					cs := l_creators.cursor
-					l_creators.start
-				until
-					l_creators.after
-				loop
-					l_root := l_creators.item_for_iteration
-
+				if not eiffel_system.system.root_creators.is_empty then
+					l_root := eiffel_system.system.root_creators.first
 
 					root_class := l_root.root_class
 					root_cluster := l_root.cluster
@@ -105,10 +96,7 @@ feature -- Miscellaneous
 					end
 					text.add_new_line
 					text.add_new_line
-
-					l_creators.forth
 				end
-				l_creators.go_to (cs)
 			else
 				text.add_comment ("System is not yet compiled.")
 				text.add_new_line

@@ -2,7 +2,7 @@
 RM=del
 
 # Gobo flag for gelex
-GOBO_LEX_FLAGS=-z
+GOBO_LEX_FLAGS=-z --pragma=noline
 GOBO_LEX=$(GOBO)\spec\$(ISE_PLATFORM)\bin\gelex $(GOBO_LEX_FLAGS)
 
 # Gobo flag for geyaxx

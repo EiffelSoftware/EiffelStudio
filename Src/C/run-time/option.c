@@ -90,6 +90,16 @@ rt_public struct stack *prof_stack;
 /* INTERNAL TRACE VARIABLES */
 
 /*
+doc:	<attribute name="eif_trace_disabled" return_type="int" export="private">
+doc:		<summary>Is tracing currently disabled at the application level? By default 0.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_private int eif_trace_disabled = 0;
+
+/*
 doc:	<attribute name="last_dtype" return_type="int" export="private">
 doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
 doc:		<access>Read/Write</access>
@@ -864,12 +874,52 @@ void stop_profile(void)
 
 #define Classname(x)	System(x).cn_generator
 
+/*
+doc:	<routine name="eif_is_tracing_enabled" return="EIF_BOOLEAN" export="public">
+doc:		<summary>Enable tracing for current thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_is_tracing_enabled (void) 
+{
+	RT_GET_CONTEXT
+	return EIF_TEST(eif_trace_disabled = 0);
+}
+
+/*
+doc:	<routine name="eif_enable_tracing" export="public">
+doc:		<summary>Enable tracing for current thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_enable_tracing (void) 
+{
+	RT_GET_CONTEXT
+	eif_trace_disabled = 0;
+}
+
+/*
+doc:	<routine name="eif_disable_tracing" export="public">
+doc:		<summary>Disable tracing for current thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_disable_tracing (void) 
+{
+	RT_GET_CONTEXT
+	eif_trace_disabled = 1;
+}
+
 void start_trace(char *name, int origin, int dtype)
            				/* The routine name */
            				/* The origin of the routine */
           				/* The class in which the routine is defined */
 {
-	/* Prints, on stdout, the message that feature 'name' in class 'dtype' inherited from 'origin' is just entered.
+	/* Prints, on stdout, the message that feature 'name' in class 'dtype' inherited from 'origin'
+	 * is just entered.
 	 * The user can redirect the output to a file, when he/she wants that.
 	 */
 
@@ -877,27 +927,29 @@ void start_trace(char *name, int origin, int dtype)
 	EIF_GET_CONTEXT
 	int i;				/* Counter needed for loops */
 
-	if (trace_call_level != 0 && last_dtype != -1) {
-		EIF_TRACE_LOCK
-		print_err_msg(stderr, "\n");
+	if (!eif_trace_disabled) {
+		if (trace_call_level != 0 && last_dtype != -1) {
+			EIF_TRACE_LOCK
+			print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
+			print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
 #endif
-		for (i = 0; i < trace_call_level - 1; i++)
-			print_err_msg (stderr, "|  ");		/* Print preceding spaces */
+			for (i = 0; i < trace_call_level - 1; i++)
+				print_err_msg (stderr, "|  ");		/* Print preceding spaces */
 
-		print_err_msg(stderr, ">>> %s from %s", last_name, Classname(last_dtype));		/* Standard message for entering features */
+			print_err_msg(stderr, ">>> %s from %s", last_name, Classname(last_dtype));		/* Standard message for entering features */
 
-		if (last_dtype != last_origin)	/* Check if it is inherited... */
-			print_err_msg(stderr, " (%s)", Classname(last_origin));
-		EIF_TRACE_UNLOCK
+			if (last_dtype != last_origin)	/* Check if it is inherited... */
+				print_err_msg(stderr, " (%s)", Classname(last_origin));
+			EIF_TRACE_UNLOCK
+		}
+
+		trace_call_level++;		/* Increase the call_level */
+
+		last_dtype = dtype;
+		last_origin = origin;
+		last_name = name;
 	}
-
-	trace_call_level++;		/* Increase the call_level */
-
-	last_dtype = dtype;
-	last_origin = origin;
-	last_name = name;
 }
 
 void stop_trace(char *name, int origin, int dtype)

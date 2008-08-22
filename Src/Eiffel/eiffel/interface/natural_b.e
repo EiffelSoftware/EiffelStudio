@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (l: like original_class; n: INTEGER) is
 			-- Creation of basic class

@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	bind_help_shortcut (a_window: EV_WINDOW)
+	bind_help_shortcut (a_window: EV_WINDOW) is
 			-- Binds the help shortcut to a specify window for contextual help requests via the keyboard.
 			--
 			-- `a_window': The window to bind the help shortcut key to.
@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 			a_window_attached: a_window /= Void
 			not_a_window_is_destoryed: not a_window.is_destroyed
 		do
-			a_window.accelerators.extend (create_help_request_shortcut)
+			if not a_window.accelerators.has (create_help_request_shortcut) then
+				a_window.accelerators.extend (create_help_request_shortcut)
+			end
 		end
 
 feature {NONE} -- Helpers

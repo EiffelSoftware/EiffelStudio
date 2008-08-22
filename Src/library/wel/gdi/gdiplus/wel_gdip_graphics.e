@@ -156,7 +156,20 @@ feature -- Command
 		do
 			create l_wel_string.make (a_string)
 			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, a_length, a_font.item, a_rect_f.item, a_format.item, a_brush.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
+
+	fill_rectangle (a_brush: WEL_GDIP_BRUSH; a_rect: WEL_GDIP_RECT) is
+			-- Uses `a_brush' to fill the interior of a rectangle.
+		require
+			not_void: a_brush /= Void
+			not_void: a_rect /= Void
+		local
+			l_result: INTEGER
+	 	do
+			c_gdip_fill_rectangle_i (gdi_plus_handle, item, a_brush.item, a_rect.x, a_rect.y, a_rect.width, a_rect.height, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+	 	end
 
 	 rotate_transform (a_angle: REAL)
 	 		-- Applies the specified rotation to the transformation matrix of this Graphics.
@@ -199,6 +212,48 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	set_clip_rect (a_rect: WEL_GDIP_RECT) is
+			-- Sets the clipping region of Current to `a_rect'
+		require
+			not_void: a_rect /= Void
+		local
+			l_result: INTEGER
+		do
+			c_gdip_set_clip_rect_i (gdi_plus_handle, item, a_rect.x, a_rect.y, a_rect.width, a_rect.height, {WEL_GDIP_COMBINE_MODE}.replace, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	set_clip_graphics (a_src_graphics: WEL_GDIP_GRAPHICS) is
+			-- Updates the clipping region of Current to a region that is the combination of itself and the clipping region of `a_graphics'.
+		require
+			not_void: a_src_graphics /= Void and then a_src_graphics.exists
+		local
+			l_result: INTEGER
+		do
+			c_gdip_set_clip_graphics (gdi_plus_handle, item, a_src_graphics.item, {WEL_GDIP_COMBINE_MODE}.replace, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	set_clip_path (a_path: WEL_GDIP_GRAPHICS_PATH) IS
+			-- Updates the clipping region of this Graphics object to a region that is the combination of itself and the region specified by
+			-- a graphics path. If a figure in the path is not closed, this method treats the nonclosed figure as if it were closed by a
+			-- straight line that connects the figure's starting and ending points.
+		local
+			l_result: INTEGER
+		do
+			c_gdip_set_clip_path (gdi_plus_handle, item, a_path.item, {WEL_GDIP_COMBINE_MODE}.replace, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	reset_clip is
+			-- Resets the clip region of Current to an infinite region.
+		local
+			l_result: INTEGER
+		do
+			c_gdip_reset_clip (gdi_plus_handle, item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 feature -- Query
 
 	dc: WEL_MEMORY_DC  is
@@ -226,7 +281,7 @@ feature -- Query
 feature -- Destroy
 
 	destroy_item is
-			-- Redefine
+			-- <Precursor>
 		local
 			l_result: INTEGER
 		do
@@ -493,6 +548,36 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_fill_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Uses a brush to fill the interior of a rectangle.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_brush_not_null: a_brush /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipFillRectangleI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipFillRectangleI) {
+					GdipFillRectangleI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipFillRectangleI");
+				}
+				if (GdipFillRectangleI) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpBrush *, INT, INT, INT, INT)) GdipFillRectangleI)
+								((GpGraphics *) $a_graphics,
+								(GpBrush *) $a_brush,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height);
+				}
+			}
+			]"
+		end
+
 	c_gdip_rotate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_angle: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Rotate drawing in subsequent calling of `draw_xxx'.
 		require
@@ -596,6 +681,118 @@ feature {NONE} -- C externals
 					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, ARGB)) GdipGraphicsClear)
 								((GpGraphics *) $a_graphics,
 								(ARGB) $a_color);
+				}
+			}
+			]"
+		end
+
+	c_gdip_set_clip_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Sets the clipping region of Current to the Clip property of parameters.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_combine_mode_valid: (create {WEL_GDIP_COMBINE_MODE}).is_valid (a_combine_mode)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetClipRectI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipSetClipRectI) {
+					GdipSetClipRectI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetClipRectI");
+				}
+				if (GdipSetClipRectI) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, INT, INT, INT, INT, CombineMode)) GdipSetClipRectI)
+								((GpGraphics *) $a_graphics,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height,
+								(CombineMode) $a_combine_mode);
+				}
+			}
+			]"
+		end
+
+	c_gdip_set_clip_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_src_graphics: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Sets the clipping region of Current to the Clip property of `a_src_graphics'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_src_graphics_not_null: a_src_graphics /= default_pointer
+			a_combine_mode_valid: (create {WEL_GDIP_COMBINE_MODE}).is_valid (a_combine_mode)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetClipGraphics = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipSetClipGraphics) {
+					GdipSetClipGraphics = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetClipGraphics");
+				}
+				if (GdipSetClipGraphics) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpGraphics *, CombineMode)) GdipSetClipGraphics)
+								((GpGraphics *) $a_graphics,
+								(GpGraphics *) $a_src_graphics,
+								(CombineMode) $a_combine_mode);
+				}
+			}
+			]"
+		end
+
+	c_gdip_set_clip_path (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_graphics_path: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Updates the clipping region of Current to a region that is the combination of itself and the region specified by a graphics path.
+			-- If a figure in the path is not closed, this method treats the nonclosed figure as if it were closed by a straight line that connects
+			-- the figure's starting and ending points.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_src_graphics_not_null: a_graphics_path /= default_pointer
+			a_combine_mode_valid: (create {WEL_GDIP_COMBINE_MODE}).is_valid (a_combine_mode)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetClipPath = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipSetClipPath) {
+					GdipSetClipPath = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetClipPath");
+				}
+				if (GdipSetClipPath) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPath *, CombineMode)) GdipSetClipPath)
+								((GpGraphics *) $a_graphics,
+								(GpPath *) $a_graphics_path,
+								(CombineMode) $a_combine_mode);
+				}
+			}
+			]"
+		end
+
+	c_gdip_reset_clip (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Resets the clip region of `a_graphics' to an infinite region.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipResetClip = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipResetClip) {
+					GdipResetClip = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipResetClip");
+				}
+				if (GdipResetClip) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *)) GdipResetClip)
+								((GpGraphics *) $a_graphics);
 				}
 			}
 			]"

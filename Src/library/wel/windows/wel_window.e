@@ -1980,20 +1980,16 @@ feature -- Registration
 	frozen register_current_window is
 			-- Register `Current' in window manager.
 		local
-			l_null, p: POINTER
-			l_object_id: INTEGER
+			l_old_data: POINTER
+			l_object_id: like internal_object_id
 		do
-			p := internal_data
-				-- If object was already registered, no need to recreate `internal_data',
-				-- we simply set `GWLP_USERDATA' with `internal_data' again.
-			if p = l_null then
-				p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
-				internal_data := p
-				p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
+			l_object_id := internal_object_id
+				-- If object was already registered, no need to create a new entry.
+			if l_object_id = 0 then
 				l_object_id := eif_object_id (Current)
-				{WEL_INTERNAL_DATA}.set_object_id (p, l_object_id)
+				internal_object_id := l_object_id
 			end
-			cwin_set_window_long (item, Gwlp_userdata, p)
+			l_old_data := {WEL_API}.set_window_long (item, Gwlp_userdata, cwel_integer_to_pointer (l_object_id))
 		ensure
 			registered: is_registered
 		end
@@ -2002,19 +1998,21 @@ feature -- Registration
 			-- Is `window' registered?
 		local
 			l_data, null: POINTER
+			l_object_id: like internal_object_id
 		do
 				-- Default is `Result := False'.
 			if exists then
-				l_data := internal_data
+				l_data := {WEL_API}.get_window_long (item, gwlp_userdata)
 				if l_data /= null then
-					Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data)) = Current
+					l_object_id := l_data.to_integer_32
+					Result := l_object_id = internal_object_id and then  eif_id_object (l_object_id) = Current
 				end
 			end
 		end
 
 feature {NONE} -- Registration
 
-	frozen internal_data: POINTER
+	frozen internal_object_id: INTEGER
 			-- Data set to widget at creation.
 			-- Used for having weak references
 
@@ -2037,27 +2035,13 @@ feature {NONE} -- Removal
 	dispose is
 			-- Free allocated memory.
 		local
-			l_null, l_data: POINTER
 			l_object_id: INTEGER
 		do
-				-- Free memory taken by `internal_data'.
-			l_data := internal_data
-			if l_data /= l_null then
-				l_object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
-				check
-					l_object_id_valid: l_object_id > 0
-				end
+				-- Free weak reference taken by `internal_object_id'.
+			l_object_id := internal_object_id
+			if l_object_id > 0 then
 				eif_object_id_free (l_object_id)
-					-- To mark that area as been freed
-				{WEL_INTERNAL_DATA}.set_object_id (l_data, -1)
-				if item /= l_null then
-						-- The data is not usable anymore so we need to
-						-- remove it from GWLP_USERDATA otherwise bad things
-						-- might happen.
-					cwin_set_window_long (item, gwlp_userdata, l_null)
-				end
-				l_data.memory_free
-				internal_data := l_null
+				internal_object_id := -1
 			end
 
 			Precursor {WEL_ANY}
@@ -2076,15 +2060,18 @@ feature {NONE} -- Removal
 		local
 			l_null: POINTER
 			p, hwnd: POINTER
-			l_result: INTEGER
+			l_result: BOOLEAN
 		do
 				-- Take care of `item'.
 			hwnd := item
 			if hwnd /= l_null and then is_window (hwnd) then
 					-- When called from `dispose' we do not want to come back in Eiffel code
-					-- in the call to `cwin_destroy_window'. This is why we reset the dispatched
-					-- pointer.
-				if is_from_gc then
+					-- in the call to `{WEL_API}.destroy_window'. This is why we reset the dispatched
+					-- pointer but only in non .NET mode. In .NET mode, it does not matter as the 
+					-- GC thread runs in its own thread and if WEL is compiled in mono-threaded mode,
+					-- we might have a race condition since there is only one WEL_DISPATCHER object,
+					-- thus while collecting some message might not be processed correctly.
+				if is_from_gc and not {PLATFORM}.is_dotnet then
 						-- Save protected reference to `dispatcher' object.
 					p := cwel_dispatcher_pointer
 
@@ -2094,18 +2081,24 @@ feature {NONE} -- Removal
 				end
 
 					-- Destroying the window.
-				l_result := cwin_destroy_window (hwnd)
-				if l_result = 0 then
+				l_result := {WEL_API}.destroy_window (hwnd)
+				if not l_result then
 						-- In a multithreaded application it may fail when the thread
 						-- who created `hwnd' is not the current thread. This means
 						-- that the current windows was not destroyed.
 						-- To ensure that the window will be destroyed, we send a
 						-- WM_CLOSE message which by default calls `DestroyWindow'
 						-- but this time it will be done in the proper thread.
-					{WEL_API}.post_message (hwnd, wm_close, l_null, l_null)
+						-- When Current is a dialog, sending WM_CLOSE does not have any effect
+						-- (at least on .NET) and instead we call `{WEL_API}.end_dialog'.
+					if cwin_get_window_long (hwnd, dwlp_dlgproc) /= l_null then
+						l_result := {WEL_API}.end_dialog (hwnd, cwel_integer_to_pointer (0))
+					else
+						{WEL_API}.post_message (hwnd, wm_close, l_null, l_null)
+					end
 				end
 
-				if is_from_gc then
+				if is_from_gc and not {PLATFORM}.is_dotnet then
 						-- Restore `dispatcher' object so that dispatching can proceed.
 					cwel_set_dispatcher_pointer (p)
 				end

@@ -338,7 +338,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
-							l_accel := l_window_imp.accel_list.item (l_accel_imp.hash_code_function (a_key.code, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
+							l_accel := l_window_imp.accel_list.item (l_accel_imp.generate_accel_id (a_key, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
 								l_accel_called := True
 								l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))

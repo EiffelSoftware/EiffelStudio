@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			set_c_object (text_label)
 			align_text_center
-			a_cs := "justify"
+			a_cs := app_implementation.c_string_from_eiffel_string (once "justify")
 			{EV_GTK_EXTERNALS}.g_object_get_integer (text_label, a_cs.item, $int_value)
 		end
 
@@ -88,4 +88,5 @@ indexing
 
 
 end --class LABEL_IMP
+
 

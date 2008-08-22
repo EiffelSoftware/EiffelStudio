@@ -33,6 +33,7 @@ typedef void GpFontCollection;
 typedef void GpStringFormat;
 typedef void GpBrush;
 typedef void GpSolidFill;
+typedef void GpPath;
 typedef GUID CLSID;
 typedef void  EncoderParameters;
 typedef int GpMatrixOrder;  
@@ -67,6 +68,11 @@ typedef struct {
 	ULONG Type;
 	void *Value;
 } ImageEncoderParameter;
+
+typedef struct {
+	int X;
+	int Y;
+}GpPoint;
 
 #define GDIPCONST const
 
@@ -123,6 +129,22 @@ typedef enum ColorMatrixFlagsEnum
     ColorMatrixFlagsSkipGrays = 1,
     ColorMatrixFlagsAltGray   = 2
 }ColorMatrixFlags;
+
+typedef enum CombineModeEnum
+{
+	Replace= 0,
+	Intersect = 1,
+	Union = 2,
+	Xor_mode = 3,
+	Exclude = 4,
+	Complement = 5
+}CombineMode;
+
+typedef enum GpFillModeEnum
+{
+	Alternate = 0,
+	Winding =1
+}GpFillMode;
 
 typedef float REAL;
 

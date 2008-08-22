@@ -55,28 +55,4 @@
 #define NOFILE VAL_NOFILE	/* File descriptor limit */
 #endif
 
-
-#ifdef EIF_WINDOWS
-
-/* Usually, the following macros are defined in <sys/types.h> or <sys/select.h>,
- * but I define mine there to ensure a wider portability. This means this file
- * has to be included at the end of the include list, or there is a chance those
- * could be redefined elsewhere.
- */
-
-struct fd_mask {
-	unsigned long fdm_bits[NOFILE/BPI+1];	/* NOFILE max # of fd available */
-};
-
-#undef FD_ZERO
-#define FD_ZERO(p)		memset((char *) (p), 0, sizeof(*(p)))
-#undef FD_SET
-#define FD_SET(n, p)	((p)->fdm_bits[(n)/BPI] |= (1 << ((n) % BPI)))
-#undef FD_CLR
-#define FD_CLR(n, p)	((p)->fdm_bits[(n)/BPI] &= ~(1 << ((n) % BPI)))
-#undef FD_ISSET
-#define FD_ISSET(n, p)	((p)->fdm_bits[(n)/BPI] & (1 << (n) % BPI))
-
-#endif
-
 #endif

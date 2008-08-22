@@ -331,7 +331,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action_kamikaze, do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time when the application is next idle.
 			-- Thread safe
 		require
@@ -415,4 +415,5 @@ indexing
 
 
 end -- class EV_APPLICATION
+
 

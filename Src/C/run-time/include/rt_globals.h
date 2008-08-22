@@ -223,6 +223,7 @@ typedef struct tag_rt_globals
 	EIF_BOOLEAN eif_is_new_recoverable_format_cx;
 
 		/* option.c */
+	int eif_trace_disabled_cx;
 	int last_dtype_cx;
 	int last_origin_cx;
 	char *last_name_cx;
@@ -445,6 +446,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define eif_is_new_recoverable_format	(rt_globals->eif_is_new_recoverable_format_cx)
 
 	/* option.c */
+#define eif_trace_disabled	(rt_globals->eif_trace_disabled_cx)
 #define last_dtype			(rt_globals->last_dtype_cx)
 #define last_origin			(rt_globals->last_origin_cx)
 #define last_name			(rt_globals->last_name_cx)

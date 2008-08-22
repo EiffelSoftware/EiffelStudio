@@ -85,7 +85,6 @@ RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
 #define PROF_RECORDING	1	/* Mask for checking whethter profiler is currently recording */
 #define IN_ACE_FILE	2	/* Mask for checking whether profile(yes) is in the Ace file */
 
-/* #define prof_enabled    EIF_TEST(egc_prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
 #define prof_recording	EIF_TEST(egc_prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
 
 #ifndef EIF_THREADS
@@ -109,6 +108,10 @@ RT_LNK void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
 						 * updates the table, and
 						 * pops the items from the stack
 						 */
+
+RT_LNK EIF_BOOLEAN eif_is_tracing_enabled(void);
+RT_LNK void eif_enable_tracing(void);
+RT_LNK void eif_disable_tracing(void);
 
 #ifdef __cplusplus
 }

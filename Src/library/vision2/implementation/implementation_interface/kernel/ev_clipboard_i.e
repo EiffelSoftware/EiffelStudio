@@ -24,6 +24,8 @@ feature -- Access
 
 	text: STRING_32 is
 		deferred
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Status setting

@@ -309,8 +309,22 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_app_imp := app_implementation
 				-- Perform translation on key values from gdk.
 			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (a_key_event)
-			if keyval > 0 and then valid_gtk_code (keyval) then
-				create a_key.make_with_code (key_code_from_gtk (keyval))
+			if keyval > 0 then
+				if not valid_gtk_code (keyval) then
+						-- We perform mapping for F11 and F12 keys on Solaris with Type 4 keyboards.
+					if keyval = 0x1005FF10 then
+							-- If Sun_F36 has been pressed then map it to F11 key
+						keyval := {EV_GTK_KEY_CONVERSION}.key_f11_keysym
+					elseif keyval = 0x1005FF11 then
+							-- If Sun_F37 has been pressed then map it to F12 key
+						keyval := {EV_GTK_KEY_CONVERSION}.key_f12_keysym
+					else
+						keyval := 0
+					end
+				end
+				if keyval > 0 then
+					create a_key.make_with_code (key_code_from_gtk (keyval))
+				end
 			end
 			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
 				a_key_press := True
@@ -324,7 +338,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
-							l_accel := l_window_imp.accel_list.item (l_accel_imp.generate_accel_id (a_key, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
+							l_accel := l_window_imp.accel_list.item (l_accel_imp.hash_code_function (a_key.code, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
 								l_accel_called := True
 								l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))

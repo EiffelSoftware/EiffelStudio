@@ -2713,7 +2713,7 @@ feature -- Removal
 							if current_item.internal_is_selected then
 								current_item.disable_select_internal
 							end
-							current_item.unparent
+							current_item.update_for_removal
 						end
 						j := j + 1
 					end

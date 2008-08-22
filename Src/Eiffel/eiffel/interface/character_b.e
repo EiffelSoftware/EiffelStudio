@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (l: like original_class; w: BOOLEAN) is
 			-- Create instance of CHARACTER_A. If `w' a normal character.

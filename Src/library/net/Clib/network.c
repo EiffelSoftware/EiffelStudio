@@ -21,10 +21,6 @@ indexing
 #pragma module NET_NETWORK
 #endif /* __VMS */
 
-#ifdef EIF_WINDOWS
-#define FD_SETSIZE 256
-#endif
-
 #include "eif_config.h"
 
 #ifdef EIF_WINDOWS

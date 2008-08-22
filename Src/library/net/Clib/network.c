@@ -26,10 +26,16 @@ indexing
 #endif
 
 #include "eif_config.h"
+
+#ifdef EIF_WINDOWS
+#define FD_SETSIZE 256
+#endif
+
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
 #include "eif_except.h"  
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
+
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN

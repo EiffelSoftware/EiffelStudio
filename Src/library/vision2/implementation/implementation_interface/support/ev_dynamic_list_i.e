@@ -370,10 +370,12 @@ feature -- Removal
 		do
 			item_index := index_of (v, 1)
 			if item_index > 0 then
-				remove_i_th (item_index)
+					-- Update index should the item position being removed
+					-- come before the current index position.
 				if item_index <= index then
 					index := index - 1
 				end
+				remove_i_th (item_index)
 			end
 		ensure
 			--| It is not possible to call old item as if off, it will cause

@@ -23,12 +23,39 @@ inherit
 create
 	default_create
 
+feature -- Clean up
+
+	close_session (a_session: SESSION_I)
+			-- Closes a session object.
+			--
+			-- `a_session': The session object to close.
+		local
+			l_sessions: ?like internal_sessions
+		do
+			if is_interface_usable then
+				l_sessions := internal_sessions
+				if l_sessions /= Void and then l_sessions.has (a_session) then
+						-- Removes the session object from the list of managed objects.
+					l_sessions.start
+					l_sessions.search_forth (a_session)
+					check a_session_found: not l_sessions.after end
+					l_sessions.remove_at
+
+						-- Cleans up the session object.
+					if a_session.is_interface_usable and then {l_disposable: DISPOSABLE} a_session then
+						l_disposable.dispose
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
 		local
 			l_sessions: like internal_sessions
+			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
 		do
 			if a_disposing then
 					-- Store all unsaved session data
@@ -36,15 +63,13 @@ feature {NONE} -- Clean up
 				l_sessions := internal_sessions
 				if l_sessions /= Void then
 						-- Clean up sessions
-					l_sessions.do_all (agent (a_ia_session: SESSION_I)
-						local
-							l_disposable: DISPOSABLE
-						do
-							l_disposable ?= a_ia_session
-							if l_disposable /= Void then
-								l_disposable.dispose
-							end
-						end)
+					l_cursor := l_sessions.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						if {l_disposable: DISPOSABLE} l_cursor.item then
+							l_disposable.dispose
+						end
+						l_cursor.forth
+					end
 				end
 			end
 

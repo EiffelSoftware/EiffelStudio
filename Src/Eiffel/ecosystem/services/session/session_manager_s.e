@@ -27,6 +27,20 @@ feature -- Access
 			result_has_attached_items: not Result.has (Void)
 		end
 
+feature -- Clean up
+
+	close_session (a_session: SESSION_I)
+			-- Closes a session object.
+			--
+			-- `a_session': The session object to close.
+		require
+			active_sessions_has_a_session: active_sessions.has (a_session)
+		deferred
+		ensure
+			not_active_sessions_has_a_session: not active_sessions.has (a_session)
+			not_a_session_is_interface_usable: not a_session.is_interface_usable
+		end
+
 feature -- Storage
 
 	store (a_session: SESSION_I)

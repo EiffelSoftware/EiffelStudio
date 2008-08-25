@@ -72,8 +72,6 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
-			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
-
 			if a_disposing then
 				if is_dirty and then manager.is_interface_usable then
 					manager.store (Current)
@@ -81,6 +79,13 @@ feature {NONE} -- Clean up
 				data.wipe_out
 				value_changed_event.dispose
 			end
+			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+			manager := Void
+		ensure then
+			not_is_dirty: a_disposing implies not is_dirty
+			data_is_empty: a_disposing implies (old data).is_empty
+			not_value_changed_event_is_interface_usable: a_disposing implies not (old value_changed_event).is_interface_usable
+			manager_detached: manager = Void
 		end
 
 feature -- Access

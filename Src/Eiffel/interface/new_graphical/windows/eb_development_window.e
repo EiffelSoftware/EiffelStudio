@@ -179,10 +179,23 @@ feature {NONE} -- Clean up
 			-- Recycle all.
 		local
 			l_session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			l_sessions: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_session: SESSION_I
 		do
-				-- Persist session data
 			create l_session_manager
 			if l_session_manager.is_service_available then
+					-- Store and clear all session data related to the window.
+				l_sessions := l_session_manager.service.active_sessions.new_cursor
+				from l_sessions.start until l_sessions.after loop
+					l_session := l_sessions.item
+					if l_session.is_interface_usable and then l_session.is_per_window and then l_session.window_id = window_id then
+							-- Closes and stores session data.
+						l_session_manager.service.close_session (l_session)
+					end
+					l_sessions.forth
+				end
+
+					-- Store all other session data, that's not tied to the window, incase this is the last window.
 				l_session_manager.service.store_all
 			end
 
@@ -235,6 +248,8 @@ feature {NONE} -- Clean up
 			ui := Void
 			shell_tools := Void
 			address_manager := Void
+			internal_session_data := Void
+			internal_project_session_data := Void
 
 			Precursor {EB_TOOL_MANAGER}
 		ensure then
@@ -252,6 +267,8 @@ feature {NONE} -- Clean up
 			agents_detached: agents = Void
 			ui_detached: ui = Void
 			shell_tools_detached: shell_tools = Void
+			internal_session_detached: internal_session_data = Void
+			internal_project_session_detached: internal_project_session_data = Void
 		end
 
 feature -- Access
@@ -325,6 +342,25 @@ feature -- Access
 			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).is_service_available implies Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
 			result_consistent: Result = project_session_data
+		end
+
+	frozen layout_manager: !ES_DEVELOPMENT_WINDOW_LAYOUT_MANAGER
+			-- Handles all docking layout management
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_result: ?like internal_layout_manager
+		do
+			l_result := internal_layout_manager
+			if l_result = Void then
+				create Result.make (Current)
+				auto_recycle (Result)
+				internal_layout_manager := Result
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = layout_manager
 		end
 
 	frozen window_id: NATURAL_32
@@ -1114,7 +1150,7 @@ feature -- Window management
 
 			save_editors_to_session_data (Result)
 
-			docking_layout_manager.save_editors_docking_layout
+			layout_manager.store_editors_layout
 
 			if tools.features_relation_tool /= Void then
 				l_feature_stone ?= tools.features_relation_tool.stone
@@ -1379,14 +1415,14 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			save_size
 				-- Create session data from above saved data.
 			create l_develop_window_data.make_from_window_data (development_window_data)
-			docking_layout_manager.save_tools_docking_layout
+			layout_manager.store_standard_tools_layout
 			session_data.set_value (l_develop_window_data, development_window_data.development_window_data_id)
 
 			if (create {SHARED_WORKBENCH}).workbench.system_defined then
 				-- Editor data save to per-project session data.
 				create l_develop_window_data.make_from_window_data (development_window_data)
 				save_editors_to_session_data (l_develop_window_data)
-				docking_layout_manager.save_editors_docking_layout
+				layout_manager.store_editors_layout
 
 				-- Must use project *window* session data here.
 				project_session_data.set_value (l_develop_window_data, development_window_data.development_window_project_data_id)
@@ -2443,13 +2479,17 @@ feature {NONE} -- Window management
 
 feature {NONE} -- Internal implementation cache
 
-	internal_session_data: like session_data
-			-- Cached version of `session_data'
-			-- Note: Do not use directly
+	internal_session_data: ?like session_data
+			-- Cached version of `session_data'.
+			-- Note: Do not use directly!
 
-	internal_project_session_data: like project_session_data
-			-- Cached version of `project_session_data'
-			-- Note: Do not use directly
+	internal_project_session_data: ?like project_session_data
+			-- Cached version of `project_session_data'.
+			-- Note: Do not use directly!
+
+	internal_layout_manager: ?like layout_manager
+			-- Cached version of `layout_manager'.
+			-- Note: Do not use directly!
 
 invariant
 	commands_attached: not is_recycled implies commands /= Void

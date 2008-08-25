@@ -16,6 +16,7 @@ inherit
 			make as make_session,
 			make_per_window as make_per_window_session
 		redefine
+			safe_dispose,
 			value,
 			value_or_default
 		end
@@ -68,6 +69,17 @@ feature {NONE} -- Initialization
 			is_per_window: is_per_window
 			manager_set: manager = a_manager
 			inner_session_set: inner_session = a_session
+		end
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_disposing: BOOLEAN)
+			-- <Precursor>
+		do
+			Precursor (a_disposing)
+			inner_session := Void
+		ensure then
+			inner_session_detached: inner_session = Void
 		end
 
 feature {SESSION_MANAGER_S} -- Access

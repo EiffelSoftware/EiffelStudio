@@ -28,7 +28,11 @@ feature {NONE} -- Clean Up
 			retried: BOOLEAN
 		do
 			if not retried and not is_zombie then
-				safe_dispose (False)
+				if is_in_final_collect then
+					safe_dispose (False)
+				else
+					dispose
+				end
 			end
 		rescue
 			retried := True

@@ -13,6 +13,10 @@ class
 inherit
 	SHARED_LOCALE
 
+feature -- General purpose
+
+	e_unknown_error: !STRING_32 do Result ?= locale.translation ("Unknown error.") end
+
 feature -- Code template
 
 	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end

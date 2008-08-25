@@ -55,12 +55,12 @@ feature -- Initialization
 	feature_linv is
 		once
 			from
-			variant
-				variant_vio: i + 1
 			until
 				False
 			loop
 
+			variant
+				variant_vio: i + 1
 			end
 		end
 

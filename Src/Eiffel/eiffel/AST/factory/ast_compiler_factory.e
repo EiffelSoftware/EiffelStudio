@@ -266,8 +266,8 @@ feature -- Access
 				end
 				create Result.initialize (f, b, i, system.feature_as_counter.next_id, next_pos)
 
-				if b.is_built_in and then system.eiffel_project.is_compiling then
-						-- The system.eiffel_project.is_compiling needs to be checked here because refactoring uses this factory.
+				if b.is_built_in and then system.workbench.is_compiling then
+						-- The system.workbench.is_compiling needs to be checked here because refactoring uses this factory.
 						-- When working with uncompiled classes system.current_class will be Void. See fix_me below
 
 						-- We have a built in so we set the replacement feature inside if available.

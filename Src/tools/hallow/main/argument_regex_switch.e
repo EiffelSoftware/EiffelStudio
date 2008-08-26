@@ -22,8 +22,8 @@ create
 
 feature -- Access
 
-	value_validator: ARGUMENT_REGEX_VALIDATOR is
-			-- Retrieves an validator used to check current switch value
+	value_validator: !ARGUMENT_REGEX_VALIDATOR
+			-- <Precursor>
 		once
 			create Result
 		end

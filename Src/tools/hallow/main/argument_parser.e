@@ -15,17 +15,14 @@ inherit
 
 	ARGUMENT_SINGLE_PARSER
 		rename
-			make as make_parser
-		export
-			{NONE} all
-			{ANY} execute, successful
+			make as make_single_parser
 		redefine
 			display_logo
 		end
 
 	I_OPTIONS
 		rename
-			can_read_options as successful
+			can_read_options as is_successful
 		end
 
 create
@@ -36,9 +33,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize parser
 		do
-			make_parser (False, False,  True)
-			set_show_switch_arguments_inline (True)
-			set_loose_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
+			make_single_parser (False, False)
+			set_is_using_separated_switch_values (False)
+			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
 		end
 
 feature -- Access
@@ -56,7 +53,7 @@ feature -- Access
 	frozen user_directory: SYSTEM_STRING
 			-- Start directory to scan for directories files, specified by the user.
 		once
-			if has_loose_argument then
+			if has_non_switched_argument then
 				Result := values.first
 			else
 				Result := {ENVIRONMENT}.current_directory
@@ -117,7 +114,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (file_include_pattern_switch).do_all (agent (a_item: STRING; a_buffer: STRING)
+			options_values_of_name (file_include_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -133,7 +130,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (file_exclude_pattern_switch).do_all (agent (a_item: STRING; a_buffer: STRING)
+			options_values_of_name (file_exclude_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -149,7 +146,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (directory_include_pattern_switch).do_all (agent (a_item: STRING; a_buffer: STRING)
+			options_values_of_name (directory_include_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -165,7 +162,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (directory_exclude_pattern_switch).do_all (agent (a_item: STRING; a_buffer: STRING)
+			options_values_of_name (directory_exclude_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -291,18 +288,17 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: STRING = "Hallow, Windows Installer Xml v3.0 Tool"
-			-- Full name of application
+	name: !STRING = "Hallow, Windows Installer Xml v3.0 Tool"
+			-- <Precursor>
 
-	version: STRING
-			-- Version number of application
+	version: !STRING
+			-- <Precursor>
 		once
-			Result := {ASSEMBLY}.get_executing_assembly.get_name.version.to_string
+			create Result.make_from_cil ({ASSEMBLY}.get_executing_assembly.get_name.version.to_string)
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
-			-- Retrieve a list of switch used for a specific application
-			-- (export status {NONE})
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+			-- <Precursor>
 		do
 			create Result.make (8)
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_include_switch, "Generated a WiX Include definition instead of a Fragment.", True, False))
@@ -323,29 +319,28 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over the include pattern when matching.", True, False))
 		end
 
-	loose_argument_name: STRING = "directory"
-			-- Name of lose argument, used in usage information
+	non_switched_argument_name: !STRING = "directory"
+			-- <Precursor>
 
-	loose_argument_description: STRING = "Directory to scan for files."
-			-- Description of lose argument, used in usage information
+	non_switched_argument_description: !STRING = "Directory to scan for files."
+			-- <Precursor>
 
-	loose_argument_type: STRING = "A directory"
-			-- Type of lose argument, used in usage information.
-			-- A type is a short description of the argument. I.E. "Configuration File"
+	non_switched_argument_type: !STRING = "A directory"
+			-- <Precursor>
 
 feature {NONE} -- Output
 
-	display_logo is
-			-- Displays copyright information
+	display_logo
+			-- <Precursor>
 		do
-			if successful then
-				if not display_help then
+			if is_successful then
+				if not is_help_usage_displayed then
 					{SYSTEM_CONSOLE}.write_line ("<?xml version=%"1.0%" encoding=%"utf-8%"?>")
 					{SYSTEM_CONSOLE}.write_line ("<!--")
 					{SYSTEM_CONSOLE}.write_line
 				end
 				Precursor {ARGUMENT_SINGLE_PARSER}
-				if not display_help then
+				if not is_help_usage_displayed then
 					{SYSTEM_CONSOLE}.write_line ("-->")
 				end
 			else
@@ -355,25 +350,25 @@ feature {NONE} -- Output
 
 feature {NONE} -- Switch names
 
-	generate_include_switch: STRING = "i"
-	directory_ref_switch: STRING = "dr"
-	one_file_per_component_switch: STRING = "s"
-	recursive_switch: STRING = "r"
-	directory_alias_switch: STRING = "a"
-	verbal_name_generation_semantics_switch: STRING = "n"
-	disk_id_switch: STRING = "k"
-	file_include_pattern_switch: STRING = "fi"
-	file_exclude_pattern_switch: STRING = "fe"
-	directory_include_pattern_switch: STRING = "di"
-	directory_exclude_pattern_switch: STRING = "de"
-	exclude_pattern_priority_switch: STRING = "epp"
-	merge_module_switch: STRING = "m"
-	group_components_switch: STRING = "g"
-	x64_switch: STRING = "x64"
-	conditional_expression_switch: STRING = "c"
+	generate_include_switch: !STRING = "i"
+	directory_ref_switch: !STRING = "dr"
+	one_file_per_component_switch: !STRING = "s"
+	recursive_switch: !STRING = "r"
+	directory_alias_switch: !STRING = "a"
+	verbal_name_generation_semantics_switch: !STRING = "n"
+	disk_id_switch: !STRING = "k"
+	file_include_pattern_switch: !STRING = "fi"
+	file_exclude_pattern_switch: !STRING = "fe"
+	directory_include_pattern_switch: !STRING = "di"
+	directory_exclude_pattern_switch: !STRING = "de"
+	exclude_pattern_priority_switch: !STRING = "epp"
+	merge_module_switch: !STRING = "m"
+	group_components_switch: !STRING = "g"
+	x64_switch: !STRING = "x64"
+	conditional_expression_switch: !STRING = "c"
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

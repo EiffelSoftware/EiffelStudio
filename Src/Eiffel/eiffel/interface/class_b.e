@@ -5,12 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_B
+deferred class CLASS_B
 
 inherit
 	EIFFEL_CLASS_C
 		redefine
-			is_basic, partial_actual_type, check_validity
+			is_basic, partial_actual_type, check_validity, make
 		end
 
 	SPECIAL_CONST
@@ -18,8 +18,14 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
+feature {NONE} -- Initialization
+
+	make (l: like original_class) is
+			-- <Precursor>
+		do
+			Precursor {EIFFEL_CLASS_C} (l)
+			is_expanded := True
+		end
 
 feature
 

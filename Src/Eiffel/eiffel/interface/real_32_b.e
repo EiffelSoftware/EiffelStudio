@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Internal representation of class REAL
 
-class REAL_32_B 
+class REAL_32_B
 
 inherit
 
@@ -13,10 +13,9 @@ inherit
 		end
 
 create
-
 	make
-	
-feature 
+
+feature
 
 	actual_type: REAL_32_A is
 			-- actual real type

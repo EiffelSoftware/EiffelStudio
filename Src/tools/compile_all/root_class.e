@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 			eiffel_layout.check_environment_variable
 
 				-- get arguments
-			create arguments.make (False, True)
-			arguments.set_use_separated_switch_values (True)
+			create arguments.make
 			arguments.execute (agent start)
 		end
 

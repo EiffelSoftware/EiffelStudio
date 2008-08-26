@@ -36,6 +36,8 @@ feature -- Access
 
 	frozen application_base: !STRING
 			-- The base location of application.
+		indexing
+			once_status: global
 		local
 			l_result: ?STRING
 			l_path: STRING
@@ -60,8 +62,8 @@ feature -- Access
 	frozen values: !LIST [!STRING]
 			-- List of arguments values that were not qualified with a switch (aka loose arguments).
 		require
-			has_parsed: has_parsed
-		once
+			is_successful: is_successful
+		do
 			Result := internal_values
 		ensure
 			result_contains_attached_valid_items: Result.for_all (
@@ -74,13 +76,15 @@ feature -- Access
 	frozen option_values: !LIST [!ARGUMENT_OPTION]
 			-- Option values parsed via command line, these do not include the loose arguments. See `values'.
 		require
-			has_parsed: has_parsed
-		once
+			is_successful: is_successful
+		do
 			Result := internal_option_values
 		end
 
 	frozen error_messages: !ARRAYED_LIST [!STRING]
 			-- Any error messages generated during parse and validation, if any.
+		indexing
+			once_status: global
 		once
 			create Result.make (0)
 		ensure
@@ -137,7 +141,7 @@ feature -- Status report
 		do
 			Result := has_parsed and error_messages.is_empty
 		ensure
-			error_messages_is_empty: Result implies error_messages.is_empty
+			error_messages_is_empty: Result implies has_parsed and then error_messages.is_empty
 		end
 
 	is_using_separated_switch_values: BOOLEAN assign set_is_using_separated_switch_values
@@ -1421,6 +1425,8 @@ feature {NONE} -- Usage
 
 	frozen command_option_configurations: ?ARRAYED_LIST [!STRING]
 			-- Command line option configuration string (to display in usage).
+		indexing
+			once_status: global
 		local
 			l_groups: ?like switch_groups
 			l_group: ARGUMENT_GROUP
@@ -1612,6 +1618,8 @@ feature {NONE} -- Switches
 
 	frozen available_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch.
+		indexing
+			once_status: global
 		local
 			l_switches: ?like switches
 			l_switch: !ARGUMENT_SWITCH
@@ -1636,6 +1644,8 @@ feature {NONE} -- Switches
 
 	frozen available_visible_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available visible (not hidden) switch.
+		indexing
+			once_status: global
 		local
 			l_switches: !like available_switches
 			l_switch: !ARGUMENT_SWITCH
@@ -1668,7 +1678,7 @@ feature {NONE} -- Switches
 
 	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping.
-		once
+		do
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
@@ -1676,7 +1686,7 @@ feature {NONE} -- Switches
 	switch_appurtenances: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
 			-- Switch appurtenances (dependencies)
 			-- Note: Siwtch appurtenances are implictly added to a group where a switch is present.
-		once
+		do
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end

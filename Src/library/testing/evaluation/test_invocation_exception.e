@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_INVOKATION_EXCEPTION
+	TEST_INVOCATION_EXCEPTION
 
 inherit
 	EXCEP_CONST

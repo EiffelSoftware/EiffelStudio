@@ -19,33 +19,20 @@ inherit
 
 feature {EIFFEL_TEST_SUITE_S} -- Events
 
-	on_executor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_executor: !EIFFEL_TEST_EXECUTOR_I)
-			-- Called when test suite launches an executor.
-			--
-			-- `a_test_suite': Test suite that triggered event.
-			-- `a_executor': Executor which was launched by test suite.
-		require
-			interface_usable: is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
-			a_executor_running: a_executor.is_running
-			a_test_suite_launched_a_executor: a_executor.test_suite = a_test_suite
-		do
-		end
-
-	on_factory_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_factory: !EIFFEL_TEST_FACTORY_I [EIFFEL_TEST_CONFIGURATION_I])
-			-- Called when test suite launches a factory.
+	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- Called when test suite launches a processor.
 			--
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_factory': Factory which was launched by test suite.
 		require
 			usable: is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
-			a_factory_running: a_factory.is_running
-			a_test_suite_launched_a_factory: a_factory.test_suite = a_test_suite
+			a_processor_running: a_processor.is_running
+			a_test_suite_launched_a_processor: a_processor.test_suite = a_test_suite
 		do
 		end
 
-	on_processor_proceeded (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I [ANY]) is
+	on_processor_proceeded (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I) is
 			-- Called when some processor has proceeded with its task.
 			--
 			-- `a_test_suite': Test suite managing processor.
@@ -59,7 +46,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I [ANY])
+	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- Called when some processor finished its task.
 			--
 			-- `a_test_suite': Test suite that triggered event.
@@ -73,7 +60,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I [ANY]) is
+	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I) is
 			-- Called when a processor has completely stopped
 			--
 			-- Note: It is not guaranteed that all observers will receive this notification. This is because

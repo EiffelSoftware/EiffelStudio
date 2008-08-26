@@ -18,78 +18,37 @@ deferred class
 	EIFFEL_TEST_EXECUTOR_I
 
 inherit
-	EIFFEL_TEST_PROCESSOR_I [!DS_LINEAR [!EIFFEL_TEST_I]]
+	EIFFEL_TEST_PROCESSOR_I
 		rename
-			is_valid_argument as is_valid_test_list,
-			tests as queued_tests
+			tests as active_tests,
+			argument as active_tests,
+			is_valid_typed_argument as is_valid_test_list
+		redefine
+			is_valid_test_list
 		end
 
 feature -- Access
 
-	queued_tests: !DS_LINEAR [!EIFFEL_TEST_I]
+	active_tests: !DS_LINEAR [!EIFFEL_TEST_I]
 			-- <Precursor>
+			--
+			-- Note: list contains tests which are queued or currently executed.
 		deferred
 		ensure then
 				-- Tests queued by `Current'
 			results_queued: ({!DS_LINEAR [!EIFFEL_TEST_I]} #? Result).for_all (
 				agent (a_test: !EIFFEL_TEST_I): BOOLEAN
 					do
-						Result := a_test.is_queued and then a_test.executor = Current
+						Result := (a_test.is_queued or a_test.is_running) and then a_test.executor = Current
 					end)
-		end
-
-	current_test: !EIFFEL_TEST_I
-			-- Test currently being executed
-		require
-			usable: is_interface_usable
-			testing: is_testing
-		deferred
-		ensure
-				-- Test being run by `Current'
-			result_running: Result.is_running and then Result.executor = Current
-		end
-
-feature -- Status report
-
-	is_preparing: BOOLEAN
-			-- Is the execution beeing prepared?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_no_other_state: Result implies not (is_testing or is_cleaning_up)
-		end
-
-	is_testing: BOOLEAN
-			-- Is a test currently beeing executed?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_no_other_state: Result implies not (is_preparing or is_cleaning_up)
-		end
-
-	is_cleaning_up: BOOLEAN
-			-- Is any cleaning up being performed?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_no_other_state: Result implies not (is_preparing or is_testing)
-		end
-
-	is_running: BOOLEAN
-			-- <Precursor>
-		do
-			Result := is_preparing or is_testing or is_cleaning_up
 		end
 
 feature -- Query
 
-	is_valid_test_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]): BOOLEAN
+	is_valid_test_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_test_suite: like test_suite): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_list.for_all (agent is_test_executable)
+			Result := a_test_suite.is_subset (a_list) and a_list.for_all (agent is_test_executable)
 		end
 
 	is_test_executable (a_test: !EIFFEL_TEST_I): BOOLEAN is
@@ -100,38 +59,24 @@ feature -- Query
 		require
 			a_test_usable: a_test.is_interface_usable
 		do
-			Result := is_test_compatible (a_test) and not
-				(a_test.is_queued or a_test.is_running)
+			Result := (a_test.is_queued or a_test.is_running)
 		ensure
-			result_implies_compatible: Result implies is_test_compatible (a_test)
 			result_implies_not_queued: Result implies not a_test.is_queued
 			result_implies_not_running: Result implies not a_test.is_running
 		end
 
-	is_test_compatible (a_test: !EIFFEL_TEST_I): BOOLEAN is
-			-- Is test compatible with current executor?
+feature -- Status setting
+
+	skip_test (a_test: !EIFFEL_TEST_I)
+			-- Remove test from `active_tests'
+			--
+			-- `a_test': Test to be removed from active tests.
 		require
-			a_test_usable: a_test.is_interface_usable
-		do
-			Result := True
-		end
-
-feature {EIFFEL_TEST_SUITE_S} -- Status setting
-
-	start (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_test_suite: !EIFFEL_TEST_SUITE_S) is
-			-- Launch test execution for a given list of tests. Once `Current' is preparing return and
-			-- continue execution asynchronously.
-			--
-			-- Note: Implementors should respect list order.
-			--
-			-- `a_list': List containing tests to be executed
-			-- `a_test_suite': Test suite containing tests
-		require else
-			tests_belong_to_suite: a_test_suite.is_subset (a_list)
+			usable: is_interface_usable
+			a_test_active: active_tests.has (a_test)
 		deferred
-		ensure then
-			preparing: is_preparing
-			a_list_queued: queued_tests.is_equal (a_list)
+		ensure
+			a_test_not_active: not active_tests.has (a_test)
 		end
 
 end

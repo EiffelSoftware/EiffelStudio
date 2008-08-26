@@ -13,22 +13,25 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_PROCESSOR_REGISTRAR_I [G -> EIFFEL_TEST_PROCESSOR_I [ANY]]
+	EIFFEL_TEST_PROCESSOR_REGISTRAR_I [G]
 
 inherit
-	ACTIVE_COLLECTION_I [G]
-		rename
-			items as processors,
-			are_items_available as is_interface_usable,
-			item_added_event as processor_added_event,
-			item_removed_event as processor_removed_event,
-			item_changed_event as processor_changed_event,
-			items_reset_event as processors_changed_event
+	USABLE_I
+
+feature -- Access
+
+	processors: !DS_LINEAR [!G]
+			-- Registered processors
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_consistent: Result = processors
 		end
 
 feature -- Status report
 
-	is_registered (a_type: !TYPE [!G]): BOOLEAN
+	is_registered (a_type: !TYPE [G]): BOOLEAN
 			-- Is an item available for `a_type'?
 			--
 			-- `a_type': Type requested processor conforms to.
@@ -40,7 +43,7 @@ feature -- Status report
 
 feature -- Query
 
-	processor (a_type: !TYPE [!G]): !G
+	processor (a_type: !TYPE [G]): !G
 			-- Processor registered for type.
 			--
 			-- `a_type': Type requested processor conforms to.
@@ -50,7 +53,6 @@ feature -- Query
 			a_type_is_registered: is_registered (a_type)
 		deferred
 		ensure
-			result_is_interface_usable: Result.is_interface_usable
 			items_has_result: processors.has (Result)
 			conforming_type: a_type.attempt (Result) /= Void
 		end
@@ -63,12 +65,12 @@ feature -- Query
 		require
 			usable: is_interface_usable
 		do
-			Result := a_processor.is_interface_usable
+			Result := True
 		end
 
-feature -- Basic operations
+feature -- Element change
 
-	register (a_processor: !G; a_type: !TYPE [!G]) is
+	register (a_processor: !G; a_type: !TYPE [G]) is
 			-- Register processor associated with type.
 			--
 			-- `a_processor': Processor to be registered.
@@ -84,7 +86,7 @@ feature -- Basic operations
 			items_has_a_item: processors.has (a_processor)
 		end
 
-	unregister (a_type: !TYPE [!G])
+	unregister (a_type: !TYPE [G])
 			-- Unregister processor associated with type.
 			--
 			-- `a_type': Type processor is registered with.

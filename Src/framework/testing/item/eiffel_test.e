@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			class_name := a_class_name
 			internal_tags := new_hash_set
-			create {!DS_ARRAYED_LIST [!EIFFEL_TEST_OUTCOME_I]} internal_outcomes.make (0)
+			create {!DS_ARRAYED_LIST [!TEST_OUTCOME]} internal_outcomes.make (0)
 			add_implicit_tags
 		ensure
 			name_set: name = a_name

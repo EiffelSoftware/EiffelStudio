@@ -38,18 +38,18 @@ getdrupmod()
 }
 
 getdrupal_modules(){
-	getdrupmod cck-6.x-2.0-rc4.tar.gz
+	getdrupmod cck-6.x-2.0-rc6.tar.gz
 	getdrupmod diff-6.x-2.0.tar.gz
 	getdrupmod freelinking-6.x-1.4.tar.gz
 	getdrupmod geshifilter-6.x-1.1.tar.gz
-	getdrupmod image-6.x-1.0-alpha2.tar.gz
+	getdrupmod image-6.x-1.0-alpha3.tar.gz
 	getdrupmod imce-6.x-1.1.tar.gz
 	getdrupmod img_assist-6.x-1.0-beta1.tar.gz
 	getdrupmod lightbox2-6.x-1.8.tar.gz
 	getdrupmod pathauto-6.x-1.1.tar.gz
 	getdrupmod pearwiki_filter-6.x-1.0-beta1.tar.gz
 	getdrupmod persistent_login-6.x-1.4-beta2.tar.gz
-	getdrupmod print-6.x-1.0-rc8.tar.gz
+	getdrupmod print-6.x-1.0-rc9.tar.gz
 	getdrupmod recent_changes-6.x-1.x-dev.tar.gz
 	getdrupmod tagadelic-6.x-1.0.tar.gz
 	getdrupmod talk-6.x-1.4.tar.gz
@@ -60,8 +60,8 @@ getdrupal_modules(){
 	getdrupmod views-6.x-2.0-rc1.tar.gz
 	getdrupmod wikitools-6.x-1.0.tar.gz
 	getdrupmod flexifilter-6.x-1.1-rc1.tar.gz
-	getdrupmod tableofcontents-6.x-2.1.tar.gz
-	getdrupmod fckeditor-6.x-1.3-beta2.tar.gz
+	getdrupmod tableofcontents-6.x-2.2.tar.gz
+	getdrupmod fckeditor-6.x-1.3-rc1.tar.gz
 	getdrupmod opensearchplugin-6.x-1.1.tar.gz
 	getdrupmod jtooltips-6.x-1.8.tar.gz
 	getdrupmod xmlcontent-6.x-1.x-dev.tar.gz
@@ -116,7 +116,7 @@ cd tmp
 # First get drupal itself
 safemkdir drupal
 cd drupal
-getdrupalcms 6.3
+getdrupalcms 6.4
 if [ ! -e $DRUPALDIR/sites/default ]; then
 	cp -rf $DRUPALDIR/sites.distrib/default $DRUPALDIR/sites/default
 fi
@@ -146,7 +146,12 @@ cd 3rd
 getsf3rd geshifilter geshi geshi-1.0.7.21.tar.gz geshi "tar xzvf"
 getsf3rd fckeditor fckeditor FCKeditor_2.6.3.tar.gz fckeditor "tar xzvf"
 getsf3rd print dompdf dompdf-0.5.1.tar.gz dompdf-0.5.1 "tar xzvf"
-getsf3rd print tcpdf tcpdf_4_0_017.zip tcpdf "unzip"
+getsf3rd print tcpdf tcpdf_4_0_021.zip tcpdf "unzip"
+
 
 cd ..
 cd ..
+cd $DRUPALDIR/sites/all/modules/pearwiki_filter
+cvs -d :pserver:cvsread@cvs.php.net:/repository checkout -d Text pear/Text_Wiki/Text
+
+cd $CWD

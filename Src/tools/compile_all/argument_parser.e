@@ -10,26 +10,37 @@ class
 
 inherit
 	ARGUMENT_OPTION_PARSER
-		export
-			{NONE} all
-			{ROOT_CLASS} execute, successful, set_use_separated_switch_values
+		rename
+			make as make_option_parser
 		end
 
 create
 	make
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
-	name: STRING = "Compile All Tool"
-			-- Application name
-
-	version: STRING is
-			-- Application version
-		once
-			Result := {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out
+	make
+			-- Initialize the argument parser
+		do
+			make_option_parser (False)
+			set_is_using_separated_switch_values (True)
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+feature {NONE} -- Access
+
+	name: !STRING = "Compile All Tool"
+			-- Application name
+
+	version: !STRING
+			-- Application version
+		once
+			create Result.make (5)
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_character ('.')
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+		end
+
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Argument switches
 		once
 			create Result.make (9)
@@ -59,21 +70,20 @@ feature -- Status Report
 
 feature -- Access
 
-	location: STRING
+	location: !STRING
 			-- Location of files to use
 		once
 			if has_option (location_switch) then
 				Result := option_of_name (location_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				Result ?= (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_exists: (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
 		end
 
-	eifgen: STRING
+	eifgen: ?STRING
 			-- Location where the projects are compiled.
 		once
 			if has_option (eifgen_switch) then
@@ -81,7 +91,7 @@ feature -- Access
 			end
 		end
 
-	ignore: STRING
+	ignore: ?STRING
 			-- File with the ignores.
 		once
 			if has_option (ignore_switch) then
@@ -135,15 +145,15 @@ feature -- Access
 
 feature {NONE} -- Switch names
 
-	location_switch: STRING = "l"
-	eifgen_switch: STRING = "eifgen"
-	ignore_switch: STRING = "ignore"
-	log_verbose_switch: STRING = "log_verbose"
-	no_clean_switch: STRING = "no_clean"
-	no_c_compile_switch: STRING = "no_c_compile"
-	no_melt_switch: STRING = "no_melt"
-	no_freeze_switch: STRING = "no_freeze"
-	no_finalize_switch: STRING = "no_finalize";
+	location_switch: !STRING = "l"
+	eifgen_switch: !STRING = "eifgen"
+	ignore_switch: !STRING = "ignore"
+	log_verbose_switch: !STRING = "log_verbose"
+	no_clean_switch: !STRING = "no_clean"
+	no_c_compile_switch: !STRING = "no_c_compile"
+	no_melt_switch: !STRING = "no_melt"
+	no_freeze_switch: !STRING = "no_freeze"
+	no_finalize_switch: !STRING = "no_finalize";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

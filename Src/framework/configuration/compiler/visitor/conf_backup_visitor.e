@@ -17,6 +17,9 @@ inherit
 		end
 
 	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	CONF_ACCESS
 

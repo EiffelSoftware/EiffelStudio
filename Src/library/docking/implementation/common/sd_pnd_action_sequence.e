@@ -52,8 +52,6 @@ feature -- Basic operations
 				from
 					is_aborted_stack.extend (False)
 					snapshot.start
-				variant
-					snapshot.count + 1 - snapshot.index
 				until
 					snapshot.index > snapshot.count
 					or is_aborted_stack.item
@@ -71,6 +69,8 @@ feature -- Basic operations
 						end
 					end
 					snapshot.forth
+				variant
+					snapshot.count + 1 - snapshot.index
 				end
 				is_aborted_stack.remove
 			when

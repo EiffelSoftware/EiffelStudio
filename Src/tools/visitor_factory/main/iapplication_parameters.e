@@ -12,21 +12,21 @@ deferred class
 
 feature -- Access
 
-	included_files: LIST [STRING] is
+	included_files: !LIST [!STRING]
 			-- Included file/folder paths passed via command line
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	exclude_expressions: LIST [STRING] is
+	exclude_expressions: !LIST [!STRING]
 			-- Exclude file/folder expressions passed via command line
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	class_name: STRING is
+	class_name: !STRING
 			-- Output class name
 		require
 			is_readable: is_readable
@@ -34,7 +34,7 @@ feature -- Access
 		deferred
 		end
 
-	user_data_class_name: STRING is
+	user_data_class_name: !STRING
 			-- User data class name
 		require
 			is_readable: is_readable
@@ -42,35 +42,35 @@ feature -- Access
 		deferred
 		end
 
-	use_user_data: BOOLEAN is
+	use_user_data: BOOLEAN
 			-- Inidicates if a user data class name was passed via command line
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	generate_stub: BOOLEAN is
+	generate_stub: BOOLEAN
 			-- Indiciates if a stub class file should be generated
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	generate_interface: BOOLEAN is
+	generate_interface: BOOLEAN
 			-- Indiciates if a interface class file should be generated
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	generate_process_routines: BOOLEAN is
+	generate_process_routines: BOOLEAN
 			-- Should we generate `process' routines for each class being added to the visitor?
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	recurse_directories: BOOLEAN is
+	recurse_directories: BOOLEAN
 			-- Inidicates if user specified to recursively scan included directories
 		require
 			is_readable: is_readable
@@ -79,14 +79,14 @@ feature -- Access
 
 feature -- Status report
 
-	has_class_name: BOOLEAN is
+	has_class_name: BOOLEAN
 			-- Inidicates if a class name was passed via command line
 		require
 			is_readable: is_readable
 		deferred
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Indiciates if application options can be read.
 		deferred
 		end

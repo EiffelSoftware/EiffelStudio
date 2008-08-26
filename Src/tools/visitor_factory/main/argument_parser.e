@@ -11,17 +11,14 @@ class
 	ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_OPTION_PARSER
+	ARGUMENT_SINGLE_PARSER
 		rename
-			make as make_parser
-		export
-			{NONE} all
-			{ANY} execute, successful
+			make as make_single_parser
 		end
 
 	IAPPLICATION_PARAMETERS
 		rename
-			is_readable as successful
+			is_readable as is_successful
 		end
 
 create
@@ -29,106 +26,107 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize argument parser
 		do
-			make_parser (False, False)
-			set_use_separated_switch_values (True)
-			set_show_switch_arguments_inline (True)
-			display_usage_on_error := True
+			make_single_parser (False, False)
+			set_is_using_separated_switch_values (True)
+			set_is_showing_argument_usage_inline (True)
+			set_is_usage_displayed_on_error (False)
+			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
 		end
 
 feature -- Access
 
-	included_files: LIST [STRING] is
-			-- Included file/folder paths passed via command line
+	included_files: !LIST [!STRING]
+			-- <Precursor>
 		once
 			Result := options_values_of_name (include_switch)
 		end
 
-	exclude_expressions: LIST [STRING] is
-			-- Exclude file/folder expressions passed via command line
+	exclude_expressions: !LIST [!STRING]
+			-- <Precursor>
 		once
 			Result := options_values_of_name (exclude_switch)
 		end
 
-	class_name: STRING is
-			-- Output class name
+	class_name: !STRING
+			-- <Precursor>
 		once
 			Result := option_of_name (class_name_switch).value
 		end
 
-	user_data_class_name: STRING is
-			-- User data class name
+	user_data_class_name: !STRING
+			-- <Precursor>
 		once
 			Result := option_of_name (user_data_switch).value
 		end
 
-	use_user_data: BOOLEAN is
-			-- Inidicates if a user data class name was passed via command line
+	use_user_data: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (user_data_switch)
 		end
 
-	recurse_directories: BOOLEAN is
-			-- Inidicates if user specified to recursively scan included directories
+	recurse_directories: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (recurse_switch)
 		end
 
-	generate_stub: BOOLEAN is
-			-- Indiciates if a stub class file should be generated
+	generate_stub: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (stub_switch)
 		end
 
-	generate_interface: BOOLEAN is
-			-- Indiciates if a interface class file should be generated
+	generate_interface: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (interface_switch) or else not has_option (stub_switch)
 		end
 
-	generate_process_routines: BOOLEAN is
+	generate_process_routines: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (routines_switch)
 		end
 
 feature -- Status report
 
-	has_class_name: BOOLEAN is
-			-- Inidicates if a class name was passed via command line
+	has_class_name: BOOLEAN
+			-- <Precursor>
 		once
 			Result := has_option (class_name_switch)
 		end
 
 feature {NONE} -- Usage
 
-	name: STRING = "Eiffel Class Visitor Generator"
-			-- Full name of application
+	name: !STRING = "Eiffel Class Visitor Generator"
+			--  <Precursor>
 
-	version: STRING is
-			-- Version number of application
+	version: !STRING
+			--  <Precursor>
 		once
 			create Result.make (5)
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	loose_argument_name: STRING = "folder"
-			-- Name of lose argument, used in usage information
+	non_switched_argument_name: !STRING = "folder"
+			--  <Precursor>
 
-	loose_argument_description: STRING = "Location to search in for Eiffel classes"
-			-- Description of lose argument, used in usage information
+	non_switched_argument_description: !STRING = "Location to search in for Eiffel classes"
+			--  <Precursor>
 
-	loose_argument_type: STRING = "a folder"
-			-- Type of lose argument, used in usage information.
-			-- A type is a short description of the argument. I.E. "Configuration File"
+	non_switched_argument_type: !STRING = "a folder"
+			--  <Precursor>
 
 
 feature {NONE} -- Switches
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		do
 			create Result.make (5)
@@ -144,14 +142,14 @@ feature {NONE} -- Switches
 
 feature {NONE} -- Switch names
 
-	include_switch: STRING = "i"
-	exclude_switch: STRING = "ex"
-	class_name_switch: STRING = "n"
-	user_data_switch: STRING = "ud"
-	recurse_switch: STRING = "r"
-	stub_switch: STRING = "stub"
-	interface_switch: STRING = "interface"
-	routines_switch: STRING = "routines"
+	include_switch: !STRING = "i|include"
+	exclude_switch: !STRING = "e|exclude"
+	class_name_switch: !STRING = "n|class-name"
+	user_data_switch: !STRING = "u|user-data"
+	recurse_switch: !STRING = "r|recursive"
+	stub_switch: !STRING = "s|stub"
+	interface_switch: !STRING = "t|interface"
+	routines_switch: !STRING = "o|routines"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

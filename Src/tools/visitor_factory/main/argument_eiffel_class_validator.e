@@ -18,14 +18,10 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
-		local
-			l_synax_checker: EIFFEL_SYNTAX_CHECKER
+	validate_value (a_value: !STRING)
+			-- <Precursor>
 		do
-			create l_synax_checker
-			is_option_valid := l_synax_checker.is_valid_class_name (a_value)
+			is_option_valid := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_value)
 			if not is_option_valid then
 				reason := "The specified class name is not a valid Eiffel class name identifier."
 			end

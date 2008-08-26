@@ -15,6 +15,9 @@ inherit
 			process_tagged_as
 		end
 
+create
+	make
+
 feature {AST_EIFFEL} -- Visitor pattern
 
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])

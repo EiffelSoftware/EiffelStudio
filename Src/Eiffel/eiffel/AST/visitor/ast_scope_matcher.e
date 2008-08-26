@@ -22,6 +22,18 @@ inherit
 		export {NONE} all
 		end
 
+feature {NONE} -- Initialization
+
+	make (c: like context) is
+			-- Initialize Current
+		require
+			c_attached: c /= Void
+		do
+			context := c
+		ensure
+			context_set: context = c
+		end
+
 feature {AST_EIFFEL} -- Visitor pattern
 
 	process_bin_eq_as (l_as: BIN_EQ_AS)
@@ -114,12 +126,10 @@ feature {NONE} -- Check for void test
 
 feature -- Context manipulation
 
-	add_scopes (a: AST_EIFFEL; c: AST_CONTEXT)
+	add_scopes (a: AST_EIFFEL)
 		require
 			a_attached: a /= Void
-			c_attached: c /= Void
 		do
-			context := c
 			is_negated := False
 			a.process (Current)
 		end

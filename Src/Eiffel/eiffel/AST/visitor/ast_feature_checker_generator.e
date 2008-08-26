@@ -775,10 +775,10 @@ feature -- Roundtrip
 				l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
 			else
 				if is_byte_node_enabled then
-
 						-- This is the first place, where inline agents are looked at as features.
 						-- They are ignored by degree 2. So a new FEATURE_I has to be created
-					create l_feature_names.make (0)
+					create l_feature_names.make (1)
+					l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize ("inline_agent")))
 					create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
 					create l_feature_generator
@@ -3094,7 +3094,7 @@ feature -- Implementation
 				loop
 					l_as.item.process (Current)
 					if m /= Void then
-						m.add_scopes (l_as.item, context)
+						m.add_scopes (l_as.item)
 					end
 					l_list.extend (last_byte_node)
 					l_as.forth
@@ -3107,7 +3107,7 @@ feature -- Implementation
 				loop
 					l_as.item.process (Current)
 					if m /= Void then
-						m.add_scopes (l_as.item, context)
+						m.add_scopes (l_as.item)
 					end
 					l_as.forth
 				end
@@ -4048,7 +4048,7 @@ feature -- Implementation
 						-- Then type check the right operand
 					if scope_matcher /= Void then
 						s := context.scope
-						scope_matcher.add_scopes (l_as.left, context)
+						scope_matcher.add_scopes (l_as.left)
 					end
 					l_as.right.process (Current)
 					if last_type /= Void then
@@ -4193,7 +4193,7 @@ feature -- Implementation
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
 		do
-			process_binary_as (l_as, create {AST_SCOPE_CONJUNCTIVE_EXPRESSION})
+			process_binary_as (l_as, create {AST_SCOPE_CONJUNCTIVE_EXPRESSION}.make (context))
 		end
 
 	process_bin_free_as (l_as: BIN_FREE_AS) is
@@ -4209,7 +4209,7 @@ feature -- Implementation
 		do
 			l_old_expr := old_expressions
 			old_expressions := Void
-			process_binary_as (l_as, create {AST_SCOPE_IMPLICATIVE_EXPRESSION})
+			process_binary_as (l_as, create {AST_SCOPE_IMPLICATIVE_EXPRESSION}.make (context))
 			if last_type /= Void then
 				if is_byte_node_enabled then
 						-- Special optimization, if the left-hand side is False, then
@@ -4243,7 +4243,7 @@ feature -- Implementation
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
 		do
-			process_binary_as (l_as, create {AST_SCOPE_DISJUNCTIVE_EXPRESSION})
+			process_binary_as (l_as, create {AST_SCOPE_DISJUNCTIVE_EXPRESSION}.make (context))
 		end
 
 	process_bin_xor_as (l_as: BIN_XOR_AS) is
@@ -5270,7 +5270,7 @@ feature -- Implementation
 		do
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
-				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}, Void)
+				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
 				set_is_checking_check (False)
 
 				if is_byte_node_enabled then
@@ -5988,9 +5988,9 @@ feature -- Implementation
 
 				-- Type check on compound
 			context.scope_keeper.enter_realm
-			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
-			scope_matcher.add_scopes (l_as.condition, context)
+			scope_matcher.add_scopes (l_as.condition)
 			if l_as.compound /= Void then
 				process_compound (l_as.compound)
 				if l_needs_byte_node then
@@ -6001,9 +6001,9 @@ feature -- Implementation
 			context.set_scope (s)
 			context.scope_keeper.save_sibling
 
-			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
-			scope_matcher.add_scopes (l_as.condition, context)
+			scope_matcher.add_scopes (l_as.condition)
 			context.scope_keeper.update_realm
 
 				-- Type check on alternaltives compounds
@@ -6216,9 +6216,9 @@ feature -- Implementation
 						-- After the loop we have to merge current and loop body
 						-- scope information, so the current one is saved here.
 					context.scope_keeper.save_sibling
-					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 					s := context.scope
-					scope_matcher.add_scopes (l_as.stop, context)
+					scope_matcher.add_scopes (l_as.stop)
 					process_compound (l_as.compound)
 					if l_needs_byte_node then
 						l_list ?= last_byte_node
@@ -6229,8 +6229,8 @@ feature -- Implementation
 					context.scope_keeper.save_sibling
 					context.scope_keeper.leave_realm
 						-- Take exit condition into account.
-					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
-					scope_matcher.add_scopes (l_as.stop, context)
+					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
+					scope_matcher.add_scopes (l_as.stop)
 				end
 
 				if l_needs_byte_node then
@@ -6527,9 +6527,9 @@ feature -- Implementation
 			end
 
 				-- Type check on compound
-			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
-			scope_matcher.add_scopes (l_as.expr, context)
+			scope_matcher.add_scopes (l_as.expr)
 			if l_as.compound /= Void then
 				process_compound (l_as.compound)
 				if not l_has_error and l_needs_byte_node then
@@ -6541,8 +6541,8 @@ feature -- Implementation
 			context.scope_keeper.save_sibling
 
 				-- Add scopes for the parts that follow this one.
-			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
-			scope_matcher.add_scopes (l_as.expr, context)
+			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
+			scope_matcher.add_scopes (l_as.expr)
 			context.scope_keeper.update_realm
 
 			if not l_has_error and l_needs_byte_node then
@@ -6697,7 +6697,7 @@ feature -- Implementation
 					create b.make (a.count)
 					i := context.next_object_test_local_position
 				end
-				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}, b)
+				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
 				if b /= Void then
 					if b.is_empty then
 						b := Void

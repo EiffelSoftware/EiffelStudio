@@ -21,12 +21,12 @@ compile_result 	ok
 define GENERICS "[G -> TEST]"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_error TEST VSRT(1)
+compile_result 	validity_error TEST VTUG(2)
 
 define GENERICS "[G -> TEST create make end]"
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VSRT(1)
+compile_result 	validity_error TEST VTUG(2)
 
 define GENERICS ""
 define ARRAY_TYPE "G"

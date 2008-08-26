@@ -18,7 +18,7 @@ feature -- Initialization
 		local
 			l_parser: ARGUMENT_PARSER
 		do
-			create l_parser.make (False, False)
+			create l_parser.make
 			l_parser.execute (agent start (l_parser))
 		end
 

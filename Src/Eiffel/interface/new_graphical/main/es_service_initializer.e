@@ -75,6 +75,24 @@ feature {NONE} -- Code template cataloging
 			a_service.extend_catalog (eiffel_layout.user_templates_path.string)
 		end
 
+feature {NONE} -- Test suite extension
+
+	register_test_suite_processors (a_service: !EIFFEL_TEST_SUITE_S) is
+			-- Register standard test processors for test suite service.
+			--
+			-- `a_service': Service in which test processors are registered.
+		require
+			a_service_usable: a_service.is_interface_usable
+		local
+			l_executor: EIFFEL_TEST_EXECUTOR
+			l_debugger: EIFFEL_TEST_DEBUGGER_I
+			l_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]
+		do
+			create l_executor.make
+			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
+			a_service.processor_registrar.register (l_executor, l_type)
+		end
+
 feature {NONE} -- Factory
 
 	create_file_notifier_service: ?FILE_NOTIFIER_S
@@ -119,6 +137,7 @@ feature {NONE} -- Factory
 			-- Create test suite service
 		do
 			create {EIFFEL_TEST_SUITE} Result.make
+			register_test_suite_processors (Result)
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end

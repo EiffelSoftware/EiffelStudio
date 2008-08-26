@@ -44,8 +44,6 @@ feature -- Basic operations
 					is_aborted_stack.extend (False)
 					l_is_accepting := veto_pebble_function_result (a_pebble_tuple.item (1))
 					snapshot.start
-				variant
-					snapshot.count + 1 - snapshot.index
 				until
 					snapshot.index > snapshot.count
 					or is_aborted_stack.item
@@ -56,6 +54,8 @@ feature -- Basic operations
 						snapshot.item.call (l_tuple)
 					end
 					snapshot.forth
+				variant
+					snapshot.count + 1 - snapshot.index
 				end
 				is_aborted_stack.remove
 			when

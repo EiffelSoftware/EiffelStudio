@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
+			f_not_empty: not f.is_empty
 			b_not_void: b /= Void
 			a_pos_non_negative: a_pos >= 0
 		do

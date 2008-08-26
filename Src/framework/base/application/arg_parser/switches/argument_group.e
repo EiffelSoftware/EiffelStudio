@@ -14,81 +14,71 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_switches: like switches; a_loose: like accepts_loose_arguments) is
-			-- Initializes an argument group
+	make (a_switches: !ARRAY [?ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+			-- Initializes an argument group with a collection of switches.
+			--
+			-- `a_switches': The switches allowed in the group.
+			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
-			a_switches_attached: a_switches /= Void
-			a_switches_contained_attached_items: a_switches.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
-				do
-					Result := a_item /= Void
-				end)
-			a_switches_contained_unique_items: a_switches.for_all (agent (a_arr: ARRAY [ARGUMENT_SWITCH]; a_item: ARGUMENT_SWITCH): BOOLEAN
-				require
-					a_item_attached: a_item /= Void
-				do
-					Result := a_arr.occurrences (a_item) = 1
-				end (a_switches, ?))
+			a_switches_contained_attached_items: not a_switches.has (Void)
+			a_switches_contained_unique_items: a_switches.for_all (
+				agent (ia_arr: !ARRAY [?ARGUMENT_SWITCH]; ia_item: ?ARGUMENT_SWITCH): BOOLEAN
+					do
+						Result := ia_arr.occurrences (ia_item) = 1
+					end  (a_switches, ?))
 		do
-			switches := a_switches
-			accepts_loose_arguments := a_loose
+			switches ?= a_switches
+			is_allowing_non_switched_arguments := a_allow_non_switched
 			is_hidden := False
 		ensure
 			switches_set: switches = a_switches
-			accepts_loose_arguments_set: accepts_loose_arguments = a_loose
+			a_allow_non_switched_set: a_allow_non_switched = a_allow_non_switched
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_switches: like switches; a_loose: like accepts_loose_arguments) is
-			-- Initializes an argument group that will no be show in usage
+	make_hidden (a_switches: !ARRAY [?ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+			-- Initializes an argument group, not to be shown in the usage, with a collection of switches.
+			--
+			-- `a_switches': The switches allowed in the group.
+			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
-			a_switches_attached: a_switches /= Void
-			a_switches_contained_attached_items: a_switches.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
-				do
-					Result := a_item /= Void
-				end)
-			a_switches_contained_unique_items: a_switches.for_all (agent (a_arr: ARRAY [ARGUMENT_SWITCH]; a_item: ARGUMENT_SWITCH): BOOLEAN
-				require
-					a_item_attached: a_item /= Void
-				do
-					Result := a_arr.occurrences (a_item) = 1
-				end (a_switches, ?))
+			a_switches_contained_attached_items: not a_switches.has (Void)
+			a_switches_contained_unique_items: a_switches.for_all (
+				agent (ia_arr: !ARRAY [?ARGUMENT_SWITCH]; ia_item: ?ARGUMENT_SWITCH): BOOLEAN
+					do
+						Result := ia_arr.occurrences (ia_item) = 1
+					end  (a_switches, ?))
 		do
-			make (a_switches, a_loose)
+			make (a_switches, a_allow_non_switched)
 			is_hidden := True
 		ensure
 			switches_set: switches = a_switches
-			accepts_loose_arguments_set: accepts_loose_arguments = a_loose
+			a_allow_non_switched_set: a_allow_non_switched = a_allow_non_switched
 			is_hidden: is_hidden
 		end
 
 feature -- Access
 
-	switches: ARRAY [ARGUMENT_SWITCH]
-			-- Switches belonging to group
+	switches: !ARRAY [!ARGUMENT_SWITCH]
+			-- Switches applicable to the group.
 
 feature -- Status report
 
-	accepts_loose_arguments: BOOLEAN
-			-- Indicates if loose arguments can be used in the group
-
 	is_hidden: BOOLEAN
-			-- Indicates if a usage group command should be generated
+			-- Indicates if a usage group command should be generated.
+
+	is_allowing_non_switched_arguments: BOOLEAN
+			-- Indicates if non-switched arguments can be used in the group.
 
 invariant
-	switches_attached: switches /= Void
-	switches_contained_attached_items: switches.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
-		do
-			Result := a_item /= Void
-		end)
-	switches_contained_unique_items: switches.for_all (agent (a_arr: ARRAY [ARGUMENT_SWITCH]; a_item: ARGUMENT_SWITCH): BOOLEAN
-		require
-			a_item_attached: a_item /= Void
-		do
-			Result := a_arr.occurrences (a_item) = 1
-		end  (switches, ?))
+	switches_contained_unique_items: switches.for_all (
+		agent (ia_arr: !ARRAY [!ARGUMENT_SWITCH]; ia_item: !ARGUMENT_SWITCH): BOOLEAN
+			do
+				Result := ia_arr.occurrences (ia_item) = 1
+			end  (switches, ?))
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

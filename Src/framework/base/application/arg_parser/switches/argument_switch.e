@@ -4,6 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	license_id: "gpl2"
 
 class
 	ARGUMENT_SWITCH
@@ -17,20 +18,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+	make (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple)
 			-- Initialize a new basic option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
 		require
-			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 			a_id_is_valid_id: is_valid_id (a_id)
-			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
 		local
-			l_names: like canonical_name
+			l_names: !like split_canonical_id
 		do
-			l_names := canonical_name (a_id)
+			l_names := split_canonical_id (a_id)
 			short_name := l_names.short_name
 			long_name := l_names.long_name
 
@@ -38,7 +37,7 @@ feature {NONE} -- Initialization
 			description := a_desc
 			optional := a_optional
 			allow_multiple := a_allow_mutliple
-			lower_case_id := a_id.as_lower
+			lower_case_id ?= a_id.as_lower
 		ensure
 			id_set: id = a_id
 			description_set: description = a_desc
@@ -48,7 +47,7 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+	make_hidden (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
 			-- Initialize a new basic option.
 		require
 			a_id_attached: a_id /= Void
@@ -70,36 +69,37 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: STRING
-			-- Option name id
+	id: !STRING
+			-- Switch identifer
 
-	name: STRING
+	lower_case_id: !STRING
+			-- Lower-case version of the switch identifier
+
+	name: !STRING
 			-- Priority option name
 		do
 			if has_short_name then
-				Result := short_name.out
+				Result ?= short_name.out
 			else
 				Result := long_name
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	short_name: CHARACTER
-			-- Option short name
-
-	long_name: STRING
+	long_name: !STRING
 			-- Option long name
 
-	description: STRING
+	short_name: CHARACTER
+			-- Option short name, or '%U' if no short name is used.
+
+	description: !STRING
 			-- Option description
 
-	lower_case_id: STRING
-			-- Option name in lower-case
+feature {NONE} -- Access
 
 	hash_code: INTEGER
-			-- Hash code value
+			-- <Precursor>
 		do
 			Result := name.hash_code
 		end
@@ -107,19 +107,19 @@ feature -- Access
 feature -- Status Report
 
 	optional: BOOLEAN
-			-- Indicates if switch is optional
+			-- Indicates if switch is optional.
 
 	allow_multiple: BOOLEAN
-			-- Indicated if mutiple occurrences permitted
+			-- Indicated if mutiple occurrences permitted.
 
 	is_hidden: BOOLEAN
-			-- Indicate if switch should be hidden
+			-- Indicate if switch should be hidden.
 
 	is_special: BOOLEAN
-			-- Indicates if switch is to be treated with "special" care
+			-- Indicates if switch is to be treated with "special" care by the argument validator.
 
 	frozen has_short_name: BOOLEAN
-			-- Indicates if a short name has been specified
+			-- Indicates if a short name has been specified.
 		do
 			Result := short_name /= '%U'
 		end
@@ -127,7 +127,7 @@ feature -- Status Report
 feature {ARGUMENT_BASE_PARSER} -- Status Setting
 
 	set_is_special is
-			-- Set switch to be special
+			-- Set switch to be treated with "special" care by the argument validator.
 		do
 			is_special := True
 		ensure
@@ -136,20 +136,20 @@ feature {ARGUMENT_BASE_PARSER} -- Status Setting
 
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
-	create_option: ARGUMENT_OPTION is
-			-- Creates a new argument option for switch
+	create_option: !ARGUMENT_OPTION
+			-- Creates a new argument option for switch.
 		do
 			create Result.make (Current)
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Query
 
-	is_valid_id (a_id: STRING): BOOLEAN is
-			-- Determines if `a_id' is a valid identifier
+	is_valid_id (a_id: !STRING): BOOLEAN
+			-- Determines if switch ID is a valid identifier.
+			--
+			-- `a_id': The switch identifer to validate.
+			-- `Result': True if the switch identifier is valid; False otherwise.
 		require
-			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 		local
 			c: CHARACTER
@@ -173,22 +173,24 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	canonical_name (a_id: STRING): TUPLE [long_name: STRING; short_name: CHARACTER] is
-			-- Splits canonical name `a_id'
+	split_canonical_id (a_id: !STRING): !TUPLE [long_name: !STRING; short_name: CHARACTER] is
+			-- Splits canonical switch identifier in a long and short name.
+			-- Note: When no short name is found `Result.short_name' will be a null character ('%U').
 			--
-			-- Note: When no short name is found `Result.short_name' will be null
+			-- `a_id': The switch identifier to split.
+			-- `Result': A tuple containing the split long and short names.
 		local
 			i: INTEGER
+			l_long_name: !STRING
 		do
 			i := a_id.index_of (canocial_name_separator, 1)
 			if i > 0 and i + 1 <= a_id.count then
-				Result := [a_id.substring (i + 1, a_id.count), a_id.item (1)]
+				l_long_name ?= a_id.substring (i + 1, a_id.count).out
+				Result := [l_long_name, a_id.item (1)]
 			else
 				Result := [a_id, '%U']
 			end
 		ensure
-			result_attached: Result /= Void
-			result_long_name_attached: Result.long_name /= Void
 			not_result_long_name_is_empty: not Result.long_name.is_empty
 		end
 
@@ -196,17 +198,13 @@ feature {NONE} -- Query
 			-- Character used to separate canonical names
 
 invariant
-	id_attached: id /= Void
 	not_id_is_empty: not id.is_empty
 	id_is_valid_id: is_valid_id (id)
-	long_name_attached: long_name /= Void
 	not_long_name_is_empty: not long_name.is_empty
-	description_attached: description /= Void
 	not_description_is_empty: not description.is_empty
-	lower_case_id_attached: lower_case_id /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,50 +20,58 @@ create {ARGUMENT_SWITCH}
 
 feature -- Access
 
-	property_name: STRING
+	property_name: !STRING
 			-- Name of property
+		require
+			has_property_name: has_property_name
+		do
+			Result ?= internal_property_value
+		end
 
-	property_value: STRING
+	property_value: !STRING
 			-- Value of property
+		require
+			has_property_value: has_property_value
+		do
+			create Result.make_from_string (internal_property_value)
+		end
 
 feature -- Status report
 
-	has_property_name: BOOLEAN is
+	has_property_name: BOOLEAN
 			-- Indicicate if option has a property name.
-		require
-			has_value: has_value
 		do
-			Result := property_name /= Void or else not property_name.is_empty
+			Result := internal_property_name /= Void and then not internal_property_name.is_empty
 		ensure
-			result_base_true: Result implies (property_name /= Void and then not property_name.is_empty)
+			result_base_true: Result implies (internal_property_name /= Void and then not internal_property_name.is_empty)
 		end
 
-	has_property_value: BOOLEAN is
+	has_property_value: BOOLEAN
 			-- Indicicate if option has a property value.
-		require
-			has_value: has_value
 		do
-			Result := property_value /= Void or else not property_value.is_empty
+			Result := internal_property_value /= Void and then not internal_property_value.is_empty
 		ensure
-			result_base_true: Result implies (property_value /= Void and then not property_value.is_empty)
+			result_base_true: Result implies (internal_property_value /= Void and then not internal_property_value.is_empty)
 		end
 
 feature {ARGUMENT_BASE_PARSER} -- Element Change
 
-	set_value (a_value: like value) is
-			-- Sets `value' with `a_value'.
+	set_value (a_value: !like value)
+			-- <Precursor>
 		do
-			value := a_value
+			internal_value := a_value
 			split_canonical_value
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Basic operations
 
-	split_canonical_value is
-			-- Splits `value' and set `property_name' and `property_value' base on it.
+	split_canonical_value
+			-- Splits the value into a property name and associated property value.
+			-- Note: It is fine to call this even when the switch does not have a set value, the property
+			--       name and value will consequently be Void also.
 		local
-			l_value: STRING
-			l_pval, l_pname: STRING
+			l_value: !like value
+			l_pval, l_pname: ?STRING
 			l_count: INTEGER
 			l_pos: INTEGER
 		do
@@ -86,16 +94,26 @@ feature {NONE} -- Implementation
 					l_pval := l_value.twin
 				end
 			end
-			property_name := l_pname
-			property_value := l_pval
+			internal_property_name := l_pname
+			internal_property_value := l_pval
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_property_name: ?STRING
+			-- Internal version of `property_name'
+			-- Note: Do not use directly.
+
+	internal_property_value: ?STRING
+			-- Internal version of `property_value'
+			-- Note: Do not use directly.
 
 invariant
 	has_name_or_value: has_value implies (has_property_name or has_property_value)
 	not_has_name_or_value: not has_value implies (not has_property_name and not has_property_value)
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,7 +20,10 @@ create
 feature {NONE} -- Initialization
 
 	make (a_min: like min; a_max: like max)
-			-- Initializes validator with a minimum and maximum value
+			-- Initializes validator with a minimum and maximum value.
+			--
+			-- `a_min': Minimum, inclusive accepted value.
+			-- `a_max': Maximum, inclusive accepted value.
 		require
 			a_min_less_than_a_max: a_min < a_max
 		do
@@ -41,19 +44,16 @@ feature -- Access
 
 feature -- Validation
 
-	validate_value (a_value: STRING)
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
+	validate_value (a_value: !STRING)
+			-- <Precursor>
 		local
 			l_value: NATURAL_64
-			l_formatter: STRING_FORMATTER
 		do
 			if a_value.is_integer_64 then
 				l_value := a_value.to_natural_64
 				is_option_valid := l_value >= min and then l_value <= max
 				if not is_option_valid then
-					create l_formatter
-					reason := l_formatter.format ("'{1} is not within the range from {2} to {3}.'", [l_value, min, max])
+					reason := (create {STRING_FORMATTER}).format ("'{1} is not within the range from {2} to {3}.'", [l_value, min, max])
 				end
 			else
 				reason := "The specified value is not a valid number."
@@ -64,7 +64,7 @@ invariant
 	min_less_than_max: min < max
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

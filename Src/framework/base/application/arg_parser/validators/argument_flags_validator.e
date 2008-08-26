@@ -19,47 +19,47 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_flags: LIST [CHARACTER]; a_cs: BOOLEAN) is
-			-- Initializes validator for flags, which uses `a_flags' to validate a user passed value.
+	make (a_flags: like flags; a_cs: like is_case_sensitive)
+			-- Initializes validator for option flag.
+			--
+			-- `a_flags': The list of available, valid flags.
+			-- `is_case_sensitive': True to indicate if the flags are case sensitive; False otherwise.
 		require
-			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		do
 			flags := a_flags
-			case_sensitive := a_cs
+			is_case_sensitive := a_cs
 		ensure
 			flags_set: flags = a_flags
-			case_sensitive_set: case_sensitive = a_cs
+			is_case_sensitive_set: is_case_sensitive = a_cs
 		end
 
 feature -- Access
 
-	flags: LIST [CHARACTER]
-			-- Available flags
+	flags: !LINEAR [CHARACTER]
+			-- Available valid flag options.
 
 feature -- Status report
 
-	case_sensitive: BOOLEAN
-			-- Indicates if flags are case sensitive
+	is_case_sensitive: BOOLEAN
+			-- Indicates if flags are case sensitive.
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
+	validate_value (a_value: !STRING)
+			-- <Precursor>
 		local
 			l_cs: BOOLEAN
 			l_count: INTEGER
 			l_valid: BOOLEAN
 			l_invalid_flags: STRING
-			l_formatter: STRING_FORMATTER
-			l_flags: like flags
+			l_flags: !like flags
 			c: CHARACTER
 			i: INTEGER
 		do
 			l_valid := True
 			create l_invalid_flags.make (a_value.count)
-			l_cs := case_sensitive
+			l_cs := is_case_sensitive
 			l_flags := flags
 			l_count := a_value.count
 			from i := 1 until i > l_count loop
@@ -76,18 +76,18 @@ feature -- Validation
 			end
 			l_valid := l_invalid_flags.is_empty
 			if l_valid then
-				create l_formatter
-				reason := l_formatter.format ("Flags '{1}' are not valid flags for this option.", [l_invalid_flags])
+				reason := (create {STRING_FORMATTER}).format ("Flags '{1}' are not valid flags for this option.", [l_invalid_flags])
 			end
 			is_option_valid := l_valid
 		end
 
 invariant
-	flags_attached: flags /= Void
 	not_flags_is_empty: not flags.is_empty
+	flags_contain_printable_character: flags.for_all (
+		agent (ia_char: CHARACTER): BOOLEAN do Result := ia_char.is_printable end)
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

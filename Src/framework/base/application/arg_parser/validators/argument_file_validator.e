@@ -16,11 +16,10 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
+	validate_value (a_value: !STRING)
+			-- <Precursor>
 		local
-			l_file: RAW_FILE
+			l_file: !RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -39,7 +38,7 @@ feature -- Validation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

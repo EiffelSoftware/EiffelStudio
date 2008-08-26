@@ -13,16 +13,16 @@ feature -- Access
 	is_option_valid: BOOLEAN
 			-- Indicates if last validate option, using `validate_option' was valid
 
-	reason: STRING
+	reason: ?STRING
 			-- Reason why switch valud is invalid
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
+	validate_value (a_value: !STRING)
 			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
-		require
-			a_value_attached: a_value /= Void
+			--| Set `is_option_valid' to indicate the state and `reason' when `is_option_valid' is False.
+			--
+			-- `a_value': The argument option to validate.
 		do
 			is_option_valid := True
 			reason := Void
@@ -33,7 +33,7 @@ feature -- Validation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,24 +19,24 @@ create
 	make,
 	make_hidden
 
-feature -- Access
+feature {ARGUMENT_BASE_PARSER} -- Access
 
-	value_validator: ARGUMENT_FILE_OR_DIRECTORY_VALIDATOR is
-			-- Retrieves an validator used to check current switch value
+	value_validator: !ARGUMENT_FILE_OR_DIRECTORY_VALIDATOR
+			-- <Precursor>
 		once
 			create Result
 		end
 
-feature {ARGUMENT_BASE_PARSER} -- Factory Functions
+feature {ARGUMENT_BASE_PARSER} -- Factory
 
-	create_value_option (a_value: STRING): ARGUMENT_FILE_OR_DIRECTORY_OPTION is
-			-- Creates a new argument option given a value `a_value'
+	create_value_option (a_value: !STRING): !ARGUMENT_FILE_OR_DIRECTORY_OPTION
+			-- <Precursor>
 		do
 			create Result.make_with_value (a_value, Current)
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

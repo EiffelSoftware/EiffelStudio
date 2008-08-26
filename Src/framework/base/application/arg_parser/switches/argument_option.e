@@ -14,72 +14,73 @@ create {ARGUMENT_SWITCH}
 
 feature {NONE} -- Initialization
 
-	make (a_switch: like switch) is
-			-- Initializes option with just a name `a_name'
-		require
-			a_switch_attached: a_switch /= Void
+	make (a_switch: !like switch)
+			-- Initializes option with just an option switch.
+			--
+			-- `a_switch': The switch to associated with the option.
 		do
 			switch := a_switch
 		ensure
 			switch_set: switch = a_switch
 		end
 
-	make_with_value (a_value: like value; a_switch: like switch) is
-			-- Initializes option with a name and an associated value.
-		require
-			a_value_attached: a_value /= Void
-			a_switch_attached: a_switch /= Void
+	make_with_value (a_value: !like value; a_switch: !like switch)
+			-- Initializes option with just an option switch and an associated value.
+			--
+			-- `a_value': The value associated with the option.
+			-- `a_switch': The switch to associated with the option.
 		do
 			make (a_switch)
 			set_value (a_value)
 		ensure
-			value_set: value = a_value
-			switch_set: switch = a_switch
+			value_set: equal (value, a_value)
+			switch_set: equal (switch, a_switch)
 		end
 
 feature -- Access
 
-	switch_id: STRING
-			-- Option name
+	switch: !ARGUMENT_SWITCH
+			-- Switch associated with the current option.
+
+	value: !STRING assign set_value
+			-- The option's value, if any.
+		require
+			has_value: has_value
 		do
-			Result := switch.id
+			create Result.make_from_string (internal_value)
 		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
+			result_consistent: equal (Result, value)
 		end
-
-	value: STRING assign set_value
-			-- Option value, if any
-
-	switch: ARGUMENT_SWITCH
-			-- Switch associated with option
 
 feature {ARGUMENT_BASE_PARSER} -- Element Change
 
-	set_value (a_value: like value) is
-			-- Sets `value' with `a_value'.
+	set_value (a_value: !like value)
+			-- Sets the option value.
+			--
+			-- `a_value': The option value to set.
 		do
-			value := a_value
+			internal_value := a_value
 		ensure
-			value_set: value = a_value
+			internal_value_set: equal (internal_value, a_value)
 		end
 
 feature -- Status Report
 
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Indicicate if option has an associated value.
 		do
-			Result := value /= Void and then not value.is_empty
+			Result := internal_value /= Void and then not internal_value.is_empty
 		ensure
-			result_base_true: Result implies (value /= Void and then not value.is_empty)
+			result_base_true: Result implies (internal_value /= Void and then not internal_value.is_empty)
 		end
 
-invariant
-	not_name_is_empty: not switch_id.is_empty
-	switch_attached: switch /= Void
+feature {NONE} -- Implementation: Internal cache
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	internal_value: ?like value
+			-- Mutable version of `value.
+
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

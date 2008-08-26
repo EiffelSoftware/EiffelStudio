@@ -16,16 +16,13 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
+	validate_value (a_value: !STRING)
+			-- <Precursor>
 		local
-			l_file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make (a_value)
-				is_option_valid := l_file.exists --and then not l_file.is_device
+				is_option_valid := (create {RAW_FILE}.make (a_value)).exists --and then not l_file.is_device
 				if not is_option_valid then
 					reason := "The specified file or directory does not exist."
 				end
@@ -39,7 +36,7 @@ feature -- Validation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

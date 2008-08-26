@@ -85,8 +85,6 @@ feature -- Status report
 		require
 			usable: is_interface_usable
 		deferred
-		ensure
-			result_implies_outcomes_attached: Result implies outcomes /= Void
 		end
 
 	passed: BOOLEAN

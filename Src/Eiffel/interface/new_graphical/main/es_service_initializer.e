@@ -85,7 +85,6 @@ feature {NONE} -- Test suite extension
 			a_service_usable: a_service.is_interface_usable
 		local
 			l_executor: EIFFEL_TEST_EXECUTOR
-			l_debugger: EIFFEL_TEST_DEBUGGER_I
 			l_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]
 		do
 			create l_executor.make

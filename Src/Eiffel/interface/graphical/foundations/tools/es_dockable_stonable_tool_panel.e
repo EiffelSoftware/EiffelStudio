@@ -209,10 +209,9 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 					l_new_stone := l_stone.synchronized_stone
 				end
 				if l_new_stone /= l_stone then
-						-- Force recomputation
+						-- Force recomputation.
 					stone_change_notified := False
 					is_in_stone_synchronization := True
-					l_new_stone := l_new_stone.synchronized_stone
 					if l_new_stone /= Void and then is_stone_usable (l_new_stone) then
 						set_stone (l_new_stone)
 					else

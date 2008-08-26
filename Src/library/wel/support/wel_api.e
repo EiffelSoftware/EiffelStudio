@@ -144,7 +144,7 @@ feature -- Window class
 	set_window_long (hwnd: POINTER; offset: INTEGER_32; value: POINTER): POINTER
 			-- SDK SetWindowLongPtr
 		external
-			"C inline use <windows.h>"
+			"C inline use %"wel.h%""
 		alias
 			"return (EIF_POINTER) SetWindowLongPtr ((HWND) $hwnd, (int) $offset, (LONG_PTR) $value);"
 		end
@@ -152,7 +152,7 @@ feature -- Window class
 	get_window_long (hwnd: POINTER; offset: INTEGER_32): POINTER
 			-- SDK GetWindowLongPtr
 		external
-			"C inline use <windows.h>"
+			"C inline use %"wel.h%""
 		alias
 			"return (EIF_POINTER) GetWindowLongPtr ((HWND) $hwnd, (int) $offset);"
 		end

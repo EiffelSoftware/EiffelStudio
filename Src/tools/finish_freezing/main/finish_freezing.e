@@ -30,7 +30,7 @@ feature -- Initialization
 			create l_layout
 			l_layout.check_environment_variable
 			set_eiffel_layout (l_layout)
-			create l_parser.make (False, False)
+			create l_parser.make
 			l_parser.execute (agent start (l_parser))
 		end
 

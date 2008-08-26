@@ -450,8 +450,6 @@ feature -- Automatically indented output
 				invariant
 					i >= 0
 					i + j = s.count + 1
-				variant
-					i + 1
 				until
 					i = 0
 				loop
@@ -466,6 +464,8 @@ feature -- Automatically indented output
 					l_current_buffer.append_character ('"')
 					i := i - n
 					j := j + n
+				variant
+					i + 1
 				end
 				exdent
 			else
@@ -766,8 +766,6 @@ feature {NONE} -- Implementation
 			from
 				i := start_index - 1
 				l_area := s.area
-			variant
-				end_index - i + 2
 			until
 				i = end_index
 			loop
@@ -786,6 +784,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				i := i + 1
+			variant
+				end_index - i + 2
 			end
 		end
 

@@ -58,7 +58,6 @@ feature -- Visitor
 		end
 
 invariant
-	associated_class_not_void: associated_class /= Void
 	warning_message_not_void: warning_message /= Void
 
 indexing

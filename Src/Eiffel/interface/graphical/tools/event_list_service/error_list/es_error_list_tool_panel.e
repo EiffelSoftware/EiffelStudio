@@ -112,7 +112,7 @@ feature {NONE} -- User interface initialization
 			a_widget.disable_row_height_fixed
 			a_widget.enable_auto_size_best_fit_column (error_column)
 			a_widget.enable_multiple_row_selection
-			register_action (a_widget.item_deactivate_actions, agent (a_row: EV_GRID_ITEM)
+			register_action (a_widget.row_deselect_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
@@ -141,10 +141,6 @@ feature {NONE} -- Clean up
 						session_data.disconnect_events (Current)
 					end
 				end
-
-				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
-				errors_button.select_actions.prune (agent on_toogle_errors_button)
-				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
 			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
@@ -193,6 +189,9 @@ feature {NONE} -- User interface items
 
 	expand_errors_button: SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to expanded error events automatically
+
+	delete_items_button: SD_TOOL_BAR_BUTTON
+			-- Delete selected items button
 
 	error_info_button: SD_TOOL_BAR_BUTTON
 			-- Error information button
@@ -449,7 +448,7 @@ feature {NONE} -- Basic operations
 						-- Remove, multiple
 					create l_remove.make_with_text (interface_names.m_remove_all)
 					l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
-					l_remove.select_actions.extend (agent remove_all_selected_event_list_rows)
+					l_remove.select_actions.extend (agent on_remove_selected_rows)
 					l_menu.extend (l_remove)
 				end
 				l_menu.show_at (a_item.row.parent, a_x, a_y)
@@ -565,6 +564,15 @@ feature {NONE} -- Events
 			end
 
 			update_content_applicable_navigation_buttons
+		end
+
+	on_remove_selected_rows
+			-- Caled when the `delete_items_button' is selected.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			remove_all_selected_event_list_rows
 		end
 
 	on_toogle_warnings_button is
@@ -813,7 +821,7 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (8)
+			create Result.make (9)
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
@@ -828,6 +836,13 @@ feature {NONE} -- Factory
 			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
+			create delete_items_button.make
+			delete_items_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
+			delete_items_button.set_pixmap (stock_pixmaps.general_delete_icon)
+			delete_items_button.set_tooltip (local_formatter.translation (tt_delete_items))
+			register_action (delete_items_button.select_actions, agent on_remove_selected_rows)
+			Result.put_last (delete_items_button)
+
 				-- Separator
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
@@ -836,20 +851,19 @@ feature {NONE} -- Factory
 			expand_errors_button.set_pixmap (stock_pixmaps.errors_and_warnings_expand_errors_icon)
 			expand_errors_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_expand_errors_icon_buffer)
 			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
-			expand_errors_button.select_actions.extend (agent on_toggle_expand_errors_button)
-			expand_errors_button.select_actions.compare_objects
+			register_action (expand_errors_button.select_actions, agent on_toggle_expand_errors_button)
 			Result.put_last (expand_errors_button)
 
 			create error_info_command.make
 			error_info_button := error_info_command.new_sd_toolbar_item (False)
 				-- We need to do something else, like handle grid selection
 			error_info_button.select_actions.wipe_out
-			error_info_button.select_actions.extend (agent on_error_info)
+			register_action (error_info_button.select_actions, agent on_error_info)
 			Result.put_last (error_info_button)
 
 				-- Filter pop up widget
 			create filter_widget.make
-			filter_widget.filter_changed_actions.extend (agent on_warnings_filter_changed)
+			register_action (filter_widget.filter_changed_actions, agent on_warnings_filter_changed)
 
 				-- Filter button
 			create filter_button.make
@@ -960,10 +974,12 @@ feature {NONE} -- User interface manipulation
 			--
 			-- `a_enable': True to indicate there is content available, False otherwise
 		do
-			if a_enable and grid_events.selected_rows.count = 1 then
+			if a_enable and grid_events.selected_rows.count >= 1 then
 				error_info_command.enable_sensitive
+				delete_items_button.enable_sensitive
 			else
 				error_info_command.disable_sensitive
+				delete_items_button.disable_sensitive
 			end
 		end
 
@@ -1155,17 +1171,23 @@ feature {NONE} -- Constants
 	context_column: INTEGER = 4
 	position_column: INTEGER = 5
 
-	expand_errors_session_id: STRING_8 = "com.eiffel.error_list.expand_errors"
+	expand_errors_session_id: !STRING = "com.eiffel.error_list.expand_errors"
+
+feature {NONE} -- Internationalization
+
+	tt_delete_items: !STRING = "Delete all the selected [completed] items"
 
 invariant
 	errors_button_attached: is_initialized implies errors_button /= Void
 	warnings_button_attached: is_initialized implies warnings_button /= Void
-	filter_button_attached: is_initialized implies filter_button /= Void
+	delete_items_button_attached: is_initialized implies delete_items_button /= Void
 	expand_errors_button_attached: is_initialized implies expand_errors_button /= Void
+	error_info_button_attached: is_initialized implies error_info_button /= Void
+	filter_button_attached: is_initialized implies filter_button /= Void
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

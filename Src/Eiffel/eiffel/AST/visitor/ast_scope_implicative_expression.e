@@ -15,6 +15,9 @@ inherit
 			process_bin_and_then_as
 		end
 
+create
+	make
+
 feature {AST_EIFFEL} -- Visitor pattern
 
 	process_bin_and_as (l_as: BIN_AND_AS)

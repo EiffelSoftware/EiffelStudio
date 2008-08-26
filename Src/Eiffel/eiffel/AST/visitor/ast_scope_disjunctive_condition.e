@@ -15,6 +15,9 @@ inherit
 			process_bin_or_else_as
 		end
 
+create
+	make
+
 feature {AST_EIFFEL} -- Visitor pattern
 
 	process_bin_or_as (l_as: BIN_OR_AS)

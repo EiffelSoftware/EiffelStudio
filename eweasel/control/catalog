@@ -1886,6 +1886,7 @@ test	agent-optimization-failure		agent001 tcf pass agents
 test	agent-with-like					agent002 tcf pass agents
 test	agent-with-basic				agent003 tcf fail agents finalizing
 test	agent-crash						agent004 tcf fail agents
+test	agent-too-many-arguments		agent005 tcf fail agents
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

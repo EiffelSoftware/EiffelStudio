@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Starts application after all command-line arguments have been validated.
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_opt: ARGUMENT_OPTION
 			l_source_fn: STRING

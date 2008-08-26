@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Starts application
 		require
 			a_options_attached: a_options /= Void
-			a_options_successful: a_options.successful
+			a_options_successful: a_options.is_successful
 			a_env_attached: a_env /= Void
 		local
 			l_success: BOOLEAN
@@ -65,7 +65,7 @@ feature -- Basic operations
 			-- Initializes an environment base on `a_options'
 		require
 			a_options_attached: a_options /= Void
-			a_options_successful: a_options.successful
+			a_options_successful: a_options.is_successful
 			a_env_attached: a_env /= Void
 		local
 			l_manager: C_CONFIG_MANAGER
@@ -103,7 +103,7 @@ feature -- Basic operations
 			-- Spawns all processes found in `a_options' and returns successful result
 		require
 			a_options_attached: a_options /= Void
-			a_options_successful: a_options.successful
+			a_options_successful: a_options.is_successful
 		local
 			l_commands: LINEAR [STRING]
 			l_factory: PROCESS_FACTORY
@@ -142,7 +142,7 @@ feature -- Basic operations
 			-- Lists the available C/C++ compilers
 		require
 			a_options_attached: a_options /= Void
-			a_options_successful: a_options.successful
+			a_options_successful: a_options.is_successful
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_codes: LIST [STRING]

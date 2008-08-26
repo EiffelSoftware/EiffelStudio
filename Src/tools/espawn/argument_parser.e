@@ -13,10 +13,7 @@ class
 inherit
 	ARGUMENT_MULTI_PARSER
 		rename
-			make as make_parser
-		export
-			{NONE} all
-			{ANY} successful, execute
+			make as make_multi_parser
 		redefine
 			switch_groups
 		end
@@ -29,11 +26,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize parser
 		do
-			make_parser (False, True, False)
-			set_show_switch_arguments_inline (True)
-			if not {PLATFORM}.is_windows  then
-				set_use_separated_switch_values (True)
-			end
+			make_multi_parser (False, True)
+			set_is_using_separated_switch_values (False)
 		end
 
 feature -- Access
@@ -41,7 +35,7 @@ feature -- Access
 	commands: LINEAR [STRING] is
 			-- List of commands
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := values
 		ensure
@@ -52,7 +46,7 @@ feature -- Access
 	for_32bit: BOOLEAN is
 			-- Indiciates if tool should be run in a 32bit emulated enironment
 		require
-			successful: successful
+			is_successful: is_successful
 		do
 			Result := not {PLATFORM_CONSTANTS}.is_64_bits or else has_option (x86_switch)
 		ensure
@@ -62,7 +56,7 @@ feature -- Access
 	specific_compiler_code: STRING is
 			-- The user specified compiler code to use to establish an environment
 		require
-			successful: successful
+			is_successful: is_successful
 			use_specific_compiler: use_specific_compiler
 		do
 			Result := option_of_name (use_compiler_switch).value
@@ -74,7 +68,7 @@ feature -- Access
 	ignore_failures: BOOLEAN is
 			-- Indicates if process execution failures should be ignored
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (ignore_switch)
 		end
@@ -82,7 +76,7 @@ feature -- Access
 	manual: BOOLEAN is
 			-- Inidicates if user wants to manually setup their environment
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (manual_switch)
 		end
@@ -90,7 +84,7 @@ feature -- Access
 	asynchronous: BOOLEAN is
 			-- Inidicates if commands should be launched aynchronously
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (aync_switch)
 		end
@@ -98,7 +92,7 @@ feature -- Access
 	max_processors: NATURAL_16 is
 			-- Maximum number of processors to untilize
 		require
-			successful: successful
+			is_successful: is_successful
 		local
 			l_option: ARGUMENT_NATURAL_OPTION
 		once
@@ -120,7 +114,7 @@ feature -- Access
 	list_available_compilers: BOOLEAN is
 			-- Indicates if espawn should list the available compiler codes
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (list_compilers_switch)
 		end
@@ -130,18 +124,18 @@ feature -- Status report
 	use_specific_compiler: BOOLEAN is
 			-- Inidicate if a specific compiler code should be used
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (use_compiler_switch)
 		end
 
 feature {NONE} -- Usage
 
-	name: STRING_8 = "Eiffel Environment Command Spawn Utility"
-			-- Full name of application
+	name: !STRING = "Eiffel Environment Command Spawn Utility"
+			-- <Precursor>
 
-	version: STRING_8
-			-- Version number of application
+	version: !STRING
+			-- <Precursor>
 		do
 			create Result.make (3)
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
@@ -149,18 +143,17 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	loose_argument_description: STRING_8 = "Command or application to execute."
-			-- Description of lose argument, used in usage information
+	non_switched_argument_description: !STRING = "Command or application to execute."
+			-- <Precursor>
 
-	loose_argument_name: STRING_8 = "command"
-			-- Name of lose argument, used in usage information
+	non_switched_argument_name: !STRING = "command"
+			-- <Precursor>
 
-	loose_argument_type: STRING_8 = "A command"
-			-- Type of lose argument, used in usage information.
-			-- A type is a short description of the argument. I.E. "Configuration File"
+	non_switched_argument_type: !STRING = "A command"
+			-- <Precursor>
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
-			-- Retrieve a list of switch used for a specific application
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH] is
+			-- <Precursor>
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration.", False, False))
@@ -175,7 +168,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
 
-	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
+	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP] is
 			-- Valid switch grouping
 		do
 			create Result.make (2)
@@ -186,12 +179,12 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switch names
 
-	manual_switch: STRING = "manual"
-	x86_switch: STRING = "x86"
-	aync_switch: STRING = "async"
-	ignore_switch: STRING = "ignore"
-	list_compilers_switch: STRING = "l"
-	use_compiler_switch: STRING = "use"
+	manual_switch: !STRING = "manual"
+	x86_switch: !STRING = "x86"
+	aync_switch: !STRING = "async"
+	ignore_switch: !STRING = "ignore"
+	list_compilers_switch: !STRING = "l"
+	use_compiler_switch: !STRING = "use"
 
 feature {NONE} -- Externals
 

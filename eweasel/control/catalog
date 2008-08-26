@@ -642,7 +642,6 @@ test	c-inline-change-arg-order	incr212  tcf pass incrementality
 test	chg-generic-c-inline-function	incr213  tcf pass incrementality
 test	freeze-no-c-compile-melt	incr214  tcf fail incrementality
 test	chg-constraint-add-create	incr215  tcf pass incrementality
-if not DOTNET test	own-string-bogus-vgcc5		incr216  tcf pass incrementality
 test	chg-external-function-type	incr217  tcf pass incrementality
 test	make-agent-target-expanded	incr218  tcf pass incrementality
 test	expand-unexpand-agent-target	incr219  tcf fail incrementality

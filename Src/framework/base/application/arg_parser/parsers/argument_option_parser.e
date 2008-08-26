@@ -11,7 +11,7 @@ deferred class
 inherit
 	ARGUMENT_BASE_PARSER
 		rename
-			make as make_lite
+			make as make_base_parser
 		export
 			{NONE} values
 		redefine
@@ -20,29 +20,27 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_cs: like case_sensitive; a_usage_on_error: like display_usage_on_error) is
-			-- Initializes argument parser
+	make (a_cs: like is_case_sensitive)
+			-- ...
 		do
-			make_lite (a_cs, False, False, a_usage_on_error)
+			make_base_parser (a_cs, False, False)
 		ensure
-			case_sensitive_set: case_sensitive = a_cs
-			display_usage_on_error_set: display_usage_on_error = a_usage_on_error
+			is_case_sensitive_set: is_case_sensitive = a_cs
 		end
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Executes `a_agent' when no arguments of any worth are passed.
+	execute_noop (a_action: !PROCEDURE [ANY, ?TUPLE])
+			-- <Precursor>
 		do
-			a_agent.call ([])
+			a_action.call (Void)
 		end
 
 invariant
-	not_accepts_loose_argument: not accepts_loose_argument
-	not_accepts_multiple_loose_arguments: not accepts_multiple_loose_arguments
+	not_is_allowing_non_switched_arguments: not is_allowing_non_switched_arguments
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

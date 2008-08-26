@@ -12,11 +12,18 @@ inherit
 	ARGUMENT_OPTION
 
 create {ARGUMENT_NATURAL_SWITCH}
+	make,
 	make_with_value
+
+convert
+	natural_8_value: {NATURAL_8},
+	natural_16_value: {NATURAL_16},
+	natural_32_value: {NATURAL_32},
+	natural_64_value: {NATURAL_64}
 
 feature -- Access
 
-	natural_8_value: NATURAL_8 is
+	natural_8_value: NATURAL_8
 			-- `value' as an {NATURAL_8}
 		require
 			has_value: has_value
@@ -24,7 +31,7 @@ feature -- Access
 			Result := value.to_natural_8
 		end
 
-	natural_16_value: NATURAL_16 is
+	natural_16_value: NATURAL_16
 			-- `value' as an {NATURAL_16}
 		require
 			has_value: has_value
@@ -32,7 +39,7 @@ feature -- Access
 			Result := value.to_natural_16
 		end
 
-	natural_32_value: NATURAL_32 is
+	natural_32_value: NATURAL_32
 			-- `value' as an {NATURAL_32}
 		require
 			has_value: has_value
@@ -40,7 +47,7 @@ feature -- Access
 			Result := value.to_natural_32
 		end
 
-	natural_64_value: NATURAL_64 is
+	natural_64_value: NATURAL_64
 			-- `value' as an {NATURAL_64}
 		require
 			has_value: has_value
@@ -52,7 +59,7 @@ invariant
 	value_is_natural: has_value implies value.is_natural
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

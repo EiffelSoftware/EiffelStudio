@@ -19,12 +19,12 @@ inherit
 
 	ARGUMENT_BASE_PARSER
 		rename
-			make as make_lite
+			make as make_base_parser
 		export
 			{NONE} values
 		undefine
 			extended_usage,
-			validate_loose_arguments
+			validate_non_switched_arguments
 		redefine
 			command_option_group_configuration,
 			validate_arguments
@@ -32,63 +32,65 @@ inherit
 
 feature -- Access
 
-	single_value: STRING is
-			-- Specified loose argument value
+	value: !STRING
+			-- Specified non-switched argument value.
 		require
-			successful: successful
+			is_successful: is_successful
+			has_non_switched_argument: has_non_switched_argument
 		do
 			Result := values.first
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Usage
 
-	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_loose: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is
+	command_option_group_configuration (a_group: !LIST [!ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: !LIST [!ARGUMENT_SWITCH]): STRING is
 			-- Command line option configuration string (to display in usage)
 		local
 			l_suffix: STRING
 			l_arg: STRING
 		do
-			if not a_show_loose or not a_add_appurtenances then
-				Result := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
-			else
-				l_arg := loose_argument_name_arg
-				create Result.make (l_arg.count)
-				Result.append (l_arg)
-				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
-				if l_suffix /= Void then
-					Result.append_character (' ')
-					Result.append (l_suffix)
-				else
-					Result := l_arg
+			l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_non_switch, a_non_switch_required, a_add_appurtenances, a_src_group)
+
+			create Result.make (30)
+			if a_show_non_switch then
+				l_arg := non_switched_argument_name_arg
+				if not a_non_switch_required then
+					Result.append_character ('[')
 				end
+				Result.append (l_arg)
+				if not a_non_switch_required then
+					Result.append_character (']')
+				end
+			end
+
+			if l_suffix /= Void then
+				if not Result.is_empty then
+					Result.append_character (' ')
+				end
+				Result.append (l_suffix)
 			end
 		end
 
 feature {NONE} -- Validation
 
-	validate_arguments is
-			-- Validates arguments to ensure they are configured correctly
+	validate_arguments
+			-- <Precursor>
 		do
 			if values.count > 1 then
-				add_template_error (multi_loose_argument_error, [loose_argument_type.as_lower])
+					-- Only allowed one non-switched argument.
+				add_template_error (e_one_non_switch_only, [non_switched_argument_type.as_lower])
 			end
 			Precursor {ARGUMENT_MULTI_PARSER}
 		end
 
-feature {NONE} -- Error Constants
+feature {NONE} -- Internationalization
 
-	multi_loose_argument_error: STRING is "Only one {1} can be specified."
-		-- Errors
+	e_one_non_switch_only: STRING is "Only one {1} can be specified."
 
-invariant
-	accepts_loose_argument: accepts_loose_argument
-	accepts_multiple_loose_arguments: accepts_multiple_loose_arguments
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

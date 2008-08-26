@@ -107,17 +107,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value_validator: ARGUMENT_INTEGER_RANGE_VALIDATOR
-			-- Retrieves an validator used to check current switch value
-		do
-			create Result.make (min, max)
-		end
-
 	min: INTEGER_64
 			-- Minimum valid value
 
 	max: INTEGER_64
 			-- Maximumn valid value
+
+feature {ARGUMENT_BASE_PARSER} -- Access
+
+	value_validator: !ARGUMENT_INTEGER_RANGE_VALIDATOR
+			-- <Precursor>
+		do
+			create Result.make (min, max)
+		end
 
 feature -- Element change
 
@@ -135,23 +137,25 @@ feature -- Element change
 
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
-	create_option: ARGUMENT_INTEGER_OPTION is
-			-- Creates a new argument option for switch
+	create_option: !ARGUMENT_INTEGER_OPTION
+			-- <Precursor>
 		do
-			create Result.make_with_value (Void, Current)
+			create Result.make (Current)
 		end
 
-	create_value_option (a_value: STRING): ARGUMENT_INTEGER_OPTION is
-			-- Creates a new argument option given a value `a_value'
+	create_value_option (a_value: !STRING): !ARGUMENT_INTEGER_OPTION
+			-- <Precursor>
 		do
 			create Result.make_with_value (a_value, Current)
+		ensure then
+			result_value_in_ranged: Result.integer_64_value >= min and then Result.integer_64_value <= max
 		end
 
 invariant
 	min_less_than_max: min < max
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,11 +12,18 @@ inherit
 	ARGUMENT_OPTION
 
 create {ARGUMENT_INTEGER_SWITCH}
+	make,
 	make_with_value
+
+convert
+	integer_8_value: {INTEGER_8},
+	integer_16_value: {INTEGER_16},
+	integer_32_value: {INTEGER_32},
+	integer_64_value: {INTEGER_64}
 
 feature -- Access
 
-	integer_8_value: INTEGER_8 is
+	integer_8_value: INTEGER_8
 			-- `value' as an {INTEGER_8}
 		require
 			has_value: has_value
@@ -24,7 +31,7 @@ feature -- Access
 			Result := value.to_integer_8
 		end
 
-	integer_16_value: INTEGER_16 is
+	integer_16_value: INTEGER_16
 			-- `value' as an {INTEGER_16}
 		require
 			has_value: has_value
@@ -32,7 +39,7 @@ feature -- Access
 			Result := value.to_integer_16
 		end
 
-	integer_32_value: INTEGER_32 is
+	integer_32_value: INTEGER_32
 			-- `value' as an {INTEGER_32}
 		require
 			has_value: has_value
@@ -40,7 +47,7 @@ feature -- Access
 			Result := value.to_integer_32
 		end
 
-	integer_64_value: INTEGER_64 is
+	integer_64_value: INTEGER_64
 			-- `value' as an {INTEGER_64}
 		require
 			has_value: has_value
@@ -52,7 +59,7 @@ invariant
 	value_is_integer: has_value implies value.is_integer
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

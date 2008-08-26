@@ -70,7 +70,6 @@ inherit
 		export {EV_WIDGET_IMP}
 			menu_bar_height
 		undefine
-			on_accelerator_command,
 			on_left_button_down,
 			on_middle_button_down,
 			on_right_button_down,
@@ -138,13 +137,16 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			make_top ("")
-			create accel_list.make (10)
 		end
 
 	initialize is
 			-- Initialize `Current'.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+
+				-- Create accelerator list for window.
+			create accel_list.make (10)
+
 			user_can_resize := True
 			init_bars
 			application_imp.add_root_window (Current)
@@ -437,66 +439,6 @@ feature -- Status Report
 
 feature {EV_ANY, EV_ANY_I} -- Accelerators
 
-	on_accelerator_command (an_accel_id: INTEGER) is
-			-- Accelerator with `an_accel_id' has just been pressed.
-		local
-			l_accelerator: EV_ACCELERATOR
-		do
-			l_accelerator := accel_list.item (an_accel_id)
-			if l_accelerator /= Void then
-					-- There may be rare occasions where an accelerator is in the message loop
-					-- whilst it is removed from the list so we add protection
-					-- to avoid a crash. (see bug#14044)
-				l_accelerator.actions.call (Void)
-			end
-		end
-
-	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
-			-- List of accelerators connected to `Current' indexed by
-			-- their `id'.
-
-	has_f10_accelerator: BOOLEAN
-			-- Does current window override F10 shortcut?
-
-	wel_acc_size: INTEGER is
-			-- Used to initialize WEL_ARRAY.
-		local
-			wel_acc: WEL_ACCELERATOR
-		once
-			wel_acc ?= (create {EV_ACCELERATOR}).implementation
-			Result := wel_acc.structure_size
-		end
-
-	create_accelerators is
-			-- Recreate the accelerators.
-		local
-			wel_array: WEL_ARRAY [WEL_ACCELERATOR]
-			acc: WEL_ACCELERATOR
-			n: INTEGER
-		do
-			has_f10_accelerator := False
-			if accel_list.is_empty then
-				accelerators := Void
-			else
-	 			from
-	 				accel_list.start
-		 			create wel_array.make (accel_list.count, wel_acc_size)
-					n := 0
-				until
-					accel_list.after
-				loop
-					acc ?= accel_list.item_for_iteration.implementation
-					if not has_f10_accelerator then
-						has_f10_accelerator := acc.key = vk_f10
-					end
-					wel_array.put (acc, n)
-					accel_list.forth
-					n := n + 1
-	 			end
-	 			create accelerators.make_with_array (wel_array)
-			end
-		end
-
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Connect key combination `an_accel' to `Current'.
 		local
@@ -504,13 +446,10 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				check
-					acc_imp_not_void: acc_imp /= Void
-				end
-				accel_list.put (an_accel, acc_imp.id)
-				create_accelerators
+				accel_list.put (an_accel, acc_imp.hash_code)
 			end
 		end
+
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Disconnect key combination `an_accel' from `Current'.
@@ -519,11 +458,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				check
-					acc_imp_not_void: acc_imp /= Void
-				end
-				accel_list.remove (acc_imp.id)
-				create_accelerators
+				accel_list.remove (acc_imp.hash_code)
 			end
 		end
 

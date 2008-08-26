@@ -320,11 +320,6 @@ feature -- Element change
 			menu_bar := Void
 		end
 
-feature {EV_GTK_WINDOW_IMP} -- Access
-
-	accel_list: HASH_TABLE [EV_ACCELERATOR, NATURAL_32]
-		-- Lookup table for accelerator access.
-
 feature {NONE} -- Accelerators
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -332,14 +327,22 @@ feature {NONE} -- Accelerators
 		local
 			acc_imp: EV_ACCELERATOR_IMP
 			a_property, a_origin, a_value: EV_GTK_C_STRING
+			l_override_key: STRING
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				accel_list.put (an_accel, acc_imp.accel_id)
+				accel_list.put (an_accel, acc_imp.hash_code)
 				if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
-						-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
+					l_override_key := once "F10"
+				elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f11 then
+					l_override_key := once "F11"
+				elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f12 then
+					l_override_key := once "F12"
+				end
+				if l_override_key /= Void then
+						-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
 					a_property := once "gtk-menu-bar-accel"
-					a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
+					a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
 						-- This is a value that is highly unlikely to be used
 					a_origin := once "Vision2"
 					{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
@@ -354,7 +357,7 @@ feature {NONE} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				accel_list.remove (acc_imp.accel_id)
+				accel_list.remove (acc_imp.hash_code)
 			end
 		end
 
@@ -540,6 +543,47 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP, EV_APPLICATION_IMP} -- Imp
 			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
 		end
 
+feature {NONE} -- Composite handling
+
+	set_opacity (a_opacity: REAL)
+		require
+			not_is_destroyed: not is_destroyed
+			a_opacity_valid: a_opacity >= 0 and then a_opacity <= 1
+		local
+			l_opacity_symbol: POINTER
+		do
+			l_opacity_symbol := gtk_window_set_opacity_symbol
+			if l_opacity_symbol /= default_pointer then
+				gtk_window_set_opacity_call (l_opacity_symbol, c_object, a_opacity)
+			end
+		end
+
+	gtk_window_set_opacity_symbol: POINTER
+			-- Symbol for `gtk_window_set_opacity'
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gtk_window_set_opacity")
+		end
+
+	gtk_window_set_opacity_call (a_function: POINTER; a_window: POINTER; a_opacity: REAL_32)
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(FUNCTION_CAST(void, (GtkWidget*, gdouble)) $a_function)((GtkWidget*) $a_window, (gdouble) $a_opacity);"
+		end
+
+	gtk_widget_is_composited_symbol: POINTER
+			-- Symbol for `gtk_widget_is_composited'
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gtk_widget_is_composited")
+		end
+
+	gtk_widget_is_composited_call (a_function: POINTER; a_widget: POINTER): BOOLEAN
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GtkWidget*)) $a_function)((GtkWidget*) $a_widget);"
+		end
+
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	on_focus_changed (a_has_focus: BOOLEAN) is
@@ -596,4 +640,6 @@ indexing
 
 
 end -- class EV_WINDOW_IMP
+
+
 

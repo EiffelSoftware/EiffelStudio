@@ -99,6 +99,31 @@ feature -- Element change
 		deferred
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	hash_code: INTEGER is
+			-- Hash code to be used with `Current' when adding to accel list of a window.
+		require
+			key_set: key /= Void
+		do
+			Result := hash_code_function (key.code, control_required, alt_required, shift_required)
+		end
+
+	hash_code_function (a_key_code: INTEGER; a_control_required, a_alt_required, a_shift_required: BOOLEAN): INTEGER
+			-- Function used for generating accelerator hash codes.
+		do
+			Result := a_key_code
+			if a_control_required then
+				Result := Result + 2048
+			end
+			if a_alt_required then
+				Result := Result + 1024
+			end
+			if a_shift_required then
+				Result := Result + 512
+			end
+		end
+
 feature {EV_ACCELERATOR_I} -- Implementation
 
 	actions_internal: EV_NOTIFY_ACTION_SEQUENCE

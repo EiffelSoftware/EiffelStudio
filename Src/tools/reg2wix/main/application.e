@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
-			if not l_parser.successful then
+			if not l_parser.is_successful then
 				(create {EXCEPTIONS}).die (1)
 			elseif not error_handler.successful then
 				(create {EXCEPTIONS}).die (2)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Application start
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_reader: REG_FILE_READER
 			l_reg_files: HASH_TABLE [REG_FILE, STRING]

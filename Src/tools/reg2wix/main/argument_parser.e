@@ -13,15 +13,12 @@ class
 inherit
 	ARGUMENT_MULTI_PARSER
 		rename
-			make as make_parser
-		export
-			{NONE} all
-			{APPLICATION} successful, execute
+			make as make_multi_parser
 		end
 
 	IREG2WIX_OPTIONS
 		rename
-			can_query_options as successful
+			can_query_options as is_successful
 		end
 
 create
@@ -32,21 +29,19 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize command line argument parser
 		do
-			make_parser (False, False, False)
-			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
-			set_show_switch_arguments_inline (True)
-			set_use_separated_switch_values (True)
+			make_multi_parser (False, True)
+			set_non_switched_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
 		end
 
 feature -- Access
 
-	reg_files: LINEAR [STRING]
+	reg_files: !LINEAR [!STRING]
 			-- List of registry files to process
 		do
 			Result := values
 		end
 
-	output_file_name: STRING
+	output_file_name: !STRING
 			-- Optional output file name
 		do
 			Result := options_values_of_name (out_switch).first
@@ -60,27 +55,26 @@ feature -- Status report
 			Result := has_option (out_switch)
 		end
 
-
 feature {NONE} -- Usage
 
-	name: STRING = "Registry File to WiX Conversion Tool"
-			-- Full name of application
+	name: !STRING = "Registry File to WiX Conversion Tool"
+			-- <Precursor>
 
-	version: STRING = "3.0"
-			-- Version number of application	
+	version: !STRING = "3.1"
+			-- <Precursor>
 
-	loose_argument_name: STRING = "RegFile"
-			-- Name of lose argument, used in usage information
+	non_switched_argument_name: !STRING = "RegFile"
+			-- <Precursor>
 
-	loose_argument_description: STRING = "A Windows registry file."
-			-- Description of lose argument, used in usage information
+	non_switched_argument_description: !STRING = "A Windows registry file."
+			-- <Precursor>
 
-	loose_argument_type: STRING = "Registry file"
-			-- Type of lose argument, used in usage information.
+	non_switched_argument_type: !STRING = "Registry file"
+			-- <Precursor>
 
 feature {NONE} -- Switches
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		do
@@ -88,7 +82,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (out_switch, "An output file name for the generated WiX document.", True, False, "File", "Output file name.", False))
 		end
 
-	out_switch: STRING = "out"
+	out_switch: !STRING = "out"
 			-- Command line switches
 
 ;indexing

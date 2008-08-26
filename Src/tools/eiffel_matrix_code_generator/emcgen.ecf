@@ -19,17 +19,17 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="line_generation" value="false"/>
 		<setting name="multithreaded" value="false"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
+		<library name="text" location="$EIFFEL_SRC\framework\base\text\text.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<option>
 				<assertions/>
 			</option>
 		</library>
-		<cluster name="base_ext" location="${EIFFEL_SRC}\framework\base\" recursive="true">
-			<option warning="true">
-			</option>
-		</cluster>
 		<cluster name="eiffel_matrix_code_generator" location="${EIFFEL_SRC}\tools\eiffel_matrix_code_generator\" recursive="true">
 			<option warning="true">
 			</option>
@@ -38,6 +38,5 @@
 				<exclude>/example$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="ini_reader" location="${EIFFEL_SRC}\framework\file_formats\ini\" recursive="true"/>
 	</target>
 </system>

@@ -40,14 +40,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parser: like xml_parser)
+	make (a_parser: !like xml_parser)
 			-- Initializes callbacks using an existing XML parser.
 			-- Note: Initialization will set the parser's callbacks to Current.
 			--
 			-- `a_parser': An XML parser Current is used with.
 		do
 			create current_transition_stack.make_default
-			create current_attributes.make_default
+			create current_attributes_stack.make_default
 			create current_content_stack.make_default
 
 			a_parser.set_callbacks (Current)
@@ -81,7 +81,7 @@ feature {NONE} -- Access
 	current_transition_stack: !DS_LINKED_STACK [NATURAL_8]
 			-- Stack of transitional XML element tags
 
-	current_attributes: !DS_HASH_TABLE [!STRING_32, NATURAL_8]
+	current_attributes_stack: !DS_LINKED_STACK [!DS_HASH_TABLE [!STRING_32, NATURAL_8]]
 			-- Current attributes
 
 	current_content_stack: !DS_LINKED_STACK [!STRING_32]
@@ -93,6 +93,14 @@ feature {NONE} -- Access
 			not_current_transition_stack_is_empty: not current_transition_stack.is_empty
 		do
 			Result := current_transition_stack.item
+		end
+
+	frozen current_attributes: !DS_HASH_TABLE [!STRING_32, NATURAL_8]
+			-- Current attributes
+		require
+			not_current_attributes_stack_is_empty: not current_attributes_stack.is_empty
+		do
+			Result := current_attributes_stack.item
 		end
 
 	frozen current_content: !STRING_32
@@ -146,12 +154,17 @@ feature {NONE} -- Basic operations
 			-- Resets internal state, ready for the next parse
 		do
 			current_transition_stack.wipe_out
-			current_attributes.wipe_out
+			current_attributes_stack.wipe_out
+			current_content_stack.wipe_out
+
+				-- Required for the xml declaration processing instruction
+			current_attributes_stack.put (create {DS_HASH_TABLE [!STRING_32, NATURAL_8]}.make_default)
 
 			internal_last_error_message := Void
 		ensure
 			current_transition_stack_is_empty: current_transition_stack.is_empty
-			current_attributes_is_empty: current_attributes.is_empty
+			current_attributes_stack_is_empty: current_attributes_stack.count = 1
+			current_content_stack_is_empty: current_content_stack.is_empty
 			not_has_error: not has_error
 			internal_last_error_message_detached: internal_last_error_message = Void
 		end
@@ -268,8 +281,8 @@ feature {NONE} -- Action handlers
 			l_next_state: NATURAL_8
 		do
 			if not has_error then
-					-- Wipe out any previous attributes.
-				current_attributes.wipe_out
+					-- Extend the attribute stack
+				current_attributes_stack.put (create {DS_HASH_TABLE [!STRING_32, NATURAL_8]}.make_default)
 
 					-- Set new state
 				l_next_state := t_none
@@ -427,6 +440,7 @@ feature {NONE} -- Action handlers
 				end
 
 					-- Remove content
+				current_attributes_stack.remove
 				current_content_stack.remove
 			end
 		end
@@ -496,6 +510,72 @@ feature {NONE} -- Reporting
 		end
 
 feature {NONE} -- Conversion
+
+	boolean_attribute (a_name: STRING; a_token: NATURAL_8; a_default: BOOLEAN): BOOLEAN
+			-- Converts an attribute value to a Boolean.
+			--
+			-- `a_name': The name of the attribute or element.
+			-- `a_token': The attribute token.
+			-- `a_default': A default value, in the case the supplied value cannot be converted.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_attributes: !like current_attributes
+			l_value: like prune_whitespace
+		do
+			Result := a_default
+
+			l_attributes := current_attributes
+			if l_attributes.has (a_token) then
+				l_value := l_attributes.item (a_token)
+				if l_value /= Void then
+					l_value.left_adjust
+					l_value.right_adjust
+					if l_value.is_boolean then
+						Result := l_value.to_boolean
+					elseif v_bool_one.is_equal (l_value) or else v_bool_yes.is_case_insensitive_equal (l_value) then
+						Result := True
+					elseif v_bool_zero.is_equal (l_value) or else v_bool_no.is_case_insensitive_equal (l_value) then
+						Result := False
+					else
+							-- Invalid Boolean value.
+						on_report_xml_error ("Invalid Boolean value '" + l_value + "' for entity '" + a_name + "!")
+					end
+				end
+			end
+		end
+
+	integer_attribute (a_name: STRING; a_token: NATURAL_8; a_default: INTEGER_32): INTEGER_32
+			-- Converts an attribute value to a Boolean.
+			--
+			-- `a_name': The name of the attribute or element.
+			-- `a_token': The attribute token.
+			-- `a_default': A default value, in the case the supplied value cannot be converted.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_attributes: !like current_attributes
+			l_value: like prune_whitespace
+		do
+			Result := a_default
+
+			l_attributes := current_attributes
+			if l_attributes.has (a_token) then
+				l_value := l_attributes.item (a_token)
+				if l_value /= Void then
+					l_value.left_adjust
+					l_value.right_adjust
+					if l_value.is_integer_32 then
+						Result := l_value.to_integer_32
+					else
+							-- Invalid Integer value.
+						on_report_xml_error ("Invalid Integer value '" + l_value + "' for entity '" + a_name + "!")
+					end
+				end
+			end
+		end
 
 	to_boolean (a_name: STRING; a_value: !STRING_32; a_default: BOOLEAN): BOOLEAN
 			-- Converts a value to a Boolean.

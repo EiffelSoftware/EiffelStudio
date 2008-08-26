@@ -10,9 +10,8 @@ class
 
 inherit
 	ARGUMENT_OPTION_PARSER
-		export
-			{NONE} all
-			{APPLICATION} execute
+		rename
+			make as make_option_parser
 		redefine
 			execute_noop
 		end
@@ -20,16 +19,30 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize the argument parser.
+		do
+			make_option_parser (False)
+		end
+
 feature {NONE} -- Access
 
-	name: STRING = "Eiffel Parser SpeedMark"
-			-- Application name
+	name: !STRING = "Eiffel Parser SpeedMark"
+			-- <Precursor>
 
-	version: STRING = "5.6.62115.0"
-			-- Application version
+	version: !STRING
+			-- <Precursor>
+		once
+			create Result.make (5)
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_character ('.')
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
-			-- Argument switches
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+			-- <Precursor>
 		once
 			create Result.make (5)
 			Result.extend (create {ARGUMENT_SWITCH}.make (null_switch, "Test parser using AST_NULL_FACTORY%N(exclude when using -all.)", True, False))
@@ -95,16 +108,15 @@ feature -- Status Report
 
 feature -- Access
 
-	location: STRING
+	location: !STRING
 			-- Location of files to use
 		once
 			if has_option (location_switch) then
 				Result := option_of_name (location_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				Result ?= (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_exists: (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
 		end
@@ -127,27 +139,27 @@ feature -- Access
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Executes `a_agent' when no arguments of any worth are passed.
+	execute_noop (a_agent: !PROCEDURE [ANY, TUPLE]) is
+			-- <Precursor>
 		do
 			display_usage
 		end
 
 feature {NONE} -- Switch names
 
-	null_switch: STRING = "null"
-	basic_switch: STRING = "basic"
-	lite_switch: STRING = "lite"
-	roundtrip_switch: STRING = "roundtrip"
-	all_switch: STRING = "all"
+	null_switch: !STRING = "n|null"
+	basic_switch: !STRING = "|bbasic"
+	lite_switch: !STRING = "l|lite"
+	roundtrip_switch: !STRING = "o|roundtrip"
+	all_switch: !STRING = "a|all"
 			-- Factory switches
 
-	location_switch: STRING = "l"
-	recursive_switch: STRING = "r"
+	location_switch: !STRING = "l|location"
+	recursive_switch: !STRING = "r|recursive"
 			-- Location switches
 
-	error_switch: STRING = "e"
-	disk_access_switch: STRING = "da";
+	error_switch: STRING = "e|error"
+	disk_access_switch: STRING = "d|disk-access";
 			-- Test related switches
 
 

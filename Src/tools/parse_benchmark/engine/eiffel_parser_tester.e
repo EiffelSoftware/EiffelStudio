@@ -72,10 +72,8 @@ feature {NONE} -- Externals
 			"C inline use %"time.h%""
 		alias
 			"[
-			{
 				clock_t t = clock();
-				return (ULONG) (LONG)t;
-			}
+				return (unsigned long) (long)t;
 			]"
 		end
 
@@ -84,9 +82,12 @@ feature {NONE} -- Externals
 			"C inline use %"time.h%""
 		alias
 			"[
-			{
-				return (ULONG) ((LONG)CLK_TCK / 1000L);
-			}
+				#ifdef CLK_TCK
+						// Deprecated in some systems.
+					return (unsigned long) ((long)CLK_TCK / 1000L);
+				#else
+					return (unsigned long) ((long)CLOCKS_PER_SEC / 1000L);
+				#endif
 			]"
 		end
 

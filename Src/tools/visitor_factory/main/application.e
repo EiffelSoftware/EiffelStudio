@@ -42,6 +42,7 @@ feature -- Initialization
 			-- Start exection of application
 		require
 			a_parser_attached: a_parser /= Void
+			a_parser_is_successful: a_parser.is_successful
 		local
 			l_options: APPLICATION_OPTIONS
 			l_printer: TEXT_PRINTER

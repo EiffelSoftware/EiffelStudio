@@ -20,15 +20,13 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_PROCESSOR_I [G]
+	EIFFEL_TEST_PROCESSOR_I
 
 inherit
 	EIFFEL_TEST_COLLECTION_I
 		rename
 			are_tests_available as is_test_suite_valid
 		end
-
-	ACTIVE_ITEM_I
 
 feature -- Access
 
@@ -41,6 +39,14 @@ feature -- Access
 		ensure
 			result_usable: Result.is_interface_usable
 			result_available: Result.is_project_initialized
+		end
+
+	argument: !ANY
+			-- Argument with which `Current' has been launched
+		require
+			usable: is_interface_usable
+			running: is_running
+		deferred
 		end
 
 	tests: !DS_LINEAR [!EIFFEL_TEST_I]
@@ -67,6 +73,8 @@ feature -- Status report
 		require
 			usable: is_interface_usable
 		deferred
+		ensure
+			result_implies_valid_test_suite: Result implies is_test_suite_valid
 		end
 
 	is_finished: BOOLEAN
@@ -78,7 +86,7 @@ feature -- Status report
 			result_implies_idle: Result implies is_idle
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Status report
+feature -- Status report
 
 	is_idle: BOOLEAN
 			-- Is `Current' in a state where it is waiting to continue with its task?
@@ -91,11 +99,17 @@ feature {EIFFEL_TEST_SUITE_S} -- Status report
 
 feature -- Query
 
-	is_valid_argument (a_arg: G): BOOLEAN
-			-- Is `an_arg' a valid argument to start a task?
+	frozen is_valid_argument (a_arg: !ANY; a_test_suite: like test_suite): BOOLEAN
+			-- Is `an_arg' a valid argument to start a task for `a_test_suite'?
 		require
 			usable: is_interface_usable
-		deferred
+		do
+			if {l_type: like argument} a_arg then
+				Result := is_valid_typed_argument (l_type, a_test_suite)
+			end
+		ensure
+			result_implies_valid_typed: Result implies ({l_type2: like argument} a_arg and then
+				is_valid_typed_argument ({like argument} #? a_arg, a_test_suite))
 		end
 
 	is_stop_requested: BOOLEAN
@@ -103,6 +117,15 @@ feature -- Query
 		require
 			usable: is_interface_usable
 			running: is_running
+		deferred
+		end
+
+feature {NONE} -- Query
+
+	is_valid_typed_argument (a_arg: like argument; a_test_suite: like test_suite): BOOLEAN
+			-- Is `an_arg' a valid argument to start a task for `a_test_suite'?
+		require
+			usable: is_interface_usable
 		deferred
 		end
 
@@ -120,7 +143,7 @@ feature -- Status setting
 
 feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
-	start (a_arg: G; a_test_suite: like test_suite)
+	frozen start (a_arg: !ANY; a_test_suite: like test_suite)
 			-- Start performing a task for given arguments.
 			--
 			-- `a_arg': Arguments defining the task.
@@ -128,13 +151,14 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 		require
 			usable: is_interface_usable
 			ready: is_ready
-			a_arg_valid: is_valid_argument (a_arg)
+			a_arg_valid: is_valid_argument (a_arg, a_test_suite)
 			a_test_suite_usable: a_test_suite.is_interface_usable
-		deferred
+		do
+			attach_test_suite (a_test_suite)
+			start_process ({like argument} #? a_arg)
 		ensure
 			idle: is_idle
 			test_suite_set: test_suite = a_test_suite
-			stop_not_requested: not is_stop_requested
 		end
 
 	proceed
@@ -162,4 +186,28 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			stopped: not is_running
 		end
 
+feature {NONE} -- Status setting
+
+	attach_test_suite (a_test_suite: like test_suite)
+			-- Set `test_suite' to `a_test_suite' and connect
+		require
+			usable: is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+		deferred
+		ensure
+			test_suite_set: test_suite = a_test_suite
+		end
+
+	start_process (a_arg: like argument)
+			-- Start performing a task for given arguments.
+			--
+			-- `a_arg': Arguments defining the task.
+		require
+			usable: is_interface_usable
+			ready: is_ready
+			a_arg_valid: is_valid_argument (a_arg, test_suite)
+		deferred
+		ensure
+			idle: is_idle
+		end
 end

@@ -16,12 +16,13 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_FACTORY_I [G -> EIFFEL_TEST_CONFIGURATION_I]
+	EIFFEL_TEST_FACTORY_I [G -> !EIFFEL_TEST_CONFIGURATION_I]
 
 inherit
-	EIFFEL_TEST_PROCESSOR_I [!EIFFEL_TEST_CONFIGURATION_I]
+	EIFFEL_TEST_PROCESSOR_I
 		rename
 			tests as created_tests,
+			argument as configuration,
 			is_valid_argument as is_valid_configuration
 		end
 
@@ -29,20 +30,10 @@ feature -- Access
 
 	configuration: !G
 			-- Configuration used in current test creation run
-		require
+		require else
 			usable: is_interface_usable
 			running: is_running
 		deferred
-		end
-
-feature {TEST_SUITE_S} -- Factory
-
-	start (a_config: !EIFFEL_TEST_CONFIGURATION_I; a_test_suite: like test_suite)
-			-- <Precursor>
-		deferred
-		ensure then
-			configuration_set: configuration = a_config
-			no_tests_created_yet: created_tests.is_empty
 		end
 
 end

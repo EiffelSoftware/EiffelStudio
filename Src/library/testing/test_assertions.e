@@ -49,6 +49,4 @@ feature -- Status report
 	last_assertion_failed: BOOLEAN
 			-- Status of last call to `assert'.
 
-feature -- Settings
-
 end

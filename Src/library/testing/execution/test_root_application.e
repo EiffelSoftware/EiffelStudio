@@ -1,8 +1,8 @@
 indexing
 	description: "[
-		Core implementation for root class of test executor. The test interpreter is used by the
+		Core implementation for root class of test executor. The test evaluator is used by the
 		testing tool to run tests and retrieve results. Any descendant of this class should be used as
-		the root class of an interpreter. Descendants need to provide {TEST_INTERPRETER} information on
+		the root class of an interpreter. Descendants need to provide {TEST_ROOT_APPLICATION} information on
 		what test classes/routines are available and be able to create instances of them.
 	]"
 	author: ""
@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	TEST_INTERPRETER
+	TEST_ROOT_APPLICATION
 
 inherit
 	EXCEPTIONS
@@ -34,21 +34,34 @@ feature {NONE} -- Initialization
 		require
 			arguments_valid: arguments.successful
 		local
-			l_quit: BOOLEAN
-			i: NATURAL
+			l_quit, l_bad_argument: BOOLEAN
+			l_index: STRING
+			n: NATURAL
 		do
 			if not l_quit then
 				initialize_stream
-				if arguments.has_id_option then
-					stream.independent_store (arguments.id_option)
-				end
 				from
-					i := 1
+					arguments.values.start
 				until
-					i > test_count
+					arguments.values.after
 				loop
-					run_test (i)
-					i := i + 1
+					l_index := arguments.values.item_for_iteration
+					if l_index.is_natural then
+						n := l_index.to_natural
+						if is_valid_index (n) then
+							run_test (n)
+						else
+							l_bad_argument := True
+						end
+					else
+						l_bad_argument := True
+					end
+					if l_bad_argument then
+						io.error.put_string (arguments.values.item_for_iteration)
+						io.error.put_string (" is not a valid test index")
+						die (1)
+					end
+					arguments.values.forth
 				end
 				close_stream
 			end
@@ -65,7 +78,7 @@ feature {NONE} -- Initialization
 				die (1)
 			elseif exception = {EXCEP_CONST}.signal_exception or
 			       exception = {EXCEP_CONST}.operating_system_exception then
-					-- Note: assuming process was killed on user request
+					--| assuming process was killed on user request
 				l_quit := True
 				retry
 			end
@@ -95,8 +108,8 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	test_count: NATURAL
-			-- Number of tests available
+	is_valid_index (a_index: NATURAL): BOOLEAN
+			-- Is `a_index' a valid?
 		deferred
 		end
 
@@ -137,27 +150,27 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query
 
-	test_set_instance (a_index:  like test_count): !TEST_SET is
+	test_set_instance (a_index: NATURAL): !TEST_SET is
 			-- Instance of a test set class.
 		require
-			a_index_valid: a_index > 0 and a_index <= test_count
+			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
-	test_procedure (a_index:  like test_count): !PROCEDURE [ANY, TUPLE [TEST_SET]] is
+	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [TEST_SET]] is
 			-- Agent for a test procedure.
 		require
-			a_index_valid: a_index > 0 and a_index <= test_count
+			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
 feature {NONE} -- Execution
 
-	run_test (a_index: like test_count)
+	run_test (a_index: NATURAL)
 
 		require
 			stream_initialized: stream.is_open_write
-			a_index_valid: a_index > 0 and a_index <= test_count
+			a_index_valid: is_valid_index (a_index)
 		do
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index))
 			if stream.extendible then

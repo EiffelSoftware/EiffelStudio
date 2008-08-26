@@ -12,10 +12,12 @@ class
 inherit
 	EIFFEL_TEST_PROJECT_I
 
-	TEST_COLLECTION
+	EIFFEL_TEST_COLLECTION
 		rename
 			are_tests_available as is_project_initialized
 		end
+
+	CONF_ACCESS
 
 	SHARED_ERROR_HANDLER
 		export
@@ -23,6 +25,11 @@ inherit
 		end
 
 	SHARED_TEST_ROUTINES
+		export
+			{NONE} all
+		end
+
+	SHARED_EIFFEL_PARSER
 		export
 			{NONE} all
 		end
@@ -40,6 +47,7 @@ feature {NONE} -- Initialization
 			l_manager := internal_project.manager
 			l_manager.load_agents.force (agent synchronize)
 			l_manager.compile_stop_agents.extend (agent synchronize)
+			l_manager.compile_start_agents.extend (agent update_root_class)
 
 				-- Create storage
 			create test_class_map.make (0)
@@ -101,6 +109,9 @@ feature {NONE} -- Access
 
 	old_class_map: ?like test_class_map
 			-- Temporary storage for old instance of `test_class_map'
+
+	test_root_cluster: ?CONF_CLUSTER
+			-- Internal cluster containing testing root classes
 
 feature -- Status report
 
@@ -166,6 +177,18 @@ feature {NONE} -- Query
 			result_not_empty: not Result.is_empty
 		end
 
+	test_root_cluster_path: !STRING
+			-- Path for `test_root_cluster'
+		require
+			project_initialized: is_project_initialized
+		local
+			l_dir: DIRECTORY_NAME
+		do
+			create l_dir.make_from_string (eiffel_project.project_directory.target_path)
+			l_dir.extend ("testing")
+			Result := l_dir
+		end
+
 feature -- Status setting
 
 	synchronize
@@ -177,11 +200,13 @@ feature -- Status setting
 			if not is_updating_tests then
 				is_updating_tests := True
 				if is_project_initialized then
-					old_class_map := test_class_map
-					create test_class_map.make (old_class_map.count)
-					locators.do_all (agent {!EIFFEL_TEST_CLASS_LOCATOR_I}.locate_classes (Current))
-					remove_old_classes
-					old_class_map := Void
+					if eiffel_project.successful then
+						old_class_map := test_class_map
+						create test_class_map.make (old_class_map.count)
+						locators.do_all (agent {!EIFFEL_TEST_CLASS_LOCATOR_I}.locate_classes (Current))
+						remove_old_classes
+						old_class_map := Void
+					end
 				else
 					if not test_class_map.is_empty then
 						test_routine_map.wipe_out
@@ -196,6 +221,32 @@ feature -- Status setting
 	synchronize_with_class (a_class: !EIFFEL_CLASS_I) is
 			-- <Precursor>
 		do
+		end
+
+feature {NONE} -- Status setting
+
+	update_root_class is
+			--
+		local
+			l_system: SYSTEM_I
+			l_name: FILE_NAME
+			l_file: KL_TEXT_OUTPUT_FILE
+		do
+			if is_project_initialized then
+				create l_name.make_from_string (eiffel_project.project_directory.eifgens_cluster_path)
+				l_name.extend (root_writer.class_name.as_lower)
+				l_name.add_extension ("e")
+				create l_file.make (l_name)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					root_writer.write_source (l_file, {!DS_LINEAR [!EIFFEL_CLASS_I]} #? test_class_map.keys)
+					l_file.close
+					l_system := eiffel_project.system.system
+					if not l_system.is_explicit_root (root_writer.class_name, root_writer.root_feature_name) then
+						l_system.add_explicit_root (Void, root_writer.class_name, root_writer.root_feature_name)
+					end
+				end
+			end
 		end
 
 feature -- Element change
@@ -397,13 +448,13 @@ feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation
 					create l_file.make (a_class.file_name)
 					l_file.open_read
 					if l_file.is_open_read then
-						create l_parser.make
-						l_parser.parse (l_file)
-						if l_parser.error_count = 0 then
-							l_ast := l_parser.root_node
-						else
-							error_handler.wipe_out
+						check
+							error_handler_empty: error_handler.error_list.is_empty and
+								error_handler.warning_list.is_empty
 						end
+						eiffel_parser.parse (l_file)
+						l_ast := eiffel_parser.root_node
+						error_handler.wipe_out
 						l_file.close
 					end
 				end
@@ -477,6 +528,20 @@ feature {NONE} -- Factory
 			-- `Result': new {EIFFEL_TEST_I} instance
 		do
 			create {EIFFEL_TEST} Result.make (a_routine_name, class_name (a_class.eiffel_class))
+		end
+
+feature {NONE} -- Implementation
+
+	conf_factory: CONF_COMP_FACTORY
+			-- Factory for creating system items
+		once
+			create Result
+		end
+
+	root_writer: EIFFEL_TEST_ANCHOR_ROOT_SOURCE_WRITER
+			-- Source writer for creating test class list
+		once
+			create Result
 		end
 
 end

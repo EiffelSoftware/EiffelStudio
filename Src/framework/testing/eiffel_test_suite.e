@@ -28,10 +28,14 @@ feature {NONE} -- Initialization
 			l_project_factory: SHARED_EIFFEL_PROJECT
 			l_project: !E_PROJECT
 		do
+				-- Create registrar
+			create processor_registrar.make
+
 				-- Create events
-			create executor_launched_event
-			create factory_launched_event
+			create processor_launched_event
+			create processor_proceeded_event
 			create processor_finished_event
+			create processor_stopped_event
 
 			create l_project_factory
 			l_project ?= l_project_factory.eiffel_project
@@ -45,13 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_executor: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
-			-- <Precursor>
-		once
-
-		end
-
-	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR_I [!EIFFEL_TEST_PROCESSOR_I [ANY]]
+	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR
 			-- <Precursor>
 
 feature -- Query
@@ -78,16 +76,24 @@ feature -- Status report
 	count_failing: NATURAL
 			-- <Precursor>
 
-feature -- Status settings
+feature -- Status setting
 
-	run_list (a_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
+	synchronize_processors
 			-- <Precursor>
 		do
+			processor_registrar.processors.do_all (
+				agent (a_proc: !EIFFEL_TEST_PROCESSOR_I)
+					do
+						if a_proc.is_idle then
+							a_proc.proceed
+						end
+					end)
 		end
 
-	create_tests (a_type: !TYPE [!EIFFEL_TEST_FACTORY_I [EIFFEL_TEST_CONFIGURATION_I]]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
+	launch_processor (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- <Precursor>
 		do
+
 		end
 
 feature -- Basic functionality
@@ -100,19 +106,16 @@ feature -- Basic functionality
 
 feature -- Events
 
-	executor_launched_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; executor: !EIFFEL_TEST_EXECUTOR_I]]
+	processor_launched_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; factory: !EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]]
 			-- <Precursor>
 
-	factory_launched_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; factory: !EIFFEL_TEST_FACTORY_I [EIFFEL_TEST_CONFIGURATION_I]]]
+	processor_proceeded_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_proceeded_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
+	processor_finished_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_finished_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
-			-- <Precursor>
-
-	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I [ANY]]]
+	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I]]
 			-- <Precursor>
 
 

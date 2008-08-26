@@ -39,7 +39,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	last_invocation_response: ?TEST_INVOKATION_RESPONSE
+	last_invocation_response: ?TEST_INVOCATION_RESPONSE
 			-- Response last produced by `safe_execute'
 
 feature -- Status setting
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			l_old: PLAIN_TEXT_FILE
 			l_excpt: !EXCEPTION
 			l_type, l_rec, l_tag, l_trace: !STRING
-			l_texcpt: !TEST_INVOKATION_EXCEPTION
+			l_texcpt: !TEST_INVOCATION_EXCEPTION
 		do
 			if not l_retry then
 				l_old := io.default_output

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	TEST_COLLECTION
+	EIFFEL_TEST_COLLECTION
 
 inherit
 	EIFFEL_TEST_COLLECTION_I

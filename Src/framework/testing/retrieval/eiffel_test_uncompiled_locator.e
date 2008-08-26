@@ -152,6 +152,10 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			create l_file.make (a_class.file_name)
 			l_file.open_read
 			if l_file.is_open_read then
+				check
+					error_handler_empty: error_handler.error_list.is_empty and
+								error_handler.warning_list.is_empty
+				end
 				inheritance_parser.parse (l_file)
 				create l_list.make (inheritance_ast_factory.ancestors.count)
 				l_cursor := inheritance_ast_factory.ancestors.new_cursor

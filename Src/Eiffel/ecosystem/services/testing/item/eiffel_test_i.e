@@ -37,7 +37,7 @@ feature -- Access
 		deferred
 		end
 
-	last_outcome: !EIFFEL_TEST_OUTCOME_I
+	last_outcome: !TEST_OUTCOME
 			-- Last test result if `Current' has been tested
 		require
 			usable: is_interface_usable
@@ -127,7 +127,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			-- `a_executor': Executor set to run `Current'.
 		require
 			usable: is_interface_usable
-			not_queued_or_running: not (is_queued or is_running)
+			not_active: not (is_queued or is_running)
 		deferred
 		ensure
 			queued: is_queued
@@ -148,10 +148,10 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			-- Set `is_queued' and `is_running' to False.
 		require
 			usable: is_interface_usable
-			queued_or_running: is_queued or is_running
+			active: is_queued or is_running
 		deferred
 		ensure
-			not_queued_or_running: not (is_queued or is_running)
+			not_active: not (is_queued or is_running)
 		end
 
 	add_outcome (a_outcome: like last_outcome)
@@ -160,11 +160,12 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			-- `a_outcome': Outcome to be added to the end of `outcomes'.
 		require
 			usable: is_interface_usable
+			active: is_queued or is_running
 		deferred
 		ensure
 			outcome_available: is_outcome_available
 			a_outcome_last: last_outcome = a_outcome
-			not_queued_or_running: not (is_queued or is_running)
+			not_active: not (is_queued or is_running)
 		end
 
 end

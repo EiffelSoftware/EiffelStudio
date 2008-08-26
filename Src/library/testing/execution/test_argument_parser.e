@@ -10,7 +10,7 @@ class
 	TEST_ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_OPTION_PARSER
+	ARGUMENT_MULTI_PARSER
 		rename
 			make as make_parser
 		redefine
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			make_parser (False, False)
+			make_parser (False, False, False)
 			set_use_separated_switch_values (True)
 			set_show_switch_arguments_inline (True)
 		end
@@ -63,17 +63,6 @@ feature -- Access
 			result_not_empty: not Result.is_empty
 		end
 
-	id_option: !STRING
-			-- Identifier
-		require
-			successful: successful
-			has_id_option: has_id_option
-		do
-			Result ?= option_of_name (id_switch).value
-		ensure
-			result_not_empty: not Result.is_empty
-		end
-
 feature -- Status report
 
 	has_port_option: BOOLEAN
@@ -92,12 +81,6 @@ feature -- Status report
 			-- Was output switch provided?
 		do
 			Result := has_option (output_switch)
-		end
-
-	has_id_option: BOOLEAN
-			-- Was id switch provided?
-		do
-			Result := has_option (id_switch)
 		end
 
 feature {NONE} -- Access
@@ -123,17 +106,14 @@ feature {NONE} -- Access
 				"File name (WARNING: any existing file will be overwritten)", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (output_switch,
 				"Add test output to result", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (id_switch,
-			    "Add identifier to output", True, False, "name",
-			    "Name for identifier", False))
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- <Precursor>
 		once
 			create Result.make (2)
-			Result.extend (create {ARGUMENT_GROUP}.make (<< switch_of_name (port_switch), switch_of_name (id_switch), switch_of_name (output_switch) >>, True))
-			Result.extend (create {ARGUMENT_GROUP}.make (<< switch_of_name (file_switch), switch_of_name (id_switch), switch_of_name (output_switch) >>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<< switch_of_name (port_switch), switch_of_name (output_switch) >>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<< switch_of_name (file_switch), switch_of_name (output_switch) >>, False))
 		end
 
 	name: STRING = "eiffel_test_interpreter"
@@ -149,9 +129,6 @@ feature {NONE} -- Option names
 
 	file_switch: STRING = "f|file"
 			-- Switch making interpreter print output to a file
-
-	id_switch: STRING = "i|identifier"
-			-- Switch for identifying interpreter
 
 	output_switch: STRING = "o|output"
 			-- Switch telling interpreter to print tests output along with results

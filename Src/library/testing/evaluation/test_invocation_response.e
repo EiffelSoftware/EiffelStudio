@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_INVOKATION_RESPONSE
+	TEST_INVOCATION_RESPONSE
 
 create
 	make_normal, make_exceptional
@@ -43,7 +43,7 @@ feature -- Query
 
 feature -- Access
 
-	exception: !TEST_INVOKATION_EXCEPTION
+	exception: !TEST_INVOCATION_EXCEPTION
 			-- Exception thrown during the execution
 		require
 			exceptional: is_exceptional

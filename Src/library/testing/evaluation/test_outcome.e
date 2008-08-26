@@ -61,13 +61,13 @@ feature -- Access
 	date: !DATE_TIME
 			-- Date and time `Current' was retrieved
 
-	setup_response: ?TEST_INVOKATION_RESPONSE
+	setup_response: ?TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
 
-	test_response: ?TEST_INVOKATION_RESPONSE
+	test_response: ?TEST_INVOCATION_RESPONSE
 			-- Response from test stage
 
-	teardown_response: ?TEST_INVOKATION_RESPONSE
+	teardown_response: ?TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
 
 feature -- Status report

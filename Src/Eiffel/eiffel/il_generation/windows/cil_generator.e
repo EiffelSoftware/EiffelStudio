@@ -455,8 +455,6 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				compiled_classes_count := 0
-			variant
-				nb - i + 1
 			until
 				i > nb
 			loop
@@ -524,6 +522,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 		end
 
@@ -541,8 +541,6 @@ feature {NONE} -- Type description
 			from
 				i := classes.lower
 				nb := classes.upper
-			variant
-				nb - i + 1
 			until
 				i > nb
 			loop
@@ -585,6 +583,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 		end
 
@@ -603,8 +603,6 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-			variant
-				nb - i + 1
 			until
 				i > nb or j = 0
 			loop
@@ -633,6 +631,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 		end
 
@@ -659,8 +659,6 @@ feature {NONE} -- Type description
 						degree_output.put_start_degree (1, j)
 					end
 				end
-			variant
-				nb - i + 1
 			until
 				i > nb or j = 0
 			loop
@@ -700,6 +698,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 			if is_single_module then
 				degree_output.put_end_degree
@@ -729,8 +729,6 @@ feature {NONE} -- Type description
 						degree_output.put_start_degree (-1, j)
 					end
 				end
-			variant
-				nb - i + 1
 			until
 				i > nb or j = 0
 			loop
@@ -786,6 +784,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 			if is_single_module then
 				degree_output.put_end_degree
@@ -807,8 +807,6 @@ feature {NONE} -- Type description
 			from
 				i := classes.lower
 				nb := classes.upper
-			variant
-				nb - i + 1
 			until
 				i > nb
 			loop
@@ -835,6 +833,8 @@ feature {NONE} -- Type description
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 			if is_single_module then
 				degree_output.put_end_degree
@@ -888,8 +888,6 @@ feature {NONE} -- Sort
 				i := 1
 				nb := system_classes.capacity
 				l_is_one_module := is_single_module
-			variant
-				nb - i + 1
 			until
 				i > nb
 			loop
@@ -913,6 +911,8 @@ feature {NONE} -- Sort
 					end
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 
 			create ordered_classes.make (l_max_packet)
@@ -1051,8 +1051,6 @@ feature {NONE} -- Sort
 				i := 1
 				nb := system_classes.capacity
 				create Result.make (i, nb)
-			variant
-				nb - i + 1
 			until
 				i > nb
 			loop
@@ -1061,6 +1059,8 @@ feature {NONE} -- Sort
 					Result.force (class_c, class_c.topological_id)
 				end
 				i := i + 1
+			variant
+				nb - i + 1
 			end
 		ensure
 			Result_not_void: Result /= Void

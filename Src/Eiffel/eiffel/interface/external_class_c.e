@@ -1427,8 +1427,6 @@ feature {NONE} -- Implementation
 				from
 					n := a_value.count.min (16)
 					i := 1
-				variant
-					n - i + 1
 				until
 					i > n
 				loop
@@ -1447,6 +1445,8 @@ feature {NONE} -- Implementation
 						-- Bytes are encoded in big-endian order
 					l_int64 := l_int64 + h.to_integer_64 |<< ((i + (i & 1) |<< 1 - 2) * 4)
 					i := i + 1
+				variant
+					n - i + 1
 				end
 				($l_real64).memory_copy ($l_int64, 8)
 				create {REAL_VALUE_I} l_value.make_real_64 (l_real64)
@@ -1455,8 +1455,6 @@ feature {NONE} -- Implementation
 				from
 					n := a_value.count.min (8)
 					i := 1
-				variant
-					n - i + 1
 				until
 					i > n
 				loop
@@ -1475,6 +1473,8 @@ feature {NONE} -- Implementation
 						-- Bytes are encoded in big-endian order
 					l_int32 := l_int32 + h |<< ((i + (i & 1) |<< 1 - 2) * 4)
 					i := i + 1
+				variant
+					n - i + 1
 				end
 				($l_real32).memory_copy ($l_int32, 4)
 				create {REAL_VALUE_I} l_value.make_real_32 (l_real32)

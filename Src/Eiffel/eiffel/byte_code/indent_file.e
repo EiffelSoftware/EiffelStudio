@@ -185,8 +185,6 @@ feature
 				create s.make (3);
 				from
 					val := i;
-				variant
-					val + 1
 				until
 					val = 0
 				loop
@@ -194,6 +192,8 @@ feature
 					val := val // 8;
 					t := remain.out;
 					s.prepend (t);
+				variant
+					val + 1
 				end;
 				file_putstring (s);
 			end;

@@ -1,7 +1,0 @@
-A system has its own STRING class, excluding the one from EiffelBase.
-This STRING class does not inherit from TO_SPECIAL [CHARACTER], which
-causes a VEEN error.  After the compiler correctly detects this error,
-the missing inheritance clause is added to STRING.  The compiler then
-reports a bogus VGCC(5) error in class MISMATCH_CORRECTOR.
-
-Discovered in release 5.4.0610.

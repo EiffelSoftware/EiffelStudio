@@ -10,6 +10,9 @@ class
 
 inherit
 	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	SHARED_LOCALE
 

@@ -10,6 +10,12 @@ class
 
 inherit
 	CONF_CONSTANTS
+		export
+			{NONE} all
+			{ANY} prefix_separator
+		end
+
+	ANY
 
 feature -- Basic validity queries
 

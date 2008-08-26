@@ -57,27 +57,6 @@ feature -- Access
 			no_trailing_separator: Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
-feature {NONE} -- Access
-
-	frozen system_name: !STRING
-			-- Retrieves system executable name.
-		local
-			l_path: STRING
-			i: INTEGER
-		do
-			l_path := arguments.argument (0)
-			if l_path /= Void and then not l_path.is_empty then
-				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
-				if i > 0 then
-					Result ?= l_path.substring (i + 1, l_path.count)
-				else
-					Result ?= l_path
-				end
-			else
-				Result := default_system_name
-			end
-		end
-
 	frozen values: !LIST [!STRING]
 			-- List of arguments values that were not qualified with a switch (aka loose arguments).
 		require
@@ -110,6 +89,27 @@ feature {NONE} -- Access
 					do
 						Result := not ia_item.is_empty
 					end)
+		end
+
+feature {NONE} -- Access
+
+	frozen system_name: !STRING
+			-- Retrieves system executable name.
+		local
+			l_path: STRING
+			i: INTEGER
+		do
+			l_path := arguments.argument (0)
+			if l_path /= Void and then not l_path.is_empty then
+				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
+				if i > 0 then
+					Result ?= l_path.substring (i + 1, l_path.count)
+				else
+					Result ?= l_path
+				end
+			else
+				Result := default_system_name
+			end
 		end
 
 	non_switched_argument_validator: ?ARGUMENT_VALUE_VALIDATOR assign set_non_switched_argument_validator

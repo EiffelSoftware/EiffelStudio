@@ -801,6 +801,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			l_current: EV_WIDGET_I
 			l_pnd_finished: BOOLEAN
 			l_disable_default_processing: BOOLEAN
+			l_accel: EV_ACCELERATOR
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
@@ -819,8 +820,19 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						-- Propagate key event to top level window
 					l_top_level_window_imp ?= top_level_window_imp
 					l_current := Current
-					if l_top_level_window_imp /= Void and then l_top_level_window_imp /= l_current then
-						l_top_level_window_imp.key_press_actions.call ([key])
+					if l_top_level_window_imp /= Void then
+						if l_top_level_window_imp /= l_current then
+							l_top_level_window_imp.key_press_actions.call ([key])
+						end
+						l_accel := accelerator_from_key_code (key.code)
+						if l_accel /= Void then
+								-- We have found an accelerator to execute.
+								-- Add to the idle actions so that it gets fired during no activity.
+							application_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
+
+								-- Disable all default processing if an accelerator is being fired.
+							l_disable_default_processing := True
+						end
 					end
 				end
 				if application_imp.key_press_actions_internal /= Void then
@@ -838,6 +850,34 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					disable_default_processing
 				elseif is_tabable_from and then not l_disable_default_processing then
 					process_navigation_key (virtual_key)
+				end
+			end
+		end
+
+	accelerator_from_key_code (a_key_code: INTEGER): EV_ACCELERATOR
+			-- Return accelerator from current key pressed if any.
+		require
+			a_key_code_valid: a_key_code > 0
+		local
+			l_accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER_32]
+			l_accel: EV_ACCELERATOR
+			l_accel_imp: EV_ACCELERATOR_IMP
+			l_top_level_window_imp: like top_level_window_imp
+		do
+			l_top_level_window_imp := top_level_window_imp
+			if l_top_level_window_imp /= Void then
+				l_accel_list := l_top_level_window_imp.accel_list
+				if l_accel_list.count > 0 then
+						-- We have accelerators so we need to check if one needs to be fired.
+					l_accel_list.start
+					if not l_accel_list.after then
+						l_accel := l_accel_list.item_for_iteration
+						if l_accel /= Void then
+							l_accel_imp ?= l_accel.implementation
+								-- Search for an accelerator based on current key combinations.
+							Result := l_accel_list.item (l_accel_imp.hash_code_function (a_key_code, application_imp.ctrl_pressed, application_imp.alt_pressed, application_imp.shift_pressed))
+						end
+					end
 				end
 			end
 		end
@@ -970,7 +1010,8 @@ feature {NONE} -- Implementation
 			character_string: STRING_32
 			l_char: CHARACTER_32
 			l_key: EV_KEY
-			l_code: INTEGER
+			l_code: INTEGER_32
+			l_ignore_event: BOOLEAN
 		do
 			if character_code = 13 then
 					-- On Windows, the Enter key gives us "%R" but we need to
@@ -981,30 +1022,48 @@ feature {NONE} -- Implementation
 			end
 			create character_string.make(1)
 			character_string.append_character (l_char)
-			inspect character_code
+			inspect
+				character_code
 			when 8, 27, 127 then
 				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
 				-- are pressed as they are not displayable characters.
+				l_ignore_event := True
 			else
+					-- Process char event
+				l_ignore_event := False
+			end
+
+
+			l_code := {WEL_API}.vk_key_scan (l_char) & 0xFF
+				-- Mask out any control key values in the upper bit.
+			if l_code /= -1 and then valid_wel_code (l_code) then
+				if default_key_processing_handler /= Void then
+					create l_key.make_with_code (key_code_from_wel (l_code))
+				end
+					-- Ignore string event should an accelerator be valid.
+				if not l_ignore_event then
+					l_ignore_event := accelerator_from_key_code (key_code_from_wel (l_code)) /= Void
+				end
+			end
+
+				-- Check to see if default processing should be disabled.
+			if
+				(l_key /= Void and then default_key_processing_handler /= Void and then not default_key_processing_handler.item ([l_key])) or else
+					-- If we have a default key processing handler, check to see if we should disable default processing.
+				(not has_focus or ignore_character_code (character_code))
+					-- When we loose the focus or press return, we do not perform the
+					-- default processing since it causes a system beep.
+			then
+				disable_default_processing
+			end
+
+			if not l_ignore_event then
 				if application_imp.key_press_string_actions_internal /= Void then
 					application_imp.key_press_string_actions_internal.call ([interface, character_string])
 				end
 				if key_press_string_actions_internal /= Void then
 					key_press_string_actions_internal.call ([character_string])
 				end
-			end
-			if default_key_processing_handler /= Void then
-				l_code := {WEL_API}.vk_key_scan (l_char)
-				if l_code /= -1 and then valid_wel_code (l_code) then
-					create l_key.make_with_code (key_code_from_wel (l_code))
-					if not default_key_processing_handler.item ([l_key]) then
-						disable_default_processing
-					end
-				end
-			elseif not has_focus or ignore_character_code (character_code) then
-					-- When we loose the focus or press return, we do not perform the
-					-- default processing since it causes a system beep.
-				disable_default_processing
 			end
 		end
 

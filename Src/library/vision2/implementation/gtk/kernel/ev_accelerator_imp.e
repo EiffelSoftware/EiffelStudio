@@ -36,31 +36,6 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-feature {EV_GTK_WINDOW_IMP} -- Implementation
-
-	accel_id: NATURAL_32
-			-- Id of `Current' used for hash table lookup.
-		do
-			Result := generate_accel_id (key, control_required, alt_required, shift_required)
-		end
-
-	generate_accel_id (a_key: EV_KEY; a_control_required, a_alt_required, a_shift_required: BOOLEAN): NATURAL_32 is
-		do
-			Result := a_key.code.as_natural_32
-			Result := Result |<< 8
-			if a_control_required then
-				Result :=  Result + {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
-			end
-			Result := Result |<< 8
-			if a_alt_required then
-				Result := Result + {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM
-			end
-			Result := Result |<< 8
-			if a_shift_required then
-				Result := Result + {EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM
-			end
-		end
-
 feature -- Access
 
 	key: EV_KEY
@@ -149,4 +124,6 @@ indexing
 
 
 end -- class EV_ACCELERATOR_IMP
+
+
 

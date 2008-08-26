@@ -1,5 +1,6 @@
+
 indexing
-	description: "EiffelVision accelerator. Mswindows implementation."
+	description: "EiffelVision accelerator. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,151 +11,98 @@ class
 
 inherit
 	EV_ACCELERATOR_I
-		undefine
-			copy, is_equal
-		end
-
-	EV_WEL_KEY_CONVERSION
-		undefine
-			copy, is_equal
-		end
-
-	WEL_ACCELERATOR
-		rename
-			make as wel_make,
-			key as wel_key,
-			set_key as wel_set_key
-		end
-
-	WEL_ACCELERATOR_FLAG_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
-	WEL_BIT_OPERATIONS
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
-	EV_ID_IMP
-		undefine
-			copy, is_equal
+		redefine
+			interface
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
-			-- Create `Current' with interface `an_interface'.
+			-- Connect interface.
 		do
 			base_make (an_interface)
-			make_id
-			wel_make (key_code_to_wel ((create {EV_KEY}).code), id, Fvirtkey)
+			create key
 		end
 
 	initialize is
-			-- Initialize `Current'.
+			-- Setup `Current'
 		do
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	key: EV_KEY is
-			-- `Result' is key used by `Current' key combination.
-		do
-			create Result.make_with_code (key_code_from_wel (wel_key))
-		end
+	key: EV_KEY
+			-- Representation of the character that must be entered
+			-- by the user. See class EV_KEY_CODE
 
-	shift_required: BOOLEAN is
+	shift_required: BOOLEAN
 			-- Must the shift key be pressed?
-		do
-			Result := flag_set (flags, Fshift)
-		end
 
-	alt_required: BOOLEAN is
+	alt_required: BOOLEAN
 			-- Must the alt key be pressed?
-		do
-			Result := flag_set (flags, Falt)
-		end
 
-	control_required: BOOLEAN is
+	control_required: BOOLEAN
 			-- Must the control key be pressed?
-		do
-			Result := flag_set (flags, Fcontrol)
-		end
 
 feature -- Element change
 
 	set_key (a_key: EV_KEY) is
-			-- Set `a_key_code' as new key that has to be pressed.
+			-- Set `a_key' as new key that has to be pressed.
 		do
-			wel_set_key (key_code_to_wel (a_key.code))
+			key := a_key.twin
 		end
 
 	enable_shift_required is
 			-- "Shift" must be pressed for the key combination.
 		do
-			set_flags (set_flag (flags, Fshift))
+			shift_required := True
 		end
 
 	disable_shift_required is
-			-- Remove "Shift" from the key combination of `Current'.
+			-- "Shift" is not part of the key combination.
 		do
-			set_flags (clear_flag (flags, Fshift))
+			shift_required := False
 		end
 
 	enable_alt_required is
 			-- "Alt" must be pressed for the key combination.
 		do
-			set_flags (set_flag (flags, Falt))
+			alt_required := True
 		end
 
 	disable_alt_required is
-			-- Remove "Alt" from the key combination of `Current'.
+			-- "Alt" is not part of the key combination.
 		do
-			set_flags (clear_flag (flags, Falt))
+			alt_required := False
 		end
 
 	enable_control_required is
 			-- "Control" must be pressed for the key combination.
 		do
-			set_flags (set_flag (flags, Fcontrol))
+			control_required := True
 		end
 
 	disable_control_required is
-			-- Remove "Control" from the key combination of `Current'.
+			-- "Control" is not part of the key combination.
 		do
-			set_flags (clear_flag (flags, Fcontrol))
+			control_required := False
 		end
 
 feature {NONE} -- Implementation
 
-	id4: INTEGER is
-			-- Integer representation of key combination.
-		do
-			Result := key.code
-			if control_required then
-				Result := Result + 2048
-			end
-			if alt_required then
-				Result := Result + 1024
-			end
-			if shift_required then
-				Result := Result + 512
-			end
-		end
+	interface: EV_ACCELERATOR
+		-- Interface object of `Current'
+
+feature {NONE} -- Implementation
 
 	destroy is
-			-- Destroy `Current'.
+			-- Free resources of `Current'
 		do
-			destroy_item
+			key := Void
 			set_is_destroyed (True)
 		end
 
@@ -169,8 +117,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_ACCELERATOR_IMP
-

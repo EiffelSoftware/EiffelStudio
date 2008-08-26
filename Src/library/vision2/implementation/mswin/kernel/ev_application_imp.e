@@ -92,7 +92,6 @@ feature {NONE} -- Initialization
 
 			create theme_window.make
 			create reusable_message.make
-			create duplicated_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
 
@@ -604,87 +603,25 @@ feature {NONE} -- Implementation
 		require
 			msg_not_void: msg /= Void
 		local
-			focused_window: like window_with_focus
+			l_process_events: BOOLEAN
 		do
 			if msg.last_boolean_result then
 				if msg.quit then
 					set_is_destroyed (True)
 				else
-
-					focused_window := window_with_focus
-					if focused_window /= Void and then focused_window.exists then
-						if is_dialog (focused_window.wel_item) then
-							msg.process_dialog_message (focused_window.wel_item)
-							if not msg.last_boolean_result then
-								process_window_message (msg, focused_window)
-							end
-						else
-							process_window_message (msg, focused_window)
-						end
-					else
-							-- No top window, simply dispatch message.
+					l_process_events := True
+					if window_with_focus /= Void and then window_with_focus.exists and then is_dialog (window_with_focus.wel_item) then
+							msg.process_dialog_message (window_with_focus.wel_item)
+							l_process_events := not msg.last_boolean_result
+								-- Only process events if the event was not a dialog message.
+					end
+					if l_process_events then
+							-- Dispatch message.
 						msg.translate
 						msg.dispatch
 					end
 				end
 			end
-		end
-
-	process_window_message (a_msg: WEL_MSG; a_window: EV_WINDOW_IMP) is
-			-- Process `a_msg' in `a_window'.
-		require
-			a_msg_not_void: a_msg /= Void
-			a_window_not_void: a_window /= Void
-			a_window_exists: a_window.exists
-		local
-			l_msg: WEL_MSG
-			l_f10_processed: BOOLEAN
-		do
-			l_msg := duplicated_message
-			if a_window.has_f10_accelerator and a_window.has_menu then
-					-- Test whether or not the F10 key was the reason for the call which
-					-- by default on Windows highlight the first menu entry. We use
-					-- `silly_main_window' for testing since no one has connected actions to it.
-				l_msg.copy (a_msg)
-				l_msg.translate_accelerator (silly_main_window, f10_accelerator_table)
-				if l_msg.last_boolean_result then
-						-- This was F10 because we cannot prevent Windows behavior for selecting the
-						-- first menu, so we will only process the accelerator message.
-					a_msg.translate_accelerator (a_window, a_window.accelerators)
-					check accelerator_processed: a_msg.last_boolean_result end
-					l_f10_processed := True
-				end
-			end
-
-			if not l_f10_processed then
-					-- Normal case, we first dispatch the message
-					-- and then we see if it matched one of our accelerator.
-				a_msg.translate
-				a_msg.dispatch
-					-- We need to check for window existence because the previous call might
-					-- have destroyed the window.
-				if a_window.exists and then a_window.accelerators /= Void then
-					a_msg.translate_accelerator (a_window, a_window.accelerators)
-				end
-			end
-		end
-
-	duplicated_message: WEL_MSG
-			-- To avoid creating too many duplicated WEL_MSG objects.
-
-	f10_accelerator_table: WEL_ACCELERATORS is
-			-- Create F10 accelerator. This is needed to see whether or not a received message
-			-- correspond to the F10 key or not.
-		local
-			l_accel: WEL_ACCELERATOR
-			l_array: WEL_ARRAY [WEL_ACCELERATOR]
-		once
-			create l_accel.make (vk_f10, 1, {WEL_ACCELERATOR_FLAG_CONSTANTS}.fvirtkey)
-			create l_array.make (1, l_accel.structure_size)
-			l_array.put (l_accel, 0)
-			create Result.make_with_array (l_array)
-		ensure
-			f10_accelerator_table_not_void: Result /= Void
 		end
 
 	internal_capture_type: CELL [INTEGER] is
@@ -803,7 +740,6 @@ feature {NONE} -- Externals
 
 invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
-	duplicated_message_not_void: duplicated_message /= Void
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 indexing

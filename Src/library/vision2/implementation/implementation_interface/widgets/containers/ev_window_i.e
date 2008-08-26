@@ -233,6 +233,11 @@ feature -- Status setting
 		deferred
 		end
 
+feature {EV_ANY_I} -- Access
+
+	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER_32]
+		-- Lookup table for accelerator access.
+
 feature {NONE} -- Implementation
 
 	internal_disable_border is

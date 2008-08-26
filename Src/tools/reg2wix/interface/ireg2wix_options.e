@@ -12,27 +12,24 @@ deferred class
 
 feature -- Access
 
-	reg_files: LINEAR [STRING] is
+	reg_files: !LINEAR [!STRING] is
 			-- List of registry files to process
 		require
 			can_query_options: can_query_options
 		deferred
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_items_attached: not Result.has (Void)
-			not_result_items_is_empty: Result.for_all (agent (a_item: STRING): BOOLEAN do Result := not a_item.is_empty end)
-			result_items_exists: Result.for_all (agent (a_item: STRING): BOOLEAN do Result := (create {RAW_FILE}.make (a_item)).exists end)
+			not_result_items_is_empty: Result.for_all (agent (a_item: !STRING): BOOLEAN do Result := not a_item.is_empty end)
+			result_items_exists: Result.for_all (agent (a_item: !STRING): BOOLEAN do Result := (create {RAW_FILE}.make (a_item)).exists end)
 		end
 
-	output_file_name: STRING is
+	output_file_name: !STRING is
 			-- Optional output file name
 		require
 			can_query_options: can_query_options
 			use_output_file_name: use_output_file_name
 		deferred
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 

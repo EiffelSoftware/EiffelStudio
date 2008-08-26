@@ -13,10 +13,7 @@ class
 inherit
 	ARGUMENT_MULTI_PARSER
 		rename
-			make as make_parser
-		export
-			{NONE} all
-			{ANY} successful, execute
+			make as make_multi_parser
 		end
 
 	KL_SHARED_FILE_SYSTEM
@@ -32,10 +29,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_parser (False, False, True)
-			set_use_separated_switch_values (True)
-			set_show_switch_arguments_inline (True)
-			set_loose_argument_validator (create {ARGUMENT_FILE_OR_DIRECTORY_VALIDATOR})
+			make_multi_parser (False, False)
+			set_non_switched_argument_validator (create {ARGUMENT_FILE_OR_DIRECTORY_VALIDATOR})
 		end
 
 feature -- Access
@@ -43,10 +38,10 @@ feature -- Access
 	files: DS_BILINEAR [STRING] is
 			-- List of files to resave
 		require
-			successful: successful
+			is_successful: is_successful
 		local
 			l_options: like values
-			l_result: DS_ARRAYED_LIST [STRING]
+			l_result: DS_ARRAYED_LIST [!STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -57,7 +52,7 @@ feature -- Access
 				end
 			end
 			create l_result.make (l_options.count)
-			l_options.do_all (agent l_result.force_last (?))
+			l_options.do_all (agent l_result.force_last)
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
@@ -67,10 +62,10 @@ feature -- Access
 	directories: DS_BILINEAR [STRING] is
 			-- List of directories to locate ecfs in
 		require
-			successful: successful
+			is_successful: is_successful
 		local
 			l_options: like values
-			l_result: DS_ARRAYED_LIST [STRING]
+			l_result: DS_ARRAYED_LIST [!STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -81,7 +76,7 @@ feature -- Access
 				end
 			end
 			create l_result.make (l_options.count)
-			l_options.do_all (agent l_result.force_last (?))
+			l_options.do_all (agent l_result.force_last)
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
@@ -91,32 +86,37 @@ feature -- Access
 	use_directory_recusion: BOOLEAN is
 			-- Indicates if directories should be recursively scanned
 		require
-			successful: successful
+			is_successful: is_successful
 		once
 			Result := has_option (recursive_switch)
 		end
 
 feature {NONE} -- Usage
 
-	loose_argument_name: STRING = "path"
-			-- Name of lose argument, used in usage information
+	non_switched_argument_name: !STRING = "path"
+			--  <Precursor>
 
-	loose_argument_description: STRING = "An Eiffel configuration file or a directory"
-			-- Description of lose argument, used in usage information
+	non_switched_argument_description: !STRING = "An Eiffel configuration file or a directory"
+			--  <Precursor>
 
-	loose_argument_type: STRING = "Eiffel configuration file/directory"
-			-- Type of lose argument, used in usage information.
-			-- A type is a short description of the argument. I.E. "Configuration File"
+	non_switched_argument_type: !STRING = "Eiffel configuration file/directory"
+			--  <Precursor>
 
-	name: STRING = "savecfg"
-			-- Full name of application
+	name: !STRING = "savecfg"
+			--  <Precursor>
 
-	version: STRING = "6.0"
-			-- Version number of application
+	version: !STRING
+			--  <Precursor>
+		once
+			create Result.make (5)
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_character ('.')
+			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+		end
 
 feature {NONE} -- Switches
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH] is
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (1)

@@ -42,11 +42,11 @@ feature {NONE} -- Execution
 			-- Starts application once all arguments have been parsed
 		require
 			a_options_attached: a_options /= Void
-			a_options_successful: a_options.successful
+			a_options_is_successful: a_options.is_successful
 		local
 			l_cursor: DS_BILINEAR_CURSOR [STRING]
 			l_files: DS_ARRAYED_LIST [STRING]
-			l_dir: DS_ARRAYED_LIST [STRING]
+			l_dirs: DS_ARRAYED_LIST [STRING]
 			l_eh: like error_handler
 			l_eprinter: ERROR_CUI_PRINTER
 		do
@@ -57,9 +57,9 @@ feature {NONE} -- Execution
 			l_files.append_last (scan_for_ecf_files (a_options.directories, a_options.use_directory_recusion))
 			if l_files.is_empty then
 					-- No files or directories, use current directory
-				create l_dir.make (1)
-				l_dir.force_left (file_system.current_working_directory)
-				l_files.append_last (scan_for_ecf_files (l_files, a_options.use_directory_recusion))
+				create l_dirs.make (1)
+				l_dirs.put_last (file_system.current_working_directory)
+				l_files.append_last (scan_for_ecf_files (l_dirs, a_options.use_directory_recusion))
 			end
 
 				-- Resave files

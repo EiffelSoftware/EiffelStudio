@@ -54,10 +54,10 @@
 				<exclude>/new_gui$</exclude>
 			</file_rule>
 			<visible class="ECOM_DOCUMENTATION"/>
-			<visible class="ECOM_TYPE_LIB_FIND_NAME_RESULT"/>
+			<visible class="ECOM_SAFE_ARRAY_BOUND" feature="make_by_pointer"/>
 			<visible class="ECOM_DLL_ENTRY"/>
 			<visible class="ECOM_CUST_DATA_ITEM"/>
-			<visible class="ECOM_SAFE_ARRAY_BOUND" feature="make_by_pointer"/>
+			<visible class="ECOM_TYPE_LIB_FIND_NAME_RESULT"/>
 		</cluster>
 	</target>
 </system>

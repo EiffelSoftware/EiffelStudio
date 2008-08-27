@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
 
-			if not l_parser.successful then
+			if not l_parser.is_successful then
 				(create {EXCEPTIONS}).die (1)
 			end
 		end
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			-- Launch application from command line
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_definition_file, l_text: STRING
 		do

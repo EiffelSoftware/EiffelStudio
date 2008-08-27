@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="resave"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>

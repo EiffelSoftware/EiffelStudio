@@ -7,7 +7,7 @@
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<setting name="console_application" value="true"/>
-		<library name="arg_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="argument_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf"/>
 		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment.ecf"/>
 		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>

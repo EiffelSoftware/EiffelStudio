@@ -11,7 +11,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf">
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf">
 			<option warning="false">
 			</option>
 		</library>

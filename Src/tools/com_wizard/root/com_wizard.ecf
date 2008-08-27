@@ -15,7 +15,7 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="True"/>
 		<external_object location="htmlhelp.lib"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf"/>
 		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>

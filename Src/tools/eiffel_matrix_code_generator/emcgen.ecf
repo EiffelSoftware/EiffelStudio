@@ -19,7 +19,7 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="line_generation" value="false"/>
 		<setting name="multithreaded" value="false"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>

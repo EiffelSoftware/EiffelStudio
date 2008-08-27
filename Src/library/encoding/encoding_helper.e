@@ -29,17 +29,16 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			new_size: INTEGER
 			l_end_pos, l_start_pos: INTEGER
-			l_managed_data: MANAGED_POINTER
 		do
 			l_start_pos := 1
 			l_end_pos := a_string.count
-			create l_managed_data.make ((l_end_pos + 1) * 2)
+			create Result.make ((l_end_pos + 1) * 2)
 			nb := l_end_pos - l_start_pos + 1
 
 			new_size := (nb + 1) * 2
 
-			if l_managed_data.count < new_size  then
-				l_managed_data.resize (new_size)
+			if Result.count < new_size  then
+				Result.resize (new_size)
 			end
 
 			from
@@ -47,11 +46,12 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				l_managed_data.put_natural_16 (a_string.code (i + l_start_pos).to_natural_16, i * 2)
+				Result.put_natural_16 (a_string.code (i + l_start_pos).to_natural_16, i * 2)
 				i := i +  1
 			end
-			l_managed_data.put_natural_16 (0, i * 2)
-			Result := l_managed_data
+			Result.put_natural_16 (0, i * 2)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8 is
@@ -179,7 +179,7 @@ feature {NONE} -- Endian
 	string_32_switch_endian (a_str: STRING_32): STRING_32 is
 			-- Switch endian of `a_str' for both high and low bits.
 		require
-			a_str /= Void
+			a_str_not_void: a_str /= Void
 		local
 			l_code: NATURAL_32
 			i, l_count: INTEGER
@@ -206,7 +206,7 @@ feature {NONE} -- Endian
 			-- Switch endian of `a_str' for low bits.
 			-- High bits are cleaned.
 		require
-			a_str /= Void
+			a_str_not_void: a_str /= Void
 		local
 			l_code: NATURAL_32
 			i, l_count: INTEGER
@@ -229,8 +229,6 @@ feature {NONE} -- Endian
 
 	is_little_endian: BOOLEAN is
 			-- Is this system little endian?
-		local
-			l_p: PLATFORM
 		once
 			Result := (create {PLATFORM}).is_little_endian
 		end

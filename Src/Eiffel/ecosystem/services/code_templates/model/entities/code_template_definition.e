@@ -74,7 +74,6 @@ feature -- Element change
 			metadata := a_data
 		ensure
 			metadata_assigned: metadata = a_data
-			a_data_is_parented: a_data.is_parented
 			a_data_parent_set: a_data.parent = Current
 		end
 
@@ -86,7 +85,6 @@ feature -- Element change
 			declarations := a_decl
 		ensure
 			declarations_assigned: declarations = a_decl
-			declarations_is_parented: declarations.is_parented
 			declarations_parent_set: declarations.parent = Current
 		end
 
@@ -98,7 +96,6 @@ feature -- Element change
 			templates := a_templates
 		ensure
 			templates_assigned: templates = a_templates
-			templates_is_parented: templates.is_parented
 			templates_parent_set: templates.parent = Current
 		end
 

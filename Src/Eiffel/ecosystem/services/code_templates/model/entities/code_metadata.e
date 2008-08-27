@@ -87,7 +87,6 @@ feature -- Element change
 			categories := a_categories
 		ensure
 			categories_assigned: categories = a_categories
-			categories_is_parented: categories.is_parented
 			categories_parent_set: categories.parent = Current
 		end
 

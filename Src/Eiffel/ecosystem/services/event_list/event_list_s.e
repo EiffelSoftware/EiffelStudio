@@ -252,12 +252,6 @@ feature -- Query
 			Result := all_items.has (a_event_item)
 		end
 
-invariant
-	item_added_events_attached: item_added_event /= Void
-	item_removed_events_attached: item_removed_event /= Void
-	item_changed_events_attached: item_changed_event /= Void
-	item_adopted_event_attached: item_adopted_event /= Void
-
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

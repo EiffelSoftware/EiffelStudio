@@ -4,7 +4,7 @@
 		<root all_classes="true"/>
 		<option namespace="EiffelSoftware.Library">
 		</option>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

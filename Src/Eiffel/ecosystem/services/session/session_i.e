@@ -232,8 +232,6 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 
 invariant
 	window_id_positive: is_per_window implies window_id > 0
-	session_object_attached: session_object /= Void
-	value_changed_event_attached: value_changed_event /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

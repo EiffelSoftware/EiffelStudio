@@ -14,20 +14,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_switches: !ARRAY [?ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+	make (a_switches: !ARRAY [!ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
 			-- Initializes an argument group with a collection of switches.
 			--
 			-- `a_switches': The switches allowed in the group.
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
-			a_switches_contained_attached_items: not a_switches.has (Void)
 			a_switches_contained_unique_items: a_switches.for_all (
-				agent (ia_arr: !ARRAY [?ARGUMENT_SWITCH]; ia_item: ?ARGUMENT_SWITCH): BOOLEAN
+				agent (ia_arr: !ARRAY [!ARGUMENT_SWITCH]; ia_item: !ARGUMENT_SWITCH): BOOLEAN
 					do
 						Result := ia_arr.occurrences (ia_item) = 1
 					end  (a_switches, ?))
 		do
-			switches ?= a_switches
+			switches := a_switches
 			is_allowing_non_switched_arguments := a_allow_non_switched
 			is_hidden := False
 		ensure
@@ -36,15 +35,14 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_switches: !ARRAY [?ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+	make_hidden (a_switches: !ARRAY [!ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
 			-- Initializes an argument group, not to be shown in the usage, with a collection of switches.
 			--
 			-- `a_switches': The switches allowed in the group.
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
-			a_switches_contained_attached_items: not a_switches.has (Void)
 			a_switches_contained_unique_items: a_switches.for_all (
-				agent (ia_arr: !ARRAY [?ARGUMENT_SWITCH]; ia_item: ?ARGUMENT_SWITCH): BOOLEAN
+				agent (ia_arr: !ARRAY [!ARGUMENT_SWITCH]; ia_item: !ARGUMENT_SWITCH): BOOLEAN
 					do
 						Result := ia_arr.occurrences (ia_item) = 1
 					end  (a_switches, ?))

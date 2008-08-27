@@ -36,8 +36,6 @@ feature -- Access
 
 	frozen application_base: !STRING
 			-- The base location of application.
-		indexing
-			once_status: global
 		local
 			l_result: ?STRING
 			l_path: STRING
@@ -83,8 +81,6 @@ feature -- Access
 
 	frozen error_messages: !ARRAYED_LIST [!STRING]
 			-- Any error messages generated during parse and validation, if any.
-		indexing
-			once_status: global
 		once
 			create Result.make (0)
 		ensure
@@ -213,7 +209,45 @@ feature {NONE} -- Status report
 		end
 
 	has_parsed: BOOLEAN
-			-- Indicates of a parse has been performed
+			-- Indicates of a parse has been performed.
+
+	has_switch (a_name: !STRING): BOOLEAN
+			-- Determines if a switch exists.
+			--
+			-- `a_name': The name of the switch to determine existance for.
+			-- `Result': True if the switch exists; False otherwise.
+		local
+			l_switches: !like available_switches
+			l_cs: like is_case_sensitive
+			l_cursor: CURSOR
+			l_name: !STRING_8
+			l_match_name: !STRING_8
+		do
+			l_switches := available_switches
+			l_cursor := l_switches.cursor
+			l_cs := is_case_sensitive
+			if l_cs then
+				l_match_name := a_name
+			else
+				l_match_name := a_name.as_lower
+			end
+			from
+				l_switches.start
+			until
+				l_switches.after or Result
+			loop
+				if l_cs then
+					l_name := l_switches.item.id
+				else
+					l_name := l_switches.item.lower_case_id
+				end
+				Result := l_match_name.is_equal (l_name)
+				l_switches.forth
+			end
+			l_switches.go_to (l_cursor)
+		ensure
+			available_switches_unmoved: available_switches.cursor.is_equal (old available_switches.cursor)
+		end
 
 feature -- Status Setting
 
@@ -434,7 +468,7 @@ feature {NONE} -- Query
 					end)
 		end
 
-	switch_of_name (a_name: !STRING): ?ARGUMENT_SWITCH
+	switch_of_name (a_name: !STRING): !ARGUMENT_SWITCH
 			-- Retrieves a argument switch using its textual name.
 			--
 			-- `a_name': The name of the switch to retrieve.
@@ -442,12 +476,14 @@ feature {NONE} -- Query
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			has_switch_a_name: has_switch (a_name)
 		local
 			l_switches: !like available_switches
 			l_cs: like is_case_sensitive
 			l_cursor: CURSOR
 			l_name: !STRING
 			l_match_name: !STRING
+			l_found: BOOLEAN
 		do
 			l_switches := available_switches
 			l_cursor := l_switches.cursor
@@ -458,21 +494,22 @@ feature {NONE} -- Query
 			else
 				l_match_name := a_name.as_lower
 			end
-			from l_switches.start until l_switches.after or Result /= Void loop
+			from l_switches.start until l_switches.after or l_found loop
 				if l_cs then
 					l_name := l_switches.item.id
 				else
 					l_name := l_switches.item.lower_case_id
 				end
-				if l_match_name.is_equal (l_name) then
-					Result := l_switches.item
-				else
+				l_found := l_match_name.is_equal (l_name)
+				if not l_found then
 					l_switches.forth
 				end
 			end
+			Result := l_switches.item
 			l_switches.go_to (l_cursor)
 		ensure
-			result_is_requsted_switch: Result /= Void implies Result.id.is_equal (a_name)
+			available_switches_unmoved: available_switches.cursor.is_equal (old available_switches.cursor)
+			result_is_requsted_switch: Result.id.is_equal (a_name)
 		end
 
 feature {NONE} -- Helpers
@@ -520,7 +557,7 @@ feature -- Basic Operations
 					end
 				end
 			else
-				if switch_of_name (nologo_switch) /= Void and then not is_logo_information_suppressed then
+				if has_switch (nologo_switch) and then not is_logo_information_suppressed then
 					display_logo
 				end
 				if is_usage_displayed_on_error then
@@ -765,7 +802,7 @@ feature {NONE} -- Post Processing
 			is_successful: is_successful
 			has_parsed: has_parsed
 		do
-			is_logo_information_suppressed := switch_of_name (nologo_switch) = Void or else has_option (nologo_switch)
+			is_logo_information_suppressed := not has_switch (nologo_switch) or else has_option (nologo_switch)
 			is_help_usage_displayed := has_option (help_switch)
 		end
 
@@ -779,7 +816,7 @@ feature {NONE} -- Validation
 			l_switches: !like available_switches
 			l_options: ?like options_of_name
 			l_switch_groups: ?like switch_groups
-			l_switch_appurtenances: ?like switch_appurtenances
+			l_switch_appurtenances: ?like switch_dependencies
 			l_cursor: CURSOR
 			l_ocursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
@@ -789,7 +826,7 @@ feature {NONE} -- Validation
 			l_succ: BOOLEAN
 		do
 			l_switch_groups := switch_groups
-			l_switch_appurtenances := switch_appurtenances
+			l_switch_appurtenances := switch_dependencies
 			if l_switch_groups /= Void then
 				l_switch_groups := valid_switch_groups
 				if l_switch_groups.is_empty then
@@ -915,10 +952,10 @@ feature {NONE} -- Validation
 			-- Validate all switch appurtenances to ensure a specified switch has all its dependencies.
 		require
 			has_parsed: has_parsed
-			switch_appurtenances_attached: switch_appurtenances /= Void
+			switch_appurtenances_attached: switch_dependencies /= Void
 			not_option_values_is_empty: not option_values.is_empty
 		local
-			l_switch_appurtenances: like switch_appurtenances
+			l_switch_appurtenances: like switch_dependencies
 			l_appurtenances: ARRAY [ARGUMENT_SWITCH]
 			l_appurtenance: ARGUMENT_SWITCH
 			l_option: ARGUMENT_SWITCH
@@ -927,7 +964,7 @@ feature {NONE} -- Validation
 			l_count: INTEGER
 			i: INTEGER
 		do
-			l_switch_appurtenances := switch_appurtenances
+			l_switch_appurtenances := switch_dependencies
 			l_options := option_values
 
 			l_cursor := l_options.cursor
@@ -1045,7 +1082,7 @@ feature {NONE} -- Validation
 		require
 			a_group_attached: a_group /= Void
 		local
-			l_switch_appurtenances: ?like switch_appurtenances
+			l_switch_appurtenances: ?like switch_dependencies
 			l_appurtenances: !ARRAY [!ARGUMENT_SWITCH]
 			l_switch: !ARGUMENT_SWITCH
 			l_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
@@ -1056,7 +1093,7 @@ feature {NONE} -- Validation
 		do
 			l_group_switches := a_group.switches
 			create l_switches.make_from_array (l_group_switches)
-			l_switch_appurtenances := switch_appurtenances
+			l_switch_appurtenances := switch_dependencies
 			if l_switch_appurtenances /= Void then
 				l_icount := l_group_switches.count
 				from i := 1 until i > l_icount loop
@@ -1425,8 +1462,6 @@ feature {NONE} -- Usage
 
 	frozen command_option_configurations: ?ARRAYED_LIST [!STRING]
 			-- Command line option configuration string (to display in usage).
-		indexing
-			once_status: global
 		local
 			l_groups: ?like switch_groups
 			l_group: ARGUMENT_GROUP
@@ -1457,8 +1492,9 @@ feature {NONE} -- Usage
 					if not l_group.is_hidden then
 						l_switches := create {ARRAYED_LIST [!ARGUMENT_SWITCH]}.make_from_array (l_group.switches)
 							-- Add nologo switch, if not already added
-						l_switch := switch_of_name (nologo_switch)
-						if l_switch /= Void then
+
+						if has_switch (nologo_switch) then
+							l_switch := switch_of_name (nologo_switch)
 							if not l_switches.has (l_switch) then
 								l_switches.extend (l_switch)
 							end
@@ -1500,7 +1536,7 @@ feature {NONE} -- Usage
 		require
 			a_group_equals_a_src_group: a_add_appurtenances implies a_group = a_src_group
 		local
-			l_appurtenances: like switch_appurtenances
+			l_appurtenances: like switch_dependencies
 			l_use_separated: like is_using_separated_switch_values
 			l_cursor: CURSOR
 			l_switch: !ARGUMENT_SWITCH
@@ -1512,7 +1548,7 @@ feature {NONE} -- Usage
 			l_add_switch: BOOLEAN
 		do
 			if not a_group.is_empty then
-				l_appurtenances := switch_appurtenances
+				l_appurtenances := switch_dependencies
 
 				l_prefix := switch_prefixes[1]
 				l_use_separated := is_using_separated_switch_values
@@ -1618,8 +1654,6 @@ feature {NONE} -- Switches
 
 	frozen available_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch.
-		indexing
-			once_status: global
 		local
 			l_switches: ?like switches
 			l_switch: !ARGUMENT_SWITCH
@@ -1644,8 +1678,6 @@ feature {NONE} -- Switches
 
 	frozen available_visible_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available visible (not hidden) switch.
-		indexing
-			once_status: global
 		local
 			l_switches: !like available_switches
 			l_switch: !ARGUMENT_SWITCH
@@ -1683,9 +1715,9 @@ feature {NONE} -- Switches
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	switch_appurtenances: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
+	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
 			-- Switch appurtenances (dependencies)
-			-- Note: Siwtch appurtenances are implictly added to a group where a switch is present.
+			-- Note: Switch appurtenances are implictly added to a group where a switch is present.
 		do
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty

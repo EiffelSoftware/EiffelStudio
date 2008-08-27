@@ -16,10 +16,10 @@ inherit
 			make as make_parser
 		export
 			{NONE} all
-			{ANY} execute, executed, successful
+			{ANY} execute, has_executed, is_successful
 		redefine
 			switch_groups,
-			switch_appurtenances,
+			switch_dependencies,
 			post_process_arguments
 		end
 
@@ -38,8 +38,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize parser
 		do
-			make_parser (False, False)
-			set_show_switch_arguments_inline (True)
+			make_parser (False)
+			set_is_usage_displayed_on_error (False)
+			set_is_showing_argument_usage_inline (True)
 		end
 
 feature -- Access
@@ -47,7 +48,7 @@ feature -- Access
 	show_graphical_wizard: BOOLEAN
 			-- Indicates if the graphical user interface should be shown
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (graphical_switch)
 		end
@@ -55,7 +56,7 @@ feature -- Access
 	generate_for_client: BOOLEAN
 			-- Indicates if code for and Eiffel client should be generated
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (client_switch)
 		end
@@ -63,7 +64,7 @@ feature -- Access
 	generate_for_server: BOOLEAN
 			-- Indicates if code for and Eiffel server should be generated
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (server_switch)
 		end
@@ -71,7 +72,7 @@ feature -- Access
 	library_definition: STRING
 			-- Library definition file
 		require
-			successful: successful
+			successful: is_successful
 			generating_from_library: generate_for_client or generate_for_server
 		local
 			l_opt: ARGUMENT_OPTION
@@ -92,7 +93,7 @@ feature -- Access
 	use_destination_folder: BOOLEAN
 			-- Indicates if an alternative destination path should be used
 		require
-			successful: successful
+			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (destination_switch)
@@ -101,7 +102,7 @@ feature -- Access
 	destination: STRING
 			-- Location to generated code with
 		require
-			successful: successful
+			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
 			use_destination_folder: use_destination_folder
 		once
@@ -119,7 +120,7 @@ feature -- Access
 	backup_files: BOOLEAN
 			-- Indicates if existing files should be backed up
 		require
-			successful: successful
+			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (backup_switch)
@@ -128,7 +129,7 @@ feature -- Access
 	clean_up_destination: BOOLEAN
 			-- Indicates if destination folder should be cleaned prior to generation
 		require
-			successful: successful
+			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (cleanup_switch)
@@ -137,7 +138,7 @@ feature -- Access
 	out_of_process: BOOLEAN
 			-- Indicates if an out of process components should be generated or accessed
 		require
-			successful: successful
+			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (out_of_process_switch)
@@ -146,7 +147,7 @@ feature -- Access
 	use_custom_marshaller: BOOLEAN
 			-- Indicates if a Eiffel server should use a custom marhsaller library
 		require
-			successful: successful
+			successful: is_successful
 			generate_for_server: generate_for_server
 		once
 			Result := has_option (out_of_process_switch)
@@ -155,7 +156,7 @@ feature -- Access
 	add_to_eiffel_project: BOOLEAN
 			-- Indicate if user wants to add a COM interface to an existing project
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (add_to_project_switch)
 		end
@@ -163,7 +164,7 @@ feature -- Access
 	eiffel_configuration_file: STRING
 			-- Path to an Eiffel project file
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 		once
 			Result := option_of_name (add_to_project_switch).value
@@ -176,7 +177,7 @@ feature -- Access
 	eiffel_target: STRING
 			-- Target found in `eiffel_configuration_file'
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 		once
 			Result := option_of_name (target_switch).value
@@ -188,7 +189,7 @@ feature -- Access
 	use_eiffel_project_path: BOOLEAN
 			-- Indicates if user wants to use a custom Eiffel project path
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 		once
 			Result := has_option (eiffel_project_path_switch)
@@ -197,7 +198,7 @@ feature -- Access
 	eiffel_project_path: STRING
 			-- Path to an Eiffel project file
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 			use_eiffel_project_path: use_eiffel_project_path
 		once
@@ -211,7 +212,7 @@ feature -- Access
 	use_facade_class: BOOLEAN
 			-- Indicates if a facade class should be used
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 		once
 			Result := has_option (facade_switch)
@@ -220,7 +221,7 @@ feature -- Access
 	facade_class: STRING
 			-- Facade class used to expose features from COM
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 			use_facade_class: use_facade_class
 		once
@@ -233,7 +234,7 @@ feature -- Access
 	use_facade_cluster: BOOLEAN
 			-- Indicates if a facade class cluster should be used
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 			use_facade_class: use_facade_class
 		once
@@ -243,7 +244,7 @@ feature -- Access
 	facade_class_cluster: STRING
 			-- Cluster containing `facade_class'
 		require
-			successful: successful
+			successful: is_successful
 			add_to_eiffel_project: add_to_eiffel_project
 			use_facade_class: use_facade_class
 			use_facade_cluster: use_facade_cluster
@@ -257,7 +258,7 @@ feature -- Access
 	compile_c_code: BOOLEAN
 			-- Indicate if generated C/C++ code should be compiled
 		require
-			successful: successful
+			successful: is_successful
 			generating: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (compile_c_switch) or compile_eiffel_code
@@ -266,7 +267,7 @@ feature -- Access
 	compile_eiffel_code: BOOLEAN
 			-- Indicate if generated Eiffel code should be compiled
 		require
-			successful: successful
+			successful: is_successful
 			generating: generate_for_client or generate_for_server or add_to_eiffel_project
 		once
 			Result := has_option (compile_eiffel_switch)
@@ -279,9 +280,9 @@ feature {NONE} -- Post Processing
 			-- Set an error if an switch or value does not adhear to any custom rules.
 		do
 			Precursor {ARGUMENT_OPTION_PARSER}
-			if not suppress_logo then
+			if not is_logo_information_suppressed then
 					-- No logo for graphical version of wizard.
-				suppress_logo := show_graphical_wizard
+				is_logo_information_suppressed := show_graphical_wizard
 			end
 		end
 
@@ -290,7 +291,7 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
 
-	version: STRING_8 is
+	version: !STRING_8 is
 			-- Version number of application
 		do
 			create Result.make (10)
@@ -313,7 +314,7 @@ feature {NONE} -- Usage
 			Result := 0000
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+	switches: ?ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		local
 			l_ecf_switch: STRING
@@ -323,11 +324,10 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (client_switch, "Build an Eiffel client to access a COM component using a specified library.", False, False, "LIBRARY", "A Type Library (*.tlb), IDL File (*.idl) or another COM server component (*.exe, *.ocx, *.dll, ...).", False))
 
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (add_to_project_switch, "Add a COM interface to an existing Eiffel project.", False, False, "ECF_PATH", "Path to an Eiffel configuration file.", False))
-			l_ecf_switch := Result.last.name
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (target_switch, "Eiffel configuration file target to merged the COM project into, used with -" + l_ecf_switch, False, False, "TARGET", "A target found in the specified Eiffel configuration file.", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (facade_switch, "Expose features from <CLASS_NAME> to COM, used with -" + l_ecf_switch, False, False, "CLASS_NAME", "An Eiffel class in the specified project.", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (cluster_switch, "Cluster containing facade class name, used with -" + l_ecf_switch, False, False, "CLUSTER_NAME", "A cluster found in the specified Eiffel project.", False))
-			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (eiffel_project_path_switch, "Path to the Eiffel project,  used with -" + l_ecf_switch, True, False, "PROJECT_PATH", "Path to an Eiffel project root folder, where the EIFGENs folder is located.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (target_switch, "Eiffel configuration file target to merged the COM project into, used with -add", False, False, "TARGET", "A target found in the specified Eiffel configuration file.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (facade_switch, "Expose features from <CLASS_NAME> to COM, used with -add", False, False, "CLASS_NAME", "An Eiffel class in the specified project.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (cluster_switch, "Cluster containing facade class name, used with -add", False, False, "CLUSTER_NAME", "A cluster found in the specified Eiffel project.", False))
+			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (eiffel_project_path_switch, "Path to the Eiffel project,  used with -add", True, False, "PROJECT_PATH", "Path to an Eiffel project root folder, where the EIFGENs folder is located.", False))
 
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (destination_switch, "Generates files into an alternative folder.", True, False, "DESTINATION_PATH", "Path to generated files into.", False))
 
@@ -336,14 +336,14 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (out_of_process_switch, "Access or build an out-of-process (exe) component.%NBy default in-process component DLLs are accessed or built.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (marshaller_switch, "Build custom marshaller DLL for COM Eiffel servers.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (compile_c_switch, "Compiles generated C/C++ code.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (compile_eiffel_switch, "Compiles generated Eiffel code. Implies -" + Result.last.name, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (compile_eiffel_switch, "Compiles generated Eiffel code. Implies -compilec", True, False))
 
 			Result.extend (create {ARGUMENT_SWITCH}.make_hidden (graphical_switch, "Display graphical wizard", False, False))
 		ensure then
 			result_attached: Result /= Void
 		end
 
-	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
+	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP] is
 			-- Valid switch grouping
 		once
 			create Result.make (0)
@@ -355,7 +355,7 @@ feature {NONE} -- Usage
 			result_attached: Result /= Void
 		end
 
-	switch_appurtenances: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]
+	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH] is
 			-- Switch appurtenances (dependencies)
 			-- Note: Switch appurtenances are implictly added to a group where a switch is present
 		once
@@ -381,11 +381,11 @@ feature {NONE} -- Switches
 	cleanup_switch: STRING = "x|cleanup"
 	server_switch: STRING = "s|server"
 	cluster_switch: STRING = "u|cluster"
-	target_switch: STRINg = "t|target"
+	target_switch: STRING = "t|target"
 
 invariant
 	exclusive_options: -- I long for XOR to work correctly!
-		(successful and not display_help) implies
+		(is_successful and not is_help_usage_displayed) implies
 			(add_to_eiffel_project and not (show_graphical_wizard or generate_for_client or generate_for_server)) or
 			(show_graphical_wizard and not (add_to_eiffel_project or generate_for_client or generate_for_server)) or
 			(generate_for_client and not (add_to_eiffel_project or show_graphical_wizard or generate_for_server)) or

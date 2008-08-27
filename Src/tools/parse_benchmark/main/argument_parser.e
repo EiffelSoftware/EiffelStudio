@@ -148,7 +148,7 @@ feature {NONE} -- Basic Operations
 feature {NONE} -- Switch names
 
 	null_switch: !STRING = "n|null"
-	basic_switch: !STRING = "|bbasic"
+	basic_switch: !STRING = "b|basic"
 	lite_switch: !STRING = "l|lite"
 	roundtrip_switch: !STRING = "o|roundtrip"
 	all_switch: !STRING = "a|all"
@@ -159,12 +159,12 @@ feature {NONE} -- Switch names
 			-- Location switches
 
 	error_switch: STRING = "e|error"
-	disk_access_switch: STRING = "d|disk-access";
+	disk_access_switch: STRING = "d|disk-access"
 			-- Test related switches
 
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

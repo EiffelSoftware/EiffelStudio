@@ -57,7 +57,7 @@ feature -- Conversion
 				-- We accept conversion between the same encodings to optimize.
 			if a_from_code_page.is_equal (a_to_code_page) then
 				last_conversion_successful := True
-				last_converted_string := a_from_code_page
+				last_converted_string := a_from_string
 			else
 				if a_from_code_page.is_equal (utf8) then
 						-- UTF-8 to UTF-32

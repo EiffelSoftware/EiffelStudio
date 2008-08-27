@@ -16,8 +16,6 @@ inherit
 			interface
 		end
 
-	EV_GTK_KEY_CONVERSION
-
 create
 	make
 

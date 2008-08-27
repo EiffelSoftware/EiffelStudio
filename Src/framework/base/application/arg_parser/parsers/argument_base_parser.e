@@ -1348,8 +1348,8 @@ feature {NONE} -- Output
 			l_cursor := l_options.cursor
 			from l_options.start until l_options.after loop
 				if not l_options.item.is_hidden then
-					if l_options.item.has_short_name then
-						l_max_len := l_max_len.max (l_options.item.long_name.count + 4)
+					if is_using_unix_switch_style or else l_options.item.has_short_name then
+						l_max_len := l_max_len.max (l_options.item.long_name.count + 5)
 					else
 						l_max_len := l_max_len.max (l_options.item.long_name.count)
 					end
@@ -1357,7 +1357,7 @@ feature {NONE} -- Output
 				l_options.forth
 			end
 
-			create l_tabbed_nl.make_filled (' ', l_nl.count + tab_string.count + 2 + l_max_len)
+			create l_tabbed_nl.make_filled (' ', l_nl.count + tab_string.count + 1 + l_max_len)
 			l_tabbed_nl.insert_string (l_nl, 1)
 
 			l_def_prefix := switch_prefixes[1]
@@ -1373,9 +1373,11 @@ feature {NONE} -- Output
 				end
 
 				if l_opt.has_short_name then
-					l_arg_name := l_opt.short_name.out + " " + l_def_prefix.out + l_def_prefix.out + l_opt.long_name
+					l_arg_name := l_def_prefix.out + l_opt.short_name.out + " " + l_def_prefix.out + l_def_prefix.out + l_opt.long_name
+				elseif is_using_unix_switch_style then
+					l_arg_name := "   " + l_def_prefix.out + l_def_prefix.out + l_opt.long_name
 				else
-					l_arg_name := l_opt.long_name
+					l_arg_name := l_def_prefix.out + l_opt.long_name
 				end
 				if l_max_len > l_arg_name.count then
 					create l_name.make_filled (' ', l_max_len - l_arg_name.count)
@@ -1404,7 +1406,6 @@ feature {NONE} -- Output
 				l_desc.replace_substring_all (l_nl, l_tabbed_nl)
 
 				io.put_string (tab_string)
-				io.put_character (l_def_prefix)
 				io.put_string (l_name)
 				io.put_string (once ": ")
 				io.put_string (l_desc)

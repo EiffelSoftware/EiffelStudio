@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Set `code_page' with `a_code_page'
 			-- `a_code_page' should be valid, either it is from CODE_PAGE_CONSTANTS
 			-- or dynamically from i18n library.
-			-- Other names of code page/character set are not guarenteed valid for all platforms,
+			-- Other names of code page/character set are not guaranteed valid for all platforms,
 			-- though they would work on certain platforms.
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -37,7 +37,7 @@ feature -- Access
 			-- Code page/Character set name
 
 	last_converted_stream: STRING_8 is
-			-- Stream prepresentation of last converted string.
+			-- Stream representation of last converted string.
 		do
 			Result := encoding_i.last_converted_stream
 		ensure
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 	regular_encoding_imp: ENCODING_I is
-			-- Regular encoding implementation (Distinguashed from Unicode conversion)
+			-- Regular encoding implementation (Distinguished from Unicode conversion)
 		once
 			create {ENCODING_IMP}Result
 		end

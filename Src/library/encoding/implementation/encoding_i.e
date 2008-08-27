@@ -92,7 +92,7 @@ feature {ENCODING} -- Status report
 feature {NONE} -- Status report
 
 	is_valid_as_string_16 (a_string: STRING_GENERAL): BOOLEAN is
-			-- Check high 16 bit of any char in `a_string' is not zero.
+			-- Check high 16 bit of any char in `a_string' is zero.
 		local
 			i, nb: INTEGER_32
 			l_area: SPECIAL [CHARACTER_32]

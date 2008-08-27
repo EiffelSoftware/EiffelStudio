@@ -235,13 +235,13 @@ feature -- Element Change
 			result_type := type.adapted_in (class_type)
 
 			if not result_type.is_true_expanded and then not result_type.is_bit then
-				buffer.put_string ("*")
+				buffer.put_character ('*')
 				result_type.c_type.generate_access_cast (buffer)
 			else
 					-- We do not need to generate a cast since what we are computed is
 				-- already good.
 			end
-			buffer.put_string ("(")
+			buffer.put_character ('(')
 			buffer.put_string (cur);
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
@@ -251,11 +251,11 @@ feature -- Element Change
 
 						-- Generate following dispatch:
 						-- table [Actual_offset - base_offset]
-					buffer.put_string (" + ")
+					buffer.put_three_character (' ', '+', ' ')
 					buffer.put_string (table_name)
 					buffer.put_string ("[Dtype(")
 					buffer.put_string (cur)
-					buffer.put_string (") - ")
+					buffer.put_four_character (')', ' ', '-', ' ')
 					buffer.put_integer (array_index)
 					buffer.put_character (']')
 						-- Mark attribute offset table used.
@@ -280,7 +280,7 @@ feature -- Element Change
 				buffer.put_integer (rout_info.offset)
 				buffer.put_string (", Dtype(")
 				buffer.put_string (cur)
-				buffer.put_string("))")
+				buffer.put_two_character (')', ')')
 			else
 				buffer.put_string (" + RTWA(")
 				buffer.put_static_type_id (class_type.static_type_id)
@@ -288,9 +288,9 @@ feature -- Element Change
 				buffer.put_integer (feature_id)
 				buffer.put_string (", Dtype(")
 				buffer.put_string (cur)
-				buffer.put_string("))")
+				buffer.put_two_character (')', ')')
 			end;
-			buffer.put_string(")")
+			buffer.put_character(')')
 		end
 
 	replicated (in: INTEGER): FEATURE_I is

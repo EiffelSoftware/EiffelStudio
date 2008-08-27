@@ -426,15 +426,15 @@ function var_dump_global($refname) {
  */
 
 function book_doc_page_exists($a_title) {
-//	$nid = db_result(db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type IN ()", $a_title));
-	//$nid = db_result(db_query("SELECT nid FROM {node} WHERE title = '%s'", $a_title));
-	$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s')", $a_title);
+	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type IN ()", $a_title);
+	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type = 'doc' ", $a_title);
+	$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') ", $a_title);
 	if ($res === FALSE) {
-		drupal_set_message(t("TitleExists? [$a_title] = NO result" ),'status');
+		//drupal_set_message(t("TitleExists? [$a_title] = NO result" ),'status');
 		return FALSE;
 	} else {
 		$v = db_fetch_object($res);
-		drupal_set_message(t("TitleExists? [$a_title] = %nid", array('%nid' => $v->nid)),'status');
+		//drupal_set_message(t("TitleExists? [$a_title] = %nid", array('%nid' => $v->nid)),'status');
 		return $v->nid;
 	}
 }

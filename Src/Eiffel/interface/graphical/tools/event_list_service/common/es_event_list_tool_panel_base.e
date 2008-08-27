@@ -784,8 +784,8 @@ feature {NONE} -- UI manipulation
 			--
 			-- `a_enable': True to indicate there is content available, False otherwise
 		require
-			item_count_positive: a_enable implies item_count > 0
-			item_count_is_zero: not a_enable implies item_count = 0
+			item_count_positive: a_enable implies grid_events.row_count > 0
+			item_count_is_zero: not a_enable implies grid_events.row_count = 0
 		do
 		end
 

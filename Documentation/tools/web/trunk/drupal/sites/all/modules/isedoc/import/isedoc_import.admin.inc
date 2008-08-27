@@ -300,7 +300,6 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 			}
 
 			$j = strpos($line, ":", $i);
-//drupal_set_message(t("Line=$line is_reuse=$is_reuse i=$i j=$j ..."),'status');
 			$l_depth = substr($line, $i+1, 1 + ($j-1) -($i+1) );
 			$i = strpos($line, "]", $j+1);
 			$l_base_id = substr($line, $j+1, 1 + ($i-1) - ($j+1));
@@ -309,6 +308,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 			$line = fgets($fp);
 			$line = substr($line, 0, -1);
 
+//drupal_set_message(t("Line=$line is_reuse=$is_reuse ..."),'status');
 			$i = strpos($line, "!src=");
 			if ($i > 0) {
 				$l_src = $dn . "/". substr($line, $i+5) . ".wiki";
@@ -341,7 +341,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 					$info['baseid'] = $l_baseid;
 					$info['depth'] = $l_depth;
 
-					if ($dep > 0) {
+					if ($dep >= 0) {
 						$p_mlid = $node_ids[$l_depth - 1];
 					} else {
 						$p_mlid = $book_id;

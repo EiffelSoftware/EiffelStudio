@@ -181,17 +181,13 @@ function isedoc_import_form_import($form, &$form_state) {
 			//drupal_set_message(t("Importing files using index %i into bookid=%bookid", array ('%i' => $book_index_path, '%bookid' => $bookid)));
 
 			// a slow machine
-			if (!ini_get('safe_mode')) {
-				set_time_limit(0);
-			}
-			isedoc_import_with_index($dirpath,$book_index_path,$bookid);
-			$filename = file_check_location($dirpath .'/'. $origname, $dirpath);
-			if ($filename) {
-			}
+			if (!ini_get('safe_mode')) { set_time_limit(0); }
+
+			$nodes_count = isedoc_import_with_index($dirpath,$book_index_path,$bookid);
 
 			// report back on our progress
-			if (!empty($nodes)) {
-				drupal_set_message(t('Successfully imported: ') . theme('item_list', $nodes));
+			if ($nodes_count > 0) {
+				drupal_set_message(t('Successfully imported: %nb nodes', array ('%nb' => $nodes_count)));
 			}
 			else {
 				drupal_set_message(t('No files were imported.'));
@@ -287,19 +283,24 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 	$node_ids = array();
 	$dep = 0;
 	$is_reuse = 0;
+	$nodes_count = 0;
 
 	while (!feof($fp)) {
 		$node = NULL;
 		$line = fgets($fp);
 		$line = substr($line, 0, -1);
-		if (substr($line, 1, 1) == "@") {
-			$is_reuse = 1;
-		} else {
-			$is_reuse = 0;
-		}
 		$i = strpos($line, "[");
-		if ($i > 0) {
+		if ($i === FALSE) {
+			//drupal_set_message(t("Line=$line UNABLE TO FIND [ ..."),'status');
+		} else {
+			if (($i > 0) and (substr($line, $i-1, 1) == "@")) {
+				$is_reuse = 1;
+			} else {
+				$is_reuse = 0;
+			}
+
 			$j = strpos($line, ":", $i);
+//drupal_set_message(t("Line=$line is_reuse=$is_reuse i=$i j=$j ..."),'status');
 			$l_depth = substr($line, $i+1, 1 + ($j-1) -($i+1) );
 			$i = strpos($line, "]", $j+1);
 			$l_base_id = substr($line, $j+1, 1 + ($i-1) - ($j+1));
@@ -314,13 +315,13 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 
 				fputs($logfp, "#$dep: $l_title  [$l_src]\n");
 
-				if ($reuse == 1) {
-					$a_nid = book_doc_page_exists($info['title']);
-					if ($a_nid > 0) {
-						$node = node_load ($nid);
-					} else {
+				if ($is_reuse == 1) {
+					$a_nid = book_doc_page_exists($l_title);
+					if ($a_nid === FALSE) {
 						drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
 						$is_reuse = 0;
+					} else {
+						$node = node_load ($a_nid);
 					}
 					if (!$node) {
 						$is_reuse = 0;
@@ -354,6 +355,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 						drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 					} else {
 						$node = isedoc_create_doc_node_from ($info);
+						$nodes_count = $nodes_count + 1;
 						$l_mlid = isedoc_create_doc_outline_from ($node->nid, $info);
 						drupal_set_message(t(" -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 					}
@@ -370,7 +372,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 
 	fclose ($logfp);
 	fclose ($fp);
-
+	return $nodes_count;
 }
 
 function isedoc_file_info($fn, $is_full=FALSE) {
@@ -425,8 +427,16 @@ function var_dump_global($refname) {
 
 function book_doc_page_exists($a_title) {
 //	$nid = db_result(db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type IN ()", $a_title));
-	$nid = db_result(db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s')", $a_title));
-	return $nid;
+	//$nid = db_result(db_query("SELECT nid FROM {node} WHERE title = '%s'", $a_title));
+	$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s')", $a_title);
+	if ($res === FALSE) {
+		drupal_set_message(t("TitleExists? [$a_title] = NO result" ),'status');
+		return FALSE;
+	} else {
+		$v = db_fetch_object($res);
+		drupal_set_message(t("TitleExists? [$a_title] = %nid", array('%nid' => $v->nid)),'status');
+		return $v->nid;
+	}
 }
 
 function isedoc_book_get_books() {

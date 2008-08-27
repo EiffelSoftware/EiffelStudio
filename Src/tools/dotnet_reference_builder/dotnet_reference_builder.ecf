@@ -12,7 +12,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>

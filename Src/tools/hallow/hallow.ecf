@@ -13,7 +13,7 @@
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_use_optimized_precompile" value="true"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false">
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false">
 			<option namespace="EiffelSoftware.Framework">
 			</option>
 		</library>

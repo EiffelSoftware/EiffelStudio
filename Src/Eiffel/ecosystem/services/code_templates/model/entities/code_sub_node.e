@@ -37,7 +37,6 @@ feature -- Access
 	definition: !CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		do
-			check is_parented: is_parented end
 			Result := (({!G}) #? parent).definition
 		end
 
@@ -66,16 +65,6 @@ feature {CODE_NODE} -- Element change
 		ensure
 			parent_assigned: parent = a_parent
 			is_initialized: is_initialized
-		end
-
-feature -- Query
-
-	is_parented: BOOLEAN
-			-- Is current node parented to another node?
-		do
-			Result := parent /= Void
-		ensure
-			parent_attached: Result implies parent /= Void
 		end
 
 ;indexing

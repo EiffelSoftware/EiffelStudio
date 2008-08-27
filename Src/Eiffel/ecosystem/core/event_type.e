@@ -114,7 +114,6 @@ feature -- Subscription
 			-- `a_action': The action to subscribe.
 		require
 			is_interface_usable: is_interface_usable
-			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		do
 			subscribers.force_last (a_action)
@@ -131,7 +130,6 @@ feature -- Subscription
 			-- `a_action': The action to subscribe.
 		require
 			is_interface_usable: is_interface_usable
-			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		do
 			suicide_actions.force_last (a_action)
@@ -153,7 +151,6 @@ feature -- Subscription
 			-- `a_action': A previously subscribed action to unsubscribe.
 		require
 			is_interface_usable: is_interface_usable
-			a_action_attached: a_action /= Void
 			a_action_is_subscribed: is_subscribed (a_action)
 		local
 			l_subscribers: like subscribers

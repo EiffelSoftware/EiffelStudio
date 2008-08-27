@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		require
 			not_a_non_switch_required: not a_allow_non_switched implies not a_non_switch_required
 		do
-			is_using_builtin_switches := {PLATFORM}.is_windows
+			is_using_builtin_switches := True
 			is_case_sensitive := a_cs
 			is_allowing_non_switched_arguments := a_allow_non_switched
 			is_non_switch_argument_required := a_non_switch_required
@@ -195,6 +195,23 @@ feature {NONE} -- Status report
 
 	is_help_usage_displayed: BOOLEAN
 			-- Should usage message be displayed?
+
+	is_using_unix_switch_style: BOOLEAN
+			-- Indicates if the Unix command switch style is being used by the application switches.
+		local
+			l_switches: ?like switches
+			l_cursor: CURSOR
+		once
+			l_switches := switches
+			if l_switches /= Void then
+				l_cursor := l_switches.cursor
+				from l_switches.start until l_switches.after or Result loop
+					Result := l_switches.item.has_short_name
+					l_switches.forth
+				end
+				l_switches.go_to (l_cursor)
+			end
+		end
 
 	frozen has_available_options: BOOLEAN
 			-- Indicates if there are options available
@@ -542,18 +559,23 @@ feature -- Basic Operations
 			parse_arguments
 
 			if is_successful then
-				if not is_logo_information_suppressed then
+				if {PLATFORM}.is_windows and then not is_logo_information_suppressed then
 					display_logo
 				end
 
 				if is_help_usage_displayed then
 					display_usage
 				else
-					l_options := option_values
-					if option_values.is_empty and values.is_empty then
-						execute_noop (a_action)
+					if has_switch (version_switch) and then has_option (version_switch) then
+							-- Version information has been requested.
+						display_version
 					else
-						a_action.call (Void)
+						l_options := option_values
+						if option_values.is_empty and values.is_empty then
+							execute_noop (a_action)
+						else
+							a_action.call (Void)
+						end
 					end
 				end
 			else
@@ -802,7 +824,7 @@ feature {NONE} -- Post Processing
 			is_successful: is_successful
 			has_parsed: has_parsed
 		do
-			is_logo_information_suppressed := not has_switch (nologo_switch) or else has_option (nologo_switch)
+			is_logo_information_suppressed := (not has_switch (nologo_switch) or else has_option (nologo_switch)) or else has_option (version_switch)
 			is_help_usage_displayed := has_option (help_switch)
 		end
 
@@ -1199,24 +1221,25 @@ feature {NONE} -- Output
 
 	display_logo
 			-- Displays copyright information.
-		local
-			l_name: !like name
-			l_copy: !like copyright
-			l_ver: !like version
-			l_logo: !STRING
 		do
-			l_name := name
-			l_copy := copyright
-			l_ver := version
-
-			create l_logo.make (l_name.count + l_copy.count + l_ver.count + 13)
-			l_logo.append (l_name)
-			l_logo.append (" - Version: ")
-			l_logo.append (l_ver)
-			l_logo.append ("%N")
-			l_logo.append (l_copy)
-			io.put_string (l_logo)
+			io.put_string (name)
+			io.put_string (" - Version: ")
+			io.put_string (version)
 			io.new_line
+			io.put_string (copyright)
+			io.new_line
+			io.new_line
+		end
+
+	display_version
+			-- Displays version information
+		do
+				-- Only display the version information if it was not already displayed			
+			io.put_string (name)
+			io.put_string (" version ")
+			io.put_string (version)
+			io.new_line
+			io.put_string (copyright)
 			io.new_line
 		end
 
@@ -1634,6 +1657,7 @@ feature {NONE} -- Switches
 
 	nologo_switch: !STRING
 			-- Supress copyright information switch.
+
 		once
 			Result := "nologo"
 		ensure
@@ -1643,10 +1667,22 @@ feature {NONE} -- Switches
 	help_switch: !STRING
 			-- Display usage information switch.
 		once
-			if {PLATFORM}.is_windows then
-				Result := "?"
-			else
+			if is_using_unix_switch_style then
 				Result := "h|help"
+			else
+				Result := "help"
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	version_switch: !STRING
+			-- Version information switch.
+		once
+			if is_using_unix_switch_style then
+				Result := "v|version"
+			else
+				Result := "version"
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1660,20 +1696,26 @@ feature {NONE} -- Switches
 		once
 			l_switches := switches
 			if l_switches /= Void then
-				create Result.make (2 + l_switches.count)
+				create Result.make (3 + l_switches.count)
 				Result.append (l_switches)
 			else
-				create Result.make (2)
+				create Result.make (3)
 			end
 
-			if is_using_builtin_switches then
-				create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
-				l_switch.set_is_special
-				Result.extend (l_switch)
-			end
 			create l_switch.make (help_switch, "Display usage information.", True, False)
 			l_switch.set_is_special
 			Result.extend (l_switch)
+
+			if is_using_builtin_switches then
+				create l_switch.make (version_switch, "Displays version information.", True, False)
+				l_switch.set_is_special
+				Result.extend (l_switch)
+				if {PLATFORM}.is_windows then
+					create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
+					l_switch.set_is_special
+					Result.extend (l_switch)
+				end
+			end
 		end
 
 	frozen available_visible_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
@@ -1706,6 +1748,7 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_consistent: Result ~ switches
 		end
 
 	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
@@ -1713,14 +1756,16 @@ feature {NONE} -- Switches
 		do
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_consistent: Result ~ switch_groups
 		end
 
 	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
-			-- Switch appurtenances (dependencies)
+			-- Switch appurtenances (dependencies).
 			-- Note: Switch appurtenances are implictly added to a group where a switch is present.
 		do
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_consistent: Result ~ switch_dependencies
 		end
 
 feature {NONE} -- Formatting

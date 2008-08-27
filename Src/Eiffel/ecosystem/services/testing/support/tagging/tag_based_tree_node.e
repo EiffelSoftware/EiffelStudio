@@ -29,9 +29,6 @@ feature {NONE} -- Initialization
 		require
 			a_parent_active: a_parent.is_interface_usable
 			a_token_valid: is_valid_token (a_token)
-		local
-			l_cursor: !DS_HASH_TABLE_CURSOR [NATURAL, !STRING]
-			l_descendant: like tag
 		do
 			parent := a_parent
 			create token.make_from_string (a_token)

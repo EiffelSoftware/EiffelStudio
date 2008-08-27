@@ -32,12 +32,12 @@ feature -- Access
 
 feature {NONE} -- NLS LC CTYPE CONSTANTS
 
-	LOCALE_IDEFAULTCODEPAGE: INTEGER is        0x0000000B   -- default oem code page
-	locale_idefaultcodepage_maxlen: INTEGER is 6
-	LOCALE_IDEFAULTANSICODEPAGE: INTEGER is    0x00001004   -- default ansi code page
-	locale_idefaultansicodepage_maxlen: INTEGER is 6
-	LOCALE_IDEFAULTMACCODEPAGE: INTEGER is     0x00001011   -- default mac code page
-	locale_idefaultmaccodepage_maxlen: INTEGER is 6
+	LOCALE_IDEFAULTCODEPAGE: INTEGER =        0x0000000B   -- default oem code page
+	locale_idefaultcodepage_maxlen: INTEGER = 6
+	LOCALE_IDEFAULTANSICODEPAGE: INTEGER =    0x00001004   -- default ansi code page
+	locale_idefaultansicodepage_maxlen: INTEGER = 6
+	LOCALE_IDEFAULTMACCODEPAGE: INTEGER =     0x00001011   -- default mac code page
+	locale_idefaultmaccodepage_maxlen: INTEGER = 6
 
 feature {NONE} -- Implementation
 

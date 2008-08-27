@@ -185,14 +185,11 @@ feature {NONE} -- Encoding implementation
 			-- Convert `a_text' of lexer encoding to UTF-32.
 		require
 			a_text_not_void: a_text /= Void
-		local
-			l_str: STRING_32
 		do
 			if current_encoding /= Void then
 				current_encoding.convert_to (utf32, a_text)
-				l_str := current_encoding.last_converted_string
 				if current_encoding.last_conversion_successful then
-					Result := l_str
+					Result := current_encoding.last_converted_string.as_string_32
 				else
 					Result := a_text
 				end

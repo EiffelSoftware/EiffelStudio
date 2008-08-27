@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- though they would work on certain platforms.
 		require
 			a_code_page_not_void: a_code_page /= Void
+			a_code_page_not_empty: not a_code_page.is_empty
 		do
 			code_page := a_code_page
 		end
@@ -34,10 +35,14 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	code_page: STRING
-			-- Code page/Character set name
+			-- Code page/Character set name.
+			-- Immutable name.
 
 	last_converted_stream: STRING_8 is
 			-- Stream representation of last converted string.
+			-- Note: Original string object could be returned directly.
+		require
+			last_conversion_successful: last_conversion_successful
 		do
 			Result := encoding_i.last_converted_stream
 		ensure
@@ -46,6 +51,9 @@ feature -- Access
 
 	last_converted_string: STRING_GENERAL is
 			-- Last converted string.
+			-- Note: Original string object could be returned directly.
+		require
+			last_conversion_successful: last_conversion_successful
 		do
 			Result := encoding_i.last_converted_string
 		ensure
@@ -56,8 +64,9 @@ feature -- Conversion
 
 	convert_to (a_to_encoding: ENCODING; a_string: STRING_GENERAL) is
 			-- Convert `a_string' from current encoding to `a_to_encoding'.
-			-- If either current or `a_to_encoding' is not `is_valid', or an error occurs,
-			-- result can be void.
+			-- If either current or `a_to_encoding' is not `is_valid', or an error occurs during conversion,
+			-- `last_conversion_successful' is unset.
+			-- Conversion result can be retrieved via `last_converted_string' or `last_converted_stream'.
 		require
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
@@ -86,7 +95,7 @@ feature -- Conversion
 feature -- Status report
 
 	last_conversion_successful: BOOLEAN is
-			-- Was last conversion successful?
+			-- Is last conversion successful?
 		do
 			Result := encoding_i.last_conversion_successful
 		end

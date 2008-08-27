@@ -1669,7 +1669,9 @@ feature {NONE} -- Encoding conversion
 			end
 			if l_encoding /= Void then
 				l_encoding.convert_to (utf8, a_string)
-				l_str := l_encoding.last_converted_string
+				if l_encoding.last_conversion_successful then
+					l_str := l_encoding.last_converted_string
+				end
 			end
 			if l_str = Void then
 				Result := a_string.as_string_8

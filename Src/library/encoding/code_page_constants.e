@@ -10,22 +10,22 @@ class
 
 feature -- Access
 
-	utf7: STRING is "UTF-7"
+	utf7: STRING = "UTF-7"
 
-	utf8: STRING is "UTF-8"
+	utf8: STRING = "UTF-8"
 
-	utf16: STRING is "UTF-16"
+	utf16: STRING = "UTF-16"
 
-	utf32: STRING is "UTF-32";
+	utf32: STRING = "UTF-32";
 		-- UCS-4 and UTF-32 are functionally identical since ISO 10646..
 
 feature -- Little/Big endian
 
-	utf16_le: STRING is "UTF-16LE"
-	utf32_le: STRING is "UTF-32LE"
+	utf16_le: STRING = "UTF-16LE"
+	utf32_le: STRING = "UTF-32LE"
 
-	utf16_be: STRING is "UTF-16BE"
-	utf32_be: STRING is "UTF-32BE";
+	utf16_be: STRING = "UTF-16BE"
+	utf32_be: STRING = "UTF-32BE";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

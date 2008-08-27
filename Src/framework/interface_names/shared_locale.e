@@ -129,36 +129,50 @@ feature -- Conversion
 			a_str_not_void: a_str /= Void
 		do
 			utf32.convert_to (a_console_encoding, a_str)
-			Result := utf32.last_converted_string
-				-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
-				-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
-			if not utf32.last_conversion_successful and not utf8.is_equal (a_console_encoding) then
-				utf32.convert_to (utf8, a_str)
+			if utf32.last_conversion_successful then
 				Result := utf32.last_converted_string
-				if utf32.last_conversion_successful then
-					utf8.convert_to (a_console_encoding, Result)
-					Result := utf8.last_converted_string
+			else
+					-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
+					-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
+				if not utf8.is_equal (a_console_encoding) then
+					utf32.convert_to (utf8, a_str)
+					if utf32.last_conversion_successful then
+						Result := utf32.last_converted_string
+						utf8.convert_to (a_console_encoding, Result)
+						if utf8.last_conversion_successful then
+							Result := utf8.last_converted_string
+						else
+							Result := a_str
+						end
+					end
 				end
 			end
 		end
 
 	console_encoding_to_utf32 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
-			-- Convert `a_str' to console encoding if possible.
-			-- `a_str' is taken as a UTF-32 string.
+			-- Convert `a_str' to UTF-32 if possible.
+			-- `a_str' is taken as a console encoding string.
 		require
 			a_console_encoding_not_void: a_console_encoding /= Void
 			a_str_not_void: a_str /= Void
 		do
 			a_console_encoding.convert_to (utf32, a_str)
-			Result := a_console_encoding.last_converted_string
-				-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
-				-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-32.
-			if not a_console_encoding.last_conversion_successful and not utf8.is_equal (a_console_encoding) then
-				a_console_encoding.convert_to (utf8, a_str)
+			if a_console_encoding.last_conversion_successful then
 				Result := a_console_encoding.last_converted_string
-				if a_console_encoding.last_conversion_successful then
-					utf8.convert_to (utf32, Result)
-					Result := a_console_encoding.last_converted_string
+			else
+					-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
+					-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-32.
+				if not utf8.is_equal (a_console_encoding) then
+					a_console_encoding.convert_to (utf8, a_str)
+					if a_console_encoding.last_conversion_successful then
+						Result := a_console_encoding.last_converted_string
+						utf8.convert_to (utf32, Result)
+						if utf8.last_conversion_successful then
+							Result := utf8.last_converted_string
+						else
+							Result := a_str
+						end
+					end
 				end
 			end
 		end

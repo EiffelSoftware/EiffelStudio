@@ -171,13 +171,10 @@ feature {NONE} -- Encoding conversion
 			-- UTF32 to UTF8 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			l_str: STRING_32
 		do
 			utf8.convert_to (utf32, a_string)
-			l_str := utf8.last_converted_string
 			if utf8.last_conversion_successful then
-				Result := l_str
+				Result := utf8.last_converted_string
 			else
 				Result := a_string
 			end

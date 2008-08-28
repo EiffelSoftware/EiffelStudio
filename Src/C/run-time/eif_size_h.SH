@@ -108,5 +108,4 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 
 #endif
 !NO!SUBS!
-chmod 755 eif_size.h
 $eunicefix eif_size.h

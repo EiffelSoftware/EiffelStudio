@@ -169,46 +169,46 @@ feature -- Code-Page Identifiers
 			Result.put ("65001", "65001") -- Unicode UTF-8
 
 				-- Added for more functionalities.
-			Result.put ("65000", utf7) -- Unicode UTF-7
-			Result.put ("65001", utf8) -- Unicode UTF-8
+			Result.put ("65000", utf7.as_lower) -- Unicode UTF-7
+			Result.put ("65001", utf8.as_lower) -- Unicode UTF-8
 
-			Result.put ("1200", utf16)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
-			Result.put ("1200", utf16_le)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ("1200", utf16.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ("1200", utf16_le.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 
-			Result.put ("12000", utf32) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
-			Result.put ("12000", utf32_le) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ("12000", utf32.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ("12000", utf32_le.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
 
-			Result.put ("1201", utf16_be) -- Unicode UCS-2 Big-Endian
-			Result.put ("12001", utf32_be) -- Unicode UCS-4 Big-Endian
+			Result.put ("1201", utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
-	two_byte_codesets: HASH_TABLE [STRING, STRING] is
+	two_byte_code_pages: HASH_TABLE [STRING, STRING] is
 		once
 			create Result.make (5)
 			Result.put ("1200", "1200")  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
-			Result.put ("1200", utf16)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
-			Result.put ("1200", utf16_le)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
-			Result.put ("1201", utf16_be) -- Unicode UCS-2 Big-Endian
+			Result.put ("1200", utf16.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ("1200", utf16_le.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ("1201", utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
 		end
 
-	four_byte_codesets: HASH_TABLE [STRING, STRING] is
+	four_byte_code_pages: HASH_TABLE [STRING, STRING] is
 		once
 			create Result.make (5)
 			Result.put ("12000", "12000") -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("12001", "12001") -- Unicode UCS-4 Big-Endian
-			Result.put ("12000", utf32) -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
-			Result.put ("12000", utf32_le) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
-			Result.put ("12001", utf32_be) -- Unicode UCS-4 Big-Endian
+			Result.put ("12000", utf32.as_lower) -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ("12000", utf32_le.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
-	big_endian_codepage: HASH_TABLE [STRING, STRING] is
+	big_endian_code_pages: HASH_TABLE [STRING, STRING] is
 		once
 			create Result.make (4)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
 			Result.put ("12001", "12001") -- Unicode UCS-4 Big-Endian
-			Result.put ("1201", utf16_be) -- Unicode UCS-2 Big-Endian
-			Result.put ("12001", utf32_be) -- Unicode UCS-4 Big-Endian
+			Result.put ("1201", utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
 indexing

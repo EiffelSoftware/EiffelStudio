@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
 			code_page := a_code_page
+			encoding_i := regular_encoding_imp
 		end
 
 feature -- Access
@@ -78,10 +79,10 @@ feature -- Conversion
 				unicode_conversion.is_code_page_valid (code_page) and then
 				unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
 			then
-				encoding_imp := unicode_conversion
+				encoding_i := unicode_conversion
 				l_unicode_conversion := True
 			else
-				encoding_imp := regular_encoding_imp
+				encoding_i := regular_encoding_imp
 			end
 
 			encoding_i.reset
@@ -129,20 +130,8 @@ feature {ENCODING} -- Status report
 
 feature {NONE} -- Implementation
 
-	encoding_i: ENCODING_I is
+	encoding_i: ENCODING_I
 			-- Current encoding implementation
-		do
-			Result := encoding_imp
-			if Result = Void then
-				Result := regular_encoding_imp
-				encoding_imp := Result
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	encoding_imp: like encoding_i
-			-- Cached current encoding implementation
 
 	unicode_conversion: UNICODE_CONVERSION is
 			-- Unicode conversion
@@ -158,6 +147,7 @@ feature {NONE} -- Implementation
 
 invariant
 	code_page_not_void: code_page /= Void
+	encoding_i_not_void: encoding_i /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

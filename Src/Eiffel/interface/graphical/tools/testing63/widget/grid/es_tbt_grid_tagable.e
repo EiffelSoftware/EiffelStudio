@@ -39,10 +39,10 @@ feature -- Access
 
 feature -- Basic functionality
 
-	populate_row (a_factory: ES_TBT_GRID_LAYOUT [G])
+	populate_row (a_layout: ES_TBT_GRID_LAYOUT [G])
 			-- <Precursor>
 		do
-			a_factory.populate_item_row (row, item)
+			a_layout.populate_item_row (row, item)
 		end
 
 end

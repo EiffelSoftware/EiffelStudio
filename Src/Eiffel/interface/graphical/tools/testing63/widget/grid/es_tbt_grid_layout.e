@@ -49,6 +49,24 @@ feature -- Status report
 			result_positive: Result > 0
 		end
 
+feature -- Query
+
+	has_attached_items (a_row: !EV_GRID_ROW): BOOLEAN
+			-- Are all items of `a_row' attached?
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+				Result := True
+			until
+				i > column_count.as_integer_32 or not Result
+			loop
+				Result := a_row.item (i) /= Void
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Query
 
 	is_class_token (a_token: !STRING): BOOLEAN
@@ -104,6 +122,9 @@ feature -- Basic functionality
 			valid_item_count: a_row.count.as_natural_32 = column_count
 		do
 			a_row.set_item (1, new_token_item (a_node.token, a_node.tag))
+			fill_with_empty_items (a_row, 2)
+		ensure
+			items_attached: has_attached_items (a_row)
 		end
 
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !G)
@@ -113,6 +134,9 @@ feature -- Basic functionality
 			a_item_usable: a_item.is_interface_usable
 		do
 			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_item.name))
+			fill_with_empty_items (a_row, 2)
+		ensure
+			items_attached: has_attached_items (a_row)
 		end
 
 	populate_untagged_row (a_row: !EV_GRID_ROW)
@@ -121,6 +145,9 @@ feature -- Basic functionality
 			valid_item_count: a_row.count.as_natural_32 = column_count
 		do
 			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("<untagged>"))
+			fill_with_empty_items (a_row, 2)
+		ensure
+			items_attached: has_attached_items (a_row)
 		end
 
 feature {NONE} -- Factory
@@ -180,6 +207,24 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Implementation
+
+	fill_with_empty_items (a_row: !EV_GRID_ROW; a_start: INTEGER)
+			-- Fill missing items of row with empty items.
+			--
+			-- `a_row': Row to be filled with empty items
+			-- `a_start': Index of first empty.
+		local
+			i: INTEGER
+		do
+			from
+				i := a_start
+			until
+				i > column_count.as_integer_32
+			loop
+				a_row.set_item (i, new_empty_item)
+				i := i + 1
+			end
+		end
 
 	process_token (a_token: !STRING): !STRING is
 			-- Replace underscores in `a_token' with whitespace

@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 
 feature -- Basic functionality
 
-	populate_row (a_factory: ES_TBT_GRID_LAYOUT [TAGABLE_I]) is
+	populate_row (a_layout: ES_TBT_GRID_LAYOUT [TAGABLE_I]) is
 			-- <Precursor>
 		do
-			a_factory.populate_untagged_row (row)
+			a_layout.populate_untagged_row (row)
 		end
 
 

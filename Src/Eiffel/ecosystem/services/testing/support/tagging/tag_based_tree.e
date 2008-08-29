@@ -253,7 +253,7 @@ feature {NONE} -- Events
 		require else
 			a_collection_valid: a_collection = observed_collection
 		local
-			l_tags: !DS_HASH_SET [!STRING]
+			l_tags, l_unchanged_tags: !DS_HASH_SET [!STRING]
 			l_is_tagged: BOOLEAN
 		do
 			l_tags := tag_suffixes (a_item.memento.added_tags, tag_prefix)
@@ -265,14 +265,17 @@ feature {NONE} -- Events
 				l_is_tagged := True
 			end
 			l_tags := tag_suffixes (a_item.memento.removed_tags, tag_prefix)
+			l_unchanged_tags := tag_suffixes (a_item.tags, tag_prefix)
 			if not l_tags.is_empty then
 				l_tags.do_all (agent remove_tag_for_item (?, a_item))
 				if not l_is_tagged then
-					l_tags := tag_suffixes (a_item.tags, tag_prefix)
-					if l_tags.is_empty then
+					if l_unchanged_tags.is_empty then
 						add_untagged_item (a_item)
 					end
 				end
+			end
+			if not l_unchanged_tags.is_empty then
+				l_unchanged_tags.do_all (agent propagate_item_change (?, a_item))
 			end
 		end
 

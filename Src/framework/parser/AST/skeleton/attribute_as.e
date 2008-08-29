@@ -10,6 +10,7 @@ class ATTRIBUTE_AS
 inherit
 	INTERNAL_AS
 		redefine
+			is_attribute,
 			process
 		end
 
@@ -28,6 +29,11 @@ feature{NONE} -- Initialization
 		ensure
 			attribute_keyword_set: l_as /= Void implies attribute_keyword_index = l_as.index
 		end
+
+feature -- Properties
+
+	is_attribute: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Visitor
 

@@ -1613,6 +1613,7 @@ test	validity-vfav2-basic		vfav201  tcf pass validity vfav
 test	validity-vfav3-basic		vfav301  tcf pass validity vfav
 test	validity-vfav4-basic		vfav401  tcf pass validity vfav
 
+test	validity-vffd1-attribute	vffd101	 tcf pass validity vffd attribute
 test	validity-vffd2-basic		vffd201	 tcf pass validity vffd
 test	validity-vffd2-diff-decls	vffd202	 tcf pass validity vffd
 test	validity-vffd3-basic		vffd301	 tcf pass validity vffd

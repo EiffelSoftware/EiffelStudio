@@ -1,30 +1,30 @@
 indexing
 
-	description: 
+	description:
 		"Abstract description of error in third pass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class FEATURE_NAME_ERROR 
+deferred class FEATURE_NAME_ERROR
 
 inherit
 
 	EIFFEL_ERROR
 		redefine
 			trace
-		end;
+		end
 
 feature -- Properties
 
-	feature_name:  STRING;
+	feature_name:  STRING
 			-- Feature involved in the error
-			-- [if Void it is in the invariant]
+			-- (if Void it is in the invariant)
 
 feature -- Output
 
-	trace (a_text_formatter: TEXT_FORMATTER) is
+	trace (a_text_formatter: TEXT_FORMATTER)
 		do
 			print_error_message (a_text_formatter);
 			a_text_formatter.add ("Class: ");
@@ -38,18 +38,21 @@ feature -- Output
 			end;
 			a_text_formatter.add_new_line;
 			build_explain (a_text_formatter)
-		end;
+			if line > 0 then
+				print_context_of_error (class_c, a_text_formatter)
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (s: STRING) is
+	set_feature_name (s: STRING)
 			-- Assign `f' to `feature'.
 		do
-			feature_name := s;
-		end;
+			feature_name := s
+		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

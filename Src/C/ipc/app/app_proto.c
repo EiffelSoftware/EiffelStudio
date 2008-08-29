@@ -374,7 +374,7 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case INTERRUPT_OK:				/* Stop execution and send call stack */
 		(void) rem_input(sp);		/* exit listening loop */
-		dbreak(PG_INTERRUPT);
+		dbreak(PG_INTERRUPT, 1);	/* We will wait to make sure that the application will stop. */
 		break;
 	case INTERRUPT_NO:				/* Resume execution with no further ado */
 		(void) rem_input(sp);		/* exit listening loop */

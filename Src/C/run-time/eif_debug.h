@@ -184,9 +184,6 @@ extern EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, ui
 
 #endif /* WORKBENCH */
 
-/* Breakpoint handling */
-extern void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
-
 /* Once result evaluation */
 extern EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/
 

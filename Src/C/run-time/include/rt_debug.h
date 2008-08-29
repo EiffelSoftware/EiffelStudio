@@ -63,6 +63,7 @@ extern void set_breakpoint_count(int num);
 
 extern void debug_initialize(void);
 extern void dbreak_free_table(void);
+extern void dbreak(int why, int wait);		/* Program execution stopped */
 extern void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/
 
 /* Notification event types */

@@ -194,12 +194,15 @@ rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against con
 	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\
 	EIF_ENTER_C; EIF_ASYNC_SAFE_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C; RTGC
+#define DBGMTX_TRYLOCK	\
+	EIF_LW_MUTEX_TRYLOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
 #define DBGMTX_UNLOCK \
 	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
 #else
 #define DBGMTX_CREATE 
 #define DBGMTX_DESTROY 
 #define DBGMTX_LOCK 
+#define DBGMTX_TRYLOCK 
 #define DBGMTX_UNLOCK 
 #endif
 
@@ -218,7 +221,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 rt_shared void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
 rt_private void dbreak_create_table(void);
 rt_shared void dbreak_free_table(void);
-rt_shared void dbreak (EIF_CONTEXT int why);
+rt_shared void dbreak (EIF_CONTEXT int why, int wait);
 rt_shared void safe_dbreak (int why);
 rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
@@ -699,15 +702,23 @@ rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EI
 * Breakpoints handling.
 *************************************************************************************************************************/
 
-rt_shared void dbreak(EIF_CONTEXT int why)
+rt_shared void dbreak(int why, int wait)
 	/* Safe entry point for multithreaded application */
+	/* If `wait' then wait until we get mutex, otherwise do nothing. */
 {
+#ifdef EIF_THREADS
 	RT_GET_CONTEXT
-	DBGMTX_LOCK;
-
+	if (wait) {
+		DBGMTX_LOCK;
+		safe_dbreak(why);
+		DBGMTX_UNLOCK;
+	} else if (DBGMTX_TRYLOCK) {
+		safe_dbreak(why);
+		DBGMTX_UNLOCK;
+	}
+#else
 	safe_dbreak(why);
-
-	DBGMTX_UNLOCK;
+#endif
 }
 
 rt_shared void safe_dbreak (int why)

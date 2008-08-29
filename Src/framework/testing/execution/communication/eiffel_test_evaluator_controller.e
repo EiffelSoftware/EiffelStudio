@@ -11,6 +11,9 @@ indexing
 deferred class
 	EIFFEL_TEST_EVALUATOR_CONTROLLER
 
+inherit
+	THREAD_CONTROL
+
 feature {NONE} -- Initialization
 
 	make (a_map: like map)
@@ -74,7 +77,8 @@ feature -- Status report
 			-- Is evaluator currently running?
 		require
 			launched: is_launched
-		deferred
+		do
+			Result := status.is_receiving or is_evaluator_running
 		ensure
 			result_implies_is_launched: Result implies is_launched
 		end
@@ -82,15 +86,7 @@ feature -- Status report
 	is_terminated: BOOLEAN
 			-- Was evaluator stopped through call to `terminate'.
 
-	has_completed: BOOLEAN
-			-- Did evaluator execute all tests so far?
-		require
-			launched: is_launched
-		do
-			Result := not status.has_remaining_tests
-		end
-
-feature -- Status setting
+feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 
 	frozen launch (a_list: !DS_LINEAR [!EIFFEL_TEST_I]) is
 			-- Launch list of tests.
@@ -104,7 +100,7 @@ feature -- Status setting
 			create internal_launch_time.make_now
 			create internal_status.make (a_list)
 			receiver.receive (status)
-			launch_evaluator (receiver.last_port)
+			launch_evaluator (arguments (a_list))
 		ensure then
 			launched: is_launched
 		end
@@ -115,6 +111,7 @@ feature -- Status setting
 			launched: is_launched
 		do
 			is_terminated := True
+			status.stop_receiving
 			terminate_evaluator
 		ensure
 			not_running: not is_running
@@ -133,13 +130,58 @@ feature -- Status setting
 			not_terminated: not is_terminated
 		end
 
+feature {NONE} -- Query
+
+	arguments (a_list: !DS_LINEAR [!EIFFEL_TEST_I]): !ARRAYED_LIST [!STRING] is
+			-- Arguments used to launch evaluator
+		require
+			a_list_in_map: a_list.for_all (agent (map.tests).has)
+		local
+			l_idx, l_port, l_root: !STRING
+			l_array: !ARRAYED_LIST [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
+		do
+			create Result.make (a_list.count + 5)
+
+			from
+				l_cursor := a_list.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_idx ?= map.index (l_cursor.item).out
+				Result.force (l_idx)
+				l_cursor.forth
+			end
+
+			Result.force ("-p")
+			l_port ?= receiver.last_port.out
+			Result.force (l_port)
+			Result.force ("-o")
+			Result.force ("-eif_root")
+			create l_root.make (20)
+			l_root.append ({EIFFEL_TEST_EVALUATOR_SOURCE_WRITER}.class_name)
+			l_root.append_character ('.')
+			l_root.append ({EIFFEL_TEST_EVALUATOR_SOURCE_WRITER}.root_feature_name)
+			Result.force (l_root)
+		end
+
 feature	{NONE} -- Implementation
 
-	launch_evaluator (a_port: INTEGER) is
+	launch_evaluator (a_args: !LIST [!STRING]) is
 			-- Launch evaluator executable
+			--
+			-- `a_args': Arguments for launching evaluator process
 		require
 			launched: is_launched
-			a_port_valid: a_port >= 49152 and a_port <= 65535
+			a_args_not_empty: not a_args.there_exists (agent {!STRING}.is_empty)
+		deferred
+		end
+
+	is_evaluator_running: BOOLEAN
+			-- Is evaluator executable running?
+		require
+			launched: is_launched
 		deferred
 		end
 
@@ -149,8 +191,7 @@ feature	{NONE} -- Implementation
 			launched: is_launched
 		deferred
 		ensure
-			not_running: not is_running
+			evaluator_not_running: not is_evaluator_running
 		end
-
 
 end

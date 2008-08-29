@@ -11,6 +11,11 @@ deferred class
 
 inherit
 	EIFFEL_TEST_PROCESSOR_I
+		rename
+			start_process as start_process_frozen
+		redefine
+			start_process_frozen
+		end
 
 	EIFFEL_TEST_COLLECTION
 		rename
@@ -20,6 +25,9 @@ inherit
 		end
 
 	EIFFEL_TEST_SUITE_OBSERVER
+		redefine
+			on_test_changed
+		end
 
 feature -- Access
 
@@ -63,10 +71,18 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 	frozen proceed is
 			-- <Precursor>
 		do
-			is_idle := True
-			proceed_process
 			is_idle := False
+			proceed_process
+			is_idle := True
 		end
+
+	frozen stop is
+			-- <Precursor>
+		do
+			is_idle := False
+			stop_process
+		end
+
 
 feature {NONE} -- Status setting
 
@@ -80,6 +96,25 @@ feature {NONE} -- Status setting
 			internal_test_suite.connect_events (Current)
 		end
 
+	frozen start_process_frozen (a_arg: like argument)
+			-- <Precursor>
+		do
+			start_process (a_arg)
+			is_idle := True
+		end
+
+	start_process (a_arg: like argument)
+			-- Start performing a task for given arguments.
+			--
+			-- Note: `start_process' does not need to care about the idle status.
+			--
+			-- `a_arg': Arguments defining the task.
+		require
+			ready: is_ready
+			a_arg_valid: is_valid_argument (a_arg, test_suite)
+		deferred
+		end
+
 	proceed_process is
 			-- Proceed with actual task
 		require
@@ -87,5 +122,23 @@ feature {NONE} -- Status setting
 		deferred
 		end
 
+	stop_process is
+			-- Stop task
+		require
+			not_idle: not is_idle
+		deferred
+		ensure
+			not_running: not is_running
+		end
+
+feature {EIFFEL_TEST_SUITE_S} -- Events
+
+	on_test_changed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
+			-- <Precursor>
+		do
+			if tests.has (a_item) then
+				test_changed_event.publish ([Current, a_item])
+			end
+		end
 
 end

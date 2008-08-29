@@ -101,8 +101,7 @@ feature -- Status setting
 		do
 			run_list (a_type, tests, a_blocking)
 		ensure
-			not_blocking_equals_preparing_tests: not a_blocking = (executor (a_type).is_idle and
-				executor (a_type).active_tests.is_equal (tests))
+			not_blocking_equals_preparing_tests: not a_blocking = executor (a_type).is_idle
 		end
 
 	run_list (a_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
@@ -117,8 +116,7 @@ feature -- Status setting
 		do
 			launch_processor (a_type, a_list, a_blocking)
 		ensure
-			not_blocking_equals_preparing_a_list: not a_blocking = (executor (a_type).is_idle and
-				executor (a_type).active_tests.is_equal (a_list))
+			not_blocking_equals_preparing_a_list: not a_blocking = executor (a_type).is_idle
 		end
 
 	create_tests (a_type: !TYPE [!EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
@@ -146,6 +144,68 @@ feature -- Status setting
 		deferred
 		ensure
 			not_blocking_equals_running: not a_blocking = (processor_registrar.processor (a_type).is_running)
+		end
+
+feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
+
+	set_test_queued (a_test: !EIFFEL_TEST_I; a_executor: !EIFFEL_TEST_EXECUTOR_I) is
+			-- Set status of test to queued and notify observers.
+			--
+			-- `a_test': Test being queued.
+		require
+			usable: is_interface_usable
+			tests_available: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+			test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
+		deferred
+		ensure
+			a_test_queued: a_test.is_queued
+			a_executor_queues_a_test: a_test.executor = a_executor
+		end
+
+	set_test_running (a_test: !EIFFEL_TEST_I)
+			-- Set status of test to running and notify observers.
+			--
+			-- `a_test': Test being executed.
+		require
+			usable: is_interface_usable
+			tests_available: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+			test_queued: a_test.is_queued
+		deferred
+		ensure
+			a_test_running: a_test.is_running
+		end
+
+	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !TEST_OUTCOME)
+			-- Add outcome to test being executed and notify observers.
+			--
+			-- `a_test': Test for which outcome is available.
+			-- `a_outcome': Outcome received from last execution.
+		require
+			usable: is_interface_usable
+			tests_available: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+			test_running: a_test.is_running or a_test.is_queued
+		deferred
+		ensure
+			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
+			a_test_has_outcome: a_test.is_outcome_available
+			a_outcome_is_last_outcome: a_test.last_outcome = a_outcome
+		end
+
+	set_test_aborted (a_test: !EIFFEL_TEST_I)
+			-- Abort execution of test and notify observers.
+			--
+			-- `a_test': Test which was not completely executed.
+		require
+			usable: is_interface_usable
+			tests_available: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+			test_queued_or_running: (a_test.is_queued or a_test.is_running)
+		deferred
+		ensure
+			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
 		end
 
 feature {NONE} -- Query

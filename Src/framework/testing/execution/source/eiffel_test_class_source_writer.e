@@ -22,11 +22,8 @@ feature -- Access
 			Result := << >>
 		end
 
-	root_feature_name: !STRING
+	root_feature_name: !STRING = "make"
 			-- <Precursor>
-		do
-			Result := "make"
-		end
 
 feature {NONE} -- Access
 
@@ -90,7 +87,7 @@ feature {NONE} -- Output
 			end
 
 			l_root := root_feature_name
-			if l_root /= Void then
+			if not l_root.is_empty then
 				stream.put_line ("create")
 				stream.indent
 				stream.put_line (l_root)

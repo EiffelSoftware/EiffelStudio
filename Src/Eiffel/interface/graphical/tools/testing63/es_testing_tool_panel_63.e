@@ -23,6 +23,10 @@ inherit
 create {ES_TESTING_TOOL_63}
 	make
 
+feature
+
+	eval: TEST_ROOT_APPLICATION
+
 feature {NONE} -- Initialization
 
 	on_before_initialize
@@ -284,10 +288,15 @@ feature {NONE} -- Status setting: stones
 
 feature {NONE} -- Action handlers
 
-	on_run_all_tests is
+	on_run_all is
 			-- Called when user selects "run all" item of `run_button'.
+		local
+			l_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
 		do
-
+			if test_suite.is_service_available then
+				l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
+				test_suite.service.run_all (l_type, False)
+			end
 		end
 
 	on_run_failing is
@@ -333,7 +342,7 @@ feature {NONE} -- Factory
 
 			create l_menu.default_create
 			create l_menu_item.make_with_text (local_formatter.translation (m_run_all))
-
+			register_action (l_menu_item.select_actions, agent on_run_all)
 			l_menu.extend (l_menu_item)
 			create l_menu_item.make_with_text (local_formatter.translation (m_run_failing))
 			l_menu.extend (l_menu_item)

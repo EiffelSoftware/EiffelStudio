@@ -85,16 +85,58 @@ feature -- Status setting
 				agent (a_proc: !EIFFEL_TEST_PROCESSOR_I)
 					do
 						if a_proc.is_idle then
-							a_proc.proceed
+							if a_proc.is_finished then
+								a_proc.stop
+							else
+								a_proc.proceed
+							end
 						end
 					end)
 		end
 
 	launch_processor (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- <Precursor>
+		local
+			l_processor: EIFFEL_TEST_PROCESSOR_I
 		do
-
+			l_processor := processor_registrar.processor (a_type)
+			l_processor.start (a_arg, Current)
 		end
+
+feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
+
+	set_test_queued (a_test: !EIFFEL_TEST_I; a_executor: !EIFFEL_TEST_EXECUTOR_I) is
+			-- <Precursor>
+		do
+			a_test.set_queued (a_executor)
+			test_changed_event.publish ([Current, a_test])
+			a_test.clear_changes
+		end
+
+	set_test_running (a_test: !EIFFEL_TEST_I) is
+			-- <Precursor>
+		do
+			a_test.set_running
+			test_changed_event.publish ([Current, a_test])
+			a_test.clear_changes
+		end
+
+	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !TEST_OUTCOME) is
+			-- <Precursor>
+		do
+			a_test.add_outcome (a_outcome)
+			test_changed_event.publish ([Current, a_test])
+			a_test.clear_changes
+		end
+
+	set_test_aborted (a_test: !EIFFEL_TEST_I) is
+			-- <Precursor>
+		do
+			a_test.abort
+			test_changed_event.publish ([Current, a_test])
+			a_test.clear_changes
+		end
+
 
 feature -- Basic functionality
 

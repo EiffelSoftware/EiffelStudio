@@ -16,8 +16,8 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_collection is
-			--
+	make is
+			-- Initialize `Current'
 		do
 			create test_added_event
 			create test_removed_event

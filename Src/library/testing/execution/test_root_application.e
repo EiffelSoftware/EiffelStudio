@@ -16,13 +16,18 @@ inherit
 	EXCEPTIONS
 		export
 			{NONE} all
-		redefine
-			default_create
+		end
+
+feature -- TO BE REMOVED
+
+	print_error (a_string: !STRING)
+		do
+			io.error.put_string (a_string + "%N")
 		end
 
 feature {NONE} -- Initialization
 
-	frozen default_create is
+	frozen make is
 			-- Initialize `Current'
 		do
 			create arguments.make
@@ -32,7 +37,7 @@ feature {NONE} -- Initialization
 	start is
 			-- Initialize output and start processing commands.
 		require
-			arguments_valid: arguments.successful
+			arguments_valid: arguments.is_successful
 		local
 			l_quit, l_bad_argument: BOOLEAN
 			l_index: STRING
@@ -50,6 +55,7 @@ feature {NONE} -- Initialization
 						n := l_index.to_natural
 						if is_valid_index (n) then
 							run_test (n)
+							print_error ({!STRING} #? ("finished running test " + n.out))
 						else
 							l_bad_argument := True
 						end
@@ -92,7 +98,7 @@ feature {NONE} -- Access
 	evaluator: !TEST_EVALUATOR
 			-- Evaluator for executing tests
 		require
-			arguments_valid: arguments.successful
+			arguments_valid: arguments.is_successful
 		once
 			create Result
 			Result.set_record_output (arguments.has_output_option)
@@ -128,6 +134,7 @@ feature {NONE} -- Status setting
 					if not l_socket.is_open_write then
 						raise ("bad_socket")
 					end
+					print_error ("connected to socket!")
 					stream := l_socket
 				else
 					create {RAW_FILE} stream.make_open_write (arguments.file_option)

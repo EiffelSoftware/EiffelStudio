@@ -33,7 +33,6 @@ feature -- Access
 			-- Test results from passed executions where the last is the most recent one.
 		require
 			usable: is_interface_usable
-			has_been_tested: is_outcome_available
 		deferred
 		end
 
@@ -84,7 +83,10 @@ feature -- Status report
 			-- Has `Current' been executed yet?
 		require
 			usable: is_interface_usable
-		deferred
+		do
+			Result := not outcomes.is_empty
+		ensure
+			definition: Result = not outcomes.is_empty
 		end
 
 	passed: BOOLEAN
@@ -117,7 +119,7 @@ feature {EIFFEL_TEST_PROJECT_I} -- Status setting
 			tags_contains_list: a_list.for_all (agent tags.has)
 		end
 
-feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
+feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
 	set_queued (a_executor: like executor) is
 			-- Set `Current' to be queued by an executor
@@ -129,6 +131,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 		deferred
 		ensure
 			queued: is_queued
+			changed: has_changed
 			executor_set: executor = a_executor
 		end
 
@@ -140,6 +143,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 		deferred
 		ensure
 			running: is_running
+			changed: has_changed
 		end
 
 	abort
@@ -150,6 +154,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 		deferred
 		ensure
 			not_active: not (is_queued or is_running)
+			changed: has_changed
 		end
 
 	add_outcome (a_outcome: like last_outcome)
@@ -158,12 +163,13 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			-- `a_outcome': Outcome to be added to the end of `outcomes'.
 		require
 			usable: is_interface_usable
-			active: is_queued or is_running
+			active: is_running or is_queued
 		deferred
 		ensure
 			outcome_available: is_outcome_available
 			a_outcome_last: last_outcome = a_outcome
 			not_active: not (is_queued or is_running)
+			changed: has_changed
 		end
 
 end

@@ -17,26 +17,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: !DS_LINEAR [!EIFFEL_TEST_I])
+	make (a_count: INTEGER)
 			-- Initialize `Current'.
 			--
-			-- `a_list': List of all tests used for map
-		local
-			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
-			n: NATURAL
+			-- `a_count': Approximate number of tests that map will contain
+		require
+			a_count_valid: a_count >= 0
 		do
-			create tests_map.make (a_list.count)
-			from
-				l_cursor := a_list.new_cursor
-				l_cursor.start
-				n := 1
-			until
-				l_cursor.after
-			loop
-				tests_map.put (n, l_cursor.item)
-				n := n + 1
-				l_cursor.forth
-			end
+			counter := 1
+			create tests_map.make (a_count)
 		end
 
 feature -- Access
@@ -48,6 +37,9 @@ feature -- Access
 		end
 
 feature {NONE} -- Access
+
+	counter: NATURAL
+			-- Counter for indices
 
 	tests_map: !DS_HASH_TABLE [NATURAL, !EIFFEL_TEST_I]
 			-- Internal storage
@@ -66,12 +58,25 @@ feature -- Query
 
 feature -- Element change
 
+	add_test (a_test: !EIFFEL_TEST_I)
+			-- Add test to map
+			--
+			-- `a_test': Test to be added to `tests'
+		require
+			test_not_added: not tests.has (a_test)
+		do
+			tests_map.put (counter, a_test)
+			counter := counter + 1
+		ensure
+			added: tests.has (a_test)
+		end
+
 	remove_test (a_test: !EIFFEL_TEST_I)
 			-- Remove test from map.
 			--
 			-- `a_test': Test to be removed from `tests'
 		require
-			tests_has_a_test: tests.has (a_test)
+			test_added: tests.has (a_test)
 		do
 			tests_map.remove (a_test)
 		ensure

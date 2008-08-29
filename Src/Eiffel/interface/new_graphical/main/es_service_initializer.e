@@ -84,12 +84,13 @@ feature {NONE} -- Test suite extension
 		require
 			a_service_usable: a_service.is_interface_usable
 		local
-			l_executor: EIFFEL_TEST_EXECUTOR
+			l_bg_executor: EIFFEL_TEST_BACKGROUND_EXECUTOR
+			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
 			l_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]
 		do
-			create l_executor.make
+			create l_bg_executor.make
 			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
-			a_service.processor_registrar.register (l_executor, l_type)
+			a_service.processor_registrar.register (l_bg_executor, l_type)
 		end
 
 feature {NONE} -- Factory
@@ -134,9 +135,13 @@ feature {NONE} -- Factory
 
 	create_testing_servive: ?EIFFEL_TEST_SUITE_S
 			-- Create test suite service
+		local
+			l_evapp: EV_SHARED_APPLICATION
 		do
 			create {EIFFEL_TEST_SUITE} Result.make
 			register_test_suite_processors (Result)
+			create l_evapp
+			l_evapp.ev_application.add_idle_action (agent Result.synchronize_processors)
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end

@@ -25,17 +25,26 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			make_parser (False, False, False)
-			set_use_separated_switch_values (True)
-			set_show_switch_arguments_inline (True)
+			make_parser (False, True)
+			set_is_using_separated_switch_values (True)
+			set_is_showing_argument_usage_inline (True)
 		end
 
 feature -- Access
 
+	non_switched_argument_name: !STRING = "test_id"
+			-- <Precursor>
+
+	non_switched_argument_type: !STRING = "index"
+			-- <Precursor>
+
+	non_switched_argument_description: !STRING = "Index of test to be executed"
+			-- <Precursor>
+
 	port_option: INTEGER
 			-- Port number
 		require
-			successful: successful
+			successful: is_successful
 			has_port_option
 		do
 			Result := option_of_name (port_switch).value.to_integer
@@ -44,7 +53,7 @@ feature -- Access
 	file_option: !STRING
 			-- File name of
 		require
-			successful: successful
+			successful: is_successful
 			has_input_option: has_file_option
 		do
 			Result ?= option_of_name (file_switch).value
@@ -55,7 +64,7 @@ feature -- Access
 	output_option: !STRING
 			-- Location to store test reports
 		require
-			successful: successful
+			successful: is_successful
 			has_output_option: has_output_option
 		do
 			Result ?= option_of_name (output_switch).value
@@ -94,7 +103,7 @@ feature {NONE} -- Access
 	loose_argument_type: STRING = "Test Procedure"
 			-- <Precursor>
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [!ARGUMENT_SWITCH] is
 			-- <Precursor>
 		once
 			create Result.make (4)
@@ -108,7 +117,7 @@ feature {NONE} -- Access
 				"Add test output to result", True, False))
 		end
 
-	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- <Precursor>
 		once
 			create Result.make (2)
@@ -134,6 +143,6 @@ feature {NONE} -- Option names
 			-- Switch telling interpreter to print tests output along with results
 
 invariant
-	successful_implies_port_or_file: successful implies (has_port_option or has_file_option)
+	successful_implies_port_or_file: is_successful implies (has_port_option or has_file_option)
 
 end

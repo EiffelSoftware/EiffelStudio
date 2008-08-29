@@ -10,6 +10,9 @@ indexing
 frozen class
 	EIFFEL_TEST_RESULT_RECEIVER
 
+inherit
+	THREAD_CONTROL
+
 feature -- Access
 
 	last_port: INTEGER
@@ -17,11 +20,17 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	port_counter: !INTEGER_REF
+	port_counter: !CELL [INTEGER]
 			-- Counter for port number `Current' listens to
 		once
 			create Result
 		end
+
+	min_port: INTEGER = 49152
+			-- Smallest valid port number
+
+	max_port: INTEGER = 65535
+			-- Largest valid port number
 
 feature -- Status setting
 
@@ -36,40 +45,49 @@ feature -- Status setting
 			--
 			-- `a_status': Status to which received results are added
 		local
+			l_socket: ?NETWORK_STREAM_SOCKET
 			l_thread: WORKER_THREAD
+			l_tries: NATURAL
 		do
-			port_counter.set_item (port_counter.item + 1)
-			if port_counter < 49152 or port_counter > 65535 then
-				port_counter.set_item (49152)
+			from until
+				(l_socket /= Void and then l_socket.is_open_read) or l_tries > 20
+			loop
+				port_counter.put (port_counter.item + 1)
+				if port_counter.item < min_port or port_counter.item > max_port then
+					port_counter.put (min_port)
+				end
+				last_port := port_counter.item
+				create l_socket.make_server_by_port (last_port)
+				l_tries := l_tries + 1
 			end
-			last_port := port_counter.item
-			create l_thread.make (agent start (last_port, a_status))
-			l_thread.launch
+			if l_tries <= 20 then
+						-- TODO: error handling
+				l_socket.set_blocking
+				l_socket.listen (1)
+				create l_thread.make (agent start ({!NETWORK_STREAM_SOCKET} #? l_socket, a_status))
+				l_thread.launch
+			end
 		ensure
-			last_port_valid: last_port >= 49152 and last_port <= 65535
+			last_port_valid: last_port >= min_port and last_port <= max_port
 		end
 
 feature {NONE} -- Implementation
 
-	start (a_port: INTEGER; a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
-			-- Wait for incoming connection on given port.
+	start (a_socket: !NETWORK_STREAM_SOCKET; a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
+			-- Wait for incoming connection on socket and receive results.
 			--
-			-- `a_port': Port on which a listener socket should be created.
-			-- `a_status': Status to which new results are added.
-		require
-			a_port_valid: a_port >= 49152 and a_port <= 65535
+			-- `a_socket': Socket to which evaluator will connect to.
+			-- `a_status': Status where new results are added.
 		local
 			l_rescued: BOOLEAN
-			l_listener: !NETWORK_STREAM_SOCKET
 		do
 			if not l_rescued then
-				create l_listener.make_server_by_port (a_port)
-				l_listener.listen (1)
-				l_listener.accept
-				if {l_receiver: !NETWORK_STREAM_SOCKET} l_listener.accepted then
-					l_listener.close
+				io.put_string ("receiver thread is starting...e%N")
+				a_socket.accept
+				if {l_receiver: !NETWORK_STREAM_SOCKET} a_socket.accepted then
+					a_socket.close
 					from until
-						not (l_receiver.is_open_read and a_status.has_remaining_tests)
+						not (l_receiver.is_open_read and a_status.has_remaining_tests and a_status.is_receiving)
 					loop
 						if {l_outcome: !TEST_OUTCOME} l_receiver.retrieved then
 							a_status.add_result (l_outcome)
@@ -81,9 +99,11 @@ feature {NONE} -- Implementation
 						l_receiver.close
 					end
 				else
-					l_listener.close
+					a_socket.close
 				end
 			end
+			a_status.stop_receiving
+			io.put_string ("receiver thread is done...%N")
 		rescue
 			l_rescued := True
 			retry

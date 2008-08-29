@@ -5513,8 +5513,9 @@ feature -- Element change: Root creators
 				l_tpl := explicit_roots.item_for_iteration
 				if l_tpl.clss.is_equal (a_class_name) and l_tpl.ft.is_equal (a_feature_name) then
 					explicit_roots.remove
+				else
+					explicit_roots.forth
 				end
-				explicit_roots.forth
 			end
 			set_rebuild (True)
 		ensure

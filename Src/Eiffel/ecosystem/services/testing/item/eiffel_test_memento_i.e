@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Objects that describe changes occured in {EIFFEL_TEST_I}.	
+		Objects that describe changes occured in {EIFFEL_TEST_I}.
 	]"
 	author: ""
 	date: "$Date$"
@@ -14,12 +14,12 @@ inherit
 
 feature -- Status report
 
-	outcome_added: BOOLEAN
+	is_outcome_added: BOOLEAN
 			-- Has a new outcome been added?
 		deferred
 		end
 
-	execution_status_changed: BOOLEAN
+	has_execution_status_changed: BOOLEAN
 			-- Has execution status changed?
 		deferred
 		end

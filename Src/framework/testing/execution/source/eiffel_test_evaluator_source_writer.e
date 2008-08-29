@@ -17,11 +17,8 @@ inherit
 
 feature -- Access
 
-	class_name: !STRING
+	class_name: !STRING = "TEST_EVALUATOR_ROOT"
 			-- <Precursor>
-		do
-			Result := "TEST_EVALUATOR_ROOT"
-		end
 
 	ancestor_names: !ARRAY [!STRING]
 			-- <Precursor>
@@ -74,7 +71,7 @@ feature {NONE} -- Implementation
 		do
 			stream.indent
 			stream.put_string (a_name)
-			stream.put_string (" (a_index: like test_count): ")
+			stream.put_string (" (a_index: NATURAL): ")
 			stream.put_line (a_result)
 			stream.indent
 			stream.put_line ("do")

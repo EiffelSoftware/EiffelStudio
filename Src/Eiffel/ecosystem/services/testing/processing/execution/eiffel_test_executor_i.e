@@ -59,7 +59,7 @@ feature -- Query
 		require
 			a_test_usable: a_test.is_interface_usable
 		do
-			Result := (a_test.is_queued or a_test.is_running)
+			Result := not (a_test.is_queued or a_test.is_running)
 		ensure
 			result_implies_not_queued: Result implies not a_test.is_queued
 			result_implies_not_running: Result implies not a_test.is_running

@@ -14,6 +14,7 @@ inherit
 
 	EIFFEL_TEST_COLLECTION
 		rename
+			make as make_collection,
 			are_tests_available as is_project_initialized
 		end
 

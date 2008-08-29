@@ -550,7 +550,7 @@ feature -- Text operator
 		end
 
 	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER) is
-			-- Put `address' for `e_class'.
+			-- Put error of feature `feat', named `str' and located at `a_line'.
 		do
 			process_feature_error (str, feat, a_line)
 		end
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

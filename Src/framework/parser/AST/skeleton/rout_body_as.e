@@ -12,6 +12,12 @@ inherit
 
 feature -- Properties
 
+	is_attribute: BOOLEAN
+			-- Is it an attribute?
+		do
+			-- Do nothing
+		end
+
 	is_once: BOOLEAN is
 			-- Is the routine body a once one ?
 		do

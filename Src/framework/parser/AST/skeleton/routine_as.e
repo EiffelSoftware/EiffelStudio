@@ -230,6 +230,12 @@ feature -- Properties
 					  not rescue_clause.is_empty
 		end
 
+	is_attribute: BOOLEAN
+			-- Is it an attribute?
+		do
+			Result := routine_body.is_attribute
+		end
+
 	is_deferred: BOOLEAN is
 			-- Is the routine body a deferred one ?
 		do
@@ -360,7 +366,7 @@ invariant
 --	end_keyword_not_void: end_keyword /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

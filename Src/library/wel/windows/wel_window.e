@@ -1606,7 +1606,7 @@ feature {WEL_WINDOW} -- Implementation
 		do
 			parent := a_parent
 			create a_wel_string1.make (class_name)
-			if a_name /= Void then
+			if a_name /= Void and then not a_name.is_empty then
 				create a_wel_string2.make (a_name)
 				item := cwin_create_window_ex (default_ex_style,
 					a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
@@ -2067,7 +2067,7 @@ feature {NONE} -- Removal
 			if hwnd /= l_null and then is_window (hwnd) then
 					-- When called from `dispose' we do not want to come back in Eiffel code
 					-- in the call to `{WEL_API}.destroy_window'. This is why we reset the dispatched
-					-- pointer but only in non .NET mode. In .NET mode, it does not matter as the 
+					-- pointer but only in non .NET mode. In .NET mode, it does not matter as the
 					-- GC thread runs in its own thread and if WEL is compiled in mono-threaded mode,
 					-- we might have a race condition since there is only one WEL_DISPATCHER object,
 					-- thus while collecting some message might not be processed correctly.

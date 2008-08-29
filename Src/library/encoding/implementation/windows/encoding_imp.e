@@ -115,23 +115,29 @@ feature -- String encoding convertion
 	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8 is
 			-- Convert UTF-16 string into 8bit string by `a_code_page'.
 		local
-			l_pointer: POINTER
 			l_count: INTEGER
+			l_string: MANAGED_POINTER
+			l_out_string: MANAGED_POINTER
 		do
-			l_pointer := cwin_wide_char_to_multi_byte (a_code_page.to_integer, wide_string_to_pointer (a_string).item, $l_count, $last_conversion_successful)
-			Result := pointer_to_multi_byte (l_pointer, l_count - 1)
-			l_pointer.memory_free
+			l_string := wide_string_to_pointer (a_string)
+			l_count := cwin_WideCharToMultiByte_buffer_length (a_code_page.to_integer, l_string.item)
+			create l_out_string.make (l_count)
+			cwin_wide_char_to_multi_byte (a_code_page.to_integer, l_string.item, l_out_string.item, l_count, $last_conversion_successful)
+			Result := pointer_to_multi_byte (l_out_string.item, l_count - 1)
 		end
 
 	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32 is
 			-- Convert 8bit string into UTF-16 string by `a_code_page'.
 		local
-			l_pointer: POINTER
 			l_count: INTEGER
+			l_string: MANAGED_POINTER
+			l_out_string: MANAGED_POINTER
 		do
-			l_pointer := cwin_multi_byte_to_wide_char (a_code_page.to_integer, multi_byte_to_pointer (a_string).item, $l_count, $last_conversion_successful)
-			Result := pointer_to_wide_string (l_pointer, (l_count - 1) * 2)
-			l_pointer.memory_free
+			l_string := multi_byte_to_pointer (a_string)
+			l_count := cwin_MultiByteToWideChar_buffer_length (a_code_page.to_integer, l_string.item)
+			create l_out_string.make (l_count * Wchar_length)
+			cwin_multi_byte_to_wide_char (a_code_page.to_integer, l_string.item, l_out_string.item, l_count, $last_conversion_successful)
+			Result := pointer_to_wide_string (l_out_string.item, (l_count - 1) * 2)
 		end
 
 feature -- Status report
@@ -207,62 +213,73 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is
+	cwin_WideCharToMultiByte_buffer_length (cpid: INTEGER; a_wide_string: POINTER): INTEGER is
+			-- Get buffer length of converted result.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, NULL, 0, NULL, NULL);"
+		end
+
+	cwin_MultiByteToWideChar_buffer_length (cpid: INTEGER; a_multi_byte: POINTER): INTEGER is
+			-- Get buffer length of converted result.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return MultiByteToWideChar ($cpid, 0, $a_multi_byte, -1, NULL, 0);"
+		end
+
+	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN]) is
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
-				LPSTR temp;
 				DWORD dw;
-			    *$a_count_to_buffer = WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, NULL, 0, NULL, NULL);
-			    
-			    temp = malloc ((sizeof (LPSTR) * *$a_count_to_buffer));
-			    if (temp == NULL){
-			    	*$a_b = 0;
-			    	return NULL;
-			    }
 			    			    	
-				WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, temp, *$a_count_to_buffer, NULL, NULL);
+				WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, $a_out_pointer, $a_count_to_buffer, NULL, NULL);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;
 				}
-				return (EIF_POINTER) temp;
 			]"
 		end
 
-	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is
+	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN]) is
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
-				LPWSTR temp;
 				DWORD dw;
-			    *$a_count_to_buffer = MultiByteToWideChar ($cpid, 0, $a_multi_byte, -1, NULL, 0);
 			    
-			    temp = malloc ((sizeof (LPWSTR) * *$a_count_to_buffer));
-			    if (temp == NULL){
-			    	*$a_b = 0;
-			    	return NULL;
-			    }
-			    
-				MultiByteToWideChar ($cpid,	0, $a_multi_byte, -1, temp, *$a_count_to_buffer);
+				MultiByteToWideChar ($cpid,	0, $a_multi_byte, -1, $a_out_pointer, $a_count_to_buffer);
 				dw = GetLastError();
-				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION)
+				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION) {
 					*$a_b = 0;
-				return (EIF_POINTER) temp;
+				}
 			]"
 		end
 
+	Wchar_length: INTEGER is
+			-- Length of WCHAR.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return sizeof(WCHAR);"
+		end
+
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library:   "Encoding: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
+
 
 end

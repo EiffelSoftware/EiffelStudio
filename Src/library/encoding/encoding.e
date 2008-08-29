@@ -106,6 +106,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
+			-- |FIXME: Different names can indicate the same encoding.
 		do
 			Result := code_page.is_case_insensitive_equal (other.code_page)
 		end

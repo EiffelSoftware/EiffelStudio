@@ -86,6 +86,35 @@ feature -- Query
 			Result := cached_children.item (a_token)
 		end
 
+feature {NONE} -- Query
+
+	row_data_for_item (a_item: !G): !ES_TBT_GRID_TAGABLE [G]
+			-- {ES_TBT_GRID_TAGABLE} instance for item
+		require
+			usable: is_interface_usable
+			evaluated: is_evaluated
+			a_item_added: items.has (a_item)
+		local
+			l_data: ?like row_data_for_item
+			i: INTEGER
+		do
+			from
+				i := first_item_index
+			until
+				l_data /= Void
+			loop
+				l_data ?= tree.grid.row (i).data
+				if l_data.item /= a_item then
+					l_data := Void
+					i := i + tree.grid.row (i).subrow_count_recursive + 1
+				else
+					Result ?= l_data
+				end
+			end
+		ensure
+			correct_result: Result.item = a_item
+		end
+
 feature {NONE} -- Element change
 
 	add_child (a_token: !STRING)
@@ -156,16 +185,11 @@ feature {NONE} -- Element change
 			-- <Precursor>
 		local
 			i: INTEGER
+			l_data: like row_data_for_item
 		do
 			Precursor (a_item)
-			from
-				i := first_item_index
-			until
-				{l_data: ES_TBT_GRID_TAGABLE [G]} tree.grid.row (i).data and then
-					l_data.item = a_item
-			loop
-				i := i + tree.grid.row (i).subrow_count_recursive + 1
-			end
+			l_data := row_data_for_item (a_item)
+			i := l_data.row.index
 			if cached_items.is_empty then
 				first_item_subrow := Void
 			elseif tree.grid.row (i) = first_item_subrow then

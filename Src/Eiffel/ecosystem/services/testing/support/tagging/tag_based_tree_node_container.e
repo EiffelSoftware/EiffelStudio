@@ -269,6 +269,49 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			item_removed: (a_tag.is_empty and is_evaluated) implies not cached_items.has (a_item)
 		end
 
+	add_item (a_item: !G) is
+			-- Add item to `items'
+		require
+			usable: is_interface_usable
+			evaluated: is_evaluated
+			a_item_valid: a_item.tags.has (tag)
+			a_item_not_added: not items.has (a_item)
+		do
+			cached_items.force (a_item)
+		ensure
+			a_item_added: items.has (a_item)
+		end
+
+	remove_item (a_item: !G)
+			-- Remove item from `items'
+		require
+			usable: is_interface_usable
+			evaluated: is_evaluated
+			a_item_added: items.has (a_item)
+		do
+			cached_items.remove (a_item)
+		ensure
+			a_item_removed: not items.has (a_item)
+		end
+
+	propagate_item_change (a_tag: !STRING; a_item: !G) is
+			-- Notify nodes representing tag that an item has changed.
+		require
+			usable: is_interface_usable
+			a_tag_valid: is_valid_tag (a_tag)
+		local
+			l_token: !STRING
+		do
+			if is_evaluated then
+				if not a_tag.is_empty then
+					l_token := first_token (a_tag)
+					child_for_token (l_token).propagate_item_change (suffix (l_token, a_tag), a_item)
+				end
+			end
+		end
+
+feature {NONE} -- Element change
+
 	add_child (a_token: !STRING) is
 			-- Add child to node in `Current'
 		require
@@ -287,19 +330,6 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			child_empty: child_for_token (a_token).is_empty
 		end
 
-	add_item (a_item: !G) is
-			-- Add item to `items'
-		require
-			usable: is_interface_usable
-			evaluated: is_evaluated
-			a_item_valid: a_item.tags.has (tag)
-			a_item_not_added: not items.has (a_item)
-		do
-			cached_items.force (a_item)
-		ensure
-			a_item_added: items.has (a_item)
-		end
-
 	remove_child (a_token: !STRING) is
 			-- Remove child for `a_token'
 		require
@@ -311,18 +341,6 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			cached_children.remove (a_token)
 		ensure
 			child_removed: not has_child_for_token (a_token)
-		end
-
-	remove_item (a_item: !G)
-			-- Remove item from `items'
-		require
-			usable: is_interface_usable
-			evaluated: is_evaluated
-			a_item_added: items.has (a_item)
-		do
-			cached_items.remove (a_item)
-		ensure
-			a_item_removed: not items.has (a_item)
 		end
 
 feature {TAG_BASED_TREE} -- Implementation

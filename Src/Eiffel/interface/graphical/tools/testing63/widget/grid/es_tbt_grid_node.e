@@ -24,7 +24,8 @@ inherit
 			add_child,
 			add_item,
 			remove_child,
-			remove_item
+			remove_item,
+			propagate_item_change
 		redefine
 			parent,
 			tree
@@ -35,7 +36,8 @@ inherit
 			token,
 			row
 		redefine
-			parent
+			parent,
+			propagate_item_change
 		end
 
 	ES_TBT_GRID_DATA [G]
@@ -91,10 +93,22 @@ feature {NONE} -- Access
 
 feature -- Basic functionality
 
-	populate_row (a_factory: ES_TBT_GRID_LAYOUT [G])
+	populate_row (a_layout: ES_TBT_GRID_LAYOUT [G])
 			-- <Precursor>
 		do
-			a_factory.populate_node_row (row, Current)
+			a_layout.populate_node_row (row, Current)
+		end
+
+feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
+
+	propagate_item_change (a_tag: !STRING_8; a_item: G)
+			-- <Precursor>
+		do
+			row.clear
+			if a_tag.is_empty then
+				row_data_for_item (a_item).row.clear
+			end
+			Precursor {ES_TBT_GRID_NODE_CONTAINER} (a_tag, a_item)
 		end
 
 end

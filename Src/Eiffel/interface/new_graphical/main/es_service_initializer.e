@@ -91,6 +91,10 @@ feature {NONE} -- Test suite extension
 			create l_bg_executor.make
 			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
 			a_service.processor_registrar.register (l_bg_executor, l_type)
+			if False then
+				l_type ?= {EIFFEL_TEST_DEBUGGER_I}
+				a_service.processor_registrar.register (l_dbg_executor, l_type)
+			end
 		end
 
 feature {NONE} -- Factory

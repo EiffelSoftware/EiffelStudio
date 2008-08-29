@@ -82,7 +82,6 @@ feature {NONE} -- Implementation
 			l_rescued: BOOLEAN
 		do
 			if not l_rescued then
-				io.put_string ("receiver thread is starting...e%N")
 				a_socket.accept
 				if {l_receiver: !NETWORK_STREAM_SOCKET} a_socket.accepted then
 					a_socket.close
@@ -103,7 +102,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			a_status.stop_receiving
-			io.put_string ("receiver thread is done...%N")
 		rescue
 			l_rescued := True
 			retry

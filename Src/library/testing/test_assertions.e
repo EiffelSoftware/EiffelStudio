@@ -6,6 +6,9 @@ indexing
 class
 	TEST_ASSERTIONS
 
+inherit
+	EXCEPTIONS
+
 feature -- Basic operations
 
 	frozen assert (a_tag: STRING; a_condition: BOOLEAN) is
@@ -13,10 +16,10 @@ feature -- Basic operations
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			last_assertion_failed := a_condition
-			if not a_condition then
+			last_assertion_failed := not a_condition
+			if last_assertion_failed then
 				on_violation (a_tag)
-					-- Throw an exception here.
+				raise (a_tag)
 			else
 				on_satisfaction (a_tag)
 			end

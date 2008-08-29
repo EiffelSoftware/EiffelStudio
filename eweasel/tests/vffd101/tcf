@@ -1,0 +1,9 @@
+test_name 	 validity-vffd1-attribute
+test_description Attribute should have a query mark and no formal arguments.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VFFD(1) VFFD(1) VFFD(1) VFFD(1)
+
+test_end

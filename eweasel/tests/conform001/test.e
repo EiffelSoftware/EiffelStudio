@@ -19,14 +19,37 @@ feature {NONE} -- Implementation
 			a_att: A [!ANY]
 			a_det: A [?ANY]
 		do
-			a_att ?= create {A [?INTEGER]}
+			a_att ?= create {A [?ANY]}
 			check_for_true (a_att = Void)
+			a_att ?= create {A [!ANY]}
+			check_for_true (a_att /= Void)
+
+			a_att ?= create {A [?C]}
+			check_for_true (a_att = Void)
+			a_att ?= create {A [!C]}
+			check_for_true (a_att /= Void)
+
+
+			a_att ?= create {A [INTEGER]}
+			check_for_true (a_att /= Void)
+			a_att ?= create {A [?INTEGER]}
+			check_for_true (a_att /= Void)
 			a_att ?= create {A [!INTEGER]}
 			check_for_true (a_att /= Void)
 
 			a_att ?= create {A [?STRING]}
 			check_for_true (a_att = Void)
 			a_att ?= create {A [!STRING]}
+			check_for_true (a_att /= Void)
+
+			a_det ?= create {A [?ANY]}
+			check_for_true (a_att /= Void)
+			a_det ?= create {A [!ANY]}
+			check_for_true (a_att /= Void)
+
+			a_det ?= create {A [?C]}
+			check_for_true (a_att /= Void)
+			a_det ?= create {A [!C]}
 			check_for_true (a_att /= Void)
 
 			a_det ?= create {A [?INTEGER]}

@@ -157,7 +157,6 @@ feature {NONE} -- Status setting
 			l_project: !E_PROJECT
 		do
 			create internal_map.make (a_list.count)
-			io.put_string ("background executor is starting...%N")
 			cursor := map.tests.new_cursor
 			from
 				l_cursor := a_list.new_cursor
@@ -190,7 +189,6 @@ feature {NONE} -- Status setting
 		do
 			cursor := Void
 			is_idle := False
-			io.put_string ("background executor has stopped...%N")
 		end
 
 	write_root_class
@@ -234,7 +232,6 @@ feature {NONE} -- Status setting
 			end
 			if compilation_launcher.is_ready (l_project) then
 				compilation_launcher.compile (l_project)
-				io.put_string ("Done compiling...%N")
 				if l_project.successful then
 					last_compilation_successful := True
 				end
@@ -299,7 +296,6 @@ feature {NONE} -- Status setting
 				if not l_cursor.after and l_evaluator = l_cursor.item then
 					l_cursor.forth
 				else
-					io.put_string ("evaluator is done...%N")
 				end
 			end
 		ensure
@@ -388,7 +384,6 @@ feature {NONE} -- Status setting
 					if map.tests.has (l_test) then
 						l_outcome ?= l_tuple.outcome
 						remove_test (l_test)
-						io.put_string ("received results for " + l_test.name + "%N")
 						test_suite.add_outcome_to_test (l_test, l_outcome)
 					end
 				else

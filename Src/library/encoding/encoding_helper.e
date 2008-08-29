@@ -11,6 +11,7 @@ class
 feature {NONE} -- Implementation
 
 	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER is
+			-- Managed pointer of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -23,22 +24,25 @@ feature {NONE} -- Implementation
 		end
 
 	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER is
+			-- Managed pointer of `a_string' which is taken as
+			-- 16bits string. High 16bits of characters of `a_string' are discarded.
 		require
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
 			l_end_pos, l_start_pos: INTEGER
+			l_result: MANAGED_POINTER
 		do
 			l_start_pos := 1
 			l_end_pos := a_string.count
-			create Result.make ((l_end_pos + 1) * 2)
+			create l_result.make ((l_end_pos + 1) * 2)
 			nb := l_end_pos - l_start_pos + 1
 
 			new_size := (nb + 1) * 2
 
-			if Result.count < new_size  then
-				Result.resize (new_size)
+			if l_result.count < new_size  then
+				l_result.resize (new_size)
 			end
 
 			from
@@ -46,15 +50,17 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				Result.put_natural_16 (a_string.code (i + l_start_pos).to_natural_16, i * 2)
+				l_result.put_natural_16 (a_string.code (i + l_start_pos).to_natural_16, i * 2)
 				i := i +  1
 			end
-			Result.put_natural_16 (0, i * 2)
+			l_result.put_natural_16 (0, i * 2)
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8 is
+			-- STRING_8 read from `a_multi_string'.
 		require
 			a_multi_string_not_default: a_multi_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -77,6 +83,7 @@ feature {NONE} -- Implementation
 		end
 
 	pointer_to_wide_string (a_w_string: POINTER; a_count: INTEGER): STRING_32 is
+			-- STRING_32 read from `a_w_string' of `a_count' bytes.
 		require
 			a_w_string_not_default: a_w_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -103,6 +110,7 @@ feature {NONE} -- Implementation
 		end
 
 	pointer_to_string_32 (a_w_string: POINTER; a_count: INTEGER_32): STRING_32
+			-- STRING_32 read from `a_w_string' of `a_count' bytes.
 		require
 			a_w_string_not_default: a_w_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -129,6 +137,7 @@ feature {NONE} -- Implementation
 		end
 
 	string_32_to_stream (a_string: STRING_32): STRING_8 is
+			-- Byte stream of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -234,14 +243,17 @@ feature {NONE} -- Endian
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library:   "Encoding: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
+
 
 end

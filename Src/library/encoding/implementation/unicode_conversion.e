@@ -16,13 +16,13 @@ inherit
 create {ENCODING}
 	default_create
 
-feature -- Querry
+feature -- Query
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN is
 			-- Is `a_code_page' valid?
 		do
-			if a_code_page /= Void then
-				Result := unicode_encodings.has (a_code_page)
+			if a_code_page /= Void and then not a_code_page.is_empty then
+				Result := unicode_encodings.has (a_code_page.as_lower)
 			end
 		end
 
@@ -30,19 +30,23 @@ feature -- Querry
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		do
 				-- We accept conversion between the same encodings to optimize.
-			if a_from_code_page.is_equal (utf8) then
+			if a_from_code_page.is_case_insensitive_equal (utf8) then
 					-- UTF-8 to UTF-32
-				Result := a_to_code_page.is_equal (utf8) or else a_to_code_page.is_equal (utf32)
-			elseif a_from_code_page.is_equal (utf32) then
+				Result := a_to_code_page.is_case_insensitive_equal (utf8) or else
+							a_to_code_page.is_case_insensitive_equal (utf32)
+			elseif a_from_code_page.is_case_insensitive_equal (utf32) then
 					-- UTF-32 to UTF-8
 					-- UTF-32 to UTF-16
-				Result := a_to_code_page.is_equal (utf32) or else a_to_code_page.is_equal (utf8) or else a_to_code_page.is_equal (utf16)
-			elseif a_from_code_page.is_equal (utf16) then
+				Result := a_to_code_page.is_case_insensitive_equal (utf32) or else
+							a_to_code_page.is_case_insensitive_equal (utf8) or else
+							a_to_code_page.is_case_insensitive_equal (utf16)
+			elseif a_from_code_page.is_case_insensitive_equal (utf16) then
 					-- UTF-16 to UTF-32
-				Result := a_to_code_page.is_equal (utf16) or else a_to_code_page.is_equal (utf32)
-			elseif a_from_code_page.is_equal (utf7) then
+				Result := a_to_code_page.is_case_insensitive_equal (utf16) or else
+							a_to_code_page.is_case_insensitive_equal (utf32)
+			elseif a_from_code_page.is_case_insensitive_equal (utf7) then
 					-- Do not support UTF-7 encoding conversion.
-				Result := a_to_code_page.is_equal (utf7)
+				Result := a_to_code_page.is_case_insensitive_equal (utf7)
 			--else
 					-- Neither other endian independent Unicode encodings.
 			end
@@ -55,32 +59,32 @@ feature -- Conversion
 		do
 			reset
 				-- We accept conversion between the same encodings to optimize.
-			if a_from_code_page.is_equal (a_to_code_page) then
+			if a_from_code_page.is_case_insensitive_equal (a_to_code_page) then
 				last_conversion_successful := True
 				last_converted_string := a_from_string
 			else
-				if a_from_code_page.is_equal (utf8) then
+				if a_from_code_page.is_case_insensitive_equal (utf8) then
 						-- UTF-8 to UTF-32
 					last_converted_string := utf8_to_utf32 (a_from_string.as_string_8)
 					last_conversion_successful := True
-				elseif a_from_code_page.is_equal (utf32) then
-					if a_to_code_page.is_equal (utf8) then
+				elseif a_from_code_page.is_case_insensitive_equal (utf32) then
+					if a_to_code_page.is_case_insensitive_equal (utf8) then
 							-- UTF-32 to UTF-8
 						last_converted_string := utf32_to_utf8 (a_from_string.as_string_32)
 						last_conversion_successful := True
-					elseif a_to_code_page.is_equal (utf16) then
+					elseif a_to_code_page.is_case_insensitive_equal (utf16) then
 							-- UTF-32 to UTF-16
 						last_converted_string := utf32_to_utf16 (a_from_string.as_string_32)
 						last_was_wide_string := True
 						last_conversion_successful := True
 					end
-				elseif a_from_code_page.is_equal (utf16) then
+				elseif a_from_code_page.is_case_insensitive_equal (utf16) then
 						-- UTF-16 to UTF-32
-					if a_to_code_page.is_equal (utf32) then
+					if a_to_code_page.is_case_insensitive_equal (utf32) then
 						last_converted_string := utf16_to_utf32 (a_from_string.as_string_32)
 						last_conversion_successful := True
 					end
-				--elseif a_from_code_page.is_equal (utf7) then
+				--elseif a_from_code_page.is_case_insensitive_equal (utf7) then
 						-- Do not support UTF-7 encoding conversion.
 				--else
 						-- Neither other endian independent Unicode encodings.
@@ -239,25 +243,28 @@ feature {NONE} -- Implementation
 			-- Supported Unicode encodings
 		once
 			create Result.make (8)
-			Result.put (utf7, utf7)
-			Result.put (utf8, utf8)
-			Result.put (utf16, utf16)
-			Result.put (utf32, utf32)
-			Result.put (utf16_le, utf16_le)
-			Result.put (utf32_le, utf32_le)
-			Result.put (utf16_be, utf16_be)
-			Result.put (utf32_be, utf32_be)
+			Result.put (utf7, utf7.as_lower)
+			Result.put (utf8, utf8.as_lower)
+			Result.put (utf16, utf16.as_lower)
+			Result.put (utf32, utf32.as_lower)
+			Result.put (utf16_le, utf16_le.as_lower)
+			Result.put (utf32_le, utf32_le.as_lower)
+			Result.put (utf16_be, utf16_be.as_lower)
+			Result.put (utf32_be, utf32_be.as_lower)
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library:   "Encoding: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
+
 
 end

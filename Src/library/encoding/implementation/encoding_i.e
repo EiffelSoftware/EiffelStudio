@@ -106,7 +106,7 @@ feature {NONE} -- Status report
 					until
 						i = nb or not Result
 					loop
-						Result := l_area.item (i).code <= 0xFFFF
+						Result := l_area [i].code <= 0xFFFF
 						i := i + 1
 					end
 				else
@@ -132,8 +132,7 @@ feature {NONE} -- Implementation
 			until
 				i > l_count
 			loop
-				l_code := a_str.code (i)
-				l_code := l_code & 0xFFFFF
+				l_code := a_str.code (i) & 0xFFFFF
 				if l_code > 0xFFFF then
 					l_code := l_code - 0x10000
 					Result.append_code (l_code |>> 10 | 0xD800)
@@ -186,14 +185,17 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library:   "Encoding: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
+
 
 end

@@ -1,3 +1,4 @@
 #!/bin/sh
 
-sudo sh eiffeldoc_backup.sh 
+cd `dirname $0`/..
+sudo sh ./eiffeldoc_backup.sh 

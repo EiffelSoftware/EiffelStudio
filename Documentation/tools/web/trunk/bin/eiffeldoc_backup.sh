@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. `dirname $0`/etc/init_vars.sh
+
 safemkdir()
 {
   if [ ! -e "$1" ]; then
@@ -10,8 +12,6 @@ safemkdir()
 
 CWD=`pwd`
 DATE=`eval date +%Y%m%d_%H-%M`
-DB_USER=root
-DB_PASS=abc123
 DB_NAME=eiffeldoc
 
 safemkdir backup

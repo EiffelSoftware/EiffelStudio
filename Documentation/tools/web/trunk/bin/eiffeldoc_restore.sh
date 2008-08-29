@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. `dirname $0`/etc/init_vars.sh
+
 safemkdir()
 {
   if [ ! -e "$1" ]; then
@@ -15,8 +17,6 @@ TARGETDB=$3
 TARGETSITENAME=$4
 
 
-DB_USER=root
-DB_PASS=abc123
 DB_NAME=eiffeldoc
 DB_DOCUSER=eiffeldoc
 

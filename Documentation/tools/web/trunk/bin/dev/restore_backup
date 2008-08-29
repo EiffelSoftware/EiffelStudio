@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd `dirname $0`/..
 sudo sh ./eiffeldoc_restore.sh backup/latest ../drupal_backup eiffeldoc_backup
 
 THEFILE=../drupal_backup/drupal/.htaccess

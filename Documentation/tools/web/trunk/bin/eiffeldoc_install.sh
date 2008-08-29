@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. `dirname $0`/etc/init_vars.sh
+
 # For CMS daily use
 CWD=`pwd`
 DRUPALDIR=$CWD/../drupal

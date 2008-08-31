@@ -212,7 +212,7 @@ feature -- C special code generation
 				target.print_register
 			when as_integer_32_type, to_integer_32_type then
 				buffer.put_string ("(EIF_INTEGER_32) ")
-				if target.c_type.is_pointer then
+				if basic_type.is_pointer then
 						-- Special code generation for conversion from POINTER to INTEGER without
 						-- raising a warning at the C compilation level on platforms where the pointer
 						-- size is different from the size of an INTEGER_32.
@@ -714,9 +714,9 @@ feature {NONE} -- C code generation
 				target.print_register
 				buffer.put_character(')')
 			else
-				buffer.put_string ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) (")
+				buffer.put_string ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) ((rt_int_ptr) (")
 				target.print_register
-				buffer.put_string ("))")
+				buffer.put_three_character (')', ')', ')')
 			end
 		end
 

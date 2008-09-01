@@ -16,6 +16,7 @@ feature -- Access
 
 	code_pages: HASH_TABLE [STRING, STRING] is
 			-- All code pages that iconv can possibly support.
+			-- It is not used now.
 		indexing
 			EIS: "name=GNU libiconv", "src=http://www.gnu.org/software/libiconv/", "tag=encoding library"
 		once

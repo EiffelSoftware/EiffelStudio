@@ -170,8 +170,19 @@ feature {NONE} -- Status report
 		require
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
+		local
+			l_pointer: MANAGED_POINTER
+			l_error: INTEGER
 		do
-			Result := code_pages.has (a_code_page.as_lower)
+			if not a_code_page.is_case_insensitive_equal (utf8) then
+				l_pointer := multi_byte_to_pointer (a_code_page)
+				Result := c_codeset_valid (l_pointer.item, $l_error)
+				if l_error /= 0 then
+					conversion_exception (l_error).raise
+				end
+			else
+				Result := True
+			end
 		end
 
 	is_two_byte_code_page (a_code_page: STRING): BOOLEAN is
@@ -371,6 +382,26 @@ feature {NONE} -- Implementation
 			"[
 				iconv_t cd;
 				cd = iconv_open ($a_to_codeset, $a_from_codeset);
+				if (cd != (iconv_t)(-1)){
+					if (iconv_close(cd)) {
+						*$a_error = 8;
+					}
+					return EIF_TRUE;
+				}else
+					return EIF_FALSE;
+			]"
+		end
+
+	c_codeset_valid (a_code_set: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN is
+			-- Check if `a_code_set' is convertible to utf-8 to see if it is valid.
+			-- Some systems do not support utf-8 to utf-8 conversion, so checking utf-8
+			-- should be avoided.
+		external
+			"C inline use <iconv.h>"
+		alias
+			"[
+				iconv_t cd;
+				cd = iconv_open ($a_code_set, "utf-8");
 				if (cd != (iconv_t)(-1)){
 					if (iconv_close(cd)) {
 						*$a_error = 8;

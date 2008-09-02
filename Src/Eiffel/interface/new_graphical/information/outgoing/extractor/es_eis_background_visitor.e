@@ -11,6 +11,7 @@ class
 inherit
 	CONF_ITERATOR
 		redefine
+			process_target,
 			process_cluster,
 			process_override,
 			process_library,
@@ -49,10 +50,6 @@ feature -- Operation
 				ev_application.remove_idle_action (background_procedures.first)
 			end
 
-				-- We collect conf nodes foreground,
-				-- since this is light operation.
-			collect_conf_nodes
-
 				-- Setup background visiting
 			if {lt_target: CONF_TARGET}universe.target then
 				lt_target.process (Current)
@@ -82,6 +79,20 @@ feature -- Query
 		end
 
 feature -- Visit nodes
+
+	process_target (a_target: CONF_TARGET) is
+			-- Visit `a_target'.
+		local
+			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]
+			l_procedure: PROCEDURE [ANY, TUPLE]
+		do
+			Precursor {CONF_ITERATOR} (a_target)
+			create l_conf_tuple
+			l_procedure := agent process_notable_only_conf (l_conf_tuple)
+			l_conf_tuple.t_notable := a_target
+			l_conf_tuple.t_procedure := l_procedure
+			background_procedures.extend (l_procedure)
+		end
 
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
@@ -136,8 +147,15 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		local
 			l_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]]
+			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]
 			l_procedure: PROCEDURE [ANY, TUPLE]
 		do
+			create l_conf_tuple
+			l_procedure := agent process_notable_only_conf (l_conf_tuple)
+			l_conf_tuple.t_notable := a_group
+			l_conf_tuple.t_procedure := l_procedure
+			background_procedures.extend (l_procedure)
+
 			if a_group.classes_set and then {lt_classes: ARRAYED_LIST [CONF_CLASS]}a_group.classes.linear_representation then
 					-- Collect actions to be managed.
 				from
@@ -159,27 +177,35 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	collect_conf_nodes is
-			-- Collect EIS information from configuration system.
-		do
-			if {lt_target: CONF_TARGET}universe.target and then {lt_system: CONF_SYSTEM}lt_target.system then
-				if {lt_target_order: ARRAYED_LIST [CONF_TARGET]}lt_system.target_order then
-					lt_target_order.do_if (
-						agent process_target_only_conf,
-						agent (aa_target: CONF_TARGET): BOOLEAN
-							do
-								Result := True
-							end)
-				end
-			end
-		end
-
-	process_target_only_conf (a_target: !CONF_TARGET) is
+	process_notable_only_conf (a_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]) is
 			-- Process configuration node of `a_target'
+		require
+			a_tuple_filed: a_tuple.t_notable /= Void and then a_tuple.t_procedure /= Void
 		local
 			l_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			create l_extractor.make (a_target)
+			if {lt_notable: CONF_NOTABLE}a_tuple.t_notable then
+				create l_extractor.make (lt_notable)
+			end
+			background_procedures.prune_all (a_tuple.t_procedure)
+			if is_value_valid (background_procedures.count) then
+				on_progress_progress (background_procedures.count)
+			end
+			if not background_procedures.is_empty then
+				if not ev_application.is_destroyed then
+					ev_application.do_once_on_idle (background_procedures.first)
+				end
+			else
+				if not ev_application.is_destroyed then
+						-- Clean up useless entries
+					ev_application.do_once_on_idle (agent storage.clean_up)
+						-- Save the storage to file
+					ev_application.do_once_on_idle (agent storage.save_to_file)
+				end
+				on_progress_finish
+			end
+		ensure
+			background_procedures_not_has: not background_procedures.has (a_tuple.t_procedure)
 		end
 
 	process_class_internal (a_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]]) is

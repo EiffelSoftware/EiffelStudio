@@ -228,7 +228,11 @@ function isedoc_create_doc_node_from($info) {
 	$original_path = $filepath;
 
 	// Build the node.
-	$nid = $info['nid'];
+	if (isset($info['nid'])) {
+		$nid = 0;
+	} else {
+		$nid = 0;
+	}
 	if ($nid > 0) {
 		//drupal_set_message("isedoc_create_node_from using nid=$nid");
 		$node = node_load ($nid, NULL, TRUE);
@@ -305,6 +309,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 			$l_base_id = substr($line, $j+1, 1 + ($i-1) - ($j+1));
 			$l_title = substr($line, $i+2);
 
+
 			$line = fgets($fp);
 			$line = substr($line, 0, -1);
 
@@ -314,68 +319,64 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 				$l_src = $dn . "/". substr($line, $i+5) . ".wiki";
 
 				fputs($logfp, "#$dep: $l_title  [$l_src]\n");
-				if ($is_reuse == 1) {
-					$a_nid = book_doc_page_exists($l_title);
-					if ($a_nid === FALSE) {
-						drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
-						$is_reuse = 0;
-					} else {
-						$node = node_load ($a_nid);
-					}
-					if (!$node) {
-						$is_reuse = 0;
-						drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
-					}
-				}
-
-				if ($is_reuse == 1) {
-					$info = isedoc_file_info($l_src, FALSE);
-				} else {
-					$info = isedoc_file_info($l_src, TRUE);
-				}
-				if ($info) {
-					//drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'status');
-					$info['title'] = $l_title;
-					$info['src'] = $l_src;
-					$info['baseid'] = $l_baseid;
-					$info['depth'] = $l_depth;
-
-
-					if ($dep >= 0) {
-						$p_mlid = $node_ids[$l_depth - 1];
-					} else {
-						$p_mlid = $book_id;
-					}
-
-					$dep = $l_depth;
-					$info['parent_mlid'] = $p_mlid;
-					$info['book_id'] = $bid;
-					if (($is_reuse == 0) and ($l_depth == 0)) {
-						$node = node_load ($bid);
-						if ($node) {
-							$info['nid'] = $bid;
-							$node = isedoc_create_doc_node_from ($info);
-							$l_mlid = $node->book['mlid'];
-							$nodes_count = $nodes_count + 1;
-						} else {
-							drupal_set_message(t(" ERROR top node is not book node !! dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
-						}
-					} elseif ($node) {
-						$l_mlid = $node->book['mlid'];
-						drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
-					} else {
-						$node = isedoc_create_doc_node_from ($info);
-						$nodes_count = $nodes_count + 1;
-						$l_mlid = isedoc_create_doc_outline_from ($node->nid, $info);
-						drupal_set_message(t(" -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
-					}
-					$node_ids[$l_depth] = $l_mlid;
-
+				if ($l_depth == 0) {
+					// This is related to the book,
+					// For now, no specific action 
+					$node = node_load ($bid);
+					$l_mlid = $node->book['mlid'];
 					$node = NULL;
+					$node_ids[$l_depth] = $l_mlid;
 				} else {
-					drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+					if ($is_reuse == 1) {
+						$a_nid = book_doc_page_exists($l_title);
+						if ($a_nid === FALSE) {
+							drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+							$is_reuse = 0;
+						} else {
+							$node = node_load ($a_nid);
+						}
+						if (!$node) {
+							$is_reuse = 0;
+							drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+						}
+					}
+
+					if ($is_reuse) {
+						$info = isedoc_file_info($l_src, FALSE);
+					} else {
+						$info = isedoc_file_info($l_src, TRUE);
+					}
+					if ($info) {
+						//drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'status');
+						$info['title'] = $l_title;
+						$info['src'] = $l_src;
+						$info['baseid'] = $l_baseid;
+						$info['depth'] = $l_depth;
+
+						if ($dep > 0) {
+							$p_mlid = $node_ids[$l_depth - 1];
+						} else {
+							$p_mlid = $book_id;
+						}
+						$dep = $l_depth;
+						$info['parent_mlid'] = $p_mlid;
+						$info['book_id'] = $bid;
+						if ($node) {
+							$l_mlid = $node->book['mlid'];
+							drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+						} else {
+							$node = isedoc_create_doc_node_from ($info);
+							$nodes_count = $nodes_count + 1;
+							$l_mlid = isedoc_create_doc_outline_from ($node->nid, $info);
+							drupal_set_message(t(" -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+						}
+						$node_ids[$l_depth] = $l_mlid;
+
+						$node = NULL;
+					} else {
+						drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+					}
 				}
-				
 			}
 		}
 	}

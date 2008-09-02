@@ -56,20 +56,22 @@
 			<span><class_name>CALENDAR</class_name></span> control.
 		</paragraph>
 		<paragraph>Clicking on the "Change font" button and a 
-			<link>
+			change font dialog box will appear.
+			<image>
 				<url>/images/dotnet_samples/change_font_dialog.png</url>
-				<label>change font dialog box</label>
-			</link> will appear.
+				<legend>change font dialog box</legend>
+			</image>.
 		</paragraph>
-		<paragraph>Clicking on the "Change color" button and a 
-			<link>
+		<paragraph>Clicking on the "Change color" button and a dialog_box will appear.
+			<image>
 				<url>/images/dotnet_samples/date_time_picker_change_color_dlg.png</url>
-				<label>dialog box</label>
-			</link> will appear that will permit you to customize the color appearance of the calendar though a 
-			<link>
+				<legend>dialog box</legend>
+			</image>
+			It will permit you to customize the color appearance of the calendar though a color dialog box
+			<image>
 				<url>/images/dotnet_samples/date_time_picker_change_color_dlg.png</url>
-				<label>color dialog box</label>
-			</link>.
+				<legend>color dialog box</legend>
+			</image>.
 		</paragraph>
 		<paragraph/>
 		<heading>

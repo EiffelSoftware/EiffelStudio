@@ -21,7 +21,7 @@
 			<item>If you want to define another derived metric, repeat all the previous steps.</item>
 		</list>
 		
-		<paragraph>For more information about criterion, read the <link><url>../../../../reference/60_metric_tool/30_user_interface_basics/20_criterion.xml</url><label>Managing criterion</label></link> section.</paragraph>
+		<paragraph>For more information about criterion, read the <link><url>../../../../reference/60_metric_tool/20_definitions/99_criterion_reference.xml</url><label>Managing criterion</label></link> section.</paragraph>
 		
 		<paragraph>A summary of the metric you just defined appears in a textual representation in the <bold>Expression</bold> text field.</paragraph>
 		<seealso>
@@ -33,7 +33,7 @@
 			</link>
 			<line_break></line_break>
 			<link>
-				<url>../../../../reference/60_metric_tool/30_user_interface_basics/20_criterion.xml</url>
+				<url>../../../../reference/60_metric_tool/20_definitions/99_criterion_reference.xml</url>
 				<label>Managing criterion</label>
 			</link>
 		</seealso>

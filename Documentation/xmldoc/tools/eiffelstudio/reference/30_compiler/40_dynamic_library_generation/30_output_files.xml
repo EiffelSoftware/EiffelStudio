@@ -1,4 +1,4 @@
-<document title="Generated files" output="studio">
+<document title="Dynamic library: Generated files" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>Basically, once the Eiffel definition file is created, the compiler will generate a set of files and will compile them to generate the Dynamic library into the 

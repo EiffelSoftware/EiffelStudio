@@ -2,7 +2,7 @@
 	<meta_data></meta_data>	
 	<paragraph>			
 		<paragraph>For detailed installation instructions please follow the link for the product your are installing.</paragraph>					
-		<link><url>studio/index.xml</url><label><heading><size>2</size>EiffelStudio 6.3</heading></label></link>
-		<link><url>thirdparty/index.xml</url><label><heading><size>2</size>Third Party Tools</heading></label></link>
+		<heading><size>2</size><link><url>studio/index.xml</url><label>EiffelStudio 6.3</label></link></heading>
+		<heading><size>2</size><link><url>thirdparty/index.xml</url><label>Third Party Tools</label></link></heading>
 	</paragraph>
 </document>

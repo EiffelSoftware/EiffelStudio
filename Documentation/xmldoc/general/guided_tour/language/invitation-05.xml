@@ -36,9 +36,8 @@
 		</paragraph>
 		<code_block><local_variable>acc</local_variable>: <class_name>ACCOUNT</class_name></code_block>
 		<paragraph>The term "entity" generalizes the more common notion of "variable".  An entity declared of a reference type, such as 
-			<code><local_variable>acc</local_variable>
-			</code>, may at any time during execution become " 
-			<bold>attached to</bold> "an object; the type rules imply that this object must be a direct instance of 
+			<code><local_variable>acc</local_variable></code>,
+			may at any time during execution become " <bold>attached to</bold> " an object; the type rules imply that this object must be a direct instance of 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> -- or, as seen below, of a "descendant" of that class.

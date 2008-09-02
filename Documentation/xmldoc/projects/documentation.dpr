@@ -1,8 +1,8 @@
 <project>
 	<project_name>docs</project_name>
-	<root_directory>$DOCUMENT_DIR/xmldoc</root_directory>
-	<schema>$EIFFEL_SRC/tools/doc_builder/resources/xml/schema/document.xsd</schema>
-	<html_css>$DOCUMENT_DIR/xmldoc/default.css</html_css>
+	<root_directory>d:/_dev/trunk/Src/../Documentation/xmldoc</root_directory>
+	<schema>D:/_dev/trunk/Src/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>d:/_dev/trunk/Src/../Documentation/xmldoc/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>
@@ -105,10 +105,6 @@
 	<shortcut>
 		<shortcut_key>78</shortcut_key>
 		<shortcut_value>&lt;link&gt;&lt;url&gt;&lt;/url&gt;&lt;label&gt;[tag]&lt;/label&gt;&lt;/link&gt;</shortcut_value>
-	</shortcut>
-	<shortcut>
-		<shortcut_key>79</shortcut_key>
-		<shortcut_value>&lt;list ordered="false"&gt;&lt;item&gt;[tag]&lt;/item&gt;&lt;/list&gt;</shortcut_value>
 	</shortcut>
 	<shortcut>
 		<shortcut_key>82</shortcut_key>

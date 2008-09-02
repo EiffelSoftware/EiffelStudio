@@ -19,10 +19,10 @@
 				<url>../../../../../images/eiffelstudio/icons/12x12/bp_slot_other_frame_icon.png</url>
 			</image> ) indicates the execution line that was attained in the feature in the current call stack element. Therefore, if a feature is recursive, and appears several times in the call stack, changing the current call stack element may cause green arrows to be displayed at different places in the same feature (if the different calls did not reach the same execution point). On the other hand, the yellow arrow can only appear at one place as long as the application is not started again.
 		</paragraph>
-		<paragraph>The 
+		<paragraph>The left part of the 
 			<link>
-				<url>../40_object_tool/05_local_view.xml</url>
-				<label>left part of the object tool</label>
+				<url>../40_object_tool/00_introduction.xml</url>
+				<label>object tool</label>
 			</link> gives valuable information concerning parameters that were passed to the feature corresponding to the current call stack, the current value of the local variables, and, if it is a function, the current value of its result.
 		</paragraph>
 	</paragraph></document>

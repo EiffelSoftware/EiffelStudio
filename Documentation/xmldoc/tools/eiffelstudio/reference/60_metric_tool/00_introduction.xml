@@ -1,4 +1,4 @@
-<document title="Introduction" output="studio">
+<document title="Metric tool: Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>One of the innovations of the new EiffelStudio 5.x environment is a set of metric facilities enabling developers and managers to obtain quantitative information about software systems and the process of producing them.</paragraph>

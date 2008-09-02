@@ -1,4 +1,4 @@
-<document title="Introduction" output="studio">
+<document title="Browsing tools: Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>The browsing tools are the address bars as well as all the tools that are in the left panel of development windows in normal mode. They help find an item in the system, such as a class, a cluster, a feature, some text, ... They include the 

@@ -1,4 +1,4 @@
-<document title="How to analyze a project" output="studio">
+<document title="How to analyze a project: Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>The metric tab in the context tool allows project analyzing. Built on a suitable metric theory, this tool provides a set of elementary metrics that can be evaluated to test projects design and implementation.</paragraph>

@@ -1,4 +1,4 @@
-<document title="Code generation" output="studio">
+<document title="Diagram tool: Code generation" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>All actions taken in the diagram tool that modify a part of the system are immediately reflected in the Eiffel system. Following is a summary of these actions.</paragraph>

@@ -1,4 +1,4 @@
-<document title="Introduction" output="studio">
+<document title="EiffelCOM: Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>This chapter covers enough information about COM for Eiffel developers to use the EiffelCOM wizard in an effective way. It does not cover all of COM since it would require an entire book but presents the main concepts needed to understand how to build an EiffelCOM system. </paragraph>

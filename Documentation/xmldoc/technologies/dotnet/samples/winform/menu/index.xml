@@ -31,11 +31,11 @@
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. The main window contains a main menu with two entries (File and Format). </paragraph>
 		<paragraph>The main window also has a blue 
 			<span>LABEL</span> that contains a context menu, that is the clone of "Format" in the main menu. Right click on the 
-			<span>LABEL</span> and a 
-			<link>
+			<span>LABEL</span> and a context menu will appear
+			<image>
 				<url>../../../../../images/dotnet_samples/menu_contextuel.png</url>
-				<label>context menu will appear</label>
-			</link>.
+				<legend>context menu</legend>
+			</image>.
 		</paragraph>
 		<paragraph/>
 		<heading>

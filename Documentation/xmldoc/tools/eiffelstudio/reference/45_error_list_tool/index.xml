@@ -26,7 +26,7 @@
 			By default the tool's title (in the tab-docked tab or on the tool's title bar when visible) will read<italic> 'Error List'</italic>. In it's default state there are no errors or warning and the title reads as such. When performing a compilation resulting in the logging of any number of errors or warnings the tool title will be update to indicate the respective number of errors and warning as <italic>'Error List (#Errors, #Warning)'</italic> where <italic>#Errors</italic> indicates the number of logged errors and <italic>#Warnings</italic> indicates the number of logged warnings. When there are no errors or warnings the tool's title will be reset to the default title <italic>'Error List'</italic>.
 		</paragraph>
 		<paragraph>
-			When the tool is visible, not only does the tab (if docked) and the title bar reflect the number of logged errors and warnings but the tool bar <bold>Errors</bold> and  <bold>Warnings</bold> filter toggle buttons also reflect the number of respective logged errors and warnings. For more information on filtering error and warnings, see <link><url>#filtering_errors_and_warnings</url><label>Filtering Errors and Warnings</label></link>.
+			When the tool is visible, not only does the tab (if docked) and the title bar reflect the number of logged errors and warnings but the tool bar <bold>Errors</bold> and  <bold>Warnings</bold> filter toggle buttons also reflect the number of respective logged errors and warnings. For more information on filtering error and warnings, see <link><anchor_name>filtering_errors_and_warnings</anchor_name><label>Filtering Errors and Warnings</label></link>.
 		</paragraph>
 				
 		<anchor>reading_logged_error_and_warning_reports</anchor>
@@ -86,7 +86,7 @@
 			There are also a matching number of keyboard shortcuts that can be used with or without the Error List tool being in view; To go to the next error use CTRL+F8,  To go to the previous error use CTRL+SHIFT+F8, to go to the next warning use CTRL+ALT+F8 and to go to the previous warning use CTRL+ALT+SHIFT+F8.
 		</paragraph>
 		<paragraph>
-			In the event of no visible errors or warnings, the respective Next/Previous buttons and menu items will be unavailable. This is also effective when <link><url>#filtering_errors_and_warnings</url><label>filtering errors and warnings</label></link>, as the unseen logged error and warnings are treated as if they had never been logged ensuring that, when navigating, the irrelevant errors and warnings are not navigated to.
+			In the event of no visible errors or warnings, the respective Next/Previous buttons and menu items will be unavailable. This is also effective when <link><anchor_name>filtering_errors_and_warnings</anchor_name><label>filtering errors and warnings</label></link>, as the unseen logged error and warnings are treated as if they had never been logged ensuring that, when navigating, the irrelevant errors and warnings are not navigated to.
 		</paragraph>
 		<paragraph>
 			When navigating between a logged error or warning the context where the error/warning occurred is shown. At anytime, double-left clicking on an error or warning will show the corresponding context to that logged error/warning. Pressing ENTER on the selected error or warning will also show the correspond context.

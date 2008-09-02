@@ -10,8 +10,8 @@
 				<url>/images/eiffelstudio/icons/10x10/general_delete_icon.png</url>
 			</image> discards an object from the 
 			<link>
-				<url>10_object_view.xml</url>
-				<label>object view</label>
+				<url>00_introduction.xml</url>
+				<label>object tools</label>
 			</link>. All top-level objects can be removed, except the first one, which is the object relative to the 
 			<link>
 				<url>../30_call_stack_tool/00_introduction.xml</url>
@@ -20,8 +20,8 @@
 		</paragraph>
 		<paragraph>Left-clicking on this button removes the selected object from the 
 			<link>
-				<url>10_object_view.xml</url>
-				<label>object view</label>
+				<url>00_introduction.xml</url>
+				<label>object tools</label>
 			</link>, if possible. It is also possible to 
 			<link>
 				<url>../../../../../tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>

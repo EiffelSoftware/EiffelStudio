@@ -4,7 +4,7 @@
 		<paragraph>Here you can find help for installing third party tools and programs which may be necessary for your Eiffel programming needs.</paragraph>
 		<list ordered="false">				
 			<item>
-				<link><url>http://dev.eiffel.com/Installing_Microsoft_C_compiler</url><label><heading><size>2</size>Free Microsoft C Compiler </heading></label></link>
+				<heading><size>2</size><link><url>http://dev.eiffel.com/Installing_Microsoft_C_compiler</url><label>Free Microsoft C Compiler </label></link></heading>
 			</item>
 		</list>
 	</paragraph>

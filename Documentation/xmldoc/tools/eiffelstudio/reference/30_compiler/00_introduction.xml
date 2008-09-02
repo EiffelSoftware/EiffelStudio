@@ -1,4 +1,4 @@
-<document title="Compiler" output="studio">
+<document title="Compiler: introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>EiffelStudio naturally includes a powerful Eiffel compiler, which is at the core of the IDE. It supports the entire Eiffel language as defined in the third edition of Eiffel: The Language.</paragraph> 

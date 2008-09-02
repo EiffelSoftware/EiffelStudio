@@ -7,7 +7,7 @@
 			</image> changes the display size of special objects (i.e. objects whose class is <link><url>/libraries/base/reference/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link>).Since special objects may contain thousands of attributes, only the first fifty are displayed by default.
 			If left-clicked, a dialog is popped up that sets the exploration indices of special objects that will be loaded in the future.
 			 <line_break></line_break>
-			 This popup also shows the "Maximum displayed string size" in the grid (<link><label>local view</label><url>05_local_view.xml</url></link> or <link><label>objects view</label><url>10_object_view.xml</url></link>, or the <link><label>watch tools</label><url>../50_expression_evaluation/index.xml</url></link>).
+			 This popup also shows the "Maximum displayed string size" in the grid (<link><label>objects tool</label><url>00_introduction.xml</url></link>, or the <link><label>watch tools</label><url>../50_expression_evaluation/index.xml</url></link>).
 		</paragraph>
 		<paragraph>This dialog changes the settings for future special objects:</paragraph>
 		<paragraph>

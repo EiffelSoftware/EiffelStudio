@@ -1,4 +1,4 @@
-<document title="Introduction" output="studio">
+<document title="Address bars: Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>All development windows are composed of two major components, each of which can be centered on a given "address" (either a cluster, a class or a feature). One is the editor, with which go all the peripheral tools (including the 

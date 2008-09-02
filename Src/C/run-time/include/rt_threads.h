@@ -684,7 +684,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 			InitializeCriticalSectionAndSpinCount(m, (DWORD) sc); \
 		}
 #define EIF_LW_MUTEX_LOCK(m,msg)	EnterCriticalSection(m)
-#define EIF_LW_MUTEX_TRYLOCK(m,msg)	TryEnterCriticalSection(m)
+#define EIF_LW_MUTEX_TRYLOCK(m,r,msg)	r = EIF_TEST(TryEnterCriticalSection(m))
 #define EIF_LW_MUTEX_UNLOCK(m,msg)	LeaveCriticalSection(m)
 #define EIF_LW_MUTEX_DESTROY(m,msg)	DeleteCriticalSection(m); eif_free(m)
 
@@ -695,7 +695,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
     	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
 		memset(m, 0, sizeof(EIF_LW_MUTEX_TYPE));
 #define EIF_LW_MUTEX_LOCK(m,msg)	_lwp_mutex_lock(m) 
-#define EIF_LW_MUTEX_TRYLOCK(m,msg)	(_lwp_mutex_trylock(m) ? EIF_FALSE : EIF_TRUE)
+#define EIF_LW_MUTEX_TRYLOCK(m,r,msg)	r = (_lwp_mutex_trylock(m) ? EIF_FALSE : EIF_TRUE)
 #define EIF_LW_MUTEX_UNLOCK(m,msg)	_lwp_mutex_unlock(m)
 #define EIF_LW_MUTEX_DESTROY(m,msg)	eif_free(m)
 
@@ -704,7 +704,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 #define EIF_LW_MUTEX_TYPE EIF_MUTEX_TYPE
 #define EIF_LW_MUTEX_CREATE(m,sc,msg)	EIF_MUTEX_CREATE(m,msg)
 #define EIF_LW_MUTEX_LOCK(m,msg)		EIF_MUTEX_LOCK(m,msg)
-#define EIF_LW_MUTEX_TRYLOCK(m,msg)		EIF_MUTEX_TRYLOCK(m,msg)
+#define EIF_LW_MUTEX_TRYLOCK(m,r,msg)	EIF_MUTEX_TRYLOCK(m,r,msg)
 #define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK(m,msg)
 #define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY(m,msg)
 #endif

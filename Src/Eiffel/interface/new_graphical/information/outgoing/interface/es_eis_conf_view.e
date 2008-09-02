@@ -83,11 +83,12 @@ feature -- Operation
 			if component_editable then
 				create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
 				if {lt_target: CONF_TARGET}conf_notable then
-					if {lt_sys: CONF_SYSTEM}lt_target.system and then not lt_sys.is_readonly then
+					if {lt_sys: CONF_SYSTEM}lt_target.system then
 						write_entry (l_entry, lt_target, lt_sys)
 						l_added := last_entry_modified
-					else
-						prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_target.name), Void, Void)
+						if not l_added then
+							prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_target.name), Void, Void)
+						end
 					end
 				elseif {lt_cluster: CONF_CLUSTER}conf_notable then
 					if {lt_sys1: CONF_SYSTEM}lt_cluster.target.system and then not lt_cluster.is_readonly then
@@ -161,7 +162,6 @@ feature {NONE} -- Conf modification
 			-- `a_system' to save the configure file.
 		require
 			a_entry_editable: entry_editable (a_entry)
-			a_system_is_not_readonly: not a_system.is_readonly
 		local
 			l_for_conf: BOOLEAN
 		do
@@ -180,7 +180,6 @@ feature {NONE} -- Conf modification
 			-- Modify `a_old_entry' into `a_new_entry' in `a_conf'
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
-			a_system_is_not_readonly: not a_system.is_readonly
 		local
 			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
 			l_found: BOOLEAN
@@ -215,7 +214,6 @@ feature {NONE} -- Conf modification
 			-- Remove `a_entry' from `a_conf_notable' and save in `a_system'
 		require
 			a_entry_editable: entry_editable (a_entry)
-			a_system_is_not_readonly: not a_system.is_readonly
 		local
 			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
 			l_found: BOOLEAN

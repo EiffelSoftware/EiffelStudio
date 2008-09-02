@@ -39,6 +39,7 @@ feature -- Basic operation
 				{lt_section: HELP_SECTION_EIS_ENTRY}a_section and then
 				{lt_entry: EIS_ENTRY}lt_section.entry and then
 				lt_entry.source /= Void and then
+				not lt_entry.source.is_empty and then
 				{lt_src: STRING}lt_entry.source.as_string_8.twin	 -- |FIXME: Bad conversion to STRING_8
 			then
 				last_entry := lt_entry

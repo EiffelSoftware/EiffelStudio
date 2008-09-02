@@ -2559,7 +2559,6 @@ rt_public EIF_REFERENCE stack_trace_string (void)
 		 * By doing this, we can build incomplete traces for inner levels (full trace is not needed) 
 		 * before building the full one for the most outer level.
 		 */
-	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	struct ex_vect *backtrack_point = NULL;	/* Saved top node of the trace stack */
 	struct xstack saved;			/* Saved stack context */

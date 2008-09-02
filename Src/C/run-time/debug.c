@@ -194,7 +194,7 @@ rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against con
 	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\
 	EIF_ENTER_C; EIF_ASYNC_SAFE_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C; RTGC
-rt_private EIF_BOOLEAN dbgmtx_trylock(EIF_LW_MUTEX_TYPE a_mutex) {
+rt_private EIF_BOOLEAN dbgmtx_trylock(EIF_LW_MUTEX_TYPE *a_mutex) {
 	EIF_BOOLEAN result;
 	EIF_LW_MUTEX_TRYLOCK(db_mutex, result, "Cannot lock mutex for the debugger [dbreak]\n");
 	return result;

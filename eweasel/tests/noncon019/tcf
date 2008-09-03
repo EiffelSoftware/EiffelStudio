@@ -1,0 +1,39 @@
+test_name non-conform-precondition-inheritance
+test_description Inheriting an ancestor routine from a non-conforming parent generates a VEEN error.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw account.e $CLUSTER account.e
+copy_raw account_i.e $CLUSTER account_i.e
+copy_raw account_imp1.e $CLUSTER account_imp1.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_1
+execute_result	ok
+compare	exec_output_1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE exec_output_2
+execute_result	ok
+compare	exec_output_2 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final	NONE exec_output_3
+execute_result	ok
+compare	exec_output_3 output
+
+
+
+test_end

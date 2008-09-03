@@ -330,7 +330,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 			$i = strpos($line, "!src=");
 			if ($i > 0) {
 				$l_ref_src = substr($line, $i+5);
-				$l_src = $dn . "/". l_ref_src . ".wiki";
+				$l_src = $dn . "/". $l_ref_src . ".wiki";
 
 				if ($is_reuse == 0 and $l_depth == 0) {
 					// This is related to the book,
@@ -377,13 +377,13 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 						$info['book_id'] = $bid;
 						if ($node) {
 							$l_mlid = $node->book['mlid'];
-							drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+							drupal_set_message(t(" REUSE %tit -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%tit" => $l_title, "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 						} else {
 							$node = isedoc_create_doc_node_from (&$info);
 							$nodes_count = $nodes_count + 1;
 							$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
 							fputs($logfp, "#".$info['depth'].":".$node->nid.":".$l_mlid.":".$l_ref_src.":".$info['title']."\n");
-							drupal_set_message(t(" -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_src, "%nid" => $node->nid)),'status');
+							drupal_set_message(t(" -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_ref_src, "%nid" => $node->nid)),'status');
 						}
 						$node_ids[$l_depth] = $l_mlid;
 
@@ -454,7 +454,7 @@ function var_dump_global($refname) {
 function book_doc_page_exists($a_title) {
 	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type IN ()", $a_title);
 	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type = 'doc' ", $a_title);
-	$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') ", $a_title);
+	$res = db_query("SELECT nid FROM {node} WHERE type = 'doc' AND LOWER(title) = LOWER('%s') ", $a_title);
 	if ($res === FALSE) {
 		//drupal_set_message(t("TitleExists? [$a_title] = NO result" ),'status');
 		return FALSE;

@@ -196,9 +196,9 @@ function isedoc_import_form_import($form, &$form_state) {
 	}
 }
 
-function isedoc_create_doc_outline_from($nid,$info) {
+function isedoc_create_doc_outline_from($nid,&$info) {
 
-	$node = node_load ($nid, NULL, TRUE);
+	$node =& node_load ($nid, NULL, TRUE);
 
         book_nodeapi(&$node, "prepare", NULL, NULL);
         $node->book['bid'] = $info['book_id'];
@@ -207,12 +207,20 @@ function isedoc_create_doc_outline_from($nid,$info) {
         $node->book['plid'] = $info['parent_mlid'];
         book_nodeapi(&$node, "update", NULL, NULL);
 
-	node_save($node);
-	return $node->book['mlid'];
+	drupal_set_message(var_dump_r($node));
+
+	if (isset($info['index'])) {
+		if ($info['index'] != 0) {
+			$node->book['weight'] = $info['index'];
+		}
+	}
+	node_save(&$node);
+	$mlid = $node->book['mlid'];
+	return $mlid;
 
 }
 
-function isedoc_create_doc_node_from($info) {
+function isedoc_create_doc_node_from(&$info) {
 	global $user;
 
 //	if (!user_access('create isedoc')) {
@@ -269,7 +277,7 @@ function isedoc_create_doc_node_from($info) {
 
 	// Save the node.
 	$node = node_submit($node);
-	node_save($node);
+	node_save(&$node);
 
 	return $node;
 }
@@ -297,7 +305,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 		if ($i === FALSE) {
 			//drupal_set_message(t("Line=$line UNABLE TO FIND [ ..."),'status');
 		} else {
-			if (($i > 0) and (substr($line, $i-1, 1) == "@")) {
+			if (($i > 0) and (substr($line,0,1) == "@" or substr($line, $i-1, 1) == "@")) {
 				$is_reuse = 1;
 			} else {
 				$is_reuse = 0;
@@ -305,9 +313,14 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 
 			$j = strpos($line, ":", $i);
 			$l_depth = substr($line, $i+1, 1 + ($j-1) -($i+1) );
-			$i = strpos($line, "]", $j+1);
-			$l_base_id = substr($line, $j+1, 1 + ($i-1) - ($j+1));
-			$l_title = substr($line, $i+2);
+
+			$i = strpos($line, ":", $j+1);
+			$l_base_id = substr($line, $j+1, 1 + ($i-1) -($j+1) );
+
+			$j = strpos($line, "]", $i+1);
+			$l_index = substr($line, $i+1, 1 + ($j-1) - ($i+1));
+
+			$l_title = substr($line, $j+2);
 
 
 			$line = fgets($fp);
@@ -318,14 +331,13 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 			if ($i > 0) {
 				$l_src = $dn . "/". substr($line, $i+5) . ".wiki";
 
-				fputs($logfp, "#$dep: $l_title  [$l_src]\n");
-				if ($l_depth == 0) {
+				if ($is_reuse == 0 and $l_depth == 0) {
 					// This is related to the book,
 					// For now, no specific action 
 					$node = node_load ($bid);
 					$l_mlid = $node->book['mlid'];
 					$node = NULL;
-					$node_ids[$l_depth] = $l_mlid;
+					$node_ids[0] = $l_mlid;
 				} else {
 					if ($is_reuse == 1) {
 						$a_nid = book_doc_page_exists($l_title);
@@ -352,8 +364,9 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 						$info['src'] = $l_src;
 						$info['baseid'] = $l_baseid;
 						$info['depth'] = $l_depth;
+						$info['index'] = $l_index;
 
-						if ($dep > 0) {
+						if ($dep >= 0) {
 							$p_mlid = $node_ids[$l_depth - 1];
 						} else {
 							$p_mlid = $book_id;
@@ -365,10 +378,11 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 							$l_mlid = $node->book['mlid'];
 							drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 						} else {
-							$node = isedoc_create_doc_node_from ($info);
+							$node = isedoc_create_doc_node_from (&$info);
+							fputs($logfp, "#[".$info['depth'].":".$node->nid."]: \"".$info['title']."\" [".$info['src']."]\n");
 							$nodes_count = $nodes_count + 1;
-							$l_mlid = isedoc_create_doc_outline_from ($node->nid, $info);
-							drupal_set_message(t(" -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+							$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
+							drupal_set_message(t(" -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_src, "%nid" => $node->nid)),'status');
 						}
 						$node_ids[$l_depth] = $l_mlid;
 

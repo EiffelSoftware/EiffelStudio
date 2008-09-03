@@ -207,7 +207,7 @@ function isedoc_create_doc_outline_from($nid,&$info) {
         $node->book['plid'] = $info['parent_mlid'];
         book_nodeapi(&$node, "update", NULL, NULL);
 
-	drupal_set_message(var_dump_r($node));
+	//drupal_set_message(var_dump_r($node));
 
 	if (isset($info['index'])) {
 		if ($info['index'] != 0) {
@@ -329,7 +329,8 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 //drupal_set_message(t("Line=$line is_reuse=$is_reuse ..."),'status');
 			$i = strpos($line, "!src=");
 			if ($i > 0) {
-				$l_src = $dn . "/". substr($line, $i+5) . ".wiki";
+				$l_ref_src = substr($line, $i+5);
+				$l_src = $dn . "/". l_ref_src . ".wiki";
 
 				if ($is_reuse == 0 and $l_depth == 0) {
 					// This is related to the book,
@@ -379,9 +380,9 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 							drupal_set_message(t(" REUSE -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
 						} else {
 							$node = isedoc_create_doc_node_from (&$info);
-							fputs($logfp, "#[".$info['depth'].":".$node->nid."]: \"".$info['title']."\" [".$info['src']."]\n");
 							$nodes_count = $nodes_count + 1;
 							$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
+							fputs($logfp, "#".$info['depth'].":".$node->nid.":".$l_mlid.":".$l_ref_src.":".$info['title']."\n");
 							drupal_set_message(t(" -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_src, "%nid" => $node->nid)),'status');
 						}
 						$node_ids[$l_depth] = $l_mlid;

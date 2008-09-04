@@ -57,4 +57,14 @@ feature {NONE} -- Implementation: Access
 	internal_asserter: like asserter
 			-- Once per object storage for `asserter'.
 
+feature {NONE} -- Implementation
+
+	frozen evaluator_root: ?TEST_ROOT_APPLICATION
+			-- Anchor for {TEST_ROOT_APPLICATION}.
+			--
+			-- Note: this anchor prevents recompiling classes needed by {TEST_ROOT_APPLICATION} every time
+			--       test execution is launched.
+		do
+		end
+
 end

@@ -18,13 +18,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- TO BE REMOVED
-
-	print_error (a_string: !STRING)
-		do
-			io.error.put_string (a_string + "%N")
-		end
-
 feature {NONE} -- Initialization
 
 	frozen make is
@@ -55,7 +48,9 @@ feature {NONE} -- Initialization
 						n := l_index.to_natural
 						if is_valid_index (n) then
 							run_test (n)
-							print_error ({!STRING} #? ("finished running test " + n.out))
+							io.output.put_string ("ran tests ")
+							io.output.put_natural (n)
+							io.output.put_new_line
 						else
 							l_bad_argument := True
 						end
@@ -63,24 +58,26 @@ feature {NONE} -- Initialization
 						l_bad_argument := True
 					end
 					if l_bad_argument then
-						io.error.put_string (arguments.values.item_for_iteration)
-						io.error.put_string (" is not a valid test index")
+						io.output.put_string (arguments.values.item_for_iteration)
+						io.output.put_string (" is not a valid test index")
 						die (1)
 					end
 					arguments.values.forth
 				end
+				--stream.put_character ('0')
+				io.output.put_string ("terminating normally...%N")
 				close_stream
 			end
 		rescue
 			if is_stream_invalid then
 				if arguments.has_port_option then
-					io.error.put_string ("Could not write to socket on port ")
-					io.error.put_integer (arguments.port_option)
+					io.output.put_string ("Could not write to socket on port ")
+					io.output.put_integer (arguments.port_option)
 				else
-					io.error.put_string ("Count not write to file ")
-					io.error.put_string (arguments.file_option)
+					io.output.put_string ("Count not write to file ")
+					io.output.put_string (arguments.file_option)
 				end
-				io.error.put_new_line
+				io.output.put_new_line
 				die (1)
 			elseif exception = {EXCEP_CONST}.signal_exception or
 			       exception = {EXCEP_CONST}.operating_system_exception then
@@ -134,7 +131,6 @@ feature {NONE} -- Status setting
 					if not l_socket.is_open_write then
 						raise ("bad_socket")
 					end
-					print_error ("connected to socket!")
 					stream := l_socket
 				else
 					create {RAW_FILE} stream.make_open_write (arguments.file_option)
@@ -155,7 +151,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-feature {NONE} -- Query
+feature {NONE} -- Query		
 
 	test_set_instance (a_index: NATURAL): !TEST_SET is
 			-- Instance of a test set class.
@@ -179,10 +175,26 @@ feature {NONE} -- Execution
 			stream_initialized: stream.is_open_write
 			a_index_valid: is_valid_index (a_index)
 		do
+			io.output.put_string ("trying to run " + a_index.out + "...%N")
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index))
+			io.output.put_string ("done with " + a_index.out + "%N")
+			io.output.put_string ("stream: ")
+			print (stream)
+			io.output.new_line
 			if stream.extendible then
+				io.output.put_string ("stream IS extendible (open write: "); io.output.flush
+				io.output.put_boolean (stream.is_open_write)
+				io.output.put_boolean (stream.is_writable)
+				io.output.put_string ("%Nsending id%N");io.output.flush
+				--stream.put_character ('1')
+				io.output.put_string ("sending outcome%N"); io.output.flush
 				stream.independent_store (evaluator.last_outcome)
+				io.output.put_string ("done%N"); io.output.flush
 			else
+				io.output.put_string ("stream NOT extendible (open write: "); io.output.flush
+				io.output.put_boolean (stream.is_open_write)
+				io.output.put_boolean (stream.is_writable)
+				io.output.put_string ("%N")
 				is_stream_invalid := True
 			end
 		end

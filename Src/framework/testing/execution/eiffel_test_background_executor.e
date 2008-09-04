@@ -16,7 +16,7 @@ inherit
 		end
 
 create
-	make
+	make, make_with_launcher
 
 feature {NONE} -- Status setting
 

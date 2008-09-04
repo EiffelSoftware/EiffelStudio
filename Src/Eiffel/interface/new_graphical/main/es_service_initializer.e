@@ -84,13 +84,16 @@ feature {NONE} -- Test suite extension
 		require
 			a_service_usable: a_service.is_interface_usable
 		local
+			l_comp: ES_EIFFEL_TEST_COMPILATION_LAUNCHER
 			l_bg_executor: EIFFEL_TEST_BACKGROUND_EXECUTOR
 			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
 			l_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]
 		do
-			create l_bg_executor.make
+			create l_comp
+			create l_bg_executor.make_with_launcher (l_comp)
 			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
 			a_service.processor_registrar.register (l_bg_executor, l_type)
+			
 			if False then
 				l_type ?= {EIFFEL_TEST_DEBUGGER_I}
 				a_service.processor_registrar.register (l_dbg_executor, l_type)

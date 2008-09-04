@@ -299,7 +299,6 @@ feature {NONE} -- Implementation
 			l_data ?= l_row.data
 			l_data.populate_row (layout)
 			Result := l_row.item (a_col_index)
-
 		end
 
 	on_row_expansion (a_row: EV_GRID_ROW) is

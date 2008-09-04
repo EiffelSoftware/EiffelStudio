@@ -70,17 +70,28 @@ feature -- Status setting
 			end
 		end
 
-	launch_evaluator (a_args: !LIST [!STRING])
+	launch_evaluator (a_args: !LIST [!STRING]) is
 			-- <Precursor>
 		do
 			process := process_factory.process_launcher (executable, a_args, Void)
-			process.redirect_output_to_agent (
-				agent (a_out: !STRING)
-					do
-						output.append (a_out)
-					end)
-			process.redirect_error_to_same_as_output
+			--process.redirect_output_to_agent (
+--				agent (a_out: !STRING)
+--					do
+--						output.append (a_out)
+--					end)
+			--process.redirect_error_to_same_as_output
+			io.put_string ("launching process... ")
+			from
+				a_args.start
+			until
+				a_args.after
+			loop
+				io.put_string (a_args.item_for_iteration)
+				io.put_string (", ")
+				a_args.forth
+			end
 			process.launch
+			io.put_string ("process launched...%N")
 		end
 
 feature {NONE} -- Implementation

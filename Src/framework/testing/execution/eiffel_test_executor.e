@@ -136,7 +136,7 @@ feature {NONE} -- Status report
 	last_compilation_successful: BOOLEAN
 			-- True if last melting triggered by `Current' was successful
 
-	last_test_in_map: BOOLEAN
+	is_current_test_in_map: BOOLEAN
 			-- Was last test traversed by `retrieve_results' and determined to be running in map?
 
 feature -- Status setting
@@ -289,7 +289,7 @@ feature {NONE} -- Status setting
 					end
 				else
 					retrieve_results (l_evaluator.status)
-					if not (last_test_in_map and l_evaluator.status.has_remaining_tests) then
+					if not (is_current_test_in_map and l_evaluator.status.has_remaining_tests) then
 						l_evaluator.terminate
 					end
 				end
@@ -362,6 +362,7 @@ feature {NONE} -- Status setting
 			end
 			if not l_list.is_empty then
 				a_evaluator.launch (l_list)
+				test_suite.set_test_running (l_list.first)
 			end
 		end
 
@@ -389,7 +390,7 @@ feature {NONE} -- Status setting
 				else
 					l_done := True
 				end
-				last_test_in_map := False
+				is_current_test_in_map := False
 				if l_tuple.next /= Void then
 					l_test ?= l_tuple.next
 						-- If map does not contain `l_test', we could abort here. However if the evaluator has
@@ -399,7 +400,7 @@ feature {NONE} -- Status setting
 						if not l_test.is_running then
 							test_suite.set_test_running (l_test)
 						end
-						last_test_in_map := True
+						is_current_test_in_map := True
 					end
 				else
 					l_done := True

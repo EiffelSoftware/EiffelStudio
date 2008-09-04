@@ -64,7 +64,7 @@ feature -- Status setting
 						-- TODO: error handling
 				l_socket.set_blocking
 				l_socket.listen (1)
-				create l_thread.make (agent start ({!NETWORK_STREAM_SOCKET} #? l_socket, a_status))
+				create l_thread.make (agent listen ({!NETWORK_STREAM_SOCKET} #? l_socket, a_status))
 				l_thread.launch
 			end
 		ensure
@@ -73,26 +73,39 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	start (a_socket: !NETWORK_STREAM_SOCKET; a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
+	listen (a_socket: !NETWORK_STREAM_SOCKET; a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
 			-- Wait for incoming connection on socket and receive results.
 			--
 			-- `a_socket': Socket to which evaluator will connect to.
 			-- `a_status': Status where new results are added.
 		local
 			l_rescued: BOOLEAN
+			c: CHARACTER
+			--l_receiver: NETWORK_STREAM_SOCKET
+			i: INTEGER
 		do
 			if not l_rescued then
 				a_socket.accept
 				if {l_receiver: !NETWORK_STREAM_SOCKET} a_socket.accepted then
-					a_socket.close
-					from until
-						not (l_receiver.is_open_read and a_status.has_remaining_tests and a_status.is_receiving)
+					from
+						i := 1
+					until
+						not l_receiver.is_open_read or a_status.results_complete or not a_status.is_receiving
 					loop
-						if {l_outcome: !TEST_OUTCOME} l_receiver.retrieved then
-							a_status.add_result (l_outcome)
-						else
-							l_receiver.close
-						end
+						--l_receiver.read_stream (1)
+						--if not l_receiver.last_string.is_empty then
+							--if l_receiver.last_string.item (1) = '1' then
+								(create {EXECUTION_ENVIRONMENT}).sleep (100000000)
+								if {l_outcome: !TEST_OUTCOME} l_receiver.retrieved then
+									a_status.add_result (l_outcome)
+								else
+									l_receiver.close
+								end
+							--else
+							--	a_status.stop_receiving
+							--end
+						--end
+						i := i + 1
 					end
 					if not l_receiver.is_closed then
 						l_receiver.close
@@ -101,10 +114,22 @@ feature {NONE} -- Implementation
 					a_socket.close
 				end
 			end
+			a_socket.close
 			a_status.stop_receiving
 		rescue
 			l_rescued := True
 			retry
 		end
+
+	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
+			--
+		local
+			l_retried: BOOLEAN
+		do
+		rescue
+			l_retried := True
+			retry
+		end
+
 
 end

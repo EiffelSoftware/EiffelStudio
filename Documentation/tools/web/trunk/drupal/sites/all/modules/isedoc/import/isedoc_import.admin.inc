@@ -41,8 +41,8 @@ function isedoc_import_admin_settings_goto_import($form, &$form_state) {
 function _isedoc_import_doc() {
 	drupal_set_message("_isedoc_import_doc...");
 	//	$links = array();
-	//	$links[] = l('import 1', 'іsedoc/import');
-	//	$links[] = l('import 2', 'іsedoc/import');
+	//	$links[] = l('import 1', 'Isedoc/import');
+	//	$links[] = l('import 2', 'Isedoc/import');
 	//	return theme('list', $links);
 	$form['isedoc_import'] = array(
 		'#type' => 'fieldset',
@@ -76,16 +76,32 @@ function isedoc_import_form() {
 	/*
 	 * Files
 	 */
+	$index_lst = file_scan_directory($dirpath, ".*\.index$", array(), 0, FALSE, 'filename');
+	if (count($index_lst) > 0) {
 
-	$book_import_log_path = $dirpath . "/" . "book.index.log";
-	$book_index_path = $dirpath . "/" . "book.index";
-	if (file_exists($book_index_path)) {
-		$form['isedoc_import_index'] = array(
-			'#type' => 'textfield',
-			'#title' => t('Book index'),
-			'#default_value' => variable_get('isedoc_import_bookindex', $book_index_path),
-			'#description' => t('BookIndex'),
+		$all_indexes = array();
+		foreach ($index_lst as $idx) {
+			if (file_exists($idx->filename.".log")) {
+				$all_indexes[$idx->filename] = $idx->name. " (done)";
+			} else {
+				$all_indexes[$idx->filename] = $idx->name;
+			}
+		}
+		ksort(&$all_indexes);
+		foreach ($all_indexes as $k_fn => $v) {
+			if (!file_exists($k_fn.".log")) {
+				if ($dft_index == '') { $dft_index = $k_fn; }
+			}
+		}
+			
+		$form['isedoc_import_indexes'] = array(
+			'#type' => 'select',
+			'#title' => t('Select a book index to import'),
+			'#default_value' => variable_get('isedoc_import_idx', $dft_index),
+			'#options' => $all_indexes,
+			'#description' => t('The index to import.'),
 		);
+
 
 		/*
 		 *	  Parameters 
@@ -129,9 +145,9 @@ function isedoc_import_form() {
 		);
 	}
 	else {
-		$form['isedoc_import_index'] = array(
+		$form['isedoc_import_indexes'] = array(
 			'#type' => 'item',
-			'#value' => t('No book.index file found'),
+			'#value' => t('No book index file found (.*\\.index$)'),
 		);
 
 		$form['isedoc_import_subfolder'] = array(
@@ -165,17 +181,16 @@ function isedoc_import_form_import($form, &$form_state) {
 	if (isset($form_state['values']['isedoc_import_subfolder'])) {
 		variable_set('isedoc_import_subfolder',$form_state['values']['isedoc_import_subfolder']);
 	}
-	variable_set('isedoc_import_bid',$form_state['values']['isedoc_import_booknames']);
+	variable_set('isedoc_import_bid',$bookid);
 	variable_set('isedoc_import_bookname',$form_state['values']['isedoc_import_bookname']);
 	$op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 	if ($op == t('Import')) {
 		$dirpath = $form_state['values']['isedoc_import_dirpath'];
-//		$dirpath = variable_get('isedoc_import_subfolder', '');
 		if (file_check_directory($dirpath)) {
 			$nodes = array();
 			$files = array();
 //			drupal_set_message(var_dump_r($form_state['values']));
-			$book_index_path = $form_state['values']['isedoc_import_index'];
+			$book_index_path = $form_state['values']['isedoc_import_indexes'];
 			//drupal_set_message(t("Importing files using index %i into bookid=%bookid", array ('%i' => $book_index_path, '%bookid' => $bookid)));
 
 			// a slow machine

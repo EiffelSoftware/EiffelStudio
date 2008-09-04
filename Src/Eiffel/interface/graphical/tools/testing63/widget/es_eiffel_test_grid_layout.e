@@ -109,9 +109,9 @@ feature -- Factory
 			a_row.set_item (1, l_eitem)
 
 			if a_item.is_queued then
-				create l_label.make_with_text ("queued")
+				create l_label.make_with_text ("?")
 			elseif a_item.is_running then
-				create l_label.make_with_text ("running")
+				create l_label.make_with_text ("-->")
 			else
 				if a_item.is_outcome_available then
 					if a_item.last_outcome.is_fail then

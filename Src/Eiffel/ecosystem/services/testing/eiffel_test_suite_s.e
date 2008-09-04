@@ -186,7 +186,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			usable: is_interface_usable
 			tests_available: is_project_initialized
 			tests_has_a_test: tests.has (a_test)
-			test_running: a_test.is_running or a_test.is_queued
+			test_running: a_test.is_running
 		deferred
 		ensure
 			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)

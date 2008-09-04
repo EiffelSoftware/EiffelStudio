@@ -39,16 +39,7 @@ feature {NONE} -- Access
 			create Result.make
 		end
 
-feature {NONE} -- Implementation: uncompiled test retrieval
-
-	test_cluster_depth: NATURAL
-			-- How many of the current's clusters parents are test clusters?
-
-	traversed_descendants: ?DS_HASH_SET [!EIFFEL_CLASS_I]
-
-	traversed_helpers: ?DS_HASH_SET [!EIFFEL_CLASS_I]
-
-	cached_common_ancestor: like common_ancestor
+feature {EIFFEL_TEST_PROJECT_I} -- Basic functionality
 
 	locate_classes is
 			-- <Precursor>
@@ -67,6 +58,17 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				traversed_helpers := Void
 			end
 		end
+
+feature {NONE} -- Implementation: uncompiled test retrieval
+
+	test_cluster_depth: NATURAL
+			-- How many of the current's clusters parents are test clusters?
+
+	traversed_descendants: ?DS_HASH_SET [!EIFFEL_CLASS_I]
+
+	traversed_helpers: ?DS_HASH_SET [!EIFFEL_CLASS_I]
+
+	cached_common_ancestor: like common_ancestor
 
 	report_potential_test_class (a_class: !EIFFEL_CLASS_I) is
 			-- Report class as potential test class if it inherits from {TEST_SET}

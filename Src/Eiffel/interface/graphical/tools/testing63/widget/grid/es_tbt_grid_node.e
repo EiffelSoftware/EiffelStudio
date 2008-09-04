@@ -105,8 +105,10 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			-- <Precursor>
 		do
 			row.clear
-			if a_tag.is_empty then
-				row_data_for_item (a_item).row.clear
+			if is_evaluated then
+				if a_tag.is_empty then
+					row_data_for_item (a_item).row.clear
+				end
 			end
 			Precursor {ES_TBT_GRID_NODE_CONTAINER} (a_tag, a_item)
 		end

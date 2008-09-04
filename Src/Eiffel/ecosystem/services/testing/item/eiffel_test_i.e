@@ -163,7 +163,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- `a_outcome': Outcome to be added to the end of `outcomes'.
 		require
 			usable: is_interface_usable
-			active: is_running or is_queued
+			active: is_running
 		deferred
 		ensure
 			outcome_available: is_outcome_available

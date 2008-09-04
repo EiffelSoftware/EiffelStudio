@@ -162,7 +162,6 @@ function isedoc_import_form_update($form, &$form_state) {
 
 function isedoc_import_form_import($form, &$form_state) {
 	$bookid = $form_state['values']['isedoc_import_booknames'];
-	drupal_set_message(t('Import processing... "bookid:@bookname"', array('@bookname' => $bookid)));
 	if (isset($form_state['values']['isedoc_import_subfolder'])) {
 		variable_set('isedoc_import_subfolder',$form_state['values']['isedoc_import_subfolder']);
 	}
@@ -172,7 +171,6 @@ function isedoc_import_form_import($form, &$form_state) {
 	if ($op == t('Import')) {
 		$dirpath = $form_state['values']['isedoc_import_dirpath'];
 //		$dirpath = variable_get('isedoc_import_subfolder', '');
-		drupal_set_message(t("Importing files from %dirpath into bookid=%bookid", array ('%dirpath' => $dirpath, '%bookid' => $bookid)));
 		if (file_check_directory($dirpath)) {
 			$nodes = array();
 			$files = array();
@@ -183,11 +181,12 @@ function isedoc_import_form_import($form, &$form_state) {
 			// a slow machine
 			if (!ini_get('safe_mode')) { set_time_limit(0); }
 
+			drupal_set_message(t("Importing files using index=<strong>$book_index_path</strong> into bookid=<strong>$bookid</strong>"),'status');
 			$nodes_count = isedoc_import_with_index($dirpath,$book_index_path,$bookid);
 
 			// report back on our progress
 			if ($nodes_count > 0) {
-				drupal_set_message(t('Successfully imported: %nb nodes', array ('%nb' => $nodes_count)));
+				drupal_set_message(t('Successfully imported: %nb nodes from $book_index_path', array ('%nb' => $nodes_count)));
 			}
 			else {
 				drupal_set_message(t('No files were imported.'));
@@ -259,21 +258,20 @@ function isedoc_create_doc_node_from(&$info) {
 	$node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
 	$node->status = in_array('status', $node_options);
 	$node->promote = in_array('promote', $node_options);
+
+/* Comment is not handled for importation! FIXME
 	if (module_exists('comment')) {
 		$node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
 	}
-	if (module_exists('taxonomy')) {
-		$node->taxonomy = $taxonomy;
+*/
+	if (module_exists('taxonomy') and !empty($info['tags']) ) {
+		isedoc_set_tags (&$node, $info['tags']);
 	}
-
 	if ($nid > 0) {
 		$node->revision = TRUE;
-		$node->new_file = FALSE;
 	} else {
 		$node->revision = FALSE;
-		$node->new_file = TRUE;
 	}
-//	$node->images[IMAGE_ORIGINAL] = $filepath;
 
 	// Save the node.
 	$node = node_submit($node);
@@ -282,13 +280,55 @@ function isedoc_create_doc_node_from(&$info) {
 	return $node;
 }
 
+function isedoc_set_tags (&$node, $tags) {
+	$l_vocs = array_shift(taxonomy_get_vocabularies($node->type));
+	$l_vid = $l_vocs->vid;
+
+	//drupal_set_message("tags -> ".$tags, 'status');
+	//drupal_set_message("vocs [$l_vid] -> ".var_dump_r ($l_vocs), 'status');
+	$o = taxonomy_nodeapi($node, 'load');
+	$taxonomy = $o['taxonomy'];
+	// For now, we deal only new node, so there is no tag at this point
+	// and $taxonomy is thus an empty array
+
+	$lst_tags = explode(',', $tags);
+	foreach ($lst_tags as $l_tag) {
+		$t = isedoc_tag_object ($l_vid, trim($l_tag));
+		if ($t) {
+		  $taxonomy[$t->tid] = $t;
+		}
+	}
+	$node->taxonomy = $taxonomy;
+}
+
+function isedoc_tag_object ($a_vid, $a_tag) {
+  //drupal_set_message("isedoc_tag_object [$a_vid] tag[$a_tag]", 'status');
+  $result = isedoc_fetch_tag_object ($a_vid, $a_tag);
+  if ($result) {
+    return $result;
+  } else {
+    $t = array(
+	'vid' => $a_vid,
+	'name' => $a_tag,
+      );
+    taxonomy_save_term(&$t);
+    return isedoc_fetch_tag_object ($a_vid, $a_tag);
+  }
+}
+
+function isedoc_fetch_tag_object ($a_vid, $a_tag) {
+  //drupal_set_message("isedoc_fetch_tag_object [$a_vid] tag[$a_tag]", 'status');
+  $db_result = db_query(db_rewrite_sql("SELECT t.tid, t.* FROM {term_data} t WHERE t.vid = '%s' AND LOWER(t.name) = LOWER('%s')", 't', 'tid'), $a_vid, trim($a_tag));
+  return db_fetch_object($db_result);
+}
+
 
 /**
  * Helpers
  */
 
 function isedoc_import_with_index($dn,$fn,$bid) {
-	drupal_set_message(t("Importing using index $fn ..."),'status');
+	//drupal_set_message(t("Importing using index $fn ..."),'status');
 	$logfp = fopen($fn.".log", 'w+');
 
 	$fp = fopen($fn, 'r');
@@ -341,7 +381,11 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 					$node_ids[0] = $l_mlid;
 				} else {
 					if ($is_reuse == 1) {
-						$a_nid = book_doc_page_exists($l_title);
+						if ($l_depth == 0) {
+							$a_nid = $bid;
+						} else {
+							$a_nid = book_doc_page_exists($l_title);
+						}
 						if ($a_nid === FALSE) {
 							drupal_set_message(t(" ERROR no REUSE dep=%dep \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
 							$is_reuse = 0;
@@ -378,18 +422,21 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 						if ($node) {
 							$l_mlid = $node->book['mlid'];
 							drupal_set_message(t(" REUSE %tit -> [%dep] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%tit" => $l_title, "%dep" => $l_depth, "%src" => $l_src, "%nid" => $node->nid)),'status');
+
+/*
+*/
 						} else {
 							$node = isedoc_create_doc_node_from (&$info);
 							$nodes_count = $nodes_count + 1;
 							$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
 							fputs($logfp, "#".$info['depth'].":".$node->nid.":".$l_mlid.":".$l_ref_src.":".$info['title']."\n");
-							drupal_set_message(t(" -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_ref_src, "%nid" => $node->nid)),'status');
+							drupal_set_message(t("NEW -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)(tags=%tags)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_ref_src, "%nid" => $node->nid, "%tags" => $info['tags'])),'status');
 						}
 						$node_ids[$l_depth] = $l_mlid;
 
 						$node = NULL;
 					} else {
-						drupal_set_message(t(" -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
+						drupal_set_message(t("ERROR -> [%dep:%bas] \"%tit\" -> %src", array( "%dep" => $l_depth, "%tit" => $l_title, "%bas" => $l_base_id, "%src" => $l_src)),'error');
 					}
 				}
 			}
@@ -414,7 +461,7 @@ function isedoc_file_info($fn, $is_full=FALSE) {
 		} else {
 			$i = strpos ($line, "=");
 			if ($i > 0) {
-				$k = substr($line, 1, $i);
+				$k = substr($line, 1, $i-1);
 				$v = substr($line, $i+1);
 				$info[$k] = $v;
 			} else {
@@ -456,11 +503,9 @@ function book_doc_page_exists($a_title) {
 	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type = 'doc' ", $a_title);
 	$res = db_query("SELECT nid FROM {node} WHERE type = 'doc' AND LOWER(title) = LOWER('%s') ", $a_title);
 	if ($res === FALSE) {
-		//drupal_set_message(t("TitleExists? [$a_title] = NO result" ),'status');
 		return FALSE;
 	} else {
 		$v = db_fetch_object($res);
-		//drupal_set_message(t("TitleExists? [$a_title] = %nid", array('%nid' => $v->nid)),'status');
 		return $v->nid;
 	}
 }

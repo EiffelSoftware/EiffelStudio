@@ -186,9 +186,11 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- <Precursor>
 		do
 			old_tags := internal_tags
-			internal_tags := new_hash_set ((a_list.count + 3).to_natural_32)
+			internal_tags := new_hash_set (a_list.count.to_natural_32)
 			a_list.do_all (agent add_tag)
-			add_implicit_tags
+			if is_outcome_available then
+				add_tag (outcome_tag)
+			end
 			if not old_tags.is_empty then
 				internal_removed_tags := old_tags
 			end
@@ -264,22 +266,6 @@ feature {EIFFEL_TEST_MEMENTO} -- Factory
 		end
 
 feature {NONE} -- Implementation
-
-	add_implicit_tags
-			-- Add implicit tags for `Current' to `internal_tags'.
-		require
-			old_tags_attached: old_tags /= Void
-		local
-			l_tag: !STRING
-		do
-			l_tag := "class.{"
-			l_tag.append (class_name)
-			l_tag.append_character ('}')
-			add_tag (l_tag)
-			if is_outcome_available then
-				add_tag (outcome_tag)
-			end
-		end
 
 	add_tag (a_tag: !STRING)
 			-- Add tag to `internal_tags' and remove it from `old_tags'

@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			create test_class_map.make (0)
 			create test_routine_map.make_default
 			create locators.make
+			create cluster_stack.make_default
 		ensure
 			project_set: eiffel_project = a_project
 		end
@@ -323,6 +324,7 @@ feature {NONE} -- Element change
 			l_cursor: DS_HASH_SET_CURSOR [!STRING]
 			l_et: !EIFFEL_TEST_I
 			l_ctags, l_ftags: !DS_HASH_SET [!STRING]
+			l_tag: !STRING
 		do
 			l_names := a_test_class.internal_names
 			l_features := valid_features (a_class_as)
@@ -330,11 +332,17 @@ feature {NONE} -- Element change
 			create l_ctags.make_default
 			l_ctags.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
 			if {l_ticlause: !INDEXING_CLAUSE_AS} a_class_as.top_indexes then
-				add_tags (l_ticlause, l_ctags)
+				add_note_tags (l_ticlause, l_ctags)
 			end
 			if {l_biclause: !INDEXING_CLAUSE_AS} a_class_as.bottom_indexes then
-				add_tags (l_biclause, l_ctags)
+				add_note_tags (l_biclause, l_ctags)
 			end
+			create l_tag.make (20)
+			l_tag.append ("class")
+			l_tag.append_character (tag_utilities.split_char)
+			add_class_path (l_tag, {!STRING} #? a_test_class.eiffel_class.name, Void)
+			l_ctags.force_last (l_tag)
+
 
 				-- Following loop either removes or refreshes existing tests!
 				--
@@ -357,7 +365,7 @@ feature {NONE} -- Element change
 				if l_features.found then
 					if {l_ficlause: !INDEXING_CLAUSE_AS} l_features.found_item.indexes then
 						l_ftags := l_ctags.cloned_object
-						add_tags (l_ficlause, l_ftags)
+						add_note_tags (l_ficlause, l_ftags)
 					else
 						l_ftags := l_ctags
 					end
@@ -385,7 +393,7 @@ feature {NONE} -- Element change
 				l_et := new_test (l_features.key_for_iteration, a_test_class)
 				if {l_ficlause2: !INDEXING_CLAUSE_AS} l_features.item_for_iteration.indexes then
 					l_ftags := l_ctags.cloned_object
-					add_tags (l_ficlause2, l_ftags)
+					add_note_tags (l_ficlause2, l_ftags)
 				else
 					l_ftags := l_ctags
 				end
@@ -467,7 +475,137 @@ feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation
 
 feature {NONE} -- Implementation: tag retrieval
 
-	add_tags (a_indexing_clause: !INDEXING_CLAUSE_AS; a_set: !DS_SET [!STRING])
+	cluster_stack: !DS_ARRAYED_LIST [!CONF_GROUP]
+			-- List used as a stack by `add_class_path'
+
+	add_tag (a_tag: !STRING; a_set: !DS_SET [!STRING]) is
+			-- Add tag to set by replacing all class names with current cluster/class/feature hierarchy.
+			--
+			-- `a_tag': Tag to be added to set
+			-- `a_set': Set to which tag is added
+		require
+			a_tag_not_empty: not a_tag.is_empty
+			a_tag_valid: tag_utilities.is_valid_tag (a_tag)
+			project_initialized: is_project_initialized
+		local
+			i, start: INTEGER
+			l_in_class, l_in_feature: BOOLEAN
+			c: CHARACTER
+			l_final, l_class_name: !STRING
+			l_feature_name: ?STRING
+		do
+			create l_final.make (a_tag.count*2)
+			from
+				start := 1
+				i := 1
+			until
+				i > a_tag.count
+			loop
+				c := a_tag.item (i)
+				if c = tag_utilities.split_char or not (c.is_alpha_numeric or c = '_') then
+					if l_in_feature then
+						l_in_feature := False
+						if i > start + 1 then
+							l_feature_name := a_tag.substring (start + 1, i - 1)
+							start := i
+						end
+						add_class_path (l_final, l_class_name, l_feature_name)
+						l_feature_name := Void
+					end
+					if c = '{' then
+						if i > start then
+							l_final.append (a_tag.substring (start, i - 1))
+						end
+						start := i
+						l_in_class := True
+					elseif l_in_class then
+						l_in_class := False
+						if c = '}' and i > start + 1 then
+							l_class_name := a_tag.substring (start + 1, i - 1)
+							start := i + 1
+							if a_tag.count > i + 1 and then a_tag.item (i + 1) = '.' then
+								i := i + 1
+								l_in_feature := True
+							else
+								add_class_path (l_final, l_class_name, Void)
+							end
+						end
+					end
+				end
+				i := i + 1
+			end
+			if l_in_feature then
+				l_feature_name := a_tag.substring (start + 1, i - 1)
+				add_class_path (l_final, l_class_name, l_feature_name)
+			elseif start < i then
+				l_final.append (a_tag.substring (start, i - 1))
+			end
+			a_set.force (l_final)
+		ensure
+			a_set_increased: a_set.count = old a_set.count + 1
+		end
+
+	add_class_path (a_tag: !STRING; a_class_name: !STRING; a_feature_name: ?STRING) is
+			-- Add cluster/class/feature information to tag
+			--
+			-- `a_tag': Tag to which information should be added
+			-- `a_class_name': Name of class for which information is added
+			-- `a_feature_name': Name of feature in class (Can be Void if only class information is added)
+		require
+			a_class_name_not_empty: not a_class_name.is_empty
+			a_feature_name_not_empty: a_feature_name /= Void implies a_feature_name /= Void
+			project_initialized: is_project_initialized
+		local
+			l_root, l_current: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_class: CLASS_I
+			l_array: DS_ARRAYED_LIST [!CONF_GROUP]
+		do
+			l_root := eiffel_project.system.system.root_creators.first.cluster
+			l_class := eiffel_project.universe.class_named (a_class_name, l_root)
+			if l_class /= Void then
+				from
+					l_current := l_class.group
+				until
+					l_current = Void
+				loop
+					cluster_stack.put_last (l_current)
+					l_cluster ?= l_current
+					l_current := Void
+					if l_cluster /= Void then
+						if l_cluster.parent /= Void then
+							l_current := l_cluster.parent
+						elseif l_cluster.is_used_in_library then
+							
+						end
+					end
+				end
+				from until
+					cluster_stack.is_empty
+				loop
+					if cluster_stack.last.is_cluster then
+						a_tag.append ("cluster:")
+					elseif cluster_stack.last.is_library then
+						a_tag.append ("library:")
+					end
+					a_tag.append (cluster_stack.last.name)
+					a_tag.append_character (tag_utilities.split_char)
+					cluster_stack.remove_last
+				end
+				cluster_stack.wipe_out
+			end
+			a_tag.append ("class:")
+			a_tag.append (a_class_name)
+			if a_feature_name /= Void then
+				a_tag.append_character (tag_utilities.split_char)
+				a_tag.append ("feature:")
+				a_tag.append (a_feature_name)
+			end
+		ensure
+			cluster_stack_empty: cluster_stack.is_empty
+		end
+
+	add_note_tags (a_indexing_clause: !INDEXING_CLAUSE_AS; a_set: !DS_SET [!STRING])
 			-- Add tags defined in indexing clause to a set.
 			--
 			-- `a_indexing_clause': Indexing clause of a class or feature that might contains tags.
@@ -494,7 +632,7 @@ feature {NONE} -- Implementation: tag retrieval
 							l_value_list.after
 						loop
 							l_tags ?= l_value_list.item.string_value.twin
-							tag_utilities.find_tags_in_string (l_tags, agent a_set.force)
+							tag_utilities.find_tags_in_string (l_tags, agent add_tag (?, a_set))
 							l_value_list.forth
 						end
 					end

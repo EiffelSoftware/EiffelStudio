@@ -110,14 +110,14 @@ feature {NONE} -- Initialization: widget status
 		do
 			view_templates.put_last ("")
 			view_template_descriptions.put_last ("")
-			view_templates.put_last ("class.")
-			view_template_descriptions.put_last ("Tests%T%T%T(class.)")
-			view_templates.put_last ("outcome.")
-			view_template_descriptions.put_last ("Outcomes%T%T(outcome.)")
-			view_templates.put_last ("covers.")
-			view_template_descriptions.put_last ("Classes under test%T(covers.)")
-			view_templates.put_last ("type.")
-			view_template_descriptions.put_last ("Types%T%T(type.)")
+			view_templates.put_last ("class/")
+			view_template_descriptions.put_last ("Tests%T%T%T(class/)")
+			view_templates.put_last ("outcome/")
+			view_template_descriptions.put_last ("Outcomes%T%T(outcome/)")
+			view_templates.put_last ("covers/")
+			view_template_descriptions.put_last ("Classes under test%T(covers/)")
+			view_templates.put_last ("type/")
+			view_template_descriptions.put_last ("Types%T%T(type/)")
 
 			update_view_box
 			view_box.i_th (2).enable_select

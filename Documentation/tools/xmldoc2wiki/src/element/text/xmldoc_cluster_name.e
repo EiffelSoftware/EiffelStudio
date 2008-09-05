@@ -8,13 +8,15 @@ class
 	XMLDOC_CLUSTER_NAME
 
 inherit
+	XMLDOC_CODE_ENTITY_KIND
+	
 	XMLDOC_TEXT_CONTAINER
 		redefine
 			process_visitor
 		end
 
 	XMLDOC_LIKE_EIFFEL_LINK
-	
+
 create
 	make
 

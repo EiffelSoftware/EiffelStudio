@@ -105,6 +105,12 @@ feature -- Basic operations
 		deferred
 		end
 
+	process_code_block (i: XMLDOC_CODE_BLOCK)
+		require
+			i_attached: i /= Void
+		deferred
+		end
+
 	process_note (i: XMLDOC_NOTE)
 		require
 			i_attached: i /= Void
@@ -160,6 +166,12 @@ feature -- Basic operations
 		end
 
 	process_feature_name (i: XMLDOC_FEATURE_NAME)
+		require
+			i_attached: i /= Void
+		deferred
+		end
+
+	process_label (i: XMLDOC_LABEL)
 		require
 			i_attached: i /= Void
 		deferred

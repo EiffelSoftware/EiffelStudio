@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	label: STRING
+	label: XMLDOC_LABEL
 			-- Associated label
 
 feature -- Element change
@@ -19,9 +19,7 @@ feature -- Element change
 		require
 			v_attached: v /= Void
 		do
-			create label.make_from_string (v)
-			label.left_adjust
-			label.right_adjust
+			label := v
 		end
 
 end

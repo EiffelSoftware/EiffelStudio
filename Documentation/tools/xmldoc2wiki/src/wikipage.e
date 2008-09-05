@@ -47,6 +47,7 @@ feature -- Access
 	src: STRING assign set_src
 	title: STRING assign set_title
 	depth: INTEGER assign set_depth
+	tags: STRING assign set_tags
 	failed: BOOLEAN assign set_failed
 
 feature -- status report
@@ -111,6 +112,13 @@ feature -- Element change
 			v_attached: v /= Void
 		do
 			path := v
+		end
+
+	set_tags (v: like tags)
+		require
+			v_attached: v /= Void
+		do
+			tags := v
 		end
 
 	set_is_index (v: like is_index)

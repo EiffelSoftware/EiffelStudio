@@ -57,7 +57,11 @@ feature -- Element change
 	valid_item (i: XMLDOC_ITEM): BOOLEAN
 			-- is_text_or_container
 		do
-			Result := ({ot_t: XMLDOC_TEXT} i) or ({ot_c: XMLDOC_TEXT_CONTAINER} i) or ({ot_l: XMLDOC_LINK} i)
+			Result := ({ot_t: XMLDOC_TEXT} i)
+					or ({ot_c: XMLDOC_TEXT_CONTAINER} i)
+					or ({ot_l: XMLDOC_LINK} i)
+					or ({ot_i: XMLDOC_IMAGE} i)
+					-- or ({ot_h: XMLDOC_HEADING} i)
 		end
 
 end

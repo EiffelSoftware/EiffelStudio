@@ -33,6 +33,10 @@ feature -- Access
 
 	product_name: STRING assign set_product_name
 
+	inside_help_element: BOOLEAN
+			-- Is inside <help> element?
+			--| this is needed to handle <keyword></keyword> differently according to the context
+
 	inside_preformatted_element: BOOLEAN
 			-- Is inside a preformatted element?
 			--| such as code, code_block ..
@@ -223,6 +227,20 @@ feature -- Result
 			end
 		end
 
+	last_but_one_item: XMLDOC_ITEM
+		local
+			i: like last_item
+		do
+			if not opened_items.is_empty then
+				i := opened_items.item
+				remove_last_item
+				if not opened_items.is_empty then
+					Result := opened_items.item
+				end
+				push_last_item (i)
+			end
+		end
+
 	last_item: XMLDOC_ITEM
 		do
 			if not opened_items.is_empty then
@@ -299,7 +317,7 @@ feature -- Tag
 			l_row: XMLDOC_TABLE_ROW
 			l_cell: XMLDOC_TABLE_CELL
 			l_content: like last_content
-			l_meta: XMLDOC_METADATA
+			l_meta_data: XMLDOC_METADATA
 		do
 			if is_valid_output_scope then
 				l_content := last_content
@@ -326,11 +344,21 @@ feature -- Tag
 					push_last_item (page)
 					l_item := page
 				when id_meta_data then
-					create {XMLDOC_METADATA} l_meta.make
+					create {XMLDOC_METADATA} l_meta_data.make
 					if {l_page: XMLDOC_PAGE} last_item then
-						l_page.set_meta_data (l_meta)
+						l_page.set_meta_data (l_meta_data)
 					end
-					push_last_item (l_meta)
+					push_last_item (l_meta_data)
+					l_item := Void
+				when id_meta then
+					if {l_meta: XMLDOC_META} (create {XMLDOC_META}.make) then
+						if {ot_meta_data: XMLDOC_METADATA} last_but_one_item then
+							ot_meta_data.add_meta (l_meta)
+						end
+						push_last_item (l_meta)
+					else
+						check False end
+					end
 					l_item := Void
 				when id_list then
 					create {XMLDOC_LIST} l_item.make
@@ -347,6 +375,7 @@ feature -- Tag
 				when id_content then
 					create {XMLDOC_COMPOSITE_TEXT} l_item.make
 					push_last_item (l_item)
+					l_item := Void
 	--				if {l_heading: XMLDOC_HEADING} last_item then
 	--					--| content is the heading itself
 	--					l_item := Void
@@ -377,11 +406,14 @@ feature -- Tag
 				when id_info then
 					create {XMLDOC_INFO} l_item.make
 					push_last_item (l_item)
-				when id_code_block,
-					 id_code then
-					create {XMLDOC_CODE} l_item.make
+				when id_code_block then
+					create {XMLDOC_CODE_BLOCK} l_item.make
 					push_last_item (l_item)
 					enter_preformatted_element
+				when id_code then
+					create {XMLDOC_CODE} l_item.make
+					push_last_item (l_item)
+--					enter_preformatted_element
 				when id_note then
 					create {XMLDOC_NOTE} l_item.make
 					push_last_item (l_item)
@@ -418,6 +450,9 @@ feature -- Tag
 				when id_heading then
 					create {XMLDOC_HEADING} l_item.make
 					push_last_item (l_item)
+				when id_label then
+					create {XMLDOC_LABEL} l_item.make
+					push_last_item (l_item)
 				when id_anchor then
 					create {XMLDOC_ANCHOR} l_item.make
 					push_last_item (l_item)
@@ -451,27 +486,48 @@ feature -- Tag
 				when id_image_link then
 					create {XMLDOC_IMAGE_LINK} l_item.make
 					push_last_item (l_item)
-				when id_url, id_label, id_alignment, id_style,
+				when id_url, id_alignment, id_style,
 					id_width, id_height, id_border, id_size,
 					id_legend, id_target, id_anchor_name, id_alt_text
 				then
 					--| handle by on_end_tag
 					push_last_item (create {XMLDOC_UNUSED}.make (a_local_part))
 					l_item := Void
-
 				when id_string, id_number, id_character, id_reserved_word,
 					id_local_variable, id_symbol, id_local_variable_quoted, id_generics,
 					id_contract_tag, id_indexing_tag, id_keyword,
 					id_syntax, id_compiler_error, id_sub_script,
 					id_comment
 				then
-					create {XMLDOC_CODE_ENTITY} l_item.make (a_local_part)
-					push_last_item (l_item)
-					if {l_code: XMLDOC_CODE} l_parent_item then
-						l_code.add_item (l_item)
+					if not inside_help_element then
+						create {XMLDOC_CODE_ENTITY} l_item.make (a_local_part)
+						push_last_item (l_item)
+						if {l_code: XMLDOC_CODE} l_parent_item then
+							l_code.add_item (l_item)
+							l_item := Void
+						elseif {l_code_b: XMLDOC_CODE_BLOCK} l_parent_item then
+							l_code_b.add_item (l_item)
+							l_item := Void
+						elseif {l_code_entity: XMLDOC_CODE_ENTITY} l_parent_item then
+							l_code_entity.add_item (l_item)
+							l_item := Void
+						elseif {l_code_fake: XMLDOC_COMPOSITE_TEXT} l_parent_item then
+							l_code_fake.add_item (l_item)
+							l_item := Void
+						elseif {l_unav: XMLDOC_UNAVAILABLE} l_parent_item then
+	--						l_item := Void
+						else
+							check error: False end
+						end
+					else
+						push_last_item (create {XMLDOC_UNAVAILABLE}.make (a_local_part))
+						raise_error ("Element <" + a_local_part + "> inside help element")
+						l_item := last_item
 					end
-					l_item := Void
 				else
+					if tag_to_id (a_local_part) = id_help then
+						inside_help_element := True
+					end
 					push_last_item (create {XMLDOC_UNAVAILABLE}.make (a_local_part))
 					raise_error_unavailable (a_local_part)
 					l_item := last_item
@@ -555,7 +611,6 @@ feature -- Tag
 							--|       process as <label>foobar</label>
 						l_content := unused.text_representation
 					end
-
 					inspect l_id
 					when id_document then
 						page ?= l_item
@@ -593,6 +648,18 @@ feature -- Tag
 								else
 									check mismatch_item: False end
 								end
+							when id_label then -- Immediate
+								if {l_label: XMLDOC_LABEL} l_item then
+									l_label.add_item (create {XMLDOC_TEXT}.make (l_content))
+									l_content := Void
+									if {l_with_label: XMLDOC_WITH_LABEL} last_item then
+										l_with_label.set_label (l_label)
+									else
+										check error: False end
+									end
+								else
+									check mismatch_item: False end
+								end
 							when id_bold, id_italic, id_underline then
 								if {l_txt_cont: XMLDOC_TEXT_CONTAINER} l_item then
 									l_txt_cont.add_item (create {XMLDOC_TEXT}.make (l_content))
@@ -606,8 +673,9 @@ feature -- Tag
 								id_syntax, id_compiler_error, id_sub_script,
 								id_comment
 							then
-								if {l_txt: XMLDOC_WITH_TEXT} l_item then
-									l_txt.set_text (l_content.text)
+								if {l_entity_containers: XMLDOC_CODE_ENTITY} l_item then
+									l_entity_containers.add_item (create {XMLDOC_TEXT}.make (l_content))
+--									l_txt.set_text (l_content.text)
 									l_content := Void
 								else
 									check mismatch_item: False end
@@ -663,18 +731,18 @@ feature -- Tag
 								end
 							when id_url then -- Immediate
 								if {l_url: XMLDOC_WITH_URL} last_item then
-									l_url.set_url (resolved_url (l_content.text))
+									set_resolved_url (l_url, l_content.text)
 									l_content := Void
 								else
 									check url_only_for_image_or_link: False end
 								end
-							when id_label then -- Immediate
-								if {l_label: XMLDOC_WITH_LABEL} last_item then
-									l_label.set_label (l_content.text)
-									l_content := Void
-								else
-									check error: False end
-								end
+--							when id_label then -- Immediate
+--								if {l_label: XMLDOC_WITH_LABEL} last_item then
+--									l_label.set_label (l_content.text)
+--									l_content := Void
+--								else
+--									check error: False end
+--								end
 							when id_alt_text then -- Immediate
 								if {l_alt_text: XMLDOC_WITH_ALT_TEXT} last_item then
 									l_alt_text.set_alt_text (l_content.text)
@@ -699,6 +767,20 @@ feature -- Tag
 							when id_anchor_name then -- Immediate
 								if {l_anchor_name: XMLDOC_WITH_ANCHOR_NAME} last_item then
 									l_anchor_name.set_anchor_name (l_content.text)
+									l_content := Void
+								else
+									check error: False end
+								end
+							when id_meta_content then
+								if {l_meta_1: XMLDOC_META} last_item then
+									l_meta_1.set_content (l_content.text)
+									l_content := Void
+								else
+									check error: False end
+								end
+							when id_name then
+								if {l_meta_2: XMLDOC_META} last_item then
+									l_meta_2.set_name (l_content.text)
 									l_content := Void
 								else
 									check error: False end
@@ -731,8 +813,10 @@ feature -- Tag
 							else
 								check mismatch_item: False end
 							end
-						when id_code, id_code_block then
+						when id_code_block then
 							exit_preformatted_element
+						when id_help then
+							inside_help_element := False
 						else
 						end
 					end
@@ -774,12 +858,28 @@ feature -- Content
 
 feature {NONE} -- Implementation
 
-	resolved_url (s: STRING): STRING is
+	set_resolved_url (a_with_url: XMLDOC_WITH_URL; a_url: STRING)
+		local
+			s: STRING
+		do
+			if {i: XMLDOC_IMAGE} a_with_url then
+				s := resolved_url (a_url, True)
+			else
+				s := resolved_url (a_url, False)
+			end
+			a_with_url.set_url (s)
+		end
+
+	resolved_url (s: STRING; a_is_image: BOOLEAN): STRING is
 		do
 			if url_resolver = Void or s.substring_index ("://", 1) > 0 then
 				Result := s
 			else
-				Result := url_resolver.resolved (s)
+				if a_is_image then
+					Result := url_resolver.resolved_for_image (s)
+				else
+					Result := url_resolver.resolved (s)
+				end
 			end
 		end
 
@@ -851,6 +951,8 @@ feature {NONE} -- Implementation
 					Result := id_heading
 				elseif t.is_equal (tag_height) then
 					Result := id_height
+				elseif t.is_equal (tag_help) then
+					Result := id_help
 				end
 			when 'i' then
 				if t.is_equal (tag_image) then
@@ -891,12 +993,18 @@ feature {NONE} -- Implementation
 			when 'm' then
 				if t.is_equal (tag_meta_data) then
 					Result := id_meta_data
+				elseif t.is_equal (tag_meta) then
+					Result := id_meta
+				elseif t.is_equal (tag_meta_content) then
+					Result := id_meta_content
 				end
 			when 'n' then
 				if t.is_equal (tag_note) then
 					Result := id_note
 				elseif t.is_equal (tag_number) then
 					Result := id_number
+				elseif t.is_equal (tag_name) then
+					Result := id_name
 				end
 			when 'o' then
 				if t.is_equal (tag_output) then
@@ -1035,7 +1143,10 @@ feature {NONE} -- Item id
 	id_xmlkeyword: INTEGER = 62
 	id_index: INTEGER = 63
 	id_term: INTEGER = 64
-
+	id_meta_content: INTEGER = 65
+	id_help: INTEGER = 66
+	id_meta: INTEGER = 67
+	id_name: INTEGER = 68
 
 feature {NONE} -- Item name
 
@@ -1103,6 +1214,10 @@ feature {NONE} -- Item name
 	tag_xmlkeyword: STRING = "xmlkeyword"
 	tag_index: STRING = "index"
 	tag_term: STRING = "term"
+	tag_meta_content: STRING = "meta_content"
+	tag_meta: STRING = "meta"
+	tag_help: STRING = "help"
+	tag_name: STRING = "name"
 
 	att_ordered: STRING = "ordered"
 	att_output: STRING = "output"

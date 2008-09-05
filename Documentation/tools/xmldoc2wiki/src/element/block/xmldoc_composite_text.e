@@ -16,6 +16,8 @@ inherit
 	XMLDOC_WITH_CONTENT
 		rename
 			make as make_content
+		redefine
+			add_item
 		end
 
 	XMLDOC_WITH_STYLE
@@ -37,6 +39,21 @@ feature {NONE} -- Initialization
 		do
 			make_content
 			make_alignment
+		end
+
+feature -- Element change
+
+	add_item (i: XMLDOC_ITEM)
+			-- Add item `i' to `items'
+		do
+--			if
+--				{t: XMLDOC_TEXT} i and then
+--				not t.is_empty and then
+--				(items.is_empty or else not {tt: XMLDOC_TEXT} items.last)
+--			then
+--				t.clean_first_blank
+--			end
+			Precursor (i)
 		end
 
 feature {XMLDOC_VISITOR} -- Visitor

@@ -13,9 +13,14 @@ inherit
 			initialize
 		end
 
-	KL_SHARED_FILE_SYSTEM
+	XML2WIKITEXT_TOOL
 		undefine
 			default_create, copy
+		redefine
+			reset, initialize_tool,
+			append_error_to_log, append_detailled_log,
+			xmldoc_page,
+			notify_status, notify_page_fetched, notify_page_saved
 		end
 
 feature {NONE} -- Initialize
@@ -134,14 +139,8 @@ feature {NONE} -- Initialize
 
 	initialize_tool
 		do
-			product_name := "studio"
+			Precursor
 			product_tf.set_text (product_name)
-
-			create url_resolver
-			url_resolver.base_directory := {XML2WIKITEXT_CONSTANTS}.hardcoded_base_directory
-			url_resolver.prefix_url := {XML2WIKITEXT_CONSTANTS}.hardcoded_prefix_url
-			url_resolver.current_filename := Void
-
 			if url_resolver.prefix_url = Void then
 				prefix_url_tf.remove_text
 			else
@@ -153,7 +152,6 @@ feature {NONE} -- Initialize
 				base_directory_tf.set_text (url_resolver.base_directory)
 			end
 
-			create all_pages.make (1050)
 		end
 
 	customize_text (t: EV_TEXT) is
@@ -266,58 +264,23 @@ feature {NONE} -- Initialize
 		end
 
 	export_all is
-		local
-			bd,td: STRING
-			wbt: WIKIBOOK_TOOL
-			s: STRING
-			pges: ARRAYED_LIST [ TUPLE [fn: STRING; page: XMLDOC_PAGE; src: STRING]]
 		do
-			bd := url_resolver.base_directory
-			td := url_resolver.base_directory + "__export"
 			set_export_status (True)
 			discard_display
-			if {lst: like all_filenames} all_filenames then
-				from
-					lst.start
-					create pges.make (lst.count)
-				until
-					lst.after
-				loop
-					status_label.set_text ("Get Page " + lst.index.out + " / " + lst.count.out + " items")
-					status_label.refresh_now
-					if {p: like xmldoc_page} xmldoc_page (Void, lst.item) then
-						pges.extend ([lst.item, p, url_resolver.source_url])
-						add_page (p, url_resolver.source_url)
-					else
-						check False end
-					end
-					ev_application.process_events
-					lst.forth
-				end
-
-				from
-					pges.start
-				until
-					pges.after
-				loop
-					status_label.set_text ("Save WikiText" + pges.index.out + " / " + pges.count.out + " items")
-					status_label.refresh_now
-
-					if {t: TUPLE [fn: STRING; page: XMLDOC_PAGE; src: STRING]} pges.item then
-						s := wikitext_from_page (t.page, t.src)
-						save_output (s, t.fn, url_resolver.base_directory)
-					end
-
-					ev_application.process_events
-
-					pges.forth
-				end
-			end
+			export_filenames (all_filenames)
 			restore_display
 			set_export_status (False)
+		end
 
-			create wbt.make (td)
-			status_label.set_text (status_label.text + " Export all completed")
+	notify_status (m: STRING)
+		do
+			status_label.set_text (m)
+			status_label.refresh_now
+		end
+
+	notify_page_fetched, notify_page_saved
+		do
+			ev_application.process_events
 		end
 
 feature -- Access
@@ -371,18 +334,9 @@ feature {NONE} -- Settings
 
 	current_filename: STRING
 
-	base_directory: STRING
-
 	display_discarded: BOOLEAN
 
 	export_enabled: BOOLEAN
-
-	product_name: STRING
-
-	url_resolver: URL_RESOLVER
-
-	all_pages: HASH_TABLE [XMLDOC_PAGE, STRING]
-			-- indexed by src
 
 feature {NONE} -- Settings change
 
@@ -392,12 +346,7 @@ feature {NONE} -- Settings change
 			current_text := Void
 			xmldoc_text.remove_text
 			wikitext_text.remove_text
-			if url_resolver /= Void then
-				url_resolver.current_filename := Void
-			end
-			if all_pages /= Void then
-				all_pages.wipe_out
-			end
+			Precursor
 		end
 
 	set_export_status (b: BOOLEAN)
@@ -415,37 +364,7 @@ feature {NONE} -- Settings change
 			display_discarded := False
 		end
 
-	save_output (s: STRING; source_fn: STRING; a_base_dir: STRING) is
-		require
-			ok: source_fn.substring_index (a_base_dir, 1) = 1
-		local
-			fn: STRING
-			nfn: STRING
-			dn: STRING
-			f: RAW_FILE
-		do
-			create fn.make_from_string (source_fn)
-			fn.remove_head (a_base_dir.count)
-			create nfn.make_from_string (a_base_dir + "__export")
-			nfn.append (fn)
-			dn := file_system.dirname (nfn)
-			file_system.recursive_create_directory (dn)
-			nfn.remove_tail (3) -- remove  xml
-			nfn.append ("wiki")
-			create f.make (nfn)
-			if not f.exists or else f.is_writable then
-				f.open_write
-				f.put_string (s)
-				f.close
-			end
-		end
-
 feature -- Logs
-
-	add_page (p: XMLDOC_PAGE; s: STRING) is
-		do
-			all_pages.force (p, s)
-		end
 
 	append_error_to_log (e: ERROR)
 		local
@@ -490,64 +409,81 @@ feature -- Basic operation
 			-- Files dropped
 		require
 			lst_attached: lst /= Void
+		local
+			files: ARRAYED_LIST [!STRING_8]
+			gi: EV_GRID_LABEL_ITEM
+			fn: STRING_8
 		do
+			create files.make (1050)
 			from lst.start until lst.after loop
-				on_pathname_dropped (lst.item.as_string_8)
+				if {pn: STRING_8} lst.item.as_string_8 then
+					get_from_pathname (pn, files)
+				end
 				lst.forth
 			end
+			from files.start until files.after loop
+				fn := files.item
+				if fn.count > 4 and then fn.substring (fn.count - 3, fn.count).is_case_insensitive_equal (once ".xml") then
+					create gi.make_with_text (fn)
+					grid.set_item (1, grid.row_count + 1, gi)
+					gi.row.set_data (fn)
+				end
+				files.forth
+			end
+
 			grid.column (1).resize_to_content
 			status_label.set_text (grid.row_count.out + " input(s)")
 		end
 
-	on_pathname_dropped (pn: STRING) is
-			-- Pathname `pn' dropped
-		local
-			f: RAW_FILE
-		do
-			create f.make (pn)
-			if f.exists and then f.is_directory then
-				on_directory_dropped (pn)
-			else
-				on_filename_dropped (pn)
-			end
-		end
+--	on_pathname_dropped (pn: STRING) is
+--			-- Pathname `pn' dropped
+--		local
+--			f: RAW_FILE
+--		do
+--			create f.make (pn)
+--			if f.exists and then f.is_directory then
+--				on_directory_dropped (pn)
+--			else
+--				on_filename_dropped (pn)
+--			end
+--		end
 
-	on_filename_dropped (fn: STRING) is
-			-- Filename `fn' dropped
-		local
-			gi: EV_GRID_LABEL_ITEM
-		do
-			if fn.count > 4 and then fn.substring (fn.count - 3, fn.count).is_case_insensitive_equal (once ".xml") then
-				create gi.make_with_text (fn)
-				grid.set_item (1, grid.row_count + 1, gi)
-				gi.row.set_data (fn)
-			end
-		end
+--	on_filename_dropped (fn: STRING) is
+--			-- Filename `fn' dropped
+--		local
+--			gi: EV_GRID_LABEL_ITEM
+--		do
+--			if fn.count > 4 and then fn.substring (fn.count - 3, fn.count).is_case_insensitive_equal (once ".xml") then
+--				create gi.make_with_text (fn)
+--				grid.set_item (1, grid.row_count + 1, gi)
+--				gi.row.set_data (fn)
+--			end
+--		end
 
-	on_directory_dropped (dn: STRING) is
-			-- Directory `dn' dropped
-		require
-			dn_attached: dn /= Void
-		local
-			d: KL_DIRECTORY
-			fns: ARRAYED_LIST [STRING]
-		do
-			create d.make (dn)
-			if d.exists and d.is_readable then
-				create fns.make (1050)
-				d.do_all (agent (ibn, ifn: STRING; ifns: LIST [STRING])
-					local
-						fn: FILE_NAME
-					do
-						if not ifn.is_case_insensitive_equal (once ".svn") then
-							create fn.make_from_string (ibn)
-							fn.set_file_name (ifn)
-							ifns.extend (fn.string)
-						end
-					end (dn, ?, fns))
-				fns.do_all (agent on_pathname_dropped)
-			end
-		end
+--	on_directory_dropped (dn: STRING) is
+--			-- Directory `dn' dropped
+--		require
+--			dn_attached: dn /= Void
+--		local
+--			d: KL_DIRECTORY
+--			fns: ARRAYED_LIST [STRING]
+--		do
+--			create d.make (dn)
+--			if d.exists and d.is_readable then
+--				create fns.make (1050)
+--				d.do_all (agent (ibn, ifn: STRING; ifns: LIST [STRING])
+--					local
+--						fn: FILE_NAME
+--					do
+--						if not ifn.is_case_insensitive_equal (once ".svn") then
+--							create fn.make_from_string (ibn)
+--							fn.set_file_name (ifn)
+--							ifns.extend (fn.string)
+--						end
+--					end (dn, ?, fns))
+--				fns.do_all (agent on_pathname_dropped)
+--			end
+--		end
 
 	on_row_selected (a_row: EV_GRID_ROW)
 			-- `a_row' is selected
@@ -578,75 +514,6 @@ feature -- Basic operation
 			end
 		end
 
-	text_from_filename (fn: STRING): STRING
-		local
-			f: PLAIN_TEXT_FILE
-			s: STRING
-		do
-			create f.make (fn)
-			if f.exists and then f.is_readable then
-				f.open_read
-				from
-					create Result.make (f.count)
-					f.start
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_stream (512)
-					Result.append (f.last_string)
-				end
-				f.close
-			end
-		end
-
-	xmldoc_page (txt: STRING; fn: STRING): XMLDOC_PAGE
-		local
-			x: STRING
-			vis: WIKITEXT_XMLDOC_VISITOR
-			x2w: XML2WIKITEXT
-		do
-			create x2w.make
-			update_parameters
-			url_resolver.current_filename := fn
-			x2w.url_resolver := url_resolver
-			x2w.product_name := product_name
-			if {l_xml: STRING} txt then
-				x2w.process_string (l_xml)
-			elseif {l_xml2: STRING} text_from_filename (fn) then
-				x2w.process_string (l_xml2)
-			end
-			Result := x2w.page
-			if {err: LIST [ERROR]} x2w.errors then
-				from
-					err.start
-				until
-					err.after
-				loop
-					append_error_to_log (err.item)
-					err.forth
-				end
-			end
-			if Result /= Void then
-				add_page (Result, url_resolver.source_url)
-			end
-		end
-
-	wikitext_from_page (p: XMLDOC_PAGE; src: STRING): STRING
-		local
-			vis: WIKITEXT_XMLDOC_VISITOR
-		do
-			create Result.make_empty
-			create vis.make (Result)
-			vis.set_all_pages (all_pages)
-			vis.set_url_resolver (url_resolver)
-
-			Result.append ("#src=")
-			Result.append (src)
-			Result.append ("%N")
-
-			vis.process_page (p)
-		end
-
 	update_wikitext
 			-- Update wikitext content
 		local
@@ -673,6 +540,12 @@ feature -- Basic operation
 					end
 				end
 			end
+		end
+
+	xmldoc_page (txt: STRING; fn: STRING): XMLDOC_PAGE
+		do
+			update_parameters
+			Result := Precursor (txt, fn)
 		end
 
 end

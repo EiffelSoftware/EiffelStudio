@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	XMLDOC_METADATA
+	XMLDOC_META
 
 inherit
 	XMLDOC_ITEM
@@ -20,26 +20,32 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create meta_list.make (1)
+
 		end
 
 feature -- Access
 
-	meta_list: ARRAYED_LIST [XMLDOC_META]
-			-- List of META
+	name: STRING
+
+	content: STRING
 
 feature -- Element change
 
-	add_meta (v: XMLDOC_META)
+	set_name (v: like name)
 		do
-			meta_list.extend (v)
+			name := v
+		end
+
+	set_content (v: like content)
+		do
+			content := v
 		end
 
 feature {XMLDOC_VISITOR} -- Visitor
 
 	process_visitor (v: XMLDOC_VISITOR)
 		do
-			v.process_metadata (Current)
+			v.process_item (Current)
 		end
 
 end

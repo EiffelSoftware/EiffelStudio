@@ -28,22 +28,8 @@ feature {NONE} -- Initialization
 			root := dn.twin
 			process
 
-			if use_io then
-				f := io.output
-			else
-				create fn.make_from_string (root)
-				fn.set_file_name ("book.index")
-				create {RAW_FILE} f.make (fn)
-				f.create_read_write
-			end
 			create max_depth_info
-			print_book (f, pages, 0)
-			f.put_new_line
-			if not use_io then
-				f.close
-			end
-
-
+			print_book (pages)
 			get_book_conflicts
 
 			if use_io then
@@ -55,11 +41,11 @@ feature {NONE} -- Initialization
 				f.create_read_write
 			end
 
-			f.put_string ("Log for book: %N")
-			f.put_string (" - source: " + root + "%N")
-			f.put_string (" - pages: " + book_pages.count.out + "%N")
-			f.put_string (" - depth: " + max_depth_info.depth.out + " reached " + max_depth_info.nb.out + " time(s) %N")
-			f.put_string (" - title conflict(s): " + book_conflicts.count.out + "%N")
+			f.put_string ("== Log for book ==%N")
+			f.put_string ("* source: " + root + "%N")
+			f.put_string ("* pages: " + book_pages.count.out + "%N")
+			f.put_string ("* depth: " + max_depth_info.depth.out + " reached " + max_depth_info.nb.out + " time(s) %N")
+			f.put_string ("* title conflict(s): " + book_conflicts.count.out + "%N")
 			if book_conflicts.count > 0 then
 				from
 					book_conflicts.start
@@ -67,14 +53,14 @@ feature {NONE} -- Initialization
 					book_conflicts.after
 				loop
 					k := book_conflicts.key_for_iteration
-					f.put_string ("%T#[" + k + "]%N")
+					f.put_string ("# [" + k + "]%N")
 					lst := book_conflicts.item_for_iteration
 					from
 						lst.start
 					until
 						lst.after
 					loop
-						f.put_string ("%T  - " + lst.item.src )
+						f.put_string ("#* " + lst.item.src )
 						f.put_string (" : %"" + lst.item.title + "%"")
 --						f.put_string (" : %"" + lst.item.title + "%"")
 						f.put_new_line
@@ -89,31 +75,107 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	print_book (output: FILE; pge: LIST [WIKIPAGE]; dep: INTEGER) is
+	new_book_index (i:  INTEGER): FILE
 		local
-			o: STRING
+			fn: FILE_NAME
+		do
+			create fn.make_from_string (root)
+			if i = 0 then
+				fn.set_file_name ("book.index")
+			else
+				fn.set_file_name ("book" + i.out + ".index")
+			end
+			create {RAW_FILE} Result.make (fn)
+			Result.create_read_write
+		end
+
+	print_book (pge: LIST [WIKIPAGE]) is
+		local
+			d: TUPLE [nb: INTEGER; i: INTEGER; h: LIST [STRING]]
+			cl_output: CELL [FILE]
+			output: FILE
+		do
+			create d
+			d.nb := 0
+			d.i := 0
+			d.h := create {ARRAYED_LIST [STRING]}.make (10)
+
+
+			create cl_output.put (new_book_index (0))
+			imp_print_book (cl_output, pge, 0, d)
+			cl_output.item.put_new_line
+			cl_output.item.close
+		end
+
+	imp_print_book (cl_output: CELL [FILE]; pge: LIST [WIKIPAGE]; dep: INTEGER; prog: TUPLE [nb: INTEGER; i: INTEGER; h: LIST [STRING]]) is
+		local
+			d: INTEGER
+			output: FILE
+			t, o: STRING
 			p: WIKIPAGE
+			i: INTEGER
 		do
 			create o.make_filled (' ', dep)
+			output := cl_output.item
+			if dep = 0 then
+				t := o + "[0:Book] Documentation"
+				t.append_character ('%N')
+				t.append_string (o + "  !src=book")
+				t.append_character ('%N')
+				output.put_string (t)
+			end
+
 			from
 				pge.start
+				i := 0
 			until
 				pge.after
 			loop
+				output := cl_output.item
 				p := pge.item
+				d := p.depth
+				check same_depth: d = dep end
 				check not p.failed end
 				notify_page (dep, p)
-				output.put_string (o)
-				output.put_string ("[" + p.depth.out + ":" + p.base_id + "] ")
-				output.put_string (p.title + "%N")
+				prog.nb := prog.nb + 1
+				if prog.nb \\ 225 = 0 then
+					output.put_new_line
+					output.flush
+					output.close
 
-				output.put_string (o + "  !src=" + p.src + "%N")
---				output.put_string (o + "  !path=" + p.path + "%N")
+					prog.i := prog.i + 1
+					cl_output.replace (new_book_index (prog.i))
+					output := cl_output.item
+
+					from
+						prog.h.start
+					until
+						prog.h.after
+					loop
+						output.put_string ("@")
+						output.put_string (prog.h.item)
+						prog.h.forth
+					end
+				end
+				if d = 0 then
+					d := 1
+					o.append_character (' ')
+				end
+				t := o + "[" + d.out + ":" + p.base_id + ":" + i.out + "] " + p.title
+				t.append_character ('%N')
+				t.append_string (o + "  !src=" + p.src )
+				t.append_character ('%N')
+--				t.append_string (o + "  !path=" + p.path)
+--				t.append_character ('%N')
+				output.put_string (t)
 
 				if p.pages /= Void and then not p.pages.is_empty then
+					prog.h.extend (t)
 --					notify_page (dep + 1, p.pages.first)
-					print_book (output, p.pages, dep + 1)
+					imp_print_book (cl_output, p.pages, dep + 1, prog)
+					prog.h.finish; prog.h.remove
 				end
+				i := i + 1
 				pge.forth
 			end
 		end
@@ -216,36 +278,38 @@ feature {NONE} -- Implementation
 					--| First check for the index.xml
 				create fn.make_from_string (dn)
 				fn.set_file_name ("index.wiki")
-				wpg_index := wikifile_details (fn.string)
-				check wpg_index /= Void and then wpg_index.is_index end
-				wpg_index.depth := dep - 1
-				wpg_index.force_base_id (a_folder_id) --| Set base_id to folder's id
-				add_page_entry (wpg_index)
-				a_parent.add_page (wpg_index)
+				if file_system.file_exists (fn.string) then
+					wpg_index := wikifile_details (fn.string)
+					check wpg_index /= Void and then wpg_index.is_index end
+					wpg_index.depth := dep - 1
+					wpg_index.force_base_id (a_folder_id) --| Set base_id to folder's id
+					add_page_entry (wpg_index)
+					a_parent.add_page (wpg_index)
 
-				d.do_all (agent (idn: STRING; ifn: STRING; a_par: WIKI_WITH_CHILD; idep: INTEGER)
-						local
-							l_fn: FILE_NAME
-							wpg: WIKIPAGE
-						do
-							create l_fn.make_from_string (idn)
-							l_fn.set_file_name (ifn)
-							if file_system.is_file_readable (l_fn) then
-								wpg := wikifile_details (l_fn.string)
-								if
-									wpg /= Void and then
-									not wpg.failed and then
-									not wpg.is_index --| Already handled by wpg_index
-								then
-									wpg.depth := idep
-									add_page_entry (wpg)
-									a_par.add_page (wpg)
+					d.do_all (agent (idn: STRING; ifn: STRING; a_par: WIKI_WITH_CHILD; idep: INTEGER)
+							local
+								l_fn: FILE_NAME
+								wpg: WIKIPAGE
+							do
+								create l_fn.make_from_string (idn)
+								l_fn.set_file_name (ifn)
+								if file_system.is_file_readable (l_fn) then
+									wpg := wikifile_details (l_fn.string)
+									if
+										wpg /= Void and then
+										not wpg.failed and then
+										not wpg.is_index --| Already handled by wpg_index
+									then
+										wpg.depth := idep
+										add_page_entry (wpg)
+										a_par.add_page (wpg)
+									end
+								elseif file_system.is_directory_readable (l_fn) then
+									get_pages (l_fn.string, ifn.twin, a_par, idep + 1)
 								end
-							elseif file_system.is_directory_readable (l_fn) then
-								get_pages (l_fn.string, ifn.twin, a_par, idep + 1)
-							end
-						end(dn, ?, wpg_index, dep)
-					)
+							end(dn, ?, wpg_index, dep)
+						)
+				end
 			end
 		end
 
@@ -299,6 +363,8 @@ feature {NONE} -- Implementation
 										Result.src := v
 									elseif k.is_equal (once "title") then
 										Result.title := v
+									elseif k.is_equal (once "tags") then
+										Result.tags := v
 									else
 										print ("Error .. unknown settings [" + k + "=" + v + "] %N")
 										Result.failed := True

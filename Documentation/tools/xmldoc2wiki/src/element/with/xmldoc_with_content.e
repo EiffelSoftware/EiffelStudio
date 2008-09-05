@@ -50,7 +50,10 @@ feature -- Element change
 		require
 			valid_item: valid_item (i)
 		do
-			if {t: XMLDOC_TEXT} i and then t.is_empty then
+			if {t: XMLDOC_TEXT} i then
+				if not t.is_empty then
+					items.extend (t)
+				end
 			else
 				items.extend (i)
 			end

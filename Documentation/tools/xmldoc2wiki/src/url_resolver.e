@@ -38,12 +38,41 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
+	resolved_for_image (s: STRING): STRING is
+		local
+			c: CHARACTER
+			lid: STRING
+		do
+			if base_url /= Void then
+				if s.is_empty then
+					Result := base_url
+				else
+					if s.item (1) = '/' then
+						Result := s.substring (2, s.count)
+					else
+						Result := removed_parent_redirection (base_url + s)
+						Result := path_to_url (Result)
+					end
+					if image_catalog /= Void and then image_catalog.has_key (Result) then
+						lid := image_catalog.found_item
+						Result := lid
+					end
+				end
+			end
+			if Result = Void then
+				Result := s
+			end
+		ensure
+			Result_attached: Result /= Void
+		end
+
 feature -- Settings
 
 	prefix_url: STRING assign set_prefix_url
 			-- Prefix url if any
 
 	source_url: STRING
+			-- spurce url
 
 	base_url: STRING
 			-- Base url
@@ -53,6 +82,9 @@ feature -- Settings
 
 	base_directory: STRING assign set_base_directory
 			-- Base directory to resolve the url or location
+
+	image_catalog: HASH_TABLE [STRING_8, STRING] assign set_image_catalog
+			-- Image catalog
 
 feature -- Element change
 
@@ -94,6 +126,26 @@ feature -- Element change
 			update
 		end
 
+	set_image_catalog (v: like image_catalog)
+		do
+			image_catalog := v
+		end
+
+	add_image (a_fn: STRING_8; a_id: STRING)
+		local
+			s,s_id: STRING
+			i: INTEGER
+
+		do
+			if image_catalog = Void then
+				create image_catalog.make (1500)
+			end
+			s := absolute_path_name_to_url (a_fn)
+			i := a_id.last_index_of ('.', a_id.count)
+			s_id := a_id.substring (1, i - 1)
+			image_catalog.put (s_id, s)
+		end
+
 	update
 		local
 			c: CHARACTER
@@ -122,6 +174,25 @@ feature -- Element change
 --					if prefix_url /= Void then
 --						base_url.prepend (prefix_url)
 --					end
+				end
+			end
+		end
+
+	absolute_path_name_to_url (a_pn: STRING): STRING
+		local
+			c: CHARACTER
+			i, p: INTEGER
+			fn: STRING
+			pn: KI_PATHNAME
+			lfn: STRING
+		do
+			c := op_env.directory_separator
+			if a_pn /= Void then
+				if base_directory /= Void then
+					create Result.make_from_string (a_pn)
+					check Result.substring (1, base_directory.count).is_case_insensitive_equal (base_directory) end
+					Result.remove_head (base_directory.count + 1)
+					Result := path_to_url (Result)
 				end
 			end
 		end

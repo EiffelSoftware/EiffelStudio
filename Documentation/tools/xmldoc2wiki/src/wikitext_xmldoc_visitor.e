@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	source: STRING
+
 	all_pages: HASH_TABLE [XMLDOC_PAGE, STRING]
 
 	url_resolver: URL_RESOLVER
@@ -62,14 +64,22 @@ feature -- Access
 					l.remove_tail (4)
 				end
 				p := all_pages.item (l)
+				if p = Void then
+					if l.item (1) = '/' then
+						p := all_pages.item (l.substring (2, l.count))
+					end
+				end
 				if p /= Void then
 					t := p.title
+				else
+					io.error.put_string ("Referenced page ["+ l +"] from ["+ source +"] not found%N")
+					t := l
+					t.prepend ("/isedoc/goto/")
+--					t.replace_substring_all ("/", ".")
 				end
 
 				if t /= Void then
 					Result := t
-				else
-					Result := l
 				end
 			end
 		end
@@ -84,7 +94,24 @@ feature -- Access
 			Result := a_url
 		end
 
+	output_append_new_line_if_needed
+		do
+			if output.item (output.count) /= '%N' then
+				output_append_new_line
+			end
+		end
+
+	output_append_new_line
+		do
+			output.append_character ('%N')
+		end
+
 feature -- Element change
+
+	set_source (v: like source)
+		do
+			source := v
+		end
 
 	set_all_pages (v: like all_pages)
 		do
@@ -109,8 +136,22 @@ feature -- Visiting
 		end
 
 	process_metadata (i: XMLDOC_METADATA)
+		local
+			m: XMLDOC_META
+			lst: LIST [XMLDOC_META]
 		do
-
+			from
+				lst := i.meta_list
+				lst.start
+			until
+				lst.after
+			loop
+				m := lst.item
+				output.append ("#tags=")
+				output.append (m.content)
+				output_append_new_line
+				lst.forth
+			end
 		end
 
 	process_unavailable (i: XMLDOC_UNAVAILABLE)
@@ -122,11 +163,14 @@ feature -- Visiting
 
 	process_image (i: XMLDOC_IMAGE)
 		do
-			output.append ("[[Image:")
+			output.append (" [[Image:")
 			output.append (url_to_wiki_image_url (i.url))
 			if i.legend /= Void then
 				output.append ("|")
 				output.append (i.legend)
+			elseif i.alt_text /= Void then
+				output.append ("|")
+				output.append (i.alt_text)
 			end
 			output.append ("]] ")
 		end
@@ -150,7 +194,7 @@ feature -- Visiting
 
 			if i.label /= Void then
 				output.append (" ")
-				output.append (i.label)
+				process_text_container (i.label)
 			end
 			output.append ("] ")
 		end
@@ -169,7 +213,7 @@ feature -- Visiting
 
 				if i.label /= Void then
 					output.append ("|")
-					output.append (i.label)
+					process_text_container (i.label)
 				end
 				output.append ("]] ")
 			end
@@ -195,6 +239,10 @@ feature -- Visiting
 					output.append (i.title)
 					output.append ("%N")
 				end
+				if i.meta_data /= Void then
+					process_metadata (i.meta_data)
+				end
+
 				comps := i.composite_texts
 				from
 					comps.start
@@ -236,16 +284,16 @@ feature -- Visiting
 				until
 					elts.after
 				loop
-					output.append_character ('%N')
+					output_append_new_line_if_needed
 					output.append_string (list_bullet)
 					output.append_character (' ')
 					elts.item.process_visitor (Current)
 					if not elts.islast then
-						output.append_character ('%N')
+						output_append_new_line
 					end
 					elts.forth
 				end
-				output.append_character ('%N')
+				output_append_new_line
 				list_bullet.remove_tail (1)
 			end
 		ensure then
@@ -263,7 +311,8 @@ feature -- Visiting
 				bul := once "ul"
 			end
 			elts := i.items
-			output.append ("<" + bul + ">%N")
+			output.append ("<" + bul + ">")
+			output_append_new_line
 			list_bullet.append ("  ")
 			from
 				elts.start
@@ -274,11 +323,13 @@ feature -- Visiting
 				output.append_string ("<li>")
 				output.append_character (' ')
 				elts.item.process_visitor (Current)
-				output.append_string ("</li>%N")
+				output.append_string ("</li>")
+				output_append_new_line
 				elts.forth
 			end
 			list_bullet.remove_tail (2)
-			output.append ("</" + bul + ">%N")
+			output.append ("</" + bul + ">")
+			output_append_new_line
 		end
 
 	process_list_item (i: XMLDOC_LIST_ITEM)
@@ -306,16 +357,18 @@ feature -- Visiting
 
 	process_composite_text_with_template (i: XMLDOC_COMPOSITE_TEXT; tpl: STRING)
 		do
-			output.append ("%N{{" + tpl + "|")
+			output_append_new_line
+			output.append ("{{" + tpl + "|")
 			process_with_content (i)
-			output.append ("}}%N")
+			output.append ("}}")
+			output_append_new_line
 		end
 
 	process_composite_text_with_tag (i: XMLDOC_COMPOSITE_TEXT; tag: STRING)
 		do
-			output.append ("%N<" + tag + ">")
+			output.append ("<" + tag + ">")
 			process_with_content (i)
-			output.append ("</" + tag + ">%N")
+			output.append ("</" + tag + ">")
 		end
 
 	process_composite_text (i: XMLDOC_COMPOSITE_TEXT)
@@ -330,8 +383,20 @@ feature -- Visiting
 			b := inside_code_block
 			inside_code_block := True
 
-			process_composite_text_with_tag (i, "eiffel")
+			process_composite_text_with_tag (i, "code")
 
+			inside_code_block := b
+		end
+
+	process_code_block (i: XMLDOC_CODE_BLOCK)
+		local
+			b: like inside_code_block
+		do
+			b := inside_code_block
+			inside_code_block := True
+			output_append_new_line_if_needed
+			process_composite_text_with_tag (i, "code")
+			output_append_new_line
 			inside_code_block := b
 		end
 
@@ -342,9 +407,9 @@ feature -- Visiting
 
 	process_paragraph (i: XMLDOC_PARAGRAPH)
 		do
-			output.append_character ('%N')
+			output_append_new_line
 			process_composite_text (i)
-			output.append_character ('%N')
+			output_append_new_line
 		end
 
 	process_sample (i: XMLDOC_SAMPLE)
@@ -386,15 +451,16 @@ feature -- Visiting
 				lst.after
 			loop
 				e := lst.item
-				if {t: XMLDOC_TEXT} e then
-					process_text (t)
-				elseif {tc: XMLDOC_TEXT_CONTAINER} e then
-					process_text_container (tc)
-				elseif {l: XMLDOC_LINK} e then
-					process_link (l)
-				else
-					check False end
-				end
+				e.process_visitor (Current)
+--				if {t: XMLDOC_TEXT} e then
+--					process_text (t)
+--				elseif {tc: XMLDOC_TEXT_CONTAINER} e then
+--					process_text_container (tc)
+--				elseif {l: XMLDOC_LINK} e then
+--					process_link (l)
+--				else
+--					check False end
+--				end
 				lst.forth
 			end
 		end
@@ -420,9 +486,9 @@ feature -- Visiting
 			else
 				s := ""
 			end
-			output.append ("%N")
+			output_append_new_line
 			output.append (s)
-			output.append_character (' ')
+--			output.append_character (' ')
 
 			if {o: like output} output then
 				create n.make_empty
@@ -433,9 +499,9 @@ feature -- Visiting
 				output.append (n)
 			end
 
-			output.append_character (' ')
+--			output.append_character (' ')
 			output.append (s)
-			output.append ("%N")
+			output_append_new_line
 		end
 
 	process_cluster_name (i: XMLDOC_CLUSTER_NAME)
@@ -494,6 +560,13 @@ feature -- Visiting
 				end
 
 				output.append ("</feature>")
+			end
+		end
+
+	process_label (i: XMLDOC_LABEL)
+		do
+			if not i.is_empty then
+				process_text_container (i)
 			end
 		end
 
@@ -611,10 +684,12 @@ feature -- Visiting
 		do
 			if not i.is_empty then
 				if inside_code_block then
-					output.append (i.text)
+					process_with_content (i)
+--					output.append (i.text)
 				else
 					output.append ("<code>")
-					output.append (i.text)
+					process_with_content (i)
+--					output.append (i.text)
 					output.append ("</code>")
 				end
 			end

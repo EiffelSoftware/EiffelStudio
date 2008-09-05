@@ -1,0 +1,172 @@
+Index: mediawiki_filter.info
+===================================================================
+--- mediawiki_filter.info	(revision 2642)
++++ mediawiki_filter.info	(working copy)
+@@ -1,3 +1,7 @@
+ ; $Id$
+ name = "Mediawiki filter"
+ description = "Filter which uses Mediawiki parser for formatting"
++package = Filters
++version = "6.x-0.1"
++core = "6.x"
++
+Index: mediawiki_filter.lib.inc
+===================================================================
+--- mediawiki_filter.lib.inc	(revision 2642)
++++ mediawiki_filter.lib.inc	(working copy)
+@@ -67,7 +67,7 @@
+     'wgScriptPath' => '/xyz',
+     'wgScript' => '/xyz/index.php',
+     'wgRedirectScript' => '/xyz/redirect.php',
+-    'wgArticlePath' => 'wiki/$1',
++    'wgArticlePath' => 'book/eiffelstudio/$1', /* FIXME */
+     'wgActionPaths' => array(),
+     'wgContLanguageCode' => 'en',
+     'wgRawHtml' => FALSE, // Should be disabled for security
+@@ -697,6 +697,7 @@
+       }
+     } else {
+       $dbkey = wfUrlencode( $this->getPrefixedDBkey() );
++
+       if ( $query == '' ) {
+         if($variant!=FALSE && $wgContLang->hasVariants()){
+           if($wgVariantArticlePath==FALSE) {
+@@ -708,7 +709,12 @@
+           $url = str_replace( '$1', $dbkey, $url  );
+         }
+         else {
+-          $url = str_replace( '$1', $dbkey, $wgArticlePath );
++          /* FIXME: JFIAT */
++          $l_url = $dbkey;
++          if (module_exists('pathauto')) {
++	    $l_url = pathauto_cleanstring($l_url);
++          }
++          $url = str_replace( '$1', $l_url, $wgArticlePath );
+         }
+       } else {
+         global $wgActionPaths;
+@@ -732,7 +738,7 @@
+           $url = "{$wgScript}?title={$dbkey}&{$query}";
+         }
+       }
+-      
++
+       // FIXME: this causes breakage in various places when we
+       // actually expected a local URL and end up with dupe prefixes.
+ // TODO: For Drupal we always render, no matter what
+@@ -1442,7 +1448,7 @@
+     if( $broken == 'stub' ) {
+       $r = ' class="stub"';
+     } else if ( $broken == 'yes' ) {
+-      $r = ' class="new"';
++      $r = ' class="newwiki"';
+     } else {
+       $r = '';
+     }
+@@ -1550,14 +1556,14 @@
+       $image_sizes = array();
+     }
+     if (isset($params['width'])) {
+-      foreach($image_sizes as $image_size) {
++      foreach($image_sizes as $image_label => $image_size) {
+         if ($image_size['width'] >= $params['width']) {
+           break;
+         }
+       }
+     }
+ /*    $upright = $this->info['width'] < $this->info['height'];
+-    foreach($image_sizes as $image_size) {
++    foreach($image_sizes as $image_label => $image_size) {
+       if ($upright) {
+         if ($image_size['height'] >= $params['height']) {
+           break;
+@@ -1569,9 +1575,14 @@
+         }
+       }
+     }*/
++
++    if (!$image_label) {
++      $image_label = IMAGE_ORIGINAL;
++    }
+     wfProfileIn( __METHOD__ );
+-    $path = file_create_path($this->node->images[$image_size['label']]);
+-    $url = url($this->node->images[$image_size['label']]);
++    $path = file_create_path($this->node->images[$image_label]);
++    $url = url($this->node->images[$image_label]);
++
+     $thumb = new DrupalImageTransformOutput($this, $url, $path, $params['width'], $params['height']);
+ 
+     wfProfileOut( __METHOD__ );
+@@ -1742,4 +1753,3 @@
+     return NULL;
+   }
+ }
+-
+Index: mediawiki_filter.classes.inc
+===================================================================
+--- mediawiki_filter.classes.inc	(revision 2642)
++++ mediawiki_filter.classes.inc	(working copy)
+@@ -142,14 +142,16 @@
+           // The page was just url-encoded in the "addQuotes" function above
+           $page_string .= "'" . db_escape_string(str_replace("_", " ", strtolower(urldecode($page)))) . "'";
+         }
+-        $sql = "SELECT nid, type, title FROM {node} WHERE type = '%s' AND LOWER(title) IN(".$page_string.")";
++        $sql = "SELECT nid, type, title FROM {node} WHERE type = '%s' AND LOWER(title) IN (".$page_string.")";
+         $db_result = db_query($sql, $type);
++//echo "sql=$sql type=$type<br>";
+         while($row = db_fetch_object($db_result)) {
+           $result_object = new StdClass();
+           $result_object->page_id = $row->nid;
+           $result_object->page_namespace = $namespace;
+           $result_object->page_title = $row->title;
+           $this->lastResult[] = $result_object;
++//echo "<pre>"; print_r ($result_object); echo "</pre>";
+         }
+       }
+     }
+Index: mediawiki_filter.module
+===================================================================
+--- mediawiki_filter.module	(revision 2642)
++++ mediawiki_filter.module	(working copy)
+@@ -10,8 +10,7 @@
+ /**
+  * Implementation of hook_menu().
+  */
+-function mediawiki_filter_menu($may_cache) {
+-  if (!$may_cache) {
++function mediawiki_filter_menu() {
+     drupal_add_css(drupal_get_path('module', 'mediawiki_filter') .'/mediawiki_filter.css');
+ 
+     // TODO: make external image an option
+@@ -26,7 +25,6 @@
+         });
+       }',
+       'inline', 'footer');
+-  }
+ }
+ 
+ /**
+@@ -194,12 +192,12 @@
+  */
+ function mediawiki_filter_namespace_mapping() {
+   return array(
+-    NS_MAIN => 'wiki',  // 0
++    NS_MAIN => 'doc',  // 0
+     NS_USER => 'user',  // 2
+     NS_PROJECT => NULL, // 4
+     NS_IMAGE => 'image',  // 6
+     NS_MEDIAWIKI => NULL, // 8
+-    NS_TEMPLATE => 'wiki',  // 10
++    NS_TEMPLATE => 'template',  // 10
+     NS_HELP => NULL,  // 12
+     NS_CATEGORY => NULL // 14
+   );
+@@ -226,7 +224,7 @@
+   else {
+     // TODO: name mapping
+   }
+-  return 'wiki';
++  return 'doc';
+ }
+ 
+ /**

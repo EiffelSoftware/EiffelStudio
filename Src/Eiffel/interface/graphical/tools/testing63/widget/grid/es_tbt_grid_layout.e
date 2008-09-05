@@ -86,56 +86,6 @@ feature {NONE} -- Query
 			end
 		end
 
-	is_feature_token (a_token: !STRING): BOOLEAN
-			-- Does `a_token' represent a feature name?
-		require
-			a_token_valid: is_valid_token (a_token)
-		do
-			Result := a_token.starts_with ("feature:")
-		end
-
-	feature_from_token (a_token: !STRING; a_class: !EIFFEL_CLASS_C): ?E_FEATURE is
-		require
-			a_token_valid: is_valid_token (a_token)
-			a_token_is_feature: is_feature_token (a_token)
-		do
-
-		end
-
-	is_cluster_token (a_token: !STRING): BOOLEAN
-			-- Does `a_token' represent a cluster name?
-		require
-			a_token_valid: is_valid_token (a_token)
-		do
-			Result := a_token.starts_with ("cluster:")
-		end
-
-	cluster_from_token (a_token: !STRING; a_library: ?CONF_LIBRARY): ?CONF_CLUSTER
-			-- Cluster represented by token
-		require
-			a_token_valid: is_valid_token (a_token)
-			a_token_is_cluster: is_cluster_token (a_token)
-		do
-
-		end
-
-	is_library_token (a_token: !STRING): BOOLEAN
-			-- Does `a_token' represent a library name?
-		require
-			a_token_valid: is_valid_token (a_token)
-		do
-			Result := a_token.starts_with ("library:")
-		end
-
-	library_from_token (a_token: !STRING): ?CONF_CLUSTER
-			-- Cluster represented by token
-		require
-			a_token_valid: is_valid_token (a_token)
-			a_token_is_library: is_library_token (a_token)
-		do
-
-		end
-
 feature -- Basic functionality
 
 	populate_header (a_header: !EV_GRID_HEADER) is
@@ -196,7 +146,7 @@ feature {NONE} -- Factory
 			create Result.make_with_text (a_token)
 		end
 
-	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM is
+	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM
 			-- Create new item according to given node.
 			--
 			-- `a_node': Node for which token item should be created.
@@ -208,14 +158,15 @@ feature {NONE} -- Factory
 		do
 			l_token := a_node.token
 			token_writer.new_line
-			if l_token.starts_with ("class:") then
-				l_name := l_token.substring (7, l_token.count)
+			if l_token.starts_with (class_prefix) then
+				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
 				if {l_class: !CLASS_I} class_from_name (l_name, Void) then
+					a_node.set_data (l_class)
 					token_writer.add_class (l_class)
 				end
-			elseif l_token.starts_with ("feature:") then
-				l_name := l_token.substring (9, l_token.count)
+			elseif l_token.starts_with (feature_prefix) then
+				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
 				if {l_parent2: TAG_BASED_TREE_NODE [G]} a_node.parent then
 					if {l_classi: CLASS_I} l_parent2.data then
@@ -227,14 +178,14 @@ feature {NONE} -- Factory
 						end
 					end
 				end
-			elseif l_token.starts_with ("cluster:") then
-				l_name := l_token.substring (9, l_token.count)
+			elseif l_token.starts_with (cluster_prefix) then
+				l_name := l_token.substring (cluster_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
 				if {l_cluster: CONF_CLUSTER} project.universe.cluster_of_name (l_name) then
 					token_writer.add_group (l_cluster, l_name)
 				end
-			elseif l_token.starts_with ("library:") then
-				l_name := l_token.substring (9, l_token.count)
+			elseif l_token.starts_with (library_prefix) then
+				l_name := l_token.substring (library_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
 				if {l_library: CONF_LIBRARY} project.universe.group_of_name (l_name) then
 					token_writer.add_group (l_library, l_name)

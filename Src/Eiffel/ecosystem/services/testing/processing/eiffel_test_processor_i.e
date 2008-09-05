@@ -58,10 +58,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_ready: BOOLEAN
-			-- Can `Current' start performing a task?
+	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN is
+			-- Can `Current' start performing a task for test suite?
+			--
+			-- `a_test_suite': Test suite which launches `Current'.
 		require
 			usable: is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_test_suite_has_project: a_test_suite.is_project_initialized
 		do
 			Result := not is_running
 		ensure
@@ -150,7 +154,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- `a_test_suite': Test suite for which task will be processed.
 		require
 			usable: is_interface_usable
-			ready: is_ready
+			ready: is_ready (test_suite)
 			a_arg_valid: is_valid_argument (a_arg, a_test_suite)
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
@@ -204,7 +208,7 @@ feature {NONE} -- Status setting
 			-- `a_arg': Arguments defining the task.
 		require
 			usable: is_interface_usable
-			ready: is_ready
+			ready: is_ready (test_suite)
 			a_arg_valid: is_valid_argument (a_arg, test_suite)
 		deferred
 		ensure

@@ -110,7 +110,7 @@ feature {NONE} -- Status setting
 			--
 			-- `a_arg': Arguments defining the task.
 		require
-			ready: is_ready
+			ready: is_ready (test_suite)
 			a_arg_valid: is_valid_argument (a_arg, test_suite)
 		deferred
 		end

@@ -96,7 +96,7 @@ feature -- Status setting
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			executor_available: processor_registrar.is_registered (a_type)
-			executor_ready: executor (a_type).is_ready
+			executor_ready: executor (a_type).is_ready (Current)
 			executor_suitable: executor (a_type).is_valid_test_list (tests, Current)
 		do
 			run_list (a_type, tests, a_blocking)
@@ -111,7 +111,7 @@ feature -- Status setting
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			executor_available: processor_registrar.is_registered (a_type)
-			executor_ready: executor (a_type).is_ready
+			executor_ready: executor (a_type).is_ready (Current)
 			executor_suitable: executor (a_type).is_valid_test_list (tests, Current)
 		do
 			launch_processor (a_type, a_list, a_blocking)
@@ -125,7 +125,7 @@ feature -- Status setting
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			factory_available: processor_registrar.is_registered (a_type)
-			factory_ready: factory (a_type).is_ready
+			factory_ready: factory (a_type).is_ready (Current)
 			factory_suitable: factory (a_type).is_valid_configuration (a_conf, Current)
 		do
 			launch_processor (a_type, a_conf, a_blocking)
@@ -139,7 +139,7 @@ feature -- Status setting
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			processor_available: processor_registrar.is_registered (a_type)
-			processor_ready: processor_registrar.processor (a_type).is_ready
+			processor_ready: processor_registrar.processor (a_type).is_ready (Current)
 			processor_suitable: processor_registrar.processor (a_type).is_valid_argument (a_arg, Current)
 		deferred
 		ensure

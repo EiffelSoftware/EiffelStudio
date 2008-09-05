@@ -576,7 +576,7 @@ feature {NONE} -- Implementation: tag retrieval
 						if l_cluster.parent /= Void then
 							l_current := l_cluster.parent
 						elseif l_cluster.is_used_in_library then
-							
+
 						end
 					end
 				end
@@ -584,9 +584,9 @@ feature {NONE} -- Implementation: tag retrieval
 					cluster_stack.is_empty
 				loop
 					if cluster_stack.last.is_cluster then
-						a_tag.append ("cluster:")
+						a_tag.append (tag_utilities.cluster_prefix)
 					elseif cluster_stack.last.is_library then
-						a_tag.append ("library:")
+						a_tag.append (tag_utilities.library_prefix)
 					end
 					a_tag.append (cluster_stack.last.name)
 					a_tag.append_character (tag_utilities.split_char)
@@ -594,11 +594,11 @@ feature {NONE} -- Implementation: tag retrieval
 				end
 				cluster_stack.wipe_out
 			end
-			a_tag.append ("class:")
+			a_tag.append (tag_utilities.class_prefix)
 			a_tag.append (a_class_name)
 			if a_feature_name /= Void then
 				a_tag.append_character (tag_utilities.split_char)
-				a_tag.append ("feature:")
+				a_tag.append (tag_utilities.feature_prefix)
 				a_tag.append (a_feature_name)
 			end
 		ensure

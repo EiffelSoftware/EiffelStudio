@@ -16,6 +16,8 @@ inherit
 	EIFFEL_TEST_BACKGROUND_EXECUTOR_I
 		rename
 			start_process as start_process_frozen
+		redefine
+			is_ready
 		end
 
 	EIFFEL_TEST_PROCESSOR
@@ -24,6 +26,8 @@ inherit
 			tests as active_tests,
 			argument as active_tests,
 			is_valid_typed_argument as is_valid_test_list
+		undefine
+			is_ready
 		redefine
 			on_test_removed
 		end
@@ -98,6 +102,7 @@ feature {NONE} -- Access
 		end
 
 	internal_map: ?EIFFEL_TEST_EVALUATOR_MAP
+			-- Internal storage for `map'
 
 	cursor: ?DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
 			-- Cursor iterating through elements of `map'
@@ -115,6 +120,13 @@ feature {NONE} -- Access
 		end
 
 feature -- Status report
+
+	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
+		do
+			Result := Precursor (a_test_suite) and compilation_launcher.is_ready (a_test_suite.eiffel_project)
+		ensure then
+			result_implies_launcher_ready: Result implies compilation_launcher.is_ready (a_test_suite.eiffel_project)
+		end
 
 	is_running: BOOLEAN is
 			-- <Precursor>

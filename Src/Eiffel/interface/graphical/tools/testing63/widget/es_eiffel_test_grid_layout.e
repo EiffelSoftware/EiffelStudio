@@ -88,7 +88,7 @@ feature -- Factory
 			end
 
 			token_writer.new_line
-			l_class := class_of_name (a_item.class_name)
+			l_class := class_from_name (a_item.class_name, Void)
 			if l_class /= Void then
 				if l_class.is_compiled then
 					l_feature := l_class.compiled_class.feature_with_name (a_item.name)

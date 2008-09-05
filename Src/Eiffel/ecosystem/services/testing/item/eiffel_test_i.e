@@ -113,6 +113,7 @@ feature {EIFFEL_TEST_PROJECT_I} -- Status setting
 			-- Set tags in list to be explicit tags of `Current'
 		require
 			usable: is_interface_usable
+			a_list_valid: a_list.for_all (agent is_valid_tag)
 			not_a_list_has_empty: not a_list.there_exists (agent {!STRING}.is_empty)
 		deferred
 		ensure

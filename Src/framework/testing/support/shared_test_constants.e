@@ -19,10 +19,10 @@ feature -- Access
 
 feature -- Access: tags
 
-	outcome_fail_tag: STRING = "outcome.fails"
+	outcome_fail_tag: STRING = "outcome/fails"
 
-	outcome_pass_tag: STRING = "outcome.passes"
+	outcome_pass_tag: STRING = "outcome/passes"
 
-	outcome_unresolved_tag: STRING = "outcome.unresolved"
+	outcome_unresolved_tag: STRING = "outcome/unresolved"
 
 end

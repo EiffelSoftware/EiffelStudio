@@ -187,8 +187,8 @@ feature {NONE} -- Element change
 			i: INTEGER
 			l_data: like row_data_for_item
 		do
-			Precursor (a_item)
 			l_data := row_data_for_item (a_item)
+			Precursor (a_item)
 			i := l_data.row.index
 			if cached_items.is_empty then
 				first_item_subrow := Void

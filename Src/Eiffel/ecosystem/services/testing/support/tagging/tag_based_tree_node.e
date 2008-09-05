@@ -53,6 +53,9 @@ feature -- Access
 	parent: !TAG_BASED_TREE_NODE_CONTAINER [G]
 			-- Node listing `Current' as one of its children
 
+	data: ?ANY
+			-- Storage for arbitrary data assocaited with `token'
+
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 	tree: !TAG_BASED_TREE [G]
@@ -69,6 +72,16 @@ feature -- Status report
 
 	is_root: BOOLEAN = False
 			-- <Precursor>
+
+feature -- Status setting
+
+	set_data (a_data: like data)
+			-- Set `data' to `a_data'.
+		do
+			data := a_data
+		ensure
+			data_set: data = a_data
+		end
 
 invariant
 	tag_correct: is_interface_usable implies tag.is_equal (join_tags (parent.tag, token))

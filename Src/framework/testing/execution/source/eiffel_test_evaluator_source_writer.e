@@ -96,6 +96,10 @@ feature {NONE} -- Implementation
 				i := i + 1
 				l_cursor.forth
 			end
+			stream.put_line ("else")
+			stream.indent
+			stream.put_line ("-- Invalid index")
+			stream.dedent
 			stream.put_line ("end")
 			stream.dedent
 			stream.put_line ("end")

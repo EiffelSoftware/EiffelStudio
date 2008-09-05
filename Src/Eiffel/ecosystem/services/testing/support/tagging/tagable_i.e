@@ -14,6 +14,8 @@ inherit
 			memento
 		end
 
+	TAG_UTILITIES
+
 	HASHABLE
 
 feature -- Access
@@ -34,6 +36,7 @@ feature -- Access
 		deferred
 		ensure
 			result_uses_string_equality: ({KL_STRING_EQUALITY_TESTER} #? Result.equality_tester) /= Void
+			results_valid: Result.for_all (agent is_valid_tag)
 			results_not_empty: not ({!DS_LINEAR [!STRING]} #? Result).there_exists (agent {!STRING}.is_empty)
 		end
 

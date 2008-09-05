@@ -37,7 +37,9 @@ feature {NONE} -- Query
 	is_matching (a_library: !CONF_LIBRARY): BOOLEAN is
 			-- <Precursor>
 		do
-			Result := a_library.library_target.system.uuid.is_equal (uuid)
+			if a_library.library_target /= Void then
+				Result := a_library.library_target.system.uuid.is_equal (uuid)
+			end
 		end
 
 end

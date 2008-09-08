@@ -201,7 +201,7 @@ function isedoc_import_form_import($form, &$form_state) {
 
 			// report back on our progress
 			if ($nodes_count > 0) {
-				drupal_set_message(t('Successfully imported: %nb nodes from $book_index_path', array ('%nb' => $nodes_count)));
+				drupal_set_message(t("Successfully imported: %nb nodes from $book_index_path", array ('%nb' => $nodes_count)));
 			}
 			else {
 				drupal_set_message(t('No files were imported.'));

@@ -1235,7 +1235,11 @@ rt_public void eraise(char *tag, long num)
 		echclass = 0;		/* Null class name */
 		line_number = 0;	/* Invalid line number */
 	} else {
-		if (in_assertion) {
+		/* Here we use "&&" because `eraise' is never called by the developer or
+		 * the once exception raising routine. So it is more strict to take 
+		 * the exception as assertion violation when both `in_assertion' and 
+		 * is assertion violation code. */
+		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
 			if (type == EX_CINV) {
@@ -1282,6 +1286,21 @@ rt_public void eraise(char *tag, long num)
 	if (trace) {
 		trace->ex_where = echrt;			/* Save routine in trace for exorig */
 		trace->ex_from = echclass;			/* Save class in trace for exorig */
+		trace->ex_linenum = line_number;	/* Save line number in trace */
+	}
+
+	if (trace) {
+		/* Here we use "&&" because `eraise' is never called by the developer or
+		 * the once exception raising routine. So it is more strict to take 
+		 * the exception as assertion violation when both `in_assertion' and 
+		 * is assertion violation code. */
+		if (in_assertion && is_ex_assert (num)) {
+			trace->ex_where = echrt;			/* Save routine in trace for exorig */
+			trace->ex_from = echclass;			/* Save class in trace for exorig */
+		} else {
+			trace->ex_rout = echrt;				/* Save routine in trace */
+			trace->ex_orig = echclass;			/* Save class in trace */
+		}
 		trace->ex_linenum = line_number;	/* Save line number in trace */
 	}
 
@@ -1405,7 +1424,7 @@ rt_public void com_eraise(char *tag, long num)
 		echrt = (char *) 0;	 /* Null routine name */
 		echclass = 0;		  /* Null class name */
 	} else {
-		if (in_assertion) {
+		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
 			if (type == EX_CINV) {
@@ -3087,7 +3106,10 @@ rt_private void print_top(void (*append_trace)(char *))
 				sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 			}
 		} else {
-			sprintf(buffer, "Pass\n%s\n", RT_FAILED_MSG);
+			/* We used to print `Pass' here, but once there is an exception raised,
+			 * it appears no reason to do so. We should instead print `Fail' 
+			 * as a general effect. */
+			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		}
 	}
 
@@ -3694,7 +3716,9 @@ rt_public void draise(long code, char *meaning, char *message)
 		line_number = 0;	/* Invalid line number */
 	} else {
 		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
-		 * to raise once exceptions, when `in_assertion' has already been reset. */
+		 * to raise once exceptions, when `in_assertion' has already been reset.
+		 * Here we use "||" because when ever it is an assertion "draise" take it as assertion violation,
+		 * regarding `in_assertion' context.*/
 		if (in_assertion || is_ex_assert (code)) {
 			tg = vector->ex_name;
 			type = vector->ex_type;

@@ -1,6 +1,19 @@
+Index: mediawiki_filter.settings.inc
+===================================================================
+--- mediawiki_filter.settings.inc	(revision 2653)
++++ mediawiki_filter.settings.inc	(working copy)
+@@ -206,7 +206,7 @@
+     if ($line) {
+       list($title, $id, $url) = explode('|', $line, 3);
+       if (trim($url) == '<path>') {
+-        $url = '$1'; //str_replace('__QUERY_POSITION__', '$1', url('__QUERY_POSITION__', NULL, NULL, TRUE));
++        $url = '$1'; //str_replace('__QUERY_POSITION__', '$1', url('__QUERY_POSITION__', array ('absolute' => TRUE)));
+       }
+       if ($op == 'url') {
+         $mappings[trim($id)] = trim($url);
 Index: mediawiki_filter.info
 ===================================================================
---- mediawiki_filter.info	(revision 2642)
+--- mediawiki_filter.info	(revision 2653)
 +++ mediawiki_filter.info	(working copy)
 @@ -1,3 +1,7 @@
  ; $Id$
@@ -12,17 +25,17 @@ Index: mediawiki_filter.info
 +
 Index: mediawiki_filter.lib.inc
 ===================================================================
---- mediawiki_filter.lib.inc	(revision 2642)
+--- mediawiki_filter.lib.inc	(revision 2653)
 +++ mediawiki_filter.lib.inc	(working copy)
-@@ -67,7 +67,7 @@
+@@ -63,7 +63,7 @@
+ 
+   // Set up some global variables needed for Mediawiki.
+   $settings = array(
+-    'wgServer' => url(NULL, NULL, NULL, TRUE),
++    'wgServer' => url(NULL, array('absolute' => TRUE)),
      'wgScriptPath' => '/xyz',
      'wgScript' => '/xyz/index.php',
      'wgRedirectScript' => '/xyz/redirect.php',
--    'wgArticlePath' => 'wiki/$1',
-+    'wgArticlePath' => 'book/eiffelstudio/$1', /* FIXME */
-     'wgActionPaths' => array(),
-     'wgContLanguageCode' => 'en',
-     'wgRawHtml' => FALSE, // Should be disabled for security
 @@ -696,7 +696,9 @@
          $url .= "?$query";
        }
@@ -56,81 +69,25 @@ Index: mediawiki_filter.lib.inc
        // FIXME: this causes breakage in various places when we
        // actually expected a local URL and end up with dupe prefixes.
  // TODO: For Drupal we always render, no matter what
-@@ -1442,7 +1449,7 @@
-     if( $broken == 'stub' ) {
-       $r = ' class="stub"';
-     } else if ( $broken == 'yes' ) {
--      $r = ' class="new"';
-+      $r = ' class="newwiki"';
-     } else {
-       $r = '';
-     }
-@@ -1550,14 +1557,14 @@
+@@ -1566,7 +1573,7 @@
        $image_sizes = array();
      }
      if (isset($params['width'])) {
 -      foreach($image_sizes as $image_size) {
 +      foreach($image_sizes as $image_label => $image_size) {
+         $image_label = $image_size['label'];
          if ($image_size['width'] >= $params['width']) {
            break;
-         }
-       }
-     }
- /*    $upright = $this->info['width'] < $this->info['height'];
--    foreach($image_sizes as $image_size) {
-+    foreach($image_sizes as $image_label => $image_size) {
-       if ($upright) {
-         if ($image_size['height'] >= $params['height']) {
-           break;
-@@ -1569,9 +1576,14 @@
-         }
-       }
-     }*/
-+
-+    if (!$image_label) {
-+      $image_label = IMAGE_ORIGINAL;
-+    }
-     wfProfileIn( __METHOD__ );
--    $path = file_create_path($this->node->images[$image_size['label']]);
--    $url = url($this->node->images[$image_size['label']]);
-+    $path = file_create_path($this->node->images[$image_label]);
-+    $url = url($this->node->images[$image_label]);
-+
-     $thumb = new DrupalImageTransformOutput($this, $url, $path, $params['width'], $params['height']);
- 
-     wfProfileOut( __METHOD__ );
-@@ -1742,4 +1754,3 @@
+@@ -1764,4 +1771,3 @@
      return NULL;
    }
  }
 -
-Index: mediawiki_filter.classes.inc
-===================================================================
---- mediawiki_filter.classes.inc	(revision 2642)
-+++ mediawiki_filter.classes.inc	(working copy)
-@@ -142,14 +142,16 @@
-           // The page was just url-encoded in the "addQuotes" function above
-           $page_string .= "'" . db_escape_string(str_replace("_", " ", strtolower(urldecode($page)))) . "'";
-         }
--        $sql = "SELECT nid, type, title FROM {node} WHERE type = '%s' AND LOWER(title) IN(".$page_string.")";
-+        $sql = "SELECT nid, type, title FROM {node} WHERE type = '%s' AND LOWER(title) IN (".$page_string.")";
-         $db_result = db_query($sql, $type);
-+//echo "sql=$sql type=$type<br>";
-         while($row = db_fetch_object($db_result)) {
-           $result_object = new StdClass();
-           $result_object->page_id = $row->nid;
-           $result_object->page_namespace = $namespace;
-           $result_object->page_title = $row->title;
-           $this->lastResult[] = $result_object;
-+//echo "<pre>"; print_r ($result_object); echo "</pre>";
-         }
-       }
-     }
 Index: mediawiki_filter.module
 ===================================================================
---- mediawiki_filter.module	(revision 2642)
+--- mediawiki_filter.module	(revision 2653)
 +++ mediawiki_filter.module	(working copy)
-@@ -10,8 +10,7 @@
+@@ -12,8 +12,7 @@
  /**
   * Implementation of hook_menu().
   */
@@ -140,7 +97,7 @@ Index: mediawiki_filter.module
      drupal_add_css(drupal_get_path('module', 'mediawiki_filter') .'/mediawiki_filter.css');
  
      // TODO: make external image an option
-@@ -26,7 +25,6 @@
+@@ -28,7 +27,6 @@
          });
        }',
        'inline', 'footer');
@@ -148,36 +105,21 @@ Index: mediawiki_filter.module
  }
  
  /**
-@@ -194,12 +192,12 @@
-  */
- function mediawiki_filter_namespace_mapping() {
-   return array(
--    NS_MAIN => 'wiki',  // 0
-+    NS_MAIN => 'doc',  // 0
-     NS_USER => 'user',  // 2
-     NS_PROJECT => NULL, // 4
-     NS_IMAGE => 'image',  // 6
-     NS_MEDIAWIKI => NULL, // 8
--    NS_TEMPLATE => 'wiki',  // 10
-+    NS_TEMPLATE => 'template',  // 10
-     NS_HELP => NULL,  // 12
-     NS_CATEGORY => NULL // 14
-   );
-@@ -226,7 +224,7 @@
-   else {
-     // TODO: name mapping
+@@ -218,7 +216,7 @@
+         $url = url(str_replace('$1', $title, $url));
+         break;
+       case 'create-link':
+-        $url = url('node/add/' . $type, 'edit[title]=' . urlencode($title));
++        $url = url('node/add/' . $type, array('query' => 'edit[title]=' . urlencode($title)));
+         break;
+     }
    }
--  return 'wiki';
-+  return 'doc';
- }
- 
- /**
-@@ -247,7 +245,7 @@
-  */
- function mediawiki_filter_get_create_url($title, $namespace_id, $query = NULL) {
-   $type = mediawiki_filter_node_type_for_namespace($namespace_id);
--  return url('node/add/' . $type, 'edit[title]=' . urlencode($title));
-+  return url('node/add/' . $type, array ('query' =>  'edit[title]=' . urlencode($title)));
- }
- 
- 
+@@ -230,7 +228,7 @@
+   $interwiki_links = mediawiki_filter_interwiki_mappings();
+   if (isset($interwiki_links[$key])) {
+     $url = str_replace('$1', '__QUERY_POSITION_REPLACEMENT__', $interwiki_links[$key]);
+-    $url = url($url, NULL, NULL, TRUE);
++    $url = url($url, array('absolute' => TRUE));
+     $url = str_replace('__QUERY_POSITION_REPLACEMENT__', '$1', $url);
+     return $url;
+   }

@@ -23,21 +23,23 @@ Index: mediawiki_filter.lib.inc
      'wgActionPaths' => array(),
      'wgContLanguageCode' => 'en',
      'wgRawHtml' => FALSE, // Should be disabled for security
-@@ -697,6 +697,7 @@
+@@ -696,7 +696,9 @@
+         $url .= "?$query";
        }
      } else {
++      $raw_url = $this->getPrefixedDBkey();
        $dbkey = wfUrlencode( $this->getPrefixedDBkey() );
 +
        if ( $query == '' ) {
          if($variant!=FALSE && $wgContLang->hasVariants()){
            if($wgVariantArticlePath==FALSE) {
-@@ -708,7 +709,12 @@
+@@ -708,7 +710,12 @@
            $url = str_replace( '$1', $dbkey, $url  );
          }
          else {
 -          $url = str_replace( '$1', $dbkey, $wgArticlePath );
 +          /* FIXME: JFIAT */
-+          $l_url = $dbkey;
++          $l_url = $raw_url;
 +          if (module_exists('pathauto')) {
 +	    $l_url = pathauto_cleanstring($l_url);
 +          }
@@ -45,7 +47,7 @@ Index: mediawiki_filter.lib.inc
          }
        } else {
          global $wgActionPaths;
-@@ -732,7 +738,7 @@
+@@ -732,7 +739,7 @@
            $url = "{$wgScript}?title={$dbkey}&{$query}";
          }
        }
@@ -54,7 +56,7 @@ Index: mediawiki_filter.lib.inc
        // FIXME: this causes breakage in various places when we
        // actually expected a local URL and end up with dupe prefixes.
  // TODO: For Drupal we always render, no matter what
-@@ -1442,7 +1448,7 @@
+@@ -1442,7 +1449,7 @@
      if( $broken == 'stub' ) {
        $r = ' class="stub"';
      } else if ( $broken == 'yes' ) {
@@ -63,7 +65,7 @@ Index: mediawiki_filter.lib.inc
      } else {
        $r = '';
      }
-@@ -1550,14 +1556,14 @@
+@@ -1550,14 +1557,14 @@
        $image_sizes = array();
      }
      if (isset($params['width'])) {
@@ -80,7 +82,7 @@ Index: mediawiki_filter.lib.inc
        if ($upright) {
          if ($image_size['height'] >= $params['height']) {
            break;
-@@ -1569,9 +1575,14 @@
+@@ -1569,9 +1576,14 @@
          }
        }
      }*/
@@ -97,7 +99,7 @@ Index: mediawiki_filter.lib.inc
      $thumb = new DrupalImageTransformOutput($this, $url, $path, $params['width'], $params['height']);
  
      wfProfileOut( __METHOD__ );
-@@ -1742,4 +1753,3 @@
+@@ -1742,4 +1754,3 @@
      return NULL;
    }
  }
@@ -170,3 +172,12 @@ Index: mediawiki_filter.module
  }
  
  /**
+@@ -247,7 +245,7 @@
+  */
+ function mediawiki_filter_get_create_url($title, $namespace_id, $query = NULL) {
+   $type = mediawiki_filter_node_type_for_namespace($namespace_id);
+-  return url('node/add/' . $type, 'edit[title]=' . urlencode($title));
++  return url('node/add/' . $type, array ('query' =>  'edit[title]=' . urlencode($title)));
+ }
+ 
+ 

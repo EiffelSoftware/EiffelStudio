@@ -1,5 +1,5 @@
 indexing
-	description: "Summary description for {$CLASS_NAME}."
+	description: "Summary description for {${CLASS_NAME}}."
 	author: ""
 	date: "$$Date$$"
 	revision: "$$Revision$$"

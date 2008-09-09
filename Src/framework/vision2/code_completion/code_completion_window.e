@@ -99,9 +99,12 @@ feature -- Initialization
 			is_first_show := True
 
 			if not full_list.is_empty then
-				if choice_list.row_count > 0 then
-					select_closest_match
-				end
+
+					--| FIXME IEK This code shouldn't be needed as `select_closest_match'
+					--| is called in show and result in a rebuilding of the list.
+--				if choice_list.row_count > 0 then
+--					select_closest_match
+--				end
 					-- If there is only one possibility, we insert it without displaying the window
 				determine_show_needed
 				if not show_needed then
@@ -769,6 +772,9 @@ feature {NONE} -- Implementation
 				end
 				l_count := l_count + 1
 			end
+
+				-- Shrink list in case not all items were applicable.
+			l_list.set_row_count_to (row_index - 1)
 
 				-- Enable/Disable tree view.
 			if not l_tree_view then

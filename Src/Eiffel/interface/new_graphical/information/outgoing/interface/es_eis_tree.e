@@ -370,7 +370,7 @@ feature {NONE} -- Access
 			-- Sorted tags. Do not change directly out of EIS observer.
 
 invariant
-	only_first_item_is_off_mapping: tag_header /= Void implies managed_tags.count = tag_header.count - 1
+	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

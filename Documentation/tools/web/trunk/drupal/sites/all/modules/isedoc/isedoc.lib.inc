@@ -19,6 +19,36 @@ function var_dump_global($refname) {
 	return "DUMP[".$refname."]=".$a;
 }
 
+function isedoc_mkdir($a_dir) {
+	if (!file_check_directory($a_dir)) {
+		//drupal_set_message("create directory: $a_dir", 'status');
+		mkdir($a_dir, 0775, TRUE);
+	}
+}
+
+function isedoc_rm_recursive($filepath) {
+    if (is_dir($filepath) && !is_link($filepath))
+    {
+        if ($dh = opendir($filepath))
+        {
+            while (($sf = readdir($dh)) !== false)
+            {
+                if ($sf == '.' || $sf == '..')
+                {
+                    continue;
+                }
+                if (!isedoc_rm_recursive($filepath.'/'.$sf))
+                {
+                    throw new Exception($filepath.'/'.$sf.' could not be deleted.');
+                }
+            }
+            closedir($dh);
+        }
+        return rmdir($filepath);
+    }
+    return unlink($filepath);
+}
+
 /**
  * Returns an array of all books.
  *

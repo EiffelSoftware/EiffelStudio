@@ -35,6 +35,7 @@ inherit
 			on_text_reset,
 			on_key_down,
 			on_mouse_wheel,
+			on_mouse_button_up,
 			make,
 			create_token_handler
 		end
@@ -366,6 +367,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			switch_auto_point := auto_point
 			if is_editable then
 				Precursor (c)
+
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+
 				look_for_keyword := True
 				if c = ' ' then
 					if latest_typed_word_is_keyword then
@@ -487,6 +492,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 					end
 				else
 					Precursor (ev_key)
+					if ev_key.code = key_back_space or else ev_key.code = key_delete then
+							-- Peform brace match highlighting
+						highlight_matched_braces
+					end
 				end
 			end
 			auto_point := switch_auto_point xor auto_point
@@ -517,6 +526,9 @@ feature {NONE} -- Handle keystrokes
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (action)
 			switch_auto_point := False
+
+				-- Perform brace matching, or unmatching
+			highlight_matched_braces
 		end
 
 feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
@@ -531,10 +543,14 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			-- Set mode to normal (not completion mode).
 		do
 			is_completing := False
+
 				-- Invalidating cursor forces cursor to be updated.
 			invalidate_cursor_rect (False)
 			resume_cursor_blinking
 			set_focus
+
+				-- Perform brace match highlighting/unhighlighting.
+			highlight_matched_braces
 		end
 
 	calculate_completion_list_x_position: INTEGER is
@@ -719,6 +735,92 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 					-- Calculate correct size to fit
 				Result := Precursor {EB_TAB_CODE_COMPLETABLE}
 			end
+		end
+
+feature {NONE} -- Brace matching
+
+	brace_matcher: !ES_EDITOR_BRACE_MATCHER
+			-- Brace matcher utility access.
+		once
+			create Result
+		end
+
+	highlight_matched_braces
+			-- Match editor braces.
+		local
+			l_utils: !like brace_matcher
+			l_token: ?EDITOR_TOKEN
+			l_prev_token: ?EDITOR_TOKEN
+			l_line: ?EDITOR_LINE
+			l_brace: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
+			l_last_matches: !like last_highlighted_matched_braces
+		do
+			create l_invalidated_lines.make (2)
+
+				-- Remove last matches
+			l_last_matches := last_highlighted_matched_braces
+			from l_last_matches.start until l_last_matches.after loop
+				l_brace ?= l_last_matches.item
+				if l_brace /= Void then
+					l_brace.token.set_highlighted (False)
+					if not l_invalidated_lines.has (l_brace.line) then
+						l_invalidated_lines.extend (l_brace.line)
+					end
+				end
+				l_last_matches.remove
+			end
+
+				-- Locate applicable tokens
+			l_utils := brace_matcher
+			l_token := text_displayed.cursor.token
+			l_line := text_displayed.cursor.line
+			if l_token /= Void then
+				l_prev_token := l_token.previous
+				if l_utils.is_closing_brace (l_token) and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
+						-- Check the previous token for a closing brace, because it has priority
+					l_token := l_prev_token
+				else
+					if not l_utils.is_brace (l_token) and then (l_token.is_new_line or else position <= l_token.pos_in_text) then
+							-- Grab previous token because the move will always get the next token.
+						l_token := l_prev_token
+					end
+				end
+			end
+			if l_token /= Void and then l_line /= Void then
+					-- Find matching brace tokens.
+				if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
+					l_brace := l_utils.match_brace (l_token, l_line)
+					if l_brace /= Void then
+							-- There was a match.
+						l_token.set_highlighted (True)
+						if not l_invalidated_lines.has (l_line) then
+							l_invalidated_lines.extend (l_line)
+						end
+						l_last_matches.extend ([l_token, l_line])
+
+						l_brace.token.set_highlighted (True)
+						if not l_invalidated_lines.has (l_brace.line) then
+							l_invalidated_lines.extend (l_brace.line)
+						end
+						l_last_matches.extend ([l_brace.token, l_brace.line])
+					end
+				end
+			end
+
+			if not l_invalidated_lines.is_empty then
+					-- Perform line redraws
+				from l_invalidated_lines.start until l_invalidated_lines.after loop
+					invalidate_line (l_invalidated_lines.item.index, True)
+					l_invalidated_lines.forth
+				end
+			end
+		end
+
+	last_highlighted_matched_braces: !ARRAYED_LIST [!TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]]
+			-- Last matched brace tokens, set in `highlight_matched_braces'.
+		once
+			create Result.make (2)
 		end
 
 feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, EB_STONE_CHECKER} -- Docking title
@@ -999,6 +1101,16 @@ feature {NONE} -- Implementation
 			else
 				Precursor {EB_CLICKABLE_EDITOR}(a_delta)
 			end
+		end
+
+	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
+			-- <Precursor>
+		do
+			if button = 1 then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
+			Precursor (x_pos, y_pos, button, unused1, unused2, unused3, unused4, unused5)
 		end
 
 feature -- Text Loading	
@@ -1473,6 +1585,9 @@ feature {NONE} -- Code completable implementation
 				disable_selection
 			end
 			text_displayed.delete_char
+
+				-- Perform brace match highlighting/unhighlighting.
+			highlight_matched_braces
 		end
 
 	back_delete_char is
@@ -1482,6 +1597,9 @@ feature {NONE} -- Code completable implementation
 				disable_selection
 			end
 			text_displayed.back_delete_char
+
+				-- Perform brace match highlighting/unhighlighting.
+			highlight_matched_braces
 		end
 
 	insert_string (a_str: STRING_32) is
@@ -1491,6 +1609,9 @@ feature {NONE} -- Code completable implementation
 				disable_selection
 			end
 			text_displayed.insert_string (a_str)
+
+				-- Perform brace match highlighting/unhighlighting.
+			highlight_matched_braces
 		end
 
 	insert_char (a_char: CHARACTER_32) is

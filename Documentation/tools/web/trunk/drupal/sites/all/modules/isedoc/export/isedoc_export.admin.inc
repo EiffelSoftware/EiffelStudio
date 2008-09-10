@@ -123,6 +123,7 @@ function isedoc_export_book_to($a_bookid, $a_dirpath) {
 	global $isedoc_export_dir;
 	global $isedoc_node_count;
 	global $isedoc_export_r_indexes;
+	global $isedoc_export_book_alias;
 	$isedoc_node_count = 0;
 
 	$node =& node_load(array('nid' => $a_bookid), NULL, FALSE);
@@ -143,7 +144,12 @@ function isedoc_export_book_to($a_bookid, $a_dirpath) {
 
 			$isedoc_export_r_indexes = array();
 			$tree = book_menu_subtree_data($node->book);
-			$content = isedoc_book_export_traverse($tree,'wiki');
+
+			isedoc_export_images($l_bk_dir.'/_images');
+
+			$isedoc_export_book_alias = $l_bk_alias;
+			//$content = isedoc_book_export_traverse($tree,'wiki');
+			$content = isedoc_book_export_traverse($tree,'html',$l_bk_alias.'/');
 
 			$l_fn = $l_bk_dir . "/book.index";
 			$l_fp = fopen($l_fn, 'w');
@@ -167,6 +173,16 @@ function isedoc_export_book_to($a_bookid, $a_dirpath) {
 	return $isedoc_node_count;
 }
 
+function isedoc_export_images($a_dir) {
+	$img_dir = file_directory_path().'/images';
+	$files = file_scan_directory($img_dir, "^[^\.]*\.(png|jpg|ico)$", array('.', '..', 'CVS', '.svn'), 0, FALSE, 'filename');
+	isedoc_mkdir($a_dir);
+	foreach($files as $k => $f) {
+		//drupal_set_message("copy $k to $a_dir");
+		file_copy($k,$a_dir,FILE_EXISTS_ERROR);
+	}
+}
+
 function isedoc_export_node_alias(&$a_node) {
 	$l_id = end(split('/', $a_node->path));
 	return $l_id;
@@ -184,13 +200,16 @@ function isedoc_book_export_traverse($tree,$type,$prefix='') {
     if ($node = node_load($data['link']['nid'], FALSE)) {
       $l_alias = isedoc_export_node_alias($node);
       $l_src = $prefix . $l_alias;
-      $l_prefix = $l_src . '/';
-      if ($data['below']) {
-        isedoc_mkdir($isedoc_export_dir . '/' . $l_src);
-        $l_src = $l_prefix . 'index';
-      }
       if ($type == 'wiki') {
+        $l_prefix = $l_src . '/';
+        if ($data['below']) {
+          isedoc_mkdir($isedoc_export_dir . '/' . $l_src);
+          $l_src = $l_prefix . 'index';
+        }
         $output .= isedoc_export_book_node_as_wiki($node, $l_src, $l_alias);
+      } elseif ($type == 'html') {
+        $l_prefix = $prefix;
+        $output .= isedoc_export_book_node_as_html($node, $l_src, $l_alias);
       } else {
 	// Nothing
       }
@@ -240,6 +259,57 @@ function isedoc_export_book_node_as_wiki($a_node,$a_src, $p_alias) {
 	$fp = fopen($fn, 'w');
 	if ($fp) {
 		fwrite($fp, $tw."\n");
+		fclose ($fp);
+	}
+
+	$isedoc_node_count = $isedoc_node_count + 1;
+}
+
+function isedoc_export_book_node_as_html($a_node,$a_src, $p_alias) {
+	global $isedoc_node_count;
+	global $isedoc_export_dir;
+	global $isedoc_export_book_alias;
+	global $isedoc_export_r_indexes;
+	global $base_path;
+	drupal_set_message("<strong>book_node (a_node, $a_src, $p_alias)</strong>",'status');
+	//drupal_set_message(var_dump_r ($a_node),'status');
+
+	$l_title = $a_node->title;
+	$l_depth = $a_node->book['depth'] - 1;
+	$l_weight = $a_node->book['weight'];
+	$l_node_id = $a_node->nid;
+	$l_src = $a_src;
+
+	$h = "[$l_depth:$p_alias:$l_weight] $l_title\n";
+	$h .= " !src=$l_src\n";
+	$taxo =& $a_node->taxonomy;
+	if (count($taxo) > 0) {
+		$tags = " !tags=";
+		foreach($taxo as $t) {
+			$tags .= $t->name.",";
+		}
+		$tags = rtrim($m, ',');
+		$tags .= "\n";
+		$h .= $tags;
+	}
+	$isedoc_export_r_indexes[] = $h;
+
+  	$a_node->build_mode = NODE_BUILD_PRINT;
+  	$a_node = node_build_content($a_node, FALSE, FALSE);
+  	$a_node->body = drupal_render($a_node->content);
+  	//$th = drupal_render($a_node->content);
+        $th = "".theme('book_node_export_html', $a_node, '');
+	$th = str_replace($base_path.'book/'.$isedoc_export_book_alias.'/','',$th);
+	$th = str_replace($base_path.'content/','_images/',$th);
+	$th = str_replace(file_directory_path().'images/','_images/',$th);
+
+	$fn = $isedoc_export_dir . '/' . $l_src . '.html';
+	$m .= $h;
+	drupal_set_message($m,'status');
+
+	$fp = fopen($fn, 'w');
+	if ($fp) {
+		fwrite($fp, $th."\n");
 		fclose ($fp);
 	}
 

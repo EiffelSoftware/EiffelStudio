@@ -1,0 +1,77 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_help().
+ */
+function isedoc_export_help($path, $arg) {
+  switch ($path) {
+    case 'admin/content/isedoc_export':
+      $output = '<p>'. t("Export ISE documentation. ")
+        . t("Exporting documentation files in %dirpath.", array('%dirpath' => realpath(file_directory_path() . variable_get('isedoc_export_folder', '')))) .'</p>';
+      return $output;
+    case 'admin/settings/isedoc_export':
+      return t("Configure the ISE Doc export module's settings.");
+    default:
+      return null;
+  }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function isedoc_export_perm() {
+  return array('export isedoc');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function isedoc_export_menu() {
+  $items = array();
+  
+  $items['admin/content/isedoc_export'] = array(
+    'title' => '(ISE) Export documentation ...',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_export_form'),
+    'file' => 'isedoc_export.admin.inc',
+    'access arguments' => array('export isedoc'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Export ISE docs to the filesystem.',
+  );
+
+  $items['admin/settings/isedoc/isedoc_export'] = array(
+    'title' => 'Export Docs',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_export_admin_settings'),
+    'file' => 'isedoc_export.admin.inc',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+    'description' => 'Change settings for the ISE Doc Export module.',
+  );
+
+  $items['isedoc/book/export'] = array(
+    'title' => 'Export ISE documentation ...',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_isedoc_export_doc'),
+    'file' => 'isedoc_export.admin.inc',
+    'access arguments' => array('export isedoc'),
+    'type' => MENU_CALLBACK,
+    'description' => 'Export ISE docs to the filesystem.',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_theme() registry.
+ **/
+function isedoc_export_theme() {
+  return array(
+    'isedoc_export_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'isedoc_export.admin.inc',
+    ),
+  );
+}
+

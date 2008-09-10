@@ -18,14 +18,22 @@ function isedoc_block($op = 'list', $delta = 0) {
 	} else if ($op == 'view') {
 		$block_content = '';
 		$links = array();
-		$links[] = l('Import into...','isedoc/book/import');
-		$links[] = l('Export from ...','isedoc/book/export');
+		if (module_exists('isedoc_import')) {
+		  $links[] = l('Import into...','admin/content/isedoc_import');
+		} else {
+		  $links[] = l('Enabled Import ...','admin/build/modules');
+		}
+		if (module_exists('isedoc_export')) {
+		  $links[] = l('Export from ...','admin/content/isedoc_export');
+		} else {
+		  $links[] = l('Enabled Export ...','admin/build/modules');
+		}
 
 		$block_content .= theme('item_list', $links);
 		if ($block_content == '') {
 			return;
 		}
-		$block['subject'] = 'ISE box';
+		$block['subject'] = 'Doc Control';
 		$block['content'] = $block_content;
 		return $block;
 	}
@@ -53,33 +61,7 @@ function isedoc_menu() {
     'weight' => '-10',
   );  
 
-//  if ($may_cache) {
-//    $items[] = array('path' => 'import',
-//                     'title' => t('import'),
-//                     'callback' => 'isedoc_import_book',
-//                     'access' => user_access('Import books'),
-//                     'type' => MENU_NORMAL_ITEM);
-//    $items[] = array('path' => 'import/book',
-//                     'title' => t('book'),
-//                     'callback' => 'isedoc_import_book',
-//                     'access' => user_access('import books'),
-//                     'type' => MENU_NORMAL_ITEM);
-//  }
   return $items;
 }
-
-//function isedoc_page() {
-//    $output = '';
-//    print theme('page', $output);
-//}
-//function isedoc_theme() {
-//  return array(
-//    'isedoc_form' => array(
-//      'arguments' => array('form' => NULL),
-//      'file' => 'isedoc.admin.inc',
-//    ),
-//  );
-//}
-
 
 ?>

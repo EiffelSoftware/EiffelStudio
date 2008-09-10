@@ -1,0 +1,14 @@
+; $Id$
+name = ISE Doc Export
+description = Allow exportation of ISE Documentation
+package = BookDoc
+dependencies[] = isedoc
+dependencies[] = book
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2008-06-16
+version = "6.x-0.1"
+core = "6.x"
+project = "isedoc"
+

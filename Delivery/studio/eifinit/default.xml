@@ -569,7 +569,7 @@
 	<PREF NAME="editor.general.colors.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
 	<PREF NAME="editor.general.colors.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.cursor_line_highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight line with cursor in it."><COLOR>255;128;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight lines."><COLOR>255;255;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight lines."><COLOR>50;250;30</COLOR></PREF>
 	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>

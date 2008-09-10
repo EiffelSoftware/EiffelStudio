@@ -450,7 +450,7 @@ function isedoc_import_with_index($dn,$fn,$bid) {
 							$node = isedoc_create_doc_node_from (&$info);
 							$nodes_count = $nodes_count + 1;
 							$l_mlid = isedoc_create_doc_outline_from ($node->nid, &$info);
-							fputs($logfp, "#".$info['depth'].":".$node->nid.":".$l_mlid.":".$l_ref_src.":".$info['title']."\n");
+							fwrite($logfp, "#".$info['depth'].":".$node->nid.":".$l_mlid.":".$l_ref_src.":".$info['title']."\n");
 							drupal_set_message(t("NEW -> [%dep:%idx] %src -> %nid (mlid=$l_mlid)(parent=$p_mlid)(tags=%tags)", array( "%dep" => $l_depth, "%idx" => $info['index'], "%src" => $l_ref_src, "%nid" => $node->nid, "%tags" => $info['tags'])),'status');
 						}
 						$node_ids[$l_depth] = $l_mlid;

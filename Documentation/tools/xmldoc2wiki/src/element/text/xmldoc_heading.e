@@ -23,6 +23,8 @@ inherit
 			make as make_with_size
 		end
 
+	XMLDOC_BLOCK_I
+	
 create
 	make
 

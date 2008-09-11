@@ -677,6 +677,8 @@ feature -- Tag
 									l_entity_containers.add_item (create {XMLDOC_TEXT}.make (l_content))
 --									l_txt.set_text (l_content.text)
 									l_content := Void
+								elseif {l_unuv: XMLDOC_UNAVAILABLE} l_item then
+									l_content := Void
 								else
 									check mismatch_item: False end
 								end

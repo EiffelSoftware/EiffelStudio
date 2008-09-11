@@ -74,7 +74,7 @@ feature -- Access
 				else
 					io.error.put_string ("Referenced page ["+ l +"] from ["+ source +"] not found%N")
 					t := l
-					t.prepend ("/isedoc/goto/")
+					t.prepend ("ref:")
 --					t.replace_substring_all ("/", ".")
 				end
 
@@ -96,7 +96,7 @@ feature -- Access
 
 	output_append_new_line_if_needed
 		do
-			if output.item (output.count) /= '%N' then
+			if output.is_empty or else output.item (output.count) /= '%N' then
 				output_append_new_line
 			end
 		end
@@ -161,10 +161,18 @@ feature -- Visiting
 			output.append ("!>")
 		end
 
-	process_image (i: XMLDOC_IMAGE)
+	process_image (i: XMLDOC_IMAGE) is
 		do
 			output.append (" [[Image:")
 			output.append (url_to_wiki_image_url (i.url))
+			if i.width /= Void or i.height /= Void then
+--				output.append ("|")
+--				output.append (i.width + "px")
+			end
+			if i.border > 0 then
+				output.append ("|")
+				output.append ("border")
+			end
 			if i.legend /= Void then
 				output.append ("|")
 				output.append (i.legend)
@@ -200,22 +208,31 @@ feature -- Visiting
 		end
 
 	process_link (i: XMLDOC_LINK)
+		local
+			s: STRING
 		do
 			if i.is_external then
 				process_external_link (i)
 			else
-				output.append ("[[")
+
 				if i.url /= Void then
-					output.append (url_to_wiki_url (i.url))
+					create s.make_from_string (url_to_wiki_url (i.url))
 				elseif i.anchor_name /= Void then
-					output.append ("#" + i.anchor_name)
+					create s.make_from_string ("#" + i.anchor_name)
 				end
 
-				if i.label /= Void then
-					output.append ("|")
+				if s /= Void then
+					output.append ("[[")
+					output.append (s)
+					if i.label /= Void then
+						output.append ("|")
+						process_text_container (i.label)
+					end
+					output.append ("]] ")
+				elseif i.label /= Void then
+--					check error: False end
 					process_text_container (i.label)
 				end
-				output.append ("]] ")
 			end
 		end
 
@@ -355,25 +372,43 @@ feature -- Visiting
 			i.items.do_all (agent {XMLDOC_ITEM}.process_visitor (Current))
 		end
 
-	process_composite_text_with_template (i: XMLDOC_COMPOSITE_TEXT; tpl: STRING)
+	process_composite_text_with_template (i: XMLDOC_COMPOSITE_TEXT; tpl: STRING) is
 		do
 			output_append_new_line
+			if i.is_align_center then
+				output.append ("<center>")
+			end
 			output.append ("{{" + tpl + "|")
 			process_with_content (i)
 			output.append ("}}")
+			if i.is_align_center then
+				output.append ("</center>")
+			end
 			output_append_new_line
 		end
 
 	process_composite_text_with_tag (i: XMLDOC_COMPOSITE_TEXT; tag: STRING)
 		do
+			if i.is_align_center then
+				output.append ("<center>")
+			end
 			output.append ("<" + tag + ">")
 			process_with_content (i)
 			output.append ("</" + tag + ">")
+			if i.is_align_center then
+				output.append ("</center>")
+			end
 		end
 
-	process_composite_text (i: XMLDOC_COMPOSITE_TEXT)
+	process_composite_text (i: XMLDOC_COMPOSITE_TEXT) is
 		do
+			if i.is_align_center then
+				output.append ("<center>")
+			end
 			process_with_content (i)
+			if i.is_align_center then
+				output.append ("</center>")
+			end
 		end
 
 	process_code (i: XMLDOC_CODE)
@@ -406,9 +441,18 @@ feature -- Visiting
 		end
 
 	process_paragraph (i: XMLDOC_PARAGRAPH)
+		local
+			t: like output
 		do
 			output_append_new_line
-			process_composite_text (i)
+			if {o: like output} output then
+				create t.make_empty
+				output := t
+				process_composite_text (i)
+				t.left_adjust
+				output := o
+			end
+			output.append (t)
 			output_append_new_line
 		end
 
@@ -470,38 +514,41 @@ feature -- Visiting
 			s: STRING
 			n: like output
 		do
-			inspect i.size
-			when 1 then
-				s := "="
-			when 2 then
-				s := "=="
-			when 3 then
-				s := "==="
-			when 4 then
-				s := "===="
-			when 5 then
-				s := "====="
-			when 6 then
-				s := "======"
-			else
-				s := ""
-			end
-			output_append_new_line
-			output.append (s)
---			output.append_character (' ')
-
 			if {o: like output} output then
 				create n.make_empty
 				output := n
 				process_with_content (i)
 				n.prune_all ('%N')
+				n.left_adjust
+				n.right_adjust
 				output := o
-				output.append (n)
 			end
+			if n /= Void and then not n.is_empty then
+				inspect i.size
+				when 1 then
+					s := "="
+				when 2 then
+					s := "=="
+				when 3 then
+					s := "==="
+				when 4 then
+					s := "===="
+				when 5 then
+					s := "====="
+				when 6 then
+					s := "======"
+				else
+					s := ""
+				end
 
---			output.append_character (' ')
-			output.append (s)
-			output_append_new_line
+				output_append_new_line
+				output.append (s)
+--				output.append_character (' ')
+				output.append (n)
+--				output.append_character (' ')
+				output.append (s)
+				output_append_new_line
+			end
 		end
 
 	process_cluster_name (i: XMLDOC_CLUSTER_NAME)
@@ -509,7 +556,8 @@ feature -- Visiting
 			if inside_code_block then
 				process_text_container (i)
 			else
-				output.append ("<cluster>")
+--				output.append ("<cluster>")
+				output.append ("<eiffel>")
 				if i.url /= Void then
 					output.append ("[")
 					output.append (url_to_eiffel_url (i.url))
@@ -519,8 +567,8 @@ feature -- Visiting
 				else
 					process_text_container (i)
 				end
-
-				output.append ("</cluster>")
+				output.append ("</eiffel>")
+--				output.append ("</cluster>")
 			end
 		end
 
@@ -529,7 +577,8 @@ feature -- Visiting
 			if inside_code_block then
 				process_text_container (i)
 			else
-				output.append ("<class>")
+--				output.append ("<class>")
+				output.append ("<eiffel>")
 				if i.url /= Void then
 					output.append ("[")
 					output.append (url_to_eiffel_url (i.url))
@@ -539,7 +588,8 @@ feature -- Visiting
 				else
 					process_text_container (i)
 				end
-				output.append ("</class>")
+				output.append ("</eiffel>")
+--				output.append ("</class>")
 			end
 		end
 
@@ -548,7 +598,8 @@ feature -- Visiting
 			if inside_code_block then
 				process_text_container (i)
 			else
-				output.append ("<feature>")
+--				output.append ("<feature>")
+				output.append ("<eiffel>")
 				if i.url /= Void then
 					output.append ("[")
 					output.append (url_to_eiffel_url (i.url))
@@ -559,7 +610,8 @@ feature -- Visiting
 					process_text_container (i)
 				end
 
-				output.append ("</feature>")
+				output.append ("</eiffel>")
+--				output.append ("</feature>")
 			end
 		end
 
@@ -622,6 +674,7 @@ feature -- Visiting
 
 	process_table (i: XMLDOC_TABLE)
 		do
+			output_append_new_line_if_needed
 			output.append ("{| ")
 			if i.has_border then
 				output.append ("border=%"" + i.border.out + "%" ")
@@ -629,12 +682,14 @@ feature -- Visiting
 			if i.style /= Void then
 				output.append ("style=%"" + i.style.out + "%" ")
 			end
-			output.append ("%N")
+			output_append_new_line
 			if i.legend /= Void then
-				output.append ("|+ " + i.legend + "%N")
+				output.append ("|+ " + i.legend)
+				output_append_new_line
 			end
 			i.rows.do_all (agent process_table_row)
-			output.append ("|}%N")
+			output.append ("|}")
+			output_append_new_line
 		end
 
 	process_table_row (i: XMLDOC_TABLE_ROW)
@@ -651,9 +706,10 @@ feature -- Visiting
 					s.append ("height=" + i.height + ";")
 				end
 				s.append ("%"")
-				output.append ("%N! " + s + " ")
+				output_append_new_line
+				output.append ("! " + s + " ")
 			end
-			output.append ("%N")
+			output_append_new_line
 			i.cells.do_all (agent process_table_cell)
 		end
 

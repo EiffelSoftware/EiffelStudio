@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 				get_imgdoc_source_from_pathname (s, imgs)
 --				files.extend ("D:\_dev\trunk\Documentation\xmldoc\general\guided_tour\studio\index-06.xml")
 --				files.extend ("D:\_dev\trunk\Documentation\xmldoc\general\guided_tour\studio\index-12.xml")
+--				files.extend ("D:\_dev\trunk\Documentation\xmldoc\tools\wizards\com\guided_tour\03_accessing.xml")
+--				files.extend ("D:\_dev\trunk\Documentation\xmldoc\tools\eiffelstudio\reference\40_debugger\35_execution_record_and_replay\20_exec_replay.xml")
 				get_xmldoc_source_from_pathname (s, files)
 			end
 			ht := checked_images (imgs)
@@ -159,7 +161,7 @@ feature {NONE} -- Initialization
 
 	target_directory (a_base_dir: STRING): STRING
 		do
-			Result := a_base_dir + "__export_batch"
+			Result := a_base_dir + "__export"
 		end
 
 end

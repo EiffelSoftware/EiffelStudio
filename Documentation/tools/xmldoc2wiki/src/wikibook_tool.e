@@ -298,6 +298,7 @@ feature {NONE} -- Implementation
 									if
 										wpg /= Void and then
 										not wpg.failed and then
+										wpg.title /= Void and then
 										not wpg.is_index --| Already handled by wpg_index
 									then
 										wpg.depth := idep

@@ -13,6 +13,8 @@ inherit
 			process_visitor
 		end
 
+	XMLDOC_BLOCK_I
+
 create
 	make
 
@@ -22,5 +24,5 @@ feature {XMLDOC_VISITOR} -- Visitor
 		do
 			v.process_sample (Current)
 		end
-	
+
 end

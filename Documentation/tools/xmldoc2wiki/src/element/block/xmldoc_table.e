@@ -23,6 +23,8 @@ inherit
 			make as make_border
 		end
 
+	XMLDOC_BLOCK_I
+
 	DEBUG_OUTPUT
 
 create

@@ -46,13 +46,13 @@ feature -- Element change
 	add_item (i: XMLDOC_ITEM)
 			-- Add item `i' to `items'
 		do
---			if
---				{t: XMLDOC_TEXT} i and then
---				not t.is_empty and then
---				(items.is_empty or else not {tt: XMLDOC_TEXT} items.last)
---			then
---				t.clean_first_blank
---			end
+			if
+				{t: XMLDOC_TEXT} i and then
+				not t.is_empty and then
+				(not items.is_empty and then items.last.is_block)
+			then
+				t.clean_first_blank
+			end
 			Precursor (i)
 		end
 

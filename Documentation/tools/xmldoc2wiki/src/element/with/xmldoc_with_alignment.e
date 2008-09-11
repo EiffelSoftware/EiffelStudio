@@ -11,13 +11,23 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			alignment := align_left
+			alignment := 0
 		end
 
 feature -- Access
 
 	alignment: INTEGER
 			-- Associated url
+
+	has_alignment: BOOLEAN
+		do
+			Result := alignment > 0
+		end
+
+	is_align_center: BOOLEAN
+		do
+			Result := alignment = align_center
+		end
 
 feature -- Element change
 
@@ -30,13 +40,14 @@ feature -- Element change
 				alignment := align_center
 			elseif v.is_case_insensitive_equal (once "right") then
 				alignment := align_right
---			elseif v.is_case_insensitive_equal (once "left") then				
-			else
+			elseif v.is_case_insensitive_equal (once "left") then
 				alignment := align_left
+			else
+				alignment := 0
 			end
 		end
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	align_left: INTEGER = 1
 	align_center: INTEGER = 2

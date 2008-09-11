@@ -21,6 +21,6 @@ feature {XMLDOC_VISITOR} -- Visitor
 	process_visitor (v: XMLDOC_VISITOR)
 		do
 			v.process_code_block (Current)
-		end	
-	
+		end
+
 end

@@ -7,6 +7,13 @@ indexing
 class
 	XMLDOC_ITEM
 
+feature -- Access
+
+	is_block: BOOLEAN
+		do
+			Result := {a: XMLDOC_BLOCK_I} Current
+		end
+
 feature {XMLDOC_VISITOR} -- Visitor
 
 	process_visitor (v: XMLDOC_VISITOR)

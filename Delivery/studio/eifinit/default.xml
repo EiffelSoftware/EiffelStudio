@@ -666,6 +666,7 @@
 	<PREF NAME="shortcuts.editor.show_quick_search_bar" DESCRIPTION="Trigger quick search bar."><SHORTCUT Ctrl="True">F</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.toggle_line_number_visibility" DESCRIPTION="Toggle visibility of line numbers."><SHORTCUT Ctrl="True">L</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.find_matching_brace" DESCRIPTION="Finds a matching brace for the brace under the editor's caret."><SHORTCUT Ctrl="True">[</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.comment" DESCRIPTION="Comment current line or selection."><SHORTCUT Ctrl="True">K</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.uncomment" DESCRIPTION="Uncomment current line or selection"><SHORTCUT Ctrl="True" Shift="True">K</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.set_to_uppercase" DESCRIPTION="Set current selection to uppercase."><SHORTCUT Ctrl="True">U</SHORTCUT></PREF>

@@ -287,6 +287,57 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			end
 		end
 
+	find_matching_brace
+			-- Attempts to find a matching brace under the caret.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_empty: not is_empty
+			text_is_fully_loaded: text_is_fully_loaded
+		local
+			l_brace: ?like brace_match_caret_token
+			l_caret_outside: BOOLEAN
+		do
+			l_brace := brace_match_caret_token
+			if l_brace /= Void then
+				-- Determine location of caret, if it's before/after then the new cursor position
+					-- should be after/before the matching brace.
+				if brace_matcher.is_opening_brace (l_brace.token) then
+					l_caret_outside := position <= l_brace.token.pos_in_text
+				else
+					l_caret_outside := position >= l_brace.token.pos_in_text + l_brace.token.wide_image.count
+				end
+
+				l_brace := brace_matcher.match_brace (l_brace.token, l_brace.line)
+				if l_brace /= Void then
+					if has_selection then
+							-- Remove any previous selection.
+						disable_selection
+					end
+
+						-- Set new cursor position
+					if {l_eiffel_line: EIFFEL_EDITOR_LINE} l_brace.line then
+						text_displayed.cursor.set_line (l_eiffel_line)
+						if brace_matcher.is_closing_brace (l_brace.token) then
+							if l_caret_outside then
+								text_displayed.cursor.set_current_char (l_brace.token.next, 1)
+							else
+								text_displayed.cursor.set_current_char (l_brace.token, 1)
+							end
+						else
+							if l_caret_outside then
+								text_displayed.cursor.set_current_char (l_brace.token, 1)
+							else
+								text_displayed.cursor.set_current_char (l_brace.token.next, 1)
+							end
+						end
+					else
+							-- Should never happen, we are using an Eiffel editor.
+						check False end
+					end
+				end
+			end
+		end
+
 	embed_in_block (keyword: STRING_32; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th character of `keyword'.
@@ -741,18 +792,63 @@ feature {NONE} -- Brace matching
 
 	brace_matcher: !ES_EDITOR_BRACE_MATCHER
 			-- Brace matcher utility access.
+		require
+			is_interface_usable: is_interface_usable
 		once
 			create Result
 		end
 
-	highlight_matched_braces
-			-- Match editor braces.
+	brace_match_caret_token: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+			-- Attempts to retrieve the most applicable brace match token under the caret.
+			--
+			-- `Result': The most applicable token or Void if no token was found.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_empty: not is_empty
+			text_is_fully_loaded: text_is_fully_loaded
 		local
 			l_utils: !like brace_matcher
 			l_token: ?EDITOR_TOKEN
 			l_prev_token: ?EDITOR_TOKEN
 			l_line: ?EDITOR_LINE
-			l_brace: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+		do
+				-- Locate applicable tokens
+			l_utils := brace_matcher
+			l_token := text_displayed.cursor.token
+			l_line := text_displayed.cursor.line
+			if l_token /= Void and l_line /= Void then
+				l_prev_token := l_token.previous
+				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
+					and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
+						-- Check the previous token for a closing brace, because it has priority
+					l_token := l_prev_token
+				else
+					if not l_utils.is_brace (l_token) and then (l_token.is_new_line or else position <= l_token.pos_in_text) then
+							-- Grab previous token because the move will always get the next token.
+						l_token := l_prev_token
+					end
+				end
+
+				if l_token /= Void and then l_utils.is_brace (l_token) then
+					Result := [l_token, l_line]
+				end
+			end
+		ensure
+			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
+			result_token_is_brace: Result /= Void implies brace_matcher.is_brace (Result.token)
+		end
+
+	highlight_matched_braces
+			-- Match editor braces.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_empty: not is_empty
+			text_is_fully_loaded: text_is_fully_loaded
+		local
+			l_utils: !like brace_matcher
+			l_token: ?EDITOR_TOKEN
+			l_line: ?EDITOR_LINE
+			l_brace: ?like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: !like last_highlighted_matched_braces
 		do
@@ -771,40 +867,30 @@ feature {NONE} -- Brace matching
 				l_last_matches.remove
 			end
 
-				-- Locate applicable tokens
-			l_utils := brace_matcher
-			l_token := text_displayed.cursor.token
-			l_line := text_displayed.cursor.line
-			if l_token /= Void then
-				l_prev_token := l_token.previous
-				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
-					and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
-						-- Check the previous token for a closing brace, because it has priority
-					l_token := l_prev_token
-				else
-					if not l_utils.is_brace (l_token) and then (l_token.is_new_line or else position <= l_token.pos_in_text) then
-							-- Grab previous token because the move will always get the next token.
-						l_token := l_prev_token
-					end
-				end
-			end
-			if l_token /= Void and then l_line /= Void then
-					-- Find matching brace tokens.
-				if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-					l_brace := l_utils.match_brace (l_token, l_line)
-					if l_brace /= Void then
-							-- There was a match.
-						l_token.set_highlighted (True)
-						if not l_invalidated_lines.has (l_line) then
-							l_invalidated_lines.extend (l_line)
-						end
-						l_last_matches.extend ([l_token, l_line])
+			if not has_selection then
+					-- Locate applicable tokens
+				l_brace := brace_match_caret_token
+				l_token := l_brace.token
+				l_line := l_brace.line
+				if l_token /= Void and then l_line /= Void then
+						-- Find matching brace tokens.
+					l_utils := brace_matcher
+					if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
+						l_brace := l_utils.match_brace (l_token, l_line)
+						if l_brace /= Void then
+								-- There was a match.
+							l_token.set_highlighted (True)
+							if not l_invalidated_lines.has (l_line) then
+								l_invalidated_lines.extend (l_line)
+							end
+							l_last_matches.extend ([l_token, l_line])
 
-						l_brace.token.set_highlighted (True)
-						if not l_invalidated_lines.has (l_brace.line) then
-							l_invalidated_lines.extend (l_brace.line)
+							l_brace.token.set_highlighted (True)
+							if not l_invalidated_lines.has (l_brace.line) then
+								l_invalidated_lines.extend (l_brace.line)
+							end
+							l_last_matches.extend ([l_brace.token, l_brace.line])
 						end
-						l_last_matches.extend ([l_brace.token, l_brace.line])
 					end
 				end
 			end
@@ -820,6 +906,8 @@ feature {NONE} -- Brace matching
 
 	last_highlighted_matched_braces: !ARRAYED_LIST [!TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]]
 			-- Last matched brace tokens, set in `highlight_matched_braces'.
+		require
+			is_interface_usable: is_interface_usable
 		once
 			create Result.make (2)
 		end

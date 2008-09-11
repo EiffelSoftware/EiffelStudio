@@ -777,7 +777,8 @@ feature {NONE} -- Brace matching
 			l_line := text_displayed.cursor.line
 			if l_token /= Void then
 				l_prev_token := l_token.previous
-				if l_utils.is_closing_brace (l_token) and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
+				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
+					and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
 						-- Check the previous token for a closing brace, because it has priority
 					l_token := l_prev_token
 				else

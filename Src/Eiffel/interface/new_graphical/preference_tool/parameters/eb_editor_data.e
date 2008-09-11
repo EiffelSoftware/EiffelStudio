@@ -1055,7 +1055,7 @@ feature -- Keybord shortcuts Customization
 			create Result.make (1)
 
 				-- Shortcuts for main window group
-			create l_hash.make (14)
+			create l_hash.make (15)
 			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_1")
 			l_hash.put ([False,  True, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_2")
 			l_hash.put ([False, False,  True, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_3")
@@ -1075,6 +1075,8 @@ feature -- Keybord shortcuts Customization
 
 			l_hash.put ([False,  True, False, key_strings.item (Key_i).twin.as_string_8], "embed_if_clause")
 			l_hash.put ([False,  True, False, key_strings.item (Key_d).twin.as_string_8], "embed_debug_clause")
+
+			l_hash.put ([False,  True, False, key_strings.item (key_open_bracket).twin.as_string_8], "find_matching_brace")
 
 			l_hash.put ([False, True, False, key_strings.item (Key_g).twin.as_string_8], "show_goto_dialog")
 

@@ -870,26 +870,28 @@ feature {NONE} -- Brace matching
 			if not has_selection then
 					-- Locate applicable tokens
 				l_brace := brace_match_caret_token
-				l_token := l_brace.token
-				l_line := l_brace.line
-				if l_token /= Void and then l_line /= Void then
-						-- Find matching brace tokens.
-					l_utils := brace_matcher
-					if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-						l_brace := l_utils.match_brace (l_token, l_line)
-						if l_brace /= Void then
-								-- There was a match.
-							l_token.set_highlighted (True)
-							if not l_invalidated_lines.has (l_line) then
-								l_invalidated_lines.extend (l_line)
-							end
-							l_last_matches.extend ([l_token, l_line])
+				if l_brace /= Void then
+					l_token := l_brace.token
+					l_line := l_brace.line
+					if l_token /= Void and then l_line /= Void then
+							-- Find matching brace tokens.
+						l_utils := brace_matcher
+						if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
+							l_brace := l_utils.match_brace (l_token, l_line)
+							if l_brace /= Void then
+									-- There was a match.
+								l_token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_line) then
+									l_invalidated_lines.extend (l_line)
+								end
+								l_last_matches.extend ([l_token, l_line])
 
-							l_brace.token.set_highlighted (True)
-							if not l_invalidated_lines.has (l_brace.line) then
-								l_invalidated_lines.extend (l_brace.line)
+								l_brace.token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_brace.line) then
+									l_invalidated_lines.extend (l_brace.line)
+								end
+								l_last_matches.extend ([l_brace.token, l_brace.line])
 							end
-							l_last_matches.extend ([l_brace.token, l_brace.line])
 						end
 					end
 				end

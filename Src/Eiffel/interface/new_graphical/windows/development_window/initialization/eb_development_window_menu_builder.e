@@ -642,6 +642,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_command_controller.add_edition_command (l_find_brace_cmd)
 			develop_window.commands.editor_commands.extend (l_find_brace_cmd)
+			l_sub_menu.extend (l_command_menu_item)
 
 			l_sub_menu.extend (create {EV_MENU_SEPARATOR})
 

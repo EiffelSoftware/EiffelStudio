@@ -325,6 +325,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd: EB_EDITOR_COMMAND
 			l_os_cmd: EB_ON_SELECTION_COMMAND
 			l_ln_cmd: EB_TOGGLE_LINE_NUMBERS_COMMAND
+			l_find_brace_cmd: EB_FIND_MATCHING_BRACE_COMMAND
 
 			l_command_controller: EB_EDITOR_COMMAND_CONTROLLER
 			l_edit_menu: EV_MENU
@@ -633,6 +634,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
+
+				-- Find matching brace				
+			create l_find_brace_cmd.make (develop_window)
+			auto_recycle (l_find_brace_cmd)
+			l_command_menu_item := l_find_brace_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_command_controller.add_edition_command (l_find_brace_cmd)
+			develop_window.commands.editor_commands.extend (l_find_brace_cmd)
 
 			l_sub_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -1139,6 +1148,9 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_TESTING_RESULT_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL_63})
+
+			insert_show_tool_menu_item (Result, {ES_TOTD_TOOL})
+
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then

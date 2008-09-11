@@ -542,6 +542,7 @@ feature -- Accelerator, focus label and menu name
 	m_Indent: STRING_32 is					do Result := locale.translation("&Indent Selection%TTab")	end
 	m_keep_grid_layout: STRING_32 is		do Result := locale.translation("Keep grid layout")	end
 	m_Line_numbers: STRING_32 is			do Result := locale.translation("Toggle &Line Numbers")	end
+	m_find_matching_brace: STRING_32 is		do Result := locale.translation("Find &Matching Brace")	end
 	m_lock_tool_bar: STRING_32 is			do Result := locale.translation ("Lock the Toolbars") end
 	m_lock_docking: STRING_32 is			do Result := locale.translation ("Lock the Tools") end
 	m_lock_docking_editor: STRING_32 is		do Result := locale.translation ("Lock the Editors") end

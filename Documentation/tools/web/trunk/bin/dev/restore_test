@@ -4,6 +4,6 @@ cd `dirname $0`/..
 
 sudo sh ./eiffeldoc_restore.sh backup/latest ../drupal_test eiffeldoc_test EiffelDoc-TEST
 THEFILE=../drupal_test/drupal/.htaccess
-sed "s|RewriteBase /p|RewriteBase /t|" < $THEFILE > $THEFILE.tmp
+sed "s|# RewriteBase /drupal|RewriteBase /t|" < $THEFILE > $THEFILE.tmp
 cat $THEFILE.tmp > $THEFILE
 rm $THEFILE.tmp

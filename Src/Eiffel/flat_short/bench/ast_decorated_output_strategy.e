@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 					l_feat := current_assigner_feature
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_as.assigner.name, l_feat, False)
+					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.assigner.name)
 				end

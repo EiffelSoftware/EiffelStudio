@@ -13,8 +13,6 @@ inherit
 			process_visitor
 		end
 
-	XMLDOC_BLOCK_I
-
 create
 	make
 

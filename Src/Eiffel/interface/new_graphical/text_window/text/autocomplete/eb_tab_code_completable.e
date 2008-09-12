@@ -41,6 +41,7 @@ feature -- Initialize
 			Precursor {CODE_COMPLETABLE}
 			set_completing_feature (true)
 			set_save_list_position_action (agent save_window_position)
+			create focus_back_actions
 		end
 
 feature -- Access
@@ -53,6 +54,9 @@ feature -- Access
 
 	possibilities_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider
+
+	focus_back_actions: !EV_NOTIFY_ACTION_SEQUENCE
+			-- Called after focus is set back to code completable when necessary.
 
 feature {NONE} -- Access
 
@@ -513,10 +517,15 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			l_completed.replace_substring_all (";", ",")
 			l_completed.replace_substring_all ("#", "# ")
 			insert_string (l_completed)
-
 			if appended_character /= '%U' then
 				insert_char (appended_character)
 			end
+		end
+
+	post_focus_back is
+			-- Preparation before focus is set back.
+		do
+			focus_back_actions.call (Void)
 		end
 
 feature {NONE} -- Implementation

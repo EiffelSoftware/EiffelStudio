@@ -948,11 +948,6 @@ feature {NONE} -- Implementation
 				complete
 			end
 			exit
-			code_completable.block_focus_in_actions
-			if code_completable.is_focus_back_needed then
-				code_completable.set_focus
-			end
-			code_completable.resume_focus_in_actions
 		end
 
 	complete is
@@ -997,6 +992,11 @@ feature {NONE} -- Implementation
 				code_completable.resume_focus_out_actions
 			end
 			exit_complete_mode
+			code_completable.block_focus_in_actions
+			if code_completable.is_focus_back_needed then
+				code_completable.set_focus
+			end
+			code_completable.resume_focus_in_actions
 		end
 
 	exit_complete_mode is

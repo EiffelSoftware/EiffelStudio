@@ -419,8 +419,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			if is_editable then
 				Precursor (c)
 
-					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				if c.is_character_8 and then c.to_character_8.is_punctuation then
+						-- Perform brace match highlighting/unhighlighting.
+					highlight_matched_braces
+				end
 
 				look_for_keyword := True
 				if c = ' ' then

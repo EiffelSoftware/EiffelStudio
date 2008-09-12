@@ -1215,6 +1215,7 @@ feature {NONE} -- Implementation
 			chained_assert: CHAINED_ASSERTIONS
 			is_inline_agent: BOOLEAN
 			inline_agent_assertion: ROUTINE_ASSERTIONS
+			l_built_in_as: BUILT_IN_AS
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1334,7 +1335,17 @@ feature {NONE} -- Implementation
 				if not l_as.is_deferred then
 					put_breakable
 				end
-				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+					 -- `end' token should not be printed when the substitution
+					 -- of a built-in is an attribute.
+				if not l_as.is_built_in then
+					text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+				else
+					l_built_in_as ?= l_as.routine_body
+					check l_built_in_as_not_void: l_built_in_as /= Void end
+					if l_built_in_as.body /= Void implies not l_built_in_as.body.is_attribute then
+						text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+					end
+				end
 			end
 			text_formatter_decorator.exdent
 		end

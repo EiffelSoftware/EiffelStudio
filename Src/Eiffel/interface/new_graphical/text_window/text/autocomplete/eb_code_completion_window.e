@@ -33,7 +33,8 @@ inherit
 			on_key_released,
 			set_expanded_row_icon,
 			show,
-			is_applicable_item
+			is_applicable_item,
+			exit
 		end
 
 	EB_CONSTANTS
@@ -61,6 +62,14 @@ inherit
 	EB_CONTEXT_MENU_HANDLER
 		undefine
 			default_create, copy
+		end
+
+	PLATFORM
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
 		end
 
 create
@@ -687,9 +696,20 @@ feature {NONE} -- Implementation
 				elseif not code_completable.unwanted_characters.item (c.code) then
 					if not code_completable.completion_activator_characters.has (c) then
 						close_and_complete
+					elseif code_completable.has_selection then
+						code_completable.go_to_end_of_line
 					end
 					if not code_completable.has_selection then
+							-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
+						if is_unix then
+							focus_out_actions.block
+							choice_list.focus_out_actions.block
+						end
 						code_completable.handle_character (c)
+							-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
+						if is_unix then
+							ev_application.do_once_on_idle (agent verify_display)
+						end
 					end
 					if not code_completable.completion_activator_characters.has (c) then
 						exit
@@ -773,11 +793,29 @@ feature {NONE} -- Implementation
 				end
 			end
 			exit
-			code_completable.block_focus_in_actions
+		end
+
+	exit is
+			-- Cancel autocomplete
+		do
+			Precursor
 			if code_completable.is_focus_back_needed then
-				code_completable.set_focus
+				code_completable.post_focus_back
 			end
-			code_completable.resume_focus_in_actions
+		end
+
+	verify_display is
+			-- Verify display and focus on current window.
+			-- Resume focus out actions.
+			-- |FIXME: This is a work around on Unix.
+		do
+			if not choice_list.has_focus then
+				show
+				ev_application.do_once_on_idle (agent verify_display)
+			else
+				focus_out_actions.resume
+				choice_list.focus_out_actions.resume
+			end
 		end
 
 	complete_feature is

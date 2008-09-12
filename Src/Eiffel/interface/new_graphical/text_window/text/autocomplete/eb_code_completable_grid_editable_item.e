@@ -16,6 +16,14 @@ inherit
 			activate_action
 		end
 
+	PLATFORM
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature -- Access
 
 	text_field: EB_CODE_COMPLETABLE_TEXT_FIELD
@@ -61,8 +69,24 @@ feature {NONE} -- Implementation
 			popup_window.extend (text_field)
 				-- Change `popup_window' to suit `Current'.
 			update_popup_dimensions (popup_window)
-
+				-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
+			if is_unix then
+				text_field.focus_back_actions.extend (agent verify_popup_window_focus (popup_window))
+			end
 			popup_window.show_actions.extend (agent initialize_actions)
+		end
+
+	verify_popup_window_focus (a_popup_window: EV_POPUP_WINDOW) is
+			-- Verify focus on popup window.
+			-- |FIXME: Have to call `show' to maintain focus on Unix. Vision2 GTK issue.
+		do
+			if not a_popup_window.has_focus then
+					-- Selected by default.
+				if not text_field.text.is_empty then
+					text_field.set_caret_position (text_field.text.count + 1)
+				end
+				a_popup_window.show
+			end
 		end
 
 invariant

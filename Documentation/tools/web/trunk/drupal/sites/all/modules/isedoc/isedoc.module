@@ -74,6 +74,7 @@ function isedoc_menu() {
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'file' => 'isedoc.whatlinkshere.inc',
+    'weight' => 1,
     'type' => MENU_LOCAL_TASK,
   );
 

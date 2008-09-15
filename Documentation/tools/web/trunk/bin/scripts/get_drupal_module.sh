@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CWD=`pwd`
-. `dirname $0`/common.sh
+. `dirname $0`/common.sh 
 
 getdrupmod()
 {

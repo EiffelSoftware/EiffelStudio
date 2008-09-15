@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #include
+EDOC_BINDIR=`dirname $0`
 . `dirname $0`/scripts/common.sh
 
 $EDOC_SCRIPTSDIR/install_drupal_cms.sh 6.4

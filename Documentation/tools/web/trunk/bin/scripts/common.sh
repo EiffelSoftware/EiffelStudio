@@ -1,13 +1,5 @@
 #!/bin/sh
 
-EDOC_BINDIR=`dirname $0`/../
-EDOC_SCRIPTSDIR=$EDOC_BINDIR/scripts/
-EDOC_ETCDIR=$EDOC_BINDIR/etc/
-EDOC_DRUPALDIR=$EDOC_BINDIR/../drupal/
-EDOC_TMPDIR=$EDOC_BINDIR/tmp/
-
-. $EDOC_ETCDIR/init_vars.sh
-
 safemkdir()
 {
   if [ ! -e "$1" ]; then
@@ -33,4 +25,22 @@ unzipit()
     tar xzvf $A_ZIPNAME -C $A_DIR
   fi
 }
+
+CWDc=`pwd`
+if [ "$EDOC_BINDIR" = "" ]; then
+  cd `dirname $0`/..
+else
+  cd $EDOC_BINDIR
+fi
+EDOC_BINDIR=`pwd`
+cd $CWDc
+CWDc=
+
+#echo docbin=$EDOC_BINDIR
+EDOC_SCRIPTSDIR=$EDOC_BINDIR/scripts
+EDOC_DRUPALDIR=$EDOC_BINDIR/../drupal
+EDOC_TMPDIR=$EDOC_BINDIR/tmp
+
+. $EDOC_BINDIR/etc/init_vars.sh
+
 

@@ -34,7 +34,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 		}
 		$n = menu_get_object();
 		if ($n) {
-		  $links[] = l('What links here','isedoc/'.$n->nid.'/whatlinkshere');
+		  $links[] = l('What links here','node/'.$n->nid.'/whatlinkshere');
 		}
 
 		$block_content .= theme('item_list', $links);
@@ -68,14 +68,6 @@ function isedoc_menu() {
     'file' => 'isedoc.admin.inc',
     'weight' => '-10',
   );  
-  $items['isedoc/%node/whatlinkshere'] = array(
-    'title' => 'WhatLinksHere',
-    'page callback' => 'isedoc_whatlinkshere',
-    'page arguments' => array(1),
-    'access arguments' => array('access content'),
-    'file' => 'isedoc.whatlinkshere.inc',
-    'type' => MENU_NORMAL_ITEM,
-  );
   $items['node/%node/whatlinkshere'] = array(
     'title' => t('References'),
     'page callback' => 'isedoc_whatlinkshere',

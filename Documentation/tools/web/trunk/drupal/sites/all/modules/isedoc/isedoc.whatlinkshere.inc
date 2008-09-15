@@ -7,7 +7,7 @@ function isedoc_whatlinkshere($node) {
   $refs = isedoc_pages_referencing($node->title);
   $output = "<br/>";
   if ($refs) {
-    $output .= '<strong>The following pages reference page \''.l($node->title,$node->path).'\'?</strong><br/>';
+    $output .= '<strong>'.t("The page '%tit' is referenced by the following page(s):", array('%tit' => $node->title)).'</strong>';
     $output .= "<ul>";
     foreach($refs as $r_nid => $r) {
       $n =& node_load($r_nid);
@@ -22,7 +22,7 @@ function isedoc_whatlinkshere($node) {
     }
     $output .= "</ul>";
   } else {
-    $output .= '<strong>It seems that no page reference page \''.l($node->title,$node->path).'\'!</strong><br/>';
+    $output .= '<strong>'.t("It seems that no page references internally the page '%tit'.", array('%tit' => $node->title)).'</strong>';
   }
   return $output;
 }

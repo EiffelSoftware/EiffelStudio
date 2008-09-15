@@ -68,6 +68,23 @@ function book_doc_page_exists($a_title) {
 	}
 }
 
+function isedoc_pages_referencing($a_title) {
+	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]][:blank:]*'.strtolower($a_title).'\'';
+        //$l_body_filter = 'LIKE LOWER(\'%[['.$a_title.'%\')';
+        $sql = "SELECT n.nid, n.title FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid WHERE LOWER(r.body) $l_body_filter ;";
+drupal_set_message("sql=$sql");
+        $res = db_query($sql);
+	$result = array();
+	if ($res === FALSE) {
+		return FALSE;
+	} else {
+		while ($r = db_fetch_array($res)) {
+			$result[$r['nid']] = $r;
+		}
+		return $result;
+	}
+}
+
 function isedoc_book_get_books() {
   static $all_books;
 

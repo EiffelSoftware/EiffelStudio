@@ -18,15 +18,23 @@ function isedoc_block($op = 'list', $delta = 0) {
 	} else if ($op == 'view') {
 		$block_content = '';
 		$links = array();
-		if (module_exists('isedoc_import')) {
-		  $links[] = l('Import into...','admin/content/isedoc_import');
-		} else {
-		  $links[] = l('Enabled Import ...','admin/build/modules');
+		if (user_access('import isedoc')) {
+			if (module_exists('isedoc_import')) {
+			  $links[] = l('Import into...','admin/content/isedoc_import');
+			} else {
+			  $links[] = l('Enabled Import ...','admin/build/modules');
+			}
 		}
-		if (module_exists('isedoc_export')) {
-		  $links[] = l('Export from ...','admin/content/isedoc_export');
-		} else {
-		  $links[] = l('Enabled Export ...','admin/build/modules');
+		if (user_access('export isedoc')) {
+			if (module_exists('isedoc_export')) {
+			  $links[] = l('Export from ...','admin/content/isedoc_export');
+			} else {
+			  $links[] = l('Enabled Export ...','admin/build/modules');
+			}
+		}
+		$n = menu_get_object();
+		if ($n) {
+		  $links[] = l('What links here','isedoc/'.$n->nid.'/whatlinkshere');
 		}
 
 		$block_content .= theme('item_list', $links);
@@ -60,6 +68,22 @@ function isedoc_menu() {
     'file' => 'isedoc.admin.inc',
     'weight' => '-10',
   );  
+  $items['isedoc/%node/whatlinkshere'] = array(
+    'title' => 'WhatLinksHere',
+    'page callback' => 'isedoc_whatlinkshere',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc.whatlinkshere.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['node/%node/whatlinkshere'] = array(
+    'title' => t('References'),
+    'page callback' => 'isedoc_whatlinkshere',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc.whatlinkshere.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
 
   return $items;
 }

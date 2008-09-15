@@ -1,0 +1,7 @@
+Test detachable: 1234567890
+Test explicit: 1X234X5X678X90
+Test anchored: 1234567890
+Test generic: 1234567890
+Test anchored: 1X234X5X678X90
+Test generic: 1X234X5X678X90
+Execution completed

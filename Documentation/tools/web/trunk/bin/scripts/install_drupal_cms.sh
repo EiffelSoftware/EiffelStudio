@@ -26,6 +26,7 @@ cd $EDOC_TMPDIR
 safemkdir drupal
 cd drupal
 getdrupalcms $DRUPALVERSION
+
 if [ ! -e $EDOC_DRUPALDIR/sites/default ]; then
 	cp -rf $EDOC_DRUPALDIR/sites.distrib/default $EDOC_DRUPALDIR/sites/default
 fi

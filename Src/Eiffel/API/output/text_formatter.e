@@ -280,6 +280,8 @@ feature -- Process
 
 	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process address text.
+		require
+			a_address_attached: a_address /= Void
 		deferred
 		end
 

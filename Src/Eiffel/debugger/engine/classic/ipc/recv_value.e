@@ -123,23 +123,24 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a reference value.
 		local
 			cl: CLASS_C
+			add: DBG_ADDRESS
 		do
 			fixme ("[
 				Maybe we should modified the runtime, to add the 'SPECIAL' case
 				and send at the same time the capacity.
 				For now, this looks like a hack, but this is working.
 				]")
-
+			create add.make_from_pointer (ref)
 			if Eiffel_system.valid_dynamic_id (type + 1) then
 				cl := Eiffel_system.class_of_dynamic_id (type + 1, False)
 				if cl /= Void and then cl.is_special then
-					create {SPECIAL_VALUE} item.make_set_ref (ref, type + 1)
+					create {SPECIAL_VALUE} item.make_set_ref (add, type + 1)
 				else
-					create {REFERENCE_VALUE} item.make (ref, type + 1)
+					create {REFERENCE_VALUE} item.make (add, type + 1)
 				end
 			else
 				check False end
-				create {REFERENCE_VALUE} item.make (ref, type + 1)
+				create {REFERENCE_VALUE} item.make (add, type + 1)
 			end
 		end
 
@@ -147,12 +148,13 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a exception reference value.
 		local
 			rf: REFERENCE_VALUE
+			add: DBG_ADDRESS
 		do
 			is_exception := True
 
 			check Eiffel_system.valid_dynamic_id (type + 1) end
-			create {REFERENCE_VALUE} rf.make (ref, type + 1)
-
+			create add.make_from_pointer (ref)
+			create {REFERENCE_VALUE} rf.make (add, type + 1)
 			create {EXCEPTION_DEBUG_VALUE} item.make_with_value (rf)
 		end
 

@@ -57,7 +57,7 @@ feature {NONE} -- Creation
 			-- To ensure consistency, class associated to `addr' should
 			-- conform to `a_class'.
 		require
-			non_void_addr: addr /= Void;
+			addr_attached: addr /= Void;
 			valid_addr: is_valid_object_address (addr);
 			class_not_void: a_class /= Void
 			class_has_types: a_class.has_types
@@ -71,7 +71,7 @@ feature {NONE} -- Creation
 			end
 			class_type := dynamic_class.types.first
 		ensure
-			set: addr = object_address
+			set: object_address = addr
 			dtype_set: dynamic_class = a_class
 			class_type_set: class_type = dynamic_class.types.first
 		end
@@ -89,7 +89,7 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 			rqst: ATTR_REQUEST
 		do
 			debug ("debug_recv")
-				print (generator + ".refresh (" + sp_lower.out + ", " + sp_upper.out + ") : address=" + object_address + "%N")
+				print (generator + ".refresh (" + sp_lower.out + ", " + sp_upper.out + ") : address=" + object_address.output + "%N")
 			end
 			reset
 			create rqst.make (object_address)

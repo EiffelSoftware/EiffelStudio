@@ -143,6 +143,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
 			l_extra_info: STRING
+			addr: DBG_ADDRESS
 			tid: like thread_id
 		do
 			clean
@@ -215,8 +216,8 @@ feature {APPLICATION_STATUS} -- Restricted access
 														--| Compute data to get address and co ...
 													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 													l_stack_adv := debug_value_from_icdv (l_stack_object, l_class_type.associated_class)
-													l_hexaddress := l_stack_adv.address
-													if l_hexaddress /= Void then
+													addr := l_stack_adv.address
+													if addr /= Void then
 														l_stack_drv ?= l_stack_adv
 														if l_stack_drv /= Void then
 															l_class_type := l_stack_drv.dynamic_class_type
@@ -231,7 +232,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 															l_frame,
 															l_frame_il,
 															False, 			-- is_melted (No since this is a dotnet system)
-															l_hexaddress,
+															addr,
 															l_class_type, 	-- dynmic class type
 															l_feature_i, 	-- routine, routine_name ...
 															l_il_offset,
@@ -253,9 +254,9 @@ feature {APPLICATION_STATUS} -- Restricted access
 													-- Here we have an External CallStack
 												create external_cse.make (level, tid)
 												if l_stack_object /= Void then
-													l_hexaddress := "0x" + l_stack_object.get_address.to_integer.to_hex_string
+													create addr.make_from_integer_64 (l_stack_object.get_address)
 												else
-													l_hexaddress := "0x0"
+													create addr.make_void
 												end
 												if l_module_name /= Void then
 													l_extra_info := "Module : " + l_module_name
@@ -263,7 +264,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 													l_extra_info := "no debug information"
 												end
 												external_cse.set_info (
-														l_hexaddress,
+														addr,
 														l_module.md_type_name (l_class_token),
 														l_module.md_member_name (l_feature_token),
 														l_il_offset,

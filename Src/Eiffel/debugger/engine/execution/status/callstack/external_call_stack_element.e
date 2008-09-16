@@ -17,7 +17,7 @@ create
 
 feature -- Change
 
-	set_info (a_oa: STRING; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING) is
+	set_info (a_oa: DBG_ADDRESS; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING) is
 		require
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
@@ -38,13 +38,15 @@ feature -- Properties
 	is_eiffel_call_stack_element: BOOLEAN is False
 		-- Is Current an Eiffel Call Stack Element ?
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 
 feature -- Output
 
-	object_address_to_string: like object_address is
+	object_address_to_string: STRING is
 		do
-			Result := object_address
+			if object_address /= Void then
+				Result := object_address.output
+			end
 		end
 
 indexing

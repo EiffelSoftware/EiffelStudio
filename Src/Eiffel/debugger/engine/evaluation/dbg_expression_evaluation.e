@@ -70,7 +70,7 @@ feature -- Evaluation: Access
 		do
 			if dynamic_class.is_basic then
 				dmvb ?= value
-				if dmvb = Void then
+				if dmvb = Void and then not value.is_void then
 					dmvb ?= value.to_basic
 				end
 				if dmvb /= Void then
@@ -79,22 +79,24 @@ feature -- Evaluation: Access
 			end
 		end
 
-	short_text_from_error_messages: STRING_32
+	short_text_from_errors: STRING_32
+			-- Short text from errors
 		require
 			error_occurred: error_occurred
 			evaluated: evaluated
 			not_disabled: not disabled
 		do
-			Result := dbg_error_handler.short_text_from_error_messages
+			Result := dbg_error_handler.short_text_from_errors
 		end
 
-	text_from_error_messages: STRING_32
+	full_text_from_errors: STRING_32
+			-- Full text from errors	
 		require
 			error_occurred: error_occurred
 			evaluated: evaluated
 			not_disabled: not disabled
 		do
-			Result := dbg_error_handler.text_from_error_messages
+			Result := dbg_error_handler.full_text_from_errors
 		end
 
 feature -- Status report

@@ -92,7 +92,7 @@ feature -- Access
 			Result := {st: OBJECT_STONE} a_stone
 		end
 
-	objects_grid_object_line (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
 		do
 			if has_object and viewer.row_count > 0 then
 				if current_object.object_address.is_equal (add) then

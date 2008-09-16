@@ -10,7 +10,6 @@ indexing
 class SPECIAL_VALUE
 
 inherit
-
 	ABSTRACT_SPECIAL_VALUE
 		redefine
 			set_hector_addr
@@ -37,18 +36,18 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make_set_ref (a_reference: POINTER; id: INTEGER) is
+	make_set_ref (ref: DBG_ADDRESS; id: INTEGER) is
 			-- Create Current as a standalone object
 			-- i.e: not an attribute
 			-- nevertheless at this point we don't have the `capacity'
 			-- value, so we'll fetch this value when needed
+		require
+			ref_attached: ref /= Void
 		do
 			set_default_name
 			is_attribute := False;
-			if a_reference /= Default_pointer then
-				address := a_reference.out
-			end
-			if address = Void then
+			address := ref
+			if ref.is_void then
 				is_null := True
 				capacity := 0
 			else
@@ -63,14 +62,14 @@ feature {NONE} -- Initialization
 			not_attr_name_void: attr_name /= Void;
 			not_addr_void: addr /= Void
 		do
-			name := attr_name;
+			name := attr_name
 			if a_class /= Void then
-				e_class := a_class;
-				is_attribute := True;
-			end;
-			address := addr;
-			is_null := (address = Void)
-			capacity := cap;
+				e_class := a_class
+				is_attribute := True
+			end
+			address := addr
+			is_null := address = Void or else address.is_void
+			capacity := cap
 				--| No need to preallocate area, since the fill_items or similar
 				--| will change the capacity if needed
 				--| We require only to get a non Void list
@@ -264,10 +263,10 @@ feature {NONE} -- Implementation
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		do
-			if address /= Void then
+			if address /= Void and then not address.is_void then
 				address := keep_object_as_hector_address (address);
 			end
-			is_null := (address = Void)
+			is_null := (address = Void or else address.is_void)
 
 				--| When created as local (for instance)
 				--| we don't set the capacity right away

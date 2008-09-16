@@ -313,7 +313,7 @@ feature -- Error notification : exception error
 
 feature -- Query
 
-	short_text_from_error_messages: STRING_32 is
+	short_text_from_errors: STRING_32 is
 			-- Short text from errors
 		local
 			details: DBG_ERROR
@@ -324,7 +324,7 @@ feature -- Query
 			end
 		end
 
-	text_from_error_messages: STRING_32 is
+	full_text_from_errors: STRING_32 is
 			-- Full text from errors
 		local
 			details: DBG_ERROR

@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 
 	internal_attributes: like attributes
 
-	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
 		do
 			Result := Debug_value_keeper.item (a_address)
 		end

@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (addr: STRING; a_feature: E_FEATURE) is
+	make (addr: DBG_ADDRESS; a_feature: E_FEATURE) is
 		do
 			feature_make (a_feature)
 			object_address := addr
@@ -47,7 +47,7 @@ feature -- Attachement
 
 feature -- Access
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 		-- Address of the object referenced by current feature stone.
 
 	same_as (other: STONE): BOOLEAN is
@@ -62,7 +62,6 @@ feature -- Access
 						Result := True
 					else
 						Result := object_address /= Void
-							and then conv.object_address /= Void
 							and then object_address.is_equal (conv.object_address)
 					end
 				end

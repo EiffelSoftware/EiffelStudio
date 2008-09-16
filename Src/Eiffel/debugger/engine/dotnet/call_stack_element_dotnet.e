@@ -76,7 +76,7 @@ feature -- Filling
 
 	set_routine (a_chain: ICOR_DEBUG_CHAIN;
 			a_frame: ICOR_DEBUG_FRAME; a_il_frame: ICOR_DEBUG_IL_FRAME;
-			melted: BOOLEAN; a_address: STRING;
+			melted: BOOLEAN; a_address: DBG_ADDRESS;
 			a_dyn_type: CLASS_TYPE;
 			a_feature: FEATURE_I;
 			a_il_offset: INTEGER; a_line_number: INTEGER) is
@@ -107,8 +107,7 @@ feature -- Filling
 			end
 
 			object_address := a_address
-			object_address_to_string := object_address
-			if object_address_to_string = Void or else object_address_to_string.is_equal ("0x00000000") then
+			if object_address = Void or else object_address.is_void then
 				object_address_to_string := "Unavailable"
 			end
 
@@ -230,7 +229,7 @@ feature -- Properties
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
@@ -329,7 +328,7 @@ feature {NONE} -- Implementation Properties
 	private_current_object: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Current object value
 
-	object_address_to_string:like object_address
+	object_address_to_string: STRING
 
 feature {NONE} -- Implementation
 
@@ -406,7 +405,7 @@ feature {NONE} -- Implementation
 				if private_current_object /= Void then
 					private_current_object.set_name ("Current")
 					object_address := private_current_object.address
-					object_address_to_string := object_address
+					object_address_to_string := object_address.output
 				end
 				initialized_current_object := True
 

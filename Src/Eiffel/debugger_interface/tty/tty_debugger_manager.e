@@ -287,7 +287,7 @@ feature -- Interaction
 						end
 						if v = Void or else v.error_occurred then
 							if v /= Void then
-								s := v.short_text_from_error_messages
+								s := v.short_text_from_errors
 							end
 							if s /= Void then
 								localized_print (s)

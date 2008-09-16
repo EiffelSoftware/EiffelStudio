@@ -49,7 +49,7 @@ feature -- Refresh
 
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	objects_grid_object_line (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
 		require
 			valid_address: add /= Void
 		deferred

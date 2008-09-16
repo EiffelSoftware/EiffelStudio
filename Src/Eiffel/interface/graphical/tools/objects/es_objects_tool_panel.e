@@ -691,7 +691,7 @@ feature {NONE} -- Notebook item's behavior
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_object_line (addr: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
 			-- Return managed object located at address `addr'.
 		local
 			found: BOOLEAN
@@ -1172,6 +1172,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			application_is_running: debugger_manager.application_is_executing
 			dropped_objects_grid_not_void: dropped_objects_grid /= Void
 		local
+			l_stone_addr: DBG_ADDRESS
 			n_obj: ES_OBJECTS_GRID_OBJECT_LINE
 			conv_spec: SPECIAL_VALUE
 			abstract_value: ABSTRACT_DEBUG_VALUE
@@ -1183,6 +1184,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				print (generator + ".add_object%N")
 			end
 			g := dropped_objects_grid
+			l_stone_addr := a_stone.object_address
 			from
 				displayed_objects.start
 			until
@@ -1192,7 +1194,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				check
 					n_obj.object_address /= Void
 				end
-				exists := n_obj.object_address.is_equal (a_stone.object_address)
+				exists := n_obj.object_address.is_equal (l_stone_addr)
 				displayed_objects.forth
 			end
 			n_obj := Void
@@ -1213,11 +1215,11 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					end
 				end
 				if n_obj = Void then
-					create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, g)
+					create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (l_stone_addr, a_stone.dynamic_class, g)
 				end
 
-				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
-				debugger_manager.application_status.keep_object (a_stone.object_address)
+				n_obj.set_title (a_stone.name + Left_address_delim + l_stone_addr.output + Right_address_delim)
+				debugger_manager.application_status.keep_object (l_stone_addr)
 				displayed_objects.extend (n_obj)
 				g.insert_new_row (g.row_count + 1)
 				n_obj.attach_to_row (g.row (g.row_count))
@@ -1341,7 +1343,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			Result := row.parent_row = Void
 		end
 
-	is_removable_debugged_object_address (addr: STRING): BOOLEAN is
+	is_removable_debugged_object_address (addr: DBG_ADDRESS): BOOLEAN is
 		do
 			if addr /= Void then
 				from
@@ -1349,7 +1351,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				until
 					displayed_objects.after or else Result
 				loop
-					Result := displayed_objects.item.object_address.is_equal (addr)
+					if {oa: DBG_ADDRESS} displayed_objects.item.object_address then
+						Result := oa.is_equal (addr)
+					end
 					displayed_objects.forth
 				end
 			end

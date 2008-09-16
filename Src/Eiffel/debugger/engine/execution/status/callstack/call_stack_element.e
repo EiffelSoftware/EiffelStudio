@@ -35,7 +35,7 @@ feature -- Properties
 	break_index: INTEGER
 			-- the "Line number" where application is stopped within current feature
 
-	object_address: STRING is
+	object_address: DBG_ADDRESS is
 			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
@@ -64,7 +64,7 @@ feature -- Output
 		do
 			create Result.make_empty
 			if object_address /= Void then
-				Result.append ("[0x" + object_address + "] ")
+				Result.append ("[" + object_address.output + "] ")
 			end
 
 			if class_name /= Void then
@@ -79,7 +79,7 @@ feature -- Output
 			Result.append (" @" + break_index.out)
 		end
 
-	object_address_to_string: like object_address is
+	object_address_to_string: STRING is
 			-- Display object address
 		deferred
 		end

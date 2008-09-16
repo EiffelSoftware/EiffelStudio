@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			disable_all
 		end
 
-	make_with_object (oa: STRING) is
+	make_with_object (oa: DBG_ADDRESS) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
@@ -91,12 +91,12 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			on_object_radio.enable_select
-			address_field.set_text (oa)
+			address_field.set_text (oa.as_string)
 			set_expression_mode
 			disable_all_but_object_radios
 		end
 
-	make_as_named_object (oa: STRING; on: STRING_32) is
+	make_as_named_object (oa: DBG_ADDRESS; on: STRING_32) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
@@ -108,13 +108,13 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			as_object_radio.enable_select
-			address_field.set_text (oa)
+			address_field.set_text (oa.as_string)
 			object_name_field.set_text (on)
 			set_object_name_mode
 			disable_all_but_object_radios
 		end
 
-	make_with_expression_on_object	(oa: STRING; a_exp: STRING) is
+	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: STRING) is
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			expression_field.set_text (a_exp)
 		end
 
-	make_with_named_object (oa: STRING; on: STRING_32; ac: CLASS_C) is
+	make_with_named_object (oa: DBG_ADDRESS; on: STRING_32; ac: CLASS_C) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object.
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			on_object_context_class := ac
 			make
 			on_object_radio.enable_select
-			address_field.set_text (oa)
+			address_field.set_text (oa.as_string)
 			object_name_field.set_text (on)
 			set_expression_mode
 			disable_all_but_object_radios
@@ -159,15 +159,17 @@ feature {NONE} -- Initialization
 			valid_expression: expr /= Void
 		local
 			ctx: DBG_EXPRESSION_CONTEXT
+			addr: DBG_ADDRESS
 		do
 			ctx := expr.context
 			if ctx.on_class then
 				make_with_class (expr.context.associated_class)
 			elseif ctx.on_object then
+				addr := expr.context.associated_address
 				if expr.is_context_object then
-					make_as_named_object (expr.context.associated_address, expr.name)
+					make_as_named_object (addr, expr.name)
 				else
-					make_with_object (expr.context.associated_address)
+					make_with_object (addr)
 				end
 			else
 				make_for_context
@@ -562,6 +564,7 @@ feature {NONE} -- Event handling
 			t: STRING
 			oe: STRING_32
 			do_not_close_dialog: BOOLEAN
+			add: DBG_ADDRESS
 		do
 			if modified_expression = Void then
 				if class_radio.is_selected then
@@ -621,12 +624,13 @@ feature {NONE} -- Event handling
 						t := t.substring (3, t.count)
 					end
 					t.prepend ("0x")
+					create add.make_from_string (t)
 
 					if
 						Debugger_manager.safe_application_is_stopped
-						and then Debugger_manager.application.is_valid_object_address (t)
+						and then Debugger_manager.application.is_valid_object_address (add)
 					then
-						o := debugger_manager.object_manager.debugged_object (t, 0, 0)
+						o := debugger_manager.object_manager.debugged_object (add, 0, 0)
 						if as_object_radio.is_selected or else expression_field.text.is_empty then
 							create new_expression.make_as_object (o.dynamic_class , o.object_address)
 							new_expression.set_name (object_name_field.text)
@@ -638,7 +642,7 @@ feature {NONE} -- Event handling
 							prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8), dialog, Void)
 						else
 							check debugger_manager.application_status /= Void end
-							Debugger_manager.application_status.keep_object (t)
+							Debugger_manager.application_status.keep_object (add)
 						end
 					else
 						set_focus (address_field)

@@ -187,12 +187,6 @@ feature -- Access
 
 feature -- Queries
 
-	address_as_hex_string: STRING is
-			-- hexadecimal representation for `address'
-		do
-			Result := "0x" + object_address.to_integer.to_hex_string
-		end
-
 	value_to_truncated_string (a_size: INTEGER): STRING_32 is
 			-- Truncated string output for the Current value
 		do

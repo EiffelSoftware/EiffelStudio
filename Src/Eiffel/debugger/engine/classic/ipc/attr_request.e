@@ -53,17 +53,17 @@ create
 
 feature -- Initialization
 
-	make (addr: STRING) is
+	make (addr: like object_address) is
 		require
-			valid_addr: addr /= Void
+			valid_addr: addr /= Void and then not addr.is_void
 		do
-			old_make (Rqst_inspect);
-			object_address := addr;
+			old_make (Rqst_inspect)
+			object_address := addr
 		end;
 
 feature -- Properites
 
-	object_address: STRING;
+	object_address: DBG_ADDRESS;
 			-- Hector address of object being inspected
 
 	attributes: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE];
@@ -83,7 +83,7 @@ feature -- Update
 		do
 			object_type_id := 0
 			send_rqst_3_integer (Rqst_sp_lower, 0, sp_lower, sp_upper)
-			send_rqst_3 (request_code, In_h_addr, 0, hex_to_pointer (object_address))
+			send_rqst_3 (request_code, In_h_addr, 0, object_address.as_pointer)
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
 			object_type_id := to_integer_32 (c_tread) + 1
@@ -91,7 +91,7 @@ feature -- Update
 					--| Error occurred
 				debug ("DEBUG_RECV")
 					io.error.put_string ("Grepping object at address ")
-					io.error.put_string (object_address)
+					io.error.put_string (object_address.output)
 					io.error.put_string (".%N")
 					io.error.put_string ("Error occurred !")
 					io.error.put_string (" object_type_id=" + object_type_id.out)
@@ -101,7 +101,7 @@ feature -- Update
 			else
 				debug ("DEBUG_RECV")
 					io.error.put_string ("Grepping object at address ")
-					io.error.put_string (object_address)
+					io.error.put_string (object_address.output)
 					io.error.put_string (".%N")
 					io.error.put_string ("Object is a special? ")
 					io.error.put_boolean (is_special)
@@ -165,6 +165,7 @@ feature {NONE} -- Implementation
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
+			add: DBG_ADDRESS
 			attr_name: STRING;
 			sk_type: INTEGER
 			i, attr_nb: INTEGER;
@@ -239,7 +240,7 @@ feature {NONE} -- Implementation
 						--| If expanded contained in SPECIAL, it doesn't have a specific (hector) address
 						--| and is only addressed via the SPECIAL object and the index
 						--| Then in this case we receive its attributes right away
-						create exp_attr.make_attribute (attr_name, e_class, type_id, Void);
+						create exp_attr.make_attribute_of_special (attr_name, e_class, type_id)
 						attr := exp_attr
 						if Eiffel_system.valid_dynamic_id (type_id) then
 							recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id, False), False)
@@ -250,9 +251,8 @@ feature {NONE} -- Implementation
 						sort_debug_values (exp_attr.attributes)
 					else
 						p := to_pointer (c_tread)
-						create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, type_id, p.out);
+						create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, type_id, create {DBG_ADDRESS}.make_from_pointer (p));
 					end
-
 				when Sk_ref then
 						-- Is this a special object?
 					if to_boolean (c_tread) then
@@ -260,13 +260,13 @@ feature {NONE} -- Implementation
 						if to_boolean (c_tread) then
 							type_id := to_integer_32 (c_tread) + 1
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-								type_id, to_pointer (c_tread).out)
+								type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)))
 						else
 							debug("DEBUG_RECV")
 								io.error.put_string ("Creating special object.%N")
 							end
 							p := to_pointer (c_tread)
-							create spec_attr.make_attribute (attr_name, e_class, p.out, to_integer_32 (c_tread))
+							create spec_attr.make_attribute (attr_name, e_class, create {DBG_ADDRESS}.make_from_pointer (p), to_integer_32 (c_tread))
 							debug("DEBUG_RECV")
 								io.error.put_string ("Attribute name: ");
 								io.error.put_string (attr_name);
@@ -289,10 +289,10 @@ feature {NONE} -- Implementation
 						if not to_boolean (c_tread) then
 							type_id := to_integer_32 (c_tread) + 1
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-														type_id, to_pointer (c_tread).out)
+														type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)))
 						else
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-														0, Void)
+														0, create {DBG_ADDRESS}.make_void)
 						end
 					end
 				else
@@ -338,6 +338,9 @@ feature -- Special object properties
 
 	is_tuple: BOOLEAN;
 			-- Is object being inspected of type TUPLE?
+
+invariant
+	object_address_attached: object_address /= Void and then not object_address.is_void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

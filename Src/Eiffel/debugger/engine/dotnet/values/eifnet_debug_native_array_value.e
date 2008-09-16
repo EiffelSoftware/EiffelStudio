@@ -10,7 +10,6 @@ class
 	EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 
 inherit
-
 	ABSTRACT_SPECIAL_VALUE
 		redefine
 			kind,
@@ -34,7 +33,7 @@ inherit
 		end
 
 create {CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
-	make --, make_attribute
+	make
 
 feature {NONE} -- Initialization
 
@@ -48,8 +47,10 @@ feature {NONE} -- Initialization
 			init_dotnet_data (a_referenced_value, a_prepared_value)
 
 			is_null := icd_value_info.is_null
-			if not is_null then
-				address := icd_value_info.address_as_hex_string
+			if is_null then
+				create address.make_void
+			else
+				create address.make_from_integer_64 (icd_value_info.object_address)
 			end
 
 			get_array_value
@@ -63,22 +64,6 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: icd_value = a_prepared_value
 		end
-
---	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
---			-- Set `attr_name' to `name' and `value' to `v'.
---		require
---			not_attr_name_void: attr_name /= Void
---			v_not_void: v /= Void
---		do
---			name := attr_name
---			if a_class /= Void then
---				e_class := a_class
---				is_attribute := True
---			end
---			value := v
---		ensure
---			value_set: value = v
---		end
 
 feature -- get
 

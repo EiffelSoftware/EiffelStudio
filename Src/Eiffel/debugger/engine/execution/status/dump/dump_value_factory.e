@@ -212,7 +212,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_object_value (addr: STRING; a_dtype: CLASS_C): DUMP_VALUE is
+	new_object_value (addr: DBG_ADDRESS; a_dtype: CLASS_C): DUMP_VALUE is
 			-- make a object item initialized to `value'
 		local
 			dvnet: DUMP_VALUE_DOTNET
@@ -225,7 +225,7 @@ feature -- Access
 				create Result.make_empty (debugger_manager)
 			end
 			dtype := a_dtype
-			if dtype = Void and then addr /= Void then
+			if dtype = Void and then addr /= Void and then not addr.is_void then
 				dtype := debugger_manager.object_manager.class_c_at_address (addr)
 			end
 			Result.set_object_value (addr, dtype)
@@ -234,7 +234,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_expanded_object_value  (addr: STRING; dtype: CLASS_C): DUMP_VALUE is
+	new_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C): DUMP_VALUE is
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void

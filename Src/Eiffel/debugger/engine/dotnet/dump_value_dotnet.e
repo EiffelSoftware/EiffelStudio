@@ -27,7 +27,7 @@ create {DUMP_VALUE_FACTORY}
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
-	set_object_value (value: STRING_8; dtype: CLASS_C) is
+	set_object_value (value: DBG_ADDRESS; dtype: CLASS_C) is
 			-- make a object item initialized to `value'
 		local
 			dobj: DEBUGGED_OBJECT_DOTNET

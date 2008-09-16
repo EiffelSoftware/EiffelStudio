@@ -117,7 +117,7 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 
 feature {NONE} -- Query		
 
-	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
 		require
 			a_target /= Void and then a_target.address = Void
 		deferred
@@ -240,27 +240,27 @@ feature -- Concrete evaluation
 			effective_evaluate_once_function (f)
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
+	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		local
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
-			l_address: STRING
+			l_address: DBG_ADDRESS
 			cl: CLASS_C
 		do
 			if a_target /= Void then
 				l_address := a_target.address
 			end
-			if l_address = Void then
+			if l_address = Void or else l_address.is_void then
 				l_address := a_addr
 			end
-			if l_address = Void and a_target /= Void then
+			if (l_address = Void or else l_address.is_void) and a_target /= Void then
 					--| cannot evaluate attribute on manifest value
 					--| (such as "foo", 1 or True .. in the expression)
 					-- but let's try to improve this ...
 				l_address := address_from_dump_value (a_target)
 			end
-			if l_address /= Void then
+			if l_address /= Void and then not l_address.is_void then
 				lst := attributes_list_from_object (l_address)
 				dv := find_item_in_list (f.feature_name, lst)
 
@@ -290,7 +290,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN) is
+	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -301,7 +301,7 @@ feature -- Concrete evaluation
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".evaluate_routine :%N")
-				print ("%Taddr="); print (a_addr); print ("%N")
+				print ("%Taddr="); print (a_addr.output); print ("%N")
 				if a_target /= Void then
 					print ("%Ttarget=not Void : [")
 					print (a_target.full_output)
@@ -323,11 +323,11 @@ feature -- Concrete evaluation
 			elseif l_target_dynclass /= Void and then l_target_dynclass.types.count = 1 then
 				l_dyntype := l_target_dynclass.types.first
 			elseif l_target_dynclass = Void or else l_target_dynclass.types.count > 1 then
-				if a_addr /= Void then
+				if a_addr /= Void and then not a_addr.is_void then
 						-- The type has generic derivations: we need to find the precise type.
 					l_dyntype := class_type_from_object_relative_to (a_addr, l_target_dynclass)
 					if l_dyntype = Void then
-						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr.output))
 					elseif l_target_dynclass = Void then
 						l_target_dynclass := l_dyntype.associated_class
 					end
@@ -380,7 +380,7 @@ feature -- Concrete evaluation
 						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
 						if last_result = Void or else not last_result.has_value then
 							dbg_error_handler.notify_error_evaluation (
-										Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr, Void)
+										Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr.output, Void)
 									)
 						end
 					end
@@ -396,8 +396,7 @@ feature -- Concrete evaluation
 							last_result.suggest_static_class (l_statcl)
 							if
 								l_statcl.is_basic and
-								last_result.has_value and then
-								last_result.value.address /= Void
+								last_result.has_attached_value
 							then
 									-- We expected a basic type, but got a reference.
 									-- This happens in "2 + 2" because we convert the first 2
@@ -415,7 +414,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+	evaluate_function_with_name (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 			-- Note: this feature is used only for external function				
@@ -435,7 +434,7 @@ feature -- Concrete evaluation
 		deferred
 		end
 
-	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 				ctype: CLASS_TYPE; orig_class: CLASS_C;
 				params: LIST [DUMP_VALUE];
 				is_static_call: BOOLEAN
@@ -472,7 +471,7 @@ feature -- Implementation
 			--| only for dotnet for now
 		end
 
-	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+	effective_evaluate_function_with_name (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 			-- Note: this feature is used only for external function				
@@ -485,17 +484,17 @@ feature -- Implementation
 
 feature -- Query
 
-	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	attributes_list_from_object (a_addr: DBG_ADDRESS): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 			Result := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
 		end
 
-	class_type_from_object (a_addr: STRING): CLASS_TYPE is
+	class_type_from_object (a_addr: DBG_ADDRESS): CLASS_TYPE is
 		do
 			Result := debugger_manager.object_manager.class_type_at_address (a_addr)
 		end
 
-	class_type_from_object_relative_to (a_addr: STRING; cl: CLASS_C): CLASS_TYPE is
+	class_type_from_object_relative_to (a_addr: DBG_ADDRESS; cl: CLASS_C): CLASS_TYPE is
 		do
 			Result := class_type_from_object (a_addr)
 			if
@@ -515,13 +514,13 @@ feature -- Query
 		deferred
 		end
 
-	dump_value_at_address (addr: STRING): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
 		require
-			addr /= Void
+			addr_attached: addr /= Void and then not addr.is_void
 		deferred
 		end
 
-	address_from_dump_value (a_target: DUMP_VALUE): STRING is
+	address_from_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
 		require
 			a_target /= Void
 		do

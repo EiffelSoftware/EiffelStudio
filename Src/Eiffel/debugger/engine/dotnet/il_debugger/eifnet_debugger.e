@@ -2317,7 +2317,7 @@ feature -- Specific function evaluation
 --
 --feature -- GC related
 --
---	keep_alive (addr: STRING) is
+--	keep_alive (addr: DBG_ADDRESS) is
 --		local
 --			l_icdv: ICOR_DEBUG_VALUE
 --		do
@@ -2389,13 +2389,13 @@ feature -- Specific function evaluation
 
 feature -- Bridge to debug_value_keeper
 
-	keep_only_objects (a_addresses: LIST [STRING]) is
+	keep_only_objects (a_addresses: LIST [DBG_ADDRESS]) is
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Debug_value_keeper.keep_only (a_addresses)
 		end
 
-	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
 			-- Keep this object addressed by `a_address'
 		require
 			know_about_object: know_about_kept_object (a_address)
@@ -2403,7 +2403,7 @@ feature -- Bridge to debug_value_keeper
 			Result := Debug_value_keeper.item (a_address)
 		end
 
-	know_about_kept_object (a_address: STRING): BOOLEAN is
+	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN is
 			-- Do we have a reference for the object addressed by `a_address' ?
 		do
 			Result := Debug_value_keeper.know_about (a_address)

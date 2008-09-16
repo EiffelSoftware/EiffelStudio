@@ -15,6 +15,7 @@ create {DEBUGGER_MANAGER}
 feature {NONE}-- Creation
 
 	make (dbg_manager: DEBUGGER_MANAGER) is
+			-- Instanciate with `dbg_manager'
 		do
 			debugger_manager := dbg_manager
 			if dbg_manager.is_dotnet_project then
@@ -26,6 +27,7 @@ feature {NONE}-- Creation
 feature -- Reset
 
 	reset is
+			-- Reset Current
 		do
 			last_debugged_object := Void
 		end
@@ -33,15 +35,17 @@ feature -- Reset
 feature -- Settings
 
 	set_dotnet_system is
+			-- Set dotnet system behavior
 		do
 			is_dotnet := True
 		end
 
 feature -- Query
 
-	class_type_at_address (addr: STRING): CLASS_TYPE is
+	class_type_at_address (addr: DBG_ADDRESS): CLASS_TYPE is
+			-- CLASS_TYPE for remote object at address `addr'
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 		do
@@ -49,9 +53,10 @@ feature -- Query
 			Result := dobj.class_type
 		end
 
-	class_c_at_address (addr: STRING): CLASS_C is
+	class_c_at_address (addr: DBG_ADDRESS): CLASS_C is
+			-- CLASS_C for remote object at address `addr'
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 		do
@@ -59,9 +64,10 @@ feature -- Query
 			Result := dobj.dynamic_class
 		end
 
-	attributes_at_address (addr: STRING; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Attributes for remote object at address `addr'
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 		do
@@ -69,9 +75,10 @@ feature -- Query
 			Result := dobj.attributes
 		end
 
-	sorted_attributes_at_address (addr: STRING; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Sorted attributes for remote object at address `addr'
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 		do
@@ -79,9 +86,10 @@ feature -- Query
 			Result := dobj.sorted_attributes
 		end
 
-	object_at_address_has_attributes (addr: STRING): BOOLEAN is
+	object_at_address_has_attributes (addr: DBG_ADDRESS): BOOLEAN is
+			-- Remote object at address `addr' has attribute ?
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
@@ -91,9 +99,10 @@ feature -- Query
 			Result := lst /= Void and then not lst.is_empty
 		end
 
-	special_object_capacity_at_address (addr: STRING): INTEGER is
+	special_object_capacity_at_address (addr: DBG_ADDRESS): INTEGER is
+			-- Capacity of SPECIAL remote object at address `addr'
 		require
-			address_not_void: addr /= Void
+			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
 		do
@@ -101,17 +110,25 @@ feature -- Query
 			Result := dobj.capacity
 		end
 
-feature -- Last debugged object
+feature -- Settings
 
 	last_debugged_object: DEBUGGED_OBJECT
+			-- Last debugged object
 
 	last_sp_lower, last_sp_upper: INTEGER
+			-- Last special lower and upper value
 
 	debugger_manager: DEBUGGER_MANAGER
+			-- Associated debugger manager
 
-feature -- status
+	caching_enabled: BOOLEAN
+			-- Caching enabled?
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
+
+feature -- Status report
+
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
+				-- Is `addr' a valid object address?
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -119,26 +136,27 @@ feature -- status
 		end
 
 	is_dotnet: BOOLEAN
+			-- Is related to dotnet system?
 
-feature -- debugged object creation
+feature -- Access
 
-	classic_debugged_object_with_class (addr: STRING; a_compiled_class: CLASS_C): DEBUGGED_OBJECT_CLASSIC is
+	classic_debugged_object_with_class (addr: DBG_ADDRESS; a_compiled_class: CLASS_C): DEBUGGED_OBJECT_CLASSIC is
+			-- Debugged object at address `addr' for classic system
 		require
 			not is_dotnet
 		do
 			create Result.make_with_class (addr, a_compiled_class)
 		end
 
-	caching_enabled: BOOLEAN
-
-	debugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
+	debugged_object (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
+				-- Debugged remote object located at address `addr'
 		require
-			non_void_addr: addr /= Void
+			non_void_addr: addr /= Void and then not addr.is_void
 			valid_addr: is_valid_object_address (addr)
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
 		do
 			debug ("debugger_caching")
-				print (generator + " : debugged_object for " + addr + " [" + sp_lower.out + ":" + sp_upper.out + "]%N")
+				print (generator + " : debugged_object for " + addr.output + " [" + sp_lower.out + ":" + sp_upper.out + "]%N")
 			end
 			if
 				caching_enabled and then

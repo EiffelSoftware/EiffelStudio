@@ -156,14 +156,14 @@ feature -- Status
 			Result := f.exists
 		end
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		require
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			Result := addr /= Void
+			Result := addr /= Void and then not addr.is_void
 		end
 
 feature -- Access
@@ -677,7 +677,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN is
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -700,7 +700,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: STRING; fn: STRING): DUMP_VALUE is
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE is
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
@@ -1083,19 +1083,19 @@ feature {NONE} -- Assertion change Implementation
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
 		require
 			flist_not_empty: flist /= Void and then not flist.is_empty
 		deferred
 		end
 
-	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is
 		require
 			a_addr /= Void
 		deferred
 		end
 
-	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
 		require
 			a_addr /= Void
 		deferred
@@ -1334,7 +1334,7 @@ feature {NONE} -- fake
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
 
-	keep_only_objects (kept_objects: LIST [STRING]) is
+	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) is
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		deferred
 		end

@@ -147,7 +147,7 @@ feature -- Application status
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dc: CLASS_C
 			n: STRING
-			add: STRING
+			add: DBG_ADDRESS
 		do
 			dc := dobj.dynamic_class
 			add := dobj.object_address
@@ -158,9 +158,9 @@ feature -- Application status
 			dc.append_name (st)
 			st.add_string (Left_address_delim)
 			if debugger_manager.safe_application_is_stopped then
-				st.add_address (add, n, dc)
+				st.add_address (add.as_string, n, dc)
 			else
-				st.add_string (add)
+				st.add_string (add.as_string)
 			end
 			st.add_string (Right_address_delim)
 			st.add_new_line
@@ -204,7 +204,7 @@ feature -- Application status
 				c := appstatus.dynamic_class
 				f := appstatus.e_feature
 				if f /= Void then
-					st.add_address (appstatus.object_address, f.name, c)
+					st.add_address (appstatus.object_address.as_string, f.name, c)
 				end
 				st.add_string ("]")
 				st.add_new_line
@@ -518,7 +518,7 @@ feature {NONE} -- append_to implementation
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dc: CLASS_C
 			n: STRING
-			add: STRING
+			add: DBG_ADDRESS
 		do
 --| fixme : what about character_32 ?
 			append_tabs (st, indent)
@@ -530,9 +530,9 @@ feature {NONE} -- append_to implementation
 			st.add_string (Left_address_delim)
 			add := v.address
 			if debugger_manager.safe_application_is_stopped then
-				st.add_address (add, n, dc)
+				st.add_address (add.as_string, n, dc)
 			else
-				st.add_string (add)
+				st.add_string (add.as_string)
 			end
 			st.add_string (Right_address_delim)
 			l_items := v.items
@@ -635,7 +635,7 @@ feature {NONE} -- append_type_and_value implementation
 		local
 			ec: CLASS_C
 			s: STRING_32
-			add: STRING
+			add: DBG_ADDRESS
 		do
 			if v.is_null then
 				st.add_string (NONE_representation)
@@ -646,9 +646,9 @@ feature {NONE} -- append_type_and_value implementation
 					st.add_string (Left_address_delim)
 					add := v.address
 					if debugger_manager.safe_application_is_stopped then
-						st.add_address (add, v.name, ec)
+						st.add_address (add.as_string, v.name, ec)
 					else
-						st.add_string (add)
+						st.add_string (add.as_string)
 					end;
 					st.add_string (Right_address_delim);
 					s := v.string_value
@@ -685,9 +685,9 @@ feature {NONE} -- append_type_and_value implementation
 					ec.append_name (st);
 					st.add_string (Left_address_delim);
 					if debugger_manager.safe_application_is_stopped then
-						st.add_address (v.address, v.name, ec)
+						st.add_address (v.address.as_string, v.name, ec)
 					else
-						st.add_string (v.address)
+						st.add_string (v.address.as_string)
 					end
 					st.add_string (Right_address_delim)
 				else
@@ -753,7 +753,7 @@ feature {NONE} -- append_type_and_value implementation
 		do
 			st.add_string ("ERROR: Unknown type")
 			st.add_string (Equal_sign_str);
-			st.add_string (v.address)
+			st.add_string (v.address.as_string)
 		end
 
 	eifnet_debug_native_array_value_append_type_and_value (v: EIFNET_DEBUG_NATIVE_ARRAY_VALUE; st: TEXT_FORMATTER) is

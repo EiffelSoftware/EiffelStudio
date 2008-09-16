@@ -47,12 +47,12 @@ feature {NONE} -- Creation
 					sp_upper = -1)
 		deferred
 		ensure
-			set: addr = object_address
+			set: object_address = addr
 		end
 
 feature -- Helpers
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
+	is_valid_object_address (addr: like object_address): BOOLEAN is
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -90,7 +90,7 @@ feature -- Properties
 	is_tuple: BOOLEAN;
 		-- Is the object being inspected TUPLE?
 
-	object_address: STRING;
+	object_address: DBG_ADDRESS;
 			-- Hector address of object being inspected
 
 	capacity: INTEGER;
@@ -150,7 +150,7 @@ feature -- Query
 invariant
 
 	non_void_attributes: attributes /= Void;
-	non_void_address: object_address /= Void
+	non_void_address: object_address /= Void and then not object_address.is_void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

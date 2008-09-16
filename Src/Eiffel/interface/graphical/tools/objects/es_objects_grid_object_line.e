@@ -108,7 +108,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_MANAGER} -- Grid
 
 feature {NONE} -- Helpers
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -123,7 +123,7 @@ feature -- Properties
 		deferred
 		end
 
-	object_address: STRING is
+	object_address: DBG_ADDRESS is
 		deferred
 		end
 
@@ -248,7 +248,7 @@ feature {NONE} -- Pick and Drop implementation
 					--| For now we don't support this for external type
 				ostn := object_name
 				if ostn = Void then
-					ostn := object_address
+					ostn := object_address.output
 				end
 				create ost.make (object_address, ostn, object_dynamic_class)
 				ost.set_associated_ev_item (row)
@@ -419,7 +419,7 @@ feature -- Graphical computation
 			grid_cell_set_text (glab, v)
 		end
 
-	set_address (v: STRING) is
+	set_address (v: DBG_ADDRESS) is
 		require
 			is_attached_to_row: is_attached_to_row
 		local
@@ -430,7 +430,11 @@ feature -- Graphical computation
 				glab := new_cell_address
 				set_cell (Col_address_index, glab)
 			end
-			grid_cell_set_text (glab, v)
+			if v /= Void then
+				grid_cell_set_text (glab, v.output)
+			else
+				grid_cell_set_text (glab, Void)
+			end
 		end
 
 	set_value (v: STRING_GENERAL) is

@@ -46,7 +46,9 @@ feature {NONE} -- Output
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
-			Result := address
+			if {add: like address} address then
+				Result := add.output
+			end
 		end
 
 	type_and_value: STRING_32 is

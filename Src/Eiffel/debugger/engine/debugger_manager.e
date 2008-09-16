@@ -533,7 +533,7 @@ feature -- Breakpoints management
 								elseif v.is_case_insensitive_equal ("FEATURE") and then cse.routine_name /= Void then
 									s.append (cse.routine_name)
 								elseif v.is_case_insensitive_equal ("ADDRESS") and then cse.object_address /= Void then
-									s.append (cse.object_address)
+									s.append (cse.object_address.output)
 								elseif v.is_case_insensitive_equal ("HITCOUNT") then
 									s.append_integer (bp.hits_count)
 								else
@@ -1663,7 +1663,7 @@ feature -- One time action
 
 feature -- Debuggee Objects management
 
-	release_object_references (kobjs: LIST [STRING]) is
+	release_object_references (kobjs: LIST [DBG_ADDRESS]) is
 		local
 			st: APPLICATION_STATUS
 		do

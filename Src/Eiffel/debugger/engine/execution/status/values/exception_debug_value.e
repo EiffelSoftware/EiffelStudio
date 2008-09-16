@@ -321,7 +321,7 @@ feature -- Value Access
 			Result := Debugger_manager.Dump_value_factory.new_exception_value (Current)
 		end
 
-	address: STRING is
+	address: DBG_ADDRESS is
 			-- Address of the object represented by `Current'. Void if none.
 		do
 			if has_value then
@@ -334,7 +334,9 @@ feature {NONE} -- Output
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
-			Result := address
+			if {add: like address} address then
+				Result := add.output
+			end
 		end
 
 	type_and_value: STRING_32 is

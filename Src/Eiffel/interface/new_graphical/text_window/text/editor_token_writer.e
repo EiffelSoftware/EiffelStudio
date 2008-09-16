@@ -296,9 +296,11 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_OBJECT
 			stone: OBJECT_STONE
+			addr: DBG_ADDRESS
 		do
 			create tok.make (a_address.as_string_32)
-			create stone.make (a_address.as_string_32, a_name.as_string_32, a_class)
+			create addr.make_from_string (a_address.as_string_32)
+			create stone.make (addr, a_name.as_string_32, a_class)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
 		end

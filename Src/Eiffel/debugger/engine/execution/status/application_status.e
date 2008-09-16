@@ -58,28 +58,31 @@ feature -- Objects kept from session to session
 			objects_keeper.compare_objects
 		end
 
-	objects_keeper: HASH_TABLE [INTEGER, STRING]
+	objects_keeper: HASH_TABLE [INTEGER, DBG_ADDRESS]
 
-	kept_objects: LIST [STRING] is
+	kept_objects: LIST [DBG_ADDRESS] is
 			-- Objects represented by their address that should be kept during the execution.
+		local
+			objkr: like objects_keeper
 		do
-			if not objects_keeper.is_empty then
+			objkr := objects_keeper
+			if not objkr.is_empty then
 				debug
-					print (generator + ".kept_objets : " + objects_keeper.count.out + " items%N")
+					print (generator + ".kept_objets : " + objkr.count.out + " items%N")
 				end
-				create {ARRAYED_LIST [STRING]} Result.make (objects_keeper.count)
+				create {ARRAYED_LIST [DBG_ADDRESS]} Result.make (objkr.count)
 				Result.compare_objects
 				from
-					objects_keeper.start
+					objkr.start
 				until
-					objects_keeper.after
+					objkr.after
 				loop
 					debug ("debugger_trace_cache")
-						print ("KeptObjects -> " + objects_keeper.key_for_iteration
-							+ " : " + objects_keeper.item_for_iteration.out + "%N")
+						print ("KeptObjects -> " + objkr.key_for_iteration.output
+							+ " : " + objkr.item_for_iteration.out + "%N")
 					end
-					Result.extend (objects_keeper.key_for_iteration)
-					objects_keeper.forth
+					Result.extend (objkr.key_for_iteration)
+					objkr.forth
 				end
 			end
 		ensure
@@ -91,10 +94,10 @@ feature -- Objects kept from session to session
 			objects_keeper.wipe_out
 		end
 
-	keep_object (add: STRING) is
+	keep_object (add: DBG_ADDRESS) is
 			-- Add object identified by `add' to `kept_objects'
 		require
-			address_not_empty: add /= Void and then not add.is_empty
+			address_not_void: add /= Void and then not add.is_void
 		local
 			nb: INTEGER
 		do
@@ -102,13 +105,13 @@ feature -- Objects kept from session to session
 			objects_keeper.force (nb + 1, add)
 
 			debug ("debugger_trace_cache")
-				print ("keep_object ("+ add +") " + nb.out + " -> " + objects_keeper.item (add).out + "%N")
+				print ("keep_object ("+ add.output +") " + nb.out + " -> " + objects_keeper.item (add).out + "%N")
 			end
 		end
 
-	release_object (add: STRING) is
+	release_object (add: DBG_ADDRESS) is
 		require
-			address_not_empty: add /= Void and then not add.is_empty
+			address_not_empty: add /= Void and then not add.is_void
 --			kept_objects.has (add)
 		local
 			nb: INTEGER
@@ -120,7 +123,7 @@ feature -- Objects kept from session to session
 				objects_keeper.remove (add)
 			end
 			debug ("debugger_trace_cache")
-				print ("release_object ("+ add +") " + nb.out + "-> " + objects_keeper.item (add).out + "%N")
+				print ("release_object ("+ add.output +") " + nb.out + "-> " + objects_keeper.item (add).out + "%N")
 			end
 		end
 
@@ -215,7 +218,7 @@ feature -- Values
 	reason: INTEGER
 			-- Reason for the application being stopped
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
 

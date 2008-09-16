@@ -263,11 +263,11 @@ feature -- Properties setting
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_object_line (addr: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
 		local
 			r: INTEGER
 			lrow: EV_GRID_ROW
-			ladd: STRING
+			ladd: DBG_ADDRESS
 		do
 			from
 				r := 1
@@ -520,7 +520,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 				else
 					ost ?= s
 					if ost /= Void then
-						oname := ost.name + ": " + ost.object_address
+						oname := ost.name + ": " + ost.object_address.output
 						if ev_application.ctrl_pressed then
 							add_object (ost, oname)
 						else
@@ -1240,7 +1240,7 @@ feature -- Grid management
 
 feature {NONE} -- grid Layout Implementation
 
-	keep_object_reference_fixed (addr: STRING) is
+	keep_object_reference_fixed (addr: DBG_ADDRESS) is
 		do
 			if debugger_manager.application_is_executing then
 				debugger_manager.application_status.keep_object (addr)

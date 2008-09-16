@@ -101,9 +101,11 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING;
+	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: DBG_ADDRESS;
 				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class) is
 			-- Initialize `Current' with no calls to the run-time.
+		require
+			addr_attached: addr /= Void
 		do
 			if fe /= Void then
 				private_routine := fe
@@ -133,7 +135,7 @@ feature {NONE} -- Initialization
 				--| Address and other
 
 			object_address := addr
-			object_address_to_string := object_address
+			object_address_to_string := object_address.output
 				-- set the private body index to a fake value
 			private_body_index := -1
 
@@ -157,7 +159,7 @@ feature -- Properties
 			end
 		end
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
@@ -171,15 +173,18 @@ feature -- Properties
 		local
 			dobj: DEBUGGED_OBJECT
 			ct: CLASS_TYPE
+			add: DBG_ADDRESS
 		do
-			dobj := debugger_manager.object_manager.debugged_object (object_address, 0, 0)
-			if dobj /= Void then
-				ct := dobj.class_type
-				if dobj.is_special then
-					create {SPECIAL_VALUE} Result.make_set_ref (hex_to_pointer (object_address), ct.type_id)
-				else
-					check not_expanded: not ct.is_expanded end
-					create {REFERENCE_VALUE} Result.make (hex_to_pointer (object_address), ct.type_id)
+			if object_address /= Void and then not object_address.is_void then
+				dobj := debugger_manager.object_manager.debugged_object (object_address, 0, 0)
+				if dobj /= Void then
+					ct := dobj.class_type
+					if dobj.is_special then
+						create {SPECIAL_VALUE} Result.make_set_ref (add, ct.type_id)
+					else
+						check not_expanded: not ct.is_expanded end
+						create {REFERENCE_VALUE} Result.make (add, ct.type_id)
+					end
 				end
 			end
 		end
@@ -212,10 +217,12 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		do
-			object_address := keep_object_as_hector_address (object_address)
+			if object_address /= Void and then not object_address.is_void then
+				object_address := keep_object_as_hector_address (object_address)
+			end
 
 				-- Now the address is correct and we can display it.
-			object_address_to_string := object_address
+			object_address_to_string := object_address.output
 		end
 
 feature {NONE} -- Implementation
@@ -546,9 +553,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 				break_index := line_number
 				object.to_upper
 				object_address_to_string := "Unavailable"
-				create object_address.make (10)
-				object_address.append ("0x")
-				object_address.append (object)
+				create object_address.make_from_string (object)
 				is_melted := melted
 				routine_name := r_name
 			end

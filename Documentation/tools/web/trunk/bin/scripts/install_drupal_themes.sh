@@ -8,6 +8,6 @@ getdruptheme()
   $EDOC_SCRIPTSDIR/get_drupal_theme.sh $1
 }
 
-getdruptheme zen-6.x-1.0-beta2.tar.gz
+getdruptheme zen-6.x-1.0-beta3.tar.gz
 
 cd $CWD

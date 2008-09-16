@@ -47,6 +47,7 @@ getdrupmod admin_menu-6.x-1.1.tar.gz
 getdrupmod devel-6.x-1.10.tar.gz
 getdrupmod nodetype-6.x-1.0.tar.gz
 getdrupmod plugin_manager-6.x-1.x-dev.tar.gz
+getdrupmod masquerade-6.x-1.0-beta1.tar.gz
 #getdrupmod coder-6.x-1.x-dev.tar.gz
 
 

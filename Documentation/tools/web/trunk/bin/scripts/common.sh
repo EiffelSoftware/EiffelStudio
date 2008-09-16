@@ -43,4 +43,3 @@ EDOC_TMPDIR=$EDOC_BINDIR/tmp
 
 . $EDOC_BINDIR/etc/init_vars.sh
 
-

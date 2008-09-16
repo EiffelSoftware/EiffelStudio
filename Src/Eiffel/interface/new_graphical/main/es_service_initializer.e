@@ -49,6 +49,7 @@ feature {NONE} -- Help registration
 			l_kinds: HELP_PROVIDER_KINDS
 		do
 			create l_kinds
+			a_service.register_provider (l_kinds.eiffel_doc, {EIFFEL_DOC_HELP_PROVIDER})
 			a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
 			a_service.register_provider (l_kinds.raw_uri, {RAW_URI_HELP_PROVIDER})
 			a_service.register_provider (l_kinds.pdf, {PDF_HELP_PROVIDER})
@@ -93,7 +94,7 @@ feature {NONE} -- Test suite extension
 			create l_bg_executor.make_with_launcher (l_comp)
 			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
 			a_service.processor_registrar.register (l_bg_executor, l_type)
-			
+
 			if False then
 				l_type ?= {EIFFEL_TEST_DEBUGGER_I}
 				a_service.processor_registrar.register (l_dbg_executor, l_type)

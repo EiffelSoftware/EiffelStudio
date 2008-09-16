@@ -829,9 +829,16 @@ feature {NONE} -- Brace matching
 			if l_token /= Void and l_line /= Void then
 				l_prev_token := l_token.previous
 				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
-					and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
-						-- Check the previous token for a closing brace, because it has priority
-					l_token := l_prev_token
+						and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
+							-- Check the previous token for a closing brace, because it has priority
+					if not l_token.is_highlighted then
+							-- This is a minor hack, and not even a hack really but it's necessary due to the brace finder's
+							-- function to place the caret on the inside of outside of a matching brace, based on the original
+							-- position. For instance, )|), where | is the caret has two possible matches. For this case, if the right
+							-- token is hightlighted, it has priority, overriding the left-priority semantics.
+						l_token := l_prev_token
+					end
+
 				else
 					if not l_utils.is_brace (l_token) and then (l_token.is_new_line or else position <= l_token.pos_in_text) then
 							-- Grab previous token because the move will always get the next token.

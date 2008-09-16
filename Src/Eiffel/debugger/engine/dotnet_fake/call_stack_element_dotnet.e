@@ -29,9 +29,9 @@ feature -- Properties
 		do
 		end
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 
-	object_address_to_string: like object_address
+	object_address_to_string: STRING
 
 feature -- Dotnet Properties
 

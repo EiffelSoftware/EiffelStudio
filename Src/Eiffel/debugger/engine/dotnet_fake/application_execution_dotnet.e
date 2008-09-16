@@ -22,11 +22,11 @@ feature {NONE} -- Ancestor facade
 	interrupt is do end
 	notify_breakpoints_change is do end
 	kill is do  end
-	keep_only_objects (kept_objects: LIST [STRING]) is do end
+	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) is do end
 
-	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is do end
-	debug_value_at_address_with_class (a_addr: STRING_8; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is do  end
-	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is do  end
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is do end
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is do  end
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is do  end
 
 	remote_rt_object: ABSTRACT_DEBUG_VALUE is do end
 	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end

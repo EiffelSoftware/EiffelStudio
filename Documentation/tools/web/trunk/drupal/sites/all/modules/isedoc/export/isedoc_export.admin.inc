@@ -383,11 +383,10 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	return "<li>$output</li>";
 }
 
-
 function isedoc_export_save_file($a_content, $a_fn, $a_name) {
 	$l_fp = fopen($a_fn, 'w');
 	if ($l_fp) {
-		drupal_set_message(t("Creating $a_name: <em>$a_fn</em>!"),'status');
+		drupal_set_message(t("Creating $a_name:").l($a_fn,$a_fn),'status');
 		fwrite($l_fp,$a_content);
 		fclose($l_fp);
 	} else {

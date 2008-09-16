@@ -52,8 +52,17 @@ feature -- Miscellaneous
 			text.process_indexing_tag_text ("compilation: ")
 			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
 			text.add_new_line
+
+			text.add_indent
+			text.process_indexing_tag_text ("multithread: ")
+			if Eiffel_ace.system.has_multithreaded then
+				text.process_basic_text ("enabled")
+			else
+				text.process_basic_text ("disabled")
+			end
 			text.add_new_line
 
+			text.add_new_line
 			if Eiffel_system.workbench.is_already_compiled then
 				if not eiffel_system.system.root_creators.is_empty then
 					l_root := eiffel_system.system.root_creators.first

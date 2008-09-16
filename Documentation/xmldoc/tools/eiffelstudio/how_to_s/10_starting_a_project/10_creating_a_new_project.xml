@@ -1,4 +1,4 @@
-<document title="Creating a new project" output="studio">
+<document title="EiffelStudio: Creating a new project" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>The first thing to do to start Eiffeling is to create a project. Most commands are disabled when no project is created.</paragraph>

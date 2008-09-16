@@ -66,9 +66,15 @@ feature -- Access
 feature -- Status report
 
 	has_value: BOOLEAN
-			-- Has Current a non Void `value'?
+			-- Has Current.value not Void?
 		do
 			Result := value /= Void
+		end
+
+	has_attached_value: BOOLEAN
+			-- Has Current a non Void `value'?
+		do
+			Result := value /= Void and then not value.is_void
 		end
 
 	same_as (other: DBG_EVALUATED_VALUE): BOOLEAN

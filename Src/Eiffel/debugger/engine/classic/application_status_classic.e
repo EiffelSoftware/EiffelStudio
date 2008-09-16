@@ -24,15 +24,17 @@ create {APPLICATION_EXECUTION}
 
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
-	set (n: STRING; obj: STRING; ot, dt, offs, reas: INTEGER) is
+	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, reas: INTEGER) is
 			-- Set the various attributes identifying current
 			-- position in source code.
+		require
+			add_attached: add /= Void
 		local
 			ccs: EIFFEL_CALL_STACK_CLASSIC
 
 			f: E_FEATURE
 		do
-			object_address := obj
+			object_address := add
 			reason := reas
 			if reason /= Pg_update_breakpoint then
 					-- Compute class type.

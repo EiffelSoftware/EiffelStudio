@@ -33,7 +33,6 @@ inherit
 
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make
---, make_attribute
 
 feature {NONE} -- Initialization
 
@@ -54,8 +53,10 @@ feature {NONE} -- Initialization
 			end
 
 			is_null := icd_value_info.is_null
-			if not is_null then
-				address := icd_value_info.address_as_hex_string
+			if is_null then
+				create address.make_void
+			else
+				create address.make_from_integer_64 (icd_value_info.object_address)
 				if dynamic_class_type = Void then
 					is_external_type := True
 				else
@@ -66,22 +67,6 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: icd_value = a_prepared_value
 		end
-
---	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
---			-- Set `attr_name' to `name' and `value' to `v'.
---		require
---			not_attr_name_void: attr_name /= Void
---			v_not_void: v /= Void
---		do
---			name := attr_name
---			if a_class /= Void then
---				e_class := a_class
---				is_attribute := True
---			end
---			value := v
---		ensure
---			value_set: value = v
---		end		
 
 feature -- Get
 
@@ -185,7 +170,7 @@ feature {NONE} -- Output
 					create Result.make (60)
 					Result.append (ec.name_in_upper)
 					Result.append (Left_address_delim)
-					Result.append (address)
+					Result.append (address.output)
 					Result.append (Right_address_delim)
 					if is_external_type then
 						Result.append (" token=0x"+ value_class_token.to_hex_string)

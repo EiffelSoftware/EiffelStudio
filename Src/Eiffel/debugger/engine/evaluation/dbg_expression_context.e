@@ -46,7 +46,7 @@ feature -- Access
 	associated_class: CLASS_C assign set_context_class
 			-- Class the expression refers to (only valid if `on_class').
 
-	associated_address: STRING assign set_context_address
+	associated_address: DBG_ADDRESS assign set_context_address
 			-- Address of the object the expression refers to (only valid if `on_object').
 
 	kind: INTEGER assign set_kind
@@ -66,7 +66,7 @@ feature -- Element change
 	set_context_address (add: like associated_address)
 			-- Set `associated_address' to `add'
 		require
-			add_attached: add /= Void
+			add_attached: add /= Void and then not add.is_void
 			valid_context: on_object
 		do
 			associated_address := add
@@ -95,7 +95,7 @@ feature -- Status report
 	is_coherent: BOOLEAN
 			-- Is current context coherent?
 		do
-			Result := (on_object implies associated_address /= Void) and
+			Result := (on_object implies (associated_address /= Void and then not associated_address.is_void)) and
 					(on_class implies associated_class /= Void)
 		end
 

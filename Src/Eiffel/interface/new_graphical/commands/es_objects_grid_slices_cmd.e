@@ -155,7 +155,7 @@ feature -- Basic operations
 			-- Object grid line related to `ost if any.
 		local
 			l_item: EV_ANY
-			l_addr: STRING
+			l_addr: DBG_ADDRESS
 		do
 			if ost /= Void then
 				l_item := ost.ev_item

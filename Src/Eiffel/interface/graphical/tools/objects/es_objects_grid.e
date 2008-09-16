@@ -444,7 +444,7 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 			Result ?= a_row.data
 		end
 
-	objects_grid_item (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_item (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
 		require
 			valid_address: add /= Void
 		do
@@ -458,7 +458,7 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 				)
 		end
 
-	objects_grid_item_function: FUNCTION [ANY, TUPLE [STRING], like objects_grid_item]
+	objects_grid_item_function: FUNCTION [ANY, TUPLE [DBG_ADDRESS], like objects_grid_item]
 			-- Function used to retrieve the objects_grid objects line related to `addr'.
 
 	set_objects_grid_item_function (fct: like objects_grid_item_function) is
@@ -739,7 +739,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 			kept_object_references.compare_objects
 		end
 
-	kept_object_references: LINKED_SET [STRING]
+	kept_object_references: LINKED_SET [DBG_ADDRESS]
 
 	clear_kept_object_references is
 		do
@@ -747,7 +747,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 			kept_object_references.wipe_out
 		end
 
-	keep_object_in_debugger_for_gui_need (add: STRING) is
+	keep_object_in_debugger_for_gui_need (add: DBG_ADDRESS) is
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -797,14 +797,14 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 			lab: EV_GRID_LABEL_ITEM
 			s: STRING
 			line: like object_line_from_row
-			addr: STRING
+			addr: DBG_ADDRESS
 		do
 			if a_row.parent /= Void then
 				line ?= object_line_from_row (a_row)
 				if line /= Void then
 					addr := line.object_address
-					if addr /= Void then
-						s := addr.twin
+					if addr /= Void and then not addr.is_void then
+						s := addr.output
 						if is_recording_layout then
 							keep_object_in_debugger_for_gui_need (addr)
 							fixme ("We should 'adopt' the object in order to be sure the address value will stay the same")

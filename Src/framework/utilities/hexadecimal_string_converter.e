@@ -4,9 +4,6 @@ indexing
 
 class HEXADECIMAL_STRING_CONVERTER
 
-obsolete
-	"Beurk Beurk Beurk"
-
 inherit
 	PLATFORM
 
@@ -39,7 +36,7 @@ feature {NONE}
 				else
 					Result := Result + (char.lower |-| 'a' + 10)
 				end
-				i:= i + 1
+				i := i + 1
 			end
 		end
 
@@ -70,7 +67,7 @@ feature {NONE}
 				else
 					Result := Result + (char.lower |-| 'a' + 10)
 				end
-				i:= i + 1
+				i := i + 1
 			end
 		end
 

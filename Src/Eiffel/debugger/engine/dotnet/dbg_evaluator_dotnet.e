@@ -50,7 +50,7 @@ feature -- Concrete initialization
 
 feature {NONE} -- Implementation
 
-	effective_evaluate_routine (addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
 			is_static_call: BOOLEAN) is
 			-- Evaluate dotnet function
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+	effective_evaluate_function_with_name (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 			-- Note: this feature is used only for external function
@@ -217,11 +217,11 @@ feature {NONE} -- Implementation
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function_with_name : ")
 				print (a_feature_name + ", " + a_external_name)
-				if a_addr /= Void then
-					print (" on 0x" + a_addr)
-				elseif a_target /= Void and then a_target.address /= Void then
+				if a_addr /= Void and then not a_addr.is_void then
+					print (" on " + a_addr.output)
+					elseif a_target /= Void and then a_target.address /= Void and then not a_target.address.is_void then
 
-					print (" on 0x" + a_target.address )
+					print (" on " + a_target.address.output )
 				end
 				print ("%N")
 			end
@@ -265,10 +265,10 @@ feature {NONE} -- Implementation
 			end
 
 			if error_occurred or (last_result = Void or else not last_result.has_value) then
-				if a_addr = Void then
+				if a_addr = Void or else a_addr.is_void then
 					dbg_error_handler.notify_error_evaluation ("Unable to evaluate : " + a_external_name)
 				else
-					dbg_error_handler.notify_error_evaluation ("Unable to evaluate : " + a_external_name + " on <" + a_addr + ">")
+					dbg_error_handler.notify_error_evaluation ("Unable to evaluate : " + a_external_name + " on <" + a_addr.output + ">")
 				end
 			end
 			if not error_occurred and then last_result /= Void and then last_result.has_value then
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 				if
 					l_cl /= Void and then
 					l_cl.is_basic and
-					(last_result.value.address /= Void)
+					last_result.has_attached_value
 				then
 						-- We expected a basic type, but got a reference.
 						-- This happens in "2 + 2" because we convert the first 2
@@ -540,14 +540,15 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address (addr: STRING): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
+			-- <Precursor>	
 		do
 			if Eifnet_debugger.know_about_kept_object (addr) then
 				Result := Eifnet_debugger.kept_object_item (addr).dump_value
 			end
 		end
 
-	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
 		local
 			dump: DUMP_VALUE
 		do
@@ -808,7 +809,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	target_icor_debug_value (addr: STRING; dvalue: DUMP_VALUE): ICOR_DEBUG_VALUE is
+	target_icor_debug_value (addr: DBG_ADDRESS; dvalue: DUMP_VALUE): ICOR_DEBUG_VALUE is
 		do
 				--| Get the target object : `l_icdv_obj'
 			if dvalue = Void then
@@ -982,10 +983,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal Helpers
 
-	icd_value_by_address (addr: STRING): ICOR_DEBUG_VALUE is
+	icd_value_by_address (addr: DBG_ADDRESS): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue indexed by `addr' if exists
 		require
-			address_valid: addr /= Void and then not addr.is_empty
+			address_valid: addr /= Void and then not addr.is_void
 		local
 			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
@@ -1001,10 +1002,10 @@ feature {NONE} -- Internal Helpers
 
 feature -- Helpers
 
-	debug_value_by_address (addr: STRING): ABSTRACT_DEBUG_VALUE is
+	debug_value_by_address (addr: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
 			-- ABSTRACT_DEBUG_VALUE indexed by `addr' if exists
 		require
-			address_valid: addr /= Void and then not addr.is_empty
+			address_valid: addr /= Void and then not addr.is_void
 		do
 			if Eifnet_debugger.know_about_kept_object (addr) then
 				Result := Eifnet_debugger.kept_object_item (addr)

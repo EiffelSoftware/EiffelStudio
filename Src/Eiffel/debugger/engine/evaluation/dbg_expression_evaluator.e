@@ -119,7 +119,7 @@ feature -- Settings
 	context_class: CLASS_C
 			-- Class related to the expression
 
-	context_address: STRING
+	context_address: DBG_ADDRESS
 			-- Object's address related to the expression	
 
 	side_effect_forbidden: BOOLEAN assign set_side_effect_forbidden
@@ -213,10 +213,10 @@ feature {DBG_EXPRESSION_EVALUATION} -- Implementation
 			Result := debugger_manager.safe_application_is_stopped
 		end
 
-	dump_value_at_address (addr: STRING): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
 			-- DUNP_VALUE object associated with object address `addr'
 		require
-			addr /= Void
+			addr_attached: addr /= Void and then not addr.is_void
 		do
 			Result := dbg_evaluator.dump_value_at_address (addr)
 		end

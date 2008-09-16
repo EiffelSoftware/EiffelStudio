@@ -10,7 +10,6 @@ indexing
 class REFERENCE_VALUE
 
 inherit
-
 	ABSTRACT_REFERENCE_VALUE
 		redefine
 			set_hector_addr, sorted_children
@@ -35,15 +34,17 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_reference: POINTER; id: like dynamic_type_id) is
+	make (ref: like address; id: like dynamic_type_id) is
 			-- Set `address' to `a_reference' address
 			-- and `dynamic_type_id' to `id'.
+		require
+			ref_attached: ref /= Void
 		do
-			set_default_name;
-			if a_reference /= Default_pointer then
-				address := a_reference.out
-				is_null := (address = Void)
-				dynamic_type_id := id;
+			set_default_name
+			address := ref
+			is_null := ref.is_void
+			if not is_null then
+				dynamic_type_id := id
 			end
 			get_is_expanded
 		end
@@ -51,16 +52,17 @@ feature {NONE} -- Initialization
 	make_attribute (attr_name: like name; a_class: like e_class;
 						type: like dynamic_type_id; addr: like address) is
 		require
-			not_attr_name_void: attr_name /= Void;
+			not_attr_name_void: attr_name /= Void
+			addr_attached: addr /= Void
 		do
 			name := attr_name;
 			if a_class /= Void then
-				e_class := a_class;
-				is_attribute := True;
-			end;
-			dynamic_type_id := type;
+				e_class := a_class
+				is_attribute := True
+			end
+			dynamic_type_id := type
 			address := addr
-			is_null := (address = Void)
+			is_null := address = Void or else address.is_void
 			get_is_expanded
 		end;
 
@@ -129,7 +131,11 @@ feature {NONE} -- Output value
 					create Result.make (60)
 					Result.append (ec.name_in_upper)
 					Result.append (Left_address_delim)
-					Result.append (address)
+					if {add: like address} address then
+						Result.append (add.output)
+					else
+						Result.append ("Void")
+					end
 					Result.append (Right_address_delim)
 				else
 					create Result.make (20)
@@ -180,10 +186,10 @@ feature {NONE} -- Implementation
 			-- all the information has been received from the application.)
 			-- If referenced object is a STRING, get its value.
 		do
-			if address /= Void then
+			if address /= Void and then not address.is_void then
 				address := keep_object_as_hector_address (address);
 			end
-			is_null := (address = Void)
+			is_null := (address = Void or else address.is_void)
 		end
 
 feature {NONE} -- Property

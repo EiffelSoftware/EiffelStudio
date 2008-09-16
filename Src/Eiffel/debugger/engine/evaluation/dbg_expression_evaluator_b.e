@@ -129,7 +129,7 @@ feature {NONE} -- Evaluation
 			elseif on_object then
 				dobj := debugger_manager.object_manager.debugged_object (context_address, 0, 0)
 				if dobj.is_erroneous then
-					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context_address)))
+					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context_address.output)))
 				else
 					set_context_data (Void, dobj.dynamic_class, dobj.class_type)
 				end
@@ -156,7 +156,7 @@ feature {NONE} -- Evaluation
 				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 				-- and if this is handle later or not
 			if on_context then
-				if context_address = Void then
+				if context_address = Void or else context_address.is_void then
 					l_error_occurred := True
 				end
 			end
@@ -849,7 +849,7 @@ feature {BYTE_NODE} -- Visitor
 							else
 								if tmp_target_dump_value /= Void then
 									evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
-								elseif context_address /= Void then
+								elseif context_address /= Void and then not context_address.is_void then
 									evaluate_routine (context_address, Void, cl, fi, params)
 								else
 									if debugger_manager.is_dotnet_project  then
@@ -1867,7 +1867,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
+	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
@@ -1879,7 +1879,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 			-- Evaluate routine `f' with parameters `params'
 		require
 			f /= Void
@@ -1900,7 +1900,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_static_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_static_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 			-- Evaluate static routine `f' with parameters `params'
 		require
 			f /= Void
@@ -1927,7 +1927,7 @@ feature {NONE} -- Evaluation: implementation
 			a_feature_name_not_void: a_feature_name /= Void
 			a_external_name_not_void: a_external_name /= Void
 		local
-			l_addr: STRING
+			l_addr: DBG_ADDRESS
 		do
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
@@ -2100,7 +2100,7 @@ feature -- Context: Element change
 				io.put_string ("%NExpression=" + expression.text + "%N")
 				io.put_string (" address=")
 				if ca /= Void then
-					io.put_string (ca)
+					io.put_string (ca.output)
 				else
 					io.put_string ("")
 				end
@@ -2282,7 +2282,7 @@ feature {NONE} -- Implementation
 							print ("%T%T context_class : " + context_class.name_in_upper +"%N")
 						end
 						if context_address /= Void then
-							print ("%T%T context_address : " + context_address.out +"%N")
+							print ("%T%T context_address : " + context_address.output +"%N")
 						end
 						if context_feature /= Void then
 							print ("%T%T context_feature : " + context_feature.feature_name +"%N")

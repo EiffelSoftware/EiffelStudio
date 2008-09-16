@@ -134,11 +134,15 @@ feature {DEBUG_VALUE_EXPORTER} -- Computed Value access
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Output
@@ -165,10 +169,9 @@ feature -- Output
 			end
 		end
 
-	address: STRING is
+	address: DBG_ADDRESS is
 			-- Address of the object represented by `Current'. Void if none.
 		do
-			Result := Void
 		end
 
 	kind: INTEGER is
@@ -190,7 +193,7 @@ feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IP
 
 feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 
-	set_item_number(n: like item_number) is
+	set_item_number (n: like item_number) is
 			-- set `item_number' to `n'
 		require
 			n >= 0

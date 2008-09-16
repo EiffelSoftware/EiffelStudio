@@ -232,12 +232,12 @@ feature -- Properties
 				Result := title
 			elseif expression.text /= Void then
 				Result := expression.text
-			else
-				Result := object_address
+			elseif object_address /= Void then
+				Result := object_address.output
 			end
 		end
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 			-- Object Address associated to expression's value
 
 	object_dynamic_class: CLASS_C
@@ -490,7 +490,8 @@ feature -- Graphical changes
 			s32: STRING_32
 			l_tooltip: STRING_32
 			glab: EV_GRID_LABEL_ITEM
-			add,typ: STRING
+			add: DBG_ADDRESS
+			typ: STRING
 			res: STRING_32
 			l_title: STRING_32
 			exp: like expression
@@ -510,11 +511,11 @@ feature -- Graphical changes
 
 					create l_tooltip.make (20)
 
-					if exp.is_context_object and then exp.context.associated_address /= Void then
+					if exp.is_context_object and then {ctxadd: DBG_ADDRESS} exp.context.associated_address then
 						if exp.name /= Void then
 							set_title (exp.name)
 						else
-							set_title (exp.context.associated_address)
+							set_title (ctxadd.output)
 						end
 						if title /= Void then
 							l_tooltip.append_string (interface_names.l_object_name)
@@ -538,14 +539,14 @@ feature -- Graphical changes
 						set_pixmap (Void)
 					else
 						if evl.error_occurred then
-							l_error_message := evl.text_from_error_messages
+							l_error_message := evl.full_text_from_errors
 
 							if l_error_message /= Void then
 								l_tooltip.prepend_string ("%N%N")
 								l_tooltip.prepend_string (l_error_message)
 							end
 							l_tooltip.prepend_string (interface_names.l_error_occurred.as_string_32)
-							l_error_tag := expression_evaluation.short_text_from_error_messages
+							l_error_tag := expression_evaluation.short_text_from_errors
 							if l_error_tag /= Void then
 								s32 := "["
 								s32.append_string (l_error_tag)

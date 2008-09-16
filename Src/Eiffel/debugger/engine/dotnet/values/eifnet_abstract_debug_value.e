@@ -85,11 +85,11 @@ feature {NONE} -- Init
 		do
 			if address /= Void then
 				debug ("debugger_eifnet_data")
-					print ("  <start> " + generating_type + ".register_dotnet_data : " + address + "%N")
+					print ("  <start> " + generating_type + ".register_dotnet_data : " + address.output + "%N")
 				end
 				Debug_value_keeper.keep_dotnet_value (Current)
 				debug ("debugger_eifnet_data")
-					print ("  <end> " + generating_type + ".register_dotnet_data : " + address + "%N")
+					print ("  <end> " + generating_type + ".register_dotnet_data : " + address.output + "%N")
 				end
 			end
 		end

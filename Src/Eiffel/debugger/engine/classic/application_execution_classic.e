@@ -102,9 +102,8 @@ feature -- Properties
 	status: APPLICATION_STATUS_CLASSIC
 			-- Status of the running dotnet application
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
-			-- Is object address `addr' valid?
-			-- (i.e Does bench know about it)
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
+			-- <Precursor>
 		do
 			Result := Precursor (addr) and then is_object_kept (addr)
 		end
@@ -359,17 +358,15 @@ feature -- Change
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
 		local
 			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			odv: ABSTRACT_DEBUG_VALUE
 			l_feat: FEATURE_I
-			l_addr: STRING
 			l_class: CLASS_C
 			once_r: ONCE_REQUEST
 		do
-			l_addr := a_addr
 			l_class := a_cl
 			from
 				once_r := Once_request
@@ -405,13 +402,12 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_value (a_addr, a_cl)
-
 		end
 
-	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
 		do
 --			debugged_object_manager.classic_debugged_object_with_class (a_addr, a_cl)
 --			Result := dump_value_at_address_with_class (a_addr, a_cl).

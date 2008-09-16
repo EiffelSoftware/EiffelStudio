@@ -76,7 +76,8 @@ feature -- Properties
 			Result := object.name
 		end
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
+			-- <Precursor>
 
 	object_dynamic_class: CLASS_C is
 		do

@@ -33,20 +33,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make_as_object (cl: CLASS_C; addr: STRING) is
+	make_as_object (cl: CLASS_C; addr: DBG_ADDRESS) is
 		require
 			valid_class: cl /= Void and then cl.is_valid
-			valid_address: addr /= Void
+			valid_address: addr /= Void and then not addr.is_void
 		do
-			make_with_object (cl, addr, Void)
 			is_context_object := True
+			make_with_object (cl, addr, Void)
 		end
 
-	make_with_object (cl: CLASS_C; addr: STRING; new_expr: STRING_32) is
+	make_with_object (cl: CLASS_C; addr: DBG_ADDRESS; new_expr: STRING_32) is
 			-- Initialize `Current' and link it to an object `obj' whose dynamic type is `dtype'.
 			-- Initialize the expression to `new_expr'.
 		require
-			valid_addr: addr /= Void
+			valid_addr: addr /= Void and then not addr.is_void
 			valid_class: cl /= Void and then cl.is_valid
 			valid_expression: is_context_object or valid_expression (new_expr)
 		do
@@ -126,7 +126,8 @@ feature -- Change
 			n /= Void
 		do
 			if n.is_empty then
-				name := context.associated_address
+				check associated_address_attached: context.associated_address /= Void end
+				name := context.associated_address.output
 			else
 				name := n
 			end
@@ -184,7 +185,7 @@ feature -- Access
 				if is_context_object then
 					Result.append_string_general (Interface_names.l_As_object)
 				else
-					Result.append_string_general (ctx.associated_address)
+					Result.append_string_general (ctx.associated_address.output)
 				end
 			else
 				Result.append_string_general (Interface_names.l_Current_context)
@@ -283,13 +284,15 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 			-- If `Current' or one of its descendants couldn't be evaluated,
 			-- return an explanatory message.			
 
-	valid_expression (expr: STRING): BOOLEAN is
+	valid_expression (expr: STRING_GENERAL): BOOLEAN is
 			-- Is `expr' a valid expression?
 		do
 			Result := expr /= Void and then
-						not expr.is_empty and then
-						not expr.has ('%R') and then
-						not expr.has ('%N')
+						expr.is_valid_as_string_8 and then
+						{s8: STRING_8} expr.to_string_8 and then
+						not s8.is_empty and then
+						not s8.has ('%R') and then
+						not s8.has ('%N')
 		end
 
 	analyze_expression is

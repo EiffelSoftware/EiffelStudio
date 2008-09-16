@@ -57,7 +57,7 @@ feature -- Execution
 			origine_type_id: INTEGER
 			dynamic_type_id: INTEGER
 			offset: INTEGER
-			address: STRING
+			address: DBG_ADDRESS
 			stopping_reason: INTEGER
 			exception_occurred: BOOLEAN
 			thr_id: POINTER
@@ -104,7 +104,7 @@ feature -- Execution
 
 					--| Read object address and convert it to hector address.
 				read_string
-				address := keep_object_as_hector_address (last_string)
+				address := keep_object_as_hector_address (create {DBG_ADDRESS}.make_from_string (last_string))
 
 					--| Read origin of feature
 				read_integer

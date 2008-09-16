@@ -21,11 +21,13 @@ inherit
 
 feature -- Access
 
-	keep_object_as_hector_address (addr: STRING): STRING is
+	keep_object_as_hector_address (addr: DBG_ADDRESS): DBG_ADDRESS is
 		require
-			addr_not_void: addr /= Void
+			addr_not_void: addr /= Void and then not addr.is_void
 		do
 			Result := hector_addr (addr)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	update_kept_objects_addresses is
@@ -33,28 +35,32 @@ feature -- Access
 			update_addresses
 		end
 
-	hector_addr (addr: STRING): STRING is
+	hector_addr (addr: DBG_ADDRESS): DBG_ADDRESS is
 			-- Hector address (EIF_OBJ) of object at `addr';
 			-- Ask user application to adopt that object if not already done
 		require
-			addr_not_void: addr /= Void
+			addr_not_void: addr /= Void and then not addr.is_void
 		do
-			if not addr_table.has (addr) then
-				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_pointer (addr));
-				addr_table.put (c_tread, addr)
+			if addr_table.has (addr) then
+				Result := addr_table.item (addr)
+			else
+				send_rqst_3 (Rqst_adopt, In_address, 0, addr.as_pointer)
+				create Result.make_from_string (c_tread)
+				addr_table.put (Result, addr)
 			end
-			Result := addr_table.item (addr)
-
 			debug ("HECTOR")
 				io.error.put_string ("Address: ")
-				io.error.put_string (addr)
+				io.error.put_string (addr.output)
 				io.error.put_string (" Hector: ")
-				io.error.put_string (Result)
+				io.error.put_string (Result.output)
 				io.error.put_new_line
 			end
+		ensure
+			Result_attached: Result /= Void
+			Result_in_addr_table: Result = addr_table.item (addr)
 		end
 
-	is_object_kept (h_addr: STRING): BOOLEAN is
+	is_object_kept (h_addr: DBG_ADDRESS): BOOLEAN is
 			-- Is `h_addr' a known hector address?
 		require
 			h_addr_not_void: h_addr /= Void
@@ -69,15 +75,15 @@ feature -- Updating
 			addr_table.wipe_out
 		end
 
-	keep_only_objects (kept_addrs: LIST [STRING]) is
+	keep_only_objects (kept_addrs: LIST [DBG_ADDRESS]) is
 			-- Keep references to `kept_addrs' and ask user application
 			-- to wean the other adopted objects not used anymore.
 		require
 			kept_addrs_compare_object: kept_addrs /= Void implies kept_addrs.object_comparison
 		local
-			addresses: SPECIAL [STRING];
+			addresses: SPECIAL [DBG_ADDRESS];
 			i, addr_table_count: INTEGER;
-			h_addr: STRING
+			h_addr: DBG_ADDRESS
 		do
 			from
 				addresses := addr_table.current_keys.area
@@ -101,8 +107,8 @@ feature -- Updating
 			-- Update physical addresses of adopted objects after
 			-- an execution step.
 		local
-			h_addrs: ARRAYED_LIST [STRING];
-			h_addr: STRING
+			h_addrs: ARRAYED_LIST [DBG_ADDRESS];
+			h_addr: DBG_ADDRESS
 		do
 			from
 				h_addrs := addr_table.linear_representation;
@@ -119,39 +125,41 @@ feature -- Updating
 
 feature {NONE} -- Implementation
 
-	physical_addr (h_addr: STRING): STRING is
+	physical_addr (h_addr: DBG_ADDRESS): DBG_ADDRESS is
 			-- Address of object `h_addr' (hector addr) previously
 			-- adopted by user application
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_access, In_address, 0, hex_to_pointer (h_addr));
-			Result := c_tread
+			send_rqst_3 (Rqst_access, In_address, 0, h_addr.as_pointer);
+			create Result.make_from_string (c_tread)
 
 			debug ("HECTOR")
 				io.error.put_string ("Hector: ");
-				io.error.put_string (h_addr);
+				io.error.put_string (h_addr.output);
 				io.error.put_string (" Address: ");
-				io.error.put_string (Result);
+				io.error.put_string (Result.output);
 				io.error.put_new_line
 			end
-		end;
+		ensure
+			Result_attached: Result /= Void
+		end
 
-	forget_obj (h_addr: STRING) is
+	forget_obj (h_addr: DBG_ADDRESS) is
 			-- Ask user application to wean adopted object `h_addr'.
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_pointer (h_addr))
+			send_rqst_3 (Rqst_wean, In_address, 0, h_addr.as_pointer)
 
 			debug ("HECTOR")
 				io.error.put_string ("Wean Hector: ");
-				io.error.put_string (h_addr);
+				io.error.put_string (h_addr.output);
 				io.error.put_new_line
 			end
 		end;
 
-	addr_table: HASH_TABLE [STRING, STRING] is
+	addr_table: HASH_TABLE [DBG_ADDRESS, DBG_ADDRESS] is
 			-- Table of addresses of objects adopted by the user application;
 			-- the key is the physical addr of the object, the item is
 			-- its hector addr (with indirection)

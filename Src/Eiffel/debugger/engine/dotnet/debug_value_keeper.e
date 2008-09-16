@@ -60,7 +60,7 @@ feature -- Change
 		require
 			ddv /= Void
 		local
-			l_address: STRING
+			l_address: DBG_ADDRESS
 		do
 			l_address := ddv.address
 			if l_address /= Void then
@@ -74,7 +74,7 @@ feature -- Change
 
 feature -- Access
 
-	know_about (l_k: STRING): BOOLEAN is
+	know_about (l_k: DBG_ADDRESS): BOOLEAN is
 			-- Has a Debug Value object address by `l_k'
 		do
 			if debug_value_kept /= Void then
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	item (l_k: STRING): ABSTRACT_DEBUG_VALUE is
+	item (l_k: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
 			-- Refreshed debug value object address by `l_k'.
 		require
 			know_about (l_k)
@@ -94,7 +94,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	raw_item (l_k: STRING; a_refresh_requested: BOOLEAN): ABSTRACT_DEBUG_VALUE is
+	raw_item (l_k: DBG_ADDRESS; a_refresh_requested: BOOLEAN): ABSTRACT_DEBUG_VALUE is
 			-- Debug Value object address by `l_k'
 			-- refreshed if `a_refresh_requested' is True.
 		require
@@ -110,10 +110,10 @@ feature -- Access
 
 feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 
-	keep_only (l_addresses: LIST [STRING]) is
+	keep_only (l_addresses: LIST [DBG_ADDRESS]) is
 			-- Clean all the value except the one from l_addresses
 		local
-			l_add: STRING
+			l_add: DBG_ADDRESS
 			l_val: like item
 		do
 			if debug_value_kept /= Void then
@@ -138,9 +138,10 @@ feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 
 feature {NONE} -- restricted access
 
-	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, STRING];
+	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, DBG_ADDRESS]
+			-- Debug value indexed by `dbg_address'
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

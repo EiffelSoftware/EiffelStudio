@@ -221,7 +221,7 @@ feature -- Properties
 
 feature {APPLICATION_EXECUTION} -- Properties
 
-	is_valid_object_address (addr: STRING): BOOLEAN is
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
@@ -403,7 +403,7 @@ feature -- Remote access to RT_
 
 		end
 
-	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN is
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -434,7 +434,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: STRING; fn: STRING): DUMP_VALUE is
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE is
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
@@ -620,7 +620,7 @@ feature {APPLICATION_EXECUTION} -- Launching status
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
 		local
 			l_class: CLASS_C
 			l_feat: FEATURE_I
@@ -649,7 +649,7 @@ feature -- Query
 				icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
 				if l_eifnet_debugger.last_once_available then
 					if not l_eifnet_debugger.last_once_already_called then
-						create err_dv.make_with_name  (l_feat.feature_name)
+						create err_dv.make_with_name (l_feat.feature_name)
 						err_dv.set_message (debugger_names.m_Not_yet_called)
 						err_dv.set_display_kind (Void_value)
 						if l_feat.is_function then
@@ -706,7 +706,7 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is
 		local
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
@@ -716,7 +716,7 @@ feature -- Query
 			end
 		end
 
-	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
 		do
 			if know_about_kept_object (a_addr) then
 				Result := kept_object_item (a_addr)
@@ -1550,13 +1550,13 @@ feature -- Call stack related
 
 feature -- Object Keeper
 
-	keep_only_objects (a_addresses: LIST [STRING]) is
+	keep_only_objects (a_addresses: LIST [DBG_ADDRESS]) is
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Eifnet_debugger.keep_only_objects (a_addresses)
 		end
 
-	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
 			-- Keep this object addressed by `a_address'
 		require
 			know_about_object: know_about_kept_object (a_address)
@@ -1564,7 +1564,7 @@ feature -- Object Keeper
 			Result := Eifnet_debugger.kept_object_item (a_address)
 		end
 
-	know_about_kept_object (a_address: STRING): BOOLEAN is
+	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN is
 			-- Do we have a reference for the object addressed by `a_address' ?
 		do
 			Result := Eifnet_debugger.know_about_kept_object (a_address)

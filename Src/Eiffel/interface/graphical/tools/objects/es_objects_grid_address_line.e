@@ -27,7 +27,7 @@ create
 
 feature {NONE}
 
-	make_with_address (add: STRING; dtype: CLASS_C; g: like parent_grid) is
+	make_with_address (add: DBG_ADDRESS; dtype: CLASS_C; g: like parent_grid) is
 		require
 			add /= Void
 		do
@@ -73,7 +73,7 @@ feature -- Properties
 			Result := title
 		end
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 
 	object_dynamic_class: CLASS_C
 

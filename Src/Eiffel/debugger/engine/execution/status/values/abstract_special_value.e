@@ -51,7 +51,7 @@ feature -- Properties
 			-- Is Current represents Void object
 			-- equivalent to `(address = Void)'
 
-	address: STRING;
+	address: DBG_ADDRESS
 			-- Address of object
 			--| In Classic, because the socket is already busy we cannot ask the
 			--| application for the hector address during the object
@@ -101,7 +101,7 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 			if address = Void then
 				Result := NONE_representation
 			else
-				Result := Left_address_delim + address + Right_address_delim
+				Result := Left_address_delim + address.output + Right_address_delim
 				str := string_value.as_string_8
 				if str /= Void then
 					Result.append (Equal_sign_str)

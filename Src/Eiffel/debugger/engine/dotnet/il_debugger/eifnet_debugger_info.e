@@ -196,7 +196,7 @@ feature -- Current CallStack
 							l_curr_stk_info.set_current_feature_token      (l_func.get_token)
 							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size)
 							l_curr_stk_info.set_current_il_offset          (l_il_frame.get_ip)
-							l_curr_stk_info.set_current_stack_address      (l_code.get_address.to_hex_string)
+							l_curr_stk_info.set_current_stack_address      (create {DBG_ADDRESS}.make_from_integer_64 (l_code.get_address))
 
 							debug("debugger_trace_callback")
 								io.error.put_string (generator + ".init_current_callstack: "
@@ -204,7 +204,7 @@ feature -- Current CallStack
 									+ " frame: " + l_il_frame.last_cordebugmapping_result_to_string
 									+ "%N  ->"
 									+ "#" + l_curr_stk_info.current_stack_pseudo_depth.out + " : "
-									+ "<0x" + l_curr_stk_info.current_stack_address + "> "
+									+ "<" + l_curr_stk_info.current_stack_address.output + "> "
 									+ "{" + l_module.md_type_name (l_curr_stk_info.current_class_token) + "}."
 									+ l_module.md_member_name (l_curr_stk_info.current_feature_token)
 									+ " -> 0x"+ l_curr_stk_info.current_il_offset.to_hex_string

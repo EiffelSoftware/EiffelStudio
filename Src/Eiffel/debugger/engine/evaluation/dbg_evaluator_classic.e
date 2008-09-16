@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
 			is_static_call: BOOLEAN) is
 		local
@@ -68,8 +68,8 @@ feature {NONE} -- Implementation
 			end
 				-- Send the target object.
 			if a_target = Void then
-				if a_addr /= Void then
-					send_ref_value (hex_to_pointer (a_addr))
+				if a_addr /= Void and then not a_addr.is_void then
+					send_ref_value (a_addr.as_pointer)
 				else
 					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_non_once_call_with_any_object (
 								fi.written_class.name_in_upper,
@@ -264,7 +264,8 @@ feature -- Query
 			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class)
 		end
 
-	dump_value_at_address (addr: STRING): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
+			-- <Precursor>
 		local
 			l_cl: CLASS_C
 			dbg: DEBUGGER_MANAGER
@@ -276,7 +277,7 @@ feature -- Query
 			end
 		end
 
-	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
 		require else
 			a_target_not_void: a_target /= Void
 		local

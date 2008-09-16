@@ -13,7 +13,6 @@ class
 	ABSTRACT_REFERENCE_VALUE
 
 inherit
-
 	ABSTRACT_DEBUG_VALUE
 		redefine
 			address,
@@ -22,7 +21,7 @@ inherit
 
 feature -- Properties
 
-	address: STRING;
+	address: DBG_ADDRESS
 			-- Address of referenced object (Void if no object)
 
 	string_value: STRING_32
@@ -41,10 +40,13 @@ feature {NONE} -- Output
 	output_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
-			if is_null then
+			if
+				is_null or else
+				(not {add: like address} address or else add.is_void)
+			then
 				Result := "Void"
 			else
-				Result := "[" + address + "]"
+				Result := "[" + add.output + "]"
 			end
 		end
 
@@ -80,6 +82,9 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		do
 			Result := abstract_reference_value_id
 		end
+
+invariant
+	address_void_only_for_expanded: address = Void implies is_expanded
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

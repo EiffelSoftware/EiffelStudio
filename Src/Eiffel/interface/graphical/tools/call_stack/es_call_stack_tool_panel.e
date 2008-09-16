@@ -1323,7 +1323,7 @@ feature {NONE} -- Stack grid implementation
 				l_tooltip.append (l_feature_name)
 
 					--| Object address
-				l_obj_address_info := cse.object_address
+				l_obj_address_info := cse.object_address.output
 
 				if {e_cse: EIFFEL_CALL_STACK_ELEMENT} cse then
 						--| Origin class

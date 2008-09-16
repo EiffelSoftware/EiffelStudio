@@ -54,7 +54,11 @@ feature {NONE} -- Initialization
 		do
 			set_default_name
 			init_dotnet_data (a_referenced_value, a_prepared_value)
-			address := icd_value_info.address_as_hex_string
+			if icd_value_info.is_null then
+				create address.make_void
+			else
+				create address.make_from_integer_64 (icd_value_info.object_address)
+			end
 			register_dotnet_data
 		ensure
 			value_set: icd_value = a_prepared_value
@@ -62,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	address: STRING
+	address: DBG_ADDRESS
 			-- Object's address.
 
 	dynamic_class: CLASS_C is
@@ -82,7 +86,9 @@ feature {NONE} -- Output
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
-			Result := address
+			if {add: like address} address then
+				Result := add.output
+			end
 		end
 
 	type_and_value: STRING_32 is
@@ -95,7 +101,7 @@ feature {NONE} -- Output
 				create Result.make (60)
 				Result.append ("Error: Unknown type")
 				Result.append (Left_address_delim)
-				Result.append (address)
+				Result.append (address.output)
 				Result.append (Right_address_delim)
 			else
 				create Result.make (20)

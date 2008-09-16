@@ -11,10 +11,8 @@ class
 	EXPANDED_VALUE
 
 inherit
-
 	REFERENCE_VALUE
 		redefine
-			make_attribute,
 			set_hector_addr,
 			type_and_value, expandable,
 			children, kind, output_value, dump_value,
@@ -22,17 +20,23 @@ inherit
 		end
 
 create {DEBUG_VALUE_EXPORTER}
-
-	make_attribute
+	make_attribute_of_special
 
 feature {DEBUG_VALUE_EXPORTER}
 
-	make_attribute (attr_name: like name; a_class: like e_class;
-			type: like dynamic_type_id; addr: like address) is
-		require else
+	make_attribute_of_special (attr_name: like name; a_class: like e_class;
+			type: like dynamic_type_id) is
+		require
 			not_attr_name_void: attr_name /= Void
 		do
-			Precursor {REFERENCE_VALUE} (attr_name, a_class, type, addr)
+			is_expanded := True
+			name := attr_name
+			if a_class /= Void then
+				e_class := a_class
+				is_attribute := True
+			end
+			dynamic_type_id := type
+			address := Void
 			is_null := False
 			create attributes.make (10)
 		end

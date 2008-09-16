@@ -28,9 +28,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (addr: STRING; a_name: STRING_32; dclass: CLASS_C) is
+	make (addr: DBG_ADDRESS; a_name: STRING_32; dclass: CLASS_C) is
 		require
-			not_addr_void: addr /= Void
+			not_addr_void: addr /= Void and then not addr.is_void
 			dclass_exists: dclass /= Void
 			not_name_void: a_name /= Void
 		do
@@ -45,7 +45,7 @@ feature -- Properties
 	name: STRING_32
 			-- Name associated with address (arg, local, result)
 
-	object_address: STRING
+	object_address: DBG_ADDRESS
 			-- Hector address (with an indirection)
 
 	dynamic_class: CLASS_C
@@ -74,7 +74,7 @@ feature -- Access
 			Result.append (": ")
 			Result.append (dynamic_class.name_in_upper)
 			Result.append (" object at ")
-			Result.append (object_address)
+			Result.append (object_address.output)
 		end
 
 	history_name: STRING_GENERAL is
@@ -85,7 +85,7 @@ feature -- Access
 			Result.append (": ")
 			Result.append (dynamic_class.name_in_upper)
 			Result.append (" [")
-			Result.append (object_address)
+			Result.append (object_address.output)
 			Result.append ("]")
 		end
 

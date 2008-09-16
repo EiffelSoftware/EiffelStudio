@@ -81,7 +81,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			dynamic_class := dtype
 		end
 
-	set_object_value  (value: STRING; dtype: CLASS_C) is
+	set_object_value  (value: DBG_ADDRESS; dtype: CLASS_C) is
 			-- make a object item initialized to `value'
 		do
 			value_address := value
@@ -91,7 +91,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_expanded_object_value  (addr: STRING; dtype: CLASS_C) is
+	set_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C) is
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
@@ -200,8 +200,6 @@ feature -- Status report
 	to_basic: DUMP_VALUE is
 			-- Convert `Current' from a reference value to a basic value, if possible.
 			-- If impossible, return `Current'.
-		require
-			is_reference: address /= Void
 		local
 			attribs: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			l_attribs_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
@@ -210,23 +208,25 @@ feature -- Status report
 			debug ("debug_recv")
 				print (generator + ".to_basic%N")
 			end
-			attribs := debugger_manager.object_manager.attributes_at_address (address, 0, 0)
-			if attribs /= Void then
-				from
-					l_attribs_cursor := attribs.new_cursor
-					l_attribs_cursor.start
-				until
-					l_attribs_cursor.after
-				loop
-					att := l_attribs_cursor.item
-					if att.name.is_equal ("item") then
-						Result := att.dump_value
+			if address /= Void and then not address.is_void then
+				attribs := debugger_manager.object_manager.attributes_at_address (address, 0, 0)
+				if attribs /= Void then
+					from
+						l_attribs_cursor := attribs.new_cursor
+						l_attribs_cursor.start
+					until
+						l_attribs_cursor.after
+					loop
+						att := l_attribs_cursor.item
+						if att.name.is_equal ("item") then
+							Result := att.dump_value
+						end
+						l_attribs_cursor.forth
 					end
-					l_attribs_cursor.forth
 				end
-			end
-			if Result = Void then
-				Result := Current
+				if Result = Void then
+					Result := Current
+				end
 			end
 		end
 
@@ -495,7 +495,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
 					--| since here only the printable characters matter
 
-				if value_address /= Void then
+				if value_address /= Void and then not value_address.is_void then
 					l_attributes := debugger_manager.object_manager.attributes_at_address (value_address, 0, 0)
 				end
 				if l_attributes /= Void then
@@ -689,7 +689,7 @@ feature -- Action
 				send_string_value ($value_string_c)
 			when Type_object, Type_expanded_object then
 				if value_address /= Void then
-					send_ref_value (hex_to_pointer (value_address))
+					send_ref_value (value_address.as_pointer)
 				else
 					send_ref_value (Default_pointer)
 				end
@@ -771,10 +771,11 @@ feature -- Access
 					Result := value_string.as_string_8.twin
 				end
 			when Type_string_dotnet , Type_object, type_expanded_object then
-				if value_address /= Void then
-					create Result.make (value_address.count + 2)
+				if value_address /= Void and then not value_address.is_void then
+					s := value_address.output
+					create Result.make (s.count + 2)
 					Result.append_character ('<')
-					Result.append (value_address)
+					Result.append (s)
 					Result.append_character ('>')
 					s := extra_output_details
 					if s /= Void then
@@ -863,7 +864,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	address: STRING is
+	address: DBG_ADDRESS is
 			-- If it makes sense, return the address of current object.
 			-- Void if `is_void' or if `Current' does not represent an object.
 		do
@@ -884,7 +885,7 @@ feature -- Access
 	is_void: BOOLEAN is
 			-- Is `Current' a Void reference?
 		do
-			Result := ((type = Type_object or type = Type_string_dotnet) and address = Void)
+			Result := (type = Type_object or type = Type_string_dotnet) and (address = Void or else address.is_void)
 		end
 
 	is_basic: BOOLEAN is
@@ -939,7 +940,7 @@ feature {DBG_EVALUATOR} -- Convertor
 
 feature {DEBUGGER_EXPORTER, DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
 
-	value_address	: STRING -- string standing for the address of the object if type=Type_object
+	value_address	: like address -- string standing for the address of the object if type=Type_object
 	value_string    : STRING_32 -- String value
 	value_exception : EXCEPTION_DEBUG_VALUE
 	procedure_return_value: PROCEDURE_RETURN_DEBUG_VALUE

@@ -420,8 +420,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 				Precursor (c)
 
 				if c.is_character_8 and then c.to_character_8.is_punctuation then
-						-- Perform brace match highlighting/unhighlighting.
-					highlight_matched_braces
+					if not is_empty then
+							-- Perform brace match highlighting/unhighlighting.
+						highlight_matched_braces
+					end
 				end
 
 				look_for_keyword := True
@@ -546,8 +548,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 				else
 					Precursor (ev_key)
 					if ev_key.code = key_back_space or else ev_key.code = key_delete then
-							-- Peform brace match highlighting
-						highlight_matched_braces
+						if not is_empty then
+								-- Perform brace match highlighting/unhighlighting.
+							highlight_matched_braces
+						end
 					end
 				end
 			end
@@ -580,8 +584,10 @@ feature {NONE} -- Handle keystrokes
 			Precursor {EB_CLICKABLE_EDITOR} (action)
 			switch_auto_point := False
 
-				-- Perform brace matching, or unmatching
-			highlight_matched_braces
+			if not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
 		end
 
 feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
@@ -602,8 +608,10 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			resume_cursor_blinking
 			set_focus
 
-				-- Perform brace match highlighting/unhighlighting.
-			highlight_matched_braces
+			if not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
 		end
 
 	calculate_completion_list_x_position: INTEGER is
@@ -1199,7 +1207,7 @@ feature {NONE} -- Implementation
 	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
 			-- <Precursor>
 		do
-			if button = 1 then
+			if button = 1 and then not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
 				highlight_matched_braces
 			end
@@ -1679,8 +1687,10 @@ feature {NONE} -- Code completable implementation
 			end
 			text_displayed.delete_char
 
-				-- Perform brace match highlighting/unhighlighting.
-			highlight_matched_braces
+			if not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
 		end
 
 	back_delete_char is
@@ -1691,8 +1701,10 @@ feature {NONE} -- Code completable implementation
 			end
 			text_displayed.back_delete_char
 
-				-- Perform brace match highlighting/unhighlighting.
-			highlight_matched_braces
+			if not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
 		end
 
 	insert_string (a_str: STRING_32) is
@@ -1703,8 +1715,10 @@ feature {NONE} -- Code completable implementation
 			end
 			text_displayed.insert_string (a_str)
 
-				-- Perform brace match highlighting/unhighlighting.
-			highlight_matched_braces
+			if not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+				highlight_matched_braces
+			end
 		end
 
 	insert_char (a_char: CHARACTER_32) is

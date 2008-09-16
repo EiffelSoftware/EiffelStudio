@@ -1177,7 +1177,7 @@ rt_public void eraise(char *tag, long num)
 	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
-			echmem |= MEM_FULL;					/* Signal it */
+			echmem |= MEM_FSTK;					/* Signal it */
 			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
 			}
@@ -1223,13 +1223,22 @@ rt_public void eraise(char *tag, long num)
 		echtg = tag;
 	}
 
-	vector_call = top_n_call(&eif_stack, 1);
-	if (vector_call != (struct ex_vect *) 0) {
-		eclass = vector_call->ex_orig;
-		reci_name = vector_call->ex_rout;
+	vector = extop(&eif_stack);	 /* Vector at top of stack */
+
+	if (vector != (struct ex_vect *) 0) {
+		type = vector->ex_type;
+		/* Record recipient and its class name */
+		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
+			vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
+		} else {
+			vector_call = top_n_call(&eif_stack, 1);
+		}
+		if (vector_call != (struct ex_vect *) 0) {
+			eclass = vector_call->ex_orig;
+			reci_name = vector_call->ex_rout;
+		}
 	}
 
-	vector = extop(&eif_stack);	 /* Vector at top of stack */
 	if (vector == (struct ex_vect *) 0) {
 		echrt = (char *) 0;	/* Null routine name */
 		echclass = 0;		/* Null class name */
@@ -1241,16 +1250,8 @@ rt_public void eraise(char *tag, long num)
 		 * is assertion violation code. */
 		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
-			type = vector->ex_type;
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
-			}
-			if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
-				vector_call = top_n_call(&eif_stack, 2);
-				if (vector_call != (struct ex_vect *) 0) {
-					eclass = vector_call->ex_orig;
-					reci_name = vector_call->ex_rout;
-				}
 			}
 			expop(&eif_stack);
 			vector = extop(&eif_stack);
@@ -1362,7 +1363,7 @@ rt_public void com_eraise(char *tag, long num)
 	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
-			echmem |= MEM_FULL;					/* Signal it */
+			echmem |= MEM_FSTK;					/* Signal it */
 			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
 			}
@@ -1413,30 +1414,30 @@ rt_public void com_eraise(char *tag, long num)
 		}
 	}
 
-	vector_call = top_n_call(&eif_stack, 1);
-	if (vector_call != (struct ex_vect *) 0) {
-		eclass = vector_call->ex_orig;
-		reci_name = vector_call->ex_rout;
+	vector = extop(&eif_stack);	 /* Vector at top of stack */
+
+	if (vector != (struct ex_vect *) 0) {
+		type = vector->ex_type;
+		/* Record recipient and its class name */
+		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
+			vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
+		} else {
+			vector_call = top_n_call(&eif_stack, 1);
+		}
+		if (vector_call != (struct ex_vect *) 0) {
+			eclass = vector_call->ex_orig;
+			reci_name = vector_call->ex_rout;
+		}
 	}
 
-	vector = extop(&eif_stack);	 /* Vector at top of stack */
 	if (vector == (struct ex_vect *) 0) {
 		echrt = (char *) 0;	 /* Null routine name */
 		echclass = 0;		  /* Null class name */
 	} else {
 		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
-			type = vector->ex_type;
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
-			}
-			if (((type == EX_CINV) && echentry) || (type == EX_PRE))
-			{
-				vector_call = top_n_call(&eif_stack, 2);
-				if (vector_call != (struct ex_vect *) 0) {
-					eclass = vector_call->ex_orig;
-					reci_name = vector_call->ex_rout;
-				}
 			}
 			expop(&eif_stack);
 			vector = extop(&eif_stack);
@@ -1530,6 +1531,7 @@ rt_public void eviol(void)
 		obj = vector->ex_oid;   /*	  record object */
 	}
 
+		/* Record recipient and its class name */
 	if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
 		vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
 	} else {
@@ -3684,7 +3686,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
-			echmem |= MEM_FULL;					/* Signal it */
+			echmem |= MEM_FSTK;					/* Signal it */
 			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
 			}
@@ -3703,13 +3705,22 @@ rt_public void draise(long code, char *meaning, char *message)
 	 */
 	echtg = tag;
 
-	vector_call = draise_recipient_call(&eif_stack);
-	if (vector_call != (struct ex_vect *) 0) {
-		eclass = vector_call->ex_orig;
-		reci_name = vector_call->ex_rout;
+	vector = extop(&eif_stack);	 /* Vector at top of stack */
+
+	if (vector != (struct ex_vect *) 0) {
+		type = vector->ex_type;
+		/* Record recipient and its class name */
+		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
+			vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
+		} else {
+			vector_call = draise_recipient_call(&eif_stack);
+		}
+		if (vector_call != (struct ex_vect *) 0) {
+			eclass = vector_call->ex_orig;
+			reci_name = vector_call->ex_rout;
+		}
 	}
 
-	vector = extop(&eif_stack);	 /* Vector at top of stack */
 	if (vector == (struct ex_vect *) 0) {
 		echrt = (char *) 0;	/* Null routine name */
 		echclass = 0;		/* Null class name */
@@ -3721,16 +3732,8 @@ rt_public void draise(long code, char *meaning, char *message)
 		 * regarding `in_assertion' context.*/
 		if (in_assertion || is_ex_assert (code)) {
 			tg = vector->ex_name;
-			type = vector->ex_type;
 			if (type == EX_CINV) {
 				obj = vector->ex_oid;
-			}
-			if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
-				vector_call = top_n_call(&eif_stack, 2);
-				if (vector_call != (struct ex_vect *) 0) {
-					eclass = vector_call->ex_orig;
-					reci_name = vector_call->ex_rout;
-				}
 			}
 			expop(&eif_stack);
 			vector = extop(&eif_stack);

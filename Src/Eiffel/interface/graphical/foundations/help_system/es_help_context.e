@@ -31,7 +31,7 @@ feature -- Access
 			-- Help provider kind best used for the help context.
 			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
 		once
-			Result := (create {HELP_PROVIDER_KINDS}).wiki
+			Result := (create {HELP_PROVIDER_KINDS}).eiffel_doc
 		end
 
 ;indexing

@@ -139,7 +139,9 @@ feature -- Status setting
 	reset_tool is
 		do
 			reset_update_on_idle
-			notes_on_threads.wipe_out
+			if notes_on_threads /= Void then
+				notes_on_threads.wipe_out
+			end
 			clean_threads_info
 		end
 
@@ -197,12 +199,16 @@ feature {NONE} -- Implementation
 
 	clean_threads_info is
 		do
-			grid.call_delayed_clean
+			if grid /= Void then
+				grid.call_delayed_clean
+			end
 		end
 
 	request_clean_threads_info is
 		do
-			grid.request_delayed_clean
+			if grid /= Void then
+				grid.request_delayed_clean
+			end
 		end
 
 	refresh_threads_info is

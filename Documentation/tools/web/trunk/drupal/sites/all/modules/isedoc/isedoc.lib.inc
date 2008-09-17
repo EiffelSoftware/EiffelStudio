@@ -19,6 +19,16 @@ function var_dump_global($refname) {
 	return "DUMP[".$refname."]=".$a;
 }
 
+function isedoc_uuid($prefix = '') {
+	$chars = uniqid(md5(rand()));
+	$uuid  = substr($chars,0,8) . '-';
+	$uuid .= substr($chars,8,4) . '-';
+	$uuid .= substr($chars,12,4) . '-';
+	$uuid .= substr($chars,16,4) . '-';
+	$uuid .= substr($chars,20,12);
+	return $prefix . $uuid;
+}
+
 function isedoc_mkdir($a_dir) {
 	if (!file_check_directory($a_dir)) {
 		//drupal_set_message("create directory: $a_dir", 'status');

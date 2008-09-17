@@ -78,11 +78,19 @@ function isedoc_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['isedoc/static/%'] = array(
-    'title' => t('static query'),
+    'title' => t('Redirect to static content'),
     'page callback' => 'isedoc_static_query',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'file' => 'isedoc.static.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['isedoc/uuid/%'] = array(
+    'title' => t('Redirect using UUID'),
+    'page callback' => 'isedoc_uuid_query',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc.uuid_query.inc',
     'type' => MENU_CALLBACK,
   );
 

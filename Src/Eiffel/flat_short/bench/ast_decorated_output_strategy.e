@@ -198,6 +198,9 @@ feature {AST_DECORATED_OUTPUT_STRATEGY} -- Access
 	locals_for_current_feature: HASH_TABLE [TYPE_A, STRING]
 	object_test_locals_for_current_feature: HASH_TABLE [TYPE_A, STRING]
 
+	renamed_feature: E_FEATURE
+			-- Saved renamed feature for formal declaration renaming.
+
 	processing_locals: BOOLEAN;
 
 	processing_creation_target: BOOLEAN
@@ -206,6 +209,9 @@ feature {AST_DECORATED_OUTPUT_STRATEGY} -- Access
 			-- rename, redefine clause etc.
 
 	processing_none_feature_part: BOOLEAN
+
+	processing_formal_dec: BOOLEAN
+			-- Processing formal declaration?
 
 	has_error_internal: BOOLEAN
 			-- If error when processing.
@@ -2190,6 +2196,8 @@ feature {NONE} -- Implementation
 	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
 		local
 			l_feat: E_FEATURE
+			l_is_infix, l_is_prefix: BOOLEAN
+			l_new_name: BOOLEAN
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2201,20 +2209,27 @@ feature {NONE} -- Implementation
 						l_feat := last_parent.feature_with_id (l_as.internal_name)
 					else
 						l_feat := current_class.feature_with_id (l_as.internal_name)
+							-- Renaming in formal declaration.
+						if processing_formal_dec then
+							if renamed_feature = Void then
+									-- Old name
+								check old_name_feature_not_void: l_feat /= Void end
+								renamed_feature := l_feat
+							else
+									-- New name
+								l_feat := renamed_feature
+								renamed_feature := Void
+								l_new_name := True
+							end
+						end
 					end
 				else
 						-- Processing name of a feature.
 					l_feat := feature_in_class (current_class, current_feature.rout_id_set)
 				end
-				if l_feat = Void then
-					has_error_internal := True
-				end
 			end
 
 			if not has_error_internal and then not processing_parents then
-				-- MTNASK: can one really assume, that this here is never void?
-				-- What if someone renames a non existent feature of its constraint class? should nothing be printed?
-				-- Update: I set no error_internal as it continues to print stuff. please delte this comments.
 				check
 					l_feat_not_void: l_feat /= Void
 				end
@@ -2222,22 +2237,42 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
 					text_formatter_decorator.put_space
 				end
-				if l_feat.is_infix then
+				if processing_formal_dec and then l_new_name then
+						-- Print visual name of the new renamed feature in formal declaration.
+					l_is_infix := l_as.is_infix
+					l_is_prefix := l_as.is_prefix
+				else
+					l_is_infix := l_feat.is_infix
+					l_is_prefix := l_feat.is_prefix
+				end
+				if l_is_infix then
 					text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
 					text_formatter_decorator.put_space
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_double_quote)
-					text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+					if processing_formal_dec then
+						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+					else
+						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+					end
 					text_formatter_decorator.process_symbol_text (ti_double_quote)
-				elseif l_feat.is_prefix then
+				elseif l_is_prefix then
 					text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
 					text_formatter_decorator.put_space
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_double_quote)
-					text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+					if processing_formal_dec then
+						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+					else
+						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+					end
 					text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
-					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					if processing_formal_dec then
+						text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+					else
+						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					end
 				end
 			else
 				if not processing_none_feature_part and then l_as.is_frozen then
@@ -2279,6 +2314,8 @@ feature {NONE} -- Implementation
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
 		local
 			l_feat: E_FEATURE
+			l_is_infix, l_is_prefix: BOOLEAN
+			l_new_name: BOOLEAN
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2290,6 +2327,19 @@ feature {NONE} -- Implementation
 						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
 					else
 						l_feat := current_class.feature_with_name (l_as.feature_name.name)
+							-- Renaming in formal declaration.
+						if processing_formal_dec then
+							if renamed_feature = Void then
+									-- Old name
+								check old_name_feature_not_void: l_feat /= Void end
+								renamed_feature := l_feat
+							else
+									-- New name
+								l_feat := renamed_feature
+								renamed_feature := Void
+								l_new_name := True
+							end
+						end
 					end
 					if l_feat = Void then
 						has_error_internal := True
@@ -2308,22 +2358,42 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
 						text_formatter_decorator.put_space
 					end
-					if l_feat.is_infix then
+					if processing_formal_dec and then l_new_name then
+							-- Print visual name of the new renamed feature in formal declaration.
+						l_is_infix := l_as.is_infix
+						l_is_prefix := l_as.is_prefix
+					else
+						l_is_infix := l_feat.is_infix
+						l_is_prefix := l_feat.is_prefix
+					end
+					if l_is_infix then
 						text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
 						text_formatter_decorator.put_space
 						text_formatter_decorator.set_without_tabs
 						text_formatter_decorator.process_symbol_text (ti_double_quote)
-						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+						if processing_formal_dec then
+							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						else
+							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+						end
 						text_formatter_decorator.process_symbol_text (ti_double_quote)
-					elseif l_feat.is_prefix then
+					elseif l_is_prefix then
 						text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
 						text_formatter_decorator.put_space
 						text_formatter_decorator.set_without_tabs
 						text_formatter_decorator.process_symbol_text (ti_double_quote)
-						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+						if processing_formal_dec then
+							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						else
+							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+						end
 						text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
-						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						if processing_formal_dec then
+							text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+						else
+							text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						end
 					end
 				else
 					if not processing_none_feature_part and then l_as.is_frozen then
@@ -2361,7 +2431,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+				text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end
 		end
 
@@ -2379,6 +2449,18 @@ feature {NONE} -- Implementation
 						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
 					else
 						l_feat := current_class.feature_with_name (l_as.feature_name.name)
+							-- Renaming in formal declaration.
+						if processing_formal_dec then
+							if renamed_feature = Void then
+									-- Old name
+								check old_name_feature_not_void: l_feat /= Void end
+								renamed_feature := l_feat
+							else
+									-- New name
+								l_feat := renamed_feature
+								renamed_feature := Void
+							end
+						end
 					end
 				else
 						-- Processing name of a feature.
@@ -2390,9 +2472,9 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				text_formatter_decorator.process_operator_text (l_as.feature_name.name, l_feat)
+				text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
 			else
-				text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+				text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end
 			text_formatter_decorator.put_space
 			text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
@@ -3030,7 +3112,6 @@ feature {NONE} -- Implementation
 			l_constrained_type: TYPE_A
 			l_constrained_type_set: TYPE_SET_A
 			l_is_multi_constrained: BOOLEAN
-			l_feat: E_FEATURE
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 			check
@@ -3044,14 +3125,9 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
 				text_formatter_decorator.put_space
 			end
-
+			processing_formal_dec := True
 			text_formatter_decorator.process_generic_text (l_as.name.name)
 			if l_as.has_constraint then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_constraint)
-				text_formatter_decorator.put_space
-				l_as.constraints.process (Current)
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
 
@@ -3060,7 +3136,19 @@ feature {NONE} -- Implementation
 					l_is_multi_constrained := True
 					l_constrained_type_set := l_formal_dec.constraint_types_if_possible (current_class)
 				else
-					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class).type
+					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class)
+				end
+
+				text_formatter_decorator.put_space
+				text_formatter_decorator.set_without_tabs
+				text_formatter_decorator.process_symbol_text (ti_constraint)
+				text_formatter_decorator.put_space
+				if l_is_multi_constrained then
+					text_formatter_decorator.process_symbol_text (ti_l_curly)
+				end
+				l_as.constraints.process (Current)
+				if l_is_multi_constrained then
+					text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
 
 				if l_as.has_creation_constraint then
@@ -3078,22 +3166,14 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_symbol_text (ti_comma)
 						text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
-						if l_is_multi_constrained then
-
-						else
-							if not l_constrained_type.is_formal then
-								l_feat := l_constrained_type.associated_class.feature_with_name (feature_name.visual_name)
-								text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
-							else
-								text_formatter_decorator.process_local_text (feature_name.visual_name)
-							end
-						end
+						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
 						l_as.creation_feature_list.forth
 					end
 					text_formatter_decorator.put_space
 					text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 				end
 			end
+			processing_formal_dec := False
 		end
 
 	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
@@ -3602,7 +3682,7 @@ feature {NONE} -- Expression visitor
 
 feature {NONE} -- Implementation: helpers
 
-	append_feature_by_id (a_feature_name: FEAT_NAME_ID_AS; a_type: TYPE_A; a_type_set: TYPE_SET_A)
+	append_feature_by_id (a_feature_name: FEAT_NAME_ID_AS; a_type: TYPE_A; a_type_set: TYPE_SET_A) is
 			-- Append feature.
 			--
 			-- `a_feature_name_id' is the `NAMES_HEAP' ID of the feature name.
@@ -3613,6 +3693,7 @@ feature {NONE} -- Implementation: helpers
 		local
 			l_feat: E_FEATURE
 			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+			l_name_id: INTEGER
 		do
 			if a_type_set /= Void then
 				l_result := a_type_set.e_feature_state_by_name_id (a_feature_name.feature_name.name_id)
@@ -3621,6 +3702,13 @@ feature {NONE} -- Implementation: helpers
 				check a_type_not_void: a_type /= Void end
 				if not a_type.is_formal then
 					l_feat := a_type.associated_class.feature_with_name (a_feature_name.visual_name)
+						-- Renaming situation
+					if l_feat = Void and then a_type.has_renaming then
+						l_name_id := a_type.renaming.renamed (a_feature_name.feature_name.name_id)
+						if l_name_id /= -1 then
+							l_feat := a_type.associated_class.feature_with_name_id (l_name_id)
+						end
+					end
 				end
 			end
 

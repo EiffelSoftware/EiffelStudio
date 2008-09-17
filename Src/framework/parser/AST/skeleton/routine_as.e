@@ -166,7 +166,8 @@ feature -- Roundtrip/Token
 				Result := precondition.first_token (a_list)
 			elseif internal_locals /= Void then
 				Result := internal_locals.first_token (a_list)
-			else
+			end
+			if Result = Void or else Result.is_null then
 				Result := routine_body.first_token (a_list)
 				if Result = Void or else Result.is_null then
 					if postcondition /= Void then

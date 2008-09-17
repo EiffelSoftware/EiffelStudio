@@ -77,6 +77,14 @@ function isedoc_menu() {
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
   );
+  $items['isedoc/static/%'] = array(
+    'title' => t('static query'),
+    'page callback' => 'isedoc_static_query',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc.static.inc',
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }

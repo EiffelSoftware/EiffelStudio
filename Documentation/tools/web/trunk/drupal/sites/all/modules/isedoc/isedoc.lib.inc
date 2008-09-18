@@ -107,7 +107,7 @@ function isedoc_book_get_books() {
 }
 
 function isedoc_node_ids_by_uuid($uuid) {
-	$sql = "SELECT nid, vid FROM {content_type_".'doc'."} WHERE LOWER(field_uuid_value) = LOWER('%s')";
+	$sql = "SELECT nid, vid FROM {content_type_".'doc'."} WHERE LOWER(field_uuid_value) = LOWER('%s') ORDER BY nid ASC ,vid ASC";
 	$res = db_query($sql, $uuid);
 	if ($res === FALSE) {
 		return FALSE;
@@ -116,7 +116,7 @@ function isedoc_node_ids_by_uuid($uuid) {
 		while ($v = db_fetch_array($res)) {
 			$nid = $v['nid'];
 			$vid = $v['vid'];
-			//drupal_set_message("nid=$nid; v=$vid");
+			drupal_set_message("nid=$nid; v=$vid");
 			$nids[$nid] = $vid;
 		}
 		return $nids;

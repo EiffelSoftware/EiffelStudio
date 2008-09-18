@@ -229,22 +229,14 @@ feature {NONE} -- Actions
 	on_launch_memory_analyzer is
 			-- Launch Memory Analyzer.
 		local
-			l_env: EXECUTION_ENVIRONMENT
-			l_path: STRING
 			l_dir: DIRECTORY_NAME
 		do
 			if ma_window = Void or ma_window.is_destroyed then
-				create l_env
-				l_path := l_env.get ("EIFFEL_SRC")
-				if l_path = Void then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt ("EIFFEL_SRC not defined!", window, Void)
-				else
-					create l_dir.make_from_string (l_path)
-					l_dir.extend_from_array (<<"library", "memory_analyzer" >>)
-					create ma_window.make (l_dir)
-					ma_window.close_request_actions.extend (agent ma_window.hide)
-					ma_window.show
-				end
+				create l_dir.make_from_string (eiffel_layout.library_path)
+				l_dir.extend ("memory_analyzer")
+				create ma_window.make (l_dir)
+				ma_window.close_request_actions.extend (agent ma_window.hide)
+				ma_window.show
 			else
 				ma_window.show
 			end

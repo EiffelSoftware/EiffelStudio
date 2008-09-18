@@ -21,7 +21,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			if item /= default_pointer then
-				create l_string.share_from_pointer_and_count (item, count * Wide_character_bytes)
+				create l_string.share_from_pointer_and_count (item, count * character_32_bytes)
 				Result := l_string.string
 			end
 		end

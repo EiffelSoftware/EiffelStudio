@@ -66,7 +66,7 @@ feature -- Access
 
 			if Result.is_empty then
 				create error_messages
-				Result := error_messages.error_messages.item (error_code)
+				Result := error_messages.error_message (error_code)
 			end
 			if Result = Void then
 				create Result.make (0)

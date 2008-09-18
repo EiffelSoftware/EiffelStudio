@@ -47,6 +47,29 @@ function isedoc_block($op = 'list', $delta = 0) {
 	}
 } // function isedoc_block
 
+/**
+ * Implementation of hook_nodeapi().
+ */
+function isedoc_nodeapi(&$node, $op, $form = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'prepare':
+      if (is_callable(array($node, 'field_uuid'), TRUE)) {
+        $l_uuid = $node->field_uuid[0]['value'];
+        //drupal_set_message("uuid=[$l_uuid]");
+        if ($l_uuid === NULL) {
+          $l_uuid = isedoc_uuid();
+          $node->field_uuid[0]['value'] = $l_uuid;
+          drupal_set_message(t("Set the UUID value to [$l_uuid]"));
+        }
+      }
+      break;
+  }
+}
+
+/*
+ * Menu
+ */
+
 function isedoc_menu() {
   $items = array();
   $items['admin/settings/isedoc'] = array(
@@ -95,6 +118,20 @@ function isedoc_menu() {
   );
 
   return $items;
+}
+
+/*
+ * Lib
+ */
+
+function isedoc_uuid($prefix = '') {
+	$chars = uniqid(md5(rand()));
+	$uuid  = substr($chars,0,8) . '-';
+	$uuid .= substr($chars,8,4) . '-';
+	$uuid .= substr($chars,12,4) . '-';
+	$uuid .= substr($chars,16,4) . '-';
+	$uuid .= substr($chars,20,12);
+	return $prefix . $uuid;
 }
 
 ?>

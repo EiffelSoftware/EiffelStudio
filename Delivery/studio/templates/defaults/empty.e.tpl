@@ -5,6 +5,6 @@ indexing
 	revision: "$$Revision$$"
 
 ${CLASS_MODIFIERS}class
-	$CLASS_NAME
+	${CLASS_NAME}
 
 ${INHERIT_CLAUSE}${CREATE_CLAUSE}${INIT_CLAUSE}end

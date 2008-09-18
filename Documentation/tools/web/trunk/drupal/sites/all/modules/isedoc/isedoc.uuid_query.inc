@@ -2,7 +2,7 @@
 
 require_once ("isedoc.lib.inc");
 
-function isedoc_uuid_query($uuid) {
+function isedoc_uuid_query($uuid,$a_section) {
 	$output = t("Query Documentation page for <strong>UUID=%uuid</strong>.", array('%uuid'=>$uuid));
 	$output .= '<br/>';
 
@@ -17,11 +17,11 @@ function isedoc_uuid_query($uuid) {
 			if ($node and $node->vid == $vid) {
 				// Check the version id...
 				drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
-				drupal_goto($node->path);
+				drupal_goto($node->path,NULL,$a_section);
 				$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
 			} else {
 				// Should not occur ...
-				$output .= t("Unable to find page referenced by UUID:%uuid", array('%uuid' => $uuid));
+				$output .= t("Unable to find referenced page.");
 			}
 		} else {
 			// Should not occur ...
@@ -34,7 +34,7 @@ function isedoc_uuid_query($uuid) {
 		}
 		$output .= "</ul>";
 	} else {
-		$output .= t("Unable to find page referenced by UUID:%uuid", array('%uuid' => $uuid));
+		$output .= t("Unable to find referenced page.");
 	}
 
 	return $output."<br/><br/>";

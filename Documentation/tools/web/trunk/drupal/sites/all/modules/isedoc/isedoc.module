@@ -111,7 +111,7 @@ function isedoc_menu() {
   $items['isedoc/uuid/%'] = array(
     'title' => t('Redirect using UUID'),
     'page callback' => 'isedoc_uuid_query',
-    'page arguments' => array(2),
+    'page arguments' => array(2,3),
     'access arguments' => array('access content'),
     'file' => 'isedoc.uuid_query.inc',
     'type' => MENU_CALLBACK,

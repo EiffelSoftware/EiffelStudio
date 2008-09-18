@@ -353,6 +353,7 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	//drupal_set_message(var_dump_r ($a_node),'status');
 
 	$output = '';
+	$mesg = '';
 
 	$l_title = $a_node->title;
 	$l_depth = $a_node->book['depth'] - 1;
@@ -364,30 +365,34 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	//$output .= ":<a class=\"link\" href=\"$a_parent.html\">$a_parent</a>";
 	//$output .= ":$l_weight] ";
 	$output .= "<a class=\"title\" href=\"$a_url_name.html\">$l_title</a>";
+	$mesg .= $a_node->title . " (" . l(t("page"), $a_node->path) . ")";
 
 	if (module_exists('taxonomy')) {
 		$taxo =& $a_node->taxonomy;
 		if (count($taxo) > 0) {
-			$tags = " <span class=\"tags\">(tags:";
+			$tags = "(tags:";
 			foreach($taxo as $t) {
 				$tags .= $t->name.",";
 			}
 			$tags = rtrim($tags, ',');
-			$tags .= ")</span>";
-			$output .= $tags;
+			$tags .= ")";
+			$output .= " $tags";
+			$mesg .= " $tags";
 		}
 	}
 	if (is_callable(array($a_node, 'field_uuid'), TRUE)) {
 		$uuid = $a_node->field_uuid[0]['value'];
 		if ($uuid) {
-			$output .= "<span class=\"uuid\">UUID=$uuid</span>\n";
+			$uuid_html = "(UUID=$uuid)";
+			$output .= " $uuid_html";
+			$mesg .= " $uuid_html";
 		}
 	}
 
-	$th = isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right,$a_nav,$tags);
+	$th = isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right,$a_nav,$tags,$uuid_html);
 
 	$fn = $isedoc_export_dir . '/' . $l_src . '.html';
-	drupal_set_message($output,'status');
+	drupal_set_message($mesg . " (".l(t("file"),$fn).")",'status');
 
 	$fp = fopen($fn, 'w');
 	if ($fp) {
@@ -427,7 +432,7 @@ div#doc-header { margin: 5px 5px 5px 5px; padding: 10px;
 div#doc-body { margin: 10px 5px 10px 5px; 
 		padding: 20px; border: solid 1px #ccc;}
 
-div#doc-body div#doc-tags {
+div#doc-body div#doc-tags, div#doc-body div#doc-uuid {
 	float: right;
 	margin-right: 15px;
 	}
@@ -461,7 +466,10 @@ function isedoc_export_html_page_template($book_url, $book_title) {
 	$txt .= "<span id=\"title\">$book_title</span>";
 	$txt .= '<div id="nav"><a href="%INDEX_URL%">Index</a> %LEFT_HTML% <a href="%PARENT_URL%">Up</a> %RIGHT_HTML%</div>';
 	$txt .= "</div>\n";
-	$txt .= '<div id="doc-body"><div id="doc-tags">%TAGS%</div>%BODY%<br/>%NAV_HTML%</div>';
+	$txt .= '<div id="doc-body">';
+	$txt .= '<div id="doc-tags">%TAGS%</div>';
+	$txt .= '<div id="doc-uuid">%UUID%</div>';
+	$txt .= '%BODY%<br/>%NAV_HTML%</div>';
 	$txt .= '<div id="doc-footer">';
 	$txt .= "Documentation exported from <a href=\"$book_url\">$book_url</a>";
 
@@ -473,7 +481,7 @@ function isedoc_export_html_page_template($book_url, $book_title) {
 	return new IseDocTemplateGenerator($txt);
 }
 
-function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_nav, $a_tags='') {
+function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_nav, $a_tags='',$a_uuid='') {
 	global $isedoc_export_data;
 	global $isedoc_export_book_alias;
 	global $base_path;
@@ -506,6 +514,7 @@ function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_na
 				'/%NAV_HTML%/' => $a_nav,
 				'/%BODY%/' => $content,
 				'/%TAGS%/' => $a_tags,
+				'/%UUID%/' => $a_uuid,
 				));
 
 	return $l_page;

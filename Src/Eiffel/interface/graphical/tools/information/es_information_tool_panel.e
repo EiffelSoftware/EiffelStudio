@@ -107,12 +107,12 @@ feature {NONE} -- Clean up
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 		end
 
-feature -- Access
+feature -- Access: Help
 
 	help_context_id: !STRING_GENERAL
 			-- <Precursor>
-		do
-			Result := "Information (EIS) Tool"
+		once
+			Result := "26E2C799-B48A-C588-CDF1-DD47B1994B09"
 		end
 
 feature {NONE} -- Status report

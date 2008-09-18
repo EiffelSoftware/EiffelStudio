@@ -19,6 +19,11 @@ inherit
 			on_show
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	APPLICATION_STATUS_CONSTANTS
 		export
 			{NONE} all
@@ -246,6 +251,14 @@ feature {NONE} -- Initialization
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 			activate_execution_replay_mode (False, 0)
 			request_update
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "8C3CD0FE-78AA-7EC6-F36A-2233A4E26755"
 		end
 
 feature {NONE} -- Factory

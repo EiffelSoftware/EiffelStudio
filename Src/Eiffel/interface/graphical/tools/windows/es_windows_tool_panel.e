@@ -16,6 +16,11 @@ inherit
 			create_mini_tool_bar_items
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -27,6 +32,14 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_widget': A widget to build the tool interface using.
 		do
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "57B14A4B-8694-12F6-06C8-24411E331559"
 		end
 
 feature {NONE} -- Factory

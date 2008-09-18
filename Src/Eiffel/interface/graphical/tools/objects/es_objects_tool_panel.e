@@ -20,6 +20,11 @@ inherit
 			show
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 
 	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
@@ -179,6 +184,14 @@ feature {NONE} -- Initialization
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (a_docking_manager)
 			content.drop_actions.extend (agent add_debugged_object)
 			content.drop_actions.extend (agent drop_stack_element)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "6B736424-1729-0B6F-6DDD-8240F9F8FFD6"
 		end
 
 feature {NONE} -- Factory

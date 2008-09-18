@@ -11,16 +11,16 @@ frozen class
 	ES_ERROR_LIST_TOOL
 
 inherit
+	ES_TOOL [ES_ERROR_LIST_TOOL_PANEL]
+		redefine
+			shortcut_preference_name
+		end
+
 	ES_ERROR_LIST_COMMANDER_I
 		undefine
 			out
 		end
 
-	ES_TOOL [ES_ERROR_LIST_TOOL_PANEL]
-		redefine
-			shortcut_preference_name
-		end
-		
 create {NONE}
 	default_create
 

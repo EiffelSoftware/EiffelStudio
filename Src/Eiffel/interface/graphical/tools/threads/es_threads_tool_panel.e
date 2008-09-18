@@ -16,6 +16,11 @@ inherit
 			show
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
@@ -68,6 +73,14 @@ feature -- Properties
 
 	grid: ES_GRID
 			-- Grid to display the threads
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "457B71DC-4609-DAC1-8458-CD9B64FD5945"
+		end
 
 feature {NONE} -- Factory
 

@@ -39,9 +39,13 @@ feature -- Access
 	help_provider: !UUID
 			-- Help provider kind best used for the help context.
 			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
+			--
+			--|The return value should never change, implement as a once.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_consistent: Result.is_equal (help_provider)
 		end
 
 feature -- Status report

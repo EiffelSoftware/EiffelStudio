@@ -24,10 +24,11 @@ feature {NONE} -- Access
 				Result := l_result
 			else
 				create Result.make
+				internal_mutex := Result
 			end
 		ensure
 			result_is_set: Result.is_set
-			resuilt_consistent: Result = mutex
+			result_consistent: Result = mutex
 		end
 
 feature {NONE} -- Basic operations

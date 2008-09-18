@@ -20,16 +20,21 @@ inherit
 			create_mini_tool_bar_items
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
+	ES_FEATURES_TOOL_COMMANDER_I
+		export
+			{ES_FEATURES_TOOL_COMMANDER_I} all
+		end
+
 	SESSION_EVENT_OBSERVER
 		export
 			{NONE} all
 		redefine
 			on_session_value_changed
-		end
-
-	ES_FEATURES_TOOL_COMMANDER_I
-		export
-			{ES_TOOL} all
 		end
 
 	SHARED_ERROR_HANDLER
@@ -118,6 +123,14 @@ feature {NONE} -- Access
 
 	current_compiled_class: CLASS_C
 			-- Last synchonrized class
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
+		end
 
 feature {ES_FEATURES_GRID} -- Status report
 

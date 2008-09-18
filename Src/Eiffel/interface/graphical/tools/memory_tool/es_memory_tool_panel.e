@@ -18,6 +18,14 @@ inherit
 			create_right_tool_bar_items
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		redefine
+			help_provider,
+			help_context_section
+		end
+
 create {ES_MEMORY_TOOL}
 	make
 
@@ -180,6 +188,26 @@ feature {NONE} -- Access
 		ensure
 			result_is_compiled: Result /= Void implies Result.is_compiled
 			result_consistent: Result = filter_match_expression
+		end
+
+feature {NONE} -- Access
+
+	help_provider: !UUID
+			-- <Precursor>
+		once
+			Result := (create {HELP_PROVIDER_KINDS}).wiki
+		end
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "User Interface Memory Managment"
+		end
+
+	help_context_section: ?HELP_CONTEXT_SECTION_I
+			-- <Precursor>
+		once
+			create {HELP_CONTEXT_SECTION} Result.make ("Detecting Memory Leaks")
 		end
 
 feature {NONE} -- Helpers

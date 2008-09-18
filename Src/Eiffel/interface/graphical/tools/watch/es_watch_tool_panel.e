@@ -24,6 +24,11 @@ inherit
 			show
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -192,6 +197,14 @@ feature {NONE} -- Initialization
 			-- Context menu handler
 		do
 			develop_window.menus.context_menu_factory.watch_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current, watches_grid)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "E70D5827-A00D-47EE-9E7A-B7B4BFB34CCF"
 		end
 
 feature {NONE} -- Factory

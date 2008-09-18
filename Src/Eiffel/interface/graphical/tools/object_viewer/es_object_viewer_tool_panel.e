@@ -18,6 +18,11 @@ inherit
 			show, close
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	EB_OBJECT_VIEWERS_I
 		rename
 			close as close_tool
@@ -99,6 +104,14 @@ feature {NONE} -- Initialization
 			check content_not_void : content /= Void end
 			content.drop_actions.extend (agent set_stone)
 			content.drop_actions.set_veto_pebble_function (agent is_stone_valid)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "62002CE3-37F9-22DE-39F0-0930468A67BE"
 		end
 
 feature {NONE} -- Factory

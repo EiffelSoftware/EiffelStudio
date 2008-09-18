@@ -27,16 +27,21 @@ inherit
 			show_context_menu
 		end
 
-	SESSION_EVENT_OBSERVER
+	ES_HELP_CONTEXT
 		export
 			{NONE} all
-		redefine
-			on_session_value_changed
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
 		export
 			{ES_ERROR_LIST_COMMAND} all
+		end
+
+	SESSION_EVENT_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_session_value_changed
 		end
 
 	SHARED_ERROR_TRACER
@@ -152,6 +157,14 @@ feature -- Access
 
 	warning_count: NATURAL
 			-- Number of warnings
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"
+		end
 
 feature -- Status report
 

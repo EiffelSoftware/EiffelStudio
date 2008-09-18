@@ -30,6 +30,11 @@ inherit
 			on_dirty_state_changed
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	SESSION_EVENT_OBSERVER
 		export
 			{NONE} all
@@ -226,6 +231,14 @@ feature {NONE} -- Access
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
 			l_categories.put_last (context.template_category)
 			Result ?= code_template_catalog.service.templates_by_category (l_categories, True)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "28E1B33F-4B74-4DAB-AF6B-51E7E7FBAFCF"
 		end
 
 feature {NONE} -- Element change

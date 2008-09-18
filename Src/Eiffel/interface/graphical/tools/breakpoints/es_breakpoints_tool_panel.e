@@ -19,6 +19,11 @@ inherit
 			on_show
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	EB_VETO_FACTORY
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -188,6 +193,14 @@ feature {NONE} -- Initialization
 			end
 
 			update
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "9FA30DD2-231F-C1F2-4139-F8E90DF0E77F"
 		end
 
 feature {NONE} -- Factory

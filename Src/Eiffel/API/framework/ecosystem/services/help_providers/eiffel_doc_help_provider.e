@@ -13,6 +13,7 @@ class
 inherit
 	WEB_HELP_PROVIDER
 		redefine
+			section_url_separator,
 			format_context
 		end
 
@@ -23,14 +24,14 @@ create
 feature -- Access
 
 	document_protocol: !STRING_32
-			-- Document protocol used by a URI to navigate to the help accessible from the provider.
+			-- <Precursor>
 		once
 			create Result.make_empty
 			Result.append ("eiffeldoc")
 		end
 
 	document_description: !STRING_32
-			-- Document short description
+			-- <Precursor>
 		once
 			create Result.make_empty
 			Result.append ("Eiffel Documentation")
@@ -38,41 +39,32 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: !STRING_8
-			-- Base URL used to locate help documentation.
+	base_url: !STRING
+			-- <Precursor>
 		once
-			create Result.make_from_string ("http://ise181.ise/book/documentation/")
+			create Result.make_from_string ("http://ise181.ise/isedoc/uuid/")
 		end
 
-feature -- Helpers
-
-	id_map: !EIFFEL_DOC_ID_MAP
-			-- Access to the Eiffel IDs map
+	section_url_separator: CHARACTER
+			-- <Precursor>
 		once
-			create Result
+			Result := '/'
 		end
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: !STRING_GENERAL): !STRING_8
-			-- Formats the context so it may be used in a URL.
-			--
-			-- `a_context': A help content context of session context identifier to format
-			-- `Result': A formatted help context for a URL
+	format_context (a_context: !STRING_GENERAL): !STRING
+			-- <Precursor>
 		local
 			l_count, i: INTEGER
-			l_context: ?STRING
 		do
-			l_context := id_map[a_context]
-			if l_context /= Void then
-				create Result.make_from_string (l_context)
-				l_count := Result.count
-				from i := 1 until i > l_count loop
-					if Result.item (i) = ' ' then
-						Result.put ('_', i)
-					end
-					i := i + 1
+			create Result.make_from_string (a_context.as_string_8)
+			l_count := Result.count
+			from i := 1 until i > l_count loop
+				if Result.item (i).is_space then
+					Result.put ('-', i)
 				end
+				i := i + 1
 			end
 		end
 

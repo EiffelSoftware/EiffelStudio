@@ -808,7 +808,7 @@ feature {NONE} -- Brace matching
 			create Result
 		end
 
-	brace_match_caret_token: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	brace_match_caret_token: ?TUPLE [token: !EDITOR_TOKEN_TEXT; line: !EDITOR_LINE]
 			-- Attempts to retrieve the most applicable brace match token under the caret.
 			--
 			-- `Result': The most applicable token or Void if no token was found.
@@ -818,20 +818,22 @@ feature {NONE} -- Brace matching
 			text_is_fully_loaded: text_is_fully_loaded
 		local
 			l_utils: !like brace_matcher
-			l_token: ?EDITOR_TOKEN
-			l_prev_token: ?EDITOR_TOKEN
+			l_current_token: ?EDITOR_TOKEN
+			l_token: ?EDITOR_TOKEN_TEXT
+			l_prev_token: ?EDITOR_TOKEN_TEXT
 			l_line: ?EDITOR_LINE
 		do
 				-- Locate applicable tokens
 			l_utils := brace_matcher
-			l_token := text_displayed.cursor.token
+			l_current_token := text_displayed.cursor.token
 			l_line := text_displayed.cursor.line
-			if l_token /= Void and l_line /= Void then
-				l_prev_token := l_token.previous
-				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
+			if l_current_token /= Void and l_line /= Void then
+				l_token ?= l_current_token
+				l_prev_token ?= l_current_token.previous
+				if l_utils.is_closing_brace (l_current_token) and then position = l_current_token.pos_in_text
 						and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
 							-- Check the previous token for a closing brace, because it has priority
-					if not l_token.is_highlighted then
+					if not l_current_token.is_highlighted then
 							-- This is a minor hack, and not even a hack really but it's necessary due to the brace finder's
 							-- function to place the caret on the inside of outside of a matching brace, based on the original
 							-- position. For instance, )|), where | is the caret has two possible matches. For this case, if the right
@@ -840,7 +842,7 @@ feature {NONE} -- Brace matching
 					end
 
 				else
-					if not l_utils.is_brace (l_token) and then (l_token.is_new_line or else position <= l_token.pos_in_text) then
+					if not l_utils.is_brace (l_current_token) and then (l_current_token.is_new_line or else position <= l_current_token.pos_in_text) then
 							-- Grab previous token because the move will always get the next token.
 						l_token := l_prev_token
 					end
@@ -863,8 +865,8 @@ feature {NONE} -- Brace matching
 			text_is_fully_loaded: text_is_fully_loaded
 		local
 			l_utils: !like brace_matcher
-			l_token: ?EDITOR_TOKEN
-			l_line: ?EDITOR_LINE
+			l_token: !EDITOR_TOKEN_TEXT
+			l_line: !EDITOR_LINE
 			l_brace: ?like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: !like last_highlighted_matched_braces
@@ -890,25 +892,24 @@ feature {NONE} -- Brace matching
 				if l_brace /= Void then
 					l_token := l_brace.token
 					l_line := l_brace.line
-					if l_token /= Void and then l_line /= Void then
-							-- Find matching brace tokens.
-						l_utils := brace_matcher
-						if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-							l_brace := l_utils.match_brace (l_token, l_line)
-							if l_brace /= Void then
-									-- There was a match.
-								l_token.set_highlighted (True)
-								if not l_invalidated_lines.has (l_line) then
-									l_invalidated_lines.extend (l_line)
-								end
-								l_last_matches.extend ([l_token, l_line])
-
-								l_brace.token.set_highlighted (True)
-								if not l_invalidated_lines.has (l_brace.line) then
-									l_invalidated_lines.extend (l_brace.line)
-								end
-								l_last_matches.extend ([l_brace.token, l_brace.line])
+					
+						-- Find matching brace tokens.
+					l_utils := brace_matcher
+					if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
+						l_brace := l_utils.match_brace (l_token, l_line)
+						if l_brace /= Void then
+								-- There was a match.
+							l_token.set_highlighted (True)
+							if not l_invalidated_lines.has (l_line) then
+								l_invalidated_lines.extend (l_line)
 							end
+							l_last_matches.extend ([l_token, l_line])
+
+							l_brace.token.set_highlighted (True)
+							if not l_invalidated_lines.has (l_brace.line) then
+								l_invalidated_lines.extend (l_brace.line)
+							end
+							l_last_matches.extend ([l_brace.token, l_brace.line])
 						end
 					end
 				end

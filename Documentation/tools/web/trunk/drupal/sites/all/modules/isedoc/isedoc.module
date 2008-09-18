@@ -36,6 +36,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 		if ($n) {
 		  $links[] = l('What links here','node/'.$n->nid.'/whatlinkshere');
 		}
+		$links[] = l('Update All','isedoc/update/all');
 
 		$block_content .= theme('item_list', $links);
 		if ($block_content == '') {
@@ -72,6 +73,14 @@ function isedoc_nodeapi(&$node, $op, $form = NULL, $a4 = NULL) {
 
 function isedoc_menu() {
   $items = array();
+  $items['isedoc/update/%'] = array(
+    'title' => t('Update documentation pages'),
+    'page callback' => 'isedoc_update_pages',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc.update.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
   $items['admin/settings/isedoc'] = array(
     'title' => 'IseDoc',
     'description' => 'ISE Documentation settings.',

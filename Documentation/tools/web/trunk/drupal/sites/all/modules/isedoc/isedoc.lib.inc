@@ -116,7 +116,7 @@ function isedoc_node_ids_by_uuid($uuid) {
 		while ($v = db_fetch_array($res)) {
 			$nid = $v['nid'];
 			$vid = $v['vid'];
-			drupal_set_message("nid=$nid; v=$vid");
+			//drupal_set_message("nid=$nid; v=$vid");
 			$nids[$nid] = $vid;
 		}
 		return $nids;

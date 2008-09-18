@@ -294,7 +294,8 @@ struct cecil_info {
 extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 #endif
 
-RT_LNK  void eifvisex (void);          /* Enable the visible exception (in current thread) */
+RT_LNK unsigned char eif_visible_is_off;
+RT_LNK void eifvisex (void);          /* Enable the visible exception (in current thread) */
 RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
 RT_LNK int eifattrtype (char *attr_name, EIF_TYPE_ID cid);
 										/* Type of `attr_name' from class id `cid' */

@@ -186,6 +186,7 @@ feature -- Button texts
 	b_Disable: STRING_32 is							do Result := locale.translation("Disable") end
 	b_Restore: STRING_32 is							do Result := locale.translation("Restore") end
 	b_Reset: STRING_32 is							do Result := locale.translation("Reset") end
+	b_Help: STRING_32 is							do Result := locale.translation("Help") end
 	b_start: STRING_32 is							do Result := locale.translation("Start") end
 	b_stop: STRING_32 is							do Result := locale.translation("Stop") end
 	b_overwrite: STRING_32 is						do Result := locale.translation("Overwrite") end

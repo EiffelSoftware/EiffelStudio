@@ -14,6 +14,11 @@ inherit
 			is_size_and_position_remembered
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all
@@ -131,6 +136,14 @@ feature {NONE} -- User interface initialization
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 
 			dialog.resize_actions.force_extend (agent request_refresh_now)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "1AC830AB-7600-8E52-2351-C515BCC31D41"
 		end
 
 feature -- Widgets

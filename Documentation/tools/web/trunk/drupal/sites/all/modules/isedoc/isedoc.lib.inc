@@ -19,16 +19,6 @@ function var_dump_global($refname) {
 	return "DUMP[".$refname."]=".$a;
 }
 
-function isedoc_uuid($prefix = '') {
-	$chars = uniqid(md5(rand()));
-	$uuid  = substr($chars,0,8) . '-';
-	$uuid .= substr($chars,8,4) . '-';
-	$uuid .= substr($chars,12,4) . '-';
-	$uuid .= substr($chars,16,4) . '-';
-	$uuid .= substr($chars,20,12);
-	return $prefix . $uuid;
-}
-
 function isedoc_mkdir($a_dir) {
 	if (!file_check_directory($a_dir)) {
 		//drupal_set_message("create directory: $a_dir", 'status');
@@ -114,6 +104,21 @@ function isedoc_book_get_books() {
     }
   }
   return $all_books;
+}
+
+function isedoc_node_ids_by_uuid($uuid) {
+	$sql = "SELECT nid FROM {content_type_".'doc'."} WHERE LOWER(field_uuid_value) = LOWER('%s')";
+	$res = db_query($sql, $uuid);
+	if ($res === FALSE) {
+		return FALSE;
+	} else {
+		$nids = array();
+		while ($v = db_fetch_array($res)) {
+			drupal_set_message("v=".$v['nid']);
+			$nids[] = $v['nid'];
+		}
+		return $nids;
+	}
 }
 
 ?>

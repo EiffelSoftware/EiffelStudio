@@ -41,7 +41,7 @@ feature -- Status report
 			-- Determines if a token is an opening brace token.
 			--
 			-- `a_token': The token to determine brace applicability for.
-			-- `Result': True if the supplied token is an opening brace token; False otherwise.
+			-- `Result' : True if the supplied token is an opening brace token; False otherwise.
 		local
 			l_image: ?STRING_32
 		do
@@ -62,7 +62,7 @@ feature -- Status report
 			-- Determines if a token is an closing brace token.
 			--
 			-- `a_token': The token to determine brace applicability for.
-			-- `Result': True if the supplied token is an closing brace token; False otherwise.
+			-- `Result' : True if the supplied token is an closing brace token; False otherwise.
 		local
 			l_image: ?STRING_32
 		do
@@ -83,7 +83,7 @@ feature -- Status report
 			-- Determines if a token is an opening or closing brace token.
 			--
 			-- `a_token': The token to determine brace applicability for.
-			-- `Result': True if the supplied token is an brace token; False otherwise.
+			-- `Result' : True if the supplied token is an brace token; False otherwise.
 		do
 			Result := is_opening_brace (a_token) or else is_closing_brace (a_token)
 		ensure
@@ -92,22 +92,23 @@ feature -- Status report
 
 feature -- Query
 
-	match_brace (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	match_brace (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 			-- Searches for a matching brace, automatically navigating backwards/forwards based on the brace symbol.
 			--
-			-- `a_token': The token on the supplied line to find the previous token to.
-			-- `a_line': The line where the supplied token is resident.
-			-- `Result': A resulting token and resident line, or Void if no previous token exists.
+			-- `a_start_token': The token on the supplied line to find the previous token to.
+			-- `a_start_line' : The line where the supplied token is resident.
+			-- `a_end_token'  : An optional token to stop scanning at.
+			-- `Result'       : A resulting token and resident line, or Void if no previous token exists.
 		require
-			a_line_has_a_token: a_line.has_token (a_token)
-			a_token_is_brace: is_brace (a_token)
+			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
+			a_start_token_is_brace: is_brace (a_start_token)
 		do
-			if is_opening_brace (a_token) then
+			if is_opening_brace (a_start_token) then
 					-- Move forward to match a opening brace with a closing brace.
-				Result := match_opening_brace (a_token, a_line)
-			elseif is_closing_brace (a_token) then
+				Result := match_opening_brace (a_start_token, a_start_line, a_end_token)
+			elseif is_closing_brace (a_start_token) then
 					-- Move backwards to match a closing brace with a open brace.
-				Result := match_closing_brace (a_token, a_line)
+				Result := match_closing_brace (a_start_token, a_start_line, a_end_token)
 			else
 				check False end
 			end
@@ -115,55 +116,60 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	match_opening_brace (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	match_opening_brace (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 			-- Searches for a next open matching (closing) brace.
 			--
-			-- `a_token': The token on the supplied line to find the previous token to.
-			-- `a_line': The line where the supplied token is resident.
-			-- `Result': A resulting token and resident line, or Void if no previous token exists.
+			-- `a_start_token': The token on the supplied line to find the previous token to.
+			-- `a_start_line' : The line where the supplied token is resident.
+			-- `a_end_token'  : An optional token to stop scanning at.
+			-- `Result'       : A resulting token and resident line, or Void if no previous token exists.
 		require
-			a_line_has_a_token: a_line.has_token (a_token)
-			a_token_is_opening_brace: is_opening_brace (a_token)
+			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
+			a_start_token_is_opening_brace: is_opening_brace (a_start_token)
 		local
 			l_image: ?STRING_32
 			l_match: ?STRING_32
-			l_next: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+			l_next: ?like next_token
 			l_stop: BOOLEAN
 		do
-			l_image := a_token.wide_image
+			if a_start_token /~ a_end_token then
+				l_image := a_start_token.wide_image
 
-				-- Move forward to match a opening brace with a closing brace.
-			if l_image /= Void then
-				l_match := opening_brace_map.item (l_image)
-				if l_match /= Void then
-					l_next := [a_token, a_line]
-					from until l_stop loop
-							-- Locate next brace token.
-						l_next := next_token (l_next.token, l_next.line,
-							agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
-								do
-									Result := is_brace (ia_token)
-								end)
-
-						if l_next /= Void then
-								-- A new brace token is found, check it's not
-							if is_opening_brace (l_next.token) then
-									-- Recursively find the next closing brace.
-								l_next := match_opening_brace (l_next.token, l_next.line)
-								l_stop := l_next = Void
-							elseif is_closing_brace (l_next.token) then
-									-- A closing brace is located
-								if l_next.token.wide_image.is_equal (l_match) then
-										-- The correct closing brace is matched
-									Result := l_next
-								else
+					-- Move forward to match a opening brace with a closing brace.
+				if l_image /= Void then
+					l_match := opening_brace_map.item (l_image)
+					if l_match /= Void then
+						l_next := [a_start_token, a_start_line]
+						from until l_stop loop
+								-- Locate next brace token.
+							l_next := next_token (l_next.token, l_next.line, True,
+								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE; ia_end_token: ?EDITOR_TOKEN): BOOLEAN
+									do
+										Result := is_brace (ia_start_token) or else ia_start_token ~ ia_end_token
+									end (?, ?, a_end_token))
+							if l_next /= Void and then {l_text: EDITOR_TOKEN_TEXT} l_next.token then
+									-- A new brace token is found, check it's not
+								if is_opening_brace (l_text) then
+										-- Recursively find the next closing brace.
+									l_next := match_opening_brace (l_text, l_next.line, a_end_token)
+									l_stop := l_next = Void
+								elseif is_closing_brace (l_text) then
+										-- A closing brace is located
+									if l_text.wide_image.is_equal (l_match) then
+											-- The correct closing brace is matched
+										Result := [l_text, l_next.line]
+									else
 										-- There must be syntax error, because an alternative closing brace was located.
+									end
+									l_stop := True
+								else
+										-- This happens then the matching end token was matched
+									l_stop := True
 								end
+							else
+									-- No next token exists.
 								l_stop := True
 							end
-						else
-								-- No next token exists.
-							l_stop := True
 						end
 					end
 				end
@@ -172,58 +178,63 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_closing_brace: Result /= Void implies is_closing_brace (Result.token)
 			result_is_correct_match: Result /= Void implies opening_brace_map.item (
-				({!STRING_32}) #? a_token.wide_image).is_equal (({!STRING_32}) #? Result.token.wide_image)
+				({!STRING_32}) #? a_start_token.wide_image).is_equal (({!STRING_32}) #? Result.token.wide_image)
 		end
 
-	match_closing_brace (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	match_closing_brace (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 			-- Searches for a previous closing matching (opening) brace.
 			--
-			-- `a_token': The token on the supplied line to find the previous token to.
-			-- `a_line': The line where the supplied token is resident.
-			-- `Result': A resulting token and resident line, or Void if no previous token exists.
+			-- `a_start_token': The token on the supplied line to find the previous token to.
+			-- `a_start_line' : The line where the supplied token is resident.
+			-- `a_end_token'  : An optional token to stop scanning at.
+			-- `Result'       : A resulting token and resident line, or Void if no previous token exists.
 		require
-			a_line_has_a_token: a_line.has_token (a_token)
-			a_token_is_closing_brace: is_closing_brace (a_token)
+			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
+			a_start_token_is_closing_brace: is_closing_brace (a_start_token)
 		local
 			l_image: ?STRING_32
 			l_match: ?STRING_32
-			l_prev: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+			l_prev: ?like previous_token
 			l_stop: BOOLEAN
 		do
-			l_image := a_token.wide_image
+			if a_start_token /~ a_end_token then
+				l_image := a_start_token.wide_image
 
-				-- Move forward to match a opening brace with a closing brace.
-			if l_image /= Void then
-				l_match := closing_brace_map.item (l_image)
-				if l_match /= Void then
-					l_prev := [a_token, a_line]
-					from until l_stop loop
-							-- Locate previous brace token.
-						l_prev := previous_token (l_prev.token, l_prev.line,
-							agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
-								do
-									Result := is_brace (ia_token)
-								end)
-
-						if l_prev /= Void then
-								-- A new brace token is found, check it's not
-							if is_closing_brace (l_prev.token) then
-									-- Recursively find the previous opening brace.
-								l_prev := match_closing_brace (l_prev.token, l_prev.line)
-								l_stop := l_prev = Void
-							elseif is_opening_brace (l_prev.token) then
-									-- A opening brace is located
-								if l_prev.token.wide_image.is_equal (l_match) then
-										-- The correct opening brace is matched
-									Result := l_prev
-								else
+					-- Move forward to match a opening brace with a closing brace.
+				if l_image /= Void then
+					l_match := closing_brace_map.item (l_image)
+					if l_match /= Void then
+						l_prev := [a_start_token, a_start_line]
+						from until l_stop loop
+								-- Locate previous brace token.
+							l_prev := previous_token (l_prev.token, l_prev.line, True,
+								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE; ia_end_token: ?EDITOR_TOKEN): BOOLEAN
+									do
+										Result := (ia_start_token.is_text and then is_brace (ia_start_token)) or else ia_start_token ~ ia_end_token
+									end (?, ?, a_end_token))
+							if {l_text: EDITOR_TOKEN_TEXT} l_prev.token then
+									-- A new brace token is found, check it's not
+								if is_closing_brace (l_text) then
+										-- Recursively find the previous opening brace.
+									l_prev := match_closing_brace (l_text, l_prev.line, a_end_token)
+									l_stop := l_prev = Void
+								elseif is_opening_brace (l_text) then
+										-- A opening brace is located
+									if l_text.wide_image.is_equal (l_match) then
+											-- The correct opening brace is matched
+										Result := [l_text, l_prev.line]
+									else
 										-- There must be syntax error, because an alternative opeing brace was located.
+									end
+									l_stop := True
+								else
+										-- This happens then the matching end token was matched
+									l_stop := True
 								end
+							else
+									-- No previous token exists.
 								l_stop := True
 							end
-						else
-								-- No previous token exists.
-							l_stop := True
 						end
 					end
 				end
@@ -232,7 +243,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_opening_brace: Result /= Void implies is_opening_brace (Result.token)
 			result_is_correct_match: Result /= Void implies closing_brace_map.item (
-				({!STRING_32}) #? a_token.wide_image).is_equal (({!STRING_32}) #? Result.token.wide_image)
+				({!STRING_32}) #? a_start_token.wide_image).is_equal (({!STRING_32}) #? Result.token.wide_image)
 		end
 
 ;indexing

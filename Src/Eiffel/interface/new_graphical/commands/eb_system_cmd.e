@@ -157,7 +157,7 @@ feature {NONE} -- Actions
 				check
 					library: l_lib /= Void
 				end
-				l_config := l_lib.library_target.system.file_name
+				l_config := l_lib.location.evaluated_path
 				config_windows.search (l_config)
 				if config_windows.found and then config_windows.found_item.is_show_requested then
 					configuration_window := config_windows.found_item

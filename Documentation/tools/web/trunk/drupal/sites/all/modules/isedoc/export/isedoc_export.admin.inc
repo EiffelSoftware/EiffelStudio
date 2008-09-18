@@ -307,14 +307,22 @@ function isedoc_export_book_node_as_wiki($a_node,$a_src, $p_alias) {
 
 	/* Build the wiki text */
 	$tw = "#title=$l_title\n";
-	$taxo =& $a_node->taxonomy;
-	if (count($taxo) > 0) {
-		$tw .= "#tags=";
-		foreach($taxo as $t) {
-			$tw .= $t->name.",";
+	if (module_exists('taxonomy')) {
+		$taxo =& $a_node->taxonomy;
+		if (count($taxo) > 0) {
+			$tw .= "#tags=";
+			foreach($taxo as $t) {
+				$tw .= $t->name.",";
+			}
+			$tw = rtrim($tw, ',');
+			$tw .= "\n";
 		}
-		$tw = rtrim($tw, ',');
-		$tw .= "\n";
+	}
+	if (is_callable(array($a_node, 'field_uuid'), TRUE)) {
+		$uuid = $a_node->field_uuid[0]['value'];
+		if ($uuid) {
+			$tw .= "#uuid=$uuid\n";
+		}
 	}
 
 	$fn = $isedoc_export_dir . '/' . $l_src . '.wiki';
@@ -357,15 +365,23 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	//$output .= ":$l_weight] ";
 	$output .= "<a class=\"title\" href=\"$a_url_name.html\">$l_title</a>";
 
-	$taxo =& $a_node->taxonomy;
-	if (count($taxo) > 0) {
-		$tags = " <span class=\"tags\">(tags:";
-		foreach($taxo as $t) {
-			$tags .= $t->name.",";
+	if (module_exists('taxonomy')) {
+		$taxo =& $a_node->taxonomy;
+		if (count($taxo) > 0) {
+			$tags = " <span class=\"tags\">(tags:";
+			foreach($taxo as $t) {
+				$tags .= $t->name.",";
+			}
+			$tags = rtrim($tags, ',');
+			$tags .= ")</span>";
+			$output .= $tags;
 		}
-		$tags = rtrim($tags, ',');
-		$tags .= ")</span>";
-		$output .= $tags;
+	}
+	if (is_callable(array($a_node, 'field_uuid'), TRUE)) {
+		$uuid = $a_node->field_uuid[0]['value'];
+		if ($uuid) {
+			$output .= "<span class=\"uuid\">UUID=$uuid</span>\n";
+		}
 	}
 
 	$th = isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right,$a_nav,$tags);

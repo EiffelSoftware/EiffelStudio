@@ -1,5 +1,8 @@
 indexing
-	description: "Context subsection"
+	description: "[
+			An interface implementation to further page navigation, once a context page reference has been
+			located.
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -11,14 +14,14 @@ deferred class
 feature -- Access
 
 	section: !STRING_GENERAL is
-			-- String representation of the section
+			-- String representation of the page navigation section locator.
 		deferred
 		ensure
 			section_not_empty: not Result.is_empty
 		end
 
 indexing
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

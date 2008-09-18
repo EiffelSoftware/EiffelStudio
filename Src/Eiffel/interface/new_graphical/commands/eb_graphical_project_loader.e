@@ -136,6 +136,7 @@ feature -- Settings
 			create l_dialog
 			l_dialog.set_process (l_prc_launcher)
 			l_dialog.set_title (interface_names.t_precompile_progress)
+			l_prc_launcher.redirect_input_to_stream
 			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
 			l_prc_launcher.redirect_error_to_same_as_output
 			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide_in_gui_thread)

@@ -45,6 +45,8 @@ feature -- Dialog
 	dialog_button_horizontal_padding: INTEGER = 10
 	dialog_button_width: INTEGER = 75
 	dialog_button_height: INTEGER = 23
+	dialog_maximum_height: INTEGER = 600
+	dialog_maximum_width: INTEGER = 850
 
 	prompt_border: INTEGER = 15
 	prompt_vertical_padding: INTEGER = 8

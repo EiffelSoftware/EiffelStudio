@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status report
 
-	frozen is_opening_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_opening_brace (a_token: !EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is an opening brace token.
 			--
 			-- `a_token': The token to determine brace applicability for.
@@ -58,7 +58,7 @@ feature -- Status report
 			token_image_is_opening_brace: Result implies opening_brace_map.has (({!STRING_32}) #? a_token.wide_image)
 		end
 
-	frozen is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is an closing brace token.
 			--
 			-- `a_token': The token to determine brace applicability for.
@@ -212,7 +212,7 @@ feature -- Query
 									do
 										Result := (ia_start_token.is_text and then is_brace (ia_start_token)) or else ia_start_token ~ ia_end_token
 									end (?, ?, a_end_token))
-							if {l_text: EDITOR_TOKEN_TEXT} l_prev.token then
+							if l_prev /= Void and then {l_text: EDITOR_TOKEN_TEXT} l_prev.token then
 									-- A new brace token is found, check it's not
 								if is_closing_brace (l_text) then
 										-- Recursively find the previous opening brace.

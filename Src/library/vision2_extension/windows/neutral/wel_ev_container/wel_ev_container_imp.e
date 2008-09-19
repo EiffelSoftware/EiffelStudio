@@ -81,12 +81,12 @@ feature {NONE} -- Implementation
 				if t /= Void and then t.is_notify_originator then
 						-- `notify_change' call has finished its work on descendants,
 						-- we go up to parents.
-					is_in_notify.set_item (False)
+					is_in_notify.put (False)
 				end
 			end
 			if not is_in_notify.item then
 				is_notify_originator := True
-				is_in_notify.set_item (True)
+				is_in_notify.put (True)
 				top_imp := top_level_window_imp
 				if wel_parent /= Void and then wel_parent.shown then
 					inspect type
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				is_notify_originator := False
-				is_in_notify.set_item (False)
+				is_in_notify.put (False)
 			end
 			end
 		end
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			if w_cd or h_cd then
 				internal_set_minimum_size (a_width, a_height)
 				p_imp := parent_imp
-				if p_imp /= void and then (not is_in_notify.item or else is_notify_originator) then
+				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
 					if w_cd then
 						if h_cd then
 							p_imp.notify_change (nc_minsize, Current)

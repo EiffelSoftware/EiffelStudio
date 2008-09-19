@@ -174,9 +174,6 @@ feature {NONE} -- Implementation
 					%%N%
 					%inherit%N%
 					%%TARGUMENTS%N%
-					%%T%Texport%N%
-					%%T%T%T{NONE} all%N%
-					%%T%Tend%N%
 					%%N%
 					%create%N%
 					%%T" + root_feature_name + "%N%

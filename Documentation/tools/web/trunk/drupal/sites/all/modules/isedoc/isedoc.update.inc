@@ -3,6 +3,7 @@
 require_once ("isedoc.lib.inc");
 
 function isedoc_update_pages($op) {
+  $output = '';
   if (user_access('admin isedoc')) {
     $books = array();
     $all_books = book_get_books();
@@ -15,22 +16,44 @@ function isedoc_update_pages($op) {
       default:
   	$bn = strtolower($op);
   	foreach($all_books as $b) {
-  		if (strtolower($b['title']) == $bn) {
+		//drupal_set_message(var_dump_r($b));
+  		if (isedoc_book_title_to_book_name_id($b['title']) == $bn) {
   			$books[] = $b['bid'];
   		}
   	}
   	break;
     }
-    foreach($books as $bid){
-  	isedoc_update_pages_of_book($bid);
+    if (count($books) > 0) {
+      foreach($books as $bid){
+    	isedoc_update_pages_of_book($bid);
+      }
+      $output .= "Update $op: completed.";
+      $output .= "<br/>".l(t("Update other books"), "isedoc/update/_")."<br/>";
+    } else {
+	$output .= "<ul>";
+	$output .= "<li><strong>".l(t("Update all the books"), "isedoc/update/all")."</strong></li>";
+  	foreach($all_books as $b) {
+  		$bn = isedoc_book_title_to_book_name_id($b['title']);
+		$output .= "<li>".l(t("Update only: ").$bn, "isedoc/update/$bn")."</li>";
+  	}
+	$output .= "</ul>";
     }
-    return "Update $op: completed.";
   } else {
     drupal_access_denied();
-    return "Update $op: access denied.";
+    $output .= "Update $op: access denied.";
   }
+  return $output;
 }
 
+function isedoc_book_title_to_book_name_id($a_title) {
+	if (module_exists('pathauto')) {
+		module_load_include('inc', 'pathauto', 'pathauto');
+		$l_url = pathauto_cleanstring($a_title);
+	} else {
+		$l_url = $a_title;
+	}
+	return strtolower($l_url);
+}
 
 function isedoc_update_pages_of_book($a_bookid) {
 	$node =& node_load(array('nid' => $a_bookid), NULL, FALSE);
@@ -64,8 +87,9 @@ function isedoc_update_book_traverse(&$a_tree, $a_book_short_path) {
 				}
 			}
 			if (module_exists('pathauto')) {
-				if (strncasecmp($a_book_short_path, $node->path, strlen(a_book_short_path)) != 0) {
-					//drupal_set_message($node->title . ": Update url alias");
+				//drupal_set_message("cmp=".strncasecmp($a_book_short_path, $node->path, strlen($a_book_short_path) ));
+				if (strncasecmp($a_book_short_path, $node->path, strlen($a_book_short_path) - 1) != 0) {
+					drupal_set_message($a_book_short_path . " node=" .$node->path . ": Update url alias");
 					$l_log .= "(update url alias)";
 					$b_save = TRUE;
 				}

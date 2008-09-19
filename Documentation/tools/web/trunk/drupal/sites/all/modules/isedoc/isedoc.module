@@ -51,7 +51,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 		  $links[] = l('What links here','node/'.$n->nid.'/whatlinkshere');
 		}
 		if (user_access('admin isedoc')) {
-			$links[] = l('Update All','isedoc/update/all');
+			$links[] = l('Update books','isedoc/update/_');
 		}
 
 		$block_content .= theme('item_list', $links);

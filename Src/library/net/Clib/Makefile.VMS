@@ -29,7 +29,7 @@ SED = /bin/sed
 
 SOURCES =  $(LSRCS)
 OBJECTS = 
-NET_LIBS = net.olb MTnet.olb #libnet.so libmtnet.so
+NET_LIBS = net.olb MTnet.olb # libnet.so libmtnet.so
 
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
@@ -51,6 +51,7 @@ all :: .FORCE_DEPEND
 #DPFLAGS = $(CINCLUDES)$(CDEFINES)
 #CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 #CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(EIFFEL_SRC)/C/run-time/include
+#CFLAGS = $optimize $ccflags $large -I$rt_include
 CINCLUDES = EIFFEL_SRC:[C.run-time.include]
 # define vms specific symbols for compiling, etc.
 include EIFFEL_SRC:[C]Makeinc.VMS
@@ -80,14 +81,12 @@ OBJECTS = \
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 $(ALL_OBJECTS) : []netvmsdef.h $(EXTRA_DEPENDENCIES)
 
-LIBS = net.olb MTnet.olb
-
-all :: $(LIBS) 
+all :: $(NET_LIBS) 
 
 # build local objects
 obj : $(ALL_OBJECTS)
 # build local objects, libraries
-lib : $(LIBS)
+lib : $(NET_LIBS)
 
 LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
 $(LISTINGS) : $(EXTRA_DEPENDENCIES)
@@ -105,21 +104,20 @@ MTnet.olb :: $(MT_OBJECTS)
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
-# library targets
+# delivery library targets
 
 EIFLIB = ISE_EIFFEL\:[library.net.spec.$(ISE_PLATFORM).lib]
 eiflib : $(EIFLIB) $(EIFLIB)net.olb $(EIFLIB)MTnet.olb
-
 all :: eiflib
 
 $(EIFLIB) :
 	create/directory/version_limit=10 $(EIFLIB)
 
 $(EIFLIB)net.olb : []net.olb
-	copy $^ $(EIFLIB)
+	$(COPY) $^ $(EIFLIB)
 
 $(EIFLIB)MTnet.olb : []MTnet.olb
-	copy $^ $(EIFLIB)
+	$(COPY) $^ $(EIFLIB)
 
 clean :
 	$(RM) *.obj;*,*.dia;*,*.olb;*

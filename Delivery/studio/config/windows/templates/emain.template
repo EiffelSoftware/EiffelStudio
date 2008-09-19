@@ -17,6 +17,7 @@ extern int main(void);
 extern void egc_init_plug (void); 
 extern void egc_rcdt_init (void); 
 extern void eif_retrieve_root (int *argc, char **argv);
+extern void eif_init_root (void);
 
 #ifndef GetEnvironmentStringsA 
  extern LPVOID WINAPI GetEnvironmentStringsA(void);
@@ -64,6 +65,7 @@ int main (void)
 	
 		eif_retrieve_root (&argc, argv);
 		eif_rtinit(argc, argv, envp);
+		eif_init_root();
 		if (egc_prof_enabled) initprf();
 		egc_rcdt_init();
 		emain(argc, argv);

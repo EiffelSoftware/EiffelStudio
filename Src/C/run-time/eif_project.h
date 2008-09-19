@@ -194,6 +194,7 @@ extern "C" {
 #endif
 	RT_LNK int32 egc_rcount;			/* Number of root creation procedures */
 	RT_LNK char  **egc_rlist;			/* List of root procedures ("class name"."feature name") */
+	RT_LNK char  *egc_eif_root;			/* Root name provided on command line (NULL if no name provided) */
 	RT_LNK int32 egc_ridx;				/* Index of root creation procedure */
 	RT_LNK int32 *egc_rcdt;				/* E1/einit.c */
 	RT_LNK int32 *egc_rcorigin;			/* E1/einit.c */

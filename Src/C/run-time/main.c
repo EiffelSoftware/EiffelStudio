@@ -690,31 +690,50 @@ rt_private void notify_root_thread (void)
 
 rt_public void eif_retrieve_root (int *argc, char **argv)
 {
-	int i;
+	/*
+	 * If -eif_root is provided, record its value and decrease argument count so argument is not
+	 * visisble to users application.
+	 */
 	egc_ridx = 0;
+	egc_eif_root = NULL;
 	if ((*argc) > 1) {
 		if (0 == strcmp (argv[(*argc)-2], "-eif_root")) {
-			egc_ridx = -1;
-			for (i = 0; i < egc_rcount; i++) {
-				if (0 == strcmp (argv[(*argc)-1], egc_rlist[i])) {
-					egc_ridx = i;
-					break;
-				}
-			}
-			if (egc_ridx < 0) {
-				fprintf (stderr, "%s: unknown root procedure\n", argv[(*argc)-1]);
-				exit (1);	
-			}
+			egc_eif_root = argv[(*argc)-1];
 			(*argc) -= 2;
 		}
 		else if (0 == strcmp (argv[(*argc)-1], "-eif_root")) {
-			fprintf (stderr, "\nPlease specify a root procedure. Valid root procedures are:\n\n");
-			for (i = 0; i < egc_rcount; i++) {
-				fprintf (stderr, "\t- %s\n", egc_rlist[i]);
+			egc_ridx = -1;
+		}
+	}
+}
+
+rt_public void eif_init_root (void)
+{
+	/*
+	 * If -eif_root was provided, check if requested root feature is available. Otherwise print
+	 * list of valid root features and terminate.
+	 */
+	int i;
+	if (egc_ridx >= 0 && egc_eif_root != NULL) {
+		egc_ridx = -1;
+		for (i = 0; i < egc_rcount; i++) {
+			if (0 == strcmp (egc_eif_root, egc_rlist[i])) {
+				egc_ridx = i;
+				break;
 			}
-			fprintf (stderr, "\n");
+		}
+		if (egc_ridx < 0) {
+			fprintf (stderr, "%s: unknown root procedure\n", egc_eif_root);
 			exit (1);
 		}
+	}
+	if (egc_ridx < 0) {
+		fprintf (stderr, "\nPlease specify a valid root procedure. Valid root procedures are:\n\n");
+		for (i = 0; i < egc_rcount; i++) {
+			fprintf (stderr, "\t- %s\n", egc_rlist[i]);
+		}
+		fprintf (stderr, "\n");
+		exit (1);
 	}
 }
 

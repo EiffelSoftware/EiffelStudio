@@ -201,6 +201,7 @@ feature {NONE} -- Basic operations
 			l_width: INTEGER
 		do
 			l_width := (exception_text_panel.left_margin_width * 2) + exception_text_panel.font.string_width (trace) + exception_text_panel.vertical_scrollbar.width
+			l_width := l_width.min ({ES_UI_CONSTANTS}.dialog_maximum_width)
 			exception_text_panel.widget.set_minimum_width (l_width)
 		end
 

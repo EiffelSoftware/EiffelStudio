@@ -389,6 +389,7 @@ rt_public long *egc_fsize;
 rt_public int32 egc_rcount;
 rt_public int32 egc_ridx;
 rt_public char  **egc_rlist;
+rt_public char  *egc_eif_root;
 rt_public int32 *egc_rcdt;				/* E1/einit.c */
 rt_public int32 *egc_rcorigin;			/* E1/einit.c */
 rt_public int32 *egc_rcoffset;			/* E1/einit.c */

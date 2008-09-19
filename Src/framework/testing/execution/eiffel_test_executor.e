@@ -71,7 +71,6 @@ feature -- Access
 			-- Note: can be zero to indicate that all tests are assigned to a single evaluator.
 		do
 			Result := 0
-		ensure
 		end
 
 	evaluator_count: NATURAL
@@ -137,10 +136,13 @@ feature -- Status report
 	is_finished: BOOLEAN
 			-- <Precursor>
 		do
-			Result := evaluators.is_empty
+			Result := evaluators.is_empty and is_compiled
 		end
 
 feature {NONE} -- Status report
+
+	is_compiled: BOOLEAN
+			-- Has project been compiled yet?
 
 	last_root_class_successful: BOOLEAN
 			-- True if `write_root_class' was successful in writting a root class
@@ -156,7 +158,6 @@ feature -- Status setting
 	skip_test (a_test: !EIFFEL_TEST_I)
 			-- <Precursor>
 		do
-			remove_test (a_test)
 			test_suite.set_test_aborted (a_test)
 		end
 
@@ -167,8 +168,14 @@ feature {NONE} -- Status setting
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
 			l_project: !E_PROJECT
+			l_old_map: like internal_map
 		do
+			l_old_map := internal_map
 			create internal_map.make (a_list.count)
+			if l_old_map /= Void then
+				tests_reset_event.publish ([Current])
+				l_old_map := Void
+			end
 			cursor := map.tests.new_cursor
 			from
 				l_cursor := a_list.new_cursor
@@ -178,22 +185,30 @@ feature {NONE} -- Status setting
 			loop
 				test_suite.set_test_queued (l_cursor.item, Current)
 				map.add_test (l_cursor.item)
+				test_added_event.publish ([Current, l_cursor.item])
 				l_cursor.forth
 			end
 			cursor.start
-			write_root_class
-			if last_root_class_successful then
-				compile_project
-				if last_compilation_successful then
-					initialize_evaluators
-				end
-			end
+			is_compiled := False
+		ensure then
+			not_compiled: not is_compiled
 		end
 
 	proceed_process
 			-- <Precursor>
 		do
-			syncronize_evaluators
+			if not is_compiled then
+				write_root_class
+				if last_root_class_successful then
+					compile_project
+					if last_compilation_successful then
+						initialize_evaluators
+					end
+				end
+				is_compiled := True
+			else
+				syncronize_evaluators
+			end
 		end
 
 	stop_process
@@ -340,22 +355,24 @@ feature {NONE} -- Status setting
 				if l_status.has_remaining_tests then
 					l_remaining := l_status.remaining_tests
 						--| Note: `l_remaining' should not be empty since there should not be any other thread still
-						--        adding results to the status. However to be on the safe side we check on more time.
+						--        adding results to the status. However to be on the safe side we check one more time.
 					if not l_remaining.is_empty then
 						l_remaining.start
 						if not a_evaluator.is_terminated then
 								-- Evaluator has not been stopped by `Current', which means that it encountered problems
 								-- executing the first test in `l_remaining'. Currently we will no try to test it again.
 							l_test := l_remaining.item_for_iteration
-							remove_test (l_test)
 							test_suite.set_test_aborted (l_test)
 							l_remaining.forth
 						end
 						from until
 							l_remaining.after
 						loop
-							if active_tests.has (l_remaining.item_for_iteration) then
-								l_list.put_last (l_remaining.item_for_iteration)
+							l_test := l_remaining.item_for_iteration
+							if active_tests.has (l_test) then
+								if l_test.is_queued and then l_test.executor = Current then
+									l_list.put_last (l_remaining.item_for_iteration)
+								end
 							end
 							l_remaining.forth
 						end
@@ -396,7 +413,6 @@ feature {NONE} -- Status setting
 					l_test ?= l_tuple.test
 					if map.tests.has (l_test) then
 						l_outcome ?= l_tuple.outcome
-						remove_test (l_test)
 						test_suite.add_outcome_to_test (l_test, l_outcome)
 					end
 				else
@@ -420,18 +436,6 @@ feature {NONE} -- Status setting
 			end
 		end
 
-	remove_test (a_test: !EIFFEL_TEST_I) is
-			-- Remove test from `active_tests' and notify observers.
-			--
-			-- `a_test': Test to be removed.
-		require
-			running: is_running
-			active_tests_has_a_test: active_tests.has (a_test)
-		do
-			map.remove_test (a_test)
-			test_removed_event.publish ([Current, a_test])
-		end
-
 feature {EIFFEL_TEST_SUITE_S} -- Events
 
 	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_test: !EIFFEL_TEST_I) is
@@ -439,8 +443,9 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution
 		do
-			if active_tests.has (a_test) then
-				skip_test (a_test)
+			if map.tests.has (a_test) then
+				map.remove_test (a_test)
+				test_removed_event.publish ([Current, a_test])
 			end
 			Precursor (a_collection, a_test)
 		end

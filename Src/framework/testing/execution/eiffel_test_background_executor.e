@@ -12,11 +12,20 @@ class
 inherit
 	EIFFEL_TEST_EXECUTOR
 		redefine
-			compile_project
+			compile_project,
+			evaluator_count,
+			evaluator_test_count
 		end
 
 create
 	make, make_with_launcher
+
+feature -- Access
+
+	evaluator_count: NATURAL = 3
+			-- <Precursor>
+
+	evaluator_test_count: NATURAL = 1
 
 feature {NONE} -- Status setting
 

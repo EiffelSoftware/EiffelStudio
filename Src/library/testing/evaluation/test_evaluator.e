@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					io.set_file_default (buffer)
 				end
 				a_procedure.apply
-				create last_invocation_response.make_normal (buffer.content)
+				create last_invocation_response.make_normal (buffered_output)
 			end
 			io.set_file_default (l_old)
 			buffer.wipe_out
@@ -122,29 +122,51 @@ feature {NONE} -- Implementation
 		rescue
 			l_retry := True
 			l_excpt ?= exception_manager.last_exception
+			io.error.put_string ("%NEXCEPTION")
 			if l_excpt.type_name = Void then
 				create l_type.make_empty
 			else
 				create l_type.make_from_string (l_excpt.type_name)
 			end
-			if l_rec = Void then
+			io.error.put_string ("%Ntype: " + l_type)
+			if l_excpt.recipient_name = Void then
 				create l_rec.make_empty
 			else
 				create l_rec.make_from_string (l_excpt.recipient_name)
 			end
-			if l_tag = Void then
+			io.error.put_string ("%Nrec: " + l_rec)
+			if l_excpt.message = Void then
 				create l_tag.make_empty
 			else
-				create l_tag.make_from_string (l_excpt.recipient_name)
+				create l_tag.make_from_string (l_excpt.message)
 			end
-			if l_trace = Void then
+			io.error.put_string ("%Ntag: " + l_tag)
+			if l_excpt.exception_trace = Void then
 				create l_trace.make_empty
 			else
 				create l_trace.make_from_string (l_excpt.exception_trace)
 			end
+			io.error.put_string ("%Ntrace: " + l_trace)
 			create l_texcpt.make (l_excpt.code, l_rec, l_type, l_tag, l_trace)
-			create last_invocation_response.make_exceptional (buffer.content, l_texcpt)
+			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
 			retry
+		end
+
+	buffered_output: !STRING
+			-- Output buffered by `buffer'
+			--
+			-- Note: if output was truncated, add string indicating so.
+		do
+			if buffer.is_truncated then
+				create Result.make (buffer.buffer_size + 100)
+				Result.append (buffer.leading_content)
+				Result.append ("%N%N---------------------------%N")
+				Result.append ("Truncated section%N")
+				Result.append ("---------------------------%N%N")
+				Result.append (buffer.closing_content)
+			else
+				Result := buffer.content
+			end
 		end
 
 end

@@ -1,8 +1,8 @@
 indexing
 	description: "[
-		Objects representing a {ES_TBT_GRID} layout for eiffel tests.
+		Objects representing a {ES_TAGABLE_GRID} layout for eiffel tests.
 		
-		See {ES_TBT_GRID_LAYOUT} for more information.
+		See {ES_TAGABLE_GRID_LAYOUT} for more information.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,10 +11,11 @@ class
 	ES_EIFFEL_TEST_GRID_LAYOUT
 
 inherit
-	ES_TBT_GRID_LAYOUT [EIFFEL_TEST_I]
+	ES_TAGABLE_GRID_LAYOUT [!EIFFEL_TEST_I]
 		redefine
 			project,
 			is_project_available,
+			column_width,
 			populate_item_row,
 			column_count
 		end
@@ -26,6 +27,8 @@ feature {NONE} -- Initialization
 
 	make (a_test_suite: like test_suite)
 			-- Initialize `Current'.
+			--
+			-- `a_test_suite': Test suite from which project data is retrieved.
 		do
 			test_suite := a_test_suite
 		ensure
@@ -45,7 +48,8 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	column_count: NATURAL = 2
+	column_count: INTEGER = 3
+			-- <Precursor>
 
 	is_project_available: BOOLEAN
 			-- <Precursor>
@@ -54,7 +58,19 @@ feature -- Status report
 				test_suite.service.is_project_initialized
 		end
 
-feature -- Factory
+	column_width (a_index: INTEGER): INTEGER
+			-- <Precursor>
+		do
+			inspect
+				a_index
+			when status_column then
+				Result := 70
+			when last_tested_column then
+				Result := 100
+			end
+		end
+
+feature -- Basic functionality
 
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !EIFFEL_TEST_I) is
 			-- <Precursor>
@@ -64,28 +80,8 @@ feature -- Factory
 			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label: EV_GRID_LABEL_ITEM
 			l_tooltip: STRING
-			l_outcome: TEST_OUTCOME
 		do
 			create l_tooltip.make_empty
-			if a_item.is_outcome_available then
-				l_outcome := a_item.last_outcome
-				if l_outcome.setup_response /= Void then
-					l_tooltip.append ("setup: ")
-					append_response (l_tooltip, {!TEST_INVOCATION_RESPONSE} #? l_outcome.setup_response)
-					if l_outcome.test_response /= Void then
-						l_tooltip.append ("test: ")
-						append_response (l_tooltip, {!TEST_INVOCATION_RESPONSE} #? l_outcome.test_response)
-						if l_outcome.teardown_response /= Void then
-							l_tooltip.append ("teardown: ")
-							append_response (l_tooltip, {!TEST_INVOCATION_RESPONSE} #?  l_outcome.teardown_response)
-						end
-					end
-				else
-					l_tooltip.append ("execution failed...")
-				end
-			else
-				l_tooltip.append ("not tested yet")
-			end
 
 			token_writer.new_line
 			l_class := class_from_name (a_item.class_name, Void)
@@ -115,9 +111,11 @@ feature -- Factory
 			else
 				if a_item.is_outcome_available then
 					if a_item.last_outcome.is_fail then
-						create l_label.make_with_text ("failing")
+						create l_label
+						l_label.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 					elseif a_item.last_outcome.is_pass then
-						create l_label.make_with_text ("passing")
+						create l_label
+						l_label.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 					else
 						create l_label.make_with_text ("unresolved")
 					end
@@ -126,35 +124,20 @@ feature -- Factory
 				end
 			end
 			l_label.set_tooltip (l_tooltip)
-			a_row.set_item (2, l_label)
+			a_row.set_item (status_column, l_label)
+
+			if a_item.is_outcome_available then
+				create l_label.make_with_text (a_item.last_outcome.date.out)
+				l_label.align_text_right
+			else
+				create l_label
+			end
+			a_row.set_item (last_tested_column, l_label)
 		end
 
-	append_response (a_string: !STRING; a_response: !TEST_INVOCATION_RESPONSE) is
-			-- Append texual representation for `a_responce'.
-		local
-			l_exception: TEST_INVOCATION_EXCEPTION
-		do
-			if a_response.is_exceptional then
-				a_string.append ("exceptional%N{")
-				l_exception := a_response.exception
-				a_string.append (l_exception.class_name)
-				a_string.append ("}.")
-				a_string.append (l_exception.recipient_name)
-				a_string.append (" ")
-				a_string.append_integer (l_exception.code)
-				a_string.append (":")
-				a_string.append (l_exception.tag_name)
-				a_string.append ("%N%N")
-			else
-				a_string.append ("normal%N%N")
-			end
-			if not a_response.output.is_empty then
-				a_string.append ("output:%N")
-				a_string.append ("--------------------------------%N")
-				a_string.append (a_response.output)
-				a_string.append ("%N--------------------------------")
-				a_string.append ("%N%N")
-			end
-		end
+feature {NONE} -- Constants
+
+	status_column: INTEGER = 2
+	last_tested_column: INTEGER = 3
 
 end

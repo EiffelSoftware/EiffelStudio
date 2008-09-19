@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Objects that represent a tagable item associated with a grid row for {ES_TBT_GRID}. These rows
+		Objects that represent a tagable item associated with a grid row for {ES_TAGABLE_GRID}. These rows
 		represent the leaves in the underlayint {TAG_BASED_TREE}.
 	]"
 	author: ""
@@ -8,10 +8,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TBT_GRID_TAGABLE [G -> TAGABLE_I]
+	ES_TAGABLE_GRID_ITEM_DATA [G -> TAGABLE_I]
 
 inherit
-	ES_TBT_GRID_DATA [G]
+	ES_TAGABLE_GRID_DATA [G]
 
 create
 	make
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Basic functionality
 
-	populate_row (a_layout: ES_TBT_GRID_LAYOUT [G])
+	populate_row (a_layout: ES_TAGABLE_GRID_LAYOUT [G])
 			-- <Precursor>
 		do
 			a_layout.populate_item_row (row, item)

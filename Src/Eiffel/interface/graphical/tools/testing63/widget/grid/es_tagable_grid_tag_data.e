@@ -1,19 +1,19 @@
 indexing
 	description: "[
 		Objects that represent a tree node of {TAG_BASED_TREE} associated with a grid row for
-		{ES_TBT_GRID}.
+		{ES_TAGABLE_TREE_GRID}.
 		
 		Object redefines insertion and removal of child nodes and items from {TAG_BASED_TREE_NODE}. That
 		way the grid is kept synchronized with the underlaying tree.
 		
-		See {TAG_BASED_TREE_NODE} and {ES_TBT_GRID_NODE_CONTAINER} for more information.
+		See {TAG_BASED_TREE_NODE} and {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} for more information.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TBT_GRID_NODE [G -> TAGABLE_I]
+	ES_TAGABLE_GRID_TAG_DATA [G -> TAGABLE_I]
 
 inherit
 	TAG_BASED_TREE_NODE [G]
@@ -31,7 +31,7 @@ inherit
 			tree
 		end
 
-	ES_TBT_GRID_NODE_CONTAINER [G]
+	ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 		undefine
 			token,
 			row
@@ -40,7 +40,7 @@ inherit
 			propagate_item_change
 		end
 
-	ES_TBT_GRID_DATA [G]
+	ES_TAGABLE_GRID_DATA [G]
 
 create
 	make
@@ -69,12 +69,12 @@ feature {NONE} -- Initialize
 
 feature -- Access
 
-	parent: !ES_TBT_GRID_NODE_CONTAINER [G]
+	parent: !ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 			-- <Precursor>
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: !ES_TBT_GRID [G]
+	tree: !ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 
 feature {NONE} -- Access
@@ -93,7 +93,7 @@ feature {NONE} -- Access
 
 feature -- Basic functionality
 
-	populate_row (a_layout: ES_TBT_GRID_LAYOUT [G])
+	populate_row (a_layout: ES_TAGABLE_GRID_LAYOUT [G])
 			-- <Precursor>
 		do
 			a_layout.populate_node_row (row, Current)
@@ -103,14 +103,18 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
 	propagate_item_change (a_tag: !STRING_8; a_item: G)
 			-- <Precursor>
+		local
+			i: INTEGER
+			l_item: EV_GRID_ITEM
 		do
-			row.clear
+			l_item := tree.computed_grid_item (1, row.index)
 			if is_evaluated then
 				if a_tag.is_empty then
-					row_data_for_item (a_item).row.clear
+					i := row_data_for_item (a_item).row.index
+					l_item := tree.computed_grid_item (1, i)
 				end
 			end
-			Precursor {ES_TBT_GRID_NODE_CONTAINER} (a_tag, a_item)
+			Precursor {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} (a_tag, a_item)
 		end
 
 end

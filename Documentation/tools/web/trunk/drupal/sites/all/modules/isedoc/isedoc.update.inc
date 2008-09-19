@@ -3,27 +3,32 @@
 require_once ("isedoc.lib.inc");
 
 function isedoc_update_pages($op) {
-  $books = array();
-  $all_books = book_get_books();
-  switch ($op) {
-    case 'all':
-	foreach($all_books as $b) {
-		$books[] = $b['bid'];
-	}
-	break;
-    default:
-	$bn = strtolower($op);
-	foreach($all_books as $b) {
-		if (strtolower($b['title']) == $bn) {
-			$books[] = $b['bid'];
-		}
-	}
-	break;
+  if (user_access('admin isedoc')) {
+    $books = array();
+    $all_books = book_get_books();
+    switch ($op) {
+      case 'all':
+  	foreach($all_books as $b) {
+  		$books[] = $b['bid'];
+  	}
+  	break;
+      default:
+  	$bn = strtolower($op);
+  	foreach($all_books as $b) {
+  		if (strtolower($b['title']) == $bn) {
+  			$books[] = $b['bid'];
+  		}
+  	}
+  	break;
+    }
+    foreach($books as $bid){
+  	isedoc_update_pages_of_book($bid);
+    }
+    return "Update $op: completed.";
+  } else {
+    drupal_access_denied();
+    return "Update $op: access denied.";
   }
-  foreach($books as $bid){
-	isedoc_update_pages_of_book($bid);
-  }
-  return "Update $op";
 }
 
 
@@ -55,7 +60,7 @@ function isedoc_update_book_traverse(&$a_tree, $a_book_short_path) {
 					//drupal_set_message($node->title . ": New uuid=$l_uuid");
 					$node->field_uuid[0]['value'] = $l_uuid;;
 					$b_save = TRUE;
-					$b_revision = TRUE;
+					//$b_revision = TRUE;
 				}
 			}
 			if (module_exists('pathauto')) {

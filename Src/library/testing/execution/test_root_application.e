@@ -48,9 +48,6 @@ feature {NONE} -- Initialization
 						n := l_index.to_natural
 						if is_valid_index (n) then
 							run_test (n)
-							io.output.put_string ("ran tests ")
-							io.output.put_natural (n)
-							io.output.put_new_line
 						else
 							l_bad_argument := True
 						end
@@ -58,14 +55,11 @@ feature {NONE} -- Initialization
 						l_bad_argument := True
 					end
 					if l_bad_argument then
-						io.output.put_string (arguments.values.item_for_iteration)
-						io.output.put_string (" is not a valid test index")
 						die (1)
 					end
 					arguments.values.forth
 				end
 				--stream.put_character ('0')
-				io.output.put_string ("terminating normally...%N")
 				close_stream
 			end
 		rescue
@@ -175,26 +169,24 @@ feature {NONE} -- Execution
 			stream_initialized: stream.is_open_write
 			a_index_valid: is_valid_index (a_index)
 		do
-			io.output.put_string ("trying to run " + a_index.out + "...%N")
+			--io.output.put_string ("trying to run " + a_index.out + "...%N")
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index))
-			io.output.put_string ("done with " + a_index.out + "%N")
-			io.output.put_string ("stream: ")
-			print (stream)
-			io.output.new_line
+			--io.output.put_string ("done with " + a_index.out + "%N")
+			--io.output.new_line
 			if stream.extendible then
-				io.output.put_string ("stream IS extendible (open write: "); io.output.flush
-				io.output.put_boolean (stream.is_open_write)
-				io.output.put_boolean (stream.is_writable)
-				io.output.put_string ("%Nsending id%N");io.output.flush
-				--stream.put_character ('1')
-				io.output.put_string ("sending outcome%N"); io.output.flush
+				--io.output.put_string ("stream IS extendible (open write: "); io.output.flush
+				--io.output.put_boolean (stream.is_open_write)
+				--io.output.put_boolean (stream.is_writable)
+				--io.output.put_string ("%Nsending id%N");io.output.flush
+				stream.put_character ('1')
+				--io.output.put_string ("sending outcome%N"); io.output.flush
 				stream.independent_store (evaluator.last_outcome)
-				io.output.put_string ("done%N"); io.output.flush
+				--io.output.put_string ("done%N"); io.output.flush
 			else
-				io.output.put_string ("stream NOT extendible (open write: "); io.output.flush
-				io.output.put_boolean (stream.is_open_write)
-				io.output.put_boolean (stream.is_writable)
-				io.output.put_string ("%N")
+			--	io.output.put_string ("stream NOT extendible (open write: "); io.output.flush
+				--io.output.put_boolean (stream.is_open_write)
+				--io.output.put_boolean (stream.is_writable)
+				--io.output.put_string ("%N")
 				is_stream_invalid := True
 			end
 		end

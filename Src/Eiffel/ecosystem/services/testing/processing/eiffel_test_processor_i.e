@@ -154,7 +154,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- `a_test_suite': Test suite for which task will be processed.
 		require
 			usable: is_interface_usable
-			ready: is_ready (test_suite)
+			ready: is_ready (a_test_suite)
 			a_arg_valid: is_valid_argument (a_arg, a_test_suite)
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do

@@ -92,19 +92,19 @@ feature {NONE} -- Implementation
 					until
 						not l_receiver.is_open_read or a_status.results_complete or not a_status.is_receiving
 					loop
-						--l_receiver.read_stream (1)
-						--if not l_receiver.last_string.is_empty then
-							--if l_receiver.last_string.item (1) = '1' then
+						l_receiver.read_stream (1)
+						if not l_receiver.last_string.is_empty then
+							if l_receiver.last_string.item (1) = '1' then
 								(create {EXECUTION_ENVIRONMENT}).sleep (100000000)
 								if {l_outcome: !TEST_OUTCOME} l_receiver.retrieved then
 									a_status.add_result (l_outcome)
 								else
 									l_receiver.close
 								end
-							--else
-							--	a_status.stop_receiving
-							--end
-						--end
+							else
+								a_status.stop_receiving
+							end
+						end
 						i := i + 1
 					end
 					if not l_receiver.is_closed then

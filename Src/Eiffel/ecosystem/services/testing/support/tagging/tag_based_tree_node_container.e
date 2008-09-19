@@ -399,14 +399,14 @@ feature {NONE} -- Implementation
 			-- Fill `cached_items' with items from collection observed by `tree' tagged with `tag'.
 		require
 			usable: is_interface_usable
-			collection_usable: tree.observed_collection.is_interface_usable
+			collection_usable: tree.collection.is_interface_usable
 			evaluated: is_evaluated
 		local
 			l_collection: !ACTIVE_COLLECTION_I [G]
 			l_cursor: DS_LINEAR_CURSOR [G]
 		do
 			if item_count > 0 then
-				l_collection := tree.observed_collection
+				l_collection := tree.collection
 				l_cursor := l_collection.items.new_cursor
 				from
 					l_cursor.start

@@ -83,7 +83,7 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	observed_collection: !ACTIVE_COLLECTION_I [G]
+	collection: !ACTIVE_COLLECTION_I [G]
 			-- Collection for which tree is maintained
 		require
 			usable: is_interface_usable
@@ -119,13 +119,13 @@ feature -- Status report
 		ensure then
 			result_implies_collection_attached: Result implies internal_collection /= Void
 			result_implies_prefix_attached: Result implies internal_prefix /= Void
-			result_implies_connected: Result implies observed_collection.is_connected (Current)
+			result_implies_connected: Result implies collection.is_connected (Current)
 		end
 
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not is_connected or else observed_collection.is_interface_usable
+			Result := not is_connected or else collection.is_interface_usable
 		ensure then
 			not_connected_implies_true: not is_connected implies Result
 		end
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	connect (a_collection: like observed_collection; a_prefix: like tag_prefix) is
+	connect (a_collection: like collection; a_prefix: like tag_prefix) is
 			-- Build tree for collection and given tag.
 			--
 			-- `a_collection': Active collection containing items for which tree shall be built.
@@ -152,17 +152,20 @@ feature -- Status setting
 		do
 			internal_collection := a_collection
 			internal_prefix := a_prefix
-			observed_collection.connect_events (Current)
+			collection.connect_events (Current)
 			fill
+		ensure
+			connected: is_connected
+			collection_set: collection = a_collection
 		end
 
 	disconnect is
-			-- Clear
+			-- Disconnect from `collection' and clear tree
 		require
 			connected: is_connected
 		do
 			wipe_out
-			observed_collection.disconnect_events (Current)
+			collection.disconnect_events (Current)
 			internal_collection := Void
 			internal_prefix := Void
 		ensure
@@ -209,19 +212,19 @@ feature {NONE} -- Element change
 		require
 			empty: is_empty
 			connected: is_connected
-			collection_usable: observed_collection.is_interface_usable
+			collection_usable: collection.is_interface_usable
 		do
-			if observed_collection.are_items_available then
-				observed_collection.items.do_all (agent on_item_added (observed_collection, ?))
+			if collection.are_items_available then
+				collection.items.do_all (agent on_item_added (collection, ?))
 			end
 		end
 
 feature {NONE} -- Events
 
-	frozen on_item_added (a_collection: like observed_collection; a_item: !G)
+	frozen on_item_added (a_collection: like collection; a_item: !G)
 			-- <Precursor>
 		require else
-			a_collection_valid: a_collection = observed_collection
+			a_collection_valid: a_collection = collection
 		local
 			l_tags: !DS_HASH_SET [!STRING]
 		do
@@ -233,10 +236,10 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_item_removed (a_collection: like observed_collection; a_item: !G)
+	frozen on_item_removed (a_collection: like collection; a_item: !G)
 			-- <Precursor>
 		require else
-			a_collection_valid: a_collection = observed_collection
+			a_collection_valid: a_collection = collection
 		local
 			l_tags: !DS_HASH_SET [!STRING]
 		do
@@ -248,10 +251,10 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_item_changed (a_collection: like observed_collection; a_item: !G) is
+	frozen on_item_changed (a_collection: like collection; a_item: !G) is
 			-- <Precursor>
 		require else
-			a_collection_valid: a_collection = observed_collection
+			a_collection_valid: a_collection = collection
 		local
 			l_tags, l_unchanged_tags: !DS_HASH_SET [!STRING]
 			l_is_tagged: BOOLEAN
@@ -279,10 +282,10 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_items_reset (a_collection: like observed_collection)
+	frozen on_items_reset (a_collection: like collection)
 			-- <Precursor>
 		require else
-			a_collection_valid: a_collection = observed_collection
+			a_collection_valid: a_collection = collection
 		do
 			wipe_out
 		ensure then

@@ -17,15 +17,15 @@ inherit
 		end
 
 	EIFFEL_TEST_SUITE_OBSERVER
+		redefine
+			on_test_changed,
+			on_processor_launched
+		end
 
 	TAG_UTILITIES
 
 create {ES_TESTING_TOOL_63}
 	make
-
-feature
-
-	eval: TEST_ROOT_APPLICATION
 
 feature {NONE} -- Initialization
 
@@ -50,10 +50,10 @@ feature {NONE} -- Initialization: widgets
 			-- <Precursor>
 		do
 			build_view_bar (a_widget)
-
-			create tree_view.make (develop_window)
-
-			a_widget.extend (tree_view.widget)
+			create split_area
+			build_tree_view
+			build_notebook
+			a_widget.extend (split_area)
 		end
 
 	build_view_bar (a_widget: like create_widget) is
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization: widgets
 
 				-- Create and add `view_box' with label
 			create view_box
-			create l_label.make_with_text ("View")
+			create l_label.make_with_text (local_formatter.translation (l_view))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 			l_hbox.extend (view_box)
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization: widgets
 
 				-- Create and add `filter_box' with label
 			create filter_box
-			create l_label.make_with_text ("Filter")
+			create l_label.make_with_text (local_formatter.translation (l_filter))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 			l_hbox.extend (filter_box)
@@ -86,12 +86,36 @@ feature {NONE} -- Initialization: widgets
 			a_widget.disable_item_expand (l_hbox)
 		end
 
+	build_tree_view is
+			-- Create `tree_view' and add it to `split_area'.
+		do
+			create tree_view.make (develop_window)
+			split_area.set_first (tree_view.widget)
+			register_action (tree_view.item_selected_event, agent on_selection_change (?, True))
+			register_action (tree_view.item_deselected_event, agent on_selection_change (?, False))
+		end
+
+	build_notebook
+			-- Create `notebook' and add permament tabs.
+		do
+			create notebook
+			create outcome_tab.make (develop_window)
+			notebook.extend (outcome_tab.widget)
+			notebook.set_item_text (outcome_tab.widget, outcome_tab.title)
+			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon)
+			split_area.set_second (notebook)
+		end
+
 feature {NONE} -- Initialization: widget status
 
 	on_after_initialized
 			-- <Precursor>
+		local
+			l_service: EIFFEL_TEST_SUITE_S
 		do
 			Precursor
+			l_service := test_suite.service
+			l_service.connect_events (Current)
 			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT}.make (test_suite))
 			propagate_drop_actions (Void)
 
@@ -123,10 +147,6 @@ feature {NONE} -- Initialization: widget status
 			view_box.i_th (2).enable_select
 		end
 
-feature -- Access
-
-	tree_view: ES_TBT_GRID [EIFFEL_TEST_I]
-
 feature {NONE} -- Access
 
 	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
@@ -135,6 +155,12 @@ feature {NONE} -- Access
 			create Result
 		end
 
+	tree_view: ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
+			-- Tree view displaying tests
+
+	outcome_tab: !ES_TESTING_TOOL_OUTCOME_TAB
+			-- Tab showing details of a selected test
+
 feature {NONE} -- Access: widgets
 
 	view_box: !EV_COMBO_BOX
@@ -142,6 +168,12 @@ feature {NONE} -- Access: widgets
 
 	filter_box: !EV_COMBO_BOX
 			-- Combo box containing pattern for filtering tests
+
+	split_area: !EV_VERTICAL_SPLIT_AREA
+			-- Splitting area for grid and notebook
+
+	notebook: !EV_NOTEBOOK
+			-- Notebook for detailed information
 
 feature {NONE} -- Access: view
 
@@ -165,7 +197,7 @@ feature {NONE} -- Access: buttons
 feature {NONE} -- Status setting: view
 
 	on_return_view is
-			--
+			-- Called when the user enters a new view definition
 		local
 			l_orig_tag, l_tag: !STRING
 		do
@@ -203,7 +235,7 @@ feature {NONE} -- Status setting: view
 		end
 
 	on_select_view is
-			--
+			-- Called when a view new view is selected
 		local
 			l_tag: STRING
 		do
@@ -247,7 +279,7 @@ feature {NONE} -- Status setting: view
 		end
 
 	update_view is
-			--
+			-- Refresh `tree_view' according to current view definition.
 		local
 			l_tag: !STRING
 		do
@@ -290,33 +322,135 @@ feature {NONE} -- Action handlers
 
 	on_run_all is
 			-- Called when user selects "run all" item of `run_button'.
-		local
-			l_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
 		do
 			if test_suite.is_service_available then
-				l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
-				test_suite.service.run_all (l_type, False)
+				run_list (test_suite.service.tests)
 			end
 		end
 
 	on_run_failing is
 			-- Called when user selectes "run failing" item of `run_button'.
+		local
+			l_item: !EIFFEL_TEST_I
+			l_list: !DS_ARRAYED_LIST [!EIFFEL_TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
 		do
-
+			if test_suite.is_service_available then
+				create l_list.make (test_suite.service.tests.count)
+				l_cursor := test_suite.service.tests.new_cursor
+				from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_item := l_cursor.item
+					if l_item.is_outcome_available then
+						if l_item.last_outcome.is_fail or l_item.last_outcome.is_unresolved then
+							l_list.put_last (l_item)
+						end
+					end
+					l_cursor.forth
+				end
+				run_list (l_list)
+			end
 		end
 
 	on_run_filtered is
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
-
+			if test_suite.is_service_available then
+				--run_list ()
+			end
 		end
 
 	on_run_selected is
 			-- Called when user selects "run selected" item of `run_button'.
 		do
-
+			if test_suite.is_service_available then
+				run_list (tree_view.selected_items)
+			end
 		end
 
+	run_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I])
+			-- Try to run all tests in a given list through the background executor. If of some reason
+			-- the tests can not be executed, show an error message.
+		require
+			test_suite_available: test_suite.is_service_available
+		local
+			l_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
+			l_executor: EIFFEL_TEST_EXECUTOR_I
+			l_test_suite: EIFFEL_TEST_SUITE_S
+		do
+			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
+			l_test_suite := test_suite.service
+			if l_test_suite.processor_registrar.is_registered (l_type) then
+				l_executor := l_test_suite.executor (l_type)
+				if l_executor.is_ready (l_test_suite) then
+					if l_executor.is_valid_test_list (a_list, l_test_suite) then
+						l_test_suite.run_list (l_type, a_list, False)
+					else
+						-- TODO: message saying choosen tests can not be executed...
+					end
+				else
+					-- TODO: message saying executor is currently running tests
+				end
+			else
+				-- TODO: message saying executor is not available
+			end
+		end
+
+feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
+
+	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_test: !EIFFEL_TEST_I)
+			-- <Precursor>
+		do
+			if outcome_tab.is_active and then outcome_tab.test = a_test then
+				outcome_tab.show_test (a_test)
+			end
+		end
+
+	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		local
+			l_new_tab: ES_TESTING_TOOL_EXECUTOR_TAB
+			l_found: BOOLEAN
+		do
+			if {l_exec: EIFFEL_TEST_EXECUTOR_I} a_processor then
+				from
+					notebook.start
+				until
+					notebook.after or l_found
+				loop
+					if {l_tab: ES_TESTING_TOOL_EXECUTOR_TAB} notebook.item_for_iteration.data then
+						l_found := l_tab.executor = l_exec
+						notebook.item_tab (l_tab.widget).enable_select
+					end
+					notebook.forth
+				end
+				if not l_found then
+					create l_new_tab.make (l_exec, develop_window)
+					l_new_tab.widget.set_data (l_new_tab)
+					notebook.go_i_th (notebook.count)
+					notebook.put_right (l_new_tab.widget)
+					notebook.set_item_text (l_new_tab.widget, l_new_tab.title)
+					notebook.item_tab (l_new_tab.widget).set_pixmap (l_new_tab.icon)
+					notebook.item_tab (l_new_tab.widget).enable_select
+				end
+			end
+		end
+
+feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
+
+	on_selection_change (a_test: !EIFFEL_TEST_I; a_is_selected: BOOLEAN)
+			-- Called when item is selected or deselected.
+		do
+			if tree_view.selected_items.count = 1 and a_is_selected then
+				outcome_tab.show_test (a_test)
+				notebook.item_tab (outcome_tab.widget).enable_select
+			elseif outcome_tab.is_active then
+				outcome_tab.remove_test
+			end
+		end
 
 feature {NONE} -- Factory
 
@@ -345,10 +479,13 @@ feature {NONE} -- Factory
 			register_action (l_menu_item.select_actions, agent on_run_all)
 			l_menu.extend (l_menu_item)
 			create l_menu_item.make_with_text (local_formatter.translation (m_run_failing))
+			register_action (l_menu_item.select_actions, agent on_run_failing)
 			l_menu.extend (l_menu_item)
 			create l_menu_item.make_with_text (local_formatter.translation (m_run_filtered))
+			register_action (l_menu_item.select_actions, agent on_run_filtered)
 			l_menu.extend (l_menu_item)
 			create l_menu_item.make_with_text (local_formatter.translation (m_run_selected))
+			register_action (l_menu_item.select_actions, agent on_run_selected)
 			l_menu.extend (l_menu_item)
 			run_button.set_menu (l_menu)
 
@@ -369,14 +506,18 @@ feature {NONE} -- Factory
 feature {NONE} -- Internationalization
 
 	f_run_button: STRING = "Run tests in background"
+	f_stop_button: STRING = "Stop all execution"
+
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"
 	m_run_filtered: STRING = "Run filtered"
 	m_run_selected: STRING = "Run selected"
 
-	f_stop_button: STRING = "Stop all execution"
+	l_view: STRING = "View"
+	l_filter: STRING = "Filter"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
+	details_tab_valid: notebook.has (outcome_tab.widget)
 
 end

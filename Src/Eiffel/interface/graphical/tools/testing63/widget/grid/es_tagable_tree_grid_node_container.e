@@ -1,18 +1,18 @@
 indexing
 	description: "[
-		Objects that support insertion and removal of grid rows in a {ES_TBT_GRID}, based on the changes
+		Objects that support insertion and removal of grid rows in a {ES_TAGABLE_TREE_GRID}, based on the changes
 		of an underlaying {TAG_BASED_TREE}.
 		
 		Insertion and removal of child nodes and items in {TAG_BASED_TREE_NODE_CONTAINER} are redefined to
 		keep grid synchronized.
 		
-		See {ES_TBT_GRID} and {TAG_BASED_TREE} for more information.
+		See {ES_TAGABLE_TREE_GRID} and {TAG_BASED_TREE} for more information.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ES_TBT_GRID_NODE_CONTAINER [G -> TAGABLE_I]
+	ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G -> TAGABLE_I]
 
 inherit
 	TAG_BASED_TREE_NODE_CONTAINER [G]
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	parent: !ES_TBT_GRID_NODE_CONTAINER [G]
+	parent: !ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 			-- <Precursor>
 		do
 		end
@@ -42,7 +42,7 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: !ES_TBT_GRID [G]
+	tree: !ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 		deferred
 		end
@@ -80,7 +80,7 @@ feature {NONE} -- Access
 
 feature -- Query
 
-	child_for_token (a_token: !STRING): !ES_TBT_GRID_NODE [G]
+	child_for_token (a_token: !STRING): !ES_TAGABLE_GRID_TAG_DATA [G]
 			-- <Precursor>
 		do
 			Result := cached_children.item (a_token)
@@ -88,8 +88,8 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	row_data_for_item (a_item: !G): !ES_TBT_GRID_TAGABLE [G]
-			-- {ES_TBT_GRID_TAGABLE} instance for item
+	row_data_for_item (a_item: !G): !ES_TAGABLE_GRID_ITEM_DATA [G]
+			-- {ES_TAGABLE_GRID_ITEM_DATA} instance for item
 		require
 			usable: is_interface_usable
 			evaluated: is_evaluated
@@ -121,13 +121,13 @@ feature {NONE} -- Element change
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_new: ES_TBT_GRID_NODE [G]
+			l_new: ES_TAGABLE_GRID_TAG_DATA [G]
 			l_row: !EV_GRID_ROW
 		do
 			from
 				i := first_child_index
 			until
-				i = last_child_index or else ({l_item: ES_TBT_GRID_NODE [G]} tree.grid.row (i).data and then
+				i = last_child_index or else ({l_item: ES_TAGABLE_GRID_TAG_DATA [G]} tree.grid.row (i).data and then
 					l_item.token > a_token)
 			loop
 				i := i + tree.grid.row (i).subrow_count_recursive + 1
@@ -148,12 +148,12 @@ feature {NONE} -- Element change
 		local
 			i: INTEGER
 			l_row: !EV_GRID_ROW
-			l_new: ES_TBT_GRID_TAGABLE [G]
+			l_new: ES_TAGABLE_GRID_ITEM_DATA [G]
 		do
 			from
 				i := first_item_index
 			until
-				i = last_item_index or else ({l_data: ES_TBT_GRID_TAGABLE [G]} tree.grid.row (i).data and then
+				i = last_item_index or else ({l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data and then
 					l_data.item.name > a_item.name)
 			loop
 				i := i + tree.grid.row (i).subrow_count_recursive + 1

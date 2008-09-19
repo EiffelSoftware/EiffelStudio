@@ -1,7 +1,7 @@
 indexing
 	description: "[
-		Objects defining the layout and content of a {ES_TBT_GRID}. Since this applies to a generic
-		{TAGABLE_I}, an effective implementation must be provided for concrete tagable items.
+		Objects defining the layout and content of a {ES_TAGABLE_GRID}. Since this applies to a generic
+		{TAGABLE_I}, an descending implementation must be provided for concrete tagable items.
 		
 		For tags representing classes or feature clickable items are created. Other special tags such as
 		dates or times are shown in a readable format.
@@ -14,7 +14,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TBT_GRID_LAYOUT [G -> TAGABLE_I]
+	ES_TAGABLE_GRID_LAYOUT [G -> TAGABLE_I]
 
 inherit
 
@@ -22,31 +22,72 @@ inherit
 
 	EB_CONSTANTS
 
-feature {NONE} -- Access
+feature -- Access
 
 	project: !E_PROJECT
 			-- Project used to find classes and features
 		require
 			available: is_project_available
 		do
+			Result ?= internal_project
 		ensure
 			project_usable: Result.initialized and Result.workbench.universe_defined and
 			                Result.system_defined and then Result.universe.target /= Void
 		end
+
+feature {NONE} -- Access
+
+	internal_project: ?like project
+			-- Internal storage for `project'
 
 feature -- Status report
 
 	is_project_available: BOOLEAN
 			-- Is `project' available and properly initialized?
 		do
+			Result := internal_project /= Void
 		end
 
-	column_count: NATURAL
+	column_count: INTEGER
 			-- Number of columns supported by `Current'
 		do
 			Result := 1
 		ensure
 			result_positive: Result > 0
+		end
+
+	auto_size_column: INTEGER
+			-- Index of column with variable size
+			--
+			-- Note: Can be zero to indicate that no column should have auto resize property.
+		do
+			Result := name_column
+		ensure
+			result_not_negative: Result >= 0
+			result_small_enough: Result <= column_count
+		end
+
+	column_width (a_index: INTEGER): INTEGER
+			-- Width of column at given index
+			--
+			-- `a_index': Index of column for which width should be returned.
+		require
+			a_index_positive: a_index > 0
+			a_index_small_enough: a_index <= column_count
+			a_index_not_auto_size: a_index /= auto_size_column
+		do
+		ensure
+			result_not_negative: Result >= 0
+		end
+
+feature -- Status setting
+
+	set_project (a_project: like internal_project)
+			-- Set project to be used to generate grid items
+		do
+			internal_project := a_project
+		ensure
+			project_set: internal_project = a_project
 		end
 
 feature -- Query
@@ -60,7 +101,7 @@ feature -- Query
 				i := 1
 				Result := True
 			until
-				i > column_count.as_integer_32 or not Result
+				i > column_count or not Result
 			loop
 				Result := a_row.item (i) /= Void
 				i := i + 1
@@ -91,15 +132,14 @@ feature -- Basic functionality
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- Populate header with items
 		require
-			valid_item_count: a_header.count.as_natural_32 = column_count
+			valid_item_count: a_header.count = column_count
 		do
-			--a_header.i_th (1).set_text ("Tags")
 		end
 
 	populate_node_row (a_row: !EV_GRID_ROW; a_node: !TAG_BASED_TREE_NODE [G]) is
 			-- Populate row with tree node information
 		require
-			valid_item_count: a_row.count.as_natural_32 = column_count
+			valid_item_count: a_row.count = column_count
 		do
 			a_row.set_item (1, new_token_item (a_node))
 			fill_with_empty_items (a_row, 2)
@@ -110,7 +150,7 @@ feature -- Basic functionality
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !G)
 			-- Populate row with item information
 		require
-			valid_item_count: a_row.count.as_natural_32 = column_count
+			valid_item_count: a_row.count = column_count
 			a_item_usable: a_item.is_interface_usable
 		do
 			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_item.name))
@@ -119,12 +159,12 @@ feature -- Basic functionality
 			items_attached: has_attached_items (a_row)
 		end
 
-	populate_untagged_row (a_row: !EV_GRID_ROW)
+	populate_text_row (a_row: !EV_GRID_ROW; a_text: !STRING)
 			-- Populate untagged row
 		require
-			valid_item_count: a_row.count.as_natural_32 = column_count
+			valid_item_count: a_row.count = column_count
 		do
-			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("<untagged>"))
+			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_text))
 			fill_with_empty_items (a_row, 2)
 		ensure
 			items_attached: has_attached_items (a_row)
@@ -151,7 +191,8 @@ feature {NONE} -- Factory
 			--
 			-- `a_node': Node for which token item should be created.
 		local
-			l_token, l_name: !STRING
+			l_token: !STRING
+			l_name: ?STRING
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_pixmap: EV_PIXMAP
@@ -236,7 +277,7 @@ feature {NONE} -- Implementation
 			from
 				i := a_start
 			until
-				i > column_count.as_integer_32
+				i > column_count
 			loop
 				a_row.set_item (i, new_empty_item)
 				i := i + 1
@@ -264,5 +305,9 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Constants
+
+	name_column: INTEGER = 1
 
 end

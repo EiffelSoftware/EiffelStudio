@@ -51,6 +51,10 @@ feature {NONE} -- Initialization
 			auto_recycle (l_support)
 
 			a_cell.extend (grid)
+
+			create timer
+			timer.actions.extend (agent on_timer_elapse)
+			on_timer_elapse
 		end
 
 	initialize_layout
@@ -96,6 +100,12 @@ feature {NONE} -- Access
 	internal_layout: ?like layout
 			-- Internal storage for factory
 
+	timer: !EV_TIMEOUT
+			-- Timer for redrawing items in `grid'
+
+	timer_interval: INTEGER = 10000
+			-- Interval used for timer
+
 feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Query
 
 	computed_grid_item (a_col_index, a_row_index: INTEGER): EV_GRID_ITEM is
@@ -123,7 +133,7 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Query
 			propagate_selection_events := True
 		end
 
-feature {NONE} -- Status setting
+feature {NONE} -- Status report
 
 	propagate_selection_events: BOOLEAN
 			-- If selection changes, should events be propagated to clients?
@@ -168,6 +178,36 @@ feature {NONE} -- Implementation
 		do
 			l_selected ?= grid.selected_rows
 			l_selected.do_all (agent highlight_row)
+		end
+
+	redraw_items
+			-- Redraw all items in `grid'
+		local
+			i: INTEGER
+			l_list: ARRAYED_LIST [INTEGER]
+			l_item: EV_GRID_ITEM
+		do
+			if grid.is_displayed then
+				from
+					l_list := grid.visible_row_indexes
+					i := 1
+				until
+					i > l_list.count
+				loop
+					l_item := computed_grid_item (1, l_list.i_th (i))
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Events
+
+	on_timer_elapse
+			-- Called when timer reached timeout
+		do
+			redraw_items
+			timer.set_interval (0)
+			timer.set_interval (timer_interval)
 		end
 
 	on_row_select (a_row: !EV_GRID_ROW)

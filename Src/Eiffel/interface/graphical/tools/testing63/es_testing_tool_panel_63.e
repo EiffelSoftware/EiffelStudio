@@ -22,7 +22,15 @@ inherit
 			on_processor_launched
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
+
 	TAG_UTILITIES
+		export
+			{NONE} all
+		end
 
 create {ES_TESTING_TOOL_63}
 	make
@@ -145,6 +153,14 @@ feature {NONE} -- Initialization: widget status
 
 			update_view_box
 			view_box.i_th (2).enable_select
+		end
+
+feature -- Access: help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "702E5BFA-6EB6-48AA-B7DE-C7CB3E9D0471"
 		end
 
 feature {NONE} -- Access

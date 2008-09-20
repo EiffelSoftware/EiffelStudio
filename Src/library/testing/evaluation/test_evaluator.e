@@ -15,6 +15,13 @@ class
 
 inherit
 	EXCEPTIONS
+		rename
+			class_name as exception_class_name
+		export
+			{NONE} all
+		end
+
+	INTERNAL
 		export
 			{NONE} all
 		end
@@ -29,7 +36,7 @@ feature {NONE} -- Access
 	buffer: TEST_OUTPUT_BUFFER
 			-- Buffer for recording output
 		once
-			create Result.make (1024)
+			create Result.make (2048)
 		end
 
 feature -- Status report
@@ -105,6 +112,7 @@ feature {NONE} -- Implementation
 			l_old: PLAIN_TEXT_FILE
 			l_excpt: !EXCEPTION
 			l_type, l_rec, l_tag, l_trace: !STRING
+			l_dtype: INTEGER
 			l_texcpt: !TEST_INVOCATION_EXCEPTION
 		do
 			if not l_retry then
@@ -122,32 +130,29 @@ feature {NONE} -- Implementation
 		rescue
 			l_retry := True
 			l_excpt ?= exception_manager.last_exception
-			io.error.put_string ("%NEXCEPTION")
-			if l_excpt.type_name = Void then
+			if l_excpt.type_name = Void or else l_excpt.type_name.is_empty then
 				create l_type.make_empty
+				l_dtype := -1
 			else
 				create l_type.make_from_string (l_excpt.type_name)
+				l_dtype := dynamic_type_from_string (l_type)
 			end
-			io.error.put_string ("%Ntype: " + l_type)
 			if l_excpt.recipient_name = Void then
 				create l_rec.make_empty
 			else
 				create l_rec.make_from_string (l_excpt.recipient_name)
 			end
-			io.error.put_string ("%Nrec: " + l_rec)
 			if l_excpt.message = Void then
 				create l_tag.make_empty
 			else
 				create l_tag.make_from_string (l_excpt.message)
 			end
-			io.error.put_string ("%Ntag: " + l_tag)
 			if l_excpt.exception_trace = Void then
 				create l_trace.make_empty
 			else
 				create l_trace.make_from_string (l_excpt.exception_trace)
 			end
-			io.error.put_string ("%Ntrace: " + l_trace)
-			create l_texcpt.make (l_excpt.code, l_rec, l_type, l_tag, l_trace)
+			create l_texcpt.make (l_excpt.code, l_rec, l_type, l_dtype, l_tag, l_trace)
 			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
 			retry
 		end

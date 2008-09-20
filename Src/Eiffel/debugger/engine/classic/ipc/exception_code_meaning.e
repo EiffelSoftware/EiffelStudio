@@ -18,6 +18,16 @@ feature -- Access
 			-- Meaning of the Exception code `a_code'.
 		do
 			Result := "Exception : "
+			Result.append (description_from_code (a_code))
+		end
+
+	description_from_code (a_code: INTEGER): STRING
+			-- Name associated with given exception code.
+			--
+			-- `a_code': Exception code.
+			-- `Result': If `a_code' is valid this is a short name describing exception. Empty otherwise.
+		do
+			create Result.make_empty
 			if valid_code (a_code) then
 				inspect
 					a_code

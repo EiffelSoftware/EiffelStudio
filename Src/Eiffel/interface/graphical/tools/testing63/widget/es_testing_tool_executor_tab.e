@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create grid.make (develop_window)
-			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT}.make (test_suite))
+			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT}.make (test_suite))
 			grid.connect (executor)
 			a_widget.extend (grid.widget)
 		end

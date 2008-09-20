@@ -14,6 +14,8 @@ inherit
 
 	ES_EIFFEL_TEST_COMMANDER_I
 
+	EXCEPTION_CODE_MEANING
+
 create
 	make
 
@@ -21,11 +23,25 @@ feature {NONE} -- Initialization
 
 	build_widget_interface (a_widget: like widget)
 			-- <Precursor>
+		local
+			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			create grid
 			grid.enable_tree
+
 			grid.enable_multiple_row_selection
 			grid.hide_tree_node_connectors
+			grid.set_column_count_to (2)
+			grid.column (1).set_width (250)
+			grid.enable_last_column_use_all_width
+
+				-- pick and drop support
+			create l_support.make_with_grid (grid)
+			l_support.synchronize_color_or_font_change_with_editor
+			l_support.enable_grid_item_pnd_support
+			l_support.enable_ctrl_right_click_to_open_new_window
+			l_support.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
+
 			a_widget.extend (grid)
 		end
 
@@ -63,6 +79,18 @@ feature {NONE} -- Access
 	internal_test: ?like test
 			-- Internal storage for `test'
 
+	token_writer: EB_EDITOR_TOKEN_GENERATOR
+			-- Token writer used to create clickable items
+		once
+			create Result.make
+		end
+
+	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
+			-- Access to a test suite service {EIFFEL_TEST_SUITE_S} consumer
+		once
+			create Result
+		end
+
 feature -- Status report
 
 	is_active: BOOLEAN
@@ -87,12 +115,7 @@ feature -- Status setting
 			if is_active and a_test /= test then
 				remove_test
 			end
-			if not is_active then
-				internal_test := a_test
-				grid.set_column_count_to (2)
-				grid.column (1).set_width (250)
-				grid.enable_auto_size_best_fit_column (2)
-			end
+			internal_test := a_test
 			from
 				l_cursor := test.outcomes.new_cursor
 				l_cursor.start
@@ -114,7 +137,7 @@ feature -- Status setting
 		do
 			outcome_count := 0
 			internal_test := Void
-			grid.wipe_out
+			grid.remove_and_clear_all_rows
 		end
 
 feature {NONE} -- Implementation
@@ -181,15 +204,15 @@ feature {NONE} -- Implementation
 				l_text.append ("exceptional")
 				add_exception_details (l_row, a_invocation.exception)
 				add_text (l_row, "trace", a_invocation.exception.trace)
-				if a_expanded and l_row.is_expandable then
-					l_row.expand
-				end
 			else
 				l_text.append ("normal")
 			end
 			l_label.set_text (l_text)
 			if not a_invocation.output.is_empty then
 				add_text (l_row, "output", a_invocation.output)
+			end
+			if a_expanded and l_row.is_expandable then
+				l_row.expand
 			end
 		end
 
@@ -203,18 +226,24 @@ feature {NONE} -- Implementation
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM
 			l_row: EV_GRID_ROW
+			l_font: EV_FONT
 		do
 			l_pos := a_parent.index + a_parent.subrow_count_recursive + 1
 			grid.insert_new_row_parented (l_pos, a_parent)
 			l_row := grid.row (l_pos)
 			create l_label.make_with_text (a_name)
+			l_label.pointer_double_press_actions.extend (agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
 			l_row.set_item (1, l_label)
-			create l_label.make_with_text ("(double click to see)")
+			create l_label
+			create l_font
+			l_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+			l_label.set_font (l_font)
+			l_label.set_text ("double click to view")
 			l_label.pointer_double_press_actions.extend (agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
 			l_row.set_item (2, l_label)
 		end
 
-	add_exception_details (a_parent: EV_GRID_ROW; a_exception: TEST_INVOCATION_EXCEPTION) is
+	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !TEST_INVOCATION_EXCEPTION) is
 			-- Add rows with exception details
 			--
 			-- `a_parent': Parent row for all new rows.
@@ -228,13 +257,11 @@ feature {NONE} -- Implementation
 				-- Code
 			create l_label.make_with_text ("code")
 			grid.row (l_pos).set_item (1, l_label)
-			create l_label.make_with_text (a_exception.code.out)
-			grid.row (l_pos).set_item (2, l_label)
+			grid.row (l_pos).set_item (2, code_item (a_exception.code))
 				-- Class
 			create l_label.make_with_text ("recipient")
 			grid.row (l_pos + 1).set_item (1, l_label)
-			create l_label.make_with_text (a_exception.class_name + a_exception.recipient_name)
-			grid.row (l_pos + 1).set_item (2, l_label)
+			grid.row (l_pos + 1).set_item (2, recipient_item (a_exception))
 				-- tag
 			create l_label.make_with_text ("tag")
 			grid.row (l_pos + 2).set_item (1, l_label)
@@ -242,16 +269,82 @@ feature {NONE} -- Implementation
 			grid.row (l_pos + 2).set_item (2, l_label)
 		end
 
-	show_text (a_text: !STRING; i1, i2, i3: INTEGER; r1, r2, r3: REAL_64; i4, i5: INTEGER)
+	show_text (a_text: !STRING; i1, i2, i3: INTEGER; r1, r2, r3: REAL_64; i4, i5: INTEGER) is
 			-- Display text in a separate window.
 		local
-			l_dialog: ES_INFORMATION_PROMPT
+			l_dialog: ES_BASIC_EDITOR_DIALOG
 		do
-			create l_dialog.make_standard (a_text)
+			create l_dialog.make (stock_pixmaps.tool_output_icon_buffer, "Testing output")
+			l_dialog.is_modal := False
+			l_dialog.set_text ({!STRING_32} #? a_text.to_string_32)
 			l_dialog.show (develop_window.window)
+--			create l_dialog.make_standard (a_text)
+--			l_dialog.show (develop_window.window)
 		end
 
 feature {NONE} -- Factory
+
+	code_item (a_code: INTEGER): !EV_GRID_ITEM
+			-- Item containing exception code and corresonding name
+		local
+			l_label: EV_GRID_LABEL_ITEM
+			l_text: STRING
+		do
+			create l_text.make (25)
+			l_text.append_integer (a_code)
+			l_text.append (" (")
+			l_text.append (description_from_code (a_code))
+			l_text.append_character (')')
+			create l_label.make_with_text (l_text)
+			Result := l_label
+		end
+
+	recipient_item (a_exception: !TEST_INVOCATION_EXCEPTION): !EV_GRID_ITEM
+			-- Item containing a clickable exception recipient if available
+			--
+			-- `a_exception': Exception containing recipient.
+		local
+			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
+			l_system: SYSTEM_I
+			l_universe: UNIVERSE_I
+			l_cluster: CONF_GROUP
+			l_class: CLASS_I
+			l_cclass: CLASS_C
+			l_feat: E_FEATURE
+		do
+			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
+				l_universe := test_suite.service.eiffel_project.universe
+				l_system := test_suite.service.eiffel_project.system.system
+				if not l_system.root_creators.is_empty then
+					l_cluster := l_system.root_creators.first.cluster
+					l_universe := l_system.universe
+					l_class := l_universe.class_named (a_exception.class_name, l_cluster)
+					if l_class /= Void then
+						if l_class.is_compiled then
+							l_cclass := l_class.compiled_class
+							l_feat := l_cclass.feature_with_name (a_exception.recipient_name)
+						end
+					end
+				end
+			end
+			token_writer.new_line
+			token_writer.add_char ('{')
+			if l_class /= Void then
+				token_writer.add_class (l_class)
+			else
+				token_writer.add_string (a_exception.class_name)
+			end
+			token_writer.add_char ('}')
+			token_writer.add_char ('.')
+			if l_feat /= Void then
+				token_writer.add_feature (l_feat, l_feat.name)
+			else
+				token_writer.add_string (a_exception.recipient_name)
+			end
+			create l_eitem
+			l_eitem.set_text_with_tokens (token_writer.last_line.content)
+			Result := l_eitem
+		end
 
 	create_widget: !EV_VERTICAL_BOX
 			-- <Precursor>

@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_code: like code; a_recipient_name: like recipient_name; a_class_name: like class_name;
-	      a_tag_name: like tag_name; a_trace: like trace) is
+	      a_type: like dynamic_type; a_tag_name: like tag_name; a_trace: like trace) is
 			-- Initialize `Current'.
 			--
 			-- `a_code': Code defining type of exception (as in {EXCEP_CONST})
@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			code := a_code
 			recipient_name := a_recipient_name
 			class_name := a_class_name
+			dynamic_type := a_type
 			tag_name := a_tag_name
 			trace := a_trace
 			parse_trace
@@ -50,6 +51,9 @@ feature -- Access
 	class_name: !STRING
 			-- Name of the class in which the exception occurred
 
+	dynamic_type: INTEGER
+			-- Dynamic type of `class_name', -1 if type was not available
+
 	tag_name: !STRING
 			-- Tag describing the exception
 
@@ -61,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	erl_class_imp: STRING is "TEST_INTERPRETER_"
+	erl_class_imp: STRING is "TEST_EVALUATOR"
 	function: STRING is "FUNCTION"
 	predicate: STRING is "PREDICATE"
 	procedure: STRING is "PROCEDURE"

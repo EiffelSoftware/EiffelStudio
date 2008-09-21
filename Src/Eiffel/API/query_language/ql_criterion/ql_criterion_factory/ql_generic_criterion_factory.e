@@ -29,6 +29,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_has_constraint_criterion, c_has_constraint)
 			agent_table.put (agent new_has_creation_constraint_criterion, c_has_creation_constraint)
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
+			agent_table.put (agent new_is_self_initializing_criterion, c_is_self_initializing)
 			agent_table.put (agent new_is_expanded_criterion, c_is_expanded)
 			agent_table.put (agent new_is_reference_criterion, c_is_reference)
 			agent_table.put (agent new_is_visible_criterion, c_is_visible)
@@ -43,6 +44,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_has_constraint, query_language_names.ql_cri_has_constraint)
 			name_table.put (c_has_creation_constraint, query_language_names.ql_cri_has_creation_constraint)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_is_self_initializing, query_language_names.ql_cri_is_self_initializing)
 			name_table.put (c_is_expanded, query_language_names.ql_cri_is_expanded)
 			name_table.put (c_is_reference, query_language_names.ql_cri_is_reference)
 			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
@@ -105,6 +107,15 @@ feature{NONE} -- New criterion
 		ensure
 			result_attached: Result /= Void
 		end
+
+	new_is_self_initializing_criterion: QL_SIMPLE_GENERIC_CRITERION
+			-- New criterion to test if a generic is self-initializing
+		do
+			create Result.make (agent is_self_initializing_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 	new_is_expanded_criterion: QL_SIMPLE_GENERIC_CRITERION is
 			-- New criterion to test if a generic is expanded
@@ -173,6 +184,7 @@ feature -- Criterion index
 	c_contain_ast: INTEGER is 11
 	c_value_of_metric_is: INTEGER is 12
 	c_is_satisfied_by: INTEGER is 13
+	c_is_self_initializing: INTEGER = 14
 
 feature{NONE} -- Implementation
 
@@ -235,6 +247,16 @@ feature{NONE} -- Implementation
 			Result := a_item.has_creation_constraint
 		end
 
+	is_self_initializing_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' is self-initializing
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_self_initializing
+		end
+
 	is_expanded_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' is expanded
 			-- Require compiled: True
@@ -256,7 +278,7 @@ feature{NONE} -- Implementation
 		end
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

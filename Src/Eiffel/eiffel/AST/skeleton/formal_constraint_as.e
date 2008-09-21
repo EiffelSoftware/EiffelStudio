@@ -336,6 +336,9 @@ feature -- Output
 			l_type_set: TYPE_SET_A
 			l_feature: E_FEATURE
 		do
+			if is_self_initializing then
+				a_text_formatter.process_symbol_text (ti_question)
+			end
 			if is_reference then
 				a_text_formatter.process_keyword_text (ti_reference_keyword, Void)
 				a_text_formatter.add_space

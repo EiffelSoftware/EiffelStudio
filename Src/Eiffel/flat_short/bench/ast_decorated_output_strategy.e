@@ -3118,6 +3118,9 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 				not_processing_locals: not processing_locals
 			end
+			if l_as.is_self_initializing then
+				text_formatter_decorator.process_symbol_text (ti_question)
+			end
 			if l_as.is_reference then
 				text_formatter_decorator.process_keyword_text (ti_reference_keyword, Void)
 				text_formatter_decorator.put_space

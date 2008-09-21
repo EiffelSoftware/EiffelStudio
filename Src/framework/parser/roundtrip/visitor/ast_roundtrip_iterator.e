@@ -1004,6 +1004,7 @@ feature
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		do
+			safe_process (l_as.is_self_initializing_symbol (match_list))
 			safe_process (l_as.formal)
 			safe_process (l_as.constrain_symbol (match_list))
 			safe_process (l_as.constraints)

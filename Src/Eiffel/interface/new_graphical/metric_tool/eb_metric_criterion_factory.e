@@ -357,6 +357,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_has_constraint), query_language_names.ql_cri_has_constraint)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_has_creation_constraint), query_language_names.ql_cri_has_creation_constraint)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_compiled), query_language_names.ql_cri_is_compiled)
+			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_self_initializing), query_language_names.ql_cri_is_self_initializing)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_expanded), query_language_names.ql_cri_is_expanded)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_reference), query_language_names.ql_cri_is_reference)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_visible), query_language_names.ql_cri_is_visible)
@@ -557,7 +558,7 @@ invariant
 	criterion_table_attached: criterion_table /= Void
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

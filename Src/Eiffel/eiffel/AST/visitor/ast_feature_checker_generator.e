@@ -1683,17 +1683,46 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
-							if last_access_writable and then l_result_type.is_attached and then not l_result_type.is_expanded then
-									-- Take care only for non-self-initializing attributes.
+							if last_access_writable then
 								if l_is_in_assignment or else l_is_target_of_creation_instruction then
-										-- Mark that the attribute is initialized.
-									record_initialized_attribute (l_feature.feature_id)
-								elseif not is_checking_postcondition and then not context.variables.is_attribute_set (l_feature.feature_id) then
-										-- Attribute is not properly initialized.
-									error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
-									if not is_checking_precondition then
-											-- Mark that the attribute is initialized to avoid repeated errors.
-										context.variables.set_attribute (l_feature.feature_id)
+									if l_result_type.is_attached then
+											-- Mark that the attribute is initialized.
+										record_initialized_attribute (l_feature.feature_id)
+									end
+								else
+									if
+										l_result_type.is_attached and then
+										not context.variables.is_attribute_set (l_feature.feature_id)
+									then
+										if
+											not l_result_type.is_self_initializing (context.current_class) and then
+											context.current_class.lace_class.is_void_safe
+										then
+												-- Attribute is not properly initialized.
+											error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
+										end
+										if not is_checking_precondition then
+												-- Mark that the attribute is initialized to avoid repeated errors.
+											context.variables.set_attribute (l_feature.feature_id)
+										end
+									end
+									if
+										l_needs_byte_node and then
+										(l_result_type.is_attached and then not l_result_type.is_expanded and then l_result_type.is_self_initializing (context.current_class) or else
+										(l_result_type.is_like and then not l_result_type.is_like_current and then not l_result_type.is_like_argument
+										or else l_result_type.is_formal and then l_result_type.is_self_initializing (context.current_class))) and then
+										{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
+											(system.default_create_rout_id).access (void_type, True)
+									then
+										generate_creation (l_access, c, l_result_type, Void, a_name.start_location)
+										if {a: ASSIGN_B} last_byte_node then
+											a.set_is_initialization
+											if {b: ATTRIBUTE_B} l_access then
+												b.set_is_initializing (a)
+											end
+										end
+											-- Update `last_byte_node' that is overwritten by `process_creation'.
+										last_byte_node := l_access
 									end
 								end
 							end
@@ -2148,6 +2177,7 @@ feature -- Implementation
 			l_vrle3: VRLE3
 			l_has_error: BOOLEAN
 			l_veen2a: VEEN2A
+			l_result: RESULT_B
 		do
 				-- Error if in procedure or invariant
 			l_has_error := is_checking_invariant
@@ -2173,42 +2203,60 @@ feature -- Implementation
 				else
 						-- Update the type stack
 					last_access_writable := True
-					if l_feat_type.is_attached then
-						if not l_feat_type.is_expanded then
-								-- Take care only for non-self-initializing locals.
-							if is_in_assignment or else is_target_of_creation_instruction then
-									-- Mark that Result is initialized.
-								record_initialized_result
-								last_reinitialized_local := result_name_id
-							elseif not is_checking_postcondition and then
-								not context.is_result_attached and then
-								context.current_class.lace_class.is_void_safe
-							then
-									-- Result is not properly initialized.
-								error_handler.insert_error (create {VEVI}.make_result (context, l_as))
-									-- Mark that Result is initialized to avoid repeated errors.
-								context.add_result_instruction_scope
-							end
+					if is_byte_node_enabled then
+						create l_result
+						last_byte_node := l_result
+					end
+					if is_in_assignment or else is_target_of_creation_instruction then
+						if l_feat_type.is_attached then
+								-- Mark that Result is initialized.
+							record_initialized_result
 						end
-					elseif is_in_assignment or else is_target_of_creation_instruction then
 							-- "Result" might change its attachment status.
 							-- It is recorded for future checks because
 							-- it might be still safe to use it in the expression
 							-- before actual reattachment takes place.
 						last_reinitialized_local := result_name_id
 					elseif context.is_result_attached then
-							-- "Result" is of a detachable type, but it's safe
-							-- to use it as an attached one.
-						if context.current_class.lace_class.is_void_safe then
-							l_feat_type := l_feat_type.as_attached
-						else
-							l_feat_type := l_feat_type.as_implicitly_attached
+						if not l_feat_type.is_attached then
+								-- "Result" is of a detachable type, but it's safe
+								-- to use it as an attached one.
+							if context.current_class.lace_class.is_void_safe then
+								l_feat_type := l_feat_type.as_attached
+							else
+								l_feat_type := l_feat_type.as_implicitly_attached
+							end
+						end
+					else
+						if l_feat_type.is_attached then
+							if
+								not l_feat_type.is_self_initializing (context.current_class) and then
+								context.current_class.lace_class.is_void_safe
+							then
+									-- Result is not properly initialized.
+								error_handler.insert_error (create {VEVI}.make_result (context, l_as))
+							end
+								-- Mark that Result is initialized to avoid repeated errors.
+							context.add_result_instruction_scope
+						end
+						if
+							l_result /= Void and then
+							(l_feat_type.is_attached and then not l_feat_type.is_expanded and then l_feat_type.is_self_initializing (context.current_class) or else
+							(l_feat_type.is_like and then not l_feat_type.is_like_current and then not l_feat_type.is_like_argument
+							or else l_feat_type.is_formal and then l_feat_type.is_self_initializing (context.current_class))) and then
+							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
+								(system.default_create_rout_id).access (void_type, True)
+						then
+							generate_creation (l_result, c, l_feat_type, Void, l_as.start_location)
+							if {a: ASSIGN_B} last_byte_node then
+								a.set_is_initialization
+								l_result.set_is_initializing (a)
+							end
+								-- Update `last_byte_node' that is overwritten by `process_creation'.
+							last_byte_node := l_result
 						end
 					end
 					last_type := l_feat_type
-					if is_byte_node_enabled then
-						create {RESULT_B} last_byte_node
-					end
 				end
 			end
 		end
@@ -2484,35 +2532,52 @@ feature -- Implementation
 						l_veen2b.set_identifier (l_as.feature_name.name)
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
-					elseif l_type.is_attached then
-						if not l_type.is_expanded  then
-								-- Take care only for non-self-initializing locals.
-							if is_in_assignment or else is_target_of_creation_instruction then
-									-- Mark that the local is initialized.
-								record_initialized_local (l_local_info.position)
-								last_reinitialized_local := l_as.feature_name.name_id
-							elseif not context.is_local_attached (l_as.feature_name.name_id) and then
-								context.current_class.lace_class.is_void_safe
-							then
-									-- Local is not properly initialized.
-								error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
-									-- Mark that the local is initialized to avoid repeated errors.
-								context.add_local_instruction_scope (l_as.feature_name.name_id)
-							end
-						end
 					elseif is_in_assignment or else is_target_of_creation_instruction then
+							-- Mark that the local is initialized.
+						if l_type.is_attached then
+							record_initialized_local (l_local_info.position)
+						end
 							-- The local might change its attachment status.
 							-- It is recorded for future checks because
 							-- it might be still safe to use the local in the expression
 							-- before actual reattachment takes place.
 						last_reinitialized_local := l_as.feature_name.name_id
 					elseif context.is_local_attached (l_as.feature_name.name_id) then
-							-- Local is of a detachable type, but it's safe
-							-- to use it as an attached one.
-						if context.current_class.lace_class.is_void_safe then
-							l_type := l_type.as_attached
-						else
-							l_type := l_type.as_implicitly_attached
+						if not l_type.is_attached then
+								-- Local is of a detachable type, but it's safe
+								-- to use it as an attached one.
+							if context.current_class.lace_class.is_void_safe then
+								l_type := l_type.as_attached
+							else
+								l_type := l_type.as_implicitly_attached
+							end
+						end
+					else
+						if l_type.is_attached then
+							if not l_type.is_self_initializing (context.current_class) and then
+								context.current_class.lace_class.is_void_safe
+							then
+									-- Local is not properly initialized.
+								error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
+							end
+								-- Mark that the local is initialized.
+							context.add_local_instruction_scope (l_as.feature_name.name_id)
+						end
+						if
+							l_needs_byte_node and then
+							(l_type.is_attached and then not l_type.is_expanded and then l_type.is_self_initializing (context.current_class) or else
+							(l_type.is_like and then not l_type.is_like_current and then not l_type.is_like_argument
+							or else l_type.is_formal and then l_type.is_self_initializing (context.current_class))) and then
+							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
+								(system.default_create_rout_id).access (void_type, True)
+						then
+							generate_creation (l_local, c, l_type, Void, l_as.start_location)
+							if {a: ASSIGN_B} last_byte_node then
+								a.set_is_initialization
+								l_local.set_is_initializing (a)
+							end
+								-- Update `last_byte_node' that is overwritten by `process_creation'.
+							last_byte_node := l_local
 						end
 					end
 					if not is_inherited then
@@ -2955,14 +3020,47 @@ feature -- Implementation
 
 				l_feat_type := current_feature.type
 				if
-					l_feat_type.is_attached and then
-					not l_feat_type.is_expanded and then
+					not l_feat_type.is_void and then
 					not context.is_result_attached and then
-					context.current_class.lace_class.is_void_safe and then
 					not current_feature.is_deferred
 				then
-						-- Result is not properly initialized.
-					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
+					if l_feat_type.is_attached and then
+						not l_feat_type.is_self_initializing (context.current_class) and then
+						context.current_class.lace_class.is_void_safe
+					then
+							-- Result is not properly initialized.
+						error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
+					end
+					if
+						l_needs_byte_node and then
+						not current_feature.is_external and then
+						(l_feat_type.is_attached and then not l_feat_type.is_expanded and then l_feat_type.is_self_initializing (context.current_class) or else
+						(l_feat_type.is_like or else l_feat_type.is_formal and then l_feat_type.is_self_initializing (context.current_class))) and then
+						{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
+							(system.default_create_rout_id).access (void_type, True)
+					then
+						generate_creation (create {RESULT_B}, c, l_feat_type, Void, l_as.start_location)
+						if {a: ASSIGN_B} last_byte_node then
+							a.set_is_initialization
+							if {b: STD_BYTE_CODE} l_byte_code then
+								if b.compound = Void then
+									create l_list.make (1)
+								else
+									create l_list.make (b.compound.count + 1)
+									l_list.start
+									b.compound.do_all (
+										agent (l: BYTE_LIST [BYTE_NODE]; x: BYTE_NODE)
+											do
+												l.extend (x)
+											end
+										(l_list, ?)
+									)
+								end
+								l_list.extend (a)
+								b.set_compound (l_list)
+							end
+						end
+					end
 				end
 				if is_creation_procedure then
 						-- Verify that attributes are properly initialized.
@@ -2987,11 +3085,13 @@ feature -- Implementation
 						-- Set access id level analysis to `is_checking_postcondition': locals
 						-- are not taken into account
 					set_is_checking_postcondition (True)
+					context.add_result_instruction_scope
 					l_as.postcondition.process (Current)
 					if l_needs_byte_node and then error_level = l_error_level then
 						l_assertion_byte_code ?= last_byte_node
 						l_byte_code.set_postcondition (l_assertion_byte_code)
 					end
+					context.remove_result_scope
 						-- Reset the level
 					set_is_checking_postcondition (False)
 				end
@@ -5668,15 +5768,78 @@ feature -- Implementation
 			end
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	generate_creation (
+			l_access: ACCESS_B;
+			l_call_access: CALL_ACCESS_B;
+			l_creation_type: TYPE_A;
+			l_explicit_type: TYPE_A;
+			l: LOCATION_AS)
+		require
+			l_access_attached: l_access /= Void
+			l_call_access_attached: l_call_access /= Void
+			l_creation_type_attached: l_creation_type /= Void
 		local
-			l_access: ACCESS_B
-			l_call_access: CALL_ACCESS_B
+			t: TYPE_A
 			l_creation_expr: CREATION_EXPR_B
 			l_assign: ASSIGN_B
 			l_attribute: ATTRIBUTE_B
-			l_target_type, l_explicit_type, l_creation_type: TYPE_A
 			l_create_info: CREATE_INFO
+		do
+			t := l_creation_type
+				-- Compute creation information
+			if t.is_expanded then
+					-- Even if there is an anchor, once a type is expanded it
+					-- cannot change.
+				if t.is_like then
+					t := t.conformance_type
+				end
+				create {CREATE_TYPE} l_create_info.make (t)
+			elseif l_access.is_attribute and then l_explicit_type = Void then
+					-- When we create an attribute without a type specification,
+					-- then we need to create an instance matching the possible redeclared
+					-- type of the attribute in descendant classes.
+				l_attribute ?= l_access
+				create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
+					l_attribute.routine_id)
+			else
+				l_create_info := t.create_info
+			end
+
+			if system.il_generation and {l_info: CREATE_FEAT} l_create_info then
+					-- We need to record into current class that there is a creation
+					-- using a feature, i.e. an anchor. This fixes eweasel test#dotnet100.
+				context.current_class.extend_type_set (l_info.routine_id)
+			end
+
+			create l_creation_expr
+			l_creation_expr.set_call (l_call_access)
+			l_creation_expr.set_info (l_create_info)
+			if l_call_access /= Void then
+				l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
+			end
+
+			check t /= Void end
+			l_creation_expr.set_type (t)
+			l_creation_expr.set_creation_instruction (True)
+			l_creation_expr.set_line_number (l.line)
+
+			create l_assign
+			l_assign.set_target (l_access)
+			l_assign.set_source (l_creation_expr)
+			l_assign.set_line_number (l.line)
+			check
+				l_assign.is_creation_instruction
+			end
+
+			last_byte_node := l_assign
+		end
+
+	process_creation_as (l_as: CREATION_AS) is
+		local
+			l_access: ACCESS_B
+			l_assign: ASSIGN_B
+			l_call_access: CALL_ACCESS_B
+			l_target_type, l_explicit_type, l_creation_type: TYPE_A
 			l_vgcc3: VGCC3
 			l_vgcc31: VGCC31
 			l_vgcc7: VGCC7
@@ -5698,6 +5861,9 @@ feature -- Implementation
 			last_access_writable := False
 			last_reinitialized_local := 0
 			l_as.target.process (Current)
+			if l_needs_byte_node then
+				l_access ?= last_byte_node
+			end
 				-- Record initialized variable to commit it after the call is processed.
 			l_initialized_variable := last_initialized_variable
 			l_reinitialized_local := last_reinitialized_local
@@ -5709,10 +5875,6 @@ feature -- Implementation
 			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
 			l_target_type := last_type
 			if l_target_type /= Void then
-				if l_needs_byte_node then
-					l_access ?= last_byte_node
-				end
-
 				if not last_access_writable then
 					create l_vgcc7
 					context.init_error (l_vgcc7)
@@ -5786,51 +5948,11 @@ feature -- Implementation
 
 							if l_needs_byte_node then
 								l_call_access ?= last_byte_node
-
-									-- Compute creation information
-								if l_creation_type.is_expanded then
-										-- Even if there is an anchor, once a type is expanded it
-										-- cannot change.
-									create {CREATE_TYPE} l_create_info.make (l_creation_type)
-								elseif l_access.is_attribute and l_explicit_type = Void then
-										-- When we create an attribute without a type specification,
-										-- then we need to create an instance matching the possible redeclared
-										-- type of the attribute in descendant classes.
-									l_attribute ?= l_access
-									create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
-										l_attribute.routine_id)
-								else
-									l_create_info := l_creation_type.create_info
-								end
-
-								if system.il_generation and {l_info: CREATE_FEAT} l_create_info then
-										-- We need to record into current class that there is a creation
-										-- using a feature, i.e. an anchor. This fixes eweasel test#dotnet100.
-									context.current_class.extend_type_set (l_info.routine_id)
-								end
-
-								create l_creation_expr
-								l_creation_expr.set_call (l_call_access)
-								l_creation_expr.set_info (l_create_info)
-								if l_call_access /= Void then
-									l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
-								end
-
-								check l_creation_type /= Void end
-								l_creation_expr.set_type (l_creation_type)
-								l_creation_expr.set_creation_instruction (True)
-								l_creation_expr.set_line_number (l_as.target.start_location.line)
-
-								create l_assign
-								l_assign.set_target (l_access)
-								l_assign.set_source (l_creation_expr)
-								l_assign.set_line_number (l_as.target.start_location.line)
+								generate_creation (l_access, l_call_access, l_creation_type, l_explicit_type,
+									l_as.target.start_location)
+									-- Set line information for instruction.
+								l_assign ?= last_byte_node
 								l_assign.set_line_pragma (l_as.line_pragma)
-								check
-									l_assign.is_creation_instruction
-								end
-
-								last_byte_node := l_assign
 							end
 						end
 					end

@@ -18,15 +18,16 @@ feature
 feature -- Status report
 
 	is_local: BOOLEAN is False
-		-- Not really a local.
+			-- Not really a local.
 
 feature
 
 	fill_from (l: LOCAL_B) is
 		do
-			parent := l.parent;
-			position := l.position;
+			parent := l.parent
+			position := l.position
 			type := l.type
+			initialization_byte_code := l.initialization_byte_code
 		end
 
 	enlarged: INLINED_LOCAL_B is
@@ -75,7 +76,7 @@ feature -- Register and code generation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

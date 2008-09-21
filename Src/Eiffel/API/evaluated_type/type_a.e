@@ -69,7 +69,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
-			-- Generate mode dependent sequence of type id's 
+			-- Generate mode dependent sequence of type id's
 			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 		require
@@ -81,7 +81,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
-			-- Generate mode dependent sequence of type id's 
+			-- Generate mode dependent sequence of type id's
 			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 			-- 'idx_cnt' holds the index in the array for
@@ -1174,24 +1174,34 @@ feature -- Access
 			-- exported `class_c'.
 		require
 			has_expanded
-		local
-			a_class: CLASS_C
-			creators: HASH_TABLE [EXPORT_I, STRING]
-			l_export: EXPORT_I
 		do
 			if is_expanded then
-				a_class := associated_class
-				if a_class.is_external then
+				Result := is_self_initializing (class_c)
+			else
+				Result := True
+			end
+		end
+
+	is_self_initializing (c: CLASS_C): BOOLEAN
+			-- Is type self-initializing in `c'?
+		local
+			a: CLASS_C
+			creators: HASH_TABLE [EXPORT_I, STRING]
+		do
+			if is_attached then
+				a := associated_class
+				if a.is_deferred then
+						-- Deferred type is not self-initializing.
+				elseif a.is_external then
 					Result := True
 				else
-					creators := a_class.creators
+					creators := a.creators
 					if creators = Void then
 						Result := True
 					else
-						creators.search (a_class.default_create_feature.feature_name)
+						creators.search (a.default_create_feature.feature_name)
 						if creators.found then
-							l_export := creators.found_item
-							Result := l_export.valid_for (class_c)
+							Result := creators.found_item.valid_for (c)
 						end
 					end
 				end
@@ -1366,7 +1376,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

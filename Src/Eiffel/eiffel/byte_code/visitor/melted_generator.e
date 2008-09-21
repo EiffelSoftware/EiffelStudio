@@ -84,6 +84,10 @@ feature -- Access
 	is_in_creation_call: BOOLEAN
 			-- Is current call a creation instruction?
 
+feature {NONE} -- Status report
+
+	is_initialization: BOOLEAN
+			-- Is initialization code being processed?
 
 feature -- Routine visitor
 
@@ -175,35 +179,72 @@ feature {NONE} -- Visitors
 			l_target_type: TYPE_A
 			l_target_node: ACCESS_B
 			l_hector_b: HECTOR_B
+			l_mark_count: NATURAL
 		do
-			generate_melted_debugger_hook
-				-- Generate expression byte code	
 			l_target_node := a_node.target
 			l_target_type := Context.real_type_fixed (l_target_node.type)
-			if a_node.is_creation_instruction then
-					-- Avoid object cloning.
-				a_node.source.process (Current)
-				if a_node.source.is_hector then
-					l_hector_b ?= a_node.source
-					check l_hector_b_not_void: l_hector_b /= Void end
-					make_protected_byte_code (l_hector_b, 0)
+				-- Avoid generating initialization code when it is not required.
+			if not a_node.is_initialization or else not l_target_type.is_expanded then
+				generate_melted_debugger_hook
+					-- Check whether initialization code has to be executed.
+				if
+					a_node.is_initialization and then
+					not l_target_type.is_expanded
+				then
+					l_mark_count := 1
+					l_target_node.process (Current)
+					ba.append (bc_void)
+					ba.append (bc_eq)
+					ba.append (bc_jmp_f)
+					ba.mark_forward
+					if
+						not l_target_type.is_attached and then
+						{c: CREATION_EXPR_B} a_node.source
+					then
+							-- Check if the type is attached at run-time.
+						l_mark_count := 2
+						ba.append (bc_is_attached)
+						c.info.make_byte_code (ba)
+						ba.append (bc_jmp_f)
+						ba.mark_forward
+					end
 				end
-			else
-					-- Clone source object depending on its type and type of target.
-				make_expression_byte_code_for_type (a_node.source, l_target_type)
+					-- Generate expression byte code
+				if a_node.is_creation_instruction then
+						-- Avoid object cloning.
+					a_node.source.process (Current)
+					if a_node.source.is_hector then
+						l_hector_b ?= a_node.source
+						check l_hector_b_not_void: l_hector_b /= Void end
+						make_protected_byte_code (l_hector_b, 0)
+					end
+				else
+						-- Clone source object depending on its type and type of target.
+					make_expression_byte_code_for_type (a_node.source, l_target_type)
+				end
+					-- Generate assignment header depending of the type
+					-- of the target (local, attribute or result).
+				if l_target_type.is_bit then
+					ba.append (l_target_node.bit_assign_code)
+				elseif l_target_type.is_true_expanded then
+						-- Target is expanded: copy with possible exception
+					ba.append (l_target_node.expanded_assign_code)
+				else
+						-- Target is basic or reference: simple attachment
+					ba.append (l_target_node.assign_code)
+				end
+				melted_assignment_generator.generate_assignment (ba, l_target_node)
+					-- Write marks if required.
+				from
+				until
+					l_mark_count = 0
+				loop
+					ba.write_forward
+					l_mark_count := l_mark_count - 1
+				variant
+					l_mark_count.as_integer_32
+				end
 			end
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
-			if l_target_type.is_bit then
-				ba.append (l_target_node.bit_assign_code)
-			elseif l_target_type.is_true_expanded then
-					-- Target is expanded: copy with possible exception
-				ba.append (l_target_node.expanded_assign_code)
-			else
-					-- Target is basic or reference: simple attachment
-				ba.append (l_target_node.assign_code)
-			end
-			melted_assignment_generator.generate_assignment (ba, l_target_node)
 		end
 
 	process_attribute_b (a_node: ATTRIBUTE_B) is
@@ -212,7 +253,16 @@ feature {NONE} -- Visitors
 			l_type: TYPE_A
 			l_cl_type: CL_TYPE_A
 			l_rout_info: ROUT_INFO
+			i: ASSIGN_B
 		do
+			if not is_initialization then
+				i := a_node.initialization_byte_code
+				if i /= Void then
+					is_initialization := True
+					process_assign_b (i)
+					is_initialization := False
+				end
+			end
 			l_type := context.real_type (a_node.type)
 			l_cl_type ?= a_node.context_type
 			if l_cl_type.is_basic and not l_cl_type.is_bit then
@@ -1142,7 +1192,17 @@ feature {NONE} -- Visitors
 
 	process_local_b (a_node: LOCAL_B) is
 			-- Process `a_node'.
+		local
+			i: ASSIGN_B
 		do
+			if not is_initialization then
+				i := a_node.initialization_byte_code
+				if i /= Void then
+					is_initialization := True
+					process_assign_b (i)
+					is_initialization := False
+				end
+			end
 			ba.append (bc_local)
 			ba.append_short_integer (a_node.position)
 		end
@@ -1396,7 +1456,17 @@ feature {NONE} -- Visitors
 
 	process_result_b (a_node: RESULT_B) is
 			-- Process `a_node'.
+		local
+			i: ASSIGN_B
 		do
+			if not is_initialization then
+				i := a_node.initialization_byte_code
+				if i /= Void then
+					is_initialization := True
+					process_assign_b (i)
+					is_initialization := False
+				end
+			end
 			ba.append (bc_result)
 		end
 

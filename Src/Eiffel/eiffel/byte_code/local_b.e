@@ -16,7 +16,7 @@ inherit
 			print_register,
 			assign_code, expanded_assign_code, reverse_code,
 			bit_assign_code, assigns_to, array_descriptor,
-			pre_inlined_code,
+			pre_inlined_code, size,
 			is_fast_as_local, is_predefined
 		end
 
@@ -44,10 +44,10 @@ feature
 		end
 
 	is_predefined: BOOLEAN is True
-			-- Is Current a predefined entity ?
+			-- Is Current a predefined entity?
 
 	is_local: BOOLEAN is
-			-- Is Current an access to a local variable ?
+			-- Is Current an access to a local variable?
 		do
 			Result := True
 		end
@@ -73,11 +73,23 @@ feature
 	enlarged: LOCAL_B is
 			-- Enlarge current node
 		local
-			loc_bl: LOCAL_BL
+			i: like initialization_byte_code
+			j: like initialization_byte_code
 		do
-			create loc_bl
-			loc_bl.fill_from (Current)
-			Result := loc_bl
+			if initialization_byte_code /= Void then
+					-- Enlarge initialization byte node that keeps
+					-- the current node as well.
+				i := initialization_byte_code
+				initialization_byte_code := Void
+				j := i.enlarged
+				initialization_byte_code := i
+			end
+			if j /= Void and then {l: LOCAL_BL} j.target then
+				Result := l
+				Result.set_is_initializing (j)
+			else
+				create {LOCAL_BL} Result.make (Current)
+			end
 		end
 
 	register_name: STRING is
@@ -94,10 +106,18 @@ feature
 			buffer.put_string (register_name)
 		end
 
+feature {BYTE_NODE_VISITOR, LOCAL_B} -- Status report
+
+	initialization_byte_code: ASSIGN_B
+			-- Code to initialize a local before use (if required)
+
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true
+	is_fast_as_local: BOOLEAN
 			-- Is expression calculation as fast as loading a local?
+		do
+			Result := initialization_byte_code = Void
+		end
 
 feature -- Byte code generation
 
@@ -139,6 +159,15 @@ feature -- Array optimization
 
 feature -- Inlining
 
+	size: INTEGER
+		do
+			if initialization_byte_code /= Void then
+					-- Inlining will not be done if the feature
+					-- has a creation instruction
+				Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+			end
+		end
+
 	pre_inlined_code: INLINED_LOCAL_B is
 		do
 			create Result
@@ -157,8 +186,15 @@ feature -- Setting
 			position_set: position = i
 		end
 
+	set_is_initializing (b: ASSIGN_B)
+			-- Mark that the local may need to be initialized if it is not initialized yet
+			-- using the given code `b'.
+		do
+			initialization_byte_code := b
+		end
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

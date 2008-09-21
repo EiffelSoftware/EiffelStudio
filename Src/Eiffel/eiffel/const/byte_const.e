@@ -204,11 +204,14 @@ feature -- Access
 	Bc_floor:			CHARACTER is '%/154/';
 	Bc_ceil:			CHARACTER is '%/155/';
 
-		-- Unused opcode
 	Bc_catcall:			CHARACTER is '%/156/';
 	Bc_start_catcall: 	CHARACTER is '%/157/';
 	Bc_end_catcall:		CHARACTER is '%/158/';
-	Bc_notused_159:		CHARACTER is '%/159/';
+
+		-- Type test
+	Bc_is_attached:		CHARACTER is '%/159/';
+
+		-- Unused opcode
 	Bc_notused_160:		CHARACTER is '%/160/';
 	Bc_notused_161:		CHARACTER is '%/161/';
 	Bc_notused_162:		CHARACTER is '%/162/';

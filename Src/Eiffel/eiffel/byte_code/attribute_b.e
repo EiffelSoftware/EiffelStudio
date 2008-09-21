@@ -17,7 +17,7 @@ inherit
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code,
+			assigns_to, pre_inlined_code, size,
 			need_target
 		end
 
@@ -94,14 +94,43 @@ feature
 			-- new enlarged tree node.
 		local
 			attr_bl: ATTRIBUTE_BL
+			i: like initialization_byte_code
+			j: like initialization_byte_code
 		do
-			if context.final_mode then
-				create attr_bl
-			else
-				create {ATTRIBUTE_BW} attr_bl
+			if initialization_byte_code /= Void then
+					-- Enlarge initialization byte node that keeps
+					-- the current node as well.
+				i := initialization_byte_code
+				initialization_byte_code := Void
+				j := i.enlarged
+				initialization_byte_code := i
 			end
-			attr_bl.fill_from (Current)
-			Result := attr_bl
+			if j /= Void and then {a: ATTRIBUTE_BL} j.target then
+				Result := a
+				Result.set_is_initializing (j)
+			else
+				if context.final_mode then
+					create attr_bl
+				else
+					create {ATTRIBUTE_BW} attr_bl
+				end
+				attr_bl.fill_from (Current)
+				Result := attr_bl
+			end
+		end
+
+feature {BYTE_NODE_VISITOR} -- Access
+
+	initialization_byte_code: ASSIGN_B
+			-- Code to initialize attribute before use (if required)
+
+feature -- Modification
+
+	set_is_initializing (b: ASSIGN_B)
+			-- Mark that the attribute may need to be initialized if it is not initialized yet
+			-- using the given code `b'.
+		do
+			initialization_byte_code := b
 		end
 
 feature -- Byte code generation
@@ -154,6 +183,15 @@ feature -- Array optimization
 
 feature -- Inlining
 
+	size: INTEGER
+		do
+			if initialization_byte_code /= Void then
+					-- Inlining will not be done if the feature
+					-- has a creation instruction
+				Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+			end
+		end
+
 	pre_inlined_code: ATTRIBUTE_B is
 		local
 			inlined_attr_b: INLINED_ATTR_B
@@ -170,7 +208,7 @@ feature -- Inlining
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

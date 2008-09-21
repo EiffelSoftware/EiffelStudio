@@ -65,6 +65,18 @@ feature
 			create Result.make (Current)
 		end;
 
+feature -- Status report
+
+	is_initialization: BOOLEAN
+			-- Is instruction used to initialize uninitialized variable?
+
+feature -- Setting
+
+	set_is_initialization
+		do
+			is_initialization := True
+		end
+
 feature -- Array optimization
 
 	assigns_to (i: INTEGER): BOOLEAN is

@@ -1675,6 +1675,27 @@ rt_private void interpret(int flag, int where)
 		break;
 	
 	/*
+	 * Object test to an object test local.
+	 */
+	case BC_IS_ATTACHED:
+#ifdef DEBUG
+		dprintf(2)("BC_IS_ATTACHED\n");
+#endif
+		type = get_creation_type ();
+		last = iget();
+		last->type = SK_BOOL;
+
+		if (RTAT(type)) {
+				/* Put True on the stack. */
+			last->it_char = EIF_TRUE;
+		}
+		else {
+				/* Put True on the stack. */
+			last->it_char = EIF_FALSE;
+		}
+		break;
+	
+	/*
 	 * Clone of a reference
 	 */
 	case BC_CLONE:

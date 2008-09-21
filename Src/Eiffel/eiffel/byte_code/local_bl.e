@@ -1,7 +1,7 @@
 indexing
+	description: "Enlarged access to a local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged access to a local
 
 class LOCAL_BL
 
@@ -13,6 +13,27 @@ inherit
 			analyze, generate, propagate,
 			used, parent, set_parent
 		end;
+
+create {LOCAL_B}
+	make
+
+feature {NONE} -- Creation
+
+	make (l: LOCAL_B)
+			-- Make node from local `l'.
+		require
+			l_attached: l /= Void
+		local
+			i: like initialization_byte_code
+		do
+			multi_constraint_static := l.multi_constraint_static
+			position := l.position
+			type := l.type
+			i := l.initialization_byte_code
+			if i /= Void then
+				initialization_byte_code := i.enlarged
+			end
+		end
 
 feature
 
@@ -46,27 +67,38 @@ feature
 			end;
 		end;
 
-	fill_from (l: LOCAL_B) is
-			-- Fill in node from local `l'
-		do
-			multi_constraint_static := l.multi_constraint_static
-			position := l.position;
-			type := l.type;
-		end;
-
 	analyze is
 			-- Mark local as used
+		local
+			i: like initialization_byte_code
 		do
-			context.mark_local_used (position);
-			if c_type.is_pointer then
-				context.set_local_index (register_name, Current);
-			end;
-		end;
+			i := initialization_byte_code
+			if i /= Void then
+					-- Initialization byte node includes this node.
+				initialization_byte_code := Void
+				i.analyze
+				initialization_byte_code := i
+			else
+				context.mark_local_used (position)
+				if c_type.is_pointer then
+					context.set_local_index (register_name, Current)
+				end
+			end
+		end
 
-	generate is
-			-- Do nothing
+	generate
+			-- Generate local initialization if required.
+		local
+			b: like initialization_byte_code
 		do
-		end;
+			if initialization_byte_code /= Void then
+					-- Avoid recursion
+				b := initialization_byte_code
+				initialization_byte_code := Void
+				b.generate
+				initialization_byte_code := b
+			end
+		end
 
 	free_register is
 			-- Do nothing
@@ -74,7 +106,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

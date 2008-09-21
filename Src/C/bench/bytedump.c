@@ -205,7 +205,7 @@ static  char    *names [] = {
 "BC_CATCALL" ,
 "BC_START_CATCALL" ,
 "BC_END_CATCALL" ,
-"BC_NOTUSED_159" ,
+"BC_IS_ATTACHED" ,
 "BC_NOTUSED_160" ,
 "BC_NOTUSED_161" ,
 "BC_NOTUSED_162" ,
@@ -763,6 +763,11 @@ static  void    print_instructions (void)
 				/* Object test */
 				/* local index */
 				fprintf (ofp,"%d ", (int) get_int16(&ip));
+				/* Static type of target */
+				get_creation_type();
+				break;
+			case  BC_IS_ATTACHED :
+				/* Test if a type is attached */
 				/* Static type of target */
 				get_creation_type();
 				break;

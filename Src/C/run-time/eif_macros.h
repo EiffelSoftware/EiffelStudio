@@ -275,6 +275,10 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTOE(x,y,z,v)		{ if (RTRA((x),(y))) { RTXA ((y), z); v = EIF_TRUE; } else { v = EIF_FALSE; } }
 
 
+/* Macros used for variable initialization:
+ * RTAT(x)  true if type 'x' is attached
+ */
+#define RTAT(x) (0)
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses

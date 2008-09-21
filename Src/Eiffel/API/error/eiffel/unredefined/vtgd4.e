@@ -1,5 +1,5 @@
 indexing
-	description: "Error for the formal generic part of a class."
+	description: "Error for the actual generic that is not self-initializing while the formal generic is."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -16,58 +16,60 @@ inherit
 		end
 
 create
-	default_create
+	make
+
+feature {NONE}
+
+	make (t: GEN_TYPE_A; p: INTEGER; f: FEATURE_I; c: CLASS_C)
+			-- Create an error that in feature `f' of class `c'
+			-- the actual generic `p' in `t' is not self-initializing while the formal generic is.
+		require
+			t_attached: t /= Void
+			p_valid: 0 < p and p <= t.generics.count
+			f_attached: f /= Void
+			c_attached: c /= Void
+		do
+			set_class (c)
+			set_feature (f)
+			position := p
+			actual_type := t
+		ensure
+			class_c_set: class_c = c
+			e_feature_set: e_feature /= Void and then e_feature.associated_feature_i = f
+			position_set: position = p
+			actual_type_set: actual_type = t
+		end
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 4
+	subcode: INTEGER_32 = 4
 
-	classes_with_same_feature: LIST [CLASS_C]
-			-- List of classes with same feature.
-			-- This is used to provide the user with a specific list of classes which contain the same feature.
+feature {NONE} -- Details
+
+	actual_type: GEN_TYPE_A
+			-- Actual type that causes the error
+
+	position: INTEGER
+			-- Position of the generic parameter
 
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
-			-- Build specific explanation explain for current error
-			-- in `a_text_formatter'.
-		local
-			l_output: STRING_8
+			-- <Precursor>
 		do
-			l_output := "The feature `" + feature_name + "' occurs in the following set of classes:%N   "
-			a_text_formatter.add (l_output)
-			classes_with_same_feature.do_all (agent (a_text_formatter2: TEXT_FORMATTER; a_first: CLASS_C; a_item: CLASS_C)
-				do
-					if a_item /= a_first then
-						a_text_formatter2.add (", ")
-					end
-					a_item.append_name (a_text_formatter2)
-				end (a_text_formatter, classes_with_same_feature.first, ?))
+			a_text_formatter.add_string ("Type: ")
+			actual_type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add_string ("Generic parameter position: ")
+			a_text_formatter.add_int (position)
+			a_text_formatter.add_new_line
+			a_text_formatter.add_string ("Actual generic: ")
+			actual_type.generics [position].append_to (a_text_formatter)
 			a_text_formatter.add_new_line
 		end
 
-feature {COMPILER_EXPORTER} -- Setting
-
-	set_feature_name (a_feature_name: STRING_8)
-			-- Set feature_name to `a_feature_name'
-		do
-			feature_name := a_feature_name
-		ensure
-			set: feature_name = a_feature_name
-		end
-
-	set_classes_with_same_feature (a_list: LIST [CLASS_C])
-			-- Set classes_with_same_feature to `a_list'
-		require
-			a_list_not_void: a_list /= Void
-		do
-			classes_with_same_feature := a_list
-		ensure
-			is_set: classes_with_same_feature = a_list
-		end
-
 indexing
-	copyright: "Copyright (c) 1984-2006, Eiffel Software"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

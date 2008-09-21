@@ -145,6 +145,7 @@ feature -- Criterion names
 	ql_cri_has_constraint: STRING is "has_constraint"
 	ql_cri_has_creation_constraint: STRING is "has_creation_constraint"
 	ql_cri_is_reference: STRING is "is_reference"
+	ql_cri_is_self_initializing: STRING is "is_self_initializing"
 
 	ql_cri_is_used: STRING is "is_used"
 
@@ -571,7 +572,7 @@ feature -- Access
 	ql_no_tag: STRING is "no tag";
 
 indexing
-        copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

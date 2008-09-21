@@ -24,6 +24,7 @@ inherit
 			is_full_named_type,
 			convert_to,
 			check_const_gen_conformance,
+			is_self_initializing,
 			is_reference,
 			is_expanded,
 			internal_is_valid_for_class,
@@ -87,6 +88,16 @@ feature -- Property
 
 	is_full_named_type: BOOLEAN is True
 			-- Current is a named type.
+
+	is_self_initializing (c: CLASS_C): BOOLEAN
+			-- Is type self-initializing in `c'?
+		do
+			check
+				c_is_generic: c.generics /= Void
+				valid_position: position <= c.generics.count
+			end
+			Result := c.generics.i_th (position).is_self_initializing
+		end
 
 	is_reference: BOOLEAN
 			-- Is current constrained to be always a reference?

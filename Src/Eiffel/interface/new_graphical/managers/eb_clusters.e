@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 			-- If `a_group' is a recursive cluster and a_path is not empty, add a file rule excluding `a_path'.
 		require
 			valid_group: a_group /= Void
-			not_readonly: not a_group.is_readonly
+			not_readonly: a_group.is_cluster implies not a_group.is_readonly
 			valid_path: a_path /= Void
 			path_implies_cluster: not a_path.is_empty implies is_recursive_cluster (a_group)
 			config_up_to_date: not a_group.target.system.date_has_changed

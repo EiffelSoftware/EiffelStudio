@@ -25,6 +25,8 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
+	SHARED_WORKBENCH
+
 	SHARED_DEBUGGER_MANAGER
 
 	EB_RECYCLABLE
@@ -186,6 +188,7 @@ feature {NONE} -- Implementation
 			l_sort_cl: EB_SORTED_CLUSTER
 			l_empty: BOOLEAN
 			l_sub_cl: DS_ARRAYED_LIST [CLASS_I]
+			l_library: CONF_LIBRARY
 		do
 			could_not_delete := True
 			if class_i /= Void then
@@ -206,8 +209,12 @@ feature {NONE} -- Implementation
 			elseif group /= Void then
 				str := group.name.twin
 				str.append (path)
+				l_library := group.target.system.lowest_used_in_library
 				if
-					not group.is_readonly
+						-- The project target is always writable discarding the group readability.
+						-- or `lowest_used_in_library' of the target is writable.
+					group.target = universe.target or else
+					(l_library /= Void and then not l_library.is_readonly)
 				then
 					if group.is_cluster and not path.is_empty then
 							-- create an EB_SORTED_CLUSTER because this allows as to easily access information about subfolders
@@ -225,7 +232,7 @@ feature {NONE} -- Implementation
 					end
 
 					if
-						l_empty
+						group.is_cluster implies l_empty
 					then
 						if group.target.system.date_has_changed then
 							prompts.show_warning_prompt (Warning_messages.w_cannot_delete_need_recompile, window.window, Void)

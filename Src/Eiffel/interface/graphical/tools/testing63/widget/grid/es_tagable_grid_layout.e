@@ -211,7 +211,7 @@ feature {NONE} -- Factory
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
 				if {l_parent2: TAG_BASED_TREE_NODE [G]} a_node.parent then
 					if {l_classi: CLASS_I} l_parent2.data then
-						if l_classi.is_compiled then
+						if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
 							if {l_feature: E_FEATURE} l_classi.compiled_class.feature_with_name (l_name) then
 								token_writer.add_feature (l_feature, l_name)
 								a_node.set_data (l_feature)

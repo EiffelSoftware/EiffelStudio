@@ -1,0 +1,307 @@
+Index: mediawiki_filter.css
+===================================================================
+--- mediawiki_filter.css	(revision 2675)
++++ mediawiki_filter.css	(working copy)
+@@ -1,6 +1,12 @@
+ /* wikilinks */
+ 
+-.wiki-link-new {
++.wiki-link-new,
++a.wiki-link-new,
++a.wiki-link-new:link,
++a.wiki-link-new:active,
++a.wiki-link-new:visited,
++a.wiki-link-new:hover
++{
+   color: #f33;
+ }
+ 
+Index: mediawiki_filter.settings.inc
+===================================================================
+--- mediawiki_filter.settings.inc	(revision 2675)
++++ mediawiki_filter.settings.inc	(working copy)
+@@ -206,7 +206,7 @@
+     if ($line) {
+       list($title, $id, $url) = explode('|', $line, 3);
+       if (trim($url) == '<path>') {
+-        $url = '$1'; //str_replace('__QUERY_POSITION__', '$1', url('__QUERY_POSITION__', NULL, NULL, TRUE));
++        $url = '$1'; //str_replace('__QUERY_POSITION__', '$1', url('__QUERY_POSITION__', array ('absolute' => TRUE)));
+       }
+       if ($op == 'url') {
+         $mappings[trim($id)] = trim($url);
+Index: mediawiki_filter.info
+===================================================================
+--- mediawiki_filter.info	(revision 2675)
++++ mediawiki_filter.info	(working copy)
+@@ -1,3 +1,7 @@
+ ; $Id$
+ name = "Mediawiki filter"
+ description = "Filter which uses Mediawiki parser for formatting"
++package = Filters
++version = "6.x-0.1"
++core = "6.x"
++
+Index: mediawiki_filter.lib.inc
+===================================================================
+--- mediawiki_filter.lib.inc	(revision 2675)
++++ mediawiki_filter.lib.inc	(working copy)
+@@ -63,7 +63,7 @@
+ 
+   // Set up some global variables needed for Mediawiki.
+   $settings = array(
+-    'wgServer' => url(NULL, NULL, NULL, TRUE),
++    'wgServer' => url(NULL, array('absolute' => TRUE)),
+     'wgScriptPath' => '/xyz',
+     'wgScript' => '/xyz/index.php',
+     'wgRedirectScript' => '/xyz/redirect.php',
+@@ -697,6 +697,7 @@
+       }
+     } else {
+       $dbkey = wfUrlencode( $this->getPrefixedDBkey() );
++
+       if ( $query == '' ) {
+         if($variant!=FALSE && $wgContLang->hasVariants()){
+           if($wgVariantArticlePath==FALSE) {
+@@ -708,7 +709,14 @@
+           $url = str_replace( '$1', $dbkey, $url  );
+         }
+         else {
+-          $url = str_replace( '$1', $dbkey, $wgArticlePath );
++          /* FIXME: JFIAT */
++          if (module_exists('pathauto')) {
++ 	   $l_url = pathauto_cleanstring($this->getPrefixedDBkey());
++          } else {
++           $l_url = $dbkey;
++          }
++          $l_url = $dbkey;
++          $url = str_replace( '$1', $l_url, $wgArticlePath );
+         }
+       } else {
+         global $wgActionPaths;
+@@ -732,7 +740,7 @@
+           $url = "{$wgScript}?title={$dbkey}&{$query}";
+         }
+       }
+-      
++
+       // FIXME: this causes breakage in various places when we
+       // actually expected a local URL and end up with dupe prefixes.
+ // TODO: For Drupal we always render, no matter what
+@@ -1573,15 +1581,14 @@
+       $image_sizes = array();
+     }
+     if (isset($params['width'])) {
+-      foreach($image_sizes as $image_size) {
+-        $image_label = $image_size['label'];
++      foreach($image_sizes as $image_key => $image_size) {
+         if ($image_size['width'] >= $params['width']) {
+           break;
+         }
+       }
+     }
+ /*    $upright = $this->info['width'] < $this->info['height'];
+-    foreach($image_sizes as $image_label => $image_size) {
++    foreach($image_sizes as $image_key => $image_size) {
+       if ($upright) {
+         if ($image_size['height'] >= $params['height']) {
+           break;
+@@ -1594,12 +1601,12 @@
+       }
+     }*/
+ 
+-    if (!$image_label) {
+-      $image_label = IMAGE_ORIGINAL;
++    if (!$image_key) {
++      $image_key = IMAGE_ORIGINAL;
+     }
+     wfProfileIn( __METHOD__ );
+-    $path = file_create_path($this->node->images[$image_label]);
+-    $url = url($this->node->images[$image_label]);
++    $path = file_create_path($this->node->images[$image_key]);
++    $url = url($this->node->images[$image_key]);
+ 
+     $thumb = new DrupalImageTransformOutput($this, $url, $path, $params['width'], $params['height']);
+ 
+@@ -1716,10 +1723,15 @@
+     $attribs = array(
+       'alt' => $alt,
+       'src' => $this->url,
+-      'width' => $this->width,
+-      'height' => $this->height,
+       'border' => 0,
+     );
++
++    if ($this->width) {
++      $attribs['width'] = $this->width ;
++    }
++    if ($this->height) {
++      $attribs['height'] = $this->height ;
++    }
+     if ( !empty( $options['valign'] ) ) {
+       $attribs['style'] = "vertical-align: {$options['valign']}";
+     }
+@@ -1771,4 +1783,3 @@
+     return NULL;
+   }
+ }
+-
+Index: mediawiki_filter.classes.inc
+===================================================================
+--- mediawiki_filter.classes.inc	(revision 2675)
++++ mediawiki_filter.classes.inc	(working copy)
+@@ -159,9 +159,96 @@
+     else {
+       drupal_set_message('Unexpected Mediawiki query. Please report to module maintainer', 'error');
+     }
++    $this->filterLastResultForBook();
+     return NULL;
+   }
+ 
++  function getCurrentNodeBookId() {
++    /* Dirty Hack ... might not work all the time...*/
++    $q = $_GET['q'];
++    if (substr($q, 0, 5) === 'node/') {
++      $l_curr_nid = substr($q, 5, strlen($q));
++      list($l_curr_nid) = split('/', $l_curr_nid, 1);
++      $l_curr_node = node_load(array('nid' => $l_curr_nid));
++      if ($l_curr_node and isset($l_curr_node->book['bid'])) {
++      $l_curr_bid = $l_curr_node->book['bid'];
++        return $l_curr_bid;
++      }
++    }
++    return FALSE;
++  }
++
++  function filterLastResultForBook() {
++    /* Dirty Hack ...*/
++    if (count($this->lastResult) > 0) {
++      $res_by_title = array();
++      foreach ($this->lastResult as $k => $res_obj) {
++        $res_by_title[$res_obj->page_title][] = $res_obj;
++      }
++      $bid = $this->getCurrentNodeBookId();
++      $the_results = array();
++      foreach ($res_by_title as $l_title => $l_pages) {
++	$l_pages = $this->filterResultsForBook(&$l_pages, $l_title, $bid);
++        foreach($l_pages as $k => $v) {
++          $the_results[] = $v;
++        }
++      }
++      if (count($the_results) > 0) {
++        $this->lastResult = $the_results;
++      }
++    }
++  }
++
++  function filterResultsForBook(&$res, $a_title, $a_bid) {
++    if ($a_bid) {
++      $l_curr_bid = $a_bid;
++    } else {
++      $l_curr_bid = 0;
++    }
++    if (count($res) > 1) {
++      $m = t("Found %nb pages with name \"%tit\":<ul>", array('%tit' => $a_title, '%nb' => count($res)));
++      $the_results = array();
++      foreach ($res as $k => $res_obj) {
++        $l_node = node_load($res_obj->page_id);
++        if ($l_node) {
++  	  $m .= "<li><a href=\"".url($l_node->path, array('absolute' => TRUE))."\">".$l_node->title.": node ".$l_node->nid." (<em>".$l_node->path."</em>)</a>";
++  	  if ($l_curr_bid <= 0 or $l_node->book['bid'] == $l_curr_bid) {
++  	    $the_results[] = $res_obj;
++  	    if ($l_curr_bid > 0) {
++  	      $m .= " - Selected ";
++  	      $l_curr_bid = -1; // Select only first result;
++  	    }
++    	  }
++  	  $m .= "</li>";
++        }
++      }
++      $m .= "</ul>";
++      if ($l_curr_bid > 0) {
++        $m .= "<br/>".t("Unable to find a page with name \"%tit\" in the same book!", array ('%tit' => $a_title));
++      }
++      drupal_set_message($m,'warning');
++    } else if (count($res) == 1 and $l_curr_bid > 0) {
++      $l_node = node_load(end(&$res)->page_id);
++      if ($l_node and $l_node->book['bid'] != $l_curr_bid) {
++        $m = t("The page used for name \"%tit\" in outside current book!", array ('%tit' => $a_title));
++  	$m .= "<ul><li><a href=\"".url($l_node->path, array('absolute' => TRUE))."\">".$l_node->title.": node ".$l_node->nid." (<em>".$l_node->path."</em>)</a></li></ul>";
++        drupal_set_message($m,'warning');
++      }
++      if (defined('STATUS_TRASH')) {
++        if ($l_node and $l_node->status == STATUS_TRASH) {
++          $m = t("The page used for name \"%tit\" in trashed!", array ('%tit' => $a_title));
++  	  $m .= "<ul><li><a href=\"".url($l_node->path, array('absolute' => TRUE))."\">".$l_node->title.": node ".$l_node->nid." (<em>".$l_node->path."</em>)</a></li></ul>";
++          drupal_set_message($m,'warning');
++        }
++      }
++    }
++    if (count($the_results) > 0) {
++      return $the_results;
++    } else {
++      return $res;
++    }
++  }
++
+   function fetchObject($res) {
+     return array_pop($this->lastResult);
+   }
+Index: mediawiki_filter.module
+===================================================================
+--- mediawiki_filter.module	(revision 2675)
++++ mediawiki_filter.module	(working copy)
+@@ -12,8 +12,7 @@
+ /**
+  * Implementation of hook_menu().
+  */
+-function mediawiki_filter_menu($may_cache) {
+-  if (!$may_cache) {
++function mediawiki_filter_init() {
+     drupal_add_css(drupal_get_path('module', 'mediawiki_filter') .'/mediawiki_filter.css');
+ 
+     // TODO: make external image an option
+@@ -28,9 +27,25 @@
+         });
+       }',
+       'inline', 'footer');
+-  }
+ }
+ 
++function mediawiki_filter_menu() {
++    drupal_add_css(drupal_get_path('module', 'mediawiki_filter') .'/mediawiki_filter.css');
++
++    // TODO: make external image an option
++    $external_img_url = base_path() . drupal_get_path('module', 'mediawiki_filter') .'/external.png';
++    drupal_add_js(drupal_get_path('module', 'mediawiki_filter') .'/mediawiki_filter.js');
++    drupal_add_js(
++      'if (Drupal.jsEnabled) {
++        $(document).ready(function() {
++          $(\'a.external\').each(function() {
++            $(this).append(\'&nbsp;<img src="' . $external_img_url . '" alt="external"/>\');
++          });
++        });
++      }',
++      'inline', 'footer');
++}
++
+ /**
+  * Implementation of hook_filter_tips()
+  */
+@@ -218,7 +233,7 @@
+         $url = url(str_replace('$1', $title, $url));
+         break;
+       case 'create-link':
+-        $url = url('node/add/' . $type, 'edit[title]=' . urlencode($title));
++        $url = url('node/add/' . $type, array('query' => 'edit[title]=' . urlencode($title)));
+         break;
+     }
+   }
+@@ -230,7 +245,7 @@
+   $interwiki_links = mediawiki_filter_interwiki_mappings();
+   if (isset($interwiki_links[$key])) {
+     $url = str_replace('$1', '__QUERY_POSITION_REPLACEMENT__', $interwiki_links[$key]);
+-    $url = url($url, NULL, NULL, TRUE);
++    $url = url($url, array('absolute' => TRUE));
+     $url = str_replace('__QUERY_POSITION_REPLACEMENT__', '$1', $url);
+     return $url;
+   }

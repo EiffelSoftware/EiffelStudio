@@ -605,14 +605,18 @@ feature {NONE} -- Actions
 		local
 			l_show: BOOLEAN
 		do
-			l_show := delete_status_prompt = Void
-			if l_show then
-				delete_status_prompt := create_delete_status_prompt
-				delete_status_prompt.dialog.set_minimum_width (600)
-			end
-			delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first, path_ellipsis_width))
-			if l_show then
-				delete_status_prompt.show (parent_window)
+			if not is_deletion_cancelled then
+					-- Check a cancellation request hasn't been made, because if so then
+					-- there is no need to report status any longer.
+				l_show := delete_status_prompt = Void
+				if l_show then
+					delete_status_prompt := create_delete_status_prompt
+					delete_status_prompt.dialog.set_minimum_width (600)
+				end
+				delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first, path_ellipsis_width))
+				if l_show then
+					delete_status_prompt.show (parent_window)
+				end
 			end
 			ev_application.process_events
 		end

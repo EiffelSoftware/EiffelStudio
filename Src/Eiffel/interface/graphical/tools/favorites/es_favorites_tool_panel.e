@@ -116,8 +116,10 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			favorites_manager.recycle
-			favorites_manager := Void
+			if favorites_manager /= Void then
+				favorites_manager.recycle
+				favorites_manager := Void
+			end
 			Precursor {EB_TOOL}
 		end
 

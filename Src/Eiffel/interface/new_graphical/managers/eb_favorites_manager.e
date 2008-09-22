@@ -84,8 +84,10 @@ feature -- Basic Operations
 	cleanup is
 			-- Routine to be called when this manager has became useless.
 		do
-			favorites.remove_observer (widget)
-			favorites.remove_observer (menu)
+			if favorites /= Void then
+				favorites.remove_observer (widget)
+				favorites.remove_observer (menu)
+			end
 		end
 
 	add_class is

@@ -92,7 +92,9 @@ feature {NONE} -- Cleaning
 	internal_recycle is
 			-- To be called when the object is no more used.
 		do
-			favorites.remove_observer (Current)
+			if favorites /= Void then
+				favorites.remove_observer (Current)
+			end
 			favorites_manager := Void
 		end
 

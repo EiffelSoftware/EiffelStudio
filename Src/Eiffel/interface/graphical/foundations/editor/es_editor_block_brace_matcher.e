@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			Supports brace match scanning functionality in the editor.
+			Supports Eiffel block brace match scanning functionality in the editor.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,21 +8,66 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_EDITOR_BRACE_MATCHER
+	ES_EDITOR_BLOCK_BRACE_MATCHER
 
 inherit
-	ES_EDITOR_PAIRED_MATCHER
+	ES_EDITOR_BRACE_MATCHER
+		redefine
+			opening_brace_map,
+			is_opening_brace,
+			is_closing_brace,
+			is_opening_match_exception,
+			is_closing_match_exception
+		end
+
+	ES_EDITOR_KEYWORD_BRACE_MATCHER
+		redefine
+			opening_brace_map,
+			is_opening_brace,
+			is_closing_brace,
+			is_opening_match_exception,
+			is_closing_match_exception
+		end
 
 feature -- Access
 
 	opening_brace_map: !HASH_TABLE [!STRING_32, !STRING_32]
 			-- <Precursor>
 		once
-			create Result.make (4)
-			Result.put (create {STRING_32}.make_from_string (")"), create {STRING_32}.make_from_string ("("))
-			Result.put (create {STRING_32}.make_from_string ("]"), create {STRING_32}.make_from_string ("["))
-			Result.put (create {STRING_32}.make_from_string ("}"), create {STRING_32}.make_from_string ("{"))
-			Result.put (create {STRING_32}.make_from_string (">>"), create {STRING_32}.make_from_string ("<<"))
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER}
+			Result.merge (Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER})
+		end
+
+feature -- Status report
+
+	is_opening_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
+				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
+		end
+
+	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
+				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
+		end
+
+feature {NONE} -- Status report
+
+	is_opening_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
+				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
+		end
+
+	is_closing_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
+				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
 		end
 
 ;indexing

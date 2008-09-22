@@ -68,10 +68,21 @@ function book_doc_page_exists($a_title) {
 	}
 }
 
+function isedoc_book_parent_of($nid) {
+	$parent_sql = "SELECT b.nid FROM {book} b INNER JOIN {menu_links} m ON m.mlid = b.mlid INNER JOIN {menu_links} m2 ON m.mlid = m2.plid INNER JOIN {book} b2 ON b2.nid = '%d' AND m2.mlid = b2.mlid ";
+	$parent = db_result(db_query(db_rewrite_sql($parent_sql), $nid));
+	if ($parent) {
+		return $parent;
+	} else {
+		return FALSE;
+	}
+}
+
 function isedoc_pages_referencing($a_title) {
 	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]][:blank:]*'.strtolower($a_title).'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
         //$l_body_filter = 'LIKE LOWER(\'%[['.$a_title.'%\')';
-        $sql = "SELECT n.nid, n.title FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid WHERE LOWER(r.body) $l_body_filter ;";
+        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE LOWER(r.body) $l_body_filter ";
+	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);
 	$result = array();
 	if ($res === FALSE) {

@@ -4,11 +4,18 @@ require_once ("isedoc.lib.inc");
 
 function isedoc_whatlinkshere($node) {
   drupal_set_title(check_plain($node->title));
+  $output = "<br/>";
+
+  if (defined('STATUS_TRASH')) {
+    if ($node->status == STATUS_TRASH) {
+      $output .= t("The page '%tit' is <strong>trashed</strong>.",array('%tit' => $node->title));
+      $output .= "<br/>";
+    }
+  }
   $n_bn = isedoc_book_name($node->book['bid']);
   $refs = isedoc_pages_referencing($node->title);
-  $output = "<br/>";
   if ($refs) {
-    $output .= '<strong>'.t("The page '%tit' is referenced by the following %nb page(s):", array('%tit' => $node->title, '%nb' => count($refs))).'</strong>';
+    $output .= t("The page '%tit' is <strong>referenced by the following %nb page(s)</strong>:", array('%tit' => $node->title, '%nb' => count($refs)));
     $output_by_book=array();
     foreach($refs as $r_nid => $r) {
       $n =& node_load($r_nid);
@@ -56,8 +63,10 @@ function _isedoc_display_references($tit, $lst) {
         $t .= " (".l(t("view"), $n->path);
         $t .= ", ".l(t("edit"), 'node/'.$n->nid.'/edit');
         $t .= ")";
+        //$t .= " status=".$n->status;
+        //$t .= " version=".$n->vid;
 	if (defined('STATUS_TRASH')) {
-		if ($node->status == STATUS_TRASH) {
+		if ($n->status == STATUS_TRASH) {
 			$t .= " <strong>Trashed</strong>";
 		}
 	}

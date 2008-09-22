@@ -34,6 +34,8 @@ getdrupmod jtooltips-6.x-1.8.tar.gz
 getdrupmod captcha-6.x-1.0-rc2.tar.gz
 getdrupmod captcha_pack-6.x-1.0-beta2.tar.gz
 getdrupmod advanced_help-6.x-1.0.tar.gz
+getdrupmod book_access-6.x-1.0-rc1.tar.gz
+getdrupmod protected_node-6.x-1.3.tar.gz
 
 #getdrupmod freelinking-6.x-1.4.tar.gz
 #getdrupmod pearwiki_filter-6.x-1.0-beta1.tar.gz

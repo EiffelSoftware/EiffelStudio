@@ -153,9 +153,22 @@ feature -- Command
 		local
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
+			l_string_item: POINTER
+			l_font_item: POINTER
+			l_rect_item: POINTER
+			l_format_item: POINTER
+			l_brush_item: POINTER
 		do
 			create l_wel_string.make (a_string)
-			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, a_length, a_font.item, a_rect_f.item, a_format.item, a_brush.item, $l_result)
+
+			l_string_item := l_wel_string.item
+			l_font_item := a_font.item
+			l_rect_item := a_rect_f.item
+			l_format_item := a_format.item
+			l_brush_item := a_brush.item
+
+			c_gdip_draw_string (gdi_plus_handle, item, l_string_item, a_length, l_font_item, l_rect_item, l_format_item, l_brush_item, $l_result)
+			
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 

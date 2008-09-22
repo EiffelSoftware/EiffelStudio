@@ -19,6 +19,11 @@ function isedoc_whatlinkshere($node) {
         $t .= " (".l(t("view"), $n->path);
         $t .= ", ".l(t("edit"), 'node/'.$n->nid.'/edit');
         $t .= ")";
+	if (defined('STATUS_TRASH')) {
+		if ($node->status == STATUS_TRASH) {
+			$t .= " <strong>Trashed</strong>";
+		}
+	}
 	$bid = $n->book['bid'];
 	$bn = isedoc_book_name($bid);
         //$t .= " from book <strong>".$bn."</strong>";

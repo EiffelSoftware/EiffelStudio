@@ -1017,6 +1017,7 @@ feature -- Events
 			l_dl_window: EB_DYNAMIC_LIB_WINDOW
 			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
+			check system_defined: eiffel_project.system_defined end
 			if not l_retried then
 			-- Attempt to load the 'session.wb' file from the project directory.
 			-- If load fails then do nothing.
@@ -1095,23 +1096,24 @@ feature -- Events
 			retried: BOOLEAN
 			l_develop_window: EB_DEVELOPMENT_WINDOW
 		do
+			check system_defined: eiffel_project.system_defined end
 			if not retried then
 					-- Attempt to save the 'session.wb' file to the current project directory.
 					-- If save cannot be made then do nothing.
 				l_develop_window := a_development_window
 				if l_develop_window /= Void then
-					-- Maybe we can't save development window count data in `project_session_data' or `session_data' since they are all *window* related data?
+						-- Maybe we can't save development window count data in `project_session_data' or `session_data' since they are all *window* related data?
 					l_develop_window.project_session_data.set_value (development_windows_count, l_develop_window.development_window_data.development_window_count_id)
 				end
 
 				for_all_development_windows (agent (a_develop_window: EB_DEVELOPMENT_WINDOW)
-													require
-														not_void: a_develop_window /= Void
-													do
-														a_develop_window.project_session_data.set_value (a_develop_window.save_layout_to_session,
-																		a_develop_window.development_window_data.development_window_project_data_id)
-
-													end)
+					require
+						not_void: a_develop_window /= Void
+					do
+						a_develop_window.project_session_data.set_value (
+							a_develop_window.save_layout_to_session,
+							a_develop_window.development_window_data.development_window_project_data_id)
+					end)
 			end
 		rescue
 			retried := True
@@ -1250,7 +1252,9 @@ feature -- Events
 			Manager.on_project_unloaded
 			save_favorites
 				-- Make development window session data persistent for future reloading.
-			save_session
+			if eiffel_project.system_defined then
+				save_session
+			end
 			for_all (agent unload_project_action)
 			Melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive

@@ -253,7 +253,11 @@ feature -- Status report
 	reverse : BOOLEAN is
 			-- Search upwards?
 		do
-			Result := Precursor {ES_MULTI_SEARCH_TOOL_PANEL_IMP} or temp_reverse
+			if temp_reverse then
+				Result := not Precursor {ES_MULTI_SEARCH_TOOL_PANEL_IMP}
+			else
+				Result := Precursor {ES_MULTI_SEARCH_TOOL_PANEL_IMP}
+			end
 		end
 
 feature -- Status setting

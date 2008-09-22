@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			Supports brace match scanning functionality in the editor.
+			Eiffel keyword constants.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,22 +8,45 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_EDITOR_BRACE_MATCHER
+	ES_EIFFEL_KEYWORD_CONSTANTS
 
-inherit
-	ES_EDITOR_PAIRED_MATCHER
+feature -- Keywords
 
-feature -- Access
+	agent_keyword    : !STRING = "agent"
+	attribute_keyword: !STRING = "attribute"
+	class_keyword    : !STRING = "class"
+	debug_keyword    : !STRING = "debug"
+	deferred_keyword : !STRING = "deferred"
+	do_keyword       : !STRING = "do"
+	external_keyword : !STRING = "external"
+	else_keyword     : !STRING = "else"
+	elseif_keyword   : !STRING = "elseif"
+	end_keyword      : !STRING = "end"
+	export_keyword   : !STRING = "export"
+	feature_keyword  : !STRING = "feature"
+	from_keyword     : !STRING = "from"
+	if_keyword       : !STRING = "if"
+	index_keyword    : !STRING = "indexing"
+	inspect_keyword  : !STRING = "inspect"
+	like_keyword     : !STRING = "like"
+	local_keyword    : !STRING = "local"
+	loop_keyword     : !STRING = "loop"
+	once_keyword     : !STRING = "once"
+	note_keyword     : !STRING = "note"
+	redefine_keyword : !STRING = "redefine"
+	rename_keyword   : !STRING = "rename"
+	require_keyword  : !STRING = "require"
+	then_keyword     : !STRING = "then"
+	select_keyword   : !STRING = "select"
+	undefine_keyword : !STRING = "undefine"
+	until_keyword    : !STRING = "until"
 
-	opening_brace_map: !HASH_TABLE [!STRING_32, !STRING_32]
-			-- <Precursor>
-		once
-			create Result.make (4)
-			Result.put (create {STRING_32}.make_from_string (")"), create {STRING_32}.make_from_string ("("))
-			Result.put (create {STRING_32}.make_from_string ("]"), create {STRING_32}.make_from_string ("["))
-			Result.put (create {STRING_32}.make_from_string ("}"), create {STRING_32}.make_from_string ("{"))
-			Result.put (create {STRING_32}.make_from_string (">>"), create {STRING_32}.make_from_string ("<<"))
-		end
+feature -- Reserved words
+
+	current_keyword  : !STRING = "Current"
+	precursor_keyword: !STRING = "Precursor"
+	result_keyword   : !STRING = "Result"
+	void_keyword     : !STRING = "Void"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

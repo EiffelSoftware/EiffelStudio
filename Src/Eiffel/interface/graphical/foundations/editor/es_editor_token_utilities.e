@@ -27,7 +27,7 @@ feature -- Query
 		do
 			if a_token /~ a_finish_token then
 				if a_finish_token = Void then
-					l_result := next_token (a_token, a_line, a_skip_ws, Void)
+					l_result := previous_token (a_token, a_line, a_skip_ws, Void)
 				else
 					l_result := previous_token (a_token, a_line, a_skip_ws, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE; ia_finish_token: !EDITOR_TOKEN): BOOLEAN
 						do

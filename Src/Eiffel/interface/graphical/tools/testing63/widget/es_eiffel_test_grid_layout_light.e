@@ -89,7 +89,7 @@ feature -- Basic functionality
 			token_writer.new_line
 			l_class := class_from_name (a_item.class_name, Void)
 			if l_class /= Void then
-				if l_class.is_compiled then
+				if l_class.is_compiled and then l_class.compiled_class.has_feature_table then
 					l_feature := l_class.compiled_class.feature_with_name (a_item.name)
 					if l_feature /= Void then
 						token_writer.add_feature (l_feature, a_item.name)

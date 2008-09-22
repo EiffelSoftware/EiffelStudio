@@ -478,9 +478,11 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			enable_bkpt_button.recycle
-			disable_bkpt_button.recycle
-			clear_bkpt_button.recycle
+			if is_initialized then
+				enable_bkpt_button.recycle
+				disable_bkpt_button.recycle
+				clear_bkpt_button.recycle
+			end
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			set_row_highlight_bg_color_agent := Void
 			Precursor {ES_DOCKABLE_TOOL_PANEL}

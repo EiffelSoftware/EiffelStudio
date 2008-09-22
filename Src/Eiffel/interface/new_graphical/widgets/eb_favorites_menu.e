@@ -322,7 +322,9 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			favorites.remove_observer (Current)
+			if favorites /= Void then
+				favorites.remove_observer (Current)
+			end
 			favorites_manager := Void
 			destroy
 		end

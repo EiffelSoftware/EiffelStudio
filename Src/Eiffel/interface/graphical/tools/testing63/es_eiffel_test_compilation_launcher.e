@@ -17,7 +17,9 @@ inherit
 		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
-
+		export
+			{NONE} all
+		end
 
 feature -- Status report
 

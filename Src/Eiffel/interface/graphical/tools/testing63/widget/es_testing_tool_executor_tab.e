@@ -16,6 +16,11 @@ inherit
 			make as make_widget
 		end
 
+	ES_SHARED_EIFFEL_TEST_SERVICE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -41,7 +46,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create grid.make (develop_window)
-			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT}.make (test_suite))
+			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT})
 			grid.connect (executor)
 			a_widget.extend (grid.widget)
 		end
@@ -56,7 +61,7 @@ feature -- Access
 			create Result.make (25)
 			Result.append (local_formatter.translation (t_title))
 			Result.append (" (")
-			if {l_debugger: EIFFEL_TEST_DEBUGGER_I} executor then
+			if debug_executor_type.attempt (executor) /= Void then
 				Result.append (local_formatter.translation (t_title_debugger))
 			else
 				Result.append (local_formatter.translation (t_title_background))
@@ -67,7 +72,7 @@ feature -- Access
 	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
-			if {l_debugger: EIFFEL_TEST_DEBUGGER_I} executor then
+			if debug_executor_type.attempt (executor) /= Void then
 				Result := stock_pixmaps.debug_run_icon_buffer
 			else
 				Result := stock_pixmaps.debug_run_icon_buffer
@@ -77,7 +82,7 @@ feature -- Access
 	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
-			if {l_debugger: EIFFEL_TEST_DEBUGGER_I} executor then
+			if debug_executor_type.attempt (executor) /= Void then
 				Result := stock_pixmaps.debug_run_icon
 			else
 				Result := stock_pixmaps.debug_run_icon
@@ -87,12 +92,6 @@ feature -- Access
 feature {NONE} -- Access: grid
 
 	grid: !ES_TAGABLE_LIST_GRID [EIFFEL_TEST_I]
-
-	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
-			-- Access to a test suite service {EIFFEL_TEST_SUITE_S} consumer
-		once
-			create Result
-		end
 
 feature {NONE} -- Factory
 

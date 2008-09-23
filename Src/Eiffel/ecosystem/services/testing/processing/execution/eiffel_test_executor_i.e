@@ -34,13 +34,6 @@ feature -- Access
 			--
 			-- Note: list contains tests which are queued or currently executed.
 		deferred
-		ensure then
-				-- Tests queued by `Current'
-			results_queued: ({!DS_LINEAR [!EIFFEL_TEST_I]} #? Result).for_all (
-				agent (a_test: !EIFFEL_TEST_I): BOOLEAN
-					do
-						Result := (a_test.is_queued or a_test.is_running) implies a_test.executor = Current
-					end)
 		end
 
 feature -- Query

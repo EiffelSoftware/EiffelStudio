@@ -13,9 +13,7 @@ deferred class
 	EIFFEL_TEST_EXECUTOR
 
 inherit
-	EIFFEL_TEST_BACKGROUND_EXECUTOR_I
-		rename
-			start_process as start_process_frozen
+	EIFFEL_TEST_EXECUTOR_I
 		redefine
 			is_ready
 		end
@@ -150,8 +148,11 @@ feature {NONE} -- Status report
 	last_compilation_successful: BOOLEAN
 			-- True if last melting triggered by `Current' was successful
 
-	is_current_test_in_map: BOOLEAN
-			-- Was last test traversed by `retrieve_results' and determined to be running in map?
+	current_test: ?EIFFEL_TEST_I
+			-- Last test determined to be currently executed
+			--
+			-- Note: this attribute is set by `retrieve_results' and is used to check whether an evaluator
+			--       is running a test still valid to the executor.
 
 feature -- Status setting
 
@@ -163,7 +164,7 @@ feature -- Status setting
 
 feature {NONE} -- Status setting
 
-	start_process (a_list: like active_tests)
+	start_process_internal (a_list: like active_tests)
 			-- <Precursor>
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
@@ -298,7 +299,9 @@ feature {NONE} -- Status setting
 				l_cursor.after
 			loop
 				l_evaluator := l_cursor.item
-				if is_stop_requested and l_evaluator.is_running then
+
+					-- If user requested stop terminate evaluator
+				if is_stop_requested then
 					l_evaluator.terminate
 				end
 
@@ -316,7 +319,9 @@ feature {NONE} -- Status setting
 					end
 				else
 					retrieve_results (l_evaluator.status)
-					if not (is_current_test_in_map and l_evaluator.status.has_remaining_tests) then
+					if current_test /= Void and then not map.tests.has ({!EIFFEL_TEST_I} #? current_test) then
+							-- `current_test' is no longer known to the executor as a valid test so we terminate
+							-- the evaluator
 						l_evaluator.terminate
 					end
 				end
@@ -405,7 +410,9 @@ feature {NONE} -- Status setting
 			l_test: !EIFFEL_TEST_I
 			l_outcome: !TEST_OUTCOME
 		do
-			from until
+			from
+				current_test := Void
+			until
 				l_done
 			loop
 				l_tuple := a_status.retrieve
@@ -418,17 +425,15 @@ feature {NONE} -- Status setting
 				else
 					l_done := True
 				end
-				is_current_test_in_map := False
 				if l_tuple.next /= Void then
-					l_test ?= l_tuple.next
+					current_test ?= l_tuple.next
 						-- If map does not contain `l_test', we could abort here. However if the evaluator has
 						-- already produced a result, we simply won't propagate it and let it execute the next
 						-- test in the queue.
-					if map.tests.has (l_test) then
-						if not l_test.is_running then
-							test_suite.set_test_running (l_test)
+					if map.tests.has ({!EIFFEL_TEST_I} #? current_test) then
+						if not current_test.is_running then
+							test_suite.set_test_running ({!EIFFEL_TEST_I} #? current_test)
 						end
-						is_current_test_in_map := True
 					end
 				else
 					l_done := True

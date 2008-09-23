@@ -16,10 +16,16 @@ inherit
 			on_after_initialized
 		end
 
+	ES_SHARED_EIFFEL_TEST_SERVICE
+		export
+			{NONE} all
+		end
+
 	EIFFEL_TEST_SUITE_OBSERVER
 		redefine
 			on_test_changed,
-			on_processor_launched
+			on_processor_launched,
+			on_processor_stopped
 		end
 
 	ES_HELP_CONTEXT
@@ -124,7 +130,7 @@ feature {NONE} -- Initialization: widget status
 			Precursor
 			l_service := test_suite.service
 			l_service.connect_events (Current)
-			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT}.make (test_suite))
+			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT})
 			propagate_drop_actions (Void)
 
 			initialize_tool_bar
@@ -165,12 +171,6 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
-			-- Access to a test suite service {EIFFEL_TEST_SUITE_S} consumer
-		once
-			create Result
-		end
-
 	tree_view: ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
 			-- Tree view displaying tests
 
@@ -204,11 +204,28 @@ feature {NONE} -- Access: view
 
 feature {NONE} -- Access: buttons
 
-	run_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	run_button: !SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for launching the test executor
 
-	stop_button: SD_TOOL_BAR_BUTTON
+	debug_button: !SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			-- Button for debugging tests
+
+	stop_button: !SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
+
+feature {NONE} -- Access: menus
+
+	run_all_menu,
+	run_failing_menu,
+	run_selected_menu,
+	run_filtered_menu: !EV_MENU_ITEM
+			-- Menu items for running tests in background
+
+	debug_all_menu,
+	debug_failing_menu,
+	debug_selected_menu,
+	debug_filtered_menu: !EV_MENU_ITEM
+			-- Menu items for debugging tests
 
 feature {NONE} -- Status setting: view
 
@@ -336,15 +353,15 @@ feature {NONE} -- Status setting: stones
 
 feature {NONE} -- Action handlers
 
-	on_run_all is
+	on_run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run all" item of `run_button'.
 		do
 			if test_suite.is_service_available then
-				run_list (test_suite.service.tests)
+				execute_list (test_suite.service.tests, a_type)
 			end
 		end
 
-	on_run_failing is
+	on_run_failing (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selectes "run failing" item of `run_button'.
 		local
 			l_item: !EIFFEL_TEST_I
@@ -367,11 +384,11 @@ feature {NONE} -- Action handlers
 					end
 					l_cursor.forth
 				end
-				run_list (l_list)
+				execute_list (l_list, a_type)
 			end
 		end
 
-	on_run_filtered is
+	on_run_filtered (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
 			if test_suite.is_service_available then
@@ -379,31 +396,29 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_run_selected is
+	on_run_selected (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run selected" item of `run_button'.
 		do
 			if test_suite.is_service_available then
-				run_list (tree_view.selected_items)
+				execute_list (tree_view.selected_items, a_type)
 			end
 		end
 
-	run_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I])
+	execute_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		require
 			test_suite_available: test_suite.is_service_available
 		local
-			l_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]
 			l_executor: EIFFEL_TEST_EXECUTOR_I
 			l_test_suite: EIFFEL_TEST_SUITE_S
 		do
-			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
 			l_test_suite := test_suite.service
-			if l_test_suite.processor_registrar.is_registered (l_type) then
-				l_executor := l_test_suite.executor (l_type)
+			if l_test_suite.processor_registrar.is_registered (a_type) then
+				l_executor := l_test_suite.executor (a_type)
 				if l_executor.is_ready (l_test_suite) then
 					if l_executor.is_valid_test_list (a_list, l_test_suite) then
-						l_test_suite.run_list (l_type, a_list, False)
+						l_test_suite.run_list (a_type, a_list, False)
 					else
 						-- TODO: message saying choosen tests can not be executed...
 					end
@@ -453,7 +468,22 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 					notebook.item_tab (l_new_tab.widget).enable_select
 				end
 			end
+			if background_executor_type.attempt (a_processor) /= Void then
+				run_button.disable_sensitive
+			elseif debug_executor_type.attempt (a_processor) /= Void then
+				debug_button.disable_sensitive
+			end
 		end
+
+ 	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+ 			-- <Precursor>
+ 		do
+ 			if background_executor_type.attempt (a_processor) /= Void then
+				run_button.enable_sensitive
+			elseif debug_executor_type.attempt (a_processor) /= Void then
+				debug_button.enable_sensitive
+			end
+ 		end
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
@@ -465,6 +495,13 @@ feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 				notebook.item_tab (outcome_tab.widget).enable_select
 			elseif outcome_tab.is_active then
 				outcome_tab.remove_test
+			end
+			if tree_view.selected_items.is_empty then
+				run_selected_menu.disable_sensitive
+				debug_selected_menu.disable_sensitive
+			else
+				run_selected_menu.enable_sensitive
+				debug_selected_menu.enable_sensitive
 			end
 		end
 
@@ -480,32 +517,58 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		local
 			l_menu: EV_MENU
-			l_menu_item: EV_MENU_ITEM
 		do
-			create Result.make (2)
+			create Result.make (5)
 
-				-- Create run btton
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Create run button
 			create run_button.make
 			run_button.set_tooltip (local_formatter.translation (f_run_button))
 			run_button.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
 			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
+			register_action (run_button.select_actions, agent on_run_all (background_executor_type))
 
-			create l_menu.default_create
-			create l_menu_item.make_with_text (local_formatter.translation (m_run_all))
-			register_action (l_menu_item.select_actions, agent on_run_all)
-			l_menu.extend (l_menu_item)
-			create l_menu_item.make_with_text (local_formatter.translation (m_run_failing))
-			register_action (l_menu_item.select_actions, agent on_run_failing)
-			l_menu.extend (l_menu_item)
-			create l_menu_item.make_with_text (local_formatter.translation (m_run_filtered))
-			register_action (l_menu_item.select_actions, agent on_run_filtered)
-			l_menu.extend (l_menu_item)
-			create l_menu_item.make_with_text (local_formatter.translation (m_run_selected))
-			register_action (l_menu_item.select_actions, agent on_run_selected)
-			l_menu.extend (l_menu_item)
+			create l_menu
+			create run_all_menu.make_with_text (local_formatter.translation (m_run_all))
+			register_action (run_all_menu.select_actions, agent on_run_all (background_executor_type))
+			l_menu.extend (run_all_menu)
+			create run_failing_menu.make_with_text (local_formatter.translation (m_run_failing))
+			register_action (run_failing_menu.select_actions, agent on_run_failing (background_executor_type))
+			l_menu.extend (run_failing_menu)
+			create run_filtered_menu.make_with_text (local_formatter.translation (m_run_filtered))
+			register_action (run_filtered_menu.select_actions, agent on_run_filtered (background_executor_type))
+			l_menu.extend (run_filtered_menu)
+			create run_selected_menu.make_with_text (local_formatter.translation (m_run_selected))
+			register_action (run_selected_menu.select_actions, agent on_run_selected (background_executor_type))
+			l_menu.extend (run_selected_menu)
 			run_button.set_menu (l_menu)
 
 			Result.put_last (run_button)
+
+				-- Create debug button
+			create debug_button.make
+			debug_button.set_tooltip (local_formatter.translation (f_debug_button))
+			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_debug_mode_icon_buffer)
+			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_debug_mode_icon)
+			register_action (debug_button.select_actions, agent on_run_all (debug_executor_type))
+
+			create l_menu
+			create debug_all_menu.make_with_text (local_formatter.translation (m_debug_all))
+			register_action (debug_all_menu.select_actions, agent on_run_all (debug_executor_type))
+			l_menu.extend (debug_all_menu)
+			create debug_failing_menu.make_with_text (local_formatter.translation (m_debug_failing))
+			register_action (debug_failing_menu.select_actions, agent on_run_failing (debug_executor_type))
+			l_menu.extend (debug_failing_menu)
+			create debug_filtered_menu.make_with_text (local_formatter.translation (m_debug_filtered))
+			register_action (debug_filtered_menu.select_actions, agent on_run_filtered (debug_executor_type))
+			l_menu.extend (debug_filtered_menu)
+			create debug_selected_menu.make_with_text (local_formatter.translation (m_debug_selected))
+			register_action (debug_selected_menu.select_actions, agent on_run_selected (debug_executor_type))
+			l_menu.extend (debug_selected_menu)
+			debug_button.set_menu (l_menu)
+
+			Result.put_last (debug_button)
 
 				-- Create stop button
 			create stop_button.make
@@ -515,19 +578,23 @@ feature {NONE} -- Factory
 
 			Result.put_last (stop_button)
 
-
-			--create Result.make (0)
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 		end
 
 feature {NONE} -- Internationalization
 
-	f_run_button: STRING = "Run tests in background"
+	f_run_button: STRING = "Run all tests in background"
+	f_debug_button: STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: STRING = "Stop all execution"
 
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"
 	m_run_filtered: STRING = "Run filtered"
 	m_run_selected: STRING = "Run selected"
+	m_debug_all: STRING = "Debug all"
+	m_debug_failing: STRING = "Debug failing"
+	m_debug_filtered: STRING = "Debug filtered"
+	m_debug_selected: STRING = "Debug selected"
 
 	l_view: STRING = "View"
 	l_filter: STRING = "Filter"

@@ -89,7 +89,7 @@ feature -- Status setting
 		deferred
 		end
 
-	run_all (a_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]; a_blocking: BOOLEAN)
+	run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]; a_blocking: BOOLEAN)
 			-- Run all tests in `tests' with executor of type `a_executor'
 			-- and notify observers that executor has been launched.
 		require
@@ -104,7 +104,7 @@ feature -- Status setting
 			not_blocking_equals_preparing_tests: not a_blocking = executor (a_type).is_idle
 		end
 
-	run_list (a_type: !TYPE [!EIFFEL_TEST_EXECUTOR_I]; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
+	run_list (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
 			-- Run all tests in `a_list' with executor of type `a_executor'
 			-- and notify observers that executor has been launched.
 		require
@@ -119,7 +119,7 @@ feature -- Status setting
 			not_blocking_equals_preparing_a_list: not a_blocking = executor (a_type).is_idle
 		end
 
-	create_tests (a_type: !TYPE [!EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
+	create_tests (a_type: !TYPE [EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
 			-- Launch test creation and notify all observers
 		require
 			usable: is_interface_usable
@@ -133,7 +133,7 @@ feature -- Status setting
 			not_blocking_equals_running_conf: not a_blocking = (factory (a_type).is_running)
 		end
 
-	launch_processor (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
+	launch_processor (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- Launch test processor and notify all observers
 		require
 			usable: is_interface_usable

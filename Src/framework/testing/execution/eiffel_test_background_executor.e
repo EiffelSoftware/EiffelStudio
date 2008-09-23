@@ -17,6 +17,11 @@ inherit
 			evaluator_test_count
 		end
 
+	EIFFEL_TEST_BACKGROUND_EXECUTOR_I
+		undefine
+			is_ready
+		end
+
 create
 	make, make_with_launcher
 
@@ -35,7 +40,7 @@ feature {NONE} -- Status setting
 			l_wkbench, l_tmp: FILE_NAME
 		do
 			Precursor
-			-- Todo: copy wkbench executable to separate directory
+				-- TODO: copy wkbench executable to separate directory
 		end
 
 feature {NONE} -- Factory
@@ -45,6 +50,7 @@ feature {NONE} -- Factory
 		local
 			l_exec: !STRING
 		do
+				-- TODO: use temporary executable
 			l_exec ?= test_suite.eiffel_project.system.application_name (True)
 			create {EIFFEL_TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (map, l_exec)
 		end

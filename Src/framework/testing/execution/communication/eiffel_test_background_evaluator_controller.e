@@ -39,14 +39,6 @@ feature {NONE} -- Access
 	process: ?PROCESS
 			-- Process
 
-feature -- Status report
-
-	is_ready: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
-		end
-
 feature {NONE} -- Status report
 
 	is_evaluator_running: BOOLEAN

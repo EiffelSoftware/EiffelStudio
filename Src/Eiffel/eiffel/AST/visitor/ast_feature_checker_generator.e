@@ -3028,6 +3028,7 @@ feature -- Implementation
 					if
 						l_needs_byte_node and then
 						not current_feature.is_external and then
+						not l_as.is_built_in and then
 						l_feat_type.is_initialization_required (context.current_class) and then
 						{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
 							(system.default_create_rout_id).access (void_type, True)

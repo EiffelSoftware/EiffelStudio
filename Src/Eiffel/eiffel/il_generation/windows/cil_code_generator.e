@@ -978,7 +978,7 @@ feature -- Generation Structure
 				(current_module /= Void and then current_module.is_generated)
 			then
 					-- Mark now entry point for debug information
-				if has_root_type and is_debug_info_enabled and system.root_creation_name /= Void then
+				if has_root_type and is_debug_info_enabled and not system.root_creation_name.is_empty then
 					a_class := system.root_type.associated_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
 					l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)

@@ -1210,6 +1210,23 @@ feature -- Access
 			end
 		end
 
+	is_initialization_required (c: CLASS_C): BOOLEAN
+			-- May type need initialization in `c'?
+		do
+				-- The cases that require initialization include:
+				--   - attached self-initializing types (except expanded that are initialized eagerly)
+				-- The cases that may require initialization include:
+				--   - anchored types (due to anchor redeclaration)
+				--   - formal generics that are self-initializing (due to generic substitution)
+			if
+				is_attached and then not is_expanded and then is_self_initializing (c) or else
+				is_like and then not is_like_argument or else
+				is_formal and then is_self_initializing (c)
+			then
+				Result := True
+			end
+		end
+
 	is_ancestor_valid: BOOLEAN is
 			-- Is type ancestor valid?
 			-- (This is currently checked only for expanded types that have

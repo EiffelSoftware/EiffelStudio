@@ -1708,9 +1708,7 @@ feature -- Implementation
 									end
 									if
 										l_needs_byte_node and then
-										(l_result_type.is_attached and then not l_result_type.is_expanded and then l_result_type.is_self_initializing (context.current_class) or else
-										(l_result_type.is_like and then not l_result_type.is_like_current and then not l_result_type.is_like_argument
-										or else l_result_type.is_formal and then l_result_type.is_self_initializing (context.current_class))) and then
+										l_result_type.is_initialization_required (context.current_class) and then
 										{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
 											(system.default_create_rout_id).access (void_type, True)
 									then
@@ -2241,9 +2239,7 @@ feature -- Implementation
 						end
 						if
 							l_result /= Void and then
-							(l_feat_type.is_attached and then not l_feat_type.is_expanded and then l_feat_type.is_self_initializing (context.current_class) or else
-							(l_feat_type.is_like and then not l_feat_type.is_like_current and then not l_feat_type.is_like_argument
-							or else l_feat_type.is_formal and then l_feat_type.is_self_initializing (context.current_class))) and then
+							l_feat_type.is_initialization_required (context.current_class) and then
 							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
 								(system.default_create_rout_id).access (void_type, True)
 						then
@@ -2565,9 +2561,7 @@ feature -- Implementation
 						end
 						if
 							l_needs_byte_node and then
-							(l_type.is_attached and then not l_type.is_expanded and then l_type.is_self_initializing (context.current_class) or else
-							(l_type.is_like and then not l_type.is_like_current and then not l_type.is_like_argument
-							or else l_type.is_formal and then l_type.is_self_initializing (context.current_class))) and then
+							l_type.is_initialization_required (context.current_class) and then
 							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
 								(system.default_create_rout_id).access (void_type, True)
 						then
@@ -3034,8 +3028,7 @@ feature -- Implementation
 					if
 						l_needs_byte_node and then
 						not current_feature.is_external and then
-						(l_feat_type.is_attached and then not l_feat_type.is_expanded and then l_feat_type.is_self_initializing (context.current_class) or else
-						(l_feat_type.is_like or else l_feat_type.is_formal and then l_feat_type.is_self_initializing (context.current_class))) and then
+						l_feat_type.is_initialization_required (context.current_class) and then
 						{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
 							(system.default_create_rout_id).access (void_type, True)
 					then

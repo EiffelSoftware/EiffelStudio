@@ -1,0 +1,180 @@
+/* $Id: html-elements.css,v 1.2 2008/01/06 15:50:31 johnalbin Exp $ */
+
+/****
+ **** HTML ELEMENT STYLING
+ ****/
+
+
+/** fonts **/
+  body
+  {
+    font: 13px Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+    background: #fff;
+  }
+
+  /* IE 5 and 6 can't resize text that is specified in pixels. */
+  * html body
+  {
+    font-size: x-small; /* IE5 will get this value */
+    font-size: small; /* IE6 will get this value */
+  }
+
+  #page
+  {
+    font-family: Verdana, "Bitstream Vera Sans", Arial, Helvetica, sans-serif;
+    line-height: 1.5em;
+  }
+
+  pre, code
+  {
+    font-size: 115%; /* Monospace fonts can be hard to read */
+    font-family: "Bitstream Vera Sans Mono", "Courier New", monospace;
+  }
+
+/** headings **/
+  h1
+  {
+    font-size: 140%;
+  }
+
+  h1, h1 a, h1 a:hover
+  {
+    margin: .5em 0 .5em 0;
+    font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+    color: #444;
+  }
+
+  h1.title
+  {
+    font-size: 200%;
+  }
+
+  h1.title, h1.title a, h1.title a:hover
+  {
+    font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    color: #6191C5;
+    margin: 0;
+    margin-bottom: 0;
+    line-height: normal;
+  }
+
+  h2
+  {
+    font-size: 122%;
+  }
+
+  h2, h2 a, h2 a:hover, .block h3, .block h3 a
+  {
+    color: #444;
+    font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+    margin: .5em 0 .5em 0;
+  }
+
+  h3
+  {
+    font-size: 107%;
+    font-weight: bold;
+    font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+  }
+
+  h4, h5, h6
+  {
+    font-weight: bold;
+    font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+  }
+
+/** block-level elements **/
+  p
+  {
+    padding: 0 0 0.5em 0;
+    margin: 0;
+  }
+
+  ol, ul, dl
+  {
+    position: relative;
+  }
+
+  pre
+  {
+    background: #ddd;
+    border: 1px solid #aaa;
+    padding: 0.75em 1.5em;
+  }
+
+  blockquote
+  {
+    border: 1px #ccc solid;
+    margin: 0.5em 1em;
+    padding: 0.3em;
+    font-style: italic;
+  }
+
+/** links **/
+  /* The order of link states are based on Eric Meyer's article:
+   * http://meyerweb.com/eric/thoughts/2007/06/11/who-ordered-the-link-states
+   */
+  a:link,
+  a:visited
+  {
+    color: #2763A5;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus
+  {
+    color: #6191C5;
+    text-decoration: underline;
+  }
+
+  a:active,
+  a.active
+  {
+    color: #89A3E4;
+  }
+
+/** tables **/
+  table
+  {
+    font-size: 100%; /* Forces font size inheritance in IE5 */
+    f\ont-size: inherit;
+  }
+
+  tr, td
+  {
+    padding: .25em;
+  }
+
+/** abbreviations **/
+  /* Date-based "abbreviations" show computer-friendly timestamps which are not
+     human-friendly. */
+  abbr.created
+  {
+    border-bottom: none;
+    text-decoration: none;
+  }
+
+/** images **/
+  img
+  {
+    border: 0;
+  }
+
+/** forms **/
+  form
+  {
+    margin: 0;
+    padding: 0;
+  }
+
+  fieldset
+  {
+    border: solid #ccc 1px;
+  }
+
+  select, input, textarea
+  {
+    font: 99% Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+  }

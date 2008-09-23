@@ -1,0 +1,791 @@
+/* $Id$ */
+
+/*
+ * COMMON STYLES
+ */
+
+  body
+  {
+    background: #fff;
+  }
+
+  #page
+  {
+    color: #111;
+    background-color: #fff;
+  }
+
+  #container
+  {
+    margin: 0 10px 10px 10px;
+  }
+
+  #header-region,
+  #closure-blocks
+  {
+    margin: 0 10px;
+  }
+
+  #main .node .content
+  {
+    color: #333;
+  }
+
+  div.content, div.links
+  {
+    font-size: 92%;
+  }
+
+  .block h3
+  {
+    font-size: 122%;
+  }
+
+  .book .body
+  {
+    padding: 0 0 0.5em 0;
+    margin: 0;
+  }
+
+/*
+ * HEADER STYLES
+ */
+
+  #logo-title
+  {
+    margin: 10px 20px 0 20px;
+    position: relative;
+  }
+
+  #logo
+  {
+    vertical-align: baseline;
+  }
+
+  #name-and-slogan
+  {
+    display: inline;
+  }
+
+  #site-name
+  {
+    margin: 0;
+    display: inline;
+    font-size: 246%;
+  }
+
+  #site-name a, #site-name a:hover
+  {
+    font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    color: #6DA6E2;
+    margin: 0;
+    padding: 0;
+  }
+
+  #site-slogan
+  {
+    color: #aaa;
+    margin: 0;
+    font-size: 85%;
+    margin-left: 20px;
+  }
+
+  #search
+  {
+    position: absolute;
+    padding: 0;
+    top: 10px;
+    right: 0;
+  }
+
+  #mission
+  {
+    color: #666;
+    font-weight: bold;
+    padding: 2em;
+    background: #D7E3F0 url(images/background.png);
+    margin-bottom: 20px;
+    font-size: 85%;
+    border: solid 1px #B5C9D8;
+  }
+
+  .breadcrumb
+  {
+    margin: 0;
+    padding: 0;
+    font-size: 85%;
+    margin-left: 10px; /* #header-region already has 10px */
+  }
+
+  /* "Skip to Main Content" link
+   *
+   * This link useful for both blind people and people with mobility impairments
+   * who cannot use a mouse.
+   */
+
+  #skip-nav
+  {
+    margin: 0 !important;
+    padding-left: 20px;
+    font-size: 0.8em;
+    line-height: 1;
+  }
+
+  #skip-nav a
+  {
+    padding: 1px 10px;
+  }
+
+  #skip-nav a:link, #skip-nav a:visited
+  {
+    color: #ffffff; /* same as background color */
+  }
+
+  #skip-nav a:hover, #skip-nav a:active, #skip-nav a:focus
+  {
+    color: #ffffff;
+    background: #2763A5;
+    text-decoration: none;
+  }
+
+  /* Alternatively, the skip-nav link can be completely hidden until a user tabs
+     to the link. Un-comment the following CSS to use this technique. */
+  /*
+  #skip-nav a, #skip-nav a:hover, #skip-nav a:visited
+  {
+    position: absolute;
+    left: 0;
+    top: -500px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  #skip-nav a:active, #skip-nav a:focus
+  {
+    position: static;
+    width: auto;
+    height: auto;
+  }
+  #logo-title
+  {
+    margin: 10px 20px 0 20px;
+  }
+  */
+
+/*
+ * MENU STYLES
+ */
+
+  div.menu
+  {
+    margin-top: 15px;
+  }
+
+  #primary
+  {
+    font-size: 85%;
+    line-height: normal;
+    padding: 0 0 1px 20px;
+    border-bottom: 4px solid #2763A5;
+  }
+
+  #primary ul
+  {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  #primary ul.links li,
+  #secondary ul.links li
+  {
+    display: inline;
+    border-left: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #primary a
+  {
+    background: #6DA6E2 url(images/tabs.png) repeat-x;
+    color: #FFF;
+    font-weight: bold;
+    display: block;
+    float: left;
+    padding: 5px 14px 5px 14px;
+    margin: 0 1px 0 0;
+    border: solid #6191C5 1px;
+    border-width: 1px 1px 0 1px;
+  }
+
+  #primary a
+  {
+    background-position: 0% 0;
+  }
+
+  #primary a:hover
+  {
+    background-position: 0% -42px;
+    text-decoration: none;
+  }
+
+  #primary a.active
+  {
+    background-position: 0% -84px;
+  }
+
+  #secondary
+  {
+    padding-left: 20px;
+    background: #6DA6E2; /*#347FD2;*/
+    border-bottom: solid #2763A5 4px;
+  }
+
+  #secondary ul
+  {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #secondary li a
+  {
+    float: left;
+    display: block;
+    color: #fff;
+    font-size: 85%;
+    text-decoration: none;
+    padding: 0 5px 0 5px;
+  }
+
+  #secondary a:hover
+  {
+    background: #2763A5;
+  }
+
+  #secondary a.active
+  {
+    font-weight: bold;
+  }
+
+/*
+ * LINK STYLES
+ */
+
+  ul.links
+  {
+    text-align: left;
+  }
+
+  ul.links li
+  {
+    border-left: 1px solid #9cf;
+  }
+
+  .taxonomy
+  {
+    margin: 0;
+    padding: 0;
+    display: inline;
+  }
+
+  .taxonomy ul.links li
+  {
+    border: none;
+    padding: 0 .1em 0 .2em;
+  }
+
+  .taxonomy ul.links li:after
+  {
+    content: ",";
+  }
+
+  .taxonomy ul.links li.last:after
+  {
+    content: "";
+  }
+
+  ul.links li.first
+  {
+    padding-left: 0;
+    border: none;
+  }
+
+  .links
+  {
+    color: #999;
+  }
+
+  .links a
+  {
+    padding: 0 .1em 0 .1em;
+  }
+
+  .submitted, .taxonomy
+  {
+    font-size: 85%;
+    color: #999;
+  }
+  .terms 
+  {
+    font-size: 85%;
+    color: #999;
+  }
+  .uuid
+  {
+    float: right;
+    font-size: 85%;
+    color: #999;
+  }
+
+  #user-info {
+    font-size: 85%;
+    position: absolute;
+    right: 20px;
+    top: 3px;
+    text-align: right;
+  }
+  #user-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #user-info li {
+    display: inline;
+    margin: 0 0 0 1em;
+  }
+
+/*
+ * FORM STYLES
+ */
+
+  input, textarea, textfield
+  {
+    margin: 0;
+    color: #000;
+    font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+    padding: 1px;
+    font-size: 100%;
+  }
+
+  input.form-checkbox, input.form-radio
+  {
+    border: none;
+  }
+
+  #search .form-text, #user-login-form .form-text
+  {
+    color: #444;
+    border: 1px solid #6191C5;
+    padding: 2px;
+  }
+
+  .form-submit, .button
+  {
+    padding: 1px;
+  }
+
+  #search .button,
+  #search .form-submit,
+  #user-login-form .button,
+  #user-login-form .form-submit
+  {
+    background-color: #68A0D9;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid #4070A1;
+  }
+
+  #user-login-form
+  {
+    text-align: left;
+  }
+
+  #user-login-form .item-list ul
+  {
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+
+/*
+ * OpenID
+ *
+ * The default styling for the OpenID login link seems to assume Garland's
+ * styling of list items.
+ */
+  #user-login-form li.openid-link, /* The "Log in using OpenID" links. */
+  #user-login li.openid-link
+  {
+    margin-top: 1em;
+    margin-left: 0;
+  	padding-left: 1.5em;
+  	background-position: left center;
+  }
+
+  #user-login-form li.user-link, /* The "Cancel OpenID login" links. */
+  #user-login li.user-link
+  {
+    margin-top: 1em;
+  }
+
+  #user-login li.user-link /* The Cancl OpenID link on the /user form. */
+  {
+    margin-left: 0;
+  }
+
+/*
+ * ALERTS, STATUS, HELP MESSAGE STYLES
+ */
+
+  .messages
+  {
+    padding: 1.3em 1em .3em 52px;
+    border: 2px solid #ddd;
+    background: #eee;
+    margin: 10px 0;
+  }
+
+  div.error
+  {
+    border: 2px solid #F00;
+  }
+
+  .messages ul
+  {
+    padding: 0 0 0 20px;
+    margin: 0;
+  }
+
+/*
+ * FOOTER STYLES
+ */
+
+  #footer-wrapper
+  {
+    margin: 0;
+    margin-top: 15px;
+  }
+
+  #footer
+  {
+    background-color: #2763A5;
+    border: solid 1px #004969;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 0;
+    font-size: 85%;
+    padding: 1em;
+  }
+
+  #footer *
+  {
+    color: #FFFFFF;
+  }
+
+  #footer a
+  {
+    color: #fff;
+    font-weight: bold;
+    border-bottom: 1px dotted #FFFFFF;
+  }
+
+  #footer a:hover
+  {
+    border-bottom: 1px solid #FFFFFF;
+  }
+
+  #footer img.drupal-powered
+  {
+    position: relative;
+    top: .3em;
+  }
+
+  #footer .block
+  {
+    text-align: left;
+  }
+ 
+  #footer div.block div.edit
+  {
+    background-color: #2763A5;
+  }
+
+/*
+ * ADMINISTRATION STYLES
+ */
+
+  .admin-panel
+  {
+    margin: 0;
+    padding: 0;
+  }
+
+  .admin-panel .body
+  {
+    background-color: #eee;
+    border: solid #6191C5 1px;
+  }
+
+  .admin-panel .body dl, .admin-panel .body p
+  {
+    padding: 10px;
+  }
+
+  .admin-panel h3
+  {
+    margin-bottom: 0;
+    padding: 5px 5px 5px 30px;
+    font-family: Verdana, "Bitstream Vera Sans", Arial, Helvetica, sans-serif;
+    font-size: 122%;
+    color: #fff;
+    border-width: 0 2px 2px 2px;
+  }
+
+  table tr.odd
+  {
+    background: #ddd;
+  }
+
+  td.icon
+  {
+    text-align: center;
+  }
+
+/*
+ * COMMENT STYLES
+ */
+
+  .comment
+  {
+    margin: 0 0 10px 0;
+    padding: 10px;
+    background: #EBF2F8;
+  }
+
+  .comment-unpublished
+  {
+    background-color: #FFF;
+  }
+
+  .comment-by-author
+  {
+    background: none;
+    border: 1px solid #6191C5;
+  }
+
+  .comment  h3.title
+  {
+    font-size: 122%;
+  }
+
+  .comment  h3.title, .comment  h3.title a
+  {
+    color: #2266AB;
+    font-weight: normal;
+    font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+    margin-bottom: 3px;
+    margin-top: 0;
+  }
+
+  .comment .picture, .node .picture
+  {
+    float: left;
+    margin-right: 15px;
+  }
+
+  .node.node-unpublished .picture,
+  .comment.comment-unpublished .picture
+  {
+    position: relative; /* Otherwise floated pictures will appear below the "Unpublished" text. */
+  }
+
+  .comment .new
+  {
+    color: #FFC600;
+    font-weight: bold;
+    font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+  }
+
+  .comment .links
+  {
+    text-align: right;
+  }
+
+/*
+ * POLL STYLES
+ */
+
+  .poll .bar .foreground
+  {
+    background: #2763A5;
+  }
+
+  .poll .bar
+  {
+    padding: 2px;
+    background: #BDCBDD;
+  }
+
+/*
+ * BOOK STYLES
+ */
+
+  div.node div.content .book-navigation
+  {
+    background: #eee;
+    margin: 0;
+    padding: 0;
+  }
+
+  div.node div.content .book-navigation ul.menu
+  {
+    border: 0;
+    border-top: 1px solid #2763A5;
+    margin: 0;
+    padding-bottom: 10px;
+  }
+
+  div.node div.content .book-navigation .page-links
+  {
+    background: #C1D4EA; /*#347FD2;*/
+    border: 1px solid #2763A5;
+    border-width: 1px 0 1px 0;
+    padding: 5px;
+    margin: 0;
+  }
+
+/*
+ * FORUM STYLES
+ */
+
+  #forum table
+  {
+    width: 100%;
+  }
+
+/*
+ * Pager styles
+ */
+
+  .pager
+  {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .pager  a, .pager-current
+  {
+    padding: 3px 8px 3px 8px;
+    margin: 0 2px 0 2px;
+    color: #2763A5;
+    font-weight: bold;
+    border: solid 1px #eee;
+  }
+
+  .pager-current
+  {
+    color: #fff;
+    background-color: #2763A5;
+  }
+
+/*
+ * Node, Block, Content styles
+ */
+
+  .node
+  {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+  }
+
+  .node-unpublished div.unpublished, /* The word "Unpublished" displayed beneath the content. */
+  .comment-unpublished div.unpublished
+  {
+    height: 0;
+    overflow: visible;
+    color: #d8d8d8;
+    font-size: 75px;
+    line-height: 1;
+    font-family: Impact, "Arial Narrow", Helvetica, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    word-wrap: break-word; /* A very nice CSS3 property */
+  }
+
+  .node h2.title
+  {
+    margin-bottom: .1em;
+  }
+
+  .node h2.title a
+  {
+    color: #555;
+    font-size: 129%;
+    font-weight: normal;
+    font-family: Verdana, Tahoma, Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+    line-height: 1.4em;
+  }
+
+  .node .content
+  {
+    padding-top: 10px;
+    padding-bottom: 5px;
+  }
+
+  .sticky
+  {
+    border-bottom: solid 3px #ddd;
+  }
+
+  #sidebar-left .block,
+  #sidebar-right .block
+  {
+    border-bottom: solid #ddd 1px;
+    padding-bottom: 15px;
+    margin: 0 0 1.5em 0;
+  }
+
+  #sidebar-left .block
+  {
+    padding-right: 15px;
+  }
+
+  #sidebar-right .block
+  {
+    padding-left: 15px;
+  }
+
+  .block .content
+  {
+    margin: 0.5em 0;
+  }
+
+  .block .item-list ul
+  {
+    padding-left: 0;
+  }
+
+/*
+ * Status report colors.
+ */
+
+  table.system-status-report tr.error, table.system-status-report tr.error th
+  {
+    background-color: #fcc;
+    border-color: #ebb;
+    color: #200;
+  }
+
+  table.system-status-report tr.warning, table.system-status-report tr.warning th
+  {
+    background-color: #ffd;
+    border-color: #eeb;
+  }
+
+  table.system-status-report tr.ok, table.system-status-report tr.ok th
+  {
+    background-color: #dfd;
+    border-color: #beb;
+  }

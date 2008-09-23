@@ -210,6 +210,5 @@
     <?php print $closure; ?>
 
   </div> <!-- /page -->
-Test EiffelDoc Theme...
 </body>
 </html>

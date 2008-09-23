@@ -404,7 +404,7 @@ feature {NONE} -- Type description
 			l_feat: FEATURE_I
 			l_root_class: CLASS_C
 		do
-			if System.root_type /= Void and then System.root_creation_name /= Void then
+			if System.root_type /= Void and then not System.root_creation_name.is_empty then
 				l_root_class := System.root_type.associated_class
 				l_feat := l_root_class.feature_table.item (System.root_creation_name)
 				root_class_routine := l_feat.written_class
@@ -851,7 +851,7 @@ feature {NONE} -- Type description
 		do
 			if
 				System.msil_generation_type.is_equal ("exe") and then
-				System.root_creation_name /= Void
+				not System.root_creation_name.is_empty
 			then
 					-- Update the root class info
 				root_class_type := system.root_class_type (system.root_type)

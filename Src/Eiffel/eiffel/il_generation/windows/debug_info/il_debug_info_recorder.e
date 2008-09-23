@@ -277,9 +277,9 @@ feature -- Queries : eStudio data from debugger data
 		do
 				--| Update the root class info
 			s := System.root_creation_name
-			if s /= Void then
+			if not s.is_empty then
 				l_class := System.root_type.associated_class
-				Result := l_class.feature_table.item (System.root_creation_name)
+				Result := l_class.feature_table.item (s)
 			end
 		end
 

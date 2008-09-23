@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 feature -- Loading/Saving
 
 	read_from_named_file (file_name: STRING_GENERAL) is
-			-- Load the pixmap described in 'file_name'. 
+			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
@@ -478,9 +478,10 @@ feature {NONE} -- Implementation
 			l_background_brush: WEL_BRUSH
 			l_rect: WEL_RECT
 			theme_drawer: EV_THEME_DRAWER_IMP
-			l_background_region, l_image_region, l_combined_region: WEL_REGION
 			l_back_buffer: WEL_BITMAP
 			l_back_buffer_dc: WEL_MEMORY_DC
+			l_blend_function: WEL_BLEND_FUNCTION
+			l_result: BOOLEAN
 		do
 			if parent /= Void then
 					-- Call expose actions first, any pending invalidations called from 'expose_actions'
@@ -516,16 +517,13 @@ feature {NONE} -- Implementation
 				l_rect.set_rect (0, 0, window_width, window_height)
 
 				if internal_mask_bitmap = Void then
-					create l_background_region.make_rect (0, 0, window_width, window_height)
-					create l_image_region.make_rect (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
-					l_combined_region := l_background_region.combine (l_image_region, {WEL_RGN_CONSTANTS}.rgn_diff)
-					paint_dc.select_clip_region (l_combined_region)
 					theme_drawer.draw_widget_background (Current, paint_dc, l_rect, l_background_brush)
-					paint_dc.remove_clip_region
-					l_background_region.delete
-					l_image_region.delete
-					l_combined_region.delete
-					paint_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, l_bitmap_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+					-- We use Alpha blend function instead of bit_blt
+					-- Fixed bug#14800
+					create l_blend_function.make
+					l_result := paint_dc.alpha_blend (bitmap_left, bitmap_top, bitmap_width, bitmap_height, l_bitmap_dc, 0, 0, bitmap_width, bitmap_height, l_blend_function)
+					check successed: l_result = True end
+					l_blend_function.dispose
 				else
 					l_mask_bitmap := internal_mask_bitmap
 					l_mask_dc := mask_dc

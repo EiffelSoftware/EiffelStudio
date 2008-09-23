@@ -25,6 +25,15 @@
   {
     margin: 0 10px;
   }
+  
+  #header 
+  {
+    margin: 0px 0 0 0;
+    border-top: solid 1px #dde;
+    border-bottom: solid 1px #dde;
+    /*background-color: #1D409F; */
+    /*color: #ffffff; */
+  }
 
   #main .node .content
   {
@@ -53,7 +62,7 @@
 
   #logo-title
   {
-    margin: 10px 20px 0 20px;
+    margin: 1px 20px 0 20px;
     position: relative;
   }
 
@@ -76,7 +85,8 @@
 
   #site-name a, #site-name a:hover
   {
-    font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    //font-family: "Trebuchet MS", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     color: #6DA6E2;
     margin: 0;
@@ -139,13 +149,13 @@
 
   #skip-nav a:link, #skip-nav a:visited
   {
-    color: #ffffff; /* same as background color */
+    color: #fff; /* same as background color */
   }
 
   #skip-nav a:hover, #skip-nav a:active, #skip-nav a:focus
   {
-    color: #ffffff;
-    background: #2763A5;
+    color: #00f;
+    background: #fff;
     text-decoration: none;
   }
 
@@ -339,11 +349,22 @@
     color: #999;
   }
 
+  #top-bar {
+    margin: 0;
+    padding: 0 20px 0 0px;
+  }
+  #top-bar
+  {
+    background-color: #FbFbFd;
+    color: #000;
+  }
+  #top-bar a
+  {
+    color: #009;
+  }
+
   #user-info {
     font-size: 85%;
-    position: absolute;
-    right: 20px;
-    top: 3px;
     text-align: right;
   }
   #user-info ul {
@@ -749,11 +770,13 @@
 
   #sidebar-left .block
   {
+    border-right: solid #eee 1px;
     padding-right: 15px;
   }
 
   #sidebar-right .block
   {
+    border-left: solid #eee 1px;
     padding-left: 15px;
   }
 

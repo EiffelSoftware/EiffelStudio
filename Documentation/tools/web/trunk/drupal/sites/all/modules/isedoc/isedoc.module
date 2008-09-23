@@ -70,7 +70,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 function isedoc_nodeapi(&$node, $op, $form = NULL, $a4 = NULL) {
   switch ($op) {
     case 'prepare':
-      if (is_callable(array($node, 'field_uuid'), TRUE)) {
+      if ($node->type == 'doc' and is_callable(array($node, 'field_uuid'), TRUE)) {
         $l_uuid = $node->field_uuid[0]['value'];
         //drupal_set_message("uuid=[$l_uuid]");
         if ($l_uuid === NULL) {

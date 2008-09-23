@@ -12,10 +12,14 @@ function isedoc_whatlinkshere($node) {
       $output .= "<br/>";
     }
   }
-  $n_bn = isedoc_book_name($node->book['bid']);
-  $refs = isedoc_pages_referencing($node->title);
+  if ($node->type == 'image') {
+    $refs = isedoc_pages_referencing_image($node->title);
+  } else {
+    $n_bn = isedoc_book_name($node->book['bid']);
+    $refs = isedoc_pages_referencing($node->title);
+  }
   if ($refs) {
-    $output .= t("The page '%tit' is <strong>referenced by the following %nb page(s)</strong>:", array('%tit' => $node->title, '%nb' => count($refs)));
+    $output .= t("The node '%tit' is <strong>referenced by the following %nb page(s)</strong>:", array('%tit' => $node->title, '%nb' => count($refs)));
     $output_by_book=array();
     foreach($refs as $r_nid => $r) {
       $n =& node_load($r_nid);
@@ -40,7 +44,7 @@ function isedoc_whatlinkshere($node) {
       $output .= _isedoc_display_references($t, $lst);
     }
   } else {
-    $output .= '<strong>'.t("It seems that no page references internally the page '%tit'.", array('%tit' => $node->title)).'</strong>';
+    $output .= '<strong>'.t("It seems that no page references internally the node '%tit'.", array('%tit' => $node->title)).'</strong>';
   }
   $pnid = isedoc_book_parent_of($node->nid);
   if ($pnid) {

@@ -87,11 +87,8 @@
 </head>
 <body class="<?php print $body_classes; ?>">
   <div id="page">
-    <div id="header">
-
-      <div id="skip-nav"><a href="#content"><?php print t('Skip to Main Content'); ?></a></div>
-
-      <div id="user-info">@
+    <div id="top-bar">
+      <div id="user-info">
         <ul>
         <?php if ($logged_in) { ?>
           <li><?php print t("Signed in as "); print l($user->name, 'user/'.$user->uid); ?></li>
@@ -102,6 +99,9 @@
         <?php } ?>
         </ul>
       </div>
+    </div>
+    <div id="header">
+      <div id="skip-nav"><a href="#content"><?php print t('Skip to Main Content'); ?></a></div>
       <div id="logo-title">
 
         <?php print $search_box; ?>
@@ -209,6 +209,6 @@
     <?php print $closure; ?>
 
   </div> <!-- /page -->
-
+Test EiffelDoc Theme...
 </body>
 </html>

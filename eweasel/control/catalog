@@ -111,6 +111,9 @@ test non-conform-linked-list					noncon015 tcf pass non-conforming
 test non-conform-arguments						noncon016 tcf pass non-conforming
 test non-conform-infinite-loop					noncon017 tcf pass non-conforming
 
+-- Replication
+test replicate-precursor				replication001 tcf pass replication
+
 -- For testing only
 
 -- test	keep-recompiling		fake001 tcf testing

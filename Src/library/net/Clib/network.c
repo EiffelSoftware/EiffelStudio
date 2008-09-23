@@ -194,7 +194,7 @@ void eif_net_check (int retcode) {
 #else
 		/* Get the last error here, and signal it like above...*/
 	if (retcode < 0) {
-		if ((retcode != EWOULDBLOCK) && (retcode != EINPROGRESS)) {
+		if ((errno != EWOULDBLOCK) && (errno != EINPROGRESS)) {
 			eraise(NULL, EN_IO);
 		} else {
 			errno = 0;

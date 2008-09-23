@@ -1,0 +1,5 @@
+print (9.87653412345) double: 9.8765341234499999
+io.putdouble (9.87653412345): 9.8765341234499999
+print (x) double: 9.8765341234499999
+io.putdouble (x): 9.8765341234499999
+Execution completed

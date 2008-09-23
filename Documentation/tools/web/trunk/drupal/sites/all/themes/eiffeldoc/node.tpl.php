@@ -65,7 +65,7 @@
   <?php if ($submitted or $terms): ?>
     <div class="meta">
       <?php 
-        if (is_callable(array($node, 'field_uuid'), TRUE)) {
+        if (!$teaser and is_callable(array($node, 'field_uuid'), TRUE)) {
           $l_uuid = $node->field_uuid[0]['value'];
           if ($l_uuid) { ?>
             <div class="uuid"><strong>UUID:</strong> <?php echo $l_uuid; ?></div>

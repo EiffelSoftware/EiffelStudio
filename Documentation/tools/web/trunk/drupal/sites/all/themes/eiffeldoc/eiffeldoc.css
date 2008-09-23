@@ -487,6 +487,18 @@
   }
 
 /*
+ * Tags
+ */
+
+div.block-tagadelic
+{
+  border: dotted 1px #dde;
+  background-color: #EFFFFF;
+  margin: 10px;
+  padding: 10px;
+}
+
+/*
  * FOOTER STYLES
  */
 

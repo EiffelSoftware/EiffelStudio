@@ -368,8 +368,8 @@ feature
 						i := c.info
 						i.generate_start (buf)
 						i.generate_gen_type_conversion (0)
-						buf.put_new_line
 					end
+					buf.put_new_line
 					buf.put_string ("if (")
 					if i /= Void then
 						buf.put_string ("RTAT(")
@@ -379,7 +379,6 @@ feature
 					buf.put_character ('!')
 					target.print_register
 					buf.put_string (") {")
-					buf.put_new_line
 					buf.indent
 				end
 				generate_frozen_debugger_hook
@@ -397,10 +396,7 @@ feature
 					generate_assignment
 				end
 				if is_conditional then
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
-					buf.put_new_line
+					buf.generate_block_close
 					if i /= Void then
 						i.generate_end (buf)
 					end

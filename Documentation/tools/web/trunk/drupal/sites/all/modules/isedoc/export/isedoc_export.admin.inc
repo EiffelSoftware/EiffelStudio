@@ -60,6 +60,7 @@ function isedoc_export_form() {
 	$all_books = book_get_books();
 	if (count($all_books) > 0) {
 		$dft_book = $all_books[1]['title'];
+		$all_books_titles[0] = "All books";
 		foreach ($all_books as $b) {
 			if ($dft_book == '') { $dft_book = $b['bid']; }
 			$all_books_titles[$b['bid']] = $b['title']; //. " #".$b['bid'];
@@ -110,30 +111,41 @@ function isedoc_export_form_export($form, &$form_state) {
 	if (isset($form_state['values']['isedoc_export_folder'])) {
 		variable_set('isedoc_export_folder',$form_state['values']['isedoc_export_folder']);
 	}
-	variable_set('isedoc_export_bid',$bookid);
 	$op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
-	if ($op == t('Export')) {
-		$dirpath = $form_state['values']['isedoc_export_dirpath'];
-		$l_exp_format = $form_state['values']['isedoc_export_format'];
-		if (file_check_directory($dirpath)) {
+	$dirpath = $form_state['values']['isedoc_export_dirpath'];
+	$l_exp_format = $form_state['values']['isedoc_export_format'];
+	variable_set('isedoc_export_bid',$bookid);
+	variable_set('isedoc_export_format',$l_exp_format);
+	if (file_check_directory($dirpath)) {
+		switch ($op) {
+		case t('Export'):
 			//drupal_set_message(var_dump_r($form_state['values']));
-			if (!ini_get('safe_mode')) { set_time_limit(0); }
-
-			$nodes_count = 0;
-			$nodes_count = isedoc_export_book_to($bookid, $dirpath, $l_exp_format);
-
-			// report back on our progress
-			if ($nodes_count > 0) {
-				drupal_set_message(t("Successfully exported: %nb nodes from book #$bookid", array ('%nb' => $nodes_count)));
+			$book_ids = array();
+			if ($bookid == 0) {
+				$all_books = book_get_books();
+				if (count($all_books) > 0) {
+					foreach ($all_books as $b) {
+						$book_ids[] = $b['bid'];
+					}
+				}
+			} else {
+				$book_ids[] = $bookid;
 			}
-			else {
-				drupal_set_message(t('No node exported.'));
+			foreach($book_ids as $k => $l_bid) {
+				$nodes_count = _isedoc_export_book_to($l_bid, $dirpath, $l_exp_format);
+				if ($nodes_count > 0) {
+					drupal_set_message(t("Successfully exported: %nb nodes from book #%bid", array ('%nb' => $nodes_count, '%bid' => $l_bid)));
+				}
+				else {
+					drupal_set_message(t('No node exported for book #%bid.', array('%bid' => $l_bid)));
+				}
 			}
+			break;
 		}
 	}
 }
 
-function isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
+function _isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
 	global $isedoc_export_data;
 	global $isedoc_export_dir;
 	global $isedoc_node_count;
@@ -142,14 +154,16 @@ function isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
 	global $base_root;
 	$isedoc_node_count = 0;
 
+	if (!ini_get('safe_mode')) { set_time_limit(0); }
+
 	$node =& node_load(array('nid' => $a_bookid), NULL, FALSE);
 	//drupal_set_message(var_dump_r ($node),'status');
 	if ($node) {
 		if (isset($node->book)) {
 			$book_url = $base_root.$base_path.$node->path;
-			$isedoc_export_dir = $a_dirpath;
+			$isedoc_export_dir = "$a_dirpath/$a_exp_format";;
 			$l_bk_alias = isedoc_export_node_alias($node);
-			$l_bk_dir = $isedoc_export_dir . '/' . $l_bk_alias;
+			$l_bk_dir = "$isedoc_export_dir/$l_bk_alias";
 
 			drupal_set_message(t("Exporting($a_exp_format) book #$a_bookid \"<strong>%bookname</strong>\" to <strong>$l_bk_dir</strong>.", 
 				array('%bookname' => $node->title)),'status');
@@ -277,9 +291,16 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
 function isedoc_export_book_html_children_navigation($a_children_tree) {
 	$output = '<ul id="doc-nav">';
 	foreach($a_children_tree as $data) {
-	    if ($node = node_load($data['link']['nid'], FALSE)) {
+	    if ($node = node_load($data['link']['nid'])) {
 	 	$l_alias = isedoc_export_node_alias($node);
-		$output .= "<li><a href=\"$l_alias.html\">".$node->title."</a></li>\n";
+		if ($data['below']) {
+			$l_class = ' class="folder" ';
+			$l_pref = '+ ';
+		} else {
+			$l_class = '';
+			$l_pref = '- ';
+		}
+		$output .= "<li$l_class>$l_pref<a href=\"$l_alias.html\">".$node->title."</a></li>\n";
 	    }
 	}
 	$output .= '</ul>';
@@ -436,13 +457,18 @@ div#doc-body div#doc-tags, div#doc-body div#doc-uuid {
 	float: right;
 	margin-right: 15px;
 	}
-ul#doc-nav { margin-left: auto; margin-right: 5px; width: 50%;
-		text-align: right;
-		list-style-type: none;
-		color: #533; 
-		background-color: #eef;
-		padding: 5px 5px 5px 20px; border: solid 1px #ccc;
+ul#doc-nav { 
+	margin-left: auto; margin-right: auto; width: 80%;
+	text-align: left;
+	list-style-type: none;
+	color: #533; 
+	background-color: #eef;
+	padding: 5px 5px 5px 20px; border: solid 1px #ccc;
 	}
+ul#doc-nav li.folder { 
+	/* list-style: square; */
+}
+
 #doc-nav a { color: #00f; text-decoration: none; 
 		padding-left: 5px; padding-right: 5px;
 	}
@@ -490,9 +516,11 @@ function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_na
   	$a_node = node_build_content($a_node, FALSE, FALSE);
   	$a_node->body = drupal_render($a_node->content);
         $content = "".theme('book_node_export_html', $a_node, '');
-	$content = str_replace($base_path.'book/'.$isedoc_export_book_alias.'/','',$content);
+	//$content = str_replace($base_path.'book/'.$isedoc_export_book_alias.'/','',$content);
+	$content = preg_replace('/'.addcslashes($base_path,'/').'book\/'.$isedoc_export_book_alias.'\/([^"]+)/','${1}.html',$content);
 	$content = str_replace($base_path.'content/','_images/',$content);
 	$content = str_replace(file_directory_path().'images/','_images/',$content);
+	$content = preg_replace('/\/book\/([^"]+)/','../${1}.html',$content);
 
 	if (strlen($a_left) > 0) {
 		$l_left_html = '<a href="'.$a_left.'.html">Left</a>';

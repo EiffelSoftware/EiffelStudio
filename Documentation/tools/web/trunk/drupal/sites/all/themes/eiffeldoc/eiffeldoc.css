@@ -33,6 +33,8 @@
     border-bottom: solid 1px #dde;
     /*background-color: #1D409F; */
     /*color: #ffffff; */
+    /* background: #fff url(images/header-eiffeldoc.png) no-repeat left top; */
+    background: #fff url(images/header-eiffeldoc.jpg) no-repeat left top;
   }
 
   #main .node .content
@@ -63,7 +65,9 @@
   #logo-title
   {
     margin: 1px 20px 0 20px;
+    padding: 0 10px 0 0;
     position: relative;
+    height: 85px;
   }
 
   #logo
@@ -136,6 +140,7 @@
 
   #skip-nav
   {
+    float: right;
     margin: 0 !important;
     padding-left: 20px;
     font-size: 0.8em;
@@ -375,6 +380,8 @@
   #user-info li {
     display: inline;
     margin: 0 0 0 1em;
+    padding-left: 1em;
+    border-left: solid 1px #dde;
   }
 
 /*

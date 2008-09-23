@@ -90,12 +90,13 @@
     <div id="top-bar">
       <div id="user-info">
         <ul>
+          <li><?php print l(t("Home"), '<front>'); ?></li>
         <?php if ($logged_in) { ?>
           <li><?php print t("Signed in as "); print l($user->name, 'user/'.$user->uid); ?></li>
           <li><a href="<?php print url('logout'); ?>"><? print t("Sign out") ?></a></li>
         <?php } else { ?>
-          <li><a href="<?php print url('user', drupal_get_destination()); ?>"><?php print t("Sign in") ?></a></li>
-          <li><a href="<?php print url('user/register', drupal_get_destination()); ?>"><?php print t("Register") ?></a></li>
+          <li><?php print l(t("Sign in"), 'user'); ?></li>
+          <li><?php print l(t("Register"), 'user/register'); ?></li>
         <?php } ?>
         </ul>
       </div>
@@ -105,7 +106,7 @@
       <div id="logo-title">
 
         <?php print $search_box; ?>
-        <?php if (!empty($logo)): ?>
+        <?php if (FALSE and !empty($logo)): ?>
           <a href="<?php print $base_path; ?>" title="<?php print t('Home'); ?>" rel="home">
             <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" id="logo" />
           </a>
@@ -113,7 +114,7 @@
 
         <div id="name-and-slogan">
 
-        <?php if (!empty($site_name)): ?>
+        <?php if (FALSE and !empty($site_name)): ?>
           <div id="site-name"><strong>
             <a href="<?php print $base_path; ?>" title="<?php print t('Home'); ?>" rel="home">
               <?php print $site_name; ?>

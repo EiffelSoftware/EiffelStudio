@@ -111,7 +111,7 @@
           </a>
         <?php endif; ?>
 
-        <div id="name-and-slogan">Test
+        <div id="name-and-slogan">
 
         <?php if (!empty($site_name)): ?>
           <div id="site-name"><strong>

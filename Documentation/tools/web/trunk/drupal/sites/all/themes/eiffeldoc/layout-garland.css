@@ -1,0 +1,116 @@
+/* $Id: layout-garland.css,v 1.2 2008/01/06 15:50:31 johnalbin Exp $ */
+
+/*
+ * LAYOUT STYLES
+ *
+ * Define CSS classes to create a table-free, 3-column, 2-column, or single
+ * column layout depending on whether blocks are enabled in the left or right
+ * columns.
+ *
+ * This is the same layout method used by Garland.
+ *
+ * However, there is a KNOWN BUG with this layout method that has no known fix:
+ *   oversize content will causes IE to display the sidebars underneath the main
+ *   content.
+ */
+
+  body
+  {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* With 3 columns, require a minimum width of 1000px to ensure there is enough horizontal space. */
+  body.two-sidebars
+  {
+    min-width: 980px;
+  }
+
+  /* With 2 columns, require a minimum width of 800px. */
+  body.sidebar-left, body.sidebar-right
+  {
+    min-width: 760px;
+  }
+
+  #container
+  {
+    margin: 0 auto;
+    max-width: 1270px;
+  }
+
+/* Layout the main content column */
+  #main
+  {
+    float: left;
+    width: 100%; /* Prevent it from being too narrow on near-empty pages */
+  }
+
+  #squeeze
+  {
+    position: relative;
+  }
+
+  /* First we adjust the #main container to make room for the left sidebar */
+  body.sidebar-left #main,
+  body.two-sidebars #main
+  {
+    margin-left: -210px;
+  }
+
+  body.sidebar-left #squeeze,
+  body.two-sidebars #squeeze
+  {
+    margin-left: 210px;
+    padding-left: 1em;
+  }
+
+  /* Then we adjust the #main container to make room for the right sidebar */
+  body.sidebar-right #main,
+  body.two-sidebars #main
+  {
+    margin-right: -210px;
+  }
+
+  body.sidebar-right #squeeze,
+  body.two-sidebars #squeeze
+  {
+    margin-right: 210px;
+    padding-right: 1em;
+  }
+
+/* Layout the sidebars */
+  #container .sidebar
+  {
+    float: left;
+    position: relative;
+    z-index: 2; /* We ensure the sidebars are still clickable using z-index */
+    margin: 0;
+  }
+
+  #container #sidebar-left
+  {
+    width: 210px; /* If you change this value, change the values
+                     of margin-left for #main and #squeeze. */
+  }
+
+  #container #sidebar-right
+  {
+    width: 210px; /* If you change this value, change the values
+                     of margin-right for #main and #squeeze. */
+  }
+
+/* Laout the footer */
+  #footer
+  {
+    float: none;
+    clear: both;
+    margin: 4em 0 -3em;
+  }
+
+/* Ensure long text or wide images don't break IE6 layout. */
+  #page, #header, #footer, #squeeze, #container .sidebar
+  {
+    _overflow: hidden;
+    _overflow-y: visible;
+    word-wrap: break-word; /* A very nice CSS3 property */
+  }

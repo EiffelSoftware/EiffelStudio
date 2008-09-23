@@ -1,0 +1,103 @@
+/* $Id: icons.css,v 1.5 2008/04/14 19:00:35 johnalbin Exp $ */
+
+/*
+ * ICON STYLES
+ *
+ * Puts all the references to icon images in one place.
+ */
+
+/* Leaf, collapsed, and expanded icons used for navigation */
+  .block li.leaf, ul.menu li.leaf
+  {
+    list-style-image: url(images/menu-leaf.png);
+  }
+
+  .block li.collapsed, ul.menu li.collapsed
+  {
+    list-style-image: url(images/menu-collapsed.png);
+  }
+
+  .block li.expanded, ul.menu li.expanded
+  {
+    list-style-image: url(images/menu-expanded.png);
+  }
+
+  .block li a.active
+  {
+    text-decoration: none;
+  }
+
+  .block ul li,
+  #user-login-form li.user-link, /* The "Cancel OpenID login" links. */
+  #user-login li.user-link
+  {
+    list-style-image: url(images/bullet.png);
+  }
+
+/* Forum posts and recent blog posts */
+  .block-forum ul li
+  {
+    list-style-type: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 5px 0 5px 20px;
+    background-image: url(images/page.png);
+    background-repeat: no-repeat;
+    background-position: 0 .5em;
+  }
+
+  .block-blog ul li
+  {
+    list-style-type: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 5px 0 5px 20px;
+    background-image: url(images/blog.png);
+    background-repeat: no-repeat;
+    background-position: 0 .7em;
+  }
+
+  /* Who's new & Who's online*/
+  #block-user-2 ul li, #block-user-3 ul li
+  {
+    list-style-type: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 5px 0 5px 20px;
+    background-image: url(images/user.png);
+    background-repeat: no-repeat;
+    background-position: 0 .5em;
+  }
+
+/* Status and Error icons */
+  .messages
+  {
+    min-height: 32px; /* icon height */
+  }
+
+  div.status
+  {
+    background-image: url(images/dialog-information.png);
+    background-repeat: no-repeat;
+    background-position: .5em 50%;
+  }
+
+  div.error
+  {
+    background-image: url(images/dialog-warning.png);
+    background-repeat: no-repeat;
+    background-position: .5em 50%;
+  }
+
+/* Node links such as add comments, User's blog, etc */
+  #main .node div.links
+  {
+    padding: 5px 0 5px 13px;
+    background: url(images/links.png) no-repeat 0 .93em;
+  }
+
+/* Administration panel */
+  .admin-panel h3
+  {
+    background: #6191C5 url(images/cog.png) no-repeat .5em .5em;
+  }

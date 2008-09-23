@@ -1,0 +1,10 @@
+/* $Id: zen.css,v 1.1 2008/04/14 19:43:05 johnalbin Exp $ */
+
+/*
+ * This file is intentionally blank.
+ *
+ * As per http://drupal.org/node/171209#styles-override-parent, in order for a
+ * sub-theme to remove a base theme's stylesheet, the sub-theme must re-define
+ * the stylesheet in its .info file using the same declaration and must include
+ * a stylesheet of the same name in its directory.
+ */

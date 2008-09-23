@@ -87,8 +87,16 @@ feature -- Status setting
 						if a_proc.is_idle then
 							if a_proc.is_finished then
 								a_proc.stop
+								processor_stopped_event.publish_if ([Current, a_proc], {!PREDICATE [ANY, TUPLE [!like Current, !EIFFEL_TEST_PROCESSOR_I]]} #?
+									agent (ts: like Current; p: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
+										do
+											Result := not p.is_running
+										end)
 							else
 								a_proc.proceed
+								if a_proc.is_finished then
+									processor_finished_event.publish ([Current, a_proc])
+								end
 							end
 						end
 					end)

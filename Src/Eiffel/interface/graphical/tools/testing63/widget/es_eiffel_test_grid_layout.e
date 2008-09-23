@@ -19,9 +19,6 @@ inherit
 			populate_header
 		end
 
-create
-	make
-
 feature -- Status report
 
 	column_count: INTEGER

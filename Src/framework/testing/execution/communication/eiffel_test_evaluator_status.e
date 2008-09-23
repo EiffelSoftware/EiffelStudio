@@ -24,11 +24,11 @@ feature {NONE} -- Initialization
 			a_list.do_all (agent test_queue.put_last)
 			create result_queue.make
 			create queue_mutex.make
-			is_receiving := True
+			is_listening := True
 		ensure
 			test_queue_equals_a_list: (a_list.count = test_queue.count) and a_list.for_all (agent test_queue.has)
 			result_queue_empty: result_queue.is_empty
-			receiving: is_receiving
+			listening: is_listening
 		end
 
 feature -- Access
@@ -83,6 +83,9 @@ feature {NONE} -- Access
 
 feature -- Status report
 
+	is_listening: BOOLEAN
+			-- Is receiver still waiting for connection?
+
 	is_receiving: BOOLEAN
 			-- Are more results expected?
 
@@ -104,12 +107,21 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_receiving
+			-- Change status from `is_listening' to `is_receiving'
+		do
+			is_listening := False
+			is_receiving := True
+		end
+
 	add_result (a_outcome: !TEST_OUTCOME)
 			-- Add outcome for `current_test'.
 		do
 			queue_mutex.lock
-			if result_queue.count < test_queue.count then
-				result_queue.put_last (a_outcome)
+			if is_receiving then
+				if result_queue.count < test_queue.count then
+					result_queue.put_last (a_outcome)
+				end
 			end
 			queue_mutex.unlock
 		end
@@ -119,6 +131,7 @@ feature -- Status setting
 		do
 			queue_mutex.lock
 			is_receiving := False
+			is_listening := False
 			queue_mutex.unlock
 		end
 

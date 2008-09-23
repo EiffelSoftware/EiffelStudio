@@ -11,11 +11,6 @@ deferred class
 
 inherit
 	EIFFEL_TEST_PROCESSOR_I
-		rename
-			start_process as start_process_frozen
-		redefine
-			start_process_frozen
-		end
 
 	EIFFEL_TEST_COLLECTION
 		rename
@@ -96,20 +91,21 @@ feature {NONE} -- Status setting
 			internal_test_suite.connect_events (Current)
 		end
 
-	frozen start_process_frozen (a_arg: like argument)
+	frozen start_process (a_arg: like argument)
 			-- <Precursor>
 		do
-			start_process (a_arg)
+			start_process_internal (a_arg)
 			is_idle := True
 		end
 
-	start_process (a_arg: like argument)
+	start_process_internal (a_arg: like argument)
 			-- Start performing a task for given arguments.
 			--
 			-- Note: `start_process' does not need to care about the idle status.
 			--
 			-- `a_arg': Arguments defining the task.
 		require
+			test_suite_valid: is_test_suite_valid
 			ready: is_ready (test_suite)
 			a_arg_valid: is_valid_argument (a_arg, test_suite)
 		deferred

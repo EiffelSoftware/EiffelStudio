@@ -60,12 +60,10 @@ feature {NONE} -- Access
 			create Result
 		end
 
-feature -- Status report
+	last_port: INTEGER
+			-- Port last receiver launched by `Current' opened a socket
 
-	is_ready: BOOLEAN
-			-- Can `Current' be launched?
-		deferred
-		end
+feature -- Status report
 
 	is_launched: BOOLEAN
 			-- Has evaluator been launched?
@@ -94,12 +92,12 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			-- `a_list': List of tests that `Current' should tell evaluator to execute.
 		require else
 			not_launched: not is_launched
-			ready: is_ready
 			a_list_in_map: a_list.for_all (agent (map.tests).has)
 		do
 			create internal_launch_time.make_now
 			create internal_status.make (a_list)
 			receiver.receive (status)
+			last_port := receiver.last_port
 			launch_evaluator (arguments (a_list))
 		ensure then
 			launched: is_launched
@@ -111,8 +109,13 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			launched: is_launched
 		do
 			is_terminated := True
-			status.stop_receiving
 			terminate_evaluator
+			if status.is_listening then
+					-- The evaluator was not able to connect to the receiver so we have to terminate the
+					-- thread by connecting to the listener port directly.
+				close_connection
+			end
+			status.stop_receiving
 		ensure
 			not_running: not is_running
 		end
@@ -155,7 +158,7 @@ feature {NONE} -- Query
 			end
 
 			Result.force ("-p")
-			l_port ?= receiver.last_port.out
+			l_port ?= last_port.out
 			Result.force (l_port)
 			Result.force ("-o")
 			Result.force ("-eif_root")
@@ -167,6 +170,17 @@ feature {NONE} -- Query
 		end
 
 feature	{NONE} -- Implementation
+
+	close_connection
+			-- Close port last launched receiver is listening on by connecting to it and immediatly closing
+			-- the connection.
+		local
+			l_socket: NETWORK_STREAM_SOCKET
+		do
+			create l_socket.make_client_by_port (last_port, "localhost")
+			l_socket.connect
+			l_socket.close
+		end
 
 	launch_evaluator (a_args: !LIST [!STRING]) is
 			-- Launch evaluator executable

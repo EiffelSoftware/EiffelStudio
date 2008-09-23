@@ -12,6 +12,11 @@ class
 inherit
 	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
 
+	ES_SHARED_EIFFEL_TEST_SERVICE
+		export
+			{NONE} all
+		end
+
 	ES_EIFFEL_TEST_COMMANDER_I
 
 	EXCEPTION_CODE_MEANING
@@ -83,12 +88,6 @@ feature {NONE} -- Access
 			-- Token writer used to create clickable items
 		once
 			create Result.make
-		end
-
-	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
-			-- Access to a test suite service {EIFFEL_TEST_SUITE_S} consumer
-		once
-			create Result
 		end
 
 feature -- Status report

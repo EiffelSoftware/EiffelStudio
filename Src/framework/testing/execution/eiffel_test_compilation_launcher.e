@@ -16,6 +16,8 @@ feature -- Status report
 
 	is_ready (a_project: !E_PROJECT): BOOLEAN
 			-- Can a compilation be launched?
+			--
+			-- `a_project': Project to be compiled.
 		do
 			Result := a_project.able_to_compile
 		end
@@ -23,7 +25,9 @@ feature -- Status report
 feature -- Status setting
 
 	compile (a_project: !E_PROJECT) is
-			-- Compile project if
+			-- Compile project.
+			--
+			-- `a_project': Project to be compiled.
 		require
 			ready: is_ready (a_project)
 		do

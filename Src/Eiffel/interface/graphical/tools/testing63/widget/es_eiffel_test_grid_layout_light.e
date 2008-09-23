@@ -18,20 +18,7 @@ inherit
 			populate_header
 		end
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_test_suite: like test_suite)
-			-- Initialize `Current'.
-			--
-			-- `a_test_suite': Test suite from which project data is retrieved.
-		do
-			test_suite := a_test_suite
-		ensure
-			test_suite_set: test_suite = a_test_suite
-		end
+	ES_SHARED_EIFFEL_TEST_SERVICE
 
 feature {NONE} -- Access
 
@@ -40,9 +27,6 @@ feature {NONE} -- Access
 		do
 			Result := test_suite.service.eiffel_project
 		end
-
-	test_suite: SERVICE_CONSUMER [EIFFEL_TEST_SUITE_S]
-			-- Consumer for test suite service
 
 feature -- Status report
 

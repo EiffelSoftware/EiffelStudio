@@ -105,31 +105,33 @@ feature -- Query
 			l_old_fcl, l_old_fl: CURSOR
 		do
 			create Result.make_default
-			from
-				l_fcl := a_class.features
-				l_old_fcl := l_fcl.cursor
-				l_fcl.start
-			until
-				l_fcl.after
-			loop
-				if is_valid_feature_clause ({!FEATURE_CLAUSE_AS} #? l_fcl.item) then
-					from
-						l_fl := l_fcl.item.features
-						l_old_fl := l_fl.cursor
-						l_fl.start
-					until
-						l_fl.after
-					loop
-						if {l_f: !FEATURE_AS} l_fl.item and then is_valid_feature (l_f) then
-							Result.force (l_f, create {!STRING}.make_from_string (test_routine_name (l_f)))
+			if a_class.features /= Void then
+				from
+					l_fcl := a_class.features
+					l_old_fcl := l_fcl.cursor
+					l_fcl.start
+				until
+					l_fcl.after
+				loop
+					if is_valid_feature_clause ({!FEATURE_CLAUSE_AS} #? l_fcl.item) then
+						from
+							l_fl := l_fcl.item.features
+							l_old_fl := l_fl.cursor
+							l_fl.start
+						until
+							l_fl.after
+						loop
+							if {l_f: !FEATURE_AS} l_fl.item and then is_valid_feature (l_f) then
+								Result.force (l_f, create {!STRING}.make_from_string (test_routine_name (l_f)))
+							end
+							l_fl.forth
 						end
-						l_fl.forth
+						l_fl.go_to (l_old_fl)
 					end
-					l_fl.go_to (l_old_fl)
+					l_fcl.forth
 				end
-				l_fcl.forth
+				l_fcl.go_to (l_old_fcl)
 			end
-			l_fcl.go_to (l_old_fcl)
 		ensure
 			result_has_valid_items: Result.keys.for_all (
 				agent (k: !STRING; t: like valid_features): BOOLEAN

@@ -28,13 +28,15 @@ feature {NONE} -- Initialization
 			l_tool_bar_container: like create_tool_container_widget
 		do
 				-- Create tool bar
-			l_tool_bar_container := create_tool_container_widget (a_widget)
-			a_widget.extend (l_tool_bar_container)
+			if has_tool_bar then
+				l_tool_bar_container := create_tool_container_widget (a_widget)
+				a_widget.extend (l_tool_bar_container)
+			end
 
 				-- Create real widget
 			notebook_widget := create_notebook_widget
 			build_notebook_widget_interface (notebook_widget)
-			l_tool_bar_container.extend (notebook_widget)
+			a_widget.extend (notebook_widget)
 		end
 
 	build_notebook_widget_interface (a_widget: !G)

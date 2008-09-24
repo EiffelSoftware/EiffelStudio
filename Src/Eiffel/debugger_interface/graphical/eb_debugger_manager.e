@@ -355,7 +355,7 @@ feature -- Settings
 				end
 			end
 		end
-		
+
 feature -- Access
 
 	clear_bkpt: EB_CLEAR_STOP_POINTS_COMMAND
@@ -1325,6 +1325,9 @@ feature -- Status setting
 			-- Save tools layout.
 		do
 			raise_saving_layout (True)
+				--| process graphical events before trying to start the execution
+				--| this way, the UI does not look frozen for too long.
+			ev_application.process_graphical_events
 		end
 
 	raise_saving_layout (a_save: BOOLEAN) is
@@ -1439,7 +1442,6 @@ feature -- Status setting
 			raised
 		end
 
-
 	unraise is
 			-- Make the debug tools disappear from `a_window'.
 		require
@@ -1487,6 +1489,8 @@ feature -- Status setting
 			update_all_debugging_tools_menu
 			unpopup_switching_mode
 			force_debug_mode_cmd.enable_sensitive
+
+			ev_application.process_graphical_events
 		ensure
 			not raised
 		end

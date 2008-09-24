@@ -790,13 +790,13 @@ div.block-tagadelic
 
   #sidebar-left .block
   {
-    border-right: solid #eee 1px;
+    border-right: dotted #eee 1px;
     padding-right: 15px;
   }
 
   #sidebar-right .block
   {
-    border-left: solid #eee 1px;
+    border-left: dotted #eee 1px;
     padding-left: 15px;
   }
 
@@ -832,3 +832,8 @@ div.block-tagadelic
     background-color: #dfd;
     border-color: #beb;
   }
+
+/* Fix an IE issue, display a text cursor for tabs, instead of hand */
+div.tabs a {
+    cursor: pointer;
+}

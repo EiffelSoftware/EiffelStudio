@@ -1,0 +1,8 @@
+Validity: Call Sharing Rule (VMCS)
+
+     It is valid for a feature f repeatedly inherited by 
+     a class D from an ancestor A, such that f is shared
+     under repeated inheritance and not redeclared, to 
+     involve a feature g of A other than as the feature 
+     of a qualified call if and only if g is, along the 
+     corresponding inheritance paths, also shared.

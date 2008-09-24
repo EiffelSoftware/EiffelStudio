@@ -100,11 +100,11 @@ feature -- Initialization
 
 			if not full_list.is_empty then
 
-					--| FIXME IEK This code shouldn't be needed as `select_closest_match'
-					--| is called in show and result in a rebuilding of the list.
---				if choice_list.row_count > 0 then
---					select_closest_match
---				end
+					-- We call `ensure_item_selection' instead of `select_closest_match' to avoid
+					-- needless completion list rebuilding.
+				if choice_list.row_count > 0 then
+					ensure_item_selection
+				end
 					-- If there is only one possibility, we insert it without displaying the window
 				determine_show_needed
 				if not show_needed then

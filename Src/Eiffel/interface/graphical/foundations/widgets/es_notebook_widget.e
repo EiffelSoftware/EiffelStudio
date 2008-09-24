@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			if has_tool_bar then
 				l_tool_bar_container := create_tool_container_widget (a_widget)
 				a_widget.extend (l_tool_bar_container)
+				a_widget.disable_item_expand (l_tool_bar_container)
 			end
 
 				-- Create real widget

@@ -391,12 +391,12 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	if (module_exists('taxonomy')) {
 		$taxo =& $a_node->taxonomy;
 		if (count($taxo) > 0) {
-			$tags = "(tags:";
+			$tags = "tags: ";
 			foreach($taxo as $t) {
 				$tags .= $t->name.",";
 			}
 			$tags = rtrim($tags, ',');
-			$tags .= ")";
+			$tags .= " ";
 			$output .= " $tags";
 			$mesg .= " $tags";
 		}
@@ -404,7 +404,7 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	if (is_callable(array($a_node, 'field_uuid'), TRUE)) {
 		$uuid = $a_node->field_uuid[0]['value'];
 		if ($uuid) {
-			$uuid_html = "(UUID=$uuid)";
+			$uuid_html = "UUID: $uuid";
 			$output .= " $uuid_html";
 			$mesg .= " $uuid_html";
 		}
@@ -455,6 +455,9 @@ div#doc-body { margin: 10px 5px 10px 5px;
 
 div#doc-body div#doc-tags, div#doc-body div#doc-uuid {
 	float: right;
+	clear: right;
+	font-size: 85%;
+	color: #999;
 	margin-right: 15px;
 	}
 ul#doc-nav { 
@@ -469,6 +472,9 @@ ul#doc-nav li.folder {
 	/* list-style: square; */
 }
 
+#doc-body a {
+	text-decoration: none; 
+}
 #doc-nav a { color: #00f; text-decoration: none; 
 		padding-left: 5px; padding-right: 5px;
 	}
@@ -493,8 +499,8 @@ function isedoc_export_html_page_template($book_url, $book_title) {
 	$txt .= '<div id="nav"><a href="%INDEX_URL%">Index</a> %LEFT_HTML% <a href="%PARENT_URL%">Up</a> %RIGHT_HTML%</div>';
 	$txt .= "</div>\n";
 	$txt .= '<div id="doc-body">';
-	$txt .= '<div id="doc-tags">%TAGS%</div>';
 	$txt .= '<div id="doc-uuid">%UUID%</div>';
+	$txt .= '<div id="doc-tags">%TAGS%</div>';
 	$txt .= '%BODY%<br/>%NAV_HTML%</div>';
 	$txt .= '<div id="doc-footer">';
 	$txt .= "Documentation exported from <a href=\"$book_url\">$book_url</a>";
@@ -512,11 +518,12 @@ function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_na
 	global $isedoc_export_book_alias;
 	global $base_path;
 
-  	$a_node->build_mode = NODE_BUILD_PRINT;
+  	$a_node->build_mode = NODE_BUILD_NORMAL;
   	$a_node = node_build_content($a_node, FALSE, FALSE);
   	$a_node->body = drupal_render($a_node->content);
+        unset($a_node->teaser);
+	node_invoke_nodeapi($a_node, 'alter', FALSE, FALSE);
         $content = "".theme('book_node_export_html', $a_node, '');
-	//$content = str_replace($base_path.'book/'.$isedoc_export_book_alias.'/','',$content);
 	$content = preg_replace('/'.addcslashes($base_path,'/').'book\/'.$isedoc_export_book_alias.'\/([^"]+)/','${1}.html',$content);
 	$content = str_replace($base_path.'content/','_images/',$content);
 	$content = str_replace(file_directory_path().'images/','_images/',$content);

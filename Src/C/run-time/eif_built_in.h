@@ -62,6 +62,7 @@ extern "C" {
 #define eif_builtin_ARGUMENTS_argument_count(some)		(arg_number() - 1)
 
 /* SPECIAL class */
+#define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
 #define eif_builtin_SPECIAL_count(area)						sp_count (area)
 #define eif_builtin_SPECIAL_element_size(area)				sp_elem_size (area)
 #define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, sp_count (area))

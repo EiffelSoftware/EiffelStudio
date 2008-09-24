@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	valid_token_chars: !STRING = "_{}()[]:/."
+	valid_token_chars: !STRING = "_{}()[]:.-"
 			-- Valid chars to be used in a token other than alpha numeric
 
 	valid_tag_chars: !STRING

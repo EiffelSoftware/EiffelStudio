@@ -197,7 +197,7 @@ feature {NONE} -- Quick search bar.
 			bottom_widget.extend (search_bar)
 			hide_search_bar
 			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
-			search_bar.close_button.select_actions.extend (agent close_quick_search_bar)
+			search_bar.close_button.select_actions.extend (agent close_quick_search_bar (True))
 			search_bar.next_button.select_actions.extend (agent quick_find_next)
 			search_bar.previous_button.select_actions.extend (agent quick_find_previous)
 
@@ -299,7 +299,7 @@ feature {NONE} -- Quick search bar.
 				if not search_bar.has_focus_on_widgets and not focusing_search_bar then
 					-- Commented out to prevent QSB flickering.
 					-- hide_search_bar
-					close_quick_search_bar
+					close_quick_search_bar (False)
 				else
 					if not search_bar.is_displayed then
 						show_search_bar
@@ -317,7 +317,7 @@ feature {NONE} -- Quick search bar.
 				if not has_focus and not search_bar.has_focus_on_widgets then
 					-- Commented out to prevent QSB flickering.
 					-- hide_search_bar
-					close_quick_search_bar
+					close_quick_search_bar (False)
 				end
 			end
 		end
@@ -335,7 +335,7 @@ feature {NONE} -- Quick search bar.
 			l_shortcut_sel_forw := preferences.editor_data.shortcuts.item ("search_selection_forward")
 			l_shortcut_sel_backw := preferences.editor_data.shortcuts.item ("search_selection_backward")
 			if a_key.code = {EV_KEY_CONSTANTS}.key_escape and not ctrled_key and not shifted_key and not alt_key then
-				close_quick_search_bar
+				close_quick_search_bar (True)
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter and not ctrled_key and not shifted_key and not alt_key then
 				search_bar.record_current_searched
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter and ctrled_key and not shifted_key and not alt_key then
@@ -365,12 +365,14 @@ feature {NONE} -- Quick search bar.
 			end
 		end
 
-	close_quick_search_bar is
+	close_quick_search_bar (a_focus_editor: BOOLEAN) is
 			-- When `close_button' is pressed.
 		do
 			set_quick_search_mode (false)
 			hide_search_bar
-			ev_application.do_once_on_idle (agent set_focus_to_drawing_area)
+			if a_focus_editor then
+				ev_application.do_once_on_idle (agent set_focus_to_drawing_area)
+			end
 		end
 
 	quick_search_mode : BOOLEAN is

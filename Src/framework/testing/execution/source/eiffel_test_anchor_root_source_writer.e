@@ -42,6 +42,8 @@ feature {NONE} -- Implementation
 			--
 		require
 			stream_valid: is_stream_valid
+		local
+			l_type: TYPE [ANY]
 		do
 			stream.indent
 			stream.put_line ("make")
@@ -52,6 +54,11 @@ feature {NONE} -- Implementation
 			stream.dedent
 			stream.put_line ("do")
 			stream.indent
+			stream.indent
+			stream.put_line ("-- First prevents warning message about unused local if no test class exists")
+			stream.dedent
+			stream.put_line ("l_type := {ANY}")
+			stream.put_line ("")
 			a_list.do_all (agent (a_class: !EIFFEL_CLASS_I)
 				do
 					stream.put_string ("l_type := {")

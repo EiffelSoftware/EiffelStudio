@@ -134,7 +134,7 @@ feature -- Status report
 	is_finished: BOOLEAN
 			-- <Precursor>
 		do
-			Result := evaluators.is_empty and is_compiled
+			Result := evaluators.is_empty and cursor.after
 		end
 
 feature {NONE} -- Status report
@@ -198,11 +198,13 @@ feature {NONE} -- Status setting
 	proceed_process
 			-- <Precursor>
 		do
-			if not is_compiled then
+			if not (is_compiled or is_stop_requested) then
 				write_root_class
 				if last_root_class_successful then
 					compile_project
-					if last_compilation_successful then
+					if not last_compilation_successful then
+						request_stop
+					elseif not is_stop_requested then
 						initialize_evaluators
 					end
 				end
@@ -319,16 +321,21 @@ feature {NONE} -- Status setting
 					end
 				else
 					retrieve_results (l_evaluator.status)
-					if current_test /= Void and then not map.tests.has ({!EIFFEL_TEST_I} #? current_test) then
-							-- `current_test' is no longer known to the executor as a valid test so we terminate
-							-- the evaluator
-						l_evaluator.terminate
+					if current_test /= Void then
+						if not (current_test.is_running and map.tests.has ({!EIFFEL_TEST_I} #? current_test)) then
+								-- `current_test' is no longer known to the executor as a valid test so we terminate
+								-- the evaluator
+							l_evaluator.terminate
+						end
 					end
 				end
 				if not l_cursor.after and l_evaluator = l_cursor.item then
 					l_cursor.forth
 				else
 				end
+			end
+			if is_stop_requested then
+				abort
 			end
 		ensure
 			stop_requested_implies_evaluators_empty: is_stop_requested implies evaluators.is_empty
@@ -391,7 +398,9 @@ feature {NONE} -- Status setting
 				(evaluator_test_count > 0 and l_list.count = evaluator_test_count.to_integer_32)
 					or cursor.after
 			loop
-				l_list.put_last (cursor.item)
+				if cursor.item.is_queued and then cursor.item.executor = Current then
+					l_list.put_last (cursor.item)
+				end
 				cursor.forth
 			end
 			if not l_list.is_empty then
@@ -431,13 +440,28 @@ feature {NONE} -- Status setting
 						-- already produced a result, we simply won't propagate it and let it execute the next
 						-- test in the queue.
 					if map.tests.has ({!EIFFEL_TEST_I} #? current_test) then
-						if not current_test.is_running then
+						if current_test.is_queued then
 							test_suite.set_test_running ({!EIFFEL_TEST_I} #? current_test)
 						end
 					end
 				else
 					l_done := True
 				end
+			end
+		end
+
+	abort
+			-- Abort testing by moving cursor to end and aborting each test which is still queued or running.
+		do
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
+				if cursor.item.is_queued or cursor.item.is_running then
+					test_suite.set_test_aborted (cursor.item)
+				end
+				cursor.forth
 			end
 		end
 

@@ -75,6 +75,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- <Precursor>
 		do
 			is_idle := False
+			is_stop_requested := False
 			stop_process
 		end
 

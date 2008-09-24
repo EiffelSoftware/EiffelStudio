@@ -69,7 +69,7 @@ feature -- Status setting
 			a_test_active: active_tests.has (a_test)
 		deferred
 		ensure
-			a_test_not_active: not active_tests.has (a_test)
+			a_test_not_active: (a_test.is_queued or a_test.is_running) implies a_test.executor /= Current
 		end
 
 end

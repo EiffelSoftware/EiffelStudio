@@ -174,7 +174,7 @@ feature {NONE} -- Access
 	tree_view: ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
 			-- Tree view displaying tests
 
-	outcome_tab: !ES_TESTING_TOOL_OUTCOME_TAB
+	outcome_tab: !ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
 
 feature {NONE} -- Access: widgets
@@ -378,7 +378,7 @@ feature {NONE} -- Action handlers
 				loop
 					l_item := l_cursor.item
 					if l_item.is_outcome_available then
-						if l_item.last_outcome.is_fail or l_item.last_outcome.is_unresolved then
+						if l_item.last_outcome.is_fail then
 							l_list.put_last (l_item)
 						end
 					end
@@ -418,7 +418,7 @@ feature {NONE} -- Action handlers
 				l_executor := l_test_suite.executor (a_type)
 				if l_executor.is_ready (l_test_suite) then
 					if l_executor.is_valid_test_list (a_list, l_test_suite) then
-						l_test_suite.run_list (a_type, a_list, False)
+						l_test_suite.run_list (l_executor, a_list, False)
 					else
 						-- TODO: message saying choosen tests can not be executed...
 					end
@@ -443,7 +443,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
-			l_new_tab: ES_TESTING_TOOL_EXECUTOR_TAB
+			l_new_tab: ES_TESTING_TOOL_EXECUTOR_WIDGET
 			l_found: BOOLEAN
 		do
 			if {l_exec: EIFFEL_TEST_EXECUTOR_I} a_processor then
@@ -452,7 +452,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 				until
 					notebook.after or l_found
 				loop
-					if {l_tab: ES_TESTING_TOOL_EXECUTOR_TAB} notebook.item_for_iteration.data then
+					if {l_tab: ES_TESTING_TOOL_EXECUTOR_WIDGET} notebook.item_for_iteration.data then
 						l_found := l_tab.executor = l_exec
 						notebook.item_tab (l_tab.widget).enable_select
 					end

@@ -58,7 +58,8 @@ feature -- Basic functionality
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- <Precursor>
 		do
-			a_header.i_th (status_column).set_text ("Status")
+			a_header.i_th (tests_column).set_text (t_tests)
+			a_header.i_th (status_column).set_text (t_status)
 		end
 
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !EIFFEL_TEST_I) is
@@ -130,6 +131,11 @@ feature -- Basic functionality
 
 feature {NONE} -- Constants
 
+
+	t_tests: STRING = "Tests"
+	t_status: STRING = "Status"
+
+	tests_column: INTEGER = 1
 	status_column: INTEGER = 2
 
 

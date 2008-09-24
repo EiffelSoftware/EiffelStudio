@@ -252,7 +252,6 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
         $l_right = $l_aliases[$i+1];
       }
 
-
       $l_alias = isedoc_export_node_alias($node);
       $l_src = $prefix . $l_alias;
       switch ($type) {
@@ -267,7 +266,7 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
       case 'wiki':
       default:
         $l_prefix = $l_src . '/';
-        if ($data['below']) {
+        if ($data['below'] or $prefix == '' ) {
           isedoc_mkdir($isedoc_export_dir . '/' . $l_src);
           $l_src = $l_prefix . 'index';
         }

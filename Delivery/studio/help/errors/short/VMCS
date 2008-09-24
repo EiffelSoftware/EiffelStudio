@@ -1,0 +1,2 @@
+Validity: Call Sharing Violation. 
+What to do: Make sure that the shared routine making an unqualified call to a replicated feature is itself replicated.

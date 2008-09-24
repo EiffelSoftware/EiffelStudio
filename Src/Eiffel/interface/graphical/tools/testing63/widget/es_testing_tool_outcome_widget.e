@@ -7,10 +7,13 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_TOOL_OUTCOME_TAB
+	ES_TESTING_TOOL_OUTCOME_WIDGET
 
 inherit
-	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
+	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
+		rename
+			make as make_widget
+		end
 
 	ES_SHARED_EIFFEL_TEST_SERVICE
 		export
@@ -26,7 +29,17 @@ create
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: like widget)
+	make (a_window: like development_window)
+			-- Initialize `Current'.
+		require
+			a_window_attached: a_window /= Void
+			a_window_is_interface_usable: a_window.is_interface_usable
+		do
+			development_window := a_window
+			make_widget
+		end
+
+	build_notebook_widget_interface (a_widget: like widget)
 			-- <Precursor>
 		local
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -45,7 +58,7 @@ feature {NONE} -- Initialization
 			l_support.synchronize_color_or_font_change_with_editor
 			l_support.enable_grid_item_pnd_support
 			l_support.enable_ctrl_right_click_to_open_new_window
-			l_support.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
+			l_support.set_context_menu_factory_function (agent (development_window.menus).context_menu_factory)
 
 			a_widget.extend (grid)
 		end
@@ -77,6 +90,9 @@ feature -- Access
 		end
 
 feature {NONE} -- Access
+
+	development_window: EB_DEVELOPMENT_WINDOW
+			-- Window in which `Current' is shown
 
 	grid: !ES_GRID
 			-- Grid for listing test results
@@ -276,9 +292,7 @@ feature {NONE} -- Implementation
 			create l_dialog.make (stock_pixmaps.tool_output_icon_buffer, "Testing output")
 			l_dialog.is_modal := False
 			l_dialog.set_text ({!STRING_32} #? a_text.to_string_32)
-			l_dialog.show (develop_window.window)
---			create l_dialog.make_standard (a_text)
---			l_dialog.show (develop_window.window)
+			l_dialog.show (development_window.window)
 		end
 
 feature {NONE} -- Factory
@@ -345,7 +359,12 @@ feature {NONE} -- Factory
 			Result := l_eitem
 		end
 
-	create_widget: !EV_VERTICAL_BOX
+	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+		end
+
+	create_notebook_widget: !EV_VERTICAL_BOX
 			-- <Precursor>
 		do
 			create Result

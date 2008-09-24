@@ -135,6 +135,11 @@ feature -- Status report
 			Result := locators.has (a_locator)
 		end
 
+feature {NONE} -- Status report
+
+	is_test_class_map_modified: BOOLEAN
+			-- Has `test_class_map' changed since last call to `update_root_class'?
+
 feature -- Query
 
 	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN is
@@ -234,7 +239,8 @@ feature {NONE} -- Status setting
 			l_name: FILE_NAME
 			l_file: KL_TEXT_OUTPUT_FILE
 		do
-			if is_project_initialized then
+			if is_project_initialized and is_test_class_map_modified then
+				is_test_class_map_modified := False
 				create l_name.make_from_string (eiffel_project.project_directory.eifgens_cluster_path)
 				l_name.extend (root_writer.class_name.as_lower)
 				l_name.add_extension ("e")
@@ -299,6 +305,7 @@ feature {NONE} -- Element change
 			end
 			if l_test_class = Void then
 				l_test_class := new_test_class (a_class)
+				is_test_class_map_modified := True
 			end
 			test_class_map.force (l_test_class, a_class)
 			synchronize_test_class (l_test_class, a_class_as)
@@ -437,6 +444,7 @@ feature {NONE} -- Element change
 					test_removed_event.publish ([Current, l_et])
 					l_cursor.forth
 				end
+				is_test_class_map_modified := True
 				old_class_map.forth
 			end
 		end

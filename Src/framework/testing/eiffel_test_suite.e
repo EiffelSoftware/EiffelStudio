@@ -102,14 +102,11 @@ feature -- Status setting
 					end)
 		end
 
-	launch_processor (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
+	launch_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- <Precursor>
-		local
-			l_processor: !EIFFEL_TEST_PROCESSOR_I
 		do
-			l_processor := processor_registrar.processor (a_type)
-			l_processor.start (a_arg, Current)
-			processor_launched_event.publish ([Current, l_processor])
+			a_processor.start (a_arg, Current)
+			processor_launched_event.publish ([Current, a_processor])
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting

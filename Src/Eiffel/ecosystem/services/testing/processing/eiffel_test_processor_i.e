@@ -58,6 +58,13 @@ feature -- Access
 
 feature -- Status report
 
+	is_test_suite_valid: BOOLEAN
+			-- <Precursor>
+		deferred
+		ensure then
+			result_implies_usable: Result implies test_suite.is_interface_usable
+		end
+
 	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN is
 			-- Can `Current' start performing a task for test suite?
 			--

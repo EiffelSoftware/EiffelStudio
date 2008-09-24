@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			grid.set_dynamic_content_function (agent computed_grid_item)
 
 				-- grid appearance
+			do_nothing
 			grid.set_focused_selection_color (colors.grid_focus_selection_color)
 			grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)

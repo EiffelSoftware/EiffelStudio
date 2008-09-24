@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 		do
 			make_controller (a_map)
 			executable := a_executable
+			create output.make (1024)
 		ensure
 			executable_set: executable = a_executable
 		end
@@ -38,6 +39,11 @@ feature {NONE} -- Access
 
 	process: ?PROCESS
 			-- Process
+
+	output: !STRING
+			-- Output of `process'
+			--
+			-- Note: used for debugging purposes
 
 feature {NONE} -- Status report
 
@@ -62,13 +68,13 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			process := process_factory.process_launcher (executable, a_args, Void)
-			from
-				a_args.start
-			until
-				a_args.after
-			loop
-				a_args.forth
-			end
+			output.wipe_out
+			process.redirect_output_to_agent (
+				agent (s: STRING)
+					do
+						output.append (s)
+					end)
+			process.redirect_error_to_same_as_output
 			process.launch
 		end
 

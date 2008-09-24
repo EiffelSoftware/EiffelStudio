@@ -89,61 +89,58 @@ feature -- Status setting
 		deferred
 		end
 
-	run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]; a_blocking: BOOLEAN)
+	run_all (a_executor: !EIFFEL_TEST_EXECUTOR_I; a_blocking: BOOLEAN)
 			-- Run all tests in `tests' with executor of type `a_executor'
 			-- and notify observers that executor has been launched.
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			executor_available: processor_registrar.is_registered (a_type)
-			executor_ready: executor (a_type).is_ready (Current)
-			executor_suitable: executor (a_type).is_valid_test_list (tests, Current)
+			executor_ready: a_executor.is_ready (Current)
+			executor_suitable: a_executor.is_valid_test_list (tests, Current)
 		do
-			run_list (a_type, tests, a_blocking)
+			run_list (a_executor, tests, a_blocking)
 		ensure
-			not_blocking_equals_preparing_tests: not a_blocking = executor (a_type).is_idle
+			not_blocking_equals_preparing_tests: not a_blocking = a_executor.is_idle
 		end
 
-	run_list (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
+	run_list (a_executor: !EIFFEL_TEST_EXECUTOR_I; a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_blocking: BOOLEAN)
 			-- Run all tests in `a_list' with executor of type `a_executor'
 			-- and notify observers that executor has been launched.
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			executor_available: processor_registrar.is_registered (a_type)
-			executor_ready: executor (a_type).is_ready (Current)
-			executor_suitable: executor (a_type).is_valid_test_list (tests, Current)
+			executor_ready: a_executor.is_ready (Current)
+			executor_suitable: a_executor.is_valid_test_list (tests, Current)
 		do
-			launch_processor (a_type, a_list, a_blocking)
+			launch_processor (a_executor, a_list, a_blocking)
 		ensure
-			not_blocking_equals_preparing_a_list: not a_blocking = executor (a_type).is_idle
+			not_blocking_equals_preparing_a_list: not a_blocking = a_executor.is_idle
 		end
 
-	create_tests (a_type: !TYPE [EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
+	create_tests (a_factory: !EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
 			-- Launch test creation and notify all observers
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			factory_available: processor_registrar.is_registered (a_type)
-			factory_ready: factory (a_type).is_ready (Current)
-			factory_suitable: factory (a_type).is_valid_configuration (a_conf, Current)
+			factory_ready: a_factory.is_ready (Current)
+			factory_suitable: a_factory.is_valid_configuration (a_conf, Current)
 		do
-			launch_processor (a_type, a_conf, a_blocking)
+			launch_processor (a_factory, a_conf, a_blocking)
 		ensure
-			not_blocking_equals_running_conf: not a_blocking = (factory (a_type).is_running)
+			not_blocking_equals_running: not a_blocking = a_factory.is_idle
+			not_blocking_equals_running_conf: not a_blocking implies (a_factory.configuration = a_conf)
 		end
 
-	launch_processor (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_arg: !ANY; a_blocking: BOOLEAN)
+	launch_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- Launch test processor and notify all observers
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			processor_available: processor_registrar.is_registered (a_type)
-			processor_ready: processor_registrar.processor (a_type).is_ready (Current)
-			processor_suitable: processor_registrar.processor (a_type).is_valid_argument (a_arg, Current)
+			processor_ready: a_processor.is_ready (Current)
+			processor_suitable: a_processor.is_valid_argument (a_arg, Current)
 		deferred
 		ensure
-			not_blocking_equals_running: not a_blocking = (processor_registrar.processor (a_type).is_running)
+			not_blocking_equals_running: not a_blocking = a_processor.is_idle
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting

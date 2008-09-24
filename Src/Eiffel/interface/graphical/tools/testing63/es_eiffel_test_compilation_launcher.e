@@ -26,8 +26,8 @@ feature -- Status report
 	is_ready (a_project: !E_PROJECT): BOOLEAN
 			-- <Precursor>
 		do
-			Result := freeze_project_cmd.executable
-			--Result := melt_project_cmd.executable
+			--Result := freeze_project_cmd.executable
+			Result := melt_project_cmd.executable
 		end
 
 feature -- Basic operations
@@ -35,8 +35,8 @@ feature -- Basic operations
 	compile (a_project: !E_PROJECT)
 			-- <Precursor>
 		do
-			freeze_project_cmd.execute_and_wait
-			--melt_project_cmd.execute_and_wait
+			--freeze_project_cmd.execute_and_wait
+			melt_project_cmd.execute_and_wait
 		end
 
 end

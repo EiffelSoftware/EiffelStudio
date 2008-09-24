@@ -1706,22 +1706,22 @@ feature -- Implementation
 											context.variables.set_attribute (l_feature.feature_id)
 										end
 									end
-									if
-										l_needs_byte_node and then
-										l_result_type.is_initialization_required (context.current_class) and then
-										{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
-											(system.default_create_rout_id).access (void_type, True)
-									then
-										generate_creation (l_access, c, l_result_type, Void, a_name.start_location)
-										if {a: ASSIGN_B} last_byte_node then
-											a.set_is_initialization
-											if {b: ATTRIBUTE_B} l_access then
-												b.set_is_initializing (a)
-											end
-										end
-											-- Update `last_byte_node' that is overwritten by `process_creation'.
-										last_byte_node := l_access
-									end
+--									if
+--										l_needs_byte_node and then
+--										l_result_type.is_initialization_required (context.current_class) and then
+--										{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
+--											(system.default_create_rout_id).access (void_type, True)
+--									then
+--										generate_creation (l_access, c, l_result_type, Void, a_name.start_location)
+--										if {a: ASSIGN_B} last_byte_node then
+--											a.set_is_initialization
+--											if {b: ATTRIBUTE_B} l_access then
+--												b.set_is_initializing (a)
+--											end
+--										end
+--											-- Update `last_byte_node' that is overwritten by `process_creation'.
+--										last_byte_node := l_access
+--									end
 								end
 							end
 						else

@@ -94,10 +94,26 @@ function isedoc_pages_referencing_image($a_title) {
 	}
 }
 
+function isedoc_pages_referencing_template($a_title) {
+	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.strtolower($a_title).'[:blank:]*[[.|.]]\'';
+        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
+	$sql .= " ORDER BY n.nid, n.vid ";
+        $res = db_query(db_rewrite_sql($sql));
+	$result = array();
+	if ($res === FALSE) {
+		return FALSE;
+	} else {
+		while ($r = db_fetch_array($res)) {
+			$result[$r['nid']] = $r;
+		}
+		return $result;
+	}
+}
+
 function isedoc_pages_referencing($a_title) {
 	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]][:blank:]*'.strtolower($a_title).'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
         //$l_body_filter = 'LIKE LOWER(\'%[['.$a_title.'%\')';
-        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE LOWER(r.body) $l_body_filter ";
+        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);
 	$result = array();

@@ -53,6 +53,9 @@ function isedoc_block($op = 'list', $delta = 0) {
 		if (user_access('admin isedoc')) {
 			$links[] = l('Update books','isedoc/update/_');
 		}
+		if (user_access('edit any doc content')) {
+			$links[] = l('List Templates','isedoc/templates');
+		}
 
 		$block_content .= theme('item_list', $links);
 		if ($block_content == '') {
@@ -124,6 +127,15 @@ function isedoc_menu() {
     'file' => 'isedoc.whatlinkshere.inc',
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
+  );
+  $items['isedoc/templates'] = array(
+    'title' => t('Templates'),
+    'page callback' => 'isedoc_list_templates',
+    'page arguments' => array(2),
+    'access arguments' => array('edit any doc content'),
+    'file' => 'isedoc.queries.inc',
+    'weight' => 1,
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['isedoc/static/%'] = array(
     'title' => t('Redirect to static content'),

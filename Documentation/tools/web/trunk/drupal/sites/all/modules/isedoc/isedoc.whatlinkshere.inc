@@ -12,11 +12,18 @@ function isedoc_whatlinkshere($node) {
       $output .= "<br/>";
     }
   }
-  if ($node->type == 'image') {
-    $refs = isedoc_pages_referencing_image($node->title);
-  } else {
-    $n_bn = isedoc_book_name($node->book['bid']);
-    $refs = isedoc_pages_referencing($node->title);
+  switch($node->type) {
+	case 'image':
+		$refs = isedoc_pages_referencing_image ($node->title);
+		break;
+	case 'template':
+		$refs = isedoc_pages_referencing_template($node->title);
+		break;
+	case 'doc':
+	default:
+		$n_bn = isedoc_book_name ($node->book['bid']);
+		$refs = isedoc_pages_referencing ($node->title);
+		break;
   }
   if ($refs) {
     $output .= t("The node '%tit' is <strong>referenced by the following %nb page(s)</strong>:", array('%tit' => $node->title, '%nb' => count($refs)));
@@ -63,19 +70,16 @@ function _isedoc_display_references($tit, $lst) {
       
       foreach($lst as $n) {
         $t = '';
-        $t .= "<li><em>".$n->title."</em>";
+	$t .= "<em>".$n->title."</em>";
         $t .= " (".l(t("view"), $n->path);
         $t .= ", ".l(t("edit"), 'node/'.$n->nid.'/edit');
         $t .= ")";
         //$t .= " status=".$n->status;
         //$t .= " version=".$n->vid;
-	if (defined('STATUS_TRASH')) {
-		if ($n->status == STATUS_TRASH) {
-			$t .= " <strong>Trashed</strong>";
-		}
+	if (defined('STATUS_TRASH') and $n->status == STATUS_TRASH) {
+		$t = "<strike>$t <strong>Trashed</strong></strike>";
 	}
-        $t .= "</li>\n";
-	$output .= $t;
+	$output .= "<li>$t</li>\n";
       }
       $output .= "</ul>";
       return $output;

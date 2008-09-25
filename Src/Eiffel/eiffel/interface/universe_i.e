@@ -536,7 +536,7 @@ feature -- Access
 					do
 						Result := a_lib.library_target.system.uuid.is_equal (a_id)
 					end (?, a_uuid))
-			results_valid: a_recursive implies Result.for_all (
+			results_valid: not a_recursive implies Result.for_all (
 				agent (a_lib: !CONF_LIBRARY): BOOLEAN
 					do
 						Result := a_lib.target = target

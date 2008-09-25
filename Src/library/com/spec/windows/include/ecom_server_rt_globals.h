@@ -27,9 +27,6 @@ indexing
 extern "C" {
 #endif
 
-extern int return_hr_value;
-extern jmp_buf exenv;
-extern int eif_visible_is_off;
 
 // Enter Eiffel COM stub code
 #define ECOM_ENTER_STUB \
@@ -71,6 +68,7 @@ extern int eif_visible_is_off;
 
 #define ECOM_CATCH(in_eiffel_code)  struct ex_vect *exvect;\
   jmp_buf exenv;\
+  int return_hr_value; \
   RTEA ((char *)0,0, (char *)0);\
   exvect->ex_jbuf = &exenv;\
   if (return_hr_value = setjmp (exenv)) { \
@@ -102,6 +100,7 @@ extern int eif_visible_is_off;
 	
 #define ECATCH  struct ex_vect *exvect;\
   jmp_buf exenv;\
+  int return_hr_value; \
   RTEA ((char *)0,0, (char *)0);\
   exvect->ex_jbuf = &exenv;\
   if (return_hr_value = setjmp (exenv)) { \

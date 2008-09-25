@@ -65,6 +65,15 @@ feature -- Access
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+			ordered_deprecation: Result.for_all (agent (ia_item: !C_CONFIG; ia_dep: !CELL [BOOLEAN]): BOOLEAN
+				do
+					if ia_item.is_deprecated then
+						ia_dep.put (True)
+						Result := True
+					else
+						Result := not ia_dep.item
+					end
+				end (?, create {CELL [BOOLEAN]}))
 			result_consistent: Result = configs
 		end
 
@@ -110,63 +119,68 @@ feature -- Access
 			result_consistent: Result = ordered_configs
 		end
 
-	applicable_config_codes: LIST [STRING] is
+	applicable_config_codes: !LIST [!STRING] is
 			-- List of available and applicable configuration codes
 		local
-			l_result: ARRAYED_LIST [STRING]
-			l_configs: like applicable_configs
+			l_list: !ARRAYED_LIST [!STRING]
+			l_configs: !like applicable_configs
 		do
-			Result := internal_applicable_config_codes
-			if Result = Void then
-				l_configs := applicable_configs
-				create l_result.make (l_configs.count)
-				l_result.compare_objects
-
-				l_configs.do_all (agent (a_item: C_CONFIG; a_list: ARRAYED_LIST [STRING])
-					do
-						if a_item /= Void then
-							check a_item_exists: a_item.exists end
-							a_list.extend (a_item.code)
-						end
-					end (?, l_result))
+			if {l_result: !LIST [!STRING]} internal_applicable_config_codes then
 				Result := l_result
+			else
+				l_configs := applicable_configs
+				create l_list.make (l_configs.count)
+				l_list.compare_objects
+
+				l_configs.do_all (agent (ia_item: !C_CONFIG; ia_list: !ARRAYED_LIST [!STRING])
+					local
+						l_code: STRING
+					do
+						if ia_item /= Void then
+							check ia_item_exists: ia_item.exists end
+							l_code := ia_item.code
+							if l_code /= Void then
+								ia_list.extend (l_code)
+							end
+						end
+					end (?, l_list))
+				Result := l_list
 				internal_applicable_config_codes := Result
 			end
 		ensure
-			result_attached: Result /= Void
 			result_count_big_enough: Result.count <= configs.count
 			result_compares_objects: Result.object_comparison
-			result_contains_attached_items: not Result.has (Void)
 			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			result_consistent: Result = applicable_config_codes
 		end
 
-	applicable_configs: LIST [C_CONFIG] is
+	applicable_configs: !LIST [!C_CONFIG]
 			-- Applicable configurations given user's machine state.
 		local
-			l_result: ARRAYED_LIST [C_CONFIG]
-			l_configs: like configs
-			l_config: C_CONFIG
+			l_list: !ARRAYED_LIST [!C_CONFIG]
+			l_configs: !like configs
+			l_config: !C_CONFIG
 		do
-			Result := internal_applicable_configs
-			if Result = Void then
+			if {l_result: !LIST [!C_CONFIG]} internal_applicable_configs then
+				Result := l_result
+			else
 				l_configs := configs
-				create l_result.make (l_configs.count)
-				l_result.append (l_configs)
-				from l_result.start until l_result.after loop
-					l_config := l_result.item
+				create l_list.make (l_configs.count)
+				l_list.append (l_configs)
+				from l_list.start until l_list.after loop
+					l_config := l_list.item
 					if not l_config.exists then
-						l_result.remove
+						l_list.remove
 					else
-						l_result.forth
+						l_list.forth
 					end
 				end
-				Result := l_result
+				Result := l_list
 				internal_applicable_configs := Result
 			end
 		ensure
-			result_attached: Result /= Void
-			result_contains_attached_items: not Result.has (Void)
 			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			result_consistent: Result = applicable_configs
 		end
 
 feature -- Status report
@@ -193,7 +207,7 @@ feature -- Status report
 			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
 		end
 
-	best_configuration: C_CONFIG is
+	best_configuration: ?C_CONFIG is
 			-- Retrieve's the best C compiler configuration given the state of a user's system
 		require
 			has_applicable_config: has_applicable_config
@@ -217,7 +231,7 @@ feature -- Status report
 			result_attached: Result /= Void
 		end
 
-	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): C_CONFIG is
+	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): ?C_CONFIG is
 			-- Retrieves a config from the code `a_code'. If `a_applicable_only' is set to True
 			-- the located configuration must exists in order to return a result
 		require
@@ -249,7 +263,8 @@ feature -- Status report
 feature {NONE} -- Access
 
 	create_configs (a_use_32bit: BOOLEAN): !ARRAYED_LIST [!C_CONFIG] is
-			-- Visual Studio configuration for x64/x86 platforms
+			-- Visual Studio configuration for x64/x86 platforms.
+			--|Be sure to place deprecated configurations after all valid configurations!
 		require
 			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM_CONSTANTS}.is_64_bits
 		local
@@ -259,24 +274,32 @@ feature {NONE} -- Access
 			create Result.make (7)
 
 				-- VS 9.0
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, "WSDK61", "Microsoft Windows SDK 6.1", "2008-WSDK"))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS"))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, "WSDK61", "Microsoft Windows SDK 6.1", "2008-WSDK", False))
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
 			if l_32_bits then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC", False))
 			end
 
 				-- VS 8.0
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, "WSDK60", "Microsoft Windows SDK 6.0", "2006-WSDK"))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS"))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, "WSDK60", "Microsoft Windows SDK 6.0", "2006-WSDK", False))
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS", False))
 
 			if l_32_bits then
 					-- VS Other
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS"))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS"))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS"))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS", True))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS", True))
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
 			end
 		ensure
-			result_attached: Result /= Void
+			ordered_deprecation: Result.for_all (agent (ia_item: !C_CONFIG; ia_dep: !CELL [BOOLEAN]): BOOLEAN
+				do
+					if ia_item.is_deprecated then
+						ia_dep.put (True)
+						Result := True
+					else
+						Result := not ia_dep.item
+					end
+				end (?, create {CELL [BOOLEAN]}))
 		end
 
 feature {NONE} -- Internal implementation cache

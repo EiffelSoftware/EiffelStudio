@@ -188,8 +188,13 @@ feature -- Basic operations
 			else
 					-- A configuration was located, lets make sure the required components are locatable and are the right assembly type.
 				l_config ?= l_manager.best_configuration
-				internal_c_configuration := l_config
-				check_compiler_executable (l_config)
+				if l_config.is_deprecated then
+						-- The configuration is deprecated.
+					set_error (e_compiler_deprecated_1, [l_config.description])
+				else
+					internal_c_configuration := l_config
+					check_compiler_executable (l_config)
+				end
 			end
 		end
 
@@ -307,6 +312,7 @@ feature {NONE} -- Localization
 	e_x64_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1'  is a 64-bit compiler. Please install the 32-bit (x86) C/C++ tools!"
 	e_corrupt_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1' is not a valid executable file!"
 	e_no_compiler_1: !STRING = "$1 was found but is could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
+	e_compiler_deprecated_1: !STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

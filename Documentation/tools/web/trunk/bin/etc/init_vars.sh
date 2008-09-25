@@ -1,5 +1,5 @@
 #!/bin/sh
 
 DB_USER=root
-DB_PASS=abc123
+DB_PASS=eisesql!
 

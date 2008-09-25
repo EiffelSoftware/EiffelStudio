@@ -17,7 +17,8 @@ getdrupmod img_assist-6.x-1.0-beta1.tar.gz
 getdrupmod lightbox2-6.x-1.8.tar.gz
 getdrupmod pathauto-6.x-1.1.tar.gz
 getdrupmod persistent_login-6.x-1.4-beta2.tar.gz
-getdrupmod print-6.x-1.0.tar.gz
+#getdrupmod print-6.x-1.0.tar.gz
+getdrupmod print-6.x-1.x-dev.tar.gz
 getdrupmod recent_changes-6.x-1.x-dev.tar.gz
 getdrupmod tagadelic-6.x-1.0.tar.gz
 getdrupmod community_tags-6.x-1.0-beta1.tar.gz
@@ -54,5 +55,10 @@ getdrupmod plugin_manager-6.x-1.x-dev.tar.gz
 getdrupmod masquerade-6.x-1.0-beta1.tar.gz
 #getdrupmod coder-6.x-1.x-dev.tar.gz
 
+#TO add and set up to improve SEO
+getdrupmod front-6.x-1.2.tar.gz
+getdrupmod globalredirect-6.x-1.0.tar.gz
+getdrupmod nodewords-6.x-1.0-rc1.tar.gz
+getdrupmod page_title-6.x-2.x-dev.tar.gz
 
 cd $CWD

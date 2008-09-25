@@ -1,5 +1,6 @@
 INSTALL)
 sudo apt-get install subversion cvs p7zip-full unzip
+sudo apt-get install patch indent
 sudo apt-get install apache2
 sudo apt-get install php5
 sudo apt-get install libapache2-mod-php5

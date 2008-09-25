@@ -180,8 +180,11 @@ feature -- Basic operations
 					create l_compilers.make (1024)
 					l_manager.ordered_configs.do_all (agent (ia_buffer: !STRING; ia_config: !C_CONFIG)
 						do
-							ia_buffer.append ("%N    - ")
-							ia_buffer.append (ia_config.description)
+							if not ia_config.is_deprecated then
+									-- Only list supported configurations.
+								ia_buffer.append ("%N    - ")
+								ia_buffer.append (ia_config.description)
+							end
 						end (l_compilers, ?))
 					set_error (e_no_compatible_compiler_1, [l_compilers])
 				end

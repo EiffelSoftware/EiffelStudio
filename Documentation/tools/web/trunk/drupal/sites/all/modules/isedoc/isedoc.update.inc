@@ -103,7 +103,7 @@ function isedoc_update_book_traverse(&$a_tree, $a_book_short_path, $a_op='all') 
 				}
 			}
 			if ($a_op == 'template') {
-				$pat = "/{{\s*([a-z ]+)\s*\|[' ]*\\1[': ]*/i";
+				$pat = "/{{\s*([a-z]+)\s*\|[' ]*\\1[': ]*/i";
 				$txt = preg_replace($pat, '{{${1}|',$node->body);
 				if (strlen($txt) < strlen($node->body)) {
 					drupal_set_message($a_book_short_path . " node=" .$node->path . ": Clean template usage");

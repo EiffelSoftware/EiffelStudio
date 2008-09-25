@@ -114,8 +114,6 @@ feature -- Basic operations
 						l_is_aborted_stack.extend (False)
 						l_count := l_routines_snapshot.count
 						i := 0
-					variant
-						l_count - i
 					until
 						i = l_count
 						or l_is_aborted_stack.item
@@ -125,6 +123,8 @@ feature -- Basic operations
 							l_action.call (event_data)
 						end
 						i := i + 1
+					variant
+						l_count - i
 					end
 					l_is_aborted_stack.remove
 				when

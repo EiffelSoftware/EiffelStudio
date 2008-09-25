@@ -15,7 +15,7 @@ getdrupalcms()
 	if [ -e $DRUPALZIPNAME ]; then
 		mv $DRUPALZIPNAME/sites $DRUPALZIPNAME/sites.distrib
 		mv $DRUPALZIPNAME/* $EDOC_DRUPALDIR/.
-		mv $DRUPALZIPNAME/.* $EDOC_DRUPALDIR/.
+		mv $DRUPALZIPNAME/.h* $EDOC_DRUPALDIR/.
 		rmdir $DRUPALZIPNAME
 	fi
 }

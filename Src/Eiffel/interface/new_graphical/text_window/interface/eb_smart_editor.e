@@ -36,6 +36,7 @@ inherit
 			on_key_down,
 			on_mouse_wheel,
 			on_mouse_button_up,
+			on_char,
 			make,
 			create_token_handler
 		end
@@ -403,6 +404,18 @@ feature {NONE} -- Text loading
 	is_text_loaded_called: BOOLEAN
 			-- If text loaded called?
 
+feature -- Process Vision2 events
+
+ 	on_char (character_string: STRING_32) is
+   			-- Process displayable character key press event.
+   		do
+   			Precursor (character_string)
+			if not ignore_keyboard_input and then not character_string.is_empty and then not is_empty then
+					-- Perform brace match highlighting/unhighlighting.
+	   			highlight_matched_braces (True)
+			end
+ 		end
+
 feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 
 	handle_character (c: CHARACTER_32) is
@@ -418,14 +431,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			switch_auto_point := auto_point
 			if is_editable then
 				Precursor (c)
-
-				if c.is_character_8 and then c.to_character_8.is_punctuation then
-					if not is_empty then
-							-- Perform brace match highlighting/unhighlighting.
-						highlight_matched_braces
-					end
-				end
-
 				look_for_keyword := True
 				if c = ' ' then
 					if latest_typed_word_is_keyword then
@@ -547,15 +552,17 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 					end
 				else
 					Precursor (ev_key)
-					if ev_key.code = key_back_space or else ev_key.code = key_delete then
-						if not is_empty then
-								-- Perform brace match highlighting/unhighlighting.
-							highlight_matched_braces
-						end
-					end
 				end
 			end
 			auto_point := switch_auto_point xor auto_point
+
+			if not is_empty then
+				if ev_key.code = key_back_space or else ev_key.code = key_delete or else ev_key.code = key_enter then
+						-- Perform brace match highlighting/unhighlighting.
+						-- Enter key requires special processing.
+					highlight_matched_braces (ev_key.code = key_enter)
+				end
+			end
 		end
 
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
@@ -586,7 +593,7 @@ feature {NONE} -- Handle keystrokes
 
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (True)
 			end
 		end
 
@@ -610,7 +617,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (True)
 			end
 		end
 
@@ -855,7 +862,7 @@ feature {NONE} -- Brace matching
 			result_token_is_brace: Result /= Void implies brace_matcher.is_brace (Result.token)
 		end
 
-	highlight_matched_braces
+	highlight_matched_braces (a_update: BOOLEAN)
 			-- Match editor braces.
 		require
 			is_interface_usable: is_interface_usable
@@ -913,7 +920,7 @@ feature {NONE} -- Brace matching
 				end
 			end
 
-			if not l_invalidated_lines.is_empty then
+			if a_update and then not l_invalidated_lines.is_empty then
 					-- Perform line redraws
 				from l_invalidated_lines.start until l_invalidated_lines.after loop
 					invalidate_line (l_invalidated_lines.item.index, True)
@@ -1215,7 +1222,7 @@ feature {NONE} -- Implementation
 		do
 			if button = 1 and then not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (True)
 			end
 			Precursor (x_pos, y_pos, button, unused1, unused2, unused3, unused4, unused5)
 		end
@@ -1695,7 +1702,7 @@ feature {NONE} -- Code completable implementation
 
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (False)
 			end
 		end
 
@@ -1709,7 +1716,7 @@ feature {NONE} -- Code completable implementation
 
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (False)
 			end
 		end
 
@@ -1723,7 +1730,7 @@ feature {NONE} -- Code completable implementation
 
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
-				highlight_matched_braces
+				highlight_matched_braces (False)
 			end
 		end
 

@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version) is
+	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version; a_deprecated: like is_deprecated) is
 			-- Initialize a config from a relative HKLM\SOFTWARE registry key `a_key'.
 		require
 			a_key_attached: a_key /= Void
@@ -39,10 +39,12 @@ feature {NONE} -- Initalization
 		do
 			make_c_config (a_use_32bit, a_code, a_desc, a_version)
 			product_reg_path := a_key
+			is_deprecated := a_deprecated
 		ensure
 			product_reg_path_set: product_reg_path = a_key
 			use_32bit_set: use_32bit = a_use_32bit
 			code_set: code = a_code
+			is_deprecated_set: is_deprecated = a_deprecated
 		end
 
 	on_initialize is
@@ -185,6 +187,9 @@ feature -- Status report
 			initialize
 			Result := internal_reg_key /= default_pointer
 		end
+
+	is_deprecated: BOOLEAN
+			-- Indicates if the product is deprecated.
 
 feature {NONE} -- Basic operations
 

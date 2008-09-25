@@ -54,9 +54,6 @@ feature -- Basic Operations
 				cpp_class_writer.add_import ("server_registration.h")
 			end
 
-			-- Add jmp_buf variable
-			cpp_class_writer.add_other_source ("static int return_hr_value;")
-
 			-- member (LONG Ref_count)
 			create member_writer.make
 			member_writer.set_name (Ref_count)

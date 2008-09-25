@@ -95,7 +95,7 @@ function isedoc_menu() {
   $items['isedoc/update/%'] = array(
     'title' => t('Update documentation pages'),
     'page callback' => 'isedoc_update_pages',
-    'page arguments' => array(2),
+    'page arguments' => array(2,3),
     'access arguments' => array('admin isedoc'),
     'file' => 'isedoc.update.inc',
     'type' => MENU_NORMAL_ITEM,

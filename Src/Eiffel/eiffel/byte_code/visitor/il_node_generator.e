@@ -884,28 +884,31 @@ feature {NONE} -- Visitors
 			source_type: TYPE_A
 			target_type: TYPE_A
 		do
-			generate_il_line_info (a_node, True)
-			process_pragma (a_node)
+			if not a_node.is_initialization then
+					-- Ignore self-initializing types for the time being (this fixes test#attach023).
+				generate_il_line_info (a_node, True)
+				process_pragma (a_node)
 
-				-- Code that needs to be generated when performing
-				-- assignment to an attribute.
-			generate_il_start_assignment (a_node.target)
+					-- Code that needs to be generated when performing
+					-- assignment to an attribute.
+				generate_il_start_assignment (a_node.target)
 
-			source_type := context.real_type (a_node.source.type)
-			target_type := context.real_type (a_node.target.type)
+				source_type := context.real_type (a_node.source.type)
+				target_type := context.real_type (a_node.target.type)
 
-				-- Generate expression byte code.
-			generate_expression_il_for_type (a_node.source, target_type)
+					-- Generate expression byte code.
+				generate_expression_il_for_type (a_node.source, target_type)
 
-				-- Check if the assignment instruction is used to model
-				-- creation instruction.
-			if not a_node.is_creation_instruction then
-					-- Generate code for reattachment.
-				generate_reattachment (a_node.source, source_type, target_type)
+					-- Check if the assignment instruction is used to model
+					-- creation instruction.
+				if not a_node.is_creation_instruction then
+						-- Generate code for reattachment.
+					generate_reattachment (a_node.source, source_type, target_type)
+				end
+
+					-- Generate assignment.
+				generate_il_assignment (a_node.target, source_type)
 			end
-
-				-- Generate assignment.
-			generate_il_assignment (a_node.target, source_type)
 		end
 
 	process_attribute_b (a_node: ATTRIBUTE_B) is

@@ -170,7 +170,7 @@ function isedoc_node_ids_by_uuid($uuid) {
 
 function isedoc_pages_referencing_image($a_title) {
 	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]]Image:[:blank:]*'.strtolower($a_title).'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
-        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE LOWER(r.body) $l_body_filter ";
+        $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);
 	$result = array();

@@ -54,7 +54,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 			$links[] = l('Update books','isedoc/update/_');
 		}
 		if (user_access('query isedoc')) {
-			$links[] = l('Check books','isedoc/report/doc/_');
+			$links[] = l('Check/report','isedoc/report/doc/_');
 		}
 		if (isedoc_user_can_edit()) {
 			$links[] = l('List Templates','isedoc/templates');

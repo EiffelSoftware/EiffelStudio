@@ -331,7 +331,7 @@ feature {NONE} -- Factory
 				if not l_system.root_creators.is_empty then
 					l_cluster := l_system.root_creators.first.cluster
 					l_universe := l_system.universe
-					l_class := l_universe.class_named (a_exception.class_name, l_cluster)
+					l_class := l_universe.safe_class_named (a_exception.class_name, l_cluster)
 					if l_class /= Void then
 						if l_class.is_compiled then
 							l_cclass := l_class.compiled_class

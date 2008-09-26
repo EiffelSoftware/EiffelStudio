@@ -153,6 +153,7 @@ feature {NONE} -- Element change
 			internal_untagged_items.wipe_out
 			untagged_subrow := Void
 			first_item_subrow := Void
+			initialize_layout
 		end
 
 	add_untagged_item (a_item: !G) is

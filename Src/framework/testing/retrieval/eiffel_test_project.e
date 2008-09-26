@@ -233,7 +233,8 @@ feature -- Status setting
 feature {NONE} -- Status setting
 
 	update_root_class is
-			--
+			-- If test classes have changed since last time `udpate_root_class' has been called, write
+			-- new class referencing all test classes and register it as root clas in system.
 		local
 			l_system: SYSTEM_I
 			l_name: FILE_NAME
@@ -566,11 +567,24 @@ feature {NONE} -- Implementation: tag retrieval
 		local
 			l_root, l_current: CONF_GROUP
 			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
+			l_uni: UNIVERSE_I
+			l_clist: LIST [CLASS_I]
+			l_list: LIST [!CONF_LIBRARY]
 			l_class: CLASS_I
 			l_array: DS_ARRAYED_LIST [!CONF_GROUP]
 		do
-			l_root := eiffel_project.system.system.root_creators.first.cluster
-			l_class := eiffel_project.universe.class_named (a_class_name, l_root)
+			if not eiffel_project.system.system.root_creators.is_empty then
+				l_root := eiffel_project.system.system.root_creators.first.cluster
+				l_uni := eiffel_project.universe
+				l_class := l_uni.safe_class_named (a_class_name, l_root)
+			end
+			if l_class = Void then
+				l_clist := l_uni.classes_with_name (a_class_name)
+				if l_clist /= Void and then not l_clist.is_empty then
+					l_class := l_clist.first
+				end
+			end
 			if l_class /= Void then
 				from
 					l_current := l_class.group
@@ -584,7 +598,12 @@ feature {NONE} -- Implementation: tag retrieval
 						if l_cluster.parent /= Void then
 							l_current := l_cluster.parent
 						elseif l_cluster.is_used_in_library then
-
+							if {l_uuid: !UUID} l_cluster.target.system.uuid then
+								l_list := l_uni.library_of_uuid (l_uuid, True)
+								if not l_list.is_empty then
+									cluster_stack.put_last (l_list.first)
+								end
+							end
 						end
 					end
 				end

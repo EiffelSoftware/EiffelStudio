@@ -149,7 +149,7 @@ Index: mediawiki_filter.classes.inc
 ===================================================================
 --- mediawiki_filter.classes.inc	(revision 2675)
 +++ mediawiki_filter.classes.inc	(working copy)
-@@ -159,9 +159,96 @@
+@@ -159,9 +159,98 @@
      else {
        drupal_set_message('Unexpected Mediawiki query. Please report to module maintainer', 'error');
      }
@@ -199,6 +199,7 @@ Index: mediawiki_filter.classes.inc
 +    } else {
 +      $l_curr_bid = 0;
 +    }
++    $m = FALSE;
 +    if (count($res) > 1) {
 +      $m = t("Found %nb pages with name \"%tit\":<ul>", array('%tit' => $a_title, '%nb' => count($res)));
 +      $the_results = array();
@@ -220,21 +221,22 @@ Index: mediawiki_filter.classes.inc
 +      if ($l_curr_bid > 0) {
 +        $m .= "<br/>".t("Unable to find a page with name \"%tit\" in the same book!", array ('%tit' => $a_title));
 +      }
-+      drupal_set_message($m,'warning');
 +    } else if (count($res) == 1 and $l_curr_bid > 0) {
 +      $l_node = node_load(end(&$res)->page_id);
++      $w = '';
 +      if ($l_node and $l_node->book['bid'] != $l_curr_bid) {
-+        $m = t("The page used for name \"%tit\" in outside current book!", array ('%tit' => $a_title));
-+  	$m .= "<ul><li><a href=\"".url($l_node->path, array('absolute' => TRUE))."\">".$l_node->title.": node ".$l_node->nid." (<em>".$l_node->path."</em>)</a></li></ul>";
-+        drupal_set_message($m,'warning');
++        $w .= t('from other book "%bn"',array('%bn' => $l_node->path ));
 +      }
-+      if (defined('STATUS_TRASH')) {
-+        if ($l_node and $l_node->status == STATUS_TRASH) {
-+          $m = t("The page used for name \"%tit\" in trashed!", array ('%tit' => $a_title));
-+  	  $m .= "<ul><li><a href=\"".url($l_node->path, array('absolute' => TRUE))."\">".$l_node->title.": node ".$l_node->nid." (<em>".$l_node->path."</em>)</a></li></ul>";
-+          drupal_set_message($m,'warning');
-+        }
++      if (defined('STATUS_TRASH') and ($l_node and $l_node->status == STATUS_TRASH)) {
++        if ($w != '') { $w .= ", "; }
++        $w .= '<strong>'.t('TRASHED!').'</strong>';
 +      }
++      if ($w != '') {
++        $m = t('Referenced page ') . l($l_node->title, "node/".$l_node->nid) . ": $w";
++      }
++    }
++    if ($m) {
++      drupal_set_message($m,'warning');
 +    }
 +    if (count($the_results) > 0) {
 +      return $the_results;

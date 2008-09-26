@@ -80,7 +80,7 @@ feature -- Status report
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
-			result_implies_clean_test_response: Result implies test_response.is_exceptional
+			result_implies_clean_test_response: Result implies not test_response.is_exceptional
 		end
 
 	is_fail: BOOLEAN

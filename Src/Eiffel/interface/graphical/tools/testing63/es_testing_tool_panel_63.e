@@ -450,6 +450,26 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_stop
+			-- Stop any running test processor
+		local
+			l_cursor: DS_LINEAR_CURSOR [EIFFEL_TEST_PROCESSOR_I]
+		do
+			if test_suite.is_service_available then
+				from
+					l_cursor := test_suite.service.processor_registrar.processors.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					if l_cursor.item.is_interface_usable and l_cursor.item.is_running then
+						l_cursor.item.request_stop
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
 feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 
 	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_test: !EIFFEL_TEST_I)
@@ -595,7 +615,7 @@ feature {NONE} -- Factory
 			stop_button.set_tooltip (local_formatter.translation (f_stop_button))
 			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
-
+			register_action (stop_button.select_actions, agent on_stop)
 			Result.put_last (stop_button)
 
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)

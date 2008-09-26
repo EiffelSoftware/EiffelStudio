@@ -25,7 +25,7 @@ feature -- Basic operations
 			create l_app.make (256)
 			if not {PLATFORM}.is_mac then
 					-- Unix systems other than mac should be using 'xdg-open', Mac's use 'open'
-				l_app.append ("xdg-2")
+				l_app.append ("xdg-")
 			end
 			l_app.append ("open")
 			Result := launch_with_app (a_uri, l_app)

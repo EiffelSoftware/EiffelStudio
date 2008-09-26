@@ -15,24 +15,20 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: !STRING_GENERAL): BOOLEAN
+	launch (a_uri: !READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
-			l_exec: !EXECUTION_ENVIRONMENT
-			l_cmd: !STRING
+			l_app: !STRING
 		do
 			check is_unix: {PLATFORM}.is_unix end
-			create l_exec
-			create l_cmd.make (256)
+
+			create l_app.make (256)
 			if not {PLATFORM}.is_mac then
 					-- Unix systems other than mac should be using 'xdg-open', Mac's use 'open'
-				l_cmd.append ("xdg-")
+				l_app.append ("xdg-2")
 			end
-			l_cmd.append ("open %"")
-			l_cmd.append (a_uri.as_string_8)
-			l_cmd.append_character ('%"')
-			l_exec.launch (l_cmd)
-			Result := True
+			l_app.append ("open")
+			Result := launch_with_app (a_uri, l_app)
 		end
 
 ;indexing

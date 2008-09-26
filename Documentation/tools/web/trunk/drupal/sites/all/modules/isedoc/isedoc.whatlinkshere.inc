@@ -91,23 +91,5 @@ function _isedoc_display_references($tit, $lst) {
       return $output;
 }
 
-function isedoc_book_name ($bid) {
-	static $s_book_names;
-	if (!$s_book_names) {
-		$s_book_names = array();
-	}
-	if (isset($s_book_names[$bid])) {
-		$bn = $s_book_names[$bid];
-	} else {
-		$b =& node_load($bid);
-		if ($b) {
-			$bn = $b->title;
-		} else {
-			$bn = "Book id#$bid";
-		}
-		$s_book_names[$bid]=$bn;
-	}
-	return $bn;
-}
 
 ?>

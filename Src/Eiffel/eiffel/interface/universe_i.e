@@ -531,12 +531,12 @@ feature -- Access
 			target.process (l_visitor)
 			Result := l_visitor.found_libraries
 		ensure
-			results_valid: Result.for_all (
+			results_match_uuid: Result.for_all (
 				agent (a_lib: !CONF_LIBRARY; a_id: !UUID): BOOLEAN
 					do
 						Result := a_lib.library_target.system.uuid.is_equal (a_id)
 					end (?, a_uuid))
-			results_valid: not a_recursive implies Result.for_all (
+			results_match_recursion: not a_recursive implies Result.for_all (
 				agent (a_lib: !CONF_LIBRARY): BOOLEAN
 					do
 						Result := a_lib.target = target

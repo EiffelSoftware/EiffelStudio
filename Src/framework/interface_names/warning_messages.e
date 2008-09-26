@@ -575,6 +575,12 @@ feature -- Cluster tree warnings
 						%Please wait until then before calling this command."), [n.out])
 		end
 
+	w_cannot_create_cluster_in_tests_cluster: STRING_32
+			-- Waning saying that user can not create normal cluster inside of a test cluster
+		do
+			Result := locale.translation ("It is not possible to create a normal cluster inside of a test cluster")
+		end
+
 feature -- Backup warnings
 
 	w_Crashed: STRING_32 is

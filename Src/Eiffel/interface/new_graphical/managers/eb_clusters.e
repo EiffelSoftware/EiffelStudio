@@ -529,8 +529,13 @@ feature -- Element change
 			end
 		end
 
-	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING) is
+	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING; a_is_tests_cluster: BOOLEAN) is
 			-- Add new cluster with `a_name' optionally `a_parent' and `a_path'.
+			--
+			-- `a_name': Name of new cluster.
+			-- `a_parent': If not Void, create new cluster so it is a child of `a_parent'.
+			-- `a_path': Path for new cluster.
+			-- `a_is_tests_cluster': If True, new cluster will be a tests cluster.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty and a_name.as_lower.is_equal (a_name)
 			a_path_ok: a_path /= Void and then not a_path.is_empty
@@ -555,7 +560,11 @@ feature -- Element change
 				l_over := l_fact.new_override (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
 				last_added_cluster := l_over
 			else
-				last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				if a_is_tests_cluster then
+					last_added_cluster := l_fact.new_test_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				else
+					last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				end
 			end
 				-- create empty class list, so that the folder can be displayed
 			last_added_cluster.set_classes (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))

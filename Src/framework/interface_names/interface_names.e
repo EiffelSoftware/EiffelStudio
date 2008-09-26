@@ -1004,6 +1004,7 @@ feature -- Label texts
 	l_add_project_config_file: STRING_32 is	do Result := locale.translation("Add Project...")	end
 	l_additional_details: STRING_32 is		do Result := locale.translation("Additional details")	end
 	l_All: STRING_32 is						do Result := locale.translation("recursive")	end
+	l_tests_cluster: STRING_32 is        do Result := locale.translation ("test cluster") end
 	l_all_classes_in_same_cluster: STRING_32 is	do Result := locale.translation("All classes in same cluster")	end
 	l_Alias_name: STRING_32 is				do Result := locale.translation("Alias:")	end
 	l_Ancestors: STRING_32 is				do Result := locale.translation("Ancestors")	end

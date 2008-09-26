@@ -301,11 +301,19 @@ feature -- Visit nodes
 				-- ignore subclusters, except if we are handling one.
 			if not a_cluster.is_internal and (a_cluster.parent = Void or current_is_subcluster) then
 				current_is_subcluster := False
-				append_pre_group ("cluster", a_cluster)
+				if a_cluster.is_test_cluster then
+					append_pre_group ("tests", a_cluster)
+				else
+					append_pre_group ("cluster", a_cluster)
+				end
 				append_attr_cluster (a_cluster)
 				append_val_group (a_cluster)
 				append_val_cluster (a_cluster)
-				append_post_group ("cluster")
+				if a_cluster.is_test_cluster then
+					append_post_group ("tests")
+				else
+					append_post_group ("cluster")
+				end
 			end
 		ensure then
 			indent_back: indent = old indent

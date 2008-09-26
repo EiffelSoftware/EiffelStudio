@@ -1834,26 +1834,26 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_library)
 			Result.force (l_trans, t_precompile)
 
-				-- cluster
+				-- tests
 				-- -everything from library/precompile except renaming
 				-- => file_rule
 				-- => mapping
 				-- => uses
-				-- => cluster
 			l_trans := l_trans.twin
 			l_trans.remove ("renaming")
 			l_trans.force (t_note, "note")
 			l_trans.force (t_file_rule, "file_rule")
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_uses, "uses")
-			l_trans.force (t_cluster, "cluster")
 			l_trans.force (t_test_cluster, "tests")
-			Result.force (l_trans, t_cluster)
-
-				-- tests
-				-- -everything from cluster
-			l_trans := l_trans.twin
 			Result.force (l_trans, t_test_cluster)
+
+				-- cluster
+				-- -everything from test cluster
+				-- => cluster
+			l_trans := l_trans.twin
+			l_trans.force (t_cluster, "cluster")
+			Result.force (l_trans, t_cluster)
 
 				-- override
 				-- -everything from cluster

@@ -52,6 +52,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 		}
 		if (user_access('admin isedoc')) {
 			$links[] = l('Update books','isedoc/update/_');
+			$links[] = l('Check books','isedoc/report/_');
 		}
 		if (isedoc_user_can_edit()) {
 			$links[] = l('List Templates','isedoc/templates');
@@ -98,6 +99,14 @@ function isedoc_menu() {
     'page arguments' => array(2,3),
     'access arguments' => array('admin isedoc'),
     'file' => 'isedoc.update.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['isedoc/report/%'] = array(
+    'title' => t('Check documentation pages and report'),
+    'page callback' => 'isedoc_report',
+    'page arguments' => array(2,3),
+    'access arguments' => array('admin isedoc'),
+    'file' => 'isedoc.report.inc',
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/settings/isedoc'] = array(

@@ -2,7 +2,7 @@
 
 require_once ("isedoc.lib.inc");
 
-function isedoc_report($target,$a_op='') {
+function isedoc_report($a_type='doc', $target,$a_op='') {
   $output = '';
 drupal_add_css(drupal_get_path('module', 'system') .'/system.css');
 drupal_add_js('misc/collapse.js');
@@ -11,7 +11,7 @@ drupal_add_js('misc/collapse.js');
   if ($op == '') {
     $op = 'all';
   }
-  if (user_access('admin isedoc')) {
+  if (user_access('admin isedoc') or user_access('query isedoc')) {
     $books = array();
     $all_books = book_get_books();
     switch ($target) {
@@ -38,18 +38,18 @@ drupal_add_js('misc/collapse.js');
       } else {
         $output .= "Report $target: completed.";
       }
-      $output .= "<br/>".l(t("Report other books"), "isedoc/report/_")."<br/>";
+      $output .= "<br/>".l(t("Report other books"), "isedoc/report/$a_type/_")."<br/>";
     } else {
 	$output .= "<ul>";
-	$output .= "<li><strong>".l(t("Report all the books"), "isedoc/report/all")."</strong></li>";
+	$output .= "<li><strong>".l(t("Report all the books"), "isedoc/report/$a_type/all")."</strong></li>";
   	foreach($all_books as $b) {
   		$bn = isedoc_book_title_to_book_name_id($b['title']);
-		$output .= "<li>".l(t("Report only: ").$bn, "isedoc/report/$bn")."</li>";
+		$output .= "<li>".l(t("Report only: ").$bn, "isedoc/report/$a_type/$bn")."</li>";
   	}
 	$output .= "</ul>";
     }
   } else {
-    drupal_access_denied();
+    //drupal_access_denied();
     $output .= "Report $target: access denied.";
   }
   return $output;

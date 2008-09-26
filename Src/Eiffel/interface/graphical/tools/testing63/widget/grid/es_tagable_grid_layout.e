@@ -123,7 +123,7 @@ feature {NONE} -- Query
 				end
 			end
 			if l_group /= Void then
-				Result := project.universe.class_named (a_name, l_group)
+				Result := project.universe.safe_class_named (a_name, l_group)
 			end
 		end
 
@@ -186,7 +186,7 @@ feature {NONE} -- Factory
 			create Result.make_with_text (a_token)
 		end
 
-	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM
+	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM is
 			-- Create new item according to given node.
 			--
 			-- `a_node': Node for which token item should be created.
@@ -196,21 +196,28 @@ feature {NONE} -- Factory
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_pixmap: EV_PIXMAP
+			l_pnode: TAG_BASED_TREE_NODE [G]
+			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
 		do
 			l_token := a_node.token
 			token_writer.new_line
+			l_pnode ?= a_node.parent
 			if l_token.starts_with (class_prefix) then
 				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
-				if {l_class: !CLASS_I} class_from_name (l_name, Void) then
+				if l_pnode /= Void then
+					l_cluster ?= l_pnode.data
+				end
+				if {l_class: !CLASS_I} class_from_name (l_name, l_cluster) then
 					a_node.set_data (l_class)
 					token_writer.add_class (l_class)
 				end
 			elseif l_token.starts_with (feature_prefix) then
 				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
-				if {l_parent2: TAG_BASED_TREE_NODE [G]} a_node.parent then
-					if {l_classi: CLASS_I} l_parent2.data then
+				if l_pnode /= Void then
+					if {l_classi: CLASS_I} l_pnode.data then
 						if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
 							if {l_feature: E_FEATURE} l_classi.compiled_class.feature_with_name (l_name) then
 								token_writer.add_feature (l_feature, l_name)
@@ -222,14 +229,31 @@ feature {NONE} -- Factory
 			elseif l_token.starts_with (cluster_prefix) then
 				l_name := l_token.substring (cluster_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
-				if {l_cluster: CONF_CLUSTER} project.universe.cluster_of_name (l_name) then
+				if l_pnode /= Void then
+					l_cluster ?= l_pnode.data
+					if l_cluster /= Void then
+						l_cluster := l_cluster.target.clusters.item (l_name)
+					else
+						l_library ?= l_pnode.data
+						if l_library /= Void then
+							l_cluster := l_library.library_target.clusters.item (l_name)
+						end
+					end
+				end
+				if l_cluster = Void and l_library = Void then
+					l_cluster := project.universe.cluster_of_name (l_name)
+				end
+				if l_cluster /= Void then
 					token_writer.add_group (l_cluster, l_name)
+					a_node.set_data (l_cluster)
 				end
 			elseif l_token.starts_with (library_prefix) then
 				l_name := l_token.substring (library_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
-				if {l_library: CONF_LIBRARY} project.universe.group_of_name (l_name) then
+				l_library ?= project.universe.group_of_name (l_name)
+				if l_library /= Void then
 					token_writer.add_group (l_library, l_name)
+					a_node.set_data (l_library)
 				end
 			elseif False then
 				-- More tokens to come

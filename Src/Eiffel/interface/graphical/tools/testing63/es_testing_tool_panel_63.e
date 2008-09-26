@@ -56,6 +56,8 @@ feature {NONE} -- Initialization
 			view_template_descriptions.set_equality_tester (l_et)
 			create view_history.make
 			view_history.set_equality_tester (l_et)
+
+			create filter.make
 		end
 
 feature {NONE} -- Initialization: widgets
@@ -91,6 +93,7 @@ feature {NONE} -- Initialization: widgets
 
 				-- Create and add `filter_box' with label
 			create filter_box
+			register_action (filter_box.return_actions, agent update_view)
 			create l_label.make_with_text (local_formatter.translation (l_filter))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
@@ -148,14 +151,14 @@ feature {NONE} -- Initialization: widget status
 		do
 			view_templates.put_last ("")
 			view_template_descriptions.put_last ("")
-			view_templates.put_last ("class/")
-			view_template_descriptions.put_last ("Tests%T%T%T(class/)")
-			view_templates.put_last ("outcome/")
-			view_template_descriptions.put_last ("Outcomes%T%T(outcome/)")
-			view_templates.put_last ("covers/")
-			view_template_descriptions.put_last ("Classes under test%T(covers/)")
-			view_templates.put_last ("type/")
-			view_template_descriptions.put_last ("Types%T%T(type/)")
+			view_templates.put_last ("class")
+			view_template_descriptions.put_last ("Tests%T%T%T(class)")
+			view_templates.put_last ("outcome")
+			view_template_descriptions.put_last ("Outcomes%T%T(outcome)")
+			view_templates.put_last ("covers")
+			view_template_descriptions.put_last ("Classes under test%T(covers)")
+			view_templates.put_last ("type")
+			view_template_descriptions.put_last ("Types%T%T(type)")
 
 			update_view_box
 			view_box.i_th (2).enable_select
@@ -171,8 +174,11 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	tree_view: ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
+	tree_view: !ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
 			-- Tree view displaying tests
+
+	filter: !TAG_BASED_FILTERED_COLLECTION [!EIFFEL_TEST_I]
+			-- Collection used for filter
 
 	outcome_tab: !ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
@@ -246,7 +252,6 @@ feature {NONE} -- Status setting: view
 			end
 			if is_valid_tag (l_tag) then
 				if not l_tag.is_empty then
-					l_tag.append_character (split_char)
 					if not view_templates.has (l_tag) then
 						view_history.start
 						view_history.search_forth (l_tag)
@@ -318,20 +323,31 @@ feature {NONE} -- Status setting: view
 		do
 			if test_suite.is_service_available then
 				l_tag ?= view_box.text.to_string_8
-				if l_tag.ends_with (split_char.out) then
-					l_tag := l_tag.substring (1, l_tag.count - 1)
-				end
-
 				if tree_view.is_connected then
 					if not tree_view.tag_prefix.is_equal (l_tag) then
 						tree_view.disconnect
 					end
 				end
-				if not tree_view.is_connected then
-					tree_view.connect (test_suite.service, l_tag)
+				if not filter.is_connected then
+					filter.connect (test_suite.service)
 				end
-			elseif tree_view.is_connected then
-				tree_view.disconnect
+				if {l_expr: !STRING} filter_box.text.to_string_8 and then not l_expr.is_empty then
+					if not (filter.has_expression and then filter.expression.is_equal (l_expr)) then
+						filter.set_expression (l_expr)
+					end
+				elseif filter.has_expression then
+					filter.remove_expression
+				end
+				if not tree_view.is_connected then
+					tree_view.connect (filter, l_tag)
+				end
+			else
+				if tree_view.is_connected then
+					tree_view.disconnect
+				end
+				if filter.is_connected then
+					filter.disconnect
+				end
 			end
 		end
 
@@ -340,13 +356,17 @@ feature {NONE} -- Status setting: stones
 	on_stone_changed (a_old_stone: ?like stone)
 			-- <Precursor>
 		local
-			l_class: !CLASS_C
+			l_name: STRING
 		do
-			if {l_class_stone: !CLASSC_STONE} stone then
-				l_class ?= l_class_stone.e_class
+			if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
+				l_name := l_class_stone.class_name
 
-				view_box.set_text ("covers.")
-				filter_box.set_text ("covers." + l_class.name)
+				filter_box.set_text (l_name)
+				if test_suite.is_service_available and then test_suite.service.is_test_class (l_class) then
+					view_box.set_text ("class")
+				else
+					view_box.set_text ("covers")
+				end
 				update_view
 			end
 		end
@@ -392,7 +412,7 @@ feature {NONE} -- Action handlers
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
 			if test_suite.is_service_available then
-				--run_list ()
+				execute_list (filter.items, a_type)
 			end
 		end
 

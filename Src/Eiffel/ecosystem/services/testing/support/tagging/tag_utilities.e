@@ -230,10 +230,10 @@ feature -- Basic functionality
 
 feature -- Constants
 
-	library_prefix: STRING = "0library:"
-	cluster_prefix: STRING = "1cluster:"
-	class_prefix: STRING = "2class:"
-	feature_prefix: STRING = "3feature:"
+	cluster_prefix: STRING = "0cluster:"
+	class_prefix: STRING = "1class:"
+	feature_prefix: STRING = "2feature:"
+	library_prefix: STRING = "4library:"
 			-- Eiffel prefixes used in tags
 
 end

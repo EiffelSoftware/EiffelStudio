@@ -20,7 +20,7 @@ inherit
 			class_name as conf_class_name
 		redefine
 			process_cluster,
-			process_test_cluster
+			process_library
 		end
 
 	SHARED_ERROR_HANDLER
@@ -51,7 +51,6 @@ feature {EIFFEL_TEST_PROJECT_I} -- Basic functionality
 				create traversed_descendants.make_default
 				create traversed_helpers.make_default
 
-				test_cluster_depth := 0
 				process_target (project.eiffel_project.universe.target)
 
 				traversed_descendants := Void
@@ -59,10 +58,24 @@ feature {EIFFEL_TEST_PROJECT_I} -- Basic functionality
 			end
 		end
 
-feature {NONE} -- Implementation: uncompiled test retrieval
+feature {NONE} -- Query
 
-	test_cluster_depth: NATURAL
-			-- How many of the current's clusters parents are test clusters?
+	has_tests_cluster_parent (a_cluster: CONF_CLUSTER): BOOLEAN
+			-- Is cluster (indirect) child of a tests cluster?
+		local
+			l_cluster: CONF_CLUSTER
+		do
+			from
+				l_cluster := a_cluster
+			until
+				l_cluster = Void or Result
+			loop
+				Result := {l_tcluster: CONF_TEST_CLUSTER} l_cluster
+				l_cluster := l_cluster.parent
+			end
+		end
+
+feature {NONE} -- Implementation: uncompiled test retrieval
 
 	traversed_descendants: ?DS_HASH_SET [!EIFFEL_CLASS_I]
 
@@ -166,7 +179,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				until
 					l_cursor.after
 				loop
-					if {l_class: !EIFFEL_CLASS_I} l_universe.class_named (l_cursor.item, l_group) then
+					if {l_class: !EIFFEL_CLASS_I} l_universe.safe_class_named (l_cursor.item, l_group) then
 						l_list.put_last (l_class)
 					end
 					l_cursor.forth
@@ -190,7 +203,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 		local
 			l_ht: HASH_TABLE [CONF_CLASS, STRING]
 		do
-			if test_cluster_depth > 0 then
+			if has_tests_cluster_parent (a_cluster) then
 				l_ht := a_cluster.classes
 				from
 					l_ht.start
@@ -205,23 +218,17 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 					l_ht.forth
 				end
 			end
-			if {l_list: ARRAYED_LIST [CONF_CLUSTER]} a_cluster.children then
-				l_list.do_all (agent {CONF_CLUSTER}.process (Current))
-			end
 		end
 
-	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER) is
+	process_library (a_library: CONF_LIBRARY) is
 			-- <Precursor>
 			--
-			-- `test_cluster_depth' is used to keep track whether the visitor is traversing sub items or a
-			-- test cluster.
-		require else
-			locating: is_locating
+			-- Note: if library is not read only, we will look for tests.
 		do
-			test_cluster_depth := test_cluster_depth + 1
-			process_cluster (a_test_cluster)
-			test_cluster_depth := test_cluster_depth - 1
+			Precursor (a_library)
+			if not a_library.is_readonly and a_library.library_target /= Void then
+				process_target (a_library.library_target)
+			end
 		end
-
 
 end

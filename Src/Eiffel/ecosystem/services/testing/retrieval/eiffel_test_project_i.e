@@ -71,7 +71,7 @@ feature -- Status report
 			usable: is_interface_usable
 			project_available: is_project_initialized
 		do
-			Result := eiffel_project.universe.class_named (a_class.name, a_class.cluster) /= Void
+			Result := eiffel_project.universe.safe_class_named (a_class.name, a_class.cluster) /= Void
 		end
 
 	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN is

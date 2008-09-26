@@ -154,7 +154,7 @@ feature {NONE} -- Query
 			l_system := project.system.system
 			if not l_system.root_creators.is_empty then
 				l_root := l_system.root_creators.first.cluster
-				l_classi := project.universe.class_named (a_test.class_name, l_root)
+				l_classi := project.universe.safe_class_named (a_test.class_name, l_root)
 			end
 			if l_classi /= Void and then l_classi.is_compiled then
 				l_classc := l_classi.compiled_class

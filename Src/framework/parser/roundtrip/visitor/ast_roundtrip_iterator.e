@@ -890,16 +890,33 @@ feature
 		end
 
 	process_loop_as (l_as: LOOP_AS) is
+		local
+			l_until: KEYWORD_AS
+			l_variant_processing_after: BOOLEAN
 		do
 			safe_process (l_as.from_keyword (match_list))
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_keyword (match_list))
 			safe_process (l_as.full_invariant_list)
-			safe_process (l_as.variant_part)
-			safe_process (l_as.until_keyword (match_list))
+				-- Special code to handle the old or new ordering of the `variant'
+				-- clause in a loop.
+			l_until := l_as.until_keyword (match_list)
+			if l_as.variant_part /= Void and l_until /= Void then
+				if l_as.variant_part.start_position > l_until.start_position then
+					l_variant_processing_after := True
+				else
+					safe_process (l_as.variant_part)
+				end
+			else
+				safe_process (l_as.variant_part)
+			end
+			safe_process (l_until)
 			safe_process (l_as.stop)
 			safe_process (l_as.loop_keyword (match_list))
 			safe_process (l_as.compound)
+			if l_variant_processing_after then
+				l_as.variant_part.process (Current)
+			end
 			safe_process (l_as.end_keyword)
 		end
 

@@ -7,12 +7,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_DEPENDANCE 
+class CLASS_DEPENDANCE
 
 inherit
 	HASH_TABLE [FEATURE_DEPENDANCE, INTEGER]
 		redefine
-			remove, put
+			remove, put, force
 		end
 
 	IDABLE
@@ -31,7 +31,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	associated_class: CLASS_C is
 			-- Associated class
@@ -40,6 +40,13 @@ feature
 		end
 
 	put (f: FEATURE_DEPENDANCE; bindex: INTEGER) is
+			-- We must update the correspondance table in the server
+		do
+			System.depend_server.add_correspondance (bindex, class_id)
+			Precursor {HASH_TABLE} (f, bindex)
+		end
+
+	force (f: FEATURE_DEPENDANCE; bindex: INTEGER) is
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)

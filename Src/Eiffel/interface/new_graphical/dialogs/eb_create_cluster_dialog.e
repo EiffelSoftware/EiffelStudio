@@ -104,6 +104,7 @@ feature {NONE} -- Initialization
 			create folder_entry
 			create cluster_list.make_without_targets (a_target.menus.context_menu_factory)
 			create recursive_box.make_with_text (Interface_names.l_All)
+			create tests_cluster_box.make_with_text (Interface_names.l_tests_cluster)
 			create name_label.make_with_text (Interface_names.L_cluster_name)
 			create path_label.make_with_text (Interface_names.l_Path)
 
@@ -143,6 +144,9 @@ feature {NONE} -- Initialization
 			create hb
 			hb.extend (recursive_box)
 			vb.extend (hb)
+			create hb
+			hb.extend (tests_cluster_box)
+			vb.extend (hb)
 			name_frame.extend (vb)
 
 				-- Build the list
@@ -150,6 +154,7 @@ feature {NONE} -- Initialization
 			vb.set_padding (Layout_constants.Small_border_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
+			cluster_list.select_actions.extend (agent check_for_tests_cluster)
 			cluster_list.refresh
 			vb.extend (cluster_list)
 			cluster_frame.extend (vb)
@@ -269,6 +274,9 @@ feature {NONE} -- Implementation
 	aok: BOOLEAN
 			-- Is the current state valid?
 
+	tests_cluster_was_selected: BOOLEAN
+			-- Was `tests_cluster_box' before selecting a test cluster been selected?
+
 	change_parent_group is
 			-- Set `group' to selected cluster/library from tree.
 		local
@@ -346,6 +354,10 @@ feature {NONE} -- Implementation
 					if group.is_cluster then
 						l_clu ?= group
 						in_recursive := l_clu /= Void and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
+						if group.is_test_cluster and not tests_cluster_box.is_selected then
+							prompts.show_error_prompt (warning_messages.w_cannot_create_cluster_in_tests_cluster, Current, Void)
+							aok := False
+						end
 					end
 				end
 				if aok and not in_recursive then
@@ -393,8 +405,12 @@ feature {NONE} -- Implementation
 			-- `name': name of the new cluster.
 		require
 			valid_params: name /= Void and then not name.is_empty and name.as_lower.is_equal (name)
+		local
+			l_is_tests_cluster: BOOLEAN
 		do
-			manager.add_cluster (name, group, original_path)
+			l_is_tests_cluster := tests_cluster_box.is_selected
+			manager.add_cluster (name, group, original_path, l_is_tests_cluster)
+			manager.last_added_cluster.set_recursive (recursive_box.is_selected)
 		end
 
 	create_directory (dir: DIRECTORY) is
@@ -463,6 +479,34 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			aok implies (chosen_dir /= Void and original_path /= Void)
+		end
+
+	check_for_tests_cluster is
+			-- Check if selected cluster in `cluster_list' is a test cluster. If so, disable sensitivity of
+			-- `tests_cluster_box' and make it selected by default. If no test cluster is selected and
+			-- sensitivity is still disabled, restore state of box before disabling it.
+		local
+			l_sensitive: BOOLEAN
+		do
+			change_parent_group
+			l_sensitive := True
+			if aok and not is_top_level then
+				l_sensitive := not group.is_test_cluster
+			end
+			if l_sensitive then
+				if not tests_cluster_box.is_sensitive then
+					tests_cluster_box.enable_sensitive
+					if not tests_cluster_was_selected then
+						tests_cluster_box.disable_select
+					end
+				end
+			else
+				if tests_cluster_box.is_sensitive then
+					tests_cluster_was_selected := tests_cluster_box.is_selected
+					tests_cluster_box.enable_select
+					tests_cluster_box.disable_sensitive
+				end
+			end
 		end
 
 	last_browsed_directory: STRING is
@@ -540,6 +584,9 @@ feature {NONE} -- Vision2 widgets
 
 	recursive_box: EV_CHECK_BUTTON
 			-- Check box that sets whether the cluster is recursive or not.
+
+	tests_cluster_box: EV_CHECK_BUTTON
+			-- Check box that determines whether the cluster should be a test cluster or not
 
 	create_button: EV_BUTTON
 			-- Button to create the class

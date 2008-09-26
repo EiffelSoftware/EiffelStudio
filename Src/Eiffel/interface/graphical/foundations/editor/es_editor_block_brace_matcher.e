@@ -47,20 +47,18 @@ feature -- Status report
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
-	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
-			-- <Precursor>
-		do
-			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
-				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
-		end
-
-feature {NONE} -- Status report
-
 	is_opening_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
+		end
+
+	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
+				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
 	is_closing_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN

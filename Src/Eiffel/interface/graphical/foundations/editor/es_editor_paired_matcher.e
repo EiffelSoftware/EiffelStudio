@@ -43,7 +43,7 @@ feature -- Status report
 		local
 			l_image: ?STRING_32
 		do
-			if {l_symbol: EDITOR_TOKEN_TEXT} a_token then
+			if not {l_comment: EDITOR_TOKEN_COMMENT} a_token and then {l_symbol: EDITOR_TOKEN_TEXT} a_token then
 				l_image := a_token.wide_image
 				if l_image /= Void and then not l_image.is_empty then
 					Result := opening_brace_map.has (l_image)
@@ -55,40 +55,6 @@ feature -- Status report
 		ensure
 			token_image_is_opening_brace: Result implies opening_brace_map.has (({!STRING_32}) #? a_token.wide_image)
 		end
-
-	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
-			-- Determines if a token is an closing brace token.
-			--
-			-- `a_token': The token to determine brace applicability for.
-			-- `Result' : True if the supplied token is an closing brace token; False otherwise.
-		local
-			l_image: ?STRING_32
-		do
-			if {l_symbol: EDITOR_TOKEN_TEXT} a_token then
-				l_image := a_token.wide_image
-				if l_image /= Void and then not l_image.is_empty then
-					Result := closing_brace_map.has (l_image)
-				else
-						-- Why is the image Void or empty?
-					check False end
-				end
-			end
-		ensure
-			token_image_is_opening_brace: Result implies closing_brace_map.has (({!STRING_32}) #? a_token.wide_image)
-		end
-
-	frozen is_brace (a_token: !EDITOR_TOKEN): BOOLEAN
-			-- Determines if a token is an opening or closing brace token.
-			--
-			-- `a_token': The token to determine brace applicability for.
-			-- `Result' : True if the supplied token is an brace token; False otherwise.
-		do
-			Result := is_opening_brace (a_token) or else is_closing_brace (a_token)
-		ensure
-			a_token_is_opening_or_closing_brace: Result implies (is_opening_brace (a_token) or else is_closing_brace (a_token))
-		end
-
-feature {NONE} -- Status report
 
 	is_opening_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
 			-- Determines if a matching opening token is an exception to the rule when paired with a closing brace.
@@ -103,6 +69,27 @@ feature {NONE} -- Status report
 			Result := False
 		end
 
+	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- Determines if a token is an closing brace token.
+			--
+			-- `a_token': The token to determine brace applicability for.
+			-- `Result' : True if the supplied token is an closing brace token; False otherwise.
+		local
+			l_image: ?STRING_32
+		do
+			if not {l_comment: EDITOR_TOKEN_COMMENT} a_token and then {l_symbol: EDITOR_TOKEN_TEXT} a_token then
+				l_image := a_token.wide_image
+				if l_image /= Void and then not l_image.is_empty then
+					Result := closing_brace_map.has (l_image)
+				else
+						-- Why is the image Void or empty?
+					check False end
+				end
+			end
+		ensure
+			token_image_is_opening_brace: Result implies closing_brace_map.has (({!STRING_32}) #? a_token.wide_image)
+		end
+
 	is_closing_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
 			-- Determines if a matching closing token is an exception to the rule when paired with a opening brace.
 			--
@@ -114,6 +101,17 @@ feature {NONE} -- Status report
 			a_token_is_closing_brace: is_closing_brace (a_token)
 		do
 			Result := False
+		end
+
+	frozen is_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- Determines if a token is an opening or closing brace token.
+			--
+			-- `a_token': The token to determine brace applicability for.
+			-- `Result' : True if the supplied token is an brace token; False otherwise.
+		do
+			Result := is_opening_brace (a_token) or else is_closing_brace (a_token)
+		ensure
+			a_token_is_opening_or_closing_brace: Result implies (is_opening_brace (a_token) or else is_closing_brace (a_token))
 		end
 
 feature -- Query
@@ -168,11 +166,11 @@ feature -- Query
 						l_next := [a_start_token, a_start_line]
 						from until l_stop loop
 								-- Locate next brace token.
-							l_next := next_token (l_next.token, l_next.line, True,
-								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE; ia_end_token: ?EDITOR_TOKEN): BOOLEAN
+							l_next := next_token (l_next.token, l_next.line, True, a_end_token,
+								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE): BOOLEAN
 									do
-										Result := is_brace (ia_start_token) or else ia_start_token ~ ia_end_token
-									end (?, ?, a_end_token))
+										Result := is_brace (ia_start_token)
+									end)
 							if l_next /= Void and then {l_text: EDITOR_TOKEN_TEXT} l_next.token then
 									-- A new brace token is found, check it's not
 								if is_opening_brace (l_text) then
@@ -241,11 +239,11 @@ feature -- Query
 						l_prev := [a_start_token, a_start_line]
 						from until l_stop loop
 								-- Locate previous brace token.
-							l_prev := previous_token (l_prev.token, l_prev.line, True,
-								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE; ia_end_token: ?EDITOR_TOKEN): BOOLEAN
+							l_prev := previous_token (l_prev.token, l_prev.line, True, a_end_token,
+								agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE): BOOLEAN
 									do
-										Result := (ia_start_token.is_text and then is_brace (ia_start_token)) or else ia_start_token ~ ia_end_token
-									end (?, ?, a_end_token))
+										Result := (ia_start_token.is_text and then is_brace (ia_start_token))
+									end)
 							if l_prev /= Void and then {l_text: EDITOR_TOKEN_TEXT} l_prev.token then
 									-- A new brace token is found, check it's not
 								if is_closing_brace (l_text) then

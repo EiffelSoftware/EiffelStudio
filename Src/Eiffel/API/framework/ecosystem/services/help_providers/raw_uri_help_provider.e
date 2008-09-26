@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
@@ -65,6 +70,7 @@ feature -- Basic operations
 				format_uris (lt_id)
 				launch_uri (lt_id)
 			end
+
 		end
 
 feature {NONE} -- Basic operations
@@ -78,9 +84,19 @@ feature {NONE} -- Basic operations
 		local
 			l_url: !URI_LAUNCHER
 			l_error: ES_ERROR_PROMPT
+			l_default_browser: STRING_GENERAL
+			l_launched: BOOLEAN
 		do
 			create l_url
-			if not l_url.launch (a_uri) then
+			l_default_browser := preferences.misc_data.internet_browser_preference.string_value
+			if l_default_browser /= Void and then not l_default_browser.is_empty then
+				l_launched := l_url.launch_with_default_app (a_uri, l_default_browser)
+			else
+				l_launched := l_url.launch (a_uri)
+					-- This check is here because it lets us know if the preference wasn't initialized.
+				check False end
+			end
+			if not l_launched then
 				create l_error.make_standard ((create {ERROR_MESSAGES}).e_help_unable_to_launch)
 				l_error.show_on_active_window
 			end

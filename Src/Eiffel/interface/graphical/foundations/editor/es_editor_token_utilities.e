@@ -10,6 +10,72 @@ indexing
 class
 	ES_EDITOR_TOKEN_UTILITIES
 
+feature {NONE} -- Access: Keywords
+
+	feature_body_keywords: !HASH_TABLE [BOOLEAN, !STRING_32]
+			-- Keywords that mark the beginning of an Eiffel feature body.
+		once
+			create Result.make (5)
+			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
+		end
+
+feature -- Status report
+
+	is_text_token (a_token: !EDITOR_TOKEN; a_text: ?READABLE_STRING_GENERAL; a_ignore_case: BOOLEAN): BOOLEAN
+			-- Detemines if a token is a specific text token.
+			--
+			-- `a_token'      : The token to determine if to be a specific keyword.
+			-- `a_text'       : The text of the keyword to match or Void to just match a keyword.
+			-- `a_ignore_case': True to match case insensitive; False otherwise.
+			-- `Result'       : True if the supplied token is a keyword with the given text; False otherwise.
+		require
+			not_a_text_is_empty: a_text /= Void not a_text.is_empty
+		do
+			if {l_keyword: EDITOR_TOKEN_TEXT} a_token then
+				Result := True
+				if a_text /= Void then
+					if {l_wide_string: STRING_32} a_text then
+						if a_ignore_case then
+							Result := a_token.wide_image.is_case_insensitive_equal (l_wide_string)
+						else
+							Result := a_token.wide_image.is_equal (l_wide_string)
+						end
+					else
+						if a_ignore_case then
+							Result := a_token.wide_image.as_string_8.is_case_insensitive_equal (a_text.as_string_8)
+						else
+							Result := a_token.wide_image.as_string_8.is_equal (a_text.as_string_8)
+						end
+					end
+				end
+			end
+		end
+
+	is_keyword_token (a_token: !EDITOR_TOKEN; a_keyword: ?READABLE_STRING_GENERAL): BOOLEAN
+			-- Detemines if a token is a specific keyword token.
+			--
+			-- `a_token'  : The token to determine if to be a specific keyword.
+			-- `a_keyword': The text of the keyword to match or Void to just match a keyword.
+			-- `Result'   : True if the supplied token is a keyword with the given text; False otherwise.
+		require
+			not_a_keyword_is_empty: a_keyword /= Void not a_keyword.is_empty
+		do
+			if {l_keyword: EDITOR_TOKEN_KEYWORD} a_token then
+				Result := True
+				if a_keyword /= Void then
+					if {l_wide_string: STRING_32} a_keyword then
+						Result := a_token.wide_image.is_case_insensitive_equal (l_wide_string)
+					else
+						Result := a_token.wide_image.as_string_8.is_case_insensitive_equal (a_keyword.as_string_8)
+					end
+				end
+			end
+		end
+
 feature -- Query
 
 	previous_text_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
@@ -26,14 +92,7 @@ feature -- Query
 			l_result: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 		do
 			if a_token /~ a_finish_token then
-				if a_finish_token = Void then
-					l_result := previous_token (a_token, a_line, a_skip_ws, Void)
-				else
-					l_result := previous_token (a_token, a_line, a_skip_ws, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE; ia_finish_token: !EDITOR_TOKEN): BOOLEAN
-						do
-							Result := ia_finish_token ~ ia_token or else ia_token.is_text
-						end (?, ?, a_finish_token))
-				end
+				l_result := previous_token (a_token, a_line, a_skip_ws, a_finish_token, Void)
 				if l_result /= Void and then {l_token: EDITOR_TOKEN_TEXT} l_result.token then
 					Result := [l_token, l_result.line]
 				end
@@ -41,6 +100,7 @@ feature -- Query
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_token_is_text: (Result /= Void and a_skip_ws) implies Result.token.is_text
+			result_token_not_a_finish_token: Result /= Void implies Result.token /~ a_finish_token
 		end
 
 	next_text_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
@@ -57,14 +117,7 @@ feature -- Query
 			l_result: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 		do
 			if a_token /~ a_finish_token then
-				if a_finish_token = Void then
-					l_result ?= next_token (a_token, a_line, a_skip_ws, Void)
-				else
-					l_result ?= next_token (a_token, a_line, a_skip_ws, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE; ia_finish_token: !EDITOR_TOKEN): BOOLEAN
-						do
-							Result := ia_finish_token ~ ia_token or else ia_token.is_text
-						end (?, ?, a_finish_token))
-				end
+				l_result := next_token (a_token, a_line, a_skip_ws, a_finish_token, Void)
 				if l_result /= Void and then {l_token: EDITOR_TOKEN_TEXT} l_result.token then
 					Result := [l_token, l_result.line]
 				end
@@ -72,18 +125,21 @@ feature -- Query
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_token_is_text: (Result /= Void and a_skip_ws) implies Result.token.is_text
+			result_token_not_a_finish_token: Result /= Void implies Result.token /~ a_finish_token
 		end
 
 feature -- Query
 
-	previous_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_predicate: ?FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	previous_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: ?EDITOR_TOKEN; a_predicate: ?FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
-			-- `a_token'  : The token on the supplied line to find the previous token to.
-			-- `a_line'   : The line where the supplied token is resident.
-			-- `a_skip_ws': True to skip whitespace tokens; False to include text and whitespace tokens.
-			-- `Result'   : A resulting token and resident line, or Void if no previous token exists.
+			-- `a_token'       : The token on the supplied line to find the next token to.
+			-- `a_line'        : The line where the supplied token is resident.
+			-- `a_skip_ws'     : True to skip whitespace tokens; False to include text and whitespace tokens.
+			-- `a_finish_token': An optional token to terminate navigation at.
+			-- `a_predicate'   : An optional predicate to detemine result matching applicability.
+			-- `Result'        : A resulting token and resident line, or Void if no next token exists.
 		require
 			a_line_has_a_token: a_line.has_token (a_token)
 		local
@@ -91,42 +147,47 @@ feature -- Query
 			l_line: ?EDITOR_LINE
 			l_stop: BOOLEAN
 		do
-			l_token := a_token
-			l_line := a_line
-			from until l_stop loop
-				l_token := l_token.previous
-				if l_token = Void then
-					l_line := l_line.previous
-					if l_line /= Void then
-						l_token := l_line.eol_token
+			if a_token /~ a_finish_token then
+				l_token := a_token
+				l_line := a_line
+				from until l_stop loop
+					l_token := l_token.previous
+					if l_token = Void then
+						l_line := l_line.previous
+						if l_line /= Void then
+							l_token := l_line.eol_token
+						end
 					end
-				end
-				if l_token /= Void and l_line /= Void then
-					if a_predicate /= Void then
-						if a_predicate.item ([l_token, l_line]) then
+					if l_token /= Void and l_line /= Void then
+						if a_predicate /= Void then
+							if a_predicate.item ([l_token, l_line]) then
+								Result := [l_token, l_line]
+							end
+						elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
+								-- There is no stop condition test predicate, so just locate text tokens
 							Result := [l_token, l_line]
 						end
-					elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
-							-- There is no stop condition test predicate, so just locate text tokens
-						Result := [l_token, l_line]
+						l_stop := Result /= Void
+					else
+						l_stop := True
 					end
-					l_stop := Result /= Void
-				else
-					l_stop := True
 				end
 			end
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
+			result_token_not_a_finish_token: Result /= Void implies Result.token /~ a_finish_token
 		end
 
-	next_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_predicate: ?FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	next_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: ?EDITOR_TOKEN; a_predicate: ?FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
 			-- Searches for the next token given a start token and line. A predicate can be used to locate
 			-- special tokens or else the next text token will be located.
 			--
-			-- `a_token'  : The token on the supplied line to find the next token to.
-			-- `a_line'   : The line where the supplied token is resident.
-			-- `a_skip_ws': True to skip whitespace tokens; False to include text and whitespace tokens.
-			-- `Result'   : A resulting token and resident line, or Void if no next token exists.
+			-- `a_token'       : The token on the supplied line to find the next token to.
+			-- `a_line'        : The line where the supplied token is resident.
+			-- `a_skip_ws'     : True to skip whitespace tokens; False to include text and whitespace tokens.
+			-- `a_finish_token': An optional token to terminate navigation at.
+			-- `a_predicate'   : An optional predicate to detemine result matching applicability.
+			-- `Result'        : A resulting token and resident line, or Void if no next token exists.
 		require
 			a_line_has_a_token: a_line.has_token (a_token)
 		local
@@ -134,32 +195,35 @@ feature -- Query
 			l_line: ?EDITOR_LINE
 			l_stop: BOOLEAN
 		do
-			l_token := a_token
-			l_line := a_line
-			from until l_stop loop
-				l_token := l_token.next
-				if l_token = Void then
-					l_line := l_line.next
-					if l_line /= Void then
-						l_token := l_line.first_token
+			if a_token /~ a_finish_token then
+				l_token := a_token
+				l_line := a_line
+				from until l_stop loop
+					l_token := l_token.next
+					if l_token = Void then
+						l_line := l_line.next
+						if l_line /= Void then
+							l_token := l_line.first_token
+						end
 					end
-				end
-				if l_token /= Void and l_line /= Void then
-					if a_predicate /= Void then
-						if a_predicate.item ([l_token, l_line]) then
+					if l_token /= Void and l_line /= Void then
+						if a_predicate /= Void then
+							if a_predicate.item ([l_token, l_line]) then
+								Result := [l_token, l_line]
+							end
+						elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
+								-- There is no stop condition test predicate, so just locate text tokens
 							Result := [l_token, l_line]
 						end
-					elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
-							-- There is no stop condition test predicate, so just locate text tokens
-						Result := [l_token, l_line]
+						l_stop := Result /= Void
+					else
+						l_stop := True
 					end
-					l_stop := Result /= Void
-				else
-					l_stop := True
 				end
 			end
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
+			result_token_not_a_finish_token: Result /= Void implies Result.token /~ a_finish_token
 		end
 
 feature -- Conversion
@@ -194,29 +258,6 @@ feature -- Conversion
 					l_next := Void
 				end
 			end
-		end
-
-feature {NONE} -- Access: Keywords
-
-	feature_body_block_keywords: !HASH_TABLE [BOOLEAN, !STRING_32]
-			-- Block initializer keywords that can appear within the confines of a feature.
-		once
-			create Result.make (15)
-			Result.put (True, create {STRING_32}.make_from_string ("from"))
-			Result.put (True, create {STRING_32}.make_from_string ("if"))
-			Result.put (True, create {STRING_32}.make_from_string ("inspect"))
-			Result.merge (feature_body_keywords)
-		end
-
-	feature_body_keywords: !HASH_TABLE [BOOLEAN, !STRING_32]
-			-- Keywords that mark the beginning of an Eiffel feature body.
-		once
-			create Result.make (5)
-			Result.put (True, create {STRING_32}.make_from_string ("attribute"))
-			Result.put (True, create {STRING_32}.make_from_string ("deferred"))
-			Result.put (True, create {STRING_32}.make_from_string ("do"))
-			Result.put (True, create {STRING_32}.make_from_string ("external"))
-			Result.put (True, create {STRING_32}.make_from_string ("once"))
 		end
 
 ;indexing

@@ -29,6 +29,9 @@ feature -- Access
 			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
 
 			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.check_keyword))
+
+			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
 			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.class_keyword))
 
 			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
@@ -115,7 +118,7 @@ feature {NONE} -- Status report
 						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword)
 					then
 							-- Parent clause is only a valid match if the previous token is a class name.
-						l_prev := previous_token (a_token, a_line, True, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
+						l_prev := previous_token (a_token, a_line, True, Void, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
 								-- We are looking for the parent class declaration which could either be a class name or generic type, in which
 								-- case a closing ] might be found.
 							do

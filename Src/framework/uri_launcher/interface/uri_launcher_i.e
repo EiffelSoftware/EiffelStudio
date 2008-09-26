@@ -33,7 +33,8 @@ feature -- Basic operations
 			not_a_uri_is_empty: not a_uri.is_empty
 			not_a_default_app_is_empty: not a_default_app.is_empty
 		do
-			if not launch (a_uri) then
+			Result := launch (a_uri)
+			if not Result then
 				Result := launch_with_app (a_uri, a_default_app)
 			end
 		end

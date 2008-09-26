@@ -38,7 +38,8 @@ feature -- Basic operations
 			l_cleaner.auto_free (l_op)
 			l_cleaner.auto_free (l_uri)
 
-			Result := cwin_shell_execute (l_null, l_null, l_uri, l_null, l_null, cwin_sw_shownormal) = 0
+				-- Return values greater than 32 represent a success, see MS documentation on ShellExecute.
+			Result := cwin_shell_execute (l_null, l_null, l_uri, l_null, l_null, cwin_sw_shownormal) > 32
 
 			l_cleaner.clean
 		rescue

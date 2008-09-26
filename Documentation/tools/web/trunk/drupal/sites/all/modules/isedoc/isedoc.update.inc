@@ -102,6 +102,16 @@ function isedoc_update_book_traverse(&$a_tree, $a_book_short_path, $a_op='all') 
 					}
 				}
 			}
+			if ($a_op == 'blockimage') {
+				$pat = "/\\n\[\[Image:/";
+				$txt = preg_replace($pat, '[[Image:',$node->body);
+				if (strlen($txt) < strlen($node->body)) {
+					drupal_set_message($a_book_short_path . " node=" .$node->path . ": Clean imageblock usage");
+					$node->body = $txt;
+					$b_save = TRUE;
+					$b_revision = TRUE;
+				}
+			}
 			if ($a_op == 'templateseealso') {
 				$pat = "/{{\s*seealso\s*\|[' ]*see also[': ]*/i";
 				$txt = preg_replace($pat, '{{seealso|',$node->body);

@@ -18,7 +18,7 @@ function isedoc_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function isedoc_perm() {
-  return array('admin isedoc');
+  return array('admin isedoc', 'query isedoc');
 }
 
 
@@ -52,7 +52,9 @@ function isedoc_block($op = 'list', $delta = 0) {
 		}
 		if (user_access('admin isedoc')) {
 			$links[] = l('Update books','isedoc/update/_');
-			$links[] = l('Check books','isedoc/report/_');
+		}
+		if (user_access('query isedoc')) {
+			$links[] = l('Check books','isedoc/report/doc/_');
 		}
 		if (isedoc_user_can_edit()) {
 			$links[] = l('List Templates','isedoc/templates');
@@ -101,11 +103,11 @@ function isedoc_menu() {
     'file' => 'isedoc.update.inc',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['isedoc/report/%'] = array(
+  $items['isedoc/report/%/%'] = array(
     'title' => t('Check documentation pages and report'),
     'page callback' => 'isedoc_report',
-    'page arguments' => array(2,3),
-    'access arguments' => array('admin isedoc'),
+    'page arguments' => array(2,3,4),
+    'access arguments' => array('query isedoc'),
     'file' => 'isedoc.report.inc',
     'type' => MENU_NORMAL_ITEM,
   );

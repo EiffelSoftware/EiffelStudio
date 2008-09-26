@@ -32,8 +32,12 @@ function isedoc_whatlinkshere($node) {
       $n =& node_load($r_nid);
       $bn = '';
       if ($n) {
-	$bid = $n->book['bid'];
-	$bn = isedoc_book_name($bid);
+        if ($n->type == 'doc') {
+	  $bid = $n->book['bid'];
+	  $bn = t("book %name", array('%name' => isedoc_book_name($bid)));
+        } elseif ($n->type == 'template') {
+	  $bn = "Templates";
+        }
       } else {
         drupal_set_message(t("Unable to find info about '%tit' (node #%nid)", array('%nid' => $r_nid, '%tit' => $r['title'])),'error');
       }
@@ -44,9 +48,9 @@ function isedoc_whatlinkshere($node) {
     }
     foreach($output_by_book as $bn => $lst) {
       if ($bn == $n_bn) {
-        $t = "From current book '<em>".$bn."</em>'";
+        $t = "From current '<em>".$bn."</em>'";
       } else {
-        $t = "From book '<em>".$bn."</em>'";
+        $t = "From '<em>".$bn."</em>'";
       }
       $output .= _isedoc_display_references($t, $lst);
     }
@@ -72,7 +76,9 @@ function _isedoc_display_references($tit, $lst) {
         $t = '';
 	$t .= "<em>".$n->title."</em>";
         $t .= " (".l(t("view"), $n->path);
-        $t .= ", ".l(t("edit"), 'node/'.$n->nid.'/edit');
+        if (isedoc_user_can_edit()) {
+          $t .= ", ".l(t("edit"), 'node/'.$n->nid.'/edit');
+        }
         $t .= ")";
         //$t .= " status=".$n->status;
         //$t .= " version=".$n->vid;

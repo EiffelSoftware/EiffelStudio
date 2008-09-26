@@ -15,10 +15,29 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: !STRING_GENERAL): BOOLEAN
-			-- <Precursor>
+	launch (a_uri: !READABLE_STRING_GENERAL): BOOLEAN
+			-- Launches a URI in the system's default web-browser.
+			--
+			-- `a_uri' : The URI to launch.
+			-- `Result': True if the URI was launched; False otherwise.
+		require
+			not_a_uri_is_empty: not a_uri.is_empty
 		do
 			Result := bridge.launch (a_uri)
+		end
+
+	launch_with_default_app (a_uri: !READABLE_STRING_GENERAL; a_default_app: !READABLE_STRING_GENERAL): BOOLEAN
+			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
+			-- default application.
+			--
+			-- `a_uri'        : The URI to launch.
+			-- `a_default_app': The default application to use in case of system default failure.
+			-- `Result'       : True if the URI was launched; False otherwise.
+		require
+			not_a_uri_is_empty: not a_uri.is_empty
+			not_a_default_app_is_empty: not a_default_app.is_empty
+		do
+			Result := bridge.launch_with_default_app (a_uri, a_default_app)
 		end
 
 feature {NONE} -- Factory

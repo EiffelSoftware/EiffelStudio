@@ -53,7 +53,7 @@ function isedoc_block($op = 'list', $delta = 0) {
 		if (user_access('admin isedoc')) {
 			$links[] = l('Update books','isedoc/update/_');
 		}
-		if (user_access('edit any doc content')) {
+		if (isedoc_user_can_edit()) {
 			$links[] = l('List Templates','isedoc/templates');
 		}
 
@@ -169,6 +169,10 @@ function isedoc_uuid($prefix = '') {
 	$uuid .= substr($chars,16,4) . '-';
 	$uuid .= substr($chars,20,12);
 	return $prefix . $uuid;
+}
+
+function isedoc_user_can_edit($type='doc') {
+	return user_access('edit any '.$type.' content');
 }
 
 ?>

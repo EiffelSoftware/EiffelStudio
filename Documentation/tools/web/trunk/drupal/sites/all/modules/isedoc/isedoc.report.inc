@@ -33,7 +33,7 @@ function _isedoc_images_by_nid($a_type='doc') {
 	return $results;
 }
 
-function isedoc_gallery_taxonomy($vid,$a_name) {
+function isedoc_gallery_taxonomy($vid,$a_tid,$a_name) {
 	//drupal_set_message("isedoc_gallery_taxonomy($vid,$a_name) .. ");
 
 	$n = strtolower($a_name);
@@ -45,25 +45,26 @@ function isedoc_gallery_taxonomy($vid,$a_name) {
 		//drupal_set_message("isedoc_gallery_taxonomy($vid,$a_name) -> tid=".$res->tid . " name=".$res->name);
 		return $res;
 	} else {
-		$tid = db_result (db_query("SELECT tid FROM {term_data} WHERE vid = '%s' AND LOWER(name) = LOWER('%s')", $vid, 'documentation'));
-		$parents = taxonomy_get_parents ($tid);
-		if ($parents) {
-		    $parent = array_shift ($parents);
-		    $parent = $parent->tid;
-		} else {
-		    $parent = 0;
-		}
-//drupal_set_message("parent = $parent");
+//		$sql = "SELECT tid FROM {term_data} WHERE vid = '%s' AND LOWER(name) = LOWER('%s') ";
+//		$tid = db_result (db_query($sql, $vid, 'documentation'));
+//		$parents = taxonomy_get_parents ($tid);
+//		if ($parents) {
+//		    $parent = array_shift ($parents);
+//		    $parent = $parent->tid;
+//		} else {
+//		    $parent = 0;
+//		}
+		$parent = $a_tid;
 		$t = array('parent' => array($parent), 'vid' => $vid, 'name' => $n, "description" => "Images for book $a_name");
 		$st = taxonomy_save_term(&$t);
 //drupal_set_message("taxonomy_save_term($vid, $a_name) -> $st");
-		return isedoc_gallery_taxonomy($vid,$a_name);
+		return isedoc_gallery_taxonomy($vid,$a_tid,$a_name);
 	}
 }
-function isedoc_gallery_set_taxonomy(&$node,$vid,$a_name) {
+function isedoc_gallery_set_taxonomy(&$node,$vid,$a_tid,$a_name) {
 	//drupal_set_message("isedoc_gallery_set_taxonomy($vid,$a_name)");
 
-	$taxo = isedoc_gallery_taxonomy($vid, $a_name);
+	$taxo = isedoc_gallery_taxonomy($vid,$a_tid,$a_name);
 	taxonomy_node_delete($node->nid);
 	$taxonomy = taxonomy_node_get_terms($node->nid);
 	$taxonomy[$taxo->tid] = $taxo;
@@ -127,7 +128,7 @@ function isedoc_report($a_type='doc',$target, $a_op='') {
 							switch (count($bids)) {
 							case 0:
 								$output .= ":<strong> UNUSED</strong>";
-								isedoc_gallery_set_taxonomy(&$v_node, $vid, "unused");
+								isedoc_gallery_set_taxonomy(&$v_node, $vid, $tid, "unused");
 								$b_save = TRUE;
 								break;
 							case 1:
@@ -137,7 +138,7 @@ function isedoc_report($a_type='doc',$target, $a_op='') {
 								$r_bn = isedoc_book_name($r_bid);
 								$output .= ": only from book '".l($r_bn, "node/$r_bid")."' (count=".count($r_nids).")";
 
-								isedoc_gallery_set_taxonomy(&$v_node, $vid, "book-$r_bn");
+								isedoc_gallery_set_taxonomy(&$v_node, $vid, $tid, "book-$r_bn");
 								$b_save = TRUE;
 
 								break;
@@ -163,7 +164,7 @@ function isedoc_report($a_type='doc',$target, $a_op='') {
 							}
 						} else {
 							$output .= ":<strong> UNUSED</strong>";
-							isedoc_gallery_set_taxonomy(&$v_node, $vid, "unused");
+							isedoc_gallery_set_taxonomy(&$v_node, $vid, $tid, "unused");
 							$b_save = TRUE;
 						}
 						$output .= "</li>";

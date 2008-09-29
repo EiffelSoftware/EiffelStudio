@@ -650,7 +650,7 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	}
 
 	t.tv_sec = timeout;
-	t.tv_usec = timeoutm;
+	t.tv_usec = (timeoutm * 1000);
 
 	result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t);
 	eif_net_check (result);

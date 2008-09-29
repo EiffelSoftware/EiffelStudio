@@ -602,7 +602,8 @@ feature {NONE} -- Notebook item's behavior
 				end
 				if
 					content /= Void and then
-					content.is_docking_manager_attached
+					content.is_docking_manager_attached and then
+					not content.is_destroyed
 				then
 					content.update_mini_tool_bar_size
 				end

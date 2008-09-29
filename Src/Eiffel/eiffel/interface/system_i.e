@@ -5403,6 +5403,8 @@ feature -- Access: Root creators
 	root_creation_name: STRING is
 		do
 			Result := root_creators.first.procedure_name
+		ensure
+			root_creation_name_not_void: Result /= Void
 		end
 
 

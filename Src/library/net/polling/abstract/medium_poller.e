@@ -56,27 +56,27 @@ feature -- Initialization
 
 feature
 
-	execute (max_des, time_out_msec: INTEGER) is
+	execute (max_des, time_out_millisec: INTEGER) is
 			-- Poll io_medium's whose descriptor is less than
 			-- `max_des' and process ready media.
-			-- If no medium is ready, wait the 'time_out..'
+			-- If no medium is ready, wait the 'time_out..' milliseconds
 			-- time before returning.
 		require
 			valid_number: max_des > 0
 		local
 			number_ready: INTEGER
 		do
-			number_ready := medium_select (max_des, time_out_msec);
+			number_ready := medium_select (max_des, time_out_millisec);
 			if number_ready > 0 then
 				process_selected (number_ready)
 			end
 		end;
 
-	medium_select (number_to_check, time_out_msec: INTEGER): INTEGER is
-			-- Check the multiplexing masks for the 
+	medium_select (number_to_check, time_out_millisec: INTEGER): INTEGER is
+			-- Check the multiplexing masks for the
 			-- read, write, and exception medium reception
 			-- and return the number of mediums waiting
-			-- after 'time_out...' time
+			-- after 'time_out...' milliseconds time
 		local
 			lrm, lwm, lem: POINTER
 		do
@@ -88,7 +88,7 @@ feature
 				last_write_mask := write_mask.twin
 				lwm := last_write_mask.mask.item
 			end;
-			if not ignore_exception and then 
+			if not ignore_exception and then
 				not exception_command_list.all_default then
 				last_except_mask := except_mask.twin
 				lem := last_except_mask.mask.item
@@ -97,7 +97,7 @@ feature
 			if wait then
 				Result := c_select (number_to_check, lrm, lwm, lem, -1, 0)
 			else
-				Result := c_select (number_to_check, lrm, lwm, lem, time_out_msec//1000, time_out_msec\\1000)
+				Result := c_select (number_to_check, lrm, lwm, lem, time_out_millisec//1000, time_out_millisec\\1000)
 			end
 		end
 
@@ -134,10 +134,10 @@ feature -- process set commands
 			a_command: POLL_COMMAND
 		do
 			if not ignore_read and then not read_command_list.all_default then
-				from 
+				from
 					counter1 := read_command_list.lower
 				until
-					counter1 > read_command_list.upper or else 
+					counter1 > read_command_list.upper or else
 						not (counter < number_of_selected)
 				loop
 					a_command := read_command_list.item (counter1);
@@ -152,10 +152,10 @@ feature -- process set commands
 			end;
 			if not ignore_write and then counter < number_of_selected and then
 				not write_command_list.all_default then
-				from 
+				from
 					counter1 := write_command_list.lower
 				until
-					counter1 > write_command_list.upper or else 
+					counter1 > write_command_list.upper or else
 						not (counter < number_of_selected)
 				loop
 					a_command := write_command_list.item (counter1);
@@ -411,7 +411,7 @@ feature -- commands to be executed
 
 feature {NONE}
 
-	c_select (nfds: INTEGER; rmask, wmask, emask: POINTER; time_sec, time_msec: INTEGER): INTEGER  is
+	c_select (nfds: INTEGER; rmask, wmask, emask: POINTER; time_sec, time_millisec: INTEGER): INTEGER  is
 			-- External C routine designed for asynchronous IO
 		external
 			"C blocking"

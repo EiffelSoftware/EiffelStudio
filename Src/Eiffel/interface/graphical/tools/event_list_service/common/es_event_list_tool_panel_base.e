@@ -70,20 +70,30 @@ feature {NONE} -- Initialization
 			grid_events.disable_vertical_scrolling_per_item
 
 				-- Register action to display context menus.
-			register_action (grid_events.pointer_button_release_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button, ia_x_tilt, ia_y_tilt, ia_pressure, ia_screen_x, ia_screen_y: INTEGER_32)
-				local
-					l_item: EV_GRID_ITEM
+			register_action (grid_events.pointer_button_press_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button, ia_x_tilt, ia_y_tilt, ia_pressure, ia_screen_x, ia_screen_y: INTEGER_32)
 				do
 					if ia_button = 3 then
 							-- Process the right click
-						if ia_widget.is_header_displayed then
-							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y - ia_widget.header.height)
-						else
-							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y)
-						end
-						if l_item /= Void then
-							show_context_menu (l_item, ia_x, ia_y)
-						end
+
+							-- Extend a kamikaze action on the release to show the menu. This is to rememdy the way context menus are displayed on Linux, which cannot
+							-- use press actions because of focus issues. Using release gives us the wrong menu for the orginally clicked item.
+						register_kamikaze_action (ia_widget.pointer_button_release_actions, agent (
+								iia_widget: ES_GRID; iia_x, iia_y: INTEGER;
+									-- Ingore all other arguments.
+								iia_u1, iia_u2, iia_u3, iia_u4, iia_u5, iia_u6, iia_u7, iia_u8: INTEGER_32)
+							local
+								l_item: EV_GRID_ITEM
+							do
+								if iia_widget.is_header_displayed then
+									l_item := iia_widget.item_at_virtual_position (iia_x, iia_y - iia_widget.header.height)
+								else
+									l_item := iia_widget.item_at_virtual_position (iia_x, iia_y)
+								end
+								if l_item /= Void then
+									show_context_menu (l_item, iia_x, iia_y)
+								end
+							end (ia_widget, ia_x, ia_y, ?, ?, ?, ?, ?, ?, ?, ?))
+
 					end
 				end (grid_events, ?, ?, ?, ?, ?, ?, ?, ?))
 

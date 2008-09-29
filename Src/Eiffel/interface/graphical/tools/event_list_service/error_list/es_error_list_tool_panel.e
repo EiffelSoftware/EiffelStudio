@@ -456,7 +456,6 @@ feature {NONE} -- Basic operations
 				l_remove.select_actions.extend (agent remove_event_list_row (a_item.row))
 				l_menu.extend (l_remove)
 
-
 				if grid_events.selected_rows /= Void and then not grid_events.selected_rows.is_empty then
 						-- Remove, multiple
 					create l_remove.make_with_text (interface_names.m_remove_all)
@@ -466,7 +465,11 @@ feature {NONE} -- Basic operations
 				end
 				l_menu.show_at (a_item.row.parent, a_x, a_y)
 			else
-				check False end
+					-- This occurs when the user requests a context menu on an error list subrow, which
+					-- do not have context menus.
+				check
+					row_parented: a_item.row.parent_row /= Void
+				end
 			end
 
 		end

@@ -62,20 +62,11 @@
     <div class="unpublished"><?php print t('Unpublished'); ?></div>
   <?php endif; ?>
 
-  <?php if ($submitted or $terms): ?>
+  <?php if ($terms): ?>
     <div class="meta">
-      <?php 
-        if (!$teaser and is_callable(array($node, 'field_uuid'), TRUE)) {
-          $l_uuid = $node->field_uuid[0]['value'];
-          if ($l_uuid) { ?>
-            <div class="uuid"><strong>UUID:</strong> <?php echo $l_uuid; ?></div>
-            <?php
-          }
-        }
-      ?>
-      <?php if ($submitted): ?>
+      <?php if ($teaser and $date): ?>
         <div class="submitted">
-          <?php print $submitted; ?>
+          <?php print t("Last modified: ") . $date; ?>
         </div>
       <?php endif; ?>
       <?php if ($terms): ?>
@@ -87,7 +78,24 @@
   <div class="content">
     <?php print $content; ?>
   </div>
-
   <?php print $links; ?>
+  <?php if ($date or $submitted): ?>
+    <div class="meta">
+      <?php 
+        if (!$teaser and is_callable(array($node, 'field_uuid'), TRUE)) {
+          $l_uuid = $node->field_uuid[0]['value'];
+          if ($l_uuid) { ?>
+            <div class="uuid"><strong>UUID:</strong> <?php echo $l_uuid; ?></div>
+            <?php
+          }
+        }
+      ?>
+      <?php if (!$teaser and $date): ?>
+        <div class="submitted">
+          <?php print t("Last modified: ") . $date; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
 
 </div></div> <!-- /node-inner, /node -->

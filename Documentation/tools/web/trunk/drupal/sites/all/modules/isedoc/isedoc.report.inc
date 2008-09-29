@@ -34,7 +34,8 @@ function _isedoc_images_by_nid($a_type='doc') {
 }
 
 function isedoc_gallery_taxonomy($vid,$a_name) {
-//drupal_set_message("isedoc_gallery_taxonomy($vid,$a_name) .. ");
+	//drupal_set_message("isedoc_gallery_taxonomy($vid,$a_name) .. ");
+
 	$n = strtolower($a_name);
 	$sqlres = db_query("SELECT tid,vid,name,description,weight FROM {term_data} WHERE vid = '%s' AND LOWER(name) = LOWER('%s')", $vid, $n);
 	if ($sqlres) {
@@ -52,6 +53,7 @@ function isedoc_gallery_taxonomy($vid,$a_name) {
 		} else {
 		    $parent = 0;
 		}
+//drupal_set_message("parent = $parent");
 		$t = array('parent' => array($parent), 'vid' => $vid, 'name' => $n, "description" => "Images for book $a_name");
 		$st = taxonomy_save_term(&$t);
 //drupal_set_message("taxonomy_save_term($vid, $a_name) -> $st");
@@ -62,12 +64,11 @@ function isedoc_gallery_set_taxonomy(&$node,$vid,$a_name) {
 	//drupal_set_message("isedoc_gallery_set_taxonomy($vid,$a_name)");
 
 	$taxo = isedoc_gallery_taxonomy($vid, $a_name);
-
-	$o = taxonomy_nodeapi($node, 'load');
-	$taxonomy = $o['taxonomy'];
+	taxonomy_node_delete($node->nid);
+	$taxonomy = taxonomy_node_get_terms($node->nid);
 	$taxonomy[$taxo->tid] = $taxo;
-
 	$node->taxonomy = $taxonomy;
+	taxonomy_node_save($node->nid, $node->taxonomy);
 }
 
 function isedoc_report($a_type='doc',$target, $a_op='') {

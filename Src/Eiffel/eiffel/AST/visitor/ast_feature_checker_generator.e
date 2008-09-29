@@ -5770,7 +5770,6 @@ feature -- Implementation
 			l: LOCATION_AS)
 		require
 			l_access_attached: l_access /= Void
-			l_call_access_attached: l_call_access /= Void
 			l_creation_type_attached: l_creation_type /= Void
 		local
 			t: TYPE_A
@@ -5806,9 +5805,10 @@ feature -- Implementation
 			end
 
 			create l_creation_expr
-			l_creation_expr.set_call (l_call_access)
 			l_creation_expr.set_info (l_create_info)
+				-- When this is not `default_create'.
 			if l_call_access /= Void then
+				l_creation_expr.set_call (l_call_access)
 				l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
 			end
 

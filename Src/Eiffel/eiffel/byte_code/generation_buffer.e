@@ -267,11 +267,21 @@ feature -- Automatically indented output
 			current_buffer.append_natural_64 (i)
 		end
 
-	put_hex_natural_16 (v: NATURAL_16) is
-			-- Write int `i' as an hexadecimal value.
+	put_hex_integer_16 (v: INTEGER) is
+			-- Write integer `v' as a 16-bit hexadecimal value.
+		require
+			valid_as_integer_16: v <= {INTEGER_16}.max_value
+		do
+			put_hex_natural_16 (v.as_natural_16)
+		end
+
+	put_hex_natural_16 (v: NATURAL) is
+			-- Write natural `v' as a 16-bit hexadecimal value.
+		require
+			valid_as_natural_16: v <= {NATURAL_16}.max_value
 		local
-			i, nb, val: INTEGER
-			a_digit: INTEGER
+			i, nb: INTEGER
+			val, a_digit: NATURAL
 			l_buffer: like current_buffer
 		do
 			l_buffer := current_buffer

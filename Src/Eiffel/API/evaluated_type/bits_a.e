@@ -17,7 +17,7 @@ inherit
 			same_as, ext_append_to,
 			is_equivalent, process,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code, associated_class_type, has_associated_class_type,
+			make_type_byte_code, associated_class_type, has_associated_class_type,
 			metamorphose, is_external, reference_type
 		end
 
@@ -76,11 +76,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is `other' the same as Current?
-		local
-			other_bits: BITS_A
 		do
-			other_bits ?= other
-			Result := other_bits /= Void and then other_bits.bit_count = bit_count
+			Result := {b: BITS_A} other and then  bit_count = b.bit_count
 		end
 
 	associated_class: CLASS_C is
@@ -115,8 +112,7 @@ feature -- Generic conformance
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A) is
 		do
-			buffer.put_integer (generated_id (final_mode, a_context_type))
-			buffer.put_character (',')
+			Precursor (buffer, final_mode, use_info, a_context_type)
 			buffer.put_integer (bit_count)
 			buffer.put_character (',')
 		end
@@ -125,9 +121,10 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
-			generate_cid (buffer, final_mode, use_info, a_context_type)
-				-- Increment counter twice.
-			dummy := idx_cnt.next
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type)
+			buffer.put_integer (bit_count)
+			buffer.put_character (',')
+				-- Increment counter.
 			dummy := idx_cnt.next
 		end
 
@@ -135,12 +132,11 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
-				-- Increment counter twice.
-			dummy := idx_cnt.next
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_level)
 			dummy := idx_cnt.next
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
 		do
 			Precursor (ba, use_info, a_context_type)
 				-- FIXME: Manu 08/06/2003: There is no limitation about the size

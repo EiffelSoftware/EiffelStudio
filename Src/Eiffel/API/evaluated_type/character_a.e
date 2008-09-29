@@ -52,15 +52,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
-		local
-			char: like Current
 		do
-			Result := other.is_character
-			if Result then
-				char ?= other
-				Result := is_character_32 = char.is_character_32
-					and then has_same_attachment_marks (char)
-			end
+			Result := {c: CHARACTER_A} other and then is_character_32 = c.is_character_32
 		end
 
 	associated_class: CLASS_C is

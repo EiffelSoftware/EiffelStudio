@@ -12,7 +12,7 @@ inherit
 	TYPE_A
 		redefine
 			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
-			generate_gen_type_il, make_gen_type_byte_code
+			generate_gen_type_il
 		end
 
 feature -- Visitor
@@ -74,14 +74,6 @@ feature -- Generic conformance
 			-- Id of a `like xxx'.
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.none_type
-		end
-
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
-			-- Put type id's in byte array.
-			-- `use_info' is true iff we generate code for a
-			-- creation instruction.
-		do
-			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
 		end
 
 feature -- IL code generation

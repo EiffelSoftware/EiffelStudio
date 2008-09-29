@@ -21,7 +21,7 @@ inherit
 			is_equivalent, instantiation_of, same_as, instantiation_in,
 			is_full_named_type, evaluated_type_in_descendant, is_explicit,
 			generate_cid, generate_cid_array, generate_cid_init, has_actual,
-			make_gen_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
+			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			adapted_in, skeleton_adapted_in, is_class_valid, is_valid_generic_derivation,
 			dispatch_anchors, has_like_current, internal_generic_derivation,
 			internal_same_generic_derivation_as

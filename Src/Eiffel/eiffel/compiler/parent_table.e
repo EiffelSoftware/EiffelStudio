@@ -28,9 +28,6 @@ feature
 	generic_count : INTEGER;
 			-- Number of formal generic parameters
 
-	classname : STRING;
-			-- Name of class to which table belongs
-
 	is_expanded : BOOLEAN;
 			-- Is type expanded?
 
@@ -41,23 +38,20 @@ feature
 			crnt_pos := 1
 		end
 
-	init (tid, gcount : INTEGER; cname : STRING; is_exp : BOOLEAN) is
+	init (tid, gcount : INTEGER; is_exp : BOOLEAN) is
 			-- Initialization for id `tid' with `gcount' generics;
 			-- Classname is `cname', `is_exp' is expandedness status.
 		require
 			positive_id: tid >= 0;
 			meaningful_count: gcount >= 0
-			valid_classname: cname /= Void
 		do
 			type_id := tid;
 			generic_count := gcount
-			classname := cname
 			is_expanded := is_exp
 			crnt_pos := 1
 		ensure
 			type_id_set: type_id = tid
 			generic_count_set: generic_count = gcount
-			classname_set: classname.is_equal (cname)
 			expandedness_set: is_expanded = is_exp
 			cursor_reset: crnt_pos = 1
 		end;
@@ -83,17 +77,10 @@ feature
 			i, j, n : INTEGER;
 			l_type_id: INTEGER
 		do
+			l_type_id := type_id
 			buffer.put_new_line
 			buffer.put_string ("static EIF_TYPE_INDEX ptf");
-
-			l_type_id := type_id
-			if l_type_id <= -256 then
-				-- expanded
-				l_type_id := -256 - l_type_id
-			end
-
 			buffer.put_integer (l_type_id);
-
 			buffer.put_string ("[] = {");
 
 			from
@@ -119,7 +106,7 @@ feature
 			buffer.put_integer (l_type_id);
 
 			buffer.put_string (" = {")
-			buffer.put_string_literal (classname)
+			buffer.put_hex_integer_16 (l_type_id)
 			buffer.put_string (", ptf")
 
 			buffer.put_integer (l_type_id);
@@ -143,19 +130,11 @@ feature
 			i, n: INTEGER;
 		do
 			-- Dynamic type associated to the table
-			if type_id <= -256 then
-				-- expanded
-				ba.append_short_integer (-256-type_id);
-			else
-				ba.append_short_integer (type_id);
-			end
+			ba.append_short_integer (type_id);
 			-- Number of formal generics
 			ba.append_short_integer (generic_count)
-			-- Classname
-			check
-				class_name_not_too_long: classname.count <= ba.max_string_count
-			end
-			ba.append_string (classname)
+			-- Static type
+			ba.append_short_integer (type_id)
 			-- Expandedness
 			if is_expanded then
 				ba.append ('%/001/')
@@ -169,7 +148,7 @@ feature
 			until
 				i >= n
 			loop
-				item (i).make_gen_type_byte_code (ba, False, a_class_type.type);
+				item (i).make_type_byte_code (ba, False, a_class_type.type);
 				i := i + 1
 			end;
 

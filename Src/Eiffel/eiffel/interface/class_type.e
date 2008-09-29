@@ -1286,11 +1286,9 @@ feature {NONE} -- Implementation
 
 			if gen_type /= Void and then gen_type.generics /= Void then
 				Par_table.init (type.generated_id (final_mode, Void),
-								gen_type.generics.count,
-								a_class.name, a_class.is_expanded);
+								gen_type.generics.count, a_class.is_expanded);
 			else
-				Par_table.init (type.generated_id (final_mode, Void), 0,
-								a_class.name, a_class.is_expanded);
+				Par_table.init (type.generated_id (final_mode, Void), 0, a_class.is_expanded);
 			end
 
 			if is_expanded then

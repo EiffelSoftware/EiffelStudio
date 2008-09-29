@@ -55,7 +55,7 @@ feature -- Visitor
 			v.process_unevaluated_like_type (Current)
 		end
 
-feature -- Properties
+feature -- Access
 
 	anchor_name_id: INTEGER
 			-- Id of `anchor' in `names_heap'.
@@ -65,6 +65,8 @@ feature -- Properties
 		do
 			Result := names_heap.item (anchor_name_id)
 		end
+
+feature -- Status report
 
 	is_like_current: BOOLEAN
 			-- Is Current like Current?

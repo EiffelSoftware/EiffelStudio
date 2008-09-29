@@ -56,15 +56,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
-		local
-			i: NATURAL_A
 		do
-			Result := other.is_natural
-			if Result then
-				i ?= other
-				Result := size = i.size
-					and then has_same_attachment_marks (i)
-			end
+			Result := {n: NATURAL_A} other and then size = n.size
 		end
 
 	associated_class: CLASS_C is

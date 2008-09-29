@@ -185,7 +185,7 @@ feature -- from ENTRY
 		require
 			is_generic : needs_extended_info
 		do
-			type.make_gen_type_byte_code (ba, False, system.class_type_of_id (type_id).type)
+			type.make_type_byte_code (ba, False, system.class_type_of_id (type_id).type)
 		end;
 
 indexing

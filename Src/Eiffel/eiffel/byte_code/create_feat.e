@@ -10,7 +10,7 @@ class CREATE_FEAT
 inherit
 	CREATE_INFO
 		redefine
-			created_in, generate_cid, make_gen_type_byte_code,
+			created_in, generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init, is_explicit
 		end
 
@@ -460,7 +460,7 @@ feature -- Genericity
 			end
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+	make_type_byte_code (ba : BYTE_ARRAY) is
 
 		local
 			rout_info: ROUT_INFO

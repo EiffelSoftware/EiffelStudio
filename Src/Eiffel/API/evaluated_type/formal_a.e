@@ -31,7 +31,7 @@ inherit
 			description,
 			generated_id,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code,
+			make_type_byte_code,
 			generate_gen_type_il,
 			generic_il_type_name
 		end
@@ -275,6 +275,7 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
+			generate_cid_prefix (buffer, Void)
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			buffer.put_character (',')
 			buffer.put_integer (position)
@@ -285,6 +286,7 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
+			generate_cid_prefix (buffer, idx_cnt)
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			buffer.put_character (',')
 			buffer.put_integer (position)
@@ -297,15 +299,17 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
+			generate_cid_prefix (Void, idx_cnt)
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
 			-- Put type id's in byte array.
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
+			make_type_prefix_byte_code (ba)
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			ba.append_short_integer (position)
 		end

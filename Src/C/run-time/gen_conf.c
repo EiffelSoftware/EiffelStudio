@@ -593,7 +593,7 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 		if (*pt == (struct eif_par_types *)0)
 			continue;
 
-		cname = (*pt)->class_name;
+		cname = System((*pt)->dtype).cn_generator;
 
 		if ((strcmp("ANY",cname)==0))
 		{
@@ -1961,7 +1961,7 @@ finish_simple:
 	   which has the same class name as `base_id'.
 	*/
 
-	cname = (par_info(base_id))->class_name;
+	cname = System((par_info(base_id))->dtype).cn_generator;
 
 	if (strcmp (cname, "ARRAY") == 0)
 		result->is_array = '1';
@@ -1971,7 +1971,7 @@ finish_simple:
 		if (*pt == (struct eif_par_types *)0)
 			continue;
 
-		if (strcmp (cname,(*pt)->class_name) == 0)
+		if (strcmp (cname,System((*pt)->dtype).cn_generator) == 0)
 		{
 			result->first_id = dt;
 			break;
@@ -2325,7 +2325,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 
 		l_name = non_generic_type_names [dftype];
 		if (l_name == NULL) {
-			char *l_class_name = par_info(RTUD_INV(dftype))->class_name;
+			char *l_class_name = System(par_info(RTUD_INV(dftype))->dtype).cn_generator;
 
 			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
 				l_name = eif_malloc (10 + strlen (l_class_name));
@@ -2414,7 +2414,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 			strcat (result, "reference ");
 		}
 		/* Compiler generated id */
-		strcat (result, par_info(RTUD_INV(dftype))->class_name);
+		strcat (result, System(par_info(RTUD_INV(dftype))->dtype).cn_generator);
 		return;
 	}
 
@@ -2473,7 +2473,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 		strcat (result, "reference ");
 	}
 
-	strcat (result, par_info(gdp->base_id)->class_name);
+	strcat (result, System(par_info(gdp->base_id)->dtype).cn_generator);
 
 	if (i > 0)
 	{
@@ -2529,7 +2529,7 @@ rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype)
 			len = 10;
 		}
 		/* Compiler generated id */
-		return len + strlen (par_info(RTUD_INV(dftype))->class_name);
+		return len + strlen (System(par_info(RTUD_INV(dftype))->dtype).cn_generator);
 	}
 
 	/* We have created this id */
@@ -2558,7 +2558,7 @@ rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype)
 
 	i = gdp->size;
 
-	len += (uint32) strlen (par_info(gdp->base_id)->class_name);
+	len += (uint32) strlen (System(par_info(gdp->base_id)->dtype).cn_generator);
 
 	if (needs_expanded) {
 		len += 9;

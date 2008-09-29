@@ -56,15 +56,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
-		local
-			i: INTEGER_A
 		do
-			Result := other.is_integer
-			if Result then
-				i ?= other
-				Result := size = i.size
-						and then has_same_attachment_marks (i)
-			end
+			Result := {i: INTEGER_A} other and then size = i.size
 		end
 
 	associated_class: CLASS_C is

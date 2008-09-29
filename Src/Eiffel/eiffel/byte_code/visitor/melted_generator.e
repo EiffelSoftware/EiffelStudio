@@ -153,14 +153,14 @@ feature {NONE} -- Visitors
 				ba.append_integer (l_rout_info.offset)
 				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
+				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			else
 				ba.append (Bc_array)
 				ba.append_short_integer (l_real_ty.static_type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
+				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 				ba.append_short_integer (l_feat_i.feature_id)
 			end
@@ -1663,13 +1663,13 @@ feature {NONE} -- Visitors
 				ba.append (Bc_ptuple)
 				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id-1)
-				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
+				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			else
 				ba.append (Bc_tuple)
 				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
+				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			end
 			ba.append_integer (a_node.expressions.count + 1)

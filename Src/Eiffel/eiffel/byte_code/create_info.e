@@ -126,7 +126,7 @@ feature -- Generic conformance
 			-- Do nothing
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY) is
+	make_type_byte_code (ba: BYTE_ARRAY) is
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
 		require

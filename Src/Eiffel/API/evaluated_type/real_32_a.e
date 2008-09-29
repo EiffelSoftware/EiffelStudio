@@ -72,11 +72,8 @@ feature {COMPILER_EXPORTER}
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
-		local
-			o: REAL_32_A
 		do
-			o ?= other
-			Result := o /= Void	and then has_same_attachment_marks (o)
+			Result := same_type (other)
 		end
 
 indexing

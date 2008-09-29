@@ -21,7 +21,7 @@ inherit
 			actual_argument_type, update_dependance, hash_code,
 			is_full_named_type, process, evaluated_type_in_descendant,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code, il_type_name, generic_il_type_name,
+			make_type_byte_code, il_type_name, generic_il_type_name,
 			generate_gen_type_il, adapted_in, internal_generic_derivation,
 			internal_same_generic_derivation_as, is_class_valid,
 			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors
@@ -387,7 +387,7 @@ feature -- Generic conformance
 			end
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
 			-- Put type id's in byte array.
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
@@ -404,7 +404,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).make_gen_type_byte_code (ba, use_info, a_context_type)
+				l_generics.item (i).make_type_byte_code (ba, use_info, a_context_type)
 				i := i + 1
 			end
 		end

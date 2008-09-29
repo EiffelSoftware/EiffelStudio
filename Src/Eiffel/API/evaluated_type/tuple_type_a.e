@@ -11,10 +11,9 @@ inherit
 	GEN_TYPE_A
 		redefine
 			good_generics, error_generics, check_constraints,
-			is_tuple, conform_to, process, valid_generic, generate_cid,
-			generate_cid_array, generate_cid_init, make_gen_type_byte_code,
+			is_tuple, conform_to, process, valid_generic,
 			il_type_name, generate_gen_type_instance, same_generic_derivation_as,
-			generic_derivation
+			generic_derivation, generate_cid_prefix, make_type_prefix_byte_code
 		end
 
 create
@@ -78,54 +77,40 @@ feature -- Comparison
 
 feature -- Generic conformance
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
-		do
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
-			buffer.put_character (',')
-			buffer.put_integer (generics.count)
-			buffer.put_character (',')
-
-			Precursor (buffer, final_mode, use_info, a_context_type)
-		end
-
-	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
-		local
-			dummy: INTEGER
-		do
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
-			buffer.put_character (',')
-			buffer.put_integer (generics.count)
-			buffer.put_character (',')
-
-				-- Increment counter by an additional 2 (mark for tuple type and count)
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-
-			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type)
-		end
-
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
-		local
-			dummy: INTEGER
-		do
-				-- Increment counter by an additional 2 (mark for tuple type and count)
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
-
-			Precursor (buffer, final_mode, use_info, idx_cnt, a_level)
-		end
-
-	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
-		do
-			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
-			ba.append_short_integer (generics.count)
-			Precursor (ba, use_info, a_context_type)
-		end
-
 	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
 			-- Generic runtime instance for Current
 		do
 			il_generator.generate_tuple_type_instance (n)
+		end
+
+feature {NONE} -- Generic conformance
+
+	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER) is
+			-- <Precursor>
+		local
+			l_dummy: INTEGER
+		do
+			Precursor (buffer, idx_cnt)
+				-- If `buffer' was provided, outputs tuple specification.
+			if buffer /= Void then
+				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+				buffer.put_character (',')
+				buffer.put_integer (generics.count)
+				buffer.put_character (',')
+			end
+				-- If counter was provided, increments it.
+			if idx_cnt /= Void then
+				l_dummy := idx_cnt.next
+				l_dummy := idx_cnt.next
+			end
+		end
+
+	make_type_prefix_byte_code (ba: BYTE_ARRAY) is
+			-- <Precursor>
+		do
+			Precursor (ba)
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+			ba.append_short_integer (generics.count)
 		end
 
 feature -- IL code generation

@@ -57,6 +57,23 @@ feature -- Visitor
 
 feature -- Generic conformance
 
+	annotation_flags: NATURAL_16 is
+			-- Flags for annotations of Current.
+			-- Currently only `!' and `frozen' are supported
+		do
+-- To uncomment when attachment marks are supported at runtime.
+--				-- Only if a type is not expanded do we need to generate the
+--				-- attached annotation since by default expanded implies attached.
+--			if is_attached and not is_expanded then
+--				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+--			end
+-- To uncomment when variant/frozen proposal for generics is supported.
+--			if is_frozen then
+--				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+--			end
+		end
+
+
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
 			-- Mode dependent type id - just for convenience
 		require
@@ -76,6 +93,7 @@ feature -- Generic conformance
 			valid_file : buffer /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
 		do
+			generate_cid_prefix (buffer, Void)
 			buffer.put_integer (generated_id (final_mode, a_context_type))
 			buffer.put_character (',')
 		end
@@ -93,6 +111,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
+			generate_cid_prefix (buffer, idx_cnt)
 			buffer.put_integer (generated_id (final_mode, a_context_type))
 			buffer.put_character (',')
 
@@ -112,31 +131,38 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
+			generate_cid_prefix (Void, idx_cnt)
 				-- Increment counter
 			dummy := idx_cnt.next
 		end
 
-	make_full_type_byte_code (ba: BYTE_ARRAY; a_context_type: TYPE_A) is
+	frozen make_full_type_byte_code (ba: BYTE_ARRAY; a_context_type: TYPE_A) is
 			-- Append full type info for the current type to `ba'
 			-- following the format for locals, creation expressions, etc.
 		require
 			ba_attached: ba /= Void
 			a_context_type_not_void: a_context_type /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
+		local
+			l_annotation: like annotation_flags
 		do
 			if has_associated_class_type (a_context_type) then
 				ba.append_short_integer (type_id (a_context_type) - 1)
 			else
 				ba.append_short_integer (0)
 			end
+			l_annotation := annotation_flags
+			if l_annotation /= 0 then
+				ba.append_short_integer (l_annotation)
+			end
 				-- We can provide `Void' for `generated_id' since it is the one
 				-- from `a_context_type' that we are retrieving.
 			ba.append_short_integer (a_context_type.generated_id (False, Void))
-			make_gen_type_byte_code (ba, True, a_context_type)
+			make_type_byte_code (ba, True, a_context_type)
 			ba.append_short_integer (-1)
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
 			-- Put type id's in byte array.
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
@@ -144,6 +170,7 @@ feature -- Generic conformance
 			ba_attached: ba /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
 		do
+			make_type_prefix_byte_code (ba)
 			ba.append_short_integer (generated_id (False, a_context_type))
 		end
 
@@ -153,6 +180,44 @@ feature -- Generic conformance
 		require
 			il_generator_not_void: il_generator /= Void
 		do
+		end
+
+feature {NONE} -- Generic conformance
+
+	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER) is
+			-- Generate prefix to a type specification if `buffer' specified.
+			-- Increment `idx_cnt' accordingly if specified.
+		local
+			l_annotation: like annotation_flags
+			l_dummy: INTEGER
+		do
+			l_annotation := annotation_flags
+			if l_annotation /= 0 then
+					-- If `buffer' was provided, outputs annotation.
+				if buffer /= Void then
+					buffer.put_hex_natural_16 (l_annotation)
+					buffer.put_character (',')
+				end
+					-- If counter was provided, increments it.
+				if idx_cnt /= Void then
+					l_dummy := idx_cnt.next
+				end
+			end
+		end
+
+	make_type_prefix_byte_code (ba: BYTE_ARRAY) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		require
+			ba_attached: ba /= Void
+		local
+			l_annotation: like annotation_flags
+		do
+			l_annotation := annotation_flags
+			if l_annotation /= 0 then
+				ba.append_natural_16 (l_annotation)
+			end
 		end
 
 feature -- C code generation

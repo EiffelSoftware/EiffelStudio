@@ -19,7 +19,7 @@ inherit
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
 			unset_is_implicitly_attached, description, c_type, is_explicit,
 			generated_id, generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
+			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
@@ -301,12 +301,12 @@ feature -- Generic conformance
 			end
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
 			if use_info then
-				create_info.make_gen_type_byte_code (ba)
+				create_info.make_type_byte_code (ba)
 			else
-				conformance_type.make_gen_type_byte_code (ba, use_info, a_context_type)
+				conformance_type.make_type_byte_code (ba, use_info, a_context_type)
 			end
 		end
 

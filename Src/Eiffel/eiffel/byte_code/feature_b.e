@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 						-- much choice at the moment. The good thing is that
 						-- since it is done at degree 3, we are most likely
 						-- to hit the feature table cache.
-					written_in := f.written_in
+					written_in := f.access_in
 					feat_tbl := System.class_of_id (written_in).feature_table
 					feat := feat_tbl.feature_of_rout_id_set (f.rout_id_set)
 					feature_id := feat.feature_id

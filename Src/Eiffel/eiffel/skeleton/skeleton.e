@@ -1047,7 +1047,7 @@ feature -- Skeleton byte code
 			loop
 				ba.append_short_integer (1)
 				ba.append_short_integer (0)
-				current_area.item (i).type_i.make_gen_type_byte_code (ba, False, class_type.type)
+				current_area.item (i).type_i.make_type_byte_code (ba, False, class_type.type)
 				ba.append_short_integer (- 1)
 				i := i + 1
 			end;

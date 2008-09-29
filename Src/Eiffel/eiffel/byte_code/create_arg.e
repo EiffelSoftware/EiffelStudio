@@ -11,7 +11,7 @@ class
 inherit
 	CREATE_INFO
 		redefine
-			created_in, generate_cid, make_gen_type_byte_code,
+			created_in, generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init
 		end
 
@@ -161,7 +161,7 @@ feature -- Generic conformance
 			buffer.put_character (',')
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+	make_type_byte_code (ba : BYTE_ARRAY) is
 
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_arg_type)

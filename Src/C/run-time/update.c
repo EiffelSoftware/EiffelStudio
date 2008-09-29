@@ -724,7 +724,7 @@ rt_private void parents_updt(void)
 
 		/* Read class name */
 
-		pt->class_name = wclass_name();
+		pt->dtype = (EIF_TYPE_INDEX) wshort ();
 
 		/* Is it expanded? */
 

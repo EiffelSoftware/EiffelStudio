@@ -47,7 +47,7 @@ inherit
 			generics,
 			generated_id,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code, generate_gen_type_il,
+			make_type_byte_code, generate_gen_type_il,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			internal_generic_derivation, internal_same_generic_derivation_as,
@@ -220,7 +220,9 @@ feature -- Access
 	generics: ARRAY [TYPE_A] is
 			-- <Precursor>
 		do
-			Result := actual_type.generics
+			if {a: like actual_type} actual_type then
+				Result := a.generics
+			end
 		end
 
 	description: ATTR_DESC is
@@ -436,13 +438,13 @@ feature -- Generic conformance
 			end
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
 			if use_info then
 				initialize_info (shared_create_info)
-				shared_create_info.make_gen_type_byte_code (ba)
+				shared_create_info.make_type_byte_code (ba)
 			else
-				actual_type.make_gen_type_byte_code (ba, use_info, a_context_type)
+				actual_type.make_type_byte_code (ba, use_info, a_context_type)
 			end
 		end
 

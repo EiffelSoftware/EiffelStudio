@@ -149,10 +149,10 @@ struct conform {
 */
 
 struct eif_par_types {
-	char    *class_name;    /* Name of this class */
-	EIF_TYPE_INDEX   *parents;       /* Parent types */
-	uint16   nb_generics;    /* Number of formal generics */
-	char    is_expanded;    /* Is it expanded? */
+	EIF_TYPE_INDEX dtype;	/* Dynamic type of this class per esystem */
+	EIF_TYPE_INDEX *parents;/* Parent types */
+	uint16 nb_generics;		/* Number of formal generics */
+	char is_expanded;		/* Is it expanded? */
 };
 
 RT_LNK EIF_TYPE_INDEX scount;				/* Numner of dynamic types */

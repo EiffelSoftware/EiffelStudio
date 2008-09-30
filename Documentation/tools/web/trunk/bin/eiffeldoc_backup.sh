@@ -18,7 +18,7 @@ safemkdir backup
 cd backup
 safemkdir $DATE
 
-/bin/tar -p -s -czvf $DATE/files.tar.gz $CWD/../drupal
+/bin/tar -p -s -czvf $DATE/files.tar.gz --exclude $CWD/../drupal/sites/default/files/isedoc/export $CWD/../drupal
 
 mysqldump -h localhost -u $DB_USER -p$DB_PASS -r$DATE/$DB_NAME.sql $DB_NAME
 

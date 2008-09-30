@@ -65,7 +65,7 @@ if [ -e "$TARGETDIR" ]; then
 	\rm -rf $TARGETDIR
 fi
 safemkdir $TARGETDIR
-tar xzvf $BACKUPDIR/files.tar.gz -C $TARGETDIR
+tar xjvf $BACKUPDIR/files.tar.bz2 -C $TARGETDIR
 
 #replacethisin()
 #{
@@ -89,7 +89,7 @@ echo "Granting all privilege on DATABASE $TARGETDB for $DB_DOCUSER..."
 echo "GRANT ALL PRIVILEGES ON $TARGETDB.* TO '$DB_DOCUSER'@localhost;" | mysql -h localhost -u $DB_USER -p$DB_PASS
 
 echo "Load sql content into $TARGETDB"
-mysql -h localhost -u $DB_USER -p$DB_PASS $TARGETDB < $BACKUPDIR/$DB_NAME.sql
+bunzip2 -c $BACKUPDIR/$DB_NAME.sql.bz2 | mysql -h localhost -u $DB_USER -p$DB_PASS $TARGETDB 
 
 echo "Backup ($BACKUPDIR) restored to ($TARGETDIR)"
 echo ""

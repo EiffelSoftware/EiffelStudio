@@ -43,7 +43,14 @@ getdrupmod protected_node-6.x-1.3.tar.gz
 #getdrupmod flexifilter-6.x-1.1-rc1.tar.gz
 #getdrupmod tableofcontents-6.x-2.2.tar.gz
 #getdrupmod xmlcontent-6.x-1.x-dev.tar.gz
+
 #getdrupmod nice_menus-6.x-1.1.tar.gz
+#getdrupmod dhtml_menu-6.x-3.0-beta.tar.gz
+getdrupmod jstools-6.x-1.0.tar.gz
+getdrupmod activemenu-6.x-1.x-dev.tar.gz
+getdrupmod reindex-6.x-1.x-dev.tar.gz
+getdrupmod search_files-6.x-1.6.tar.gz
+
 
 
 # For development purpose

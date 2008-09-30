@@ -477,6 +477,7 @@
   div.error
   {
     border: 2px solid #F00;
+    padding-left: 46px;
   }
 
   .messages ul

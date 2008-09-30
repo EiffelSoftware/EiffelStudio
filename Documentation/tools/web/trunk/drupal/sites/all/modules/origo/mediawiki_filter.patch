@@ -1,6 +1,6 @@
 Index: mediawiki_filter.css
 ===================================================================
---- mediawiki_filter.css	(revision 2675)
+--- mediawiki_filter.css	(revision 2682)
 +++ mediawiki_filter.css	(working copy)
 @@ -1,6 +1,12 @@
  /* wikilinks */
@@ -18,7 +18,7 @@ Index: mediawiki_filter.css
  
 Index: mediawiki_filter.settings.inc
 ===================================================================
---- mediawiki_filter.settings.inc	(revision 2675)
+--- mediawiki_filter.settings.inc	(revision 2682)
 +++ mediawiki_filter.settings.inc	(working copy)
 @@ -206,7 +206,7 @@
      if ($line) {
@@ -31,7 +31,7 @@ Index: mediawiki_filter.settings.inc
          $mappings[trim($id)] = trim($url);
 Index: mediawiki_filter.info
 ===================================================================
---- mediawiki_filter.info	(revision 2675)
+--- mediawiki_filter.info	(revision 2682)
 +++ mediawiki_filter.info	(working copy)
 @@ -1,3 +1,7 @@
  ; $Id$
@@ -43,7 +43,7 @@ Index: mediawiki_filter.info
 +
 Index: mediawiki_filter.lib.inc
 ===================================================================
---- mediawiki_filter.lib.inc	(revision 2675)
+--- mediawiki_filter.lib.inc	(revision 2682)
 +++ mediawiki_filter.lib.inc	(working copy)
 @@ -63,7 +63,7 @@
  
@@ -147,7 +147,7 @@ Index: mediawiki_filter.lib.inc
 -
 Index: mediawiki_filter.classes.inc
 ===================================================================
---- mediawiki_filter.classes.inc	(revision 2675)
+--- mediawiki_filter.classes.inc	(revision 2682)
 +++ mediawiki_filter.classes.inc	(working copy)
 @@ -159,9 +159,98 @@
      else {
@@ -235,7 +235,7 @@ Index: mediawiki_filter.classes.inc
 +        $m = t('Referenced page ') . l($l_node->title, "node/".$l_node->nid) . ": $w";
 +      }
 +    }
-+    if ($m) {
++    if (user_access('edit any doc content') and $m) {
 +      drupal_set_message($m,'warning');
 +    }
 +    if (count($the_results) > 0) {
@@ -250,7 +250,7 @@ Index: mediawiki_filter.classes.inc
    }
 Index: mediawiki_filter.module
 ===================================================================
---- mediawiki_filter.module	(revision 2675)
+--- mediawiki_filter.module	(revision 2682)
 +++ mediawiki_filter.module	(working copy)
 @@ -12,8 +12,7 @@
  /**

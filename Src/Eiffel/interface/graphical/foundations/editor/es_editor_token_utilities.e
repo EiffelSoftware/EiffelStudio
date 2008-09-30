@@ -16,11 +16,11 @@ feature {NONE} -- Access: Keywords
 			-- Keywords that mark the beginning of an Eiffel feature body.
 		once
 			create Result.make (5)
-			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
+			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
 		end
 
 feature -- Status report

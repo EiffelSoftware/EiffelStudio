@@ -12,6 +12,7 @@ feature
 		local
 			b: B
 		do
+			b := a
 			f (a, b)
 		end
 

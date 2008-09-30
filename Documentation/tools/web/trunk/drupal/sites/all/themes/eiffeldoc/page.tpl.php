@@ -93,10 +93,10 @@
           <li><?php print l(t("Home"), '<front>'); ?></li>
         <?php if ($logged_in) { ?>
           <li><?php print t("Signed in as "); print l($user->name, 'user/'.$user->uid); ?></li>
-          <li><a href="<?php print url('logout'); ?>"><? print t("Sign out") ?></a></li>
+          <li><?php print l(t("Sign out"), 'logout', array('query' => drupal_get_destination())); ?></li>
         <?php } else { ?>
-          <li><?php print l(t("Sign in"), 'user'); ?></li>
-          <li><?php print l(t("Register"), 'user/register'); ?></li>
+          <li><?php print l(t("Sign in"), 'user', array('query' => drupal_get_destination())); ?></li>
+          <li><?php print l(t("Register"), 'user/register', array('query' => drupal_get_destination())); ?></li>
         <?php } ?>
         </ul>
       </div>

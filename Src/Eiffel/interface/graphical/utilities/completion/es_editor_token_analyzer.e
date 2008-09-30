@@ -57,15 +57,12 @@ feature -- Basic operations
 						end
 					end
 				else
-					if {l_like_keyword: EDITOR_TOKEN_KEYWORD} l_token then
-						l_image ?= l_token.wide_image.as_string_8
-						if l_image.is_case_insensitive_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.like_keyword) then
-								-- An anchored type declaration.
-							l_next := next_text_token (l_token, l_next.line, True, a_end_token)
-							if l_next /= Void then
-									-- Should be the feature name now.
-								Result := l_next
-							end
+					if is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.like_keyword) then
+							-- An anchored type declaration.
+						l_next := next_text_token (l_token, l_next.line, True, a_end_token)
+						if l_next /= Void then
+								-- Should be the feature name now.
+							Result := l_next
 						end
 					end
 				end
@@ -79,6 +76,12 @@ feature {NONE} -- Helpers
 
 	brace_matcher: !ES_EDITOR_BRACE_MATCHER
 			-- Shared access to a brace matcher to match expressions and signature braces.
+		once
+			create Result
+		end
+
+	block_matcher: !ES_EDITOR_BLOCK_BRACE_MATCHER
+			-- Shared access to a block/brace matcher to match expressions and signature braces.
 		once
 			create Result
 		end

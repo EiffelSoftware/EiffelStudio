@@ -25,53 +25,53 @@ feature -- Access
 		once
 			create Result.make (15)
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.check_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.check_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.class_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.class_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.debug_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.debug_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.export_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.export_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.from_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.from_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.if_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.if_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.inspect_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.inspect_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.rename_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.select_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.select_keyword))
 
-			Result.put (create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
-			            create {STRING_32}.make_from_string ({ES_EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword))
+			Result.put (create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.end_keyword),
+			            create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword))
 		end
 
 feature -- Status report
@@ -105,17 +105,17 @@ feature {NONE} -- Status report
 				l_image := l_keyword.wide_image.as_string_8
 				if l_image /= Void then
 					l_image.to_lower
-					if l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
+					if l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
 						l_next := next_text_token (a_token, a_line, True, Void)
 							-- Check the token is not a once string.
 						Result := l_next /= Void and then {l_once_string: EDITOR_TOKEN_STRING} l_next.token
 					elseif
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.export_keyword) or else
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword) or else
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.select_keyword) or else
-						l_image.is_equal ({ES_EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword)
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.export_keyword) or else
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword) or else
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.select_keyword) or else
+						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword)
 					then
 							-- Parent clause is only a valid match if the previous token is a class name.
 						l_prev := previous_token (a_token, a_line, True, Void, agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN

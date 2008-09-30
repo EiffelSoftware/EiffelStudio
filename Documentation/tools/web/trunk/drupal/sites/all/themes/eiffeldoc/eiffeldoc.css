@@ -196,6 +196,11 @@
     margin-top: 15px;
   }
 
+  ul.menu li a.active {
+    font-weight: bold;
+    border-bottom: solid 2px #ccf;
+  }
+
   #primary
   {
     font-size: 85%;

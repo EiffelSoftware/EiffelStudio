@@ -76,6 +76,21 @@ feature -- Status report
 			end
 		end
 
+	is_scanning_comments: BOOLEAN assign set_is_scanning_comments
+			-- Indicates if the scanning includes analysis of comments.
+
+feature -- Status setting
+
+	set_is_scanning_comments (a_scan: BOOLEAN)
+			-- Sets state to detemine if comments should be included in scanning or not.
+			--
+			-- `a_scan': True to include comment tokens when scanning; False otherwise.
+		do
+			is_scanning_comments := a_scan
+		ensure
+			is_scanning_comments_set: is_scanning_comments = a_scan
+		end
+
 feature -- Query
 
 	previous_text_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
@@ -145,11 +160,13 @@ feature -- Query
 		local
 			l_token: ?EDITOR_TOKEN
 			l_line: ?EDITOR_LINE
+			l_scan_comments: BOOLEAN
 			l_stop: BOOLEAN
 		do
 			if a_token /~ a_finish_token then
 				l_token := a_token
 				l_line := a_line
+				l_scan_comments := is_scanning_comments
 				from until l_stop loop
 					l_token := l_token.previous
 					if l_token = Void then
@@ -158,16 +175,22 @@ feature -- Query
 							l_token := l_line.eol_token
 						end
 					end
-					if l_token /= Void and l_line /= Void then
-						if a_predicate /= Void then
-							if a_predicate.item ([l_token, l_line]) then
-								Result := [l_token, l_line]
+					if l_token /~ a_finish_token then
+						if l_scan_comments or else not {l_comment: EDITOR_TOKEN_COMMENT} l_token then
+							if l_token /= Void and l_line /= Void then
+								if a_predicate /= Void then
+									if a_predicate.item ([l_token, l_line]) then
+										Result := [l_token, l_line]
+									end
+								elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
+										-- There is no stop condition test predicate, so just locate text tokens
+									Result := [l_token, l_line]
+								end
+								l_stop := Result /= Void
+							else
+								l_stop := True
 							end
-						elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
-								-- There is no stop condition test predicate, so just locate text tokens
-							Result := [l_token, l_line]
 						end
-						l_stop := Result /= Void
 					else
 						l_stop := True
 					end
@@ -193,6 +216,7 @@ feature -- Query
 		local
 			l_token: ?EDITOR_TOKEN
 			l_line: ?EDITOR_LINE
+			l_scan_comments: BOOLEAN
 			l_stop: BOOLEAN
 		do
 			if a_token /~ a_finish_token then
@@ -206,16 +230,22 @@ feature -- Query
 							l_token := l_line.first_token
 						end
 					end
-					if l_token /= Void and l_line /= Void then
-						if a_predicate /= Void then
-							if a_predicate.item ([l_token, l_line]) then
-								Result := [l_token, l_line]
+					if l_token /~ a_finish_token then
+						if l_scan_comments or else not {l_comment: EDITOR_TOKEN_COMMENT} l_token then
+							if l_token /= Void and l_line /= Void then
+								if a_predicate /= Void then
+									if a_predicate.item ([l_token, l_line]) then
+										Result := [l_token, l_line]
+									end
+								elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
+										-- There is no stop condition test predicate, so just locate text tokens
+									Result := [l_token, l_line]
+								end
+								l_stop := Result /= Void
+							else
+								l_stop := True
 							end
-						elseif l_token.is_text or else (not a_skip_ws and then l_token.is_blank) then
-								-- There is no stop condition test predicate, so just locate text tokens
-							Result := [l_token, l_line]
 						end
-						l_stop := Result /= Void
 					else
 						l_stop := True
 					end

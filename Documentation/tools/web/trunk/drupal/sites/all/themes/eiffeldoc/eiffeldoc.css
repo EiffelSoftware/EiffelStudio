@@ -840,3 +840,12 @@
 div.tabs a {
     cursor: pointer;
 }
+
+/*
+ * geshifilter
+ */
+
+div.geshifilter pre {
+    background: none;
+    border: none;
+}

@@ -140,10 +140,9 @@
 
   #skip-nav
   {
-    float: right;
-    margin: 0 !important;
-    padding-left: 20px;
-    font-size: 0.8em;
+    margin-left:40%;
+    margin-right:40%;
+    font-size: 0.4em;
     line-height: 1;
   }
 
@@ -490,12 +489,16 @@
  * Tags
  */
 
-div.block-tagadelic
+#content div.block-tagadelic
 {
-  border: dotted 1px #dde;
-  background-color: #EFFFFF;
   margin: 10px;
   padding: 10px;
+  border: dotted 1px #dde;
+  background-color: #EFFFFF;
+}
+.sidebar div.block-tagadelic
+{
+ font-size: 85%;
 }
 
 /*

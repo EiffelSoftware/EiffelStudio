@@ -18,9 +18,9 @@ safemkdir backup
 cd backup
 safemkdir $DATE
 
-/bin/tar -p -s -czvf $DATE/files.tar.gz --exclude $CWD/../drupal/sites/default/files/isedoc/export $CWD/../drupal
+/bin/tar -p -s -cjvf $DATE/files.tar.bz2 --exclude $CWD/../drupal/sites/default/files/isedoc/export $CWD/../drupal
 
-mysqldump -h localhost -u $DB_USER -p$DB_PASS -r$DATE/$DB_NAME.sql $DB_NAME
+mysqldump -h localhost -u $DB_USER -p$DB_PASS $DB_NAME | bzip2 -c > $DATE/$DB_NAME.sql.bz2
 
 rm latest
 ln -f -s $DATE latest

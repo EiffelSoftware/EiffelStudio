@@ -80,7 +80,7 @@ features[] = secondary_links
   ; Set the default settings to be used in theme-settings.php
 settings[zen_block_editing]        = 1
 settings[zen_breadcrumb]           = yes
-settings[zen_breadcrumb_separator] = ' :&#58; '
+settings[zen_breadcrumb_separator] = ' -&#62; '
 settings[zen_breadcrumb_home]      = 1
 settings[zen_breadcrumb_trailing]  = 0
 settings[zen_breadcrumb_title]     = 0

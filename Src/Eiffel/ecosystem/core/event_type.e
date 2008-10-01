@@ -36,15 +36,11 @@ feature {NONE} -- Clean up
 			if a_disposing then
 					-- Remove all subscribers to prevent potential memory leaks.
 				subscribers.wipe_out
-				subscribers := Void
 				suicide_actions.wipe_out
-				suicide_actions := Void
 			end
 		ensure then
 			subscribers_emptied: (old subscribers).is_empty
-			subscribers_detached: subscribers = Void
-			suicide_actions_emptied:  (old suicide_actions).is_empty
-			suicide_actions_detached: suicide_actions = Void
+			suicide_actions_emptied: (old suicide_actions).is_empty
 		end
 
 feature {NONE} -- Access

@@ -29,8 +29,10 @@ feature {NONE}  -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
-			internal_docking_manager.main_window.focus_out_actions.extend (agent on_main_window_focus_out)
-			internal_docking_manager.main_window.focus_in_actions.extend (agent on_main_window_focus_in)
+			main_window_focus_out := agent on_main_window_focus_out
+			main_window_focus_in := agent on_main_window_focus_in
+			internal_docking_manager.main_window.focus_out_actions.extend (main_window_focus_out)
+			internal_docking_manager.main_window.focus_in_actions.extend (main_window_focus_in)
 			pnd_motion_actions_handler := agent on_pnd_motions
 			pick_actions_handler := agent on_pick_actions
 			drop_actions_handler := agent on_drop_actions
@@ -61,8 +63,10 @@ feature -- Command
 			widget_pointer_press_for_upper_zone_handler := agent on_widget_pointer_press_for_upper_zone
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
-			internal_docking_manager.main_window.focus_out_actions.extend (agent on_top_level_window_focus_out)
-			internal_docking_manager.main_window.focus_in_actions.extend (agent on_top_level_window_focus_in)
+			top_level_window_focus_out := agent on_top_level_window_focus_out
+			top_level_window_focus_in := agent on_top_level_window_focus_in
+			internal_docking_manager.main_window.focus_out_actions.extend (top_level_window_focus_out)
+			internal_docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
 		end
 
 feature  -- Agents
@@ -412,6 +416,10 @@ feature -- Destory
 				l_viewport := internal_docking_manager.internal_viewport
 				check not_void: l_viewport /= Void end
 				l_viewport.resize_actions.wipe_out
+				internal_docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
+				internal_docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
+				internal_docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
+				internal_docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
 
 			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
@@ -531,6 +539,10 @@ feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
+
+	main_window_focus_out, main_window_focus_in,
+	top_level_window_focus_out, top_level_window_focus_in: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE]
+			-- Agents registered into the main window's focus in and out actions.
 
 	widget_pointer_press_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
 			-- Pointer press actions.

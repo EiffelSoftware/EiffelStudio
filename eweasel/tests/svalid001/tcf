@@ -7,6 +7,8 @@ copy_raw	test1.e	$CLUSTER test1.e
 copy_raw	a.e	$CLUSTER a.e
 copy_raw	b.e	$CLUSTER b.e
 copy_raw	c.e	$CLUSTER c.e
+copy_raw	d.e	$CLUSTER d.e
+copy_raw	e.e	$CLUSTER e.e
 
 compile_melted
 compile_result ok

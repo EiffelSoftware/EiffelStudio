@@ -1897,6 +1897,7 @@ feature -- Convenience features
 			-- inherited routines in the context of the descendant class?
 		do
 			Result := lace_class.is_full_class_checking
+			Result := True
 		end
 
 	is_cat_call_detection: BOOLEAN is

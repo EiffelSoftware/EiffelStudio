@@ -1,41 +1,51 @@
 indexing
-	description: "AST representation of binary `/~' operation."
+	description: "Store information to be used when a conversion occurs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	BIN_NOT_TILDE_AS
-
-inherit
-	BIN_TILDE_AS
-		redefine
-			process, op_name
-		end
-
-	BIN_NE_AS
-		redefine
-			process, op_name
-		end
+	PARENT_CONVERSION_INFO
 
 create
-	initialize
+	make
 
-feature -- Visitor
+feature {NONE} -- Initialization
 
-	process (v: AST_VISITOR) is
-			-- process current element.
+	make (a_feature_conversion: CONVERSION_INFO) is
+			-- Using `a_feature_conversion' create the necessary information that is needed
+			-- for checking a conversion in a descendant class.
+		require
+			a_feature_conversion_not_void: a_feature_conversion /= Void
+			a_feature_conversion_has_depend_unit: a_feature_conversion.has_depend_unit
 		do
-			v.process_bin_not_tilde_as (Current)
+			if {l_info: FEATURE_CONVERSION_INFO} a_feature_conversion then
+				is_from_conversion := l_info.is_from_conversion
+				if is_from_conversion then
+					creation_type := l_info.target_type.actual_type
+				end
+				routine_id := l_info.conversion_feature.rout_id_set.first
+			else
+				check not_possible_to_get_there: False end
+			end
 		end
 
-feature -- Properties
+feature -- Access
 
-	op_name: ID_AS is
-		once
-			create Result.initialize ("/~")
-		end
+	is_from_conversion: BOOLEAN
+			-- True if conversion is of the form `create {X}.from_y (y)',
+			-- False if defined as `y.to_x'.
+
+	creation_type: TYPE_A
+			-- Type use for creation when `is_from_conversion'.
+
+	routine_id: INTEGER
+			-- Routine ID of feature used for conversion.
+
+invariant
+	creation_type_not_void: is_from_conversion implies creation_type /= Void
+	routine_id_positive: routine_id > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

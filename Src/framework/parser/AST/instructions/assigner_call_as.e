@@ -72,6 +72,18 @@ feature -- Comparison
 				equivalent (target, other.target)
 		end
 
+feature -- Settings
+
+	set_source (s: like source) is
+			-- Set `source' with `s'.
+		require
+			s_not_void: s /= Void
+		do
+			source := s
+		ensure
+			source_set: source = s
+		end
+
 invariant
 	target_not_void: target /= Void
 	source_not_void: source /= Void

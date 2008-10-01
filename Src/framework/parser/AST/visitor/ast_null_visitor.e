@@ -240,6 +240,10 @@ feature -- Implementation
 		do
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		do
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 		do
 		end

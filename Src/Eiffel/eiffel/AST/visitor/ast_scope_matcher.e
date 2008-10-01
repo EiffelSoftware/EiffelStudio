@@ -14,6 +14,7 @@ inherit
 			process_bin_eq_as,
 			process_bin_ne_as,
 			process_object_test_as,
+			process_converted_expr_as,
 			process_paran_as,
 			process_un_not_as
 		end
@@ -55,6 +56,11 @@ feature {AST_EIFFEL} -- Visitor pattern
 			if is_negated = is_negation_expected then
 				add_object_test_scope (l_as.name.name_id)
 			end
+		end
+
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS)
+		do
+			l_as.expr.process (Current)
 		end
 
 	process_paran_as (l_as: PARAN_AS)

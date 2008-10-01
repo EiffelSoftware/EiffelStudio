@@ -87,20 +87,26 @@ feature -- Comparison
 				equivalent (target, other.target)
 		end
 
-feature {ASSIGN_AS}	-- Replication
+feature -- Settings
 
 	set_target (t: like target) is
+			-- Set `target' with `t'.
 		require
-			valid_arg: t /= Void
+			t_not_void: t /= Void
 		do
 			target := t
+		ensure
+			target_set: target = t
 		end
 
 	set_source (s: like source) is
+			-- Set `source' with `s'.
 		require
-			valid_arg: s /= Void
+			s_not_void: s /= Void
 		do
 			source := s
+		ensure
+			source_set: source = s
 		end
 
 invariant

@@ -1512,6 +1512,58 @@ feature {NONE} -- Implementation
 			last_type := strip_type
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		local
+			l_feat: E_FEATURE
+			l_type: TYPE_A
+			l_old_expr_type_visiting: like expr_type_visiting
+		do
+			l_old_expr_type_visiting := expr_type_visiting
+			expr_type_visiting := True
+			reset_last_class_and_type
+			l_as.expr.process (Current)
+			expr_type_visiting := l_old_expr_type_visiting
+
+			if {l_info: PARENT_CONVERSION_INFO} l_as.data then
+					-- If we have some data about the above with a conversion, we need
+					-- to extract it so that we can recheck the code in the descendant.
+				if l_info.is_from_conversion then
+					l_type := l_info.creation_type.evaluated_type_in_descendant (source_class, current_class, current_feature)
+					if not expr_type_visiting then
+						text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+						text_formatter_decorator.put_space
+						text_formatter_decorator.process_symbol_text (ti_l_curly)
+						type_output_strategy.process (l_type, text_formatter_decorator, current_class, current_feature)
+						text_formatter_decorator.process_symbol_text (ti_r_curly)
+						text_formatter_decorator.process_symbol_text (ti_dot)
+						l_feat := l_type.associated_class.feature_with_rout_id (l_info.routine_id)
+						text_formatter_decorator.add_feature (l_feat, l_feat.name)
+						text_formatter_decorator.process_symbol_text (ti_space)
+						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+						l_as.expr.process (Current)
+						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					end
+				else
+					l_feat := last_type.associated_class.feature_with_rout_id (l_info.routine_id)
+					if l_feat /= Void then
+						l_type := l_feat.type
+						if not expr_type_visiting then
+							l_as.expr.process (Current)
+							text_formatter_decorator.process_symbol_text (ti_dot)
+							text_formatter_decorator.add_feature (l_feat, l_feat.name)
+						end
+					else
+						set_error_message ("Could not find routine of a given routine ID in an inherited conversion")
+					end
+				end
+				last_type := l_type
+			else
+				if not expr_type_visiting then
+					l_as.expr.process (Current)
+				end
+			end
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 		do
 			if not expr_type_visiting then

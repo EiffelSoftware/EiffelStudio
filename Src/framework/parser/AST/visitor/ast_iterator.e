@@ -304,6 +304,11 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		do
+			l_as.expr.process (Current)
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 		do
 			l_as.expr.process (Current)

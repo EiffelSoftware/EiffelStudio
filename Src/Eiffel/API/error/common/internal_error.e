@@ -1,44 +1,60 @@
 indexing
-	description: "AST representation of binary `/~' operation."
+	description: "Internal error of the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	BIN_NOT_TILDE_AS
+	INTERNAL_ERROR
 
 inherit
-	BIN_TILDE_AS
-		redefine
-			process, op_name
-		end
-
-	BIN_NE_AS
-		redefine
-			process, op_name
-		end
+	COMPILER_ERROR
 
 create
-	initialize
+	make
 
-feature -- Visitor
+feature {NONE} -- Initialization
 
-	process (v: AST_VISITOR) is
-			-- process current element.
+	make (m: like message) is
+			-- New internal error with message `m'.
+		require
+			m_not_void: m /= Void
+			m_not_empty: not m.is_empty
 		do
-			v.process_bin_not_tilde_as (Current)
+			message := m
+		ensure
+			message_set: message = m
 		end
 
-feature -- Properties
+feature -- Access
 
-	op_name: ID_AS is
-		once
-			create Result.initialize ("/~")
+	code: STRING is "INTERNAL_ERROR"
+			-- Name of error.
+
+	file_name: STRING is
+		do
 		end
+
+	message: STRING
+			-- Description of internal error.
+
+feature {ERROR_TRACER} -- Formatting
+
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			a_text_formatter.add ("Error message: ")
+			a_text_formatter.add (message)
+			a_text_formatter.add_new_line
+		end
+
+invariant
+	message_not_void: message /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

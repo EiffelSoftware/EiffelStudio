@@ -9,9 +9,10 @@ class
 	BIN_TILDE_AS
 
 inherit
-	BINARY_AS
-
-	PREFIX_INFIX_NAMES
+	BIN_EQ_AS
+		redefine
+			process, op_name
+		end
 
 create
 	initialize
@@ -25,12 +26,6 @@ feature -- Visitor
 		end
 
 feature -- Type check, byte code and dead code removal
-
-	infix_function_name: STRING is
-			-- Qualified name with the infix keyword.
-		once
-			Result := infix_feature_name_with_symbol (op_name.name)
-		end
 
 	op_name: ID_AS is
 			-- Name without the infix keyword.

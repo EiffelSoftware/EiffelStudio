@@ -556,10 +556,15 @@ feature
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		do
+			l_as.expr.process (Current)
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			safe_process (l_as.expr)
+			l_as.expr.process (Current)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 

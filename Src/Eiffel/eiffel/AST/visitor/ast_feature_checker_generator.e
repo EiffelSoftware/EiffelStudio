@@ -483,8 +483,10 @@ feature {NONE} -- Implementation: State
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- List of old expressions found during feature type checking
 
-	is_type_compatible: BOOLEAN
-			-- Is `last_type' compatible with type passed to `process_type_compatibility'?
+	is_type_compatible: TUPLE [is_compatible: BOOLEAN; conversion_info: CONVERSION_INFO]
+			-- Result of computation of `process_type_compatibility'. If `last_type' is
+			-- compatible then `is_compatible' is set, if there is a conversion, then
+			-- `conversion_info' is set?
 
 	last_assigner_command: FEATURE_I
 			-- Last assigner command associated with a feature
@@ -590,7 +592,7 @@ feature -- Settings
 			last_original_feature_name_id := 0
 			last_feature_name_id := 0
 			last_calls_target_type := Void
-			is_type_compatible := False
+			is_type_compatible := [False, Void]
 			last_assigner_command := Void
 			is_inherited := False
 			inline_agent_byte_codes := Void
@@ -1444,6 +1446,8 @@ feature -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
+													l_parameters.put_i_th (create {CONVERTED_EXPR_AS}.initialize (l_parameters.i_th (i),
+														create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
 												end
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
@@ -1453,6 +1457,7 @@ feature -- Implementation
 													l_expr ?= l_arg_nodes.i_th (i)
 													l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
 												end
+													-- Create a conversion node to keep the data used for conversion
 											elseif
 												l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
 												l_arg_type.is_conformant_to (l_formal_arg_type)
@@ -1913,6 +1918,11 @@ feature -- Implementation
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_type_a) then
 								if l_element_type.convert_to (l_current_class, l_type_a) then
+									if l_context.last_conversion_info.has_depend_unit then
+										l_as.expressions.put_i_th (
+											create {CONVERTED_EXPR_AS}.initialize (l_as.expressions.i_th (i),
+												create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
+									end
 									if is_byte_node_enabled and not is_checking_cas then
 										l_list.put_i_th (l_context.last_conversion_info.byte_node (
 											l_list.i_th (i)), i)
@@ -2020,29 +2030,10 @@ feature -- Implementation
 							end
 						end
 						if l_has_error then
-								-- We could not find a common type, so let's iterate again to ensure that
-								-- elements conform or convert to ANY.
-							from
-								i := 1
-								l_has_error := False
-								create {CL_TYPE_A} l_type_a.make (system.any_id)
-							until
-								i > nb
-							loop
-								l_element_type := l_last_types.item (i)
-								if not l_element_type.conform_to (l_type_a) then
-									if l_element_type.convert_to (l_current_class, l_type_a) then
-										if is_byte_node_enabled and not is_checking_cas then
-											l_list.put_i_th (l_context.last_conversion_info.byte_node (
-												l_list.i_th (i)), i)
-										end
-									else
-										l_has_error := True
-										i := nb + 1	-- Exit the loop
-									end
-								end
-								i := i + 1
-							end
+								-- We could not find a common type, so we now assume it is ANY since
+								-- we always conform to ANY.
+							l_has_error := False
+							create {CL_TYPE_A} l_type_a.make (system.any_id)
 						end
 						if not l_has_error then
 							create l_generics.make (1, 1)
@@ -3384,6 +3375,40 @@ feature -- Implementation
 			end
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		local
+			l_feat: FEATURE_I
+		do
+			l_as.expr.process (Current)
+				-- It only make sense to process the conversion data only when
+				-- rechecking the code in a descendant class.
+			if is_inherited and then {l_info: PARENT_CONVERSION_INFO} l_as.data then
+					-- If we have some data about the above with a conversion, we need
+					-- to extract it so that we can recheck that the converted code still
+					-- make sense in a descendant.
+				if l_info.is_from_conversion then
+						-- For a from conversion, we just need to adapt the creation type to the
+						-- descendant class (case of formal generics that might need to be instantiated).
+					last_type := l_info.creation_type.evaluated_type_in_descendant (context.written_class,
+						context.current_class, context.current_feature)
+				else
+						-- For a to conversion, we need to take the descendant version of the routine
+						-- orginally taken and check that its return type still make sense.
+					l_feat := last_type.associated_class.feature_of_rout_id (l_info.routine_id)
+					if l_feat /= Void then
+						last_type := adapted_type (l_feat.type, last_type, last_type)
+					else
+							-- We should not get there, but just in case we generate an internal
+							-- error message.
+						last_type := Void
+						error_handler.insert_error (create {INTERNAL_ERROR}.make (
+							"In {AST_FEATURE_CHECKER_GENERATOR}.process_converted_as could%N%
+							%not find routine of a given routine ID in an inherited conversion"))
+					end
+				end
+			end
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 		local
 			l_expr: EXPR_B
@@ -4182,7 +4207,7 @@ feature -- Implementation
 								l_error := last_infix_error
 								if l_left_type.convert_to (context.current_class, l_right_type) then
 									l_target_conv_info := context.last_conversion_info
-									if  is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
+									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
 										l_right_constrained := last_calls_target_type
 										l_left_constrained := l_right_constrained
 										l_as.set_left_type_converted (True)
@@ -4207,6 +4232,8 @@ feature -- Implementation
 								l_left_id := l_right_constrained.associated_class.class_id
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
+									l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+										create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
 								end
 								l_target_type := l_target_conv_info.target_type
 								if l_needs_byte_node then
@@ -4226,6 +4253,8 @@ feature -- Implementation
 							if last_infix_argument_conversion_info /= Void then
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
+									l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+										create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
 								end
 								if l_needs_byte_node then
 									l_right_expr ?= last_infix_argument_conversion_info.byte_node (l_right_expr)
@@ -4446,6 +4475,8 @@ feature -- Implementation
 						l_conv_info := context.last_conversion_info
 						if l_conv_info.has_depend_unit then
 							context.supplier_ids.extend (l_conv_info.depend_unit)
+							l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+								create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 						end
 						if l_needs_byte_node then
 							l_right_expr := l_conv_info.byte_node (l_right_expr)
@@ -4455,6 +4486,8 @@ feature -- Implementation
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
+								l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							end
 							if l_needs_byte_node then
 								l_left_expr := l_conv_info.byte_node (l_left_expr)
@@ -4504,96 +4537,8 @@ feature -- Implementation
 		end
 
 	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
-		local
-			l_left_type, l_right_type: TYPE_A
-			l_left_expr, l_right_expr: EXPR_B
-			l_conv_info: CONVERSION_INFO
-			l_binary: BINARY_B
-			l_vweq: VWEQ
-			l_needs_byte_node: BOOLEAN
-			l_is_byte_node_simplified: BOOLEAN
-			l_not_tilde_as: BIN_NOT_TILDE_AS
 		do
-			l_needs_byte_node := is_byte_node_enabled
-
-				-- First type check the left member
-			l_as.left.process (Current)
-			l_left_type := last_type
-			if l_left_type /= Void and l_needs_byte_node then
-				l_left_expr ?= last_byte_node
-			end
-
-				-- Then type check the right member
-			l_as.right.process (Current)
-			l_right_type := last_type
-			if l_right_type /= Void and l_needs_byte_node then
-				l_right_expr ?= last_byte_node
-			end
-
-			if l_left_type /= Void and then l_right_type /= Void then
-					-- Check if `l_left_type' conforms to `l_right_type' or if
-					-- `l_right_type' conforms to `l_left_type'.
-				if not is_inherited then
-					l_as.set_class_id (class_id_of (l_left_type))
-				end
-				if
-					not (l_left_type.conform_to (l_right_type.actual_type) or else
-					l_right_type.conform_to (l_left_type.actual_type))
-				then
-					if l_right_type.convert_to (context.current_class, l_left_type.actual_type) then
-						l_conv_info := context.last_conversion_info
-						if l_conv_info.has_depend_unit then
-							context.supplier_ids.extend (l_conv_info.depend_unit)
-						end
-						if l_needs_byte_node then
-							l_right_expr := l_conv_info.byte_node (l_right_expr)
-						end
-					else
-						if l_left_type.convert_to (context.current_class, l_right_type.actual_type) then
-							l_conv_info := context.last_conversion_info
-							if l_conv_info.has_depend_unit then
-								context.supplier_ids.extend (l_conv_info.depend_unit)
-							end
-							if l_needs_byte_node then
-								l_left_expr := l_conv_info.byte_node (l_left_expr)
-							end
-						elseif not is_inherited then
-							if context.current_class.is_warning_enabled (w_vweq) then
-								create l_vweq
-								context.init_error (l_vweq)
-								l_vweq.set_left_type (l_left_type)
-								l_vweq.set_right_type (l_right_type)
-								l_vweq.set_location (l_as.operator_location)
-								error_handler.insert_warning (l_vweq)
-							end
-							if l_left_type.is_basic and l_right_type.is_basic then
-									-- Non-compatible basic type always implies a False/true comparison.
-								l_is_byte_node_simplified := True
-							end
-						end
-					end
-				end
-
-				if l_needs_byte_node then
-					if l_is_byte_node_simplified then
-						l_not_tilde_as ?= l_as
-						if l_not_tilde_as /= Void then
-							create {BOOL_CONST_B} last_byte_node.make (True)
-						else
-							create {BOOL_CONST_B} last_byte_node.make (False)
-						end
-					else
-						l_binary := byte_anchor.binary_node (l_as)
-						l_binary.set_left (l_left_expr)
-						l_binary.set_right (l_right_expr)
-						last_byte_node := l_binary
-					end
-				end
-			end
-				-- Regardless of a failure in either expressions, we can still assume the return
-				-- type to be a BOOLEAN, that way we can detect all the other errors in the englobing
-				-- expressions if any.
-			last_type := boolean_type
+			process_bin_eq_as (l_as)
 		end
 
 	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
@@ -5005,7 +4950,7 @@ feature -- Implementation
 				if l_source_type /= Void then
 						-- Type checking
 					process_type_compatibility (l_target_type)
-					if not is_type_compatible then
+					if not is_type_compatible.is_compatible then
 						if l_source_type.is_bit then
 							create l_vncb
 							context.init_error (l_vncb)
@@ -5022,6 +4967,14 @@ feature -- Implementation
 							l_vjar.set_target_name (l_as.target.access_name)
 							l_vjar.set_location (l_as.start_location)
 							error_handler.insert_error (l_vjar)
+						end
+					else
+						if
+							is_type_compatible.conversion_info /= Void and then
+							is_type_compatible.conversion_info.has_depend_unit
+						then
+							l_as.set_source (create {CONVERTED_EXPR_AS}.initialize (l_as.source,
+								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 						end
 					end
 
@@ -5098,7 +5051,7 @@ feature -- Implementation
 				if last_type /= Void then
 					process_type_compatibility (target_type)
 					source_type := last_type
-					if not is_type_compatible then
+					if not is_type_compatible.is_compatible then
 						create vbac1
 						context.init_error (vbac1)
 						vbac1.set_source_type (source_type)
@@ -5112,115 +5065,125 @@ feature -- Implementation
 						context.init_error (vbac2)
 						vbac2.set_location (l_as.start_location)
 						error_handler.insert_error (vbac2)
-					elseif is_byte_node_enabled then
-							-- Preserve source byte node
-						source_byte_node ?= last_byte_node
-
-							-- Discriminate over expression kind:
-							-- it should be either a qualified call,
-							-- a binary or an unary
-						outer_nested_b ?= target_byte_node
-						binary_b ?= target_byte_node
-						unary_b ?= target_byte_node
-						external_b ?= target_byte_node
-						if external_b /= Void then
-							--| Do nothing (for external static calls)
-						elseif outer_nested_b /= Void then
-							call_b := outer_nested_b
-								-- Find end of call chain
-							from
-								inner_nested_b ?= outer_nested_b.message
-							until
-								inner_nested_b = Void
-							loop
-								outer_nested_b := inner_nested_b
-								inner_nested_b ?= outer_nested_b.message
-							end
-								-- Evaluate assigner command arguments
-							access_b ?= outer_nested_b.message
-							check
-								access_b_not_void: access_b /= Void
-							end
-								-- Get the multi_constrait_static if one exists
-							l_multi_constraint_static := access_b.multi_constraint_static
-							arguments := access_b.parameters
-						elseif binary_b /= Void then
-								-- Create call chain
-							outer_nested_b := binary_b.nested_b
-							call_b := outer_nested_b
-								-- Evaluate assigner command arguments
-							create arguments.make (1)
-							create argument
-							argument.set_expression (binary_b.right)
-							argument.set_attachment_type (binary_b.attachment)
-							if not system.il_generation then
-								-- It is pretty important that we use `actual_type.is_formal' and not
-								-- just `is_formal' because otherwise if you have `like x' and `x: G'
-								-- then we would fail to detect that.
-								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-							end
-							arguments.extend (argument)
-						else
-							check
-								unary_b_not_void: unary_b /= Void
-							end
-								-- Create call chain
-							outer_nested_b := unary_b.nested_b
-							call_b := outer_nested_b
-								-- There are no arguments in unary expression
+					else
+						if
+							is_type_compatible.conversion_info /= Void and then
+							is_type_compatible.conversion_info.has_depend_unit
+						then
+							l_as.set_source (create {CONVERTED_EXPR_AS}.initialize (l_as.source,
+								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 						end
 
-						if l_is_tuple_access then
-								-- When assigning to a tuple, we simply transform the tuple
-								-- access by giving a source.
-							l_tuple_access ?= access_b
-							check l_tuple_access_not_void: l_tuple_access /= Void end
-							l_tuple_access.set_line_number (l_as.start_location.line)
-							l_tuple_access.set_source (source_byte_node)
-							last_byte_node := target_byte_node
-						else
-								-- Evaluate assigner command arguments:
-								--   first is a source of an assigner command
-								--   next are those from target call
-							if arguments = Void then
-								create assigner_arguments.make (1)
-							else
-								create assigner_arguments.make (arguments.count + 1)
-							end
-							create argument
-							argument.set_expression (source_byte_node)
-							argument.set_attachment_type (target_type)
-							if not system.il_generation then
-								-- It is pretty important that we use `actual_type.is_formal' and not
-								-- just `is_formal' because otherwise if you have `like x' and `x: G'
-								-- then we would fail to detect that.
-								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-							end
-							assigner_arguments.extend (argument)
-							if arguments /= Void then
-								assigner_arguments.append (arguments)
-							end
-								-- Evaluate assigner command byte node
-							access_b := target_assigner.access (void_type, True)
-							access_b.set_parameters (assigner_arguments)
+						if is_byte_node_enabled then
+								-- Preserve source byte node
+							source_byte_node ?= last_byte_node
 
-							if l_multi_constraint_static /= Void then
-									-- We are in the multi constraint case, set the multi constraint static
-								access_b.set_multi_constraint_static (l_multi_constraint_static)
+								-- Discriminate over expression kind:
+								-- it should be either a qualified call,
+								-- a binary or an unary
+							outer_nested_b ?= target_byte_node
+							binary_b ?= target_byte_node
+							unary_b ?= target_byte_node
+							external_b ?= target_byte_node
+							if external_b /= Void then
+								--| Do nothing (for external static calls)
+							elseif outer_nested_b /= Void then
+								call_b := outer_nested_b
+									-- Find end of call chain
+								from
+									inner_nested_b ?= outer_nested_b.message
+								until
+									inner_nested_b = Void
+								loop
+									outer_nested_b := inner_nested_b
+									inner_nested_b ?= outer_nested_b.message
+								end
+									-- Evaluate assigner command arguments
+								access_b ?= outer_nested_b.message
+								check
+									access_b_not_void: access_b /= Void
+								end
+									-- Get the multi_constrait_static if one exists
+								l_multi_constraint_static := access_b.multi_constraint_static
+								arguments := access_b.parameters
+							elseif binary_b /= Void then
+									-- Create call chain
+								outer_nested_b := binary_b.nested_b
+								call_b := outer_nested_b
+									-- Evaluate assigner command arguments
+								create arguments.make (1)
+								create argument
+								argument.set_expression (binary_b.right)
+								argument.set_attachment_type (binary_b.attachment)
+								if not system.il_generation then
+									-- It is pretty important that we use `actual_type.is_formal' and not
+									-- just `is_formal' because otherwise if you have `like x' and `x: G'
+									-- then we would fail to detect that.
+									argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
+								end
+								arguments.extend (argument)
+							else
+								check
+									unary_b_not_void: unary_b /= Void
+								end
+									-- Create call chain
+								outer_nested_b := unary_b.nested_b
+								call_b := outer_nested_b
+									-- There are no arguments in unary expression
 							end
 
-							if external_b = Void then
-									-- Replace end of call chain with an assigner command
-								access_b.set_parent (outer_nested_b)
-								outer_nested_b.set_message (access_b)
+							if l_is_tuple_access then
+									-- When assigning to a tuple, we simply transform the tuple
+									-- access by giving a source.
+								l_tuple_access ?= access_b
+								check l_tuple_access_not_void: l_tuple_access /= Void end
+								l_tuple_access.set_line_number (l_as.start_location.line)
+								l_tuple_access.set_source (source_byte_node)
+								last_byte_node := target_byte_node
 							else
-									-- Set external static assigner
-								check call_b_unattached: call_b = Void end
-								call_b := access_b
+									-- Evaluate assigner command arguments:
+									--   first is a source of an assigner command
+									--   next are those from target call
+								if arguments = Void then
+									create assigner_arguments.make (1)
+								else
+									create assigner_arguments.make (arguments.count + 1)
+								end
+								create argument
+								argument.set_expression (source_byte_node)
+								argument.set_attachment_type (target_type)
+								if not system.il_generation then
+									-- It is pretty important that we use `actual_type.is_formal' and not
+									-- just `is_formal' because otherwise if you have `like x' and `x: G'
+									-- then we would fail to detect that.
+									argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
+								end
+								assigner_arguments.extend (argument)
+								if arguments /= Void then
+									assigner_arguments.append (arguments)
+								end
+									-- Evaluate assigner command byte node
+								access_b := target_assigner.access (void_type, True)
+								access_b.set_parameters (assigner_arguments)
+
+								if l_multi_constraint_static /= Void then
+										-- We are in the multi constraint case, set the multi constraint static
+									access_b.set_multi_constraint_static (l_multi_constraint_static)
+								end
+
+								if external_b = Void then
+										-- Replace end of call chain with an assigner command
+									access_b.set_parent (outer_nested_b)
+									outer_nested_b.set_message (access_b)
+								else
+										-- Set external static assigner
+									check call_b_unattached: call_b = Void end
+									call_b := access_b
+								end
+								create l_instr.make (call_b, l_as.start_location.line)
+								l_instr.set_line_pragma (l_as.line_pragma)
+								last_byte_node := l_instr
 							end
-							create l_instr.make (call_b, l_as.start_location.line)
-							l_instr.set_line_pragma (l_as.line_pragma)
-							last_byte_node := l_instr
 						end
 					end
 				end
@@ -5234,7 +5197,6 @@ feature -- Implementation
 			l_reverse: REVERSE_B
 			l_ve03: VE03
 			l_source_type, l_target_type: TYPE_A
-			l_conv_info: CONVERSION_INFO
 			l_formal: FORMAL_A
 			l_vjrv1: VJRV1
 			l_vjrv2: VJRV2
@@ -5309,22 +5271,6 @@ feature -- Implementation
 							l_vjrv2.set_target_type (l_target_type)
 							l_vjrv2.set_location (l_as.target.end_location)
 							error_handler.insert_warning (l_vjrv2)
-						end
-					else
-							-- Target is a reference, but source is not.
-						if l_source_type.is_expanded then
-								-- Special case `ref ?= exp' where we convert
-								-- `exp' to its associated reference before
-								-- doing the assignment.
-							if l_source_type.convert_to (context.current_class, l_target_type) then
-								l_conv_info := context.last_conversion_info
-								if l_conv_info.has_depend_unit then
-									context.supplier_ids.extend (l_conv_info.depend_unit)
-								end
-								if is_byte_node_enabled then
-									l_source_expr := l_conv_info.byte_node (l_source_expr)
-								end
-							end
 						end
 					end
 
@@ -7532,6 +7478,7 @@ feature {NONE} -- Implementation
 			-- make the result available in `is_type_compatible'.
 			-- Adjust `last_byte_node' to reflect conversion if required.
 		require
+			is_type_compatible_set: is_type_compatible /= Void
 			last_type_not_void: last_type /= Void
 			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
 		local
@@ -7539,7 +7486,8 @@ feature {NONE} -- Implementation
 			l_source_expr: EXPR_B
 			l_conv_info: CONVERSION_INFO
 		do
-			is_type_compatible := True
+			is_type_compatible.is_compatible := True
+			is_type_compatible.conversion_info := Void
 			l_source_type := last_type
 				--| If `l_source_type' is of type NONE_A and if `l_target_type' does
 				--| not conform to NONE, we generate in all the cases a VJAR error,
@@ -7550,6 +7498,7 @@ feature {NONE} -- Implementation
 			if not l_source_type.conform_to (l_target_type) then
 				if l_source_type.convert_to (context.current_class, l_target_type) then
 					l_conv_info := context.last_conversion_info
+					is_type_compatible.conversion_info := l_conv_info
 					if l_conv_info.has_depend_unit then
 						context.supplier_ids.extend (l_conv_info.depend_unit)
 					end
@@ -7572,7 +7521,7 @@ feature {NONE} -- Implementation
 				else
 						-- Type does not convert neither, so we raise an error
 						-- about non-conforming types.
-					is_type_compatible := False
+						is_type_compatible.is_compatible := False
 				end
 			end
 		ensure

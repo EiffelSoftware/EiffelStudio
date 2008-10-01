@@ -663,6 +663,13 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_paran_as (l_as: PARAN_AS) is
 			-- Process `l_as'.
 		require

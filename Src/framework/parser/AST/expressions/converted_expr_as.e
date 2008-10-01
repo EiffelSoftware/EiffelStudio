@@ -1,41 +1,76 @@
 indexing
-	description: "AST representation of binary `/~' operation."
+	description: "Node which is the result of a conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	BIN_NOT_TILDE_AS
+	CONVERTED_EXPR_AS
 
 inherit
-	BIN_TILDE_AS
-		redefine
-			process, op_name
-		end
-
-	BIN_NE_AS
-		redefine
-			process, op_name
-		end
+	EXPR_AS
 
 create
 	initialize
+
+feature {NONE} -- Initialization
+
+	initialize (e: like expr; d: like data) is
+			-- Initialize new CONVERTED_EXPR_AS node
+		require
+			e_not_void: e /= Void
+			d_not_void: d /= Void
+		do
+			if {l_already_converted: like Current} e then
+				expr := l_already_converted.expr
+			else
+				expr := e
+			end
+			data := d
+		ensure
+			data_set: data = d
+		end
 
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
-			v.process_bin_not_tilde_as (Current)
+			v.process_converted_expr_as (Current)
 		end
 
-feature -- Properties
+feature -- Access
 
-	op_name: ID_AS is
-		once
-			create Result.initialize ("/~")
+	expr: EXPR_AS
+			-- Parenthesized expression
+
+	data: ANY
+			-- Data needed for conversion. Implementation specific.
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := expr.first_token (a_list)
 		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := expr.last_token (a_list)
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (expr, other.expr)
+		end
+
+invariant
+	expr_not_void: expr /= Void
+	data_not_void: data /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -68,5 +103,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 
 end

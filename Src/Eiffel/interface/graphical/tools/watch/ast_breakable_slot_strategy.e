@@ -44,6 +44,7 @@ inherit
 			process_operand_as,
 			process_variant_as,
 			process_un_strip_as,
+			process_converted_expr_as,
 			process_paran_as,
 			process_expr_call_as,
 			process_expr_address_as,
@@ -987,6 +988,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			last_type := strip_type
+		end
+
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+		do
+			l_as.expr.process (Current)
 		end
 
 	process_paran_as (l_as: PARAN_AS) is

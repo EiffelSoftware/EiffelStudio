@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
+		A descriptor shim for all formatter tools.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

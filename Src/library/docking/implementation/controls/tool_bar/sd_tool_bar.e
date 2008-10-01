@@ -229,6 +229,17 @@ feature -- Command
 	destroy	is
 			-- Redefine
 		do
+			expose_actions.wipe_out
+			pointer_motion_actions.wipe_out
+			pointer_button_press_actions.wipe_out
+			pointer_button_press_actions.wipe_out
+			pointer_double_press_actions.wipe_out
+			pointer_button_release_actions.wipe_out
+			pointer_leave_actions.wipe_out
+			pointer_enter_actions.wipe_out
+			drop_actions.wipe_out
+			drop_actions.set_veto_pebble_function (Void)
+
 			content := Void
 			prune_tool_bar (Current)
 			Precursor {SD_DRAWING_AREA}

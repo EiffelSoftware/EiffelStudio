@@ -9,6 +9,6 @@ copy_raw	b.e	$CLUSTER b.e
 copy_raw	c.e	$CLUSTER c.e
 
 compile_melted
-compile_result validity_error TEST VUEX
+compile_result validity_error TEST VUEX(2)
 
 test_end

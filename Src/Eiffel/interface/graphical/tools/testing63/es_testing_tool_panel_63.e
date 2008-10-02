@@ -210,6 +210,9 @@ feature {NONE} -- Access: view
 
 feature {NONE} -- Access: buttons
 
+	wizard_button: !SD_TOOL_BAR_BUTTON
+			-- Button for launching test wizard
+
 	run_button: !SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for launching the test executor
 
@@ -558,7 +561,17 @@ feature {NONE} -- Factory
 		local
 			l_menu: EV_MENU
 		do
-			create Result.make (5)
+			create Result.make (6)
+
+			create wizard_button.make
+			wizard_button.set_text ("New")
+			register_action (wizard_button.select_actions, agent
+				local
+					l_wizard: ES_EIFFEL_TEST_WIZARD_MANAGER
+				do
+					create l_wizard.make (develop_window.window)
+				end)
+			Result.put_last (wizard_button)
 
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 

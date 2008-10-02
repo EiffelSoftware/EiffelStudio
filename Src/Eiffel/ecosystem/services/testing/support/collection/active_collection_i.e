@@ -22,7 +22,8 @@ feature -- Access
 		deferred
 		ensure
 			result_consistent: Result = items
-			results_usable: ({!DS_LINEAR [!USABLE_I]} #? Result).for_all (agent {!USABLE_I}.is_interface_usable)
+				-- Not supported yet
+			--results_usable: Result.for_all (agent {!G}.is_interface_usable)
 		end
 
 feature -- Status report

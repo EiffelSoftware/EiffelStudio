@@ -9,6 +9,8 @@ deferred class
 	ENCODING_DETECTOR
 
 inherit
+	ANY
+
 	SYSTEM_ENCODINGS
 		export
 			{NONE} all

@@ -90,7 +90,11 @@ feature -- Properties
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			Result := interface_names.l_classi_header (stone_signature, class_i.group.name, class_i.file_name)
+			Result := interface_names.l_classi_header (eiffel_system.name,
+														 eiffel_universe.target_name,
+														 class_i.group.name,
+														 stone_signature,
+														 class_i.file_name)
 		end
 
 	synchronized_stone: CLASSI_STONE is

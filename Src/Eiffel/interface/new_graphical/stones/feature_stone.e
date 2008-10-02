@@ -184,19 +184,32 @@ feature -- dragging
 	header: STRING_GENERAL is
 			-- Name for the stone.
 		local
-			a_base_name: STRING
+			l_feature_name: STRING_32
+			l_file_name: FILE_NAME
 		do
-			create {STRING_32}Result.make (20)
-			Result.append ("{")
-			Result.append (e_class.name_in_upper)
-			Result.append ("}.")
-			Result.append (feature_name)
+
+			create l_feature_name.make (20)
+			l_feature_name.append ("{")
+			l_feature_name.append (e_class.name_in_upper)
+			l_feature_name.append ("}.")
+			l_feature_name.append (feature_name)
 			if class_i /= Void then
-				a_base_name := class_i.file_name
-				if a_base_name /= Void then
-					Result.append (interface_names.l_located_in (a_base_name))
-				end
+				l_file_name := class_i.file_name
 			end
+
+			if not e_class.is_precompiled then
+				Result := interface_names.l_feature_header (eiffel_system.name,
+															eiffel_universe.target_name,
+															e_class.group.name,
+															l_feature_name,
+															l_file_name)
+			else
+				Result := interface_names.l_feature_header_precompiled (eiffel_system.name,
+															eiffel_universe.target_name,
+															e_class.group.name,
+															l_feature_name)
+			end
+
 		end
 
 	stone_cursor: EV_POINTER_STYLE is

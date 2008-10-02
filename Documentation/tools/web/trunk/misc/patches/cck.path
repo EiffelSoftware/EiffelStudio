@@ -1,0 +1,12 @@
+--- content.module.dist	2008-10-02 06:08:32.000000000 -0700
++++ content.module	2008-10-02 06:06:01.000000000 -0700
+@@ -668,6 +668,9 @@
+       if ($node->build_mode == NODE_BUILD_NORMAL || $node->build_mode == NODE_BUILD_PREVIEW) {
+         $context = $teaser ? 'teaser' : 'full';
+       }
++      elseif ($node->build_mode == NODE_BUILD_PRINT) {
++        $context = $teaser ? 'teaser' : 'full';
++      }
+       else {
+         $context = $node->build_mode;
+       }

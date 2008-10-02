@@ -82,7 +82,7 @@ feature -- Execution
 			l_tuple: TUPLE [TEST_SET]
 			l_setup, l_test, l_teardown: !like last_invocation_response
 		do
-			safe_execute (agent a_test_set.set_up)
+			safe_execute (agent a_test_set.setup)
 			l_setup ?= last_invocation_response
 			if not last_invocation_response.is_exceptional then
 				l_tuple := a_test.empty_operands

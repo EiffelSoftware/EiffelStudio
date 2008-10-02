@@ -77,7 +77,8 @@ function isedoc_export_form() {
 	$all_export_format = array();
 	$dft_export_format = 'wiki';
 	$all_export_format['wiki'] = t('Export as wiki content (default)');
-	$all_export_format['html'] = t('Export as static html content');
+	$all_export_format['html'] = t('Export as static html multiple files');
+	$all_export_format['html-one'] = t('Export as static html single file');
 
 	$form['isedoc_export_format'] = array(
 		'#type' => 'select',
@@ -182,8 +183,28 @@ function _isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
 			case 'html':
 				$isedoc_export_data['html.tpl'] = &isedoc_export_html_page_template($book_url,$node->title);
 				$content = isedoc_book_export_traverse($tree,'html','index',$l_bk_alias.'/');
-				isedoc_export_book_create_style("$l_bk_dir/book.css");
+				isedoc_export_book_create_style("$l_bk_dir/book.css",'book');
 				isedoc_export_save_file($content, "$l_bk_dir/index.html", 'book html index');
+				break;
+			case 'html-one':
+				$isedoc_export_data['html.tpl'] = &isedoc_export_html_one_page_template($book_url,$node->title);
+				$isedoc_export_data['node.tpl'] = &isedoc_export_html_node_template($book_url,$node->title);
+				$l_target_book_path = "$l_bk_alias/$l_bk_alias";
+				$l_index_content = isedoc_book_export_traverse($tree,'html-one','index', $l_target_book_path);
+				isedoc_export_book_create_style("$l_bk_dir/book.css",'book-one');
+
+				$l_fn = "$l_bk_dir/$l_bk_alias.html";
+				$l_body = _isedoc_file_content($l_fn);
+
+				$tpl = &$isedoc_export_data['html.tpl'];
+				$txt = $tpl->generate(array(
+							'/%INDEX_URL%/' => "index.html",
+							'/%TITLE%/' => $node->title,
+							'/%BODY%/' => $l_body,
+							'/%INDEX_BODY%/' => $l_index_content,
+							));
+				isedoc_export_save_file($txt, $l_fn, "Single file output");
+				isedoc_export_save_file($l_index_content, "$l_bk_dir/index.html", 'book html index');
 				break;
 			case 'wiki':
 			default:
@@ -216,6 +237,11 @@ function isedoc_export_node_alias(&$a_node) {
 	return $l_id;
 }
 
+function isedoc_export_anchor(&$node) {
+	return 'node-'.isedoc_export_node_alias($node);
+	//return str_replace('/', '-', $node->path);
+}
+
 
 function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
   /* Check book_export_traverse($tree, $visit_func) modules/book/book.module, line 905 */
@@ -240,7 +266,6 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
   foreach ($tree as $data) {
     // Note- access checking is already performed when building the tree.
     if ($node = node_load($data['link']['nid'], FALSE)) {
-
       if ($i == 0) {
         $l_left = $a_alias;
       } elseif ($i <= $n) {
@@ -251,7 +276,6 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
       } elseif ($i >= 0) {
         $l_right = $l_aliases[$i+1];
       }
-
       $l_alias = isedoc_export_node_alias($node);
       $l_src = $prefix . $l_alias;
       switch ($type) {
@@ -262,6 +286,17 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
           $l_html_nav = isedoc_export_book_html_children_navigation($data['below']);
         }
         $output .= isedoc_export_book_node_as_html($node, $l_src,$l_alias,$a_alias,$l_left,$l_right,$l_html_nav);
+        break;
+      case 'html-one':
+        $l_prefix = $prefix;
+        $l_src = $prefix;
+	$param = array();
+	$param['parent'] = $a_alias;
+	$param['left'] = $l_left;
+	$param['right'] = $l_right;
+	$param['nav'] = '';
+
+        $output .= isedoc_export_book_node_as_html_one($node, $l_src,$l_alias,  $param);
         break;
       case 'wiki':
       default:
@@ -280,10 +315,16 @@ function isedoc_book_export_traverse($tree,$type,$a_alias='book',$prefix='') {
     }
     $i = $i + 1;
   }
-  if ($type == 'html') {
-    return "<ul>$output</ul>\n";
-  } else {
-    return $output;
+  switch ($type) {
+  case 'html':
+  	return "<ul>$output</ul>\n";
+  	break;
+  case 'html-one':
+  	return "<ul>$output</ul>\n";
+  	break;
+  default:
+  	return $output;
+  	break;
   }
 }
 
@@ -381,9 +422,6 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	$l_node_id = $a_node->nid;
 	$l_src = $a_src;
 
-	//$output .= "[$l_depth";
-	//$output .= ":<a class=\"link\" href=\"$a_parent.html\">$a_parent</a>";
-	//$output .= ":$l_weight] ";
 	$output .= "<a class=\"title\" href=\"$a_url_name.html\">$l_title</a>";
 	$mesg .= $a_node->title . " (" . l(t("page"), $a_node->path) . ")";
 
@@ -404,7 +442,7 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 		$uuid = $a_node->field_uuid[0]['value'];
 		if ($uuid) {
 			$uuid_html = "UUID: $uuid";
-			$output .= " $uuid_html";
+			//$output .= " $uuid_html";
 			$mesg .= " $uuid_html";
 		}
 	}
@@ -424,6 +462,78 @@ function isedoc_export_book_node_as_html($a_node,$a_src,$a_url_name,$a_parent,$a
 	return "<li>$output</li>";
 }
 
+function isedoc_export_book_node_as_html_one($a_node,$a_src,$a_url_name,$a_param) {
+	global $isedoc_node_count;
+	global $isedoc_export_dir;
+	global $isedoc_export_book_alias;
+	global $base_path;
+
+	$output = '';
+	$mesg = '';
+
+	$l_title = $a_node->title;
+	$l_depth = $a_node->book['depth'] - 1;
+	$l_weight = $a_node->book['weight'];
+	$l_node_id = $a_node->nid;
+	$l_src = $a_src;
+
+	$output .= "<a class=\"title\" href=\"#node-$a_url_name\">$l_title</a>";
+	$mesg .= $a_node->title . " (" . l(t("page"), $a_node->path) . ")";
+
+	if (module_exists('taxonomy')) {
+		$taxo =& $a_node->taxonomy;
+		if (count($taxo) > 0) {
+			$tags = "tags: ";
+			foreach($taxo as $t) {
+				$tags .= $t->name.",";
+			}
+			$tags = rtrim($tags, ',');
+			$tags .= " ";
+			$output .= " $tags";
+			$mesg .= " $tags";
+		}
+	}
+	if (is_callable(array($a_node, 'field_uuid'), TRUE)) {
+		$uuid = $a_node->field_uuid[0]['value'];
+		if ($uuid) {
+			$uuid_html = "UUID: $uuid";
+			//$output .= " $uuid_html";
+			$mesg .= " $uuid_html";
+		}
+	}
+	$a_param['tags'] = $tags;
+	$a_param['uuid'] = $uuid_html;
+
+	$th = isedoc_export_book_node_html_one($a_node,$a_param);
+
+	$fn = "$isedoc_export_dir/$l_src.html";
+	drupal_set_message($mesg . " (".l(t("file"),$fn).")",'status');
+
+	$fp = fopen($fn, 'a+');
+	if ($fp) {
+		fwrite($fp, $th."\n");
+		fclose ($fp);
+	}
+
+	$isedoc_node_count = $isedoc_node_count + 1;
+	return "<li>$output</li>";
+}
+
+function isedoc_export_update_file($a_top, $a_bottom, $a_fn, $a_name) {
+	$contents = _isedoc_file_content($a_fn);
+
+	$l_fp = fopen($a_fn, 'w');
+	if ($l_fp) {
+		drupal_set_message(t("Updating $a_name:").l($a_fn,$a_fn),'status');
+		fwrite($l_fp,$a_top);
+		fwrite($l_fp,$contents);
+		fwrite($l_fp,$a_bottom);
+		fclose($l_fp);
+	} else {
+		drupal_set_message(t("Error: unable to update $a_name <em>$a_fn</em>!"),'error');
+	}
+}
+
 function isedoc_export_save_file($a_content, $a_fn, $a_name) {
 	$l_fp = fopen($a_fn, 'w');
 	if ($l_fp) {
@@ -435,53 +545,13 @@ function isedoc_export_save_file($a_content, $a_fn, $a_name) {
 	}
 }
 
-function isedoc_export_book_create_style($a_fn) {
+function isedoc_export_book_create_style($a_fn,$type) {
 	$l_fp = fopen($a_fn, 'w');
 	if ($l_fp) {
+		$css_fn = drupal_get_path('module','isedoc_export')."/tpl/css/$type.css";
+		$css = _isedoc_file_content($css_fn);
+
 		drupal_set_message(t("Creating book style file: <em>$a_fn</em>!"),'status');
-		$css = <<<CSSTXT
-div#doc-header { margin: 5px 5px 5px 5px; padding: 10px; 
-	color: #fff; background-color: #003063; border: solid 1px #009; }
-#doc-header span#title { font-size: 180%; font-weight: bold; }
-#doc-header #nav { float: right; position: relative; top: -20px; }
-
-#doc-header a { color: #00f; text-decoration: none; 
-		padding: 0 5px 0 5px;
-		margin: 0 5px 0 5px;
-		background-color: #fff; border: solid 1px #ccf; }
-div#doc-body { margin: 10px 5px 10px 5px; 
-		padding: 20px; border: solid 1px #ccc;}
-
-div#doc-body div#doc-tags, div#doc-body div#doc-uuid {
-	float: right;
-	clear: right;
-	font-size: 85%;
-	color: #999;
-	margin-right: 15px;
-	}
-ul#doc-nav { 
-	margin-left: auto; margin-right: auto; width: 80%;
-	text-align: left;
-	list-style-type: none;
-	color: #533; 
-	background-color: #eef;
-	padding: 5px 5px 5px 20px; border: solid 1px #ccc;
-	}
-ul#doc-nav li.folder { 
-	/* list-style: square; */
-}
-
-#doc-body a {
-	text-decoration: none; 
-}
-#doc-nav a { color: #00f; text-decoration: none; 
-		padding-left: 5px; padding-right: 5px;
-	}
-
-div#doc-footer { margin: 10px 5px 5px 5px; padding 5px; 
-	text-align: center; color: #999;}
-CSSTXT;
-
 		fwrite($l_fp, $css);
 		fclose($l_fp);
 	} else {
@@ -490,25 +560,35 @@ CSSTXT;
 }
 
 function isedoc_export_html_page_template($book_url, $book_title) {
-	$txt = "<html><head><title>%TITLE%</title>";
-	$txt .= '<link type="text/css" rel="stylesheet" media="all" href="book.css" />';
-	$txt .= '</head><body>';
-	$txt .= '<div id="doc-header">';
-	$txt .= "<span id=\"title\">$book_title</span>";
-	$txt .= '<div id="nav"><a href="%INDEX_URL%">Index</a> %LEFT_HTML% <a href="%PARENT_URL%">Up</a> %RIGHT_HTML%</div>';
-	$txt .= "</div>\n";
-	$txt .= '<div id="doc-body">';
-	$txt .= '<div id="doc-uuid">%UUID%</div>';
-	$txt .= '<div id="doc-tags">%TAGS%</div>';
-	$txt .= '%BODY%<br/>%NAV_HTML%</div>';
-	$txt .= '<div id="doc-footer">';
-	$txt .= "Documentation exported from <a href=\"$book_url\">$book_url</a>";
-
+	$tpl_fn = drupal_get_path('module','isedoc_export')."/tpl/html.page.tpl";
+	$txt = _isedoc_file_content($tpl_fn);
 	$l_datetime = date ("d-M-Y H:i:s - T");
-	$txt .= " -- $l_datetime";
-	$txt .= '</div></body></html>';
-	$txt .= '</body></html>';
+	$tpl = new IseDocTemplateGenerator($txt);
+	$txt = $tpl->generate(array(
+			'/%BOOK_TITLE%/' => $book_title,
+			'/%BOOK_URL%/' => $book_url,
+			'/%DATETIME%/' => $l_datetime,
+			));
 
+	return new IseDocTemplateGenerator($txt);
+}
+
+function isedoc_export_html_one_page_template($book_url, $book_title) {
+	$tpl_fn = drupal_get_path('module','isedoc_export')."/tpl/html-one.page.tpl";
+	$txt = _isedoc_file_content($tpl_fn);
+	$l_datetime = date ("d-M-Y H:i:s - T");
+	$tpl = new IseDocTemplateGenerator($txt);
+	$txt = $tpl->generate(array(
+			'/%BOOK_TITLE%/' => $book_title,
+			'/%BOOK_URL%/' => $book_url,
+			'/%DATETIME%/' => $l_datetime,
+			));
+	return new IseDocTemplateGenerator($txt);
+}
+
+function isedoc_export_html_node_template($book_url, $book_title) {
+	$tpl_fn = drupal_get_path('module','isedoc_export')."/tpl/html-one.node.tpl";
+	$txt = _isedoc_file_content($tpl_fn);
 	return new IseDocTemplateGenerator($txt);
 }
 
@@ -517,7 +597,7 @@ function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_na
 	global $isedoc_export_book_alias;
 	global $base_path;
 
-  	$a_node->build_mode = NODE_BUILD_NORMAL;
+  	$a_node->build_mode = NODE_BUILD_PRINT;
   	$a_node = node_build_content($a_node, FALSE, FALSE);
   	$a_node->body = drupal_render($a_node->content);
         unset($a_node->teaser);
@@ -553,6 +633,60 @@ function isedoc_export_book_node_html($a_node,$a_parent,$a_left, $a_right, $a_na
 
 	return $l_page;
 }
+
+function isedoc_export_book_node_html_one($a_node,$a_param) {
+	global $isedoc_export_data;
+	global $isedoc_export_book_alias;
+	global $base_path;
+
+	$a_right = $a_param['right'];
+	$a_left = $a_param['left'];
+	$a_parent = $a_param['parent'];
+	$a_nav = $a_param['nav'];
+
+	//$a_tags='',$a_uuid=''
+	$a_tags = $a_param['tags'];
+	$a_uuid = $a_param['uuid'];
+
+  	$a_node->build_mode = NODE_BUILD_PRINT;
+  	$a_node = node_build_content($a_node, FALSE, FALSE);
+  	$a_node->body = drupal_render($a_node->content);
+        unset($a_node->teaser);
+	node_invoke_nodeapi($a_node, 'alter', FALSE, FALSE);
+        $content = "".theme('book_node_export_html', $a_node, '');
+
+	$content = preg_replace('/'.addcslashes($base_path,'/').'book\/'.$isedoc_export_book_alias.'\/([^"]+)/','index.html#node-${1}',$content);
+	$content = str_replace($base_path.'content/','_images/',$content);
+	$content = str_replace(file_directory_path().'images/','_images/',$content);
+	$content = preg_replace('/\/book\/([^"]+)/','../index.html#node-${1}',$content);
+
+	if (strlen($a_left) > 0) {
+		$l_left_html = '<a href="#node-'.$a_left.'">&lt;</a>';
+	} else {
+		$l_left_html = '';
+	}
+	if (strlen($a_right) > 0) {
+		$l_right_html = '<a href="#node-'.$a_right.'">&gt;</a>';
+	} else {
+		$l_right_html = '';
+	}
+	$tpl = &$isedoc_export_data['node.tpl'];
+	$l_page = $tpl->generate(array(
+				'/%ANCHOR%/' => isedoc_export_anchor($a_node),
+				'/%ANCHOR_END%/' => "end-of-".isedoc_export_anchor($a_node),
+				'/%INDEX_URL%/' => "#page-top",
+				'/%LEFT_HTML%/' => $l_left_html,
+				'/%PARENT_URL%/' => "#node-$a_parent",
+				'/%RIGHT_HTML%/' => $l_right_html,
+				'/%NAV_HTML%/' => $a_nav,
+				'/%BODY%/' => $content,
+				'/%TAGS%/' => $a_tags,
+				'/%UUID%/' => $a_uuid,
+				));
+
+	return $l_page;
+}
+
 
 class IseDocTemplateGenerator {
 	var $tpl;

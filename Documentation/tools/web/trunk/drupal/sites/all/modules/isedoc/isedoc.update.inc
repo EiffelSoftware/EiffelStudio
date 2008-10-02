@@ -2,8 +2,18 @@
 
 require_once ("isedoc.lib.inc");
 
-function isedoc_update_pages($target,$op) {
+function isedoc_update_pages($target,$a_op) {
+  drupal_add_css(drupal_get_path('module', 'system') .'/system.css');
+  drupal_add_js('misc/collapse.js');
   $output = '';
+
+  $batch_name = 'update';
+
+  $op = $a_op;
+  if ($op == '') {
+    $op = 'all';
+  }
+
   if (user_access('admin isedoc')) {
     $books = array();
     $all_books = book_get_books();
@@ -25,20 +35,20 @@ function isedoc_update_pages($target,$op) {
     }
     if (count($books) > 0) {
       foreach($books as $bid){
-    	isedoc_update_pages_of_book($bid,$op);
+    	$output .= isedoc_update_pages_of_book($bid,$op);
       }
       if ($op) {
         $output .= "Update $target ($op): completed.";
       } else {
         $output .= "Update $target: completed.";
       }
-      $output .= "<br/>".l(t("Update other books"), "isedoc/update/_")."<br/>";
+      $output .= "<br/>".l(t("Update other books"), "isedoc/$batch_name/_/$op")."<br/>";
     } else {
 	$output .= "<ul>";
-	$output .= "<li><strong>".l(t("Update all the books"), "isedoc/update/all")."</strong></li>";
+	$output .= "<li><strong>".l(t("Update all the books"), "isedoc/$batch_name/all")."</strong></li>";
   	foreach($all_books as $b) {
   		$bn = isedoc_book_title_to_book_name_id($b['title']);
-		$output .= "<li>".l(t("Update only: ").$bn, "isedoc/update/$bn")."</li>";
+		$output .= "<li>".l(t("Update only: ").$bn, "isedoc/$batch_name/$bn")."</li>";
   	}
 	$output .= "</ul>";
     }

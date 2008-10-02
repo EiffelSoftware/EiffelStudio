@@ -8,7 +8,7 @@ deferred class
 
 feature -- Initialization
 
-	set_up is
+	setup is
 		do
 		end
 

@@ -1,4 +1,4 @@
 #!/bin/tcsh
 
-eweasel -keep failed -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $1 -output $EWEASEL/../test_dir
+eweasel-mt -max_threads 8 -keep failed -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $1 -output $EWEASEL/../test_dir
 

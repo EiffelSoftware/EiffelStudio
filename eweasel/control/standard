@@ -8,8 +8,8 @@
 
 -- Eiffelbase directories
 
-define_directory	BASE	 	$ISE_EIFFEL library base elks
-define_directory	BASE_ISE 	$ISE_EIFFEL library base ise
+define_directory	BASE	 	$ISE_LIBRARY library base elks
+define_directory	BASE_ISE 	$ISE_LIBRARY library base ise
 define_directory	KERNEL		$BASE kernel
 define_directory	EXCEPTIONS	$BASE kernel exceptions
 define_directory	EXCEPTIONS_ISE	$BASE_ISE kernel exceptions
@@ -31,18 +31,18 @@ define_directory	STORAGE		$BASE structures storage
 define_directory	TABLE		$BASE structures table
 define_directory	TRAVERSING	$BASE structures traversing
 define_directory	TREE		$BASE structures tree
-define_directory	THREAD		$ISE_EIFFEL library thread
+define_directory	THREAD		$ISE_LIBRARY library thread
 
 -- EiffelTime directories
 
-define_directory	TIME	 	$ISE_EIFFEL library time
+define_directory	TIME	 	$ISE_LIBRARY library time
 define_directory	TIME_FORMAT 	$TIME format
 define_directory	TIME_ENGLISH 	$TIME format english
 define_directory	TIME_GERMAN 	$TIME format german
 
 -- EiffelStore directories
 
-define_directory	STORE	 	$ISE_EIFFEL library store
+define_directory	STORE	 	$ISE_LIBRARY library store
 define_directory	DATE_TIME	$STORE date_and_time
 define_directory	RDBMS_ORACLE	$STORE dbms rdbms oracle
 define_directory	RDBMS_SUPPORT	$STORE dbms rdbms support

@@ -39,7 +39,7 @@ feature {NONE} -- Status report
 	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_class_stone: CLASSC_STONE} a_stone
+			Result := {l_class_stone: CLASSI_STONE} a_stone
 		end
 
 feature {NONE} -- Factory

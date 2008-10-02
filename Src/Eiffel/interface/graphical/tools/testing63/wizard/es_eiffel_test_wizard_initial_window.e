@@ -20,7 +20,7 @@ inherit
 		end
 
 create
-	make
+	make_window
 
 feature {NONE} -- Initialization
 
@@ -52,11 +52,13 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been initialized.
 		do
-			if wizard_information.is_new_class then
-				new_class_button.enable_select
-			else
-				existing_class_button.enable_select
-			end
+--			if wizard_information.is_new_class then
+--				new_class_button.enable_select
+--			else
+--				existing_class_button.enable_select
+--			end
+			new_class_button.enable_select
+			existing_class_button.disable_sensitive
 			update_next_button_status
 		end
 
@@ -93,9 +95,9 @@ feature -- Basic operations
 		do
 			wizard_information.set_is_new_class (new_class_button.is_selected)
 			if wizard_information.is_new_class then
-				proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_NEW_CLASS_WINDOW}.make (wizard_information))
+				proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_NEW_CLASS_WINDOW}.make_window (development_window, wizard_information))
 			else
-				proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_CLASS_WINDOW}.make (wizard_information))
+				proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_CLASS_WINDOW}.make_window (development_window, wizard_information))
 			end
 		end
 

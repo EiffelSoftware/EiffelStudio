@@ -25,6 +25,18 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize `Current'.
+		do
+			create traversed_descendants.make_default
+			create traversed_helpers.make_default
+		end
+
 feature {NONE} -- Access
 
 	inheritance_parser: !EIFFEL_PARSER
@@ -39,26 +51,22 @@ feature {NONE} -- Access
 			create Result.make
 		end
 
-feature {EIFFEL_TEST_PROJECT_I} -- Basic functionality
+	cached_common_ancestor: like common_ancestor
+			-- Cache for `common_ancestor'
 
-	locate_classes is
-			-- <Precursor>
-		local
-			l_list: !DS_LINEAR [!EIFFEL_CLASS_I]
-		do
-			cached_common_ancestor := common_ancestor
-			if cached_common_ancestor /= Void then
-				create traversed_descendants.make_default
-				create traversed_helpers.make_default
+	traversed_descendants: !DS_HASH_SET [!EIFFEL_CLASS_I]
+			-- Cached classes which are descendants of {TEST_SET}
 
-				process_target (project.eiffel_project.universe.target)
-
-				traversed_descendants := Void
-				traversed_helpers := Void
-			end
-		end
+	traversed_helpers: !DS_HASH_SET [!EIFFEL_CLASS_I]
+			-- Cached ancestors which are not descendants of {TEST_SET}
 
 feature {NONE} -- Query
+
+	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_descendant (a_class, False)
+		end
 
 	has_tests_cluster_parent (a_cluster: CONF_CLUSTER): BOOLEAN
 			-- Is cluster (indirect) child of a tests cluster?
@@ -75,13 +83,22 @@ feature {NONE} -- Query
 			end
 		end
 
+feature {NONE} -- Basic functionality
+
+	locate_classes is
+			-- <Precursor>
+		local
+			l_list: !DS_LINEAR [!EIFFEL_CLASS_I]
+		do
+			cached_common_ancestor := common_ancestor
+			traversed_descendants.wipe_out
+			traversed_helpers.wipe_out
+			if cached_common_ancestor /= Void then
+				process_target (project.eiffel_project.universe.target)
+			end
+		end
+
 feature {NONE} -- Implementation: uncompiled test retrieval
-
-	traversed_descendants: ?DS_HASH_SET [!EIFFEL_CLASS_I]
-
-	traversed_helpers: ?DS_HASH_SET [!EIFFEL_CLASS_I]
-
-	cached_common_ancestor: like common_ancestor
 
 	report_potential_test_class (a_class: !EIFFEL_CLASS_I) is
 			-- Report class as potential test class if it inherits from {TEST_SET}
@@ -118,10 +135,10 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				if a_cache then
 					traversed_helpers.put (a_class)
 				end
-				if a_class.is_compiled then
-					if cached_common_ancestor.is_compiled /= Void then
-						Result := a_class.compiled_class.conform_to (cached_common_ancestor.compiled_class)
-					end
+					--| Note: we only check compiled parents of potential test classes, hence `a_cache' must be
+					--|       true in the following statement.
+				if a_class.is_compiled and a_cache and cached_common_ancestor.is_compiled then
+					Result := a_class.compiled_class.conform_to (cached_common_ancestor.compiled_class)
 				else
 					l_parents := parents_of_class (a_class)
 					from
@@ -151,7 +168,6 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			-- `a_class': Class for which we want to retreive ancestors
 			-- `Result': List of direct ancestors of `a_class'.
 		require
-			a_class_not_compiled: not a_class.is_compiled
 			a_class_in_project: project.is_class_in_project (a_class)
 			factory_reset: inheritance_ast_factory.is_reset
 		local

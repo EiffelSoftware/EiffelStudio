@@ -10,7 +10,7 @@ deferred class
 	ES_TAGABLE_WIDGET [G -> TAGABLE_I]
 
 inherit
-	ES_WINDOW_WIDGET [EV_CELL]
+	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
 		undefine
 			is_interface_usable
 		redefine

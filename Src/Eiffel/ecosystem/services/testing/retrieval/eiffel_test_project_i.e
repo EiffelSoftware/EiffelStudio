@@ -112,13 +112,12 @@ feature -- Status report
 feature -- Status setting
 
 	synchronize is
-			-- Synchronize `tests' with test classes found in `eiffel_project'
+			-- Synchronize `tests' with test classes found in `eiffel_project'.
+			--
+			-- Note: this is usually automatically invoked after compilation.
 		require
 			usable: is_interface_usable
-			not_synchronizing: not is_updating_tests
 		deferred
-		ensure
-			done_synchronizing: not is_updating_tests
 		end
 
 	synchronize_with_class (a_class: !EIFFEL_CLASS_I)
@@ -128,11 +127,9 @@ feature -- Status setting
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			not_updating: not is_updating_tests
 			a_class_in_project: is_class_in_project (a_class)
 		deferred
 		ensure
-			done_synchronizing: not is_updating_tests
 		end
 
 feature -- Element change

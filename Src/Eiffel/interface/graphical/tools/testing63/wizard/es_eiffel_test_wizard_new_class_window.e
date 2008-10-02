@@ -23,7 +23,7 @@ inherit
 		end
 
 create
-	make
+	make_window
 
 feature {NONE} -- Initialization
 
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			a_parent.disable_item_expand (l_label)
 
 			create l_layouts
-			create class_tree.make_with_options (window_manager.last_focused_development_window.menus.context_menu_factory, False, False)
+			create class_tree.make_with_options (development_window.menus.context_menu_factory, False, False)
 			class_tree.select_actions.extend (agent on_select_tree_item)
 			class_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(350))
 			class_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
@@ -148,11 +148,12 @@ feature {NONE} -- Initialization
 			else
 				tear_down_checkbox.disable_select
 			end
-			if wizard_information.is_system_level_test then
-				system_level_test_checkbox.enable_select
-			else
-				system_level_test_checkbox.disable_select
-			end
+--			if wizard_information.is_system_level_test then
+--				system_level_test_checkbox.enable_select
+--			else
+--				system_level_test_checkbox.disable_select
+--			end
+			system_level_test_checkbox.disable_sensitive
 			update_next_button_status
 		end
 
@@ -249,7 +250,7 @@ feature {NONE} -- Basic operations
 	proceed_with_current_info
 			-- <Precursor>
 		do
-			proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make (wizard_information))
+			proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
 		end
 
 	display_state_text

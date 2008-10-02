@@ -363,18 +363,34 @@ feature {NONE} -- Status setting: stones
 		do
 			if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
 				l_name := l_class_stone.class_name
-
-				filter_box.set_text (l_name)
-				if test_suite.is_service_available and then test_suite.service.is_test_class (l_class) then
-					view_box.set_text ("class")
+				if test_suite.is_service_available then
+					test_suite.service.synchronize_with_class (l_class)
+					if test_suite.service.is_test_class (l_class) then
+						view_box.set_text ("class")
+					else
+						view_box.set_text ("covers")
+					end
 				else
 					view_box.set_text ("covers")
 				end
+				filter_box.set_text (l_name)
 				update_view
 			end
 		end
 
 feature {NONE} -- Action handlers
+
+	on_run_current (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+			-- Called when user presses `run_button' or `debug_button' directly.
+		do
+			if test_suite.is_service_available then
+				if not tree_view.selected_items.is_empty then
+					on_run_selected (a_type)
+				else
+					on_run_filtered (a_type)
+				end
+			end
+		end
 
 	on_run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run all" item of `run_button'.
@@ -569,7 +585,7 @@ feature {NONE} -- Factory
 				local
 					l_wizard: ES_EIFFEL_TEST_WIZARD_MANAGER
 				do
-					create l_wizard.make (develop_window.window)
+					create l_wizard.make (develop_window)
 				end)
 			Result.put_last (wizard_button)
 
@@ -580,7 +596,7 @@ feature {NONE} -- Factory
 			run_button.set_tooltip (local_formatter.translation (f_run_button))
 			run_button.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
 			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
-			register_action (run_button.select_actions, agent on_run_all (background_executor_type))
+			register_action (run_button.select_actions, agent on_run_current (background_executor_type))
 
 			create l_menu
 			create run_all_menu.make_with_text (local_formatter.translation (m_run_all))
@@ -604,7 +620,7 @@ feature {NONE} -- Factory
 			debug_button.set_tooltip (local_formatter.translation (f_debug_button))
 			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_debug_mode_icon_buffer)
 			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_debug_mode_icon)
-			register_action (debug_button.select_actions, agent on_run_all (debug_executor_type))
+			register_action (debug_button.select_actions, agent on_run_current (debug_executor_type))
 
 			create l_menu
 			create debug_all_menu.make_with_text (local_formatter.translation (m_debug_all))

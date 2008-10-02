@@ -12,7 +12,8 @@ deferred class
 inherit
 	EIFFEL_TEST_CLASS_LOCATOR_I
 		rename
-			locate_classes as internal_locate_classes
+			locate_classes as locate_class_impl,
+			is_test_class as is_test_class_impl
 		end
 
 	SHARED_TEST_CONSTANTS
@@ -58,20 +59,43 @@ feature -- Status report
 
 	is_locating: BOOLEAN
 			-- <Precursor>
+		do
+			Result := internal_project /= Void
+		end
 
 	is_interface_usable: BOOLEAN = True
 			-- <Precursor>
 
 feature {EIFFEL_TEST_PROJECT_I} -- Status setting
 
-	frozen internal_locate_classes (a_project: like project)
+	frozen locate_class_impl (a_project: like project)
 			-- <Precursor>
 		do
-			is_locating := True
 			internal_project := a_project
 			locate_classes
-			is_locating := False
+			internal_project := Void
 		end
+
+feature {EIFFEL_TEST_PROJECT_I} -- Query
+
+	is_test_class_impl (a_class: !EIFFEL_CLASS_I; a_project: like project): BOOLEAN
+			-- <Precursor>
+		do
+			internal_project := a_project
+			Result := is_test_class (a_class)
+			internal_project := Void
+		end
+
+feature {NONE} -- Query
+
+	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
+			-- Is `a_class' a valid test class?
+		require
+			locating: is_locating
+		deferred
+		end
+
+feature {NONE} -- Implementation
 
 	locate_classes
 			-- Locate potential test classes in `eiffel_project'.

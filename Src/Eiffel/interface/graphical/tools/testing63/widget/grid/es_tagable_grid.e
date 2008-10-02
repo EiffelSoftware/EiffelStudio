@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_cell: EV_CELL)
+	build_widget_interface (a_box: like widget)
 			-- <Precursor>
 		local
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 			auto_recycle (l_support)
 
-			a_cell.extend (grid)
+			a_box.extend (grid)
 
 			create timer
 			timer.actions.extend (agent on_timer_elapse)
@@ -235,7 +235,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Factory
 
-	create_widget: EV_CELL
+	create_widget: like widget
 			-- <Precursor>
 		do
 			create Result

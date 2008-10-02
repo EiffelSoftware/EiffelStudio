@@ -35,7 +35,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 		ensure
 			moved_back: history.index = old history.index - 1
 		end
-	
+
 	next is
 			-- Go to the next step.
 		do
@@ -44,7 +44,10 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 				until
 					history.islast
 				loop
-					history.remove_right
+					history.forth
+					history.item.cancel
+					history.remove
+					history.back
 				end
 			end
 			history.item.update_state_information
@@ -52,7 +55,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 		ensure
 			moved_forth: not history.item.is_final_state implies history.index = old history.index + 1
 		end
-	
+
 	cancel_actions is
 			-- Actions performed by Current when the user
 			-- exits the wizard ( i.e. he presses "Cancel") .

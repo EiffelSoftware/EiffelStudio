@@ -306,6 +306,13 @@ feature {NONE} -- Basic operations
 					l_list.forth
 				end
 				l_list.go_to (l_cursor)
+			elseif {l_split: EV_SPLIT_AREA} a_start_widget then
+				if {l_first: !EV_WIDGET} l_split.first and then not l_first.is_destroyed then
+					propagate_action (l_first, a_action, a_excluded)
+				end
+				if {l_second: !EV_WIDGET} l_split.second and then not l_second.is_destroyed then
+					propagate_action (l_second, a_action, a_excluded)
+				end
 			end
 		end
 
@@ -350,6 +357,13 @@ feature {NONE} -- Basic operations
 					l_list.forth
 				end
 				l_list.go_to (l_cursor)
+			elseif {l_split: EV_SPLIT_AREA} l_start_widget then
+				if {l_first: !EV_WIDGET} l_split.first and then not l_first.is_destroyed then
+					propagate_register_action (l_first, a_sequence, a_action, a_excluded)
+				end
+				if {l_second: !EV_WIDGET} l_split.second and then not l_second.is_destroyed then
+					propagate_register_action (l_second, a_sequence, a_action, a_excluded)
+				end
 			end
 		end
 

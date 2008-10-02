@@ -165,7 +165,7 @@ feature {NONE} -- Implementation functions
 					str.prepend ("* ")
 					develop_window.set_title (str)
 				else
-					develop_window.set_title (a_stone.header)
+					develop_window.set_title (a_stone.header.as_string_32)
 				end
 			else
 				develop_window.set_title (develop_window.Interface_names.t_empty_development_window)

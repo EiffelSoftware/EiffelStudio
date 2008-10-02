@@ -1713,37 +1713,70 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1(not an Eiffel class file)   located in $2"), [a_stone_signature, a_file_name])
 		end
 
-	l_classi_header (a_sig, a_group_name, a_file_name: STRING_GENERAL): STRING_32 is
+	l_classi_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
 		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
 			a_sig_not_void: a_sig /= Void
 			a_group_name_not_void: a_group_name /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1  in cluster $2  (not in system)  located in $3"), [a_sig, a_group_name, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} (not in system, $5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
 		end
 
-	l_classc_header (a_sig, a_group_name, a_file_name: STRING_GENERAL): STRING_32 is
+	l_classc_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
 		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
 			a_sig_not_void: a_sig /= Void
 			a_group_name_not_void: a_group_name /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1  in cluster $2  located in $3"), [a_sig, a_group_name, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} ($5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
 		end
 
-	l_classc_header_precompiled (a_sig, a_group_name: STRING_GENERAL): STRING_32 is
+	l_classc_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: STRING_GENERAL): STRING_32 is
 		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
 			a_sig_not_void: a_sig /= Void
 			a_group_name_not_void: a_group_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1  in cluster $2  (precompiled)"), [a_sig, a_group_name])
+			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} (precompiled)"), [a_system_name, a_target_name, a_group_name, a_sig])
 		end
 
-	l_located_in (a_s: STRING_GENERAL): STRING_32 is
+	l_feature_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
 		require
-			a_s_not_void: a_s /= Void
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_sig_not_void: a_sig /= Void
+			a_group_name_not_void: a_group_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation (" (located in $1)"), [a_s])
+			if a_file_name /= Void then
+				Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4 ($5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
+			else
+				Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4"), [a_system_name, a_target_name, a_group_name, a_sig])
+			end
+		end
+
+	l_feature_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: STRING_GENERAL): STRING_32 is
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_sig_not_void: a_sig /= Void
+			a_group_name_not_void: a_group_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4 (precompiled)"), [a_system_name, a_target_name, a_group_name, a_sig])
+		end
+
+	l_cluster_header (a_system_name, a_target_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_sig_not_void: a_sig /= Void
+			a_file_name_not_void: a_file_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] ($4)"), [a_system_name, a_target_name, a_sig, a_file_name])
 		end
 
 	l_replace_report (a_item_num, a_class_num: INTEGER): STRING_32 is

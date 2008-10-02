@@ -69,9 +69,16 @@ feature -- Access
 			-- window title bar.
 		do
 			if e_class.is_precompiled then
-				Result := interface_names.l_classc_header_precompiled (stone_signature, e_class.group.name)
+				Result := interface_names.l_classc_header_precompiled (eiffel_system.name,
+																		eiffel_universe.target_name,
+																		e_class.group.name,
+																		stone_signature)
 			else
-				Result := interface_names.l_classc_header (stone_signature, e_class.group.name, e_class.lace_class.file_name)
+				Result := interface_names.l_classc_header (eiffel_system.name,
+															eiffel_universe.target_name,
+															e_class.group.name,
+															stone_signature,
+															e_class.lace_class.file_name)
 			end
 		end
 

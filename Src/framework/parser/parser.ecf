@@ -8,7 +8,7 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="base_extension" location="$EIFFEL_SRC\library\base_extension\base_extension.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="parser" location=".\" recursive="true"/>

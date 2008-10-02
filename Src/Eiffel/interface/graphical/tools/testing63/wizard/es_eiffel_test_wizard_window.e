@@ -20,10 +20,10 @@ inherit
 			{NONE}
 		end
 
-	EB_SHARED_WINDOW_MANAGER
-		export
-			{NONE}
-		end
+--	EB_SHARED_WINDOW_MANAGER
+--		export
+--			{NONE}
+--		end
 
 	SHARED_SERVER
 		export
@@ -37,6 +37,13 @@ inherit
 
 
 feature {NONE} -- Initialization
+
+	make_window (a_development_window: like development_window; a_wizard_info: like wizard_information)
+			-- Initialize `Current'.
+		do
+			development_window := a_development_window
+			make (a_wizard_info)
+		end
 
 	initialize_container (a_container: EV_VERTICAL_BOX): EV_BOX is
 			-- Initialize container to add widgets for wizard window
@@ -57,6 +64,9 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Access
+
+	development_window: EB_DEVELOPMENT_WINDOW
+			-- Window `Current' is attached to.
 
 	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY is
 			-- Pixmap factory

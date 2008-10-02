@@ -227,7 +227,28 @@ feature -- Status setting
 
 	synchronize_with_class (a_class: !EIFFEL_CLASS_I) is
 			-- <Precursor>
+		local
+			l_is_tc: BOOLEAN
 		do
+			if not is_updating_tests then
+				is_updating_tests := True
+				l_is_tc := locators.there_exists (agent {!EIFFEL_TEST_CLASS_LOCATOR_I}.is_test_class (a_class, Current))
+				test_class_map.search (a_class)
+				if l_is_tc or test_class_map.found then
+					if test_class_map.found then
+						create old_class_map.make (1)
+						old_class_map.put (test_class_map.found_item, test_class_map.found_key)
+						test_class_map.remove_found_item
+					end
+					if l_is_tc then
+						report_test_class (a_class)
+					else
+						remove_old_classes
+					end
+					old_class_map := Void
+				end
+				is_updating_tests := False
+			end
 		end
 
 feature {NONE} -- Status setting

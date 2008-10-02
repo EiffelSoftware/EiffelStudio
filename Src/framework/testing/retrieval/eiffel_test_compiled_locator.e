@@ -24,6 +24,19 @@ feature {NONE} -- Query
 			Result := a_class.is_valid and then a_class.has_ast
 		end
 
+	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
+			-- <Precursor>
+		local
+			l_ancestor: like common_ancestor
+		do
+			if a_class.is_compiled and then {l_class: !EIFFEL_CLASS_C} a_class.compiled_class then
+				l_ancestor := common_ancestor
+				if l_ancestor /= Void and then l_ancestor.is_compiled then
+					Result := l_class.conform_to (l_ancestor.compiled_class)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	locate_classes is

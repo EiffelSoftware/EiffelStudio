@@ -19,11 +19,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: EV_WINDOW)
+	make (a_development_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialize `Current'.
 		do
 			create wizard_info.make
-			make_and_show (a_window, create {ES_EIFFEL_TEST_WIZARD_INITIAL_WINDOW}.make (wizard_info))
+			make_and_show (a_development_window.window, create {ES_EIFFEL_TEST_WIZARD_INITIAL_WINDOW}.make_window (a_development_window, wizard_info))
 		end
 
 feature -- Access

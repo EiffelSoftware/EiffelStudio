@@ -45,7 +45,7 @@ inherit
 		end
 
 create
-	make
+	make_window
 
 feature {NONE} -- Initialization
 
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 
 			create l_hb
 			create l_layouts
-			create class_tree.make_with_options (window_manager.last_focused_development_window.menus.context_menu_factory, False, True)
+			create class_tree.make_with_options (development_window.menus.context_menu_factory, False, True)
 			class_tree.select_actions.extend (agent on_select_class)
 			l_hb.extend (class_tree)
 			class_tree.refresh
@@ -395,6 +395,14 @@ feature {NONE} -- Basic operations
 
 	proceed_with_current_info
 			-- <Precursor>
+		local
+			l_shared: EV_SHARED_APPLICATION
+		do
+			create l_shared
+			l_shared.ev_application.add_idle_action_kamikaze (agent create_and_cancel)
+		end
+
+	create_and_cancel
 		do
 			if wizard_information.is_new_class then
 				create_new_class
@@ -692,7 +700,11 @@ feature {NONE} -- Implementation: creation
 					render_class_text (l_file.name)
 					if is_test_created then
 						manager.add_class_to_cluster (l_fname, l_group, l_path)
-						if {l_classi: CLASS_I} manager.last_added_class then
+						if {l_classi: !EIFFEL_CLASS_I} manager.last_added_class then
+							if test_suite.is_service_available then
+								test_suite.service.synchronize_with_class (l_classi)
+							end
+							development_window.advanced_set_stone (create {CLASSI_STONE}.make (l_classi))
 							-- TODO: make new class available
 						end
 					end

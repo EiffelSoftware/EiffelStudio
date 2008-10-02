@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			make_with_project (l_project)
 
 			register_locator (create {EIFFEL_TEST_COMPILED_LOCATOR})
-			register_locator (create {EIFFEL_TEST_UNCOMPILED_LOCATOR})
+			register_locator (create {EIFFEL_TEST_UNCOMPILED_LOCATOR}.make)
 
 			synchronize
 		end
@@ -51,22 +51,6 @@ feature -- Access
 
 	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR
 			-- <Precursor>
-
-feature -- Query
-
-	is_test_class_name (a_name: !STRING): BOOLEAN
-			-- <Precursor>
-		do
-			--Result := test_class_map.has (a_name)
-		end
-
-	tests_for_class_name (a_name: !STRING): !DS_LINEAR [!EIFFEL_TEST_I]
-			-- <Precursor>
-		local
-			l_array: !DS_ARRAYED_LIST [!EIFFEL_TEST_I]
-		do
-
-		end
 
 feature -- Status report
 
@@ -129,7 +113,25 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 
 	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !TEST_OUTCOME) is
 			-- <Precursor>
+		local
+			l_old, l_new: NATURAL_8
 		do
+			if a_test.is_outcome_available then
+				l_old := a_test.last_outcome.status
+			end
+			l_new := a_outcome.status
+			if l_old /= l_new then
+				if l_new = {TEST_OUTCOME_STATUS_TYPES}.failed then
+					count_failing := count_failing + 1
+				elseif l_new = {TEST_OUTCOME_STATUS_TYPES}.passed then
+					count_passing := count_passing + 1
+				end
+				if l_old = {TEST_OUTCOME_STATUS_TYPES}.failed then
+					count_failing := count_failing - 1
+				elseif l_new = {TEST_OUTCOME_STATUS_TYPES}.passed then
+					count_passing := count_passing - 1
+				end
+			end
 			a_test.add_outcome (a_outcome)
 			test_changed_event.publish ([Current, a_test])
 			a_test.clear_changes

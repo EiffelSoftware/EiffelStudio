@@ -15,7 +15,7 @@ feature -- Access
 			-- Valid chars to be used in a token other than alpha numeric
 
 	valid_tag_chars: !STRING
-			-- Valid chars for tags other than alpha numeric\
+			-- Valid chars for tags other than alpha numeric
 		once
 			Result := valid_token_chars + split_char.out
 		end

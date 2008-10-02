@@ -421,6 +421,14 @@ feature -- Observer pattern
 			wipe_out
 		end
 
+feature {NONE} -- Status report
+
+	has_readonly_items: BOOLEAN
+			-- Shall read only items be shown in `Current'?
+		do
+			Result := True
+		end
+
 feature {NONE} -- Memory management
 
 	internal_recycle is
@@ -814,8 +822,8 @@ feature {NONE} -- Implementation
 				a_grps.after
 			loop
 				l_group := a_grps.item_for_iteration
-				if not l_group.actual_group.is_internal then
-					create l_item.make_with_option (l_group, is_show_classes)
+				if not l_group.actual_group.is_internal and (has_readonly_items or l_group.is_writable) then
+					l_item := create_folder_item (l_group)
 
 					if textable /= void and not is_show_classes then
 					l_item.set_associated_textable (textable)
@@ -975,6 +983,14 @@ feature {NONE} -- Implementation
 
 	is_show_classes: BOOLEAN
 			-- Show classes notes?
+
+feature {NONE} -- Factory
+
+	create_folder_item (a_group: EB_SORTED_CLUSTER): EB_CLASSES_TREE_FOLDER_ITEM
+			-- Create new folder item
+		do
+			create Result.make_with_option (a_group, is_show_classes)
+		end
 
 feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 

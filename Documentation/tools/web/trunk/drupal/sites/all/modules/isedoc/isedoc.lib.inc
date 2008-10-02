@@ -217,5 +217,11 @@ function isedoc_pages_referencing($a_title) {
 	}
 }
 
+function _isedoc_file_content($a_fn) {
+	$l_fp = fopen($a_fn, "r");
+	$contents = fread($l_fp, filesize($a_fn));
+	fclose($l_fp);
+	return $contents;
+}
 
 ?>

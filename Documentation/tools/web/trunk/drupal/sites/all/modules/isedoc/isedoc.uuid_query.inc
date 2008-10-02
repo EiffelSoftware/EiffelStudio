@@ -16,7 +16,7 @@ function isedoc_uuid_query($uuid,$a_section) {
 			$node =& node_load(array('nid' => $nid));
 			if ($node and $node->vid == $vid) {
 				// Check the version id...
-				drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
+				//drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
 				drupal_goto($node->path,NULL,$a_section);
 				$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
 			} else {

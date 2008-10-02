@@ -82,7 +82,7 @@ function isedoc_nodeapi(&$node, $op, $form = NULL, $a4 = NULL) {
         if ($l_uuid === NULL) {
           $l_uuid = isedoc_uuid();
           $node->field_uuid[0]['value'] = $l_uuid;
-          drupal_set_message(t("Set the UUID value to [$l_uuid]"));
+          //drupal_set_message(t("Set the UUID value to [$l_uuid]"));
         }
       }
       break;

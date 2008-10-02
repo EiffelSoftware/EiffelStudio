@@ -189,11 +189,11 @@ function _isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
 			case 'html-one':
 				$isedoc_export_data['html.tpl'] = &isedoc_export_html_one_page_template($book_url,$node->title);
 				$isedoc_export_data['node.tpl'] = &isedoc_export_html_node_template($book_url,$node->title);
-				$l_target_book_path = "$l_bk_alias/$l_bk_alias";
+				$l_target_book_path = "$l_bk_alias/index";
 				$l_index_content = isedoc_book_export_traverse($tree,'html-one','index', $l_target_book_path);
 				isedoc_export_book_create_style("$l_bk_dir/book.css",'book-one');
 
-				$l_fn = "$l_bk_dir/$l_bk_alias.html";
+				$l_fn = "$l_bk_dir/index.html";
 				$l_body = _isedoc_file_content($l_fn);
 
 				$tpl = &$isedoc_export_data['html.tpl'];
@@ -204,7 +204,7 @@ function _isedoc_export_book_to($a_bookid, $a_dirpath, $a_exp_format) {
 							'/%INDEX_BODY%/' => $l_index_content,
 							));
 				isedoc_export_save_file($txt, $l_fn, "Single file output");
-				isedoc_export_save_file($l_index_content, "$l_bk_dir/index.html", 'book html index');
+				//isedoc_export_save_file($l_index_content, "$l_bk_dir/index.html", 'book html index');
 				break;
 			case 'wiki':
 			default:

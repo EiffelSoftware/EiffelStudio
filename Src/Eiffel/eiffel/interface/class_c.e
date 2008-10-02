@@ -764,7 +764,7 @@ feature -- Skeleton processing
 							-- Recompile generic derivations that depend on `class_type' as
 							-- `clients' does not include them.
 						from
-							class_types := system.class_types
+							class_types := system.class_types.area
 							i := class_types.lower
 							n := class_types.upper
 						until
@@ -1897,7 +1897,6 @@ feature -- Convenience features
 			-- inherited routines in the context of the descendant class?
 		do
 			Result := lace_class.is_full_class_checking
-			Result := True
 		end
 
 	is_cat_call_detection: BOOLEAN is

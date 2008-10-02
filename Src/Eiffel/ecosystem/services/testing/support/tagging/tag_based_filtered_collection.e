@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 							if l_added = Void then
 								create l_added.make_default
 							end
-							l_added.put_last (l_cursor.item)
+							l_added.force_last (l_cursor.item)
 						end
 					elseif l_expr and not l_int and (internal_items.found or not a_had_expr) then
 						if l_removed = Void then
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 						if internal_items.found then
 							internal_items.remove_found_item
 						end
-						l_removed.put_last (l_cursor.item)
+						l_removed.force_last (l_cursor.item)
 					end
 					l_cursor.forth
 				end

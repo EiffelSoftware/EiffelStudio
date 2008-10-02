@@ -184,7 +184,7 @@ feature {NONE} -- Basic opertations
 			propagate_action (user_widget, agent (a_widget: EV_WIDGET)
 					-- Propagating the action to set the veto pebble function.
 				do
-					user_widget.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY): BOOLEAN
+					a_widget.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY): BOOLEAN
 							-- Query if a pebble should be vetoed.
 						do
 							Result := ia_pebble = Void

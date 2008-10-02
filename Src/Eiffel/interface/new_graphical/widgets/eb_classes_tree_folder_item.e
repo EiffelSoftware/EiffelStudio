@@ -213,6 +213,16 @@ feature -- Status setting
 			end
 		end
 
+feature {NONE} -- Query
+
+	is_valid_class (a_class: CLASS_I): BOOLEAN
+			-- Is class valid for beeing displayed in `Current'?
+		do
+			Result := a_class.is_valid
+		ensure
+			result_implies_valid: Result implies a_class.is_valid
+		end
+
 feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 	 load
@@ -265,7 +275,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					loop
 						l_sub_path := path + cluster_separator + subfolders[i]
 						if l_fr.is_included (l_sub_path) then
-							create l_subfolder.make_with_all_options (data, l_sub_path, is_show_classes)
+							l_subfolder := create_folder_item_with_options (data, l_sub_path)
 							if associated_window /= Void then
 								l_subfolder.associate_with_window (associated_window)
 							end
@@ -304,7 +314,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						i > up
 					loop
-						create l_subfolder.make_with_all_options (data, path+ cluster_separator +subfolders[i], is_show_classes)
+						l_subfolder := create_folder_item_with_options (data, path+ cluster_separator +subfolders[i])
 						if associated_window /= Void then
 							l_subfolder.associate_with_window (associated_window)
 						end
@@ -346,7 +356,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						until
 							classes.after
 						loop
-							if classes.item_for_iteration.is_valid then
+							if is_valid_class (classes.item_for_iteration) then
 								l_name := classes.item_for_iteration.name.twin
 								if data.renaming.has (l_name) then
 									l_name := data.renaming.item (l_name)
@@ -367,7 +377,9 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						end
 					end
 				else
-					set_associated_textable (associated_textable)
+					if associated_textable /= Void then
+						set_associated_textable (associated_textable)
+					end
 				end
 			end
 
@@ -755,7 +767,7 @@ feature {NONE} -- Implementation
 					a_groups.after
 				loop
 					l_group := a_groups.item_for_iteration
-					create a_folder.make_with_option (l_group, is_show_classes)
+					a_folder := create_folder_item (l_group)
 
 					if associated_window /= Void then
 						a_folder.associate_with_window (associated_window)
@@ -814,6 +826,20 @@ feature {NONE} -- Implementation
 			create Result
 		ensure
 			not_void: Result /= Void
+		end
+
+feature {NONE} -- Factory
+
+	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING_8): EB_CLASSES_TREE_FOLDER_ITEM
+			-- Create new folder item.
+		do
+			create Result.make_with_all_options (a_cluster, a_path, is_show_classes)
+		end
+
+	create_folder_item (a_cluster: EB_SORTED_CLUSTER): EB_CLASSES_TREE_FOLDER_ITEM
+			-- Create new folder item.
+		do
+			create Result.make_with_option (a_cluster, is_show_classes)
 		end
 
 invariant

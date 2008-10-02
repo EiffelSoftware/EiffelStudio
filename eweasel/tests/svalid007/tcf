@@ -1,0 +1,14 @@
+test_name	svalid-conversion-with-formal
+test_description A conversion is specified using formals, the compiler crashes when checking in a descendant such a conversion.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	b.e	$CLUSTER b.e
+copy_raw	d.e	$CLUSTER d.e
+
+compile_melted
+compile_result ok
+
+test_end

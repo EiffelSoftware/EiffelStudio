@@ -419,7 +419,8 @@ test	svalid-rename-constant-inspect	svalid002 tcf pass system-validity
 test	svalid-incremental-check		svalid003 tcf pass system-validity
 test	precursor-validity				svalid004 tcf pass system-validity
 test	obsolete-warning-not-repeated	svalid005 tcf pass system-validity
-test	proper-conversion-validity		svalid006 tcf fail system-validity
+test	proper-conversion-validity		svalid006 tcf pass system-validity
+test	svalid-conversion-with-formal	svalid007 tcf pass system-validity
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

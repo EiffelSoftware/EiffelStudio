@@ -241,7 +241,7 @@ feature -- Access
 			end
 		end
 
-	generic_derivation: CL_TYPE_A is
+	generic_derivation: like Current is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_A
 			-- which can be used to search its associated CLASS_TYPE.

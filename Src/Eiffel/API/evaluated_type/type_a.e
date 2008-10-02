@@ -672,7 +672,8 @@ feature -- Comparison
 			is_valid: is_valid
 		do
 			if other /= Void and then other.same_type (Current) then
-				Result := other.is_valid and then is_equivalent (other)
+				Result := {l_other: like Current} other and then
+					l_other.is_valid and then is_equivalent (l_other)
 			end
 		end;
 

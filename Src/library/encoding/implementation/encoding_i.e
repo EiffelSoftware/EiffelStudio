@@ -9,6 +9,7 @@ deferred class
 	ENCODING_I
 
 inherit
+	ANY
 
 	CODE_PAGE_CONSTANTS
 		export

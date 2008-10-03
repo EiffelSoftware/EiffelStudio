@@ -29,7 +29,7 @@ inherit
 create
 	make
 
-feature{EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Docking issue
+feature -- Docking issue
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager

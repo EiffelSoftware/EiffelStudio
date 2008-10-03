@@ -129,7 +129,7 @@ feature -- Access
 	links: DS_BILINEAR [!HELP_CONTEXT_I]
 			-- Help context links
 
-feature {NONE} -- Access
+feature -- Access
 
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon

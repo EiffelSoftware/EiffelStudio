@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			sd.update_size
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
+feature -- Initialization
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager

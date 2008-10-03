@@ -19,13 +19,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation refedines
-
-	default_confirm_button: INTEGER
-			-- <Precursor>
-		do
-			Result := dialog_buttons.ok_button
-		end
+feature -- Access
 
 	title: STRING_32
 			-- <Precursor>
@@ -47,6 +41,26 @@ feature {NONE} -- Implementation refedines
 		do
 			Result := dialog_buttons.ok_button
 		end
+
+	buttons: DS_SET [INTEGER]
+			-- <Precursor>
+		do
+			Result := dialog_buttons.ok_cancel_buttons
+		end
+
+	default_cancel_button: INTEGER
+			-- <Precursor>
+		do
+			Result := dialog_buttons.cancel_button
+		end
+
+	default_confirm_button: INTEGER
+			-- <Precursor>
+		do
+			Result := dialog_buttons.ok_button
+		end
+
+feature {NONE} -- Implementation
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
 			-- <Precursor>
@@ -123,18 +137,6 @@ feature {NONE} -- Implementation refedines
 			init_service
 
 			set_button_action (default_button, agent on_default_ok_button)
-		end
-
-	buttons: DS_SET [INTEGER]
-			-- <Precursor>
-		do
-			Result := dialog_buttons.ok_cancel_buttons
-		end
-
-	default_cancel_button: INTEGER
-			-- <Precursor>
-		do
-			Result := dialog_buttons.cancel_button
 		end
 
 feature {NONE} -- Initialization

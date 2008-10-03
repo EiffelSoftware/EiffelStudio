@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			box: EV_VERTICAL_BOX
-			borderbox: EV_VERTICAL_BOX
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			ffilter, fgrid, fdesc: EV_FRAME

@@ -16,13 +16,6 @@ inherit
 			has_readonly_items
 		end
 
-	ES_SHARED_EIFFEL_TEST_SERVICE
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 create
 	make,
 	make_with_options

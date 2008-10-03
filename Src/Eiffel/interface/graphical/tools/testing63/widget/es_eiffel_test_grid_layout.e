@@ -68,27 +68,25 @@ feature {NONE} -- Basic functionality
 			-- `a_date': Date shown on item.
 		local
 			l_label: EV_GRID_LABEL_ITEM
+			l_now: DATE_TIME
 			l_secs, l_days, l_hours, l_mins: INTEGER_64
 			l_text, l_tooltip: STRING
 		do
 			create l_text.make (20)
-			l_secs := (create {DATE_TIME}.make_now).definite_duration (a_date).seconds_count
+			create l_now.make_now
+			l_secs := l_now.definite_duration (a_date).seconds_count
 			l_days := l_secs // 86400
 			if l_days > 10 then
 				l_text.append (date_format.create_string (a_date))
 			else
 				l_hours := l_secs // 3600
 				if l_hours > 23 then
-					l_text.append (date_format.create_string (a_date))
-					l_text.append (" (")
 					l_text.append_integer_64 (l_days)
 					l_text.append (" day")
 					if l_days > 1 then
 						l_text.append_character ('s')
 					end
 				else
-					l_text.append (time_format.create_string (a_date))
-					l_text.append (" (")
 					l_mins := (l_secs // 60) + 1
 					if l_mins > 59 then
 						l_text.append_integer_64 (l_hours)
@@ -101,12 +99,18 @@ feature {NONE} -- Basic functionality
 						l_text.append (" min")
 					end
 				end
-				l_text.append (" ago)")
+				l_text.append (" ago")
+			end
+			if l_days > 365 or l_now.year /= a_date.year then
+				l_tooltip := date_format.create_string (a_date)
+			elseif l_now.month /= a_date.month or l_now.day /= a_date.day then
+				l_tooltip := date_format_show.create_string (a_date)
+			else
+				l_tooltip := time_format.create_string (a_date)
 			end
 			create l_label
 			l_label.align_text_right
 			l_label.set_text (l_text)
-			l_tooltip := utc_format.create_string (a_date)
 			l_label.set_tooltip (l_tooltip)
 			Result := l_label
 		end
@@ -123,6 +127,11 @@ feature {NONE} -- Constants
 	date_format: DATE_TIME_CODE_STRING
 		once
 			create Result.make ("mmm dd yyyy")
+		end
+
+	date_format_show: DATE_TIME_CODE_STRING
+		once
+			create Result.make ("mm dd")
 		end
 
 	utc_format: DATE_TIME_CODE_STRING

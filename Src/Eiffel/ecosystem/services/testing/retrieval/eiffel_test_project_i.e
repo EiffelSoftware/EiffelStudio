@@ -123,11 +123,14 @@ feature -- Status setting
 	synchronize_with_class (a_class: !EIFFEL_CLASS_I)
 			-- Synchronize `tests' with state of class.
 			--
+			-- Note: this routine can be called for any {EIFFEL_CLASS_I} object, even if the actual class
+			--       file does not exist any longer. That way the service is able to remove any references
+			--       to old test classes.
+			--
 			-- `a_class': Class which `tests' will be synchronized against.
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			a_class_in_project: is_class_in_project (a_class)
 		deferred
 		ensure
 		end

@@ -427,7 +427,8 @@ feature -- Update
 					end
 					if
 						not manager.is_project_loaded and then
-						workbench.has_compilation_started
+						workbench.has_compilation_started and then
+						manager.is_created -- It is possible that the project has been forced exiting.
 					then
 						manager.on_project_loaded
 					end

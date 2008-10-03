@@ -76,14 +76,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	same_as (other: STONE): BOOLEAN is
-		local
-			conv: CALL_STACK_STONE
 		do
-			conv ?= other
-			if conv /= Void then
-				Result := Precursor {OBJECT_STONE} (other) and then
-						Precursor {FEATURE_STONE} (other)
-			end
+			Result := {conv: CALL_STACK_STONE} other and then
+				Precursor {OBJECT_STONE} (other) and then
+				Precursor {FEATURE_STONE} (other)
 		end
 
 	level_number: INTEGER

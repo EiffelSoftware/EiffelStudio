@@ -82,11 +82,8 @@ feature -- Properties
 
 	same_as (other: STONE): BOOLEAN is
 			-- Do `Current' and `other' represent the same class?
-		local
-			convcur: EXTERNAL_FILE_STONE
 		do
-			convcur ?= other
-			Result := convcur /= Void and then file.is_equal (convcur.file)
+			Result := {convcur: EXTERNAL_FILE_STONE} other and then file.is_equal (convcur.file)
 		end
 
 feature -- Access

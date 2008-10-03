@@ -11,6 +11,8 @@ class
 	ES_EDITOR_ANALYZER_UTILITIES
 
 inherit
+	ANY
+
 	ES_EDITOR_TOKEN_UTILITIES
 		export
 			{NONE} all

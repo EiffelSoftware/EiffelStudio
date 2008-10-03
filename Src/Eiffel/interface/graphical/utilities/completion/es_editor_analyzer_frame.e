@@ -11,6 +11,8 @@ class
 	ES_EDITOR_ANALYZER_FRAME
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PARSER
 		export
 			{NONE} all

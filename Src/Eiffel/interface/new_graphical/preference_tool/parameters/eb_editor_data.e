@@ -1082,6 +1082,10 @@ feature -- Keybord shortcuts Customization
 
 			l_hash.put ([False,  True, False, key_strings.item (Key_equal).twin.as_string_8], "zoom_in")
 			l_hash.put ([False,  True, False, key_strings.item (Key_dash).twin.as_string_8], "zoom_out")
+
+			l_hash.put ([False,  True, False, key_strings.item (key_numpad_add).twin.as_string_8], "zoom_in_numpad")
+			l_hash.put ([False,  True, False, key_strings.item (key_numpad_subtract).twin.as_string_8], "zoom_out_numpad")
+
 			l_hash.put ([False,  True, False, key_strings.item (key_0).twin.as_string_8], "zoom_reset")
 
 			Result.extend ([l_hash, main_window_group])

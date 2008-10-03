@@ -155,7 +155,9 @@ feature -- Command
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 
 			l_editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
+			l_editor_font_zoom_in_numpad_command: ES_EDITOR_FONT_ZOOM_IN_NUMPAD_COMMAND
 			l_editor_font_zoom_out_command: EB_EDITOR_FONT_ZOOM_OUT_COMMAND
+			l_editor_font_zoom_out_numpad_command: ES_EDITOR_FONT_ZOOM_OUT_NUMPAD_COMMAND
 			l_editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
 
 			l_edit_contracts_command: ES_EDIT_CONTRACTS_COMMAND
@@ -357,8 +359,13 @@ feature -- Command
 
 			create l_editor_font_zoom_in_command.make (develop_window)
 			develop_window.commands.set_editor_font_zoom_in_command (l_editor_font_zoom_in_command)
+			create l_editor_font_zoom_in_numpad_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_in_numpad_command (l_editor_font_zoom_in_numpad_command)
 			create l_editor_font_zoom_out_command.make (develop_window)
 			develop_window.commands.set_editor_font_zoom_out_command (l_editor_font_zoom_out_command)
+			create l_editor_font_zoom_out_numpad_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_out_numpad_command (l_editor_font_zoom_out_numpad_command)
+
 			create l_editor_font_zoom_reset_command.make (develop_window)
 			develop_window.commands.set_editor_font_zoom_reset_command (l_editor_font_zoom_reset_command)
 

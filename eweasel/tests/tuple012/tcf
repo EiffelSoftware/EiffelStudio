@@ -1,0 +1,12 @@
+test_name 	 wrong-label-in-inheritance
+test_description A class inherits from another class using a labeled tuple as actual generic parameter, but the labeled tuple is using one of the routine of TUPLE as label. The compiler fails to detect this error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error	TEST1 VRFT
+
+test_end

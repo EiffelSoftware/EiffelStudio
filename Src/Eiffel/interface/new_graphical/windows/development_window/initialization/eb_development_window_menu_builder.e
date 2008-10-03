@@ -1400,6 +1400,17 @@ feature -- Docking library menu items
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
 
+				l_new_menu_item := l_last_development_window.commands.minimize_editor_area_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
+				l_new_menu_item := l_last_development_window.commands.restore_editor_area_command.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+				
+					-- Separator --------------------------------------
+				Result.extend (create {EV_MENU_SEPARATOR})
+
 				l_new_menu_item := l_last_development_window.commands.minimize_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)

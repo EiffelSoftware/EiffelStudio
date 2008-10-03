@@ -15,7 +15,6 @@ class
 inherit
 	EV_GRID_LABEL_ITEM_I
 		redefine
-			initialize,
 			interface,
 			required_width,
 			perform_redraw
@@ -23,13 +22,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	initialize is
-		do
-			Precursor {EV_GRID_LABEL_ITEM_I}
-		end
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
 

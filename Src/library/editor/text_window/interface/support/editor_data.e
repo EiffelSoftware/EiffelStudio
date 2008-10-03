@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			operator_background_color_preference := l_manager.new_color_preference_value (l_manager, operator_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			number_text_color_preference := l_manager.new_color_preference_value (l_manager, number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 255))
 			number_background_color_preference := l_manager.new_color_preference_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			highlight_color_preference := l_manager.new_color_preference_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 128))
+			highlight_color_preference := l_manager.new_color_preference_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (50, 250, 30))
 			cursor_line_highlight_color_preference := l_manager.new_color_preference_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
 			quadruple_click_enabled_preference := l_manager.new_boolean_preference_value (l_manager, quadruple_click_enabled_string, True)
 			use_buffered_line_preference := l_manager.new_boolean_preference_value (l_manager, use_buffered_line_string, True)

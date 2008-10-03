@@ -100,6 +100,9 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)
 			shared := False
+			if a_bitmap.is_made_by_dib or a_bitmap.ppv_bits /= default_pointer then
+				is_made_by_dib := True
+			end
 			gdi_make
 		end
 
@@ -181,6 +184,9 @@ feature -- Access
 	ppv_bits: POINTER
 			-- If Current if Created by `make_dib', this is the pointer to the location of the DIB bit values.
 			-- Otherwise it's void.
+
+	is_made_by_dib: BOOLEAN
+		-- When calling `make_by_bitmap', if current made from DIB bitmap?
 
 feature -- Basic operations
 

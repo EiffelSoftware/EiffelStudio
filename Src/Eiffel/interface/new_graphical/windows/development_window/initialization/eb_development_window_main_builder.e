@@ -159,6 +159,7 @@ feature -- Command
 			l_editor_font_zoom_out_command: EB_EDITOR_FONT_ZOOM_OUT_COMMAND
 			l_editor_font_zoom_out_numpad_command: ES_EDITOR_FONT_ZOOM_OUT_NUMPAD_COMMAND
 			l_editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
+			l_editor_font_zoom_reset_numpad_command: ES_EDITOR_FONT_ZOOM_RESET_NUMPAD_COMMAND
 
 			l_edit_contracts_command: ES_EDIT_CONTRACTS_COMMAND
 		do
@@ -368,6 +369,8 @@ feature -- Command
 
 			create l_editor_font_zoom_reset_command.make (develop_window)
 			develop_window.commands.set_editor_font_zoom_reset_command (l_editor_font_zoom_reset_command)
+			create l_editor_font_zoom_reset_numpad_command.make (develop_window)
+			develop_window.commands.set_editor_font_zoom_reset_numpad_command (l_editor_font_zoom_reset_numpad_command)
 
 			develop_window.commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
 			develop_window.commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})

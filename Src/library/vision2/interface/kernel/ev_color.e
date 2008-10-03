@@ -116,8 +116,8 @@ feature -- Access
 			R := red
 			G := green
 			B := blue
-			max_color := red.max(green).max(blue)
-			min_color := red.min(green).min(blue)
+			max_color := R.max(G).max(B)
+			min_color := R.min(G).min(B)
 			Result := (max_color + min_color) / 2
 		end
 

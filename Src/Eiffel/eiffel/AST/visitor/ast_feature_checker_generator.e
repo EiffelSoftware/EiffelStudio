@@ -1446,8 +1446,10 @@ feature -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
-													l_parameters.put_i_th (create {CONVERTED_EXPR_AS}.initialize (l_parameters.i_th (i),
-														create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
+													if not is_inherited then
+														l_parameters.put_i_th (create {CONVERTED_EXPR_AS}.initialize (l_parameters.i_th (i),
+															create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
+													end
 												end
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
@@ -1918,7 +1920,7 @@ feature -- Implementation
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_type_a) then
 								if l_element_type.convert_to (l_current_class, l_type_a) then
-									if l_context.last_conversion_info.has_depend_unit then
+									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
 										l_as.expressions.put_i_th (
 											create {CONVERTED_EXPR_AS}.initialize (l_as.expressions.i_th (i),
 												create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
@@ -3378,6 +3380,8 @@ feature -- Implementation
 	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
 		local
 			l_feat: FEATURE_I
+			l_feat_name: ID_AS
+			l_location: LOCATION_AS
 		do
 			l_as.expr.process (Current)
 				-- It only make sense to process the conversion data only when
@@ -3395,8 +3399,13 @@ feature -- Implementation
 						-- For a to conversion, we need to take the descendant version of the routine
 						-- orginally taken and check that its return type still make sense.
 					l_feat := last_type.associated_class.feature_of_rout_id (l_info.routine_id)
+
 					if l_feat /= Void then
-						last_type := adapted_type (l_feat.type, last_type, last_type)
+						create l_feat_name.initialize_from_id (l_feat.feature_name_id)
+						l_location := l_as.expr.end_location
+						l_feat_name.set_position (l_location.line, l_location.column,
+							l_location.position + l_location.location_count, 0)
+						process_call (last_type, Void, l_feat_name, l_feat, Void, False, False, True, False)
 					else
 							-- We should not get there, but just in case we generate an internal
 							-- error message.
@@ -4232,8 +4241,10 @@ feature -- Implementation
 								l_left_id := l_right_constrained.associated_class.class_id
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
-									l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
-										create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
+									if not is_inherited then
+										l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+											create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
+									end
 								end
 								l_target_type := l_target_conv_info.target_type
 								if l_needs_byte_node then
@@ -4253,8 +4264,10 @@ feature -- Implementation
 							if last_infix_argument_conversion_info /= Void then
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
-									l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
-										create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
+									if not is_inherited then
+										l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+											create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
+									end
 								end
 								if l_needs_byte_node then
 									l_right_expr ?= last_infix_argument_conversion_info.byte_node (l_right_expr)
@@ -4475,8 +4488,10 @@ feature -- Implementation
 						l_conv_info := context.last_conversion_info
 						if l_conv_info.has_depend_unit then
 							context.supplier_ids.extend (l_conv_info.depend_unit)
-							l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
-								create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+							if not is_inherited then
+								l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+							end
 						end
 						if l_needs_byte_node then
 							l_right_expr := l_conv_info.byte_node (l_right_expr)
@@ -4486,8 +4501,10 @@ feature -- Implementation
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
-								l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
-									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+								if not is_inherited then
+									l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+										create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+								end
 							end
 							if l_needs_byte_node then
 								l_left_expr := l_conv_info.byte_node (l_left_expr)
@@ -4970,6 +4987,7 @@ feature -- Implementation
 						end
 					else
 						if
+							not is_inherited and then
 							is_type_compatible.conversion_info /= Void and then
 							is_type_compatible.conversion_info.has_depend_unit
 						then
@@ -5067,6 +5085,7 @@ feature -- Implementation
 						error_handler.insert_error (vbac2)
 					else
 						if
+							not is_inherited and then
 							is_type_compatible.conversion_info /= Void and then
 							is_type_compatible.conversion_info.has_depend_unit
 						then

@@ -1571,70 +1571,39 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	type_of_local_entity_named (name: STRING): TYPE_A is
+	type_of_local_entity_named (a_name: STRING): TYPE_A is
 			-- return type of argument or local variable named `name' found in `current_feature_as'
 			-- Void if there is none
 		require
 			current_class_c_not_void: current_class_c /= Void
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		local
-			current_feature: FEATURE_I
-			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list: IDENTIFIER_LIST
-			stop: BOOLEAN
-			name_id: INTEGER
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
+			l_name: !STRING_32
+			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
+			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
+			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
 			retried: BOOLEAN
-			l_current_class_c: CLASS_C
-			l_class_type_as: CLASS_TYPE_AS
-			l_class_name_as: ID_AS
-			l_name: STRING
 		do
-			if retried then
-				Result := Void
-			else
-				l_current_class_c := current_class_c
-				current_feature := current_feature_i
-
-				if current_token /= Void and then current_line /= Void then
-					set_up_local_analyzer (current_line, current_token, l_current_class_c)
-					entities_list := local_analyzer.found_locals_list
-
-					name_id := Names_heap.id_of (name)
-					if name_id > 0 and not entities_list.is_empty then
-							-- There is a `name_id' corresponding to `name' so let's
-							-- look further.
-						from
-							entities_list.start
-						until
-							entities_list.after or stop
-						loop
-							from
-								id_list := entities_list.item.id_list
-								id_list.start
-							until
-								id_list.after or stop
-							loop
-								if name_id = id_list.item then
-									stop := True
-										-- Compute actual type for local
-									Result := local_evaluated_type (entities_list.item.type,
-										l_current_class_c,
-										current_feature)
-									if Result = Void then
-										l_class_type_as ?= entities_list.item.type
-										if l_class_type_as /= Void then
-											l_class_name_as := l_class_type_as.class_name
-											if l_class_name_as /= Void then
-												l_name := l_class_name_as.name
-												if l_name /= Void then
-													Result := type_of_generic (l_name)
-								end
-											end
-										end
+			if not retried then
+				if a_name /= Void and then not a_name.is_empty then
+					if {l_class: CLASS_I} current_class_i then
+						l_token := current_token
+						l_line := current_line
+						if l_token /= Void and then l_line /= Void then
+							create l_analyzer.make (l_class)
+							l_result := l_analyzer.scan (l_token, l_line)
+							if l_result /= Void and then l_result.has_current_frame then
+								if not l_result.current_frame.is_empty then
+									l_locals := l_result.current_frame.all_locals
+									l_name ?= a_name.as_string_32
+									if l_locals.has (l_name) then
+										Result := l_locals.item (l_name)
 									end
 								end
-								id_list.forth
 							end
-							entities_list.forth
 						end
 					end
 				end
@@ -2049,36 +2018,6 @@ feature {NONE} -- Implementation
 			-- Is the current platform Windows?
 		once
 			Result := (create {PLATFORM_CONSTANTS}).is_windows
-		end
-
-	local_analyzer: EB_LOCAL_ENTITIES_FINDER is
-			--
-		do
-			Result := local_analyzer_cell.item
-		ensure
-			local_analyzer_not_void: Result /= Void
-		end
-
-	local_analyzer_cell: CELL [EB_LOCAL_ENTITIES_FINDER] is
-		local
-			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_TEXT
-		once
-			create Result
-			create l_analyzer.make
-			Result.put (l_analyzer)
-		end
-
-	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_class_c: CLASS_C) is
-			-- Set up local analyzer.
-		local
-			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_TEXT
-		do
-			l_analyzer ?= local_analyzer
-			if l_analyzer = Void then
-				create l_analyzer.make
-				local_analyzer_cell.put (l_analyzer)
-			end
-			l_analyzer.build_entities_list (a_line, a_token, a_class_c)
 		end
 
 feature {NONE} -- Implementation

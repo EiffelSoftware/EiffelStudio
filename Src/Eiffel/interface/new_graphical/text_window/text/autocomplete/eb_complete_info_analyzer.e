@@ -66,6 +66,7 @@ feature -- Basic operations
 			cursor_token_not_void: a_cursor_token /= Void
 		local
 			token				: EDITOR_TOKEN
+			line                : EDITOR_LINE
 			feat_table			: E_FEATURE_TABLE
 			feat_i_table		: FEATURE_TABLE
 			feat				: E_FEATURE
@@ -98,20 +99,21 @@ feature -- Basic operations
 				token_writer.set_context_group (group)
 				if current_class_i /= Void and then current_class_c /= Void then
 					l_current_class_c := current_class_c
-					token := cursor_token
+					token := current_token
+					line := current_line
 					if token /= Void then
 						l_class_list := class_c_to_complete_from (token, current_line, l_current_class_c, False, False)
 
 						if exploring_current_class then
-							set_up_local_analyzer (current_line, token, l_current_class_c)
-							add_names_to_completion_list (Local_analyzer, l_current_class_c)
+							if token /= Void and then line /= Void then
+								add_names_to_completion_list (token, line)
+							end
 
 								-- Add precursors
 							l_class_as := l_current_class_c.ast
 							if l_class_as /= Void and current_feature_as /= Void  then
 								add_precursor_possibilities (l_class_as, current_feature_as.feat_as)
 							end
-							local_analyzer.reset
 						end
 					end
 					if l_class_list /= Void then
@@ -605,35 +607,56 @@ feature {NONE} -- Implementation
 			at_least_one_element_in_result: Result.count > 0
 		end
 
-	add_names_to_completion_list (a_analyser: EB_LOCAL_ENTITIES_FINDER; a_current: CLASS_C) is
+	add_names_to_completion_list (a_start_token: !like current_token; a_start_line: !like current_line)
 			-- Adds locals and arguments to completion list and adds 'Current' based on `a_current'
-		require
-			a_analyser_not_void: a_analyser /= Void
 		local
 			l_basic: EB_NAME_FOR_COMPLETION
-			l_names: DYNAMIC_LIST [STRING_32]
+			l_typed_basic: EB_NAME_WITH_TYPE_FOR_COMPLETION
+			l_name: !STRING_32
+			l_type: ?TYPE_A
+			l_compiled_class: CLASS_C
+			l_feature: FEATURE_I
+			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
+			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
+			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+			l_result_kw: STRING_32
 		do
-			create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ("Current"))
+				-- Add Current, because it's always available.
+			create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword))
 			insert_in_completion_possibilities (l_basic)
-			if a_analyser.has_return_type then
-				create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ("Result"))
-				insert_in_completion_possibilities (l_basic)
-			end
+
+				-- Add reserved word Void
 			if preferences.editor_data.show_any_features then
-				create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ("Void"))
+				create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ({EIFFEL_KEYWORD_CONSTANTS}.void_keyword))
 				insert_in_completion_possibilities (l_basic)
 			end
 
-			l_names := a_analyser.found_names
-			if l_names /= Void and then not l_names.is_empty then
-				from
-					l_names.start
-				until
-					l_names.after
-				loop
-					create l_basic.make (l_names.item)
-					insert_in_completion_possibilities (l_basic)
-					l_names.forth
+				-- Add local declarations
+			l_feature := current_feature_i
+			if l_feature /= Void and then {l_class: CLASS_I} current_class_i then
+				create l_analyzer.make (l_class)
+				l_result := l_analyzer.scan (a_start_token, a_start_line)
+				if l_result /= Void and then l_result.has_current_frame then
+					if not l_result.current_frame.is_empty then
+						l_locals := l_result.current_frame.all_locals
+						l_compiled_class := current_class_c
+						l_feature := current_feature_i
+						l_result_kw := {EIFFEL_KEYWORD_CONSTANTS}.result_keyword.as_string_32
+						from l_locals.start until l_locals.after loop
+							l_name := l_locals.key_for_iteration
+							l_type := l_locals.item_for_iteration
+							if l_type /= Void and then l_compiled_class /= Void and then l_type.is_valid_for_class (l_compiled_class) then
+									-- The type is valid for the given class
+								create l_typed_basic.make (l_name, l_type, l_feature)
+								insert_in_completion_possibilities (l_typed_basic)
+							else
+									-- The local type is not valid, so use the raw text.
+								create l_basic.make (l_name)
+								insert_in_completion_possibilities (l_basic)
+							end
+							l_locals.forth
+						end
+					end
 				end
 			end
 		end

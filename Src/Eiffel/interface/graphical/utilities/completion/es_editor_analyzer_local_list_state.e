@@ -41,8 +41,6 @@ feature {NONE} -- Status report
 			--
 			-- `a_token': The token to determine local declaration block start status.
 			-- `Result' : True if the token is a local's block terminating token; False otherwise.			
-		local
-			l_image: ?STRING
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword) or else
 					is_text_token (a_token, "(", False) or else

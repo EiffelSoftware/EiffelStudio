@@ -140,7 +140,7 @@ feature {NONE} -- Element change
 			l_row ?= tree.grid.row (i)
 			l_row.ensure_expandable
 			create l_new.make (l_row, Current, a_token)
-			cached_children.put (l_new, a_token)
+			cached_children.force (l_new, a_token)
 		end
 
 	add_item (a_item: !G) is

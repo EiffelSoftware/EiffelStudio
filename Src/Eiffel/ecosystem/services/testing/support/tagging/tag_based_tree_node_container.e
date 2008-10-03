@@ -212,9 +212,9 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 				else
 					descending_tags.search (a_tag)
 					if descending_tags.found then
-						descending_tags.put (descending_tags.found_item + 1, a_tag)
+						descending_tags.force (descending_tags.found_item + 1, a_tag)
 					else
-						descending_tags.put (1, a_tag)
+						descending_tags.force (1, a_tag)
 					end
 				end
 			end
@@ -323,7 +323,7 @@ feature {NONE} -- Element change
 			l_child: like child_for_token
 		do
 			create l_child.make (Current, a_token)
-			cached_children.put (l_child, a_token)
+			cached_children.force (l_child, a_token)
 		ensure
 			child_added: has_child_for_token (a_token)
 			child_not_evaluated: not child_for_token (a_token).is_evaluated
@@ -383,7 +383,7 @@ feature {TAG_BASED_TREE} -- Implementation
 					child_not_evaluated: not l_child.is_evaluated
 				end
 				if i > 0 then
-					l_child.descending_tags.put (l_cursor.item, l_tag)
+					l_child.descending_tags.force (l_cursor.item, l_tag)
 				else
 					l_child.set_item_count (l_cursor.item)
 				end

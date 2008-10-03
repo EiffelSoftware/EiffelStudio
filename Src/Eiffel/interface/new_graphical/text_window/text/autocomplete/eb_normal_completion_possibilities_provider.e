@@ -33,8 +33,7 @@ inherit
 			reset,
 			go_to_next_token,
 			go_to_previous_token,
-			after_searched_token,
-			set_up_local_analyzer
+			after_searched_token
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -379,20 +378,6 @@ feature {NONE} -- Build completion possibilities
 				a_class_c.generics.valid_index (a_formal.position)
 			then
 				Result := a_class_c.constraints (a_formal.position)
-			end
-		end
-
-	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_class_c: CLASS_C) is
-		local
-			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_AST
-		do
-			l_analyzer ?= local_analyzer
-			if l_analyzer = Void then
-				create l_analyzer.make
-				local_analyzer_cell.put (l_analyzer)
-			end
-			if context_feature_as /= Void then
-				l_analyzer.build_entities_list (context_feature_as)
 			end
 		end
 

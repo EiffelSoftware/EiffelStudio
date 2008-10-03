@@ -11,12 +11,6 @@ indexing
 class
 	ES_TOOL_PROFILE_KINDS
 
-inherit
-	ANY
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	frozen generic: !UUID

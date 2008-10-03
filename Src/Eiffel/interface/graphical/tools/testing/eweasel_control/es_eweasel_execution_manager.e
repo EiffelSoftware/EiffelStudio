@@ -11,6 +11,8 @@ class
 	ES_EWEASEL_EXECUTION_MANAGER
 
 inherit
+	ANY
+
 	EB_CLUSTER_MANAGER_OBSERVER
 		export
 			{NONE} all

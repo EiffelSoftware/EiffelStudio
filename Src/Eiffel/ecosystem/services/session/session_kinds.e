@@ -11,12 +11,6 @@ indexing
 class
 	SESSION_KINDS
 
-inherit
-	ANY
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	frozen environment: UUID

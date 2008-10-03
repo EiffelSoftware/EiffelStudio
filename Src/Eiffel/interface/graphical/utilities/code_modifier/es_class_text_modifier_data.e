@@ -10,7 +10,9 @@ indexing
 class
 	ES_CLASS_TEXT_MODIFIER_DATA
 
-inherit --{NONE}
+inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

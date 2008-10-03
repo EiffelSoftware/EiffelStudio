@@ -31,6 +31,8 @@ class
 	ES_CLASS_LICENSER
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

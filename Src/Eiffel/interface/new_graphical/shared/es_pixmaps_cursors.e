@@ -9,6 +9,8 @@ class
 	ES_PIXMAPS_CURSORS
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

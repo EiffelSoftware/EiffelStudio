@@ -11,6 +11,8 @@ class
 	ES_LOCALE_FORMATTER
 
 inherit
+	ANY
+
 	SHARED_LOCALE
 		export
 			{NONE} all

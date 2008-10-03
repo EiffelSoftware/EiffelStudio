@@ -10,6 +10,8 @@ class
 	EB_PRINTER_TEXT_GENERATOR
 
 inherit
+	ANY
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all

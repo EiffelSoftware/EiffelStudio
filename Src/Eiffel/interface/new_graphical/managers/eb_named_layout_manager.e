@@ -8,7 +8,9 @@ indexing
 class
 	EB_NAMED_LAYOUT_MANAGER
 
-inherit --{NONE}
+inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

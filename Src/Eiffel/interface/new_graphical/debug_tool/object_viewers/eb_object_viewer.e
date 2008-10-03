@@ -10,6 +10,8 @@ deferred class
 	EB_OBJECT_VIEWER
 
 inherit
+	ANY
+
 	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all

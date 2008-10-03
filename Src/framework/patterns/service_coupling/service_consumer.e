@@ -12,6 +12,8 @@ class
 	SERVICE_CONSUMER [G -> SERVICE_I]
 
 inherit
+	ANY
+
 	SHARED_SERVICE_PROVIDER
 		rename
 			service_provider as global_service_provider

@@ -11,6 +11,8 @@ class
 	ES_TOOL_UTILITIES
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

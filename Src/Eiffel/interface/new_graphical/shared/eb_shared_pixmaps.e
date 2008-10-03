@@ -9,6 +9,8 @@ class
 	EB_SHARED_PIXMAPS
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

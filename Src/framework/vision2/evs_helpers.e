@@ -11,6 +11,8 @@ class
 	EVS_HELPERS
 
 inherit
+	ANY
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all

@@ -564,7 +564,7 @@ feature -- EB_TOOL features
 			address_manager.label_changed_actions.extend (agent (develop_window.docking_manager).update_mini_tool_bar_size (content))
 		end
 
-feature
+feature -- Initialization
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager

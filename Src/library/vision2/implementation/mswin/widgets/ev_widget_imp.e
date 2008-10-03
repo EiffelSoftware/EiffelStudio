@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 			Result.client_to_screen (ww)
 		end
 
-	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x: INTEGER; y: INTEGER; screen_x: INTEGER; screen_y: INTEGER] is
+	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER] is
 			-- For `a_x', `a_y', give actual x and y and screen x and y.
 			-- By default, actual x and y are the same as `a_x', `a_y'.
 			-- Redefined in EV_PIXMAP_IMP_WIDGET.

@@ -1045,7 +1045,7 @@ feature -- Keybord shortcuts Customization
 			create Result.make (default_shortcut_actions.count)
 		end
 
-	default_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]]
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]; group: MANAGED_SHORTCUT_GROUP]]
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 
 	editor_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]] is

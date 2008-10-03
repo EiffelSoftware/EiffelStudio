@@ -568,8 +568,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Windows events
 
-	translate_coordinates (a_x, a_y: INTEGER): TUPLE [INTEGER, INTEGER, INTEGER,
-		INTEGER] is
+	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER] is
 			-- For `a_x', `a_y', give actual x and y and screen x and y.
 		local
 			pt: WEL_POINT

@@ -9,7 +9,7 @@ class
 	EV_GRID_ITEM_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [item: EV_GRID_ITEM]]
+	EV_ACTION_SEQUENCE [TUPLE [grid_item: EV_GRID_ITEM]]
 
 create
 	default_create

@@ -11,7 +11,7 @@ class
 	EV_HEADER_ITEM_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [item: EV_HEADER_ITEM]]
+	EV_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM]]
 
 create
 	default_create

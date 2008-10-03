@@ -11,7 +11,7 @@ class
 	EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [item: EV_MENU_ITEM]]
+	EV_ACTION_SEQUENCE [TUPLE [menu_item: EV_MENU_ITEM]]
 
 create
 	default_create

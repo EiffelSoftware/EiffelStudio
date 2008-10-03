@@ -1238,7 +1238,9 @@ feature {NONE} -- Implementation
 							l_char := token.wide_image.item (1)
 							if char_32_is_alpha (l_char) then
 									-- Happens when completing 'a.b.|c'
-								insertion_remainder := token.wide_image.count
+									-- Using 0 means the word in front is not replaced.
+									-- Use `token.wide_image.count' to replace the word.
+								insertion_remainder := 0
 							else
 									-- Happens when completing 'a.b.|)'
 							end

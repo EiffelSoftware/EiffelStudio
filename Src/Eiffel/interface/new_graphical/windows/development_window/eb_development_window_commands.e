@@ -132,7 +132,13 @@ feature -- Query
 	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			-- Command that increase editor font
 
+	editor_font_zoom_in_numpad_command: ES_EDITOR_FONT_ZOOM_IN_NUMPAD_COMMAND
+			-- Command that increase editor font
+
 	editor_font_zoom_out_command: EB_EDITOR_FONT_ZOOM_OUT_COMMAND
+			-- Command that decrease editor font
+
+	editor_font_zoom_out_numpad_command: ES_EDITOR_FONT_ZOOM_OUT_NUMPAD_COMMAND
 			-- Command that decrease editor font
 
 	editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
@@ -487,12 +493,28 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_in_command = a_cmd
 		end
 
+	set_editor_font_zoom_in_numpad_command (a_cmd: like editor_font_zoom_in_numpad_command) is
+			-- Set `editor_font_zoom_in_numpad_command'
+		do
+			editor_font_zoom_in_numpad_command := a_cmd
+		ensure
+			set: editor_font_zoom_in_numpad_command = a_cmd
+		end
+
 	set_editor_font_zoom_out_command (a_cmd: like editor_font_zoom_out_command) is
 			-- Set `editor_font_zoom_out_command'
 		do
 			editor_font_zoom_out_command := a_cmd
 		ensure
 			set: editor_font_zoom_out_command = a_cmd
+		end
+
+	set_editor_font_zoom_out_numpad_command (a_cmd: like editor_font_zoom_out_numpad_command) is
+			-- Set `editor_font_zoom_out_numpad_command'
+		do
+			editor_font_zoom_out_numpad_command := a_cmd
+		ensure
+			set: editor_font_zoom_out_numpad_command = a_cmd
 		end
 
 	set_editor_font_zoom_reset_command (a_cmd: like editor_font_zoom_reset_command) is
@@ -580,7 +602,9 @@ feature -- Recycle
 			save_as_cmd.recycle
 
 			editor_font_zoom_in_command.recycle
+			editor_font_zoom_in_numpad_command.recycle
 			editor_font_zoom_out_command.recycle
+			editor_font_zoom_out_numpad_command.recycle
 			editor_font_zoom_reset_command.recycle
 
 			c_finalized_compilation_cmd.recycle

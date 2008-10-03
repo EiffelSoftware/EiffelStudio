@@ -253,7 +253,7 @@ feature {NONE} -- Pick and Drop implementation
 				create ost.make (object_address, ostn, object_dynamic_class)
 				ost.set_associated_ev_item (row)
 				create t
-				t.stone := ost
+				t.pebble := ost
 				t.accept_cursor := ost.stone_cursor
 				t.deny_cursor := ost.X_stone_cursor
 				--When compiler is fixed use: t := [ost, ost.stone_cursor, ost.X_stone_cursor]
@@ -264,7 +264,7 @@ feature {NONE} -- Pick and Drop implementation
 				if ocl /= Void then
 					create {CLASSC_STONE} clst.make (ocl)
 					create t
-					t.stone := clst
+					t.pebble := clst
 					t.accept_cursor := clst.stone_cursor
 					t.deny_cursor := clst.X_stone_cursor
 					--When compiler is fixed use: t := [clst, clst.stone_cursor, clst.X_stone_cursor]
@@ -282,7 +282,7 @@ feature {NONE} -- Pick and Drop implementation
 			item_stone_properties_computed: items_stone_properties_computed
 		end
 
-	internal_item_stone_data_i_th (i: INTEGER): TUPLE [stone: STONE; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
+	internal_item_stone_data_i_th (i: INTEGER): TUPLE [pebble: STONE; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
 			-- Internal data related to `i_th' cell of current row.
 		do
 			if internal_items_stone_data /= Void then

@@ -80,12 +80,10 @@ feature  -- Access
 	same_as (other: STONE): BOOLEAN is
 			-- Is `other' same as Current?
 			--| By default: Result = equal (Current, other).
-		local
-			o: like Current
 		do
-				--| System level validity problems
-			o ?= other
-			Result := equal (Current, other)
+			if {o: like Current} other then
+				Result := is_equal (o)
+			end
 		end
 
 	stone_name: STRING_GENERAL is

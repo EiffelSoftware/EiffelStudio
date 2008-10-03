@@ -182,6 +182,8 @@ feature -- Access
 			end
 		end
 
+	preferences_title: STRING_GENERAL is				do Result := names.t_preference_window				end
+
 feature {NONE} -- Names
 
 	l_name: STRING_GENERAL is							do Result := names.l_name								end
@@ -193,7 +195,6 @@ feature {NONE} -- Names
 	user_value: STRING_GENERAL is						do Result := names.l_user_set							end
 	auto_value: STRING_GENERAL is						do Result := names.l_auto								end
 	no_description_text: STRING_GENERAL is				do Result := names.l_no_description_text				end
-	preferences_title: STRING_GENERAL is				do Result := names.t_preference_window				end
 	restore_preference_string: STRING_GENERAL is		do Result := names.l_restore_preference_string		end
 	shortcut_modification_denied: STRING_GENERAL is		do Result := names.l_shortcut_modification_denied 	end
 	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := names.l_preferences_delayed_resources	end

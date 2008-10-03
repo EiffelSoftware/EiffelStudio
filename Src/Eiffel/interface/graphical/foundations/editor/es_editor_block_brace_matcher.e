@@ -34,7 +34,8 @@ feature -- Access
 	opening_brace_map: !HASH_TABLE [!STRING_32, !STRING_32]
 			-- <Precursor>
 		once
-			Result := Precursor {ES_EDITOR_BRACE_MATCHER}
+			create Result.make (20)
+			Result.merge (Precursor {ES_EDITOR_BRACE_MATCHER})
 			Result.merge (Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER})
 		end
 

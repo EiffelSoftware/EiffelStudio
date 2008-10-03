@@ -77,12 +77,15 @@ feature {NONE} -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
+			l_matcher: ?like brace_matcher
 			l_prev: ?like previous_text_token
+			l_peek: ?like previous_text_token
 			l_token: !EDITOR_TOKEN
 			l_line: !EDITOR_LINE
 			l_stop: BOOLEAN
 			l_feature_state: ?like new_feature_state
 		do
+			l_matcher := brace_matcher
 			l_prev := [a_token, a_line]
 			from until l_stop loop
 				l_token := l_prev.token
@@ -116,6 +119,14 @@ feature {NONE} -- Query
 						else
 								-- No match, switch the stopping condition back to False.
 							l_stop := False
+						end
+					else
+						if l_matcher.is_closing_brace (l_token) and then not l_matcher.is_closing_match_exception (l_token, l_line) then
+							l_peek := l_matcher.match_closing_brace (l_token, l_line, Void)
+							if l_peek /= Void then
+								l_token := l_peek.token
+								l_line := l_peek.line
+							end
 						end
 					end
 				end

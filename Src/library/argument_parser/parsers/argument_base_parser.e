@@ -1689,7 +1689,7 @@ feature {NONE} -- Switches
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen available_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	available_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch.
 		local
 			l_switches: ?like switches

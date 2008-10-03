@@ -10,6 +10,8 @@ class
 	EB_SHARED_WRITER
 
 inherit
+	ANY
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all

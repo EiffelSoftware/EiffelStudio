@@ -10,6 +10,8 @@ class
 	DBG_ERROR_HANDLER
 
 inherit
+	ANY
+
 	SHARED_ERROR_TRACER
 		export
 			{NONE} all

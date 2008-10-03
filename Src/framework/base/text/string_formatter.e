@@ -9,6 +9,8 @@ class
 	STRING_FORMATTER
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		export
 			{NONE} all

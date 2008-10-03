@@ -12,6 +12,8 @@ deferred class
 	EVENT_LIST_ITEM_I
 
 inherit
+	ANY
+
 	SHARED_ENVIRONMENT_CATEGORIES
 		export
 			{NONE} all

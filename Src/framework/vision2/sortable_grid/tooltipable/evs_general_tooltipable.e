@@ -13,6 +13,8 @@ deferred class
 	EVS_GENERAL_TOOLTIPABLE
 
 inherit
+	ANY
+
 	EVS_GENERAL_TOOLTIP_UTILITY
 		export
 			{NONE} all

@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Conversion: To pointer
 
-	string_to_unicode (a_str: ?STRING_GENERAL): POINTER
+	string_to_unicode (a_str: ?READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -65,7 +65,7 @@ feature -- Conversion: To pointer
 			a_ptr_is_pointer_managed: is_pointer_managed (Result)
 		end
 
-	string_to_ansi (a_str: ?STRING_GENERAL): POINTER
+	string_to_ansi (a_str: ?READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an ANSI string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -86,7 +86,7 @@ feature -- Conversion: To pointer
 			a_ptr_is_pointer_managed: is_pointer_managed (Result)
 		end
 
-	string_to_tstring (a_str: ?STRING_GENERAL): POINTER
+	string_to_tstring (a_str: ?READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an compiler-select ANSI/unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -120,7 +120,7 @@ feature -- Conversion: From pointer
 		local
 			l_str: !WEL_STRING
 		do
-			if is_pointer_managed (a_ptr) and {l_result: STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
+			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
 				Result ?= l_result.as_string_32
 			else
 				create l_str.make_by_pointer (a_ptr)
@@ -140,7 +140,7 @@ feature -- Conversion: From pointer
 		local
 			l_str: !C_STRING
 		do
-			if is_pointer_managed (a_ptr) and {l_result: STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
+			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
 				Result ?= l_result.as_string_8
 			else
 				create l_str.make_by_pointer (a_ptr)

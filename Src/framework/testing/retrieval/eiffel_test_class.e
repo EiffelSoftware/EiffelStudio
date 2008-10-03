@@ -9,6 +9,8 @@ class
 	EIFFEL_TEST_CLASS
 
 inherit
+	ANY
+
 	KL_SHARED_STRING_EQUALITY_TESTER
 		export
 			{NONE} all

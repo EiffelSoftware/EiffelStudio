@@ -10,7 +10,9 @@ indexing
 class
 	ES_PERSISTABLE_STONE_UTILITIES
 
-inherit -- {NONE}
+inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

@@ -9,7 +9,7 @@ class
 	EV_LIST_ITEM_CHECK_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [item: EV_LIST_ITEM]]
+	EV_ACTION_SEQUENCE [TUPLE [list_item: EV_LIST_ITEM]]
 
 create
 	default_create

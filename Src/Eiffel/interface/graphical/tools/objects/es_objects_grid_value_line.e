@@ -113,7 +113,7 @@ feature {NONE} -- Object stone
 							create fost.make (related_line.object_address, feat)
 							t := internal_item_stone_data_i_th (0)
 							if t /= Void then
-								objst ?= t.stone
+								objst ?= t.pebble
 								if objst /= Void then
 									fost.attach_object_stone (objst)
 								end
@@ -121,7 +121,7 @@ feature {NONE} -- Object stone
 							fst := fost
 
 							create t
-							t.stone := fst
+							t.pebble := fst
 							t.accept_cursor := fst.stone_cursor
 							t.deny_cursor := fst.X_stone_cursor
 							internal_items_stone_data[col_name_index] := t

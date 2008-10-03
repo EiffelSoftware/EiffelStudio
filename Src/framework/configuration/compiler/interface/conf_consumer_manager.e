@@ -164,11 +164,13 @@ feature -- Commands
 		ensure
 			assemblies_set: not is_error implies assemblies /= Void
 		rescue
-			l_retried := True
 			check
 				is_error: is_error
 			end
-			retry
+			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+				l_retried := True
+				retry
+			end
 		end
 
 feature {NONE} -- Events
@@ -694,9 +696,13 @@ feature {NONE} -- error handling
 			-- Add `an_error' and raise an exception.
 		require
 			an_error_not_void: an_error /= Void
+		local
+			l_conf_exception: CONF_EXCEPTION
 		do
 			last_error := an_error
-			raise (an_error.out)
+			create l_conf_exception
+			l_conf_exception.set_message (an_error.out)
+			l_conf_exception.raise
 		end
 
 feature {CONSUMER_EXPORT} -- il emitter

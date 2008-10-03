@@ -284,9 +284,11 @@ feature -- Visit nodes
 		rescue
 				-- If we have added a new configuration error, we retry, otherwise we let the
 				-- caller handle the exception.
-			if last_errors /= Void and then last_errors.count /= l_error_count then
-				l_retried := True
-				retry
+			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+				if last_errors /= Void and then last_errors.count /= l_error_count then
+					l_retried := True
+					retry
+				end
 			end
 		end
 

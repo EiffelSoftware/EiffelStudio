@@ -111,10 +111,14 @@ feature {NONE} -- Implementation
 			-- Set `an_error'.
 		require
 			an_error_ok: an_error /= Void
+		local
+			l_conf_exception: CONF_EXCEPTION
 		do
 			is_error := True
 			last_error := an_error
-			raise ("Parse error")
+			create l_conf_exception
+			l_conf_exception.set_message ("Parse error")
+			l_conf_exception.raise
 		end
 
 	set_warning (an_error: CONF_ERROR_PARSE) is
@@ -133,12 +137,15 @@ feature {NONE} -- Implementation
 			-- We have a parse error with a message.
 		local
 			l_error: CONF_ERROR_PARSE
+			l_conf_exception: CONF_EXCEPTION
 		do
 			create l_error
 			l_error.set_message (a_message)
 			is_error := True
 			last_error := l_error
-			raise ("Parse error")
+			create l_conf_exception
+			l_conf_exception.set_message ("Parse error")
+			l_conf_exception.raise
 		end
 
 	set_parse_warning_message (a_message: STRING) is

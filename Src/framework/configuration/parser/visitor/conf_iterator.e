@@ -31,7 +31,7 @@ feature -- Visit nodes
 				end
 			end
 		rescue
-			if is_error then
+			if is_error and then {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
 				l_retried := True
 				retry
 			end
@@ -51,7 +51,9 @@ feature -- Visit nodes
 				a_target.overrides.linear_representation.do_all (agent {CONF_OVERRIDE}.process (Current))
 			end
 		rescue
-			retry
+			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+				retry
+			end
 		end
 
 	process_group (a_group: CONF_GROUP) is

@@ -75,6 +75,7 @@ feature {NONE} -- Initialization: widgets
 	build_view_bar (a_widget: like create_widget) is
 			-- Build tool bar containing view and filter box
 		local
+			l_tool_bar: SD_TOOL_BAR
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
 		do
@@ -83,21 +84,32 @@ feature {NONE} -- Initialization: widgets
 			l_hbox.set_border_width (5)
 
 				-- Create and add `view_box' with label
-			create view_box
 			create l_label.make_with_text (local_formatter.translation (l_view))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
+			create view_box
 			l_hbox.extend (view_box)
 			register_action (view_box.select_actions, agent on_select_view)
 			register_action (view_box.return_actions, agent on_return_view)
 
 				-- Create and add `filter_box' with label
-			create filter_box
-			register_action (filter_box.return_actions, agent update_view)
 			create l_label.make_with_text (local_formatter.translation (l_filter))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
+			create filter_box
+			register_action (filter_box.return_actions, agent on_return_filter)
 			l_hbox.extend (filter_box)
+
+			create clear_filter_button.make
+			clear_filter_button.set_pixel_buffer (stock_pixmaps.general_reset_icon_buffer)
+			clear_filter_button.set_pixmap (stock_pixmaps.general_reset_icon)
+			clear_filter_button.set_tooltip (local_formatter.translation (tt_clear_filter))
+			register_action (clear_filter_button.select_actions, agent on_clear_filter)
+			create l_tool_bar.make
+			l_tool_bar.extend (clear_filter_button)
+			l_tool_bar.compute_minimum_size
+			l_hbox.extend (l_tool_bar)
+			l_hbox.disable_item_expand (l_tool_bar)
 
 			a_widget.extend (l_hbox)
 			a_widget.disable_item_expand (l_hbox)
@@ -222,6 +234,9 @@ feature {NONE} -- Access: buttons
 	stop_button: !SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
 
+	clear_filter_button: !SD_TOOL_BAR_BUTTON
+			-- Button for clearing any filter
+
 feature {NONE} -- Access: menus
 
 	run_all_menu,
@@ -285,6 +300,19 @@ feature {NONE} -- Status setting: view
 				tag_attached: l_tag /= Void
 			end
 			view_box.set_text (l_tag)
+			execute_with_busy_cursor (agent update_view)
+		end
+
+	on_return_filter
+			-- Called when user presses enter in `filter_box'.
+		do
+			execute_with_busy_cursor (agent update_view)
+		end
+
+	on_clear_filter
+			-- Called when `clear_filter_button' is pressed.
+		do
+			filter_box.set_text ("")
 			execute_with_busy_cursor (agent update_view)
 		end
 
@@ -655,6 +683,7 @@ feature {NONE} -- Internationalization
 	f_run_button: STRING = "Run all tests in background"
 	f_debug_button: STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: STRING = "Stop all execution"
+	tt_clear_filter: STRING = "Clear filter"
 
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"

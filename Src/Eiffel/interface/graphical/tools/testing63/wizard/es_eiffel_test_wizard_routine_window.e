@@ -39,11 +39,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_CLUSTER_MANAGER_OBSERVER
-		export
-			{NONE} all
-		end
-
 create
 	make_window
 
@@ -395,14 +390,6 @@ feature {NONE} -- Basic operations
 
 	proceed_with_current_info
 			-- <Precursor>
-		local
-			l_shared: EV_SHARED_APPLICATION
-		do
-			create l_shared
-			l_shared.ev_application.add_idle_action_kamikaze (agent create_and_cancel)
-		end
-
-	create_and_cancel
 		do
 			if wizard_information.is_new_class then
 				create_new_class
@@ -756,7 +743,9 @@ feature {NONE} -- Implementation: creation
 	template_parameters: DS_HASH_TABLE [!STRING, !STRING]
 			-- Template parameters for creating actual class text from template file.
 		local
-			l_redefine, l_body, l_setup, l_tear_down: !STRING
+			l_redefine, l_body, l_setup, l_tear_down, l_indexing: !STRING
+			l_cursor: DS_BILINEAR_CURSOR [!STRING]
+			l_count: INTEGER
 		do
 			create Result.make_default
 			if {l_class_name: !STRING} wizard_information.new_class_name then
@@ -802,6 +791,49 @@ feature {NONE} -- Implementation: creation
 			if {l_name: !STRING} wizard_information.test_name then
 				Result.force_last (l_name, v_test_name)
 			end
+			if not wizard_information.tag_list.is_empty or wizard_information.class_covered /= Void then
+				create l_indexing.make (100)
+				l_indexing.append ("%T%Tindexing%N")
+				if not wizard_information.tag_list.is_empty then
+					l_indexing.append ("%T%T%Ttesting: ")
+					from
+						l_cursor := wizard_information.tag_list.new_cursor
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						l_count := l_count + l_cursor.item.count
+						if l_count > 80 then
+							l_indexing.append ("%N%T%T%T         ")
+							l_count := l_cursor.item.count
+						end
+						l_indexing.append (" %"")
+						l_indexing.append (l_cursor.item)
+						l_indexing.append_character ('"')
+						if not l_cursor.is_last then
+							l_indexing.append_character (',')
+						else
+							l_indexing.append_character ('%N')
+						end
+						l_cursor.forth
+					end
+				end
+				if wizard_information.class_covered /= Void then
+					l_indexing.append ("%T%T%Ttesting: %"covers/{")
+					l_indexing.append (wizard_information.class_covered.name)
+					l_indexing.append ("}")
+					if wizard_information.feature_covered /= Void then
+						if {l_feat: !STRING} wizard_information.feature_covered.name then
+							if tag_utilities.is_valid_token (l_feat) then
+								l_indexing.append_character ('.')
+								l_indexing.append (l_feat)
+							end
+						end
+					end
+					l_indexing.append ("%"%N")
+				end
+				Result.force_last (l_indexing, v_indexing)
+			end
 		end
 
 	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
@@ -838,6 +870,7 @@ feature {NONE} -- Constants
 	v_setup_routine: !STRING = "SETUP_ROUTINE"
 	v_test_name: !STRING = "TEST_NAME"
 	v_tear_down_routine: !STRING = "TEAR_DOWN_ROUTINE"
+	v_indexing: !STRING = "INDEXING"
 
 	test_set_ancestor: !STRING = "TEST_SET"
 	system_level_test_ancestor: !STRING = "SYSTEM_LEVEL_TEST_SET"

@@ -9,6 +9,8 @@ class
 	EB_CONFIRM_SAVE_DIALOG
 
 inherit
+	ANY
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all

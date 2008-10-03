@@ -13,6 +13,8 @@ class
 	ES_TEST_CASE_GRID_MANAGER
 
 inherit
+	ANY
+
 	EB_CONSTANTS
 		export
 			{NONE} all

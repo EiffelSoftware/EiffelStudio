@@ -9,6 +9,8 @@ class
 	ES_COMMAND_RECEIVER_CALLBACKS
 
 inherit
+	ANY
+
 	EB_SHARED_MANAGERS
 		export
 			{NONE} all

@@ -9,6 +9,8 @@ deferred class
 	ES_EIS_EXTRACTOR
 
 inherit
+	ANY
+
 	ES_EIS_SHARED
 		export
 			{NONE} all

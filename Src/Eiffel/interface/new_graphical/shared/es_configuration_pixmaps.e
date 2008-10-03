@@ -12,9 +12,6 @@ class
 
 inherit
 	ES_PIXMAPS_16X16
-		export
-			{NONE} all
-		end
 
 	CONF_PIXMAPS
 

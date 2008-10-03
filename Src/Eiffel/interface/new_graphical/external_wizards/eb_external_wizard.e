@@ -10,6 +10,8 @@ deferred class
 	EB_EXTERNAL_WIZARD
 
 inherit
+	ANY
+
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all

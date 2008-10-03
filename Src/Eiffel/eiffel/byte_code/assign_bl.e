@@ -33,9 +33,6 @@ feature {NONE} -- Initialization
 			target := other.target.enlarged
 			source := other.source.enlarged
 			line_number := other.line_number
-			if other.is_initialization then
-				set_is_initialization
-			end
 		end
 
 feature
@@ -96,8 +93,7 @@ feature
 				not context.has_invariant and
 				not context.has_rescue and
 				not context.current_feature.is_once and then
-				source.is_simple_expr and then
-				not is_initialization
+				source.is_simple_expr
 			then
 				target_type := context.real_type (target.type)
 				source_type := context.real_type (source.type)
@@ -185,222 +181,180 @@ feature
 			check not target_type.is_multi_constrained end
 			target_type := context.real_type_fixed (target_type)
 
-			if is_initialization and then target_type.is_expanded then
-					-- No initialization is required, but the target has to be analyzed
-					-- because it is used to access the value.
-				target.analyze
-			else
-					-- The target is always expanded in-line for de-referencing.
-				context.init_propagation
+				-- The target is always expanded in-line for de-referencing.
+			context.init_propagation
 
-					-- Propagation of `No_register' in any generation mode
-				target.set_register (No_register)
-				context.set_propagated
+				-- Propagation of `No_register' in any generation mode
+			target.set_register (No_register)
+			context.set_propagated
 
-				target.analyze
-					-- If we are not in the case "last assignment in Result" then
-					-- look whether it is a simple operator assignment which could
-					-- be generated nicely and efficiently in C (like c++ :-).
-				simple_op_assignment := No_simple_op
-				if not last_in_result then
-					analyze_simple_assignment
-				end
-				create saved_context.make_from_context (context)
+			target.analyze
+				-- If we are not in the case "last assignment in Result" then
+				-- look whether it is a simple operator assignment which could
+				-- be generated nicely and efficiently in C (like c++ :-).
+			simple_op_assignment := No_simple_op
+			if not last_in_result then
+				analyze_simple_assignment
+			end
+			create saved_context.make_from_context (context)
 
-				if simple_op_assignment = No_simple_op then
-					source_type := context.real_type_fixed (source.type)
-					if target.is_predefined then
-						result_used := target.is_result
-							-- We won't attempt a propagation of the target if the
-							-- target is a reference and the source is a basic type
-							-- or an expanded.
-						context.init_propagation
-						if not target_type.is_expanded and source_type.is_expanded then
-								-- Expand source but grab a register to hold cloned
-								-- or metamorphosed value as aging tests might have
-								-- to be performed.
-							source.propagate (No_register)
-							register := target
-							register_for_metamorphosis := True
-						elseif target_type.is_bit and then source_type.is_bit then
-							is_bit_assignment := True
-						else
-								-- Do not propagate something expanded as the
-								-- routines in NESTED_BL and friends won't know
-								-- how to deal with that (they do real assignments,
-								-- not copies). In case target is expanded, we
-								-- do not propagate anything in the source.
-							if not target_type.is_true_expanded then
-									-- If there is invariant checking and the target
-									-- is used in the source, do not propagate.
-									-- Case: p := p.right in a list and p becomes
-									-- void...
-								if not ((context.workbench_mode or else
-									context.assertion_level.is_invariant) and
-									source.used (target))
-								then
-									source.propagate (target)
-									target_propagated := context.propagated
-								end
-							end
-						end
+			if simple_op_assignment = No_simple_op then
+				source_type := context.real_type_fixed (source.type)
+				if target.is_predefined then
+					result_used := target.is_result
+						-- We won't attempt a propagation of the target if the
+						-- target is a reference and the source is a basic type
+						-- or an expanded.
+					context.init_propagation
+					if not target_type.is_expanded and source_type.is_expanded then
+							-- Expand source but grab a register to hold cloned
+							-- or metamorphosed value as aging tests might have
+							-- to be performed.
+						source.propagate (No_register)
+						register := target
+						register_for_metamorphosis := True
+					elseif target_type.is_bit and then source_type.is_bit then
+						is_bit_assignment := True
 					else
-							-- This is an assignment in an attribute.
-						context.init_propagation
-						if not target_type.is_expanded and source_type.is_expanded then
-								-- Expand source but grab a register to hold cloned
-								-- or metamorphosed value as aging tests might have
-								-- to be performed.
-							source.propagate (No_register)
-							get_register
-							register_for_metamorphosis := True
-						elseif target_type.is_bit then
-							is_bit_assignment := True
-						else
-								-- Nothing to be done because:
-								-- 1 - For reference target, we need an aging test which is a macro
-								--     that might evaluate more than once its argument, so we have to
-								--     store `source' in a register.
-								-- 2 - To fix an ordering problem for assignment with gcc 4.x (see eweasel test#runtime007)
-								--     we have to do the same for basic types, but this time is to ensure
-								--     that target is actually evaluated after source. This is only needed
-								--     if source allocates some memory.
-							if not source.allocates_memory and not target.c_type.is_pointer  then
-								source.propagate (No_register)
+							-- Do not propagate something expanded as the
+							-- routines in NESTED_BL and friends won't know
+							-- how to deal with that (they do real assignments,
+							-- not copies). In case target is expanded, we
+							-- do not propagate anything in the source.
+						if not target_type.is_true_expanded then
+								-- If there is invariant checking and the target
+								-- is used in the source, do not propagate.
+								-- Case: p := p.right in a list and p becomes
+								-- void...
+							if not ((context.workbench_mode or else
+								context.assertion_level.is_invariant) and
+								source.used (target))
+							then
+								source.propagate (target)
+								target_propagated := context.propagated
 							end
 						end
-						if target.c_type.is_pointer then
-								-- Mark current as used for RTAP.
-							context.mark_current_used
+					end
+				else
+						-- This is an assignment in an attribute.
+					context.init_propagation
+					if not target_type.is_expanded and source_type.is_expanded then
+							-- Expand source but grab a register to hold cloned
+							-- or metamorphosed value as aging tests might have
+							-- to be performed.
+						source.propagate (No_register)
+						get_register
+						register_for_metamorphosis := True
+					elseif target_type.is_bit then
+						is_bit_assignment := True
+					else
+							-- Nothing to be done because:
+							-- 1 - For reference target, we need an aging test which is a macro
+							--     that might evaluate more than once its argument, so we have to
+							--     store `source' in a register.
+							-- 2 - To fix an ordering problem for assignment with gcc 4.x (see eweasel test#runtime007)
+							--     we have to do the same for basic types, but this time is to ensure
+							--     that target is actually evaluated after source. This is only needed
+							--     if source allocates some memory.
+						if not source.allocates_memory and not target.c_type.is_pointer  then
+							source.propagate (No_register)
 						end
 					end
-				elseif target.is_result then
-					context.mark_result_used
-				end
-					-- Analyze the source given the current propagations.
-				source.analyze
-				source.free_register
-				if register_for_metamorphosis then
-					register.free_register
-				end
-					-- If the source is a string constant and the target is not
-					-- predefined, then a RTAP will be generated and the RTMS
-					-- must NOT be expanded in line (side effect in macro).
-				if not target.is_predefined then
-					string_b ?= source
-					if
-						string_b /= Void and then string_b.register = No_register
-					then
-							-- Take a register to hold the value of the string.
-						get_register
-						register.free_register
+					if target.c_type.is_pointer then
+							-- Mark current as used for RTAP.
+						context.mark_current_used
 					end
 				end
-				if target_type.is_true_expanded then
-						-- Take a register to hold the value of the cloned expanded object.
+			elseif target.is_result then
+				context.mark_result_used
+			end
+				-- Analyze the source given the current propagations.
+			source.analyze
+			source.free_register
+			if register_for_metamorphosis then
+				register.free_register
+			end
+				-- If the source is a string constant and the target is not
+				-- predefined, then a RTAP will be generated and the RTMS
+				-- must NOT be expanded in line (side effect in macro).
+			if not target.is_predefined then
+				string_b ?= source
+				if
+					string_b /= Void and then string_b.register = No_register
+				then
+						-- Take a register to hold the value of the string.
 					get_register
 					register.free_register
 				end
-					-- If source has GCable variables and is not a single call or
-					-- access, then we cannot expand that in a return after the
-					-- GC hooks have been removed.
-				call_b ?= source
-				if call_b /= Void and then call_b.is_single then
-					source_has_gcable := call_b.has_gcable_variable and not
-						call_b.is_simple_expr
-				else
-					expr_b ?= source
-	 				source_has_gcable := expr_b.has_call or expr_b.allocates_memory
-				end
+			end
+			if target_type.is_true_expanded then
+					-- Take a register to hold the value of the cloned expanded object.
+				get_register
+				register.free_register
+			end
+				-- If source has GCable variables and is not a single call or
+				-- access, then we cannot expand that in a return after the
+				-- GC hooks have been removed.
+			call_b ?= source
+			if call_b /= Void and then call_b.is_single then
+				source_has_gcable := call_b.has_gcable_variable and not
+					call_b.is_simple_expr
+			else
+				expr_b ?= source
+ 				source_has_gcable := expr_b.has_call or expr_b.allocates_memory
+			end
 
-					-- Mark Result used only if not the last instruction (in which
-					-- case we'll generate a direct return, hence Result won't be
-					-- needed).
-				if last_in_result and target.is_result and not source_has_gcable
-				then
-					context.restore (saved_context)
-					source.unanalyze
+				-- Mark Result used only if not the last instruction (in which
+				-- case we'll generate a direct return, hence Result won't be
+				-- needed).
+			if last_in_result and target.is_result and not source_has_gcable
+			then
+				context.restore (saved_context)
+				source.unanalyze
+				context.init_propagation
+				source.propagate (No_register)
+					-- If Result is already used, then propagate it. Otherwise,
+					-- we won't need it. Note that if the result is an expanded
+					-- entity, we need it.
+				if context.result_used then
+						-- Propagation of Result may avoid a register allocation
 					context.init_propagation
-					source.propagate (No_register)
-						-- If Result is already used, then propagate it. Otherwise,
-						-- we won't need it. Note that if the result is an expanded
-						-- entity, we need it.
-					if context.result_used then
-							-- Propagation of Result may avoid a register allocation
-						context.init_propagation
-						source.propagate (target)
-					else
-							-- We won't need Result after all...
-						result_used := False
-					end
-					source.analyze
-					source.free_register
-						-- We may expand the return in line, once the GC hooks
-						-- have been removed.
-					expand_return := True
+					source.propagate (target)
 				else
-						-- Force usage of Result
-					last_in_result := False
+						-- We won't need Result after all...
+					result_used := False
 				end
-				if result_used then
-					context.mark_result_used
-				end
+				source.analyze
+				source.free_register
+					-- We may expand the return in line, once the GC hooks
+					-- have been removed.
+				expand_return := True
+			else
+					-- Force usage of Result
+				last_in_result := False
+			end
+			if result_used then
+				context.mark_result_used
 			end
 		end
 
 	generate is
 			-- Generate assignment
-		local
-			buf: like buffer
-			i: CREATE_INFO
-			type: TYPE_A
-			is_conditional: BOOLEAN
 		do
-			type := context.real_type_fixed (target.type)
-			if not is_initialization or else not type.is_expanded then
-				generate_line_info
-				if is_initialization and then not type.is_expanded then
-					is_conditional := True
-					buf := buffer
-					if not type.is_attached and then {c: CREATION_EXPR_B} source then
-							-- It must be an anchored or a formal generic type.
-							-- Perform initialization only for attached types.
-						i := c.info
-						i.generate_start (buf)
-						i.generate_gen_type_conversion (0)
-					end
-					buf.put_new_line
-					buf.put_string ("if (")
-					if i /= Void then
-						buf.put_string ("RTAT(")
-						i.generate_type_id (buf, context.final_mode, 0)
-						buf.put_string (") && ")
-					end
-					buf.put_character ('!')
-					target.print_register
-					buf.put_string (") {")
-					buf.indent
-				end
-				generate_frozen_debugger_hook
-				if context.workbench_mode and then context.assertion_type /= context.in_invariant then
-					generate_frozen_debugger_recording_assignment (target)
-				end
-				if last_in_result then
-						-- Assignement in Result is the last expression and
-						-- the source does not use GCable variable, or only in
-						-- an "atomic" way in a simple call.
-					generate_last_return
-				elseif simple_op_assignment /= No_simple_op then
-					generate_simple_assignment
-				else
-					generate_assignment
-				end
-				if is_conditional then
-					buf.generate_block_close
-					if i /= Void then
-						i.generate_end (buf)
-					end
-				end
+			generate_line_info
+			generate_frozen_debugger_hook
+			if context.workbench_mode and then context.assertion_type /= context.in_invariant then
+				generate_frozen_debugger_recording_assignment (target)
+			end
+			if last_in_result then
+					-- Assignement in Result is the last expression and
+					-- the source does not use GCable variable, or only in
+					-- an "atomic" way in a simple call.
+				generate_last_return
+			elseif simple_op_assignment /= No_simple_op then
+				generate_simple_assignment
+			else
+				generate_assignment
 			end
 		end
 

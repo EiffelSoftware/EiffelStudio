@@ -145,7 +145,6 @@ feature -- Criterion names
 	ql_cri_has_constraint: STRING is "has_constraint"
 	ql_cri_has_creation_constraint: STRING is "has_creation_constraint"
 	ql_cri_is_reference: STRING is "is_reference"
-	ql_cri_is_self_initializing: STRING is "is_self_initializing"
 
 	ql_cri_is_used: STRING is "is_used"
 

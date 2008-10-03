@@ -1844,9 +1844,15 @@ feature -- Signature checking
 					Error_handler.insert_error (vffd5)
 				end
 
+				if l_class.class_id = written_in then
+					type_a_checker.check_type_validity (solved_type, Void)
+				end
 				if arguments /= Void then
 						-- Check types of arguments
 					arguments.check_types (feat_table, Current)
+					if l_class.class_id = written_in then
+						arguments.check_type_validity (l_class, Current, type_a_checker)
+					end
 				end
 			end
 		end
@@ -2808,7 +2814,7 @@ feature -- Debugging
 	valid_body_id: BOOLEAN is
 			-- Use of this routine as precondition for real_body_id.
 		do
-			Result := ((not is_attribute)
+			Result := ((not is_attribute or else {a: ATTRIBUTE_I} Current and then a.has_body)
 						and then (not is_constant)
 						and then (not is_deferred)
 						and then (not is_unique)
@@ -2884,6 +2890,7 @@ feature {FEATURE_I} -- Implementation
 	is_export_status_none_mask: NATURAL_32 is 0x40000
 	has_function_origin_mask: NATURAL_32 is 0x80000 -- Used in ATTRIBUTE_I
 	has_replicated_ast_mask: NATURAL_32 is 0x100000
+	has_body_mask: NATURAL_32 is 0x200000 -- Used in ATTRIBUTE_I
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

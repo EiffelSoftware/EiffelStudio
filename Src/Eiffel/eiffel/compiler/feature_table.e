@@ -952,27 +952,27 @@ end
 			end
 		end
 
---	update_instantiator2 is
---			-- Look for generic types in the result and arguments of
---			-- the features assuming that the associated class is
---			-- syntactically changed
---		require
---			associated_class.changed
---		local
---			a_class: CLASS_C
---			feature_i: FEATURE_I
---		do
---			from
---				start
---				a_class := associated_class
---			until
---				after
---			loop
---				feature_i := item_for_iteration
---				feature_i.update_instantiator2 (a_class)
---				forth
---			end
---		end
+	update_instantiator2 is
+			-- Look for generic types in the result and arguments of
+			-- the features assuming that the associated class is
+			-- syntactically changed
+		require
+			associated_class.changed
+		local
+			a_class: CLASS_C
+			feature_i: FEATURE_I
+		do
+			from
+				start
+				a_class := associated_class
+			until
+				after
+			loop
+				feature_i := item_for_iteration
+				feature_i.update_instantiator2 (a_class)
+				forth
+			end
+		end
 
 	skeleton: GENERIC_SKELETON is
 			-- Skeleton of the associated class

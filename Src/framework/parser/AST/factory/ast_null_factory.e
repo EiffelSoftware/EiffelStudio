@@ -794,7 +794,7 @@ feature -- Access
 		do
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS; q: BOOLEAN; q_as: SYMBOL_AS): FORMAL_DEC_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_DEC_AS is
 			-- New FORMAL_DECLARATION AST node
 		do
 		end

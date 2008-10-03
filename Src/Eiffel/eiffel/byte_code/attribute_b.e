@@ -89,25 +89,51 @@ feature
 			end
 		end
 
-	enlarged: ATTRIBUTE_B is
+	wrapper: FEATURE_B
+			-- A wrapper to be called for an attribute that may need to be initialized
+			-- (Void if none)
+		local
+			p: like parent
+		do
+			if False then
+				debug ("to_implement")
+					(create {REFACTORING_HELPER}).to_implement ("Provide check that will ensure the attribute may need to be initialized.")
+				end
+					-- Call a wrapper that performs the required initialization.
+				create {FEATURE_B} Result.make (context_type.associated_class.feature_of_rout_id (routine_id), type, Void)
+				p := parent
+				if p /= Void then
+					Result.set_parent (p)
+					if p.message = Current then
+						p.set_message (Result)
+					else
+						check
+							p.target = Current
+						end
+						p.set_target (Result)
+					end
+				end
+			end
+		end
+
+	enlarged: CALL_ACCESS_B is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		local
+			f: FEATURE_B
+			feature_bl: FEATURE_BL
 			attr_bl: ATTRIBUTE_BL
-			i: like initialization_byte_code
-			j: like initialization_byte_code
 		do
-			if initialization_byte_code /= Void then
-					-- Enlarge initialization byte node that keeps
-					-- the current node as well.
-				i := initialization_byte_code
-				initialization_byte_code := Void
-				j := i.enlarged
-				initialization_byte_code := i
-			end
-			if j /= Void and then {a: ATTRIBUTE_BL} j.target then
-				Result := a
-				Result.set_is_initializing (j)
+			f := wrapper
+			if f /= Void then
+					-- Call a wrapper that performs the required initialization.
+				if context.final_mode then
+					create feature_bl.make
+				else
+					create {FEATURE_BW} feature_bl.make
+				end
+				feature_bl.fill_from (f)
+				Result := feature_bl
 			else
 				if context.final_mode then
 					create attr_bl
@@ -117,20 +143,6 @@ feature
 				attr_bl.fill_from (Current)
 				Result := attr_bl
 			end
-		end
-
-feature {BYTE_NODE_VISITOR} -- Access
-
-	initialization_byte_code: ASSIGN_B
-			-- Code to initialize attribute before use (if required)
-
-feature -- Modification
-
-	set_is_initializing (b: ASSIGN_B)
-			-- Mark that the attribute may need to be initialized if it is not initialized yet
-			-- using the given code `b'.
-		do
-			initialization_byte_code := b
 		end
 
 feature -- Byte code generation
@@ -185,9 +197,9 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-			if initialization_byte_code /= Void then
-					-- Inlining will not be done if the feature
-					-- has a creation instruction
+			if False then
+				(create {REFACTORING_HELPER}).to_implement ("Check if attribute has to be initialized.")
+					-- Inlining will not be done if the attribute has to be initialized
 				Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 			end
 		end

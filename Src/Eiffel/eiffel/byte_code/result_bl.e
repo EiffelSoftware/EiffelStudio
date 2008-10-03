@@ -9,7 +9,7 @@ class
 inherit
 	RESULT_B
 		redefine
-			analyze, used, generate, parent, set_parent,
+			used, generate, parent, set_parent,
 			free_register, print_register, propagate,
 			type
 		end;
@@ -41,20 +41,6 @@ feature
 
 feature -- C code generation
 
-	analyze
-			-- <Precursor>
-		local
-			i: like initialization_byte_code
-		do
-			i := initialization_byte_code
-			if i /= Void then
-					-- Initialization byte node includes this node.
-				initialization_byte_code := Void
-				i.analyze
-				initialization_byte_code := i
-			end
-		end
-
 	propagate (r: REGISTRABLE) is
 			-- Do nothing
 		do
@@ -67,19 +53,9 @@ feature -- C code generation
 		end;
 
 	generate
-			-- Generate result initialization if required.
-		local
-			b: like initialization_byte_code
+			-- Do nothing
 		do
-			if initialization_byte_code /= Void then
-					-- Avoid recursion
-				b := initialization_byte_code
-				initialization_byte_code := Void
-				b.generate
-				initialization_byte_code := b
-			end
 		end
-
 
 	free_register is
 			-- Do nothing

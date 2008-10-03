@@ -134,16 +134,9 @@ feature
 			context.generate_local_declaration (0, False)
 				-- Generation of temporary variables under the control
 				-- of the GC
-			context.generate_temporary_ref_variables;
-				-- Dynamic type of Current
-			if context.dftype_current > 1 then
-				buf.put_new_line;
-				buf.put_string ("RTCFDT;");
-			end;
-			if context.dt_current > 1 then
-				buf.put_new_line;
-				buf.put_string ("RTCDT;");
-			end;
+			context.generate_temporary_ref_variables
+				-- Generate dynamic type of Current.
+			context.generate_dtype_declaration (False)
 
 				-- Generation of the local variable array
 			i := context.ref_var_used;

@@ -1936,33 +1936,12 @@ Formal_generic:
 			{
 				if $3 /= Void then
 					if $3.creation_constrain /= Void then
-						$$ := ast_factory.new_formal_dec_as ($1, $3.type, $3.creation_constrain.feature_list, $3.constrain_symbol, $3.creation_constrain.create_keyword, $3.creation_constrain.end_keyword, False, Void)
+						$$ := ast_factory.new_formal_dec_as ($1, $3.type, $3.creation_constrain.feature_list, $3.constrain_symbol, $3.creation_constrain.create_keyword, $3.creation_constrain.end_keyword)
 					else
-						$$ := ast_factory.new_formal_dec_as ($1, $3.type, Void, $3.constrain_symbol, Void, Void, False, Void)
+						$$ := ast_factory.new_formal_dec_as ($1, $3.type, Void, $3.constrain_symbol, Void, Void)
 					end					
 				else
-					$$ := ast_factory.new_formal_dec_as ($1, Void, Void, Void, Void, Void, False, Void)
-				end
-			}
-	|	TE_QUESTION Formal_parameter
-			{
-				if $2 /= Void then
-						-- Needs to be done here, in case current formal is used in
-						-- Constraint.
-					formal_parameters.extend ($2)
-					$2.set_position (formal_parameters.count)
-				end
-			}
-			Constraint
-			{
-				if $4 /= Void then
-					if $4.creation_constrain /= Void then
-						$$ := ast_factory.new_formal_dec_as ($2, $4.type, $4.creation_constrain.feature_list, $4.constrain_symbol, $4.creation_constrain.create_keyword, $4.creation_constrain.end_keyword, True, $1)
-					else
-						$$ := ast_factory.new_formal_dec_as ($2, $4.type, Void, $4.constrain_symbol, Void, Void, True, $1)
-					end					
-				else
-					$$ := ast_factory.new_formal_dec_as ($2, Void, Void, Void, Void, Void, True, $1)
+					$$ := ast_factory.new_formal_dec_as ($1, Void, Void, Void, Void, Void)
 				end
 			}
 	;

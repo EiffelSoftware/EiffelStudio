@@ -1481,9 +1481,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- We do not have a creation constraint, so stop checking for it.
 								l_check_creation_readiness := False
 							end
-							if l_formal_dec_as.is_self_initializing and then not l_generic_parameter.is_self_initializing (a_type_context) then
-								error_handler.insert_error (create {VTGD4}.make (Current, i, a_context_feature, a_type_context))
-							end
 						end
 						if l_generic_parameter.has_generics then
 								-- Recursion

@@ -238,7 +238,10 @@ feature {NONE} --Implementation
 			Result.init (l_feat)
 			l_type_i := context.real_type_in (l_feat.type, cl_type.associated_class_type (context.context_class_type.type).type)
 			Result.set_type (l_type_i)
-			Result := Result.enlarged
+			Result ?= Result.enlarged
+			check
+				result_attached: Result /= Void
+			end
 			Result.analyze_on (reg)
 			Result.set_register (No_register)
 		end

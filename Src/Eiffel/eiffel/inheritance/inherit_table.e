@@ -337,6 +337,8 @@ feature
 				-- Track generic types in the result and arguments of
 				-- features of a changed class
 			if a_class.changed then
+					-- Generic types tracking
+				resulting_table.update_instantiator2
 					-- Compute invariant clause
 				compute_invariant;
 			end;
@@ -458,9 +460,6 @@ end;
 			assert_prop_list := Void;
 
 
-				-- Ensure a wrapper is generated for attributes of a formal generic type.
-			mark_generic_attribute_seeds (resulting_table)
-
 -- Line removed by Frederic Deramat 15/04/92.
 --
 --    *** resulting_table.process_polymorphism (feature_table); ***
@@ -487,6 +486,10 @@ end;
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			a_class.set_current_feature_table (resulting_table)
+
+				-- Ensure a wrapper is generated for attributes of a formal generic type.
+			mark_generic_attribute_seeds (resulting_table)
+
 				-- Flush all the routines we have created so far to the disk.
 			resulting_table.flush
 				-- Update table `changed_features' of `a_class'.
@@ -1668,7 +1671,6 @@ feature {NONE} -- Implementation
 			resulting_table_attached: resulting_table /= Void
 		local
 			f: FEATURE_I
-			a: ATTRIBUTE_I
 		do
 			from
 				resulting_table.start
@@ -1676,12 +1678,16 @@ feature {NONE} -- Implementation
 				resulting_table.after
 			loop
 				f := resulting_table.item_for_iteration
-				if f.is_attribute and then f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
-					a ?= f
-					check
-						a_attached: a /= Void
+				if f.is_attribute and then {a: ATTRIBUTE_I} f then
+					if
+						a.has_body or else
+						f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal
+					then
+						debug ("to_implement")
+							(create {REFACTORING_HELPER}).to_implement ("Ensure a wrapper is generated if attribute can be redeclared to be self-initializing.")
+						end
+						a.set_generate_in (f.written_in)
 					end
-					a.set_generate_in (f.written_in)
 				end
 				resulting_table.forth
 			end

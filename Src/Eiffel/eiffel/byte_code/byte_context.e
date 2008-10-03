@@ -1702,6 +1702,37 @@ feature -- Access
 			object_test_local_offset := saved_context.object_test_local_offset
 		end
 
+	generate_dtype_declaration (is_once: BOOLEAN)
+			-- Declare the 'dtype' variable which holds the pre-computed
+			-- dynamic type of current. To avoid unnecssary computations,
+			-- this is not done in case of a once, before we know we have
+			-- to really enter the body of the routine.
+		local
+			buf: like buffer
+		do
+			buf := buffer
+			if dftype_current > 1 then
+					-- There has to be more than one usage of the dynamic type
+					-- of current in order to have this variable generated.
+				buf.put_new_line
+				if is_once then
+					buf.put_string ("RTCFDD;")
+				else
+					buf.put_string ("RTCFDT;")
+				end
+			end
+			if dt_current > 1 then
+					-- There has to be more than one usage of the full dynamic type
+					-- of current in order to have this variable generated.
+				buf.put_new_line
+				if is_once then
+					buf.put_string ("RTCDD;")
+				else
+					buf.put_string ("RTCDT;")
+				end
+			end
+		end
+
 	generate_current_dtype is
 			-- Generate the dynamic type of `Current'
 		do

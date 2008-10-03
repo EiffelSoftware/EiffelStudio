@@ -144,6 +144,9 @@ feature -- Query
 	editor_font_zoom_reset_command: EB_EDITOR_FONT_ZOOM_RESET_COMMAND
 			-- Command that reset editor font
 
+	editor_font_zoom_reset_numpad_command: ES_EDITOR_FONT_ZOOM_RESET_NUMPAD_COMMAND
+			-- Command that reset editor font
+
 	customized_formatter_command: EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND
 			-- Command to setup customzied formatter
 
@@ -525,6 +528,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_reset_command = a_cmd
 		end
 
+	set_editor_font_zoom_reset_numpad_command (a_cmd: like editor_font_zoom_reset_numpad_command) is
+			-- Set `editor_font_zoom_reset_numpad_command'
+		do
+			editor_font_zoom_reset_numpad_command := a_cmd
+		ensure
+			set: editor_font_zoom_reset_numpad_command = a_cmd
+		end
+
 	set_customized_formatter_command (a_cmd: like customized_formatter_command) is
 			-- Set `customized_formatter_command' with `a_cmd'.
 		do
@@ -606,6 +617,7 @@ feature -- Recycle
 			editor_font_zoom_out_command.recycle
 			editor_font_zoom_out_numpad_command.recycle
 			editor_font_zoom_reset_command.recycle
+			editor_font_zoom_reset_numpad_command.recycle
 
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle

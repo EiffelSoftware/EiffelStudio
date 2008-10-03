@@ -1087,6 +1087,7 @@ feature -- Keybord shortcuts Customization
 			l_hash.put ([False,  True, False, key_strings.item (key_numpad_subtract).twin.as_string_8], "zoom_out_numpad")
 
 			l_hash.put ([False,  True, False, key_strings.item (key_0).twin.as_string_8], "zoom_reset")
+			l_hash.put ([False,  True, False, key_strings.item (key_numpad_0).twin.as_string_8], "zoom_reset_numpad")
 
 			Result.extend ([l_hash, main_window_group])
 		end

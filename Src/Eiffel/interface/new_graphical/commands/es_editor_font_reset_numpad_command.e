@@ -1,15 +1,15 @@
 indexing
-	description: "Same as {EB_EDITOR_FONT_ZOOM_IN_COMMAND}, except using different shortcut"
+	description: "Same as {EB_EDITOR_FONT_ZOOM_RESET_COMMAND}, except using different shortcut"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
-	ES_EDITOR_FONT_ZOOM_IN_NUMPAD_COMMAND
+	ES_EDITOR_FONT_ZOOM_RESET_NUMPAD_COMMAND
 
 inherit
-	EB_EDITOR_FONT_ZOOM_IN_COMMAND
+	EB_EDITOR_FONT_ZOOM_RESET_COMMAND
 		redefine
 			init_accelerator
 		end
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			create l_preference
-			l_shortcut := l_preference.preferences.editor_data.shortcuts.item ("zoom_in_numpad")
+			l_shortcut := l_preference.preferences.editor_data.shortcuts.item ("zoom_reset_numpad")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator.actions.extend (agent execute)
 			set_referred_shortcut (l_shortcut)
@@ -64,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_EDITOR_FONT_ZOOM_IN_NUMPAD_COMMAND
+end -- class ES_EDITOR_FONT_ZOOM_RESET_NUMPAD_COMMAND

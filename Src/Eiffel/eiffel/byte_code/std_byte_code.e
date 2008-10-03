@@ -286,7 +286,10 @@ feature -- Analyzis
 				-- Generate function signature
 			extern := True
 			name := internal_name
-			if l_is_once and then l_context.is_once_call_optimized then
+			if
+				l_is_once and then l_context.is_once_call_optimized or else
+				context.current_feature.is_attribute
+			then
 					-- Once routines should be protected against exceptions.
 					-- C compiler generates inefficient code for functions that catch exceptions.
 					-- Therefore two functions are generated instead of one
@@ -857,30 +860,9 @@ end
 				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
 
-				-- Declare the 'dtype' variable which holds the pre-computed
-				-- dynamic type of current. To avoid unnecssary computations,
-				-- this is not done in case of a once, before we know we have
-				-- to really enter the body of the routine.
-			if context.dftype_current > 1 then
-					-- There has to be more than one usage of the dynamic type
-					-- of current in order to have this variable generated.
-				buf.put_new_line
-				if l_is_once then
-					buf.put_string ("RTCFDD;")
-				else
-					buf.put_string ("RTCFDT;")
-				end
-			end
-			if context.dt_current > 1 then
-					-- There has to be more than one usage of the full dynamic type
-					-- of current in order to have this variable generated.
-				buf.put_new_line
-				if l_is_once then
-					buf.put_string ("RTCDD;")
-				else
-					buf.put_string ("RTCDT;")
-				end
-			end
+				-- Generate dynamic type of Current.
+			context.generate_dtype_declaration (l_is_once)
+
 			if wkb_mode or else context.system.keep_assertions then
 					-- Generate the int local variable saving the global `nstcall'.
 				buf.put_new_line

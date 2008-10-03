@@ -38,27 +38,6 @@ feature
 	assigner_name_id: INTEGER
 			-- Id of `assigner_name' in `Names_heap' table
 
-	has_function_origin: BOOLEAN
-			-- Flag for detecting a redefinition of a function into an
-			-- attribute. This flag is set by routine `process' of
-			-- class FEATURE_TABLE and will be useful for generating a
-			-- access function of this attribute in the C file associated
-			-- to the class where this attribute is available.
-		do
-			Result := feature_flags & has_function_origin_mask = has_function_origin_mask
-		end
-
-	set_has_function_origin (b: BOOLEAN) is
-			-- Assign `b' to `has_function_origin'.
-		do
-			feature_flags := feature_flags.set_bit_with_mask (b, has_function_origin_mask)
-		ensure
-			has_function_origin_set: has_function_origin = b
-		end
-
-	is_attribute: BOOLEAN is True
-			-- is the feature an attribute ?
-
 	extension: IL_EXTENSION_I
 			-- Deferred external information
 
@@ -85,6 +64,45 @@ feature
 			-- Is an attribute undefinable ?
 		do
 			-- Do nothing
+		end
+
+feature -- Status report
+
+	is_attribute: BOOLEAN = True
+			-- Is the feature an attribute?
+
+	has_function_origin: BOOLEAN
+			-- Flag for detecting a redefinition of a function into an
+			-- attribute. This flag is set by routine `process' of
+			-- class FEATURE_TABLE and will be useful for generating a
+			-- access function of this attribute in the C file associated
+			-- to the class where this attribute is available.
+		do
+			Result := feature_flags & has_function_origin_mask = has_function_origin_mask
+		end
+
+	has_body: BOOLEAN
+			-- Is there an explicit attribute body?
+		do
+			Result := feature_flags & has_body_mask = has_body_mask
+		end
+
+feature -- Status setting
+
+	set_has_function_origin (b: BOOLEAN) is
+			-- Assign `b' to `has_function_origin'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_function_origin_mask)
+		ensure
+			has_function_origin_set: has_function_origin = b
+		end
+
+	set_has_body (b: BOOLEAN) is
+			-- Assign `b' to `has_body_mask'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_body_mask)
+		ensure
+			has_body_set: has_body = b
 		end
 
 feature -- Element Change
@@ -173,12 +191,55 @@ feature -- Element Change
 			result_type: TYPE_A
 			internal_name: STRING
 			return_type_name: STRING
+			l_byte_code: BYTE_CODE
+			tmp_body_index: INTEGER
 			l_byte_context: like byte_context
+			create_info: CREATE_FEAT
+			is_initialization_required: BOOLEAN
 		do
 			if used then
-					-- Generation of a routine to access the attribute
 				generate_header (class_type, buffer)
+
+					-- Code generation of an explicit attribute body.
+				if has_body then
+					tmp_body_index := body_index
+					l_byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
+					if l_byte_code = Void then
+						l_byte_code := byte_server.disk_item (tmp_body_index)
+					end
+
+						-- Generation of C code for an Eiffel feature written in
+						-- the associated class of the current type.
+					l_byte_context := byte_context
+
+					if System.in_final_mode and then System.inlining_on then
+							-- We need to set `{BYTE_CONTEXT}.byte_code', since it is used
+							-- in `inlined_byte_code'.
+						l_byte_context.set_byte_code (l_byte_code)
+						l_byte_code := l_byte_code.inlined_byte_code
+					end
+
+						-- Generation of the C routine
+					l_byte_context.set_byte_code (l_byte_code)
+					l_byte_context.set_current_feature (Current)
+					l_byte_code.analyze
+					l_byte_code.set_real_body_id (real_body_id (class_type))
+					l_byte_code.generate
+					l_byte_context.clear_feature_data
+				end
+
+					-- Generation of a routine to access the attribute
 				result_type := type.adapted_in (class_type)
+
+				if not result_type.is_expanded and then has_body then
+					if not result_type.is_attached then
+							-- Whether the type is attached or not should be detected at run-time.
+						create create_info.make (feature_id, rout_id_set.first)
+						create_info.analyze
+					end
+					is_initialization_required := True
+				end
+
 				internal_name := Encoder.feature_name (class_type.type_id, body_index)
 				add_in_log (class_type, internal_name)
 
@@ -199,6 +260,45 @@ feature -- Element Change
 					buffer.put_string ("r.")
 					result_type.c_type.generate_typed_tag (buffer)
 					buffer.put_character (';')
+				end
+				if is_initialization_required then
+					buffer.put_new_line
+					buffer.put_string ("if (!")
+					generate_attribute_access (class_type, buffer, "Current")
+					buffer.put_string (") {")
+					buffer.indent
+					if not result_type.is_attached then
+							-- Check if type is really attached.
+						buffer.put_new_line
+						create_info.generate_start (buffer)
+						create_info.generate_gen_type_conversion (0)
+						buffer.put_new_line
+						buffer.put_string ("if (")
+						buffer.put_string ("RTAT(")
+						create_info.generate_type_id (buffer, byte_context.final_mode, 0)
+						buffer.put_string (")) {")
+						buffer.indent
+					end
+					if has_body then
+						buffer.put_new_line
+						generate_attribute_access (class_type, buffer, "Current")
+						buffer.put_string (" = (")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_body (Current))")
+						if byte_context.workbench_mode then
+							buffer.put_character ('.')
+							result_type.c_type.generate_typed_field (buffer)
+						end
+						buffer.put_character (';')
+					end
+					if create_info /= Void then
+						buffer.generate_block_close
+						create_info.generate_end (buffer)
+					end
+					buffer.generate_block_close
+				end
+
+				if byte_context.workbench_mode then
 					buffer.put_new_line
 					buffer.put_string ("r.")
 					result_type.c_type.generate_typed_field (buffer)
@@ -219,6 +319,7 @@ feature -- Element Change
 				buffer.generate_block_close
 				buffer.put_new_line
 				buffer.put_new_line
+				l_byte_context.clear_feature_data
 			end
 		end
 

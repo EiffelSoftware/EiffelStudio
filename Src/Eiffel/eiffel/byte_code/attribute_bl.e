@@ -8,7 +8,7 @@ class ATTRIBUTE_BL
 inherit
 	ATTRIBUTE_B
 		redefine
-			free_register, generate,
+			free_register,
 			basic_register, generate_access_on_type,
 			is_polymorphic, generate_on, generate_access,
 			analyze_on, analyze, set_parent, parent, set_register, register
@@ -59,27 +59,17 @@ feature
 
 	analyze is
 			-- Analyze attribute
-		local
-			i: like initialization_byte_code
 		do
-			i := initialization_byte_code
-			if i /= Void then
-					-- Initialization byte node includes this node.
-				initialization_byte_code := Void
-				i.analyze
-				initialization_byte_code := i
-			else
 debug
 io.error.put_string ("In attribute_bl%N")
 io.error.put_string (attribute_name)
 io.error.put_new_line
 end
-				analyze_on (Current_register)
-				get_register
+			analyze_on (Current_register)
+			get_register
 debug
 io.error.put_string ("Out attribute_bl%N")
 end
-			end
 		end
 
 	analyze_on (reg: REGISTRABLE) is
@@ -111,21 +101,6 @@ io.error.put_string ("Out attribute_bl [analyze_on]: ")
 io.error.put_string (attribute_name)
 io.error.put_new_line
 end
-		end
-
-	generate
-			-- <Precursor>
-		local
-			b: like initialization_byte_code
-		do
-			if initialization_byte_code /= Void then
-					-- Avoid recursion
-				b := initialization_byte_code
-				initialization_byte_code := Void
-				b.generate
-				initialization_byte_code := b
-			end
-			Precursor
 		end
 
 	generate_on (reg: REGISTRABLE) is

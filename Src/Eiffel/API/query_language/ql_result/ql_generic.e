@@ -215,14 +215,6 @@ feature -- Status report
 			good_result: Result implies ast.has_creation_constraint
 		end
 
-	is_self_initializing: BOOLEAN
-			-- Is Current formal self-initializing?
-		do
-			Result := ast.is_self_initializing
-		ensure
-			good_result: Result implies ast.is_self_initializing
-		end
-
 	is_reference: BOOLEAN is
 			-- Is Current formal to be always instantiated as a reference type?
 		do

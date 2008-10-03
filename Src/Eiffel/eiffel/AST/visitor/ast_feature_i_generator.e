@@ -263,7 +263,11 @@ feature {NONE} -- Implementation
 								(current_class, names_heap.item (feature_name_id), node.start_location)
 							)
 						end
-						create {DYN_FUNC_I} l_func
+						create l_attr.make
+						l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
+						l_attr.set_has_body (True)
+						l_result := l_attr
+						l_result.set_is_empty (l_as.content.is_empty)
 					elseif l_routine.is_deferred then
 							-- Deferred function
 						create l_def_func
@@ -357,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

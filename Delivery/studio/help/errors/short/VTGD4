@@ -1,3 +1,0 @@
-Error: Formal generic parameter is self-initializing and the actual one is not.
-What to do: Make sure that in a generic derivation the actual type parameter
-  is self-initializing.

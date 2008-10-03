@@ -1234,31 +1234,19 @@ feature -- Access
 			Result := act_type.is_expanded and then act_type.associated_class.is_deferred
 		end
 
-	valid_expanded_creation (class_c: CLASS_C): BOOLEAN is
+	valid_expanded_creation (c: CLASS_C): BOOLEAN
 			-- Is the expanded type has an associated class with one
 			-- creation routine which is a version of {ANY}.default_create
-			-- exported `class_c'.
+			-- exported to `class_c'.
 		require
 			has_expanded
-		do
-			if is_expanded then
-				Result := is_self_initializing (class_c)
-			else
-				Result := True
-			end
-		end
-
-	is_self_initializing (c: CLASS_C): BOOLEAN
-			-- Is type self-initializing in `c'?
 		local
 			a: CLASS_C
 			creators: HASH_TABLE [EXPORT_I, STRING]
 		do
-			if is_attached then
+			if is_expanded then
 				a := associated_class
-				if a.is_deferred then
-						-- Deferred type is not self-initializing.
-				elseif a.is_external then
+				if a.is_external then
 					Result := True
 				else
 					creators := a.creators
@@ -1272,23 +1260,6 @@ feature -- Access
 					end
 				end
 			else
-				Result := True
-			end
-		end
-
-	is_initialization_required (c: CLASS_C): BOOLEAN
-			-- May type need initialization in `c'?
-		do
-				-- The cases that require initialization include:
-				--   - attached self-initializing types (except expanded that are initialized eagerly)
-				-- The cases that may require initialization include:
-				--   - anchored types (due to anchor redeclaration)
-				--   - formal generics that are self-initializing (due to generic substitution)
-			if
-				is_attached and then not is_expanded and then is_self_initializing (c) or else
-				is_like and then not is_like_argument or else
-				is_formal and then is_self_initializing (c)
-			then
 				Result := True
 			end
 		end

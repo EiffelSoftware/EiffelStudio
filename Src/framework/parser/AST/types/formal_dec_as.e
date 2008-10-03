@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword; q: BOOLEAN; q_as: like is_self_initializing_symbol) is
+	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
@@ -36,10 +36,6 @@ feature {NONE} -- Initialization
 			if ek_as /= Void then
 				end_keyword_index := ek_as.index
 			end
-			is_self_initializing := q
-			if q_as /= Void then
-				is_self_initializing_symbol_index := q_as.index
-			end
 		ensure
 			constraints_set: c /= Void implies constraints = c
 			constraints_not_void: constraints /= Void
@@ -48,8 +44,6 @@ feature {NONE} -- Initialization
 			constrain_symbol_set: c_as /= Void implies constrain_symbol_index = c_as.index
 			create_keyword_set: ck_as /= Void implies create_keyword_index = ck_as.index
 			end_keyword_set: ek_as /= Void implies end_keyword_index = ek_as.index
-			is_self_initializing_set: is_self_initializing = q
-			is_self_initializing_symbol_set: q_as /= Void implies is_self_initializing_symbol_index = q_as.index
 		end
 
 feature -- Visitor
@@ -65,9 +59,6 @@ feature -- Roundtrip
 	formal: FORMAL_AS
 			-- Formal generic parameter associated with this structure		
 
-	is_self_initializing_symbol_index: INTEGER
-			-- Self-initializing mark index (if any)
-
 	constrain_symbol_index: INTEGER
 			-- Symbol "->" associated with this structure
 
@@ -76,19 +67,6 @@ feature -- Roundtrip
 
 	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
-
-	is_self_initializing_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
-			-- Self-initializing mark (if any)
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := is_self_initializing_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
 
 	constrain_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
 			-- Symbol "->" associated with this structure
@@ -137,9 +115,6 @@ feature -- Convenience
 			Result := formal.name
 		end
 
-	is_self_initializing: BOOLEAN
-			-- If formal generic self_initializing?
-
 	is_reference: BOOLEAN
 		do
 			Result := formal.is_reference
@@ -182,11 +157,7 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void and is_self_initializing_symbol_index /= 0 then
-				Result := is_self_initializing_symbol (a_list)
-			else
-				Result := formal.first_token (a_list)
-			end
+			Result := formal.first_token (a_list)
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -421,7 +392,6 @@ feature -- Comparison
 			Result := equivalent (formal, other.formal)
 				and then equivalent (constraints, other.constraints)
 				and then equivalent (creation_feature_list, other.creation_feature_list)
-				and then is_self_initializing = other.is_self_initializing
 		end
 
 	equiv (other: like Current): BOOLEAN is
@@ -430,10 +400,7 @@ feature -- Comparison
 		require
 			good_argument: other /= Void
 		do
-			if
-				formal.is_equivalent (other.formal) and then
-				is_self_initializing = other.is_self_initializing
-			then
+			if formal.is_equivalent (other.formal) then
 				Result := constraints.is_equivalent (other.constraints) and then
 					equivalent (creation_feature_list, other.creation_feature_list)
 			end
@@ -445,9 +412,6 @@ feature -- Output
 			-- Produce a STRING version of the CONSTRAINT
 		do
 			create Result.make (50)
-			if is_self_initializing then
-				Result.append_character ('?')
-			end
 			if is_reference then
 				Result.append ("reference ")
 			elseif is_expanded then

@@ -357,7 +357,6 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_has_constraint), query_language_names.ql_cri_has_constraint)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_has_creation_constraint), query_language_names.ql_cri_has_creation_constraint)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_compiled), query_language_names.ql_cri_is_compiled)
-			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_self_initializing), query_language_names.ql_cri_is_self_initializing)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_expanded), query_language_names.ql_cri_is_expanded)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_reference), query_language_names.ql_cri_is_reference)
 			l_hash_table.put (agent new_normal_criterion (generic_scope, query_language_names.ql_cri_is_visible), query_language_names.ql_cri_is_visible)

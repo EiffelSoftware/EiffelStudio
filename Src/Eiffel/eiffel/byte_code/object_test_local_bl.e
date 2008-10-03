@@ -51,13 +51,11 @@ feature {NONE} -- Creation
 			position := other.position
 			type := other.type
 			body_id := other.body_id
-			initialization_byte_code := other.initialization_byte_code
 		ensure
 			multi_constraint_static_set: multi_constraint_static = other.multi_constraint_static
 			position_set: position = other.position
 			type_set: type = other.type
 			body_id_set: body_id = other.body_id
-			initialization_byte_code_set: initialization_byte_code = other.initialization_byte_code
 		end
 
 feature -- Access

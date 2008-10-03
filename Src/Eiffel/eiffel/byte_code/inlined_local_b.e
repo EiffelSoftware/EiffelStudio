@@ -27,7 +27,6 @@ feature
 			parent := l.parent
 			position := l.position
 			type := l.type
-			initialization_byte_code := l.initialization_byte_code
 		end
 
 	enlarged: INLINED_LOCAL_B is

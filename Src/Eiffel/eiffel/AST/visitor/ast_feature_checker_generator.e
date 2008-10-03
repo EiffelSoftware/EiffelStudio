@@ -1698,37 +1698,16 @@ feature -- Implementation
 									end
 								else
 									if
-										l_result_type.is_attached and then
+										l_result_type.is_attached and then not l_result_type.is_expanded and then
 										not context.variables.is_attribute_set (l_feature.feature_id)
 									then
-										if
-											not l_result_type.is_self_initializing (context.current_class) and then
-											context.current_class.lace_class.is_void_safe
-										then
-												-- Attribute is not properly initialized.
-											error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
-										end
+											-- Attribute is not properly initialized.
+										error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
 										if not is_checking_precondition then
 												-- Mark that the attribute is initialized to avoid repeated errors.
 											context.variables.set_attribute (l_feature.feature_id)
 										end
 									end
---									if
---										l_needs_byte_node and then
---										l_result_type.is_initialization_required (context.current_class) and then
---										{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
---											(system.default_create_rout_id).access (void_type, True)
---									then
---										generate_creation (l_access, c, l_result_type, Void, a_name.start_location)
---										if {a: ASSIGN_B} last_byte_node then
---											a.set_is_initialization
---											if {b: ATTRIBUTE_B} l_access then
---												b.set_is_initializing (a)
---											end
---										end
---											-- Update `last_byte_node' that is overwritten by `process_creation'.
---										last_byte_node := l_access
---									end
 								end
 							end
 						else
@@ -2218,32 +2197,14 @@ feature -- Implementation
 								l_feat_type := l_feat_type.as_implicitly_attached
 							end
 						end
-					else
-						if l_feat_type.is_attached then
-							if
-								not l_feat_type.is_self_initializing (context.current_class) and then
-								context.current_class.lace_class.is_void_safe
-							then
-									-- Result is not properly initialized.
-								error_handler.insert_error (create {VEVI}.make_result (context, l_as))
-							end
-								-- Mark that Result is initialized to avoid repeated errors.
-							context.add_result_instruction_scope
-						end
-						if
-							l_result /= Void and then
-							l_feat_type.is_initialization_required (context.current_class) and then
-							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
-								(system.default_create_rout_id).access (void_type, True)
-						then
-							generate_creation (l_result, c, l_feat_type, Void, l_as.start_location)
-							if {a: ASSIGN_B} last_byte_node then
-								a.set_is_initialization
-								l_result.set_is_initializing (a)
-							end
-								-- Update `last_byte_node' that is overwritten by `process_creation'.
-							last_byte_node := l_result
-						end
+					elseif
+						l_feat_type.is_attached and then not l_feat_type.is_expanded and then
+						context.current_class.lace_class.is_void_safe
+					then
+							-- Result is not properly initialized.
+						error_handler.insert_error (create {VEVI}.make_result (context, l_as))
+							-- Mark that Result is initialized to avoid repeated errors.
+						context.add_result_instruction_scope
 					end
 					last_type := l_feat_type
 				end
@@ -2541,31 +2502,13 @@ feature -- Implementation
 								l_type := l_type.as_implicitly_attached
 							end
 						end
-					else
-						if l_type.is_attached then
-							if not l_type.is_self_initializing (context.current_class) and then
-								context.current_class.lace_class.is_void_safe
-							then
-									-- Local is not properly initialized.
-								error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
-							end
-								-- Mark that the local is initialized.
-							context.add_local_instruction_scope (l_as.feature_name.name_id)
+					elseif l_type.is_attached and then not l_type.is_expanded then
+							-- Local is not properly initialized.
+						if context.current_class.lace_class.is_void_safe then
+							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
 						end
-						if
-							l_needs_byte_node and then
-							l_type.is_initialization_required (context.current_class) and then
-							{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
-								(system.default_create_rout_id).access (void_type, True)
-						then
-							generate_creation (l_local, c, l_type, Void, l_as.start_location)
-							if {a: ASSIGN_B} last_byte_node then
-								a.set_is_initialization
-								l_local.set_is_initializing (a)
-							end
-								-- Update `last_byte_node' that is overwritten by `process_creation'.
-							last_byte_node := l_local
-						end
+							-- Mark that the local is initialized.
+						context.add_local_instruction_scope (l_as.feature_name.name_id)
 					end
 					if not is_inherited then
 							-- set some type attributes of the node
@@ -3008,46 +2951,14 @@ feature -- Implementation
 				l_feat_type := current_feature.type
 				if
 					not l_feat_type.is_void and then
+					l_feat_type.is_attached and then
+					not l_feat_type.is_expanded and then
 					not context.is_result_attached and then
-					not current_feature.is_deferred
+					not current_feature.is_deferred and then
+					context.current_class.lace_class.is_void_safe
 				then
-					if l_feat_type.is_attached and then
-						not l_feat_type.is_self_initializing (context.current_class) and then
-						context.current_class.lace_class.is_void_safe
-					then
-							-- Result is not properly initialized.
-						error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
-					end
-					if
-						l_needs_byte_node and then
-						not current_feature.is_external and then
-						not l_as.is_built_in and then
-						l_feat_type.is_initialization_required (context.current_class) and then
-						{c: CALL_ACCESS_B} system.any_type.associated_class.feature_of_rout_id
-							(system.default_create_rout_id).access (void_type, True)
-					then
-						generate_creation (create {RESULT_B}, c, l_feat_type, Void, l_as.start_location)
-						if {a: ASSIGN_B} last_byte_node then
-							a.set_is_initialization
-							if {b: STD_BYTE_CODE} l_byte_code then
-								if b.compound = Void then
-									create l_list.make (1)
-								else
-									create l_list.make (b.compound.count + 1)
-									l_list.start
-									b.compound.do_all (
-										agent (l: BYTE_LIST [BYTE_NODE]; x: BYTE_NODE)
-											do
-												l.extend (x)
-											end
-										(l_list, ?)
-									)
-								end
-								l_list.extend (a)
-								b.set_compound (l_list)
-							end
-						end
-					end
+						-- Result is not properly initialized.
+					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
 				end
 				if is_creation_procedure then
 						-- Verify that attributes are properly initialized.

@@ -230,7 +230,7 @@ feature -- Basic operations: Standard persona
 			retried: BOOLEAN
 		do
 			if not retried then
-				if not {l_debugger: EB_DEBUGGER_MANAGER} development_window or else not l_debugger.is_exiting_eiffel_studio then
+				if not {l_debugger: EB_DEBUGGER_MANAGER} development_window.debugger or else not l_debugger.is_exiting_eiffel_studio then
 						-- If directly exiting Eiffel Studio from EB_DEBUGGER_MANAGER, then we don't save the tools
 						-- layout, because current widgets layout is debug mode layout (not normal mode layout),
 						-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already -- larrym

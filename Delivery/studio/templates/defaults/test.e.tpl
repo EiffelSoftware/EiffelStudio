@@ -16,7 +16,7 @@ ${SETUP_ROUTINE}feature -- Test routines
 
 	${TEST_NAME}
 			-- New test routine
-		do
+${INDEXING}		do
 			assert ("not_implemented", False)
 		end
 

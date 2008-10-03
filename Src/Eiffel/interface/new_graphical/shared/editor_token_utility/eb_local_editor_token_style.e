@@ -58,7 +58,11 @@ feature -- Text
 		do
 			l_writer := token_writer
 			l_writer.new_line
-			l_writer.process_local_text (name)
+			if is_keyword_name then
+				l_writer.process_keyword_text (name, Void)
+			else
+				l_writer.process_local_text (name)
+			end
 			if is_type_enabled and then type /= Void and then feature_i /= Void then
 				l_writer.process_symbol_text (ti_colon)
 				l_writer.add_space
@@ -70,15 +74,18 @@ feature -- Text
 feature -- Status report
 
 	is_type_enabled: BOOLEAN
-			-- Should type of local be displayed?	
-
-feature -- Status report
+			-- Should type of local be displayed?
 
 	is_text_ready: BOOLEAN
 			-- Is `text' ready to be returned?
 		do
 			Result := name /= Void
 		end
+
+feature -- Status report
+
+	is_keyword_name: BOOLEAN
+			-- Is the name actually an Eiffel keyword?
 
 feature -- Setting
 
@@ -90,10 +97,26 @@ feature -- Setting
 			create name.make_from_string (a_name)
 			type := a_type
 			feature_i := a_feature
+			is_keyword_name := False
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name)
 			type_set: type = a_type
 			feature_set: feature_i = a_feature
+			not_is_keyword_name: not is_keyword_name
+		end
+
+	set_keyword_local (a_name: like name; a_type: like type; a_feature: like feature_i) is
+			-- Set `name' with `a_name', `type' with `a_type and `feature_i' with `a_feature'.
+		require
+			a_name_valid: a_name /= Void and then not a_name.is_empty
+		do
+			set_local (a_name, a_type, a_feature)
+			is_keyword_name := True
+		ensure
+			name_set: name /= Void and then name.is_equal (a_name)
+			type_set: type = a_type
+			feature_set: feature_i = a_feature
+			is_keyword_name: is_keyword_name
 		end
 
 	enable_type is

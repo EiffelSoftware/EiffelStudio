@@ -88,23 +88,48 @@ feature -- Attributes
 			Result := True
 		end
 
-	is_local: BOOLEAN
+	is_local: BOOLEAN is
 			-- Is current entity a local?
+		do
+			Result := (flags & is_local_flag) = is_local_flag
+		end
 
-	is_argument: BOOLEAN
+	is_argument: BOOLEAN is
 			-- Is the current entity an argument?
+		do
+			Result := (flags & is_argument_flag) = is_argument_flag
+		end
 
-	is_object_test_local: BOOLEAN
+	is_object_test_local: BOOLEAN is
 			-- Is the current entity an object test local?
+		do
+			Result := (flags & is_object_test_local_flag) = is_object_test_local_flag
+		end
 
-	is_tuple_access: BOOLEAN
+	is_tuple_access: BOOLEAN is
 			-- Is the current entity an access to one of the TUPLE labels?
+		do
+			Result := (flags & is_tuple_access_flag) = is_tuple_access_flag
+		end
 
 	class_id: INTEGER
 			-- The class id of the qualified call.
 
-	argument_position: INTEGER
+	argument_position: INTEGER is
 			-- If the current entity is an argument this gives the position in the argument list.
+		require
+			is_argument: is_argument
+		do
+			Result := first
+		end
+
+	label_position: INTEGER is
+			-- If current entity is a tuple access, gives the position in the tuple actual generic argument list.
+		require
+			is_tuple_access: is_tuple_access
+		do
+			Result := first
+		end
 
 feature -- Roundtrip
 
@@ -184,16 +209,28 @@ feature -- Setting
 
 	set_argument_position (an_argument_position: like argument_position) is
 			-- Set `argument_position' to `an_argument_position'.
+		require
+			is_argument: is_argument
 		do
-			argument_position := an_argument_position
+			first := an_argument_position
 		ensure
 			argument_position_set: argument_position = an_argument_position
+		end
+
+	set_label_position (a_pos: like label_position) is
+			-- Set `label_position' to `a_pos'.
+		require
+			is_tuple_access: is_tuple_access
+		do
+			first := a_pos
+		ensure
+			label_position_set: label_position = a_pos
 		end
 
 	enable_local is
 			-- Set `is_local' to true.
 		do
-			is_local := True
+			flags := flags | is_local_flag
 		ensure
 			is_local_set: is_local
 		end
@@ -201,16 +238,15 @@ feature -- Setting
 	enable_object_test_local is
 			-- Set `is_object_test_local' to true.
 		do
-			is_object_test_local := True
+			flags := flags | is_object_test_local_flag
 		ensure
 			is_object_test_local_set: is_object_test_local
 		end
 
-
 	enable_argument is
 			-- Set `is_argument' to true.
 		do
-			is_argument := True
+			flags := flags | is_argument_flag
 		ensure
 			is_argument_set: is_argument
 		end
@@ -218,10 +254,21 @@ feature -- Setting
 	enable_tuple_access is
 			-- Set `is_tuple_access' to True.
 		do
-			is_tuple_access := True
+			flags := flags | is_tuple_access_flag
 		ensure
 			is_tuple_access_set: is_tuple_access
 		end
+
+feature {NONE} -- Implementation
+
+	flags: NATURAL_8
+			-- Store property of this node.
+
+	is_local_flag: NATURAL_8 = 0x01
+	is_argument_flag: NATURAL_8 = 0x02
+	is_tuple_access_flag: NATURAL_8 = 0x04
+	is_object_test_local_flag: NATURAL_8 is 0x08
+			-- Various possible values for `flags'.
 
 invariant
 	not_local_and_argument_and_tuple_access: is_local and (not is_argument and not is_tuple_access) or

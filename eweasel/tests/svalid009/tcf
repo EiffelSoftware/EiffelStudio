@@ -1,0 +1,12 @@
+test_name	svalid-inherit-labeled-tuple
+test_description A routine depends on a labeled tuple in its code, but if the labeled tuple is redefine to not have the labels anymore the code should still be accepted but is not currently by the compiler.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

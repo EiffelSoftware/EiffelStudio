@@ -286,10 +286,15 @@ feature -- Execution
 
 	go_on_compile is
 			-- Go on running Eiffel compilation.
+		local
+			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
 			output_manager.clear
 			execute_with_c_compilation_flag (True)
-			window_manager.last_focused_development_window.tools.output_tool.update_pixmap
+			l_dev_window := window_manager.last_focused_development_window
+			if l_dev_window /= Void and then not l_dev_window.tools.is_recycled then
+				l_dev_window.tools.output_tool.update_pixmap
+			end
 		end
 
 feature {NONE} -- Execution

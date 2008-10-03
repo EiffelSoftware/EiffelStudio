@@ -653,7 +653,9 @@ feature {E_PROJECT} -- Status update
 			-- Warn the interface that a compilation is over.
 		do
 			is_compiling := False
-			Eiffel_project.Manager.on_project_recompiled (successful)
+			if eiffel_project.manager.is_created then
+				Eiffel_project.Manager.on_project_recompiled (successful)
+			end
 		end
 
 feature {NONE} -- Automatic Backup

@@ -61,7 +61,9 @@ feature {NONE} -- Implementation
 	flush_output is
 			-- Flush any pending messages to the display.
 		do
-			ev_application.process_events
+			if not ev_application.is_destroyed and then ev_application.is_launched then
+				ev_application.process_events
+			end
 		end
 
 	put_new_compilation is

@@ -108,6 +108,7 @@ feature {NONE} -- Callbacks
 			l_error: ES_ERROR_PROMPT
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
+			eiffel_project.degree_output.user_has_requested_cancellation
 			l_eb_debugger_manager := eb_Debugger_manager
 			if l_eb_debugger_manager /= Void and then l_eb_debugger_manager.raised then
 				l_eb_debugger_manager.enable_exiting_eiffel_studio

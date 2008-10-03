@@ -122,11 +122,8 @@ feature -- Status report
 	same_as (other: STONE): BOOLEAN is
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
-		local
-			fns: FEATURE_STONE
 		do
-			fns ?= other
-			Result := fns /= Void and then same_feature (e_feature, fns.e_feature)
+			Result := {fns: FEATURE_STONE} other and then same_feature (e_feature, fns.e_feature)
 		end
 
 	is_valid: BOOLEAN is

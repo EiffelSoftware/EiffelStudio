@@ -173,11 +173,8 @@ feature -- Status report
 
  	same_as (other: STONE): BOOLEAN is
  			-- Does `other' and `Current' represent the same cluster?
- 		local
- 			conv_clu: CLUSTER_STONE
  		do
- 			conv_clu ?= other
- 			Result := conv_clu /= Void and then conv_clu.group = group
+ 			Result := {conv_clu: CLUSTER_STONE} other and then conv_clu.group = group
  		end
 
 	is_cluster: BOOLEAN is

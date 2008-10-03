@@ -131,11 +131,8 @@ feature -- Status report
 
 	same_as (other: STONE): BOOLEAN is
 			-- Do `Current' and `other' represent the same class?
-		local
-			convcur: CLASSI_STONE
 		do
-			convcur ?= other
-			Result := convcur /= Void and then class_i.is_equal (convcur.class_i)
+			Result := {convcur: CLASSI_STONE} other and then class_i.is_equal (convcur.class_i)
 				and then equal (class_i.config_class.overriden_by, convcur.class_i.config_class.overriden_by)
 		end
 

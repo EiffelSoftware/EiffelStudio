@@ -56,8 +56,10 @@ feature -- Visit nodes
 				a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (state))
 			end
 		rescue
-			l_retried := True
-			retry
+			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+				l_retried := True
+				retry
+			end
 		end
 
 invariant

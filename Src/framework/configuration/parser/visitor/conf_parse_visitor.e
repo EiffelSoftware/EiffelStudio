@@ -72,7 +72,9 @@ feature -- Visit nodes
 			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void
 			fully_parsed: not is_error implies a_target.system.is_fully_parsed
 		rescue
-			retry
+			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+				retry
+			end
 		end
 
 	process_library (a_library: CONF_LIBRARY) is

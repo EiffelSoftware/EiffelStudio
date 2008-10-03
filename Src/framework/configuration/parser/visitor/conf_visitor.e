@@ -156,8 +156,12 @@ feature {NONE} -- Implementation
 			-- Raise an exception because we have errors.
 		require
 			is_error: is_error
+		local
+			l_conf_exception: CONF_EXCEPTION
 		do
-			raise (configuration_error_tag)
+			create l_conf_exception
+			l_conf_exception.set_message (configuration_error_tag)
+			l_conf_exception.raise
 		end
 
 feature {NONE} -- Implementation

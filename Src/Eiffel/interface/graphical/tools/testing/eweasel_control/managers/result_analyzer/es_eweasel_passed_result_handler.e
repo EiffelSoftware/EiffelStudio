@@ -16,19 +16,21 @@ inherit
 
 feature {NONE} -- Implementation
 
-	process_imp (a_lines: !LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
+	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
-			if a_lines.first.has_substring (passed_signature) then
-				create Result
-				Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.passed)
-				Result.set_original_eweasel_ouput (to_one_string (a_lines.twin))
-				Result.set_title (a_lines.first.twin)
-				Result.set_root_class_name (class_name_in_string (a_lines.first.twin))
-				if {l_test: ES_EWEASEL_TEST_RESULT_ITEM} Result then
-					set_with_current_item (l_test)
+			if {l_lines: !LIST [STRING]} a_lines then
+				if l_lines.first.has_substring (passed_signature) then
+					create Result
+					Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.passed)
+					Result.set_original_eweasel_ouput (to_one_string (l_lines.twin))
+					Result.set_title (l_lines.first.twin)
+					Result.set_root_class_name (class_name_in_string (l_lines.first.twin))
+					if {l_test: ES_EWEASEL_TEST_RESULT_ITEM} Result then
+						set_with_current_item (l_test)
+					end
+					result_analyzer.reset_cache
 				end
-				result_analyzer.reset_cache
 			end
 		ensure then
 			valid: Result /= Void implies Result.result_type = {ES_EWEASEL_RESULT_TYPE}.passed

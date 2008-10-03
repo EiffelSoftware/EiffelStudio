@@ -257,44 +257,7 @@ feature -- Query
 	is_submit_successed: BOOLEAN
 			-- If bug report submitted successfully
 
-feature {NONE} -- Access
-
-	support_login: COMM_SUPPORT_BUG_REPORTER
-			-- Reporter used to report bugs to the support system
-
-	remembered_username: STRING_GENERAL
-			-- Last remembered user name
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized or is_initializing
-			is_user_remembered: is_user_remembered
-		do
-			if session_manager.is_service_available then
-				Result ?= session_data.value (username_session_id)
-			end
-			if Result = Void then
-				create {STRING_32} Result.make_empty
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	remembered_password: STRING_GENERAL
-			-- Last remembered password
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized or is_initializing
-			is_user_remembered: is_user_remembered
-		do
-			if session_manager.is_service_available then
-				Result ?= session_data.value (password_session_id)
-			end
-			if Result = Void then
-				create {STRING_32} Result.make_empty
-			end
-		ensure
-			result_attached: Result /= Void
-		end
+feature -- Access
 
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon
@@ -334,6 +297,45 @@ feature {NONE} -- Access
 			--       of `show' to see how it is done.
 		once
 			Result := {ES_DIALOG_BUTTONS}.cancel_button
+		end
+
+feature {NONE} -- Implementation: access
+
+	support_login: COMM_SUPPORT_BUG_REPORTER
+			-- Reporter used to report bugs to the support system
+
+	remembered_username: STRING_GENERAL
+			-- Last remembered user name
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			is_user_remembered: is_user_remembered
+		do
+			if session_manager.is_service_available then
+				Result ?= session_data.value (username_session_id)
+			end
+			if Result = Void then
+				create {STRING_32} Result.make_empty
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	remembered_password: STRING_GENERAL
+			-- Last remembered password
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			is_user_remembered: is_user_remembered
+		do
+			if session_manager.is_service_available then
+				Result ?= session_data.value (password_session_id)
+			end
+			if Result = Void then
+				create {STRING_32} Result.make_empty
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	default_synopsis: STRING = "Enter synopsis"

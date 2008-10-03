@@ -893,7 +893,7 @@ feature {NONE} -- Factory
 			filter_button_attached: filter_button /= Void
 		end
 
-feature {NONE} -- User interface manipulation
+feature -- User interface manipulation
 
 	show is
 			-- Redefine
@@ -913,6 +913,8 @@ feature {NONE} -- User interface manipulation
 				end
 			end
 		end
+
+feature {NONE} -- User interface manipulation
 
 	set_error_count (a_count: like error_count)
 			-- Sets `error_count' to `a_count'

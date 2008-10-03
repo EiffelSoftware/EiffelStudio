@@ -26,7 +26,7 @@ inherit
 create
 	make
 
-feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Docking issues
+feature -- Docking issues
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager
@@ -167,7 +167,7 @@ feature -- Status setting
 				set_last_stone (cst)
 				develop_window.tools.set_last_stone (stone)
 			end
-			
+
 			if widget.is_displayed or else is_auto_hide or else develop_window.link_tools then
 				force_last_stone
 			end

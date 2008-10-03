@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Redefine
+feature -- Access
 
 	default_button: INTEGER
 			-- <Precursor>
@@ -47,6 +47,20 @@ feature {NONE} -- Redefine
 			Result := Interface_names.t_Choose_class
 		end
 
+	buttons: DS_SET [INTEGER]
+			-- <Precursor>
+		do
+			Result := dialog_buttons.ok_cancel_buttons
+		end
+
+	default_confirm_button: INTEGER
+			-- <Precursor>
+		do
+			Result := dialog_buttons.ok_button
+		end
+
+feature {NONE} -- Initialization
+
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
@@ -62,20 +76,6 @@ feature {NONE} -- Redefine
 			on_class_name_entry_changed
 		ensure then
 		end
-
-	buttons: DS_SET [INTEGER]
-			-- <Precursor>
-		do
-			Result := dialog_buttons.ok_cancel_buttons
-		end
-
-	default_confirm_button: INTEGER
-			-- <Precursor>
-		do
-			Result := dialog_buttons.ok_button
-		end
-
-feature {NONE} -- Initialization
 
 	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX) is
 			-- Create the controls and setup the layout

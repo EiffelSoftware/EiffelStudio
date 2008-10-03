@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			Result := l_constants.pixmaps.icon_pixmaps.tool_output_successful_icon
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
+feature -- Initialization
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager

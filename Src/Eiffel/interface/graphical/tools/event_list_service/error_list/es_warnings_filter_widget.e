@@ -12,10 +12,6 @@ class
 
 inherit
 	EV_VERTICAL_BOX
-		export
-			{NONE} all
-			{ANY} is_displayed
-		end
 
 	EB_CONSTANTS
 		export

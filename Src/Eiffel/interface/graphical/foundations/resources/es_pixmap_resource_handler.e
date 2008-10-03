@@ -11,6 +11,8 @@ class
 	ES_PIXMAP_RESOURCE_HANDLER
 
 inherit
+	ANY
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all

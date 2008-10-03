@@ -9,6 +9,8 @@ deferred class
 	ERF_REFACTORING
 
 inherit
+	ANY
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all

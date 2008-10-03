@@ -2231,6 +2231,7 @@ feature -- Implementation
 			l_type_set: TYPE_SET_A
 			l_vtmc4: VTMC4
 			l_error_level: NATURAL_32
+			l_is_not_call: BOOLEAN
 		do
 			l_type_a := last_type.actual_type
 			if l_type_a.is_formal then
@@ -2243,18 +2244,33 @@ feature -- Implementation
 			end
 
 			l_error_level := error_level
+			l_last_type := last_type
 
 			if  not l_type_a_is_multi_constrained then
 				if not l_type_a.is_none and not l_type_a.is_void then
-					if is_inherited and not l_as.is_tuple_access then
-							-- Reuse the feature when it is really one, otherwise when it is a tuple
-							-- access the call to `process_call' will do the right thing for inherited code.
-						l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
+					if is_inherited then
+						if not l_as.is_tuple_access then
+								-- Reuse the feature when it is really one, otherwise when it is a tuple
+								-- access the call to `process_call' will do the right thing for
+								-- inherited code.
+							l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
+						else
+							if {l_tuple_type: TUPLE_TYPE_A} l_last_type.actual_type then
+								l_is_not_call := True
+								last_type := l_tuple_type.generics.item (l_as.label_position)
+							else
+								check
+									False
+								end
+							end
+						end
 					end
 				end
 					-- Type check the call
-				process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
-					False, False, True, False)
+				if not l_is_not_call then
+					process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
+						False, False, True, False)
+				end
 			else
 					-- Multi constraint case
 				if is_inherited then
@@ -2278,7 +2294,6 @@ feature -- Implementation
 							-- As we inherited this feature there's the possiblity that now,
 					from
 						l_result.start
-						l_last_type :=last_type
 					until
 						l_result.after or l_vtmc4 /= Void
 					loop
@@ -2311,10 +2326,10 @@ feature -- Implementation
 						end
 					end
 						-- We inherited this feature. Adapt it's type.
-					last_type := l_feature_type
+					l_last_type := l_feature_type
 				else
 						-- Type check the call
-					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
+					process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
 						False, False, True, False)
 				end
 			end
@@ -2337,6 +2352,13 @@ feature -- Implementation
 							is_tuple_access: is_last_access_tuple_access
 						end
 						l_as.enable_tuple_access
+						if {l_labeled_tuple: NAMED_TUPLE_TYPE_A} l_last_type.actual_type then
+							l_as.set_label_position (l_labeled_tuple.label_position (l_as.feature_name.name))
+						else
+							check
+								False
+							end
+						end
 					end
 				end
 			else
@@ -2589,7 +2611,9 @@ feature -- Implementation
 			l_feature := current_feature
 				-- Look for an argument
 			if is_inherited then
-				l_arg_pos := l_as.argument_position
+				if l_as.is_argument then
+					l_arg_pos := l_as.argument_position
+				end
 			else
 				l_arg_pos := l_feature.argument_position (l_as.feature_name.name_id)
 			end

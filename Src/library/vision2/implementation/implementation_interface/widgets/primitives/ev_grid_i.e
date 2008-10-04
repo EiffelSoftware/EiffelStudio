@@ -3497,7 +3497,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				end
 				redraw_locked
 			end
-
 		end
 
 	redraw_locked is

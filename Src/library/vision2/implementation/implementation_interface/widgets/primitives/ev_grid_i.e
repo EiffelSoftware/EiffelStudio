@@ -3366,11 +3366,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if not is_locked then
 					-- Only perform the redraw if the grid is not locked.
 
-
 					-- Increase the number of times that `redraw_item' has been called
 					-- since the last refresh.
-				redraw_item_counter := redraw_item_counter + 1
-				if redraw_item_counter < maximum_items_redrawn_between_refresh then
+				redraw_object_counter := redraw_object_counter + 1
+				if redraw_object_counter < maximum_objects_redrawn_between_refresh then
 						-- Only perform the exact item calculation if our threshold
 						-- for individual item redrawing has not been met.
 
@@ -3389,7 +3388,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						-- prevents `item_indent' being called twice, once in the virtual x offset calculation
 						-- and once for calculating the width of the item to draw.
 					drawable.redraw_rectangle (column_i.virtual_x_position + l_indent - (internal_client_x - viewport_x_offset), an_item.virtual_y_position - (internal_client_y - viewport_y_offset), column_i.width - l_indent, item_height)
-				elseif redraw_item_counter = maximum_items_redrawn_between_refresh then
+				elseif redraw_object_counter = maximum_objects_redrawn_between_refresh then
 						-- The threshold has been met, so invalidate the complete client area.
 
 					redraw_client_area
@@ -3398,22 +3397,22 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			redraw_locked
 		end
 
-	maximum_items_redrawn_between_refresh: INTEGER is 500
-		-- The maximum number of items for which `redraw_item' works on an individual item
-		-- basis, before the complete client area is invalidated. By performing this, the
-		-- calculation of the items exact position may be by-passed, ensuring large performance
-		-- gains while adding many items.
+	maximum_objects_redrawn_between_refresh: INTEGER is 250
+		-- The maximum number of grid objects for which a combination `redraw_item/row/column'
+		-- may be called before the complete client area is invalidated. By performing this, the
+		-- calculation of the objects exact position may be by-passed, ensuring large performance
+		-- gains while adding many grud objects.
 
-	redraw_item_counter: INTEGER
-		-- A counter to hold the number of times `redraw_item' has been called
+	redraw_object_counter: INTEGER
+		-- A counter to hold the number of times `redraw_item/row/column' has been called
 		-- since the last redraw.
 
-	reset_redraw_item_counter is
+	reset_redraw_object_counter is
 			-- Reset `redraw_item_counter' to 0.
 		do
-			redraw_item_counter := 0
+			redraw_object_counter := 0
 		ensure
-			redraw_item_counter_zero: redraw_item_counter = 0
+			redraw_object_counter_zero: redraw_object_counter = 0
 		end
 
 	redraw_client_area is
@@ -3435,8 +3434,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			col_x1: INTEGER
 		do
 			if not is_locked then
-				col_x1 := a_column.virtual_x_position
-				drawable.redraw_rectangle (col_x1, viewport_y_offset, a_column.width, viewable_height)
+				redraw_object_counter := redraw_object_counter + 1
+				if redraw_object_counter < maximum_objects_redrawn_between_refresh then
+					col_x1 := a_column.virtual_x_position
+					drawable.redraw_rectangle (col_x1, viewport_y_offset, a_column.width, viewable_height)
+				elseif redraw_object_counter = maximum_objects_redrawn_between_refresh then
+					redraw_client_area
+				end
 				redraw_locked
 			end
 		end
@@ -3480,11 +3484,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_y1: INTEGER
 		do
 			if not is_locked then
-				row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-				if is_row_height_fixed then
-					drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, row_height)
-				else
-					drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
+				redraw_object_counter := redraw_object_counter + 1
+				if redraw_object_counter < maximum_objects_redrawn_between_refresh then
+					row_y1 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
+					if is_row_height_fixed then
+						drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, row_height)
+					else
+						drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
+					end
+				elseif redraw_object_counter = maximum_objects_redrawn_between_refresh then
+					redraw_client_area
 				end
 				redraw_locked
 			end

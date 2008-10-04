@@ -2337,6 +2337,13 @@ feature -- Removal
 				upper_index).subrow_count_recursive) or
 				            (is_tree_enabled and then highest_parent_row_within_bounds
 				(lower_index, upper_index) = Void implies row (upper_index).subrow_count = 0)
+			valid_final_row_in_tree_structure: (is_tree_enabled and then
+				highest_parent_row_within_bounds (lower_index, upper_index) /= Void implies
+				upper_index = highest_parent_row_within_bounds (lower_index,
+				upper_index).index + highest_parent_row_within_bounds (lower_index,
+				upper_index).subrow_count_recursive) or
+				            (is_tree_enabled and then highest_parent_row_within_bounds
+				(lower_index, upper_index) = Void implies row (upper_index).subrow_count = 0)
 		do
 			implementation.remove_rows (lower_index, upper_index)
 		ensure

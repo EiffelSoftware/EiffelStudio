@@ -29,32 +29,40 @@ feature {NONE} -- Clean up
 			-- on other objects since these may also be dead and reclaimed.
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+		local
+			l_pool: ?like internal_disposable_pool
+			l_actions: ?like internal_disposable_actions
 		do
-			if not a_disposing and then internal_disposable_pool /= Void then
-				internal_disposable_pool.do_all (agent (a_item: ANY)
-					local
-						l_disposable: SAFE_DISPOSABLE
-						retried: BOOLEAN
-					do
-						if not retried then
-							l_disposable ?= reveal_disposable_item (a_item)
-							if l_disposable /= Void then
-									-- Perform dispose
-								l_disposable.dispose
-							end
+			if a_disposing then
+				l_pool := internal_disposable_pool
+				if l_pool /= Void then
+						-- Twin to prevent index changes.
+					from l_pool.start until l_pool.after loop
+						if {l_disposable: SAFE_DISPOSABLE} reveal_disposable_item (l_pool.item_for_iteration) then
+								-- Perform dispose
+							l_disposable.dispose
 						end
-					rescue
-						retried := True
-						retry
-					end)
-				internal_disposable_pool.wipe_out
+						l_pool.forth
+					end
+					l_pool.wipe_out
+				end
+
+				l_actions := internal_disposable_actions
+				if l_actions /= Void then
+					l_actions.call (Void)
+					l_actions.wipe_out
+				end
 			end
+		ensure then
+			internal_disposable_pool_is_empty: internal_disposable_pool /= Void implies internal_disposable_pool.is_empty
+			internal_disposable_actions_is_empty: internal_disposable_actions /= Void implies internal_disposable_actions.is_empty
 		end
 
 feature {NONE} -- Access
 
 	frozen disposable_pool: DS_ARRAYED_LIST [ANY]
-			-- List of items to be automatically disposed when Current is disposed
+			-- List of items to be automatically disposed when Current is disposed.
+			-- Note: Call `auto_dispose' or `delayed_auto_dispose' rather than use directly!
 		require
 			not_is_zombie: not is_zombie
 		do
@@ -68,37 +76,84 @@ feature {NONE} -- Access
 			result_consistent: Result = Result
 		end
 
-feature {NONE} -- Basic operation
+	frozen disposable_actions: ACTION_SEQUENCE [TUPLE]
+			-- List of agents to be called on dispose.
+			-- Note: Call `perform_auto_dispose' rather than use directly!
+		require
+			not_is_zombie: not is_zombie
+		do
+			Result := internal_disposable_actions
+			if Result = Void then
+				create Result
+				internal_disposable_actions := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
+feature -- Basic operation
 
 	frozen auto_dispose (a_object: ANY)
 			-- Automatically disposes of an object when Current is disposed of.
 			--
 			-- `a_object': Object to dispose of when Current is disposed.
 		require
-			not_is_zombie: not is_zombie
-			not_is_actively_disposing: not is_actively_disposing
 			a_object_attached: a_object /= Void
-			not_disposable_pool_has_a_object: not disposable_pool.has (a_object)
 		do
-			disposable_pool.force_last (a_object)
+			check
+				not_is_zombie: not is_zombie
+				not_is_actively_disposing: not is_actively_disposing
+				not_disposable_pool_has_a_object: not disposable_pool.has (a_object)
+			end
+			if is_interface_usable then
+				disposable_pool.force_last (a_object)
+			end
 		ensure
-			disposable_pool_has_a_object: disposable_pool.has (a_object)
+			disposable_pool_has_a_object: is_interface_usable implies disposable_pool.has (a_object)
 		end
 
 	frozen delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
 			-- Automatically disposes of an object when Current is disposed of.
+			-- Note: DO NOT create any objects in the performed action, this may be called
+			--       during a real GC dispose.
 			--
 			-- `a_action': The action to retrieve a object for when Current is disposed.
 			--             Warning: THe action should not create any objects for Current
 		require
-			not_is_zombie: not is_zombie
-			not_is_actively_disposing: not is_actively_disposing
 			a_action_attached: a_action /= Void
-			not_disposable_pool_has_a_action: not disposable_pool.has (a_action)
 		do
-			disposable_pool.force_last (a_action)
+			check
+				not_is_zombie: not is_zombie
+				not_is_actively_disposing: not is_actively_disposing
+				not_disposable_pool_has_a_action: not disposable_pool.has (a_action)
+			end
+			if is_interface_usable then
+				disposable_pool.force_last (a_action)
+			end
 		ensure
-			disposable_pool_has_a_action: disposable_pool.has (a_action)
+			disposable_pool_has_a_action: is_interface_usable implies disposable_pool.has (a_action)
+		end
+
+	frozen perform_auto_dispose (a_action: PROCEDURE [ANY, TUPLE])
+			-- Automatically performs an action on dispose.
+			-- Note: DO NOT create any objects in the performed action, this may be called
+			--       during a real GC dispose.
+			--
+			-- `a_action': The action to called when Current is disposed.
+		require
+			a_action_attached: a_action /= Void
+		do
+			check
+				not_is_zombie: not is_zombie
+				not_is_actively_disposing: not is_actively_disposing
+				not_disposable_actions_has_a_action: not disposable_actions.has (a_action)
+			end
+			if is_interface_usable then
+				disposable_actions.extend (a_action)
+			end
+		ensure
+			disposable_actions_has_a_action: is_interface_usable implies disposable_actions.has (a_action)
 		end
 
 feature {NONE} -- Query
@@ -124,6 +179,10 @@ feature {NONE} -- Internal implementation cache
 
 	frozen internal_disposable_pool: like disposable_pool
 			-- Cached version of `disposable_pool'
+			-- Note: Do not use directly!
+
+	frozen internal_disposable_actions: like disposable_actions
+			-- Cached version of `disposable_actions'
 			-- Note: Do not use directly!
 
 ;indexing

@@ -76,8 +76,10 @@ feature {NONE} -- Clean up
 	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
 		do
+			if a_disposing then
+				set_inner_session (Void)
+			end
 			Precursor (a_disposing)
-			inner_session := Void
 		ensure then
 			inner_session_detached: inner_session = Void
 		end
@@ -89,20 +91,23 @@ feature {SESSION_MANAGER_S} -- Access
 
 feature {SESSION_MANAGER_S} -- Element change
 
-	set_inner_session (a_session: like inner_session)
+	set_inner_session (a_session: ?like inner_session)
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
-			a_session_attached: a_session /= Void
-			a_session_is_interface_usable: a_session.is_interface_usable
+			a_session_is_interface_usable: a_session /= Void implies a_session.is_interface_usable
 		do
-			if inner_session /= Void then
+			if inner_session /= Void and then inner_session.is_interface_usable then
 					-- remove old event handler
 				inner_session.value_changed_event.unsubscribe (agent on_inner_session_value_changed)
 			end
 
 				-- Set extension name
-			set_extension_name (a_session.extension_name)
+			if a_session /= Void then
+				set_extension_name (a_session.extension_name)
+			else
+				set_extension_name (Void)
+			end
 
 			inner_session := a_session
 			if a_session /= Void then
@@ -111,7 +116,8 @@ feature {SESSION_MANAGER_S} -- Element change
 			end
 		ensure
 			inner_session_set: inner_session = a_session
-			extension_name_set: equal (extension_name,  a_session.extension_name)
+			extension_name_set: (a_session /= Void and then equal (extension_name, a_session.extension_name)) or else
+				(a_session = Void and then extension_name = Void)
 		end
 
 feature -- Query

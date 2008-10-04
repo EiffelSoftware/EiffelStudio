@@ -472,6 +472,8 @@ feature {NONE} -- Factory
 			l_inner_session: SESSION_I
 			l_shared: SHARED_EIFFEL_PROJECT
 			l_set_object: BOOLEAN
+			l_load_agents: ACTION_SEQUENCE [TUPLE]
+			l_load_agent: PROCEDURE [ANY, TUPLE]
 		do
 			l_set_object := True
 
@@ -501,7 +503,28 @@ feature {NONE} -- Factory
 					create l_shared
 					if not l_shared.eiffel_project.workbench.system_defined then
 							-- No project is loaded so we have to initialize the project session once it is loaded.
-						l_shared.eiffel_project.manager.load_agents.extend (agent set_session_object (Result))
+						l_load_agents := l_shared.eiffel_project.manager.load_agents
+						l_load_agent := agent (ia_session: SESSION_I)
+							do
+								if is_interface_usable and then ia_session.is_interface_usable then
+										-- For protection, make sure both objects are usable.
+									set_session_object (ia_session)
+								end
+							end (Result)
+						l_load_agents.extend_kamikaze (l_load_agent)
+						if {l_safe_disposable: SAFE_AUTO_DISPOSABLE} Result then
+								-- We have to be sure to remove the load agent on dispose. When a new window is opened
+								-- with no project loaded, then the window is closed and then project is opened, the agent
+								-- will still be called. We cannot have this.
+							l_safe_disposable.perform_auto_dispose (agent (ia_load_agents: ACTION_SEQUENCE [TUPLE]; ia_agent: PROCEDURE [ANY, TUPLE])
+								do
+									ia_load_agents.prune (ia_agent)
+								end (l_load_agents,l_load_agent))
+						else
+								-- Sanity check. This should only happen if there is alternative implementation (possibly external)
+								-- for {SESSSION_I}.
+							check False end
+						end
 						l_set_object := False
 					end
 				end

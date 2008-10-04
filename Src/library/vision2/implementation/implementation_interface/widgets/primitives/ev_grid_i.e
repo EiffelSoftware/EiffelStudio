@@ -463,11 +463,7 @@ feature -- Access
 			elseif is_vertical_scrolling_per_item then
 				row_index := last_first_row_in_per_item_scrolling
 				if row_index <= row_count and row_index > 0 then
-					if not uses_row_offsets then
-						virtual_y_position_of_last_row := (row_index - 1) * row_height
-					else
-						virtual_y_position_of_last_row := row_internal (row_index).virtual_y_position
-					end
+					virtual_y_position_of_last_row := row_internal (row_index).virtual_y_position_unlocked
 					l_calculation := total_row_height - virtual_y_position_of_last_row
 				end
 			elseif is_vertical_scrolling_per_item = False then

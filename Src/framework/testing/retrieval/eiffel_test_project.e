@@ -237,6 +237,7 @@ feature -- Status setting
 				end
 				test_class_map.search (a_class)
 				if l_is_test_class or test_class_map.found then
+					old_class_map := Void
 					if test_class_map.found then
 						create old_class_map.make (1)
 						old_class_map.put (test_class_map.found_item, test_class_map.found_key)
@@ -244,6 +245,13 @@ feature -- Status setting
 					end
 					if l_is_test_class then
 						report_test_class (a_class)
+						if not test_class_map.has (a_class) and old_class_map /= Void then
+								-- This means even though one of the locators sees `a_class' as a test class, it has not
+								-- been added. This happens for example when the class has a syntax error after the
+								-- inheritance clause. However in this case, we must remove any remaining test routines
+								-- which have previously been in `test_routine_map'.
+							remove_old_classes
+						end
 					else
 						remove_old_classes
 					end

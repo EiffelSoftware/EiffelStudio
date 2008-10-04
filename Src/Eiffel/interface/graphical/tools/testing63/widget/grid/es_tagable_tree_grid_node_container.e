@@ -20,6 +20,7 @@ inherit
 			parent,
 			child_for_token,
 			tree,
+			insert_tag_for_item,
 			add_child,
 			add_item,
 			remove_child,
@@ -116,6 +117,57 @@ feature {NONE} -- Query
 		end
 
 feature {NONE} -- Element change
+
+	insert_tag_for_item (a_tag: !STRING; a_item: !G)
+			-- <Precursor>
+		local
+			l_data: ES_TAGABLE_GRID_TAG_DATA [G]
+			l_row: ?EV_GRID_ROW
+			l_expand: BOOLEAN
+		do
+			if not is_root and not is_evaluated then
+				if descending_tags.is_empty and item_count = 0 then
+					tree.expansion_cache.start
+					tree.expansion_cache.search_forth (tag)
+					l_expand := not tree.expansion_cache.off
+					if l_expand then
+							-- We remove the row here since it will be added when the row expands again
+						tree.expansion_cache.remove_at
+						compute_descendants
+					end
+				end
+			end
+			Precursor (a_tag, a_item)
+			if l_expand then
+				if row.is_expandable then
+					row.expand
+				end
+			end
+
+
+--			if a_tag.is_empty then
+--				if not is_root and then tree.expansion_cache.has (tag) then
+--					l_row := row
+--				end
+--			else
+--				l_data := child_for_token (first_token (a_tag))
+--				if tree.expansion_cache.has (l_data.tag) then
+--					l_row := l_data.row
+--				end
+--			end
+
+
+--			if is_evaluated and not a_tag.is_empty then
+--				l_data := child_for_token (first_token (a_tag))
+--				if tree.expansion_cache.has (l_data.tag) and l_data.row.is_expandable then
+--					l_data.row.expand
+--				end
+--			elseif a_tag.is_empty and not is_root then
+--				if tree.expansion_cache.has (tag) and row.is_expandable then
+--					row.expand
+--				end
+--			end
+		end
 
 	add_child (a_token: !STRING)
 			-- <Precursor>

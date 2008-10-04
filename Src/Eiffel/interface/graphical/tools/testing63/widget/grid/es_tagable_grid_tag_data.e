@@ -21,6 +21,7 @@ inherit
 			make as make_node
 		undefine
 			child_for_token,
+			insert_tag_for_item,
 			add_child,
 			add_item,
 			remove_child,

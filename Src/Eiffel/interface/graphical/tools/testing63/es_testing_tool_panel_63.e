@@ -389,20 +389,22 @@ feature {NONE} -- Status setting: stones
 		local
 			l_name: STRING
 		do
-			if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
-				l_name := l_class_stone.class_name
-				if test_suite.is_service_available then
-					test_suite.service.synchronize_with_class (l_class)
-					if test_suite.service.is_test_class (l_class) then
-						view_box.set_text ("class")
+			if not is_in_stone_synchronization then
+				if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
+					l_name := l_class_stone.class_name
+					if test_suite.is_service_available then
+						test_suite.service.synchronize_with_class (l_class)
+						if test_suite.service.is_test_class (l_class) then
+							view_box.set_text ("class")
+						else
+							view_box.set_text ("covers")
+						end
 					else
 						view_box.set_text ("covers")
 					end
-				else
-					view_box.set_text ("covers")
+					filter_box.set_text (l_name)
+					update_view
 				end
-				filter_box.set_text (l_name)
-				update_view
 			end
 		end
 

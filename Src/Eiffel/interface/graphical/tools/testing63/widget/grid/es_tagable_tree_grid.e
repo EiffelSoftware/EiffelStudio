@@ -32,6 +32,7 @@ inherit
 			is_interface_usable,
 			unused_parent,
 			child_for_token,
+			insert_tag_for_item,
 			add_child,
 			add_item,
 			remove_child,
@@ -65,6 +66,10 @@ feature {NONE} --Initialization
 			create cached_children.make_default
 			create cached_items.make_default
 
+				-- Create expansion cache
+			create expansion_cache.make
+			expansion_cache.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+
 				-- Initialize tree
 			make_tree
 		end
@@ -75,7 +80,8 @@ feature {NONE} --Initialization
 			Precursor
 
 				-- Initialize grid
-			grid.row_expand_actions.extend (agent on_row_expansion)
+			register_action (grid.row_expand_actions, agent on_row_expansion)
+			register_action (grid.row_collapse_actions, agent on_row_collapse)
 		end
 
 feature -- Access
@@ -85,6 +91,14 @@ feature -- Access
 		do
 			Result := Current
 		end
+
+feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Access
+
+	expansion_cache: !DS_LINKED_LIST [!STRING]
+			-- Tags of nodes which are currently expanded in `grid'
+			--
+			-- Note: this list holds not more than `max_expansion_cache_count', where the first one the list
+			--       will be removed whenever the user expands a new node.
 
 feature {NONE} -- Access
 
@@ -134,6 +148,14 @@ feature -- Status report
 		do
 			Result := Precursor {TAG_BASED_TREE}
 		end
+
+feature {NONE} -- Status report
+
+	is_untagged_subrow_expanded: BOOLEAN
+			-- Is `untagged_subrow' currently expanded?
+			--
+			-- Note: this can be true even if not untagged items are displayed. This means the last time
+			--       items were displayed, the user had expanded the row.
 
 feature {NONE} -- Element change
 
@@ -225,10 +247,35 @@ feature {NONE} -- Implementation
 				if not l_node.is_evaluated then
 					l_node.compute_descendants
 				end
+				if expansion_cache.count = max_expansion_cache_count then
+					expansion_cache.remove_first
+				end
+				expansion_cache.put_last (l_node.tag)
+			elseif a_row = untagged_subrow then
+				is_untagged_subrow_expanded := True
 			end
 		end
 
+	on_row_collapse (a_row: EV_GRID_ROW)
+			-- Remove tag from `expansion_cache' if which is represented by node.
+		do
+			if {l_node: ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data then
+				expansion_cache.start
+				expansion_cache.search_forth (l_node.tag)
+				if not expansion_cache.off then
+					expansion_cache.remove_at
+				end
+			elseif a_row = untagged_subrow then
+				is_untagged_subrow_expanded := False
+			end
+		end
+
+feature {NONE} -- Constants
+
+	max_expansion_cache_count: INTEGER = 40
+
 invariant
 	untagged_subrow_valid: untagged_items.is_empty = (untagged_subrow = Void)
+	expansion_cache_not_exceeded: expansion_cache.count <= max_expansion_cache_count
 
 end

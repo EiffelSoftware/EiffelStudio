@@ -18,6 +18,7 @@ inherit
 			query_set_stone,
 			create_right_tool_bar_items,
 			on_show,
+			on_focus_in,
 			on_handle_key
 		end
 
@@ -119,9 +120,6 @@ feature {NONE} -- Initialization
 			register_action (invaraints_menu_item.select_actions, agent set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants))
 			register_action (show_all_lines_button.select_actions, agent on_show_all_rows)
 			register_action (show_callers_button.select_actions, agent on_show_callers)
-
-				-- Register action to perform updates on focus
-			register_action (content.focus_in_actions, agent update_if_modified)
 
 				-- Register menu item actions
 			register_action (add_manual_menu_item.select_actions, agent on_add_contract)
@@ -712,20 +710,6 @@ feature {NONE} -- User interface manipulation
 			end
 		end
 
-feature {NONE} -- Actions handlers
-
-	on_row_selected (a_row: EV_GRID_ROW)
-			-- Called when a grid row is selected
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_row_attached: a_row /= Void
-		do
-			if {l_row: EV_GRID_ROW} a_row then
-				--update_context_buttons (is_editable_row (l_row))
-			end
-		end
-
 feature {SESSION_I} -- Event handlers
 
 	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
@@ -877,6 +861,13 @@ feature {NONE} -- Tool action handlers
 			end
 		ensure then
 			last_file_change_notified_agent_detached: last_file_change_notified_agent = Void
+		end
+
+	on_focus_in
+			-- <Precursor>
+		do
+			Precursor
+			update_if_modified
 		end
 
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN is
@@ -1319,6 +1310,18 @@ feature {NONE} -- Action handlers
 				end
 			else
 				check False end
+			end
+		end
+
+	on_row_selected (a_row: EV_GRID_ROW)
+			-- Called when a grid row is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: a_row /= Void
+		do
+			if {l_row: EV_GRID_ROW} a_row then
+				--update_context_buttons (is_editable_row (l_row))
 			end
 		end
 

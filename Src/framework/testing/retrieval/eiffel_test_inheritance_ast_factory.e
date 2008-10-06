@@ -110,7 +110,7 @@ feature -- Query
 					create l_type.make (a_scn.text_count)
 					a_scn.append_text_to_string (l_type)
 					if not l_type.is_case_insensitive_equal ("NONE") then
-						internal_ancestors.put_last (l_type.as_upper)
+						internal_ancestors.force_last (l_type.as_upper)
 					end
 				end
 			end

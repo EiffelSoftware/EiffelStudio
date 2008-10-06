@@ -622,7 +622,7 @@ feature {NONE} -- Implementation: tag retrieval
 				until
 					l_current = Void
 				loop
-					cluster_stack.put_last (l_current)
+					cluster_stack.force_last (l_current)
 					l_cluster ?= l_current
 					l_current := Void
 					if l_cluster /= Void then
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation: tag retrieval
 							if {l_uuid: !UUID} l_cluster.target.system.uuid then
 								l_list := l_uni.library_of_uuid (l_uuid, True)
 								if not l_list.is_empty then
-									cluster_stack.put_last (l_list.first)
+									cluster_stack.force_last (l_list.first)
 								end
 							end
 						end

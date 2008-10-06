@@ -196,7 +196,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 					l_cursor.after
 				loop
 					if {l_class: !EIFFEL_CLASS_I} l_universe.safe_class_named (l_cursor.item, l_group) then
-						l_list.put_last (l_class)
+						l_list.force_last (l_class)
 					end
 					l_cursor.forth
 				end

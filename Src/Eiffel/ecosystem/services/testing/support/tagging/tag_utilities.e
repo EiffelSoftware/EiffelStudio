@@ -166,9 +166,9 @@ feature -- Query
 			loop
 				l_tag := l_cursor.item
 				if a_prefix.is_empty then
-					l_result.put (l_tag)
+					l_result.force (l_tag)
 				elseif is_prefix (a_prefix, l_tag) then
-					l_result.put (suffix (a_prefix, l_tag))
+					l_result.force (suffix (a_prefix, l_tag))
 				end
 				l_cursor.forth
 			end

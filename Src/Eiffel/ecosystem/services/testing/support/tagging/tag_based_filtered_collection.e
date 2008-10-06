@@ -216,7 +216,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 		do
 			if has_expression then
 				if matches (an_item) then
-					internal_items.put (an_item)
+					internal_items.force (an_item)
 					item_added_event.publish ([Current, an_item])
 				end
 			else
@@ -251,7 +251,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 						item_removed_event.publish ([Current, an_item])
 					end
 				elseif matches (an_item) then
-					internal_items.put (an_item)
+					internal_items.force (an_item)
 					item_added_event.publish ([Current, an_item])
 				end
 			else

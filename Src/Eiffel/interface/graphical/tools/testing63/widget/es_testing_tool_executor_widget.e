@@ -262,21 +262,21 @@ feature {NONE} -- Factory
 			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
 			run_button.set_tooltip (tt_run)
 			register_action (run_button.select_actions, agent on_run)
-			Result.put_last (run_button)
+			Result.force_last (run_button)
 
 			create stop_button.make
 			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
 			stop_button.set_tooltip (tt_stop)
 			register_action (stop_button.select_actions, agent on_stop)
-			Result.put_last (stop_button)
+			Result.force_last (stop_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create skip_button.make
 			skip_button.set_text (b_skip)
 			register_action (skip_button.select_actions, agent on_skip)
-			Result.put_last (skip_button)
+			Result.force_last (skip_button)
 		end
 
 	create_notebook_widget: !EV_VERTICAL_BOX

@@ -161,16 +161,16 @@ feature {NONE} -- Initialization: widget status
 	initialize_view_bar
 			-- Initialize view bar combo boxes
 		do
-			view_templates.put_last ("")
-			view_template_descriptions.put_last ("")
-			view_templates.put_last ("class")
-			view_template_descriptions.put_last ("Tests%T%T%T(class)")
-			view_templates.put_last ("outcome")
-			view_template_descriptions.put_last ("Outcomes%T%T(outcome)")
-			view_templates.put_last ("covers")
-			view_template_descriptions.put_last ("Classes under test%T(covers)")
-			view_templates.put_last ("type")
-			view_template_descriptions.put_last ("Types%T%T(type)")
+			view_templates.force_last ("")
+			view_template_descriptions.force_last ("")
+			view_templates.force_last ("class")
+			view_template_descriptions.force_last ("Tests%T%T%T(class)")
+			view_templates.force_last ("outcome")
+			view_template_descriptions.force_last ("Outcomes%T%T(outcome)")
+			view_templates.force_last ("covers")
+			view_template_descriptions.force_last ("Classes under test%T(covers)")
+			view_templates.force_last ("type")
+			view_template_descriptions.force_last ("Types%T%T(type)")
 
 			update_view_box
 			view_box.i_th (2).enable_select
@@ -352,6 +352,7 @@ feature {NONE} -- Status setting: view
 		local
 			l_tag: !STRING
 		do
+			develop_window.lock_update
 			if test_suite.is_service_available then
 				l_tag ?= view_box.text.to_string_8
 				if tree_view.is_connected then
@@ -380,6 +381,7 @@ feature {NONE} -- Status setting: view
 					filter.disconnect
 				end
 			end
+			develop_window.unlock_update
 		end
 
 feature {NONE} -- Status setting: stones
@@ -448,7 +450,7 @@ feature {NONE} -- Action handlers
 					l_item := l_cursor.item
 					if l_item.is_outcome_available then
 						if l_item.last_outcome.is_fail then
-							l_list.put_last (l_item)
+							l_list.force_last (l_item)
 						end
 					end
 					l_cursor.forth
@@ -617,9 +619,9 @@ feature {NONE} -- Factory
 				do
 					create l_wizard.make (develop_window)
 				end)
-			Result.put_last (wizard_button)
+			Result.force_last (wizard_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Create run button
 			create run_button.make
@@ -643,7 +645,7 @@ feature {NONE} -- Factory
 			l_menu.extend (run_selected_menu)
 			run_button.set_menu (l_menu)
 
-			Result.put_last (run_button)
+			Result.force_last (run_button)
 
 				-- Create debug button
 			create debug_button.make
@@ -667,7 +669,7 @@ feature {NONE} -- Factory
 			l_menu.extend (debug_selected_menu)
 			debug_button.set_menu (l_menu)
 
-			Result.put_last (debug_button)
+			Result.force_last (debug_button)
 
 				-- Create stop button
 			create stop_button.make
@@ -675,9 +677,9 @@ feature {NONE} -- Factory
 			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
 			register_action (stop_button.select_actions, agent on_stop)
-			Result.put_last (stop_button)
+			Result.force_last (stop_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 		end
 
 feature {NONE} -- Internationalization

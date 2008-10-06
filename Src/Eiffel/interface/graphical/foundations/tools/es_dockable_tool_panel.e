@@ -102,9 +102,25 @@ feature {NONE} -- Initialization
         require
         	is_initialized: is_initialized
         do
+        		-- Key handling
         	register_action (user_widget.key_press_actions, agent on_key_pressed)
         	register_action (user_widget.key_release_actions, agent on_key_released)
 
+        		-- Focus
+        	register_action (content.focus_in_actions, agent
+        		do
+        			if is_interface_usable and then is_initialized and then shown then
+        				on_focus_in
+        			end
+        		end)
+        	register_action (content.focus_out_actions, agent
+        		do
+        			if is_interface_usable and then is_initialized then
+        				on_focus_out
+        			end
+        		end)
+
+				-- Show actions
         	register_kamikaze_action (content.show_actions, agent
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
@@ -629,6 +645,23 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			shown: shown
 			user_widget_is_displayed: user_widget.is_displayed
+		do
+		end
+
+	on_focus_in
+			-- Called when the panel receives focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			shown: shown
+		do
+		end
+
+	on_focus_out
+			-- Called when the panel loses focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 		end
 

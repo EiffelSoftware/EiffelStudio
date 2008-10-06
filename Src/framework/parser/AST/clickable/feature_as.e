@@ -129,7 +129,7 @@ feature -- Roundtrip/Comment
 			a_list_not_void: a_list /= Void
 		local
 			l_routine: ROUTINE_AS
-			l_end_index: INTEGER
+			l_start_index, l_end_index: INTEGER
 			l_retried: BOOLEAN
 			l_region: ERT_TOKEN_REGION
 			l_first_token: LEAF_AS
@@ -145,10 +145,11 @@ feature -- Roundtrip/Comment
 					if l_first_token /= Void then
 						l_routine_first_token := l_routine.first_token (a_list)
 						if l_routine_first_token /= Void then
+							l_start_index := l_first_token.index.max (1)
 							l_end_index := l_routine_first_token.index - 1
 
 							check l_first_token.index <= l_end_index end
-							create l_region.make (l_first_token.index, l_end_index)
+							create l_region.make (l_start_index, l_end_index)
 						end
 					end
 				end

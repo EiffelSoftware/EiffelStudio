@@ -199,7 +199,7 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		do
 			if not (is_compiled or is_stop_requested) then
-				write_root_class
+				write_root_class (False)
 				if last_root_class_successful then
 					compile_project
 					if not last_compilation_successful then
@@ -208,6 +208,8 @@ feature {NONE} -- Status setting
 						initialize_evaluators
 					end
 				end
+					-- Lets write an empty root class back to prevent compiler errors in next compilation
+				write_root_class (True)
 				is_compiled := True
 			else
 				syncronize_evaluators
@@ -221,8 +223,11 @@ feature {NONE} -- Status setting
 			is_idle := False
 		end
 
-	write_root_class
+	write_root_class (a_empty: BOOLEAN)
 			-- Write new root class
+			--
+			-- `a_empty': If True, a root class not referencing any tests will be written. Otherwise all
+			--            tests in `map' will be used.
 		require
 			running: is_running
 		local
@@ -238,7 +243,11 @@ feature {NONE} -- Status setting
 			create l_file.make (l_file_name)
 			l_file.recursive_open_write
 			if l_file.is_open_write then
-				source_writer.write_source (l_file, {!EIFFEL_TEST_EVALUATOR_MAP} #? map)
+				if a_empty then
+					source_writer.write_source (l_file, create {EIFFEL_TEST_EVALUATOR_MAP}.make (0))
+				else
+					source_writer.write_source (l_file, map)
+				end
 				last_root_class_successful := True
 				l_file.flush
 				l_file.close

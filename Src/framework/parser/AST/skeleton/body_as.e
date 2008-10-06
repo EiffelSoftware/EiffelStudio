@@ -199,7 +199,7 @@ feature -- Roundtrip/Token
 						Result := indexing_clause.last_token (a_list)
 					elseif assigner /= Void then
 						Result := assigner.last_token (a_list)
-					else
+					elseif type /= Void then
 						Result := type.last_token (a_list)
 					end
 				end

@@ -312,10 +312,12 @@ feature {NONE} -- Status setting
 				if not l_evaluator.is_running then
 					retrieve_results (l_evaluator.status)
 					if is_stop_requested or (cursor.after and l_evaluator.status.results_complete) then
+						l_evaluator.reset
 						l_cursor.remove
 					else
 						launch_evaluator (l_evaluator)
 						if not l_evaluator.is_launched then
+							l_evaluator.reset
 							l_cursor.remove
 						end
 					end

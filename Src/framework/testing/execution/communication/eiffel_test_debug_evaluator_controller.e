@@ -13,11 +13,20 @@ inherit
 	EIFFEL_TEST_EVALUATOR_CONTROLLER
 		rename
 			make as make_controller
+		redefine
+			reset
 		end
 
 	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
+		end
+
+	DEBUGGER_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_application_exited
 		end
 
 create
@@ -87,8 +96,19 @@ feature -- Status setting
 				a_args.forth
 			end
 			l_param.set_arguments (l_args)
-			debugger_manager.add_on_stopped_action (agent on_application_quit, True)
+			attach_to_debugger (debugger_manager)
 			debugger_launcher.launch (project, l_param)
+		end
+
+feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
+
+	reset
+			-- <Precursor>
+		do
+			Precursor
+			if is_attached_to (internal_debugger) then
+				unattach_from_debugger
+			end
 		end
 
 feature {NONE} -- Status setting
@@ -98,6 +118,8 @@ feature {NONE} -- Status setting
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
 			l_manager: BREAKPOINTS_MANAGER
+			l_loc: BREAKPOINT_LOCATION
+			l_bp: BREAKPOINT
 			l_test: EIFFEL_TEST_I
 			l_feat: like breakpoint_feature
 			i: INTEGER
@@ -113,6 +135,8 @@ feature {NONE} -- Status setting
 				l_feat := breakpoint_feature (l_test)
 				if l_feat /= Void then
 					i := l_feat.first_breakpoint_slot_index
+					--l_location := l_manager.breakpoint_location (l_feat, i, True)
+					--l_bp := l_manager.new_user_breakpoint (l_location)
 					if not l_manager.is_breakpoint_enabled (l_feat, i) then
 						l_manager.set_user_breakpoint (l_feat, i)
 						breakpoints.force_last (l_manager.user_breakpoint (l_feat, i))
@@ -134,9 +158,7 @@ feature {NONE} -- Status setting
 				breakpoints.is_empty
 			loop
 				l_point := breakpoints.last
-				if l_manager.is_user_breakpoint_set_at (l_point.location) then
-					l_manager.remove_user_breakpoint (l_point.routine, l_point.body_index)
-				end
+				l_manager.delete_breakpoint (l_point)
 				breakpoints.remove_last
 			end
 		end
@@ -164,7 +186,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Events
 
-	on_application_quit (a_dbg_manager: DEBUGGER_MANAGER)
+	on_application_exited (dbg: DEBUGGER_MANAGER)
 			-- Called when debugger terminates
 		do
 			remove_breakpoints

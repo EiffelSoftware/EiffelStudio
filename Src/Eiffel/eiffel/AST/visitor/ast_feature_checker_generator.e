@@ -2257,6 +2257,8 @@ feature -- Implementation
 						else
 							if {l_tuple_type: TUPLE_TYPE_A} l_last_type.actual_type then
 								l_is_not_call := True
+								is_last_access_tuple_access := True
+								is_assigner_call := False
 								last_type := l_tuple_type.generics.item (l_as.label_position)
 							else
 								check

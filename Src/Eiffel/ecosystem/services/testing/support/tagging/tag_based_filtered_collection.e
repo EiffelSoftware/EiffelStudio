@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 					internal_items.search (l_cursor.item)
 					if not internal_items.found and ((l_expr and l_int) or (not l_expr and a_had_expr)) then
 						if l_expr then
-							internal_items.put_last (l_cursor.item)
+							internal_items.force_last (l_cursor.item)
 						end
 						if a_had_expr then
 							if l_added = Void then

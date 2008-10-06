@@ -3333,14 +3333,35 @@ feature {NONE} -- Implementation
 		end
 
 	process_interval_as (l_as: INTERVAL_AS) is
+		local
+			l_feat: E_FEATURE
+			l_id: ID_AS
 		do
-			l_as.lower.process (Current)
+				-- Only ID_AS can be a constant access in current class.
+			l_id ?= l_as.lower
+			if l_id /= Void then
+				l_feat := feature_from_id_as (l_id)
+			end
+			if l_feat /= Void then
+				text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+			else
+				l_as.lower.process (Current)
+			end
 			if l_as.upper /= Void then
 				if not expr_type_visiting then
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_dotdot)
 				end
-				l_as.upper.process (Current)
+				l_id ?= l_as.upper
+				l_feat := Void
+				if l_id /= Void then
+					l_feat := feature_from_id_as (l_id)
+				end
+				if l_feat /= Void then
+					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+				else
+					l_as.upper.process (Current)
+				end
 			end
 		end
 
@@ -4164,6 +4185,19 @@ feature {NONE} -- Implementation: helpers
 		do
 			l_feature := feature_from_ancestors (source_class, current_feature.assigner_name_id)
 			Result := feature_in_class (current_class, l_feature.rout_id_set)
+		end
+
+	feature_from_id_as (a_as: ID_AS): E_FEATURE is
+			-- Feature in current class with written name `a_as'.
+		require
+			a_as_not_void: a_as /= Void
+		local
+			l_feature: FEATURE_I
+		do
+			l_feature := feature_from_ancestors (source_class, a_as.name_id)
+			if l_feature /= Void then
+				Result := feature_in_class (current_class, l_feature.rout_id_set)
+			end
 		end
 
 	feature_from_ancestors (a_current_class: CLASS_C; a_name_id: INTEGER): FEATURE_I is

@@ -25,6 +25,9 @@ feature -- Initialization
 			-- Build margin drawable area
 		do
 			Precursor {MARGIN_WIDGET}
+			margin_area.set_pebble_function (agent pebble_from_x_y)
+			margin_area.drop_actions.extend (agent on_breakable_stone_dropped)
+
 			margin_area.pointer_button_press_actions.extend (agent on_mouse_button_event (True, ?, ?, ?, ?, ?, ?, ?, ?))
 			margin_area.pointer_button_release_actions.extend (agent on_mouse_button_event (False, ?, ?, ?, ?, ?, ?, ?, ?))
 			hide_breakpoints
@@ -72,6 +75,47 @@ feature -- Query
 			-- Are line numbers hidden?
 		do
 		    Result := Precursor
+		end
+
+feature {EB_CLICKABLE_MARGIN} -- Pick and drop
+
+	on_breakable_stone_dropped (a_bp: BREAKABLE_STONE)
+		do
+			if ev_application.ctrl_pressed then
+				if {bp: BREAKABLE_STONE} breakable_stone_at (0, margin_viewport.pointer_position.y_abs + margin_viewport.y_offset) then
+					bp.drop_bkpt (a_bp)
+					refresh_now
+				end
+			end
+		end
+
+	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE is
+			-- Stone on (`x_pos', `y_pos').
+			-- Process single click on mouse buttons.			
+		local
+			bpst: like breakable_stone_at
+		do
+			-- The context menu has to be displayed on button release otherwise it may disappear straight away on mouse click.
+			if ev_application.ctrl_pressed then
+				bpst := breakable_stone_at (0, abs_y_pos)
+				if bpst.has_associated_user_breakpoint then
+					Result := bpst
+				end
+			end
+		end
+
+	breakable_stone_at (a_abs_x, a_abs_y: INTEGER): BREAKABLE_STONE
+			-- Breakable stone at position `(a_x, a_y)'
+		local
+			ln: EIFFEL_EDITOR_LINE
+			l_number: INTEGER
+		do
+			print ("breakable_stone_at (..," + a_abs_y.out + ")%N")
+			l_number := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
+			if l_number <= text_panel.number_of_lines then
+				ln ?= text_panel.text_displayed.line (l_number)
+				Result ?= ln.real_first_token.pebble
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -152,17 +196,22 @@ feature {NONE} -- Events
 			bkstn: BREAKABLE_STONE
 		do
 				-- The context menu has to be displayed on button release otherwise it may disappear straight away on mouse click.
-			if (button = 1 and then a_press) or else (button = 3 and then not a_press) then
-				l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
-				if l_number <= text_panel.number_of_lines then
-					ln ?= text_panel.text_displayed.line (l_number)
-					bkstn ?= ln.real_first_token.pebble
-					if bkstn /= Void then
-						if button = 1 then
-							bkstn.toggle_bkpt
-							text_panel.set_focus
-						elseif button = 3 then
-							bkstn.display_bkpt_menu
+			if
+				not ev_application.ctrl_pressed and then  --| To avoid conflict with bp move feature
+				abs_x_pos <= margin_viewport.width + 3    --| a tolerance of 3 pixel is ok
+			then
+				if (button = 1 and then a_press) or else (button = 3 and then not a_press) then
+					l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
+					if l_number <= text_panel.number_of_lines then
+						ln ?= text_panel.text_displayed.line (l_number)
+						bkstn ?= ln.real_first_token.pebble
+						if bkstn /= Void then
+							if button = 1 then
+								bkstn.toggle_bkpt
+								text_panel.set_focus
+							elseif button = 3 then
+								bkstn.display_bkpt_menu
+							end
 						end
 					end
 				end

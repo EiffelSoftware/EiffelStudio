@@ -50,17 +50,6 @@ feature -- Normal mode command
 			end
 		end
 
-	save_editors_docking_layout is
-			-- Save all editors docking layout.
-		local
-			l_result: BOOLEAN
-		do
-			l_result := develop_window.docking_manager.save_editors_data (project_docking_standard_file_name)
-			if not l_result then
-				show_last_error
-			end
-		end
-
 	construct_standard_layout_by_code is
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
@@ -170,25 +159,6 @@ feature -- Normal mode command
 				develop_window.window.maximize_actions.extend_kamikaze (restore_agent_for_maximize_action)
 			else
 				restore_tools_docking_layout_immediately
-			end
-		end
-
-	restore_editors_docking_layout is
-			-- Restore docking layout information.
-		local
-			l_file_name: STRING
-			l_file: RAW_FILE
-		do
-			l_file_name := project_docking_standard_file_name
-			if l_file_name /= Void and then not l_file_name.is_empty then
-				create l_file.make (l_file_name)
-				if l_file.exists then
-					develop_window.docking_manager.open_editors_config (l_file_name)
-				end
-
-				if not l_file.is_closed then
-					l_file.close
-				end
 			end
 		end
 

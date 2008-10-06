@@ -472,6 +472,7 @@ feature {NONE} -- Factory
 			l_inner_session: SESSION_I
 			l_shared: SHARED_EIFFEL_PROJECT
 			l_set_object: BOOLEAN
+			l_existing_load_agents: ACTION_SEQUENCE [TUPLE]
 			l_load_agents: ACTION_SEQUENCE [TUPLE]
 			l_load_agent: PROCEDURE [ANY, TUPLE]
 		do
@@ -511,7 +512,23 @@ feature {NONE} -- Factory
 									set_session_object (ia_session)
 								end
 							end (Result)
+							-- Hack to force the session to be the first load action, so we can be sure the session
+							-- is correctly initialized before anyone trys to use it in other load actions.
+						l_existing_load_agents := l_load_agents.twin
+						l_load_agents.wipe_out
+							-- Extend the session resurrect action.
 						l_load_agents.extend_kamikaze (l_load_agent)
+							-- Add all the other actions.
+						from l_existing_load_agents.start until l_existing_load_agents.after loop
+							l_load_agent := l_existing_load_agents.item
+							if l_existing_load_agents.has_kamikaze_action (l_load_agent) then
+								l_load_agents.extend_kamikaze (l_load_agent)
+							else
+								l_load_agents.extend (l_load_agent)
+							end
+							l_existing_load_agents.forth
+						end
+
 						if {l_safe_disposable: SAFE_AUTO_DISPOSABLE} Result then
 								-- We have to be sure to remove the load agent on dispose. When a new window is opened
 								-- with no project loaded, then the window is closed and then project is opened, the agent

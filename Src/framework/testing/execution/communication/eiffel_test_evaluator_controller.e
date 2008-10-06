@@ -11,9 +11,6 @@ indexing
 deferred class
 	EIFFEL_TEST_EVALUATOR_CONTROLLER
 
-inherit
-	THREAD_CONTROL
-
 feature {NONE} -- Initialization
 
 	make (a_map: like map)

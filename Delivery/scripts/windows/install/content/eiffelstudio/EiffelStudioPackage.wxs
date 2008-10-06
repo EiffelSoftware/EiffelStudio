@@ -266,10 +266,12 @@
 		<InstallExecuteSequence>
 			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
-      		<?ifdef Enterprise?>
-				<Custom Action="PrepareFinalizeSetup" After="PrepareInstallCdKey"><![CDATA[NOT Installed]]></Custom>
-				<Custom Action="FinalizeSetup" After="InstallCdKey"><![CDATA[NOT Installed]]></Custom>
-      		<?endif?>
+      <Custom Action="PrepareFinalizeSetup" After="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
+      <?ifdef Enterprise?>
+        <Custom Action="FinalizeSetup" After="InstallCdKey"><![CDATA[NOT Installed]]></Custom>
+      <?else?>
+        <Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
+      <?endif?>
 		</InstallExecuteSequence>
 		<!-- END INSTALL SEQUENCING -->
 	</Fragment>

@@ -99,7 +99,7 @@ feature {NONE} -- Basic functionality
 						l_text.append (" min")
 					end
 				end
-				l_text.append (" ago")
+				l_text.append (" ago ")
 			end
 			if l_days > 365 or l_now.year /= a_date.year then
 				l_tooltip := date_format.create_string (a_date)

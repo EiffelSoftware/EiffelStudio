@@ -385,7 +385,7 @@ feature {NONE} -- Status setting
 							l_test := l_remaining.item_for_iteration
 							if active_tests.has (l_test) then
 								if l_test.is_queued and then l_test.executor = Current then
-									l_list.put_last (l_remaining.item_for_iteration)
+									l_list.force_last (l_remaining.item_for_iteration)
 								end
 							end
 							l_remaining.forth
@@ -401,7 +401,7 @@ feature {NONE} -- Status setting
 					or cursor.after
 			loop
 				if cursor.item.is_queued and then cursor.item.executor = Current then
-					l_list.put_last (cursor.item)
+					l_list.force_last (cursor.item)
 				end
 				cursor.forth
 			end

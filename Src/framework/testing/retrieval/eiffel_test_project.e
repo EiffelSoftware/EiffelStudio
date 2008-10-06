@@ -157,28 +157,25 @@ feature -- Query
 			l_test_class := test_class_map.item (a_class)
 			create l_list.make (l_test_class.test_routine_names.count)
 			l_test_class.test_routine_names.do_all (
-				agent (n: !STRING; c: !EIFFEL_CLASS_I; l: !DS_LIST [!EIFFEL_TEST_I])
+				agent (n: !STRING; c: !EIFFEL_TEST_CLASS; l: !DS_LIST [!EIFFEL_TEST_I])
 					local
 						l_id: !STRING
 					do
 						l_id := test_identifier (c, n)
 						l.put_last (test_routine_map.item (l_id))
-					end (?, a_class, l_list))
+					end (?, l_test_class, l_list))
 		end
 
 feature {NONE} -- Query
 
-	test_identifier (a_class: !EIFFEL_CLASS_I; a_name: !STRING): !STRING is
+	test_identifier (a_class: !EIFFEL_TEST_CLASS; a_name: !STRING): !STRING is
 			-- Create unqiue identifier for test routine
 			--
 			-- `a_class': Class in which test is defined.
 			-- `a_name': Name of test routine
 		do
-			create Result.make (a_class.cluster.cluster_name.count + a_class.name.count + a_name.count + 2)
-			Result.append (a_class.cluster.cluster_name)
-			Result.append_character ('.')
-			Result.append (a_class.name)
-			Result.append_character ('.')
+			create Result.make (a_class.identifier.count + a_name.count)
+			Result.append (a_class.identifier)
 			Result.append (a_name)
 		ensure
 			result_not_empty: not Result.is_empty
@@ -395,7 +392,7 @@ feature {NONE} -- Element change
 			until
 				l_cursor.after
 			loop
-				test_routine_map.search (test_identifier (a_test_class.eiffel_class, l_cursor.item))
+				test_routine_map.search (test_identifier (a_test_class, l_cursor.item))
 				check
 					test_exists: test_routine_map.found
 				end
@@ -440,7 +437,7 @@ feature {NONE} -- Element change
 				if l_et.has_changed then
 					l_et.clear_changes
 				end
-				test_routine_map.force (l_et, test_identifier (a_test_class.eiffel_class, l_features.key_for_iteration))
+				test_routine_map.force (l_et, test_identifier (a_test_class, l_features.key_for_iteration))
 				test_added_event.publish ([Current, l_et])
 				l_features.forth
 			end
@@ -466,7 +463,7 @@ feature {NONE} -- Element change
 				until
 					l_cursor.after
 				loop
-					l_name :=  test_identifier (old_class_map.item_for_iteration.eiffel_class, l_cursor.item)
+					l_name :=  test_identifier (old_class_map.item_for_iteration, l_cursor.item)
 					test_routine_map.search (l_name)
 					check
 						test_exists: test_routine_map.found

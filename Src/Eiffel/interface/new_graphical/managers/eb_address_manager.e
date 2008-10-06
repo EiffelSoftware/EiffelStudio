@@ -1515,25 +1515,9 @@ feature {NONE} -- open new class
 		require
 			class_selected: class_i /= Void
 			valid_class: current_class /= Void
-		local
-			t: E_FEATURE_TABLE
-			found: BOOLEAN
 		do
-			t := current_class.api_feature_table
-			if t /= Void then
-					-- Even in a class_c, the feature table may be Void (if half-compiled).
-				from
-					t.start
-				until
-					t.after or else found
-				loop
-					if t.item_for_iteration.name.is_equal (name) then
-						Result := t.item_for_iteration
-						found := True
-					else
-						t.forth
-					end
-				end
+			if current_class.has_feature_table then
+				Result := current_class.feature_with_name (name)
 			end
 		end
 

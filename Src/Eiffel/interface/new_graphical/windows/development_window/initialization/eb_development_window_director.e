@@ -144,7 +144,7 @@ feature -- Command
 				l_has_editor_restored := develop_window.editors_manager.restore_editors (l_project_session_data.open_classes, l_project_session_data.open_clusters)
 			end
 			if l_has_editor_restored then
-				develop_window.docking_layout_manager.restore_editors_docking_layout
+				develop_window.layout_manager.restore_editors_layout
 				develop_window.editors_manager.show_editors_possible
 				l_debugger_manager ?= develop_window.debugger_manager
 				if not l_debugger_manager.raised then

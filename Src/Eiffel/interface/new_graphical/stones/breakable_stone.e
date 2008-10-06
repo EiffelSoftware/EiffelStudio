@@ -303,9 +303,61 @@ feature -- operation on breakpoint
 			dlg.show_on_active_window
  		end
 
-feature -- state of breakpoint		
+feature -- state of breakpoint
 
-	toggle_bkpt is
+	has_associated_user_breakpoint: BOOLEAN
+			-- Has associated breakpoint?
+		do
+			Result := {bpm: BREAKPOINTS_MANAGER} breakpoints_manager and then
+					{loc: BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) and then
+					bpm.is_user_breakpoint_set_at (loc)
+		end
+
+	breakpoint_location: BREAKPOINT_LOCATION
+			-- Associated BREAKPOINT_LOCATION
+		local
+			bpm: BREAKPOINTS_MANAGER
+		do
+			bpm := breakpoints_manager
+			Result := bpm.breakpoint_location (routine, index, True)
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	associated_user_breakpoint: BREAKPOINT
+			-- Associated BREAKPOINT if any
+		local
+			bpm: BREAKPOINTS_MANAGER
+			loc: BREAKPOINT_LOCATION
+		do
+			bpm := breakpoints_manager
+			loc := bpm.breakpoint_location (routine, index, False)
+			if bpm.is_user_breakpoint_set_at (loc) then
+				Result := bpm.user_breakpoint_at (loc)
+			end
+		ensure
+			Result_attached_if_has_user_bp: has_associated_user_breakpoint implies Result /= Void
+		end
+
+	drop_bkpt (a_dropped_bp: BREAKABLE_STONE)
+			-- `a_bp' dropped on Current
+		local
+			bp, dropped_bp: BREAKPOINT
+		do
+			bp := associated_user_breakpoint
+			if bp = Void then
+				dropped_bp := a_dropped_bp.associated_user_breakpoint
+				if dropped_bp /= Void and then
+					dropped_bp.routine = routine
+				then
+					breakpoints_manager.move_breakpoint_to (dropped_bp, breakpoint_location)
+				end
+			else
+				--| Can not drop user bp on existing user bp
+			end
+		end
+
+	toggle_bkpt
 			-- If the corresponding breakpoint was not set or disabled, enable it.
 			-- If the corresponding breakpoint was already enabled, remove it.
 		local

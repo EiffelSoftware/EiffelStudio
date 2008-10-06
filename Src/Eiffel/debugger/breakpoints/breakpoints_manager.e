@@ -850,6 +850,24 @@ feature -- Breakpoints change
 			end
 		end
 
+	move_breakpoint_to (a_bp: BREAKPOINT; bploc: BREAKPOINT_LOCATION)
+			-- Move `a_bp' to location `bploc'
+		require
+			a_bp_attached: a_bp /= Void
+			bploc_attached: bploc /= Void
+			no_bp_at_bploc: not is_breakpoint_set_at (bploc, a_bp.is_hidden)
+			same_routine: a_bp.routine = bploc.routine
+		do
+			breakpoints.remove (a_bp)
+			a_bp.set_location (bploc)
+			add_breakpoint (a_bp)
+			notify_breakpoints_changes
+			on_breakpoint_added_or_deleted_event (True)
+		ensure
+			a_bp_at_bploc: is_breakpoint_set_at (bploc, a_bp.is_hidden)
+			bp_set: breakpoint_at (bploc, a_bp.is_hidden) = a_bp
+		end
+
 feature -- Breakpoints addition
 
 	set_user_breakpoint, enable_user_breakpoint (f: E_FEATURE; i: INTEGER) is

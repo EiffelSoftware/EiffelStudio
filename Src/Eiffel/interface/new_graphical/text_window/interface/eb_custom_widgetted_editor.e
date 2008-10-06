@@ -80,7 +80,7 @@ feature -- Access
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL is
 			-- Current search tool.
 		do
-			if dev_window /= Void and then not dev_window.shell_tools.is_recycled then
+			if dev_window /= Void and then dev_window.shell_tools.is_interface_usable then
 				Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 			end
 		end
@@ -186,14 +186,21 @@ feature {NONE} -- Quick search bar.
 			-- Build quick search bar.
 		require
 			bottom_widget_created: bottom_widget /= Void
+		local
+			l_tool: like search_tool
 		do
 			create search_bar.make (search_tool)
 
 			first_result_reached_action := agent search_bar.trigger_first_reached_pixmap
 			bottom_reached_action := agent search_bar.trigger_bottom_reached_pixmap
 
-			search_tool.first_result_reached_actions.extend (first_result_reached_action)
-			search_tool.bottom_reached_actions.extend (bottom_reached_action)
+			l_tool := search_tool
+			if l_tool /= Void then
+				l_tool.first_result_reached_actions.extend (first_result_reached_action)
+				l_tool.bottom_reached_actions.extend (bottom_reached_action)
+			else
+				check False end
+			end
 			bottom_widget.extend (search_bar)
 			hide_search_bar
 			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
@@ -215,33 +222,39 @@ feature {NONE} -- Quick search bar.
 		local
 			l_incremental_search: BOOLEAN
 			l_keyword: STRING_32
+			l_tool: like search_tool
 		do
-			if search_bar.is_case_sensitive /= search_tool.case_sensitive_button.is_selected then
-				if search_bar.is_case_sensitive then
-					search_tool.case_sensitive_button.enable_select
-				else
-					search_tool.case_sensitive_button.disable_select
+			l_tool := search_tool
+			if l_tool /= Void then
+				if search_bar.is_case_sensitive /= l_tool.case_sensitive_button.is_selected then
+					if search_bar.is_case_sensitive then
+						l_tool.case_sensitive_button.enable_select
+					else
+						l_tool.case_sensitive_button.disable_select
+					end
 				end
-			end
-			if search_bar.is_regex /= search_tool.use_regular_expression_button.is_selected then
-				if search_bar.is_regex then
-					search_tool.use_regular_expression_button.enable_select
-				else
-					search_tool.use_regular_expression_button.disable_select
+				if search_bar.is_regex /= l_tool.use_regular_expression_button.is_selected then
+					if search_bar.is_regex then
+						l_tool.use_regular_expression_button.enable_select
+					else
+						l_tool.use_regular_expression_button.disable_select
+					end
 				end
-			end
-			l_keyword := search_bar.keyword_field.text
-			search_tool.search_current_editor_only
-			if not l_keyword.is_empty then
-				search_tool.set_check_class_succeed (True)
-				l_incremental_search := search_tool.is_incremental_search
-				search_tool.disable_incremental_search
-				if not search_tool.keyword_field.text.is_equal (l_keyword) then
-					search_tool.set_current_searched (l_keyword)
+				l_keyword := search_bar.keyword_field.text
+				l_tool.search_current_editor_only
+				if not l_keyword.is_empty then
+					l_tool.set_check_class_succeed (True)
+					l_incremental_search := l_tool.is_incremental_search
+					l_tool.disable_incremental_search
+					if not l_tool.keyword_field.text.is_equal (l_keyword) then
+						l_tool.set_current_searched (l_keyword)
+					end
+					if l_incremental_search then
+						l_tool.enable_incremental_search
+					end
 				end
-				if l_incremental_search then
-					search_tool.enable_incremental_search
-				end
+			else
+				check False end
 			end
 		end
 
@@ -249,34 +262,45 @@ feature {NONE} -- Quick search bar.
 			-- Incremental search for text in search bar.
 		local
 			l_editor: EB_EDITOR
+			l_tool: like search_tool
 		do
-			if not search_tool.is_recycled then
-				if not is_empty and search_tool.is_incremental_search then
+			l_tool := search_tool
+			if l_tool /= Void and then l_tool.is_interface_usable then
+				if not is_empty and l_tool.is_incremental_search then
 					if search_bar.keyword_field.text_length /= 0 then
 						l_editor := search_tool.old_editor
-						search_tool.set_old_editor (Current)
-						search_tool.incremental_search (search_bar.keyword_field.text, search_tool.incremental_search_start_pos, False)
-						if search_tool.has_result then
-							search_tool.select_in_current_editor
+						l_tool.set_old_editor (Current)
+						l_tool.incremental_search (search_bar.keyword_field.text, l_tool.incremental_search_start_pos, False)
+						if l_tool.has_result then
+							l_tool.select_in_current_editor
 						else
-							search_tool.retrieve_cursor
+							l_tool.retrieve_cursor
 						end
-						search_tool.set_old_editor (l_editor)
+						l_tool.set_old_editor (l_editor)
 					else
-						search_tool.retrieve_cursor
+						l_tool.retrieve_cursor
 					end
 				end
-				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
+				l_tool.trigger_keyword_field_color (search_bar.keyword_field)
+			else
+				check False end
 			end
 		end
 
 	trigger_advanced_search is
 			-- Show advanced search panel.
+		local
+			l_tool: like search_tool
 		do
-			if not search_tool.is_visible then
-				search_tool.prepare_search
+			l_tool := search_tool
+			if l_tool /= Void then
+				if not l_tool.is_visible then
+					l_tool.prepare_search
+				else
+					l_tool.close
+				end
 			else
-				search_tool.close
+				check False end
 			end
 		end
 

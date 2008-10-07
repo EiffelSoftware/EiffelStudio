@@ -73,6 +73,7 @@ feature
 			-- Generates the current parent table
 		require
 			valid_file: buffer /= Void
+			a_class_type_not_void: a_class_type /= Void
 		local
 			i, j, n : INTEGER;
 			l_type_id: INTEGER

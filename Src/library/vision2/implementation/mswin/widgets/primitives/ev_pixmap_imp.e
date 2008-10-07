@@ -78,9 +78,9 @@ feature {NONE} -- Initialization
 			check not_void: l_pixel_buffer /= Void end
 			l_gdip_bitmap := l_pixel_buffer.gdip_bitmap
 			if l_gdip_bitmap /= Void and then color_depth = 32 then
-				-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
-				-- Because EV_PIXMAP_IMP_STATE doesn't have `private_bitmap' and `private_mask_bitmap' features,
-				-- we have to implement it in this class.				
+					-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
+					-- Because EV_PIXMAP_IMP_STATE doesn't have `private_bitmap' and `private_mask_bitmap' features,
+					-- we have to implement it in this class.				
 				if private_bitmap /= Void then
 					private_bitmap.delete
 				end
@@ -145,7 +145,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 		end
 
 	read_from_named_file (file_name: STRING_GENERAL) is
-			-- Load the pixmap described in 'file_name'. 
+			-- Load the pixmap described in 'file_name'.
 			-- Exceptions "No such file or directory",
 			--            "Unable to retrieve icon information",
 			--            "Unable to load the file".

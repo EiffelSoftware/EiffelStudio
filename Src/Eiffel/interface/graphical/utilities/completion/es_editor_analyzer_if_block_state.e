@@ -146,6 +146,9 @@ feature {NONE} -- Basic operation
 						l_start_token := l_next_then.token
 						l_start_line := l_next_then.line
 						l_stop := False
+					elseif l_stop then
+							-- There was no next token above so the actual end token was reached.
+						a_info.has_runout := True
 					end
 					a_info.set_current_line (l_start_line, l_start_token)
 

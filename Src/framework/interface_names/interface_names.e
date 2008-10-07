@@ -1721,7 +1721,7 @@ feature -- Label texts
 			a_group_name_not_void: a_group_name /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} (not in system, $5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (not in system, $5)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 		end
 
 	l_classc_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
@@ -1732,7 +1732,7 @@ feature -- Label texts
 			a_group_name_not_void: a_group_name /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} ($5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} ($4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 		end
 
 	l_classc_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: STRING_GENERAL): STRING_32 is
@@ -1742,7 +1742,7 @@ feature -- Label texts
 			a_sig_not_void: a_sig /= Void
 			a_group_name_not_void: a_group_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] {$4} (precompiled)"), [a_system_name, a_target_name, a_group_name, a_sig])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 		end
 
 	l_feature_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
@@ -1753,9 +1753,9 @@ feature -- Label texts
 			a_group_name_not_void: a_group_name /= Void
 		do
 			if a_file_name /= Void then
-				Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4 ($5)"), [a_system_name, a_target_name, a_group_name, a_sig, a_file_name])
+				Result := locale.formatted_string (locale.translation ("$1 - [$2] $3 ($4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 			else
-				Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4"), [a_system_name, a_target_name, a_group_name, a_sig])
+				Result := locale.formatted_string (locale.translation ("$1 - [$2] $3"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 			end
 		end
 
@@ -1766,7 +1766,7 @@ feature -- Label texts
 			a_sig_not_void: a_sig /= Void
 			a_group_name_not_void: a_group_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] $4 (precompiled)"), [a_system_name, a_target_name, a_group_name, a_sig])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] $3 (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 		end
 
 	l_cluster_header (a_system_name, a_target_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is
@@ -1776,7 +1776,21 @@ feature -- Label texts
 			a_sig_not_void: a_sig /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1.$2 - [$3] ($4)"), [a_system_name, a_target_name, a_sig, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] ($3)"), [l_system_and_target (a_system_name, a_target_name), a_sig, a_file_name])
+		end
+
+	l_system_and_target (a_system_name, a_target_name: STRING_GENERAL): STRING_32 is
+			-- System name and target name for the dev window title.
+			-- When they are the same, we only keep one.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
+		do
+			if a_system_name.as_string_32.is_equal (a_target_name.as_string_32) then
+				Result := a_target_name.as_string_32
+			else
+				Result := locale.formatted_string (locale.translation ("$1.$2"), [a_system_name, a_target_name])
+			end
 		end
 
 	l_replace_report (a_item_num, a_class_num: INTEGER): STRING_32 is

@@ -3458,7 +3458,7 @@ feature {NONE} -- Finalization implementation
 			class_array := classes
 			nb := class_counter.count
 -- Comment out the line below to quickly debug generation bug in finalized mode:
---			universe.class_named ("TEST", root_class.group).compiled_class.pass4
+--			universe.class_named ("TEST", root_type.associated_class.group).compiled_class.pass4
 			from
 				i := 1
 			until

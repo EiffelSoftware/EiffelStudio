@@ -24,35 +24,41 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !like context_class)
+	make (a_feature: !like context_feature)
 			-- Initialize a new context frame.
 			--
-			-- `a_class': A context class to resolve type information.
+			-- `a_feature' : A context feature used to resolve type information.
 		do
-			context_class := a_class
+			context_feature := a_feature
 		ensure
-			context_class_set: context_class = a_class
+			context_feature_set: context_feature = a_feature
 		end
 
-	make_parented (a_class: !like context_class; a_parent: !like parent)
+	make_parented (a_feature: !like context_feature; a_parent: !like parent)
 			-- Initialize a context frame with a parent frame.
 			--
-			-- `a_class' : A context class to resolve type information.
+			-- `a_feature' : A context feature used to resolve type information.
 			-- `a_parent': A parent frame, used for merging local entities.
 		require
 			non_circular_parent: not is_parented_to_current (a_parent)
 		do
 			parent := a_parent
-			make (a_class)
+			make (a_feature)
 		ensure
-			context_class_set: context_class = a_class
+			context_feature_set: context_feature = a_feature
 			parent_set: parent = a_parent
 		end
 
 feature -- Access
 
-	context_class: !CLASS_I
+	context_class: !CLASS_C
 			-- The context class of the current frame, used to resolve type information.
+		do
+			Result ?= context_feature.written_class
+		end
+
+	context_feature: !FEATURE_I
+			-- The context feature of the current frame, used to resolve type information.
 
 feature {ES_EDITOR_ANALYZER_FRAME} -- Access
 
@@ -161,13 +167,14 @@ feature -- Query
 			-- key: Local entity name.
 		local
 			l_result: ?like internal_locals
-			l_context_class: !like context_class
-			l_class: ?CLASS_C
+			l_class: !like context_class
+			l_feature: !like context_feature
 			l_ast_locals: ?like internal_ast_local_declarations
 			l_string_locals: ?like internal_string_local_declarations
 			l_parsed_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
 			l_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
 			l_generator: !like type_generator
+			l_checker: !like type_checker
 			l_name: !STRING_32
 			l_type: ?TYPE_A
 		do
@@ -188,27 +195,23 @@ feature -- Query
 					end
 				end
 
-				l_context_class := context_class
-				if not l_context_class.is_compiled then
-						-- There is no compiled class so use ANY
-					l_context_class ?= l_context_class.system.any_class
-				end
-
-				l_class := l_context_class.compiled_class
-				if l_class /= Void then
-					l_generator := type_generator
-					from l_locals.start until l_locals.after loop
-						l_name := l_locals.key_for_iteration
-						l_type := l_generator.evaluate_type_if_possible (l_locals.item_for_iteration, l_class)
-						if l_type /= Void then
-							Result.force (l_type, l_name)
-						elseif not Result.has (l_name) then
-							Result.force (Void, l_name)
-						end
-						l_locals.forth
+				l_feature := context_feature
+				l_class := context_class
+				l_generator := type_generator
+				l_checker := type_checker
+				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void, Void)
+				from l_locals.start until l_locals.after loop
+					l_name := l_locals.key_for_iteration
+					l_type := l_generator.evaluate_type_if_possible (l_locals.item_for_iteration, l_class)
+					if l_type /= Void then
+						l_type := l_checker.solved (l_type, l_locals.item_for_iteration)
 					end
-				else
-					check False end
+					if l_type /= Void and then l_type.is_valid then
+						Result.force (l_type, l_name)
+					elseif not Result.has (l_name) then
+						Result.force (Void, l_name)
+					end
+					l_locals.forth
 				end
 
 				internal_locals := Result
@@ -353,7 +356,13 @@ feature {NONE} -- Helpers
 	type_generator: !AST_TYPE_A_GENERATOR
 			-- Used to evaluate types from an AST, without type checking.
 		once
-			create Result
+			Result ?= (create {SHARED_STATELESS_VISITOR}).type_a_generator
+		end
+
+	type_checker: !TYPE_A_CHECKER
+			-- Used to populate unevaluated types, from `type_generator'
+		once
+			Result ?= (create {SHARED_STATELESS_VISITOR}).type_a_checker
 		end
 
 feature -- Extension

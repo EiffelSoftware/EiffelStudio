@@ -11,7 +11,8 @@ class
 	ES_EDITOR_ANALYZER_STATE_INFO
 
 create
-	make
+	make,
+	make_with_feature
 
 feature {NONE} -- Initialization
 
@@ -33,10 +34,38 @@ feature {NONE} -- Initialization
 			current_token_set: current_token ~ a_token
 		end
 
+	make_with_feature (a_feature: !like context_feature; a_token: !like current_token; a_line: !like current_line)
+			-- Initialize a state result using a context class and an initial editor token and hosting line.
+			--
+			-- `a_feature': The context feature to initialize the state info for.
+			-- `a_token'  : The state's current token.
+			-- `a_line'   : The state's current line, where the supplied token is resident.
+		require
+			a_line_has_a_token: a_line.has_token (a_token)
+		local
+			l_class: CLASS_C
+		do
+			context_feature := a_feature
+			l_class := a_feature.written_class
+			if l_class /= Void then
+				make (l_class, a_token, a_line)
+			else
+				check False end
+			end
+		ensure
+			context_feature_set: context_feature ~ a_feature
+			context_class_set: context_class ~ a_feature.written_class
+			current_line_set: current_line ~ a_line
+			current_token_set: current_token ~ a_token
+		end
+
 feature -- Access
 
-	context_class: !CLASS_I
+	context_class: !CLASS_C
 			-- The context class
+
+	context_feature: ?FEATURE_I
+			-- The context feature
 
 	current_token: !EDITOR_TOKEN assign set_current_token
 			-- Last editor token processed.
@@ -90,6 +119,14 @@ feature -- Element change
 
 feature -- Status report
 
+	has_context_feature: BOOLEAN
+			-- Indicates if there is a context feature set for more specific analysis.
+		do
+			Result := context_feature /= Void
+		ensure
+			context_feature_attached: Result implies context_feature /= Void
+		end
+
 	has_current_frame: BOOLEAN
 			-- Indicates if there is a current frame.
 		do
@@ -117,18 +154,26 @@ feature -- Basic operation
 			-- Increments the current local frame. `current_frame' will be affected as a result.
 			--
 			-- `a_force_new': True to create a new stop frame; False otherwise.
+		require
+			has_context_feature: has_context_feature
 		local
 			l_frame: ?like current_frame
+			l_feature: ?like context_feature
 		do
 			if not a_force_new and has_current_frame then
 				l_frame := current_frame
 			end
-			if l_frame = Void then
-				create l_frame.make (context_class)
+			l_feature := context_feature
+			if l_feature /= Void then
+				if l_frame = Void then
+					create l_frame.make (l_feature)
+				else
+					create l_frame.make_parented (l_feature, l_frame)
+				end
+				frames.extend (l_frame)
 			else
-				create l_frame.make_parented (context_class, l_frame)
+				check False end
 			end
-			frames.extend (l_frame)
 		ensure
 --			current_frame_changed: old has_current_frame and then current_frame /~ old current_frame
 --			current_frame_is_stop_frame: a_force_new implies current_frame.is_stop_frame

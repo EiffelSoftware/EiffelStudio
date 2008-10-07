@@ -12,6 +12,10 @@ class
 
 inherit
 	ES_EDITOR_ANALYZER_STATE_INFO
+		rename
+			make as make_with_class,
+			make_with_feature as make
+		end
 
 create
 	make

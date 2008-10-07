@@ -614,7 +614,6 @@ feature {NONE} -- Implementation
 			l_typed_basic: EB_NAME_WITH_TYPE_FOR_COMPLETION
 			l_name: !STRING_32
 			l_type: ?TYPE_A
-			l_compiled_class: CLASS_C
 			l_feature: FEATURE_I
 			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
 			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
@@ -633,19 +632,18 @@ feature {NONE} -- Implementation
 
 				-- Add local declarations
 			l_feature := current_feature_i
-			if l_feature /= Void and then {l_class: CLASS_I} current_class_i then
-				create l_analyzer.make (l_class)
+			if l_feature /= Void and then {l_class: CLASS_C} l_feature.written_class then
+				create l_analyzer.make_with_feature (l_feature)
 				l_result := l_analyzer.scan (a_start_token, a_start_line)
 				if l_result /= Void and then l_result.has_current_frame then
 					if not l_result.current_frame.is_empty then
 						l_locals := l_result.current_frame.all_locals
-						l_compiled_class := current_class_c
 						l_feature := current_feature_i
 						l_result_kw := {EIFFEL_KEYWORD_CONSTANTS}.result_keyword.as_string_32
 						from l_locals.start until l_locals.after loop
 							l_name := l_locals.key_for_iteration
 							l_type := l_locals.item_for_iteration
-							if l_type /= Void and then l_compiled_class /= Void and then l_type.is_valid_for_class (l_compiled_class) then
+							if l_type /= Void and then l_type.is_valid_for_class (l_class) then
 									-- The type is valid for the given class
 								create l_typed_basic.make (l_name, l_type, l_feature)
 								insert_in_completion_possibilities (l_typed_basic)

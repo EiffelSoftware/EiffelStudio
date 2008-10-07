@@ -105,9 +105,6 @@ feature -- Checking
 			l_feat_tbl: FEATURE_TABLE
 			l_pos: INTEGER
 		do
-				-- The following line may result in a Void `l_named_tuple_node' when for example
-				-- the type is being rechecked or checked since part of a routine signature (see eweasel
-				-- test#tuple008 for why we always need to perform the check).
 			l_named_tuple_node ?= a_node
 			l_is_tuple_class_available := system.tuple_class.is_compiled and then
 				(not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed)
@@ -127,9 +124,14 @@ feature -- Checking
 					l_pos := l_names.index_of (l_name_id, i + 1)
 					if l_pos >= 0 then
 						create l_vreg
-						context.init_error (l_vreg)
+						l_vreg.set_class (a_context_class)
+						if context.current_feature /= Void then
+							l_vreg.set_feature (context.current_feature)
+						end
 						if l_named_tuple_node /= Void then
 							l_vreg.set_location (l_named_tuple_node.i_th_type_declaration (l_pos + 1).start_location)
+						elseif a_node /= Void then
+							l_vreg.set_location (a_node.start_location)
 						end
 						l_vreg.set_entity_name (names_heap.item (l_name_id))
 						error_handler.insert_error (l_vreg)
@@ -140,15 +142,20 @@ feature -- Checking
 					l_feat_tbl.search_id (l_name_id)
 					if l_feat_tbl.found then
 						create l_vrft
-						context.init_error (l_vrft)
+						l_vrft.set_class (a_context_class)
+						if context.current_feature /= Void then
+							l_vrft.set_feature (context.current_feature)
+						end
 						if l_named_tuple_node /= Void then
 							l_vrft.set_location (l_named_tuple_node.i_th_type_declaration (i + 1).start_location)
+						elseif a_node /= Void then
+							l_vrft.set_location (a_node.start_location)
 						end
 						l_vrft.set_other_feature (l_feat_tbl.found_item)
 						error_handler.insert_error (l_vrft)
 					end
 				else
-					add_future_checking (a_context_class, agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, l_named_tuple_node, i + 1))
+					add_future_checking (a_context_class, agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, a_node, i + 1))
 				end
 				i := i + 1
 			end
@@ -161,7 +168,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Checking
 
-	check_tuple_feature_clash (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_name_id: INTEGER; a_tuple_node: NAMED_TUPLE_TYPE_AS; a_pos: INTEGER) is
+	check_tuple_feature_clash (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_name_id: INTEGER; a_node: TYPE_AS; a_pos: INTEGER) is
 			-- Check that `a_name_id' is not the same as a feature of TUPLE.
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -183,8 +190,12 @@ feature {NONE} -- Checking
 				if a_context_feature /= Void then
 					l_vrft.set_feature (a_context_feature)
 				end
-				if a_tuple_node /= Void then
-					l_vrft.set_location (a_tuple_node.i_th_type_declaration (a_pos).start_location)
+				if a_node /= Void then
+					if {l_tuple_node: NAMED_TUPLE_TYPE_AS} a_node then
+						l_vrft.set_location (l_tuple_node.i_th_type_declaration (a_pos).start_location)
+					else
+						l_vrft.set_location (a_node.start_location)
+					end
 				end
 				l_vrft.set_other_feature (l_feat_tbl.found_item)
 				error_handler.insert_error (l_vrft)

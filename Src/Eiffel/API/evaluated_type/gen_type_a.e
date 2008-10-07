@@ -24,7 +24,8 @@ inherit
 			make_type_byte_code, il_type_name, generic_il_type_name,
 			generate_gen_type_il, adapted_in, internal_generic_derivation,
 			internal_same_generic_derivation_as, is_class_valid,
-			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors
+			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors,
+			check_labels
 		end
 
 create
@@ -1348,6 +1349,24 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := generics.item (i).good_generics
 					i := i + 1
 				end
+			end
+		end
+
+	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is
+			-- <Precursor>
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			from
+				l_generics := generics
+				i  := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_generics.item (i).check_labels (a_context_class, a_node)
+				i := i + 1
 			end
 		end
 

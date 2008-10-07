@@ -123,8 +123,8 @@ feature {NONE} -- Initialization: widgets
 		do
 			create tree_view.make (develop_window)
 			split_area.set_first (tree_view.widget)
-			register_action (tree_view.item_selected_event, agent on_selection_change (?, True))
-			register_action (tree_view.item_deselected_event, agent on_selection_change (?, False))
+			register_action (tree_view.item_selected_actions, agent on_selection_change (?, True))
+			register_action (tree_view.item_deselected_actions, agent on_selection_change (?, False))
 		end
 
 	build_notebook

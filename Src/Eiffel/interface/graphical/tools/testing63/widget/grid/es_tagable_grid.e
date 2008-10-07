@@ -217,7 +217,7 @@ feature {NONE} -- Events
 			if propagate_selection_events then
 				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data then
 					internal_selected_items.force (l_data.item)
-					item_selected_event.call ([l_data.item])
+					item_selected_actions.call ([l_data.item])
 				end
 			end
 		end
@@ -228,7 +228,7 @@ feature {NONE} -- Events
 			if propagate_selection_events then
 				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data then
 					internal_selected_items.remove (l_data.item)
-					item_deselected_event.call ([l_data.item])
+					item_deselected_actions.call ([l_data.item])
 				end
 			end
 		end

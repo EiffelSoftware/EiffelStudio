@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 			create grid.make (development_window)
 			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT})
 			grid.connect (executor)
-			register_action (grid.item_selected_event, agent on_selection_change)
-			register_action (grid.item_deselected_event, agent on_selection_change)
+			register_action (grid.item_selected_actions, agent on_selection_change)
+			register_action (grid.item_deselected_actions, agent on_selection_change)
 			a_widget.extend (grid.widget)
 		end
 

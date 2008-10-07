@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_window)
-			create item_selected_event
-			create item_deselected_event
+			create item_selected_actions
+			create item_deselected_actions
 			create internal_selected_items.make_default
 		end
 
@@ -65,10 +65,10 @@ feature -- Status report
 
 feature -- Events
 
-	item_selected_event: !ACTION_SEQUENCE [TUPLE [item: G]]
+	item_selected_actions: !ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when a item is selected in `widget'
 
-	item_deselected_event: !ACTION_SEQUENCE [TUPLE [item: G]]
+	item_deselected_actions: !ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when an item is deselected in `widget'
 
 end

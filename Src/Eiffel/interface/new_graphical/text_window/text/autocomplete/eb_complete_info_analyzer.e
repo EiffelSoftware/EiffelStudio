@@ -480,18 +480,18 @@ feature {NONE} -- Implementation
 					if prev_token /= Void then
 						if token_image_is_in_array (token, Feature_call_separators) then
 								-- Token is dot or tilda					
-							is_create := create_before_position (current_line, prev_token)
+							is_create := create_before_position (a_line, prev_token)
 							if is_create then
 									-- Fetch create token, used later
-								l_create_token := locate_create_before_position (current_line, prev_token)
+								l_create_token := locate_create_before_position (a_line, prev_token)
 							end
-							is_static := static_call_before_position (current_line, prev_token)
-							is_parenthesized := parenthesized_before_position (current_line, prev_token)
+							is_static := static_call_before_position (a_line, prev_token)
+							is_parenthesized := parenthesized_before_position (a_line, prev_token)
 						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-							Result := class_c_to_complete_from (prev_token, current_line, a_compiled_class, True, two_back)
+							Result := class_c_to_complete_from (prev_token, a_line, a_compiled_class, True, two_back)
 						elseif prev_token.is_text and not two_back then
 							gone_back_two := True
-							Result := class_c_to_complete_from (prev_token, current_line, a_compiled_class, True, True)
+							Result := class_c_to_complete_from (prev_token, a_line, a_compiled_class, True, True)
 						else
 							exploring_current_class := True
 						end
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 						-- It must be a space, or tab or end of line something like that so take the previous
 						-- token to determine context
 					if token.previous /= Void then
-						Result := class_c_to_complete_from (token.previous, current_line, a_compiled_class, True, True)
+						Result := class_c_to_complete_from (token.previous, a_line, a_compiled_class, True, True)
 					else
 							-- Context unknown, assume current class
 						exploring_current_class := True
@@ -521,9 +521,9 @@ feature {NONE} -- Implementation
 					Result := create_class_list_and_insert (a_compiled_class)
 				elseif prev_token /= Void and not is_create and not is_static and not is_parenthesized then
 					if current_feature_as = Void then
-						current_feature_as := feature_containing (prev_token, current_line)
+						current_feature_as := feature_containing (prev_token, a_line)
 					end
-					type := type_from (prev_token, current_line)
+					type := type_from (prev_token, a_line)
 					if type /= Void then
 						Result := create_class_list_and_insert_associated_classes_from_type (type)
 					end
@@ -535,16 +535,16 @@ feature {NONE} -- Implementation
 					else
 							-- Looks like it was a creation instruction since `found_class' was not set.
 						if current_feature_as = Void then
-							current_feature_as := feature_containing (prev_token, current_line)
+							current_feature_as := feature_containing (prev_token, a_line)
 						end
 						if prev_token /= Void then
 							if is_parenthesized then
 								if l_create_token /= Void then
-									type := type_from (l_create_token, current_line)
+									type := type_from (l_create_token, a_line)
 									is_create := False
 								end
 							else
-								type := type_from (prev_token, current_line)
+								type := type_from (prev_token, a_line)
 							end
 
 							if type /= Void then

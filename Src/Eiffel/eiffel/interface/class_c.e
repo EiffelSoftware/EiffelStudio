@@ -1395,6 +1395,9 @@ feature -- Parent checking
 						vtcg4.set_parent_type (parent_actual_type)
 						fixme ("Shouldn't we be able to provide a location?")
 						error_handler.insert_error (vtcg4)
+					else
+							-- We need to check named tuple labels. This fixes eweasel test#tuple012.
+						parent_actual_type.check_labels (Current, Void)
 					end
 				end
 

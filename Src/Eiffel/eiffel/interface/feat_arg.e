@@ -180,7 +180,7 @@ feature -- Checking
 			end
 		end
 
-	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER) is
+	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER; a_check_for_obsolete: BOOLEAN) is
 			-- Check like types in arguments and instantiate arguments
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -204,7 +204,9 @@ feature -- Checking
 					-- Process anchored type for argument types
 					-- Check validity of a generic type
 				a_checker.check_type_validity (l_type, Void)
-				l_type.check_for_obsolete_class (a_context_class, a_feature)
+				if a_check_for_obsolete then
+					l_type.check_for_obsolete_class (a_context_class, a_feature)
+				end
 				i := i + 1
 			end
 		end

@@ -1846,12 +1846,13 @@ feature -- Signature checking
 
 				if l_class.class_id = written_in then
 					type_a_checker.check_type_validity (solved_type, Void)
+					solved_type.check_for_obsolete_class (l_class, Current)
 				end
 				if arguments /= Void then
 						-- Check types of arguments
 					arguments.check_types (feat_table, Current)
 					if l_class.class_id = written_in then
-						arguments.check_type_validity (l_class, Current, type_a_checker)
+						arguments.check_type_validity (l_class, Current, type_a_checker, True)
 					end
 				end
 			end
@@ -1880,11 +1881,10 @@ feature -- Signature checking
 					Current, a_context_class.feature_table, Void, error_handler)
 				if not l_type.is_void then
 					type_a_checker.check_type_validity (l_type, Void)
-					l_type.check_for_obsolete_class (a_context_class, Current)
 				end
 				if arguments /= Void then
 						-- Check types of arguments
-					arguments.check_type_validity (a_context_class, Current, type_a_checker)
+					arguments.check_type_validity (a_context_class, Current, type_a_checker, False)
 				end
 			end
 		end

@@ -82,7 +82,7 @@ feature {NONE}
 
 			create l_hb
 			create l_cell
-			l_cell.set_minimum_width (indentation)
+			l_cell.set_minimum_width ({ES_UI_CONSTANTS}.sub_widget_indent_width)
 			l_hb.extend (l_cell)
 			l_hb.disable_item_expand (l_cell)
 			create feature_clause_box
@@ -100,7 +100,7 @@ feature {NONE}
 
 			create l_hb
 			create l_cell
-			l_cell.set_minimum_width (indentation)
+			l_cell.set_minimum_width ({ES_UI_CONSTANTS}.sub_widget_indent_width)
 			l_hb.extend (l_cell)
 			l_hb.disable_item_expand (l_cell)
 			create l_text_field
@@ -395,8 +395,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Constants
-
-	indentation: INTEGER = 20
 
 	t_title: STRING = "Test class properties"
 	t_subtitle: STRING = "Define where new test routine will be created"

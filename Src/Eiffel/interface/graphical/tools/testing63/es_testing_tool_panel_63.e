@@ -13,7 +13,8 @@ inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			on_before_initialize,
-			on_after_initialized
+			on_after_initialized,
+			create_right_tool_bar_items
 		end
 
 	ES_SHARED_EIFFEL_TEST_SERVICE
@@ -23,7 +24,9 @@ inherit
 
 	EIFFEL_TEST_SUITE_OBSERVER
 		redefine
+			on_test_added,
 			on_test_changed,
+			on_test_removed,
 			on_processor_launched,
 			on_processor_stopped
 		end
@@ -150,6 +153,7 @@ feature {NONE} -- Initialization: widget status
 
 			initialize_tool_bar
 			initialize_view_bar
+			update_run_labels
 		end
 
 	initialize_tool_bar
@@ -208,6 +212,14 @@ feature {NONE} -- Access: widgets
 
 	notebook: !EV_NOTEBOOK
 			-- Notebook for detailed information
+
+	runs_label: !EV_LABEL
+			-- Label showing number of tests which have been executed
+
+	errors_label: !EV_LABEL
+			-- Label showing number of tests currently failing
+
+	errors_pixmap: !EV_PIXMAP
 
 feature {NONE} -- Access: view
 
@@ -410,7 +422,47 @@ feature {NONE} -- Status setting: stones
 			end
 		end
 
-feature {NONE} -- Action handlers
+feature {NONE} -- Status settings: labels
+
+	update_run_labels
+			-- Update text in `runs_label' and `errors_label'.
+		local
+			l_text: STRING_32
+			l_ts: EIFFEL_TEST_SUITE_S
+		do
+			if test_suite.is_service_available then
+				l_ts := test_suite.service
+				create l_text.make (10)
+				l_text.append ("Run: ")
+				l_text.append_natural_32 (l_ts.count_executed)
+				l_text.append_character ('/')
+				if l_ts.is_project_initialized then
+					l_text.append_integer (l_ts.tests.count)
+				else
+					l_text.append_integer (0)
+				end
+				runs_label.set_text (l_text)
+
+				create l_text.make (10)
+				l_text.append ("Failing: ")
+				l_text.append_natural_32 (l_ts.count_failing)
+				errors_label.set_text (l_text)
+
+				if l_ts.count_failing > 0 then
+					errors_pixmap.enable_sensitive
+					errors_label.enable_sensitive
+				else
+					errors_pixmap.disable_sensitive
+					errors_label.disable_sensitive
+				end
+
+				if {l_tb: like right_tool_bar_widget} right_tool_bar_widget then
+					l_tb.compute_minimum_size
+				end
+			end
+		end
+
+feature {NONE} -- Events: buttons
 
 	on_run_current (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user presses `run_button' or `debug_button' directly.
@@ -521,7 +573,31 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+feature {NONE} -- Events: labels
+
+	on_run_label_select
+			-- Called when user clicks on `runs_label'.
+		do
+			view_box.set_text (l_outcome_view)
+			filter_box.set_text ("")
+			update_view
+		end
+
+	on_error_label_select
+			-- Called when user clicks on `errors_label'.
+		do
+			view_box.set_text (l_outcome_view)
+			filter_box.set_text (l_filter_not_passing)
+			update_view
+		end
+
 feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
+
+	on_test_added (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
+			-- <Precursor>
+		do
+			update_run_labels
+		end
 
 	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_test: !EIFFEL_TEST_I)
 			-- <Precursor>
@@ -529,6 +605,13 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			if outcome_tab.is_active and then outcome_tab.test = a_test then
 				outcome_tab.show_test (a_test)
 			end
+			update_run_labels
+		end
+
+	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
+			-- <Precursor>
+		do
+			update_run_labels
 		end
 
 	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
@@ -682,6 +765,67 @@ feature {NONE} -- Factory
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 		end
 
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		local
+			l_vbox: EV_VERTICAL_BOX
+			l_box: EV_HORIZONTAL_BOX
+			l_pixmap: EV_PIXMAP
+		do
+			create Result.make (5)
+
+				-- Runs
+			create l_vbox
+			l_vbox.extend (create {EV_CELL})
+
+			create l_box
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
+			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+
+			l_pixmap := stock_pixmaps.run_animation_5_icon.twin
+			register_action (l_pixmap.pointer_double_press_actions, agent on_run_label_select)
+
+			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
+			l_box.extend (l_pixmap)
+
+			create runs_label
+			runs_label.align_text_left
+			register_action (runs_label.pointer_double_press_actions, agent on_run_label_select)
+			l_box.extend (runs_label)
+
+			l_vbox.extend (l_box)
+			l_vbox.disable_item_expand (l_box)
+			l_vbox.extend (create {EV_CELL})
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Errors
+			create l_vbox
+			l_vbox.extend (create {EV_CELL})
+
+			create l_box
+			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
+			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
+
+			create errors_pixmap.make_with_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
+			errors_pixmap.set_minimum_size (errors_pixmap.width, errors_pixmap.height)
+			register_action (errors_pixmap.pointer_double_press_actions, agent on_error_label_select)
+			l_box.extend (errors_pixmap)
+
+			create errors_label
+			errors_label.align_text_left
+			register_action (errors_label.pointer_double_press_actions, agent on_error_label_select)
+			l_box.extend (errors_label)
+
+			l_vbox.extend (l_box)
+			l_vbox.disable_item_expand (l_box)
+			l_vbox.extend (create {EV_CELL})
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+		end
+
 feature {NONE} -- Internationalization
 
 	f_run_button: STRING = "Run all tests in background"
@@ -700,6 +844,8 @@ feature {NONE} -- Internationalization
 
 	l_view: STRING = "View"
 	l_filter: STRING = "Filter"
+	l_outcome_view: STRING = "outcome"
+	l_filter_not_passing: STRING = "-outcome/passes"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

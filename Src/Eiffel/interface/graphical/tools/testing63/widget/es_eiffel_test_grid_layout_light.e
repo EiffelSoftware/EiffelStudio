@@ -116,7 +116,8 @@ feature -- Basic functionality
 						l_label.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 						l_tooltip := "Passes"
 					else
-						create l_label.make_with_text ("unresolved")
+						create l_label
+						l_label.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
 						l_tooltip := "Unresolved"
 					end
 				else

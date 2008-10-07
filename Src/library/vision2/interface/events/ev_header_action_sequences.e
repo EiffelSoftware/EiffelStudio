@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
+	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
 			-- Actions to be performed when a mouse pointer is pressed on a header item.
 			--
-			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
+			-- header_item: EV_HEADER_ITEM -- The header item the event occurred upon.
 			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- button_number: INTEGER -- The mouse button number.
@@ -31,10 +31,10 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
+	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
 			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
 			--
-			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
+			-- header_item: EV_HEADER_ITEM -- The header item the event occurred upon.
 			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- button_number: INTEGER -- The mouse button number.

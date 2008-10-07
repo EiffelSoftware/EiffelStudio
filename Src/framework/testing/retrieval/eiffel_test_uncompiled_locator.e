@@ -65,7 +65,12 @@ feature {NONE} -- Query
 	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_descendant (a_class, False)
+			if cached_common_ancestor = Void then
+				cached_common_ancestor := common_ancestor
+			end
+			if cached_common_ancestor /= Void then
+				Result := is_descendant (a_class, False)
+			end
 		end
 
 	has_tests_cluster_parent (a_cluster: CONF_CLUSTER): BOOLEAN

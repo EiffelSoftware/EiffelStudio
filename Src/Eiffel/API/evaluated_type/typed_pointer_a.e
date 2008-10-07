@@ -24,7 +24,7 @@ inherit
 			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			adapted_in, skeleton_adapted_in, is_class_valid, is_valid_generic_derivation,
 			dispatch_anchors, has_like_current, internal_generic_derivation,
-			internal_same_generic_derivation_as, generic_derivation
+			internal_same_generic_derivation_as, generic_derivation, check_labels
 		redefine
 			is_typed_pointer, c_type, associated_class, process,
 			il_type_name, generic_il_type_name

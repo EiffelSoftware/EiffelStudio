@@ -1634,10 +1634,15 @@ feature {NONE}-- Implementation
 					token_image_is_same_as_word (token, Result_word) and then
 					current_feature_as /= Void and then l_current_class_c.has_feature_table
 				then
-					current_feature := l_current_class_c.feature_with_name (
-						current_feature_as.name.internal_name.name)
-					if current_feature /= Void then
-						Result := current_feature.type
+						-- First check the local declarations
+					Result := type_of_local_entity_named ({EIFFEL_KEYWORD_CONSTANTS}.result_keyword)
+					if Result = Void then
+							-- Used the compiled information
+						current_feature := l_current_class_c.feature_with_name (
+							current_feature_as.name.internal_name.name)
+						if current_feature /= Void then
+							Result := current_feature.type
+						end
 					end
 				elseif token_image_is_in_array (token, boolean_values) then
 					Result := boolean_type

@@ -198,6 +198,7 @@ feature {NONE} -- Status report
 
 	is_using_unix_switch_style: BOOLEAN
 			-- Indicates if the Unix command switch style is being used by the application switches.
+			--| Note: Redefine to force use of unix long name switches.
 		local
 			l_switches: ?like switches
 			l_cursor: CURSOR
@@ -1669,9 +1670,17 @@ feature {NONE} -- Switches
 			-- Display usage information switch.
 		once
 			if is_using_unix_switch_style then
-				Result := "h|help"
+				if {PLATFORM}.is_windows then
+					Result := "?|help"
+				else
+					Result := "h|help"
+				end
 			else
-				Result := "help"
+				if {PLATFORM}.is_windows then
+					Result := "?"
+				else
+					Result := "help"
+				end
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

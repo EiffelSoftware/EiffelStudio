@@ -65,12 +65,12 @@ feature -- Action
 				if not user_cancelled_activation and then (validation_agent = Void or else validation_agent.item ([text_field.text])) then
 					set_text (text_field.text)
 				end
-				Precursor {EV_GRID_LABEL_ITEM}
 				if text_field /= Void then
 					text_field.destroy
 					text_field := Void
 				end
 			end
+			Precursor {EV_GRID_LABEL_ITEM}
 		end
 
 feature {NONE} -- Implementation

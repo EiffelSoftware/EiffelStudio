@@ -61,18 +61,24 @@ feature -- Query
 		end
 
 	deactivate is
+			-- <Precursor>
 		do
 			Precursor
-			if not user_cancelled_activation and then not text.is_empty then
+			if
+				not user_cancelled_activation and then
+				text /= Void and then
+				not text.is_empty
+			then
 				apply_actions.call ([text])
 			end
 			set_text (empty_text)
 		end
 
 	apply_actions: ACTION_SEQUENCE [TUPLE [STRING_32]]
-		-- Action to perform when applying the changes
+			-- Action to perform when applying the changes
 
 	initialize_actions is
+			-- <Precursor>
 		do
 			Precursor
 			if use_text /= Void then

@@ -1730,7 +1730,10 @@ feature {NONE}-- Implementation
 			found: BOOLEAN
 			uncomplete_string: BOOLEAN
 		do
-			if current_token /= Void then
+			check
+				current_line_attached: current_token /= Void implies current_line /= Void
+			end
+			if current_token /= Void and current_line /= Void then
 				from
 					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
@@ -1814,7 +1817,10 @@ feature {NONE}-- Implementation
 			found: BOOLEAN
 			uncomplete_string: BOOLEAN
 		do
-			if current_token /= Void then
+			check
+				current_line_attached: current_token /= Void implies current_line /= Void
+			end
+			if current_token /= Void and current_line /= Void then
 				from
 					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines

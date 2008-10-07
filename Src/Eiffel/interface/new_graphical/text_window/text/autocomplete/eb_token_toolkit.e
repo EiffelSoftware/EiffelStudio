@@ -133,8 +133,7 @@ feature -- basic operations
 			-- Is `token' of the correct type that we can attempt to build a feature or class
 			-- autocompletion list?
 		do
-			Result := token /= Void	and not	is_comment (token) and not is_string (token)
-				-- TODO: neilc.  I do not see why we should not allow complete in comments or strings, for user convenience.
+			Result := token /= Void
 		end
 
 	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is

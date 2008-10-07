@@ -35,7 +35,7 @@ feature {NONE} -- Basic operation
 			l_next: ?like next_text_token
 			l_type_start: ?like next_text_token
 			l_type_end: ?like next_text_token
-			l_context_class: !CLASS_I
+			l_context_class: !CLASS_C
 			l_token: !EDITOR_TOKEN
 			l_line: !EDITOR_LINE
 			l_token_text: !STRING_32
@@ -123,14 +123,20 @@ feature {NONE} -- Basic operation
 
 					a_info.has_runout := l_next = Void
 					if l_next /= Void then
-							-- Check for local declaration.
-						l_next := next_token (l_next.token, l_next.line, True, a_end_token,
-							agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
-									-- Search for the attribute, do, once, deferred, external or local words
-								do
-									Result := is_feature_body_token (ia_token, ia_line) or else
-										is_keyword_token (ia_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
-								end)
+							-- Step back because there might not have been any arguments or return type, which means we
+							-- are already on the feature body or local keyword token.
+						l_next := previous_token (l_next.token, l_next.line, False, Void, Void)
+						check l_next_attached: l_next /= Void end
+						if l_next /= Void then
+								-- Check for local declaration.
+							l_next := next_token (l_next.token, l_next.line, True, a_end_token,
+								agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE): BOOLEAN
+										-- Search for the attribute, do, once, deferred, external or local words
+									do
+										Result := is_feature_body_token (ia_token, ia_line) or else
+											is_keyword_token (ia_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
+									end)
+						end
 
 						if l_next /= Void then
 								-- Check for local keyword

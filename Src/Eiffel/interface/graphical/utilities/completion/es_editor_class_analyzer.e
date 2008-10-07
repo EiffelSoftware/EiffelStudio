@@ -18,7 +18,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_feature
 
 feature {NONE} -- Initialization
 
@@ -29,13 +30,34 @@ feature {NONE} -- Initialization
 		do
 			context_class := a_class
 		ensure
-			context_class_set: context_class = a_class
+			context_class_set: context_class ~ a_class
+		end
+
+	make_with_feature (a_feature: !like context_feature)
+			-- Initialize the class context analyzer.
+			--
+			-- `a_class': The context class to analyze the class for.
+			-- `a_feature': The context feature to analyze in context to.
+		local
+			l_class: CLASS_C
+		do
+			context_feature := a_feature
+			l_class := a_feature.written_class
+			if l_class /= Void then
+				make (l_class)
+			end
+		ensure
+			context_feature_set: context_feature ~ a_feature
+			context_class_set: context_class ~ a_feature.written_class
 		end
 
 feature -- Access
 
-	context_class: !CLASS_I
+	context_class: !CLASS_C
 			-- The class analyzer's context class.
+
+	context_feature: ?FEATURE_I
+			-- The class analyzer's context feature, for specialized analysis.
 
 feature {NONE} -- Status report
 
@@ -356,13 +378,19 @@ feature {NONE} -- Factory
 			a_token_is_valid_start_token: a_state.is_valid_start_token (a_token, a_line)
 		local
 			l_feature_info: !ES_EDITOR_ANALYZER_FEATURE_STATE_INFO
+			l_feature: ?like context_feature
 		do
-			if {l_feature_state: ES_EDITOR_ANALYZER_FEATURE_STATE} a_state then
-				create l_feature_info.make (context_class, a_token, a_line)
+			l_feature := context_feature
+			if {l_feature_state: ES_EDITOR_ANALYZER_FEATURE_STATE} a_state and then l_feature /= Void then
+				create l_feature_info.make (l_feature, a_token, a_line)
 				l_feature_info.increment_current_frame (True)
 				Result := l_feature_info
 			else
-				create Result.make (context_class, a_token, a_line)
+				if l_feature /= Void then
+					create Result.make_with_feature (l_feature, a_token, a_line)
+				else
+					create Result.make (context_class, a_token, a_line)
+				end
 			end
 		ensure
 			result_is_valid_state_info: a_state.is_valid_state_info (Result)

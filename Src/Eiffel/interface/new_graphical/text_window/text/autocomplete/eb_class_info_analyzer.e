@@ -766,44 +766,46 @@ feature {NONE} -- Implementation (`type_from')
 			l_class: CLASS_C
 			l_is_named_tuple: BOOLEAN
 		do
-			l_is_named_tuple := a_parent_type.is_named_tuple
-			l_class := current_class_c
-			if a_type.is_loose then
-				if l_is_named_tuple then
-					last_target_type := a_type.actual_type.instantiation_in (a_type, a_class.class_id)
-				else
-					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
-				end
-				last_type := last_target_type
-				if last_target_type /= Void then
-					last_target_type := last_target_type.actual_type
-					last_was_constrained := last_target_type.is_formal
-					last_formal ?= last_target_type
-					if last_was_constrained then
-						last_was_multi_constrained := not last_formal.is_single_constraint_without_renaming (l_class)
-						if last_was_multi_constrained then
-								-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.							
-							last_constraints := last_formal.constraints (l_class).constraining_types_if_possible (l_class)
-								-- We don't know yet the real target type (it'll be one out of last_constraints)
-							last_target_type := Void
-						else
-							last_target_type := last_formal.constrained_type (l_class)
-						end
+			if a_type.is_valid then
+				l_is_named_tuple := a_parent_type.is_named_tuple
+				l_class := current_class_c
+				if a_type.is_loose then
+					if l_is_named_tuple then
+						last_target_type := a_type.actual_type.instantiation_in (a_type, a_class.class_id)
+					else
+						last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
 					end
+					last_type := last_target_type
+					if last_target_type /= Void and then last_target_type.is_valid then
+						last_target_type := last_target_type.actual_type
+						last_was_constrained := last_target_type.is_formal
+						last_formal ?= last_target_type
+						if last_was_constrained then
+							last_was_multi_constrained := not last_formal.is_single_constraint_without_renaming (l_class)
+							if last_was_multi_constrained then
+									-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.							
+								last_constraints := last_formal.constraints (l_class).constraining_types_if_possible (l_class)
+									-- We don't know yet the real target type (it'll be one out of last_constraints)
+								last_target_type := Void
+							else
+								last_target_type := last_formal.constrained_type (l_class)
+							end
+						end
+						error := False
+					end
+				else
+						-- Non formal status.
+					if not a_parent_type.is_tuple then
+						last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
+					else
+						last_target_type := a_type
+					end
+
+					last_type := last_target_type
+					last_was_multi_constrained := False
+					last_was_constrained := False
 					error := False
 				end
-			else
-					-- Non formal status.
-				if not a_parent_type.is_tuple then
-					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
-				else
-					last_target_type := a_type
-				end
-
-				last_type := last_target_type
-				last_was_multi_constrained := False
-				last_was_constrained := False
-				error := False
 			end
 		end
 
@@ -1585,23 +1587,23 @@ feature {NONE}-- Implementation
 			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
 			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
 			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+			l_feature: like current_feature_i
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_name /= Void and then not a_name.is_empty then
-					if {l_class: CLASS_I} current_class_i then
-						l_token := current_token
-						l_line := current_line
-						if l_token /= Void and then l_line /= Void then
-							create l_analyzer.make (l_class)
-							l_result := l_analyzer.scan (l_token, l_line)
-							if l_result /= Void and then l_result.has_current_frame then
-								if not l_result.current_frame.is_empty then
-									l_locals := l_result.current_frame.all_locals
-									l_name ?= a_name.as_string_32
-									if l_locals.has (l_name) then
-										Result := l_locals.item (l_name)
-									end
+				l_feature := current_feature_i
+				if l_feature /= Void and then a_name /= Void and then not a_name.is_empty then
+					l_token := current_token
+					l_line := current_line
+					if l_token /= Void and then l_line /= Void then
+						create l_analyzer.make_with_feature (l_feature)
+						l_result := l_analyzer.scan (l_token, l_line)
+						if l_result /= Void and then l_result.has_current_frame then
+							if not l_result.current_frame.is_empty then
+								l_locals := l_result.current_frame.all_locals
+								l_name ?= a_name.as_string_32
+								if l_locals.has (l_name) then
+									Result := l_locals.item (l_name)
 								end
 							end
 						end

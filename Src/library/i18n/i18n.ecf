@@ -18,7 +18,7 @@
 			<warning name="vweq" enabled="false"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="$(EIFFEL_SRC)/library/i18n/spec/include">
+		<external_include location="$(ISE_LIBRARY)/library/i18n/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

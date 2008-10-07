@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	test_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; item: !EIFFEL_TEST_I]]
+	test_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; active: !EIFFEL_TEST_I]]
 			-- <Precursor>
 
-	test_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; item: !EIFFEL_TEST_I]]
+	test_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; active: !EIFFEL_TEST_I]]
 			-- <Precursor>
 
-	test_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; item: !EIFFEL_TEST_I]]
+	test_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; active: !EIFFEL_TEST_I]]
 			-- <Precursor>
 
 	tests_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]]]

@@ -49,7 +49,7 @@ feature {NONE} -- Query
 
 feature -- Events
 
-	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- Events called after an item was added to `items'.
 			--
 			-- collection: `Current'
@@ -59,7 +59,7 @@ feature -- Events
 		deferred
 		end
 
-	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- Events called after an item was removed from `items'.
 			--
 			-- collection: `Current'
@@ -69,7 +69,7 @@ feature -- Events
 		deferred
 		end
 
-	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; item: !G]]
+	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- Events called after the state of an item has changed
 			--
 			-- collection: `Current'

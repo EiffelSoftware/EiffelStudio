@@ -134,7 +134,7 @@ feature {NONE} -- Initialization: widgets
 			create outcome_tab.make (develop_window)
 			notebook.extend (outcome_tab.widget)
 			notebook.set_item_text (outcome_tab.widget, outcome_tab.title)
-			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon)
+			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon_pixmap)
 			split_area.set_second (notebook)
 		end
 
@@ -638,7 +638,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 					notebook.go_i_th (notebook.count)
 					notebook.put_right (l_new_tab.widget)
 					notebook.set_item_text (l_new_tab.widget, l_new_tab.title)
-					notebook.item_tab (l_new_tab.widget).set_pixmap (l_new_tab.icon)
+					notebook.item_tab (l_new_tab.widget).set_pixmap (l_new_tab.icon_pixmap)
 					notebook.item_tab (l_new_tab.widget).enable_select
 				end
 			end

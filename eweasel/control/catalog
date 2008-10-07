@@ -912,6 +912,7 @@ test	inlining-with-formal-2		final060 tcf pass finalizing inlining
 test	inlining-with-less-formals	final061 tcf pass finalizing inlining
 test	inlining-with-less-formals-2	final062 tcf pass finalizing inlining
 test	unresolved-c-externals-on-inline-agents	final063 tcf pass finalizing
+test	bad-c-inline-agent			final064 tcf pass finalizing agents
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

@@ -79,6 +79,10 @@ feature
 		do
 			l_type_id := type_id
 			buffer.put_new_line
+			buffer.put_three_character ('/', '*', ' ')
+			buffer.put_string (a_class_type.type.dump)
+			buffer.put_three_character (' ', '*', '/')
+			buffer.put_new_line
 			buffer.put_string ("static EIF_TYPE_INDEX ptf");
 			buffer.put_integer (l_type_id);
 			buffer.put_string ("[] = {");
@@ -106,7 +110,7 @@ feature
 			buffer.put_integer (l_type_id);
 
 			buffer.put_string (" = {")
-			buffer.put_hex_integer_16 (l_type_id)
+			buffer.put_integer (l_type_id)
 			buffer.put_string (", ptf")
 
 			buffer.put_integer (l_type_id);

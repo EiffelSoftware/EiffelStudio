@@ -413,8 +413,7 @@ feature {NONE} -- Element change
 					l_features.remove_found_item
 					l_cursor.forth
 				else
-					test_routine_map.remove_found_item
-					test_removed_event.publish ([Current, l_et])
+					remove_test (test_routine_map.found_key)
 					l_names.remove (l_cursor.item)
 				end
 			end
@@ -464,18 +463,27 @@ feature {NONE} -- Element change
 					l_cursor.after
 				loop
 					l_name :=  test_identifier (old_class_map.item_for_iteration, l_cursor.item)
-					test_routine_map.search (l_name)
-					check
-						test_exists: test_routine_map.found
-					end
-					l_et := test_routine_map.found_item
-					test_routine_map.remove_found_item
-					test_removed_event.publish ([Current, l_et])
+					remove_test (l_name)
 					l_cursor.forth
 				end
 				is_test_class_map_modified := True
 				old_class_map.forth
 			end
+		end
+
+	remove_test (a_id: !STRING)
+			-- Remove test for given identifier from `test_routine_map' and inform observer
+		require
+			has_test_for_id: test_routine_map.has (a_id)
+		local
+			l_test: EIFFEL_TEST_I
+		do
+			test_routine_map.search (a_id)
+			l_test := test_routine_map.found_item
+			test_routine_map.remove_found_item
+			test_removed_event.publish ([Current, l_test])
+		ensure
+			not_has_test_for_id: not test_routine_map.has (a_id)
 		end
 
 feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation

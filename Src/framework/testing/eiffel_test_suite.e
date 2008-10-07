@@ -15,6 +15,8 @@ inherit
 	EIFFEL_TEST_PROJECT
 		undefine
 			events
+		redefine
+			remove_test
 		end
 
 create
@@ -53,6 +55,9 @@ feature -- Access
 			-- <Precursor>
 
 feature -- Status report
+
+	count_executed: NATURAL
+			-- <Precursor>
 
 	count_passing: NATURAL
 			-- <Precursor>
@@ -118,6 +123,8 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 		do
 			if a_test.is_outcome_available then
 				l_old := a_test.last_outcome.status
+			else
+				count_executed := count_executed + 1
 			end
 			l_new := a_outcome.status
 			if l_old /= l_new then
@@ -145,13 +152,23 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
+feature {NONE} -- Element change
 
-feature -- Basic functionality
-
-	synchronize_tests (a_class: !EIFFEL_CLASS_I)
+	remove_test (a_id: !STRING)
 			-- <Precursor>
 		local
+			l_test: EIFFEL_TEST_I
 		do
+			l_test := test_routine_map.item (a_id)
+			if l_test.is_outcome_available then
+				count_executed := count_executed - 1
+				if l_test.passed then
+					count_passing := count_passing - 1
+				elseif l_test.failed then
+					count_failing := count_failing - 1
+				end
+			end
+			Precursor (a_id)
 		end
 
 feature -- Events

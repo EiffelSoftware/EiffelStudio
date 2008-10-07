@@ -63,6 +63,8 @@ feature -- Code generation
 			l_cl_type: GEN_TYPE_A
 		do
 			l_cl_type := cl_type.instantiated_in (context.context_class_type.type)
+				-- Initialize variable being caried from `generate_on' to `generate_parameters_list'.
+			is_deferred.put (False)
 			if is_function then
 				register.print_register
 				buffer.put_string (" = ")

@@ -64,6 +64,13 @@ feature -- Access
 
 feature -- Status report
 
+	count_executed: NATURAL
+			-- Number of tests in `test' which have been executed
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
 	count_passing: NATURAL
 			-- Number of passing tests in `tests'
 		require

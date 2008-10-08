@@ -538,8 +538,20 @@ feature -- Access
 					end (?, a_uuid))
 			results_match_recursion: not a_recursive implies Result.for_all (
 				agent (a_lib: !CONF_LIBRARY): BOOLEAN
+					local
+						l_target: CONF_TARGET
 					do
 						Result := a_lib.target = target
+						if not Result then
+							from
+								l_target := target
+							until
+								l_target = Void or Result
+							loop
+								Result := l_target = a_lib.target
+								l_target := l_target.extends
+							end
+						end
 					end)
 		end
 

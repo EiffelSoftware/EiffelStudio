@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			Precursor (a_window)
 			create item_selected_actions
 			create item_deselected_actions
+			create item_pointer_double_press_actions
 			create internal_selected_items.make_default
 		end
 
@@ -64,6 +65,9 @@ feature -- Status report
 		end
 
 feature -- Events
+
+	item_pointer_double_press_actions: !ACTION_SEQUENCE [TUPLE [G]]
+			-- Events called when user double clicks on item row in `widget'
 
 	item_selected_actions: !ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when a item is selected in `widget'

@@ -74,6 +74,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	executor: !EIFFEL_TEST_EXECUTOR_I
+			-- Executor being visualized by `Current'
+
+	grid: !ES_TAGABLE_LIST_GRID [!EIFFEL_TEST_I]
+			-- Grid displaying list of tests
 
 	title: !STRING_32
 			-- Caption for tab
@@ -109,13 +113,10 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Access: grid
+feature {NONE} -- Access
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window in which `Current' is shown
-
-	grid: !ES_TAGABLE_LIST_GRID [!EIFFEL_TEST_I]
-			-- Grid displaying list of tests
 
 feature {NONE} -- Access: buttons
 

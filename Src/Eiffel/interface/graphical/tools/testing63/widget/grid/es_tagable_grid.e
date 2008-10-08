@@ -38,8 +38,9 @@ feature {NONE} -- Initialization
 			grid.focus_out_actions.extend (agent change_focus)
 
 				-- selection support
-			grid.row_select_actions.extend (agent on_row_select)
-			grid.row_deselect_actions.extend (agent on_row_deselect)
+			register_action (grid.row_select_actions, agent on_row_select)
+			register_action (grid.row_deselect_actions, agent on_row_deselect)
+			register_action (grid.pointer_double_press_item_actions, agent on_item_double_press)
 			propagate_selection_events := True
 
 				-- pick and drop support
@@ -229,6 +230,16 @@ feature {NONE} -- Events
 				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data then
 					internal_selected_items.remove (l_data.item)
 					item_deselected_actions.call ([l_data.item])
+				end
+			end
+		end
+
+	on_item_double_press (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+			-- Called when a item has been double clicked in `grid'
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.left then
+				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_item.row.data then
+					item_pointer_double_press_actions.call ([l_data.item])
 				end
 			end
 		end

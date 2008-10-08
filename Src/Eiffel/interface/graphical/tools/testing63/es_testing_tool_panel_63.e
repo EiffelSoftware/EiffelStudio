@@ -125,6 +125,7 @@ feature {NONE} -- Initialization: widgets
 			split_area.set_first (tree_view.widget)
 			register_action (tree_view.item_selected_actions, agent on_selection_change (?, True))
 			register_action (tree_view.item_deselected_actions, agent on_selection_change (?, False))
+			register_action (tree_view.item_pointer_double_press_actions, agent on_item_double_press)
 		end
 
 	build_notebook
@@ -611,6 +612,9 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
 			-- <Precursor>
 		do
+			if outcome_tab.is_active and then outcome_tab.test = a_item then
+				outcome_tab.remove_test
+			end
 			update_run_labels
 		end
 
@@ -635,6 +639,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 				if not l_found then
 					create l_new_tab.make (l_exec, develop_window)
 					l_new_tab.widget.set_data (l_new_tab)
+					register_action (l_new_tab.grid.item_pointer_double_press_actions, agent on_item_double_press)
 					notebook.go_i_th (notebook.count)
 					notebook.put_right (l_new_tab.widget)
 					notebook.set_item_text (l_new_tab.widget, l_new_tab.title)
@@ -661,15 +666,18 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
+	on_item_double_press (a_item: !EIFFEL_TEST_I)
+			-- Called when user double presses on item in of the grids
+		do
+			if not outcome_tab.is_active or else outcome_tab.test /= a_item then
+				outcome_tab.show_test (a_item)
+			end
+			notebook.item_tab (outcome_tab.widget).enable_select
+		end
+
 	on_selection_change (a_test: !EIFFEL_TEST_I; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
 		do
-			if tree_view.selected_items.count = 1 and a_is_selected then
-				outcome_tab.show_test (a_test)
-				notebook.item_tab (outcome_tab.widget).enable_select
-			elseif outcome_tab.is_active then
-				outcome_tab.remove_test
-			end
 			if tree_view.selected_items.is_empty then
 				run_selected_menu.disable_sensitive
 				debug_selected_menu.disable_sensitive

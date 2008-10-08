@@ -20,6 +20,8 @@ inherit
 
 	ES_SHARED_EIFFEL_TEST_SERVICE
 
+	EV_STOCK_COLORS
+
 feature {NONE} -- Access
 
 	project: !E_PROJECT
@@ -49,7 +51,7 @@ feature -- Status report
 			inspect
 				a_index
 			when status_column then
-				Result := 100
+				Result := 150
 			end
 		end
 
@@ -70,6 +72,8 @@ feature -- Basic functionality
 			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label: EV_GRID_LABEL_ITEM
 			l_tooltip: STRING
+			l_outcome: TEST_OUTCOME
+			l_tag: STRING
 		do
 			token_writer.new_line
 			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
@@ -109,18 +113,30 @@ feature -- Basic functionality
 				l_tooltip := "Running"
 			else
 				if a_item.is_outcome_available then
-					if a_item.last_outcome.is_fail then
-						create l_label
-						l_label.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
-						l_tooltip := "Fails"
-					elseif a_item.last_outcome.is_pass then
-						create l_label
+					l_outcome := a_item.last_outcome
+					create l_label
+					if not l_outcome.is_pass then
+						l_label.set_foreground_color (exception_tag_color)
+						create l_tag.make (20)
+						l_tag.append(" (")
+						if l_outcome.is_setup_clean then
+							l_tag.append (l_outcome.test_response.exception.tag_name)
+						else
+							l_tag.append (l_outcome.setup_response.exception.tag_name)
+						end
+						l_tag.append_character (')')
+						l_label.set_text (l_tag)
+						if l_outcome.is_fail then
+							l_label.set_foreground_color (exception_tag_color)
+							l_label.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
+							l_tooltip := "Fails"
+						else
+							l_label.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
+							l_tooltip := "Unresolved"
+						end
+					else
 						l_label.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 						l_tooltip := "Passes"
-					else
-						create l_label
-						l_label.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
-						l_tooltip := "Unresolved"
 					end
 				else
 					create l_label.make_with_text ("not tested")
@@ -131,7 +147,6 @@ feature -- Basic functionality
 			a_row.set_item (status_column, l_label)
 		end
 
-
 feature {NONE} -- Constants
 
 
@@ -141,5 +156,10 @@ feature {NONE} -- Constants
 	tests_column: INTEGER = 1
 	status_column: INTEGER = 2
 
+	exception_tag_color: EV_COLOR
+			-- Color for displaying exception tag
+		do
+			Result := grey
+		end
 
 end

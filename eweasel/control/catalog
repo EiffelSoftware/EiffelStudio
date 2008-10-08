@@ -1927,6 +1927,7 @@ test	object-test-finalization-crash					attach018 tcf pass object_test
 test	object-test-invariant-any-to-expanded			attach019 tcf fail object_test expanded system-validity
 test	detached-type-target-conversion					attach020 tcf fail attached_types system-validity
 test	explicit-attached-formal-conformance			attach021 tcf fail attached_types system-validity conformance
+test	attached-external-check							attach022 tcf fail attached_types external generic anchored_types
 test	attached-wrong-initialization					attach023 tcf fail attached_types
 test	attached-like-feature-formal-crash				attach024 tcf fail attached_types
 

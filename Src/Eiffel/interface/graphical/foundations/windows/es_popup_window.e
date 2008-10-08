@@ -431,7 +431,6 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			relative_widget_detached: not is_shown implies relative_widget = Void
 			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
 			not_is_interface_usable: not is_shown implies (is_recycled_on_closing implies not is_interface_usable)
 		end

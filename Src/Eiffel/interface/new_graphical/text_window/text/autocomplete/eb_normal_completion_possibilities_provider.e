@@ -117,7 +117,7 @@ feature -- Basic operation
 				if provide_features then
 					current_token := text_field.current_token_in_line (watching_line)
 					current_line := watching_line
-					build_completion_list (current_token)
+					build_completion_list (current_token, current_pos_in_token)
 				end
 			end
 			if provide_classes then

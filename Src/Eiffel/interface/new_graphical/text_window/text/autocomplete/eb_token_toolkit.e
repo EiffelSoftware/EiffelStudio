@@ -129,11 +129,18 @@ feature -- basic operations
 					token_image_is_in_array (token, unary_operators)
 		end
 
-	can_attempt_auto_complete_from_token (token: EDITOR_TOKEN): BOOLEAN is
+	can_attempt_auto_complete_from_token (token: EDITOR_TOKEN; a_pos_in_token: INTEGER): BOOLEAN is
 			-- Is `token' of the correct type that we can attempt to build a feature or class
 			-- autocompletion list?
+		require
+			a_pos_in_token_positive: a_pos_in_token >= 0
 		do
 			Result := token /= Void
+			if Result and then a_pos_in_token > 1 then
+				Result := not ({l_number: EDITOR_TOKEN_NUMBER} token or else
+					{l_string: EDITOR_TOKEN_STRING} token or else
+					{l_character: EDITOR_TOKEN_CHARACTER} token)
+			end
 		end
 
 	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is

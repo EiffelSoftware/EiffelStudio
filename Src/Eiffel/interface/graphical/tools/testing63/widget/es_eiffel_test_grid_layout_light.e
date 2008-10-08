@@ -72,7 +72,9 @@ feature -- Basic functionality
 			l_tooltip: STRING
 		do
 			token_writer.new_line
-			l_class := class_from_name (a_item.class_name, Void)
+			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
+				l_class := test_suite.service.class_for_test (a_item)
+			end
 			if l_class /= Void then
 				if l_class.is_compiled and then l_class.compiled_class.has_feature_table then
 					l_feature := l_class.compiled_class.feature_with_name (a_item.name)

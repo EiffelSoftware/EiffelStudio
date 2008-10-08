@@ -44,7 +44,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "rt_struct.h"
 #include "rt_gen_conf.h"
 #include "rt_gen_types.h"
-#include "rt_lmalloc.h"
+#include "rt_malloc.h"
 #include "rt_threads.h"
 #include "rt_garcol.h"
 #include "rt_assert.h"
@@ -159,15 +159,9 @@ typedef struct eif_gen_der {
 	EIF_TYPE_INDEX      hcode;      /* Hash code to speedup search */
 	EIF_TYPE_INDEX      *typearr;   /* Array of types (cid) */
 									/* RTUD(no) */
-	EIF_TYPE_INDEX      stypearr[8];/* Small type array */
-									/* RTUD(no) */
 	EIF_TYPE_INDEX      *gen_seq;   /* Id sequence which generates this type */
 									/* RTUD(yes) */
-	EIF_TYPE_INDEX      sgen_seq[8];/* Small id sequence */
-									/* RTUD(yes) */
 	EIF_TYPE_INDEX      *ptypes;    /* Parent types */
-									/* RTUD(yes) */
-	EIF_TYPE_INDEX      sptypes[8]; /* Small parent types table */
 									/* RTUD(yes) */
 	EIF_TYPE_INDEX      id;         /* Run-time generated id */
 									/* RTUD(no) */
@@ -197,12 +191,8 @@ typedef struct {
 	EIF_TYPE_INDEX  max_high_id;    /* Maximal high conforming id */
 	unsigned char   *low_tab;       /* Bit table for lower ids */
 	unsigned char   *high_tab;      /* Bit table for high ids */
-	unsigned char   slow_tab [8];   /* Small bit table for low ids */
-	unsigned char   shigh_tab [8];  /* Small bit table for high ids */
 	unsigned char   *low_comp;      /* Bit table for computed lower conf. */
 	unsigned char   *high_comp;     /* Bit table for computed high conf. */
-	unsigned char   slow_comp [8];  /* Small bit table for computed low conf.*/
-	unsigned char   shigh_comp [8]; /* Small bit table for computed high conf.*/
 } EIF_CONF_TAB;
 /*------------------------------------------------------------------*/
 /* Structure for ancestor id information.                           */
@@ -212,10 +202,6 @@ typedef struct {
 	EIF_TYPE_INDEX  min_id;         /* Minimal ancestor id; RTUD(no) */
 	EIF_TYPE_INDEX  max_id;         /* Maximal ancestor id; RTUD(no) */
 	EIF_TYPE_INDEX  *map;           /* Ancestor id map.
-									   Index : RTUD(no)
-									   Result: RTUD(yes)
-									*/
-	EIF_TYPE_INDEX  smap [8];       /* Small ancestor id map.
 									   Index : RTUD(no)
 									   Result: RTUD(yes)
 									*/
@@ -556,22 +542,22 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 		eif_par_table2_size = eif_par_table_size;
 	}
 
-	eif_cid_map = (EIF_TYPE_INDEX *) eif_malloc (eif_cid_size * sizeof (EIF_TYPE_INDEX));
+	eif_cid_map = (EIF_TYPE_INDEX *) cmalloc (eif_cid_size * sizeof (EIF_TYPE_INDEX));
 
 	if (eif_cid_map == NULL)
 		enomem();
 
-	eif_derivations = (EIF_GEN_DER **) eif_malloc(eif_cid_size * sizeof (EIF_GEN_DER*));
+	eif_derivations = (EIF_GEN_DER **) cmalloc(eif_cid_size * sizeof (EIF_GEN_DER*));
 
 	if (eif_derivations == NULL)
 		enomem();
 
-	eif_conf_tab = (EIF_CONF_TAB **) eif_malloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
+	eif_conf_tab = (EIF_CONF_TAB **) cmalloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
 
 	if (eif_conf_tab == NULL)
 		enomem();
 
-	eif_anc_id_map = (EIF_ANC_ID_MAP **) eif_malloc(eif_cid_size * sizeof (EIF_ANC_ID_MAP*));
+	eif_anc_id_map = (EIF_ANC_ID_MAP **) cmalloc(eif_cid_size * sizeof (EIF_ANC_ID_MAP*));
 
 	if (eif_anc_id_map == NULL)
 		enomem();
@@ -611,7 +597,7 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 
 #ifdef WORKBENCH
 
-	rtud_inv = (EIF_TYPE_INDEX *) eif_malloc (fcount * sizeof (EIF_TYPE_INDEX));
+	rtud_inv = (EIF_TYPE_INDEX *) cmalloc (fcount * sizeof (EIF_TYPE_INDEX));
 
 	if (rtud_inv == NULL)
 		enomem();
@@ -650,7 +636,7 @@ doc:	</routine>
 rt_shared void eif_gen_conf_thread_init (void) {
 	RT_GET_CONTEXT
 	if (first_gen_id > 0) {
-		non_generic_type_names = (char **) eif_calloc (first_gen_id, sizeof (char *));
+		non_generic_type_names = (char **) eif_rt_xcalloc (first_gen_id, sizeof (char *));
 	}
 }
 
@@ -669,10 +655,10 @@ rt_shared void eif_gen_conf_thread_cleanup (void) {
 	for (; i < first_gen_id; i++) {
 		l_name = non_generic_type_names [i];
 		if (l_name) {
-			eif_free (l_name);
+			eif_rt_xfree (l_name);
 		}
 	}
-	eif_free (non_generic_type_names);
+	eif_rt_xfree (non_generic_type_names);
 	non_generic_type_names = NULL;
 }
 
@@ -696,7 +682,7 @@ rt_shared void eif_gen_conf_cleanup (void)
 	REQUIRE ("eif_cid_map not null", eif_cid_map);
 
 #ifdef WORKBENCH
-	eif_free (rtud_inv);
+	eif_rt_xfree (rtud_inv);
 	rtud_inv = NULL;
 #endif	/* WORKBENCH */
 
@@ -706,16 +692,16 @@ rt_shared void eif_gen_conf_cleanup (void)
 
 		if (tmp == NULL)
 			continue;
-		if (tmp->map != tmp->smap)
-			eif_free (tmp->map);
-		else {
+		if (tmp->map) {
+			eif_rt_xfree (tmp->map);
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->map)));
 #endif	/* LMALLOC_CHECK */
 		}
-		eif_free (tmp);
+		eif_rt_xfree (tmp);
 	}
-	eif_free (eif_anc_id_map);	
+	eif_rt_xfree (eif_anc_id_map);	
 
 	/* Recursively free eif_conf_tab */
 	for (i = 0; i < eif_cid_size; i++) {
@@ -724,37 +710,37 @@ rt_shared void eif_gen_conf_cleanup (void)
 		if (tmp == NULL)
 			continue;
 
-		if (tmp->low_tab != tmp->slow_tab)
-			eif_free (tmp->low_tab);	/* unsigned char * */
-		else {
+		if (tmp->low_tab) {
+			eif_rt_xfree (tmp->low_tab);	/* unsigned char * */
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->low_tab)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->high_tab != tmp->shigh_tab)
-			eif_free (tmp->high_tab);	/* unsigned char * */
-		else {
+		if (tmp->high_tab) {
+			eif_rt_xfree (tmp->high_tab);	/* unsigned char * */
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->high_tab)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->low_comp != tmp->slow_comp)	
-			eif_free (tmp->low_comp);	 	/* unsigned char * */
-		else {
+		if (tmp->low_comp) {
+			eif_rt_xfree (tmp->low_comp);	 	/* unsigned char * */
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->low_comp)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->high_comp != tmp->shigh_comp)	
-			eif_free (tmp->high_comp);	 	/* unsigned char * */
-		else {
+		if (tmp->high_comp)	{
+			eif_rt_xfree (tmp->high_comp);	 	/* unsigned char * */
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->high_comp)));
 #endif	/* LMALLOC_CHECK */
 		}
-		eif_free (tmp);
+		eif_rt_xfree (tmp);
 	}
-	eif_free (eif_conf_tab);	
+	eif_rt_xfree (eif_conf_tab);	
 
 	/* Recursively free eif_derivations. */
 	for (i = 0; i < eif_cid_size; i++) {
@@ -762,38 +748,40 @@ rt_shared void eif_gen_conf_cleanup (void)
 
 		if (tmp == NULL)
 			continue;
-		if (tmp->typearr != tmp->stypearr)
-			eif_free (tmp->typearr);
-		else {
+		if (tmp->typearr) {
+			eif_rt_xfree (tmp->typearr);
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->typearr)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->gen_seq != tmp->sgen_seq)
-			eif_free (tmp->gen_seq);
-		else {
+		if (tmp->gen_seq) {
+			eif_rt_xfree (tmp->gen_seq);
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->gen_seq)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->ptypes != tmp->sptypes)
-			eif_free (tmp->ptypes);
-		else {
+		if (tmp->ptypes) {
+			eif_rt_xfree (tmp->ptypes);
+		} else {
 #ifdef LMALLOC_CHECK
 			CHECK ("", !(is_in_lm (tmp->ptypes)));
 #endif	/* LMALLOC_CHECK */
 		}
-		eif_free (tmp->name);			/* char * */
+		if (tmp->name) {
+			eif_rt_xfree (tmp->name);			/* char * */
+		}
 		for (j = i + 1; j < eif_cid_size; j++) {
 			if (eif_derivations [j] == tmp)	
 				eif_derivations[j] = NULL;
 				
 		}
-		eif_free (tmp);
+		eif_rt_xfree (tmp);
 	}
-	eif_free (eif_derivations);	
+	eif_rt_xfree (eif_derivations);	
 
-	eif_free (eif_cid_map);
+	eif_rt_xfree (eif_cid_map);
 #ifndef EIF_THREADS
 	eif_gen_conf_thread_cleanup();
 #endif
@@ -1356,14 +1344,14 @@ rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 {
 	EIF_TYPE_INDEX   *typearr, result;
 
-	typearr = (EIF_TYPE_INDEX *) eif_malloc (4 * sizeof(EIF_TYPE_INDEX));
+	typearr = (EIF_TYPE_INDEX *) cmalloc (4 * sizeof(EIF_TYPE_INDEX));
 	typearr [0] = INVALID_DTYPE;			/* No static call context */
 	typearr [1] = RTUD_INV(egc_arr_dtype);	/* Base type of ARRAY     */
 	typearr [2] = RTUD_INV(dtype);			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
 	result = eif_compound_id (NULL, 0, typearr[1], typearr);
-	eif_free (typearr);
+	eif_rt_xfree (typearr);
 	return result;
 }
 /*------------------------------------------------------------------*/
@@ -1411,19 +1399,9 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 	/* Compute size of array */
 
 	len = eif_gen_seq_len (dftype);
-
-	if (len <= 6)
-	{
-		/* use short array */
-		gdp->gen_seq = gdp->sgen_seq;
-	}
-	else
-	{
-		gdp->gen_seq = (EIF_TYPE_INDEX *) eif_malloc ((len+2)*sizeof(EIF_TYPE_INDEX));
-
-		if (!gdp->gen_seq) {
-			enomem();
-		}
+	gdp->gen_seq = (EIF_TYPE_INDEX *) cmalloc ((len+2)*sizeof(EIF_TYPE_INDEX));
+	if (!gdp->gen_seq) {
+		enomem();
 	}
 
 	gdp->gen_seq [0] = len;
@@ -1876,7 +1854,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 	char *cname;
 	struct eif_par_types **pt;
 
-	result = (EIF_GEN_DER *) eif_malloc(sizeof (EIF_GEN_DER));
+	result = (EIF_GEN_DER *) cmalloc(sizeof (EIF_GEN_DER));
 
 	if (result == NULL)
 		enomem();
@@ -1908,20 +1886,14 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 		goto finish_simple;
 	}
 
-	if (size > 8) {
-			/* Large array */
-		tp = (EIF_TYPE_INDEX *) eif_malloc((size + 1)*sizeof(EIF_TYPE_INDEX));
-		if (tp == NULL)
-			enomem();
-	} else {
-			/* Small array */
-		tp = result->stypearr;
-	}
+		/* Large array */
+	tp = (EIF_TYPE_INDEX *) cmalloc((size + 1)*sizeof(EIF_TYPE_INDEX));
+	if (tp == NULL)
+		enomem();
 
 	tp[size]=TERMINATOR;
 
-	if (size > 0)
-	{
+	if (size > 0) {
 		memcpy (tp, typearr, size*sizeof(EIF_TYPE_INDEX));
 	}
 
@@ -1991,7 +1963,7 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 	EIF_TYPE_INDEX size;
 	unsigned char *tab;
 
-	result = (EIF_CONF_TAB *) eif_malloc(sizeof (EIF_CONF_TAB));
+	result = (EIF_CONF_TAB *) cmalloc(sizeof (EIF_CONF_TAB));
 
 	if (result == NULL)
 		enomem();
@@ -2000,58 +1972,39 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 	result->max_low_id = max_low;
 	result->min_high_id = min_high;
 	result->max_high_id = max_high;
-	result->low_tab = result->slow_tab;
-	result->high_tab = result->shigh_tab;
-	result->low_comp = result->slow_comp;
-	result->high_comp = result->shigh_comp;
 
 	if (min_low <= max_low) {
 		size = (max_low - min_low + 8)/8;
+		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+		if (!tab)
+			enomem ();
+		result->low_tab = tab;
 
-		if (size > 8) {
-			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-			if (!tab)
-				enomem ();
-			result->low_tab = tab;
-
-			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-			if (!tab)
-				enomem ();
-			result->low_comp = tab;
-		} else {
-			memset (result->low_tab, '\0', size);
-			memset (result->low_comp, '\0', size);
-		}
+		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+		if (!tab)
+			enomem ();
+		result->low_comp = tab;
 	} else {
-		size = 8;
-		memset (result->low_tab, '\0', size);
-		memset (result->low_comp, '\0', size);
+		result->low_tab = NULL;
+		result->low_comp = NULL;
 	}
 
 
 	if (min_high <= max_high) {
 		size = (max_high - min_high + 8)/8;
 
-		if (size > 8) {
-			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-			if (!tab)
-				enomem ();
-			result->high_tab = tab;
-
-			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-			if (!tab)
-				enomem ();
-			result->high_comp = tab;
-		} else {
-			memset (result->high_tab, '\0', size);
-			memset (result->high_comp, '\0', size);
-		}
+		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+		if (!tab)
+			enomem ();
+		result->high_tab = tab;
+		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+		if (!tab)
+			enomem ();
+		result->high_comp = tab;
 	} else {
-		size = 8;
-		memset (result->high_tab, '\0', size);
-		memset (result->high_comp, '\0', size);
+		result->high_tab = NULL;
+		result->high_comp = NULL;
 	}
-
 	
 	return result;
 }
@@ -2065,15 +2018,12 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 {
 	unsigned char *tab, *comp, *old_tab, *old_comp;
-	unsigned char stab [8], scomp [8];
 	int offset, was_small, is_low;
 	EIF_TYPE_INDEX min_old, max_old, min_new, max_new, size, old_size;
 
-	was_small = 0;
 	is_low = 0;
 
-	if (new_id < first_gen_id)
-	{
+	if (new_id < first_gen_id) {
 		/* It's a lower id */
 
 		is_low  = 1;
@@ -2088,26 +2038,7 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 
 		old_tab  = table->low_tab;
 		old_comp = table->low_comp;
-		tab      = table->slow_tab;
-		comp     = table->slow_comp;
-
-		/* Check if we were using the small tables so far */
-
-		if (old_tab == table->slow_tab)
-		{
-			/* Yes, copy them and set `was_small' */
-
-			was_small = 1;
-
-			memcpy ((void *)stab, (void *)old_tab, 8);
-			memcpy ((void *)scomp, (void *)old_comp, 8);
-
-			old_tab  = stab;
-			old_comp = scomp;
-		}
-	}
-	else
-	{
+	} else {
 		/* It's a high id */
 
 		min_old = min_new = table->min_high_id;
@@ -2121,50 +2052,21 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 
 		old_tab  = table->high_tab;
 		old_comp = table->high_comp;
-		tab      = table->shigh_tab;
-		comp     = table->shigh_comp;
-
-		/* Check if we were using the small tables so far */
-
-		if (old_tab == table->shigh_tab)
-		{
-			/* Yes, copy them and set `was_small' */
-
-			was_small = 1;
-
-			memcpy ((void *)stab, (void *)old_tab, 8);
-			memcpy ((void *)scomp, (void *)old_comp, 8);
-
-			old_tab  = stab;
-			old_comp = scomp;
-		}
 	}
 
-	if (min_old <= max_old)
-	{
+	if (min_old <= max_old) {
 		old_size = (max_old - min_old + 8)/8;
+	} else {
+		old_size = 0;
 	}
-	else
-	{
-		old_size = 8;
-	}
-
-	/* Now allocate new tables if size > 8 */
 
 	size = (max_new - min_new + 8)/8;
-
-	if (size > 8) {
-		tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-		if (!tab)
-			enomem ();
-
-		comp = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
-		if (!comp)
-			enomem ();
-	} else {
-		memset (tab, '\0', size);
-		memset (comp, '\0', size);
-	}
+	tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+	if (!tab)
+		enomem ();
+	comp = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+	if (!comp)
+		enomem ();
 
 		/* Initialize new tables from old tables */
 	if (min_old <= max_old)
@@ -2177,35 +2079,25 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 
 	/* Free old tables if they were not small (i.e. static) */
 
-	if (!was_small)
-	{
-		eif_free (old_tab);
-		eif_free (old_comp);
+	if (old_tab) {
+		eif_rt_xfree (old_tab);
+	}
+	if (old_comp) {
+		eif_rt_xfree (old_comp);
 	}
 
 	/* Now update structure values */
 
-	if (is_low)
-	{
+	if (is_low) {
 		table->min_low_id = min_new;
 		table->max_low_id = max_new;
-
-		if (size > 8)
-		{
-			table->low_tab  = tab;
-			table->low_comp = comp;
-		}
-	}
-	else
-	{
+		table->low_tab  = tab;
+		table->low_comp = comp;
+	} else {
 		table->min_high_id = min_new;
 		table->max_high_id = max_new;
-
-		if (size > 8)
-		{
-			table->high_tab  = tab;
-			table->high_comp = comp;
-		}
+		table->high_tab  = tab;
+		table->high_comp = comp;
 	}
 }
 /*------------------------------------------------------------------*/
@@ -2219,29 +2111,23 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (EIF_TYPE_INDEX min_id, EIF_TYPE_I
 	EIF_ANC_ID_MAP *result;
 	EIF_TYPE_INDEX *map, size;
 
-	result = (EIF_ANC_ID_MAP *) eif_malloc(sizeof (EIF_ANC_ID_MAP));
+	result = (EIF_ANC_ID_MAP *) cmalloc(sizeof (EIF_ANC_ID_MAP));
 
 	if (result == NULL)
 		enomem();
 
 	result->min_id = min_id;
 	result->max_id = max_id;
-	result->map    = result->smap;
 
 	if (min_id <= max_id) {
 		size = (max_id - min_id + 1);
 
-		if (size > 8) {
-			map = (EIF_TYPE_INDEX *) eif_calloc (size, sizeof(EIF_TYPE_INDEX));
-
-			if (map == NULL)
-				enomem ();
-
-			result->map = map;
-		} else
-			memset (result->map, '\0', size * sizeof(EIF_TYPE_INDEX));
+		map = (EIF_TYPE_INDEX *) eif_rt_xcalloc (size, sizeof(EIF_TYPE_INDEX));
+		if (map == NULL)
+			enomem ();
+		result->map = map;
 	} else {
-		memset (result->map, '\0', 8 * sizeof(EIF_TYPE_INDEX));
+		result->map = NULL;
 	}
 
 	return result;
@@ -2262,28 +2148,28 @@ rt_private void eif_expand_tables(int new_size)
 	EIF_TYPE_INDEX *map;
 	int         i;
 
-	new = (EIF_GEN_DER **) eif_realloc((char*)eif_derivations, new_size*sizeof (EIF_GEN_DER*));
+	new = (EIF_GEN_DER **) crealloc((char*)eif_derivations, new_size*sizeof (EIF_GEN_DER*));
 
 	if (new == NULL)
 		enomem();
 
 	eif_derivations = new;
 
-	tab = (EIF_CONF_TAB **) eif_realloc((char*)eif_conf_tab, new_size*sizeof (EIF_CONF_TAB*));
+	tab = (EIF_CONF_TAB **) crealloc((char*)eif_conf_tab, new_size*sizeof (EIF_CONF_TAB*));
 
 	if (tab == NULL)
 		enomem();
 
 	eif_conf_tab = tab;
 
-	amap = (EIF_ANC_ID_MAP **) eif_realloc((char*)eif_anc_id_map, new_size*sizeof (EIF_ANC_ID_MAP*));
+	amap = (EIF_ANC_ID_MAP **) crealloc((char*)eif_anc_id_map, new_size*sizeof (EIF_ANC_ID_MAP*));
 
 	if (amap == NULL)
 		enomem();
 
 	eif_anc_id_map = amap;
 
-	map = (EIF_TYPE_INDEX *) eif_realloc((char*)eif_cid_map, new_size*sizeof (EIF_TYPE_INDEX));
+	map = (EIF_TYPE_INDEX *) crealloc((char*)eif_cid_map, new_size*sizeof (EIF_TYPE_INDEX));
 
 	if (map == NULL)
 		enomem();
@@ -2328,15 +2214,15 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 			char *l_class_name = System(par_info(RTUD_INV(dftype))->dtype).cn_generator;
 
 			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
-				l_name = eif_malloc (10 + strlen (l_class_name));
+				l_name = cmalloc (10 + strlen (l_class_name));
 				l_name [0] = '\0';
 				strcat (l_name, "expanded ");
 			} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dftype))) {
-				l_name = eif_malloc (11 + strlen (l_class_name));
+				l_name = cmalloc (11 + strlen (l_class_name));
 				l_name [0] = '\0';
 				strcat (l_name, "reference ");
 			} else {
-				l_name = eif_malloc (strlen (l_class_name) + 1);
+				l_name = cmalloc (strlen (l_class_name) + 1);
 				l_name [0] = '\0';
 			}
 			strcat (l_name, l_class_name);
@@ -2356,7 +2242,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 
 	/* Create dynamic buffer for string */
 
-	result = eif_malloc (len + 1);
+	result = cmalloc (len + 1);
 
 	if (result == NULL)
 		enomem();
@@ -2371,7 +2257,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 
 	if (gdp->name != NULL)
 	{
-		eif_free (result);
+		eif_rt_xfree (result);
 		result = gdp->name;
 	}
 	else
@@ -2439,7 +2325,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 			++i;
 		}
 
-		bits = eif_malloc (i+1);
+		bits = cmalloc (i+1);
 
 		if (bits == NULL)
 			enomem ();
@@ -2790,20 +2676,11 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 		eif_derivations [dftype] = gdp;
 	}
 
-	if (pcount <= 8)
-	{
-		/* Use small table */
-		gdp->ptypes = ptypes = gdp->sptypes;
-	}
-	else
-	{
-		ptypes = (EIF_TYPE_INDEX *) eif_malloc (sizeof (EIF_TYPE_INDEX)*pcount);
+	ptypes = (EIF_TYPE_INDEX *) cmalloc (sizeof (EIF_TYPE_INDEX)*pcount);
+	if (ptypes == NULL)
+		enomem ();
 
-		if (ptypes == NULL)
-			enomem ();
-
-		gdp->ptypes = ptypes;
-	}
+	gdp->ptypes = ptypes;
 
 	/* Fill bit tables */
 

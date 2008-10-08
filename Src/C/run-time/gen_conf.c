@@ -2018,7 +2018,7 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 {
 	unsigned char *tab, *comp, *old_tab, *old_comp;
-	int offset, was_small, is_low;
+	int offset, is_low;
 	EIF_TYPE_INDEX min_old, max_old, min_new, max_new, size, old_size;
 
 	is_low = 0;

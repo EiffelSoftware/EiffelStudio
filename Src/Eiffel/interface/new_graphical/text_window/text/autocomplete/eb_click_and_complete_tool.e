@@ -175,7 +175,7 @@ feature -- Analysis preparation
 			current_line := current_cursor.line
 			current_token := a_cursor.token
 			current_feature_as := feature_containing_cursor (a_cursor)
-			build_completion_list_analyse (current_token)
+			build_completion_list_analyse (current_token, current_cursor.pos_in_token)
 		end
 
 	build_class_completion_list (a_cursor: like current_cursor) is

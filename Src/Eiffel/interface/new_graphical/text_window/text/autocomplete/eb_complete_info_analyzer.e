@@ -59,11 +59,11 @@ feature -- Basic operations
 			completion_possibilities := Void
 		end
 
-	build_completion_list (a_cursor_token: EDITOR_TOKEN) is
+	build_completion_list (a_current_token: EDITOR_TOKEN; a_pos_in_cursor: INTEGER) is
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
 		require
-			cursor_token_not_void: a_cursor_token /= Void
+			a_current_token_not_void: a_current_token /= Void
 		local
 			token				: EDITOR_TOKEN
 			line                : EDITOR_LINE
@@ -102,7 +102,7 @@ feature -- Basic operations
 					token := current_token
 					line := current_line
 					if token /= Void then
-						l_class_list := class_c_to_complete_from (token, current_line, l_current_class_c, False, False)
+						l_class_list := class_c_to_complete_from (token, line, a_pos_in_cursor, l_current_class_c, False, False)
 
 						if exploring_current_class then
 							if token /= Void and then line /= Void then
@@ -370,7 +370,7 @@ feature -- Class names completion
 			if workbench.is_already_compiled and then (not workbench.is_compiling) then
 				token := a_token.previous
 				if
-					(token_equal (token, Opening_brace) or token_equal (token, colon)) and then can_attempt_auto_complete_from_token (token)
+					(token_equal (token, Opening_brace) or token_equal (token, colon)) and then can_attempt_auto_complete_from_token (token, 1)
 				then
 					show_all := True
 				else
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	class_c_to_complete_from (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): LIST[CLASS_C] is
+	class_c_to_complete_from (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_pos_in_text: INTEGER; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): LIST[CLASS_C] is
 			-- Class type to complete on from `token'
 		local
 			prev_token: EDITOR_TOKEN
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			end
 
 			exploring_current_class := False
-			if can_attempt_auto_complete_from_token (token) then
+			if can_attempt_auto_complete_from_token (token, a_pos_in_text) then
 				if token.is_text then
 						-- The cursor is in a text token so we complete based upon the previous token.					
 					prev_token := token.previous
@@ -488,10 +488,10 @@ feature {NONE} -- Implementation
 							is_static := static_call_before_position (a_line, prev_token)
 							is_parenthesized := parenthesized_before_position (a_line, prev_token)
 						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-							Result := class_c_to_complete_from (prev_token, a_line, a_compiled_class, True, two_back)
+							Result := class_c_to_complete_from (prev_token, a_line, 1, a_compiled_class, True, two_back)
 						elseif prev_token.is_text and not two_back then
 							gone_back_two := True
-							Result := class_c_to_complete_from (prev_token, a_line, a_compiled_class, True, True)
+							Result := class_c_to_complete_from (prev_token, a_line, 1, a_compiled_class, True, True)
 						else
 							exploring_current_class := True
 						end
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 						-- It must be a space, or tab or end of line something like that so take the previous
 						-- token to determine context
 					if token.previous /= Void then
-						Result := class_c_to_complete_from (token.previous, a_line, a_compiled_class, True, True)
+						Result := class_c_to_complete_from (token.previous, a_line, 1, a_compiled_class, True, True)
 					else
 							-- Context unknown, assume current class
 						exploring_current_class := True
@@ -1224,7 +1224,7 @@ feature {NONE} -- Implementation
 		do
 			insertion_remainder := 0
 			insertion.put ("")
-			if can_attempt_auto_complete_from_token (token) then
+			if can_attempt_auto_complete_from_token (token, 1) then
 				if token.is_text or token.is_blank then
 						-- The cursor is in a text token so we complete based upon the previous token unless the cursor
 						-- is somewhere inside this token..

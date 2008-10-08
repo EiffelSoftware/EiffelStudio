@@ -33,7 +33,8 @@ cd modules
 safemkdir 3rd
 cd 3rd
 
-getsf3rd geshifilter geshi geshi-1.0.7.21.tar.gz geshi "tar xzvf"
+#getsf3rd geshifilter geshi geshi-1.0.7.21.tar.gz geshi "tar xzvf"
+getsf3rd geshifilter geshi geshi-1.0.8.tar.gz geshi "tar xzvf"
 getsf3rd fckeditor fckeditor FCKeditor_2.6.3.tar.gz fckeditor "tar xzvf"
 getsf3rd print dompdf dompdf-0.5.1.tar.gz dompdf-0.5.1 "tar xzvf"
 getsf3rd print tcpdf tcpdf_4_0_024.zip tcpdf "unzip"

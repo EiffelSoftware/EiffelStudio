@@ -6,23 +6,33 @@ safemkdir()
 {
   if [ ! -e "$1" ]; then
     echo "Creating $1"
-    mkdir $1
+    mkdir -p $1
   fi
 }
 
-CWD=`pwd`
-DATE=`eval date +%Y%m%d_%H-%M`
+DRUPALDIR=`pwd`/../drupal
+if [ ! -e "$DRUPALDIR" ]; then
+  echo "Folder to backup not found [$DRUPALDIR]"
+  exit -1
+fi
+
+DT_YEAR=`eval date +%Y`
+DT_WEEK=`eval date +%W`
+DT_DATE=`eval date +%Y_%m_%d__%Hh%Mm`
 DB_NAME=eiffeldoc
 
-safemkdir backup
-cd backup
-safemkdir $DATE
+#BACKUP_FOLDER=`pwd`/backup
+BACKUPDIR=$BACKUP_FOLDER/$DT_YEAR/week_$DT_WEEK/$DT_DATE
+echo Backing up $DRUPALDIR into $BACKUPDIR
 
-/bin/tar -p -s -cjvf $DATE/files.tar.bz2 --exclude $CWD/../drupal/sites/default/files/isedoc/export $CWD/../drupal
+safemkdir $BACKUPDIR
 
-mysqldump -h localhost -u $DB_USER -p$DB_PASS $DB_NAME | bzip2 -c > $DATE/$DB_NAME.sql.bz2
+/bin/tar -p -s -cjf $BACKUPDIR/files.tar.bz2 --exclude $DRUPALDIR/sites/default/files/isedoc/export $DRUPALDIR
 
-rm latest
-ln -f -s $DATE latest
+DB_OPTIONS="-h localhost -u $DB_USER -p$DB_PASS"
+(/usr/bin/mysqldump --flush-logs $DB_OPTIONS $DB_NAME | bzip2 -c) > $BACKUPDIR/$DB_NAME.sql.bz2
 
-echo "Backup completed (backup/$DATE/..)"
+rm $BACKUP_FOLDER/latest
+ln -f -s $BACKUPDIR $BACKUP_FOLDER/latest
+
+echo "Backup completed ($BACKUPDIR/..)"

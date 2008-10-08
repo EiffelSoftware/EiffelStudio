@@ -8,7 +8,7 @@ getdrupmod()
   $EDOC_SCRIPTSDIR/get_drupal_module.sh $1
 }
 
-getdrupmod cck-6.x-2.0-rc7.tar.gz
+getdrupmod cck-6.x-2.0-rc9.tar.gz
 getdrupmod diff-6.x-2.0.tar.gz
 getdrupmod geshifilter-6.x-1.1.tar.gz
 getdrupmod image-6.x-1.0-alpha3.tar.gz
@@ -27,7 +27,7 @@ getdrupmod textareatabs-6.x-0.1.tar.gz
 getdrupmod token-6.x-1.11.tar.gz
 getdrupmod trash-6.x-1.x-dev.tar.gz
 getdrupmod upload_image-6.x-1.x-dev.tar.gz
-getdrupmod views-6.x-2.0-rc2.tar.gz
+getdrupmod views-6.x-2.0-rc4.tar.gz
 getdrupmod wikitools-6.x-1.0.tar.gz
 getdrupmod fckeditor-6.x-1.3-rc1.tar.gz
 getdrupmod opensearchplugin-6.x-1.1.tar.gz

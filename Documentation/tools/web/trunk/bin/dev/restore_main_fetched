@@ -5,7 +5,7 @@ cd `dirname $0`/..
 echo "Are you sure you want to restore MAIN site (yes|no)?"
 read answer
 if [ "$answer" = "yes" ]; then
-	sudo sh ./eiffeldoc_restore.sh backup/fetched .. eiffeldoc
+	sudo sh ./eiffeldoc_restore.sh fetched .. eiffeldoc
 else
 	echo "Cancelled by user  (answer=[$answer] is not [yes])";
 fi

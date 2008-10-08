@@ -135,6 +135,47 @@ feature -- Status setting
 		ensure
 		end
 
+feature -- Query
+
+	class_for_test (a_test: !EIFFEL_TEST_I): ?EIFFEL_CLASS_I
+			-- Class in which test is defined.
+			--
+			-- `a_test': Test for which class shall be returned.
+			-- `Result': Class found in `eiffel_project' containing test, Void if no class found.
+		require
+			usable: is_interface_usable
+			project_initialized: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+		deferred
+		end
+
+	compiled_class_for_test (a_test: !EIFFEL_TEST_I): ?EIFFEL_CLASS_C
+			-- Compiled class in which test is defined.
+			--
+			-- `a_test': Test for which class shall be returned.
+			-- `Result': Class found in `eiffel_project' containing test, Void if no class found.
+		require
+			usable: is_interface_usable
+			project_initialized: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+		do
+			if {l_class: !EIFFEL_CLASS_I} class_for_test (a_test) and then l_class.is_compiled then
+				Result ?= l_class.compiled_class
+			end
+		end
+
+	feature_for_test (a_test: !EIFFEL_TEST_I): ?E_FEATURE
+			-- Feature defining `a_test'.
+			--
+			-- `a_test': Test for which feature shall be returned.
+			-- `Result': Feature found in `eiffel_project' representing test, Void if no feature found.
+		require
+			usable: is_interface_usable
+			project_initialized: is_project_initialized
+			tests_has_a_test: tests.has (a_test)
+		deferred
+		end
+
 feature -- Element change
 
 	register_locator (a_locator: !EIFFEL_TEST_CLASS_LOCATOR_I)

@@ -166,6 +166,20 @@ feature -- Query
 					end (?, l_test_class, l_list))
 		end
 
+	class_for_test (a_test: !EIFFEL_TEST_I): ?EIFFEL_CLASS_I
+			-- <Precursor>
+		do
+			Result := class_for_name (a_test.class_name)
+		end
+
+	feature_for_test (a_test: !EIFFEL_TEST_I): ?E_FEATURE
+			-- <Precursor>
+		do
+			if {l_class: !EIFFEL_CLASS_C} compiled_class_for_test (a_test) then
+				Result := l_class.feature_with_name (a_test.name)
+			end
+		end
+
 feature {NONE} -- Query
 
 	test_identifier (a_class: !EIFFEL_TEST_CLASS; a_name: !STRING): !STRING is
@@ -191,6 +205,36 @@ feature {NONE} -- Query
 			create l_dir.make_from_string (eiffel_project.project_directory.target_path)
 			l_dir.extend ("testing")
 			Result := l_dir
+		end
+
+	class_for_name (a_name: !STRING): ?EIFFEL_CLASS_I
+			-- Class in universe for given name
+			--
+			-- `a_name': Name of class to look for.
+			-- `Result': Class with name `a_name', Void if no class found.
+		require
+			project_initialized: is_project_initialized
+		local
+			l_system: SYSTEM_I
+			l_group: CONF_GROUP
+			l_list: LIST [CLASS_I]
+		do
+			l_system := eiffel_project.system.system
+			if not l_system.root_creators.is_empty then
+				l_group := l_system.root_creators.first.cluster
+				Result ?= eiffel_project.universe.safe_class_named (a_name, l_group)
+			end
+			if Result = Void then
+				l_list := eiffel_project.universe.classes_with_name (a_name)
+				from
+					l_list.start
+				until
+					l_list.after or Result /= Void
+				loop
+					Result ?= l_list.item_for_iteration
+					l_list.forth
+				end
+			end
 		end
 
 feature -- Status setting
@@ -601,27 +645,14 @@ feature {NONE} -- Implementation: tag retrieval
 			a_feature_name_not_empty: a_feature_name /= Void implies a_feature_name /= Void
 			project_initialized: is_project_initialized
 		local
-			l_root, l_current: CONF_GROUP
+			l_current: CONF_GROUP
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_uni: UNIVERSE_I
-			l_clist: LIST [CLASS_I]
 			l_list: LIST [!CONF_LIBRARY]
-			l_class: CLASS_I
-			l_array: DS_ARRAYED_LIST [!CONF_GROUP]
 		do
-			if not eiffel_project.system.system.root_creators.is_empty then
-				l_root := eiffel_project.system.system.root_creators.first.cluster
+			if {l_class: CLASS_I} class_for_name (a_class_name) then
 				l_uni := eiffel_project.universe
-				l_class := l_uni.safe_class_named (a_class_name, l_root)
-			end
-			if l_class = Void then
-				l_clist := l_uni.classes_with_name (a_class_name)
-				if l_clist /= Void and then not l_clist.is_empty then
-					l_class := l_clist.first
-				end
-			end
-			if l_class /= Void then
 				from
 					l_current := l_class.group
 				until
@@ -664,8 +695,6 @@ feature {NONE} -- Implementation: tag retrieval
 				a_tag.append (tag_utilities.feature_prefix)
 				a_tag.append (a_feature_name)
 			end
-		ensure
-			cluster_stack_empty: cluster_stack.is_empty
 		end
 
 	add_note_tags (a_indexing_clause: !INDEXING_CLAUSE_AS; a_set: !DS_SET [!STRING])
@@ -745,5 +774,8 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+
+invariant
+	cluster_stack_empty: cluster_stack.is_empty
 
 end

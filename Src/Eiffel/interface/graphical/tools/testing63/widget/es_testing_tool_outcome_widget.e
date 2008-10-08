@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			l_row.set_item (1, l_label)
 
 			if a_outcome.has_response then
-				add_invocation (l_row, a_outcome.setup_response, "set up", a_expanded)
+				add_invocation (l_row, a_outcome.setup_response, "setup", a_expanded)
 				if a_outcome.is_setup_clean then
 					add_invocation (l_row, a_outcome.test_response, "test", a_expanded)
 					add_invocation (l_row, a_outcome.teardown_response, "tear down", a_expanded)

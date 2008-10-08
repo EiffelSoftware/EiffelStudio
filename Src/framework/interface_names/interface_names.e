@@ -1721,7 +1721,7 @@ feature -- Label texts
 			a_group_name_not_void: a_group_name /= Void
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (not in system, $5)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
+			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (not in system, $4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 		end
 
 	l_classc_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32 is

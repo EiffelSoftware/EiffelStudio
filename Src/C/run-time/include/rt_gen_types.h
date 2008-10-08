@@ -58,7 +58,8 @@ extern "C" {
 #define LIKE_FEATURE_TYPE	0xFFFA
 #define TUPLE_TYPE			0xFFF9
 #define FORMAL_TYPE			0xFFF8
-#define MAX_DTYPE			0xFFF7
+#define PARENT_TYPE_SEPARATOR	0xFFF7
+#define MAX_DTYPE			0xFF00
 
 /* Offset that needs to be skipped when finding TUPLE_TYPE. It corresponds
  * to TUPLE_TYPE and nb generic parameters in current tuple type definition. */

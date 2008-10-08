@@ -574,25 +574,10 @@ rt_public void cnode_updt(void)
 		node->cn_gtypes = NULL;
 	}
 
-		/* 5. Parent dynamic type array */
-	nbparents = wshort();
-	SAFE_ALLOC(parents, EIF_TYPE_INDEX, nbparents + 1);
-	node->cn_parents = parents;
-#ifdef DEBUG
-	dprintf(4)("\n\tparents = ");
-#endif
-	for (i=0; i<nbparents; i++) {
-		parents[i] = (EIF_TYPE_INDEX) wshort();
-#ifdef DEBUG
-	dprintf(4)("%d ", parents[i]);
-#endif
-	}
-	parents[nbparents] = TERMINATOR;
-
-		/* 6.: Skeleton flags */
+		/* 5.: Skeleton flags */
 	node->cn_flags = (uint16) wshort();
 
-		/* 7. Attribute routine id array */
+		/* 6. Attribute routine id array */
 	if (nbattr > 0) {
 		SAFE_ALLOC(rout_ids, int32, nbattr);
 		node->cn_attr = rout_ids;
@@ -605,13 +590,13 @@ rt_public void cnode_updt(void)
 	} else
 		node->cn_attr = (int32 *) 0;
 
-		/* 8. Reference number */
+		/* 7. Reference number */
 	node->cn_nbref = wint32();
 #ifdef DEBUG
 	dprintf(4)("\n\treference number = %ld\n", node->cn_nbref);
 #endif
 
-		/* 9. Node size */
+		/* 8. Node size */
 	node->cn_size = wint32();
 #ifdef DEBUG
 	dprintf(4)("\tsize = %ld\n", node->cn_size);

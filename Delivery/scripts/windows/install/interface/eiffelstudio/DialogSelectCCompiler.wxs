@@ -32,8 +32,8 @@
           <Publish Event="NewDialog" Value="DialogSelectLanguage"><![CDATA[IS_DOTNET_INSTALLED = "1" AND C_CONFIG_MSC_FOUND = "1"]]></Publish>
         </Control>
         <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
-          <Publish Event="NewDialog" Value="DialogMscRestartRequired"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_CAN_COMPILE = "0"]]></Publish>
-          <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[C_CONFIG_NAME <> "msc" OR C_CONFIG_CAN_COMPILE = "1"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogMscRestartRequired"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_MSC_FOUND = "0"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[C_CONFIG_NAME <> "msc" OR C_CONFIG_MSC_FOUND = "1"]]></Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

@@ -176,6 +176,9 @@ rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop
 #define default_catcall_detection_mode	(0)
 #endif
 
+/* Macro for conformance */
+#define par_info(t)	(eif_par_table2[t])
+
 #ifdef __cplusplus
 }
 #endif

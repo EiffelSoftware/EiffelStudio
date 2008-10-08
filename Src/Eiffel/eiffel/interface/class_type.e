@@ -632,40 +632,6 @@ feature -- Conveniences
 			Result := written_type (a_class).type_id
 		end
 
-	parent_types: LINKED_LIST [CLASS_TYPE] is
-			-- List of parent types used for checking the invariant
-		local
-			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_A
-			already_in: BOOLEAN
-		do
-			from
-				create Result.make
-				parents := associated_class.parents
-				parents.start
-			until
-				parents.after
-			loop
-				parent_type := parents.item
-				from
-						-- Check if the parent type is not already in
-						-- the list (repeated inheritance ...).
-					already_in := False
-					Result.start
-				until
-					Result.after or else already_in
-				loop
-					already_in := parent_type.same_generic_derivation_as (type, Result.item.type)
-					Result.forth
-				end
-				if not already_in then
-					Result.extend (parent_type.associated_class_type (type))
-				end
-
-				parents.forth
-			end
-		end
-
 feature -- Generation
 
 	pass4 is
@@ -1331,8 +1297,6 @@ feature -- Skeleton generation
 			-- Generate skeleton names and types of Current class type
 		require
 			skeleton_exists: skeleton /= Void
-		local
-			parent_list: like parent_types
 		do
 			if not skeleton.empty then
 					-- Generate attribute names sequence
@@ -1366,24 +1330,6 @@ feature -- Skeleton generation
 					skeleton.generate_rout_id_array
 				end
 			end
-
-				-- Generate parent dynamic type array
-			parent_list := parent_types
-			buffer.put_string ("static EIF_TYPE_INDEX cn_parents")
-			buffer.put_integer (type_id)
-			buffer.put_string (" [] = {")
-			from
-				parent_list.start
-			until
-				parent_list.after
-			loop
-				buffer.put_type_id (parent_list.item.type_id)
-				buffer.put_character (',')
-				buffer.put_character (' ')
-				parent_list.forth
-			end
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
-			buffer.put_string ("};%N%N")
 
 			if
 				byte_context.final_mode and
@@ -1424,10 +1370,6 @@ feature -- Skeleton generation
 			else
 				buffer.put_string ("NULL")
 			end
-			buffer.put_character (',')
-			buffer.put_new_line
-			buffer.put_string ("cn_parents")
-			buffer.put_integer (type_id)
 			buffer.put_character (',')
 			buffer.put_new_line
 			if not skeleton_empty then
@@ -1763,7 +1705,6 @@ feature -- Byte code generation
 
 	melted_feature_table: MELTED_FEATURE_TABLE is
 		local
-			parent_list: like parent_types
 			ba: BYTE_ARRAY
 			creation_feature: FEATURE_I
 			class_name: STRING
@@ -1789,30 +1730,16 @@ feature -- Byte code generation
 			skeleton.make_type_byte_code (ba)
 			skeleton.make_gen_type_byte_code (ba)
 
-				-- 5. Parent list
-			from
-				parent_list := parent_types
-					-- 5.1: parent count
-				ba.append_short_integer (parent_list.count)
-				parent_list.start
-			until
-				parent_list.after
-			loop
-					-- 5.2: parent dynamic type
-				ba.append_short_integer (parent_list.item.type_id - 1)
-				parent_list.forth
-			end
-
-				-- 6. Store skeleton flags
+				-- 5. Store skeleton flags
 			ba.append_natural_16 (skeleton_flags)
 
-				-- 7. Routine ids of attributes
+				-- 6. Routine ids of attributes
 			skeleton.make_rout_id_array (ba)
 
-				-- 8. Reference number
+				-- 7. Reference number
 			ba.append_integer (skeleton.nb_reference + skeleton.nb_expanded)
 
-				-- 9. Skeleton size
+				-- 8. Skeleton size
 			skeleton.make_size_byte_code (ba)
 
 				-- Creation feature id if any.

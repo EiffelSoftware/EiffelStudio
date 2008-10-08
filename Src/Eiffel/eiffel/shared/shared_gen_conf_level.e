@@ -18,6 +18,7 @@ feature -- Generic conformance access
 	Like_feature_type: NATURAL_16 is 0xFFFA
 	Tuple_type: NATURAL_16 is 0xFFF9
 	Formal_type: NATURAL_16 is 0xFFF8
+	parent_type_separator: NATURAL_16 is 0xFFF7
 
 	annotation_type_mask: NATURAL_16 is 0xFF1F
 	attached_type: NATURAL_16 is 0xFF11

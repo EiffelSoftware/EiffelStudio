@@ -100,6 +100,12 @@ feature
 				i := i + 1;
 				j := j + 1;
 
+				if i < n then
+						-- Add a separator between parents.
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
+					buffer.put_character (',')
+				end
+
 				if (j \\ 16) = 0 then
 					buffer.put_new_line
 				end
@@ -154,6 +160,11 @@ feature
 				i >= n
 			loop
 				item (i).make_type_byte_code (ba, False, a_class_type.type);
+				if i < n then
+						-- Add a separator between parents.
+					ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
+				end
+
 				i := i + 1
 			end;
 

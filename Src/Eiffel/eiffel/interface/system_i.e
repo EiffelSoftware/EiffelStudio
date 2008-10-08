@@ -4456,7 +4456,7 @@ feature -- Generation
 						else
 								-- Type not inserted in system because it was coming
 								-- from a precompiled library.
-							buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
+							buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 						end
 					else
 						cl_type.generate_skeleton2 (buffer)
@@ -4464,10 +4464,10 @@ feature -- Generation
 				else
 						-- FIXME
 					if final_mode then
-						buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
+						buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 					else
 						buffer.put_string
-							("%N{%N0L,%N%"INVALID_TYPE%",%NNULL,%NNULL,%N%
+							("%N{%N0L,%N%"INVALID_TYPE%",%NNULL,%N%
 							%NULL,%NNULL,%N(uint16) 0L,%NNULL,%N0L,%N0L,%N%
 							%(int32) 0L,(int32) 0L,%NNULL,%N%
 							%{(int32) 0, (int) 0, NULL, NULL}}")

@@ -3802,7 +3802,6 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct cnode *node = esystem + dtype;
 	EIF_TYPE_INDEX *cn_parents;
 	EIF_TYPE_INDEX p_type;
 
@@ -3817,14 +3816,23 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 	RT_GC_PROTECT(obj);
 
 	/* Recursion on parents first. */
-	cn_parents = node->cn_parents;
+	cn_parents = par_info(dtype)->parents;
 
-	/* The list of parent dynamic types is always terminated by a
-	 * -1 value. -- FREDD
-	 */
-	while ((p_type = *cn_parents++) != TERMINATOR)
-		/* Call to potential parent invariant */
-		irecursive_chkinv(MTC p_type, obj, scur, stop, where);
+		/* The list of parent dynamic types is always terminated by TERMINATOR,
+		 * and between parents by PARENT_TYPE_SEPARATOR.
+		 */
+	p_type = *cn_parents++;
+	while (p_type != TERMINATOR) {
+			/* Call to potential parent invariant */
+		irecursive_chkinv(p_type, obj, scur, stop, where);
+			/* Iterate `cn_parents' until we reach the next parent or the end. */
+		while ((p_type != PARENT_TYPE_SEPARATOR) && (p_type != TERMINATOR)) {
+			p_type = *cn_parents++;
+		}
+		if (p_type == PARENT_TYPE_SEPARATOR) {
+			p_type = *cn_parents++;
+		}
+	}
 
 	/* Invariant check */
 	{

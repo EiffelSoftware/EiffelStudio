@@ -273,8 +273,7 @@ feature -- Element Change
 						create_info.generate_start (buffer)
 						create_info.generate_gen_type_conversion (0)
 						buffer.put_new_line
-						buffer.put_string ("if (")
-						buffer.put_string ("RTAT(")
+						buffer.put_string ("if (RTAT(")
 						create_info.generate_type_id (buffer, byte_context.final_mode, 0)
 						buffer.put_string (")) {")
 						buffer.indent

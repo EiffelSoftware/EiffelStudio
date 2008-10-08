@@ -73,13 +73,31 @@ feature {NONE} -- Initialization
 	build_class_tree (a_parent: EV_BOX) is
 			-- Initialize `class_tree'
 		local
+			l_hbox: EV_HORIZONTAL_BOX
+			l_button: SD_TOOL_BAR_BUTTON
+			l_tb: SD_TOOL_BAR
 			l_layouts: EV_LAYOUT_CONSTANTS
 			l_label: EV_LABEL
+			l_cmd: EB_NEW_CLUSTER_COMMAND
 		do
+			create l_hbox
 			create l_label.make_with_text (local_formatter.translation (l_select_cluster))
 			l_label.align_text_left
-			a_parent.extend (l_label)
-			a_parent.disable_item_expand (l_label)
+			l_hbox.extend (l_label)
+
+			create l_tb.make
+			create l_button.make
+			l_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+			l_cmd := development_window.commands.new_cluster_cmd
+			l_button.select_actions.extend (agent l_cmd.execute)
+			l_button.set_tooltip (local_formatter.translation (tt_new_cluster))
+			l_tb.extend (l_button)
+			l_tb.compute_minimum_size
+			l_hbox.extend (l_tb)
+			l_hbox.disable_item_expand (l_tb)
+
+			a_parent.extend (l_hbox)
+			a_parent.disable_item_expand (l_hbox)
 
 			create l_layouts
 			create class_tree.make_with_options (development_window.menus.context_menu_factory, False, False)
@@ -283,6 +301,8 @@ feature {NONE} -- Constants
 
 	l_class_name: STRING = "Class name: "
 	l_select_cluster: STRING = "Select parent cluster for new class"
+
+	tt_new_cluster: STRING = "Create new cluster"
 
 	b_setup_routine: STRING = "Redefine `setup' routine"
 	b_tear_down_routine: STRING = "Redefine `tear_down' routine"

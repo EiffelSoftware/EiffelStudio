@@ -6924,7 +6924,7 @@ feature {NONE} -- Implementation
 					i <= 0
 				loop
 					assertion_info := assert_id_set.item (i)
-					if assertion_info.has_assertion then
+					if assertion_info /= Void and then assertion_info.has_assertion then
 						body_index := assertion_info.body_index
 						precursor_feature := body_server.item (body_index)
 						check
@@ -6934,19 +6934,21 @@ feature {NONE} -- Implementation
 						l_old_written_class := context.written_class
 						l_written_class := system.class_of_id (assertion_info.written_in)
 						context.set_written_class (l_written_class)
-						if process_preconditions then
-							if assertion_info.has_precondition then
-								set_is_checking_precondition (True)
-								routine_body.precondition.process (Current)
-								set_is_checking_precondition (False)
-								context.clear_local_context
-							end
-						else
-							if assertion_info.has_postcondition then
-								set_is_checking_postcondition (True)
-								routine_body.postcondition.process (Current)
-								set_is_checking_postcondition (False)
-								context.clear_local_context
+						if routine_body /= Void then
+							if process_preconditions then
+								if assertion_info.has_precondition then
+									set_is_checking_precondition (True)
+									routine_body.precondition.process (Current)
+									set_is_checking_precondition (False)
+									context.clear_local_context
+								end
+							else
+								if assertion_info.has_postcondition then
+									set_is_checking_postcondition (True)
+									routine_body.postcondition.process (Current)
+									set_is_checking_postcondition (False)
+									context.clear_local_context
+								end
 							end
 						end
 						context.set_written_class (l_old_written_class)

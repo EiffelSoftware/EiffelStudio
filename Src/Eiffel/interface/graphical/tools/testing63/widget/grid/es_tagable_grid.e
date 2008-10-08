@@ -52,6 +52,8 @@ feature {NONE} -- Initialization
 
 			auto_recycle (l_support)
 
+			a_box.set_border_width (1)
+			a_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			a_box.extend (grid)
 
 			create timer

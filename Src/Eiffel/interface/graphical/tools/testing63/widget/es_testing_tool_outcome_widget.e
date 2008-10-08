@@ -60,6 +60,8 @@ feature {NONE} -- Initialization
 			l_support.enable_ctrl_right_click_to_open_new_window
 			l_support.set_context_menu_factory_function (agent (development_window.menus).context_menu_factory)
 
+			a_widget.set_border_width (1)
+			a_widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			a_widget.extend (grid)
 		end
 

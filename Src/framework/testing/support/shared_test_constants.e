@@ -13,8 +13,6 @@ feature -- Access
 
 	common_test_class_ancestor_name: STRING = "TEST_SET"
 
-	test_routine_prefix: STRING = "test_"
-
 	indexing_clause_tag_name: STRING = "testing"
 
 feature -- Access: tags

@@ -252,4 +252,24 @@ feature {EIFFEL_TEST_CLASS_LOCATOR_I} -- Basic operations
 		deferred
 		end
 
+feature -- Constants
+
+	setup_routine_name: !STRING
+			-- Name of setup routine in {TEST_SET} descendants
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			not_empty: not Result.is_empty
+		end
+
+	tear_down_routine_name: !STRING
+			-- Name of tear down routine in {TEST_SET} descendants
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			not_empty: not Result.is_empty
+		end
+
 end

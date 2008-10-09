@@ -147,9 +147,9 @@ feature {NONE} -- Basic operation
 						create l_parameters.make (2)
 						l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
 						if a_use_old_syntax then
-							l_parameters.put_last ("indexing", keyword_symbol)
+							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 						else
-							l_parameters.put_last ("note", keyword_symbol)
+							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 						end
 
 							-- Render template
@@ -175,7 +175,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Symbols
 
-	keyword_symbol: !STRING = "KEYWORD"
+	note_keyword_symbol: !STRING = "NOTE_KEYWORD"
 			-- Keyword symbol in the template license file.
 
 	year_symbol: !STRING = "YEAR"

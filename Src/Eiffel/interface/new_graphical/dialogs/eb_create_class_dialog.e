@@ -349,15 +349,25 @@ feature {NONE} -- Basic operations
 					if l_class_name /= Void then
 						l_params.put_last (l_class_name, class_name_symbol)
 					end
+
+					if cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+							-- Use old syntax
+						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+					else
+							-- Use new syntax
+						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+					end
 					if (create {RAW_FILE}.make (l_source_file)).exists then
 							-- Only render if the file exists.
 						create l_buffer.make (64)
 
 							-- Class modifiers
 						if deferred_check.is_selected then
-							l_buffer.append ("deferred ")
+							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword)
+							l_buffer.append_character (' ')
 						elseif expanded_check.is_selected then
-							l_buffer.append ("expanded ")
+							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.expanded_keyword)
+							l_buffer.append_character (' ')
 						end
 						l_params.put_last (l_buffer.twin, class_modifiers_symbol)
 
@@ -365,7 +375,8 @@ feature {NONE} -- Basic operations
 						l_buffer.wipe_out
 						l_parents := parents_list.list
 						if not l_parents.is_empty then
-							l_buffer.append ("inherit%N")
+							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword)
+							l_buffer.append_character ('%N')
 							from l_parents.start until l_parents.after loop
 								l_buffer.append_character ('%T')
 								l_buffer.append (l_parents.item.text.as_upper)
@@ -379,7 +390,8 @@ feature {NONE} -- Basic operations
 						l_buffer.wipe_out
 						l_creation_routine := creation_entry.text
 						if not deferred_check.is_selected and then creation_check.is_selected and then not l_creation_routine.is_empty then
-							l_buffer.append ("create%N%T")
+							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.create_keyword)
+							l_buffer.append ("%N%T")
 							if expanded_check.is_selected and then not ("default_create").is_case_insensitive_equal (l_creation_routine) then
 									-- Is expanded and the creation routine is not default_creation, so add it.
 								l_buffer.append ("default_create,%N%T")
@@ -397,7 +409,8 @@ feature {NONE} -- Basic operations
 							not ("default_create").is_case_insensitive_equal (l_creation_routine)
 						then
 								-- No need to add default_create for expanded classes.
-							l_buffer.append ("feature {NONE} -- Initialization%N%N%T")
+							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.feature_keyword)
+							l_buffer.append (" {NONE} -- Initialization%N%N%T")
 							l_buffer.append (l_creation_routine)
 							l_buffer.append (
 									"%N%T%T%T-- Initialization for `Current'.%N%
@@ -771,6 +784,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Constants
 
+	note_keyword_symbol: !STRING = "NOTE_KEYWORD"
 	class_name_symbol: !STRING = "CLASS_NAME"
 	class_modifiers_symbol: !STRING = "CLASS_MODIFIERS"
 	inherit_clause_symbol: !STRING = "INHERIT_CLAUSE"

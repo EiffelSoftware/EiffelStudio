@@ -48,4 +48,26 @@ feature -- Tests
 			        utilities.is_valid_token ("abcdefghijklmnopqrstwuvxyz"))
 		end
 
+	test_join_tags
+			-- Test routines for `join_tags'
+		indexing
+			testing: "covers/{TAG_UTILITIES}.is_valid_token",
+			         "tests/eiffel/statics/tagable"
+		local
+			l_tag1, l_tag2, l_result: !STRING
+		do
+			l_tag1 := ""
+			l_tag2 := ""
+			l_result := l_tag1
+			assert ("both_empty", l_result.is_equal (utilities.join_tags (l_tag1, l_tag2)))
+
+			l_tag1.append ("token1/token2")
+			l_result := l_tag1
+			assert ("first_empty", l_result.is_equal (utilities.join_tags (l_tag1, l_tag2)))
+			assert ("second_empty", l_result.is_equal (utilities.join_tags (l_tag2, l_tag1)))
+
+			l_tag2 := "token3"
+			l_result := "token1/token2/token3"
+			assert ("none_empty", l_result.is_equal (utilities.join_tags (l_tag1, l_tag2)))
+		end
 end

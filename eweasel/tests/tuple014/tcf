@@ -1,0 +1,15 @@
+test_name	wrong-manifest-tuple-type	
+test_description A class using a multidot expression as an item of a manifest tuple and the multidot expression's type is generic and one of the actual generic parameter is an anchor causes the runtime to create the wrong tuple type.
+
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

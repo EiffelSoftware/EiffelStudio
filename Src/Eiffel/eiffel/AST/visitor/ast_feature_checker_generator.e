@@ -1447,7 +1447,7 @@ feature -- Implementation
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
 													if not is_inherited then
-														l_parameters.put_i_th (create {CONVERTED_EXPR_AS}.initialize (l_parameters.i_th (i),
+														l_parameters.put_i_th (l_parameters.i_th (i).converted_expression (
 															create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
 													end
 												end
@@ -1900,9 +1900,8 @@ feature -- Implementation
 							if not l_element_type.conform_to (l_type_a) then
 								if l_element_type.convert_to (l_current_class, l_type_a) then
 									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
-										l_as.expressions.put_i_th (
-											create {CONVERTED_EXPR_AS}.initialize (l_as.expressions.i_th (i),
-												create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
+										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
+											create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
 									end
 									if is_byte_node_enabled and not is_checking_cas then
 										l_list.put_i_th (l_context.last_conversion_info.byte_node (
@@ -4184,7 +4183,7 @@ feature -- Implementation
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
 									if not is_inherited then
-										l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+										l_as.set_left (l_as.left.converted_expression (
 											create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
 									end
 								end
@@ -4207,7 +4206,7 @@ feature -- Implementation
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
 									if not is_inherited then
-										l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+										l_as.set_right (l_as.right.converted_expression (
 											create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
 									end
 								end
@@ -4431,7 +4430,7 @@ feature -- Implementation
 						if l_conv_info.has_depend_unit then
 							context.supplier_ids.extend (l_conv_info.depend_unit)
 							if not is_inherited then
-								l_as.set_right (create {CONVERTED_EXPR_AS}.initialize (l_as.right,
+								l_as.set_right (l_as.right.converted_expression (
 									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							end
 						end
@@ -4444,7 +4443,7 @@ feature -- Implementation
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
 								if not is_inherited then
-									l_as.set_left (create {CONVERTED_EXPR_AS}.initialize (l_as.left,
+									l_as.set_left (l_as.left.converted_expression (
 										create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 								end
 							end
@@ -4933,7 +4932,7 @@ feature -- Implementation
 							is_type_compatible.conversion_info /= Void and then
 							is_type_compatible.conversion_info.has_depend_unit
 						then
-							l_as.set_source (create {CONVERTED_EXPR_AS}.initialize (l_as.source,
+							l_as.set_source (l_as.source.converted_expression (
 								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 						end
 					end
@@ -5031,7 +5030,7 @@ feature -- Implementation
 							is_type_compatible.conversion_info /= Void and then
 							is_type_compatible.conversion_info.has_depend_unit
 						then
-							l_as.set_source (create {CONVERTED_EXPR_AS}.initialize (l_as.source,
+							l_as.set_source (l_as.source.converted_expression (
 								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 						end
 

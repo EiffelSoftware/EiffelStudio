@@ -109,7 +109,8 @@ feature -- Basic operations
 								l_buffer.wipe_out
 							end
 						else
-							l_buffer.append_character (c)
+								-- There was a $ followed by a non-alpha char. Just skip the $ because it wasn't escaped.
+							l_buffer.append_character (c2)
 						end
 					else
 						l_buffer.append_character (c)

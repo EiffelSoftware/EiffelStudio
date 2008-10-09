@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TEST_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PARSER
 		export
 			{NONE} all
@@ -224,15 +219,15 @@ feature {NONE} -- Query
 	is_valid_routine_name (a_name: !STRING): BOOLEAN is
 			-- Is `a_name' a valid test routine name?
 		do
-			Result := not (a_name.is_equal (prepare_routine_name) or a_name.is_equal (clean_routine_name))
+			Result := not (a_name.is_equal ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name) or a_name.is_equal ({EIFFEL_TEST_CONSTANTS}.clean_routine_name))
 
 				-- Following should be removed together with {TEST_SET} class from testing library
 			if Result then
 				Result := not (a_name.is_equal ("setup") or a_name.is_equal ("tear_down"))
 			end
 		ensure
-			result_implies_not_setup: Result implies not a_name.is_equal (prepare_routine_name)
-			result_implies_not_tear_down: Result implies not a_name.is_equal (clean_routine_name)
+			result_implies_not_setup: Result implies not a_name.is_equal ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
+			result_implies_not_tear_down: Result implies not a_name.is_equal ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
 		end
 
 	class_name (a_class: !CLASS_I): !STRING is
@@ -853,7 +848,7 @@ feature {NONE} -- Implementation: tag retrieval
 					a_indexing_clause.after
 				loop
 					l_item := a_indexing_clause.item
-					if l_item.tag.name.is_case_insensitive_equal (indexing_clause_tag_name) then
+					if l_item.tag.name.is_case_insensitive_equal ({EIFFEL_TEST_CONSTANTS}.indexing_clause_tag_name) then
 						from
 							l_value_list := l_item.index_list
 							l_value_list.start

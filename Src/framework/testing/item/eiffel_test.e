@@ -14,8 +14,6 @@ inherit
 
 	EIFFEL_TEST_MEMENTO_I
 
-	SHARED_TEST_CONSTANTS
-
 	KL_SHARED_STRING_EQUALITY_TESTER
 
 create {EIFFEL_TEST_PROJECT_I}
@@ -135,11 +133,11 @@ feature {NONE} -- Query
 			has_been_tested: is_outcome_available
 		do
 			if failed then
-				Result := outcome_fail_tag
+				Result := {EIFFEL_TEST_CONSTANTS}.outcome_fail_tag
 			elseif passed then
-				Result := outcome_pass_tag
+				Result := {EIFFEL_TEST_CONSTANTS}.outcome_pass_tag
 			else
-				Result := outcome_unresolved_tag
+				Result := {EIFFEL_TEST_CONSTANTS}.outcome_unresolved_tag
 			end
 		end
 

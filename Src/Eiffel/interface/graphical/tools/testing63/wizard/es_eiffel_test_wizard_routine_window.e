@@ -767,14 +767,14 @@ feature {NONE} -- Implementation: creation
 				l_redefine.append ("%T%Tredefine%N")
 				if wizard_information.has_setup then
 					l_redefine.append ("%T%T%T")
-					l_redefine.append ({SHARED_TEST_CONSTANTS}.prepare_routine_name)
+					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
 					if wizard_information.has_tear_down then
 						l_redefine.append (",%N")
 					end
 				end
 				if wizard_information.has_tear_down then
 					l_redefine.append ("%T%T%T")
-					l_redefine.append ({SHARED_TEST_CONSTANTS}.clean_routine_name)
+					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
 				end
 				l_redefine.append ("%N%T%Tend%N%N")
 				l_redefine.append ("feature {NONE} -- Events%N%N")
@@ -782,12 +782,12 @@ feature {NONE} -- Implementation: creation
 
 				if wizard_information.has_setup then
 					l_redefine.append_character ('%T')
-					l_redefine.append ({SHARED_TEST_CONSTANTS}.prepare_routine_name)
+					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
 					l_redefine.append (l_body)
 				end
 				if wizard_information.has_tear_down then
 					l_redefine.append_character ('%T')
-					l_redefine.append ({SHARED_TEST_CONSTANTS}.clean_routine_name)
+					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
 					l_redefine.append (l_body)
 				end
 				Result.force_last (l_redefine, v_redefine_events)
@@ -876,12 +876,12 @@ feature {NONE} -- Constants
 
 	test_set_ancestor: !STRING
 		do
-			Result := {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name
+			Result := {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name
 		end
 
 	system_level_test_ancestor: !STRING
 		do
-			Result := {SHARED_TEST_CONSTANTS}.system_level_test_ancestor_name
+			Result := {EIFFEL_TEST_CONSTANTS}.system_level_test_ancestor_name
 		end
 
 end

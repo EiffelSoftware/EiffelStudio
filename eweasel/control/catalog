@@ -1545,19 +1545,20 @@ test	ptf-read-number-routines-2	lib029	 tcf pass library file
 
 
 -- TUPLE tests
-test	tuple-manipulation		tuple001	tcf	pass tuple
-test	named-tuple-validation	tuple002	tcf	pass tuple
-test	named-tuple-as-argument	tuple003	tcf	pass tuple
-test	tuple-hashcode			tuple004	tcf	pass tuple
-test	tuple-comparison		tuple005	tcf	pass tuple
-test	tuple-twining			tuple006	tcf	pass tuple
-test	named-tuple-assignment	tuple007	tcf	pass tuple
-test	named-tuple-same-labels	tuple008	tcf	pass tuple
+test	tuple-manipulation				tuple001	tcf	pass tuple
+test	named-tuple-validation			tuple002	tcf	pass tuple
+test	named-tuple-as-argument			tuple003	tcf	pass tuple
+test	tuple-hashcode					tuple004	tcf	pass tuple
+test	tuple-comparison				tuple005	tcf	pass tuple
+test	tuple-twining					tuple006	tcf	pass tuple
+test	named-tuple-assignment			tuple007	tcf	pass tuple
+test	named-tuple-same-labels			tuple008	tcf	pass tuple
 test	named-tuple-same-labels-crash	tuple009	tcf	pass tuple
-test	internal-tuple-creation	tuple010	tcf	pass tuple
-test	tuple-creation-crash	tuple011	tcf pass tuple
-test	wrong-label-in-inheritance	tuple012	tcf pass tuple
-test	wrong-label-in-generics	tuple013	tcf pass tuple
+test	internal-tuple-creation			tuple010	tcf	pass tuple
+test	tuple-creation-crash			tuple011	tcf pass tuple
+test	wrong-label-in-inheritance		tuple012	tcf pass tuple
+test	wrong-label-in-generics			tuple013	tcf pass tuple
+test	wrong-manifest-tuple-type		tuple014	tcf fail tuple
 
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde

@@ -12,7 +12,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_OUTCOME
+	EQA_TEST_OUTCOME
 
 create
 	make, make_with_setup, make_without_response
@@ -61,13 +61,13 @@ feature -- Access
 	date: !DATE_TIME
 			-- Date and time `Current' was retrieved
 
-	setup_response: ?TEST_INVOCATION_RESPONSE
+	setup_response: ?EQA_TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
 
-	test_response: ?TEST_INVOCATION_RESPONSE
+	test_response: ?EQA_TEST_INVOCATION_RESPONSE
 			-- Response from test stage
 
-	teardown_response: ?TEST_INVOCATION_RESPONSE
+	teardown_response: ?EQA_TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
 
 feature -- Status report
@@ -107,11 +107,11 @@ feature -- Status report
 			-- Status indicating status of `is_pass', `is_fail' and `is_unresolved'
 		do
 			if is_pass then
-				Result := {TEST_OUTCOME_STATUS_TYPES}.passed
+				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.passed
 			elseif is_fail then
-				Result := {TEST_OUTCOME_STATUS_TYPES}.failed
+				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.failed
 			else
-				Result := {TEST_OUTCOME_STATUS_TYPES}.unresolved
+				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.unresolved
 			end
 		end
 

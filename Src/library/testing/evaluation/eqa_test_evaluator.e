@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_EVALUATOR
+	EQA_TEST_EVALUATOR
 
 inherit
 	EXCEPTIONS
@@ -28,12 +28,12 @@ inherit
 
 feature -- Status report
 
-	last_outcome: ?TEST_OUTCOME
+	last_outcome: ?EQA_TEST_OUTCOME
 			-- Outcome last produced by `execute'
 
 feature {NONE} -- Access
 
-	buffer: TEST_OUTPUT_BUFFER
+	buffer: EQA_TEST_OUTPUT_BUFFER
 			-- Buffer for recording output
 		once
 			create Result.make (2048)
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	last_invocation_response: ?TEST_INVOCATION_RESPONSE
+	last_invocation_response: ?EQA_TEST_INVOCATION_RESPONSE
 			-- Response last produced by `safe_execute'
 
 feature -- Status setting
@@ -63,7 +63,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: !TEST_SET; a_test: PROCEDURE [ANY, TUPLE [TEST_SET]]) is
+	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]) is
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -79,11 +79,11 @@ feature -- Execution
 		require
 			valid_test_set: a_test.valid_operands ([a_test_set])
 		local
-			l_tuple: TUPLE [TEST_SET]
-			l_setup, l_test, l_teardown: !like last_invocation_response
+			l_tuple: TUPLE [EQA_TEST_SET]
+			l_prepare, l_test, l_clean: !like last_invocation_response
 		do
-			safe_execute (agent a_test_set.setup)
-			l_setup ?= last_invocation_response
+			safe_execute (agent a_test_set.prepare)
+			l_prepare ?= last_invocation_response
 			if not last_invocation_response.is_exceptional then
 				l_tuple := a_test.empty_operands
 				check
@@ -93,11 +93,11 @@ feature -- Execution
 				l_tuple.put (a_test_set, 1)
 				safe_execute (agent a_test.call (l_tuple))
 				l_test ?= last_invocation_response
-				safe_execute (agent a_test_set.tear_down)
-				l_teardown ?= last_invocation_response
-				create last_outcome.make (l_setup, l_test, l_teardown, create {DATE_TIME}.make_now)
+				safe_execute (agent a_test_set.clean)
+				l_clean ?= last_invocation_response
+				create last_outcome.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
 			else
-				create last_outcome.make_with_setup (l_setup, create {DATE_TIME}.make_now)
+				create last_outcome.make_with_setup (l_prepare, create {DATE_TIME}.make_now)
 			end
 		end
 
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			l_excpt: !EXCEPTION
 			l_type, l_rec, l_tag, l_trace: !STRING
 			l_dtype: INTEGER
-			l_texcpt: !TEST_INVOCATION_EXCEPTION
+			l_texcpt: !EQA_TEST_INVOCATION_EXCEPTION
 		do
 			if not l_retry then
 				l_old := io.default_output

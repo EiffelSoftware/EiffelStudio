@@ -116,13 +116,13 @@ feature {NONE} -- Initialization
 			create l_vb
 
 			create setup_checkbox
-			setup_checkbox.set_text (local_formatter.translation (b_setup_routine))
+			setup_checkbox.set_text (local_formatter.formatted_translation (b_setup_routine, [{SHARED_TEST_CONSTANTS}.prepare_routine_name]))
 			setup_checkbox.select_actions.extend (agent on_setup_change)
 			l_vb.extend (setup_checkbox)
 			l_vb.disable_item_expand (setup_checkbox)
 
 			create tear_down_checkbox
-			tear_down_checkbox.set_text (local_formatter.translation (b_tear_down_routine))
+			tear_down_checkbox.set_text (local_formatter.formatted_translation (b_tear_down_routine, [{SHARED_TEST_CONSTANTS}.clean_routine_name]))
 			tear_down_checkbox.select_actions.extend (agent on_tear_down_change)
 			l_vb.extend (tear_down_checkbox)
 			l_vb.disable_item_expand (tear_down_checkbox)
@@ -304,8 +304,8 @@ feature {NONE} -- Constants
 
 	tt_new_cluster: STRING = "Create new cluster"
 
-	b_setup_routine: STRING = "Redefine `setup' routine"
-	b_tear_down_routine: STRING = "Redefine `tear_down' routine"
+	b_setup_routine: STRING = "Redefine `$1' routine"
+	b_tear_down_routine: STRING = "Redefine `$1' routine"
 	b_system_level_test: STRING = "Create system level test class"
 
 	e_project_not_available: STRING = "Project is currently not available"

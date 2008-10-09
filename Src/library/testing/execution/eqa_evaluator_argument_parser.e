@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_ARGUMENT_PARSER
+	EQA_EVALUATOR_ARGUMENT_PARSER
 
 inherit
 	ARGUMENT_MULTI_PARSER

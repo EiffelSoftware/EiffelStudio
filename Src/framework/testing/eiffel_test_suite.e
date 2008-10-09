@@ -116,7 +116,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !TEST_OUTCOME) is
+	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !EQA_TEST_OUTCOME) is
 			-- <Precursor>
 		local
 			l_old, l_new: NATURAL_8
@@ -128,14 +128,14 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			end
 			l_new := a_outcome.status
 			if l_old /= l_new then
-				if l_new = {TEST_OUTCOME_STATUS_TYPES}.failed then
+				if l_new = {EQA_TEST_OUTCOME_STATUS_TYPES}.failed then
 					count_failing := count_failing + 1
-				elseif l_new = {TEST_OUTCOME_STATUS_TYPES}.passed then
+				elseif l_new = {EQA_TEST_OUTCOME_STATUS_TYPES}.passed then
 					count_passing := count_passing + 1
 				end
-				if l_old = {TEST_OUTCOME_STATUS_TYPES}.failed then
+				if l_old = {EQA_TEST_OUTCOME_STATUS_TYPES}.failed then
 					count_failing := count_failing - 1
-				elseif l_new = {TEST_OUTCOME_STATUS_TYPES}.passed then
+				elseif l_new = {EQA_TEST_OUTCOME_STATUS_TYPES}.passed then
 					count_passing := count_passing - 1
 				end
 			end

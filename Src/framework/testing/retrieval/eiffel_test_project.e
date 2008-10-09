@@ -224,10 +224,15 @@ feature {NONE} -- Query
 	is_valid_routine_name (a_name: !STRING): BOOLEAN is
 			-- Is `a_name' a valid test routine name?
 		do
-			Result := not (a_name.is_equal (setup_routine_name) or a_name.is_equal (tear_down_routine_name))
+			Result := not (a_name.is_equal (prepare_routine_name) or a_name.is_equal (clean_routine_name))
+
+				-- Following should be removed together with {TEST_SET} class from testing library
+			if Result then
+				Result := not (a_name.is_equal ("setup") or a_name.is_equal ("tear_down"))
+			end
 		ensure
-			result_implies_not_setup: Result implies not a_name.is_equal (setup_routine_name)
-			result_implies_not_tear_down: Result implies not a_name.is_equal (tear_down_routine_name)
+			result_implies_not_setup: Result implies not a_name.is_equal (prepare_routine_name)
+			result_implies_not_tear_down: Result implies not a_name.is_equal (clean_routine_name)
 		end
 
 	class_name (a_class: !CLASS_I): !STRING is
@@ -906,14 +911,6 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-
-feature -- Constants
-
-	setup_routine_name: !STRING = "setup"
-			-- <Precursor>
-
-	tear_down_routine_name: !STRING = "tear_down"
-			-- <Precursor>
 
 invariant
 	cluster_stack_empty: cluster_stack.is_empty

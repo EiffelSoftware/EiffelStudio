@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_OUTPUT_BUFFER
+	EQA_TEST_OUTPUT_BUFFER
 
 inherit
 	PLAIN_TEXT_FILE

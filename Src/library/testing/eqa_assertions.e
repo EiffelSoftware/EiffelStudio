@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_ASSERTIONS
+	EQA_ASSERTIONS
 
 inherit
 	EXCEPTIONS

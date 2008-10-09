@@ -44,7 +44,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	exception_text (a_exception: !TEST_INVOCATION_EXCEPTION): !STRING_32
+	exception_text (a_exception: !EQA_TEST_INVOCATION_EXCEPTION): !STRING_32
 			-- Text describing for given expception
 		do
 			create Result.make_empty

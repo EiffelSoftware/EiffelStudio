@@ -181,7 +181,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			a_test_running: a_test.is_running
 		end
 
-	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !TEST_OUTCOME)
+	add_outcome_to_test (a_test: !EIFFEL_TEST_I; a_outcome: !EQA_TEST_OUTCOME)
 			-- Add outcome to test being executed and notify observers.
 			--
 			-- `a_test': Test for which outcome is available.

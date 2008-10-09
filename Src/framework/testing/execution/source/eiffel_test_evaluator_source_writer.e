@@ -17,13 +17,13 @@ inherit
 
 feature -- Access
 
-	class_name: !STRING = "TEST_EVALUATOR_ROOT"
+	class_name: !STRING = "EQA_EVALUATOR_ROOT"
 			-- <Precursor>
 
 	ancestor_names: !ARRAY [!STRING]
 			-- <Precursor>
 		do
-			Result := << "TEST_ROOT_APPLICATION" >>
+			Result := << "EQA_EVALUATOR" >>
 		end
 
 feature -- Basic operations
@@ -32,6 +32,8 @@ feature -- Basic operations
 			-- Write interpreter root class to file
 		require
 			a_file_open_write: a_file.is_open_write
+		local
+			l_type: !STRING
 		do
 			create stream.make (a_file)
 			put_indexing
@@ -41,14 +43,16 @@ feature -- Basic operations
 					do
 						stream.put_line ("Result := True")
 					end)
-			put_query ("test_set_instance", "!TEST_SET", a_map,
+			create l_type.make_from_string ("!" + {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name)
+			put_query ("test_set_instance", l_type, a_map,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("Result := create {")
 						stream.put_string (a_test.class_name)
 						stream.put_line ("}")
 					end)
-			put_query ("test_procedure", "!PROCEDURE [ANY, TUPLE [TEST_SET]]", a_map,
+			create l_type.make_from_string ("!PROCEDURE [ANY, TUPLE [" + {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
+			put_query ("test_procedure", l_type, a_map,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("Result := agent {")

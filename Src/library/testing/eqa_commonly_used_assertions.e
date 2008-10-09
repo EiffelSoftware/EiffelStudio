@@ -4,10 +4,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	TEST_COMMONLY_USED_ASSERTIONS
+	EQA_COMMONLY_USED_ASSERTIONS
 
 inherit
-	TEST_ASSERTIONS
+	EQA_ASSERTIONS
 
 feature -- Equality
 

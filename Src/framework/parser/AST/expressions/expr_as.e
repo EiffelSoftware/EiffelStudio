@@ -9,7 +9,17 @@ deferred class EXPR_AS
 
 inherit
 	AST_EIFFEL
-		
+
+feature -- Conversion
+
+	converted_expression (a_additional_data: ANY): EXPR_AS is
+			-- Convert current expression in another one.
+		do
+			create {CONVERTED_EXPR_AS} Result.initialize (Current, a_additional_data)
+		ensure
+			converted_expression_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

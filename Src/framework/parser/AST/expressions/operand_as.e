@@ -11,6 +11,9 @@ class
 
 inherit
 	EXPR_AS
+		redefine
+			converted_expression
+		end
 
 create
 	initialize
@@ -118,7 +121,7 @@ feature -- Comparison
 					  equivalent (expression, other.expression)
 		end
 
-feature
+feature -- Status report
 
 	is_open : BOOLEAN is
 			-- Is it an open operand?
@@ -126,6 +129,19 @@ feature
 			Result := (expression = Void) and then (target = Void)
 		ensure
 			Result = ((expression = Void) and then (target = Void))
+		end
+
+feature -- Conversion
+
+	converted_expression (a_additional_data: ANY): EXPR_AS is
+			-- Convert current expression in another one.
+		do
+				-- Conversion can only make sense when `expression' is not void,
+				-- otherwise what is the point of requesting a conversion.
+			if expression /= Void then
+				expression := expression.converted_expression (a_additional_data)
+			end
+			Result := Current
 		end
 
 indexing

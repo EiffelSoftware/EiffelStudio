@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			create l_tb.make
 			create l_button.make
 			l_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
-			l_cmd := development_window.commands.new_cluster_cmd
+			create l_cmd.make (development_window, True)
 			l_button.select_actions.extend (agent l_cmd.execute)
 			l_button.set_tooltip (local_formatter.translation (tt_new_cluster))
 			l_tb.extend (l_button)

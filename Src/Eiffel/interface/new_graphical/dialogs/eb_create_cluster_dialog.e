@@ -78,7 +78,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default (a_target: EB_DEVELOPMENT_WINDOW) is
+	make_default (a_target: EB_DEVELOPMENT_WINDOW; a_is_test_cluster_forced: like is_test_cluster_forced) is
 			-- Create the dialog and link it to a given development window (for modality).
 		require
 			a_target_not_void: a_target /= Void
@@ -180,6 +180,12 @@ feature {NONE} -- Initialization
 				-- Setup the default buttons and show actions.
 			set_default_cancel_button (cancel_b)
 			set_default_push_button (create_button)
+
+			is_test_cluster_forced := a_is_test_cluster_forced
+			if is_test_cluster_forced then
+				tests_cluster_box.enable_select
+				tests_cluster_box.disable_sensitive
+			end
 		ensure
 			target_set: target = a_target
 		end
@@ -218,6 +224,11 @@ feature -- Basic operations
 			default_cluster_name := Void
 			call (cluster_n)
 		end
+
+feature {NONE} -- Status report
+
+	is_test_cluster_forced: BOOLEAN
+			-- Is user forced to create a test cluster?
 
 feature {NONE} -- Implementation
 
@@ -488,23 +499,25 @@ feature {NONE} -- Implementation
 		local
 			l_sensitive: BOOLEAN
 		do
-			change_parent_group
-			l_sensitive := True
-			if aok and not is_top_level then
-				l_sensitive := not group.is_test_cluster
-			end
-			if l_sensitive then
-				if not tests_cluster_box.is_sensitive then
-					tests_cluster_box.enable_sensitive
-					if not tests_cluster_was_selected then
-						tests_cluster_box.disable_select
-					end
+			if not is_test_cluster_forced then
+				change_parent_group
+				l_sensitive := True
+				if aok and not is_top_level then
+					l_sensitive := not group.is_test_cluster
 				end
-			else
-				if tests_cluster_box.is_sensitive then
-					tests_cluster_was_selected := tests_cluster_box.is_selected
-					tests_cluster_box.enable_select
-					tests_cluster_box.disable_sensitive
+				if l_sensitive then
+					if not tests_cluster_box.is_sensitive then
+						tests_cluster_box.enable_sensitive
+						if not tests_cluster_was_selected then
+							tests_cluster_box.disable_select
+						end
+					end
+				else
+					if tests_cluster_box.is_sensitive then
+						tests_cluster_was_selected := tests_cluster_box.is_selected
+						tests_cluster_box.enable_select
+						tests_cluster_box.disable_sensitive
+					end
 				end
 			end
 		end

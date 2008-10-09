@@ -17,11 +17,28 @@ inherit
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			make as make_command
+		end
 
 	SHARED_WORKBENCH
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_window: like target; a_is_test_cluster_forced: like is_test_cluster_forced)
+			-- Initialize `Current'.
+			--
+			-- `a_window': Window in which command is used.
+			-- `a_is_test_cluster_forced': If true, the user will be forced to create a test cluster.
+		require
+			a_window_not_void: a_window /= Void
+		do
+			make_command (a_window)
+			is_test_cluster_forced := a_is_test_cluster_forced
+		end
 
 feature -- Basic operations
 
@@ -31,7 +48,7 @@ feature -- Basic operations
 			dial: EB_CREATE_CLUSTER_DIALOG
 		do
 			if Workbench.is_in_stable_state then
-				create dial.make_default (target)
+				create dial.make_default (target, is_test_cluster_forced)
 				dial.call_default
 			else
 				prompts.show_error_prompt (Warning_messages.w_Unsufficient_compilation (6), target.window, Void)
@@ -46,7 +63,7 @@ feature -- Basic operations
 			dial: EB_CREATE_CLUSTER_DIALOG
 		do
 			if Workbench.is_in_stable_state then
-				create dial.make_default (target)
+				create dial.make_default (target, is_test_cluster_forced)
 				dial.call_stone (a_stone)
 			else
 				prompts.show_warning_prompt (Warning_messages.w_Unsufficient_compilation (6), target.window, Void)
@@ -66,6 +83,11 @@ feature -- Access
 		do
 			Result := pixmaps.mini_pixmaps.new_cluster_icon_buffer
 		end
+
+feature -- Status report
+
+	is_test_cluster_forced: BOOLEAN
+			-- Should dialog force user to create a test cluster?
 
 feature {NONE} -- Implementation
 

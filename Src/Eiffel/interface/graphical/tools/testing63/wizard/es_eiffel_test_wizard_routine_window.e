@@ -748,6 +748,13 @@ feature {NONE} -- Implementation: creation
 			l_count: INTEGER
 		do
 			create Result.make_default
+			if wizard_information.parent.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+					-- Use old syntax
+				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
+			else
+					-- Use new syntax
+				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
+			end
 			if {l_class_name: !STRING} wizard_information.new_class_name then
 				Result.force_last (l_class_name, v_class_name)
 			end
@@ -846,7 +853,6 @@ feature {NONE} -- Implementation: creation
 			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
 		end
 
-
 feature {NONE} -- Constants
 
 	t_title: STRING = "Test routine"
@@ -868,6 +874,7 @@ feature {NONE} -- Constants
 	w_write_permissions: STRING = "Can not create new test class file $1"
 	w_already_exists: STRING = "Test class file $1 already exists"
 
+	v_note_keyword: !STRING = "NOTE_KEYWORD"
 	v_class_name: !STRING = "CLASS_NAME"
 	v_test_set_ancestor: !STRING = "TEST_SET_ANCESTOR"
 	v_redefine_events: !STRING = "REDEFINE_EVENTS"

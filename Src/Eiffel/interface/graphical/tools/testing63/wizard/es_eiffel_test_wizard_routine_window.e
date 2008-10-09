@@ -743,7 +743,7 @@ feature {NONE} -- Implementation: creation
 	template_parameters: DS_HASH_TABLE [!STRING, !STRING]
 			-- Template parameters for creating actual class text from template file.
 		local
-			l_redefine, l_body, l_setup, l_tear_down, l_indexing: !STRING
+			l_redefine, l_body, l_indexing: !STRING
 			l_cursor: DS_BILINEAR_CURSOR [!STRING]
 			l_count: INTEGER
 		do
@@ -758,35 +758,39 @@ feature {NONE} -- Implementation: creation
 				Result.force_last (test_set_ancestor, v_test_set_ancestor)
 			end
 			if wizard_information.has_setup or wizard_information.has_tear_down then
-				create l_redefine.make (100)
-				l_redefine.append ("%T%Tredefine%N")
 				create l_body.make (100)
-				l_body.append ("%T%T%T-- <Precursor>%N")
+				l_body.append ("%N%T%T%T-- <Precursor>%N")
 				l_body.append ("%T%Tdo%N")
 				l_body.append ("%T%T%Tassert (%"not_implemented%", False)%N")
 				l_body.append ("%T%Tend%N%N")
+				create l_redefine.make (300)
+				l_redefine.append ("%T%Tredefine%N")
 				if wizard_information.has_setup then
-					l_redefine.append ("%T%T%Tsetup")
+					l_redefine.append ("%T%T%T")
+					l_redefine.append ({SHARED_TEST_CONSTANTS}.prepare_routine_name)
 					if wizard_information.has_tear_down then
-						l_redefine.append_character (',')
+						l_redefine.append (",%N")
 					end
-					l_redefine.append_character ('%N')
-					create l_setup.make (100)
-					l_setup.append ("feature -- Initialization%N%N")
-					l_setup.append ("%Tsetup%N")
-					l_setup.append (l_body)
-					Result.force_last (l_setup, v_setup_routine)
 				end
 				if wizard_information.has_tear_down then
-					l_redefine.append ("%T%T%Ttear_down%N")
-					create l_tear_down.make (100)
-					l_tear_down.append ("feature -- Reset%N%N")
-					l_tear_down.append ("%Ttear_down%N")
-					l_tear_down.append (l_body)
-					Result.force_last (l_tear_down, v_tear_down_routine)
+					l_redefine.append ("%T%T%T")
+					l_redefine.append ({SHARED_TEST_CONSTANTS}.clean_routine_name)
 				end
-				l_redefine.append ("%T%Tend%N")
-				Result.force_last (l_redefine, v_redefine_clause)
+				l_redefine.append ("%N%T%Tend%N%N")
+				l_redefine.append ("feature {NONE} -- Events%N%N")
+
+
+				if wizard_information.has_setup then
+					l_redefine.append_character ('%T')
+					l_redefine.append ({SHARED_TEST_CONSTANTS}.prepare_routine_name)
+					l_redefine.append (l_body)
+				end
+				if wizard_information.has_tear_down then
+					l_redefine.append_character ('%T')
+					l_redefine.append ({SHARED_TEST_CONSTANTS}.clean_routine_name)
+					l_redefine.append (l_body)
+				end
+				Result.force_last (l_redefine, v_redefine_events)
 			end
 			if {l_name: !STRING} wizard_information.test_name then
 				Result.force_last (l_name, v_test_name)
@@ -866,13 +870,18 @@ feature {NONE} -- Constants
 
 	v_class_name: !STRING = "CLASS_NAME"
 	v_test_set_ancestor: !STRING = "TEST_SET_ANCESTOR"
-	v_redefine_clause: !STRING = "REDEFINE_CLAUSE"
-	v_setup_routine: !STRING = "SETUP_ROUTINE"
+	v_redefine_events: !STRING = "REDEFINE_EVENTS"
 	v_test_name: !STRING = "TEST_NAME"
-	v_tear_down_routine: !STRING = "TEAR_DOWN_ROUTINE"
 	v_indexing: !STRING = "INDEXING"
 
-	test_set_ancestor: !STRING = "TEST_SET"
-	system_level_test_ancestor: !STRING = "SYSTEM_LEVEL_TEST_SET"
+	test_set_ancestor: !STRING
+		do
+			Result := {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name
+		end
+
+	system_level_test_ancestor: !STRING
+		do
+			Result := {SHARED_TEST_CONSTANTS}.system_level_test_ancestor_name
+		end
 
 end

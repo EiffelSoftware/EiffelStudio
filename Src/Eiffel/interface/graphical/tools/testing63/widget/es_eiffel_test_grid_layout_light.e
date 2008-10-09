@@ -85,7 +85,7 @@ feature {NONE} -- Query
 	status_text (a_test: !EIFFEL_TEST_I): !STRING_32
 			-- Status text for `a_test'.
 		local
-			l_outcome: TEST_OUTCOME
+			l_outcome: EQA_TEST_OUTCOME
 		do
 			if a_test.is_queued then
 				Result := local_formatter.translation (l_queued)
@@ -109,7 +109,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	exception_text (a_exception: !TEST_INVOCATION_EXCEPTION): !STRING_32
+	exception_text (a_exception: !EQA_TEST_INVOCATION_EXCEPTION): !STRING_32
 			-- Text describing for given expception
 		do
 			create Result.make (a_exception.tag_name.count + 2)
@@ -122,7 +122,7 @@ feature {NONE} -- Query
 	status_tooltip (a_test: !EIFFEL_TEST_I): !STRING_32
 			-- Tooltip for status of `a_test'.
 		local
-			l_outcome: TEST_OUTCOME
+			l_outcome: EQA_TEST_OUTCOME
 		do
 			if a_test.is_queued then
 				Result := local_formatter.translation (tt_queued)

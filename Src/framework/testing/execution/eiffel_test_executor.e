@@ -425,10 +425,10 @@ feature {NONE} -- Status setting
 			--
 			-- `a_status': Status from which new results are fetched.
 		local
-			l_tuple: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?TEST_OUTCOME; next: ?EIFFEL_TEST_I]
+			l_tuple: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?EQA_TEST_OUTCOME; next: ?EIFFEL_TEST_I]
 			l_done: BOOLEAN
 			l_test: !EIFFEL_TEST_I
-			l_outcome: !TEST_OUTCOME
+			l_outcome: !EQA_TEST_OUTCOME
 		do
 			from
 				current_test := Void

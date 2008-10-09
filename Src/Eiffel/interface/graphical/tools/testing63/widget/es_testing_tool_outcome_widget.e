@@ -127,7 +127,7 @@ feature -- Status setting
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_cursor: DS_BILINEAR_CURSOR [!TEST_OUTCOME]
+			l_cursor: DS_BILINEAR_CURSOR [!EQA_TEST_OUTCOME]
 		do
 			if is_active and a_test /= test then
 				remove_test
@@ -159,7 +159,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_outcome (a_outcome: !TEST_OUTCOME; a_expanded: BOOLEAN) is
+	add_outcome (a_outcome: !EQA_TEST_OUTCOME; a_expanded: BOOLEAN) is
 			-- Add outcome to grid
 			--
 			-- `a_outcome': Outcome for which information should be added.
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_invocation (a_parent: EV_GRID_ROW; a_invocation: TEST_INVOCATION_RESPONSE; a_name: !STRING; a_expanded: BOOLEAN) is
+	add_invocation (a_parent: EV_GRID_ROW; a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: !STRING; a_expanded: BOOLEAN) is
 			-- Add invocation information to grid
 			--
 			-- `a_parent': Parent row for new rows.
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			l_row.set_item (2, l_label)
 		end
 
-	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !TEST_INVOCATION_EXCEPTION) is
+	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !EQA_TEST_INVOCATION_EXCEPTION) is
 			-- Add rows with exception details
 			--
 			-- `a_parent': Parent row for all new rows.
@@ -314,7 +314,7 @@ feature {NONE} -- Factory
 			Result := l_label
 		end
 
-	recipient_item (a_exception: !TEST_INVOCATION_EXCEPTION): !EV_GRID_ITEM
+	recipient_item (a_exception: !EQA_TEST_INVOCATION_EXCEPTION): !EV_GRID_ITEM
 			-- Item containing a clickable exception recipient if available
 			--
 			-- `a_exception': Exception containing recipient.

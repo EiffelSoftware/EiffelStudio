@@ -38,7 +38,7 @@ feature -- Status setting
 			-- Wait for incoming connection on socket.
 			--
 			-- Note: `receive' will open a listener socket on a arbitrary available port and simply try to
-			--       receive objects of type {TEST_OUTCOME}. If `a_status' does not have any remaining tests
+			--       receive objects of type {EQA_TEST_OUTCOME}. If `a_status' does not have any remaining tests
 			--       or something unexpected is received, the connection is closed and the listener thread
 			--       terminated. `last_port' will be set to the port on which the new listener thread is
 			--       waiting for incoming connections.
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 				loop
 					l_flag := evaluator_status (a_socket)
 					if l_flag = '1' then
-						if {l_outcome: !TEST_OUTCOME} a_socket.retrieved then
+						if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then
 							a_status.add_result (l_outcome)
 						else
 							a_socket.close

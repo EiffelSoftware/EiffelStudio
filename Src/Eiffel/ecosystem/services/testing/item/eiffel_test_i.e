@@ -36,7 +36,7 @@ feature -- Access
 		deferred
 		end
 
-	last_outcome: !TEST_OUTCOME
+	last_outcome: !EQA_TEST_OUTCOME
 			-- Last test result if `Current' has been tested
 		require
 			usable: is_interface_usable

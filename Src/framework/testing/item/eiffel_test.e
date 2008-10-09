@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			class_name := a_class_name
 			internal_tags := new_hash_set (0)
-			create {!DS_ARRAYED_LIST [!TEST_OUTCOME]} internal_outcomes.make (0)
+			create {!DS_ARRAYED_LIST [!EQA_TEST_OUTCOME]} internal_outcomes.make (0)
 		ensure
 			name_set: name = a_name
 			class_name_set: class_name = a_class_name

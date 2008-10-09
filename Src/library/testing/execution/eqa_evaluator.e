@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Core implementation for root class of test executor. The test evaluator is used by the
 		testing tool to run tests and retrieve results. Any descendant of this class should be used as
-		the root class of an interpreter. Descendants need to provide {TEST_ROOT_APPLICATION} information on
+		the root class of an interpreter. Descendants need to provide {EQA_EVALUATOR} information on
 		what test classes/routines are available and be able to create instances of them.
 	]"
 	author: ""
@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	TEST_ROOT_APPLICATION
+	EQA_EVALUATOR
 
 inherit
 	EXCEPTIONS
@@ -83,10 +83,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	arguments: !TEST_ARGUMENT_PARSER
+	arguments: !EQA_EVALUATOR_ARGUMENT_PARSER
 			-- Command line arguments
 
-	evaluator: !TEST_EVALUATOR
+	evaluator: !EQA_TEST_EVALUATOR
 			-- Evaluator for executing tests
 		require
 			arguments_valid: arguments.is_successful
@@ -147,14 +147,14 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query		
 
-	test_set_instance (a_index: NATURAL): !TEST_SET is
+	test_set_instance (a_index: NATURAL): !EQA_TEST_SET is
 			-- Instance of a test set class.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
-	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [TEST_SET]] is
+	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [EQA_TEST_SET]] is
 			-- Agent for a test procedure.
 		require
 			a_index_valid: is_valid_index (a_index)

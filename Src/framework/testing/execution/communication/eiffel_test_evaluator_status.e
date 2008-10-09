@@ -41,7 +41,7 @@ feature -- Access
 			queue_mutex.unlock
 		end
 
-	retrieve: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?TEST_OUTCOME; next: ?EIFFEL_TEST_I]
+	retrieve: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?EQA_TEST_OUTCOME; next: ?EIFFEL_TEST_I]
 			-- Snapshot of current testing progress.
 			--
 			-- Note: by calling `status', any available outcome will be removed together with its
@@ -52,7 +52,7 @@ feature -- Access
 			-- next:    Test which next outcome will be available, Void if all tests have been tested.
 		local
 			l_test, l_next: ?EIFFEL_TEST_I
-			l_outcome: ?TEST_OUTCOME
+			l_outcome: ?EQA_TEST_OUTCOME
 		do
 			queue_mutex.lock
 			if not result_queue.is_empty then
@@ -78,7 +78,7 @@ feature {NONE} -- Access
 	test_queue: !DS_LINKED_LIST [!EIFFEL_TEST_I]
 			-- Tests interpreter is iterating through
 
-	result_queue: !DS_LINKED_LIST [!TEST_OUTCOME]
+	result_queue: !DS_LINKED_LIST [!EQA_TEST_OUTCOME]
 			-- Result interpreter has produced so far
 
 feature -- Status report
@@ -114,7 +114,7 @@ feature -- Status setting
 			is_receiving := True
 		end
 
-	add_result (a_outcome: !TEST_OUTCOME)
+	add_result (a_outcome: !EQA_TEST_OUTCOME)
 			-- Add outcome for `current_test'.
 		do
 			queue_mutex.lock

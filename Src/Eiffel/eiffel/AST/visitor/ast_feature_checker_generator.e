@@ -2977,6 +2977,7 @@ feature -- Implementation
 				l_feat_type := current_feature.type
 				if
 					not l_feat_type.is_void and then
+					not l_as.is_external and then
 					l_feat_type.is_attached and then
 					not l_feat_type.is_expanded and then
 					not context.is_result_attached and then
@@ -2997,7 +2998,11 @@ feature -- Implementation
 						feature_id := skeleton.item_for_iteration.feature_id
 						attr := context.current_class.feature_of_feature_id (feature_id)
 						l_feat_type := attr.type
-						if l_feat_type.is_attached and then not l_feat_type.is_expanded and then not context.variables.is_attribute_initialized (feature_id) then
+						if
+							l_feat_type.is_attached and then not l_feat_type.is_expanded and then
+							{a: ATTRIBUTE_I} attr and then not a.has_body and then
+							not context.variables.is_attribute_initialized (feature_id)
+						then
 								-- Attribute is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_attribute (attr, context.current_class.class_id, context, l_as.end_keyword))
 						end

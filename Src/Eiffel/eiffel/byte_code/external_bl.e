@@ -248,7 +248,7 @@ feature
 
 					-- In the case of encapsulated externals, we call the associated
 					-- encapsulation.
-				if encapsulated or else system.keep_assertions or else extension.is_inline then
+				if is_encapsulation_required or else extension.is_inline then
 					rout_table ?= Eiffel_table.poly_table (routine_id)
 					if is_static_call then
 						l_typ ?= real_type (static_class_type)
@@ -314,7 +314,7 @@ feature
 	inline_needed (typ: CL_TYPE_A): BOOLEAN is
 		do
 			Result := context.final_mode and
-				not (encapsulated or else system.keep_assertions) and (is_static_call or
+				not is_encapsulation_required and (is_static_call or
 				Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True) < 0)
 		end
 
@@ -469,8 +469,31 @@ feature
 
 	allocates_memory: BOOLEAN is True;
 
+feature {NONE} -- Status report
+
+	is_encapsulation_required: BOOLEAN
+			-- Shall an encapsulation be called rather than an inlined version?
+		local
+			t: TYPE_A
+		do
+			if encapsulated or else system.keep_assertions then
+				Result := True
+			else
+				t := type.instantiated_in (context.current_type)
+				if
+					not t.is_expanded and then
+					(t.is_attached or else
+					t.is_formal or else
+					t.is_like and then not t.is_like_current and then not t.is_like_argument)
+				then
+						-- The external routine requires a check that the result is attached.
+					Result := True
+				end
+			end
+		end
+
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

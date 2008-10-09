@@ -158,6 +158,8 @@ feature -- Analyzis
 				type_i := l_context.real_type (result_type)
 				if type_i.is_true_expanded or else type_i.is_bit then
 					l_context.mark_result_used
+				else
+					l_context.analyze_external_result
 				end
 			end
 
@@ -1126,7 +1128,9 @@ end
 			nb_refs: INTEGER
 			buf: GENERATION_BUFFER
 		do
-			if rescue_clause /= Void then
+			if rescue_clause = Void then
+				context.generate_external_result_check
+			else
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("RTE_E")
@@ -1155,8 +1159,10 @@ end
 	exception_stack_managed: BOOLEAN is
 			-- Do we have to manage the exception stack
 		do
-			Result := context.workbench_mode or else
-						System.exception_stack_managed
+			Result :=
+				context.workbench_mode or else
+				System.exception_stack_managed or else
+				context.is_result_checked
 		end
 
 	generate_execution_declarations is

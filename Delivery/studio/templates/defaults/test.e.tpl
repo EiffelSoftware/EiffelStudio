@@ -1,4 +1,4 @@
-indexing
+${NOTE_KEYWORD}
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"

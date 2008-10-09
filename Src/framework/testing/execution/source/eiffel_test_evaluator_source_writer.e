@@ -43,7 +43,7 @@ feature -- Basic operations
 					do
 						stream.put_line ("Result := True")
 					end)
-			create l_type.make_from_string ("!" + {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name)
+			create l_type.make_from_string ("!" + {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name)
 			put_query ("test_set_instance", l_type, a_map,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
@@ -51,7 +51,7 @@ feature -- Basic operations
 						stream.put_string (a_test.class_name)
 						stream.put_line ("}")
 					end)
-			create l_type.make_from_string ("!PROCEDURE [ANY, TUPLE [" + {SHARED_TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
+			create l_type.make_from_string ("!PROCEDURE [ANY, TUPLE [" + {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
 			put_query ("test_procedure", l_type, a_map,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do

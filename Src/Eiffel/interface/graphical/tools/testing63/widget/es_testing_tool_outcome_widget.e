@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			elseif a_outcome.is_fail then
 				l_label.set_pixmap (stock_pixmaps.general_error_icon)
 			else
-				--l_label.set_pixmap (stock_pixmaps.general_error_icon)
+				l_label.set_pixmap (stock_pixmaps.general_warning_icon)
 			end
 			l_row := grid.row (l_pos)
 			l_row.set_item (1, l_label)

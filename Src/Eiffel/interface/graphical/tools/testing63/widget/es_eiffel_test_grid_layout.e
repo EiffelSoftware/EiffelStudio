@@ -16,7 +16,8 @@ inherit
 			column_width,
 			populate_item_row,
 			column_count,
-			populate_header
+			populate_header,
+			exception_text
 		end
 
 feature -- Status report
@@ -34,17 +35,27 @@ feature -- Status report
 				a_index
 			when last_tested_column then
 				Result := 120
+			when status_column then
+				Result := 70
 			else
 				Result := Precursor (a_index)
 			end
 		end
 
-feature {NONE} -- Basic functionality
+feature {NONE} -- Query
+
+	exception_text (a_exception: !TEST_INVOCATION_EXCEPTION): !STRING_32
+			-- Text describing for given expception
+		do
+			create Result.make_empty
+		end
+
+feature -- Basic functionality
 
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- <Precursor>
 		do
-			a_header.i_th (last_tested_column).set_text ("Last executed")
+			a_header.i_th (last_tested_column).set_text (local_formatter.translation (t_last_executed))
 			Precursor (a_header)
 		end
 
@@ -109,7 +120,6 @@ feature {NONE} -- Basic functionality
 				l_tooltip := time_format.create_string (a_date)
 			end
 			create l_label
-			l_label.align_text_right
 			l_label.set_text (l_text)
 			l_label.set_tooltip (l_tooltip)
 			Result := l_label
@@ -118,6 +128,8 @@ feature {NONE} -- Basic functionality
 feature {NONE} -- Constants
 
 	last_tested_column: INTEGER = 3
+
+	t_last_executed: STRING = "Last executed"
 
 	time_format: DATE_TIME_CODE_STRING
 		once

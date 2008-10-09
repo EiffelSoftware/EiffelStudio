@@ -2365,6 +2365,110 @@ feature {BYTE_CONTEXT} -- Object test code generation
 	object_test_local_offset: HASH_TABLE [INTEGER, INTEGER]
 			-- Offset of inherited object test locals indexed by code_id
 
+feature -- External features
+
+	is_result_checked: BOOLEAN
+			-- Is result checked to ensure it is valid?
+		do
+			inspect external_result_attachment_status
+			when is_attached_reference, is_attached_sometimes then
+				Result := True
+			else
+			end
+		end
+
+	analyze_external_result
+			-- Analyze result of an external feature.
+		do
+			inspect external_result_attachment_status
+			when is_attached_reference then
+				mark_result_used
+			when is_attached_sometimes then
+				mark_result_used
+				result_info.analyze
+			else
+			end
+		end
+
+	generate_external_result_check
+			-- Generate check for result of an external feature.
+		local
+			b: GENERATION_BUFFER
+			i: CREATE_INFO
+		do
+			inspect external_result_attachment_status
+			when is_attached_reference then
+				b := buffer
+				b.put_new_line
+				b.put_string ("if (!Result) {RTEC(EN_FAIL);}")
+			when is_attached_sometimes then
+				b := buffer
+				b.put_new_line
+				b.put_string ("if (!Result) {")
+				b.indent
+				i := result_info
+				i.generate_start (b)
+				i.generate_gen_type_conversion (0)
+				b.put_new_line
+				b.put_string ("if (RTAT(")
+				i.generate_type_id (b, final_mode, 0)
+				b.put_string (")) {RTEC(EN_FAIL);}")
+				i.generate_end (b)
+				b.generate_block_close
+			else
+			end
+		end
+
+feature {NONE} -- External_features
+
+	result_info: CREATE_INFO
+		local
+			f: FEATURE_I
+			t: TYPE_A
+		do
+			f := current_feature
+			t := f.type.instantiated_in (current_type)
+			if t.is_formal then
+				Result := t.create_info
+			else
+				create {CREATE_FEAT} Result.make (f.feature_id, f.rout_id_set.first)
+			end
+		end
+
+	external_result_attachment_status: NATURAL_32
+			-- Attachment status of a function that is external or `is_attached_never' otherwise
+		do
+			if current_feature.is_external and then byte_code /= Void and then byte_code.is_external then
+				Result := attachment_status (current_feature.type.instantiated_in (current_type))
+			else
+				Result := is_attached_never
+			end
+		end
+
+	is_attached_expanded: NATURAL_32 = 1
+	is_attached_reference: NATURAL_32 = 2
+	is_attached_sometimes: NATURAL_32 = 3
+	is_attached_never: NATURAL_32 = 4
+
+	attachment_status (t: TYPE_A): NATURAL_32
+			-- Type `t' attachment status
+		do
+			if t.is_expanded then
+					-- Type is expanded.
+				Result := is_attached_expanded
+			elseif t.is_attached then
+					-- Type is explicitly attached.
+				Result := is_attached_reference
+			elseif
+				t.is_formal or else
+				t.is_like and then not t.is_like_current and then not t.is_like_argument
+			then
+				Result := is_attached_sometimes
+			else
+				Result := is_attached_never
+			end
+		end
+
 feature -- Clearing
 
 	array_opt_clear is

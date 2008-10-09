@@ -262,7 +262,7 @@ feature -- Command
 			develop_window.commands.set_editor_paste_cmd (l_editor_paste_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_editor_paste_cmd)
 
-			create l_new_cluster_cmd.make (develop_window)
+			create l_new_cluster_cmd.make (develop_window, False)
 			auto_recycle (l_new_cluster_cmd)
 			develop_window.commands.set_new_cluster_cmd (l_new_cluster_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_cluster_cmd)

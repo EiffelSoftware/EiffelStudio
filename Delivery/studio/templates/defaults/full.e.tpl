@@ -1,4 +1,4 @@
-indexing
+${NOTE_KEYWORD}
 	description: "Summary description for {${CLASS_NAME}}."
 	author: ""
 	date: "$$Date$$"

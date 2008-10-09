@@ -499,8 +499,6 @@ rt_public void cnode_updt(void)
 	char **names;			/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
 	EIF_TYPE_INDEX **gtypes;/* Attribute full-type array */
-	short nbparents;		/* Parent count */
-	EIF_TYPE_INDEX *parents;/* Parent dynmaic type array */
 	int32 *rout_ids;		/* Routine id array */
 	int i;
 

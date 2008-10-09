@@ -169,13 +169,13 @@ feature {NONE} -- Initialization: widget status
 			view_templates.force_last ("")
 			view_template_descriptions.force_last ("")
 			view_templates.force_last ("class")
-			view_template_descriptions.force_last ("Tests%T%T%T(class)")
+			view_template_descriptions.force_last ("Tests")
 			view_templates.force_last ("outcome")
-			view_template_descriptions.force_last ("Outcomes%T%T(outcome)")
+			view_template_descriptions.force_last ("Outcomes")
 			view_templates.force_last ("covers")
-			view_template_descriptions.force_last ("Classes under test%T(covers)")
+			view_template_descriptions.force_last ("Classes under test")
 			view_templates.force_last ("type")
-			view_template_descriptions.force_last ("Types%T%T(type)")
+			view_template_descriptions.force_last ("Types")
 
 			update_view_box
 			view_box.i_th (2).enable_select
@@ -703,7 +703,7 @@ feature {NONE} -- Factory
 			create Result.make (6)
 
 			create wizard_button.make
-			wizard_button.set_text ("New")
+			wizard_button.set_text ("New test")
 			register_action (wizard_button.select_actions, agent
 				local
 					l_wizard: ES_EIFFEL_TEST_WIZARD_MANAGER

@@ -24,26 +24,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: !like context_feature)
+	make (a_class: !like context_class; a_feature: !like context_feature)
 			-- Initialize a new context frame.
 			--
-			-- `a_feature' : A context feature used to resolve type information.
+			-- `a_class'  : A context class to use to resolve type information from.
+			-- `a_feature': A context feature used to resolve type information.
 		do
+			context_class := a_class
 			context_feature := a_feature
 		ensure
+			context_class_set: context_class = a_class
 			context_feature_set: context_feature = a_feature
 		end
 
-	make_parented (a_feature: !like context_feature; a_parent: !like parent)
+	make_parented (a_class: !like context_class; a_feature: !like context_feature; a_parent: !like parent)
 			-- Initialize a context frame with a parent frame.
 			--
-			-- `a_feature' : A context feature used to resolve type information.
-			-- `a_parent': A parent frame, used for merging local entities.
+			-- `a_class'  : A context class to use to resolve type information from.
+			-- `a_feature': A context feature used to resolve type information.
+			-- `a_parent' : A parent frame, used for merging local entities.
 		require
 			non_circular_parent: not is_parented_to_current (a_parent)
 		do
 			parent := a_parent
-			make (a_feature)
+			make (a_class, a_feature)
 		ensure
 			context_feature_set: context_feature = a_feature
 			parent_set: parent = a_parent
@@ -53,9 +57,6 @@ feature -- Access
 
 	context_class: !CLASS_C
 			-- The context class of the current frame, used to resolve type information.
-		do
-			Result ?= context_feature.written_class
-		end
 
 	context_feature: !FEATURE_I
 			-- The context feature of the current frame, used to resolve type information.

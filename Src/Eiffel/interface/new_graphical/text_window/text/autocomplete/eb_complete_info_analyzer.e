@@ -632,8 +632,8 @@ feature {NONE} -- Implementation
 
 				-- Add local declarations
 			l_feature := current_feature_i
-			if l_feature /= Void and then {l_class: CLASS_C} l_feature.written_class then
-				create l_analyzer.make_with_feature (l_feature)
+			if l_feature /= Void and then {l_class: CLASS_C} current_class_c then
+				create l_analyzer.make_with_feature (l_class, l_feature)
 				l_result := l_analyzer.scan (a_start_token, a_start_line)
 				if l_result /= Void and then l_result.has_current_frame then
 					if not l_result.current_frame.is_empty then

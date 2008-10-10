@@ -1588,15 +1588,17 @@ feature {NONE}-- Implementation
 			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
 			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
 			l_feature: like current_feature_i
+			l_class: like current_class_c
 			retried: BOOLEAN
 		do
 			if not retried then
 				l_feature := current_feature_i
-				if l_feature /= Void and then a_name /= Void and then not a_name.is_empty then
+				l_class := current_class_c
+				if l_feature /= Void and then l_class /= Void and then a_name /= Void and then not a_name.is_empty then
 					l_token := current_token
 					l_line := current_line
 					if l_token /= Void and then l_line /= Void then
-						create l_analyzer.make_with_feature (l_feature)
+						create l_analyzer.make_with_feature (l_class, l_feature)
 						l_result := l_analyzer.scan (l_token, l_line)
 						if l_result /= Void and then l_result.has_current_frame then
 							if not l_result.current_frame.is_empty then

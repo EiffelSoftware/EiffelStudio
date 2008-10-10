@@ -34,27 +34,21 @@ feature {NONE} -- Initialization
 			current_token_set: current_token ~ a_token
 		end
 
-	make_with_feature (a_feature: !like context_feature; a_token: !like current_token; a_line: !like current_line)
+	make_with_feature (a_class: !like context_class; a_feature: !like context_feature; a_token: !like current_token; a_line: !like current_line)
 			-- Initialize a state result using a context class and an initial editor token and hosting line.
 			--
+			-- `a_class'  : The context class, used to resolve any type or feature information.
 			-- `a_feature': The context feature to initialize the state info for.
 			-- `a_token'  : The state's current token.
 			-- `a_line'   : The state's current line, where the supplied token is resident.
 		require
 			a_line_has_a_token: a_line.has_token (a_token)
-		local
-			l_class: CLASS_C
 		do
 			context_feature := a_feature
-			l_class := a_feature.written_class
-			if l_class /= Void then
-				make (l_class, a_token, a_line)
-			else
-				check False end
-			end
+			make (a_class, a_token, a_line)
 		ensure
+			context_class_set: context_class ~ a_class
 			context_feature_set: context_feature ~ a_feature
-			context_class_set: context_class ~ a_feature.written_class
 			current_line_set: current_line ~ a_line
 			current_token_set: current_token ~ a_token
 		end
@@ -166,9 +160,9 @@ feature -- Basic operation
 			l_feature := context_feature
 			if l_feature /= Void then
 				if l_frame = Void then
-					create l_frame.make (l_feature)
+					create l_frame.make (context_class, l_feature)
 				else
-					create l_frame.make_parented (l_feature, l_frame)
+					create l_frame.make_parented (context_class, l_feature, l_frame)
 				end
 				frames.extend (l_frame)
 			else

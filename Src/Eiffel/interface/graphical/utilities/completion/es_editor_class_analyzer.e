@@ -33,22 +33,17 @@ feature {NONE} -- Initialization
 			context_class_set: context_class ~ a_class
 		end
 
-	make_with_feature (a_feature: !like context_feature)
+	make_with_feature (a_class: !like context_class; a_feature: !like context_feature)
 			-- Initialize the class context analyzer.
 			--
 			-- `a_class': The context class to analyze the class for.
 			-- `a_feature': The context feature to analyze in context to.
-		local
-			l_class: CLASS_C
 		do
 			context_feature := a_feature
-			l_class := a_feature.written_class
-			if l_class /= Void then
-				make (l_class)
-			end
+			make (a_class)
 		ensure
+			context_class_set: context_class ~ a_class
 			context_feature_set: context_feature ~ a_feature
-			context_class_set: context_class ~ a_feature.written_class
 		end
 
 feature -- Access
@@ -382,12 +377,12 @@ feature {NONE} -- Factory
 		do
 			l_feature := context_feature
 			if {l_feature_state: ES_EDITOR_ANALYZER_FEATURE_STATE} a_state and then l_feature /= Void then
-				create l_feature_info.make (l_feature, a_token, a_line)
+				create l_feature_info.make (context_class, l_feature, a_token, a_line)
 				l_feature_info.increment_current_frame (True)
 				Result := l_feature_info
 			else
 				if l_feature /= Void then
-					create Result.make_with_feature (l_feature, a_token, a_line)
+					create Result.make_with_feature (context_class, l_feature, a_token, a_line)
 				else
 					create Result.make (context_class, a_token, a_line)
 				end

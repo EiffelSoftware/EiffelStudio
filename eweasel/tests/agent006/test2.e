@@ -10,6 +10,7 @@ feature
  
 	h: TEST2
 		do
+			create Result
 		end
  
 end

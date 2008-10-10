@@ -15,6 +15,16 @@ feature
 			a := [ g ]
 			print (a.generating_type)
 			print ("%N")
+
+			a := agent h.g
+			print (a.generating_type)
+			print ("%N")
+			a := << h.g >>
+			print (a.generating_type)
+			print ("%N")
+			a := [ h.g ]
+			print (a.generating_type)
+			print ("%N")
 		end
  
 	g: like Current
@@ -23,6 +33,7 @@ feature
  
 	h: TEST1
 		do
+			create Result
 		end
  
 end

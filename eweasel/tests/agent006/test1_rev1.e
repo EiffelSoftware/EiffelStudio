@@ -15,6 +15,16 @@ feature
 			a := [ g ]
 			print (a.generating_type)
 			print ("%N")
+
+			a := agent h.g
+			print (a.generating_type)
+			print ("%N")
+			a := << h.g >>
+			print (a.generating_type)
+			print ("%N")
+			a := [ h.g ]
+			print (a.generating_type)
+			print ("%N")
 		end
  
 	g: like h

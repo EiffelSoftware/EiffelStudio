@@ -52,19 +52,23 @@ feature -- Modification
 	start_creation_procedure
 			-- Start processing of a creation procedure.
 		do
-			start_feature
-			is_creation_procedure := True
+			if nested_variables.count = 0 then
+				start_feature
+				is_creation_procedure := True
+			end
 		ensure then
-			is_creation_procedure: is_creation_procedure
+			is_creation_procedure: nested_variables.count = 0 implies is_creation_procedure
 		end
 
 	start_feature
 			-- Start processing of a non-creation feature.
 		do
-			wipe_out
-			is_creation_procedure := False
+			if nested_variables.count = 0 then
+				wipe_out
+				is_creation_procedure := False
+			end
 		ensure then
-			not_is_creation_procedure: not is_creation_procedure
+			not_is_creation_procedure: nested_variables.count = 0 implies not is_creation_procedure
 		end
 
 	enter_compound

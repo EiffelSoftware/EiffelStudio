@@ -128,6 +128,7 @@ feature -- Type checking
 			fixme (once "Make sure to use `a_code_inherited' to properly initialize our type checker.")
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
+			context.initialize_variables
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
@@ -160,6 +161,7 @@ feature -- Type checking
 		do
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
+			context.initialize_variables
 			current_feature := a_feature
 			reset
 			if a_is_safe_to_check_inherited then
@@ -202,6 +204,7 @@ feature -- Type checking
 		do
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := a_generate_code
+			context.initialize_variables
 			current_feature := a_feature
 			reset
 			a_clause.process (Current)
@@ -1703,7 +1706,7 @@ feature -- Implementation
 									then
 											-- Attribute is not properly initialized.
 										error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
-										if not is_checking_precondition then
+										if not is_checking_precondition and then not is_checking_postcondition then
 												-- Mark that the attribute is initialized to avoid repeated errors.
 											context.variables.set_attribute (l_feature.feature_id)
 										end

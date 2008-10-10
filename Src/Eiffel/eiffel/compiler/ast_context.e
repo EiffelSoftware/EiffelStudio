@@ -47,13 +47,22 @@ feature {NONE} -- Initialization
 			create {ARRAYED_STACK [INTEGER]} scopes.make (0)
 			create object_test_locals.make (0)
 			create used_object_test_local_names.make (0)
-			if current_class /= Void then
-				if current_class.lace_class.is_void_safe then
-					create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
-				else
-					create {AST_VARIABLE_CONTEXT} variables
-				end
+		end
+
+feature -- Initialization
+
+	initialize_variables
+			-- Initializes `variables' to meet the void-safety requirements of `current_class'
+		require
+			current_class_attached: current_class /= Void
+		do
+			if current_class.lace_class.is_void_safe then
+				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
+			else
+				create {AST_VARIABLE_CONTEXT} variables
 			end
+		ensure
+			variables_attached: variables /= Void
 		end
 
 feature -- Access
@@ -379,7 +388,6 @@ feature -- Setting
 						-- Current is always attached
 					current_class_type.set_attached_mark
 				end
-				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
 			else
 				if not current_class_type.is_attached and then
 					not current_class_type.is_implicitly_attached
@@ -387,7 +395,6 @@ feature -- Setting
 						-- Current is always attached
 					current_class_type.set_is_implicitly_attached
 				end
-				create {AST_VARIABLE_CONTEXT} variables
 			end
 			current_feature_table := a_feat_tbl
 			written_class := Void
@@ -618,9 +625,12 @@ feature	-- Saving contexts
 
 	save: AST_CONTEXT is
 			-- Returns a saved context
+		require
+			current_class_attached: current_class /= Void
 		do
 			Result := twin
 			create_local_containers
+			initialize_variables
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)

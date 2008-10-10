@@ -158,7 +158,6 @@ feature {NONE} -- Event handlers
 		end
 
 invariant
-	inner_session_attached: is_interface_usable implies inner_session /= Void
 	extension_name_set: equal (extension_name, inner_session.extension_name)
 
 ;indexing

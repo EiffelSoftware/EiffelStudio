@@ -1056,14 +1056,14 @@ feature -- Output
 
 	display_system_status is
 		do
-			display_system_info
-			if application_is_executing then
-				display_debugger_info (application.parameters)
-			end
 			if
 				debugging_window /= Void
 			then
 				debugging_window.shell_tools.tool ({ES_OUTPUT_TOOL}).show (False)
+			end
+			display_system_info
+			if application_is_executing then
+				display_debugger_info (application.parameters)
 			end
 		end
 

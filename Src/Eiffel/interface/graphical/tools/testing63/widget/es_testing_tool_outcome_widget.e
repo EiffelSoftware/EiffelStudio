@@ -189,7 +189,11 @@ feature {NONE} -- Implementation
 					add_invocation (l_row, a_outcome.teardown_response, "tear down", a_expanded)
 				end
 			else
-				l_label.set_text ("no response")
+				if a_outcome.is_user_abort then
+					l_label.set_text ("user abort")
+				else
+					l_label.set_text ("no response")
+				end
 			end
 			if a_expanded and l_row.is_expandable then
 				l_row.expand

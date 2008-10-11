@@ -20,12 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_map: like map; a_executable: like executable) is
+	make (a_assigner: like assigner; a_executable: like executable) is
 			-- Initizialize `Current'
+			--
+			-- `a_assigner': Assigner for retrieving test to be executed.
 		require
 			a_executable_not_empty: not a_executable.is_empty
 		do
-			make_controller (a_map)
+			make_controller (a_assigner)
 			executable := a_executable
 			create output.make (1024)
 		ensure
@@ -87,7 +89,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	launched_implies_process_attached: is_launched implies
+	running_implies_process_attached: is_running implies
 		(process /= Void and then process.launched)
 
 end

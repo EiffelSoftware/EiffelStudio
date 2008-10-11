@@ -7,132 +7,207 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	EIFFEL_TEST_EVALUATOR_STATUS
 
 create
-	make
+	make2
 
 feature {NONE} -- Initialization
 
-	make (a_list: !DS_LINEAR [!EIFFEL_TEST_I])
-			-- Initialize `Current'
+	make2 (a_execution_assigner: like execution_assigner)
+			-- Initialize `Current'.
 			--
-			-- `a_list': List of tests that evaluator is going to tests
+			-- `a_execution_assigner': Assigner for retrieving tests to be executed.
 		do
-			create test_queue.make
-			a_list.do_all (agent test_queue.put_last)
-			create result_queue.make
+			execution_assigner := a_execution_assigner
+			max_attempts := 2
+			create status_queue.make
 			create queue_mutex.make
-			is_listening := True
 		ensure
-			test_queue_equals_a_list: (a_list.count = test_queue.count) and a_list.for_all (agent test_queue.has)
-			result_queue_empty: result_queue.is_empty
-			listening: is_listening
+			not_connected: not is_connected
+			not_finished: not is_finished
+			execution_status_set: execution_assigner = a_execution_assigner
 		end
 
 feature -- Access
 
-	remaining_tests: !DS_LINEAR [!EIFFEL_TEST_I]
-			-- Tests for which no result is available yet.
-		do
-			queue_mutex.lock
-			create {DS_ARRAYED_LIST [!EIFFEL_TEST_I]} Result.make_from_linear (test_queue)
-			queue_mutex.unlock
-		end
-
-	retrieve: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?EQA_TEST_OUTCOME; next: ?EIFFEL_TEST_I]
-			-- Snapshot of current testing progress.
-			--
-			-- Note: by calling `status', any available outcome will be removed together with its
-			--       corresponding test.
-			--
-			-- test:    Test for which current outcome is available, Void if no outcome is available.
-			-- outcome: Outcome for test, Void if no outcome is available.
-			-- next:    Test which next outcome will be available, Void if all tests have been tested.
-		local
-			l_test, l_next: ?EIFFEL_TEST_I
-			l_outcome: ?EQA_TEST_OUTCOME
-		do
-			queue_mutex.lock
-			if not result_queue.is_empty then
-				l_test := test_queue.first
-				test_queue.remove_first
-				l_outcome := result_queue.first
-				result_queue.remove_first
-			end
-			if not test_queue.is_empty then
-				l_next := test_queue.first
-			end
-			Result := [l_test, l_outcome, l_next]
-			queue_mutex.unlock
-		ensure
-			result_valid: (Result.test /= Void) = (Result.outcome /= Void)
-		end
+	max_attempts: NATURAL
+			-- Number of times a test will be relaunched after crashing the evaluator
 
 feature {NONE} -- Access
 
-	queue_mutex: MUTEX
-			-- Mutex for accessing `Current'
+	execution_assigner: !EIFFEL_TEST_EXECUTION_ASSIGNER
+			-- Assigner for retrieving tests to be executed
 
-	test_queue: !DS_LINKED_LIST [!EIFFEL_TEST_I]
-			-- Tests interpreter is iterating through
+	status_queue: !DS_LINKED_LIST [like fetch_progress]
+			-- Queue containing evaluator progress
 
-	result_queue: !DS_LINKED_LIST [!EQA_TEST_OUTCOME]
-			-- Result interpreter has produced so far
+	queue_mutex: !MUTEX
+			-- Mutex for controlling access to `status_queue'
 
 feature -- Status report
 
 	is_listening: BOOLEAN
-			-- Is receiver still waiting for connection?
-
-	is_receiving: BOOLEAN
-			-- Are more results expected?
-
-	results_complete: BOOLEAN
-			-- Are results for all remaining tests available?
+			-- Is result receiver waiting for connection?
 		do
-			queue_mutex.lock
-			Result := test_queue.count = result_queue.count
-			queue_mutex.unlock
+			Result := status = listening_status_code
 		end
 
-	has_remaining_tests: BOOLEAN
-			-- Are there any remaining tests?
+	is_connected: BOOLEAN
+			-- Is result receiver currently connected to evaluator?
 		do
-			queue_mutex.lock
-			Result := not test_queue.is_empty
-			queue_mutex.unlock
+			Result := status = connected_status_code
 		end
+
+	is_disconnected: BOOLEAN
+			-- Has evaluator closed connection to result receiver?
+		do
+			Result := status = disconnected_status_code
+		end
+
+	is_finished: BOOLEAN
+			-- Are there no more test left to execute?
+		do
+			Result := status = finished_status_code
+		end
+
+feature {NONE} -- Status report
+
+	is_termination_forced: BOOLEAN
+			-- Is next evaluator termination forced?
+
+	status: NATURAL
+			-- Current status
 
 feature -- Status setting
 
-	set_receiving
-			-- Change status from `is_listening' to `is_receiving'
+	set_max_attempts (a_max_attempts: like max_attempts)
+			-- Set total number of times `Current' will launch a test if test crashed evaluator.
+		require
+			a_max_attempts_positive: a_max_attempts > 0
 		do
-			is_listening := False
-			is_receiving := True
+			max_attempts := a_max_attempts
 		end
 
-	add_result (a_outcome: !EQA_TEST_OUTCOME)
-			-- Add outcome for `current_test'.
+feature {EIFFEL_TEST_RESULT_RECEIVER} -- Status setting
+
+	set_listening
+			-- Set `is_listening' to True.
 		do
 			queue_mutex.lock
-			if is_receiving then
-				if result_queue.count < test_queue.count then
-					result_queue.put_last (a_outcome)
+			if not is_finished then
+				status := listening_status_code
+			end
+			queue_mutex.unlock
+		end
+
+	set_disconnected
+			-- Set `is_disconnected' to True if not fininshed.
+		do
+			queue_mutex.lock
+			if not is_finished then
+				status := disconnected_status_code
+			end
+			queue_mutex.unlock
+		end
+
+feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
+
+	set_forced_termination
+			-- Set `is_termination_forced' to True.
+		do
+			is_termination_forced := True
+		end
+
+feature {EIFFEL_TEST_RESULT_RECEIVER} -- Status setting
+
+
+	fetch_next (a_outcome: ?EQA_TEST_OUTCOME): NATURAL
+			-- Index of next test to be executed
+		local
+			l_first: like fetch_progress
+			l_needs_outcome, l_new: BOOLEAN
+			l_attempt: NATURAL
+		do
+			queue_mutex.lock
+			status := connected_status_code
+			if not status_queue.is_empty then
+				l_first := status_queue.first
+				l_needs_outcome := l_first.outcome = Void
+			end
+			check
+				valid_argument: (a_outcome /= Void) implies (l_needs_outcome)
+			end
+			l_new := True
+			if l_needs_outcome then
+				if a_outcome /= Void then
+					l_first.outcome := a_outcome
+				else
+					Result := l_first.index
+					if is_termination_forced then
+						if execution_assigner.is_aborted (l_first.index) then
+							status_queue.remove_first
+						else
+								-- In this case the evaluator was already testing the next test, so we will simply relaunch
+								-- it.
+							l_new := False
+						end
+					else
+						is_termination_forced := False
+						if l_first.attempts >= max_attempts then
+							l_first.outcome := create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, False)
+						else
+							l_first.attempts := l_first.attempts + 1
+							l_new := False
+						end
+					end
+				end
+			end
+			if l_new then
+				check
+					valid_queue_state: status_queue.is_empty or else l_first.outcome /= Void
+				end
+				Result := execution_assigner.next_test
+				if Result = 0 then
+					status := finished_status_code
+				else
+					l_attempt := 1
+					status_queue.put_first ([Result, Void, l_attempt])
 				end
 			end
 			queue_mutex.unlock
 		end
 
-	stop_receiving
-			-- Set `is_receiving' to False
+feature {EIFFEL_TEST_EXECUTOR_I} -- Basic operations
+
+	fetch_progress: !TUPLE [index: like fetch_next; outcome: ?EQA_TEST_OUTCOME; attempts: NATURAL]
+			-- Retrieve current status
+			--
+			-- Note: `fetch_progress' might return information about tests which have been aborted.
+		local
+			l_zero: NATURAL
 		do
 			queue_mutex.lock
-			is_receiving := False
-			is_listening := False
+			if not status_queue.is_empty then
+				Result := status_queue.last
+				if Result.outcome /= Void then
+					status_queue.remove_last
+				else
+					Result := Result.twin
+				end
+			else
+				l_zero := 0
+				Result := [l_zero, Void, l_zero]
+			end
 			queue_mutex.unlock
 		end
+
+feature {NONE} -- Constants
+
+	listening_status_code: NATURAL = 1
+	connected_status_code: NATURAL = 2
+	disconnected_status_code: NATURAL = 3
+	finished_status_code: NATURAL = 4
 
 end

@@ -44,8 +44,6 @@ feature -- Status setting
 			--       waiting for incoming connections.
 			--
 			-- `a_status': Status to which received results are added
-		require
-			a_status_is_listening: a_status.is_listening
 		local
 			l_socket: ?NETWORK_STREAM_SOCKET
 			l_thread: WORKER_THREAD
@@ -64,6 +62,7 @@ feature -- Status setting
 			end
 			if l_tries <= 20 then
 						-- TODO: error handling
+				a_status.set_listening
 				l_socket.set_blocking
 				l_socket.listen (1)
 				create l_thread.make (agent listen ({!NETWORK_STREAM_SOCKET} #? l_socket, a_status))
@@ -89,13 +88,11 @@ feature {NONE} -- Implementation
 		do
 			if not l_rescued then
 				a_socket.accept
-				a_status.set_receiving
 				if {l_receiver: !NETWORK_STREAM_SOCKET} a_socket.accepted then
 					receive_results (l_receiver, a_status)
 				end
 			end
-			a_socket.close
-			a_status.stop_receiving
+			a_status.set_disconnected
 		rescue
 			l_rescued := True
 			retry
@@ -107,38 +104,38 @@ feature {NONE} -- Implementation
 			-- `a_socket': Socket through which evaluator sends results.
 			-- `a_status': Status where new results are added.
 		local
-			l_rescued: BOOLEAN
-			l_flag: CHARACTER
+			l_rescued, l_stop: BOOLEAN
+			l_next, l_flag: NATURAL
+			l_last_outcome: ?EQA_TEST_OUTCOME
 		do
-			a_status.set_receiving
 			if not l_rescued then
 				from until
-					not a_socket.is_open_read or a_status.results_complete or not a_status.is_receiving
+					not a_socket.is_open_read or a_status.is_finished or l_stop
 				loop
-					l_flag := evaluator_status (a_socket)
-					if l_flag = '1' then
-						if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then
-							a_status.add_result (l_outcome)
-						else
-							a_socket.close
+					l_stop := True
+					l_next := a_status.fetch_next (l_last_outcome)
+					if l_next > 0 then
+						a_socket.put_natural (l_next)
+						l_flag := evaluator_status (a_socket)
+						if l_flag = l_next then
+							if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then
+								l_last_outcome := l_outcome
+								l_stop := False
+							end
 						end
-					else
-						a_status.stop_receiving
 					end
 				end
 			end
 			a_socket.close
-			a_status.stop_receiving
 		ensure
 			a_socket_closed: a_socket.is_closed
 			a_status_not_listening: not a_status.is_listening
-			a_status_not_receiving: not a_status.is_receiving
 		rescue
 			l_rescued := True
 			retry
 		end
 
-	evaluator_status (a_socket: NETWORK_STREAM_SOCKET): CHARACTER
+	evaluator_status (a_socket: NETWORK_STREAM_SOCKET): NATURAL
 			-- Current status of evaluator.
 			--
 			-- Note: this routine will block until evaluator sends its status through the socket.
@@ -148,7 +145,6 @@ feature {NONE} -- Implementation
 		local
 			l_rescued: BOOLEAN
 		do
-			Result := '0'
 			if not l_rescued then
 				from
 				until
@@ -158,13 +154,15 @@ feature {NONE} -- Implementation
 				end
 				if a_socket.readable then
 					--a_socket.read_stream (1)
-					a_socket.read_stream_thread_aware (1)
-					if not a_socket.last_string.is_empty then
-						Result := a_socket.last_string.item (1)
-						if Result /= '1' then
-							Result := '0'
-						end
-					end
+					a_socket.read_natural_32
+					--a_socket.read_stream_thread_aware (1)
+					Result := a_socket.last_natural_32
+--					if not a_socket.last_natural_32 then
+--						Result := a_socket.last_string.item (1)
+--						if Result /= '1' then
+--							Result := '0'
+--						end
+--					end
 				end
 			end
 		rescue

@@ -32,34 +32,30 @@ feature {NONE} -- Initialization
 		require
 			arguments_valid: arguments.is_successful
 		local
-			l_quit, l_bad_argument: BOOLEAN
+			l_quit, l_done, l_bad_argument: BOOLEAN
 			l_index: STRING
 			n: NATURAL
 		do
 			if not l_quit then
 				initialize_stream
 				from
-					arguments.values.start
+
 				until
-					arguments.values.after
+					l_done
 				loop
-					l_index := arguments.values.item_for_iteration
-					if l_index.is_natural then
-						n := l_index.to_natural
+					stream.read_natural_32
+					n := stream.last_natural_32
+					if n > 0 then
 						if is_valid_index (n) then
 							run_test (n)
 						else
-							l_bad_argument := True
+							die (1)
 						end
 					else
-						l_bad_argument := True
+						l_done := True
 					end
-					if l_bad_argument then
-						die (1)
-					end
-					arguments.values.forth
 				end
-				--stream.put_character ('0')
+				stream.put_natural (0)
 				close_stream
 			end
 		rescue
@@ -178,7 +174,7 @@ feature {NONE} -- Execution
 				--io.output.put_boolean (stream.is_open_write)
 				--io.output.put_boolean (stream.is_writable)
 				--io.output.put_string ("%Nsending id%N");io.output.flush
-				stream.put_character ('1')
+				stream.put_natural (a_index)
 				--io.output.put_string ("sending outcome%N"); io.output.flush
 				stream.independent_store (evaluator.last_outcome)
 				--io.output.put_string ("done%N"); io.output.flush

@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_map: !EIFFEL_TEST_EVALUATOR_MAP) is
+	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: ?DS_LINEAR [!EIFFEL_TEST_I]) is
 			-- Write interpreter root class to file
 		require
 			a_file_open_write: a_file.is_open_write
@@ -38,13 +38,13 @@ feature -- Basic operations
 			create stream.make (a_file)
 			put_indexing
 			put_class_header
-			put_query ("is_valid_index", "BOOLEAN", a_map,
+			put_query ("is_valid_index", "BOOLEAN", a_list,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
 						stream.put_line ("Result := True")
 					end)
 			create l_type.make_from_string ("!" + {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name)
-			put_query ("test_set_instance", l_type, a_map,
+			put_query ("test_set_instance", l_type, a_list,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("Result := create {")
@@ -52,7 +52,7 @@ feature -- Basic operations
 						stream.put_line ("}")
 					end)
 			create l_type.make_from_string ("!PROCEDURE [ANY, TUPLE [" + {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
-			put_query ("test_procedure", l_type, a_map,
+			put_query ("test_procedure", l_type, a_list,
 				agent (a_test: !EIFFEL_TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("Result := agent {")
@@ -65,13 +65,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_query (a_name: !STRING; a_result: !STRING; a_map: !EIFFEL_TEST_EVALUATOR_MAP; a_callback: !PROCEDURE [ANY, TUPLE [t: !EIFFEL_TEST_I; i: NATURAL]])
+	put_query (a_name: !STRING; a_result: !STRING; a_list: ?DS_LINEAR [!EIFFEL_TEST_I]; a_callback: !PROCEDURE [ANY, TUPLE [t: !EIFFEL_TEST_I; i: NATURAL]])
 			-- Print `test_name' routine to `stream'.
 		require
 			stream_valid: is_stream_valid
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
-			i: INTEGER
+			i: NATURAL
 		do
 			stream.indent
 			stream.put_string (a_name)
@@ -84,21 +84,23 @@ feature {NONE} -- Implementation
 			stream.indent
 			stream.put_line ("a_index")
 			stream.dedent
-			from
-				l_cursor := a_map.tests.new_cursor
-				l_cursor.start
-				i := 1
-			until
-				l_cursor.after
-			loop
-				stream.put_string ("when ")
-				stream.put_integer (i)
-				stream.put_line (" then")
-				stream.indent
-				a_callback.call ([l_cursor.item, a_map.index (l_cursor.item)])
-				stream.dedent
-				i := i + 1
-				l_cursor.forth
+			if a_list /= Void then
+				from
+					l_cursor := a_list.new_cursor
+					l_cursor.start
+					i := 1
+				until
+					l_cursor.after
+				loop
+					stream.put_string ("when ")
+					stream.put_integer (i.to_integer_32)
+					stream.put_line (" then")
+					stream.indent
+					a_callback.call ([l_cursor.item, i])
+					stream.dedent
+					i := i + 1
+					l_cursor.forth
+				end
 			end
 			stream.put_line ("else")
 			stream.indent

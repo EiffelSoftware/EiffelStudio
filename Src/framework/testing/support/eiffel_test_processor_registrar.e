@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize `Current'
+			-- Initialize `Current'.
 		do
 			create registered_processors.make_default
 		end

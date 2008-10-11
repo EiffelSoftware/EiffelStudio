@@ -618,7 +618,6 @@ feature {NONE} -- Implementation
 			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
 			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
 			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
-			l_result_kw: STRING_32
 		do
 				-- Add Current, because it's always available.
 			create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword))
@@ -638,8 +637,6 @@ feature {NONE} -- Implementation
 				if l_result /= Void and then l_result.has_current_frame then
 					if not l_result.current_frame.is_empty then
 						l_locals := l_result.current_frame.all_locals
-						l_feature := current_feature_i
-						l_result_kw := {EIFFEL_KEYWORD_CONSTANTS}.result_keyword.as_string_32
 						from l_locals.start until l_locals.after loop
 							l_name := l_locals.key_for_iteration
 							l_type := l_locals.item_for_iteration

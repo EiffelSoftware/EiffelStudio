@@ -33,6 +33,7 @@ feature
  
 	h: TEST1
 		do
+			create Result
 		end
  
 end

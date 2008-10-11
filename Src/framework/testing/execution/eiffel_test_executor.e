@@ -60,7 +60,9 @@ feature -- Access
 	active_tests: !DS_LINEAR [!EIFFEL_TEST_I]
 			-- <Precursor>
 		do
-			Result ?= map.tests
+			if {l_values: !DS_LINEAR [!EIFFEL_TEST_I]} test_map then
+				Result := l_values
+			end
 		end
 
 	evaluator_test_count: NATURAL
@@ -90,19 +92,14 @@ feature {EIFFEL_TEST_EVALUATOR_CONTROLLER} -- Access
 
 feature {NONE} -- Access
 
-	map: !EIFFEL_TEST_EVALUATOR_MAP
-			-- Map containing tests
-		require
-			test_suite_valid: is_test_suite_valid
-		do
-			Result ?= internal_map
-		end
+	test_map: ?DS_HASH_TABLE [!EIFFEL_TEST_I, NATURAL]
+			-- Test map containing test and their indices to be executed.
+			--
+			-- values: Tests which are executed by `Current'.
+			-- keys: Corresponding indices.
 
-	internal_map: ?EIFFEL_TEST_EVALUATOR_MAP
-			-- Internal storage for `map'
-
-	cursor: ?DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
-			-- Cursor iterating through elements of `map'
+	assigner: ?EIFFEL_TEST_EXECUTION_ASSIGNER
+			-- Assigner for evaluators
 
 	evaluators: !DS_LINKED_LIST [like create_evaluator]
 			-- Evaluators executing tests
@@ -128,13 +125,13 @@ feature -- Status report
 	is_running: BOOLEAN is
 			-- <Precursor>
 		do
-			Result := cursor /= Void
+			Result := assigner /= Void
 		end
 
 	is_finished: BOOLEAN
 			-- <Precursor>
 		do
-			Result := evaluators.is_empty and cursor.after
+			Result := evaluators.is_empty
 		end
 
 feature {NONE} -- Status report
@@ -148,18 +145,12 @@ feature {NONE} -- Status report
 	last_compilation_successful: BOOLEAN
 			-- True if last melting triggered by `Current' was successful
 
-	current_test: ?EIFFEL_TEST_I
-			-- Last test determined to be currently executed
-			--
-			-- Note: this attribute is set by `retrieve_results' and is used to check whether an evaluator
-			--       is running a test still valid to the executor.
-
 feature -- Status setting
 
 	skip_test (a_test: !EIFFEL_TEST_I)
 			-- <Precursor>
 		do
-			test_suite.set_test_aborted (a_test)
+			abort_test (a_test, False)
 		end
 
 feature {NONE} -- Status setting
@@ -168,29 +159,31 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
-			l_project: !E_PROJECT
-			l_old_map: like internal_map
+			l_old_map: like test_map
+			l_count: NATURAL
 		do
-			l_old_map := internal_map
-			create internal_map.make (a_list.count)
+			l_old_map := test_map
+			create test_map.make (a_list.count)
 			if l_old_map /= Void then
 				tests_reset_event.publish ([Current])
 				l_old_map := Void
 			end
-			cursor := map.tests.new_cursor
+
 			from
 				l_cursor := a_list.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
 			loop
+				l_count := l_count + 1
 				test_suite.set_test_queued (l_cursor.item, Current)
-				map.add_test (l_cursor.item)
+				test_map.force_last (l_cursor.item, l_count)
 				test_added_event.publish ([Current, l_cursor.item])
 				l_cursor.forth
 			end
-			cursor.start
+			create assigner.make (l_count)
 			is_compiled := False
+			initialize_evaluators
 		ensure then
 			not_compiled: not is_compiled
 		end
@@ -199,35 +192,30 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		do
 			if not (is_compiled or is_stop_requested) then
-				write_root_class (False)
+				write_root_class (test_map)
 				if last_root_class_successful then
 					compile_project
 					if not last_compilation_successful then
 						request_stop
-					elseif not is_stop_requested then
-						initialize_evaluators
 					end
 				end
 					-- Lets write an empty root class back to prevent compiler errors in next compilation
-				write_root_class (True)
+				write_root_class (Void)
 				is_compiled := True
-			else
-				syncronize_evaluators
 			end
+			syncronize_evaluators
 		end
 
 	stop_process
 			-- <Precursor>
 		do
-			cursor := Void
-			is_idle := False
+			assigner := Void
 		end
 
-	write_root_class (a_empty: BOOLEAN)
+	write_root_class (a_list: ?DS_LINEAR [!EIFFEL_TEST_I])
 			-- Write new root class
 			--
-			-- `a_empty': If True, a root class not referencing any tests will be written. Otherwise all
-			--            tests in `map' will be used.
+			-- `a_list': List of test routines to be referenced by root class.
 		require
 			running: is_running
 		local
@@ -243,11 +231,7 @@ feature {NONE} -- Status setting
 			create l_file.make (l_file_name)
 			l_file.recursive_open_write
 			if l_file.is_open_write then
-				if a_empty then
-					source_writer.write_source (l_file, create {EIFFEL_TEST_EVALUATOR_MAP}.make (0))
-				else
-					source_writer.write_source (l_file, map)
-				end
+				source_writer.write_source (l_file, a_list)
 				last_root_class_successful := True
 				l_file.flush
 				l_file.close
@@ -285,12 +269,18 @@ feature {NONE} -- Status setting
 			evaluators_empty: evaluators.is_empty
 		local
 			l_new: like create_evaluator
+			l_count: INTEGER
 		do
+			if test_map.count < evaluator_count.to_integer_32 then
+				l_count := test_map.count
+			else
+				l_count := evaluator_count.to_integer_32
+			end
+
 			from until
-				evaluators.count = evaluator_count.to_integer_32 or cursor.after
+				evaluators.count = l_count
 			loop
 				l_new := create_evaluator
-				launch_evaluator (l_new)
 				evaluators.force_last (l_new)
 			end
 		end
@@ -301,178 +291,139 @@ feature {NONE} -- Status setting
 		local
 			l_cursor: DS_LINKED_LIST_CURSOR [like create_evaluator]
 			l_evaluator: like create_evaluator
+			l_status: EIFFEL_TEST_EVALUATOR_STATUS
 			l_test: ?EIFFEL_TEST_I
+			l_stop, l_remove: BOOLEAN
 		do
+			l_stop := is_stop_requested
 			l_cursor := evaluators.new_cursor
 			from
 				l_cursor.start
 			until
 				l_cursor.after
 			loop
+				l_remove := False
 				l_evaluator := l_cursor.item
 
-					-- If user requested stop terminate evaluator
-				if is_stop_requested then
-					l_evaluator.terminate
-				end
-
-					-- Note: the order of first checking if the evaluator is running and afterwards retrieving
-					--       the results is crucial since results are added in a different thread.
-				if not l_evaluator.is_running then
-					retrieve_results (l_evaluator.status)
-					if is_stop_requested or (cursor.after and l_evaluator.status.results_complete) then
-						l_evaluator.reset
-						l_cursor.remove
-					else
-						launch_evaluator (l_evaluator)
-						if not l_evaluator.is_launched then
-							l_evaluator.reset
-							l_cursor.remove
-						end
-					end
+				if not (l_stop or l_evaluator.is_running) then
+					l_evaluator.launch
 				else
-					retrieve_results (l_evaluator.status)
-					if current_test /= Void then
-						if not (current_test.is_running and map.tests.has ({!EIFFEL_TEST_I} #? current_test)) then
-								-- `current_test' is no longer known to the executor as a valid test so we terminate
-								-- the evaluator
+					l_status := l_evaluator.status
+					l_remove := l_stop or l_status.is_finished
+					if l_remove or l_status.is_disconnected then
+						if l_evaluator.is_running then
 							l_evaluator.terminate
 						end
+						if not l_remove then
+							l_evaluator.launch
+						end
 					end
 				end
-				if not l_cursor.after and l_evaluator = l_cursor.item then
-					l_cursor.forth
+				retrieve_results (l_evaluator)
+				if l_remove then
+					l_cursor.remove
 				else
+					l_cursor.forth
 				end
 			end
-			if is_stop_requested then
+			if l_stop then
 				abort
 			end
 		ensure
 			stop_requested_implies_evaluators_empty: is_stop_requested implies evaluators.is_empty
 		end
 
-	launch_evaluator (a_evaluator: like create_evaluator) is
-			-- Try launching evaluator with tests which has not been tested yet.
+	retrieve_results (a_evaluator: !EIFFEL_TEST_EVALUATOR_CONTROLLER)
+			-- Retrieve all available results from evaluator and add them to tests in `test_map'. If
+			-- evaluator is running a test which is not in `test_map', terminate it.
 			--
-			-- Note: if evaluator has remaining tests from last execution and they have no caused evaluator
-			--       to stop, also add them to list.
-			--
-			-- `a_evaluator': Evaluator to launch.
-		require
-			running: is_running
-			a_evaluator_not_running: not a_evaluator.is_launched or else not a_evaluator.is_running
+			-- `a_evaluator': Evaluator from which new results are fetched.
 		local
-			l_status: EIFFEL_TEST_EVALUATOR_STATUS
-			l_remaining: !DS_LINEAR [!EIFFEL_TEST_I]
-			l_list: !DS_ARRAYED_LIST [!EIFFEL_TEST_I]
+			l_tuple: !TUPLE [index: NATURAL; outcome: ?EQA_TEST_OUTCOME; attempts: NATURAL]
+			l_done, l_terminate: BOOLEAN
 			l_test: !EIFFEL_TEST_I
-		do
-			if evaluator_test_count = 0 then
-				create l_list.make (map.tests.count)
-			else
-				create l_list.make (evaluator_test_count.to_integer_32)
-			end
-			if a_evaluator.is_launched then
-				l_status := a_evaluator.status
-				if l_status.has_remaining_tests then
-					l_remaining := l_status.remaining_tests
-						--| Note: `l_remaining' should not be empty since there should not be any other thread still
-						--        adding results to the status. However to be on the safe side we check one more time.
-					if not l_remaining.is_empty then
-						l_remaining.start
-						if not a_evaluator.is_terminated then
-								-- Evaluator has not been stopped by `Current', which means that it encountered problems
-								-- executing the first test in `l_remaining'. Currently we will no try to test it again.
-							l_test := l_remaining.item_for_iteration
-							test_suite.set_test_aborted (l_test)
-							l_remaining.forth
-						end
-						from until
-							l_remaining.after
-						loop
-							l_test := l_remaining.item_for_iteration
-							if active_tests.has (l_test) then
-								if l_test.is_queued and then l_test.executor = Current then
-									l_list.force_last (l_remaining.item_for_iteration)
-								end
-							end
-							l_remaining.forth
-						end
-					end
-				end
-				a_evaluator.reset
-			end
-
-				-- Fill `l_list' with tests from `cursor' up
-			from until
-				(evaluator_test_count > 0 and l_list.count = evaluator_test_count.to_integer_32)
-					or cursor.after
-			loop
-				if cursor.item.is_queued and then cursor.item.executor = Current then
-					l_list.force_last (cursor.item)
-				end
-				cursor.forth
-			end
-			if not l_list.is_empty then
-				a_evaluator.launch (l_list)
-				test_suite.set_test_running (l_list.first)
-			end
-		end
-
-	retrieve_results (a_status: !EIFFEL_TEST_EVALUATOR_STATUS) is
-			-- Retrieve all results in status and addopt `active_tests'.
-			--
-			-- `a_status': Status from which new results are fetched.
-		local
-			l_tuple: !TUPLE [test: ?EIFFEL_TEST_I; outcome: ?EQA_TEST_OUTCOME; next: ?EIFFEL_TEST_I]
-			l_done: BOOLEAN
-			l_test: !EIFFEL_TEST_I
-			l_outcome: !EQA_TEST_OUTCOME
 		do
 			from
-				current_test := Void
 			until
 				l_done
 			loop
-				l_tuple := a_status.retrieve
-				if l_tuple.test /= Void then
-					l_test ?= l_tuple.test
-					if map.tests.has (l_test) then
-						l_outcome ?= l_tuple.outcome
-						test_suite.add_outcome_to_test (l_test, l_outcome)
-					end
-				else
-					l_done := True
-				end
-				if l_tuple.next /= Void then
-					current_test ?= l_tuple.next
-						-- If map does not contain `l_test', we could abort here. However if the evaluator has
-						-- already produced a result, we simply won't propagate it and let it execute the next
-						-- test in the queue.
-					if map.tests.has ({!EIFFEL_TEST_I} #? current_test) then
-						if current_test.is_queued then
-							test_suite.set_test_running ({!EIFFEL_TEST_I} #? current_test)
+				l_terminate := False
+				l_tuple := a_evaluator.status.fetch_progress
+				if l_tuple.index /= 0 then
+					test_map.search (l_tuple.index)
+					if test_map.found and not assigner.is_aborted (l_tuple.index) then
+						l_test := test_map.found_item
+						if not l_test.is_running then
+							test_suite.set_test_running (l_test)
 						end
+						if {l_outcome: !EQA_TEST_OUTCOME} l_tuple.outcome then
+							test_suite.add_outcome_to_test (l_test, l_outcome)
+						end
+					else
+							-- If map does not contain test, we could terminate here. However if the evaluator has
+							-- already produced a result, we simply won't propagate it and let it execute the next
+							-- test in the queue.
+						l_terminate := True
 					end
+					l_done := l_tuple.outcome = Void
 				else
 					l_done := True
 				end
+			end
+			if l_terminate then
+				a_evaluator.status.set_forced_termination
+				a_evaluator.terminate
 			end
 		end
 
 	abort
 			-- Abort testing by moving cursor to end and aborting each test which is still queued or running.
+		require
+			running: is_running
 		do
 			from
-				cursor.start
+				test_map.start
 			until
-				cursor.after
+				test_map.after
 			loop
-				if cursor.item.is_queued or cursor.item.is_running then
-					test_suite.set_test_aborted (cursor.item)
+				if test_map.item_for_iteration.is_running then
+					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, True))
+				elseif test_map.item_for_iteration.is_queued then
+					test_suite.set_test_aborted (test_map.item_for_iteration)
 				end
-				cursor.forth
+				test_map.forth
+			end
+		end
+
+	abort_test (a_test: !EIFFEL_TEST_I; a_remove: BOOLEAN)
+			-- Flag test as aborted if queued or running. Remove it from `test_map' if `a_remove' is True.
+		do
+			from
+				test_map.start
+			until
+				test_map.after
+			loop
+				if test_map.item_for_iteration = a_test then
+					if is_running then
+						assigner.set_aborted (test_map.key_for_iteration)
+						if (a_test.is_queued or a_test.is_running) then
+							if a_test.executor = Current and not a_remove then
+								if a_test.is_running then
+									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, True))
+								else
+									test_suite.set_test_aborted (a_test)
+								end
+							end
+						end
+					end
+					if a_remove then
+						test_map.remove (test_map.key_for_iteration)
+						test_removed_event.publish ([Current, a_test])
+					end
+					test_map.go_after
+				else
+					test_map.forth
+				end
 			end
 		end
 
@@ -482,11 +433,10 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 			-- <Precursor>
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [!EIFFEL_TEST_I, NATURAL]
 		do
-			if map.tests.has (a_test) then
-				map.remove_test (a_test)
-				test_removed_event.publish ([Current, a_test])
-			end
+			abort_test (a_test, True)
 			Precursor (a_collection, a_test)
 		end
 
@@ -498,12 +448,7 @@ feature {NONE} -- Factory
 			running: is_running
 		deferred
 		ensure
-			result_uses_map: Result.map = map
+			result_uses_map: Result.assigner = assigner
 		end
-
-invariant
-	cursor_attached_implies_map_attached: cursor /= Void implies map /= Void
-	cursor_valid: cursor /= Void implies cursor.container = map.tests
-	evaluators_launched: evaluators.for_all (agent {like create_evaluator}.is_launched)
 
 end

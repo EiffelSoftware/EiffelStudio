@@ -19,13 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make_without_response (a_date: like date)
+	make_without_response (a_date: like date; a_is_user_abort: like is_user_abort)
 			-- Initialize `Current' without any responses.
+			--
+			-- `a_date': Date when outcome was produced.
+			-- `a_is_user_abort': Are the responces missing due to user abort?
 		do
 			date := a_date
+			is_user_abort := a_is_user_abort
 		ensure
 			date_set: a_date = date
-			not_response: not has_response
+			is_user_abort_set: is_user_abort = a_is_user_abort
+			no_response: not has_response
 		end
 
 	make_with_setup (a_setup_response: like setup_response; a_date: like date)
@@ -134,6 +139,9 @@ feature -- Status report
 		ensure
 			result_implies_setup_response_attached: Result implies (setup_response /= Void)
 		end
+
+	is_user_abort: BOOLEAN
+			-- Are the responces missing due to user abort?
 
 	is_setup_clean: BOOLEAN
 			-- Does `Current' contain a test stage response?

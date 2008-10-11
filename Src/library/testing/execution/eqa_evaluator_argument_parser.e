@@ -10,7 +10,7 @@ class
 	EQA_EVALUATOR_ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_MULTI_PARSER
+	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_parser
 		redefine
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			make_parser (False, True)
+			make_parser (False)
 			set_is_using_separated_switch_values (True)
 			set_is_showing_argument_usage_inline (True)
 		end
@@ -93,15 +93,6 @@ feature -- Status report
 		end
 
 feature {NONE} -- Access
-
-	loose_argument_name: STRING = "test_name"
-			-- <Precursor>
-
-	loose_argument_description: STRING = "Name of a test procedure, i.e. MY_TESTS.test1 where MY_TESTS is the class name and test1 is the actual feature name."
-			-- <Precursor>
-
-	loose_argument_type: STRING = "Test Procedure"
-			-- <Precursor>
 
 	switches: ARRAYED_LIST [!ARGUMENT_SWITCH] is
 			-- <Precursor>

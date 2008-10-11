@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	evaluator_count: NATURAL = 3
+	evaluator_count: NATURAL = 4
 			-- <Precursor>
 
 	evaluator_test_count: NATURAL = 1
@@ -52,7 +52,9 @@ feature {NONE} -- Factory
 		do
 				-- TODO: use temporary executable
 			l_exec ?= test_suite.eiffel_project.system.application_name (True)
-			create {EIFFEL_TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (map, l_exec)
+			if {l_assigner: !like assigner} assigner then
+				create {EIFFEL_TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (l_assigner, l_exec)
+			end
 		end
 
 end

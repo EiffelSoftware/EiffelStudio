@@ -95,10 +95,18 @@ feature {NONE} -- Query
 				if a_test.is_outcome_available then
 					l_outcome := a_test.last_outcome
 					if not l_outcome.is_pass then
-						if l_outcome.is_setup_clean then
-							Result := exception_text (l_outcome.test_response.exception)
+						if l_outcome.has_response then
+							if l_outcome.is_setup_clean then
+								Result := exception_text (l_outcome.test_response.exception)
+							else
+								Result := exception_text (l_outcome.setup_response.exception)
+							end
 						else
-							Result := exception_text (l_outcome.setup_response.exception)
+							if l_outcome.is_user_abort then
+								Result := local_formatter.translation (l_user_aborted)
+							else
+								Result := local_formatter.translation (l_aborted)
+							end
 						end
 					else
 						create Result.make_empty
@@ -133,12 +141,20 @@ feature {NONE} -- Query
 					l_outcome := a_test.last_outcome
 					if not l_outcome.is_pass then
 						create Result.make (20)
-						if l_outcome.is_setup_clean then
-							Result.append (local_formatter.translation (tt_fails))
-							Result.append (exception_text (l_outcome.test_response.exception))
+						if l_outcome.has_response then
+							if l_outcome.is_setup_clean then
+								Result.append (local_formatter.translation (tt_fails))
+								Result.append (exception_text (l_outcome.test_response.exception))
+							else
+								Result.append (local_formatter.translation (tt_unresolved))
+								Result.append (exception_text (l_outcome.setup_response.exception))
+							end
 						else
-							Result.append (local_formatter.translation (tt_unresolved))
-							Result.append (exception_text (l_outcome.setup_response.exception))
+							if l_outcome.is_user_abort then
+								Result.append (local_formatter.translation (tt_user_aborted))
+							else
+								Result.append (local_formatter.translation (tt_aborted))
+							end
 						end
 					else
 						Result := local_formatter.translation (tt_passes)
@@ -240,6 +256,10 @@ feature {NONE} -- Constants
 	tt_unresolved: STRING = "Unresolved"
 	l_not_tested: STRING = "not tested"
 	tt_not_tested: STRING = "Test has not been executed yet"
+	l_aborted: STRING = "no response"
+	tt_aborted: STRING = "Testing tool was unable to retrieve any response for test"
+	l_user_aborted: STRING = "user abort"
+	tt_user_aborted: STRING = "Test execution was canceled by user"
 
 	tests_column: INTEGER = 1
 	status_column: INTEGER = 2

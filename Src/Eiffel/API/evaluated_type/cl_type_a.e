@@ -10,7 +10,7 @@ class CL_TYPE_A
 inherit
 	NAMED_TYPE_A
 		redefine
-			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
+			is_expanded, is_reference, is_separate, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to, description,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
@@ -645,11 +645,10 @@ feature {COMPILER_EXPORTER} -- Conformance
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
 					if is_expanded and then class_id = other_class_type.class_id then
-						if is_typed_pointer then
+						Result := other_class_type.valid_generic (Current)
+						if Result and then is_typed_pointer then
 								-- TYPED_POINTER should be exactly the same type.
-							Result := same_as (other)
-						else
-							Result := other_class_type.valid_generic (Current)
+							Result := valid_generic (other_class_type)
 						end
 					end
 				else
@@ -761,20 +760,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 		end
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
-
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in `written_id'
-		local
-			class_type: CL_TYPE_A
-		do
-			class_type ?= type
-			if class_type /= Void then
-				Result := class_type.instantiation_of (Current, written_id)
-			else
-				Result := Current
-			end
-		end
 
 	adapted_in (class_type: CLASS_TYPE): CL_TYPE_A is
 			-- Redefined for covariant redefinition of result type.

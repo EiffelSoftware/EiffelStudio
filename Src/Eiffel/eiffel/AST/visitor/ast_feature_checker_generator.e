@@ -1419,7 +1419,7 @@ feature -- Implementation
 												-- type of the routine, not the anchor.
 											if
 												not l_arg_type.conform_to (l_like_arg_type) and then
-												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type)
+												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type)
 											then
 												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
 													l_like_arg_type)
@@ -1444,7 +1444,7 @@ feature -- Implementation
 										if l_open_type /= Void or else not l_arg_type.conform_to (l_formal_arg_type) then
 											if
 												l_open_type = Void and
-												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type)
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type)
 											then
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
@@ -1544,7 +1544,7 @@ feature -- Implementation
 									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
 								end
 							end
-							l_result_type := l_result_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+							l_result_type := l_result_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id)
 							if l_arg_types /= Void and then l_pure_result_type.is_like_argument and then is_byte_node_enabled then
 									-- Ensure the expandedness status of the result type matches
 									-- the expandedness status of the argument it is anchored to (if any).
@@ -1685,7 +1685,14 @@ feature -- Implementation
 								end
 							end
 
-							last_type := l_result_type
+								-- We need to take the deep_actual_type because we cannot carry
+								-- the anchors from the result type which do not make sense in
+								-- the current context.
+							if is_qualified_call then
+								last_type := l_result_type.deep_actual_type
+							else
+								last_type := l_result_type
+							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
 							last_feature_name_id := l_feature.feature_name_id
@@ -1901,7 +1908,7 @@ feature -- Implementation
 						loop
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_type_a) then
-								if l_element_type.convert_to (l_current_class, l_type_a) then
+								if l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
 									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
 										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
 											create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
@@ -1967,12 +1974,12 @@ feature -- Implementation
 									-- If not found it will be ANY.
 								if
 									l_element_type.conform_to (l_type_a) or
-									l_element_type.convert_to (l_current_class, l_type_a)
+									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type)
 								then
 										-- Nothing to be done
 								elseif
 									l_type_a.conform_to (l_element_type) or
-									l_type_a.convert_to (l_current_class, l_element_type)
+									l_type_a.convert_to (l_current_class, l_element_type.deep_actual_type)
 								then
 										-- Found a lowest type.
 									l_type_a := l_element_type
@@ -3758,7 +3765,7 @@ feature -- Implementation
 							if l_is_named_tuple or else l_feature.is_attribute or else l_feature.is_constant then
 								is_byte_node_enabled := False
 
-								compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, last_type,
+								compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, l_feature.type,
 										l_as, l_access, l_target_node)
 
 								if l_needs_byte_node then
@@ -3773,7 +3780,7 @@ feature -- Implementation
 								end
 							else
 								compute_routine (l_table, l_feature, not l_feature.type.is_void,l_feature.has_arguments,
-											l_class.class_id, l_target_type, last_type, l_as, l_access, l_target_node)
+											l_class.class_id, l_target_type, l_feature.type, l_as, l_access, l_target_node)
 							end
 							System.instantiator.dispatch (last_type, context.current_class)
 						end
@@ -4158,7 +4165,7 @@ feature -- Implementation
 
 							else
 								l_error := last_infix_error
-								if l_left_type.convert_to (context.current_class, l_right_type) then
+								if l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 									l_target_conv_info := context.last_conversion_info
 									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
 										l_right_constrained := last_calls_target_type
@@ -4428,7 +4435,7 @@ feature -- Implementation
 					not (l_left_type.conform_to (l_right_type.actual_type) or else
 					l_right_type.conform_to (l_left_type.actual_type))
 				then
-					if l_right_type.convert_to (context.current_class, l_left_type.actual_type) then
+					if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
 						l_conv_info := context.last_conversion_info
 						if l_conv_info.has_depend_unit then
 							context.supplier_ids.extend (l_conv_info.depend_unit)
@@ -4441,7 +4448,7 @@ feature -- Implementation
 							l_right_expr := l_conv_info.byte_node (l_right_expr)
 						end
 					else
-						if l_left_type.convert_to (context.current_class, l_right_type.actual_type) then
+						if l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
@@ -7199,7 +7206,7 @@ feature {NONE} -- Implementation
 							current_target_type := l_feat.type.actual_type
 							l_value.process (Current)
 							l_has_error := last_type = Void or else (not last_type.conform_to (l_feat.type.actual_type) and
-								not last_type.convert_to (context.current_class, l_feat.type.actual_type))
+								not last_type.convert_to (context.current_class, l_feat.type.deep_actual_type))
 							if l_has_error then
 								create vjar
 								context.init_error (vjar)
@@ -7377,7 +7384,7 @@ feature {NONE} -- Implementation
 							l_class.class_id).actual_type
 
 						if not a_right_type.conform_to (l_arg_type) then
-							if a_right_type.convert_to (context.current_class, l_arg_type) then
+							if a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
 								last_infix_argument_conversion_info := context.last_conversion_info
 								last_infix_arg_type := l_arg_type
 							else
@@ -7461,7 +7468,7 @@ feature {NONE} -- Implementation
 				--|    a VNCE error.
 				--| 2- if target was a BIT type, we should generate a VNCB error.
 			if not l_source_type.conform_to (l_target_type) then
-				if l_source_type.convert_to (context.current_class, l_target_type) then
+				if l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type) then
 					l_conv_info := context.last_conversion_info
 					is_type_compatible.conversion_info := l_conv_info
 					if l_conv_info.has_depend_unit then
@@ -7666,7 +7673,7 @@ feature {NONE} -- Implementation: overloading
 						if
 							l_open_type /= Void or else
 							not (l_arg_type.conform_to (l_formal_arg_type) or
-							l_arg_type.convert_to (context.current_class, l_formal_arg_type))
+							l_arg_type.convert_to (context.current_class, l_formal_arg_type.deep_actual_type))
 						then
 								-- Error, we cannot continue. Let's check the next feature.
 							l_done := True
@@ -7875,8 +7882,8 @@ feature {NONE} -- Implementation: overloading
 					Result := target2
 				else
 						-- Conformance failed, so let's check conversion.
-					convert1 := source_type.convert_to (context.current_class, target1)
-					convert2 := source_type.convert_to (context.current_class, target2)
+					convert1 := source_type.convert_to (context.current_class, target1.deep_actual_type)
+					convert2 := source_type.convert_to (context.current_class, target2.deep_actual_type)
 					if convert1 and not convert2 then
 						Result := target1
 					elseif convert2 and not convert1 then
@@ -7932,7 +7939,7 @@ feature {NONE} -- Agents
 			valid_feature: is_byte_node_enabled or a_has_args implies a_feature /= Void;
 			no_byte_code_for_attribute: is_byte_node_enabled implies not a_feature.is_attribute
 		local
-			l_arg_type:TYPE_A
+			l_type: TYPE_A
 			l_generics: ARRAY [TYPE_A]
 			l_feat_args: FEAT_ARG
 			l_oargtypes, l_cargtypes: ARRAY [TYPE_A]
@@ -7949,20 +7956,30 @@ feature {NONE} -- Agents
 			l_expr: EXPR_B
 			l_array_of_opens: ARRAY_CONST_B
 			l_operand_node: OPERAND_B
-			l_actual_target_type: TYPE_A
 			l_current_class_void_safe: BOOLEAN
+			l_is_qualified_call: BOOLEAN
 		do
-			l_actual_target_type := a_target_type.actual_type
+				-- When the agent is a qualified call, we need to remove the anchors because otherwise
+				-- we cannot create the proper agent type, see eweasel test#exec271.
+			l_is_qualified_call := an_agent.target /= Void and then
+				(not an_agent.target.is_open or else an_agent.target.class_type /= Void)
 
 			if a_is_query then
-				if a_feat_type.is_boolean then
+					-- Evaluate type of Result in current context
+				l_type := a_feat_type.instantiation_in (a_target_type.as_implicitly_detachable, cid)
+				if l_is_qualified_call then
+					l_type := l_type.deep_actual_type
+				elseif l_type.has_like_argument then
+					l_type := l_type.deep_actual_type
+				end
+				if l_type.actual_type.is_boolean then
 						-- generics are: base_type, open_types
 					create l_generics.make (1, 2)
 					create l_result_type.make (System.predicate_class_id, l_generics)
 				else
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (1, 3)
-					l_generics.put (a_feat_type.deep_actual_type, 3)
+					l_generics.put (l_type, 3)
 					create l_result_type.make (System.function_class_id, l_generics)
 				end
 			else
@@ -8054,7 +8071,7 @@ feature {NONE} -- Agents
 				until
 					l_feat_args.after
 				loop
-					l_arg_type := Void
+					l_type := Void
 
 						-- Let's find out if this is really an open operand.
 					if an_agent.operands /= Void then
@@ -8063,7 +8080,7 @@ feature {NONE} -- Agents
 							l_is_open := True
 							if l_operand.class_type /= Void then
 								l_operand.process (Current)
-								l_arg_type := last_type
+								l_type := last_type
 							end
 						else
 							l_is_open := False
@@ -8074,25 +8091,31 @@ feature {NONE} -- Agents
 
 						-- Get type of operand.
 					if l_is_open then
-						if l_arg_type = Void then
-							l_arg_type := l_feat_args.item.actual_type
+						if l_type = Void then
+							l_type := l_feat_args.item
 						end
 					else
-						l_arg_type := l_feat_args.item.actual_type
+						l_type := l_feat_args.item
 					end
 
 						-- Evaluate type of operand in current context
-					l_arg_type := l_arg_type.instantiation_in (l_actual_target_type.as_implicitly_detachable, cid).deep_actual_type
+					l_type := l_type.instantiation_in (
+						a_target_type.as_implicitly_detachable, cid)
+					if l_is_qualified_call then
+						l_type := l_type.deep_actual_type
+					elseif l_type.has_like_argument then
+						l_type := l_type.deep_actual_type
+					end
 
 						-- If it is open insert it in `l_oargtypes' and insert
 						-- position in `l_last_open_positions'.
 					if l_is_open then
-						l_oargtypes.put (l_arg_type, l_oidx)
+						l_oargtypes.put (l_type, l_oidx)
 						l_last_open_positions.extend (l_idx)
 						l_oidx := l_oidx + 1
 					else
 						-- Add type to `l_argtypes'.
-						l_cargtypes.put (l_arg_type, l_cidx)
+						l_cargtypes.put (l_type, l_cidx)
 						l_cidx := l_cidx + 1
 					end
 
@@ -9096,7 +9119,7 @@ feature {NONE} -- Implementation: catcall check
 					if
 						not l_actual_argument.conform_to (l_descendant_argument) and
 						not (
-							l_actual_argument.convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index)) and then
+							l_actual_argument.convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index).deep_actual_type) and then
 							a_feature.arguments.i_th (l_argument_index).conform_to (l_descendant_argument)
 						)
 					then

@@ -13,7 +13,7 @@ inherit
 		undefine
 			c_type
 		redefine
-			instantiation_in, instantiation_of,
+			instantiation_of,
 			meta_type, is_basic, reference_type,
 			good_generics, internal_is_valid_for_class, error_generics, description,
 			generic_il_type_name, hash_code, internal_generic_derivation, generic_derivation,
@@ -196,12 +196,6 @@ feature {COMPILER_EXPORTER}
 --		do
 --			Result ?= f.type
 --		end
-
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
-			-- Instantiated type in the context of `type'
-		do
-			Result := Current
-		end
 
 	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A is
 			-- Insatiation of `type' in s simple type

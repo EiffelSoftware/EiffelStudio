@@ -452,12 +452,9 @@ feature {COMPILER_EXPORTER}
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
-		local
-			class_type: CL_TYPE_A
 		do
-			class_type ?= type
-			if class_type /= Void then
-				Result := class_type.instantiation_of (Current, written_id)
+			if {l_cl_type: CL_TYPE_A} type.actual_type then
+				Result := l_cl_type.instantiation_of (Current, written_id)
 			else
 				Result := Current
 			end

@@ -73,7 +73,6 @@ feature -- Generic conformance
 --			end
 		end
 
-
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
 			-- Mode dependent type id - just for convenience
 		require

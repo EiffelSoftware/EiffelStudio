@@ -285,24 +285,24 @@ feature
 			i, nb: INTEGER
 			first_type, this_type: TYPE_A
 		do
-			from
-				i := lower
-				first_type := array_item (i).type
-				i := i + 1
-				nb := max_position
-				Result := True
-			until
-				i > nb or else not Result
-			loop
-				this_type := array_item (i).type
-				Result := (first_type = Void and then this_type = Void)
-						or else ((first_type /= Void and then this_type /= Void)
-						and then first_type.same_as (this_type)
-						and then this_type.same_as (first_type))
-				i := i + 1
-			end
-			if Result then
-				Result := first_type.is_explicit
+			i := lower
+			first_type := array_item (i).type
+			if first_type /= Void then
+				from
+					first_type := first_type.deep_actual_type
+					i := i + 1
+					nb := max_position
+					Result := True
+				until
+					i > nb
+				loop
+					this_type := array_item (i).type.deep_actual_type
+					if not first_type.same_as (this_type) then
+						Result := False
+						i := nb	-- Jump out of loop.
+					end
+					i := i + 1
+				end
 			end
 		end
 

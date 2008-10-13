@@ -166,18 +166,6 @@ feature -- Generic conformance
 			Result := type.is_explicit
 		end
 
-	generate_gen_type_conversion (a_level: NATURAL) is
-
-		local
-			gen_type : GEN_TYPE_A
-		do
-			gen_type ?= context.creation_type (type)
-
-			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type, a_level)
-			end
-		end
-
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Generate creation type.
 		do

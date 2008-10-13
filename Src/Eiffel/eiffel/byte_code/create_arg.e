@@ -140,18 +140,6 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	generate_gen_type_conversion (a_level: NATURAL) is
-
-		local
-			gen_type : GEN_TYPE_A
-		do
-			gen_type ?= type_to_create
-
-			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type, a_level)
-			end
-		end
-
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 		do
 				-- If we are here, it means that it is known that the type cannot have

@@ -13,7 +13,8 @@ inherit
 		redefine
 			created_in,
 			generate_cid, make_type_byte_code,
-			generate_cid_array, generate_cid_init
+			generate_cid_array, generate_cid_init,
+			generate_gen_type_conversion
 		end
 
 	SHARED_GENERATION

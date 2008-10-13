@@ -115,6 +115,8 @@ feature -- C code generation
 					if gen_type /= Void then
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
+					elseif {l_formal: FORMAL_A} table.first.type then
+						(create {CREATE_FORMAL_TYPE}.make (l_formal)).generate_type_id (buffer, final_mode, a_level)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 					end
@@ -239,18 +241,6 @@ feature -- Genericity
 			end
 		end
 
-	generate_gen_type_conversion (a_level: NATURAL) is
-
-		local
-			gen_type : GEN_TYPE_A
-		do
-			gen_type ?= type_to_create
-
-			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type, a_level)
-			end
-		end
-
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		local
@@ -276,6 +266,8 @@ feature -- Genericity
 
 					if gen_type /= Void then
 						gen_type.generate_cid (buffer, final_mode, True, context.context_class_type.type)
+					elseif {l_formal: FORMAL_A} table.first.type then
+						l_formal.generate_cid (buffer, final_mode, True, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -358,6 +350,9 @@ feature -- Genericity
 					if gen_type /= Void then
 						gen_type.generate_cid_array (buffer,
 												final_mode, True, idx_cnt, context.context_class_type.type)
+					elseif {l_formal: FORMAL_A} table.first.type then
+						l_formal.generate_cid_array (buffer,
+							final_mode, True, idx_cnt, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -397,6 +392,8 @@ feature -- Genericity
 
 					if gen_type /= Void then
 						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
+					elseif {l_formal: FORMAL_A} table.first.type then
+						l_formal.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
 					else
 						dummy := idx_cnt.next
 					end
@@ -486,7 +483,7 @@ feature -- Genericity
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 				if table.has_one_type then
-					Result ?= table.first.type
+					Result ?= table.first.type.deep_actual_type
 				end
 			end
 		end

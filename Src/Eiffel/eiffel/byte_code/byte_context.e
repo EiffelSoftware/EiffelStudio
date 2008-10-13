@@ -281,12 +281,21 @@ feature -- Code generation
 		require
 			valid_type : gtype /= Void
 		local
-			use_init : BOOLEAN
+			use_init, l_can_save_result: BOOLEAN
 			idx_cnt : COUNTER
 			l_buffer: like buffer
+			l_gen_type: GEN_TYPE_A
 		do
 			l_buffer := buffer
-			use_init := not gtype.is_explicit
+			if gtype.is_explicit then
+				l_gen_type := gtype.deep_actual_type
+				use_init := False
+				l_can_save_result := not l_gen_type.has_formal_generic
+			else
+				l_gen_type := gtype
+				use_init := True
+				l_can_save_result := False
+			end
 
 				-- Optimize: Use static array only when `typarr' is
 				-- not modified by generated code in multithreaded mode only.
@@ -306,9 +315,9 @@ feature -- Code generation
 			if use_init then
 				create idx_cnt
 				idx_cnt.set_value (1)
-				gtype.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_class_type.type)
+				l_gen_type.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_class_type.type)
 			else
-				gtype.generate_cid (l_buffer, final_mode, True, context_class_type.type)
+				l_gen_type.generate_cid (l_buffer, final_mode, True, context_class_type.type)
 			end
 			l_buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			l_buffer.put_string ("};")
@@ -316,7 +325,7 @@ feature -- Code generation
 			l_buffer.put_string ("EIF_TYPE_INDEX typres")
 			l_buffer.put_natural_32 (a_level)
 			l_buffer.put_character (';')
-			if not use_init then
+			if l_can_save_result then
 				l_buffer.put_new_line
 				l_buffer.put_string ("static EIF_TYPE_INDEX typcache")
 				l_buffer.put_natural_32 (a_level)
@@ -326,14 +335,14 @@ feature -- Code generation
 			if use_init then
 				-- Reset counter
 				idx_cnt.set_value (1)
-				gtype.generate_cid_init (l_buffer, final_mode, True, idx_cnt, a_level)
+				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, a_level)
 			end
 
 			l_buffer.put_new_line
 			l_buffer.put_new_line
 			l_buffer.put_string ("typres")
 			l_buffer.put_natural_32 (a_level)
-			if not use_init then
+			if l_can_save_result then
 				l_buffer.put_string (" = RTCID2(&typcache")
 				l_buffer.put_natural_32 (a_level)
 				l_buffer.put_two_character (',', ' ')
@@ -342,7 +351,7 @@ feature -- Code generation
 			end
 			generate_current_dftype
 			l_buffer.put_string (", ")
-			l_buffer.put_integer (gtype.generated_id (final_mode, context_class_type.type))
+			l_buffer.put_integer (l_gen_type.generated_id (final_mode, context_class_type.type))
 			l_buffer.put_string (", typarr")
 			l_buffer.put_natural_32 (a_level)
 			l_buffer.put_two_character (')', ';')

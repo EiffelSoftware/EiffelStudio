@@ -891,7 +891,7 @@ feature {NONE} -- Brace matching
 				l_last_matches.remove
 			end
 
-			if not has_selection then
+			if not has_selection and then preferences.editor_data.highlight_matching_braces then
 					-- Locate applicable tokens
 				l_brace := brace_match_caret_token
 				if l_brace /= Void then

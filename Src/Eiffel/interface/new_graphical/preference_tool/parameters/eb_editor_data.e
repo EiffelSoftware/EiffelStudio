@@ -227,6 +227,12 @@ feature -- Value
 			Result := filter_completion_list_preference.value
 		end
 
+	highlight_matching_braces: BOOLEAN
+			-- Should matching braces be highlighted at the carets position?
+		do
+			Result := highlight_matching_braces_preference.value
+		end
+
 	show_completion_signature: BOOLEAN is
 			-- Should feature signature be shown in completion list?
 		do
@@ -390,6 +396,9 @@ feature -- Preference
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
 			-- the list will always contain possible completion options and closest match will be selected during typing.
 
+	highlight_matching_braces_preference: BOOLEAN_PREFERENCE
+			-- Should matching braces be highlighted at the carets position?
+
 	show_completion_signature_preference: BOOLEAN_PREFERENCE
 			-- Should feature signature be shown in completion list?
 
@@ -510,6 +519,9 @@ feature {NONE} -- Preference Strings
 	new_tab_at_left_string: STRING is "editor.general.new_tab_at_left"
 			-- Create new tab at left side of the target notebook?
 
+	highlight_matching_braces_string: STRING is "editor.eiffel.highlight_matching_braces"
+			-- Should matching braces be highlighted at the carets position?
+
 feature {NONE} -- Init colors and fonts.
 
 	init_colors is
@@ -617,6 +629,7 @@ feature {NONE} -- Initialization
 			auto_complete_words_preference := l_manager.new_boolean_preference_value (l_manager, auto_complete_words_string, True)
 			auto_remove_trailing_blank_when_saving_preference := l_manager.new_boolean_preference_value (l_manager, auto_remove_trailing_blank_when_saving_string, True)
 			filter_completion_list_preference := l_manager.new_boolean_preference_value (l_manager, filter_completion_list_string, True)
+			highlight_matching_braces_preference := l_manager.new_boolean_preference_value (l_manager, highlight_matching_braces_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_signature_string, True)
 			show_completion_type_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_type_string, True)
 			show_completion_disambiguated_name_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_disambiguated_name_string, False)
@@ -1177,6 +1190,7 @@ invariant
 	warning_background_color_preference_attached: warning_background_color_preference /= Void
 	argument_text_color_preference_attached: argument_text_color_preference /= Void
 	argument_background_color_preference_attached: argument_background_color_preference /= Void
+	highlight_matching_braces_preference_attached: highlight_matching_braces_preference /= Void
 
 
 indexing

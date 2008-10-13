@@ -24,8 +24,8 @@ create
 
 feature {INTERNAL} -- Initialization
 
-	frozen make (n: INTEGER) is
-			-- Creates a special object for `n' entries.
+	make (n: INTEGER)
+			-- Create a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
 		do
@@ -34,10 +34,10 @@ feature {INTERNAL} -- Initialization
 			area_allocated: count = n
 		end
 
-feature {NONE} -- Initializaiton
+feature {NONE} -- Initialization
 
-	frozen make_from_native_array (an_array: like native_array) is
-			-- Creates a special object from `an_array'.
+	make_from_native_array (an_array: like native_array)
+			-- Create a special object from `an_array'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
 			an_array_not_void: an_array /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initializaiton
 
 feature -- Access
 
-	frozen item alias "[]", frozen infix "@" (i: INTEGER): T assign put is
+	item alias "[]" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -60,9 +60,20 @@ feature -- Access
 			Result := internal_native_array.item (i)
 		end
 
-	frozen index_of (v: T; start_position: INTEGER): INTEGER is
+	infix "@" (i: INTEGER): T
+			-- Item at `i'-th position
+			-- (indices begin at 0)
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i < count
+		do
+			Result := item (i)
+		end
+
+	index_of (v: T; start_position: INTEGER): INTEGER
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
+			-- (Use object equality for comparison.)
 		require
 			valid_start_position: start_position >= 0
 		local
@@ -83,8 +94,8 @@ feature -- Access
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 
-	frozen item_address (i: INTEGER): POINTER is
-			-- Address of element at position `i'.
+	item_address (i: INTEGER): POINTER
+			-- Address of element at position `i'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
 			index_big_enough: i >= 0
@@ -94,8 +105,8 @@ feature -- Access
 			element_address_not_null: Result /= default_pointer
 		end
 
-	frozen base_address: POINTER is
-			-- Address of element at position `0'.
+	base_address: POINTER
+			-- Address of element at position `0'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
 		do
@@ -103,7 +114,7 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 
-	frozen native_array: NATIVE_ARRAY [T] is
+	native_array: ?NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -113,19 +124,29 @@ feature -- Access
 
 feature -- Measurement
 
-	lower: INTEGER is 0
+	lower: INTEGER = 0
 			-- Minimum index of Current
 
-	frozen upper: INTEGER is
+	upper: INTEGER
 			-- Maximum index of Current
 		do
 			Result := internal_native_array.count - 1
+		ensure
+			definition: lower <= Result + 1
 		end
 
-	frozen count, frozen capacity: INTEGER is
-			-- Count of the special area
+	count: INTEGER
+			-- Count of special area
+		do
+			Result := internal_native_array.count - 1
+		end
+	
+	capacity: INTEGER
+			-- Count of special area
 		do
 			Result := internal_native_array.count
+		ensure
+			capacity_non_negative: Result >= 0
 		end
 
 feature -- Status report
@@ -154,41 +175,52 @@ feature -- Status report
 			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
-	same_items (other: like Current; start_index, end_index: INTEGER): BOOLEAN
+	same_items (other: like Current; source_index, destination_index, n: INTEGER): BOOLEAN
 			-- Do all items between index `start_index' and `end_index' have
 			-- same value?
 			-- (Use reference equality for comparison.)
 		require
-			start_index_non_negative: start_index >= 0
-			start_index_not_too_big: start_index <= end_index + 1
-			end_index_valid: end_index < count
 			other_not_void: other /= Void
-			other_has_enough_items: end_index < other.count
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= other.count
+			n_is_small_enough_for_destination: destination_index + n <= count
 		local
-			i: INTEGER
+			i, j, nb: INTEGER
 		do
-			from
-				Result := True
-				i := start_index
-			until
-				i > end_index or else not Result
-			loop
-				Result := item (i) = other.item (i)
-				i := i + 1
+			Result := True
+			if other /= Current then
+				from
+					i := source_index
+					j := destination_index
+					nb := source_index + n
+				until
+					i = nb
+				loop
+					if other.item (i) /= item (j) then
+						Result := False
+						i := nb - 1
+					end
+					i := i + 1
+					j := j + 1
+				end
 			end
 		ensure
-			valid_on_empty_area: (end_index < start_index) implies Result
+			valid_on_empty_area: (n = 0) implies Result
 		end
 
-	frozen valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
-			Result := (0 <= i) and then (i < count)
+			Result := (0 <= i) and (i < count)
+		ensure
+			definition: Result = ((0 <= i) and (i < count))
 		end
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -197,7 +229,7 @@ feature -- Comparison
 			if other /= Current then
 				l_other_count := other.count
 				if count = l_other_count then
-					Result := same_items (other, 0, l_other_count - 1)
+					Result := same_items (other, 0, 0, l_other_count)
 				end
 			else
 				Result := True
@@ -206,7 +238,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	frozen put (v: T; i: INTEGER) is
+	put (v: T; i: INTEGER)
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
@@ -214,9 +246,11 @@ feature -- Element change
 			index_small_enough: i < count
 		do
 			internal_native_array.put (i, v)
+		ensure
+			inserted: item (i) = v
 		end
 
-	frozen fill_with (v: T; start_index, end_index: INTEGER) is
+	fill_with (v: T; start_index, end_index: INTEGER)
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
@@ -236,10 +270,12 @@ feature -- Element change
 				l_array.put (i, v)
 				i := i + 1
 			end
+		ensure
+			filled: -- For every `i' in `start_index' .. `end_index', `item' (`i') = `v'
 		end
 
-	frozen copy_data (other: like Current; source_index, destination_index, n: INTEGER) is
-			-- Copy `n' elements of `other' from `source_start' position to Current at
+	copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
+			-- Copy `n' elements of `other' from `source_index' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
 			other_not_void: other /= Void
@@ -248,11 +284,14 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= other.count
 			n_is_small_enough_for_destination: destination_index + n <= count
+			same_type: other.conforms_to (Current)
 		do
 			{SYSTEM_ARRAY}.copy (other.internal_native_array, source_index, internal_native_array, destination_index, n)
+		ensure
+			copied:	same_items (other, source_index, destination_index, n)
 		end
 
-	frozen move_data (source_index, destination_index, n: INTEGER) is
+	move_data (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -266,9 +305,11 @@ feature -- Element change
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+		ensure
+			moved: same_items (old twin, source_index, destination_index, n)
 		end
 
-	frozen overlapping_move (source_index, destination_index, n: INTEGER) is
+	overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -283,9 +324,11 @@ feature -- Element change
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+		ensure
+			moved: same_items (old twin, source_index, destination_index, n)
 		end
 
-	frozen non_overlapping_move (source_index, destination_index, n: INTEGER) is
+	non_overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -303,11 +346,13 @@ feature -- Element change
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+		ensure
+			moved: same_items (Current, source_index, destination_index, n)
 		end
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
@@ -326,25 +371,26 @@ feature -- Duplication
 
 feature -- Resizing
 
-	frozen resized_area (n: INTEGER): like Current is
-			-- Create a copy of Current with a count of `n'.
+	resized_area (n: INTEGER): like Current
+			-- Create a copy of Current with a count of `n'
 		require
-			valid_new_count: n > count
+			n_non_negative: n >= 0
 		local
 			l_array: like internal_native_array
 		do
 			create Result.make (n)
 			l_array := internal_native_array
-			{SYSTEM_ARRAY}.copy (l_array, Result.internal_native_array, l_array.count)
+			{SYSTEM_ARRAY}.copy (l_array, Result.internal_native_array, n.min (l_array.count))
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
+			preserved: Result.same_items (Current, 0, 0, n.min (old count))
 		end
 
-	frozen aliased_resized_area (n: INTEGER): like Current is
+	aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
-			-- possible a new copy.
+			-- possible a new copy
 		require
 			valid_new_count: n > count
 		do
@@ -352,33 +398,20 @@ feature -- Resizing
 		ensure
 			Result_not_void: Result /= Void
 			new_count: Result.count = n
-		end
-
-	frozen aliased_resized_area_and_keep (n, j, k: INTEGER): like Current is
-			-- Try to resize `Current' with a count of `n' and keeping the old
-			-- content between indices `j', `k'. If not possible a new copy.
-		require
-			n_non_negative: n >= 0
-			j_non_negative: j >= 0
-			k_non_negative: k >= 0
-			k_valid: k <= count
-		do
-			create Result.make (n)
-			{SYSTEM_ARRAY}.copy (internal_native_array, 0, Result.internal_native_array, j, k)
-		ensure
-			Result_not_void: Result /= Void
-			new_count: Result.count = n
+			preserved: Result.same_items (old twin, 0, 0, old count)
 		end
 
 feature -- Removal
 
-	frozen clear_all is
+	clear_all
 			-- Reset all items to default values.
 		local
 			l_array: like internal_native_array
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.clear (l_array, 0, l_array.count)
+		ensure
+			cleared: all_default (0, upper)
 		end
 
 feature {SPECIAL} -- Implementation: Access

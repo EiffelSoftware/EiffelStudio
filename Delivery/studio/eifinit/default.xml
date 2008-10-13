@@ -246,6 +246,7 @@
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
 	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Is underscore `_' used as a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.highlight_matching_braces" DESCRIPTION="Should the editor highlight matching braces when the caret is placed next to a (, ), {, }, [, ], << or >>?"><BOOLEAN>True</BOOLEAN></PREF>
 
 	<PREF NAME="editor.eiffel.colors.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
@@ -591,7 +592,6 @@
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="Place new editor tab at left side of editor's area?"><BOOLEAN>True</BOOLEAN></PREF>
-
 	<PREF NAME="general.external_commands.external_command_0" DESCRIPTION="First external command."><STRING></STRING></PREF>
 	<PREF NAME="general.external_commands.external_command_1" DESCRIPTION="Second external command."><STRING></STRING></PREF>
 	<PREF NAME="general.external_commands.external_command_2" DESCRIPTION="Third external command."><STRING></STRING></PREF>

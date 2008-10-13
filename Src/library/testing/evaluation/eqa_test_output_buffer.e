@@ -15,18 +15,11 @@ inherit
 			make as make_file,
 			wipe_out as wipe_out_file
 		redefine
-			count,
-			exists,
-			flush,
-			put_boolean,
-			put_character,
-			put_double,
-			putdouble,
-			put_new_line,
-			new_line,
-			put_real,
-			putreal,
-			put_string
+			count, exists, readable,
+			put_boolean, put_real, put_double, put_string, put_character,
+			put_new_line, new_line, end_of_file, file_close,
+			putbool, putreal, putdouble, putstring, putchar,
+			dispose, back, flush
 		end
 
 create
@@ -106,15 +99,6 @@ feature {NONE} -- Access
 	truncated_start_position: INTEGER
 			-- Position in `closing_content' representing beginning of actual content
 
-feature -- Status setting
-
-	wipe_out
-			-- Empty buffer
-		do
-			buffer.wipe_out
-			truncated_start_position := 0
-		end
-
 feature -- Status report
 
 	is_truncated: BOOLEAN
@@ -124,11 +108,23 @@ feature -- Status report
 		end
 
 	exists: BOOLEAN = False
-			-- <Precursor>	
+			-- <Precursor>
+
+	readable: BOOLEAN = False
+			-- <Precursor>
+
+feature -- Status setting
+
+	wipe_out
+			-- Empty buffer
+		do
+			buffer.clear_all
+			truncated_start_position := 0
+		end
 
 feature -- Output
 
-	put_string (a_string: STRING) is
+	put_string, putstring (a_string: STRING) is
 			-- Append string to `buffer'.
 			--
 			-- `a_string': String to be appended to `buffer'.
@@ -172,7 +168,7 @@ feature -- Output
 			end
 		end
 
-	put_character (c: CHARACTER)
+	put_character, putchar (c: CHARACTER)
 			-- Append character to buffer.
 			--
 			-- `c': Character to be appended to `buffer'.
@@ -198,7 +194,7 @@ feature -- Output
 			end
 		end
 
-	put_boolean (b: BOOLEAN)
+	put_boolean, putbool (b: BOOLEAN)
 			-- <Precursor>
 		do
 			put_string (b.out)
@@ -223,6 +219,28 @@ feature -- Output
 		end
 
 	flush
+			-- <Precursor>
+		do
+		end
+
+feature -- Basic functionality: file
+
+	dispose
+			-- <Precursor>
+		do
+		end
+
+	back
+			-- <Precursor>
+		do
+		end
+
+	end_of_file: BOOLEAN
+			-- <Precursor>
+		do
+		end
+
+	file_close (file: POINTER)
 			-- <Precursor>
 		do
 		end

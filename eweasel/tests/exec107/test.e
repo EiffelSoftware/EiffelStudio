@@ -19,9 +19,12 @@ feature
 	make is
 		local
 			tried: BOOLEAN
+			l_mem: MEMORY
 		do
 			if not tried then
 				from
+					create l_mem
+					l_mem.set_max_mem (100_000_000)
 					blow_up := ("x").twin
 				until
 					False

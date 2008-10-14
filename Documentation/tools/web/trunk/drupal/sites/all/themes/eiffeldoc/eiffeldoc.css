@@ -67,7 +67,7 @@
     margin: 1px 20px 10px 20px;
     padding: 0 10px 0 0;
     position: relative;
-    height: 90px;
+    height: 73px;
   }
 
   #logo
@@ -78,7 +78,7 @@
   #name-and-slogan
   {
     /* display: inline; */
-    padding: 80px 0 0 46px;
+    padding: 72px 0 0 46px;
   }
 
   #site-name
@@ -360,12 +360,13 @@
   }
 
   #top-bar {
+    /* position: relative; top: 15px; */
     margin: 0;
     padding: 0 20px 0 0px;
   }
   #top-bar
   {
-    background-color: #FbFbFd;
+    /* background-color: #FbFbFd; */
     color: #000;
   }
   #top-bar a
@@ -854,4 +855,7 @@ div.tabs a {
 div.geshifilter pre {
     background: none;
     border: none;
+}
+span.geshifilter code {
+    font-family: monospace;
 }

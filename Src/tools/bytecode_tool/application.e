@@ -10,8 +10,13 @@ class
 inherit
 	EV_APPLICATION
 
+	ARGUMENTS
+		undefine
+			default_create, copy
+		end
+
 create
-	make_and_launch 
+	make_and_launch
 
 feature {NONE} -- Initialization
 
@@ -32,14 +37,17 @@ feature {NONE} -- Initialization
 			create first_window
 
 				-- Show the first window.
-				--| TODO: Remove this line if you don't want the first 
+				--| TODO: Remove this line if you don't want the first
 				--|       window to be shown at the start of the program.
 			first_window.show
+			if argument_count > 0 and then {s: STRING} argument (1) then
+				first_window.add_melted_filename (s)
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	first_window: MAIN_WINDOW
 			-- Main window.
-	
+
 end -- class APPLICATION

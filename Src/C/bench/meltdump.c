@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
+#include "rt_gen_types.h"
 #include "eif_interp.h"
 
 #define BCDB_TAG    't'
@@ -138,7 +139,7 @@ static  void    prepare_types (void)
 
 {
 	long    count, acount, i, ctype;
-	short   slen, pcount, dtype;
+	short   slen, dtype;
 	char    *dname;
 
 	(void) rchar ();	/* Is there something to read */
@@ -247,13 +248,6 @@ static  void    prepare_types (void)
 			}
 		}
 
-		pcount = rshort ();
-
-		i = (long) pcount;
-
-		while (i--)
-			(void) rshort ();
-
 		(void) rshort(); /* Skeleton flags */
 		i = acount;
 
@@ -350,7 +344,7 @@ static  void    analyze_cnodes (void)
 
 {
 	long    count, acount, i, ctype;
-	short   slen, pcount, pid, dtype;
+	short   slen, dtype;
 	char    *dname;
 
 	printf ("Analyzing Cnodes\n");
@@ -438,18 +432,6 @@ static  void    analyze_cnodes (void)
 			}
 
 			fprintf (mfp, "\n");
-		}
-
-		pcount = rshort ();
-
-		fprintf (mfp,"Nr. of parents     : %d\n", (int) pcount);
-
-		i = (long) pcount;
-
-		while (i--)
-		{
-			pid = rshort ();
-			fprintf (mfp,"   Parent id       : %d\n", (int) pid);
 		}
 
 		fprintf (mfp,"Flags are          : 0x%x\n", (int) rshort ());
@@ -691,7 +673,7 @@ static  void    read_byte_code (void)
 static  void    analyze_parents (void)
 
 {
-	short   dtype, class_name_count;
+	unsigned short   dtype;
 
 	printf ("Analyzing Parents\n");
 
@@ -709,26 +691,30 @@ static  void    analyze_parents (void)
 	{
 		dtype = rshort ();
 
-		if (dtype == -1)
+		if (dtype == TERMINATOR)
 			break;
 
 			/* Read number of generics. */
 		(void) rshort ();
 
-		/* Read class name */
-
-		class_name_count = rshort ();
-
-		while (class_name_count--)
-			fprintf (mfp, "%c", rchar ());
+			/* Read dynamic type */
+		fprintf (mfp, "[%d, ", rshort ());
 
 		if (rchar ())
-			fprintf (mfp, " E ");     /* Expanded */
+			fprintf (mfp, "E, ");     /* Expanded */
 		else
 			fprintf (mfp, " ");       /* Not expanded */
 
-		while (rshort () != -1)
-			;
+		dtype = rshort();
+		while (dtype != TERMINATOR) {
+			if (dtype == PARENT_TYPE_SEPARATOR) {
+				fprintf (mfp, "| ");
+			} else {
+				fprintf (mfp, "%d ", dtype);
+			}
+			dtype = rshort ();
+		}
+		fprintf (mfp, "]\n");
 	}
 
 	print_line ();

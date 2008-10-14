@@ -119,10 +119,10 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 					l_stonable.set_stone (a_stone)
 				end
 			else
-				stone_change_notified := False
+				has_performed_stone_change_notification := False
 			end
 
-			if is_initialized and not stone_change_notified then
+			if is_initialized and not has_performed_stone_change_notification then
 				internal_on_stone_changed (tool_descriptor.previous_stone)
 			end
 		end
@@ -132,7 +132,21 @@ feature {NONE} -- Status report
 	is_in_stone_synchronization: BOOLEAN
 			-- Indicates if a stone synchronization is taking place instead of a simple change of stone
 
-	stone_change_notified: BOOLEAN
+	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+			-- Determines if stone synchronization is required given two stones.
+			--|Note: Redefine to better determine if a stone is applicable for synchronization, rather than
+			--|      redefine `synchronize'.
+			--
+			-- `a_old_stone': The current "old" stone.
+			-- `a_new_stone': The stone to be set if synchronization is required.
+			-- `Result': True if the panel should be synchronized with the new stone.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := a_old_stone /~ a_new_stone
+		end
+
+	has_performed_stone_change_notification: BOOLEAN
 			-- Status flag to ensure stone change notifications are performed.
 			-- Note: This flag is needed because of the transistion between old tools and ESF.
 			--       Idealistically all stones should be set through the tool panel's `tool_descriptor'.
@@ -197,8 +211,10 @@ feature {NONE} -- Basic opertations
 
 feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 
-	synchronize
-			-- Synchronizes any new data (compiled or other wise)
+	frozen synchronize
+			-- Synchronizes any new data (compiled or other wise).
+			--|Note: Redefine `is_stone_sychronization_required' instead of `synchornize' to prevent or
+			--|      force stone synchronization.
 		local
 			l_stone: STONE
 			l_new_stone: STONE
@@ -208,9 +224,9 @@ feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 				if l_stone /= Void then
 					l_new_stone := l_stone.synchronized_stone
 				end
-				if l_new_stone /= l_stone then
+				if is_stone_sychronization_required (l_stone, l_new_stone) then
 						-- Force recomputation.
-					stone_change_notified := False
+					has_performed_stone_change_notification := False
 					is_in_stone_synchronization := True
 					if l_new_stone /= Void and then is_stone_usable (l_new_stone) then
 						set_stone (l_new_stone)
@@ -231,10 +247,10 @@ feature {NONE} -- Action handlers
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
-        	if not stone_change_notified and (stone = Void or else is_stone_usable (stone)) then
+        	if not has_performed_stone_change_notification and (stone = Void or else is_stone_usable (stone)) then
         			-- Synchronize stone and by-pass display checks because the UI is shown.
 				on_stone_changed (tool_descriptor.previous_stone)
-				stone_change_notified := True
+				has_performed_stone_change_notification := True
         	end
 		end
 
@@ -246,12 +262,12 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			not_stone_change_notified: not stone_change_notified
+			not_stone_change_notified: not has_performed_stone_change_notification
 			shown: shown or is_auto_hide
 		deferred
 		ensure
 				-- This change is handled by the callee
-			not_stone_change_notified: not stone_change_notified
+			not_stone_change_notified: not has_performed_stone_change_notification
 		end
 
 	frozen internal_on_stone_changed (a_old_stone: ?like stone)
@@ -260,16 +276,16 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			not_stone_change_notified: not stone_change_notified
+			not_stone_change_notified: not has_performed_stone_change_notification
 		do
 			if shown then
 				on_stone_changed (a_old_stone)
-				stone_change_notified := True
+				has_performed_stone_change_notification := True
 			end
 		ensure
-			stone_change_notified: shown implies stone_change_notified
+			stone_change_notified: shown implies has_performed_stone_change_notification
 		rescue
-			stone_change_notified := True
+			has_performed_stone_change_notification := True
 		end
 
 invariant

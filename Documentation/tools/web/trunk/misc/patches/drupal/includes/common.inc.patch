@@ -1,0 +1,20 @@
+1269,1285d1268
+<   if (!isset ($options['fragment'])) {
+<         $options['fragment'] =  '';
+<   }
+<   if (!isset ($options['query'])) {
+<         $options['query'] =  '';
+<   }
+<   if (!isset ($options['absolute'])) {
+<         $options['absolute'] =  FALSE;
+<   }
+<   if (!isset ($options['alias'])) {
+<         $options['alias'] =  FALSE;
+<   }
+<   if (!isset ($options['prefix'])) {
+<         $options['prefix'] =  '';
+<   }
+< 
+< /*
+1293d1275
+< */

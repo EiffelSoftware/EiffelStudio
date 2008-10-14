@@ -4,11 +4,11 @@ indexing
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision $"
+	fixme: "Check retrieved arguments and locals validity"
 
 class CALL_STACK_ELEMENT_CLASSIC
 
 inherit
-
 	EIFFEL_CALL_STACK_ELEMENT
 		redefine
 			make
@@ -410,8 +410,8 @@ feature {NONE} -- Implementation
 						l_old_class := System.current_class
 						System.set_current_class (dynamic_class)
 
-						rout_i := routine_i
-						l_wc := rout_i.written_class
+						l_wc := rout.written_class
+						check same_written_class: l_wc = written_class end
 						l_names_heap := Names_heap
 
 						l_index := l_locals.lower
@@ -421,6 +421,7 @@ feature {NONE} -- Implementation
 						create locals_list.make (l_locals.count)
 
 						local_decl_grps := local_decl_grps_from (rout)
+						rout_i := routine_i
 						if local_decl_grps /= Void then
 							from
 								local_decl_grps.start
@@ -462,7 +463,7 @@ feature {NONE} -- Implementation
 							end
 						end
 						if l_index <= l_upper then
-								--| Remaining locals, should be OT locals						
+								--| Remaining locals, should be OT locals
 							l_ot_locals := object_test_locals_from (rout)
 							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
 								from

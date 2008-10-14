@@ -16,11 +16,12 @@ inherit
 			is_deferred, locals, object_test_locals, obsolete_message,
 			is_external, associated_feature_i,
 			is_inline_agent, updated_version,
+			is_invariant,
 			body_id_for_ast
 		end
 	SHARED_INLINE_AGENT_LOOKUP
 		undefine
-				is_equal
+			is_equal
 		end
 
 feature -- Properties
@@ -53,6 +54,9 @@ feature -- Properties
 			Result := inline_agent_nr /= 0
 		end
 
+	is_invariant: BOOLEAN
+			-- <Precursor>		
+
 	inline_agent_nr: INTEGER
 
 	enclosing_body_id: INTEGER
@@ -79,7 +83,11 @@ feature -- Access
 							feature_as, inline_agent_nr).content
 				end
 			elseif body_index > 0 then
-				routine_as ?= Body_server.item (body_index).body.content
+				feature_as := Body_server.item (body_index)
+				if feature_as /= Void then
+						--| feature_as can be Void for invariant routine
+					routine_as ?= feature_as.body.content
+				end
 			end
 			if routine_as /= Void then
 				if routine_as.is_built_in then
@@ -113,7 +121,11 @@ feature -- Access
 							feature_as, inline_agent_nr).content
 				end
 			elseif body_index > 0 then
-				routine_as ?= Body_server.item (body_index).body.content
+				feature_as := Body_server.item (body_index)
+				if feature_as /= Void then
+					--| It can be void for invariant routine
+					routine_as ?= feature_as.body.content
+				end
 			end
 			if routine_as /= Void then
 				if routine_as.is_built_in then
@@ -199,6 +211,12 @@ feature {FEATURE_I} -- Setting
 			-- Assign `nr' to `inline_agent_nr'
 		do
 			inline_agent_nr := nr
+		end
+
+	set_is_invariant (b: BOOLEAN) is
+			-- Assign `b' to `is_invariant'
+		do
+			is_invariant := b
 		end
 
 	set_enclosing_body_id (id: INTEGER) is

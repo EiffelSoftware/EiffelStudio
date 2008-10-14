@@ -58,13 +58,12 @@ feature -- Execution
 				else
 					execution_error := False
 					Error_handler.wipe_out
-					f_ast := target_feat.body
 					export_status := target_feat.export_status
 					initialize (text_formatter)
 					System.set_current_class (current_class);
 					Inst_context.set_group (current_class.group);
 					begin;
-				
+
 						-- We use access_class as the written class so that replicated features are retrieved correctly		
 					written_in_class := target_feat.access_class;
 					if written_in_class /= current_class then
@@ -80,50 +79,71 @@ feature -- Execution
 
 					l_match_list := match_list_server.item (written_in_class.class_id)
 
-						-- We only display one name in a feature_as.
-					if f_ast.feature_names.count > 1 then
-						f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
-						l_deep_twined := True
-					end
-						-- If the target feature is an undefined one, we create a fake ast.
-					if target_feat.is_deferred and then not source_feat.is_deferred then
-						if not l_deep_twined then
-							f_ast := f_ast.deep_twin
+					if target_feat.is_invariant then
+						if {inv_ast: INVARIANT_AS} target_feat.inv_ast_server.item (target_feat.written_in) then
+							set_is_without_breakable
+							create assert_server.make_for_class_only
+							source_class := target_feat.written_class
+							current_class := source_class
+							source_feature := target_feat
+							target_feature := target_feat
+							setup_output_strategy
+							indent
+							put_new_line
+							ast_output_strategy.format (inv_ast)
+							if ast_output_strategy.has_error then
+								put_new_line
+								print_error
+							end
 						end
-						f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
+					else
+						f_ast := target_feat.body
+						if f_ast /= Void then
+								-- We only display one name in a feature_as.
+							if f_ast.feature_names.count > 1 then
+								f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
+								l_deep_twined := True
+							end
+								-- If the target feature is an undefined one, we create a fake ast.
+							if target_feat.is_deferred and then not source_feat.is_deferred then
+								if not l_deep_twined then
+									f_ast := f_ast.deep_twin
+								end
+								f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
+							end
+
+							if {l_feat: !E_FEATURE} a_target_feat then
+								feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
+							end
+
+							create assert_server.make_for_feature (target_feat, f_ast);
+							init_feature_context (source_feat, target_feat, f_ast);
+
+							indent
+							put_new_line
+							ast_output_strategy.format (f_ast)
+							if ast_output_strategy.has_error then
+								put_new_line
+								print_error
+							end
+						end
 					end
-
-					if {l_feat: !E_FEATURE} a_target_feat then
-						feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
-					end
-
-					create assert_server.make_for_feature (target_feat, f_ast);
-					init_feature_context (source_feat, target_feat, f_ast);
-
-					indent;
-					put_new_line
-					ast_output_strategy.format (f_ast)
-					if ast_output_strategy.has_error then
-						put_new_line
-						print_error
-					end
-
-					commit;
+					commit
 				end
 			else
-				execution_error := True;
+				execution_error := True
 				rescued := False
 			end
-			System.set_current_class (prev_class);
-			Inst_context.set_group (prev_cluster);
+			System.set_current_class (prev_class)
+			Inst_context.set_group (prev_cluster)
 		rescue
 			if Rescue_status.is_error_exception then
-				Rescue_status.set_is_error_exception (False);
-				Error_handler.trace;
-				rescued := True;
+				Rescue_status.set_is_error_exception (False)
+				Error_handler.trace
+				rescued := True
 				retry
-			end;
-		end;
+			end
+		end
 
 feature -- Element change
 

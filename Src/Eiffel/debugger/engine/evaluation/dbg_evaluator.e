@@ -379,9 +379,15 @@ feature -- Concrete evaluation
 					else
 						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
 						if last_result = Void or else not last_result.has_value then
-							dbg_error_handler.notify_error_evaluation (
-										Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr.output, Void)
-									)
+							if a_addr /= Void then
+								dbg_error_handler.notify_error_evaluation (
+											Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr.output, Void)
+										)
+							else
+								dbg_error_handler.notify_error_evaluation (
+											Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, Void, Void)
+										)
+							end
 						end
 					end
 				end

@@ -27,7 +27,7 @@
 
   pre, code
   {
-    font-size: 115%; /* Monospace fonts can be hard to read */
+    /* font-size: 115%; */ /* Monospace fonts can be hard to read */
     font-family: "Bitstream Vera Sans Mono", "Courier New", monospace;
   }
 

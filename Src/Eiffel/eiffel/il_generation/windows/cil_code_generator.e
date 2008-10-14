@@ -2132,12 +2132,12 @@ feature -- Features info
 					l_meth_sig.set_parameter_count (l_parameter_count)
 				end
 
-				if l_feat.is_function or l_is_attribute or l_feat.is_constant then
-					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
-				elseif l_feat.is_type_feature then
+				if l_feat.is_type_feature then
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
+				elseif l_feat.is_function or l_is_attribute or l_feat.is_constant then
+					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
 				else
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
@@ -2288,12 +2288,12 @@ feature -- Features info
 					l_meth_sig.set_parameter_count (l_parameter_count)
 				end
 
-				if feat.is_function or l_is_attribute or feat.is_constant then
-					set_method_return_type (l_meth_sig, l_return_type, signature_declaration_type)
-				elseif feat.is_type_feature then
+				if feat.is_type_feature then
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
+				elseif feat.is_function or l_is_attribute or feat.is_constant then
+					set_method_return_type (l_meth_sig, l_return_type, signature_declaration_type)
 				else
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)

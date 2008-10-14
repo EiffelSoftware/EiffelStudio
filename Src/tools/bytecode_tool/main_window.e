@@ -33,11 +33,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 
-
-				-- Create and add the menu bar.
-			build_standard_menu_bar
-			set_menu_bar (standard_menu_bar)
-
 				-- Create and add the status bar.
 			build_standard_status_bar
 			lower_bar.extend (standard_status_bar)
@@ -67,95 +62,6 @@ feature {NONE} -- Initialization
 			Result := (width = Window_width) and then
 				(height = Window_height) and then
 				(title.is_equal (Window_title))
-		end
-
-
-feature {NONE} -- Menu Implementation
-
-	standard_menu_bar: EV_MENU_BAR
-			-- Standard menu bar for this window.
-
-	file_menu: EV_MENU
-			-- "File" menu for this window (contains New, Open, Close, Exit...)
-
-	help_menu: EV_MENU
-			-- "Help" menu for this window (contains About...)
-
-	build_standard_menu_bar is
-			-- Create and populate `standard_menu_bar'.
-		require
-			menu_bar_not_yet_created: standard_menu_bar = Void
-		do
-				-- Create the menu bar.
-			create standard_menu_bar
-
-				-- Add the "File" menu
-			build_file_menu
-			standard_menu_bar.extend (file_menu)
-
-				-- Add the "Help" menu
-			build_help_menu
-			standard_menu_bar.extend (help_menu)
-		ensure
-			menu_bar_created:
-				standard_menu_bar /= Void and then
-				not standard_menu_bar.is_empty
-		end
-
-	build_file_menu is
-			-- Create and populate `file_menu'.
-		require
-			file_menu_not_yet_created: file_menu = Void
-		local
-			menu_item: EV_MENU_ITEM
-		do
-			create file_menu.make_with_text (Menu_file_item)
-
-			create menu_item.make_with_text (Menu_file_new_item)
-				--| TODO: Add the action associated with "New" here.
-			file_menu.extend (menu_item)
-
-			create menu_item.make_with_text (Menu_file_open_item)
-				--| TODO: Add the action associated with "Open" here.
-			file_menu.extend (menu_item)
-
-			create menu_item.make_with_text (Menu_file_save_item)
-				--| TODO: Add the action associated with "Save" here.
-			file_menu.extend (menu_item)
-
-			create menu_item.make_with_text (Menu_file_saveas_item)
-				--| TODO: Add the action associated with "Save As..." here.
-			file_menu.extend (menu_item)
-
-			create menu_item.make_with_text (Menu_file_close_item)
-				--| TODO: Add the action associated with "Close" here.
-			file_menu.extend (menu_item)
-
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Create the File/Exit menu item and make it call
-				-- `request_close_window' when it is selected.
-			create menu_item.make_with_text (Menu_file_exit_item)
-			menu_item.select_actions.extend (agent request_close_window)
-			file_menu.extend (menu_item)
-		ensure
-			file_menu_created: file_menu /= Void and then not file_menu.is_empty
-		end
-
-	build_help_menu is
-			-- Create and populate `help_menu'.
-		require
-			help_menu_not_yet_created: help_menu = Void
-		local
-			menu_item: EV_MENU_ITEM
-		do
-			create help_menu.make_with_text (Menu_help_item)
-
-			create menu_item.make_with_text (Menu_help_contents_item)
-				--| TODO: Add the action associated with "Contents and Index" here.
-			help_menu.extend (menu_item)
-		ensure
-			help_menu_created: help_menu /= Void and then not help_menu.is_empty
 		end
 
 feature {NONE} -- StatusBar Implementation
@@ -379,65 +285,69 @@ feature {NONE} -- Implementation
 			h,b: STRING
 			e: like analyzes_entry
 		do
-			create f.make_open_read (fn)
-			from
-				create analyzes.make
-				f.read_line
-				line := f.last_string
-			until
-				f.end_of_file or line = Void
-			loop
-				if line.has_substring (once "1: BC_START") then
-					create e
-					analyzes.extend (e)
-					create h.make_empty
-					create b.make_empty
-					e.header := h
-					e.body := b
-					b.append (line)
-					b.append_character ('%N')
-					from
-						f.read_line
-						line.left_adjust
-					until
-						line = Void
-						or else line.item (1).is_digit
-						or f.end_of_file
-					loop
-						h.append (line)
-						h.append_character ('%N')
-						if e.rout_id = 0 and then string_started_by (line, "Routine Id", False) then
-							e.rout_id := line.substring (line.index_of (':', 1) + 1, line.count).to_integer_32
-						elseif e.body_id = 0 and then string_started_by (line, "Body Id", False) then
-							e.body_id := line.substring (line.index_of (':', 1) + 1,  line.count).to_integer_32
-						elseif e.name = Void and then string_started_by (line, "Routine name", False) then
-							e.name := line.substring (line.index_of (':', 1) + 1, line.count)
-						else
-						end
-						f.read_line
-						line.left_adjust
-					end
-					from
-						f.read_line
-						src := line.twin
-						line.left_adjust
-					until
-						line = Void
-						or else line.is_empty
-						or f.end_of_file
-					loop
-						b.append (src)
+			analyzes := Void
+			create f.make (fn)
+			if f.exists then
+				f.open_read
+				from
+					create analyzes.make
+					f.read_line
+					line := f.last_string
+				until
+					f.end_of_file or line = Void
+				loop
+					if line.has_substring (once "1: BC_START") then
+						create e
+						analyzes.extend (e)
+						create h.make_empty
+						create b.make_empty
+						e.header := h
+						e.body := b
+						b.append (line)
 						b.append_character ('%N')
-						f.read_line
-						src := line.twin
-						line.left_adjust
+						from
+							f.read_line
+							line.left_adjust
+						until
+							line = Void
+							or else line.item (1).is_digit
+							or f.end_of_file
+						loop
+							h.append (line)
+							h.append_character ('%N')
+							if e.rout_id = 0 and then string_started_by (line, "Routine Id", False) then
+								e.rout_id := line.substring (line.index_of (':', 1) + 1, line.count).to_integer_32
+							elseif e.body_id = 0 and then string_started_by (line, "Body Id", False) then
+								e.body_id := line.substring (line.index_of (':', 1) + 1,  line.count).to_integer_32
+							elseif e.name = Void and then string_started_by (line, "Routine name", False) then
+								e.name := line.substring (line.index_of (':', 1) + 1, line.count)
+							else
+							end
+							f.read_line
+							line.left_adjust
+						end
+						from
+							f.read_line
+							src := line.twin
+							line.left_adjust
+						until
+							line = Void
+							or else line.is_empty
+							or f.end_of_file
+						loop
+							b.append (src)
+							b.append_character ('%N')
+							f.read_line
+							src := line.twin
+							line.left_adjust
+						end
+						f.readline
 					end
-					f.readline
+					f.read_line
+					line.left_adjust
 				end
-				f.read_line
-				line.left_adjust
+				f.close
 			end
-			f.close
 		end
 
 	fill_bytecode_tool is
@@ -449,46 +359,51 @@ feature {NONE} -- Implementation
 			r: EV_GRID_ROW
 		do
 			bytecode_grid.set_row_count_to (0)
-			from
-				analyzes.start
-			until
-				analyzes.after
-			loop
-				e := analyzes.item
-				create glab.make_with_text (e.name)
+			if analyzes = Void then
+				create glab.make_with_text ("Error during analysis.")
 				bytecode_grid.set_item (1, bytecode_grid.row_count + 1, glab)
-				r := bytecode_grid.row (bytecode_grid.row_count)
-				r.set_data (e)
+			else
+				from
+					analyzes.start
+				until
+					analyzes.after
+				loop
+					e := analyzes.item
+					create glab.make_with_text (e.name)
+					bytecode_grid.set_item (1, bytecode_grid.row_count + 1, glab)
+					r := bytecode_grid.row (bytecode_grid.row_count)
+					r.set_data (e)
 
-				create glab.make_with_text (e.rout_id.out)
-				r.set_item (2, glab)
-				create glab.make_with_text (e.body_id.out)
-				r.set_item (3, glab)
+					create glab.make_with_text (e.rout_id.out)
+					r.set_item (2, glab)
+					create glab.make_with_text (e.body_id.out)
+					r.set_item (3, glab)
 
---				r.insert_subrows (2, 1)
---				create glab.make_with_text (e.header)
---				r.subrow (1).set_item (2, glab)
---				r.subrow (1).set_height (glab.text_height)
---				create glab.make_with_text (e.body)
---				r.subrow (2).set_item (2, glab)
---				r.subrow (2).set_height (glab.text_height)
+	--				r.insert_subrows (2, 1)
+	--				create glab.make_with_text (e.header)
+	--				r.subrow (1).set_item (2, glab)
+	--				r.subrow (1).set_height (glab.text_height)
+	--				create glab.make_with_text (e.body)
+	--				r.subrow (2).set_item (2, glab)
+	--				r.subrow (2).set_height (glab.text_height)
 
-				r.select_actions.extend (agent (ar: EV_GRID_ROW)
-						local
-							le: like analyzes_entry
-							t: STRING
-						do
-							le ?= ar.data
-							if le /= Void then
-								t := le.header + "%N" + le.body
-								t.prune_all ('%R')
-								bytecode_text.set_text (t)
-							else
-								bytecode_text.remove_text
-							end
-						end(r)
-					)
-				analyzes.forth
+					r.select_actions.extend (agent (ar: EV_GRID_ROW)
+							local
+								le: like analyzes_entry
+								t: STRING
+							do
+								le ?= ar.data
+								if le /= Void then
+									t := le.header + "%N" + le.body
+									t.prune_all ('%R')
+									bytecode_text.set_text (t)
+								else
+									bytecode_text.remove_text
+								end
+							end(r)
+						)
+					analyzes.forth
+				end
 			end
 		end
 
@@ -618,17 +533,21 @@ feature {NONE} -- Implementation
 			f: RAW_FILE
 		do
 			create f.make (fn)
-			f.open_read
-			create Result.make_empty
-			from
-				f.start
-			until
-				f.exhausted
-			loop
-				f.read_stream (512)
-				Result.append_string (f.last_string)
+			if f.exists then
+				f.open_read
+				create Result.make_empty
+				from
+					f.start
+				until
+					f.exhausted
+				loop
+					f.read_stream (512)
+					Result.append_string (f.last_string)
+				end
+				f.close
+			else
+				Result := "Unable to open file %"" + fn + "%""
 			end
-			f.close
 		end
 
 feature {NONE} -- Implementation / Constants

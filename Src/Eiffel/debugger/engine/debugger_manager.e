@@ -1625,6 +1625,8 @@ feature -- Debugging events
 				bl.forth
 			end
 			reset_class_c_data
+
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_debugging_terminated (Current))
 		end
 
 feature -- Actions

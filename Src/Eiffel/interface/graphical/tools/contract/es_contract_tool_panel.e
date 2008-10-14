@@ -269,7 +269,7 @@ feature {NONE} -- Element change
 
 				-- Make this check before updating incase the mode determination changes in the future.
 			check contract_mode_set: contract_mode = a_mode end
-			if has_stone and stone_change_notified then
+			if has_stone and has_performed_stone_change_notification then
 				refresh_stone
 			end
 		ensure

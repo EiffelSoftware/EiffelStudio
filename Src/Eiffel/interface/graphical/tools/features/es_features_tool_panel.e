@@ -17,6 +17,7 @@ inherit
 		redefine
 			on_after_initialized,
 			internal_recycle,
+			is_stone_sychronization_required,
 			create_mini_tool_bar_items
 		end
 
@@ -156,6 +157,15 @@ feature {ES_FEATURES_GRID} -- Status report
 			if is_initialized then
 				Result := show_signatures_button.is_selected
 			end
+		end
+
+feature {NONE} -- Status report
+
+	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+			-- <Precursor>
+		do
+				-- Always update the view.
+			Result := True
 		end
 
 feature {ES_TOOL} -- Basic operations

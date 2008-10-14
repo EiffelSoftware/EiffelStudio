@@ -3,9 +3,9 @@
 SITE_VERSION=_sandbox
 
 cd `dirname $0`/..
-sudo sh ./eiffeldoc_backup.sh 
+#sudo sh ./eiffeldoc_backup.sh 
 
-sudo sh ./eiffeldoc_restore.sh backup/latest ../drupal$SITE_VERSION eiffeldoc$SITE_VERSION EiffelDoc$SITE_VERSION
+sudo sh ./eiffeldoc_restore.sh latest ../drupal$SITE_VERSION eiffeldoc$SITE_VERSION EiffelDoc$SITE_VERSION
 THEFILE=../drupal$SITE_VERSION/drupal/.htaccess
 sed "s|# RewriteBase /drupal|RewriteBase /$SITE_VERSION|" < $THEFILE > $THEFILE.tmp
 cat $THEFILE.tmp > $THEFILE

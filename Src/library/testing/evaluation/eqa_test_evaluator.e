@@ -122,9 +122,9 @@ feature {NONE} -- Implementation
 				end
 				a_procedure.apply
 				create last_invocation_response.make_normal (buffered_output)
+				buffer.wipe_out
 			end
 			io.set_file_default (l_old)
-			buffer.wipe_out
 		ensure
 			last_invocation_response_attached: last_invocation_response /= Void
 		rescue
@@ -154,6 +154,7 @@ feature {NONE} -- Implementation
 			end
 			create l_texcpt.make (l_excpt.code, l_rec, l_type, l_dtype, l_tag, l_trace)
 			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
+			buffer.wipe_out
 			retry
 		end
 

@@ -160,12 +160,11 @@ feature
 				i >= n
 			loop
 				item (i).make_type_byte_code (ba, False, a_class_type.type);
+				i := i + 1
 				if i < n then
 						-- Add a separator between parents.
 					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
 				end
-
-				i := i + 1
 			end;
 
 				-- End mark

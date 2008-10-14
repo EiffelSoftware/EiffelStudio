@@ -1,6 +1,8 @@
 indexing
-	description: "Objects that represent an abstract extracted cdd test case"
-	author: "fivaa"
+	description: "[
+		Sets of tests which make use of an extracted application state to reproduce a failure.
+	]"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

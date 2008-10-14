@@ -110,8 +110,11 @@ feature -- Status report
 	exists: BOOLEAN = False
 			-- <Precursor>
 
-	readable: BOOLEAN = False
+	readable: BOOLEAN
 			-- <Precursor>
+		do
+			Result := writable
+		end
 
 feature -- Status setting
 

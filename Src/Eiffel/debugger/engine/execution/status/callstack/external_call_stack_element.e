@@ -35,7 +35,7 @@ feature -- Properties
 
 	info: STRING
 
-	is_eiffel_call_stack_element: BOOLEAN is False
+	is_eiffel_call_stack_element: BOOLEAN = False
 		-- Is Current an Eiffel Call Stack Element ?
 
 	object_address: DBG_ADDRESS

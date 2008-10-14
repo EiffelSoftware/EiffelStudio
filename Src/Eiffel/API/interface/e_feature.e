@@ -275,7 +275,12 @@ feature -- Properties
 		end;
 
 	is_inline_agent: BOOLEAN
-			-- is the featuer an inline angent
+			-- is the feature an inline angent?
+		do
+		end
+
+	is_invariant: BOOLEAN
+			-- Is this feature the invariant feature of its eiffel class ?
 		do
 		end
 
@@ -924,7 +929,11 @@ feature -- Implementation
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
 		do
-			Result := associated_class.feature_named (name)
+			if is_invariant then
+				Result := associated_class.invariant_feature
+			else
+				Result := associated_class.feature_named (name)
+			end
 		end;
 
 	body_id_for_ast: INTEGER

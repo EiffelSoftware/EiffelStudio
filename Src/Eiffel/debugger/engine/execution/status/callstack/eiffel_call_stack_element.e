@@ -21,8 +21,8 @@ inherit
 
 feature -- Properties
 
-	is_eiffel_call_stack_element: BOOLEAN is True
-		-- Is Current an Eiffel Call Stack Element ?
+	is_eiffel_call_stack_element: BOOLEAN = True
+			-- Is Current an Eiffel Call Stack Element ?
 
 	body_index: INTEGER is
 			-- body index of the associated routine

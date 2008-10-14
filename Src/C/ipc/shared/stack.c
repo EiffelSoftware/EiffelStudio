@@ -105,15 +105,14 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
  * is indicated by a positive acknowledgment.                             *
  **************************************************************************/
  rt_public void send_stack(EIF_PSTREAM s, uint32 elem_nb)
-	{
+{
 	struct dump *dp;			/* Pointer to static data where dump is */
 	uint32 sent = 0;
 	
 	save_stacks();				/* Initialize processing */
 	dp = get_next_execution_vector();
 	while (dp && (sent < elem_nb)) {	/* While still some data to send */
-		if (dp != (struct dump *) EIF_IGNORE)
-		{
+		if (dp != (struct dump *) EIF_IGNORE) {
 			send_dump(s, dp);
 			sent++;
 		}
@@ -121,7 +120,7 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
 	}
 	restore_stacks();
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
-	}
+}
 
 /************************************************************************** 
  * NAME: send_stack_variables                                             * 
@@ -167,14 +166,14 @@ rt_public void send_stack_variables(EIF_PSTREAM s, int where)
  * Send a packed containing the dump item 'dp'                            *
  **************************************************************************/
 rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
-	{
+{
 	Request rqst;					/* What we send back */
 
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 	memcpy (&rqst.rq_dump, dp, sizeof(struct dump));
 	send_packet(s, &rqst);			/* Send to network */
-	}
+}
 
 /************************************************************************** 
  * NAME: save_stacks                                                      * 
@@ -183,7 +182,7 @@ rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
  * be performed...                                                        *
  **************************************************************************/
 rt_private void save_stacks(void)
-	{
+{
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
@@ -192,7 +191,7 @@ rt_private void save_stacks(void)
 	memcpy (&xstk_context, &eif_stack, sizeof(struct xstack));
 	memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
 	memcpy (&istk_context, &op_stack, sizeof(struct opstack));
-	}
+}
 	
 /************************************************************************** 
  * NAME: restore_stacks                                                   * 
@@ -200,7 +199,7 @@ rt_private void save_stacks(void)
  * Restore context of all the stack we had to modify/inspect              *
  **************************************************************************/
 rt_private void restore_stacks(void)
-	{
+{
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
@@ -208,7 +207,7 @@ rt_private void restore_stacks(void)
 	memcpy (&eif_stack, &xstk_context, sizeof(struct xstack));
 	memcpy (&db_stack, &dstk_context, sizeof(struct dbstack));
 	memcpy (&op_stack, &istk_context, sizeof(struct opstack));
-	}
+}
 
 /************************************************************************** 
  * NAME: execution_without_variables                                      * 
@@ -222,7 +221,7 @@ rt_private void restore_stacks(void)
  * we keep an internal state about the status of the last vector.         *
  **************************************************************************/
 rt_private struct dump *get_next_execution_vector(void)
-	{
+{
 	EIF_GET_CONTEXT
 
 	struct ex_vect *top;		/* Exception vector */
@@ -234,37 +233,40 @@ rt_private struct dump *get_next_execution_vector(void)
 	 * not associated with a feature. So go on and grab next one, unless
 	 * the end of the stack has been reached.
 	 */
-	if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
-		{
+	if (eif_stack.st_cur->sk_arena == eif_stack.st_top) {
 		/* Reached end of chunck, go to previous chunck if any */
-		if (eif_stack.st_cur->sk_prev == NULL)
+		if (eif_stack.st_cur->sk_prev == NULL) {
 			return NULL; /* no previous chunck ==> end of stack */
+		}
 
 		/* There is a previous chunck, switch to it */
 		eif_stack.st_cur = eif_stack.st_cur->sk_prev;
 		eif_stack.st_top = eif_stack.st_cur->sk_end;
 		eif_stack.st_end = eif_stack.st_cur->sk_end;
-		}
+	}
 
 	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 	expop (&eif_stack);
 
-	if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != NULL))
+	if ( !( 
+			(top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC)
+			&& top->exu.exur.exur_id != NULL
+		  ) ) {
 		return (struct dump *) EIF_IGNORE;		/* This vector should not be sent */
+	}
 
 	/* Build up the dumped structure for the current vector. If this
 	 * vector is associated with a melted feature, the next call to this routine
 	 * will dump the arguments and possibluy the local variables.
 	 */
 	dc = safe_dtop();				/* Returns null pointer if empty */
-	if (dc != NULL && (dc->dc_exec == top))	/* We've reached a melted feature */
-		{
+	if (dc != NULL && (dc->dc_exec == top)) { /* We've reached a melted feature */
 		init_var_dump(dc);		/* Make this feature "active" */
 		dumped.dmp_type = DMP_MELTED;	/* Structure contains melted feature */
 		dpop();
-		}
-	else
+	} else {
 		dumped.dmp_type = DMP_VECT;	/* Structure contains frozen feature */
+	}
 
 	copy = *top;
 	dumped.dmp_vect = &copy; /* static variable  -- Didier */
@@ -274,7 +276,7 @@ rt_private struct dump *get_next_execution_vector(void)
 	}
 	
 	return &dumped;			/* Pointer to static data */
-	}
+}
 
 /************************************************************************** 
  * NAME: safe_dtop                                                        * 
@@ -285,13 +287,14 @@ rt_private struct dump *get_next_execution_vector(void)
  * if there is nothing on the stack. Here, we only return a null pointer. *
  **************************************************************************/
 rt_private struct dcall *safe_dtop(void)
-	{
+{
 	RT_GET_CONTEXT
-	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
+	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena) {
 		return NULL;
+	}
 
 	return dtop();		/* Stack is not empty */
-	}
+}
 
 /*
  * Dumping arguments and/or locals.
@@ -306,13 +309,14 @@ rt_private struct dcall *safe_dtop(void)
  * ivalue() can reliably be called to get local variables.                *
  **************************************************************************/
 rt_private void init_var_dump(struct dcall *call)
-	{
-	if (call == NULL)
+{
+	if (call == NULL) {
 		return;
+	}
 
 	/* melted feature, synchronize the registers */
 	sync_registers(call->dc_cur, call->dc_top);
-	}
+}
 
 /************************************************************************** 
  * NAME: go_ith_stack_level                                               * 
@@ -439,14 +443,15 @@ rt_private struct dump *get_next_variable(uint32 start)
  * reached the end of the argument/local variable list.                   *
  **************************************************************************/
 rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
-	{
+{
 	uint32 type;
 	static EIF_DEBUG_VALUE ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
 	ivalue(&ip, variable_type, n, start);
-	if (ip.address == NULL)
+	if (ip.address == NULL) {
 		return NULL;
+	}
 
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = &(ip.value);
@@ -457,11 +462,12 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
 	 * that item to ewb (which relies on that consistency).
 	 */
 	type = ip.value.type & SK_HEAD;
-	if ((type == SK_EXP || type == SK_REF) && (ip.value.it_ref != NULL))
+	if ((type == SK_EXP || type == SK_REF) && (ip.value.it_ref != NULL)) {
 		ip.value.type = type | Dtype(ip.value.it_ref);
+	}
 
 	return &dumped;			/* Pointer to static data */
-	}
+}
 
 /************************************************************************** 
  * NAME: send_once_result                                                 * 
@@ -473,7 +479,7 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
 rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
-	{
+{
 	uint32 type;
 	EIF_TYPED_VALUE ip;					/* Partial item pointer */
 	struct dump dumped;					/* Item to send */
@@ -481,8 +487,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	memset (&ip, 0, sizeof(EIF_TYPED_VALUE));
 
 	ip.type = otype;
-	switch (ip.type & SK_HEAD)
-		{
+	switch (ip.type & SK_HEAD) {
 		case SK_BOOL: ip.it_bool = (EIF_BOOLEAN) OResult->result.EIF_BOOLEAN_result; break;
 		case SK_CHAR: ip.it_char = (EIF_CHARACTER) OResult->result.EIF_CHARACTER_result; break;
 		case SK_WCHAR: ip.it_wchar = (EIF_WIDE_CHAR) OResult->result.EIF_WIDE_CHAR_result; break;
@@ -499,7 +504,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 		case SK_POINTER: ip.it_ptr = (EIF_POINTER) OResult->result.EIF_POINTER_result; break;
 		case SK_REF: ip.it_ref = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
 		case SK_BIT: ip.it_bit = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
-		}
+	}
 	
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = &ip;
@@ -515,7 +520,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	}
 
 	send_dump(s, &dumped);
-	}
+}
 
 /************************************************************************** 
  * NAME: stack_debug_value                                                * 
@@ -591,7 +596,7 @@ rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type,
  **************************************************************************/
 
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE *new_value)
-	{
+{
 	EIF_GET_CONTEXT
 
 	struct ex_vect	*top = NULL; 		/* Exception vector */
@@ -604,8 +609,7 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 	start = go_ith_stack_level(stack_depth); /* go down the the call stack to set our feature "active" */
 
 	/* get the address of the local item */
-	switch(loc_type)
-		{
+	switch(loc_type) {
 		case DLT_ARGUMENT:
 			ivalue(&ip, IV_ARG, loc_number-1, start);
 			break;
@@ -621,13 +625,12 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 		default:
 			error_code = 3; /* bad value for loc_type */
 			goto lblError_restore_context;
-		}
+	}
 
 	restore_stacks(); /* restore context (so that RTMS can run properly) */
 
 	/* modify the local item */
-	switch (new_value->type & SK_HEAD)
-		{
+	switch (new_value->type & SK_HEAD) {
 		case SK_BOOL:
 		case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
 		case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
@@ -657,7 +660,7 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 			/* unexpected value, error: set the error flag */
 			error_code = 1;
 			goto lblError;
-		}
+	}
 
 	goto lblError;
 	/* everything went ok, error_code is equal to 0 */
@@ -667,4 +670,5 @@ lblError_restore_context:
 
 lblError:
 	return error_code;
-	}
+}
+

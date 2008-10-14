@@ -319,6 +319,7 @@ feature -- Graphical changes
 			l_class_c: CLASS_C
 			l_feature_as: FEATURE_AS
 			exp: like expression
+			dbg: DEBUGGER_MANAGER
 		do
 			title := v
 			if is_read_only then
@@ -329,6 +330,7 @@ feature -- Graphical changes
 			else
 				gedit ?= cell (Col_expression_index)
 				if gedit = Void then
+					dbg := debugger_manager
 					exp := expression
 					gedit := new_cell_expression
 					gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
@@ -338,8 +340,8 @@ feature -- Graphical changes
 					if exp /= Void and then exp.context.associated_class /= Void then
 						l_class_c := exp.context.associated_class
 					else
-						l_class_c := eb_debugger_manager.current_debugging_class_c
-						l_feature_as := eb_debugger_manager.current_debugging_feature_as
+						l_class_c := dbg.current_debugging_class_c
+						l_feature_as := dbg.current_debugging_feature_as
 					end
 					if l_class_c /= Void then
 						create l_provider.make (l_class_c, l_feature_as)
@@ -348,8 +350,8 @@ feature -- Graphical changes
 							exp.context.associated_class = Void
 						then
 							l_provider.set_dynamic_context_functions (
-											agent eb_debugger_manager.current_debugging_class_c,
-											agent eb_debugger_manager.current_debugging_feature_as)
+											agent dbg.current_debugging_class_c,
+											agent dbg.current_debugging_feature_as)
 						end
 						gedit.set_completion_possibilities_provider (l_provider)
 					end

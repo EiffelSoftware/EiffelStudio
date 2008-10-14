@@ -64,6 +64,23 @@ feature {NONE} -- Initialization
 				(title.is_equal (Window_title))
 		end
 
+feature -- Element change
+
+	add_melted_filename (fn: STRING)
+		require
+			fn_attached: fn /= Void
+		local
+			fns: LINKED_LIST [STRING_32]
+			f: RAW_FILE
+		do
+			create f.make (fn)
+			if f.exists and then f.is_readable then
+				create fns.make
+				fns.extend (fn)
+				on_files_dropped (fns)
+			end
+		end
+
 feature {NONE} -- StatusBar Implementation
 
 	standard_status_bar: EV_STATUS_BAR
@@ -439,7 +456,6 @@ feature {NONE} -- Implementation
 			s /= Void
 		local
 			i,j: INTEGER
-			c: NATURAL_32
 		do
 			if a_prefix /= Void and then s.count >= a_prefix.count then
 				from

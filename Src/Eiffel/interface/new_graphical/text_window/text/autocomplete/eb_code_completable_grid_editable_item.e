@@ -49,48 +49,33 @@ feature {NONE} -- Implementation
 	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
-			create text_field.make
-				-- Hide the border of the text field.
-			text_field.set_completion_possibilities_provider (completion_possibilities_provider)
-			if completion_possibilities_provider /= Void then
-				completion_possibilities_provider.set_code_completable (text_field)
-			end
-			text_field.implementation.hide_border
-			if font /= Void then
-				text_field.set_font (font)
-			end
+			Precursor {EV_GRID_EDITABLE_ITEM} (popup_window)
+			if text_field /= Void then
+					--| FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
+				if is_unix then
+					text_field.focus_back_actions.extend (agent verify_popup_window_focus (popup_window))
+				end
 
-			text_field.set_text (text)
-
-			text_field.set_background_color (implementation.displayed_background_color)
-			popup_window.set_background_color (implementation.displayed_background_color)
-			text_field.set_foreground_color (implementation.displayed_foreground_color)
-
-			popup_window.extend (text_field)
-				-- Change `popup_window' to suit `Current'.
-			update_popup_dimensions (popup_window)
-				-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
-			if is_unix then
-				text_field.focus_back_actions.extend (agent verify_popup_window_focus (popup_window))
+					--| Add completion capabilities			
+				text_field.set_completion_possibilities_provider (completion_possibilities_provider)
+				if completion_possibilities_provider /= Void then
+					completion_possibilities_provider.set_code_completable (text_field)
+				end
 			end
-			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
 	verify_popup_window_focus (a_popup_window: EV_POPUP_WINDOW) is
 			-- Verify focus on popup window.
-			-- |FIXME: Have to call `show' to maintain focus on Unix. Vision2 GTK issue.
+			--| FIXME: Have to call `show' to maintain focus on Unix. Vision2 GTK issue.
 		do
 			if not a_popup_window.has_focus then
 					-- Selected by default.
-				if not text_field.text.is_empty then
+				if text_field /= Void and then not text_field.text.is_empty then
 					text_field.set_caret_position (text_field.text.count + 1)
 				end
 				a_popup_window.show
 			end
 		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

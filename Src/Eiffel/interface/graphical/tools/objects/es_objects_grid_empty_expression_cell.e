@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' and assign `a_text' to `text'
 		do
 			empty_text := a_text
-			default_create
-			set_text (a_text)
+			Precursor {EB_CODE_COMPLETABLE_GRID_EDITABLE_ITEM} (a_text)
 			create apply_actions
 		end
 
@@ -38,12 +37,15 @@ feature {NONE} -- Initialization
 		end
 
 	empty_text: STRING_32
+			-- Text to display when the item is empty
 
 feature -- Query
 
 	use_text: STRING_32
+			-- Text to use when editing
 
 	activate_with_string (a_text: STRING_32) is
+			-- Activate (start editing) with `a_text' displayed
 		do
 			use_text := a_text
 			activate
@@ -66,10 +68,10 @@ feature -- Query
 			Precursor
 			if
 				not user_cancelled_activation and then
-				text /= Void and then
-				not text.is_empty
+				{t: like text} text and then
+				not t.is_empty
 			then
-				apply_actions.call ([text])
+				apply_actions.call ([t])
 			end
 			set_text (empty_text)
 		end
@@ -80,7 +82,7 @@ feature -- Query
 	initialize_actions is
 			-- <Precursor>
 		do
-			Precursor
+			Precursor {EB_CODE_COMPLETABLE_GRID_EDITABLE_ITEM}
 			if use_text /= Void then
 				text_field.set_caret_position (use_text.count + 1)
 			end

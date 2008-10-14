@@ -988,8 +988,6 @@ feature {NONE} -- Events
 						item_count_big_enough: item_count >= 1
 					end
 
-					item_count := item_count - 1
-
 					l_selected := l_row.is_selected
 
 					l_grid := grid_events
@@ -1004,6 +1002,8 @@ feature {NONE} -- Events
 						l_row_item_count := l_row_item_count - 1
 					end
 					l_grid.remove_row (l_index)
+
+					item_count := item_count - 1
 
 					if item_count > 0 and then l_selected then
 							-- The row was selected so we need to change the selection

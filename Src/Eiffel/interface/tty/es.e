@@ -501,21 +501,54 @@ feature -- Output
 			if is_gc_stats_enabled then
 				create l_mem
 				l_mem_info := l_mem.memory_statistics ({MEM_CONST}.eiffel_memory)
-				print ("Total memory is " + l_mem_info.total.out + "%N")
-				print ("Used memory is " + (l_mem_info.used + l_mem_info.overhead).out + "%N")
-				print ("Free memory is " + l_mem_info.free.out + "%N")
+				io.put_new_line
+				io.put_string ("                   Total |      Used |  Overhead |      Free")
+				io.put_new_line
+				io.put_string ("Eiffel memory: ")
+				print_memory_value (l_mem_info.total64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.used64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.overhead64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.free64)
+				io.put_new_line
 
+				l_mem_info := l_mem.memory_statistics ({MEM_CONST}.c_memory)
+				io.put_string ("C memory:      ")
+				print_memory_value (l_mem_info.total64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.used64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.overhead64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.free64)
+				io.put_new_line
+
+				l_mem_info := l_mem.memory_statistics ({MEM_CONST}.total_memory)
+				io.put_string ("Total memory:  ")
+				print_memory_value (l_mem_info.total64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.used64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.overhead64)
+				io.put_string (" | ")
+				print_memory_value (l_mem_info.free64)
+				io.put_new_line
+
+				io.put_new_line
 				l_full_gc_info := l_mem.gc_statistics ({MEM_CONST}.full_collector)
-				print ("GC full cycle is " + l_full_gc_info.cycle_count.out + "%N")
-				print ("GC full cycle is " + l_full_gc_info.cpu_time_average.out + "%N")
+				io.put_string ("GC full cycle is " + l_full_gc_info.cycle_count.out + "%N")
+				io.put_string ("GC full cycle is " + l_full_gc_info.cpu_time_average.out + "%N")
+				io.put_new_line
 
 				l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
-				print ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
-				print ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
-				print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
-				print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
-				print ("Full Collection period " + l_mem.collection_period.out + "%N")
-				print ("GC percentage time " +
+				io.put_string ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
+				io.put_string ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
+				io.put_string ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
+				io.put_string ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
+				io.put_string ("Full Collection period " + l_mem.collection_period.out + "%N")
+				io.put_string ("GC percentage time " +
 					(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
 					 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
 					 l_part_gc_info.cpu_total_time)).out + "%N%N")
@@ -1267,6 +1300,35 @@ feature {NONE} -- Implementation
 			l_extension := a_filename.twin
 			l_extension.keep_tail (2)
 			Result := l_extension.is_equal ("." + eiffel_extension)
+		end
+
+	print_memory_value (a_value: NATURAL_64) is
+			-- Display `a_value' on screen.
+		local
+			l_real_64: REAL_64
+			l_unit: STRING
+			l_formatter: FORMAT_DOUBLE
+		do
+			if a_value > (1024 ^ 3) then
+					-- Display in GB
+				l_real_64 := a_value / (1024 ^ 3)
+				l_unit := " GB"
+			elseif a_value > (1024 ^ 2) then
+					-- Display in MB
+				l_real_64 := a_value / (1024 ^ 2)
+				l_unit := " MB"
+			elseif a_value > 1024 then
+					-- Display in KB
+				l_real_64 := a_value / 1024
+				l_unit := " KB"
+			else
+				l_real_64 := a_value
+				l_unit := "   "
+			end
+
+			create l_formatter.make (6, 2)
+			io.put_string (l_formatter.formatted (l_real_64))
+			io.put_string (l_unit)
 		end
 
 indexing

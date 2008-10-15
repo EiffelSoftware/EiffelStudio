@@ -81,15 +81,21 @@ feature -- Status
 			-- Can we inline `f' ?
 		require
 			is_inlining_enabled: inlining_on
+			a_return_type_not_void: a_return_type /= Void
 		do
-			if not processed_features.item (body_index) then
-				Result := can_be_inlined (a_return_type, body_index)
-				processed_features.put (True, body_index)
-				if Result then
-					to_be_inlined.put (True, body_index)
+				-- We cannot inline if the return type is a true expanded as it creates
+				-- a new object and our creation can only be done in the current class
+				-- due to the way we handle the generic conformance. See eweasel test#final065.
+			if not a_return_type.is_true_expanded then
+				if not processed_features.item (body_index) then
+					Result := can_be_inlined (a_return_type, body_index)
+					processed_features.put (True, body_index)
+					if Result then
+						to_be_inlined.put (True, body_index)
+					end
+				else
+					Result := to_be_inlined.item (body_index)
 				end
-			else
-				Result := to_be_inlined.item (body_index)
 			end
 		end
 
@@ -97,6 +103,8 @@ feature {NONE} -- Implementation
 
 	can_be_inlined (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN is
 			-- Tell us if we can inline the code corresponding to `body_index'
+		require
+			a_return_type_not_void: a_return_type /= Void
 		local
 			byte_code: BYTE_CODE;
 			i: INTEGER
@@ -127,12 +135,10 @@ feature {NONE} -- Implementation
 			if
 				byte_code /= Void and then
 				not byte_code.is_deferred and then
-				not byte_code.is_once
+				not byte_code.is_once and then byte_code.rescue_clause = Void
 			then
 				result_type := byte_code.result_type
-				Result := (a_return_type = Void or else not (a_return_type.is_true_expanded
-					or else a_return_type.is_bit or else result_type.has_like)) and then
-					byte_code.rescue_clause = Void
+				Result := (not a_return_type.is_bit and then not result_type.has_like)
 
 				if Result then
 					types := byte_code.locals

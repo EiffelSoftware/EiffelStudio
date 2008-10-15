@@ -766,22 +766,6 @@ feature -- Command
 			init_tool_commands
 		end
 
-	build_help_engine is
-			-- Build help engine and focus in actions.
-		local
-			l_help_engine: EB_HELP_ENGINE
-		do
-				-- Set up the minimize title if it's not done
-			if develop_window.minimized_title = Void or else develop_window.minimized_title.is_empty then
-				develop_window.set_minimized_title (develop_window.title)
-			end
-
-			create l_help_engine.make
-			develop_window.set_help_engine (l_help_engine)
-			develop_window.register_action (develop_window.window.focus_in_actions, agent (develop_window.window_manager).set_focused_window (develop_window))
-			develop_window.set_initialized_for_builder (True)
-		end
-
 	build_interface is
 			-- Build system widget.
 		local

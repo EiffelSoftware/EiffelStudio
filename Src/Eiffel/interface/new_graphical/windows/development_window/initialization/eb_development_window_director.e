@@ -250,7 +250,6 @@ feature{NONE} -- Implementation
 			end
 
 			menu_builder.build_menus
-			main_builder.build_help_engine
 
 			develop_window.set_initialized_for_builder (False)
 

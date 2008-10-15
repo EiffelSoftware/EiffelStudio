@@ -1,39 +1,73 @@
 indexing
 	description: "[
-		Default implementation for a help context used by ESF tools and dialogs to link help.
-		For a client based customizable implementation, use {ES_HELP_CUSTOM_CONTEXT}.
+		A full, customizable help context for use in client needed situations. Use {ES_HELP_CONTEXT} for
+		inheritance based help contexts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
-	ES_HELP_CONTEXT
+class
+	ES_HELP_CUSTOM_CONTEXT
 
 inherit
-	HELP_CONTEXT_I
+	ES_HELP_CONTEXT
+		rename
+			help_context_section as internal_help_context_section
+		redefine
+			internal_help_context_section
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_id: !like help_context_id; a_section: ?like help_context_section)
+			-- Initialize a new custom help context.
+		require
+			not_a_id_is_empty: not a_id.is_empty
+			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
+		do
+			help_context_id := a_id
+			help_context_section := a_section
+		ensure
+			help_context_id_set: help_context_id.same_string (a_id)
+			help_context_section_set: help_context_section /= Void implies help_context_section.same_string (a_section)
+		end
 
 feature -- Access
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_id: !STRING_GENERAL
 			-- <Precursor>
+
+	help_context_section: ?STRING_GENERAL
+			-- -- An optional sub-section in the help document, located using `help_context_id' to navigate to.
+
+feature {NONE} -- Access
+
+	internal_help_context_section: ?HELP_CONTEXT_SECTION_I
+			-- <Precursor>
+		local
+			l_section: ?like help_context_section
 		do
-			-- No additional section.
+			l_section := help_context_section
+			if l_section /= Void then
+				create {HELP_CONTEXT_SECTION} Result.make (l_section)
+			end
 		end
 
-	help_context_description: ?STRING_GENERAL
-			-- An optional description of the context.
-		once
-			Result := "Internal Help"
+feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- Determines if the interface is usable
+		do
+			Result := True
 		end
 
-	help_provider: !UUID
-			-- Help provider kind best used for the help context.
-			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
-		once
-			Result := (create {HELP_PROVIDER_KINDS}).eiffel_doc
-		end
+invariant
+	not_help_context_section_is_empty: help_context_section /= Void implies not help_context_section.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

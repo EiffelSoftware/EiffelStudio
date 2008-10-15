@@ -6,7 +6,7 @@
 
 class TEST
 
-inherit PARENT_CLASS
+inherit CHILD_CLASS
 
 create
 	make
@@ -14,10 +14,10 @@ create
 feature
 	make
 		do
-			if {x: !NON_CONFORMING_CLASS} Current then
+			if {x: !PARENT_CLASS} Current then
 				print ("CONFORMANCE%N")
 			else
 				print ("NONCONFORMANCE%N")
 			end
 		end
-end 
+end

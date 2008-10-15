@@ -274,7 +274,7 @@ feature -- Comparison
 						i := i + 1
 					end
 				else
-					Result := area.same_items (other.area, 0, upper - lower)
+					Result := area.same_items (other.area, 0, 0, count)
 				end
 			end
 		end
@@ -304,7 +304,7 @@ feature -- Status report
 			other_not_void: other /= Void
 		do
 			if count = other.count then
-				Result := area.same_items (other.area, 0, upper - lower)
+				Result := area.same_items (other.area, 0, 0, count)
 			end
 		ensure
 			definition: Result = ((count = other.count) and then

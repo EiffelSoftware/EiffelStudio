@@ -8,32 +8,32 @@ inherit
 
 	COMPILER_EXPORTER
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	SHARED_WORKBENCH
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	SHARED_ERROR_HANDLER
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	SHARED_SELECTED
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	SHARED_ORIGIN_TABLE
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	SHARED_INHERITED
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 create

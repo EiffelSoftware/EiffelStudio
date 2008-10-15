@@ -1276,9 +1276,12 @@ feature -- Conveniences
 	set_type (t: like type; a: like assigner_name_id) is
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		require
+			t_not_void: t /= Void
 			valid_a: a /= 0 implies names_heap.valid_index (a)
 		do
 			-- Do nothing
+		ensure
+			type_set: type ~ t
 		end
 
 	arguments: FEAT_ARG is

@@ -13,6 +13,11 @@ class
 inherit
 	ES_CLASS_TEXT_AST_MODIFIER
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -265,13 +270,33 @@ feature {NONE} -- Status report
 		local
 			l_syn_level: NATURAL_8
 			l_parser: !like indexing_parser
+			l_errors: LINKED_LIST [ERROR]
+			l_error_index: INTEGER_32
 		do
 			l_parser := indexing_parser
+
+				-- Log last error index
+			l_errors := error_handler.error_list
+			if l_errors /= Void then
+				l_error_index := l_errors.count
+			end
+
 			l_syn_level := context_class.options.syntax_level.item
 			l_parser.set_is_indexing_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_standard)
 			l_parser.set_is_note_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
 			l_parser.parse_from_string (a_license.as_string_8)
 			Result := l_parser.indexing_node /= Void
+
+				-- Remove any added errors
+			l_errors := error_handler.error_list
+			if l_errors /= Void then
+				if l_errors.count > l_error_index then
+					l_errors.go_i_th (l_error_index)
+					from until l_errors.count = l_error_index loop
+						l_errors.remove_right
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Helpers

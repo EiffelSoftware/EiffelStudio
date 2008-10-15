@@ -113,6 +113,7 @@ test non-conform-infinite-loop					noncon017 tcf pass non-conforming
 
 -- Replication
 test replicate-precursor				replication001 tcf pass replication
+test replicated-feature-merge				replication002	tcf fail replication
 
 -- For testing only
 

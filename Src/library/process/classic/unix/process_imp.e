@@ -51,8 +51,9 @@ feature {NONE} -- Initialization
 			args: LIST [STRING]
 		do
 			args := separated_words (cmd_line)
-			check not args.is_empty end
-			if args.count = 1 then
+			if args.is_empty then
+				make (" ", Void, a_working_directory)
+			elseif args.count = 1 then
 				make (args.first, Void, a_working_directory)
 			else
 				args.start

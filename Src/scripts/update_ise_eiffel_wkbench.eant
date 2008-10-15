@@ -186,6 +186,13 @@
 			force="true" unless="${is_windows}" >
 			<fileset include="@(**/*)" />
 		</copy>
+		<group if="$is_windows">
+			<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+				dir="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}windows" 
+				force="true" unless="${ISE_PLATFORM}=windows" >
+				<fileset include="@(**/*)" />
+			</copy>
+		</group>
 	</target>
 	<target name="copy_from_library" depend="init">
 		<echo message="Copy from [Library=${EIFFEL_SRC}${path_separator}library]" />

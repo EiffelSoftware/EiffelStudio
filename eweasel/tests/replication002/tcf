@@ -8,6 +8,7 @@ copy_raw p2.e $CLUSTER p2.e
 copy_raw my_test_class.e $CLUSTER my_test_class.e
 
 compile_melted
-compile_result 	ok
+compile_result 	validity_error TEST VMFN
+
 
 test_end

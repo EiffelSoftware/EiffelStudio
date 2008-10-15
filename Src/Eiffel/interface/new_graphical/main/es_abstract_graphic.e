@@ -238,9 +238,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 					display_starting_dialog
 				end
 			end
-
-				-- Register help engine
-			an_app.set_help_engine (create {EB_HELP_ENGINE}.make)
 		end
 
 	display_starting_dialog is

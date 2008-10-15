@@ -2170,7 +2170,7 @@ feature -- Conformance table generation
 	process_polymorphism is
 		do
 			System.set_current_class (Current)
-			feature_table.select_table.add_units (class_id)
+			feature_table.select_table.add_units (Current)
 		end
 
 feature {NONE} -- Backup implementation

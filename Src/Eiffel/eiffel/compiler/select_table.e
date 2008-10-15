@@ -150,38 +150,33 @@ feature -- Element change
 
 feature -- Final mode
 
-	add_units (id: INTEGER) is
+	add_units (a_class: CLASS_C) is
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
-			l_feature_i: FEATURE_I
 			l_table: like feature_table
-			l_id_set: ROUT_ID_SET
-			i, nb: INTEGER
-			l_control: like history_control
+			l_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER_32]
 		do
 			from
 				l_table := feature_table
-				l_control := history_control
 				l_table.start
 			until
 				l_table.after
 			loop
-				l_feature_i := l_table.item_for_iteration
-				l_id_set := l_feature_i.rout_id_set
-				l_control.add_new (l_feature_i, id, l_id_set.first)
-				nb := l_id_set.count
-				if nb > 1 then
-					from
-						i := 2
-					until
-						i > nb
-					loop
-						l_control.add_new (l_feature_i, id, l_id_set.item (i))
-						i := i + 1
-					end
-				end
+				add_feature_unit (a_class.class_id, l_table.item_for_iteration)
 				l_table.forth
+			end
+
+			l_features := a_class.generic_features
+			if l_features /= Void then
+				from
+					l_features.start
+				until
+					l_features.after
+				loop
+					add_feature_unit (a_class.class_id, l_features.item_for_iteration)
+					l_features.forth
+				end
 			end
 		end
 
@@ -241,6 +236,7 @@ feature -- Generation
 			i, j, nb, l_count: INTEGER
 			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER_32]
 			l_area: SPECIAL [FEATURE_I]
+			l_features: HASH_TABLE [FEATURE_I, INTEGER_32]
 		do
 			create Result.make (c)
 			if c.has_invariant then
@@ -282,6 +278,21 @@ feature -- Generation
 					l_feature_i := l_inline_agent_table.item_for_iteration
 					Result.put (l_feature_i.rout_id_set.first, l_feature_i)
 					l_inline_agent_table.forth
+				end
+			end
+
+				-- Added entries for the generic features, holding the data for
+				-- current and inherited formal generic parameters.
+			l_features := c.generic_features
+			if l_features /= Void then
+				from
+					l_features.start
+				until
+					l_features.after
+				loop
+					l_feature_i := l_features.item_for_iteration
+					Result.put (l_feature_i.rout_id_set.first, l_feature_i)
+					l_features.forth
 				end
 			end
 		end
@@ -345,6 +356,31 @@ feature {NONE} -- Implementation
 			go_to (l_cursor)
 		end
 
+	add_feature_unit (id: INTEGER; a_feature: FEATURE_I) is
+			-- Insert units of Current in the history
+			-- controler (routine table construction)
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_id_set: ROUT_ID_SET
+			i, nb: INTEGER
+			l_control: like history_control
+		do
+			l_control := history_control
+			l_id_set := a_feature.rout_id_set
+			l_control.add_new (a_feature, id, l_id_set.first)
+			nb := l_id_set.count
+			if nb > 1 then
+				from
+					i := 2
+				until
+					i > nb
+				loop
+					l_control.add_new (a_feature, id, l_id_set.item (i))
+					i := i + 1
+				end
+			end
+		end
 invariant
 	feature_table_not_void: feature_table /= Void
 		-- Test below is because while in the creation procedure of FEATURE_TABLE

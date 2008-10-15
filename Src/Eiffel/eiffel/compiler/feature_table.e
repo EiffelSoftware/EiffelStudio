@@ -1112,7 +1112,7 @@ end
 		local
 			feature_i: FEATURE_I
 			eiffel_class: EIFFEL_CLASS_C
-			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
+			l_feature_table: HASH_TABLE [FEATURE_I, INTEGER]
 		do
 			create Result.make (0, associated_class.feature_id_counter.value)
 			from
@@ -1128,17 +1128,29 @@ end
 
 			if eiffel_class /= Void and then eiffel_class.has_inline_agents then
 				from
-					l_inline_agent_table := eiffel_class.inline_agent_table
-					l_inline_agent_table.start
+					l_feature_table := eiffel_class.inline_agent_table
+					l_feature_table.start
 				until
-					l_inline_agent_table.after
+					l_feature_table.after
 				loop
-					feature_i := l_inline_agent_table.item_for_iteration
+					feature_i := l_feature_table.item_for_iteration
 					Result.put (feature_i, feature_i.feature_id)
-					l_inline_agent_table.forth
+					l_feature_table.forth
 				end
 			end
 
+			l_feature_table := associated_class.generic_features
+			if l_feature_table /= Void then
+				from
+					l_feature_table.start
+				until
+					l_feature_table.after
+				loop
+					feature_i := l_feature_table.item_for_iteration
+					Result.put (feature_i, feature_i.feature_id)
+					l_feature_table.forth
+				end
+			end
 		end
 
 	replicated_features: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is

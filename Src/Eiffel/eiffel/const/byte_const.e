@@ -147,7 +147,7 @@ feature -- Access
 	Bc_pop:				CHARACTER is '%/131/';
 	Bc_ref_to_ptr:		CHARACTER is '%/132/';
 	Bc_rcreate:			CHARACTER is '%/133/';
-	Bc_gen_param_create:CHARACTER is '%/134/';
+	bc_notused_134:CHARACTER is '%/134/';
 	Bc_cast_char32:		CHARACTER is '%/135/';
 	Bc_null_pointer:	CHARACTER is '%/136/';
 

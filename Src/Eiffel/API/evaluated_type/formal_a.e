@@ -259,38 +259,54 @@ feature -- Generic conformance
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
 			-- Id of a `like xxx'.
 		do
+				-- Not really applicable.
 			Result := {SHARED_GEN_CONF_LEVEL}.formal_type
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
-			generate_cid_prefix (buffer, Void)
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
-			buffer.put_character (',')
-			buffer.put_integer (position)
-			buffer.put_character (',')
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid (buffer, final_mode)
+			else
+				generate_cid_prefix (buffer, Void)
+				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+				buffer.put_character (',')
+				buffer.put_integer (position)
+				buffer.put_character (',')
+			end
 		end
 
 	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
 		local
 			dummy: INTEGER
 		do
-			generate_cid_prefix (buffer, idx_cnt)
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
-			buffer.put_character (',')
-			buffer.put_integer (position)
-			buffer.put_character (',')
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid_array (buffer, final_mode, idx_cnt)
+			else
+				generate_cid_prefix (buffer, idx_cnt)
+				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+				buffer.put_character (',')
+				buffer.put_integer (position)
+				buffer.put_character (',')
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+			end
 		end
 
 	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
 		local
 			dummy: INTEGER
 		do
-			generate_cid_prefix (Void, idx_cnt)
-			dummy := idx_cnt.next
-			dummy := idx_cnt.next
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
+			else
+				generate_cid_prefix (Void, idx_cnt)
+				dummy := idx_cnt.next
+				dummy := idx_cnt.next
+			end
 		end
 
 	make_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
@@ -298,9 +314,14 @@ feature -- Generic conformance
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
-			make_type_prefix_byte_code (ba)
-			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
-			ba.append_short_integer (position)
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.make_type_byte_code (ba)
+			else
+				make_type_prefix_byte_code (ba)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+				ba.append_short_integer (position)
+			end
 		end
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
@@ -514,6 +535,20 @@ feature {COMPILER_EXPORTER}
 			-- Create formal type info.
 		do
 			create Result.make (Current)
+		end
+
+	shared_create_info: CREATE_FORMAL_TYPE is
+			-- Same as `create_info' except that it is a shared instance.
+		once
+			create Result.make (Current)
+		ensure
+			shared_create_info_not_void: Result /= Void
+		end
+
+	initialize_info (an_info: like shared_create_info) is
+			-- Initialize `an_info' with current type data.
+		do
+			an_info.make (Current)
 		end
 
 indexing

@@ -39,6 +39,8 @@ inherit
 			{SYSTEM_I} names_heap
 		end
 
+	SHARED_EXEC_ENVIRONMENT
+
 feature -- Status
 
 	is_changed: BOOLEAN
@@ -286,6 +288,8 @@ feature -- Commands
 			l_prc_launcher: PROCESS
 			l_success: BOOLEAN
 			l_wd: STRING
+			l_cmd: STRING
+			l_args: ARRAYED_LIST [STRING_8]
 		do
 			create l_prc_factory
 			from
@@ -297,8 +301,18 @@ feature -- Commands
 				if l_action.working_directory /= Void then
 					l_wd := l_action.working_directory.evaluated_path
 				end
-				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_wd)
+				if platform_constants.is_windows then
+					l_cmd := l_action.command
+					l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd)
+				else
+					l_cmd := "/bin/sh"
+					create l_args.make (2)
+					l_args.extend ("-c")
+					l_args.extend ("%'%'"+l_action.command+"%'%'")
+					l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
+				end
 				l_prc_launcher.set_separate_console (is_gui)
+
 				l_prc_launcher.launch
 				if l_prc_launcher.launched then
 					l_prc_launcher.wait_for_exit

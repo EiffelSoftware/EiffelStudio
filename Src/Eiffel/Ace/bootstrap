@@ -12,6 +12,7 @@
 
 set target = "batch"
 set ec_name = "ecb"
+set options = "-gc_stats"
 #set target = "bench"
 #set ec_name = "ec"
 
@@ -29,7 +30,7 @@ mkdir $compile_type
 
 #First stage of bootstrap
 echo "Stage 1:"
-(time $ec_name -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp1 )>> e_comp1
+(time $ec_name -local -finalize -config ec.ecf -target $target -batch $options -clean >& e_comp1 )>> e_comp1
 echo "  Size is: `du -sh EIFGENs/$target/COMP`"
 echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 echo "  Time is: `tail -1 e_comp1`"
@@ -47,7 +48,7 @@ chdir ../..
 if ( -e ec_stage1 ) then
 	\rm -rf EIFGENs
 	echo "Stage 2:"
-	(time ./ec_stage1 -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp2 )>> e_comp2
+	(time ./ec_stage1 -local -finalize -config ec.ecf -target $target -batch $options -clean >& e_comp2 )>> e_comp2
 	echo "  Size is: `du -sh EIFGENs/$target/COMP`"
 	echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 	echo "  Time is: `tail -1 e_comp2`"
@@ -65,7 +66,7 @@ if ( -e ec_stage1 ) then
 	if ( -e ec_stage2 ) then
 		\rm -rf EIFGENs
 		echo "Stage 3:"
-		(time ./ec_stage2 -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp3 )>> e_comp3
+		(time ./ec_stage2 -local -finalize -config ec.ecf -target $target -batch $options -clean >& e_comp3 )>> e_comp3
 		echo "  Size is: `du -sh EIFGENs/$target/COMP`"
 		echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 		echo "  Time is: `tail -1 e_comp3`"

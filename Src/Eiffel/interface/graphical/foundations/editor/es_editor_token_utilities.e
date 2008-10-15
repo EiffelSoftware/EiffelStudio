@@ -136,6 +136,22 @@ feature -- Status report
 			end
 		end
 
+	is_comment_start_token (a_token: !EDITOR_TOKEN): BOOLEAN
+			-- Detemines if a token is a comment start token.
+			--
+			-- `a_token' : The token to determine if to be a comment start token.
+			-- `Result'  : True if the supplied token is a comment start token; False otherwise.
+		local
+			l_image: STRING_32
+		do
+			if {l_comment: EDITOR_TOKEN_COMMENT} a_token then
+				l_image := l_comment.wide_image
+				if l_image /= Void and then l_image.count >= 2 then
+					Result := l_image.substring (1, 2).same_string ("--")
+				end
+			end
+		end
+
 	is_scanning_comments: BOOLEAN assign set_is_scanning_comments
 			-- Indicates if the scanning includes analysis of comments.
 
@@ -226,6 +242,7 @@ feature -- Query
 		local
 			l_token: ?EDITOR_TOKEN
 			l_line: ?EDITOR_LINE
+			l_prev: ?like previous_token
 			l_scan_comments: BOOLEAN
 			l_stop: BOOLEAN
 		do
@@ -256,6 +273,22 @@ feature -- Query
 									l_stop := Result /= Void
 								else
 									l_stop := True
+								end
+							elseif l_line /= Void then
+									-- Find the previous comment start token
+								if not is_comment_start_token (l_token) then
+									if not l_scan_comments then
+										set_is_scanning_comments (True)
+									end
+									l_prev := previous_token_simplified (l_token, l_line, True, a_finish_token, agent is_comment_start_token)
+									if not l_scan_comments then
+										set_is_scanning_comments (l_scan_comments)
+									end
+									l_stop := l_prev = Void
+									if l_prev /= Void then
+										l_token := l_prev.token
+										l_line := l_prev.line
+									end
 								end
 							end
 						end
@@ -291,7 +324,7 @@ feature -- Query
 				agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE; ia_predicate: !FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
 					do
 						Result := ia_predicate.item ([ia_token])
-					end)
+					end (?, ?, a_predicate))
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
@@ -312,6 +345,7 @@ feature -- Query
 			l_token: ?EDITOR_TOKEN
 			l_line: ?EDITOR_LINE
 			l_scan_comments: BOOLEAN
+			l_in_comment: BOOLEAN
 			l_stop: BOOLEAN
 		do
 			if a_token /~ a_finish_token then
@@ -323,11 +357,14 @@ feature -- Query
 						l_line := l_line.next
 						if l_line /= Void then
 							l_token := l_line.first_token
+
+								-- Reset comment state because comments are only per-line
+							l_in_comment := False
 						end
 					end
 					if l_token /= Void then
 						if not l_token.is_margin_token and then not l_token.is_fake then
-							if l_scan_comments or else not {l_comment: EDITOR_TOKEN_COMMENT} l_token then
+							if l_scan_comments or else (not l_in_comment and then not {l_comment: EDITOR_TOKEN_COMMENT} l_token) then
 								if l_token /= Void and l_line /= Void then
 									if a_predicate /= Void then
 										if a_predicate.item ([l_token, l_line]) then
@@ -340,6 +377,15 @@ feature -- Query
 									l_stop := Result /= Void
 								else
 									l_stop := True
+								end
+							elseif l_line /= Void then
+									-- In a comment so ignore everything until the next line.
+								if a_finish_token = Void then
+										-- There is no finish token so just skip to the end of the line.
+									l_token := l_line.eol_token
+								else
+										-- We do not simply head to the end of the line because we are looking for a end token.
+									l_in_comment := True
 								end
 							end
 						end
@@ -375,7 +421,7 @@ feature -- Query
 				agent (ia_token: !EDITOR_TOKEN; ia_line: !EDITOR_LINE; ia_predicate: !FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
 					do
 						Result := ia_predicate.item ([ia_token])
-					end)
+					end (?, ?, a_predicate))
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end

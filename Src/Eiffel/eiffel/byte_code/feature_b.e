@@ -378,7 +378,8 @@ feature -- Inlining
 							inliner := System.remover.inliner
 							entry := l_rout_table.item
 							l_body_index := entry.body_index
-							inline := inliner.inline (type, l_body_index)
+								-- We need to instantiate `type' in current context to fix eweasel test#final065.
+							inline := inliner.inline (type.instantiated_in (context.context_cl_type), l_body_index)
 						end
 					end
 				end

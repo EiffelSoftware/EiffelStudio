@@ -21,7 +21,6 @@ create
 	make
 
 feature -- Access
-o: ES_CLASS_LICENSE_MODIFIER
 
 	ast: ?CLASS_AS
 			-- Resulting class AST node.

@@ -64,6 +64,7 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
+				reset
 				l_class := associated_class
 				if l_class.is_compiled then
 					l_current_class := system.current_class
@@ -85,7 +86,8 @@ feature -- Basic operations
 				l_parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				l_parser.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				l_parser.parse_from_string (text)
-				if l_errors.is_empty and then l_parser.root_node /= Void and then l_parser.match_list /= Void then
+
+				if l_parser.root_node /= Void and then l_parser.match_list /= Void then
 					ast := l_parser.root_node
 					ast_match_list := l_parser.match_list
 				else
@@ -99,14 +101,15 @@ feature -- Basic operations
 				end
 			end
 
-			if l_error_index > 0 then
-					-- Remove additional errors errors
-				l_errors.go_i_th (l_error_index)
-				from until l_errors.count = l_error_index loop
-					l_errors.remove_right
+				-- Remove any added errors
+			l_errors := error_handler.error_list
+			if l_errors /= Void then
+				if l_errors.count > l_error_index then
+					l_errors.go_i_th (l_error_index)
+					from until l_errors.count = l_error_index loop
+						l_errors.remove_right
+					end
 				end
-			else
-				l_errors.wipe_out
 			end
 
 			if retried then

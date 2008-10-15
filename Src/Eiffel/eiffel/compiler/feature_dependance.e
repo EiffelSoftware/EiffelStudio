@@ -111,14 +111,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := active = other.active and then after = other.after and then
-						before = other.before and then count = other.count and then
-						feature_name_id = other.feature_name_id and then
-						first_element = other.first_element and then
-						last_element = other.last_element and then
-						object_comparison = other.object_comparison and then
-						sublist = other.sublist
-			Result := Result and then equal (suppliers, other.suppliers)
+			Result := Precursor {TWO_WAY_SORTED_SET} (other) and then equal (suppliers, other.suppliers)
 		end
 
 feature -- Incrementality

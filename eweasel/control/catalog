@@ -36,6 +36,7 @@ test	arrayed-list-prune-all		list008 tcf pass list
 test	arrayed-list-put-*		list009 tcf pass list
 test	fixed-list-queries		list010 tcf pass list
 test	merging-compatible-arrayed-list	list011 tcf pass list
+test	sorted-two-way-list-invariant-violation	list012 tcf pass list
 
 test	disjoint-sets			set001  tcf pass set
 test	disjoint-sets-expanded		set001a tcf pass set

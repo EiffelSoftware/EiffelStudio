@@ -470,6 +470,7 @@
 		<geant target="get_bin__" arguments="ec_lite,${devpack_binary_dir},ecl${exe}" />
 		<geant target="get_bin__" arguments="compile_all,${devpack_binary_dir},compile_all${exe}" />
 		<geant target="get_bin__" arguments="eimgemb,${devpack_binary_dir},eimgemb${exe}" />
+		<geant target="get_bin__" arguments="copyright_tool,${devpack_binary_dir},copyright_tool${exe}" />
 		<!--
 		<geant target="get_bin__" arguments="escln,${devpack_binary_dir},escln${exe}" />
 		-->
@@ -534,6 +535,7 @@
 		<geant target="get_f_code__" arguments="ec_lite,${devpack_f_codes_dir}" />
 		<geant target="get_f_code__" arguments="compile_all,${devpack_f_codes_dir}" />
 		<geant target="get_f_code__" arguments="eimgemb,${devpack_f_codes_dir}" />
+		<geant target="get_f_code__" arguments="copyright_tool,${devpack_f_codes_dir}" />
 		<!--
 		<geant target="get_f_code__" arguments="escln,${devpack_f_codes_dir}" />
 		-->
@@ -936,6 +938,7 @@
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},ecl${exe}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},compile_all${exe}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},eimgemb${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},copyright_tool${exe}" />
 		<!--
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},escln${exe}" />
 		-->

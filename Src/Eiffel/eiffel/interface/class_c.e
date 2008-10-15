@@ -3792,7 +3792,7 @@ feature -- Genericity
 							-- in current class.
 						l_parent_formal := l_generic_features.item_for_iteration
 						l_formal := l_parent_formal.duplicate
-						l_formal.set_type (l_formal.type.instantiated_in (l_parents.item))
+						l_formal.set_type (l_formal.type.instantiated_in (l_parents.item), 0)
 						l_formal.set_is_origin (False)
 						if l_old /= Void and then l_old.has (l_formal.rout_id_set.first) then
 							l_formal.set_feature_id (
@@ -3809,6 +3809,9 @@ feature -- Genericity
 								-- generic parameter.
 							l_formal.set_written_in (class_id)
 						end
+
+							-- We recompute the proper pattern.
+						l_formal.process_pattern
 
 						extend_generic_features (l_formal)
 						l_generic_features.forth
@@ -3852,7 +3855,7 @@ feature -- Genericity
 
 						create l_formal
 						l_formal.set_feature_name ("_" + name + "_Formal#" + i.out)
-						l_formal.set_type (l_formal_type)
+						l_formal.set_type (l_formal_type, 0)
 						l_formal.set_written_in (class_id)
 						l_formal.set_origin_class_id (class_id)
 
@@ -3864,11 +3867,13 @@ feature -- Genericity
 							create l_rout_id_set.make
 							l_rout_id_set.put (l_formal.new_rout_id)
 							l_formal.set_feature_id (feature_id_counter.next)
+							system.rout_info_table.put (l_rout_id_set.first, Current)
 						end
 						l_formal.set_rout_id_set (l_rout_id_set)
 						l_formal.set_is_origin (True)
 						l_formal.set_position (i)
 						l_formal.set_origin_feature_id (l_formal.feature_id)
+						l_formal.process_pattern
 						l_generic_features.put (l_formal, l_rout_id_set.first)
 					end
 					i := i + 1
@@ -3998,7 +4003,7 @@ feature -- Anchored types
 					l_feat := l_select.item_for_iteration
 
 					create l_anchor
-					l_anchor.set_type (l_feat.type.actual_type)
+					l_anchor.set_type (l_feat.type.actual_type, 0)
 					l_anchor.set_written_in (class_id)
 
 					create l_rout_id_set.make

@@ -901,29 +901,10 @@ rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX df
 {
 	EIF_TYPE_INDEX result;
 	EIF_GEN_DER *gdp;
-	EIF_ANC_ID_MAP *amap;
 
 	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
-	/* get actual generic from `stype' for descendant
-	   `dftype' if stype != INVALID_DTYPElse use dftype.
-	*/
-
-	if (stype != INVALID_DTYPE)
-	{
-		amap = eif_anc_id_map [dftype];
-
-		if (amap == NULL) {
-			eif_compute_anc_id_map (dftype);
-			amap = eif_anc_id_map [dftype];
-		}
-
-		gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
-	}
-	else
-	{
-		gdp = eif_derivations [dftype];
-	}
+	gdp = eif_derivations [dftype];
 
 	CHECK("A generic type", gdp && (!gdp->is_bit));
 	CHECK("Valid generic parameter position", (pos > 0) && (pos <= gdp->size));
@@ -1030,22 +1011,13 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 {
 	EIF_TYPE_INDEX gtype;
 	EIF_GEN_DER *gdp;
-	EIF_ANC_ID_MAP *amap;
 
 		/* Check type validity */
 	REQUIRE ("dftype is non-negative", dftype >= 0);
 	REQUIRE ("dftype is less than maximum computed id", dftype < next_gen_id);
 	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type >= 0);
 
-	amap = eif_anc_id_map [dftype];
-
-	if (amap == NULL)
-	{
-		eif_compute_anc_id_map (dftype);
-		amap = eif_anc_id_map [dftype];
-	}
-
-	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
 	CHECK ("Not a bit type", !gdp->is_bit);
@@ -1076,7 +1048,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	int len;
 	uint32 pos;
 	EIF_GEN_DER *gdp;
-	EIF_ANC_ID_MAP *amap;
 	char *strp;
 
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
@@ -1103,17 +1074,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	CHECK ("Routines implies we have tuples", tuple_static_type >= 0);
 
 	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
-
-		/* Critical section as we might compute a new `eif_anc_id_map' entry */
-	EIFMTX_LOCK;
-	amap = eif_anc_id_map [dftype];
-	if (amap == NULL) {
-		eif_compute_anc_id_map (dftype);
-		amap = eif_anc_id_map [dftype];
-	}
-	EIFMTX_UNLOCK;
-
-	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
 	CHECK ("Not a bit type", !gdp->is_bit);
@@ -1148,85 +1109,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	}
 
 	RT_GC_WEAN(ret);			/* Remove protection */
-
-	return ret;	
-}
-
-/*------------------------------------------------------------------*/
-/* Typecode string for closed argument types of a ROUTINE object.   */
-/* ONLY for TUPLE!                                                  */
-/*------------------------------------------------------------------*/
-
-rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
-{
-	EIF_GET_CONTEXT
-
-	EIF_REFERENCE ret;	/* Return value. */
-	EIF_TYPE_INDEX dftype, gtype;
-	int len;
-	int pos;
-	EIF_GEN_DER *gdp;
-	EIF_ANC_ID_MAP *amap;
-	char *strp;
-
-	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
-
-	dftype = Dftype(obj);
-
-	REQUIRE ("Non negative dftype", dftype >= 0);
-	REQUIRE ("Valid dftype", dftype < next_gen_id);
-
-#ifdef EIF_ASSERTIONS
-	gdp = eif_derivations [dftype];
-#endif
-
-	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a bit type", !gdp->is_bit);
-	CHECK ("We have routines, so we must have tuples.", tuple_static_type >= 0);
-
-	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
-
-		/* Critical section as we might compute a new `eif_anc_id_map' entry */
-	EIFMTX_LOCK;
-	amap = eif_anc_id_map [dftype];
-	if (amap == NULL) {
-		eif_compute_anc_id_map (dftype);
-		amap = eif_anc_id_map [dftype];
-	}
-	EIFMTX_UNLOCK;
-
-	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
-
-	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a bit type", !gdp->is_bit);
-
-		/* Create a string for gdp->size characters */
-	len = gdp->size;
-
-	ret = emalloc(egc_str_dtype);
-	RT_GC_PROTECT(ret);
-		/* Protect address in case it moves */
-
-	nstcall = 0;
-	RT_STRING_MAKE(ret, (EIF_INTEGER) len);
-	RT_STRING_SET_COUNT(ret, len);
-
-	/* We know the `area' is the very first reference
-	 * of the STRING object, hence the simple de-referencing.
-	 */
-
-	RT_GC_WEAN(ret);			/* Remove protection */
-
-	strp = *(EIF_REFERENCE*)ret;
-
-	for (pos = 0; pos < len; pos++, strp++) {
-		gtype = gdp->typearr [pos];
-		if (gtype == NONE_TYPE) {
-			*strp = EIF_REFERENCE_CODE;
-		} else {
-			*strp = EIF_TUPLE_CODE(System(eif_cid_map[RTUD(gtype)]));
-		}
-	}
 
 	return ret;	
 }
@@ -1671,7 +1553,6 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX **inta
 	int     pos, mcmp;
 	char    is_expanded, is_tuple;
 	EIF_GEN_DER *gdp, *prev;
-	EIF_ANC_ID_MAP *amap;
 
 	/* Get full type */
 
@@ -1705,35 +1586,7 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX **inta
 		(*intab)++;
 		pos = **intab;	/* Position of formal generic */
 
-		/* get actual generic from `stype' for descendant
-		   `obj_type' if stype != INVALID_DTYPE else use obj_type.
-		*/
-
-		if (stype != INVALID_DTYPE)
-		{
-			amap = eif_anc_id_map [obj_type];
-
-			if (amap == NULL)
-			{
-				eif_compute_anc_id_map (obj_type);
-				amap = eif_anc_id_map [obj_type];
-			}
-
-			gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
-
-			if ((gdp == NULL) || (gdp->size == 0))
-			{
-				/* The static call context is not a generic class.
-				   Hence we have to take 'obj_type'. */
-
-				gdp = eif_derivations [obj_type];
-			}
-		}
-		else
-		{
-			gdp = eif_derivations [obj_type];
-		}
-
+		gdp = eif_derivations [obj_type];
 		dftype = gdp->typearr [pos-1];
 
 		(*intab)++;

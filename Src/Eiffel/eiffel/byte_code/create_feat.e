@@ -116,7 +116,11 @@ feature -- C code generation
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
 					elseif {l_formal: FORMAL_A} table.first.type then
-						(create {CREATE_FORMAL_TYPE}.make (l_formal)).generate_type_id (buffer, final_mode, a_level)
+						buffer.put_string ("eif_gen_param_id(INVALID_DTYPE, ")
+						context.generate_current_dftype
+						buffer.put_two_character (',', ' ')
+						buffer.put_integer (l_formal.position)
+						buffer.put_character (')')
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 					end
@@ -267,7 +271,7 @@ feature -- Genericity
 					if gen_type /= Void then
 						gen_type.generate_cid (buffer, final_mode, True, context.context_class_type.type)
 					elseif {l_formal: FORMAL_A} table.first.type then
-						l_formal.generate_cid (buffer, final_mode, True, context.context_class_type.type)
+						l_formal.generate_cid (buffer, final_mode, False, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -352,7 +356,7 @@ feature -- Genericity
 												final_mode, True, idx_cnt, context.context_class_type.type)
 					elseif {l_formal: FORMAL_A} table.first.type then
 						l_formal.generate_cid_array (buffer,
-							final_mode, True, idx_cnt, context.context_class_type.type)
+							final_mode, False, idx_cnt, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -393,7 +397,7 @@ feature -- Genericity
 					if gen_type /= Void then
 						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
 					elseif {l_formal: FORMAL_A} table.first.type then
-						l_formal.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
+						l_formal.generate_cid_init (buffer, final_mode, False, idx_cnt, a_level)
 					else
 						dummy := idx_cnt.next
 					end
@@ -475,7 +479,7 @@ feature -- Genericity
 			end
 		end
 
-	type_to_create : CL_TYPE_A is
+	type_to_create: CL_TYPE_A is
 
 		local
 			table : POLY_TABLE [ENTRY]

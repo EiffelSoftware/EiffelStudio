@@ -25,21 +25,9 @@ class
 
 inherit
 	FEATURE_I
-		rename
-			type as return_type,
-			set_type as set_return_type
-		export
-			{TYPE_FEATURE_I} all
-			{ANY}
-				feature_id, rout_id_set, origin_class_id, is_origin,
-				feature_name, written_in, origin_feature_id,
-				feature_name_id,
-				set_feature_id, set_rout_id_set, set_origin_class_id,
-				set_is_origin, set_feature_name, set_written_in,
-				set_origin_feature_id, set_feature_name_id,
-				instantiate, duplicate, new_rout_id, return_type, names_heap
 		redefine
-			new_entry, is_type_feature, check_expanded, is_valid
+			new_rout_entry, is_type_feature, check_expanded, is_valid,
+			is_function, type, set_type
 		end
 
 feature -- Access
@@ -68,6 +56,12 @@ feature -- Status report
 		do
 			l_formal ?= type
 			Result := l_formal /= Void
+		end
+
+	is_function: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := True
 		end
 
 feature -- Checking
@@ -131,14 +125,12 @@ feature -- Checking
 
 feature -- Settings
 
-	set_type (a_type: like type) is
+	set_type (t: like type; a: like assigner_name_id)
 			-- Set `a_type' to `type'.
-		require
-			a_type_not_void: a_type /= Void
 		do
-			type := a_type
-		ensure
-			type_set: a_type = type
+			type := t
+		ensure then
+			type_set: type = t
 		end
 
 	set_position (a_pos: like position) is
@@ -153,12 +145,22 @@ feature -- Settings
 
 feature -- Polymorphism
 
-	new_entry (rout_id: INTEGER): ATTR_ENTRY is
+	new_rout_entry: FORMAL_ENTRY is
 			-- New type feature unit.
 		do
 			create Result
+			Result.set_body_index (body_index)
 			Result.set_type_a (type.actual_type)
+			if has_replicated_ast then
+				Result.set_access_in (access_in)
+				Result.set_written_in (written_in)
+			else
+				Result.set_written_in (written_in)
+				Result.set_access_in (written_in)
+			end
+			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
+			Result.set_is_deferred (is_deferred)
 		end
 
 feature {NONE} -- Implementation

@@ -461,7 +461,7 @@ feature -- Generic conformance
 		end
 
 	initialize_info (an_info: like shared_create_info) is
-			-- Initialize `shared_create_info'.
+			-- Initialize `an_info' using current data.
 		do
 		end
 

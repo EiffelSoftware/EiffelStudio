@@ -122,6 +122,11 @@ feature -- Status Settings
 			stone = Void
 		end
 
+	on_before_text_saved is
+			-- Notify the editor that the text is about to be saved.
+		do
+		end
+
 	on_text_saved is
 			-- Notify the editor that the text has been saved.
 		do

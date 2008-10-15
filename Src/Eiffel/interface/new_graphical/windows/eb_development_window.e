@@ -43,6 +43,7 @@ inherit
 			set_stone,
 			reset,
 			stone,
+			on_before_text_saved,
 			on_text_saved,
 			perform_check_before_save,
 			check_passed,
@@ -64,6 +65,7 @@ inherit
 		redefine
 			reset,
 			stone,
+			on_before_text_saved,
 			on_text_saved,
 			perform_check_before_save,
 			check_passed,
@@ -1031,6 +1033,26 @@ feature -- Resource Update
 			-- Change a_class in shared project.
 		do
 			Eiffel_project.Workbench.change_class (a_class.original_class)
+		end
+
+
+	on_before_text_saved is
+			-- Notify the editor that the text is about to be saved.
+		local
+			l_editor: EB_SMART_EDITOR
+			l_class_i: CLASS_I
+			l_modifier: ES_CLASS_LICENSER
+		do
+			Precursor
+			l_editor := editors_manager.current_editor
+			if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+					-- We have the class stone
+				l_class_i := l_class.class_i
+				if l_class_i /= Void then
+					create l_modifier
+					l_modifier.relicense (l_class_i)
+				end
+			end
 		end
 
 	on_text_saved is

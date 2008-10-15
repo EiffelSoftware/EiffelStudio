@@ -771,13 +771,15 @@ feature {NONE} -- Sort handling
 			not_a_column_list_is_empty: not a_column_list.is_empty
 			a_comparator_attached: a_comparator /= Void
 		do
-				-- Repopulate grid
-			execute_with_busy_cursor (agent
-				do
-					clear_memory_grid
-					sort_memory_data (memory_data)
-					populate_memory_grid
-				end)
+			if memory_data /= Void then
+					-- Repopulate grid
+				execute_with_busy_cursor (agent
+					do
+						clear_memory_grid
+						sort_memory_data (memory_data)
+						populate_memory_grid
+					end)
+			end
 		end
 
 	sort_memory_data (a_map: like memory_data) is

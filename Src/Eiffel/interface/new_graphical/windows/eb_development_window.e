@@ -2253,15 +2253,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 		ensure
 			set: managed_dependency_formatters = a_formatters
 		end
-
-	set_help_engine (a_engine: like help_engine) is
-			-- Set `help_engine'
-		do
-			help_engine := a_engine
-		ensure
-			set: help_engine = a_engine
-		end
-
+		
 	set_container (a_container: like container) is
 			-- Set `container'
 		do

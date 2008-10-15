@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
 			if minimized_title = Void or else minimized_title.is_empty then
 				set_minimized_title (title)
 			end
-			create help_engine.make
 			register_action (window.focus_in_actions, agent window_manager.set_focused_window (Current))
 
 			initialized := True

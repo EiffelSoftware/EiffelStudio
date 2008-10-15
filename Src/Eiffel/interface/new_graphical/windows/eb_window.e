@@ -426,70 +426,48 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 	initialized: BOOLEAN
 			-- Is the "initialization sequence" finished?
 
-	help_csts: EB_HELP_CONTEXTS_BASES is
-			-- Shared constants for the help URLs
-		once
-			create Result
-		end
-
-	help_engine: EB_HELP_ENGINE
-			-- Help engine used to display help pages.
-
-	display_help (ctxt: EB_HELP_CONTEXT) is
-			-- Pop up the eiffelstudio chm at the URL corresponding to `ctxt'.
-		require
-			valid_ctxt: ctxt /= Void
-		do
-			help_engine.show (ctxt)
-			if not help_engine.last_show_successful then
-				prompts.show_error_prompt (help_engine.last_error_message, window, Void)
-			end
-		end
-
 	display_help_contents is
 			-- Display the part of the help relative to EiffelStudio.
 		local
-			ctxt: EB_HELP_CONTEXT
+			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create ctxt.make (help_csts.Hc_reference, "")
-			display_help (ctxt)
+			create l_service
+			if l_service.is_service_available then
+				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("e34647c8-840e-159d-74b3-07353a27472e", Void))
+			end
 		end
 
 	display_how_to_s is
 			-- Display the part of the help relative to EiffelStudio.
 		local
-			ctxt: EB_HELP_CONTEXT
+			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create ctxt.make (help_csts.Hc_how_to_s, "")
-			display_help (ctxt)
+			create l_service
+			if l_service.is_service_available then
+				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("10d806ce-5b43-26a5-6f0e-23b3b2faa2ed", Void))
+			end
 		end
 
 	display_guided_tour is
 			-- Display the guided tour of EiffelStudio.
 		local
-			ctxt: EB_HELP_CONTEXT
+			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create ctxt.make (help_csts.Hc_guided_tour, "")
-			display_help (ctxt)
+			create l_service
+			if l_service.is_service_available then
+				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("4d68a136-f7c2-ddd3-d30d-e16ee7692302", Void))
+			end
 		end
 
 	display_eiffel_introduction is
 			-- Display the introduction to Eiffel.
 		local
-			ctxt: EB_HELP_CONTEXT
+			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create ctxt.make (help_csts.Hc_root, "general/guided_tour/language/")
-			display_help (ctxt)
-		end
-
-feature -- Obsolete
-
-	shown: BOOLEAN is
-			-- Is Current shown on the screen?
-		obsolete
-			"use `is_visible' instead"
-		do
-			Result := window.is_show_requested
+			create l_service
+			if l_service.is_service_available then
+				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("ae6f212e-bdc6-d5f2-972a-1bfee586479e", Void))
+			end
 		end
 
 invariant

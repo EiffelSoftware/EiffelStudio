@@ -261,7 +261,6 @@ feature -- Control
 			prc_ftry: PROCESS_FACTORY
 			ee: EXECUTION_ENVIRONMENT
 			dir: STRING
-			prc_imp: PROCESS_IMP
 			pt: PROCESS_TIMER
 		do
 			create prc_ftry
@@ -272,7 +271,6 @@ feature -- Control
 			end
 
 			prc.redirect_input_to_stream
-			prc_imp ?= prc
 			if redirection_needed then
 				prc.redirect_input_to_stream
 				prc.redirect_output_to_agent (output_handler)

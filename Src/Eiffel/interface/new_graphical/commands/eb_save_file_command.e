@@ -79,10 +79,12 @@ feature -- Execution
 				else
 					compileok := True
 				end
+				target.on_before_text_saved
 				if
 					target.check_passed and then
 					compileok
 				then
+
 					save (target.file_name, target.text, target.encoding)
 					if last_saving_success then
 						target.set_last_saving_date (last_saving_date)

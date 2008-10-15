@@ -38,7 +38,7 @@ feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add_string ("Tuple lable name name: ")
+			a_text_formatter.add_string ("Tuple label name: ")
 			a_text_formatter.add_string (other_feature.name)
 			a_text_formatter.add_string (" is also defined as a feature of TUPLE: ")
 			other_feature.append_signature (a_text_formatter)

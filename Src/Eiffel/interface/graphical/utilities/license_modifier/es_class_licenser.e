@@ -75,6 +75,7 @@ feature -- Basic operatons
 			l_uuid: UUID
 			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
 			l_use_old_syntax: BOOLEAN
+			l_load_default: BOOLEAN
 		do
 			create l_mod.make (a_class)
 			l_mod.prepare
@@ -105,6 +106,7 @@ feature -- Basic operatons
 						l_path := a_class.workbench.eiffel_ace.file_name.as_string_32
 					end
 
+					l_load_default := True
 					if l_path /= Void then
 						l_index := l_path.last_index_of ('.', l_path.count)
 						if l_index > 1 then
@@ -114,10 +116,18 @@ feature -- Basic operatons
 
 								-- Try to load the license
 							l_path := l_fn.string.as_string_32
-							if l_path /= Void then
+							if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
 								l_license := load_license (l_path, l_use_old_syntax)
+								l_load_default := False
 							end
 						end
+					end
+
+					if l_load_default then
+						check l_license_detached: l_license = Void end
+
+							-- No license was loaded, try the default
+						l_license := load_named_license (create {STRING_32}.make_from_string ("default"), l_use_old_syntax)
 					end
 				end
 
@@ -240,7 +250,7 @@ feature {NONE} -- Basic operation
 				create l_fn.make_from_string (eiffel_layout.templates_path.string)
 				l_fn.extend ("licenses")
 				l_fn.set_file_name (a_name)
-				l_fn.add_extension ("tpl")
+				l_fn.add_extension ("lic")
 
 					-- Check user file
 				l_user_fn := eiffel_layout.user_priority_file_name (l_fn, True)

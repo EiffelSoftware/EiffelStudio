@@ -33,6 +33,11 @@ class
 inherit
 	ANY
 
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		end
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -54,49 +59,94 @@ feature {NONE} -- Helpers
 
 feature -- Basic operatons
 
-	relicense (a_class: !CLASS_I) is
+	relicense (a_class: !CLASS_I)
 			-- Initialize a class licenser for a given class.
 			--
 			-- `a_class': The class to license.
 		local
 			l_mod: !ES_CLASS_LICENSE_MODIFIER
-			l_name: !STRING_32
+			l_name: ?STRING_32
+			l_fn: ?FILE_NAME
+			l_path: ?STRING_32
+			l_index: INTEGER
 			l_license: ?like load_license
+			l_libraries: !LIST [!CONF_LIBRARY]
+			l_library: !CONF_LIBRARY
+			l_uuid: UUID
+			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
+			l_use_old_syntax: BOOLEAN
 		do
 			create l_mod.make (a_class)
 			l_mod.prepare
 			if l_mod.is_prepared and then l_mod.is_ast_available then
+				l_use_old_syntax := a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete
+
 					-- Parsed successfully.
 				l_name := l_mod.license_name
-				l_license := load_license (l_name, a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete)
+				if l_name /= Void then
+						-- Try to load the license
+					l_license := load_named_license (l_name, l_use_old_syntax)
+				else
+						-- Try to use a license file from an ECF because there was not license referene name in the class.
+					if a_class.target.system /~ a_class.universe.conf_system then
+							-- Libraries do not have variables so we need to load the configuration and fetch the variables.
+						l_uuid := a_class.target.system.uuid
+						if l_uuid /= Void then
+								-- Fetch the library reference and load the configuration.
+							l_libraries := a_class.universe.library_of_uuid (l_uuid, True)
+							if not l_libraries.is_empty then
+									-- Create the path to the license file.
+								l_library := l_libraries.first
+								l_path := l_library.location.evaluated_path.as_string_32
+							end
+						end
+					else
+						check system_defined: a_class.workbench.system_defined end
+						l_path := a_class.workbench.eiffel_ace.file_name.as_string_32
+					end
+
+					if l_path /= Void then
+						l_index := l_path.last_index_of ('.', l_path.count)
+						if l_index > 1 then
+							l_path.keep_head (l_index - 1)
+							create l_fn.make_from_string (l_path)
+							l_fn.add_extension ("lic")
+
+								-- Try to load the license
+							l_path := l_fn.string.as_string_32
+							if l_path /= Void then
+								l_license := load_license (l_path, l_use_old_syntax)
+							end
+						end
+					end
+				end
+
 				if l_license /= Void then
 					if not l_license.is_empty then
-						if l_mod.is_valid_license (l_license) then
+						if not l_mod.is_valid_license (l_license) then
+								-- Render the invalid license template.
+							l_license := local_formatter.translation (invalid_license_license)
+							if wizard_enginer.is_service_available then
+								create l_parameters.make_default
+								if l_use_old_syntax then
+									l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+								else
+									l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+								end
+								l_license := wizard_enginer.service.render_template (l_license, l_parameters)
+							else
+								l_license := Void
+							end
+						end
+
+						if l_license /= Void and then l_mod.is_valid_license (l_license) then
 							l_mod.set_license (l_license)
 							if l_mod.is_dirty then
 								l_mod.commit
 							end
 						else
-								-- There is no license file or the file cannot be read.
-							if logger.is_service_available then
-									-- Log error.
-								logger.service.put_message_format_with_severity (
-									"Unable to parse the license associated with the license ID {1}. Make sure the usage of the note and indexing clause are correct.",
-									[l_name],
-									{ENVIRONMENT_CATEGORIES}.editor,
-									{PRIORITY_LEVELS}.high)
-							end
+							check False end
 						end
-					end
-				else
-						-- There is no license file or the file cannot be read.
-					if logger.is_service_available then
-							-- Log error.
-						logger.service.put_message_format_with_severity (
-							"Unable to read license file associated with the license ID {1}.",
-							[l_name],
-							{ENVIRONMENT_CATEGORIES}.editor,
-							{PRIORITY_LEVELS}.high)
 					end
 				end
 			else
@@ -114,8 +164,66 @@ feature -- Basic operatons
 
 feature {NONE} -- Basic operation
 
-	load_license (a_name: !STRING_32; a_use_old_syntax: BOOLEAN): ?STRING_32
+	load_license (a_file_name: !STRING_32; a_use_old_syntax: BOOLEAN): ?STRING_32
 			-- Attempt to load a license file
+			--
+			-- `a_file_name': The file name of the license file to load.
+			-- `a_use_old_syntax': True to use older syntax, False to use the standard.
+			-- `Result': The license text or Void if the license file did not exist or was incompatible
+		require
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		local
+			l_name: ?STRING_32
+			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
+			l_index: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				if (create {RAW_FILE}.make (a_file_name)).exists then
+					if wizard_enginer.is_service_available then
+							-- Set up wizard parameters
+						create l_parameters.make (2)
+						l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
+						if a_use_old_syntax then
+							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+						else
+							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+						end
+
+							-- Render template
+						Result := wizard_enginer.service.render_template_from_file (a_file_name, l_parameters)
+						if Result /= Void then
+							Result.right_adjust
+							Result.left_adjust
+							if Result.is_empty then
+									-- Wipe out, because empty licenses are not valid.
+								Result := Void
+							else
+									-- Grab the first line
+								l_name := Result
+								l_index := l_name.index_of ('%N', 1)
+								if l_index > 1 then
+									l_name := l_name.substring (1, l_index - 1)
+								end
+								if l_name /= Void and then l_name.substring (1, l_name.count.min (reference_prefix.count)).is_case_insensitive_equal (reference_prefix.as_string_32) then
+										-- The file contains a license reference, redirect to use that instead.
+									l_name.keep_tail (l_name.count - reference_prefix.count)
+									Result := load_named_license (l_name, a_use_old_syntax)
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+		rescue
+			retried := True
+			retry
+		end
+
+	load_named_license (a_name: !STRING_32; a_use_old_syntax: BOOLEAN): ?STRING_32
+			-- Attempt to load a license from the licenses folder.
 			--
 			-- `a_name': The name of the license file to load.
 			-- `a_use_old_syntax': True to use older syntax, False to use the standard.
@@ -125,8 +233,7 @@ feature {NONE} -- Basic operation
 		local
 			l_fn: !FILE_NAME
 			l_user_fn: ?FILE_NAME
-			l_file: ?PLAIN_TEXT_FILE
-			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
+			l_path: ?STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -141,36 +248,13 @@ feature {NONE} -- Basic operation
 					l_fn := l_user_fn
 				end
 
-				if (create {RAW_FILE}.make (l_fn.string)).exists then
-					if wizard_enginer.is_service_available then
-							-- Set up wizard parameters
-						create l_parameters.make (2)
-						l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
-						if a_use_old_syntax then
-							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
-						else
-							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
-						end
-
-							-- Render template
-						Result := wizard_enginer.service.render_template_from_file (l_fn.string, l_parameters)
-						Result.right_adjust
-						Result.left_adjust
-						if Result.is_empty then
-								-- Wipe out, because empty licenses are not valid.
-							Result := Void
-						end
-					end
+				l_path := l_fn.string.as_string_32
+				if l_path /= Void then
+					Result := load_license (l_path, a_use_old_syntax)
 				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-		rescue
-			if l_file /= Void and then not l_file.is_closed then
-				l_file.close
-			end
-			retried := True
-			retry
 		end
 
 feature {NONE} -- Symbols
@@ -180,6 +264,14 @@ feature {NONE} -- Symbols
 
 	year_symbol: !STRING = "YEAR"
 			-- Year symbol in the template license file.
+
+	reference_prefix: !STRING = "reference:"
+			-- Reference prefix for named licenses.
+
+feature {NONE} -- Internationalization
+
+	invalid_license_license: !STRING = "${NOTE_KEYWORD}%N%Tlicense: %"The specified license contains syntax errors!%""
+			-- The default, invalid license.
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

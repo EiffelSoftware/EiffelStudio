@@ -2948,16 +2948,16 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 				 * However we need to apply `RTUD_INV' on `egc_xxx_dtype' to have a valid
 				 * typearr identifier. */
 			switch (aftype) {
-				case OLD_CHARACTER_TYPE: result = (dftype == RTID(egc_char_dtype)); break;
-				case OLD_BOOLEAN_TYPE: result = (dftype == RTID(egc_bool_dtype)); break;
-				case OLD_INTEGER_8_TYPE: result = (dftype == RTID(egc_int8_dtype)); break;
-				case OLD_INTEGER_16_TYPE: result = (dftype == RTID(egc_int16_dtype)); break;
-				case OLD_INTEGER_32_TYPE: result = (dftype == RTID(egc_int32_dtype)); break;
-				case OLD_INTEGER_64_TYPE: result = (dftype == RTID(egc_int64_dtype)); break;
-				case OLD_REAL_32_TYPE: result = (dftype == RTID(egc_real32_dtype)); break;
-				case OLD_REAL_64_TYPE: result = (dftype == RTID(egc_real64_dtype)); break;
-				case OLD_POINTER_TYPE: result = (dftype == RTID(egc_point_dtype)); break;
-				case OLD_WIDE_CHAR_TYPE: result = (dftype == RTID(egc_wchar_dtype)); break;
+				case OLD_CHARACTER_TYPE: result = (dftype == egc_char_dtype); break;
+				case OLD_BOOLEAN_TYPE: result = (dftype == egc_bool_dtype); break;
+				case OLD_INTEGER_8_TYPE: result = (dftype == egc_int8_dtype); break;
+				case OLD_INTEGER_16_TYPE: result = (dftype == egc_int16_dtype); break;
+				case OLD_INTEGER_32_TYPE: result = (dftype == egc_int32_dtype); break;
+				case OLD_INTEGER_64_TYPE: result = (dftype == egc_int64_dtype); break;
+				case OLD_REAL_32_TYPE: result = (dftype == egc_real32_dtype); break;
+				case OLD_REAL_64_TYPE: result = (dftype == egc_real64_dtype); break;
+				case OLD_POINTER_TYPE: result = (dftype == egc_point_dtype); break;
+				case OLD_WIDE_CHAR_TYPE: result = (dftype == egc_wchar_dtype); break;
 				default:
 					result = 0;
 			}

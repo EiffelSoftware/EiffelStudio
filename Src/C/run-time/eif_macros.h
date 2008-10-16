@@ -1299,11 +1299,7 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTFCID(ct,x,y,z,u)	eif_final_id((x),(y), Dftype(z),(u))
 #define RTFCID2(ct,x,y,z,u)	eif_final_id((x),(y),(z),(u))
 #define RTGPTID(st,x,y)		eif_gen_param_id ((st), Dftype(x),(y))
-#ifdef WORKBENCH
-#define RTID(x)	eif_id_for_typarr(x)
-#else
 #define RTID(x) (x)
-#endif
 
 
 

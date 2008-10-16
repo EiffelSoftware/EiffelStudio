@@ -1,0 +1,16 @@
+test_name 	 wrong-formal-type-specification
+test_description A routine which regenerates its inherited assertions involving some formal generic parameter, create the wrong code to compute the type of the formal generic parameter resulting in a segfault at run-time.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

@@ -1224,6 +1224,7 @@ test	all-defaults-failure		exec282 tcf fail execution expanded
 test	clear-all-on-special		exec283 tcf fail execution expanded
 test	wrong-expanded-generic-type	exec284 tcf fail execution expanded
 test	wrong-polymorphic-call-with-select	exec285 tcf pass execution
+test	wrong-formal-type-specification	exec286 tcf pass execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

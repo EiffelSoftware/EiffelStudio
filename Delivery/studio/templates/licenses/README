@@ -1,20 +1,68 @@
 This is the location of the template license files.
 
-License files are located at $ISE_EIFFEL/studio/templates/licenses/*.tpl, and user license
-files at $ISE_USER_FILES/studio/templates/licenses/*.tpl. The * represents the license name.
+License files are located at $ISE_EIFFEL/studio/templates/licenses/*.lic, and user license
+files at $ISE_USER_FILES/studio/templates/licenses/*.lic. The * represents the license name.
 
-License files must contain the indexing/note clause text and nothing more. They will be validated
-using a parse and invalid licenses will not be merged into the associated class. Check the logger
-tool for failed merged or other errors related to the loading on license template files.
+License files must contain the note/indexing clause text and nothing more. They will be validated
+using a parse and invalid licenses will not be merged into the associated class.
 
-The license name is extracted using the following methods, in order of priority:
-  - From the source text under an indexing term 'license_id'.
-        note
-            license_id: "my_license"
-  - From the class' configuration target variables, using 'license_id' or 'LICENSE_ID'
-  - Or the default 'default', when the above are not found.
+The license name is extracted using the following exclusive methods:
+  - From the source text under an indexing term 'licence_name'.
+  - Using a license reference in a neighboring license file to a project's ECF.
 
-In the case of a license_id resulting in the license name 'my_license' the following
-will be attempted to be loaded, in order or priority:		
-  - $ISE_USER_FILES/studio/templates/licenses/my_license.tpl
-  - $ISE_EIFFEL/studio/templates/licenses/my_license.tpl
+From the Source:
+--------------------
+Assigning a license to a particular class can be accomplished by adding the `license_name' term with
+a string value representing the license name used to look for a license file. See below:
+
+    note
+        licence_name: "my_license"
+    class
+        MY_CLASS
+    ....
+
+The license_name term should be placed in the top note/indexing clause of a class. Placing it at the
+bottom will cause it to be removed when replacing a class' license.
+
+In the case of a license_name using the license name 'my_license' the following will be attempted to
+be loaded, in order or priority:		
+  - $ISE_USER_FILES/studio/templates/licenses/my_license.lic
+  - $ISE_EIFFEL/studio/templates/licenses/my_license.lic
+    
+From a License File:
+--------------------
+For libraries and projects with an associated ECF, a license file or a license reference file may be
+used to class all classes belonging to that library or project with a particular license. The
+sources do not have to be modified to accomplish this, only a license file added at the same level 
+as the ECF.
+
+A license file should use the same file name as the ECF, for a project or library, except should
+used a ".lic" extension instead of one used for the ECF. The file can contain a license similar to
+those in $ISE_EIFFEL/studio/templates/licenses or can contain a reference string to point to a
+installed license file using a license name. For this, create the license file next to the ECF with
+the contents:
+
+    reference:name
+    
+where 'name' is the name of the license in $ISE_EIFFEL/studio/templates/licenses/ or
+$ISE_USER_FILES/studio/templates/licenses/ you wish to apply to the project/library. For instance
+
+   reference:my_ref_license
+
+In the case of a reference name using the license name 'my_license' the following will be attempted
+to be loaded, in order or priority:
+  - $ISE_USER_FILES/studio/templates/licenses/my_ref_license.lic
+  - $ISE_EIFFEL/studio/templates/licenses/my_ref_license.lic
+
+Using the Default License:
+--------------------------
+Where no license name in the source or license file neighbored to an ECF is found, you have one fall
+back option, which will license all other classes in all projects and libraries in this way - the
+default license.
+
+A default license is installed with EiffelStudio under
+$ISE_EIFFEL/studio/templates/licenses/default.lic and is blank. This file should not be modified
+unless there is good reason to do so. Instead add a user file at
+$ISE_USER_FILES/studio/templates/licenses/default.lic with the license you wish to use as the
+default for all other classes.
+

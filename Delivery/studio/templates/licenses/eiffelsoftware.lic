@@ -1,0 +1,14 @@
+${NOTE_KEYWORD}
+	copyright: "Copyright (c) 1984-${YEAR}, Eiffel Software"
+	copying: "[
+			Duplication and distribution prohibited.  May be used only with
+			Eiffel Software products, under terms of user license.
+			Contact Eiffel Software for any other use.
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"

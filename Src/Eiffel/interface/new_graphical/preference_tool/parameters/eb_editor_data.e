@@ -649,7 +649,6 @@ feature {NONE} -- Initialization
 			local_background_color_preference.set_auto_preference (normal_background_color_preference)
 
 			keyword_font_preference.change_actions.extend (agent update)
-			font_zoom_factor_preference.change_actions.extend (agent update_font)
 			normal_text_color_preference.change_actions.extend (agent update)
 			normal_background_color_preference.change_actions.extend (agent update)
 			selection_text_color_preference.change_actions.extend (agent update)

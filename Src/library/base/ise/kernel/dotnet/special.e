@@ -138,7 +138,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Count of special area
 		do
-			Result := internal_native_array.count - 1
+			Result := internal_native_array.count
 		end
 	
 	capacity: INTEGER

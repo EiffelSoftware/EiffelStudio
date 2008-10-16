@@ -185,7 +185,7 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_rt_hook (a_data: !TUPLE [unused_ref: ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
+	process_rt_hook (a_data: !TUPLE [unused_ref: ?ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
 			-- Execution reach a RTHOOK or RTNHOOK point
 		require
 			execution_recording_not_void: execution_recorder /= Void

@@ -30,11 +30,11 @@ feature -- Access
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
 		local
-			l_ast: ?like ast_license_id
+			l_ast: ?like ast_license_name
 			l_list: EIFFEL_LIST [ATOMIC_AS]
 			l_result: ?STRING_32
 		do
-			l_ast := ast_license_id
+			l_ast := ast_license_name
 			if l_ast /= Void then
 				l_list := l_ast.index_list
 				if l_list /= Void and then not l_list.is_empty then
@@ -77,8 +77,8 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	ast_license_id: ?INDEX_AS
-			-- License ID AST node.
+	ast_license_name: ?INDEX_AS
+			-- License name AST node.
 		require
 			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
@@ -88,16 +88,16 @@ feature {NONE} -- Access
 		do
 			l_indexing := ast.top_indexes
 			if l_indexing /= Void then
-				Result := ast_license_id_from_indexing (l_indexing)
+				Result := ast_license_name_from_indexing (l_indexing)
 			else
 				l_indexing := ast.bottom_indexes
 				if l_indexing /= Void then
-					Result := ast_license_id_from_indexing (l_indexing)
+					Result := ast_license_name_from_indexing (l_indexing)
 				end
 			end
 		ensure
 			result_is_license_id_term: Result /= Void implies
-				(Result.tag /= Void and then Result.tag.name.is_case_insensitive_equal (license_id_term))
+				(Result.tag /= Void and then Result.tag.name.is_case_insensitive_equal (license_name_term))
 		end
 
 	ast_license: ?INDEXING_CLAUSE_AS
@@ -129,10 +129,10 @@ feature -- Element change
 		do
 			if a_name = Void then
 					-- Remove the license id
-				l_ast := ast_license_id
+				l_ast := ast_license_name
 				if l_ast /= Void then
 					remove_ast_code (l_ast, remove_white_space_trailing)
-					if ast_license_id /= Void then
+					if ast_license_name /= Void then
 							-- There are multiple license ids, keep removing.
 						set_license_name (Void)
 					end
@@ -143,7 +143,7 @@ feature -- Element change
 				check False end
 			end
 		ensure
-			is_dirty: ((a_name = Void and old ast_license_id /= Void) implies is_dirty)
+			is_dirty: ((a_name = Void and old ast_license_name /= Void) implies is_dirty)
 		end
 
 	set_license (a_license: ?STRING_GENERAL)
@@ -193,11 +193,11 @@ feature -- Element change
 
 feature {NONE} -- Query
 
-	ast_license_id_from_indexing (a_clause: !INDEXING_CLAUSE_AS): ?INDEX_AS
-			-- Attempts to retrieve an {INDEX_AS} representing a specified license ID.
+	ast_license_name_from_indexing (a_clause: !INDEXING_CLAUSE_AS): ?INDEX_AS
+			-- Attempts to retrieve an {INDEX_AS} representing a specified license name.
 			--
-			-- `a_clause': An indexing clause to extract a license id from.
-			-- `Result': An indexing term presenting the license id or Void if none was found.
+			-- `a_clause': An indexing clause to extract a license name from.
+			-- `Result': An indexing term presenting the license name or Void if none was found.
 		require
 			is_interface_usable: is_interface_usable
 		local
@@ -209,7 +209,7 @@ feature {NONE} -- Query
 				if l_index /= Void then
 					l_tag := l_index.tag
 					if l_tag /= Void then
-						if l_tag.name.is_case_insensitive_equal (license_id_term) then
+						if l_tag.name.is_case_insensitive_equal (license_name_term) then
 							Result := l_index
 						end
 					end
@@ -218,7 +218,7 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_is_license_id_term: Result /= Void implies
-				(Result.tag /= Void and then Result.tag.name.is_case_insensitive_equal (license_id_term))
+				(Result.tag /= Void and then Result.tag.name.is_case_insensitive_equal (license_name_term))
 		end
 
 feature -- Status report
@@ -291,7 +291,7 @@ feature {NONE} -- Helpers
 
 feature -- Constants
 
-	license_id_term: !STRING = "license_id"
+	license_name_term: !STRING = "license_name"
 			-- Note term for specifying a license ID.
 
 	default_license_name: !STRING = "default"

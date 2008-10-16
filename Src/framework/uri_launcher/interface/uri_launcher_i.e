@@ -52,7 +52,7 @@ feature {NONE} -- Basic operations
 			not_a_uri_is_empty: not a_uri.is_empty
 			not_a_app_is_empty: not a_app.is_empty
 		local
-			l_exec: !EXECUTION_ENVIRONMENT
+			l_process: PROCESS
 			l_cmd: STRING
 			l_uri: STRING
 			i: INTEGER
@@ -85,9 +85,12 @@ feature {NONE} -- Basic operations
 			end
 
 				-- Execute command string.
-			create l_exec
-			l_exec.system (l_cmd)
-			Result := l_exec.return_code = 0
+			l_process := (create {PROCESS_FACTORY}).process_launcher_with_command_line (l_cmd, Void)
+			l_process.set_detached_console (True)
+			l_process.set_hidden (True)
+			l_process.launch
+			l_process.wait_for_exit
+			Result := l_process.exit_code = 0
 		end
 
 ;indexing

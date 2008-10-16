@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 				-- Show call stack command.
 			l_cmd := new_std_cmd (  Interface_names.t_call_stack_tool,
 									Pixmaps.icon_pixmaps.tool_call_stack_icon,
-									misc_shortcut_data.shortcuts.item ("show_call_stack_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_call_stack_tool"), False,
 									agent show_call_stack_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 				-- Show objects tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_object_tool,
 									Pixmaps.icon_pixmaps.tool_objects_icon,
-									misc_shortcut_data.shortcuts.item ("show_objects_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_objects_tool"), False,
 									agent show_objects_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 				-- Show thread tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_threads_tool,
 									Pixmaps.icon_pixmaps.tool_threads_icon,
-									misc_shortcut_data.shortcuts.item ("show_threads_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_threads_tool"), False,
 									agent show_thread_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 				-- Show object viewer tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_Object_viewer_tool,
 									Pixmaps.icon_pixmaps.debugger_object_expand_icon,
-									misc_shortcut_data.shortcuts.item ("show_object_viewer_tool"), True,
+									misc_shortcut_data.shortcuts.item ("show_object_viewer_tool"), False,
 									agent show_object_viewer_tool
 								)
 			show_tool_commands.extend (l_cmd)
@@ -163,7 +163,7 @@ feature {NONE} -- Initialization
 				-- Show watch tool command.
 			l_cmd := new_std_cmd (  Interface_names.t_watch_tool,
 									Pixmaps.icon_pixmaps.tool_watch_icon,
-									show_watch_tool_preference, True,
+									show_watch_tool_preference, False,
 									agent show_new_or_hidden_watch_tool
 								)
 			show_tool_commands.extend (l_cmd)

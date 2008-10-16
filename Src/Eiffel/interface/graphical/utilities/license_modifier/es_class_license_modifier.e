@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	license_name: !STRING_32
+	license_name: ?STRING_32
 			-- Name of the license previously assigned to the class.
 		require
 			is_interface_usable: is_interface_usable
@@ -33,15 +33,6 @@ feature -- Access
 			l_ast: ?like ast_license_id
 			l_list: EIFFEL_LIST [ATOMIC_AS]
 			l_result: ?STRING_32
-			l_vars: ?EQUALITY_HASH_TABLE [STRING, STRING]
-			l_variable_name: STRING
-			l_context_class: !like context_class
-			l_libraries: !LIST [!CONF_LIBRARY]
-			l_library: !CONF_LIBRARY
-			l_target: ?CONF_TARGET
-			l_load_config: !CONF_LOAD
-			l_conf_system: ?CONF_SYSTEM
-			l_uuid: UUID
 		do
 			l_ast := ast_license_id
 			if l_ast /= Void then
@@ -50,58 +41,14 @@ feature -- Access
 						-- Take the first index value, ignore all others, in case of a typo on the user's part.
 					if {l_string: STRING_AS} l_list.first then
 						l_result := l_string.value.as_string_32
-					end
-				end
-			end
-			if l_result = Void or else l_result.is_empty then
-				l_context_class := context_class
-				if l_context_class.target.system /~ l_context_class.universe.conf_system then
-						-- Libraries do not have variables so we need to load the configuration and fetch the variables.
-					l_uuid := l_context_class.target.system.uuid
-					if l_uuid /= Void then
-							-- Fetch the library reference and load the configuration.
-						l_libraries := l_context_class.universe.library_of_uuid (l_uuid, True)
-						if not l_libraries.is_empty then
-							l_library := l_libraries.first
-							create l_load_config.make (create {CONF_FACTORY})
-							l_load_config.retrieve_configuration (l_library.location.evaluated_path)
-							if not l_load_config.is_error then
-								l_conf_system := l_load_config.last_system
-								if l_conf_system /= Void then
-									l_target := l_conf_system.library_target
-								end
-							end
-						end
-					end
-				else
-						-- Use the class target
-					l_target := l_context_class.target
-				end
-
-				if l_target /= Void then
-					l_vars := l_target.variables
-					if l_vars /= Void then
-							-- Check out the variables defined in the library.
-						if l_vars.has (license_id_term) then
-							l_result := l_vars.item (license_id_term).as_string_32
-						else
-							l_variable_name := license_id_term.as_upper
-							if l_vars.has (l_variable_name) then
-								l_result := l_vars.item (license_id_term.as_upper).as_string_32
-							end
+						if not l_result.is_empty then
+							Result := l_result
 						end
 					end
 				end
-			end
-
-			if l_result = Void or else l_result.is_empty then
-					-- Use default
-				create Result.make_from_string (default_license_name)
-			else
-				Result := l_result
 			end
 		ensure
-			not_result_is_empty: not Result.is_empty
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 	license: !STRING_32

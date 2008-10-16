@@ -5172,10 +5172,10 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 		case LIKE_ARG_TYPE: /* like argument */
 			pos = (int) get_int16(&IC);
 			result = get_creation_type ();
-			result = RTID(RTCA(arg(pos)->it_ref, result));
+			result = RTCA(arg(pos)->it_ref, result);
 			break;
 		case LIKE_CURRENT_TYPE: /* like Current */
-			result = RTID(Dftype(Current));
+			result = Dftype(Current);
 			break;
 		case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
 			{
@@ -5185,7 +5185,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				stype = get_int16(&IC);			/* Get static type of caller */
 				origin = get_int32(&IC);			/* Get the origin class id */
 				ooffset = get_int32(&IC);			/* Get the offset in origin */
-				result = RTID(RTWPCT(stype, origin, ooffset, Current));
+				result = RTWPCT(stype, origin, ooffset, Current);
 			}
 			break;
 		case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
@@ -5195,7 +5195,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 
 				code = get_int16(&IC);		/* Get the static type first */
 				offset = get_int32(&IC);	/* Get the feature id of the anchor */
-				result = RTID(RTWCT(code, offset, Current));
+				result = RTWCT(code, offset, Current);
 			}
 			break;
 		default:

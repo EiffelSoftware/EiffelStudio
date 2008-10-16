@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="default">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option namespace="EiffelSoftware.Framework.Ecf">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
@@ -18,12 +18,14 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="configuration" location="compiler\" recursive="true">
+			<option namespace="Compiler">
+			</option>
 			<file_rule>
 				<exclude>/implementation$</exclude>
 			</file_rule>
-			<option namespace="Compiler"/>
 			<cluster name="implementation" location="$|implementation\" recursive="true">
-				<option namespace="Spec"/>
+				<option namespace="Spec">
+				</option>
 			</cluster>
 		</cluster>
 	</target>

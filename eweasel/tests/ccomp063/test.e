@@ -24,7 +24,7 @@ feature {NONE} -- Test
 			f = (EIF_INTEGER_32 (*)(EIF_REFERENCE, EIF_INTEGER_32))
 				(eif_integer_32_function ("f", eif_type_id ("TEST")));
 			if (f)
-				return (f) ($c, 1);
+				return (f) (eif_access($c), 1);
 			return 0;
 		]"
 		end
@@ -37,7 +37,7 @@ feature {NONE} -- Test
 			g = (EIF_INTEGER_32 (*)(EIF_REFERENCE, EIF_INTEGER_32))
 				(eif_integer_32_function ("g", eif_type_id ("TEST")));
 			if (g)
-				return (g) ($c, 1);
+				return (g) (eif_access($c), 1);
 			return 0;
 		]"
 		end

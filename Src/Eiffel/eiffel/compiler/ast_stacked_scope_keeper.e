@@ -34,7 +34,7 @@ feature -- Status report: nesting
 			Result := outer_scopes.count
 		end
 
-feature -- Modification: nesting
+feature {AST_CONTEXT} -- Modification: nesting
 
 	enter_realm
 			-- Enter a new complex instruction

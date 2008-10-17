@@ -251,11 +251,17 @@ feature -- Scope state
 	init_variable_scopes
 			-- Prepare structures to track variable scopes.
 		do
+			initialization_keeper := scope_keeper_factory.create_scope_keeper (locals.count)
 			scope_keeper := scope_keeper_factory.create_scope_keeper (locals.count)
 		ensure
+			initialization_keeper_attached: initialization_keeper /= Void
+			initialization_keeper_initialized: initialization_keeper.local_count = locals.count
 			scope_keeper_attached: scope_keeper /= Void
 			scope_keeper_initialized: scope_keeper.local_count = locals.count
 		end
+
+	initialization_keeper: AST_INITIALIZATION_KEEPER
+			-- Keeper of initialized variables
 
 	scope_keeper: AST_SCOPE_KEEPER
 			-- Keeper of scopes of non-void variables
@@ -321,6 +327,18 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			is_result_attached: is_result_attached
 		end
 
+	set_local (id: INTEGER_32)
+			-- Mark that a local identified by `id' is set.
+		do
+			initialization_keeper.set_local (locals.item (id).position)
+		end
+
+	set_result
+			-- Mark that "Result" is set.
+		do
+			initialization_keeper.set_result
+		end
+
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
 
 	add_object_test_expression_scope (id: INTEGER_32)
@@ -355,6 +373,45 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 			scope_keeper.stop_result_scope
 		ensure
 			result_scope_removed: not is_result_attached
+		end
+
+feature -- Local initialization and scopes: nesting
+
+	enter_realm
+			-- Enter a new complex instruction with inner compound parts.
+		do
+			initialization_keeper.enter_realm
+			scope_keeper.enter_realm
+		end
+
+	update_realm
+			-- Update realm variable information from the current state.
+		do
+			initialization_keeper.update_realm
+			scope_keeper.update_realm
+		end
+
+	save_sibling
+			-- Save variable information of a sibling in a complex instrution.
+			-- For example, Then_part of Elseif condition.
+		do
+			initialization_keeper.save_sibling
+			scope_keeper.save_sibling
+		end
+
+	leave_realm
+			-- Leave a complex instruction and promote variable information to the outer compound.
+		do
+			initialization_keeper.leave_realm
+			scope_keeper.leave_realm
+		end
+
+	leave_optional_realm
+			-- Leave a complex instruction and discard its variable information.
+			-- For example, Debug instruction.
+		do
+			initialization_keeper.leave_optional_realm
+			scope_keeper.leave_optional_realm
 		end
 
 feature -- Variable context
@@ -635,6 +692,7 @@ feature	-- Saving contexts
 			used_local_names := Void
 			scopes.copy (Result.scopes)
 			scope_keeper := Void
+			initialization_keeper := Void
 		end
 
 	restore (context: AST_CONTEXT) is

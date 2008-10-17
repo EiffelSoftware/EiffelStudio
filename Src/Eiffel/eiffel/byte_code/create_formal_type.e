@@ -30,8 +30,7 @@ feature -- C code generation
 
 	analyze is
 		do
-				-- Current is always used to generate the correct generic parameter.
-			context.mark_current_used
+			associated_create_feat.analyze
 		end
 
 	generate is
@@ -47,14 +46,8 @@ feature -- C code generation
 
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL) is
 			-- Generate formal creation type id
-		local
-			l_feat: TYPE_FEATURE_I
 		do
-			check
-				context_class_is_generic: context.context_class_type.is_generic
-			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).generate_type_id (buffer, final_mode, a_level)
+			associated_create_feat.generate_type_id (buffer, final_mode, a_level)
 		end
 
 feature -- IL code generation
@@ -85,27 +78,15 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a formal creation type.
-		local
-			l_feat: TYPE_FEATURE_I
 		do
-			check
-				context_class_is_generic: context.context_class_type.is_generic
-			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).make_byte_code (ba)
+			associated_create_feat.make_byte_code (ba)
 		end
 
 
 	make_type_byte_code (ba: BYTE_ARRAY)
 			-- <Precursor>
-		local
-			l_feat: TYPE_FEATURE_I
 		do
-			check
-				context_class_is_generic: context.context_class_type.is_generic
-			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).make_type_byte_code (ba)
+			associated_create_feat.make_type_byte_code (ba)
 		end
 
 feature -- Generic conformance
@@ -117,46 +98,47 @@ feature -- Generic conformance
 		end
 
 	generate_gen_type_conversion (a_level: NATURAL) is
+			-- <Precursor>
 		do
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-		local
-			l_feat: TYPE_FEATURE_I
+			-- <Precursor>
 		do
-			check
-				context_class_is_generic: context.context_class_type.is_generic
-			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).generate_cid (buffer, final_mode)
+			associated_create_feat.generate_cid (buffer, final_mode)
 		end
 
 	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL_32) is
 			-- <Precursor>
-		local
-			l_feat: TYPE_FEATURE_I
 		do
-			check
-				context_class_is_generic: context.context_class_type.is_generic
-			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).generate_cid_init (buffer, final_mode, idx_cnt, a_level)
+			associated_create_feat.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 		end
 
 	generate_cid_array (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER) is
 			-- <Precursor>
+		do
+			associated_create_feat.generate_cid_array (buffer, final_mode, idx_cnt)
+		end
+
+	type_to_create : CL_TYPE_A is
+			-- <Precursor>
+		do
+		end
+
+feature {NONE} -- Helper
+
+	associated_create_feat: CREATE_FEAT is
+			-- Associated creation feature for formal.
 		local
 			l_feat: TYPE_FEATURE_I
 		do
 			check
-				context_class_is_generic: context.context_class_type.is_generic
+				context_class_is_generic: context.class_type.is_generic
 			end
-			l_feat := context.context_class_type.associated_class.formal_at_position (type.position)
-			(create {CREATE_FEAT}.make (l_feat.feature_id, l_feat.rout_id_set.first)).generate_cid_array (buffer, final_mode, idx_cnt)
-		end
-
-	type_to_create : CL_TYPE_A is
-		do
+			l_feat := context.class_type.associated_class.formal_at_position (type.position)
+			create Result.make (l_feat.feature_id, l_feat.rout_id_set.first)
+		ensure
+			assocated_create_feat_not_void: Result /= Void
 		end
 
 indexing
@@ -191,4 +173,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATE_FORMAL_TYPE
+end

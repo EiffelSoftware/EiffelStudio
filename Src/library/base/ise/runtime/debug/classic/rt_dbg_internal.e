@@ -187,23 +187,6 @@ feature -- Object access
 			]"
 		end
 
-	frozen rt_reverse_updated_dynamic_type (fid: INTEGER): INTEGER is
-			-- Reverse updated dynamic type id from `fid'.
-			--| note: for non generic: Result = fid
-		require
-			fid_not_negative: fid >= 0
-		external
-			"C inline use %"eif_macros.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return RTID($fid);
-			#else
-				return 0;
-			#endif
-			]"
-		end
-
 feature {NONE} -- Factory
 
 	frozen object_record (i: INTEGER; obj: !ANY): ?RT_DBG_VALUE_RECORD is

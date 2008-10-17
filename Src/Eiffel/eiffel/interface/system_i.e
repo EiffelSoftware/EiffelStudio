@@ -117,9 +117,6 @@ feature {NONE} -- Initialization
 			create history_control.make
 			create instantiator.make
 
-				-- Type set creation
-			create type_set.make (100)
-
 				-- External table creation
 			create externals.make (10)
 
@@ -207,10 +204,6 @@ feature -- Properties
 
 	class_types: ARRAY [CLASS_TYPE]
 			-- Array of class types indexed by their `type_id'
-
-	type_set: SEARCH_TABLE [INTEGER]
-			-- Set of the routine ids for which a type table should
-			-- be generated
 
 	skeleton_table: HASH_TABLE [STRING, STRING]
 			-- Table where all the offsets/sizes generated in finalized mode are stored.

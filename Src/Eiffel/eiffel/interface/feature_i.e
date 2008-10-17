@@ -1471,7 +1471,7 @@ feature -- IL code generation
 			byte_code: BYTE_CODE
 		do
 			if not is_attribute and then not is_external then
-				byte_code := Byte_server.item (body_index)
+				byte_code := Byte_server.disk_item (body_index)
 				byte_context.set_byte_code (byte_code)
 				byte_context.set_current_feature (Current)
 				byte_code.generate_il

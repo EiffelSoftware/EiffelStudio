@@ -1380,6 +1380,7 @@ test	vkcn-error-reporting-failure		term157 tcf pass termination
 test	invalid-case-crash			term158 tcf pass termination
 test	conversion-in-closed-argument-crash	term159 tcf pass termination
 test	formal-generic-creation-crash	term160 tcf pass termination
+test	array-with-anchor-crash		term161 tcf pass termination dotnet
 
 -- Config
 

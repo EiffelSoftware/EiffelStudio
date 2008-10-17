@@ -26,6 +26,7 @@ inherit
 
 	EV_TEXT_FIELD
 		redefine
+			initialize,
 			make_with_text
 		end
 
@@ -38,21 +39,17 @@ inherit
 		end
 
 create
+	default_create,
 	make,
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialization
+	make
+		obsolete
+			"Use `default_create' instead."
 		do
 			default_create
-			initialize_code_complete
-			key_completable := agent can_complete
-			set_discard_feature_signature (true)
-
-				-- Add handler to trap completion
-			set_default_key_processing_handler (agent on_default_key_processing)
 		end
 
 	make_with_text (a_text: STRING_32) is
@@ -60,6 +57,18 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TEXT_FIELD} (a_text)
 			make
+		end
+
+	initialize is
+			-- <Precursor>
+		do
+			Precursor
+			initialize_code_complete
+			key_completable := agent can_complete
+			set_discard_feature_signature (true)
+
+				-- Add handler to trap completion
+			set_default_key_processing_handler (agent on_default_key_processing)
 		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access

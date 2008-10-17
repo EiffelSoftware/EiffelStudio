@@ -2811,7 +2811,7 @@ feature -- Properties
 			-- Indexed by `rout_id' of formal generic parameter.
 			-- Updated during `pass2' of INHERIT_TABLE.
 
-	anchored_features: like generic_features
+	anchored_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			-- Collect all features that are used for creating or doing an assignment
 			-- attempt in current or in an inherited class.
 			-- Indexed by `rout_id' of feature on which anchor is done.

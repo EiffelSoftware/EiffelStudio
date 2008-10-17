@@ -57,15 +57,6 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 /*------------------------------------------------------------------*/
 
 /*
-#define GEN_CONF_DEBUG
-*/
-#ifdef GEN_CONF_DEBUG
-rt_public void log_puts (char *);
-rt_public void log_puti (int);
-#define logfile "gentypes.log"
-#endif
-
-/*
 doc:	<attribute name="eif_par_table" return_type="struct eif_par_types **" export="shared">
 doc:		<summary>Parent tables. Defined by compiler C generated code in `eparents.c'. Changes to this table after melt are stored in melted file and processed by `updated.c' and stored in `eif_par_table2'.</summary>
 doc:		<access>Read only through macro `par_info'.</access>
@@ -293,7 +284,7 @@ rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX, E
 rt_public EIF_TYPE_INDEX eifthd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
 rt_shared uint32 eifthd_gen_count_with_dftype (EIF_TYPE_INDEX );
 rt_shared char eifthd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
-rt_public EIF_TYPE_INDEX eifthd_gen_param_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX , uint32);
+rt_public EIF_TYPE_INDEX eifthd_gen_param_id (EIF_TYPE_INDEX , uint32);
 rt_public EIF_REFERENCE eifthd_gen_create (EIF_REFERENCE , uint32);
 rt_shared EIF_TYPE_INDEX eifthd_register_bit_type (uint16);
 rt_shared EIF_TYPE_INDEX eifthd_typeof_array_of (EIF_TYPE_INDEX);
@@ -319,13 +310,13 @@ rt_public int eifthd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 /*------------------------------------------------------------------*/
 
 rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype);
-rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX, EIF_TYPE_INDEX, uint32, char *, uint16 *);
+rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX, uint32, char *, uint16 *);
 rt_private void eif_create_typename (EIF_TYPE_INDEX, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX);
 rt_private void eif_expand_tables(int);
-rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX, EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX, int);
+rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX, int);
 rt_private void eif_compute_ctab (EIF_TYPE_INDEX);
 rt_private EIF_CONF_TAB *eif_new_conf_tab (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, EIF_TYPE_INDEX);
@@ -410,12 +401,12 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 }
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX dftype, uint32 pos)
+rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 {
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eifthd_gen_param_id (stype, dftype, pos);
+	result = eifthd_gen_param_id (dftype, pos);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -808,48 +799,17 @@ rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX 
 
 		if ((cache) && (*cache != TERMINATOR))
 		{
-#ifdef GEN_CONF_DEBUG
-			log_puts ("Cached -> ");
-			log_puts (eif_typename(*cache));
-			log_puts ("\r\n");
-#endif
 			return *cache;
 		}
-
-#ifdef GEN_CONF_DEBUG
-		intable = types;
-		log_puts ("{");
-		while (*intable != TERMINATOR)
-		{
-			log_puti ((int) *intable);
-			log_puts (",");
-			++intable;
-		}
-
-		log_puts ("TERMINATOR} -> ");
-#endif
 
 		intable  = types+1;
 		outtable = outtab;
 
-		gresult = eif_id_of (*types, &intable, &outtable, current_dftype, 1);
+		gresult = eif_id_of (&intable, &outtable, current_dftype, 1);
 		
-#ifdef GEN_CONF_DEBUG
-		log_puts (eif_typename(gresult));
-		log_puts (" Dftype = ");
-		log_puti ((int) gresult);
-#endif
-
 		if (cache) {
-#ifdef GEN_CONF_DEBUG
-			log_puts (" CACHED");
-#endif
 			*cache = gresult;
 		}
-
-#ifdef GEN_CONF_DEBUG
-		log_puts ("\r\n");
-#endif
 
 		return gresult;
 	}
@@ -861,7 +821,6 @@ rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX 
 /* Compute id for `gttable' (generic type list for feature in final */
 /* mode).                                                           */
 /*                                                                  */
-/* stype  : static type of caller; RTUD(no)                         */
 /* Result : RTUD(yes); doesn't matter since in final mode           */
 /*------------------------------------------------------------------*/
 
@@ -872,12 +831,10 @@ rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **
 	EIF_TYPE_INDEX	dtype = To_dtype(dftype);
 	int	table_index = dtype - offset;
 
-	if (gttable != NULL)
-	{
+	if (gttable != NULL) {
 		gtp = gttable [table_index];
 
-		if ((gtp != NULL) && (*(gtp+1) != TERMINATOR))
-		{
+		if ((gtp != NULL) && (*(gtp+1) != TERMINATOR)) {
 			*gtp = dtype;
 			return eif_compound_id (NULL, dftype, ttable[table_index], gtp);
 		}
@@ -893,11 +850,10 @@ rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **
 /* set to zero. `nr_bits' is > 0 if type is BIT, zero otherwise -   */
 /* the value can then be used to call RTLB(nr_bits).                */
 /*                                                                  */
-/* stype : type of caller; RTUD(no)                                 */
 /* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX dftype, uint32 pos, char *is_exp, uint16 *nr_bits)
+rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX dftype, uint32 pos, char *is_exp, uint16 *nr_bits)
 {
 	EIF_TYPE_INDEX result;
 	EIF_GEN_DER *gdp;
@@ -1116,11 +1072,10 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
 /*                                                                  */
-/* stype : Type of caller; RTUD(no)                                 */
 /* Result: RTUD(yes)                                                */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX dftype, uint32 pos)
+rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 
 {
 	char    is_expanded;
@@ -1128,7 +1083,7 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX 
 
 	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
-	return eif_gen_param (stype, dftype, pos, &is_expanded, &nr_bits);
+	return eif_gen_param (dftype, pos, &is_expanded, &nr_bits);
 }
 /*------------------------------------------------------------------*/
 /* Create an object with the same type as the type of the generic   */
@@ -1143,7 +1098,7 @@ rt_public EIF_REFERENCE eif_gen_create (EIF_REFERENCE obj, uint32 pos)
 
 	REQUIRE("obj not null", obj);
 
-	result_type = eif_gen_param (INVALID_DTYPE, Dftype(obj), pos, &is_expanded, &nr_bits);
+	result_type = eif_gen_param (Dftype(obj), pos, &is_expanded, &nr_bits);
 
 #ifndef WORKBENCH
 	if (is_expanded) {
@@ -1535,7 +1490,6 @@ done:
 /*------------------------------------------------------------------*/
 /* Computation of a new id.                                         */
 /*                                                                  */
-/* stype      : Static type of caller; RTUD(no); <= 0 if none.      */
 /* intab      : RTUD(no) except for dtypes of objects               */
 /* outtab     : List of computed ids for generics; RTUD(no).        */
 /* obj_type   : Full type of object; RTUD(yes). Used to replace a   */
@@ -1543,7 +1497,7 @@ done:
 /* apply_rtud : Send result through RTUD?                           */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX **intab, 
+rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, 
 							EIF_TYPE_INDEX **outtab, EIF_TYPE_INDEX obj_type, 
 							int apply_rtud)
 
@@ -1633,7 +1587,7 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX **inta
 	(*intab)++;
 
 	for (hcode = 0, i = gcount; i; --i) {
-		hcode = hcode + eif_id_of (stype, intab, outtab, obj_type, 0);
+		hcode = hcode + eif_id_of (intab, outtab, obj_type, 0);
 	}
 
 	/* Search */
@@ -2482,7 +2436,7 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (INVALID_DTYPE, &intable, &outtable, dftype, 1);
+		pftype = eif_id_of (&intable, &outtable, dftype, 1);
 		if (*intable == PARENT_TYPE_SEPARATOR) {
 			intable++;
 		}
@@ -2542,7 +2496,7 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (INVALID_DTYPE, &intable, &outtable, dftype, 1);
+		pftype = eif_id_of (&intable, &outtable, dftype, 1);
 		if (*intable == PARENT_TYPE_SEPARATOR) {
 			intable++;
 		}
@@ -2668,7 +2622,7 @@ rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (INVALID_DTYPE, &intable, &outtable, dftype, 1);
+		pftype = eif_id_of (&intable, &outtable, dftype, 1);
 		if (*intable == PARENT_TYPE_SEPARATOR) {
 			intable++;
 		}
@@ -2702,7 +2656,7 @@ rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (INVALID_DTYPE, &intable, &outtable, dftype, 1);
+		pftype = eif_id_of (&intable, &outtable, dftype, 1);
 		pamap = eif_anc_id_map [pftype];
 		if (*intable == PARENT_TYPE_SEPARATOR) {
 			intable++;
@@ -2734,37 +2688,6 @@ rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX dftype)
 
 	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
-
-/*------------------------------------------------------------------*/
-/*------------------------------------------------------------------*/
-/*------------------------------------------------------------------*/
-#ifdef GEN_CONF_DEBUG
-
-#include    <stdio.h>
-
-rt_private FILE *lfp = NULL;
-
-rt_public void log_puts (char *s)
-
-{
-	if (lfp == NULL)
-		lfp = fopen (logfile, "w");
-
-	fprintf (lfp,"%s",s);
-	fflush (lfp);
-}
-
-rt_public void log_puti (int i)
-
-{
-	if (lfp == NULL)
-		lfp = fopen (logfile, "w");
-
-	fprintf (lfp,"%d",i);
-	fflush (lfp);
-}
-#endif
-/*------------------------------------------------------------------*/
 
 /*
 doc:</file>

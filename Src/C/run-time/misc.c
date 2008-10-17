@@ -427,7 +427,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * OVERHEAD bytes in the computation of 'dtype'--RAM.
 	 */
 
-	exp_dftype = eif_gen_param_id (INVALID_DTYPE, Dftype(new_area), 1);
+	exp_dftype = eif_gen_param_id (Dftype(new_area), 1);
 
 		/* Initialize expanded objects from 0 to (j - 1) */
 	new_area = sp_init(new_area, exp_dftype, 0, j - 1);

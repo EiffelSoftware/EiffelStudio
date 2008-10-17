@@ -77,13 +77,22 @@ feature -- C code generation
 			-- We need Dftype(Current).
 		local
 			entry: POLY_TABLE [ENTRY]
+			l_type: TYPE_A
 		do
 			if context.final_mode then
 				entry := Eiffel_table.poly_table (routine_id)
-				if not entry.has_one_type or else is_generic then
+				if not entry.has_one_type then
 						-- We are in polymorphic case
 					context.mark_current_used
 					context.add_dftype_current
+				else
+					l_type := entry.first.type.deep_actual_type
+					if {l_gen_type: GEN_TYPE_A} l_type then
+						context.mark_current_used
+						context.add_dftype_current
+					elseif {l_formal: FORMAL_A} l_type then
+						context.add_dftype_current
+					end
 				end
 			else
 				context.mark_current_used
@@ -116,7 +125,7 @@ feature -- C code generation
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
 					elseif {l_formal: FORMAL_A} table.first.type then
-						buffer.put_string ("eif_gen_param_id(INVALID_DTYPE, ")
+						buffer.put_string ("eif_gen_param_id(")
 						context.generate_current_dftype
 						buffer.put_two_character (',', ' ')
 						buffer.put_integer (l_formal.position)
@@ -128,9 +137,7 @@ feature -- C code generation
 						-- Attribute is polymorphic
 					table_name := Encoder.type_table_name (routine_id)
 
-					buffer.put_string ("RTFCID2(")
-					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
-					buffer.put_character (',')
+					buffer.put_string ("eif_final_id(")
 					buffer.put_string (table_name)
 					buffer.put_character (',')
 					buffer.put_string (table_name)
@@ -280,9 +287,7 @@ feature -- Genericity
 						-- Attribute is polymorphic
 					table_name := Encoder.type_table_name (routine_id)
 
-					buffer.put_string ("RTFCID2(")
-					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
-					buffer.put_character (',')
+					buffer.put_string ("eif_final_id(")
 					buffer.put_string (table_name)
 					buffer.put_character (',')
 					buffer.put_string (table_name)
@@ -409,9 +414,7 @@ feature -- Genericity
 					buffer.put_natural_32 (a_level)
 					buffer.put_character ('[')
 					buffer.put_integer (idx_cnt.value)
-					buffer.put_string ("] = RTFCID2(")
-					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
-					buffer.put_character (',')
+					buffer.put_string ("] = eif_final_id(")
 					buffer.put_string (table_name)
 					buffer.put_character (',')
 					buffer.put_string (table_name)
@@ -440,7 +443,7 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.associated_class.is_precompiled
 				then
-					buffer.put_string ("] = RTID(RTWPCT(")
+					buffer.put_string ("] = RTWPCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
@@ -448,7 +451,7 @@ feature -- Genericity
 					buffer.put_string (gc_comma)
 					buffer.put_integer (rout_info.offset)
 				else
-					buffer.put_string ("] = RTID(RTWCT(")
+					buffer.put_string ("] = RTWCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
@@ -456,7 +459,7 @@ feature -- Genericity
 
 				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.put_string ("));")
+				buffer.put_two_character (')', ';')
 				dummy := idx_cnt.next
 			end
 		end

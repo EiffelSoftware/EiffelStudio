@@ -343,11 +343,11 @@ feature -- Code generation
 			l_buffer.put_string ("typres")
 			l_buffer.put_natural_32 (a_level)
 			if l_can_save_result then
-				l_buffer.put_string (" = RTCID2(&typcache")
+				l_buffer.put_string (" = eif_compound_id(&typcache")
 				l_buffer.put_natural_32 (a_level)
 				l_buffer.put_two_character (',', ' ')
 			else
-				l_buffer.put_string (" = RTCID2(NULL, ")
+				l_buffer.put_string (" = eif_compound_id(NULL, ")
 			end
 			generate_current_dftype
 			l_buffer.put_string (", ")

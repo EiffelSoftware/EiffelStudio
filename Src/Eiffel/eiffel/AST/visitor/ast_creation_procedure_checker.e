@@ -54,8 +54,8 @@ feature {NONE} -- Creation
 			variables.start_creation_procedure
 			variables.enter_compound
 			process (f)
-			variables.leave_compound
 			check_attributes (f.body.last_token (Void))
+			variables.leave_compound
 		end
 
 feature {NONE} -- Processing
@@ -94,7 +94,7 @@ feature {NONE} -- Processing
 			loop
 				i := s.item_for_iteration.feature_id
 				a := current_class.feature_of_feature_id (i)
-				if a.type.is_initialization_required and then not variables.is_attribute_initialized (i) then
+				if a.type.is_initialization_required and then not variables.is_attribute_set (i) then
 						-- Attribute is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_attribute (a, current_class.class_id, context, l))
 				end

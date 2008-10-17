@@ -25,7 +25,7 @@ inherit
 
 feature -- Basic operations
 
-	render_template (a_template: ?STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): !STRING_32
+	render_template (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): !STRING_32
 			-- <Precursor>
 		local
 			l_templates: !like build_code_template
@@ -51,10 +51,11 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: ?STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): ?STRING_32
+	render_template_from_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): ?STRING_32
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_INPUT_FILE
+			l_contents: ?STRING
 			l_count: INTEGER
 		do
 			l_file := file_system.new_input_file (a_file_name.as_string_8)
@@ -64,7 +65,10 @@ feature -- Basic operations
 				if l_count > 0 then
 					l_file.open_read
 					l_file.read_string (l_count)
-					Result := render_template (l_file.last_string, a_parameters)
+					l_contents := l_file.last_string
+					if l_contents /= Void then
+						Result := render_template (l_contents, a_parameters)
+					end
 				else
 					create Result.make_empty
 				end
@@ -76,7 +80,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: ?STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: ?STRING_GENERAL)
+	render_template_to_file (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
@@ -97,7 +101,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: ?STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: ?STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE

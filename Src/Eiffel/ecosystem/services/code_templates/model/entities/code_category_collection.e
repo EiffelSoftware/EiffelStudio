@@ -29,7 +29,7 @@ feature {NONE} -- Access
 	item_equality_tester: KL_EQUALITY_TESTER [!STRING_32]
 			-- Optional equality tester for item comparison.
 		do
-			Result ?= Current
+			Result := Current
 		ensure then
 			result_attached: Result /= Void
 		end
@@ -39,7 +39,7 @@ feature {NONE} -- Status report
 	test (a_s1:!STRING_32; a_s2: !STRING_32): BOOLEAN
 			-- <Precursor>
 		do
-			if a_s1 = a_s2 then
+			if a_s1 ~ a_s2 then
 				Result := True
 			else
 				Result := a_s1.is_case_insensitive_equal (a_s2)

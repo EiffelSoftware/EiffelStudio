@@ -175,8 +175,9 @@ feature -- Properties
 			ct: CLASS_TYPE
 			add: DBG_ADDRESS
 		do
-			if object_address /= Void and then not object_address.is_void then
-				dobj := debugger_manager.object_manager.debugged_object (object_address, 0, 0)
+			add := object_address
+			if add /= Void and then not add.is_void then
+				dobj := debugger_manager.object_manager.debugged_object (add, 0, 0)
 				if dobj /= Void then
 					ct := dobj.class_type
 					if dobj.is_special then

@@ -390,7 +390,7 @@ feature -- Comparison
 			if l_name = Void then
 				Result := other.feature_name /= Void
 			else
-				Result := l_other_name /= Void and l_name < l_other_name
+				Result := l_other_name /= Void and then l_name < l_other_name
 			end
 		end
 

@@ -1,0 +1,11 @@
+test_name 	 crash-when-calling-out-on-a-formal
+test_description When you call `out' on a formal generic parameter which is first generated as a CHARACTER, then the compiler would modify the byte code to use the one from DEBUG_OUTPUT, but when processing the POINTER derivation because it does not inherit from DEBUG_OUTPUT it would crash at compile time. Solution is to make sure we retrieve the byte code always from disk.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

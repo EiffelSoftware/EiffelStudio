@@ -26,6 +26,7 @@ inherit
 			check_const_gen_conformance,
 			is_reference,
 			is_expanded,
+			is_initialization_required,
 			internal_is_valid_for_class,
 			description,
 			generated_id,
@@ -108,6 +109,14 @@ feature -- Property
 			l_generics := a_context_class.generics
 			check l_generics_not_void: l_generics /= Void end
 			Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
+		end
+
+	is_initialization_required: BOOLEAN
+			-- Is initialization required for this type in void-safe mode?
+		do
+			if not is_expanded and then not has_detachable_mark then
+				Result := True
+			end
 		end
 
 feature -- IL code generation
@@ -475,7 +484,7 @@ feature {COMPILER_EXPORTER}
 			-- assuming that Current is written in class of id `written_id'.
 		do
 			if {l_cl_type: CL_TYPE_A} type.actual_type then
-				Result := l_cl_type.instantiation_of (Current, written_id)
+				Result := to_current_attachment (l_cl_type.instantiation_of (Current, written_id))
 			else
 				Result := Current
 			end
@@ -509,7 +518,7 @@ feature {COMPILER_EXPORTER}
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := class_type.generics.item (position)
+			Result := to_current_attachment (class_type.generics.item (position))
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A is
@@ -523,11 +532,13 @@ feature {COMPILER_EXPORTER}
 			check l_feat_not_void: l_feat /= Void end
 			Result := l_feat.type.actual_type
 			if has_attached_mark then
-				Result := Result.duplicate
-				Result.set_attached_mark
+				if not Result.is_attached then
+					Result := Result.as_attached
+				end
 			elseif has_detachable_mark then
-				Result := Result.duplicate
-				Result.set_detachable_mark
+				if Result.is_attached or else Result.is_implicitly_attached then
+					Result := Result.as_detachable
+				end
 			end
 		end
 

@@ -140,6 +140,31 @@ feature -- Duplication
 			end
 		end
 
+	to_current_attachment (other: TYPE_A): TYPE_A
+			-- `other' interpreted with current attachment status
+		require
+			other_attached: other /= Void
+		do
+			Result := other
+			if has_attached_mark then
+				if not Result.is_attached then
+					Result := Result.as_attached
+				end
+			elseif is_implicitly_attached then
+				if not Result.is_attached and then not Result.is_implicitly_attached then
+					Result := Result.as_implicitly_attached
+				end
+			elseif has_detachable_mark then
+				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
+					Result := Result.as_detachable
+				end
+			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
+				Result := Result.as_implicitly_detachable
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Attachment properties
 
 	attachment_bits: NATURAL_8

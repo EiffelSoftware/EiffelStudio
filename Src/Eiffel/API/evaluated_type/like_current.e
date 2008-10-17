@@ -272,7 +272,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
-			-- Generate mode dependent sequence of type id's 
+			-- Generate mode dependent sequence of type id's
 			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 		do
@@ -345,31 +345,7 @@ feature {COMPILER_EXPORTER} -- Modification
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `conformance_type'.
 		do
-			if has_attached_mark then
-				if not a.is_attached then
-					conformance_type := a.as_attached
-				else
-					conformance_type := a
-				end
-			elseif is_implicitly_attached then
-				if not a.is_attached and then not a.is_implicitly_attached then
-					conformance_type := a.as_implicitly_attached
-				else
-					conformance_type := a
-				end
-			elseif has_detachable_mark then
-				if not a.is_expanded and then (a.is_attached or else a.is_implicitly_attached) then
-					conformance_type := a.as_detachable
-				else
-					conformance_type := a
-				end
-			else
-				if not is_implicitly_attached and then a.is_implicitly_attached then
-					conformance_type := a.as_implicitly_detachable
-				else
-					conformance_type := a
-				end
-			end
+			conformance_type := to_current_attachment (a)
 			actual_type := Current
 		end
 
@@ -447,22 +423,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- i16 := (0x00FF).to_integer_16 & i8
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
-			Result := type.intrinsic_type
-			if has_attached_mark then
-				if not Result.is_attached then
-					Result := Result.as_attached
-				end
-			elseif is_implicitly_attached then
-				if not Result.is_attached and then not Result.is_implicitly_attached then
-					Result := Result.as_implicitly_attached
-				end
-			elseif has_detachable_mark then
-				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
-					Result := Result.as_detachable
-				end
-			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
-				Result := Result.as_implicitly_detachable
-			end
+			Result := to_current_attachment (type.intrinsic_type)
 		end
 
 	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A is
@@ -487,21 +448,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_like.set_actual_type (class_type.conformance_type)
 				Result := l_like
 			end
-			if has_attached_mark then
-				if not Result.is_attached then
-					Result := Result.as_attached
-				end
-			elseif is_implicitly_attached then
-				if not Result.is_attached and then not Result.is_implicitly_attached then
-					Result := Result.as_implicitly_attached
-				end
-			elseif has_detachable_mark then
-				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
-					Result := Result.as_detachable
-				end
-			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
-				Result := Result.as_implicitly_detachable
-			end
+			Result := to_current_attachment (Result)
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT is

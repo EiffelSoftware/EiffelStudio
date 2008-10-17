@@ -31,6 +31,7 @@ inherit
 			is_basic,
 			is_expanded,
 			is_external,
+			is_initialization_required,
 			is_like,
 			is_loose,
 			is_none,
@@ -76,22 +77,7 @@ feature -- Properties
 		do
 				-- `conformance_type' has to be called because
 				-- `actual_type' may yield yet another anchored type.
-			Result := actual_type.conformance_type
-			if has_attached_mark then
-				if not Result.is_attached then
-					Result := Result.as_attached
-				end
-			elseif is_implicitly_attached then
-				if not Result.is_attached and then not Result.is_implicitly_attached then
-					Result := Result.as_implicitly_attached
-				end
-			elseif has_detachable_mark then
-				if Result.is_attached or else Result.is_implicitly_attached then
-					Result := Result.as_detachable
-				end
-			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
-				Result := Result.as_implicitly_detachable
-			end
+			Result := to_current_attachment (actual_type.conformance_type)
 		end
 
 	has_associated_class: BOOLEAN is
@@ -183,6 +169,16 @@ feature -- Properties
 			end
 		end
 
+	is_initialization_required: BOOLEAN
+			-- Is initialization required for this type in void-safe mode?
+		do
+			if Precursor then
+				Result := True
+			elseif not has_detachable_mark then
+				Result := conformance_type.is_initialization_required
+			end
+		end
+
 	good_generics: BOOLEAN is
 			-- <Original>
 		do
@@ -240,31 +236,7 @@ feature -- Primitives
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
 		do
-			if has_attached_mark then
-				if not a.is_attached then
-					actual_type := a.as_attached
-				else
-					actual_type := a
-				end
-			elseif is_implicitly_attached then
-				if not a.is_attached and then not a.is_implicitly_attached then
-					actual_type := a.as_implicitly_attached
-				else
-					actual_type := a
-				end
-			elseif has_detachable_mark then
-				if not a.is_expanded and then (a.is_attached or else a.is_implicitly_attached) then
-					actual_type := a.as_detachable
-				else
-					actual_type := a
-				end
-			else
-				if not is_implicitly_attached and then a.is_implicitly_attached then
-					actual_type := a.as_implicitly_detachable
-				else
-					actual_type := a
-				end
-			end
+			actual_type := to_current_attachment (a)
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is

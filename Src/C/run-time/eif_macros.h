@@ -1285,24 +1285,6 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTVI2(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
 #define RTCI2(x)			chkcinv(MTC x)
 
-
-/* Generic conformance
- *  RTCID(tp,x,y,z) converts a type array into a single id
- *  RTFCID(ct,x,y,z) fetches the creation type of a generic feature in final mode
-*/
-
-#define RTCID(tp,x,y,z)	\
-		((x) ? eif_compound_id((tp), Dftype(x),(y),(z)) : \
-		 eif_compound_id ((tp), 0, (y), (z)))
-#define RTCID2(tp,x,y,z)	\
-		eif_compound_id((tp), (x),(y),(z))
-#define RTFCID(ct,x,y,z,u)	eif_final_id((x),(y), Dftype(z),(u))
-#define RTFCID2(ct,x,y,z,u)	eif_final_id((x),(y),(z),(u))
-#define RTGPTID(st,x,y)		eif_gen_param_id ((st), Dftype(x),(y))
-#define RTID(x) (x)
-
-
-
 #ifndef EIF_THREADS
 	RT_LNK int16 caller_assertion_level;	/*Saves information about the assertionlevel of the caller*/
 #endif

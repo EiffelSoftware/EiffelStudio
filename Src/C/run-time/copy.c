@@ -872,7 +872,7 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */
 			/* Initialize new expanded elements, if any */
-		sp_init (spobj, eif_gen_param_id (INVALID_DTYPE, Dftype(spobj), 1), 0, count - 1);
+		sp_init (spobj, eif_gen_param_id (Dftype(spobj), 1), 0, count - 1);
 	}
 }
 

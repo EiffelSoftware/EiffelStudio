@@ -63,7 +63,7 @@ RT_LNK char * eif_typename (EIF_TYPE_INDEX current_dftype);
 RT_LNK int eif_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 
 /* Type of the i-th generic parameter */
-RT_LNK EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX dftype, uint32 pos);
+RT_LNK EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos);
 
 /* Id to be used in workbench mode */
 RT_LNK EIF_TYPE_INDEX eif_id_for_typarr (EIF_TYPE_INDEX x);

@@ -177,9 +177,9 @@ feature -- Generic conformance
 			buffer.put_natural_32 (a_level)
 			buffer.put_character ('[')
 			buffer.put_integer (idx_cnt.value)
-			buffer.put_string ("] = RTID(")
+			buffer.put_four_character (']', ' ', '=', ' ')
 			generate_type_id (buffer, final_mode, a_level + 1)
-			buffer.put_two_character (')', ';')
+			buffer.put_character (';')
 			generate_end (buffer)
 			dummy := idx_cnt.next
 		end

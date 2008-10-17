@@ -997,7 +997,7 @@ rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF
 	if (flags & EO_COMP) {
 			/* It is a composite object, that is to say a special of expanded,
 			 * we need to initialize every entry properly. */
-		result = sp_init (result, eif_gen_param_id(INVALID_DTYPE, dftype, 1), 0, nb - 1);
+		result = sp_init (result, eif_gen_param_id(dftype, 1), 0, nb - 1);
 	}
 	return result;
 }
@@ -1379,7 +1379,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		object = sp_init(object, eif_gen_param_id (INVALID_DTYPE, Dftype(object), 1), count, nbitems - 1);
+		object = sp_init(object, eif_gen_param_id (Dftype(object), 1), count, nbitems - 1);
 	}
 
 #ifdef ISE_GC

@@ -1268,7 +1268,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+							exp_dftype = eif_gen_param_id(dftype, 1);
 							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 							buffer_write((char *) (&store_flags), sizeof(uint32));
 							st_write_cid (exp_dftype);
@@ -1292,7 +1292,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 						buffer_write(object, count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+						exp_dftype = eif_gen_param_id(dftype, 1);
 						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 						buffer_write((char *)(&store_flags), sizeof(uint32));
 						st_write_cid (exp_dftype);
@@ -1489,7 +1489,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+							exp_dftype = eif_gen_param_id(dftype, 1);
 							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 							widr_norm_int(&store_flags);
 							ist_write_cid (exp_dftype);
@@ -1513,7 +1513,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+						exp_dftype = eif_gen_param_id(dftype, 1);
 						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 						widr_norm_int(&store_flags);
 						ist_write_cid (exp_dftype);

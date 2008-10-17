@@ -7,6 +7,9 @@ copy_raw test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok
 
+c_compile_work
+c_compile_result	ok
+
 execute_work	NONE exec_output_1
 execute_result	ok
 compare	exec_output_1 output

@@ -2966,9 +2966,9 @@ feature -- Implementation
 			l_feat_type: TYPE_A
 			creators: HASH_TABLE [EXPORT_I, STRING_8]
 			is_creation_procedure: BOOLEAN
-			feature_id: INTEGER
-			attr: FEATURE_I
-			skeleton: GENERIC_SKELETON
+--			feature_id: INTEGER
+--			attr: FEATURE_I
+--			skeleton: GENERIC_SKELETON
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_error_level := error_level
@@ -5371,6 +5371,7 @@ feature -- Implementation
 			l_original_default_create_name_id: INTEGER
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
+			l_is_qualified_call: BOOLEAN
 		do
 			l_error_level := error_level
 			l_needs_byte_node := is_byte_node_enabled
@@ -5544,6 +5545,10 @@ feature -- Implementation
 					end
 
 					if l_call /= Void then
+							-- A creation call has to be considered as a qualified call.
+							-- This fixes eweasel test#term161.
+						l_is_qualified_call := is_qualified_call
+						is_qualified_call := True
 						if is_inherited then
 							if l_is_multi_constraint_case then
 									-- We need to iterate through the type set to find the routine of ID
@@ -5595,6 +5600,7 @@ feature -- Implementation
 							last_calls_target_type := l_creation_type
 							process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
 						end
+						is_qualified_call := l_is_qualified_call
 
 						if error_level = l_error_level then
 							if not is_inherited then

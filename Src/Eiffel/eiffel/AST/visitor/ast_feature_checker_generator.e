@@ -356,16 +356,19 @@ feature {NONE} -- Internal type checking
 	check_vevi
 			-- Check VEVI for attributes.
 		local
-			c: AST_CREATION_PROCEDURE_CHECKER
+			c: CLASS_C
 			creators: HASH_TABLE [EXPORT_I, STRING_8]
 		do
-			if context.current_class.lace_class.is_void_safe then
-				creators := context.current_class.creators
+			c := context.current_class
+				-- Optimization: skip deferred classes and those without attributes.
+			if not c.is_deferred and then c.lace_class.is_void_safe and then not c.skeleton.is_empty then
+				creators := c.creators
+					-- Check if the current feature is a creation procedure.
 				if
 					creators /= Void and then creators.has (current_feature.feature_name) or else
-					context.current_class.creation_feature /= Void and then context.current_class.creation_feature.feature_id = current_feature.feature_id
+					c.creation_feature /= Void and then c.creation_feature.feature_id = current_feature.feature_id
 				then
-					create c.make (current_feature, context)
+					(create {AST_CREATION_PROCEDURE_CHECKER}.make (current_feature, context)).do_nothing
 				end
 			end
 		end

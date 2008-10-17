@@ -122,8 +122,13 @@ feature -- Access
 			-- Unique static_type_id for current class type
 			--| Useful to set name of associated generated file
 			--| which has to be dynamic type (`type_id') independant.
-			--| Remeber that after during each freezing, dynamic types
+			--| Remember that after during each finalization, dynamic types
 			--| are reprocessed.
+
+	type_id: INTEGER
+			-- Identification of the class type. In classic mode for workbench code generation
+			-- it is identical to `static_type_id'. Only in classic finalized mode where we shuffle
+			-- the `type_id' and in .NET mode they are different.
 
 	implementation_id: INTEGER
 			-- Same as `static_type_id' but used in IL mode only to
@@ -139,9 +144,6 @@ feature -- Access
 	type: CL_TYPE_A
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
-
-	type_id: INTEGER
-			-- Identification of the class type
 
 	last_type_token, last_implementation_type_token, last_create_type_token: INTEGER
 			-- Last definition tokens computed for Current. They correspond respectively

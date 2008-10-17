@@ -654,6 +654,14 @@ feature -- Properties
 				-- False by default
 		end
 
+	is_initialization_required: BOOLEAN
+			-- Is initialization required for this type in void-safe mode?
+		do
+			if not is_expanded and then is_attached then
+				Result := True
+			end
+		end
+
 	is_standalone: BOOLEAN is
 			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
 		do

@@ -159,11 +159,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 			check
 				valid_position: a_arg_types.valid_index (position)
 			end
-			Result := a_arg_types.item (position)
+				-- Preserve attachment status of the current type.
+			Result := to_current_attachment (a_arg_types.item (position))
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

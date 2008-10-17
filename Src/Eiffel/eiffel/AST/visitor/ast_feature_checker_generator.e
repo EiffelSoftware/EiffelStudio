@@ -8192,6 +8192,10 @@ feature {NONE} -- Agents
 				create l_tuple_node.make (l_expressions,
 					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_cargtypes)))
 
+					-- We need to instantiate the closed TUPLE type of the agent otherwise it
+					-- causes eweasel test#agent007 to fail.
+				system.instantiator.dispatch (l_tuple_node.type, context.current_class)
+
 					-- Setup l_last_open_positions
 
 				if l_last_open_positions /= Void then
@@ -8360,6 +8364,10 @@ feature {NONE} -- Agents
 				l_closed_args.extend (create {CURRENT_B})
 				create l_tuple_type.make (system.tuple_id, <<context.current_class_type>> )
 			end
+
+				-- We need to instantiate the closed TUPLE type of the agent otherwise it
+				-- causes eweasel test#agent007 to fail.
+			system.instantiator.dispatch (l_tuple_type, context.current_class)
 
 			create l_tuple_node.make (l_closed_args, l_tuple_type)
 

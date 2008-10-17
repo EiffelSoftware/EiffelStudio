@@ -271,12 +271,6 @@ feature
 			position := i
 		end
 
-	has_type_table: BOOLEAN is
-			-- Is a type table needed for the current table ?
-		do
-			Result := System.type_set.has (rout_id)
-		end
-
 	has_one_type: BOOLEAN is
 			-- Is the type table not polymorphic ?
 		require

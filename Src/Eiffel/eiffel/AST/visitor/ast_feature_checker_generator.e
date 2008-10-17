@@ -150,6 +150,7 @@ feature -- Type checking
 			if a_is_safe_to_check_inherited then
 				process_inherited_assertions (a_feature, False)
 			end
+			check_vevi
 		end
 
 	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited: BOOLEAN) is
@@ -191,6 +192,7 @@ feature -- Type checking
 					end
 				end
 			end
+			check_vevi
 		end
 
 	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is
@@ -345,6 +347,25 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 							end
 						end
 					end
+				end
+			end
+		end
+
+feature {NONE} -- Internal type checking
+
+	check_vevi
+			-- Check VEVI for attributes.
+		local
+			c: AST_CREATION_PROCEDURE_CHECKER
+			creators: HASH_TABLE [EXPORT_I, STRING_8]
+		do
+			if context.current_class.lace_class.is_void_safe then
+				creators := context.current_class.creators
+				if
+					creators /= Void and then creators.has (current_feature.feature_name) or else
+					context.current_class.creation_feature /= Void and then context.current_class.creation_feature.feature_id = current_feature.feature_id
+				then
+					create c.make (current_feature, context)
 				end
 			end
 		end
@@ -1700,26 +1721,27 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
-							if last_access_writable then
-								if l_is_in_assignment or else l_is_target_of_creation_instruction then
-									if l_result_type.is_attached then
-											-- Mark that the attribute is initialized.
-										record_initialized_attribute (l_feature.feature_id)
-									end
-								else
-									if
-										l_result_type.is_attached and then not l_result_type.is_expanded and then
-										not context.variables.is_attribute_set (l_feature.feature_id)
-									then
-											-- Attribute is not properly initialized.
-										error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
-										if not is_checking_precondition and then not is_checking_postcondition then
-												-- Mark that the attribute is initialized to avoid repeated errors.
-											context.variables.set_attribute (l_feature.feature_id)
-										end
-									end
-								end
-							end
+--							if last_access_writable then
+--								if l_is_in_assignment or else l_is_target_of_creation_instruction then
+--									if l_result_type.is_attached then
+--											-- Mark that the attribute is initialized.
+--										record_initialized_attribute (l_feature.feature_id)
+--									end
+--								else
+--									if
+--										l_result_type.is_attached and then not l_result_type.is_expanded and then
+--										not context.variables.is_attribute_set (l_feature.feature_id) and then
+--										not is_checking_postcondition
+--									then
+--											-- Attribute is not properly initialized.
+--										error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
+--										if not is_checking_precondition then
+--												-- Mark that the attribute is initialized to avoid repeated errors.
+--											context.variables.set_attribute (l_feature.feature_id)
+--										end
+--									end
+--								end
+--							end
 						else
 								-- `l_feature' was not valid for current, report
 								-- corresponding error.
@@ -2207,13 +2229,15 @@ feature -- Implementation
 							end
 						end
 					elseif
-						l_feat_type.is_attached and then not l_feat_type.is_expanded and then
+						l_feat_type.is_initialization_required and then
+						not context.initialization_keeper.is_result_set and then
 						context.current_class.lace_class.is_void_safe
 					then
 							-- Result is not properly initialized.
 						error_handler.insert_error (create {VEVI}.make_result (context, l_as))
 							-- Mark that Result is initialized to avoid repeated errors.
 						context.add_result_instruction_scope
+						context.set_result
 					end
 					last_type := l_feat_type
 				end
@@ -2535,13 +2559,17 @@ feature -- Implementation
 								l_type := l_type.as_implicitly_attached
 							end
 						end
-					elseif l_type.is_attached and then not l_type.is_expanded then
+					elseif
+						l_type.is_initialization_required and then
+						not context.initialization_keeper.is_local_set (l_local_info.position)
+					then
 							-- Local is not properly initialized.
 						if context.current_class.lace_class.is_void_safe then
 							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
 						end
 							-- Mark that the local is initialized.
 						context.add_local_instruction_scope (l_as.feature_name.name_id)
+						context.set_local (l_as.feature_name.name_id)
 					end
 					if not is_inherited then
 							-- set some type attributes of the node
@@ -2985,39 +3013,37 @@ feature -- Implementation
 
 				l_feat_type := current_feature.type
 				if
-					not l_feat_type.is_void and then
+					l_feat_type.is_initialization_required and then
 					not l_as.is_external and then
-					l_feat_type.is_attached and then
-					not l_feat_type.is_expanded and then
-					not context.is_result_attached and then
+					not context.initialization_keeper.is_result_set and then
 					not current_feature.is_deferred and then
 					context.current_class.lace_class.is_void_safe
 				then
 						-- Result is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
 				end
-				if is_creation_procedure then
-						-- Verify that attributes are properly initialized.
-					from
-						skeleton := context.current_class.skeleton
-						skeleton.start
-					until
-						skeleton.after
-					loop
-						feature_id := skeleton.item_for_iteration.feature_id
-						attr := context.current_class.feature_of_feature_id (feature_id)
-						l_feat_type := attr.type
-						if
-							l_feat_type.is_attached and then not l_feat_type.is_expanded and then
-							{a: ATTRIBUTE_I} attr and then not a.has_body and then
-							not context.variables.is_attribute_initialized (feature_id)
-						then
-								-- Attribute is not properly initialized.
-							error_handler.insert_error (create {VEVI}.make_attribute (attr, context.current_class.class_id, context, l_as.end_keyword))
-						end
-						skeleton.forth
-					end
-				end
+--				if is_creation_procedure then
+--						-- Verify that attributes are properly initialized.
+--					from
+--						skeleton := context.current_class.skeleton
+--						skeleton.start
+--					until
+--						skeleton.after
+--					loop
+--						feature_id := skeleton.item_for_iteration.feature_id
+--						attr := context.current_class.feature_of_feature_id (feature_id)
+--						l_feat_type := attr.type
+--						if
+--							l_feat_type.is_attached and then not l_feat_type.is_expanded and then
+--							{a: ATTRIBUTE_I} attr and then not a.has_body and then
+--							not context.variables.is_attribute_initialized (feature_id)
+--						then
+--								-- Attribute is not properly initialized.
+--							error_handler.insert_error (create {VEVI}.make_attribute (attr, context.current_class.class_id, context, l_as.end_keyword))
+--						end
+--						skeleton.forth
+--					end
+--				end
 					-- Check postconditions
 				if l_as.postcondition /= Void then
 						-- Set access id level analysis to `is_checking_postcondition': locals
@@ -4972,6 +4998,12 @@ feature -- Implementation
 								context.remove_local_scope (l_reinitialized_local)
 							end
 						end
+							-- The variable is initialized.
+						if l_reinitialized_local = result_name_id then
+							context.set_result
+						else
+							context.set_local (l_reinitialized_local)
+						end
 					end
 				end
 				commit_initialized_variable (l_initialized_variable)
@@ -5872,8 +5904,10 @@ feature -- Implementation
 						-- Local variable is now attached.
 					if l_reinitialized_local = result_name_id then
 						context.add_result_instruction_scope
+						context.set_result
 					else
 						context.add_local_instruction_scope (l_reinitialized_local)
+						context.set_local (l_reinitialized_local)
 					end
 				end
 			end
@@ -5950,9 +5984,9 @@ feature -- Implementation
 			l_node_keys: ARRAYED_LIST [STRING]
 		do
 			if l_as.compound /= Void then
-				context.scope_keeper.enter_realm
+				context.enter_realm
 				process_compound (l_as.compound)
-				context.scope_keeper.leave_optional_realm
+				context.leave_optional_realm
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
 					create l_debug
@@ -6019,7 +6053,7 @@ feature -- Implementation
 			end
 
 				-- Type check on compound
-			context.scope_keeper.enter_realm
+			context.enter_realm
 			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition)
@@ -6031,12 +6065,12 @@ feature -- Implementation
 				end
 			end
 			context.set_scope (s)
-			context.scope_keeper.save_sibling
+			context.save_sibling
 
 			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition)
-			context.scope_keeper.update_realm
+			context.update_realm
 
 				-- Type check on alternaltives compounds
 			if l_as.elsif_list /= Void then
@@ -6056,10 +6090,10 @@ feature -- Implementation
 			end
 				-- Even though Else part might be empty,
 				-- we record its void safety information.
-			context.scope_keeper.save_sibling
+			context.save_sibling
 
 			context.set_scope (s)
-			context.scope_keeper.leave_realm
+			context.leave_realm
 
 			if l_needs_byte_node then
 				l_if.set_line_number (l_as.condition.start_location.line)
@@ -6120,7 +6154,7 @@ feature -- Implementation
 					create l_controler.make (l_constraint_type)
 					inspect_controlers.put_front (l_controler)
 
-					context.scope_keeper.enter_realm
+					context.enter_realm
 					if l_as.case_list /= Void then
 						l_as.case_list.process (Current)
 						if l_needs_byte_node then
@@ -6132,13 +6166,13 @@ feature -- Implementation
 
 					if l_as.else_part /= Void then
 						process_compound (l_as.else_part)
-						context.scope_keeper.save_sibling
+						context.save_sibling
 						if l_needs_byte_node then
 							l_list ?= last_byte_node
 							l_inspect.set_else_part (l_list)
 						end
 					end
-					context.scope_keeper.leave_realm
+					context.leave_realm
 					if l_needs_byte_node then
 						l_inspect.set_line_number (l_as.switch.start_location.line)
 						l_inspect.set_end_location (l_as.end_keyword)
@@ -6244,10 +6278,10 @@ feature -- Implementation
 
 				if l_as.compound /= Void then
 						-- Type check the loop compound
-					context.scope_keeper.enter_realm
+					context.enter_realm
 						-- After the loop we have to merge current and loop body
 						-- scope information, so the current one is saved here.
-					context.scope_keeper.save_sibling
+					context.save_sibling
 					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 					s := context.scope
 					scope_matcher.add_scopes (l_as.stop)
@@ -6258,8 +6292,8 @@ feature -- Implementation
 					end
 					context.set_scope (s)
 						-- Take into account loop body scope information.
-					context.scope_keeper.save_sibling
-					context.scope_keeper.leave_realm
+					context.save_sibling
+					context.leave_realm
 						-- Take exit condition into account.
 					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
 					scope_matcher.add_scopes (l_as.stop)
@@ -6570,12 +6604,12 @@ feature -- Implementation
 				end
 			end
 			context.set_scope (s)
-			context.scope_keeper.save_sibling
+			context.save_sibling
 
 				-- Add scopes for the parts that follow this one.
 			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 			scope_matcher.add_scopes (l_as.expr)
-			context.scope_keeper.update_realm
+			context.update_realm
 
 			if not l_has_error and l_needs_byte_node then
 				l_elsif.set_line_number (l_as.expr.start_location.line)
@@ -6666,7 +6700,7 @@ feature -- Implementation
 				end
 				last_byte_node := l_case
 			end
-			context.scope_keeper.save_sibling
+			context.save_sibling
 		end
 
 	process_ensure_as (l_as: ENSURE_AS) is
@@ -8827,21 +8861,7 @@ feature {NONE} -- Implementation: type validation
 			end
 			if l_formal_type /= Void and then {l_attachable_type: ATTACHABLE_TYPE_A} a_type then
 					-- Preserve attachment status of the original type.
-				if l_attachable_type.has_attached_mark then
-					if not Result.is_attached then
-						Result := Result.as_attached
-					end
-				elseif l_attachable_type.is_implicitly_attached then
-					if not Result.is_attached and then not Result.is_implicitly_attached then
-						Result := Result.as_implicitly_attached
-					end
-				elseif l_attachable_type.has_detachable_mark then
-					if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
-						Result := Result.as_detachable
-					end
-				elseif not l_attachable_type.is_implicitly_attached and then Result.is_implicitly_attached then
-					Result := Result.as_implicitly_detachable
-				end
+				Result := l_attachable_type.to_current_attachment (Result)
 			end
 		ensure
 			adapated_type_not_void: Result /= Void

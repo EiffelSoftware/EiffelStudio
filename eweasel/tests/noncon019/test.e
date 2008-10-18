@@ -11,6 +11,7 @@ feature {NONE} -- Initialization
 		local
 			acc_imp: ACCOUNT_IMP1
 		do
+			create acc_imp	
 		end
 
 end

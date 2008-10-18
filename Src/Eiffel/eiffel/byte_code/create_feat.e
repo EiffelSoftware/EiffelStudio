@@ -105,7 +105,7 @@ feature -- C code generation
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_A
+			l_type: TYPE_A
 		do
 			if final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -119,12 +119,12 @@ feature -- C code generation
 					buffer.put_integer (0)
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					gen_type ?= table.first.type
+					l_type := table.first.type.deep_actual_type
 
-					if gen_type /= Void then
+					if l_type.has_generics then
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
-					elseif {l_formal: FORMAL_A} table.first.type then
+					elseif {l_formal: FORMAL_A} l_type then
 						buffer.put_string ("eif_gen_param_id(")
 						context.generate_current_dftype
 						buffer.put_two_character (',', ' ')
@@ -246,7 +246,7 @@ feature -- Genericity
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-				Result := table.has_one_type
+				Result := table.has_one_type and then table.first.type.deep_actual_type.is_explicit
 			else
 				Result := False
 			end
@@ -258,7 +258,7 @@ feature -- Genericity
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_A
+			l_type: TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -273,12 +273,10 @@ feature -- Genericity
 					buffer.put_character (',')
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					gen_type ?= table.first.type
+					l_type := table.first.type.deep_actual_type
 
-					if gen_type /= Void then
-						gen_type.generate_cid (buffer, final_mode, True, context.context_class_type.type)
-					elseif {l_formal: FORMAL_A} table.first.type then
-						l_formal.generate_cid (buffer, final_mode, False, context.context_class_type.type)
+					if l_type.has_generics or l_type.is_formal then
+						l_type.generate_cid (buffer, final_mode, False, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -337,7 +335,7 @@ feature -- Genericity
 		local
 			dummy : INTEGER
 			table: POLY_TABLE [ENTRY]
-			gen_type: GEN_TYPE_A
+			l_type: TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -354,14 +352,11 @@ feature -- Genericity
 					dummy := idx_cnt.next
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					gen_type ?= table.first.type
+					l_type := table.first.type.deep_actual_type
 
-					if gen_type /= Void then
-						gen_type.generate_cid_array (buffer,
-												final_mode, True, idx_cnt, context.context_class_type.type)
-					elseif {l_formal: FORMAL_A} table.first.type then
-						l_formal.generate_cid_array (buffer,
-							final_mode, False, idx_cnt, context.context_class_type.type)
+					if l_type.has_generics or l_type.is_formal then
+						l_type.generate_cid_array (buffer,
+												final_mode, False, idx_cnt, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -384,7 +379,7 @@ feature -- Genericity
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_A
+			l_type: TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -396,13 +391,10 @@ feature -- Genericity
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
 				elseif table.has_one_type then
-						-- There is a table, but with only one type
-					gen_type ?= table.first.type
+					l_type := table.first.type.deep_actual_type
 
-					if gen_type /= Void then
-						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
-					elseif {l_formal: FORMAL_A} table.first.type then
-						l_formal.generate_cid_init (buffer, final_mode, False, idx_cnt, a_level)
+					if l_type.has_generics or l_type.is_formal then
+						l_type.generate_cid_init (buffer, final_mode, False, idx_cnt, a_level)
 					else
 						dummy := idx_cnt.next
 					end

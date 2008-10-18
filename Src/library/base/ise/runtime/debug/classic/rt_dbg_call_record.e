@@ -1114,7 +1114,6 @@ feature -- debug
 
 invariant
 	non_empty_call_records: call_records /= Void implies call_records.count > 0
-
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
 indexing

@@ -102,7 +102,7 @@ feature -- Basic functionality
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
-	propagate_item_change (a_tag: !STRING_8; a_item: G)
+	propagate_item_change (a_tag: !STRING_8; a_item: !G)
 			-- <Precursor>
 		local
 			i: INTEGER

@@ -78,7 +78,7 @@ feature -- Access
 				Result ?= empty_items
 			end
 		ensure then
-			results_match_expression: has_expression implies Result.for_all (agent matches)
+			results_match_expression: has_expression implies Result.for_all (agent (a_item: !G): BOOLEAN do Result := matches (a_item) end)
 		end
 
 	collection: !like internal_collection
@@ -389,7 +389,11 @@ feature {NONE} -- Implementation
 					until
 						l_added.after
 					loop
-						item_added_event.publish ([Current, l_added.item_for_iteration])
+						if {l_added_g: G} l_added.item_for_iteration then
+							item_added_event.publish ([Current, l_added_g])
+						else
+							check False end
+						end
 						l_added.forth
 					end
 				end
@@ -399,7 +403,11 @@ feature {NONE} -- Implementation
 					until
 						l_removed.after
 					loop
-						item_removed_event.publish ([Current, l_removed.item_for_iteration])
+						if {l_removed_g: G} l_removed.item_for_iteration then
+							item_removed_event.publish ([Current, l_removed_g])
+						else
+							check False end
+						end
 						l_removed.forth
 					end
 				end

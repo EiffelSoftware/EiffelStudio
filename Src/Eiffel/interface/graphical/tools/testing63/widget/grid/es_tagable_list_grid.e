@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			connected: is_connected
 			grid_empty: grid.row_count = 0
 		local
-			l_cursor: DS_LINEAR_CURSOR [G]
+			l_cursor: DS_LINEAR_CURSOR [!G]
 			i: INTEGER
 		do
 			l_cursor := collection.items.new_cursor
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_row_for_item (a_item: G; a_pos: INTEGER)
+	add_row_for_item (a_item: !G; a_pos: INTEGER)
 			-- Insert row for item into grid at given position
 		require
 			connected: is_connected

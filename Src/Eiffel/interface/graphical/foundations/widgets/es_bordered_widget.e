@@ -26,7 +26,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_widget: !G)
+	make (a_widget: G)
 			-- Initializes a bordered widget with a existing widget.
 			--
 			-- `a_widget': The widget to surround with a border
@@ -76,7 +76,7 @@ feature {NONE} -- Access
 
 feature -- User interface elements
 
-	widget: !G
+	widget: G
 			-- Actual widget
 
 feature {NONE} -- Factory
@@ -87,7 +87,10 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-;indexing
+invariant
+	widget_not_void: widget /= Void
+
+indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

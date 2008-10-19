@@ -24,7 +24,7 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
   EIF_OBJECT eif_lower_indices = 0, eif_element_count = 0, result = 0;
   EIF_TYPE_ID type_id = -1;
   static EIF_TYPE_ID int_array_id = -1;
-  EIF_PROCEDURE make = 0, put = 0;
+  EIF_PROCEDURE make = 0;
   char * array_name = 0;
   int i = 0, element_name_lenth = 0;
   EIF_INTEGER * lower_indices = 0;

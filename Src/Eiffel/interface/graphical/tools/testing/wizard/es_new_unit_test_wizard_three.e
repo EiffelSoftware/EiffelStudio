@@ -509,7 +509,7 @@ feature {NONE} -- UI widgets
 		do
 			create l_provider.make (Void, Void)
 			l_provider.set_group_callback (agent root_group)
-			create class_under_test.make
+			create class_under_test
 
 			class_under_test.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (first_window, False))
 

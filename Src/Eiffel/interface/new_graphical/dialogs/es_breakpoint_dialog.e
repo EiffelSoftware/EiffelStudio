@@ -460,7 +460,7 @@ feature {NONE} -- Condition
 				--| Widgets
 			f := new_panel_container (interface_names.l_condition, True)
 
-			create condition_expression_tf.make
+			create condition_expression_tf
 			condition_expression_tf.set_parent_window (dialog)
 			register_input_widget (condition_expression_tf)
 

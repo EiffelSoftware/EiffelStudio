@@ -109,7 +109,7 @@ feature {NONE} -- GUI
 		do
 			create l_provider.make (Void, Void)
 			l_provider.set_group_callback (group_internal)
-			create text_field.make
+			create text_field
 			if has_parent then
 				text_field.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (parent, False))
 			end

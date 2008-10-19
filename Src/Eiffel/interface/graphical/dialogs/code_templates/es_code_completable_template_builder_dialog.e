@@ -52,7 +52,7 @@ feature {NONE} -- Factory
 	create_declaration_text_widget (a_declaration: !CODE_DECLARATION): !EV_TEXT_FIELD
 			-- <Precursor>
 		do
-			create {EB_CODE_COMPLETABLE_TEXT_FIELD} Result.make
+			create {EB_CODE_COMPLETABLE_TEXT_FIELD} Result
 		end
 
 ;indexing

@@ -221,8 +221,8 @@ feature {NONE} -- Graphical initialization and changes
 			context_radio.select_actions.extend (agent event_context_radio_selected)
 
 				--| Create and set up the text fields.
-			create class_field.make
-			create expression_field.make
+			create class_field
+			create expression_field
 			create address_field
 			create object_name_field
 

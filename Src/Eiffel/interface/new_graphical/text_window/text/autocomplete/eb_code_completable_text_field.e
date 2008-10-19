@@ -26,8 +26,7 @@ inherit
 
 	EV_TEXT_FIELD
 		redefine
-			initialize,
-			make_with_text
+			initialize
 		end
 
 	SHARED_WORKBENCH
@@ -40,24 +39,9 @@ inherit
 
 create
 	default_create,
-	make,
 	make_with_text
 
 feature {NONE} -- Initialization
-
-	make
-		obsolete
-			"Use `default_create' instead."
-		do
-			default_create
-		end
-
-	make_with_text (a_text: STRING_32) is
-			-- Initialization
-		do
-			Precursor {EV_TEXT_FIELD} (a_text)
-			make
-		end
 
 	initialize is
 			-- <Precursor>

@@ -12,12 +12,12 @@ class
 
 feature -- Factory
 
-	create_code_built_in_literal_declaration (a_id: !STRING_8; a_parent: CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
+	create_code_built_in_literal_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
 			-- Creates a built-in code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
 		do
-			create {!CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, a_parent)
+			create {CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, a_parent)
 		ensure
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
 			result_is_built_in: Result.is_built_in

@@ -102,7 +102,7 @@ feature {NONE} -- Query
 
 feature -- Events
 
-	on_item_added (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: G)
+	on_item_added (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: !G)
 			-- <Precursor>
 		local
 			l_cursor: DS_LINEAR_CURSOR [G]
@@ -122,13 +122,13 @@ feature -- Events
 			l_cursor.go_after
 		end
 
-	on_item_removed (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: G)
+	on_item_removed (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: !G)
 			-- <Precursor>
 		do
 			grid.remove_row (row_index_for_item (a_item))
 		end
 
-	on_item_changed (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: G)
+	on_item_changed (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: !G)
 			-- <Precursor>
 		local
 			l_item: EV_GRID_ITEM

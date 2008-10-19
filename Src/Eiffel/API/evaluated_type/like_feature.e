@@ -78,8 +78,6 @@ feature -- Status Report
 
 	is_explicit: BOOLEAN is
 			-- Is type fixed at compile time without anchors or formals?
-		local
-			table: POLY_TABLE [ENTRY]
 		do
 			if system.in_final_mode then
 				initialize_info (shared_create_info)

@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	items: !DS_LINEAR [G]
+	items: !DS_LINEAR [!G]
 			-- <Precursor>
 		do
 			if has_expression then
@@ -197,13 +197,13 @@ feature -- Status setting
 
 feature -- Events
 
-	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: G]]
+	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- <Precursor>
 
-	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: G]]
+	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- <Precursor>
 
-	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: G]]
+	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
 			-- <Precursor>
 
 	items_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]

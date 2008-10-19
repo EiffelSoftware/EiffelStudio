@@ -41,7 +41,6 @@ feature -- Basic operations
 			-- `Result': The result of rendering the template.
 		require
 			is_interface_usable: is_interface_usable
-			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
 		deferred
 		end
@@ -54,7 +53,6 @@ feature -- Basic operations
 			-- `Result': The result of rendering the template.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name.as_string_8)
 		deferred
 		end
@@ -67,9 +65,7 @@ feature -- Basic operations
 			-- `a_destination_file': The destination file to store the rendered template into.
 		require
 			is_interface_usable: is_interface_usable
-			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
-			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred
 		end
@@ -82,10 +78,8 @@ feature -- Basic operations
 			-- `a_destination_file': The destination file to store the rendered template into.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name.as_string_8)
 			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
-			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred
 		end

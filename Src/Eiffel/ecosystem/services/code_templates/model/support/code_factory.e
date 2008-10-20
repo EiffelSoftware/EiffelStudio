@@ -80,7 +80,7 @@ feature -- Factory
 			create Result.make (a_parent)
 		end
 
-	create_code_template_defintion: CODE_TEMPLATE_DEFINITION
+	create_code_template_defintion: !CODE_TEMPLATE_DEFINITION
 			-- Creates a root code template file.
 		do
 			create Result.make (Current)

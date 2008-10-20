@@ -197,9 +197,7 @@ extern struct opstack op_stack;               /* Operational stack */
 
 #define BC_REF_TO_PTR		(unsigned char) 132
 #define BC_RCREATE		(unsigned char) 133
-
-/* Byte code for the creation of a generic parameter */
-#define BC_GEN_PARAM_CREATE	(unsigned char) 134
+#define BC_NOTUSED_134	(unsigned char) 134
 
 /* Byte code for expression creation */
 #define BC_CAST_CHAR32		(unsigned char) 135

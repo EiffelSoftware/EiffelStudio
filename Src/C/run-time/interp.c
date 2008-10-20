@@ -5269,17 +5269,6 @@ rt_private EIF_TYPE_INDEX get_creation_type (void)
 	case BC_CCUR:				/* Like Current creation type */
 		type = icur_dftype;
 		break;
-	case BC_GEN_PARAM_CREATE:
-		{
-		EIF_TYPE_INDEX current_type;
-		int32 formal_position;
-
-		current_type = get_int16(&IC);		/* Get static type of caller */
-		formal_position = get_int32(&IC);	/* Get position of formal generic
-										   we want to create */
-		type = eif_gen_param_id(Dftype(icurrent->it_ref), formal_position);
-		}
-		break;
 	default:
 		type = 0;	/* To avoid C compiler warning */
 		eif_panic(MTC "creation type lost");

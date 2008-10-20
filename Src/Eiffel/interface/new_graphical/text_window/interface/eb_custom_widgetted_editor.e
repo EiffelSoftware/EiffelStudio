@@ -580,7 +580,7 @@ feature {NONE} -- Action hanlders
 	on_key_down (a_key: EV_KEY)
 			-- Called when the user hits a key
 		do
-			if is_editable then
+			if is_editable and then a_key.code /= {EV_KEY_CONSTANTS}.key_ctrl then
 					-- Reset timer as edits override mouse idle events
 				reset_mouse_idle_timer
 			end

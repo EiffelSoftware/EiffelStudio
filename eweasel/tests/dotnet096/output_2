@@ -5,13 +5,11 @@ Interface
 root_cluster.TEST(TEST): on class and interface
 root_cluster.TEST(method): on class and interface
 root_cluster.TEST(set_property): on class and interface
-root_cluster.TEST(property): on property
 root_cluster.TEST($$property): on class and interface attribute
 
 Implementation
 root_cluster.TEST(TEST): on class and interface
 root_cluster.TEST(method): on class and interface
 root_cluster.TEST(set_property): on class and interface
-root_cluster.TEST(property): on property
 root_cluster.TEST($$property): on class and interface attribute
 Execution completed

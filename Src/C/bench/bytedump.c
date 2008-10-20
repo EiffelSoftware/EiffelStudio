@@ -180,7 +180,7 @@ static  char    *names [] = {
 "BC_POP" ,
 "BC_REF_TO_PTR" ,
 "BC_RCREATE" ,
-"BC_GEN_PARAM_CREATE" ,
+"BC_NOTUSED_134" ,
 "BC_CAST_CHAR32" ,
 "BC_NULL_POINTER" ,
 "BC_BASIC_OPERATIONS" ,
@@ -1423,11 +1423,6 @@ static void get_creation_type (void)
 			fprintf (ofp,"oid %d ", get_int32(&ip));
 			/* Org. offset */
 			fprintf (ofp,"ooff %d", get_int32(&ip));
-			break;
-		case BC_GEN_PARAM_CREATE:
-			fprintf (ofp, " (BC_GEN_PARAM_CREATE) ");
-			print_ctype (get_int16(&ip));
-			fprintf (ofp,"pos %d", get_int32(&ip));
 			break;
 	}
 }

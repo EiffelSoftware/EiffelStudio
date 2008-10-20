@@ -550,10 +550,12 @@ feature -- Update
 			l_root: SYSTEM_ROOT
 		do
 			during_synchronization := True
-			l_system := eiffel_system.system
+			if eiffel_project.system_defined then
+				l_system := eiffel_system.system
+			end
 			if
 				stone = Void and then
-				eiffel_project.system_defined and then
+				l_system /= Void and then
 				eiffel_project.initialized and then
 				eiffel_system.workbench.is_already_compiled and then
 				eiffel_system.workbench.last_reached_degree <= 5 and then
@@ -2253,7 +2255,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 		ensure
 			set: managed_dependency_formatters = a_formatters
 		end
-		
+
 	set_container (a_container: like container) is
 			-- Set `container'
 		do

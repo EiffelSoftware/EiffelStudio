@@ -1225,7 +1225,11 @@ rt_public void eraise(char *tag, long num)
 
 	vector = extop(&eif_stack);	 /* Vector at top of stack */
 
-	if (vector != (struct ex_vect *) 0) {
+	if (!vector) {
+		echrt = (char *) 0;	/* Null routine name */
+		echclass = 0;		/* Null class name */
+		line_number = 0;	/* Invalid line number */
+	} else {
 		type = vector->ex_type;
 		/* Record recipient and its class name */
 		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
@@ -1237,13 +1241,6 @@ rt_public void eraise(char *tag, long num)
 			eclass = vector_call->ex_orig;
 			reci_name = vector_call->ex_rout;
 		}
-	}
-
-	if (vector == (struct ex_vect *) 0) {
-		echrt = (char *) 0;	/* Null routine name */
-		echclass = 0;		/* Null class name */
-		line_number = 0;	/* Invalid line number */
-	} else {
 		/* Here we use "&&" because `eraise' is never called by the developer or
 		 * the once exception raising routine. So it is more strict to take 
 		 * the exception as assertion violation when both `in_assertion' and 
@@ -1416,7 +1413,10 @@ rt_public void com_eraise(char *tag, long num)
 
 	vector = extop(&eif_stack);	 /* Vector at top of stack */
 
-	if (vector != (struct ex_vect *) 0) {
+	if (!vector) {
+		echrt = (char *) 0;	 /* Null routine name */
+		echclass = 0;		  /* Null class name */
+	} else {
 		type = vector->ex_type;
 		/* Record recipient and its class name */
 		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
@@ -1428,12 +1428,6 @@ rt_public void com_eraise(char *tag, long num)
 			eclass = vector_call->ex_orig;
 			reci_name = vector_call->ex_rout;
 		}
-	}
-
-	if (vector == (struct ex_vect *) 0) {
-		echrt = (char *) 0;	 /* Null routine name */
-		echclass = 0;		  /* Null class name */
-	} else {
 		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
 			if (type == EX_CINV) {
@@ -3707,7 +3701,11 @@ rt_public void draise(long code, char *meaning, char *message)
 
 	vector = extop(&eif_stack);	 /* Vector at top of stack */
 
-	if (vector != (struct ex_vect *) 0) {
+	if (!vector) {
+		echrt = (char *) 0;	/* Null routine name */
+		echclass = 0;		/* Null class name */
+		line_number = 0;	/* Invalid line number */
+	} else {
 		type = vector->ex_type;
 		/* Record recipient and its class name */
 		if (((type == EX_CINV) && echentry) || (type == EX_PRE)) {
@@ -3719,13 +3717,6 @@ rt_public void draise(long code, char *meaning, char *message)
 			eclass = vector_call->ex_orig;
 			reci_name = vector_call->ex_rout;
 		}
-	}
-
-	if (vector == (struct ex_vect *) 0) {
-		echrt = (char *) 0;	/* Null routine name */
-		echclass = 0;		/* Null class name */
-		line_number = 0;	/* Invalid line number */
-	} else {
 		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
 		 * to raise once exceptions, when `in_assertion' has already been reset.
 		 * Here we use "||" because when ever it is an assertion "draise" take it as assertion violation,

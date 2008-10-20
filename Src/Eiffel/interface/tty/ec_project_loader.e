@@ -308,7 +308,6 @@ feature {NONE} -- User interaction
 					i := i + 1
 					a_targets.forth
 				end
-
 				if should_stop_on_prompt then
 					localized_print (ewb_names.can_not_choose_a_target)
 					io.put_new_line
@@ -324,11 +323,16 @@ feature {NONE} -- User interaction
 						l_answer := io.last_string
 						if l_answer.is_integer then
 							i := l_answer.to_integer
-							if 1 <= i and i <= a_targets.count then
+							if i = 0 then
+								l_answered := True
+								set_has_error
+							elseif 1 <= i and i <= a_targets.count then
 								l_answer := a_targets.item (i)
 							end
 						end
-						if a_targets.has (l_answer) then
+						if l_answered then
+							--| probably user cancellation
+						elseif a_targets.has (l_answer) then
 							l_answered := True
 							target_name := l_answer.twin
 						else

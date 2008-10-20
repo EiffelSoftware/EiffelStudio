@@ -34,7 +34,7 @@ feature -- Access
 	project_contains_no_compilable_target: STRING_32 is 	do Result := locale.translation ("This project contains no compilable target.") end
 	has_more_than_one_target: STRING_32 is 					do Result := locale.translation ("This project has more than one target: ") end
 	can_not_choose_a_target: STRING_32 is 					do Result := locale.translation ("You cannot choose a target because of the -stop/-batch option.") end
-	select_the_target_you_want: STRING_32 is 				do Result := locale.translation ("Select the target you want: ") end
+	select_the_target_you_want: STRING_32 is 				do Result := locale.translation ("Select the target you want (0 to quit): ") end
 	invalid_target: STRING_32 is 							do Result := locale.translation ("Invalid target, select the target you want: ") end
 	cannot_choose_name_because_of: STRING_32 is 			do Result := locale.translation ("You cannot choose the project location%Nbecause of the -stop/-batch option.%N") end
 	enter_location_for_new_project: STRING_32 is 			do Result := locale.translation ("Enter location for new project: ") end

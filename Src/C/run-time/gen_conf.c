@@ -111,7 +111,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 doc:	<attribute name="eif_cid_size" return_type="int" export="private">
-doc:		<summary>Number of elements in following structures `eif_cid_map', `eif_derivations', `eif_con_tab', `eif_anc_id_map' and `eif_conf_tab'.</summary>
+doc:		<summary>Number of elements in following structures `eif_cid_map', `eif_derivations', `eif_con_tab', `eif_conf_tab'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gen_mutex</synchronization>
@@ -183,20 +183,6 @@ typedef struct {
 	unsigned char   *low_comp;      /* Bit table for computed lower conf. */
 	unsigned char   *high_comp;     /* Bit table for computed high conf. */
 } EIF_CONF_TAB;
-/*------------------------------------------------------------------*/
-/* Structure for ancestor id information.                           */
-/*------------------------------------------------------------------*/
-
-typedef struct {
-	EIF_TYPE_INDEX  min_id;         /* Minimal ancestor id; RTUD(no) */
-	EIF_TYPE_INDEX  max_id;         /* Maximal ancestor id; RTUD(no) */
-	EIF_TYPE_INDEX  *map;           /* Ancestor id map.
-									   Index : RTUD(no)
-									   Result: RTUD(yes)
-									*/
-} EIF_ANC_ID_MAP;
-/*------------------------------------------------------------------*/
-
 /*
 doc:	<attribute name="first_gen_id" return_type="EIF_TYPE_INDEX" export="private">
 doc:		<summary>base id of first generic type. All values below `first_gen_id' do not represent generic classes.</summary>
@@ -215,13 +201,6 @@ rt_private EIF_TYPE_INDEX  first_gen_id = 0;
 rt_private EIF_TYPE_INDEX  next_gen_id  = 0;
 
 /*
-doc:	<attribute name="eif_anc_id_map" return_type="EIF_ANC_ID_MAP **" export="private">
-doc:		<summary>Ancestor ID maps.</summary>
-doc:		<access>Read/Write</access>
-doc:		<indexing>full type id; RTUD(yes)</indexing>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gen_mutex</synchronization>
-doc:	</attribute>
 doc:	<attribute name="eif_conf_tab" return_type="EIF_CONF_TAB **" export="private">
 doc:		<summary>Conformance tables.</summary>
 doc:		<access>Read/Write</access>
@@ -237,7 +216,6 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gen_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private EIF_ANC_ID_MAP **eif_anc_id_map = NULL;
 rt_private EIF_CONF_TAB **eif_conf_tab = NULL;
 rt_private EIF_GEN_DER **eif_derivations = NULL;
 
@@ -313,8 +291,6 @@ rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype);
 rt_private EIF_TYPE_INDEX eif_gen_param (EIF_TYPE_INDEX, uint32, char *, uint16 *);
 rt_private void eif_create_typename (EIF_TYPE_INDEX, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX);
-rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
-rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX);
 rt_private void eif_expand_tables(int);
 rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX, int);
 rt_private void eif_compute_ctab (EIF_TYPE_INDEX);
@@ -546,11 +522,6 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 	if (eif_conf_tab == NULL)
 		enomem();
 
-	eif_anc_id_map = (EIF_ANC_ID_MAP **) cmalloc(eif_cid_size * sizeof (EIF_ANC_ID_MAP*));
-
-	if (eif_anc_id_map == NULL)
-		enomem();
-
 	/* Setup a 1-1 mapping and initialize the arrays */
 
 	for (dt = 0; dt < eif_cid_size; ++dt)
@@ -558,7 +529,6 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 		eif_cid_map [dt]     = dt;
 		eif_derivations [dt] = NULL;
 		eif_conf_tab [dt]    = NULL;
-		eif_anc_id_map [dt]  = NULL;
 	}
 
 	/* Now initialize egc_xxx_dtypes */
@@ -665,7 +635,6 @@ rt_shared void eif_gen_conf_cleanup (void)
 #ifdef EIF_THREADS
 	REQUIRE ("Called by root thread", eif_thr_is_root ());
 #endif	/* EIF_THREADS */
-	REQUIRE ("eif_anc_id_map not null", eif_anc_id_map);
 	REQUIRE ("eif_conf_tab not null", eif_conf_tab);
 	REQUIRE ("eif_derivations not null", eif_derivations);
 	REQUIRE ("eif_cid_map not null", eif_cid_map);
@@ -674,23 +643,6 @@ rt_shared void eif_gen_conf_cleanup (void)
 	eif_rt_xfree (rtud_inv);
 	rtud_inv = NULL;
 #endif	/* WORKBENCH */
-
-	/* Recursively free eif_anc_id_map */
-	for (i = 0; i < eif_cid_size; i++) {
-		EIF_ANC_ID_MAP *tmp = eif_anc_id_map [i];
-
-		if (tmp == NULL)
-			continue;
-		if (tmp->map) {
-			eif_rt_xfree (tmp->map);
-		} else {
-#ifdef LMALLOC_CHECK
-			CHECK ("", !(is_in_lm (tmp->map)));
-#endif	/* LMALLOC_CHECK */
-		}
-		eif_rt_xfree (tmp);
-	}
-	eif_rt_xfree (eif_anc_id_map);	
 
 	/* Recursively free eif_conf_tab */
 	for (i = 0; i < eif_cid_size; i++) {
@@ -1902,41 +1854,10 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 		table->high_comp = comp;
 	}
 }
-/*------------------------------------------------------------------*/
-/* Create new ancestor id map.                                      */
-/*                                                                  */
-/* min_id : minimal ancestor id; RTUD (no)                          */
-/* max_id : maximal ancestor id; RTUD (no)                          */
-/*------------------------------------------------------------------*/
 
-rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (EIF_TYPE_INDEX min_id, EIF_TYPE_INDEX max_id) {
-	EIF_ANC_ID_MAP *result;
-	EIF_TYPE_INDEX *map, size;
-
-	result = (EIF_ANC_ID_MAP *) cmalloc(sizeof (EIF_ANC_ID_MAP));
-
-	if (result == NULL)
-		enomem();
-
-	result->min_id = min_id;
-	result->max_id = max_id;
-
-	if (min_id <= max_id) {
-		size = (max_id - min_id + 1);
-
-		map = (EIF_TYPE_INDEX *) eif_rt_xcalloc (size, sizeof(EIF_TYPE_INDEX));
-		if (map == NULL)
-			enomem ();
-		result->map = map;
-	} else {
-		result->map = NULL;
-	}
-
-	return result;
-}
 /*------------------------------------------------------------------*/
 /* Expand `eif_cid_map', `eif_conf_tab' , `eif_derivations' and     */
-/* `eif_anc_id_map' to `new_size'                                   */
+/* to `new_size'                                                    */
 /*------------------------------------------------------------------*/
 
 rt_private void eif_expand_tables(int new_size)
@@ -1946,7 +1867,6 @@ rt_private void eif_expand_tables(int new_size)
 #else
 	EIF_GEN_DER **new;
 	EIF_CONF_TAB **tab;
-	EIF_ANC_ID_MAP **amap;
 	EIF_TYPE_INDEX *map;
 	int         i;
 
@@ -1964,13 +1884,6 @@ rt_private void eif_expand_tables(int new_size)
 
 	eif_conf_tab = tab;
 
-	amap = (EIF_ANC_ID_MAP **) crealloc((char*)eif_anc_id_map, new_size*sizeof (EIF_ANC_ID_MAP*));
-
-	if (amap == NULL)
-		enomem();
-
-	eif_anc_id_map = amap;
-
 	map = (EIF_TYPE_INDEX *) crealloc((char*)eif_cid_map, new_size*sizeof (EIF_TYPE_INDEX));
 
 	if (map == NULL)
@@ -1983,7 +1896,6 @@ rt_private void eif_expand_tables(int new_size)
 		eif_cid_map [i]     = 0;
 		eif_derivations [i] = NULL;
 		eif_conf_tab [i]    = NULL;
-		eif_anc_id_map [i]  = NULL;
 	}
 
 	eif_cid_size = new_size;
@@ -2585,108 +2497,6 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 		(ctab->high_tab)[offset/8] |= mask;
 		(ctab->high_comp)[offset/8] |= mask;
 	}
-}
-/*------------------------------------------------------------------*/
-/* Compute ancestor id map for `dftype'.                            */
-/*                                                                  */
-/* dftype                      : full type; RTUD(yes)               */
-/* min_id, max_id, table index : RTUD(no)                           */
-/* Table entries               : RTUD(yes)                          */
-/*------------------------------------------------------------------*/
-
-rt_private void eif_compute_anc_id_map (EIF_TYPE_INDEX dftype)
-
-{
-	EIF_TYPE_INDEX outtab [256], *outtable, *intable;
-	EIF_TYPE_INDEX min_id, max_id, pftype, dtype;
-	int i, count, offset;
-	EIF_TYPE_INDEX *src, *dest;
-	struct eif_par_types *pt;
-	EIF_ANC_ID_MAP *map, *pamap;
-
-	/* Get parent table */
-
-	dtype = To_dtype(dftype);
-
-		/* Compiler generated id */
-	pt = par_info (RTUD_INV(dtype));
-
-	/* Compute the range of the id map */
-
-	outtable = outtab;
-	intable = pt->parents;
-
-	CHECK ("Parents never NULL", intable);
-
-	min_id = max_id = RTUD_INV(dtype);
-
-	while (*intable != TERMINATOR)
-	{
-		pftype = eif_id_of (&intable, &outtable, dftype, 1);
-		if (*intable == PARENT_TYPE_SEPARATOR) {
-			intable++;
-		}
-
-		map = eif_anc_id_map [pftype];
-
-		if (map == NULL)
-		{
-			eif_compute_anc_id_map (pftype);
-			map = eif_anc_id_map [pftype];
-		}
-
-		if (map->min_id < min_id)
-			min_id = map->min_id;
-		if (map->max_id > max_id)
-			max_id = map->max_id;
-	}
-
-	/* Create a new map */
-
-	map = eif_new_anc_id_map (min_id, max_id);
-
-	eif_anc_id_map [dftype] = map;
-
-	/* Fill map */
-
-	outtable = outtab;
-	intable = pt->parents;
-
-	CHECK ("Parents never NULL", intable);
-
-	while (*intable != TERMINATOR)
-	{
-		pftype = eif_id_of (&intable, &outtable, dftype, 1);
-		pamap = eif_anc_id_map [pftype];
-		if (*intable == PARENT_TYPE_SEPARATOR) {
-			intable++;
-		}
-
-		/* Register parent type */
-
-		if ((min_id <= max_id) && (pamap->min_id <= pamap->max_id))
-		{
-			count  = (pamap->max_id-pamap->min_id+1);
-			offset = (pamap->min_id - min_id);
-			src    = pamap->map;
-			dest   = map->map + offset;
-
-			for (i = count; i; --i)
-			{
-				if (*src)
-				{
-					*dest = *src;
-				}
-
-				++dest;
-				++src;
-			}
-		}
-	}
-
-	/* Put own type in table */
-
-	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
 
 /*

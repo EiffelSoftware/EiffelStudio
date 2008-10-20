@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							debug ("es_grid_layout")
-								print (" -> #[MissMatched] %N")
+								print (" -> #[MisMatched] %N")
 							end
 						end
 					end

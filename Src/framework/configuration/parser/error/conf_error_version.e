@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create.
 		do
-			message := "Config file format version missmatch."
+			message := "Config file format version mismatch."
 		end
 
 indexing

@@ -179,7 +179,14 @@ end;
 								arg_types.put (feat_args.i_th (j).adapted_in (a_class_type).c_type.c_string, j + 1)
 								j := j - 1
 							end
-							buffer.generate_extern_declaration ("EIF_TYPED_VALUE", routine_name, <<>>)
+							buffer.put_string ("extern ")
+							if return_type.is_void then
+								return_type.generate (buffer)
+							else
+								buffer.put_string ("EIF_TYPED_VALUE ")
+							end
+							buffer.put_string (routine_name)
+							buffer.put_three_character ('(', ')', ';')
 							buffer.generate_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
 							buffer.generate_block_open
 							if arg_count > 0 then

@@ -429,12 +429,15 @@ feature {NONE} -- Implementation
 
 	kamikazes: ARRAYED_LIST [like item]
 			-- Used by `prune_when_called'.
+		local
+			r: ?ARRAYED_LIST [like item]
 		do
-			Result := kamikazes_internal
-			if Result = Void then
-				create Result.make (0)
-				kamikazes_internal := Result
+			r := kamikazes_internal
+			if r = Void then
+				create r.make (0)
+				kamikazes_internal := r
 			end
+			Result := r
 		end
 
 	kamikazes_internal: ?like kamikazes

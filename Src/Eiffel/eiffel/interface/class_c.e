@@ -2899,9 +2899,12 @@ feature -- Properties
 			-- Class text
 		require
 			valid_file_name: file_name /= Void
+		local
+			l_text: STRING_32
 		do
-			if lace_class.text /= Void then
-				Result := lace_class.text.as_string_8
+			l_text := lace_class.text
+			if l_text /= Void then
+				Result := l_text.as_string_8
 			end
 		end
 

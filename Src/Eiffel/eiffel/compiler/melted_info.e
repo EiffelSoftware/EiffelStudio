@@ -38,10 +38,18 @@ feature {NONE} -- Initialization
 			body_index := f.body_index
 			pattern_id := f.pattern_id
 			attr ?= f
+
 			if attr /= Void then
-				written_in := attr.generate_in
+				access_in := attr.generate_in
+				written_in := access_in
 			else
+					--| IEK: Changed from written_in for replication purposes.
 				written_in := f.written_in
+				if f.has_replicated_ast then
+					access_in := f.access_in
+				else
+					access_in := written_in
+				end
 			end
 			result_type := f.type
 		end
@@ -74,7 +82,10 @@ feature -- Access
 			-- Pattern id of feature to mel.
 
 	written_in: INTEGER
-			-- Class where current feature is to mel.
+			-- Class where current feature is to melt.
+
+	access_in: INTEGER
+			-- Class where current feature may be accessed by its routine id.
 
 	result_type: TYPE_A
 			-- Return type of current feature to melt.

@@ -119,13 +119,14 @@ feature -- Initialization
 
 feature -- Type checking
 
-	type_check_only (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_code_inherited: BOOLEAN) is
+	type_check_only (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_code_inherited, a_replicated_in_current_class: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_inherited_check: a_code_inherited implies a_is_safe_to_check_inherited
 		do
 			fixme (once "Make sure to use `a_code_inherited' to properly initialize our type checker.")
+			set_is_replicated (a_replicated_in_current_class)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			context.initialize_variables
@@ -139,9 +140,9 @@ feature -- Type checking
 			if a_code_inherited then
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if not a_feature.is_deferred and not a_feature.is_il_external then
-					is_inherited := True
+					set_is_inherited (True)
 					a_feature.body.process (Current)
-					is_inherited := False
+					set_is_inherited (False)
 				end
 			else
 				a_feature.body.process (Current)
@@ -153,13 +154,14 @@ feature -- Type checking
 			check_vevi
 		end
 
-	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited: BOOLEAN) is
+	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_replicated_in_current_class: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			rout_as: ROUTINE_AS
 		do
+			set_is_replicated (a_replicated_in_current_class)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			context.initialize_variables
@@ -168,14 +170,23 @@ feature -- Type checking
 			if a_is_safe_to_check_inherited then
 				is_byte_node_enabled := False
 				break_point_slot_count := 0
-
 				process_inherited_assertions (a_feature, True)
 				is_byte_node_enabled := True
+				if a_replicated_in_current_class then
+						-- We need to correct set the inherited TYPE_A checker to be the current
+						-- class so that like features are correctly handled.
+					inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
+				end
 				a_feature.body.process (Current)
 				is_byte_node_enabled := False
 				process_inherited_assertions (a_feature, False)
 			else
 				is_byte_node_enabled := True
+				if a_replicated_in_current_class then
+						-- We need to correct set the inherited TYPE_A checker to be the current
+						-- class so that like features are correctly handled.
+					inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
+				end
 				a_feature.body.process (Current)
 			end
 
@@ -204,6 +215,7 @@ feature -- Type checking
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_invariant: INVARIANT_B
 		do
+			set_is_replicated (False)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := a_generate_code
 			context.initialize_variables
@@ -227,6 +239,7 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 			a_cas_not_void: a_cas /= Void
 		do
+			set_is_replicated (False)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
@@ -328,7 +341,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 				current_feature := a_feature
 				reset
 				is_byte_node_enabled := a_is_byte_node_enabled
-				is_inherited := a_is_inherited
+				set_is_inherited (a_is_inherited)
 				l_written_class := context.written_class
 				a_feature.check_types (context.current_feature_table)
 				if error_level = l_error_level then
@@ -418,6 +431,19 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 
 	is_inherited: BOOLEAN
 			-- Is code being processed inherited?
+
+	is_replicated: BOOLEAN
+			-- Is code being processed to be replicated in the current class?
+
+	set_is_inherited (a_inherited: BOOLEAN)
+		do
+			is_inherited := a_inherited
+		end
+
+	set_is_replicated (a_replicated: BOOLEAN)
+		do
+			is_replicated := a_replicated
+		end
 
 feature {NONE} -- Implementation: State
 
@@ -621,7 +647,7 @@ feature -- Settings
 			last_calls_target_type := Void
 			is_type_compatible := [False, Void]
 			last_assigner_command := Void
-			is_inherited := False
+			set_is_inherited (False)
 			inline_agent_byte_codes := Void
 		end
 
@@ -1642,14 +1668,11 @@ feature -- Implementation
 										depend_unit_level)
 									context.supplier_ids.extend (l_depend_unit)
 								end
-
-								if not is_qualified and then l_feature.access_in /= l_feature.written_in and then system.current_class.class_id = l_feature.access_in
-									and then not system.has_old_feature_replication
-								then
-										-- We are unqualified-calling an inherited feature that is replicated in the current class.
+								if not is_qualified and then l_feature.is_replicated_directly and then not l_feature.from_non_conforming_parent then
+										-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
 										-- Therefore the calling feature must also be replicated in the current class.
-									if current_feature.access_in /= system.current_class.class_id then
-										-- Invalid call to replicated feature, for now raise an error.
+									if not current_feature.is_replicated_directly and then current_feature.written_class /= System.current_class then
+											-- Invalid call to replicated feature, raise VMCS.
 										Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
 									end
 								end
@@ -6973,7 +6996,7 @@ feature {NONE} -- Implementation
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
 				context.clear_local_context
-				is_inherited := True
+				set_is_inherited (True)
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				from
 					i := assert_id_set.count
@@ -7012,7 +7035,7 @@ feature {NONE} -- Implementation
 					end
 					i := i - 1
 				end
-				is_inherited := False
+				set_is_inherited (False)
 			end
 		end
 
@@ -8782,7 +8805,7 @@ feature {NONE} -- Implementation: type validation
 			l_error_level: NATURAL
 		do
 			l_error_level := error_level
-			if is_inherited then
+			if is_inherited or else is_replicated then
 					-- Convert TYPE_AS into TYPE_A.
 				l_type := type_a_generator.evaluate_type (a_type, context.written_class)
 					-- Perform simple check that TYPE_A is valid, `l_type' should not be

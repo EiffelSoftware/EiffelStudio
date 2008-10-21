@@ -274,7 +274,6 @@ feature -- Finalization
 		local
 			useless_body_index: INTEGER
 			l_useless: like useless_body_indexes
-			l_info: READ_INFO
 		do
 			debug
 				io.error.put_string ("TMP_AST_SERVER.finalize%N")
@@ -297,8 +296,7 @@ feature -- Finalization
 			until
 				body_storage.after
 			loop
-				l_info := tmp_body_info.item (body_storage.item_for_iteration.id)
-				body_info.put (l_info, body_storage.key_for_iteration)
+				body_info.put (tmp_body_info.item (body_storage.item_for_iteration.id), body_storage.key_for_iteration)
 				body_storage.forth
 			end
 				-- Remove the stored data from memory
@@ -329,6 +327,10 @@ feature -- Finalization
 				Body_server.remove (useless_body_index)
 				l_useless.forth
 			end
+				-- Wipeout useless body indexes as they are no longer required.
+			useless_body_indexes.clear_all
+
+
 				-- Clear cache and merge with server
 			Body_server.cache.wipe_out
 			Body_server.merge (body_info)

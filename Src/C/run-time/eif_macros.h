@@ -171,7 +171,6 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  initializes it with the routine pointer 'y', the true routine pointer 'z',
  *  argument tuple 'a', open map 'o' and closed map 'c'
  *  RTLB(x) allocated a new bit object of size 'x'
- *  RTUD keep dynamic type  for refreezing
  *  RTLX(x) allocates an expanded object (with possible in invocation
  *		of the creation routine) of type `x'
  *  RTXB(x,y) copies bit `x' to `y'
@@ -205,14 +204,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 		if (cp) cp(x); \
 	}
 #endif
-#ifdef WORKBENCH
-RT_LNK EIF_TYPE_INDEX fcount;
-#define RTUD(x)				((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
-#else
-#define RTUD(x)				(x) /* For convenience */
-#endif
-
-
 
 /* Macro used for object cloning:
  *  RTCL(x) clones 'x' and return a pointer to the cloned object

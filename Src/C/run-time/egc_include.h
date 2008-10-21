@@ -67,7 +67,6 @@ extern void egc_tabinit_init (void);
 
 extern int32 *egc_fcall_init [];
 extern struct rout_info egc_forg_table_init [];
-extern EIF_TYPE_INDEX egc_fdtypes_init [];
 
 #else
 

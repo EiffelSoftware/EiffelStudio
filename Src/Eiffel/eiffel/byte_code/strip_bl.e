@@ -58,9 +58,7 @@ feature
 			Context.Current_register.print_register;
 			buf.put_string (gc_comma);
 			if context.workbench_mode then
-				buf.put_string ("RTUD(")
 				buf.put_static_type_id (cl_type.static_type_id)
-				buf.put_character (')')
 			else
 				buf.put_type_id (cl_type.type_id)
 			end

@@ -168,9 +168,9 @@ feature -- C code generation
 						buffer.put_string (" + OVERHEAD")
 					end
 				else
-					buffer.put_string("(EIF_Size(RTUD(")
+					buffer.put_string("(EIF_Size(")
 					buffer.put_static_type_id (l_exp_class_type.static_type_id)
-					buffer.put_string (")) + OVERHEAD)")
+					buffer.put_string (") + OVERHEAD)")
 				end
 			else
 				type_c.generate_size (buffer)

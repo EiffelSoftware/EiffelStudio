@@ -296,9 +296,7 @@ feature -- Dynamic Library file
 									buffer.put_string ("%N%Tmain_obj = RTLN(")
 
 									if Context.workbench_mode then
-										buffer.put_string ("RTUD(");
 										buffer.put_static_type_id (dl_exp.compiled_class.actual_type.associated_class_type (Void).static_type_id)
-										buffer.put_character (')');
 									else
 										buffer.put_type_id (dl_exp.compiled_class.actual_type.type_id (Void));
 									end
@@ -860,8 +858,6 @@ feature -- Plug and Makefile file
 
 				buffer.put_string ("%N%Tegc_fcall = egc_fcall_init;%N")
 				buffer.put_string ("%Tegc_forg_table = egc_forg_table_init;%N")
-				buffer.put_string ("%Tegc_fdtypes = egc_fdtypes_init;%N")
-
 			else
 					-- Do we need to protect the exception stack?
 				buffer.put_string ("%Texception_stack_managed = (EIF_BOOLEAN) ")

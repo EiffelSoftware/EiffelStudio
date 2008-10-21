@@ -169,24 +169,6 @@ feature -- Object access
 			rt_dynamic_type_nonnegative: Result >= 0
 		end
 
-	frozen rt_updated_dynamic_type (tid: INTEGER): INTEGER is
-			-- Updated dynamic type id from `tid'.
-			-- aka: full dynamic type
-			--| note: for non generic: Result = tid
-		require
-			tid_not_negative: tid >= 0
-		external
-			"C inline use %"eif_macros.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return RTUD($tid);
-			#else
-				return 0;
-			#endif
-			]"
-		end
-
 feature {NONE} -- Factory
 
 	frozen object_record (i: INTEGER; obj: !ANY): ?RT_DBG_VALUE_RECORD is

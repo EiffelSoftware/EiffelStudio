@@ -253,9 +253,7 @@ feature -- Byte code generation
 				if precursor_type /= Void then
 						-- Use dynamic type of parent instead
 						-- of dynamic type of Current.
-					buf.put_string ("RTUD(")
 					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-					buf.put_character (')')
 				else
 					context.generate_current_dtype
 				end

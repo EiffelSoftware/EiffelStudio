@@ -70,7 +70,7 @@ feature -- Access
 	public Type dotnet_type ()
 		// Associated .NET type of `type'.
 	{
-		return Type.GetTypeFromHandle (type);
+		return ISE_RUNTIME.interface_type (Type.GetTypeFromHandle (type));
 	}
 
 /*

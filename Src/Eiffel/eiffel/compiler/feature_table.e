@@ -1011,6 +1011,7 @@ end
 				loop
 					feature_i := item_for_iteration
 					if feature_i.is_attribute then
+							-- Increase attribute counter so we only iterate the number of attributes available
 						l_attribute_counter := l_attribute_counter + 1
 						l_ext ?= feature_i.extension
 						if
@@ -1024,8 +1025,6 @@ end
 							Result.extend (desc)
 						end
 					end
-						-- Increase iteration counter
-
 					if l_attribute_counter < l_attribute_count then
 							-- If we have reached the attribute count then we don't need to do
 							-- an unnecessary forth

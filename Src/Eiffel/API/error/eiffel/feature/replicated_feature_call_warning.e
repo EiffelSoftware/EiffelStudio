@@ -8,12 +8,20 @@ indexing
 class REPLICATED_FEATURE_CALL_WARNING
 
 inherit
-	EIFFEL_WARNING
-		redefine
+	COMPILER_WARNING
+		undefine
+			has_associated_file,
+			is_defined,
+			trace,
 			trace_primary_context,
-			build_explain,
-			print_single_line_error_message,
-			help_file_name
+			process
+		end
+
+	FEATURE_ERROR
+		undefine
+			error_string
+		redefine
+			build_explain
 		end
 
 	SHARED_NAMES_HEAP
@@ -32,8 +40,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_feature_not_void: a_feature /= Void
 		do
+			class_c ?= a_class
 			associated_class := a_class
-			associated_feature := a_feature.api_feature (a_feature.written_in)
+			e_feature := a_feature.api_feature (a_feature.written_in)
 			callee_feature := a_callee.api_feature (a_feature.written_in)
 		ensure
 			associated_class_set: associated_class = a_class
@@ -41,62 +50,20 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	associated_feature: E_FEATURE
-			-- Feature making the replicated call.
-
 	callee_feature: E_FEATURE
 			-- Unqualified replicated callee that is incorrectly called my a non-replicated feature.
 
-	code: STRING is "Replicated Feature Call"
+	code: STRING is "VMCS"
 			-- Error code
-
-	help_file_name: STRING is "replicated_feature_call_warning"
-			-- Name of file with error description
 
 feature -- Output
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
-			-- Build the primary context string so errors can be navigated to
-		do
-			if associated_feature = Void then
-				Precursor (a_text_formatter)
-			else
-				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
-				a_text_formatter.add (".")
-				associated_class.append_name (a_text_formatter)
-				a_text_formatter.add (".")
-				associated_feature.append_name (a_text_formatter)
-			end
-		end
-
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add ("Class: ")
-			associated_class.append_name (a_text_formatter)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Feature: ")
-			associated_feature.append_name (a_text_formatter)
-			a_text_formatter.add_new_line
-		end
-
-feature {NONE} -- Output
-
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
-			-- Displays single line help in `a_text_formatter'.
-		do
-			Precursor (a_text_formatter)
-			a_text_formatter.add_space
-			a_text_formatter.add ("The repeatedly inherited routine `")
-			associated_feature.append_name (a_text_formatter)
-			a_text_formatter.add ("' is not replicated but is calling the unqualified feature `")
+			a_text_formatter.add ("Unqualified Call of Replicated Feature: ")
 			callee_feature.append_name (a_text_formatter)
-			a_text_formatter.add ("' that is replicated in the same inheritance branch of ")
-			associated_class.append_name (a_text_formatter)
-			a_text_formatter.add (".")
+			a_text_formatter.add_new_line
 		end
-
-invariant
-	associated_feature_not_void: associated_feature /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

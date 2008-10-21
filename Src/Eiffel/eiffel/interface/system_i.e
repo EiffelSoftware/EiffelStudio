@@ -262,6 +262,10 @@ feature -- Properties
 			-- Is it the first compilation of the system
 			-- Used by the time check
 
+	compilation_straight: BOOLEAN
+			-- Is the first compilation of the system straight?
+			-- IE: Without any incrementality (ie: Compilation from scratch without errors, etc)
+
 	project_creation_time: INTEGER
 			-- Time of creation of current project.
 
@@ -1220,7 +1224,9 @@ end
 					-- First compilation.
 				is_rebuild := True
 				init
+				compilation_straight := True
 			else
+				compilation_straight := False
 				if is_rebuild or is_force_rebuild then
 						-- Full rebuild
 					rebuild_configuration
@@ -3458,7 +3464,7 @@ feature {NONE} -- Finalization implementation
 				i > nb
 			loop
 				a_class := class_array.item (i)
-					-- Since a class can be removed, test if `a_class´
+					-- Since a class can be removed, test if `a_classï¿½
 					-- is not Void.
 				if a_class /= Void then
 					if not a_class.is_precompiled or else a_class.is_in_system then

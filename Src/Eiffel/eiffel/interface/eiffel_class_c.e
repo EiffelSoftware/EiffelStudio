@@ -506,6 +506,7 @@ feature -- Third pass: byte code production and type check
 				-- Feature invariant_type_checktable of the class
 			feature_i, def_resc: FEATURE_I
 				-- A feature of the class
+			l_feature_written_in_current: BOOLEAN
 			feature_changed: BOOLEAN
 				-- Is the current feature `feature_i' changed ?
 			dependances: CLASS_DEPENDANCE
@@ -588,6 +589,7 @@ feature -- Third pass: byte code production and type check
 					i = 0
 				loop
 					feature_i := feat_table [i]
+					l_feature_written_in_current := feature_i.written_in = class_id
 					l_ast_context.set_written_class (feature_i.written_class)
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
@@ -660,7 +662,8 @@ feature -- Third pass: byte code production and type check
 								l_ast_context.old_inline_agents.wipe_out
 								remove_inline_agents_of_feature (feature_i.body_index, l_ast_context.old_inline_agents)
 
-								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
+								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor, feature_i.is_replicated_directly)
+
 								type_checked := True
 								type_check_error := Error_handler.error_level /= l_error_level
 
@@ -751,7 +754,7 @@ feature -- Third pass: byte code production and type check
 
 						if not type_checked and then changed3 and then feature_i.is_routine then
 								-- Forced type check on the feature
-							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in)
+							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, not l_feature_written_in_current, feature_i.is_replicated_directly)
 							check_local_names_needed := False
 						elseif check_local_names_needed then
 							feature_i.check_local_names (feature_i.real_body)
@@ -767,7 +770,7 @@ feature -- Third pass: byte code production and type check
 								l_error_level := error_handler.error_level
 								l_ast_context.old_inline_agents.wipe_out
 								remove_inline_agents_of_feature (feature_i.body_index, l_ast_context.old_inline_agents)
-								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
+								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor, False)
 								type_checked := True
 								type_check_error := error_handler.error_level /= l_error_level
 								if
@@ -791,16 +794,19 @@ feature -- Third pass: byte code production and type check
 									byte_code_generated := True
 								end
 							elseif (class_id = feature_i.written_in) or else is_safe_to_check_ancestor then
-								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in)
+								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in, feature_i.is_replicated_directly)
 							end
 						end
 						record_suppliers (feature_i, dependances)
-					elseif is_safe_to_check_ancestor and then is_full_class_checking then
+					elseif is_safe_to_check_ancestor and then (is_full_class_checking or else (need_type_check and then replicated_features_list /= Void and then replicated_features_list.count > 0)) then
 							-- We check inherited routines in the context of current class only
 							-- if its parents were properly type checked.
+							-- 'need_type_check' may be true if `Current' has replicated features.
 						feature_checker.type_check_only (feature_i,
-							is_safe_to_check_ancestor, class_id /= feature_i.written_in)
-						record_suppliers (feature_i, dependances)
+							is_safe_to_check_ancestor, class_id /= feature_i.written_in, feature_i.is_replicated_directly)
+						if is_full_class_checking then
+							record_suppliers (feature_i, dependances)
+						end
 					end
 
 					l_ast_context.clear_feature_context
@@ -918,36 +924,37 @@ feature -- Third pass: byte code production and type check
 				end
 
 				if error_handler.error_level = l_class_error_level then
-					if changed then
 
-							-- Remove dependances of removed features
-						from
-							removed_features := propagators.removed_features
-							removed_features.start
-						until
-							removed_features.after
-						loop
-							body_index := removed_features.item_for_iteration
+						-- Remove dependances of removed features
+						-- Removed features may be replicated from a parent
+						-- so we have to check the removed list each time
+						-- instead of checking prior whether 'checked' is True
+					from
+						removed_features := propagators.removed_features
+						removed_features.start
+					until
+						removed_features.after
+					loop
+						body_index := removed_features.item_for_iteration
 
-							remove_inline_agents_of_feature (body_index, Void)
-							l_ast_context.old_inline_agents.wipe_out
+						remove_inline_agents_of_feature (body_index, Void)
+						l_ast_context.old_inline_agents.wipe_out
 
-							f_suppliers := dependances.item (body_index)
-							if f_suppliers /= Void then
-								if new_suppliers = Void then
-									new_suppliers := suppliers.same_suppliers
-								end
-								new_suppliers.remove_occurrence (f_suppliers)
+						f_suppliers := dependances.item (body_index)
+						if f_suppliers /= Void then
+							if new_suppliers = Void then
+								new_suppliers := suppliers.same_suppliers
 							end
-							dependances.remove (body_index)
-
-								-- Second pass desactive body id of changed
-								-- features only. Deactive body ids of removed
-								-- features.
-							Tmp_ast_server.desactive (body_index)
-
-							removed_features.forth
+							new_suppliers.remove_occurrence (f_suppliers)
 						end
+						dependances.remove (body_index)
+
+							-- Second pass desactive body id of changed
+							-- features only. Deactive body ids of removed
+							-- features.
+						Tmp_ast_server.desactive (body_index)
+
+						removed_features.forth
 					end
 
 					if new_suppliers /= Void then

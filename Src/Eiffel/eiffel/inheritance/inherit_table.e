@@ -257,10 +257,11 @@ feature
 				error_handler.raise_error
 			end
 
+				-- Remove all changed features if any
+			a_class.changed_features.clear_all;
+
 				-- Analyze features written directly in `a_class'.
 			if a_class.changed then
-					-- Remove all changed features if any
-				a_class.changed_features.clear_all;
 					-- Class `a_class' is syntactically changed
 				analyze_declarations;
 					-- No update of `Instantiator' if there is an error
@@ -325,14 +326,19 @@ feature
 				error_handler.raise_error
 			end
 
-				-- Convertibility processing
-				-- Note: Manu 04/23/2003: Do we need to make a once of `CONVERTIBILITY_CHECKER'?
-				-- At the moment no as it does not seem expensive to create it all the time.
-			(create {CONVERTIBILITY_CHECKER}).init_and_check_convert_tables (
-				a_class, resulting_table, class_info.convertors)
-			if error_handler.error_level /= l_error_level then
-				error_handler.raise_error
+
+			if class_info.convertors /= Void then
+					-- Convertibility processing
+					-- Only check if there are convertors present
+					-- Note: Manu 04/23/2003: Do we need to make a once of `CONVERTIBILITY_CHECKER'?
+					-- At the moment no as it does not seem expensive to create it all the time.
+				(create {CONVERTIBILITY_CHECKER}).init_and_check_convert_tables (
+					a_class, resulting_table, class_info.convertors)
+				if error_handler.error_level /= l_error_level then
+					error_handler.raise_error
+				end
 			end
+
 
 				-- Track generic types in the result and arguments of
 				-- features of a changed class
@@ -440,7 +446,7 @@ end;
 				-- Update the assert_id_set of redefined features.
 			update_inherited_assertions;
 
-				-- Process paterns of origin features
+				-- Process patterns of origin features
 			process_pattern (resulting_table);
 
 			if previous_feature_table /= Void then
@@ -452,31 +458,18 @@ end;
 					-- There is no table in the tmp server, see if the
 					-- new feature table is equivalent to the old one
 				equiv_tables := resulting_table.equiv (feature_table, pass2_control);
-			end;
+			end
 
-				-- Propagation
-			Degree_4.propagate (pass_c, resulting_table, equiv_tables,
-								pass2_control, assert_prop_list);
+					-- Propagation
+			Degree_4.process_and_propagate (pass_c, resulting_table, equiv_tables,
+								pass2_control, assert_prop_list, changed_features);
+
+				-- Reset `assert_prop_list' for next iteration.
 			assert_prop_list := Void;
-
-
--- Line removed by Frederic Deramat 15/04/92.
---
---    *** resulting_table.process_polymorphism (feature_table); ***
---
--- The "polymorphical tables" are not generated in workbench mode
--- anymore (replaced by "offset descriptors"). Nevertheless, the
--- facility is still used to produce finalized code, but
--- "polymorphical tables" are in no case stored to disk (only
--- generated temporarily in final mode in order to generate the
--- static C routine tables.
 
 			if l_is_il_generation then -- and then not a_class.is_external then
 				a_class.class_interface.process_features (resulting_table)
 			end
-
-				-- Instantiate generic parameter in context of current class.
-			a_class.update_generic_features
 
 				-- Find main_parent of current class.
 			if l_is_il_generation then
@@ -506,6 +499,44 @@ end;
 				end;
 			end;
 		end;
+
+	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
+			-- Mark attributes that are seeds of generic types to generate
+			-- wrappers for them.
+		require
+			resulting_table_attached: resulting_table /= Void
+		local
+			f: FEATURE_I
+			a: ATTRIBUTE_I
+			l_attribute_count, l_attribute_counter: INTEGER
+		do
+			from
+				l_attribute_count := resulting_table.attribute_count
+				resulting_table.start
+			until
+				l_attribute_counter = l_attribute_count
+			loop
+				f := resulting_table.item_for_iteration
+				if f.is_attribute then
+						-- We have an attribute so increase the counter
+					l_attribute_counter := l_attribute_counter + 1
+					if f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
+						a ?= f
+						check
+							a_attached: a /= Void
+						end
+						a.set_generate_in (f.written_in)
+					end
+				end
+				if l_attribute_counter < l_attribute_count then
+					resulting_table.forth
+				end
+			end
+			check
+				attributes_iterated: l_attribute_count = l_attribute_counter
+			end
+		end
+
 
 	assign_feature_table is
 			-- Assign attribute `feature_table'. Look for a previous
@@ -698,21 +729,33 @@ end;
 			inherited_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
 			l_count, i: INTEGER
+			l_keys: like keys
+			l_content: like content
+			l_iteration_position: INTEGER
 		do
 			from
 					-- Iteration on the structure.				
 				l_count := count
 				iteration_position := -1
+				l_keys := keys
+				l_content := content
+				l_iteration_position := -1
 			until
 				i = l_count
 			loop
-					-- We perform 'count' iterations of current so we do a forth at the start of each iteration.
-				forth
-				i := i + 1
-					-- Calculates an inherited feature: instance of
-					-- FEATURE_I
-				inherit_feat := item_for_iteration;
-				feature_name_id := key_for_iteration;
+				from
+						-- Increase 'i' to signify another iteration up to 'count' iterations.
+					i := i + 1
+						-- Find the next valid key (feature_name_id)
+					feature_name_id := 0
+				until
+					feature_name_id /= 0
+				loop
+					l_iteration_position := l_iteration_position + 1
+					feature_name_id := l_keys [l_iteration_position]
+				end
+
+				inherit_feat := l_content [l_iteration_position]
 
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.
@@ -1102,8 +1145,11 @@ end;
 
 					if not is_the_same then
 							-- assertions have changed
-						create assert_prop_list.make;
-						assert_prop_list.compare_objects;
+						if assert_prop_list = Void then
+								-- Create a new assertion list if first change.
+							create assert_prop_list.make;
+						end
+
 						assert_prop_list.extend (feature_i.rout_id_set.first)
 
 							-- FIXME: Manu 08/05/2004: It is a pain to have to freeze each
@@ -1507,27 +1553,22 @@ end;
 	check_validity3 (resulting_table: FEATURE_TABLE) is
 			-- Check the signature conformance of the redefinitions and
 			-- validity of joins; check assigner command validity.
-		local
-			f: FEATURE_I
-			l_adaptations: like adaptations
 		do
 			from
-				l_adaptations := adaptations
-				l_adaptations.start
+				adaptations.start
 			until
-				l_adaptations.after
+				adaptations.after
 			loop
-				l_adaptations.item.check_adaptation (resulting_table)
-				l_adaptations.forth
+				adaptations.item.check_adaptation (resulting_table)
+				adaptations.forth
 			end
 			from
 				resulting_table.start
 			until
 				resulting_table.after
 			loop
-				f := resulting_table.item_for_iteration
-				if f.assigner_name_id /= 0 then
-					f.check_assigner (resulting_table)
+				if resulting_table.item_for_iteration.assigner_name_id /= 0 then
+					resulting_table.item_for_iteration.check_assigner (resulting_table)
 				end
 				resulting_table.forth
 			end
@@ -1664,35 +1705,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
-			-- Mark attributes that are seeds of generic types to generate
-			-- wrappers for them.
-		require
-			resulting_table_attached: resulting_table /= Void
-		local
-			f: FEATURE_I
-		do
-			from
-				resulting_table.start
-			until
-				resulting_table.after
-			loop
-				f := resulting_table.item_for_iteration
-				if f.is_attribute and then {a: ATTRIBUTE_I} f then
-					if
-						a.has_body or else
-						f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal
-					then
-						debug ("to_implement")
-							(create {REFACTORING_HELPER}).to_implement ("Ensure a wrapper is generated if attribute can be redeclared to be self-initializing.")
-						end
-						a.set_generate_in (f.written_in)
-					end
-				end
-				resulting_table.forth
-			end
-		end
-
 feature {NONE} -- Temporary body index
 
 	external_body_index: INTEGER is
@@ -1737,5 +1749,10 @@ indexing
 		]"
 
 end
+
+
+
+
+
 
 

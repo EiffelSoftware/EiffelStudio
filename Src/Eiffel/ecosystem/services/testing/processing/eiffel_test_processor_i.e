@@ -120,7 +120,7 @@ feature -- Query
 			end
 		ensure
 			result_implies_valid_typed: Result implies ({l_type2: like argument} a_arg and then
-				is_valid_typed_argument ({like argument} #? a_arg, a_test_suite))
+				is_valid_typed_argument (l_type2, a_test_suite))
 		end
 
 	is_stop_requested: BOOLEAN
@@ -166,7 +166,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
 			attach_test_suite (a_test_suite)
-			start_process ({like argument} #? a_arg)
+			start_process (a_arg)
 		ensure
 			idle: is_idle
 			test_suite_set: test_suite = a_test_suite

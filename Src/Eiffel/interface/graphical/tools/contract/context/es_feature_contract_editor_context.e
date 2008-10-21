@@ -81,7 +81,7 @@ feature -- Contracts
 
 			if l_feature_as /= Void then
 					-- Extract contracts
-				l_assertions := contracts_for_feature (({!FEATURE_AS}) #? l_feature_as)
+				l_assertions := contracts_for_feature (l_feature_as)
 				if l_assertions /= Void then
 					l_cursor := l_assertions.cursor
 					from l_assertions.start until l_assertions.after loop

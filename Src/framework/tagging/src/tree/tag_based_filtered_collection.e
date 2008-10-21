@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 				if i > a_expr.count or else a_expr.item (i).is_space then
 					if l_expr /= Void then
 						if not l_expr.is_empty then
-							l_new := create_matcher ({!STRING} #? l_expr)
+							l_new := create_matcher (l_expr)
 							if l_pos then
 								positive_matchers.force_last (l_new)
 							else

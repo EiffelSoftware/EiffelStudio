@@ -171,7 +171,7 @@ feature -- Access
 			-- Used for MSIL code generation only.
 
 	written_feature_id: INTEGER
-			-- Feature ID of Current in associated CLASS_C of ID `written_in'
+			-- Feature ID of Current in associated CLASS_C of ID `access_in'
 			-- that gives a body.
 			-- Used for MSIL code generation only.
 
@@ -185,6 +185,21 @@ feature -- Access
 			-- Does feature have a replicated AST?
 		do
 			Result := feature_flags & has_replicated_ast_mask = has_replicated_ast_mask
+		end
+
+	frozen is_replicated_directly: BOOLEAN is
+			-- Is feature directly replicated in class it is created in?
+			-- This flag is needed to distinguish between newly replicated features
+			-- and inherited replicated features as currently the is no way of
+			-- 'selecting' the feature_i object and keeping the 'access_in' value.
+		do
+			Result := feature_flags & is_replicated_directly_mask = is_replicated_directly_mask
+		end
+
+	frozen from_non_conforming_parent: BOOLEAN is
+			-- Is feature inherited from a non-conforming parent?
+		do
+			Result := feature_flags & from_non_conforming_parent_mask = from_non_conforming_parent_mask
 		end
 
 	frozen is_frozen: BOOLEAN is
@@ -506,7 +521,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in or else (has_replicated_ast and then a_class.class_id = access_in)
+			Result := a_class.class_id = written_in or else is_replicated_directly
 		end
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
@@ -514,7 +529,7 @@ feature -- Status
 		require
 			good_argument: a_class /= Void
 		do
-			Result := a_class.class_id = written_in or else (has_replicated_ast and then a_class.class_id = access_in)
+			Result := a_class.class_id = written_in or else is_replicated_directly
 		end
 
 	frozen to_implement_in (a_class: CLASS_C): BOOLEAN is
@@ -523,7 +538,7 @@ feature -- Status
 		require
 			a_class_not_void: a_class /= Void
 		do
-			Result := a_class.class_id = written_in
+			Result := a_class.class_id = written_in or else is_replicated_directly
 		end
 
 feature -- Setting
@@ -590,7 +605,7 @@ feature -- Setting
 		end
 
 	set_written_in (a_class_id: like written_in) is
-			-- Assign `a_class_id' to `written_in'.
+			-- Assign `a_class_id' to `access_in'.
 		require
 			a_class_id_not_void: a_class_id > 0
 		do
@@ -657,7 +672,23 @@ feature -- Setting
 		do
 			feature_flags := feature_flags.set_bit_with_mask (b, has_replicated_ast_mask)
 		ensure
-			is_origin_set: has_replicated_ast = b
+			has_replicated_ast_set: has_replicated_ast = b
+		end
+
+	frozen set_is_replicated_directly (b: BOOLEAN) is
+			-- Assign `b' to `is_replicated_directly'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_replicated_directly_mask)
+		ensure
+			is_replicated_directly_set: is_replicated_directly = b
+		end
+
+	frozen set_from_non_conforming_parent (b: BOOLEAN) is
+			-- Assign `b' to `from_non_conforming_parent'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, from_non_conforming_parent_mask)
+		ensure
+			from_non_conforming_parent_set: from_non_conforming_parent = b
 		end
 
 	frozen set_is_empty (b : BOOLEAN) is
@@ -839,6 +870,7 @@ feature -- Incrementality
 			good_argument: other /= Void
 		do
 			Result := written_in = other.written_in
+				and then body_index = other.body_index
 				and then rout_id_set.same_as (other.rout_id_set)
 				and then is_origin = other.is_origin
 				and then is_frozen = other.is_frozen
@@ -1290,6 +1322,12 @@ feature -- Conveniences
 			-- No arguments
 		end
 
+	set_arguments (args: like arguments)
+			-- Assign `args' to arguments.
+		do
+
+		end
+
 	set_assert_id_set (set: like assert_id_set) is
 			-- Assign `set' to assert_id_set.
 		do
@@ -1345,8 +1383,24 @@ feature -- Export checking
 		require
 			good_argument: client /= Void
 			has_export_status: export_status /= Void
+		local
+			l_ncp_classes: FIXED_LIST [CLASS_C]
 		do
 			Result := export_status.valid_for (client)
+			if not Result then
+					-- We need to check that `Current' is non-conformally inherited by `client'.
+				l_ncp_classes := client.non_conforming_parents_classes
+				if l_ncp_classes /= Void then
+					from
+						l_ncp_classes.start
+					until
+						Result or else l_ncp_classes.after
+					loop
+						Result := export_status.valid_for (l_ncp_classes.item)
+						l_ncp_classes.forth
+					end
+				end
+			end
 		end
 
 	record_suppliers (feat_depend: FEATURE_DEPENDANCE) is
@@ -1436,7 +1490,11 @@ feature -- Check
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-				class_ast := Tmp_ast_server.item (written_in)
+				if has_replicated_ast then
+					class_ast := Tmp_ast_server.item (access_in)
+				else
+					class_ast := Tmp_ast_server.item (written_in)
+				end
 				if class_ast /= Void then
 					Result := class_ast.feature_with_name (feature_name_id)
 				end
@@ -2104,7 +2162,7 @@ end
 				-- Check the result type conformance
 				-- `old_type' is the instantiated inherited type in the
 				-- context of the class where the join takes place:
-				-- i.e the class relative to `written_in'.
+				-- i.e the class relative to `access_in'.
 			old_type ?= old_feature.type
 				-- `new_type' is the actual type of the join already
 				-- instantiated
@@ -2343,7 +2401,7 @@ end
 			query_arguments: like arguments
 			vfac: VFAC
 		do
-			if system.current_class.class_id = written_in then
+			if feature_table.feat_tbl_id = written_in then
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
 				assigner := feature_table.item_id (assigner_name_id)
 			else
@@ -2493,6 +2551,8 @@ feature -- Replication
 
 	selected: FEATURE_I is
 			-- Selected feature (used for duplicating inherited features by resetting replication and selection status
+		require
+			do_not_use_yet: False
 		deferred
 		ensure
 			Result_exists: Result /= Void
@@ -2547,6 +2607,8 @@ feature -- Replication
 	transfer_from (other: FEATURE_I) is
 			-- Transfer of datas from `other' into `Current'.
 		require
+			do_not_call: False
+				-- Feature not ready yet.
 			other_exists: other /= Void
 		do
 				-- `export_status' needs to be set via `set_export_status'
@@ -2894,6 +2956,8 @@ feature {FEATURE_I} -- Implementation
 	has_function_origin_mask: NATURAL_32 is 0x80000 -- Used in ATTRIBUTE_I
 	has_replicated_ast_mask: NATURAL_32 is 0x100000
 	has_body_mask: NATURAL_32 is 0x200000 -- Used in ATTRIBUTE_I
+	is_replicated_directly_mask: NATURAL_32 is 0x400000
+	from_non_conforming_parent_mask: NATURAL_32 is 0x800000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

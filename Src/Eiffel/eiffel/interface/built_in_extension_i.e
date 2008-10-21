@@ -54,8 +54,9 @@ feature -- Code generation
 				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
-
-			internal_generate_access (inline_byte_code.feature_name, inline_byte_code.written_class_id,
+				-- Make sure that the class id passed in is where the built-in feature is written, not melted.
+				-- This makes sure the replicated built-in's get generated correctly.
+			internal_generate_access (inline_byte_code.feature_name, Context.current_feature.written_in,
 				Void, Void, inline_byte_code.argument_count, l_ret_type)
 
 			l_buffer.put_character (';')
@@ -96,6 +97,7 @@ feature {NONE} -- Implementation
 			l_buffer := context.buffer
 
 			l_class := system.class_of_id (written_class_id)
+
 			check l_class_not_void: l_class /= Void end
 				-- Special processing of operators that have a name not suitable
 				-- for C code generation.

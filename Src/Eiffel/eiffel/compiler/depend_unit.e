@@ -56,7 +56,13 @@ feature {NONE} -- Initialization
 			else
 				rout_id := f.rout_id_set.first
 			end
-			written_in := f.written_in
+			if f.has_replicated_ast then
+					-- If we have a replicated AST then we must make sure
+					-- that the class where the AST is replicated is used.
+				written_in := f.access_in
+			else
+				written_in := f.written_in
+			end
 			body_index := f.body_index
 
 			if f.is_external then

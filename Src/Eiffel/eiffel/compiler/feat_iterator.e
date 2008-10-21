@@ -67,7 +67,7 @@ feature {NONE}
 			mark_and_record (body_index, static_class_id, original_class_id);
 
 			table ?= tmp_poly_server.item (rout_id_val)
-			if table /= Void then
+			if table /= Void and then table.count > 1 then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				from

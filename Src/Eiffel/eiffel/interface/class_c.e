@@ -2900,7 +2900,9 @@ feature -- Properties
 		require
 			valid_file_name: file_name /= Void
 		do
-			Result := lace_class.text
+			if lace_class.text /= Void then
+				Result := lace_class.text.as_string_8
+			end
 		end
 
 	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C] is

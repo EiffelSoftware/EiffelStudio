@@ -261,8 +261,8 @@ feature {NONE} -- Query
 			end
 			l_names.go_to (l_cs)
 		ensure
-			result_attached_implies_valid: (Result /= Void) implies
-				is_valid_routine_name ({!STRING} #? Result)
+			result_attached_implies_valid: Result /= Void implies
+				is_valid_routine_name (Result)
 		end
 
 	valid_features (a_class: !CLASS_AS): !DS_HASH_TABLE [!FEATURE_AS, !STRING] is
@@ -688,8 +688,8 @@ feature {EIFFEL_TEST_CLASS_LOCATOR} -- Implementation
 						l_file.close
 					end
 				end
-				if l_ast /= Void and then is_valid_class_as ({!CLASS_AS} #? l_ast) then
-					add_test_class (a_class, {!CLASS_AS} #? l_ast)
+				if l_ast /= Void and then is_valid_class_as (l_ast) then
+					add_test_class (a_class, l_ast)
 				end
 			end
 		end

@@ -115,7 +115,7 @@ feature {CODE_SYMBOL_VALUE} -- Query
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			has_id_result: Result /= Void implies has_id (({!STRING}) #? Result)
+			has_id_result: Result /= Void implies has_id (Result)
 		end
 
 feature -- Events

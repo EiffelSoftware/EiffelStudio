@@ -718,15 +718,15 @@ feature -- Query
 			l_result: !ARRAYED_LIST [!FEATURE_AS]
 		do
 			create l_result.make (0)
-			if {l_fclauses: !like features} features then
+			if {l_fclauses: like features} features then
 					-- Iterate the features clauses and feature all features
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_fclauses.after loop
-					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+					if {l_fclause: FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
 							-- Iterate all features and extend the result list
 						l_fcursor := l_features.index
 						from l_features.start until l_features.after loop
-							if {l_feature: !FEATURE_AS} l_features.item then
+							if {l_feature: FEATURE_AS} l_features.item then
 									-- Add feature
 								l_result.extend (l_feature)
 							end
@@ -739,7 +739,7 @@ feature -- Query
 				l_fclauses.go_i_th (l_fccursor)
 			end
 
-			Result := ({!BILINEAR [!FEATURE_AS]}) #? l_result
+			Result := l_result
 		end
 
 	feature_of_name (a_name: STRING_GENERAL; a_reverse_lookup: BOOLEAN): FEATURE_AS

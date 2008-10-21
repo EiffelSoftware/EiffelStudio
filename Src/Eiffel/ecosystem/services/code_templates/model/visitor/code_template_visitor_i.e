@@ -101,8 +101,8 @@ feature {NONE} -- Processing
 			l_items := a_collection.items
 			l_items.do_all (agent (a_node: ANY)
 				do
-					if {l_node: !CODE_NODE} a_node and then is_applicable_visitation_entity (l_node) then
-						l_node.process (({!CODE_TEMPLATE_VISITOR_I}) #? Current)
+					if {l_node: CODE_NODE} a_node and then is_applicable_visitation_entity (l_node) then
+						l_node.process (Current)
 					end
 				end)
 		end

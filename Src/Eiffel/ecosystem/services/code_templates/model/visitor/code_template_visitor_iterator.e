@@ -24,19 +24,19 @@ feature {CODE_NODE} -- Processing
 	process_code_category_collection (a_value: !CODE_CATEGORY_COLLECTION)
 			-- Process object `a_value'.
 		do
-			process_collection (({!CODE_COLLECTION [ANY]}) #? a_value)
+			process_collection (a_value)
 		end
 
 	process_code_declaration_collection (a_value: !CODE_DECLARATION_COLLECTION)
 			-- Process object `a_value'.
 		do
-			process_collection (({!CODE_COLLECTION [ANY]}) #? a_value)
+			process_collection (a_value)
 		end
 
 	process_code_template_collection (a_value: !CODE_TEMPLATE_COLLECTION)
 			-- Process object `a_value'.
 		do
-			process_collection (({!CODE_COLLECTION [ANY]}) #? a_value)
+			process_collection (a_value)
 		end
 
 	process_code_template_definition (a_value: !CODE_TEMPLATE_DEFINITION)

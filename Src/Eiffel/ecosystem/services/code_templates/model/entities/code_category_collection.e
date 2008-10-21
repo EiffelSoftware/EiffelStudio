@@ -51,7 +51,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_category_collection (({!CODE_CATEGORY_COLLECTION}) #? Current)
+			a_visitor.process_code_category_collection (Current)
 		end
 
 ;indexing

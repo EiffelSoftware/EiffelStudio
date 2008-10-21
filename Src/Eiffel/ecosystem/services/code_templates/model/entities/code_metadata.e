@@ -95,7 +95,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_metadata (({!CODE_METADATA}) #? Current)
+			a_visitor.process_code_metadata (Current)
 		end
 
 ;indexing

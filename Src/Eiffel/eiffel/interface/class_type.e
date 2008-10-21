@@ -359,9 +359,6 @@ feature -- Status report
 											-- The formal generic parameter of `a_type' was instantiated via inheritance.
 											-- Let's check that it is a conforming type to the actual generic parameter of `a_type'.
 										Result := l_type_feat.type.associated_class.simple_conform_to (l_type.associated_class)
-										if not Result then
-											do_nothing
-										end
 									end
 								end
 								i := i + 1
@@ -616,8 +613,8 @@ feature -- Conveniences
 			-- of Current
 		require
 			good_argument: a_class /= Void
-			consistency: associated_class.conform_to (a_class) or else
-				(associated_class.non_conforming_parents_classes /= Void and then associated_class.non_conforming_parents_classes.has (a_class))
+--			consistency: associated_class.conform_to (a_class) or else
+--				(associated_class.non_conforming_parents_classes /= Void and then associated_class.non_conforming_parents_classes.has (a_class))
 		do
 			Result := a_class.meta_type (Current)
 		ensure

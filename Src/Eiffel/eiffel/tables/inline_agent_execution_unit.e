@@ -40,7 +40,7 @@ feature -- Access
 			written_class: EIFFEL_CLASS_C
 			f: FEATURE_AS
 		do
-			written_class ?= System.class_of_id (written_in)
+			written_class ?= System.class_of_id (access_in)
 			if
 				written_class /= Void and then
 				written_class.has_inline_agent_with_body_index (body_index) and then

@@ -388,9 +388,9 @@ feature {NONE} -- Processing
 
 feature {INHERIT_TABLE} -- Propagation
 
-	propagate (a_class: CLASS_C; resulting_table: FEATURE_TABLE;
+	process_and_propagate (a_class: CLASS_C; resulting_table: FEATURE_TABLE;
 		equivalent_table: BOOLEAN; pass2_control: PASS2_CONTROL;
-		l: LINKED_LIST [INTEGER]) is
+		a_assert_prop_list: LINKED_LIST [INTEGER]; a_changed_features: ARRAYED_LIST [INTEGER]) is
 			-- Propagate to Degree 4 and Degree 3 according to
 			-- `resulting_table' and `pass2_control'.
 		require
@@ -401,6 +401,8 @@ feature {INHERIT_TABLE} -- Propagation
 			real_pass2, do_pass2: BOOLEAN
 			do_pass3: BOOLEAN
 			chg3a: BOOLEAN
+			l_descendents_with_replicated_features: LINKED_LIST [CLASS_C]
+			l_desc_class: CLASS_C
 		do
 					debug ("ACTIVITY")
 						io.error.put_string ("=============== DEGREE_4.propagate ===============%N")
@@ -419,8 +421,8 @@ feature {INHERIT_TABLE} -- Propagation
 						else
 							io.error.put_string ("%Nassert_prop_list: Void")
 						end
-						if l /= Void then
-							if l.is_empty then
+						if a_assert_prop_list /= Void then
+							if a_assert_prop_list.is_empty then
 								io.error.put_string ("%Nl: empty")
 							else
 								io.error.put_string ("%Nl: not empty")
@@ -436,14 +438,42 @@ feature {INHERIT_TABLE} -- Propagation
 					end
 				-- Propagation of the assertions.
 			if a_class.assert_prop_list = Void then
-				a_class.set_assertion_prop_list (l)
-			elseif l /= Void then
+				a_class.set_assertion_prop_list (a_assert_prop_list)
+			elseif a_assert_prop_list /= Void then
 				a_class.assert_prop_list.finish
-				a_class.assert_prop_list.merge_right (l)
+				a_class.assert_prop_list.merge_right (a_assert_prop_list)
+			end
+
+
+				-- If any routines are changed then check for any descendents that are replicating features.
+				-- If found then these routines must be fully recompiled
+				--| FIXME IEK We could optimize to check if the access_in values relate to the current class
+			if a_changed_features /= Void and then a_changed_features.count > 0 then
+					-- We need to check if any descendents are replicating features of `a_class'
+				l_descendents_with_replicated_features := a_class.descendents_with_changed_replicated_features (a_class)
+				if l_descendents_with_replicated_features /= Void and then not l_descendents_with_replicated_features.is_empty then
+					from
+							-- Make sure that all descendents with replicated features get fully recompiled and stored.
+						l_descendents_with_replicated_features.start
+					until
+						l_descendents_with_replicated_features.after
+					loop
+						l_desc_class := l_descendents_with_replicated_features.item
+						l_desc_class.lace_class.set_changed (True)
+						degree_4.insert_new_class (l_desc_class)
+						degree_3.insert_new_class (l_desc_class)
+						degree_2.insert_new_class (l_desc_class)
+							-- Make sure that the class ast gets correctly saved so that any newly replicated
+							-- features get correctly stored in the compiler servers.
+						tmp_ast_server.put (l_desc_class.ast)
+						l_descendents_with_replicated_features.forth
+					end
+				end
 			end
 
 				-- Incremetality test: asked the compiler to apply at
 				-- least Degree 4 to the direct descendants of `a_class'.
+
 			real_pass2 := (not equivalent_table) or else a_class.expanded_modified
 					or else a_class.deferred_modified
 
@@ -475,10 +505,17 @@ feature {INHERIT_TABLE} -- Propagation
 					force_type_checks (a_class, pass2_control)
 				end
 
-				a_class.set_skeleton (resulting_table.skeleton)
 				if not System.freeze then
 					degree_2.insert_class (a_class)
 				end
+
+					-- Generate skeleton and update seeds of generic attributes
+
+					-- Set the attribute skeleton of `a_class'
+				a_class.set_skeleton (resulting_table.skeleton)
+
+					-- Instantiate generic parameter in context of current class.
+				a_class.update_generic_features
 			end
 		end
 
@@ -505,51 +542,57 @@ feature {NONE} -- Propagation to Degree 4
 								io.error.put_boolean (real_pass2)
 								io.error.put_new_line
 							end
-			desc := a_class.direct_descendants
+
 			a_class.set_changed2 (True)
-			chg3a := a_class.changed3a
-			from desc.start until desc.after loop
-				descendant := desc.item
-					-- Insert the descendant in the changed classes
-					-- list of the system if not present.
-								debug ("ACTIVITY")
-									io.error.put_string ("Propagating pass2 to: ")
-									io.error.put_string (descendant.name)
-									io.error.put_new_line
-								end
-				if chg3a then
-					descendant.set_changed3a (True)
-				end
+			if not System.compilation_straight then
+					-- We do not need to propagate to descendents if this is the very first compilation
+				desc := a_class.direct_descendants
+				chg3a := a_class.changed3a
+				from desc.start until desc.after loop
+					descendant := desc.item
+						-- Insert the descendant in the changed classes
+						-- list of the system if not present.
+									debug ("ACTIVITY")
+										io.error.put_string ("Propagating pass2 to: ")
+										io.error.put_string (descendant.name)
+										io.error.put_new_line
+									end
+					if chg3a then
+						descendant.set_changed3a (True)
+					end
 
-				Degree_4.insert_new_class (descendant)
-				if real_pass2 then
-						-- Mark the descendant so if it is not syntactically
-						-- `changed', its feature table will be at least
-						-- recalculated.
-					descendant.set_changed2 (True)
-				end
-				if a_class.expanded_modified then
-					Degree_4.set_expanded_modified (descendant)
-				end
-				assert_prop_list := a_class.assert_prop_list
-				if assert_prop_list /= Void then
-					assert_prop_list.start
-					Degree_4.set_assertion_prop_list
-						(descendant, assert_prop_list.duplicate (assert_prop_list.count))
-				end
+					Degree_4.insert_new_class (descendant)
+					if real_pass2 then
+							-- Mark the descendant so if it is not syntactically
+							-- `changed', its feature table will be at least
+							-- recalculated.
+						descendant.set_changed2 (True)
+					end
+					if a_class.expanded_modified then
+						Degree_4.set_expanded_modified (descendant)
+					end
+					assert_prop_list := a_class.assert_prop_list
+					if assert_prop_list /= Void then
+						assert_prop_list.start
+						Degree_4.set_assertion_prop_list
+							(descendant, assert_prop_list.duplicate (assert_prop_list.count))
+					end
 
--- FIXME
--- The next line should NOT be here
--- Check the histroy in integrator. Xavier
+	-- FIXME
+	-- The next line should NOT be here
+	-- Check the histroy in integrator. Xavier
 
--- Insertion in Degree_2 is needed
+	-- Insertion in Degree_2 is needed
 
-				Degree_3.insert_new_class (descendant)
-					-- Insert in Degree 2 so that the skeletons
-					-- of all the descendants are updated.
-				Degree_2.insert_new_class (descendant)
-				desc.forth
+					Degree_3.insert_new_class (descendant)
+						-- Insert in Degree 2 so that the skeletons
+						-- of all the descendants are updated.
+					Degree_2.insert_new_class (descendant)
+					desc.forth
+				end
 			end
+
+
 		end
 
 feature {NONE} -- Propagation to Degree 3
@@ -568,25 +611,27 @@ feature {NONE} -- Propagation to Degree 3
 							debug ("ACTIVITY")
 								io.error.put_string ("Propagate pass3%N")
 							end
-			clients := a_class.clients
-			from clients.start until clients.after loop
-				client := clients.item
-					-- Remember the cause for type checking `client'.
-							debug ("ACTIVITY")
-								io.error.put_string ("Propagating pass3 to: ")
-								io.error.put_string (client.name)
-								io.error.put_new_line
-							end
-				client.propagators.update (pass2_control)
-				if status_modified then
-					client.propagators.add_changed_status (a_class.class_id)
-				end
-					-- Insert the client in the changed classes
-					-- list of the system if not present.
-				Degree_3.insert_new_class (client)
-				Degree_2.insert_new_class (client)
+			if not System.compilation_straight then
+				clients := a_class.clients
+				from clients.start until clients.after loop
+					client := clients.item
+						-- Remember the cause for type checking `client'.
+								debug ("ACTIVITY")
+									io.error.put_string ("Propagating pass3 to: ")
+									io.error.put_string (client.name)
+									io.error.put_new_line
+								end
+					client.propagators.update (pass2_control)
+					if status_modified then
+						client.propagators.add_changed_status (a_class.class_id)
+					end
+						-- Insert the client in the changed classes
+						-- list of the system if not present.
+					Degree_3.insert_new_class (client)
+					Degree_2.insert_new_class (client)
 
-				clients.forth
+					clients.forth
+				end
 			end
 		end
 
@@ -702,5 +747,7 @@ indexing
 		]"
 
 end -- class DEGREE_4
+
+
 
 

@@ -1011,6 +1011,7 @@ end
 				loop
 					feature_i := item_for_iteration
 					if feature_i.is_attribute then
+						l_attribute_counter := l_attribute_counter + 1
 						l_ext ?= feature_i.extension
 						if
 							(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
@@ -1021,7 +1022,6 @@ end
 							desc.set_attribute_name_id (feature_i.feature_name_id)
 							desc.set_rout_id (feature_i.rout_id_set.first)
 							Result.extend (desc)
-							l_attribute_counter := l_attribute_counter + 1
 						end
 					end
 						-- Increase iteration counter
@@ -1035,8 +1035,6 @@ end
 			else
 				Result := empty_skeleton
 			end
-		ensure
-			Result_valid: Result /= Void and then Result.count = attribute_count
 		end
 
 	empty_skeleton: GENERIC_SKELETON

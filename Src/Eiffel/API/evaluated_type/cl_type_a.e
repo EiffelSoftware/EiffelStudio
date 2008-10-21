@@ -851,7 +851,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent: CL_TYPE_A
-			parent_class: CLASS_C
 			i, count: INTEGER
 			parent_class_type: CL_TYPE_A
 		do
@@ -862,15 +861,11 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			until
 				i > count or else Result /= Void
 			loop
-				parent := parents.i_th (i)
-				parent_class := parent.associated_class
-				if parent_class = c then
+				parent := parents [i]
+				if parent.associated_class = c then
 						-- Class `c' is found
 					Result ?= parent_type (parent)
-				elseif parent_class.conform_to (c) then
-						-- Iterate in the inheritance graph and
-						-- conformance tables help to take the good
-						-- way in the parents
+				else
 					parent_class_type ?= parent_type (parent)
 					Result := parent_class_type.find_class_type (c)
 				end

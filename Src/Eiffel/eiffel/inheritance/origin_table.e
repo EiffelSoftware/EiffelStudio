@@ -37,6 +37,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_TMP_SERVER
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
@@ -131,6 +138,9 @@ feature
 				l_current_class := System.current_class
 				l_current_class.set_need_type_check (True)
 				l_class_as := l_current_class.ast
+					-- Wipeout replicated features so that they may be regenerated.
+				l_class_as.set_replicated_features (create {EIFFEL_LIST [FEATURE_AS]}.make (5))
+				l_current_class.set_replicated_features_list (create {LINKED_LIST [INTEGER]}.make)
 				create l_feature_replication_generator
 				from
 					l_replicated_feature_set.start
@@ -144,10 +154,27 @@ feature
 					until
 						l_selection_list.after
 					loop
-						l_feature_replication_generator.process_replicated_feature (l_selection_list.item.a_feature, l_selection_list.item.parent, l_current_class, old_t, new_t)
+						l_feature_replication_generator.process_replicated_feature (
+								l_selection_list.item.a_feature,
+								l_selection_list.item.parent,
+								l_selection_list.item = l_selection_list.first_element.item and then not l_selection_list.item.a_feature.from_non_conforming_parent,
+									-- Item is selected if first in the selection list and from a conforming parent.
+								l_current_class,
+								old_t,
+								new_t
+							)
 						l_selection_list.forth
 					end
 					l_replicated_feature_set.forth
+				end
+			else
+				l_current_class := System.current_class
+					-- Wipeout meta data for replication.
+				l_current_class.set_replicated_features_list (Void)
+					-- Make sure that there are no replicated Feature AS bodies stored.
+				l_class_as := l_current_class.ast
+				if l_class_as /= Void then
+					l_class_as.set_replicated_features (Void)
 				end
 			end
 			debug

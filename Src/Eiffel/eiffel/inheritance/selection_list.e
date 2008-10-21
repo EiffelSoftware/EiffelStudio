@@ -57,21 +57,28 @@ feature -- Selection
 			vmrc3: VMRC3
 			l_replicated_features_present: BOOLEAN
 			l_has_old_feature_replication: BOOLEAN
+			l_from_non_conforming_parent: BOOLEAN
 		do
 			l_has_old_feature_replication := System.has_old_feature_replication
-			l_replicated_features_present := count > 1
+			l_from_non_conforming_parent := first.parent /= Void and then first.parent.is_non_conforming
+			l_replicated_features_present := count > 1 or else l_from_non_conforming_parent
+
 			if l_replicated_features_present then
 					-- There is more than one inheritance info object in `Current'
 					-- so therefore we process a feature replication.
 				process_replication (old_t, new_t)
-			elseif first.parent /= Void and then first.parent.is_non_conforming then
+			elseif l_from_non_conforming_parent then
 					-- If the feature is solely coming from a non-conforming class
 					-- then it must be replicated in the current class
 				process_replication (old_t, new_t)
-				l_replicated_features_present := True
 			end
+
 				-- Set the selected feature to the first element in the selection list.
 			l_selected_feature := first.a_feature
+			if not l_replicated_features_present then
+					-- Make sure that direct replication flag is reset.
+				l_selected_feature.set_is_replicated_directly (False)
+			end
 
 			if
 				not (one_body_only and then (l_selected_feature.written_class.generics = Void or else same_parent_type))
@@ -84,7 +91,7 @@ feature -- Selection
 
 						-- Add selected feature name id to `Selected', this is used for tracking redundant 'selection'
 						-- when checking PARENT_C validity.
-					Selected.put_front (l_selected_feature.feature_name_id);
+					Selected.extend (l_selected_feature.feature_name_id);
 
 						-- Iterate through remaining features and initialize them as 'unselected' features.
 					from
@@ -119,13 +126,22 @@ end;
 				vmrc3.set_class (System.current_class)
 				vmrc3.set_selection_list (Current)
 				Error_handler.insert_error (vmrc3)
+			else
+				if l_replicated_features_present then
+						-- Make sure that the code id is reset so feature is not treated as a new seed.
+					l_selected_feature.set_code_id (new_t.item_id (l_selected_feature.feature_name_id).code_id)
+				end
+
+					-- Add selected feature to new feature table.
+				new_t.replace (l_selected_feature, l_selected_feature.feature_name_id)
 			end
 
 			if not l_replicated_features_present then
 					-- We want to leave the list of replicated features in the list so that we can
 					-- use this for inheritance branch determination.
 				wipe_out
-			elseif l_has_old_feature_replication then
+			elseif l_has_old_feature_replication and not l_from_non_conforming_parent then
+					-- Remove all conforming features from being replicated in legacy replication mode.
 				wipe_out
 			end
 		end;
@@ -173,11 +189,18 @@ end;
 							-- We have a non-conforming parent so increase the counter
 							-- so that implicit selection may be determined
 						l_non_conforming_count := l_non_conforming_count + 1
+						forth
 					else
 							-- This routine will be selected should every other routine come from a non-conforming branch.
 						l_implicit_selection := item.a_feature
+						if Result = Void and then active /= first_element then
+								-- Add selected feature to the front of the selection list.
+							put_front (item)
+							remove
+						else
+							forth
+						end
 					end
-					forth
 				end
 			end
 
@@ -188,6 +211,9 @@ end;
 				else
 					Result := first.a_feature
 				end
+			end
+			check
+				selected_is_first: Result /= Void implies Result = first_element.item.a_feature
 			end
 		end
 
@@ -361,6 +387,7 @@ feature -- Conceptual Replication
 			inh_info: INHERIT_INFO
 			l_inheriting_class_id: INTEGER
 			l_has_old_feature_replication: BOOLEAN
+			l_from_non_conforming_parent: BOOLEAN
 		do
 			from
 				l_has_old_feature_replication := system.has_old_feature_replication
@@ -370,12 +397,17 @@ feature -- Conceptual Replication
 				after
 			loop
 				inh_info := item
-				if l_has_old_feature_replication then
+				l_from_non_conforming_parent := inh_info.parent /= Void and then inh_info.parent.is_non_conforming
+				if not l_from_non_conforming_parent and then l_has_old_feature_replication then
+						-- Previous replication behavior is required except for non-conforming inheritance.
 					replication := inh_info.a_feature.replicated (inh_info.a_feature.written_in)
 				else
+						-- Non-conforming routines are always replicated.
 					replication := inh_info.a_feature.replicated (l_inheriting_class_id)
+					if l_from_non_conforming_parent then
+						replication.set_from_non_conforming_parent (True)
+					end
 				end
-				new_t.replace (replication, replication.feature_name_id)
 				inh_info.set_a_feature (replication)
 				forth
 			end

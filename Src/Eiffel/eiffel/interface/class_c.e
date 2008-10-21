@@ -2314,8 +2314,7 @@ end
 					r_attached: r /= Void
 				end
 				a ?= r
---				if False then
---					-- TODO: see GEN_TYPE_A.enumerate_interfaces
+					-- TODO: see GEN_TYPE_A.enumerate_interfaces
 				if a = Void and then system.is_precompiled then
 						-- Register all types where expanded parameters are replaced with reference ones.
 					t := r.generics
@@ -2445,6 +2444,7 @@ feature -- Meta-type
 			conformance: class_type.associated_class.conform_to (Current) or else True --| FIXME IEK: Create inherits_from routine in CLASS_C for non-conforming inheritance.
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
+			associated_class: CLASS_C
 		do
 			if class_type.type.class_id = class_id then
 					-- Use supplied `class_type' to preserve expandedness status, generic parameters, etc.
@@ -2453,12 +2453,13 @@ feature -- Meta-type
 					-- No instantiation for non-generic class
 				Result := types.first
 			else
+				associated_class := class_type.associated_class
 					-- FIXME: Manu 2007/09/13: This way of finding the class type in descendant
 					-- is clearly not the best way as it is slow since we are creating a new TYPE_A
 					-- instance just to find its associated type id. The better way would be to
 					-- iterate through the generics of Current and find a CLASS_TYPE instances.
 					-- See eweasel test#valid045 to see the slowness.
-				actual_class_type := class_type.associated_class.actual_type
+				actual_class_type := associated_class.actual_type
 					-- General instantiation of the actual class type where
 					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
@@ -2795,6 +2796,42 @@ feature -- Properties
 
 	direct_descendants_internal: like direct_descendants
 			-- One per object storage for direct descendants.
+
+	descendents_with_changed_replicated_features (a_changed_class: CLASS_C): LINKED_LIST [CLASS_C]
+			-- Descendents of `Current' that have replicated features.
+		require
+			a_changed_class_not_void: a_changed_class /= Void
+		local
+			l_direct_descendents: like direct_descendants_internal
+			l_result: LINKED_LIST [CLASS_C]
+		do
+			l_direct_descendents := direct_descendants_internal
+
+			if l_direct_descendents /= Void then
+				from
+					l_direct_descendents.start
+				until
+					l_direct_descendents.after
+				loop
+					l_result := l_direct_descendents.item.descendents_with_changed_replicated_features (a_changed_class)
+					if l_result /= Void then
+						if Result = Void then
+							Result := l_result
+						else
+							Result.append (l_result)
+						end
+					end
+					l_direct_descendents.forth
+				end
+			end
+			if replicated_features_list /= Void then
+					--| FIXME Use `a_current_class' to optimize whether replicated features are from there originally.
+				if Result = Void then
+					create Result.make
+				end
+				Result.extend (Current)
+			end
+		end
 
 	clients: ARRAYED_LIST [CLASS_C]
 			-- Clients of the class
@@ -4261,6 +4298,19 @@ feature {DEGREE_4, DEGREE_3} -- Used by degree 4 and 3 to compute new assertions
 			assert_prop_list_set: assert_prop_list = l
 		end
 
+feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR} -- Used by degree 4 for replication propagation
+
+	replicated_features_list: LINKED_LIST [INTEGER]
+			-- List of routine ids that are replicated in `Current'.
+
+	set_replicated_features_list (l: like replicated_features_list)
+			-- Set `replicated_featurs_list' to `l'
+		do
+			replicated_features_list := l
+		ensure
+			replicated_features_list_set: replicated_features_list = l
+		end
+
 feature {DEGREE_3} -- Degree 3
 
 	add_to_degree_3 is
@@ -4485,5 +4535,10 @@ indexing
 		]"
 
 end -- class CLASS_C
+
+
+
+
+
 
 

@@ -64,18 +64,8 @@ feature -- Execution
 					Inst_context.set_group (current_class.group);
 					begin;
 
-						-- We use access_class as the written class so that replicated features are retrieved correctly		
-					written_in_class := target_feat.access_class;
-					if written_in_class /= current_class then
-							-- Retrieve source feature.
-						source_feat := a_target_feat.written_feature.associated_feature_i
-						if source_feat = Void then
-							-- Shouldn't happen - but just in case
-							source_feat := target_feat
-						end
-					else
-						source_feat := target_feat
-					end;
+					written_in_class := target_feat.written_class;
+					source_feat := target_feat
 
 					l_match_list := match_list_server.item (written_in_class.class_id)
 

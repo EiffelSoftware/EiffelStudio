@@ -13,7 +13,7 @@ inherit
 			transfer_to, transfer_from, duplicate,
 			is_routine, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names, duplicate_arguments
+			check_local_names, duplicate_arguments, set_arguments
 		end
 
 feature -- Access
@@ -51,7 +51,7 @@ feature -- Settings
 			-- Assign `args' to `arguments'.
 		do
 			arguments := args
-		ensure
+		ensure then
 			arguments_set: arguments = args
 		end
 

@@ -758,7 +758,7 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 				sdata.typearr [0] = INVALID_DTYPE;
 				sdata.typearr [1] = TUPLE_TYPE;
 				sdata.typearr [2] = (EIF_TYPE_INDEX) a_type->count;
-				sdata.typearr [3] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+				sdata.typearr [3] = (EIF_TYPE_INDEX) l_cecil_id;
 				sdata.typearr [sdata.count - 1] = TERMINATOR;
 				sdata.position =  1 + TUPLE_OFFSET + 1;
 
@@ -831,7 +831,7 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 					} else {
 						data->typearr [data->position] = TUPLE_TYPE;
 						data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
-						data->typearr [data->position + 2] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+						data->typearr [data->position + 2] = (EIF_TYPE_INDEX) l_cecil_id;
 						data->typearr [data->count - 1] = TERMINATOR;
 						data->position = data->position + TUPLE_OFFSET + 1;
 						eif_tuple_type_id (l_type, data);
@@ -843,7 +843,7 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
-					data->typearr [data->position] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+					data->typearr [data->position] = (EIF_TYPE_INDEX) l_cecil_id;
 					data->position++;
 				}
 			}
@@ -904,9 +904,8 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 						data->typearr [data->count - 1] = TERMINATOR;
 						l_previous_pos = data->position;
 						eif_gen_type_id (&l_cecil_type, l_type, data);
-							/* Extract from computed type, the associated `SK_xx' value.
-							 * We need to do `RTUD' because it is a typarr ID. */
-						gtype [i] = sk_type (RTUD(data->typearr [l_previous_pos]));
+							/* Extract from computed type, the associated `SK_xx' value. */
+						gtype [i] = sk_type (data->typearr [l_previous_pos]);
 					}
 				} else if (is_tuple (l_type)) {
 					data->count += TUPLE_OFFSET + l_type->count;
@@ -924,7 +923,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 
 							data->typearr [data->position] = TUPLE_TYPE;
 							data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
-							data->typearr [data->position + 2] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+							data->typearr [data->position + 2] = (EIF_TYPE_INDEX) l_cecil_id;
 							data->typearr [data->count - 1] = TERMINATOR;
 							data->position = data->position + TUPLE_OFFSET + 1;
 							eif_tuple_type_id (l_type, data);
@@ -938,7 +937,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					} else {
 						gtype [i]  = sk_type (l_cecil_id);
 						CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
-						data->typearr [data->position] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+						data->typearr [data->position] = (EIF_TYPE_INDEX) l_cecil_id;
 						data->position++;
 					}
 				}
@@ -981,7 +980,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					CHECK("not too big", (t - type->patterns) <= 0x7FFFFFFF);
 					i = (uint32) (t - type->patterns) / l_generic_count;
 						/* The requested generic type ID */
-					data->typearr [l_original_pos] = eif_id_for_typarr (type->dynamic_types[i]);
+					data->typearr [l_original_pos] = type->dynamic_types[i];
 				} else {
 						/* The type has not been compiled, i.e. not part of the system and there is
 						 * not yet a generic derivation */

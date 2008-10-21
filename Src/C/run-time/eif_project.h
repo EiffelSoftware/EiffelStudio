@@ -174,8 +174,6 @@ extern "C" {
 
 	RT_LNK int32 **egc_fcall;	/* Routine id arrays indexed by feature id's */
 	RT_LNK struct rout_info *egc_forg_table;/* Routine origin/offset table */
-	RT_LNK EIF_TYPE_INDEX *egc_fdtypes;	/* Dynamic type  array indexed by old
-								* dynamic types (for re-freezing) */
 #else
 	RT_LNK void (**egc_edispose)(void);
 	RT_LNK char *(**egc_ecreate)(void);

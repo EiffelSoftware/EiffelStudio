@@ -172,9 +172,6 @@ rt_private void account_attributes (EIF_TYPE_INDEX dtype)
 				k = k + 1;
 			} else {
 				if (gtype <= MAX_DTYPE) {
-					gtype = RTUD (gtype);
-				}
-				if (gtype <= MAX_DTYPE) {
 					account[gtype] |= ACCOUNT_TYPE;
 				}
 			}

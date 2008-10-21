@@ -51,9 +51,6 @@ RT_LNK EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX cur
 RT_LNK uint32 eif_tuple_count (EIF_REFERENCE tuple);
 RT_LNK uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype);
 
-/* New object with same type as i-th (`pos') generic of `object' */
-RT_LNK EIF_REFERENCE eif_gen_create (EIF_REFERENCE object, uint32 pos);
-
 /* Full type name of an object as STRING object */
 RT_LNK EIF_REFERENCE eif_gen_typename_of_type (EIF_TYPE_INDEX current_dftype);
 RT_LNK char * eif_typename (EIF_TYPE_INDEX current_dftype);
@@ -64,9 +61,6 @@ RT_LNK int eif_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 
 /* Type of the i-th generic parameter */
 RT_LNK EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos);
-
-/* Id to be used in workbench mode */
-RT_LNK EIF_TYPE_INDEX eif_id_for_typarr (EIF_TYPE_INDEX x);
 
 
 /* TUPLEs */

@@ -367,7 +367,6 @@ rt_public void (*egc_einit)(void);
 rt_public void (*egc_tabinit)(void);	
 rt_public int32 **egc_fcall;
 rt_public struct rout_info *egc_forg_table;
-rt_public EIF_TYPE_INDEX *egc_fdtypes;
 
 #else
 rt_public void (**egc_edispose)(void);

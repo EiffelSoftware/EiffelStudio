@@ -397,9 +397,7 @@ feature -- Settings
 			-- Value of the dynamic type where the feature is written
 		do
 			if Context.workbench_mode then
-				buf.put_string ("RTUD(")
 				buf.put_static_type_id (context.class_type.static_type_id)
-				buf.put_character (')')
 			else
 				buf.put_type_id (context.class_type.type_id)
 			end

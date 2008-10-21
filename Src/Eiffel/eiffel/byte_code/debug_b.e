@@ -120,18 +120,18 @@ feature -- C Code generation
 					buf.put_new_line
 					if keys = Void then
 							-- No keys
-						buf.put_string ("WDBG(RTUD(")
+						buf.put_string ("WDBG(")
 						buf.put_static_type_id (context.class_type.static_type_id)
-						buf.put_string ("), (char *) 0)")
+						buf.put_string (", (char *) 0)")
 					else
 						from
 							keys.start
 						until
 							keys.after
 						loop
-							buf.put_string ("WDBG(RTUD(")
+							buf.put_string ("WDBG(")
 							buf.put_static_type_id (context.class_type.static_type_id)
-							buf.put_string ("),%"")
+							buf.put_string (",%"")
 							buf.put_string (keys.item)
 							buf.put_string ("%")")
 							keys.forth

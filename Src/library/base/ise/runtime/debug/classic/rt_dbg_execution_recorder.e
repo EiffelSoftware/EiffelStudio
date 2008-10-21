@@ -49,21 +49,19 @@ feature {RT_EXTENSION} -- Change
 			bottom_callstack_record_is_void: bottom_callstack_record = Void
 		local
 			r: like bottom_callstack_record
-			updated_cid: INTEGER
 		do
 			record_count := 0
 			bottom_callstack_record := Void
 			top_callstack_record := Void
 			check callstack_records_are_void: top_callstack_record = Void and bottom_callstack_record = Void end
 
-			updated_cid := rt_updated_dynamic_type (cid)
 			debug ("RT_DBG_RECORD")
 				print ("Start_recording  (")
 				io.put_string ("ref")
 				io.put_character (',')
 				io.put_integer (cid)
 				io.put_character ('=')
-				io.put_integer (updated_cid)
+				io.put_integer (cid)
 				io.put_character (',')
 				io.put_integer (fid)
 				io.put_string (",dep=")
@@ -72,7 +70,7 @@ feature {RT_EXTENSION} -- Change
 				io.put_integer (a_break_index)
 				io.put_string (")%N")
 			end
-			create r.make (Current, ref, updated_cid, fid, dep) --| Create initial call record
+			create r.make (Current, ref, cid, fid, dep) --| Create initial call record
 			r.set_breakable_info ([a_break_index, 0])
 			bottom_callstack_record := r
 			top_callstack_record := r

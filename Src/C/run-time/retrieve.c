@@ -2726,7 +2726,6 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 	}
 
 	if (dftype <= MAX_DTYPE) {
-		dftype = RTUD(dftype);
 		if (EIF_IS_EXPANDED_TYPE(System (dftype).flags)) {
 			result = System (dftype).cn_generator;
 		} else {
@@ -2944,9 +2943,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 				result = 0;
 			}
 		} else if (aftype < 0) {
-				/* Former encoding has a special encoding for basic types, new one doesn't need it.
-				 * However we need to apply `RTUD_INV' on `egc_xxx_dtype' to have a valid
-				 * typearr identifier. */
+				/* Former encoding has a special encoding for basic types, new one doesn't need it. */
 			switch (aftype) {
 				case OLD_CHARACTER_TYPE: result = (dftype == egc_char_dtype); break;
 				case OLD_BOOLEAN_TYPE: result = (dftype == egc_bool_dtype); break;
@@ -2965,7 +2962,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 			if (dftype <= MAX_DTYPE) {
 					/* This is a normal type, nothing special to be done. */
 				if (type_defined (aftype)) {
-					result = (RTUD(dftype) == type_description (aftype)->new_type);
+					result = (dftype == type_description (aftype)->new_type);
 				} else {
 					result = 0;
 				}
@@ -3009,9 +3006,8 @@ rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **
 			}
 		} else if (result) {
 			if (dftype <= MAX_DTYPE  &&  aftype <= MAX_DTYPE) {
-				EIF_TYPE_INDEX g = RTUD (dftype);
 				if (type_defined (aftype)) {
-					result = (g == type_description (aftype)->new_type);
+					result = (dftype == type_description (aftype)->new_type);
 				} else {
 					result = 0;
 				}

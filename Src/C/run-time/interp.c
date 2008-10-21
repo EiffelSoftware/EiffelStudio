@@ -2103,7 +2103,6 @@ rt_private void interpret(int flag, int where)
 			uint32 elem_size = 0, bit_size = 0, i = 0;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE *nb_item;
-			EIF_TYPE_INDEX exp_type;
 			uint32 nb = 0;
 
 			type = get_creation_type ();
@@ -2115,8 +2114,7 @@ rt_private void interpret(int flag, int where)
 
 			if (is_expanded) {
 					/* Need local since RTUD evaluates twice its argument. */
-				exp_type = get_int16(&IC);
-				elem_size = OVERHEAD + EIF_Size(RTUD(exp_type));
+				elem_size = OVERHEAD + EIF_Size(get_int16(&IC));
 			} else {
 				switch (get_uint32(&IC) & SK_HEAD) {
 					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
@@ -4729,7 +4727,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 		if ((is_inline_agent) || (is_static_call)) {
 				/* For an inline agent or a static call, the call is always relative to
 				 * the type declaring the inline agent or the type target of the static call. */
-			CBodyId(body_id,rout_id,RTUD(stype));
+			CBodyId(body_id,rout_id,stype);
 		} else {
 			CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
 		}
@@ -4738,7 +4736,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 		int offset = fid_or_offset;
 		CHECK("Not an inline agent", !is_inline_agent);
 		if (is_static_call) {
-			body_id = desc_tab[origin][RTUD(dtype)][offset].body_index;
+			body_id = desc_tab[origin][dtype][offset].body_index;
 		} else {
 			body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
 		}
@@ -4805,7 +4803,7 @@ rt_private int icall(int fid, int stype, int ptype)
 	if (ptype == -1) {
 		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
 	} else {
-		CBodyId(body_id,rout_id,RTUD(ptype));
+		CBodyId(body_id,rout_id,ptype);
 	}
 
 	OLD_IC = IC;				/* IC back up */
@@ -4857,7 +4855,7 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 	if (ptype == -1)
 		body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
 	else
-		body_id = desc_tab[origin][RTUD(ptype)][offset].body_index;
+		body_id = desc_tab[origin][ptype][offset].body_index;
 
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */

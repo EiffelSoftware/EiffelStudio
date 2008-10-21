@@ -1739,7 +1739,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 			loc1 = RTLNSMART((EIF_TYPE_INDEX) tid);
 		}
 	} else {
-		loc1 = RTLN(RTUD(typeid));
+		loc1 = RTLN(typeid);
 	}
 	if (loc1 != NULL) {
 		tmp = (EIF_REFERENCE)RTCCL(loc1); /* clone */

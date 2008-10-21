@@ -4501,25 +4501,6 @@ feature -- Generation
 					buffer.put_string (",%N")
 					i := i + 1
 				end
-				buffer.put_string ("};%N%N")
-					-- Generate the correspondances stable between original
-					-- dynamic types and new dynamic types
-				buffer.put_string ("EIF_TYPE_INDEX egc_fdtypes_init[] = {%N")
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					buffer.flush_buffer (skeleton_file)
-					cl_type := cltype_array.item (i)
-					if cl_type /= Void then
-						buffer.put_type_id (cl_type.type_id)
-					else
-						buffer.put_integer (0)
-					end
-					buffer.put_string (",%N")
-					i := i + 1
-				end
 				buffer.put_string ("};")
 			end
 

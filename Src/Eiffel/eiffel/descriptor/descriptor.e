@@ -217,14 +217,14 @@ feature -- Generation
 			i: INTEGER
 			class_type_id: INTEGER
 			init_name: STRING
-			desc, rtud, init_macro, sep, plus: STRING
+			desc, type_id_name, init_macro, sep, plus: STRING
 		do
 			class_type_id := class_type.static_type_id;
 			init_name := Encoder.init_name (class_type_id)
 			init_macro := "%TIDSC("
-			rtud := ", RTUD("
-			rtud.append (Encoder.generate_type_id_name (class_type_id))
-			rtud.append ("));%N")
+			create type_id_name.make (12)
+			type_id_name.append (Encoder.generate_type_id_name (class_type_id))
+			type_id_name.append (");%N")
 
 			buffer.generate_extern_declaration ("void", init_name, <<>>);
 			buffer.put_new_line
@@ -242,8 +242,8 @@ feature -- Generation
 				-- Special descriptor unit (invariant)
 			buffer.put_string (init_macro);
 			buffer.put_string (desc)
-			buffer.put_string (", 0")
-			buffer.put_string (rtud)
+			buffer.put_string (", 0, ")
+			buffer.put_string (type_id_name)
 
 				-- Descriptor units for origin classes
 			from
@@ -260,7 +260,8 @@ feature -- Generation
 				buffer.put_integer (i);
 				buffer.put_string (sep);
 				buffer.put_class_id (key_for_iteration);
-				buffer.put_string (rtud);
+				buffer.put_string (sep);
+				buffer.put_string (type_id_name);
 				i := i + item_for_iteration.count;
 				forth
 			end;

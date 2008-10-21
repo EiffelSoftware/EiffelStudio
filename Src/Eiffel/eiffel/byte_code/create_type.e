@@ -62,9 +62,7 @@ feature -- C code generation
 				if final_mode then
 					buffer.put_type_id (cl_type_i.type_id (context.context_class_type.type))
 				else
-					buffer.put_string ("RTUD(")
 					buffer.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-					buffer.put_character (')')
 				end
 			end
 		end

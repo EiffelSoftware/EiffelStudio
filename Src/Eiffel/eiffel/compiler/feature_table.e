@@ -88,6 +88,9 @@ inherit
 			start as internal_table_start,
 			after as internal_table_after,
 			forth as internal_table_forth
+		export
+			{NONE}
+				clear_all, wipe_out, extend
 		end
 
 create
@@ -245,6 +248,10 @@ feature -- HASH_TABLE like feature
 			new.set_id (system.feature_counter.next_id)
 			tmp_feature_server.put (new)
 			internal_table_put (new.id, key)
+			if not found and then new.is_attribute then
+					-- We are adding a new attribute so we update the attribute count.
+				attribute_count := attribute_count + 1
+			end
 				-- Update alias table
 			alias_name_id := new.alias_name_id
 			if alias_name_id > 0 then
@@ -285,6 +292,9 @@ feature {NONE} -- HASH_TABLE like features
 			old_feature := item_id (key)
 			if old_feature /= Void then
 					-- Remove feature from temporary feature server
+				if old_feature.is_attribute then
+					attribute_count := attribute_count - 1
+				end
 				l_id := old_feature.id
 				if l_id > 0 then
 					tmp_feature_server.remove (l_id)
@@ -422,6 +432,10 @@ feature -- Status report
 	is_flushed: BOOLEAN
 			-- Find out if we can discard `feature_table' during a traversal
 			-- that is to say we are sure it was stored to disk.
+
+	attribute_count: INTEGER
+			-- Number of attributes held within `Current'.
+			--| Used for optimizing skeleton creation and generic seed update.
 
 feature -- Settings
 
@@ -613,7 +627,8 @@ end
 					propagate_feature := True
 				end
 
-				if 	old_feature_i.written_in = feat_tbl_id then
+				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then
+						-- Previous feature generated for current class.
 					if old_feature_i.is_c_external then
 						debug ("ACTIVITY")
 							io.error.put_string ("Remove external: ")
@@ -625,9 +640,13 @@ end
 						external_i ?= old_feature_i
 						pass_control.remove_external (external_i)
 					end
+				end
+
+				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then
+						-- Previous feature had a body_index generated for current class.
 					if
 						new_feature_i = Void or else
-						(new_feature_i.written_in /= feat_tbl_id) or else
+						(new_feature_i.written_in /= feat_tbl_id and then not new_feature_i.is_replicated_directly) or else
 						(new_feature_i.body_index /= old_feature_i.body_index)
 					then
 							-- A feature written in the associated class disapearred,
@@ -769,7 +788,7 @@ debug ("ACTIVITY")
 	io.error.put_string (f.feature_name)
 	io.error.put_string (" removed%N")
 end
-					if f.written_in = a_class_id then
+					if f.written_in = a_class_id or else f.is_replicated_directly then
 							-- There is no need for a corresponding "reactivate" here
 							-- since it will be done in by pass2 in `feature_unit' if need be
 						Tmp_ast_server.desactive (f.body_index)
@@ -980,30 +999,50 @@ end
 			feature_i: FEATURE_I
 			desc: ATTR_DESC
 			l_ext: IL_EXTENSION_I
+			l_attribute_counter, l_attribute_count: INTEGER
 		do
-			from
-					-- Optimize creation as most of the time classes have no attributes
-				create Result.make (0)
-				start
-			until
-				after
-			loop
-				feature_i := item_for_iteration
-				if feature_i.is_attribute then
-					l_ext ?= feature_i.extension
-					if
-						(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
-					then
-							-- We do not take IL static fields, only attributes of a class.
-						desc := feature_i.type.description
-						desc.set_feature_id (feature_i.feature_id)
-						desc.set_attribute_name_id (feature_i.feature_name_id)
-						desc.set_rout_id (feature_i.rout_id_set.first)
-						Result.extend (desc)
+			l_attribute_count := attribute_count
+			if l_attribute_count > 0 then
+				create Result.make (l_attribute_count)
+				from
+					start
+				until
+					l_attribute_counter = l_attribute_count
+				loop
+					feature_i := item_for_iteration
+					if feature_i.is_attribute then
+						l_ext ?= feature_i.extension
+						if
+							(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
+						then
+								-- We do not take IL static fields, only attributes of a class.
+							desc := feature_i.type.description
+							desc.set_feature_id (feature_i.feature_id)
+							desc.set_attribute_name_id (feature_i.feature_name_id)
+							desc.set_rout_id (feature_i.rout_id_set.first)
+							Result.extend (desc)
+							l_attribute_counter := l_attribute_counter + 1
+						end
+					end
+						-- Increase iteration counter
+
+					if l_attribute_counter < l_attribute_count then
+							-- If we have reached the attribute count then we don't need to do
+							-- an unnecessary forth
+						forth
 					end
 				end
-				forth
+			else
+				Result := empty_skeleton
 			end
+		ensure
+			Result_valid: Result /= Void and then Result.count = attribute_count
+		end
+
+	empty_skeleton: GENERIC_SKELETON
+			-- Empty skeleton
+		once
+			create Result.make (0)
 		end
 
 	melt is

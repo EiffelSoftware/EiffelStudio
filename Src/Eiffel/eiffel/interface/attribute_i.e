@@ -49,8 +49,13 @@ feature
 			Result.set_type_a (type.actual_type)
 
 			if generate_in = 0 then
-				Result.set_written_in (written_in)
-				Result.set_access_in (written_in)
+				if has_replicated_ast then
+					Result.set_access_in (access_in)
+					Result.set_written_in (written_in)
+				else
+					Result.set_written_in (written_in)
+					Result.set_access_in (written_in)
+				end
 			else
 				Result.set_written_in (generate_in)
 				Result.set_access_in (generate_in)

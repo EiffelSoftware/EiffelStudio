@@ -145,8 +145,13 @@ feature -- Settings
 				Result.set_written_in (generate_in)
 				Result.set_access_in (generate_in)
 			else
-				Result.set_access_in (written_in)
-				Result.set_written_in (written_in)
+				if has_replicated_ast then
+					Result.set_access_in (access_in)
+					Result.set_written_in (written_in)
+				else
+					Result.set_written_in (written_in)
+					Result.set_access_in (written_in)
+				end
 			end
 			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)

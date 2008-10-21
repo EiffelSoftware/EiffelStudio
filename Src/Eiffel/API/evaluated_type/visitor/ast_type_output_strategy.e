@@ -139,7 +139,14 @@ feature {TYPE_A} -- Visitors
 			elseif a_type.has_detachable_mark then
 				text_formatter.process_symbol_text (ti_question)
 			end
-			text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name.as_upper)
+			if current_feature /= Void and then current_feature.has_replicated_ast then
+					-- Current feature may be Void.
+					-- If not we check if the feature has a replicated AST, in which case
+					-- we query the written class for type information.
+				text_formatter.process_generic_text (current_feature.written_class.generics.i_th (a_type.position).name.name.as_upper)
+			else
+				text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name.as_upper)
+			end
 		end
 
 	process_gen_type_a (a_type: GEN_TYPE_A) is

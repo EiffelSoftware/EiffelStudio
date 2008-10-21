@@ -371,8 +371,8 @@ feature
 			has_selection: selecting /= Void
 		local
 			vmss2: VMSS2
-			local_selecting: SEARCH_TABLE [INTEGER]
-			local_selected: LINKED_LIST [INTEGER]
+			local_selecting: like selecting
+			local_selected: like selected
 		do
 			from
 				local_selecting := selecting

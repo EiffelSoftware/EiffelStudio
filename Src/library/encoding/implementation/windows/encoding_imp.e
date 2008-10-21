@@ -236,7 +236,8 @@ feature {NONE} -- Implementation
 			"[
 				DWORD dw;
 			    			    	
-				WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, $a_out_pointer, $a_count_to_buffer, NULL, NULL);
+				WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
+					(int) -1, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;
@@ -251,7 +252,8 @@ feature {NONE} -- Implementation
 			"[
 				DWORD dw;
 			    
-				MultiByteToWideChar ($cpid,	0, $a_multi_byte, -1, $a_out_pointer, $a_count_to_buffer);
+				MultiByteToWideChar ((UINT) $cpid, (DWORD) 0, (LPCSTR) $a_multi_byte,
+					(int) -1, (LPWSTR) $a_out_pointer, (int) $a_count_to_buffer);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION) {
 					*$a_b = 0;

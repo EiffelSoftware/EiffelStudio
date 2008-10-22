@@ -273,22 +273,6 @@ feature {NONE} -- Object initialization
 			object_cache_loaded: is_cache_loaded
 		end
 
-	create_object (a_class_name: STRING): ANY is
-			-- Creates an object of type `a_class_name'.
-		require
-			a_class_name_not_empty: a_class_name /= Void and then not a_class_name.is_empty
-			a_class_name_valid: is_valid_type_string (a_class_name)
-			not_special_class: not is_special_type (dynamic_type_from_string (a_class_name))
-		local
-			l_type: INTEGER
-		do
-			l_type := dynamic_type_from_string (a_class_name)
-			Result := new_instance_of (l_type)
-		ensure
-			not_void: Result /= Void
-			--correct_type: type_name (Result).is_equal (a_class_name)
-		end
-
 	create_special_object (a_type, a_count: INTEGER): !SPECIAL [ANY] is
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
@@ -330,8 +314,6 @@ feature {NONE} -- Object initialization
 			else
 				assert ("special type not supported", False)
 			end
-		ensure
-			--correct_type: type_name (Result).is_equal (a_class_name)
 		end
 
 	set_attributes (an_object: !ANY; an_attributes: !TUPLE) is

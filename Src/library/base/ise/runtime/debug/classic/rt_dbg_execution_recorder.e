@@ -41,7 +41,7 @@ feature {RT_EXTENSION} -- Change
 			recording_values := p.recording_values
 		end
 
-	start_recording (ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; a_break_index: INTEGER)
+	start_recording (ref: !ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; a_break_index: INTEGER)
 			-- Start recording and
 			-- Initialize recording with effective information.
 		require
@@ -57,12 +57,11 @@ feature {RT_EXTENSION} -- Change
 
 			debug ("RT_DBG_RECORD")
 				print ("Start_recording  (")
-				io.put_string ("ref")
-				io.put_character (',')
+				io.put_string ("ref=")
+				io.put_string (($ref).out)
+				io.put_string (",cid=")
 				io.put_integer (cid)
-				io.put_character ('=')
-				io.put_integer (cid)
-				io.put_character (',')
+				io.put_string (",fid=")
 				io.put_integer (fid)
 				io.put_string (",dep=")
 				io.put_integer (dep)
@@ -167,7 +166,7 @@ feature -- Access
 			end
 		end
 
-	callstack_record_by_id (a_id: !STRING): like callstack_record
+	callstack_record_by_id (a_id: !STRING): ?like callstack_record
 			-- Call record for `a_id'
 		local
 			p: INTEGER
@@ -209,7 +208,7 @@ feature -- Constants from eif_debug.h
 
 feature -- Event
 
-	enter_feature (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
+	enter_feature (ref: !ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Enter feature `{cid}.fid' on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
@@ -218,7 +217,10 @@ feature -- Event
 			r: RT_DBG_CALL_RECORD
 		do
 			debug ("RT_DBG_RECORD")
-				dtrace_indent (dep); dtrace ("enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
+				dtrace_indent (dep);
+				dtrace ("enter_feature (")
+				dtrace (ref.generating_type)
+				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
 			monitor_record_count
@@ -239,11 +241,11 @@ feature -- Event
 					debug ("RT_DBG_WARNING")
 						print ("Warning: enter mismatch !!!%N")
 						print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
-						print (" now: depth=" + dep.out
-									+ " obj=" + ref.generating_type
-									+ " cid=" + cid.out
-									+ " fid=" + fid.out
-									+ "%N")
+						print (" now: depth=" + dep.out)
+						print (" obj=" + ref.generating_type)
+						print (" cid=" + cid.out)
+						print (" fid=" + fid.out)
+						print ("%N")
 						print ("%N")
 					end
 					if topr.depth = r.depth then
@@ -264,15 +266,18 @@ feature -- Event
 			end
 		end
 
-	enter_rescue (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
+	enter_rescue (ref: !ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Enter rescue on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
 		local
-			r: RT_DBG_CALL_RECORD
+			r: ?RT_DBG_CALL_RECORD
 		do
 			debug ("RT_DBG_RECORD")
-				dtrace_indent (dep); dtrace ("enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
+				dtrace_indent (dep);
+				dtrace ("enter_rescue (")
+				dtrace (ref.generating_type)
+				dtrace (", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
 			r := top_callstack_record
@@ -302,7 +307,7 @@ feature -- Event
 			end
 		end
 
-	leave_feature (ref: ?ANY; cid,fid: INTEGER; dep: INTEGER)
+	leave_feature (ref: !ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Leave feature `{cid}.fid' on object `ref', depth is `dep'
 		require
 			is_not_replaying: not is_replaying
@@ -310,7 +315,10 @@ feature -- Event
 			n: like callstack_record
 		do
 			debug ("RT_DBG_RECORD")
-				dtrace_indent (dep); dtrace ("leave_feature (" + ref.generating_type + " <" + ($ref).out + ">, " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
+				dtrace_indent (dep);
+				dtrace ("leave_feature (")
+				dtrace (ref.generating_type + " <" + ($ref).out + ">")
+				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
 			if not {r: like callstack_record} top_callstack_record then
@@ -330,11 +338,11 @@ feature -- Event
 						debug ("RT_DBG_WARNING")
 							print ("Warning: leave mismatch !!!%N")
 							print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
-							print (" now: depth=" + dep.out
-										+ " obj=" + ref.generating_type
-										+ " cid=" + cid.out
-										+ " fid=" + fid.out
-										+ "%N")
+							print (" now: depth=" + dep.out)
+							print (" obj=" + ref.generating_type)
+							print (" cid=" + cid.out)
+							print (" fid=" + fid.out)
+							print ("%N")
 							print ("%N")
 						end
 						from
@@ -364,7 +372,7 @@ feature -- Event
 					else
 						check
 							same_dep: n.depth = dep
-							same_object_type: dynamic_type (n.object) = dynamic_type (ref)
+							same_object_type: n.same_object_type (ref)
 							same_reference: not n.is_expanded implies n.object = ref
 							same_cid: n.class_type_id = cid
 							same_fid: n.feature_rout_id = fid
@@ -547,9 +555,9 @@ feature -- Replay
 							loop
 								replay_forth
 								d1 := d1 + 1
-								check replayed_call.depth = d1 end
+								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
 							end
-							check replayed_call.depth = d2 end
+							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
 						elseif d2 < d1 then
 								--| Go back in the stack
 							from
@@ -558,9 +566,9 @@ feature -- Replay
 							loop
 								replay_back
 								d1 := d1 - 1
-								check replayed_call.depth = d1 end
+								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
 							end
-							check replayed_call.depth = d2 end
+							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
 						end
 
 						Result := True
@@ -578,11 +586,13 @@ feature -- Replay
 		do
 			inspect dir
 			when Direction_back then
-				if bottom_callstack_record /= Void then
-					Result := replayed_call.available_calls_to_bottom
+				if bottom_callstack_record /= Void and {rc: like replayed_call} replayed_call then
+					Result := rc.available_calls_to_bottom
 				end
 			when Direction_forth then
-				Result := replay_stack.count
+				if {rs: like replay_stack} replay_stack then
+					Result := rs.count
+				end
 			when Direction_left then
 				-- Not yet supported
 			when Direction_right then
@@ -591,7 +601,7 @@ feature -- Replay
 			end
 		end
 
-	replayed_call_details: STRING
+	replayed_call_details: ?STRING
 			-- Details for `replayed_call'
 		require
 			is_replaying: is_replaying
@@ -608,7 +618,7 @@ feature -- Replay
 			end
 		end
 
-	callstack_record_details (a_id: !STRING; nb: INTEGER): STRING
+	callstack_record_details (a_id: !STRING; nb: INTEGER): ?STRING
 			-- Details for callstack identified by `a_id'
 			-- get information for `nb' levels.
 		require
@@ -637,6 +647,7 @@ feature -- Monitoring
 			-- Monitor if record_count is not over `max_record_count'
 			-- if `max_record_count' is 0, then no limit
 		local
+			bt: like bottom_callstack_record
 			p: like bottom_callstack_record
 			c, m, n: INTEGER
 		do
@@ -644,29 +655,32 @@ feature -- Monitoring
 			if m > 0 then
 				c := record_count
 				if c > 1.1 * m then
-					if top_callstack_record /= bottom_callstack_record then
+					bt := bottom_callstack_record
+					if top_callstack_record /= bt then
 						debug ("RT_DBG_OPTIMIZATION")
 							print ("monitor_record_count[" + ((m - c).abs // m).out + "%%] -> remove oldest: record_count=" + c.out + " (max=" + m.out + ")%N")
 						end
 						from
 							p := top_callstack_record
 						until
-							p.parent = bottom_callstack_record
+							p = Void or else p.parent = bt
 						loop
 							p := p.parent
 						end
 						check
 							p_not_void_and_last_of_parent: p /= Void and then
-								bottom_callstack_record.call_records /= Void and then bottom_callstack_record.call_records.last = p
+								bt /= Void and then bt.call_records /= Void and then bt.call_records.last = p
 						end
-						n := bottom_callstack_record.record_count_but (p)
+						n := bt.record_count_but (p)
 						p.remove_parent
 
 							--| We may clean the current `bottom_callstack_record' to help the GC ...
 						bottom_callstack_record := p
+						bt := p
+
 						c := c - n
 						record_count := c
-						check record_count = bottom_callstack_record.record_count_but (Void) end
+						check same_record_count: bt /= Void and then record_count = bt.record_count_but (Void) end
 						if c <= 0.9 * m then
 								--| Could be optimized instead of recursively call this monitoring
 							monitor_record_count
@@ -690,7 +704,13 @@ feature -- Replay operation
 	replayed_call: ?RT_DBG_CALL_RECORD
 			-- Current replayed call stack record
 
-	replay_stack: ?LINKED_LIST [TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]]
+	replay_stack_not_empty: BOOLEAN
+			-- Is `replay_stack' non empty?
+		do
+			Result := {rs: like replay_stack} replay_stack and then not rs.is_empty
+		end
+
+	replay_stack: ?LINKED_LIST [TUPLE [call_record: !RT_DBG_CALL_RECORD; chgs: ?LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]]
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
@@ -698,53 +718,58 @@ feature -- Replay operation
 			-- Replay execution back
 		require
 			is_replaying: is_replaying
+			replayed_call_attached: replayed_call /= Void
 		local
-			n, r: ?like replayed_call
+			rs: !like replay_stack
+			n: ?RT_DBG_CALL_RECORD
 			l_records: ?LIST [RT_DBG_VALUE_RECORD]
 			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("replay_back -start- %N")
 			end
-			r := replayed_call
-			check r_not_void: r /= Void end
-
-			if {p: like replayed_call} r.parent then
-				last_replay_operation_failed := False
-				if replay_stack = Void then
-					create replay_stack.make
-						-- This is the first replay operation
-						-- Replay to the beginning of the current frame
-					n := Void
-				else
-					check replay_stack_not_empty: replay_stack.count > 0 end
-					n := replay_stack.last.call_record
-				end
-				l_records := changes_between (r, n)
-				if not last_replay_operation_failed then
-					if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
-						create chgs.make (ot_records.count)
-						from
-							ot_records.finish
-						until
-							ot_records.before
-						loop
-							debug ("RT_DBG_REPLAY")
-								print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
-							end
-							if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
-								if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
-									chgs.force ([ot_rec, val])
-									ot_rec.restore (val)
-								else
-									check should_not_occur: False end
-								end
-							end
-							ot_records.back
-						end
+			if {r: RT_DBG_CALL_RECORD} replayed_call then
+				if {p: RT_DBG_CALL_RECORD} r.parent then
+					last_replay_operation_failed := False
+					if {ot_rs: like replay_stack} replay_stack then
+						rs := ot_rs
+						check replay_stack_not_empty: rs.count > 0 end
+						n := rs.last.call_record
+					else
+						create rs.make
+						replay_stack := rs
+							-- This is the first replay operation
+							-- Replay to the beginning of the current frame
+						n := Void
 					end
-					replay_stack.force ([r, chgs])
-					replayed_call := p
+					l_records := changes_between (r, n)
+					if not last_replay_operation_failed then
+						if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
+							create chgs.make (ot_records.count)
+							from
+								ot_records.finish
+							until
+								ot_records.before
+							loop
+								debug ("RT_DBG_REPLAY")
+									print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
+								end
+								if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
+									if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
+										chgs.force ([ot_rec, val])
+										ot_rec.restore (val)
+									else
+										check should_not_occur: False end
+									end
+								end
+								ot_records.back
+							end
+						end
+						rs.force ([r, chgs])
+						replayed_call := p
+					end
+				else
+					last_replay_operation_failed := True
 				end
 			else
 				last_replay_operation_failed := True
@@ -760,68 +785,73 @@ feature -- Replay operation
 			-- Replay left (up in the current call stack element)
 		require
 			is_replaying: is_replaying
+			replayed_call_attached: replayed_call /= Void
 		local
-			n, r: like replayed_call
+			n: like replayed_call
 			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]
 			r_pos_line: INTEGER
 			done: BOOLEAN
+			rs: !like replay_stack
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("replay_left -start- %N")
 			end
-			r := replayed_call
-			check r_not_void: r /= Void end
-
-			from
-				check r.replayed_position /= Void end
-				r_pos_line := r.replayed_position.line
-
-				n := r
-			until
-				done
-			loop
-				if {ot_records: LIST [RT_DBG_VALUE_RECORD]} r.left_step then
-					last_replay_operation_failed := False
-					if replay_stack = Void then
-						create replay_stack.make
+			if {r: like replayed_call} replayed_call then
+				from
+					r_pos_line := r.replayed_position.line
+					if {ot_rs: like replay_stack} replay_stack then
+						rs := ot_rs
+					else
 							-- This is the first replay operation
 							-- Replay to the beginning of the current frame
+						create rs.make
+						replay_stack := rs
 					end
-					create chgs.make (ot_records.count)
-					from
-						ot_records.finish
-					until
-						ot_records.before
-					loop
-						debug ("RT_DBG_REPLAY")
-							print ("replay_left -> " + ot_records.item_for_iteration.debug_output + " %N")
-						end
-						if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
-							if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
-								chgs.force ([ot_rec, val])
-								ot_rec.restore (val)
-							else
-								check should_not_occur: False end
-							end
-						end
-						ot_records.back
-					end
-					replay_stack.force ([r, chgs])
-				else
-					if r.parent = Void then
-						--| Revert the step left which was supposed to be a step back, 
-						--| but which wasn't since we reached the bottom
-						r.revert_left_step
-					else
-						replay_back
-					end
-					done := True
-				end
-				n := replayed_call
-				check n.replayed_position /= Void end
-				done := done or n /= r or else (n.replayed_position.line /= r_pos_line)
+					n := r
+				until
+					done
+				loop
+					if {ot_records: LIST [!RT_DBG_VALUE_RECORD]} r.left_step then
+						last_replay_operation_failed := False
 
-				--| FIXME jfiat [2008/04/09] : do we want to step left on nested index ?
+						create chgs.make (ot_records.count)
+						from
+							ot_records.finish
+						until
+							ot_records.before
+						loop
+							debug ("RT_DBG_REPLAY")
+								print ("replay_left -> " + ot_records.item_for_iteration.debug_output + " %N")
+							end
+							if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
+								if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
+									chgs.force ([ot_rec, val])
+									ot_rec.restore (val)
+								else
+									check should_not_occur: False end
+								end
+							end
+							ot_records.back
+						end
+						rs.force ([r, chgs])
+					else
+						if r.parent = Void then
+							--| Revert the step left which was supposed to be a step back,
+							--| but which wasn't since we reached the bottom
+							r.revert_left_step
+						else
+							replay_back
+						end
+						done := True
+					end
+					n := replayed_call
+					check n_attached: n /= Void end
+					if not done then
+						done := n /= r or else n = Void or else (n.replayed_position.line /= r_pos_line)
+					end
+
+					--| FIXME jfiat [2008/04/09] : do we want to step left on nested index ?
+				end
 			end
 			debug ("RT_DBG_REPLAY")
 				print ("replay_left -end- %N")
@@ -839,7 +869,7 @@ feature -- Replay operation
 				r := replayed_call
 				r := n
 			until
-				n = Void or else n /= r or else r.replayed_position_is_first
+				n = Void or else n /= r or else r = Void or else r.replayed_position_is_first
 			loop
 				replay_left
 				r := replayed_call
@@ -851,29 +881,29 @@ feature -- Replay operation
 		require
 			is_replaying: is_replaying
 			replayed_call_not_void: replayed_call /= Void
-			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
+			replay_stack_not_empty: replay_stack_not_empty
 		local
-			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
+			r: like replayed_call
+			n: !RT_DBG_CALL_RECORD
+			t: TUPLE [call_record: !RT_DBG_CALL_RECORD; chgs: ?LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 			done: BOOLEAN
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("replay_forth -start-%N")
 			end
-			if replay_stack /= Void then
+			if {rs: like replay_stack} replay_stack then
 				r := replayed_call
 				check r_not_void: r /= Void end
 				from
-					n := r
 				until
 					done
 				loop
-					check replay_stack.count > 0 end
+					check rs.count > 0 end
 						--| pop last entry
-					replay_stack.finish
-					t := replay_stack.item_for_iteration
-					replay_stack.remove
-					if replay_stack.is_empty then
+					rs.finish
+					t := rs.item_for_iteration
+					rs.remove
+					if rs.is_empty then
 						replay_stack := Void
 					end
 
@@ -920,32 +950,31 @@ feature -- Replay operation
 		require
 			is_replaying: is_replaying
 			replayed_call_not_void: replayed_call /= Void
-			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
+			replay_stack_not_empty: replay_stack_not_empty
 		local
-			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
+			r: like replayed_call
+			n: !RT_DBG_CALL_RECORD
+			t: TUPLE [call_record: !RT_DBG_CALL_RECORD; chgs: ?LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 			r_pos_line: INTEGER
 			done: BOOLEAN
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("replay_right -start-%N")
 			end
-			if replay_stack /= Void then
+			if {rs: like replay_stack} replay_stack then
 				r := replayed_call
 				check r_not_void: r /= Void end
-
 				from
-					check r.replayed_position /= Void end
 					r_pos_line := r.replayed_position.line
 				until
 					done
 				loop
-					check replay_stack.count > 0 end
+					check replay_stack_not_empty: replay_stack_not_empty end
 						--| pop last entry
-					replay_stack.finish
-					t := replay_stack.item_for_iteration
-					replay_stack.remove
-					if replay_stack.is_empty then
+					rs.finish
+					t := rs.item_for_iteration
+					rs.remove
+					if rs.is_empty then
 						replay_stack := Void
 					end
 
@@ -971,7 +1000,6 @@ feature -- Replay operation
 					if n = r then
 							--| reverted left step
 						n.revert_left_step
-						check n.replayed_position /= Void end
 						done := n.replayed_position.line /= r_pos_line
 					else --| n /= r
 							--| reverted back step
@@ -1000,8 +1028,9 @@ feature -- Replay operation
 		require
 			is_replaying: is_replaying
 		local
-			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
+			r: like replayed_call
+			n: !like callstack_record
+			t: TUPLE [call_record: !like callstack_record; chgs: ?LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("revert_replay_stack -start-%N")
@@ -1036,15 +1065,17 @@ feature -- Replay operation
 					end
 					if n = r then
 						--| reverted left step
-						r.revert_left_step
+						if r /= Void then
+							r.revert_left_step
+						end
 					else
 						--| reverted back step
-						check n = Void or else r = n.parent end
+						check r = n.parent end
 						replayed_call := n
 					end
 				end
+				check empty_replay_stack: rs.is_empty end
 			end
-			check replay_stack /= Void and then replay_stack.is_empty end
 			replay_stack := Void
 			debug ("RT_DBG_REPLAY")
 				print ("revert_replay_stack -end-%N")
@@ -1059,6 +1090,14 @@ feature -- Change
 			record_count := record_count + n
 		ensure
 			record_count_positive: record_count >= 0
+		end
+
+feature -- Measurement
+
+	is_call_at_depth (a_call: like replayed_call; d: INTEGER): BOOLEAN
+			-- Call `a_call' has depth `d' ?
+		do
+			Result := {c: like replayed_call} a_call and then c.depth = d
 		end
 
 indexing

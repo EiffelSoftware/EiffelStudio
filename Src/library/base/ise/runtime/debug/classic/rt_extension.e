@@ -155,7 +155,11 @@ feature {NONE} -- Execution replay
 		do
 			r := execution_recorder
 			if r /= Void then
-				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
+				if {ref: ANY} a_data.ref then
+					r.enter_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
+				else
+					check ref_should_not_be_void: False end
+				end
 			end
 		end
 
@@ -168,7 +172,11 @@ feature {NONE} -- Execution replay
 		do
 			r := execution_recorder
 			if r /= Void then
-				r.enter_rescue (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
+				if {ref: ANY} a_data.ref then
+					r.enter_rescue (ref, a_data.cid, a_data.fid, a_data.a_dep)
+				else
+					check ref_should_not_be_void: False end
+				end
 			end
 		end
 
@@ -181,7 +189,11 @@ feature {NONE} -- Execution replay
 		do
 			r := execution_recorder
 			if r /= Void then
-				r.leave_feature (a_data.ref, a_data.cid, a_data.fid, a_data.a_dep)
+				if {ref: ANY} a_data.ref then
+					r.leave_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
+				else
+					check ref_should_not_be_void: False end
+				end
 			end
 		end
 
@@ -280,7 +292,7 @@ feature {NONE} -- Execution replay
 
 feature -- Execution replay		
 
-	activate_execution_replay_recording (b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
+	activate_execution_replay_recording (b: BOOLEAN; ref: !ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
 			-- Start or Stop execution replay recording
 		local
 			r: like execution_recorder
@@ -304,9 +316,7 @@ feature -- Execution replay
 
 feature -- debug purpose: to remove
 
-	test_activate_recording (ref: ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER) is
-		require
-			ref_attached: ref /= Void
+	test_activate_recording (ref: !ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER) is
 		do
 			activate_execution_replay_recording (True, ref, (create {INTERNAL}).dynamic_type (ref), fid, dep, bpline)
 			c_activate_recording

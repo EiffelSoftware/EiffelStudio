@@ -40,13 +40,13 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_VALUE_RECORD
+	current_value_record: ?RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_record (index, object)
 		end
 
-	associated_object: ANY
+	associated_object: ?ANY
 			-- Associated object, if any
 		do
 			Result := object
@@ -66,18 +66,24 @@ feature -- Access
 		do
 			inspect type
 			when {INTERNAL}.reference_type then
-				if {v: ANY} value then
-					Result := ($v).out
+				if {vr: like value} value then
+					Result := ($vr).out
 				else
 					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
-				Result := ($value).out
+				check value_attached: value /= Void end
+				if {vx: like value} value then
+					Result := ($vx).out
+				else
+					create Result.make_empty
+				end
 			else
-				if {v2: like value} value then
-					Result := v2.out
+				if {v: like value} value then
+					Result := v.out
 				else
 					check False end
+					create Result.make_empty
 				end
 			end
 		end
@@ -174,12 +180,12 @@ feature {NONE} -- Internal Implementation
 					set_pointer_field (i, obj, (l_fr_pointer).value)
 				end
 			when Reference_type then
-				if {l_fr_any: RT_DBG_FIELD_RECORD [ANY]} r then
-					set_reference_field (i, obj, (l_fr_any).value)
+				if {l_fr_any: RT_DBG_FIELD_RECORD [ANY]} r and then {vr: ANY} l_fr_any.value then
+					set_reference_field (i, obj, vr)
 				end
 			when Expanded_type then
-				if {l_fr_eany: RT_DBG_FIELD_RECORD [ANY]} r then
-					set_reference_field (i, obj, (l_fr_eany).value)
+				if {l_fr_eany: RT_DBG_FIELD_RECORD [ANY]} r and then {ve: ANY} l_fr_eany.value then
+					set_reference_field (i, obj, ve)
 				end
 			when Boolean_type then
 				if {l_fr_boolean: RT_DBG_FIELD_RECORD [BOOLEAN]} r then
@@ -209,7 +215,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: G is
+	default_value: ?G is
 			-- Default value
 		do
 		end

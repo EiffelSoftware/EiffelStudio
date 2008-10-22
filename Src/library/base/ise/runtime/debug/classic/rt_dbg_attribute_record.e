@@ -36,7 +36,7 @@ feature -- Properties
 	object: !ANY
 			-- Associated object.
 
-	value: G
+	value: ?G
 			-- Associated value.
 
 	rt_type: NATURAL_32
@@ -44,13 +44,13 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_VALUE_RECORD
+	current_value_record: ?RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_attribute_record (offset, rt_type, object)
 		end
 
-	associated_object: ANY
+	associated_object: ?ANY
 			-- Associated object, if any
 		do
 			Result := object
@@ -74,15 +74,25 @@ feature -- Access
 		do
 			inspect type
 			when {INTERNAL}.reference_type then
-				if {v: ANY} value then
-					Result := ($v).out
+				if {vr: like value} value then
+					Result := ($vr).out
 				else
 					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
-				Result := ($value).out
+				check value_attached: value /= Void end
+				if {vx: like value} value then
+					Result := ($vx).out
+				else
+					create Result.make_empty
+				end
 			else
-				Result := value.out
+				if {v: like value} value then
+					Result := v.out
+				else
+					check False end
+					create Result.make_empty
+				end
 			end
 		end
 
@@ -105,7 +115,11 @@ feature -- Runtime
 		do
 			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore (" + object.generator + " #" + offset.out + ")%N")
- 				dtrace (" -> " + field_name_at (offset, object) + "%N")
+				if {fn: like field_name} field_name_at (offset, object) then
+ 					dtrace (" -> " + fn  + "%N")
+ 				else
+ 					dtrace (" -> Unknown name%N")
+				end
 			end
 			if is_same_as (val) then
 				debug ("RT_DBG_REPLAY")
@@ -145,7 +159,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: G is
+	default_value: ?G is
 			-- Default value
 		do
 		end

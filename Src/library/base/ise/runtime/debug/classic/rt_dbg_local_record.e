@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- RT internals
 
-	frozen local_value_at (dep: INTEGER; pos: INTEGER; a_rt_type: like rt_type): ANY is
+	frozen local_value_at (dep: INTEGER; pos: INTEGER; a_rt_type: like rt_type): ?ANY is
 			-- Object attached at local position `pos' for depth `dep'
 			-- (directly or through a reference)
 		require
@@ -64,7 +64,7 @@ end
 
 feature -- Properties
 
-	value: G
+	value: ?G
 			-- Associated value.
 
 	callstack_depth: INTEGER
@@ -75,13 +75,13 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_VALUE_RECORD
+	current_value_record: ?RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_local_record (callstack_depth, position, rt_type)
 		end
 
-	associated_object: ANY
+	associated_object: ?ANY
 			-- Associated object, if any
 		do
 			--| No associated object for locals
@@ -105,15 +105,24 @@ feature -- Access
 		do
 			inspect type
 			when {INTERNAL}.reference_type then
-				if {v: ANY} value then
-					Result := ($v).out
+				if {vr: like value} value then
+					Result := ($vr).out
 				else
 					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
-				Result := ($value).out
+				check value_attached: value /= Void end
+				if {vx: like value} value then
+					Result := ($vx).out
+				else
+					create Result.make_empty
+				end
 			else
-				Result := value.out
+				if {v: like value} value then
+					Result := v.out
+				else
+					create Result.make_empty
+				end
 			end
 		end
 
@@ -175,7 +184,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: G is
+	default_value: ?G is
 			-- Default value
 		do
 		end

@@ -13,7 +13,7 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
 			-- Return records from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
@@ -39,7 +39,9 @@ feature -- Query
 						crecs.after or crecs.item_for_iteration = csr2
 					loop
 						chgs := changes_between (crecs.item_for_iteration, csr2)
-						Result.append (chgs)
+						if chgs /= Void then
+							Result.append (chgs)
+						end
 						crecs.forth
 					end
 					crecs.go_to (c)

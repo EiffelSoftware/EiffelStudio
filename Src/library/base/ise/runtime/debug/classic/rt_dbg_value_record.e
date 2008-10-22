@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_VALUE_RECORD
+	current_value_record: ?RT_DBG_VALUE_RECORD
 			-- Record for current value
 		deferred
 		end
@@ -38,7 +38,7 @@ feature -- Access
 			Result := generating_type + ": #" + position.out + " = " + to_string
 		end
 
-	associated_object: ANY
+	associated_object: ?ANY
 			-- Associated object, if any
 		deferred
 		end

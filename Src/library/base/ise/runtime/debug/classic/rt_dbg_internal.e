@@ -24,24 +24,26 @@ feature -- Object access
 			Result := field_count (obj)
 		end
 
-	frozen object_records (obj: !ANY): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
+	frozen object_records (obj: !ANY): ?ARRAYED_LIST [!RT_DBG_VALUE_RECORD] is
 			-- List of field records on `obj'
 		local
 			i, cnb: INTEGER
-			r: !like object_records
+			l_records: !like object_records
 		do
 			cnb := object_field_count (obj)
 			if cnb > 0 then
-				create r.make (cnb)
+				create l_records.make (cnb)
 				from
 					i := 1
 				until
 					i > cnb
 				loop
-					r.extend (object_record (i, obj))
+					if {r: like object_record} object_record (i, obj) then
+						l_records.extend (r)
+					end
 					i := i + 1
 				end
-				Result := r
+				Result := l_records
 			end
 		end
 
@@ -466,7 +468,7 @@ feature -- Get
 
 feature -- Change field
 
-	set_field_at (off: INTEGER; a_type: NATURAL_32; value: ANY; object: ANY) is
+	set_field_at (off: INTEGER; a_type: NATURAL_32; value: ?ANY; object: !ANY) is
 		local
 			a_eif_type: INTEGER
 		do
@@ -669,7 +671,7 @@ feature -- Change local
 	rt_DLT_RESULT: INTEGER = 2
 			-- DLT=DebugLocalType, the type is the Result of the current feature
 
-	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: ANY): INTEGER is
+	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: ?ANY): INTEGER is
 			-- Set stack value at position `pos' on stack of depth `dep' with `value'
 			--| Result is 0 is succeed, otherwise Result /= 0 implies error occurred.
 		require
@@ -997,7 +999,6 @@ feature -- Testing
 	test_locals (dep: INTEGER; loc_pos: INTEGER; val: ANY; a_rt_type: NATURAL_32) is
 		local
 			s: STRING
-			a: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -1010,11 +1011,8 @@ feature -- Testing
 				s.append ("%N")
 				print (s)
 --				s.wipe_out
-
-				a := stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type)
-
 				s.append (" -> ")
-				if a /= Void then
+				if {a: ANY} stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) then
 					s.append (a.generating_type + "=" + a.out)
 				else
 					s.append ("Void object")

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (rec: like recorder; ref: ANY; cid,fid: INTEGER; dep: INTEGER)
+	make (rec: like recorder; ref: !ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Make as call `{cid}.fid' for object `ref' and depth `dep'
 		do
 			recorder := rec
@@ -34,9 +34,7 @@ feature {NONE} -- Initialization
 			feature_rout_id := fid
 			depth := dep
 			object := ref
-			if object /= Void then
-				is_expanded := object_is_expanded (object)
-			end
+			is_expanded := object_is_expanded (ref)
 			last_position := [0, 0]
 			rt_information_available := True
 			create steps.make (3)
@@ -47,16 +45,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	object: ANY
+	object: ?ANY
 			-- Target object.
 
 	dynamic_class_type_id: INTEGER
 			-- Related dynamic class type id.
-		local
-			o: ANY
 		do
-			o := object
-			if o /= Void then
+			if {o: ANY} object then
 				Result := rt_dynamic_type (o) --class_type_id
 			end
 		end
@@ -85,7 +80,7 @@ feature -- Properties
 	call_records: ?ARRAYED_LIST [!like Current]
 			-- Sub call records.
 
-	value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	value_records: ?ARRAYED_LIST [!RT_DBG_VALUE_RECORD]
 			-- Recorded values (assignment...)
 
 	flat_value_records_has_local: BOOLEAN
@@ -117,6 +112,16 @@ feature -- Measure
 
 	last_position: !TUPLE [line: INTEGER; nested: INTEGER]
 			-- Last position
+
+	same_object_type (ref: ?ANY): BOOLEAN
+			-- Is `ref' representing the same value as `object' ?
+		do
+			if {r: ANY} ref then
+				Result := {o: like object} object and then dynamic_type (o) = dynamic_type (r)
+			else
+				Result := object = Void
+			end
+		end
 
 feature -- Change
 
@@ -194,13 +199,26 @@ feature -- Status
 			end
 		end
 
+feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
+
+	parent_has_call_record (c: !like Current): BOOLEAN
+			-- Is `c' contained by `parent'?
+		do
+			Result := {p: like parent} parent and then p.has_call_record (c)
+		end
+
+	has_call_record (c: !like Current): BOOLEAN
+			-- Is `c' contained by `call_records' ?
+		do
+			Result := {crecs: like call_records} call_records and then crecs.has (c)
+		end
+
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
 	attach_to (p: !like Current)
 			-- Attach Current call record to parent call record `c'
 		require
-			not_in_parent_records: parent = Void or else parent.call_records = Void
-					or else not parent.call_records.has (p)
+			not_in_parent_records: not parent_has_call_record (p)
 		do
 			parent := p
 			p.add_call_record (Current)
@@ -281,11 +299,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			debug ("RT_DBG_RECORD")
 				if {ot_rs: like value_records} rs then
 					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
-					ot_rs.do_all (agent (r: RT_DBG_VALUE_RECORD)
+					ot_rs.do_all (agent (r: !RT_DBG_VALUE_RECORD)
 						do
-							if {ot_r: RT_DBG_VALUE_RECORD} r then
-								dtrace (" -> " + ot_r.position.out + ") " + ot_r.to_string + "%N")
-							end
+							dtrace (" -> " + r.position.out + ") " + r.to_string + "%N")
 						end)
 				else
 					dtrace_indent (depth); dtrace ("record_fields -> None.%N")
@@ -491,10 +507,10 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_flat: is_flat
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
-			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
-			orcds: LIST [RT_DBG_VALUE_RECORD]
+			ort: ARRAY [LIST [!RT_DBG_VALUE_RECORD]] -- indexed by `oi'
+			orcds: ?LIST [!RT_DBG_VALUE_RECORD]
 			rec: RT_DBG_VALUE_RECORD
-			o: ANY
+			o: ?ANY
 			oi: INTEGER
 			b: BOOLEAN
 			n: INTEGER
@@ -523,7 +539,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.force (o)
 									ot.finish
 									oi := ot.index
-									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
+									create {ARRAYED_LIST [!RT_DBG_VALUE_RECORD]} orcds.make (10)
 									if not ort.valid_index (oi) then
 										ort.grow (oi + ort.count // 2)
 									end
@@ -532,9 +548,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 							--else-- use previous values (ie: index)
 							end
 							check
-								oi > 0
-								o /= Void
-								orcds /= Void
+								oi_positive: oi > 0
+								o_attached: o /= Void
+								orcds_attached: orcds /= Void
 							end
 							if orcds.is_empty then
 								orcds.force (rec)
@@ -643,14 +659,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 		end
 
-	call_by_id (a_id: STRING): like Current
+	call_by_id (a_id: STRING): ?like Current
 		require
 			a_id_not_empty: a_id.count > 0
 		local
 			p: INTEGER
 			i: INTEGER
 			r: !like Current
-			sub_id: STRING
+			sub_id: ?STRING
 		do
 			debug ("RT_DBG_REPLAY")
 				dtrace_indent (depth); dtrace ("call_by_id (" + a_id + ")%N")
@@ -662,12 +678,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			else
 				i := a_id.to_integer_32
 			end
-			if call_records.valid_index (i) then
-				r := call_records.i_th (i)
-				if sub_id = Void then
-					Result := r
-				else
-					Result := r.call_by_id (sub_id)
+			if {crecs: like call_records} call_records then
+				if crecs.valid_index (i) then
+					r := crecs.i_th (i)
+					if sub_id = Void then
+						Result := r
+					else
+						Result := r.call_by_id (sub_id)
+					end
 				end
 			end
 			debug ("RT_DBG_REPLAY")
@@ -706,11 +724,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 	to_string (a_level: INTEGER): STRING is
 			-- String representation of Current
 		local
-			subs: STRING
+			subs: ?STRING
+			at_subs: !STRING
 			l_steps: !like steps
 			i: INTEGER
-			val_cursor: CURSOR
-			call_cursor: CURSOR
+			val_cursor: ?CURSOR
+			call_cursor: ?CURSOR
 			c,v: INTEGER
 			l_calls: like call_records
 			l_values: like value_records
@@ -755,8 +774,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			v := 0
 			if a_level /= 0 then
 				l_steps := steps
-				if l_steps.count > 0 and then {cursor: CURSOR} l_steps.cursor then
-					create subs.make_empty
+				if l_steps.count > 0 and then {steps_cursor: CURSOR} l_steps.cursor then
+					create at_subs.make_empty
+					subs := at_subs
 					from
 						if l_values /= Void then
 							val_cursor := l_values.cursor
@@ -789,24 +809,24 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 								--| l_calls can be Void if we don't keep call records on close
 							else
 								if l_steps.index = i then
-									subs.append_character ('!')
+									at_subs.append_character ('!')
 								end
-								subs.append_string (l_calls.item.to_string (a_level - 1))
+								at_subs.append_string (l_calls.item.to_string (a_level - 1))
 								l_calls.move (+1)
 							end
 							c := c + 1
 						end
 						l_steps.forth
 					end
-					if val_cursor /= Void then
+					if l_values /= Void and then val_cursor /= Void then
 						l_values.go_to (val_cursor)
 						check v = l_values.count end
 					end
-					if call_cursor /= Void then
+					if l_calls /= Void and then call_cursor /= Void then
 						l_calls.go_to (call_cursor)
 						check c = l_calls.count end
 					end
-					l_steps.go_to (cursor)
+					l_steps.go_to (steps_cursor)
 				end
 			else
 				if l_values /= Void then
@@ -844,28 +864,40 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			Result := steps.isfirst or steps.before
 		end
 
-	replayed_position: ?like last_position
+	replayed_position: !like last_position
 			-- Replayed position
 		require
 			is_replaying: is_replaying
 		local
 			l_steps: !like steps
+			rpos: ?like last_position
 		do
 			l_steps := steps
 			if l_steps.after then
-				Result := last_position --|i.e: not replayed
+				rpos := last_position --|i.e: not replayed
 			elseif l_steps.before then
-				Result := [0, 0]
+				rpos := [0, 0]
 			else
 				if l_steps.item then
-					Result := value_records.item.breakable_info
+					check value_records_attached: value_records /= Void end
+					if {vrecs: like value_records} value_records then
+						rpos := vrecs.item.breakable_info
+					end
 				else
-					Result := call_records.item.breakable_info
+					check call_records_attached: call_records /= Void end
+					if {crecs: like call_records} call_records then
+						rpos := crecs.item.breakable_info
+					end
 				end
+			end
+			if {ot_rpos: like replayed_position} rpos then
+				Result := ot_rpos
+			else
+				Result := [0, 0]
 			end
 		end
 
-	left_step: ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	left_step: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Record between current and previous step
 			--| also move replayed cursors
 		require
@@ -885,22 +917,28 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			end
 			if not l_steps.before then
 				if l_steps.item then --| Value
-					value_records.move (-1)
-					create Result.make (1)
-					check value_records /= Void and then not value_records.before end
-					Result.force (value_records.item)
-					debug ("RT_DBG_REPLAY")
-						dtrace ("VALUE ")
-						dtrace (value_records.index.out + "/" + value_records.count.out )
+					check value_records_attached: value_records /= Void end
+					if {vrecs: like value_records} value_records then
+						vrecs.move (-1)
+						create Result.make (1)
+						check value_records_not_before: not vrecs.before end
+						Result.force (vrecs.item)
+						debug ("RT_DBG_REPLAY")
+							dtrace ("VALUE ")
+							dtrace (vrecs.index.out + "/" + vrecs.count.out )
+						end
 					end
 				else --| call
-					call_records.move (-1)
-					debug ("RT_DBG_REPLAY")
-						dtrace ("CALL ")
-						dtrace (call_records.index.out + "/" + call_records.count.out )
+					check call_records_attached: call_records /= Void end
+					if {crecs: like call_records} call_records then
+						crecs.move (-1)
+						debug ("RT_DBG_REPLAY")
+							dtrace ("CALL ")
+							dtrace (crecs.index.out + "/" + crecs.count.out )
+						end
+						check call_records_not_before: not crecs.before end
+						Result := changes_between (crecs.item, Void)
 					end
-					check call_records /= Void and then not call_records.before end
-					Result := changes_between (call_records.item, Void)
 				end
 			end
 			debug ("RT_DBG_REPLAY")
@@ -934,11 +972,17 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			else
 				if not l_steps.after then
 					if l_steps.item then
-						check value_records /= Void and then not value_records.after end
-						value_records.move (+1)
+						check value_records_attached: value_records /= Void end
+						if {vrecs: like value_records} value_records then
+							check not vrecs.after end
+							vrecs.move (+1)
+						end
 					else
-						check call_records /= Void and then not call_records.after end
-						call_records.move (+1)
+						check call_records_attached: call_records /= Void end
+						if {crecs: like call_records} call_records then
+							check not crecs.after end
+							crecs.move (+1)
+						end
 					end
 				end
 				l_steps.move (+1)
@@ -1004,15 +1048,15 @@ feature -- debug
 			l_steps: like steps
 			i: INTEGER
 			v,c: INTEGER
-			val_cursor: CURSOR
-			call_cursor: CURSOR
+			val_cursor: ?CURSOR
+			call_cursor: ?CURSOR
 			l_values: like value_records
 			l_calls: like call_records
 		do
 			l_steps := steps
 			l_values := value_records
 			l_calls := call_records
-			if {cursor: CURSOR} l_steps.cursor then
+			if {steps_cursor: CURSOR} l_steps.cursor then
 				from
 					i := l_steps.index
 					v := 0
@@ -1063,13 +1107,13 @@ feature -- debug
 					print ("%N")
 					l_steps.forth
 				end
-				if val_cursor /= Void then
+				if l_values /= Void and val_cursor /= Void then
 					l_values.go_to (val_cursor)
 				end
-				if call_cursor /= Void then
+				if l_calls /= Void and then call_cursor /= Void then
 					l_calls.go_to (call_cursor)
 				end
-				l_steps.go_to (cursor)
+				l_steps.go_to (steps_cursor)
 			end
 		end
 

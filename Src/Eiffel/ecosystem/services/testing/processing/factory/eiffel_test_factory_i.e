@@ -16,7 +16,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_FACTORY_I [G -> !EIFFEL_TEST_CONFIGURATION_I]
+	EIFFEL_TEST_FACTORY_I [G -> EIFFEL_TEST_CONFIGURATION_I]
 
 inherit
 	EIFFEL_TEST_PROCESSOR_I

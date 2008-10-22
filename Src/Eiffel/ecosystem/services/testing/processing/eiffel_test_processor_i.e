@@ -41,7 +41,7 @@ feature -- Access
 			result_available: Result.is_project_initialized
 		end
 
-	argument: !ANY
+	argument: ANY
 			-- Argument with which `Current' has been launched
 		require
 			usable: is_interface_usable
@@ -92,9 +92,8 @@ feature -- Status report
 			-- Has `Current' completet its task?
 		require
 			usable: is_interface_usable
+			running: is_running
 		deferred
-		ensure
-			result_implies_idle: Result implies is_idle
 		end
 
 feature -- Status report
@@ -103,14 +102,13 @@ feature -- Status report
 			-- Is `Current' in a state where it is waiting to continue with its task?
 		require
 			usable: is_interface_usable
+			running: is_running
 		deferred
-		ensure
-			result_implies_running: Result implies is_running
 		end
 
 feature -- Query
 
-	frozen is_valid_argument (a_arg: !ANY; a_test_suite: like test_suite): BOOLEAN
+	frozen is_valid_argument (a_arg: like argument; a_test_suite: like test_suite): BOOLEAN
 			-- Is `an_arg' a valid argument to start a task for `a_test_suite'?
 		require
 			usable: is_interface_usable
@@ -191,10 +189,12 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			-- Terminate current task.
 		require
 			usable: is_interface_usable
-			done: is_finished
+			running: is_running
+			finished: is_finished
+			idle: is_idle
 		deferred
 		ensure
-			stopped: not is_running
+			running: not is_running
 		end
 
 feature {NONE} -- Status setting

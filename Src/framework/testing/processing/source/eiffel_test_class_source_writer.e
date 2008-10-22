@@ -22,16 +22,18 @@ feature -- Access
 			Result := << >>
 		end
 
-	root_feature_name: !STRING = "make"
-			-- <Precursor>
+	root_feature_name: !STRING
+			-- Name for root feature
+		deferred
+		end
 
 feature {NONE} -- Access
 
 	stream: ?EIFFEL_TEST_INDENTING_SOURCE_WRITER
 
-feature {NONE} -- Status report
+feature -- Status report
 
-	is_stream_valid: BOOLEAN
+	is_writing: BOOLEAN
 			-- Is `stream' attached and writable?
 		do
 			Result := stream /= Void and then stream.is_open_write
@@ -45,11 +47,11 @@ feature {NONE} -- Output
 	put_indexing is
 			-- Append indexing clause.
 		require
-			stream_valid: is_stream_valid
+			stream_valid: is_writing
 		do
 			stream.put_line ("indexing%N")
 			stream.indent
-			stream.put_line ("description: %"Test interpreter root class%"")
+			stream.put_line ("description: %"Testing tool internal root class%"")
 			stream.put_line ("author: %"Testing tool%"")
 			stream.dedent
 			stream.put_line ("")
@@ -58,7 +60,7 @@ feature {NONE} -- Output
 	put_class_header is
 			-- Append cdd interpreter class header.
 		require
-			stream_valid: is_stream_valid
+			stream_valid: is_writing
 		local
 			l_ancs: ARRAY [!STRING]
 			l_root: ?STRING
@@ -92,15 +94,19 @@ feature {NONE} -- Output
 				stream.indent
 				stream.put_line (l_root)
 				stream.dedent
+				stream.put_line ("")
+				stream.put_line ("feature {NONE} -- Initialization")
+				stream.put_line ("")
+			else
+				stream.put_line ("feature -- Test routines")
+				stream.put_line ("")
 			end
-			stream.put_line ("feature")
-			stream.put_line ("")
 		end
 
 	put_class_footer is
 			-- Append class footer
 		require
-			stream_valid: is_stream_valid
+			stream_valid: is_writing
 		do
 			stream.put_line ("end")
 			stream.put_line ("")

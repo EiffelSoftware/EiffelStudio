@@ -26,6 +26,9 @@ feature -- Access
 			Result := << "EQA_EVALUATOR" >>
 		end
 
+	root_feature_name: !STRING = "make"
+			-- <Precursor>
+
 feature -- Basic operations
 
 	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: ?DS_LINEAR [!EIFFEL_TEST_I]) is
@@ -61,6 +64,7 @@ feature -- Basic operations
 						stream.put_line (a_test.name)
 					end)
 			put_class_footer
+			stream := Void
 		end
 
 feature {NONE} -- Implementation
@@ -68,7 +72,7 @@ feature {NONE} -- Implementation
 	put_query (a_name: !STRING; a_result: !STRING; a_list: ?DS_LINEAR [!EIFFEL_TEST_I]; a_callback: !PROCEDURE [ANY, TUPLE [t: !EIFFEL_TEST_I; i: NATURAL]])
 			-- Print `test_name' routine to `stream'.
 		require
-			stream_valid: is_stream_valid
+			stream_valid: is_writing
 		local
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
 			i: NATURAL

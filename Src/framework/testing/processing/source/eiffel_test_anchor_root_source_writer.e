@@ -22,6 +22,9 @@ feature -- Access
 			Result := "TEST_CLASS_ANCHOR_ROOT"
 		end
 
+	root_feature_name: !STRING = "make"
+			-- <Precursor>
+
 feature -- Basic operations
 
 	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: !DS_LINEAR [!EIFFEL_CLASS_I])
@@ -34,6 +37,7 @@ feature -- Basic operations
 			put_class_header
 			put_anchor_routine (a_list)
 			put_class_footer
+			stream := Void
 		end
 
 feature {NONE} -- Implementation
@@ -41,7 +45,7 @@ feature {NONE} -- Implementation
 	put_anchor_routine (a_list: !DS_LINEAR [!EIFFEL_CLASS_I])
 			--
 		require
-			stream_valid: is_stream_valid
+			stream_valid: is_writing
 		local
 			l_type: TYPE [ANY]
 		do

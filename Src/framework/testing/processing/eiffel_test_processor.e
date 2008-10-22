@@ -74,11 +74,10 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 	frozen stop is
 			-- <Precursor>
 		do
+			stop_process
 			is_idle := False
 			is_stop_requested := False
-			stop_process
 		end
-
 
 feature {NONE} -- Status setting
 
@@ -115,6 +114,7 @@ feature {NONE} -- Status setting
 	proceed_process is
 			-- Proceed with actual task
 		require
+			running: is_running
 			not_idle: not is_idle
 		deferred
 		end
@@ -122,7 +122,8 @@ feature {NONE} -- Status setting
 	stop_process is
 			-- Stop task
 		require
-			not_idle: not is_idle
+			running: is_running
+			finished: is_finished
 		deferred
 		ensure
 			not_running: not is_running

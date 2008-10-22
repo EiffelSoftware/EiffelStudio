@@ -596,11 +596,13 @@ feature {NONE} -- Event handler
 		local
 			d: like data_from_item
 		do
-			if {gf: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
-			else
-				d := data_from_item (a_item)
-				if {ef: E_FEATURE} d  then
-					create {FEATURE_STONE} Result.make (ef)
+			if not ev_application.ctrl_pressed then
+				if {gf: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
+				else
+					d := data_from_item (a_item)
+					if {ef: E_FEATURE} d  then
+						create {FEATURE_STONE} Result.make (ef)
+					end
 				end
 			end
 		end
@@ -648,9 +650,20 @@ feature {NONE} -- Event handler
 			-- Target `features_tool' to `ef'.
 		require
 			ef_not_void: ef /= Void
+		local
+			l_stone: FEATURE_STONE
 		do
-			if a_button = 1 and then {l_ef: E_FEATURE} ef then
-				nagivate_to_feature (l_ef)
+			if {l_ef: E_FEATURE} ef then
+				if a_button = 1 then
+					nagivate_to_feature (l_ef)
+				elseif a_button = 3 then
+					if ev_application.ctrl_pressed then
+						create l_stone.make (ef)
+						if l_stone /= Void and then l_stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+						end
+					end
+				end
 			end
 		end
 

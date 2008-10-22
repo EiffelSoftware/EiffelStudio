@@ -1,0 +1,11 @@
+test_name 	 attached-formal-constraint
+test_description Attachment status of a formal generic should be taken into account when checking conformance to the constraint type.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

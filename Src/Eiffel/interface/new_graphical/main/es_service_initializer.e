@@ -88,16 +88,18 @@ feature {NONE} -- Test suite extension
 			l_comp: ES_EIFFEL_TEST_COMPILATION_LAUNCHER
 			l_bg_executor: EIFFEL_TEST_BACKGROUND_EXECUTOR
 			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
-			l_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]
+
+			l_extractor: EIFFEL_TEST_EXTRACTOR
 		do
 			create l_comp
 			create l_bg_executor.make_with_launcher (l_comp)
-			l_type ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
-			a_service.processor_registrar.register (l_bg_executor, l_type)
+			a_service.processor_registrar.register (l_bg_executor, {EIFFEL_TEST_BACKGROUND_EXECUTOR_I})
 
 			create l_dbg_executor.make_with_launcher (create {ES_EIFFEL_TEST_DEBUGGER_LAUNCHER}, l_comp)
-			l_type ?= {EIFFEL_TEST_DEBUGGER_I}
-			a_service.processor_registrar.register (l_dbg_executor, l_type)
+			a_service.processor_registrar.register (l_dbg_executor, {EIFFEL_TEST_DEBUGGER_I})
+
+			create l_extractor.make
+			a_service.processor_registrar.register (l_extractor, {EIFFEL_TEST_EXTRACTOR_I})
 		end
 
 feature {NONE} -- Factory

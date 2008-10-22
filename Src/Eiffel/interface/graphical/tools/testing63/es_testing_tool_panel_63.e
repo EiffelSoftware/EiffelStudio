@@ -31,6 +31,20 @@ inherit
 			on_processor_stopped
 		end
 
+	DEBUGGER_OBSERVER
+		redefine
+			on_application_paused,
+			on_application_exited,
+			on_application_stopped,
+			on_application_resumed,
+			on_debugging_terminated
+		end
+
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
+
 	ES_HELP_CONTEXT
 		export
 			{NONE} all
@@ -155,6 +169,8 @@ feature {NONE} -- Initialization: widget status
 			initialize_tool_bar
 			initialize_view_bar
 			update_run_labels
+			update_extract_button
+			attach_to_debugger (debugger_manager)
 		end
 
 	initialize_tool_bar
@@ -246,6 +262,9 @@ feature {NONE} -- Access: buttons
 
 	stop_button: !SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
+
+	extract_button: !SD_TOOL_BAR_BUTTON
+			-- Button for extracting new tests from a running application
 
 	clear_filter_button: !SD_TOOL_BAR_BUTTON
 			-- Button for clearing any filter
@@ -423,7 +442,7 @@ feature {NONE} -- Status setting: stones
 			end
 		end
 
-feature {NONE} -- Status settings: labels
+feature {NONE} -- Status settings: widgets
 
 	update_run_labels
 			-- Update text in `runs_label' and `errors_label'.
@@ -463,7 +482,17 @@ feature {NONE} -- Status settings: labels
 			end
 		end
 
-feature {NONE} -- Events: buttons
+	update_extract_button
+			-- Update `extract_button' sensitivity.
+		do
+			if debugger_manager.is_debugging and then debugger_manager.application.is_running and debugger_manager.application.is_stopped then
+				extract_button.enable_sensitive
+			else
+				extract_button.disable_sensitive
+			end
+		end
+
+feature {NONE} -- Events: test execution
 
 	on_run_current (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user presses `run_button' or `debug_button' directly.
@@ -574,6 +603,21 @@ feature {NONE} -- Events: buttons
 			end
 		end
 
+feature {NONE} -- Events: test generation
+
+	on_extract
+			-- Called when user click on `extract_button'.
+		local
+			l_factory: EIFFEL_TEST_FACTORY_I [EIFFEL_TEST_CONFIGURATION_I]
+			l_test_suite: EIFFEL_TEST_SUITE_S
+		do
+			if test_suite.is_service_available then
+				l_test_suite := test_suite.service
+				l_factory := l_test_suite.factory ({EIFFEL_TEST_EXTRACTOR_I})
+				l_test_suite.launch_processor (l_factory, create {EIFFEL_TEST_CONFIGURATION}, False)
+			end
+		end
+
 feature {NONE} -- Events: labels
 
 	on_run_label_select
@@ -664,6 +708,38 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			end
  		end
 
+feature {DEBUGGER_MANAGER} -- Events: debugger
+
+	on_application_paused (a_dbg: DEBUGGER_MANAGER)
+			-- <Precursor>
+		do
+			update_extract_button
+		end
+
+	on_application_exited (a_dbg: DEBUGGER_MANAGER)
+			-- <Precursor>
+		do
+			update_extract_button
+		end
+
+	on_application_stopped (a_dbg: DEBUGGER_MANAGER)
+			-- <Precursor>
+		do
+			update_extract_button
+		end
+
+	on_application_resumed (a_dbg: DEBUGGER_MANAGER)
+			-- <Precursor>
+		do
+			update_extract_button
+		end
+
+	on_debugging_terminated (a_dbg: DEBUGGER_MANAGER)
+			-- <Precursor>
+		do
+			update_extract_button
+		end
+
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
 	on_item_double_press (a_item: !EIFFEL_TEST_I)
@@ -700,7 +776,7 @@ feature {NONE} -- Factory
 		local
 			l_menu: EV_MENU
 		do
-			create Result.make (6)
+			create Result.make (7)
 
 			create wizard_button.make
 			wizard_button.set_text ("New test")
@@ -771,6 +847,11 @@ feature {NONE} -- Factory
 			Result.force_last (stop_button)
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+			create extract_button.make
+			extract_button.set_text ("EXT")
+			register_action (extract_button.select_actions, agent on_extract)
+			Result.force_last (extract_button)
 		end
 
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -780,7 +861,7 @@ feature {NONE} -- Factory
 			l_box: EV_HORIZONTAL_BOX
 			l_pixmap: EV_PIXMAP
 		do
-			create Result.make (5)
+			create Result.make (4)
 
 				-- Runs
 			create l_vbox
@@ -804,9 +885,9 @@ feature {NONE} -- Factory
 			l_vbox.extend (l_box)
 			l_vbox.disable_item_expand (l_box)
 			l_vbox.extend (create {EV_CELL})
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Errors
 			create l_vbox
@@ -829,9 +910,7 @@ feature {NONE} -- Factory
 			l_vbox.extend (l_box)
 			l_vbox.disable_item_expand (l_box)
 			l_vbox.extend (create {EV_CELL})
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
-
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 		end
 
 feature {NONE} -- Internationalization

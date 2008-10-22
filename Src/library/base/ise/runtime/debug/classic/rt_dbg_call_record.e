@@ -207,6 +207,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
 			Result := {p: like parent} parent and then p.has_call_record (c)
 		end
 
+	is_last_call_record (c: !like Current): BOOLEAN
+			-- Is `c' the last call record of `Current'?
+		do
+			Result := {crecs: like call_records} call_records and then not crecs.is_empty and then crecs.last = c
+		end
+
 	has_call_record (c: !like Current): BOOLEAN
 			-- Is `c' contained by `call_records' ?
 		do
@@ -232,18 +238,19 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		require
 			record_parented_to_current: c.parent = Current
 			not_flat: not is_flat
-			valid_records_cursor: value_records /= Void implies value_records.after
+			is_ready_to_add_call_record: is_ready_to_add_call_record
 		local
-			l_call_records: like call_records
+			crecs: !like call_records
 		do
-			l_call_records := call_records
-			if l_call_records = Void then
-				create l_call_records.make (5)
-				call_records := l_call_records
+			if {ot_crecs: like call_records} call_records then
+				crecs := ot_crecs
+			else
+				create crecs.make (5)
+				call_records := crecs
 			end
-			l_call_records.force (c)
-			l_call_records.finish
-			l_call_records.move (+1) --| point `after' when not replaying
+			crecs.force (c)
+			crecs.finish
+			crecs.move (+1) --| point `after' when not replaying
 			register_call_step
 			if depth = 0 then
 				depth := c.depth - 1
@@ -262,7 +269,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			-- Add value record
 		require
 			is_not_flat: not is_flat
-			valid_records_cursor: value_records /= Void implies value_records.after
+			is_ready_to_add_value_record: is_ready_to_add_value_record
 		local
 			l_value_records: like value_records
 		do
@@ -614,6 +621,18 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 
+	is_ready_to_add_value_record: BOOLEAN
+			-- Is Current's structures in valid context to add value record?
+		do
+			Result := {vrecs: like value_records} value_records implies vrecs.after
+		end
+
+	is_ready_to_add_call_record: BOOLEAN
+			-- Is Current's structures in valid context to add call record?
+		do
+			Result := {crecs: like call_records} call_records implies crecs.after
+		end
+
 	record_count_but (c: ?like Current): INTEGER
 			-- Number of records contained by Current and sub calls
 			-- apart from the records contained by `c' (and sub calls)
@@ -949,9 +968,12 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				end
 			end
 		ensure
-			value_records_cursor_valid: value_records /= Void implies not value_records.before
-			call_records_cursor_valid: call_records /= Void implies not call_records.before
-			steps_before_implies_record_first: steps.before implies ((value_records = Void or else value_records.isfirst) and (call_records = Void or else call_records.isfirst))
+			value_records_cursor_valid: {vrecs2: like value_records} value_records implies not vrecs2.before
+			call_records_cursor_valid:  {crecs2: like call_records} call_records   implies not crecs2.before
+			steps_before_implies_record_first: steps.before implies (
+						(not {vrecs3: like value_records} value_records or else vrecs3.isfirst) and
+						(not {crecs3: like call_records} call_records   or else crecs3.isfirst)
+					)
 		end
 
 	revert_left_step
@@ -991,8 +1013,8 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				dtrace_indent (depth); dtrace ("revert_left_step -end-%N")
 			end
 		ensure
-			steps.after implies (call_records /= Void implies call_records.after) and
-							(value_records /= Void  implies value_records.after)
+			steps.after implies ({crecs2: like call_records} call_records implies crecs2.after) and
+							({vrecs2: like value_records} value_records  implies vrecs2.after)
 		end
 
 feature {NONE} -- Steps implementation
@@ -1157,7 +1179,7 @@ feature -- debug
 		end
 
 invariant
-	non_empty_call_records: call_records /= Void implies call_records.count > 0
+	non_empty_call_records: {crecs: like call_records} call_records implies not crecs.is_empty
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
 indexing

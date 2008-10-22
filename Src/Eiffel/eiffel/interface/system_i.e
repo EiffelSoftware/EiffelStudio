@@ -2710,19 +2710,19 @@ feature -- IL code generation
 			il_generator.generate
 			if (in_final_mode or freeze) and then externals.count > 0 then
 				externals.freeze
+				freezing_occurred := True
 				old_remover_off := remover_off
 				remover_off := True
+
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
 				else
 					create {WBENCH_MAKER} makefile_generator.make
 				end
 				open_log_files
-				freezing_occurred := True
-				externals.generate_il
+				externals.generate_il (makefile_generator)
 				close_log_files
 
-				makefile_generator.generate_il
 				remover_off := old_remover_off
 
 				if not in_final_mode then

@@ -305,7 +305,7 @@ feature -- Actual generation
 				-- Generate main /bin/sh preamble
 			generate_preamble
 				-- Customize main Makefile macros
-			generate_customization
+			generate_customization (False)
 				-- How to produce a .o from a .c file
 			generate_compilation_rule
 
@@ -341,7 +341,7 @@ feature -- Actual generation
 			cecil_rt_basket.wipe_out
 		end
 
-	generate_il is
+	generate_il (has_il_cpp: BOOLEAN) is
 			-- Generate make files
 		local
 			basket: LINKED_LIST [STRING]
@@ -358,7 +358,7 @@ feature -- Actual generation
 				-- Generate main /bin/sh preamble
 			generate_preamble
 				-- Customize main Makefile macros
-			generate_customization
+			generate_customization (has_il_cpp)
 				-- How to produce a .o from a .c file
 			generate_compilation_rule
 
@@ -417,7 +417,7 @@ feature -- Sub makefile generation
 						-- Generate main /bin/sh preamble
 					generate_sub_preamble (packet_name (sub_dir, i))
 						-- Customize main Makefile macros
-					generate_customization
+					generate_customization (False)
 						-- How to produce a .o from a .c file
 					generate_compilation_rule
 						-- Generate object list.
@@ -534,7 +534,7 @@ feature -- Generation, Header
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 
-	generate_customization is
+	generate_customization (has_il_cpp: BOOLEAN) is
 			-- Customize generic Makefile
 		do
 			generate_include_path
@@ -671,10 +671,15 @@ feature -- Generation, Header
 				make_file.put_string ("IL_SYSTEM = lib")
 				make_file.put_string (system_name)
 				make_file.put_string ("$shared_suffix%N")
-				make_file.put_string ("IL_OBJECT = lib")
+				make_file.put_string ("IL_OBJECTS = lib")
 				make_file.put_string (system_name)
-				make_file.put_string (".$obj_file_ext%N")
-				make_file.put_string ("IL_RESOURCE = ")
+				make_file.put_string (".$obj_file_ext")
+				if has_il_cpp then
+					make_file.put_string (" lib")
+					make_file.put_string (system_name)
+					make_file.put_string ("_cpp.$obj_file_ext")
+				end
+				make_file.put_string ("%NIL_RESOURCE = ")
 				make_file.put_string (system_name)
 				make_file.put_new_line
 			end
@@ -883,7 +888,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("all: $(IL_SYSTEM)")
 			make_file.put_new_line
 
-			make_file.put_string ("OBJECTS= $(IL_OBJECT)")
+			make_file.put_string ("OBJECTS= $(IL_OBJECTS)")
 			make_file.put_new_line
 			make_file.put_new_line
 

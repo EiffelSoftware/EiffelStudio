@@ -232,16 +232,13 @@ feature -- dragging
 
 	update is
 			-- Update current feature stone.
-		local
-			body_as: FEATURE_AS
 		do
 			if internal_start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
-				body_as := e_feature.ast
-				if body_as /= Void then
-					internal_start_position := body_as.start_position
-					internal_end_position := body_as.end_position
-					internal_start_line_number := body_as.start_location.line
+				if not e_feature.is_il_external and then {l_body_as: FEATURE_AS} e_feature.ast then
+					internal_start_position := l_body_as.start_position
+					internal_end_position := l_body_as.end_position
+					internal_start_line_number := l_body_as.start_location.line
 				else
 					internal_start_position := 1
 					internal_end_position := 1

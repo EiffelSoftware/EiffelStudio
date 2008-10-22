@@ -668,8 +668,9 @@ feature -- Monitoring
 							p := p.parent
 						end
 						check
-							p_not_void_and_last_of_parent: p /= Void and then
-								bt /= Void and then bt.call_records /= Void and then bt.call_records.last = p
+							p_not_void_and_last_of_parent: 	p /= Void and then
+															bt /= Void and then
+															bt.is_last_call_record (p)
 						end
 						n := bt.record_count_but (p)
 						p.remove_parent

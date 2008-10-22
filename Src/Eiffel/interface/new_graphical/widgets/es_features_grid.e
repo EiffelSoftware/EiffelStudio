@@ -77,6 +77,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_SHARED_FORMAT_TABLES
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -455,6 +460,7 @@ feature -- Tree construction
 			retried: BOOLEAN
 			l_dev_win: EB_DEVELOPMENT_WINDOW
 			l_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
+			l_class: DOTNET_CLASS_AS
 		do
 			if not retried then
 				last_class := a_class.lace_class
@@ -464,9 +470,12 @@ feature -- Tree construction
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_dev_win := Window_manager.last_focused_development_window
 				if l_dev_win /= Void then
-					l_clauses := l_dev_win.get_feature_clauses (a_class.name)
+					if consumed_types.has (last_class.name) then
+						create l_class.make (consumed_types.item (last_class.name), True, last_class)
+						l_clauses := l_class.features
+					end
 				end
-				if l_clauses.is_empty then
+				if l_clauses = Void then
 					extend_message_item (Interface_names.l_compile_first)
 				else
 					from

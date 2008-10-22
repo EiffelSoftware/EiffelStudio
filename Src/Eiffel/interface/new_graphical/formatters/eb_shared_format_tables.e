@@ -244,6 +244,25 @@ feature {NONE} -- Attributes .NET
 			create Result.make (History_size)
 		end
 
+	consumed_type (a_class: CLASS_I): CONSUMED_TYPE is
+			-- Fetch associated consumed type in `consumed_types' and compute it if not found.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_consumed_types: like consumed_types
+		do
+			l_consumed_types := consumed_types
+			l_consumed_types.search (a_class.name)
+			if l_consumed_types.found then
+				Result := l_consumed_types.found_item
+			elseif {l_ext_class: EXTERNAL_CLASS_I} a_class then
+				Result := l_ext_class.external_consumed_type
+				if Result /= Void then
+					l_consumed_types.put (Result, a_class.name)
+				end
+			end
+		end
+
 	flatshort_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING] is
 			-- Table of last .NET flat short formats.
 		once

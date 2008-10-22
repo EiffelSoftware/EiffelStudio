@@ -314,7 +314,7 @@ feature {NONE} -- Implementation functions
 		local
 			l_selection: TUPLE [pos_start, pos_end: INTEGER]
 		do
-			if class_text_exists then
+			if class_text_exists or else dotnet_class then
 				if feature_stone /= Void and not develop_window.feature_stone_already_processed then  -- and not same_class then
 					conv_ferrst ?= feature_stone
 					if conv_ferrst /= Void then
@@ -471,22 +471,24 @@ feature {NONE} -- Implementation functions
 			if not class_text_exists then
 					--| Disable the textual formatter.
 				managed_main_formatters.first.disable_sensitive
-				if not text_loaded then
-					from
-						managed_main_formatters.start
-					until
-						managed_main_formatters.after
-					loop
-							--| Ted: Text might be changed
-						managed_main_formatters.item.set_stone (new_class_stone)
-						managed_main_formatters.forth
-					end
-					if not dotnet_class then
-						managed_main_formatters.i_th (2).execute
-					end
-				else
-					if not dotnet_class then
-						managed_main_formatters.i_th (2).enable_select
+				if not same_class then
+					if not text_loaded then
+						from
+							managed_main_formatters.start
+						until
+							managed_main_formatters.after
+						loop
+								--| Ted: Text might be changed
+							managed_main_formatters.item.set_stone (new_class_stone)
+							managed_main_formatters.forth
+						end
+						if not dotnet_class then
+							managed_main_formatters.i_th (2).execute
+						end
+					else
+						if not dotnet_class then
+							managed_main_formatters.i_th (2).enable_select
+						end
 					end
 				end
 			else

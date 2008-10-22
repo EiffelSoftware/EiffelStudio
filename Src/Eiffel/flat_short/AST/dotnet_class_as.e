@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_consumed: CONSUMED_TYPE; a_flag: BOOLEAN; a_class: CLASS_I) is
+	make (a_consumed: CONSUMED_TYPE; a_local_features_only: BOOLEAN; a_class: CLASS_I) is
 		require
 			a_consumed_not_void: a_consumed /= Void
 			a_classi_not_void: a_class /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			else
 				class_i ?= a_class
 			end
-			set_current_class_only (a_flag)
+			set_current_class_only (a_local_features_only)
 			initialize (a_consumed)
 		ensure
 			consumed_type_set: consumed_type /= Void
@@ -260,6 +260,11 @@ feature {NONE} -- Initialization
 		ensure
 			ancestors_set: ancestors /= Void
 		end
+
+feature -- Access
+
+	features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
+			-- Class features by category.
 
 feature {NONE} -- Access
 
@@ -580,9 +585,6 @@ feature {NONE} -- Implementation
 
 	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			-- Class ancestors.
-
-	features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
-			-- Class features by category.
 
 	property_setting_features, hidden_property_setting_features,
 	property_features, hidden_property_features,

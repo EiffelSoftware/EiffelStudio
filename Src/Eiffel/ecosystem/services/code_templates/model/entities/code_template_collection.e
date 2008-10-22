@@ -140,7 +140,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_template_collection (({!CODE_TEMPLATE_COLLECTION}) #? Current)
+			a_visitor.process_code_template_collection (Current)
 		end
 
 ;indexing

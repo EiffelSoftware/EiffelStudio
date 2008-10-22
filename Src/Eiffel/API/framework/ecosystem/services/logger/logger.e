@@ -194,7 +194,7 @@ feature {EVENT_LIST_S} -- Event handlers
 				l_cache.force_last (l_log_item)
 			end
 		ensure then
-			log_cache_has_a_event_item: (({EVENT_LIST_LOG_ITEM_I}) #? a_event_item /= Void) implies log_cache.has (({!EVENT_LIST_LOG_ITEM_I}) #? a_event_item)
+			log_cache_has_a_event_item: {i: EVENT_LIST_LOG_ITEM_I} a_event_item implies log_cache.has (i)
 		end
 
 	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
@@ -202,7 +202,7 @@ feature {EVENT_LIST_S} -- Event handlers
 		local
 			l_cache: like log_cache
 		do
-			if {l_log_item: !EVENT_LIST_LOG_ITEM_I} a_event_item then
+			if {l_log_item: EVENT_LIST_LOG_ITEM_I} a_event_item then
 				l_cache := log_cache
 				if not l_cache.is_empty then
 					if l_cache.first = a_event_item then
@@ -219,7 +219,7 @@ feature {EVENT_LIST_S} -- Event handlers
 				end
 			end
 		ensure then
-			not_log_cache_has_a_event_item: (({EVENT_LIST_LOG_ITEM_I}) #? a_event_item /= Void) implies not log_cache.has (({!EVENT_LIST_LOG_ITEM_I}) #? a_event_item)
+			not_log_cache_has_a_event_item: {i: EVENT_LIST_LOG_ITEM_I} a_event_item implies not log_cache.has (i)
 		end
 
 feature {NONE} -- Factory

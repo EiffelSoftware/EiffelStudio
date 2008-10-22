@@ -22,6 +22,11 @@ inherit
 			initialize
 		end
 
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -195,6 +200,7 @@ feature -- Element change
 			-- Format feature
 		local
 			l_feature: E_FEATURE
+			l_feature_name: STRING
 			l_is_str: BOOLEAN
 		do
 			begin
@@ -203,54 +209,64 @@ feature -- Element change
 			text_formatter.add_new_line
 			text_formatter.add_indent
 
+
 				-- Put either `frozen, deferred, infix or prefix'.
 			put_feature_qualification
 
-			l_is_str := current_feature.is_infix or current_feature.is_prefix
+			if current_feature.is_infix then
+				l_is_str := True
+				l_feature_name := infix_feature_name_with_symbol (name_of_current_feature)
+			elseif current_feature.is_prefix then
+				l_is_str := True
+				l_feature_name := prefix_feature_name_with_symbol (name_of_current_feature)
+			else
+				l_feature_name := name_of_current_feature
+			end
+
+			text_formatter.process_feature_dec_item (l_feature_name, True)
+
 			if
 				current_class /= Void and then current_class.has_feature_table and then
-				current_class.feature_table.has (name_of_current_feature)
+				current_class.feature_table.has (l_feature_name)
 			then
-				-- Feature should be clickable
-				l_feature ?= current_class.feature_table.item (name_of_current_feature).
+					-- Feature should be clickable
+				l_feature ?= current_class.feature_table.item (l_feature_name).
 					api_feature (current_class.class_id)
 			end
-			if l_is_str then
-				text_formatter.add_string ("%"")
-			end
 			if l_feature /= Void then
-				text_formatter.add_feature (l_feature, dotnet_name_of_current_feature)
 				if l_is_str then
-					text_formatter.add_string ("%"")
-				end
-				if
-					not use_dotnet_name_only and
-					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
-				then
-					text_formatter.add_char (',')
-					text_formatter.add_new_line
-					text_formatter.add_indent
-					put_feature_qualification
-					text_formatter.add_feature (l_feature, name_of_current_feature)
+					text_formatter.process_symbol_text (ti_double_quote)
+					text_formatter.process_operator_text (dotnet_name_of_current_feature, l_feature)
+					text_formatter.process_symbol_text (ti_double_quote)
+				else
+					text_formatter.process_feature_text (dotnet_name_of_current_feature, l_feature, False)
 				end
 			else
-				text_formatter.process_local_text (dotnet_name_of_current_feature)
 				if l_is_str then
-					text_formatter.add_string ("%"")
+					text_formatter.process_symbol_text (ti_double_quote)
+					text_formatter.process_local_text (dotnet_name_of_current_feature)
+					text_formatter.process_symbol_text (ti_double_quote)
+				else
+					text_formatter.process_local_text (dotnet_name_of_current_feature)
 				end
-				if
-					not use_dotnet_name_only and
-					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
-				then
-					text_formatter.add_char (',')
-					text_formatter.add_new_line
-					text_formatter.add_indent
-					put_feature_qualification
+			end
+			if
+				not use_dotnet_name_only and
+				not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
+			then
+				text_formatter.add_char (',')
+				text_formatter.add_new_line
+				text_formatter.add_indent
+				put_feature_qualification
+				if l_feature /= Void then
+					text_formatter.add_feature (l_feature, name_of_current_feature)
+				else
 					text_formatter.process_local_text (name_of_current_feature)
 				end
 			end
 			put_signature
 			put_comments
+			text_formatter.process_feature_dec_item (l_feature_name, False)
 		end
 
 	put_comments is
@@ -636,14 +652,23 @@ feature {NONE} -- Element Change
 			a_feature_not_void: a_feature /= Void
 		local
 			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
+			l_name: STRING
 		do
+				-- Adapt the name of the routine we are searching to what
+				-- the CONSUMED_ENTITY expect.
+			if a_feature.is_infix or a_feature.is_prefix then
+				l_name := a_feature.alias_symbol
+			else
+				l_name := a_feature.name
+			end
+				-- Search for all entities
 			l_entities := a_consumed_type.flat_entities
 			from
 				l_entities.start
 			until
 				l_entities.after or Result /= Void
 			loop
-				if l_entities.item.eiffel_name.is_equal (a_feature.name) then
+				if l_entities.item.eiffel_name.is_equal (l_name) then
 					Result := l_entities.item
 				end
 				l_entities.forth

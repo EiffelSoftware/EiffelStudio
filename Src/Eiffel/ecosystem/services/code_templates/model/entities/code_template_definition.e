@@ -146,7 +146,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_template_definition (({!CODE_TEMPLATE_DEFINITION}) #? Current)
+			a_visitor.process_code_template_definition (Current)
 		end
 
 invariant

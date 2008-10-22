@@ -85,7 +85,7 @@ feature -- Element change
 			--
 			-- `a_text': Code template text.
 		do
-			set_tokens (({!DS_BILINEAR [!CODE_TOKEN]}) #? tokenizer.tokenize (a_text, code_factory))
+			set_tokens (tokenizer.tokenize (a_text, code_factory))
 		end
 
 feature -- Status report
@@ -103,7 +103,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_template (({!CODE_TEMPLATE}) #? Current)
+			a_visitor.process_code_template (Current)
 		end
 
 feature -- Basic operations

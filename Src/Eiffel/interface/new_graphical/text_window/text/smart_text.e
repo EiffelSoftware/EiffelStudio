@@ -285,7 +285,7 @@ feature -- Search
 			if has_selection then
 				disable_selection
 			end
-			if click_and_complete_is_active then --and then click_tool.is_ready then
+			if click_tool_enabled then --and then click_tool.is_ready then
 				low := a_name.as_lower
 				from
 					ln ?= first_line

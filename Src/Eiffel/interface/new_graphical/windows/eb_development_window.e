@@ -1315,39 +1315,13 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 			is_dropping_on_editor := a_dropping
 		end
 
-feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
-
-	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
-			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed
-			-- type pertinent to 'a_features'.
-		require
-			a_features_not_void: a_features /= Void
-		do
-			if feature_clauses = Void then
-				create feature_clauses.make (5)
-			end
-			feature_clauses.put (a_features, a_type)
-		end
+feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
 	set_feature_locating (a_locating: BOOLEAN) is
 			-- Set `feature_locating' with `a_locating'.
 		do
 			feature_locating := a_locating
 		end
-
-	get_feature_clauses (a_type: STRING): ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]] is
-			-- Get list of feature clauses relevant to .NET type with name 'a_type'.
-		require
-			a_type_not_void: a_type /= Void
-			has_type_clauses: feature_clauses.has (a_type)
-		do
-			Result := feature_clauses.item (a_type)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	feature_clauses: HASH_TABLE [ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]], STRING]
-			-- List of features clauses for Current window hashed by the .NET name of the consumed_type.
 
 	feature_locating: BOOLEAN
 			-- Is feature tool locating a feature?
@@ -1488,22 +1462,6 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 	is_destroying: BOOLEAN
 			-- Is `current' being currently destroyed?
 
-	on_cursor_moved is
-			-- The cursor has moved, reflect the change in the status bar.
-			-- And reflect location editing in the text in features tool and address bar.
-		do
-			refresh_cursor_position
-			if context_refreshing_timer = Void then
-				create context_refreshing_timer.make_with_interval (100)
-				context_refreshing_timer.actions.extend (agent refresh_context_info)
-			end
-			if feature_locating then
-				context_refreshing_timer.set_interval (0)
-			else
-				context_refreshing_timer.set_interval (100)
-			end
-		end
-
 	all_editor_closed is
 			-- All editor closed.
 		do
@@ -1636,50 +1594,44 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			l_names: EIFFEL_LIST [FEATURE_NAME]
 			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
 		do
-			if not feat_as.is_il_external then
-				if not managed_main_formatters.first.selected then
-					if feat_as.ast /= Void then
-						editors_manager.current_editor.find_feature_named (feat_as.name)
-					end
-				else
-					if displayed_class.is_compiled then
-							-- We need to adapt E_FEATURE to the current displayed class
-							-- since we could manipulate the E_FEATURE of a descendant class
-							-- whose name is different from its definition in the displayed_class.
-							-- Fixes bug#11330.
-						l_feature := feat_as.ancestor_version (displayed_class.compiled_class)
-						if l_feature = Void then
-								-- It should not happen, but maybe the system is in a very unstable state.
-							l_feature := feat_as
-						end
-					else
+			if not managed_main_formatters.first.selected then
+					-- We are either in clickable mode or looking at a .NET class.
+				editors_manager.current_editor.find_feature_named (feat_as.name)
+			else
+				if displayed_class.is_compiled then
+						-- We need to adapt E_FEATURE to the current displayed class
+						-- since we could manipulate the E_FEATURE of a descendant class
+						-- whose name is different from its definition in the displayed_class.
+						-- Fixes bug#11330.
+					l_feature := feat_as.ancestor_version (displayed_class.compiled_class)
+					if l_feature = Void then
+							-- It should not happen, but maybe the system is in a very unstable state.
 						l_feature := feat_as
 					end
-					l_feat_as := l_feature.ast
-					if l_feat_as /= Void then
-						from
-							l_names := l_feat_as.feature_names
-							l_names.start
-						until
-							l_names.after or else
-							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
-						loop
-							l_names.forth
-						end
-						if not l_names.after then
-							begin_index := l_names.item.start_position
-						else
-								-- Something wrong happened, the feature does not exist anymore.
-								-- We simply take the position of the first one.
-							begin_index := l_names.start_position
-						end
-						offset := relative_location_offset ([begin_index, 0], displayed_class)
-						editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
-					end
+				else
+					l_feature := feat_as
 				end
-			else
-					-- Nothing for .NET features for now.
-				fixme ("It should be implemented.")
+				l_feat_as := l_feature.ast
+				if l_feat_as /= Void then
+					from
+						l_names := l_feat_as.feature_names
+						l_names.start
+					until
+						l_names.after or else
+						l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
+					loop
+						l_names.forth
+					end
+					if not l_names.after then
+						begin_index := l_names.item.start_position
+					else
+							-- Something wrong happened, the feature does not exist anymore.
+							-- We simply take the position of the first one.
+						begin_index := l_names.start_position
+					end
+					offset := relative_location_offset ([begin_index, 0], displayed_class)
+					editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
+				end
 			end
 		end
 

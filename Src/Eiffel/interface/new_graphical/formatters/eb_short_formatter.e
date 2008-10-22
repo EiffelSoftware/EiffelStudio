@@ -62,7 +62,7 @@ feature {NONE} -- Properties
 	post_fix: STRING is "sho"
 			-- String symbol of the command, used as an extension when saving.
 
-	consumed_type: CONSUMED_TYPE
+	internal_consumed_type: CONSUMED_TYPE
 			-- The .NET consumed undergoing formatting.
 
 	class_i: EXTERNAL_CLASS_I
@@ -105,9 +105,9 @@ feature {NONE} -- Implementation
 					editor.handle_before_processing (false)
 					set_is_without_breakable
 					if class_i /= Void then
-						last_was_error := short_dotnet_text (consumed_type, class_i, editor.text_displayed)
+						last_was_error := short_dotnet_text (internal_consumed_type, class_i, editor.text_displayed)
 					elseif associated_class /= Void then
-						last_was_error := short_dotnet_text (consumed_type, associated_class.lace_class, editor.text_displayed)
+						last_was_error := short_dotnet_text (internal_consumed_type, associated_class.lace_class, editor.text_displayed)
 					end
 					editor.handle_after_processing
 				end
@@ -136,44 +136,26 @@ feature -- Status setting
 			-- Associate `Current' with class contained in `new_stone'.
 		local
 			a_stone: CLASSC_STONE
-			l_ext_class: EXTERNAL_CLASS_I
 		do
 			stone := new_stone
-			if new_stone /= Void and new_stone.class_i.is_external_class then
+			if new_stone /= Void and then new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				a_stone ?= new_stone
 				if
 					a_stone /= Void and then a_stone.e_class /= Void and then
 					a_stone.e_class.has_feature_table
 				then
-					-- Is compiled .NET type.
-					if consumed_types.has (a_stone.class_i.name) then
-						consumed_type := consumed_types.item (a_stone.class_i.name)
-					else
-						l_ext_class ?= a_stone.class_i
-						check
-							l_ext_class_not_void: l_ext_class /= Void
-						end
-						consumed_type := l_ext_class.external_consumed_type
-						if consumed_type /= Void then
-							consumed_types.put (consumed_type, a_stone.class_i.name)
-						end
-					end
+					internal_consumed_type := consumed_type (a_stone.class_i)
 					class_i := Void
-					set_class (a_stone.e_class)
 				else
-					l_ext_class ?= new_stone.class_i
-					check
-						l_ext_class_not_void: l_ext_class /= Void
-					end
-					consumed_type := l_ext_class.external_consumed_type
+					internal_consumed_type := consumed_type (new_stone.class_i)
 					associated_class := Void
-					set_classi (new_stone.class_i)
 				end
 			else
 				set_dotnet_mode (False)
-				Precursor {EB_CLASS_TEXT_FORMATTER} (new_stone)
+				internal_consumed_type := Void
 			end
+			Precursor {EB_CLASS_TEXT_FORMATTER} (new_stone)
 		end
 
 	set_classi (a_class: CLASS_I) is

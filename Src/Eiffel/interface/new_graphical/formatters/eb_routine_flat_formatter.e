@@ -50,29 +50,16 @@ feature -- Status setting
 
 	set_stone (new_stone: FEATURE_STONE) is
 			-- Associate `Current' with class contained in `new_stone'.
-		local
-			l_ext_class: EXTERNAL_CLASS_I
 		do
 			force_stone (new_stone)
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
-				if consumed_types.has (new_stone.class_i.name) then
-					consumed_type := consumed_types.item (new_stone.class_i.name)
-				else
-					l_ext_class ?= new_stone.class_i
-					check
-						l_ext_class_not_void: l_ext_class /= Void
-					end
-					consumed_type := l_ext_class.external_consumed_type
-					if consumed_type /= Void then
-						consumed_types.put (consumed_type, new_stone.class_i.name)
-					end
-				end
-				set_feature (new_stone.e_feature)
+				internal_consumed_type := consumed_type (new_stone.class_i)
 			else
 				set_dotnet_mode (False)
-				Precursor {EB_FEATURE_TEXT_FORMATTER} (new_stone)
+				internal_consumed_type := Void
 			end
+			Precursor {EB_FEATURE_TEXT_FORMATTER} (new_stone)
 		end
 
 feature -- Formatting
@@ -134,7 +121,7 @@ feature {NONE} -- Properties
 	post_fix: STRING is "rfl"
 			-- String symbol of the command, used as an extension when saving.
 
-	consumed_type: CONSUMED_TYPE
+	internal_consumed_type: CONSUMED_TYPE
 			-- .NET consumed type contain this feature if external.
 
 	is_dotnet_formatter: BOOLEAN is
@@ -174,7 +161,7 @@ feature {NONE} -- Implementation
 					last_was_error := rout_flat_context_text (associated_feature, editor.text_displayed)
 				else
 					set_is_without_breakable
-					last_was_error := rout_flat_dotnet_text (associated_feature, consumed_type, editor.text_displayed)
+					last_was_error := rout_flat_dotnet_text (associated_feature, internal_consumed_type, editor.text_displayed)
 				end
 				editor.handle_after_processing
 			else

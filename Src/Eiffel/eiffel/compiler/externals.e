@@ -176,18 +176,36 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_il is
+	generate_il (a_makefile_generator: MAKEFILE_GENERATOR) is
 			-- Generate C encapsulation for all calls.
+		require
+			a_makefile_generator_not_void: a_makefile_generator /= Void
+		do
+			is_cpp := False
+				-- Generate C code first and if `is_cpp' is set, then we will
+				-- generate the C++ code.
+			internal_generate_il (False)
+			if is_cpp then
+				internal_generate_il (True)
+			end
+				-- Generate Makefile
+			a_makefile_generator.generate_il (is_cpp)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_generate_il (a_for_cpp: BOOLEAN)
+			-- Generate externals which are only C externals when `a_for_cpp' is False, C++ otherwise.
 		local
 			buffer, headers, header_buffer, ext_inline_buffer: GENERATION_BUFFER
 			external_file, header_file: INDENT_FILE
 			final_mode: BOOLEAN
 			l_extension: STRING
+			l_file_name: STRING
 			l_class: CLASS_C
 			l_types: TYPE_LIST
 		do
 			from
-				is_cpp := False
 				final_mode := context.final_mode
 				buffer := context.generation_buffer
 				header_buffer := context.header_generation_buffer
@@ -200,6 +218,14 @@ feature -- Code generation
 				buffer.start_c_specific_code
 				header_buffer.put_string ("#include %"eif_eiffel.h%"")
 				header_buffer.start_c_specific_code
+
+				l_file_name := "lib" + System.name
+				if a_for_cpp then
+					l_file_name.append ("_cpp")
+					l_extension := dot_cpp
+				else
+					l_extension := dot_c
+				end
 
 				create headers.make (100)
 				headers.put_string ("#include %"eif_eiffel.h%"%N")
@@ -222,7 +248,7 @@ feature -- Code generation
 					until
 						l_types.after
 					loop
-						generate_class_il (item_for_iteration, l_class, l_types.item, buffer)
+						generate_class_il (item_for_iteration, l_class, l_types.item, a_for_cpp, buffer)
 						l_types.forth
 					end
 					buffer.put_new_line
@@ -234,19 +260,13 @@ feature -- Code generation
 			ext_inline_buffer.end_c_specific_code
 
 			create header_file.make_open_write (
-				full_file_name (final_mode, Void, "lib" + System.name, Dot_h))
+				full_file_name (final_mode, Void, l_file_name, Dot_h))
 			extern_declarations.generate_header_files (header_buffer)
 			header_buffer.put_in_file (header_file)
 			header_file.close
 
-			if is_cpp then
-				l_extension := Dot_cpp
-			else
-				l_extension := Dot_c
-			end
-
 			create external_file.make_open_write (
-				full_file_name (final_mode, Void, "lib" + System.name, l_extension))
+				full_file_name (final_mode, Void, l_file_name, l_extension))
 			headers.put_in_file (external_file)
 			ext_inline_buffer.put_in_file (external_file)
 			buffer.put_in_file (external_file)
@@ -256,11 +276,10 @@ feature -- Code generation
 			extern_declarations.wipe_out
 			buffer.clear_all
 			header_buffer.clear_all
+
 		end
 
-feature {NONE} -- Implementation
-
-	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; a_for_cpp: BOOLEAN; buffer: GENERATION_BUFFER) is
 			-- Generate C il code
 		require
 			a_s_not_void: a_s /= Void
@@ -288,11 +307,14 @@ feature {NONE} -- Implementation
 						-- the if statement in addition to the check so that in
 						-- production we do not fail, but at least when debugging
 						-- we get an exception.
-					is_cpp := is_cpp or else ext.extension.is_cpp
-					buffer.put_string ("/* ")
-					buffer.put_string (class_c.name)
-					buffer.put_string (" */")
-					ext.generate (class_type, buffer)
+					if ext.extension.is_cpp then
+						is_cpp := True
+						if a_for_cpp then
+							ext.generate (class_type, buffer)
+						end
+					elseif not a_for_cpp then
+						ext.generate (class_type, buffer)
+					end
 				else
 					a_s.remove (a_s.item_for_iteration)
 				end

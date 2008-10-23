@@ -36,31 +36,42 @@ feature {NONE} -- Implementation
 			create det_x
 			check_for_true ("anchors - 3", is_same_type (det_x, create {C}))
 
+			create y
+			check_for_true ("anchors - 4", is_same_type (y, create {C}))
+			create att_y
+			check_for_true ("anchors - 5", is_same_type (att_y, create {C}))
+			create det_y
+			check_for_true ("anchors - 6", is_same_type (det_y, create {C}))
+
 			create a_1
-			check_for_true ("anchors - 4", is_same_type (a_1, create {A [?C]}))
+			check_for_true ("anchors - 7", is_same_type (a_1, create {A [?C]}))
 			create a_2
-			check_for_true ("anchors - 5", is_same_type (a_2, create {A [?C]}))
+			check_for_true ("anchors - 8", is_same_type (a_2, create {A [?C]}))
 			create a_3
-			check_for_true ("anchors - 6", is_same_type (a_3, create {A [!C]}))
+			check_for_true ("anchors - 9", is_same_type (a_3, create {A [!C]}))
 
 			create a_4
-			check_for_true ("anchors - 7", is_same_type (a_4, create {A [!C]}))
+			check_for_true ("anchors - 10", is_same_type (a_4, create {A [!C]}))
 			create a_5
-			check_for_true ("anchors - 8", is_same_type (a_5, create {A [?C]}))
+			check_for_true ("anchors - 11", is_same_type (a_5, create {A [?C]}))
 			create a_6
-			check_for_true ("anchors - 9", is_same_type (a_6, create {A [!C]}))
+			check_for_true ("anchors - 12", is_same_type (a_6, create {A [!C]}))
 
 			create a_7
-			check_for_true ("anchors - 10", is_same_type (a_7, create {A [?C]}))
+			check_for_true ("anchors - 13", is_same_type (a_7, create {A [?C]}))
 			create a_8
-			check_for_true ("anchors - 11", is_same_type (a_8, create {A [?C]}))
+			check_for_true ("anchors - 14", is_same_type (a_8, create {A [?C]}))
 			create a_9
-			check_for_true ("anchors - 12", is_same_type (a_9, create {A [!C]}))
+			check_for_true ("anchors - 15", is_same_type (a_9, create {A [!C]}))
 		end
 
 	x: C
 	att_x: !C
 	det_x: ?C
+
+	y: like x
+	att_y: !like x
+	det_y: ?like x
 
 	test_single_generic is
 		local

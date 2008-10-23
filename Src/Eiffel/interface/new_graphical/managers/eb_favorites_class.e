@@ -17,7 +17,8 @@ inherit
 			make,
 			string_representation,
 			mouse_cursor, Xmouse_cursor,
-			refresh
+			refresh,
+			associated_stone
 		end
 
 	EB_CONSTANTS
@@ -89,9 +90,9 @@ feature -- Element change
 	refresh is
 			-- Refresh this item.
 		local
-			l_stone: like associated_class_stone
+			l_stone: like associated_stone
 		do
-			l_stone := associated_class_stone
+			l_stone := associated_stone
 			if l_stone /= Void then
 				l_stone := l_stone.synchronized_stone
 				if l_stone /= Void then
@@ -139,7 +140,7 @@ feature -- Convert
 			end
 		end
 
-	associated_class_stone: CLASSI_STONE is
+	associated_stone: CLASSI_STONE is
 			-- CLASSI_STONE associated with favorite class, Void if none.
 		local
 			class_i: CLASS_I

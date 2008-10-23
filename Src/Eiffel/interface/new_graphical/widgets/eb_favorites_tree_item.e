@@ -27,6 +27,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -51,8 +56,8 @@ feature {NONE} -- Initialization
 			if an_item.is_class then
 					-- ...or a class.
 				conv_class ?= an_item
-				if conv_class.associated_class_stone /= Void then
-					set_pebble (conv_class.associated_class_stone)
+				if conv_class.associated_stone /= Void then
+					set_pebble_function (agent pebble_adapter (conv_class.associated_stone))
 				end
 				if conv_class.associated_class_i /= Void then
 					set_pixmap (pixmap_from_class_i (conv_class.associated_class_i))
@@ -65,7 +70,7 @@ feature {NONE} -- Initialization
 			elseif an_item.is_folder then
 				conv_folder ?= an_item
 					-- `an_item' is either a folder...
-				set_pebble (conv_folder)
+				set_pebble_function (agent pebble_adapter (conv_folder))
 				drop_actions.extend (agent conv_folder.add_feature_stone)
 				drop_actions.extend (agent conv_folder.add_class_stone)
 				drop_actions.extend (agent conv_folder.add_favorite_folder)
@@ -73,7 +78,7 @@ feature {NONE} -- Initialization
 			elseif an_item.is_feature then
 					-- ...or a feature.
 				conv_feat ?= an_item
-				set_pebble (conv_feat.associated_feature_stone)
+				set_pebble_function (agent pebble_adapter (conv_feat.associated_stone))
 				if conv_feat.associated_e_feature /= Void then
 					set_pixmap (pixmap_from_e_feature (conv_feat.associated_e_feature))
 				end
@@ -172,7 +177,7 @@ feature -- Status setting
 			data.refresh
 			cl ?= data
 			if cl /= Void then
-				set_pebble (cl.associated_class_stone)
+				set_pebble_function (agent pebble_adapter (cl.associated_stone))
 				if cl.associated_class_i /= Void then
 					set_pixmap (pixmap_from_class_i (cl.associated_class_i))
 				else
@@ -181,7 +186,7 @@ feature -- Status setting
 			else
 				ff ?= data
 				if ff /= Void then
-					set_pebble (ff.associated_feature_stone)
+					set_pebble_function (agent pebble_adapter (ff.associated_stone))
 					if ff.associated_e_feature /= Void then
 						set_pixmap (pixmap_from_e_feature (ff.associated_e_feature))
 					end
@@ -236,6 +241,16 @@ feature {NONE} -- Implementation
 						-- Some class stone was selected.
 					Result := True
 				end
+			end
+		end
+
+	pebble_adapter (a_pebble: like pebble): like pebble
+			-- Pebble adapter to enable control right click
+		require
+			a_pebble_not_void: a_pebble /= Void
+		do
+			if not ev_application.ctrl_pressed then
+				Result := a_pebble
 			end
 		end
 

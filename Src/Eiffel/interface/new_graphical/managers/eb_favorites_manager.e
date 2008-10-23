@@ -44,27 +44,14 @@ feature -- Access
 
 feature -- Status setting
 
-	go_to_class (a_favorite_class: EB_FAVORITES_CLASS) is
-			-- `a_favorite_class' has been selected, the associated class
-			-- window should load the class corresponding to `a_favorite_class'.
+	go_to_favorite (a_favorite: EB_FAVORITES_ITEM) is
+			-- Load the favorite item corresponding to `a_favorite'.
 		local
-			class_stone: CLASSI_STONE
+			stone: STONE
 		do
-			class_stone := a_favorite_class.associated_class_stone
-			if class_stone /= Void then
-				development_window.set_stone (class_stone)
-			end
-		end
-
-	go_to_feature (a_favorite_feat: EB_FAVORITES_FEATURE) is
-			-- `a_favorite_feat' has been selected, the associated feature
-			-- window should load the class corresponding to `a_favorite_feat'.
-		local
-			feat_stone: FEATURE_STONE
-		do
-			feat_stone := a_favorite_feat.associated_feature_stone
-			if feat_stone /= Void then
-				development_window.set_stone (feat_stone)
+			stone := a_favorite.associated_stone
+			if stone /= Void then
+				development_window.set_stone (stone)
 			end
 		end
 

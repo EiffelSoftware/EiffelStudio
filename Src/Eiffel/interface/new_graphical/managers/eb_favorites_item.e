@@ -42,6 +42,11 @@ feature -- Access
 	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for the item.
 
+	associated_stone: STONE is
+			-- FEATURE_STONE associated with favorite class, Void if none.
+		deferred
+		end
+
 feature -- Status
 
 	is_folder: BOOLEAN is

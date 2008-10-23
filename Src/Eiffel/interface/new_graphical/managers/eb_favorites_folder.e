@@ -49,6 +49,13 @@ feature {NONE} -- Initialization
 	item_list_make_done: BOOLEAN
 			-- is `item_list_make' already called
 
+feature -- Access
+
+	associated_stone: STONE is
+			-- No stone for a favorite folder.
+		do
+		end
+
 feature -- Status
 
 	is_folder: BOOLEAN is True

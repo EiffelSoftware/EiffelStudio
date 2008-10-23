@@ -35,6 +35,13 @@ feature {NONE} -- Initialization
 			set_pixmap (pixmaps.icon_pixmaps.information_tag_icon)
 		end
 
+feature -- Access
+
+	stone: STONE is
+			-- No stones for tags.
+		do
+		end
+
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

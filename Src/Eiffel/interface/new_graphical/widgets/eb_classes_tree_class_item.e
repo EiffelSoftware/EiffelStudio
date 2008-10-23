@@ -72,7 +72,7 @@ feature -- Status setting
 		do
 			set_text (name)
 			data := a_class
-			set_pebble_function (agent stone)
+			set_pebble (stone)
 			drop_actions.wipe_out
 			drop_actions.set_veto_pebble_function (agent droppable)
 			set_accept_cursor (Cursors.cur_Class)
@@ -106,10 +106,7 @@ feature -- Status setting
 					end
 					if class_i.is_valid then
 						create over_item.make (class_i, class_i.name)
-
-						if associated_window /= Void then
-							over_item.set_associated_window (associated_window)
-						end
+						over_item.associate_with_window (associated_window)
 						if associated_textable /= Void then
 							over_item.set_associated_textable (associated_textable)
 						end
@@ -134,10 +131,7 @@ feature -- Status setting
 				end
 				if class_i.is_valid then
 					create over_item.make (class_i, class_i.name)
-
-					if associated_window /= Void then
-						over_item.set_associated_window (associated_window)
-					end
+					over_item.associate_with_window (associated_window)
 					if associated_textable /= Void then
 						over_item.set_associated_textable (associated_textable)
 					end
@@ -153,17 +147,6 @@ feature -- Status setting
 					extend (over_item)
 				end
 			end
-		end
-
-	set_associated_window (window: like associated_window) is
-			-- Associate `Current' with `window' and change event handling.
-		require
-			window /= Void
-		do
-			if associated_window = Void then
-				pointer_button_press_actions.extend (agent double_press_action)
-			end
-			associated_window := window
 		end
 
 	add_double_click_action (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
@@ -189,16 +172,6 @@ feature {NONE} -- Implementation
 			f_not_void: f /= Void
 		do
 			Result := f = data.group
-		end
-
-	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
-						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Send a stone corresponding to `Current' to `associated_window'.
-		do
-			if a_button = 1 and then associated_window /= Void then
-				associated_window.set_stone (stone)
-			end
 		end
 
 	droppable (a_pebble: ANY): BOOLEAN is
@@ -229,9 +202,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	associated_window: EB_STONABLE
-			-- Is `Current' already associated to a window?
 
 	print_name is
 			-- Print class name in textable, the associated text component.

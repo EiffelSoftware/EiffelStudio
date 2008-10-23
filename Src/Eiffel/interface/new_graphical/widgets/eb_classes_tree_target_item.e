@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_CLASSES_TREE_ITEM
+		redefine
+			associate_with_window
+		end
 
 	EB_CONSTANTS
 		export
@@ -31,7 +34,7 @@ feature {NONE} -- Initialization
 			set_text (a_target.name)
 			set_tooltip (a_target.name)
 			set_pixmap (pixmaps.icon_pixmaps.folder_target_icon)
-			set_pebble_function (agent stone)
+			set_pebble (stone)
 			set_accept_cursor (cursors.cur_target)
 			set_deny_cursor (cursors.cur_x_target)
 			set_configurable_target_menu_mode
@@ -43,31 +46,14 @@ feature -- Access
 	stone: TARGET_STONE
 			-- Stone representing `Current'.
 
-feature {NONE} -- Actions
-
-	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
-						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Send a stone corresponding to `Current' to `associated_window'.
-		do
-			if a_button = 1 and then associated_window /= Void then
-				associated_window.set_stone (stone)
-			end
-		end
-
 feature -- Interactivity
 
-	associate_with_window (a_window: EB_DEVELOPMENT_WINDOW) is
+	associate_with_window (a_window: EB_STONABLE) is
 			-- Associate recursively with `a_window' so that we can call `set_stone' on `a_window'.
 		local
 			l_conv_target: EB_CLASSES_TREE_TARGET_ITEM
 		do
-			if associated_window = Void then
-				pointer_button_press_actions.extend (agent double_press_action)
-			end
-
-			associated_window := a_window
-
+			Precursor (a_window)
 			from
 				start
 			until
@@ -80,11 +66,6 @@ feature -- Interactivity
 				forth
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	associated_window: EB_DEVELOPMENT_WINDOW;
-			-- Where should clicked classes set a stone?
 
 invariant
 	stone_set: stone /= Void

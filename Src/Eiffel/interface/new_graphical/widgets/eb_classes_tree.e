@@ -826,13 +826,11 @@ feature {NONE} -- Implementation
 					l_item := create_folder_item (l_group)
 
 					if textable /= void and not is_show_classes then
-					l_item.set_associated_textable (textable)
+						l_item.set_associated_textable (textable)
 					end
 
 					a_header.extend (l_item)
-					if window /= Void then
-						l_item.associate_with_window (window)
-					end
+					l_item.associate_with_window (window)
 					if textable /= Void then
 						l_item.associate_textable_with_classes (textable)
 					end

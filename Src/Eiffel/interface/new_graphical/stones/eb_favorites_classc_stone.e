@@ -40,14 +40,14 @@ feature -- Initialization
 	make_from_favorite (an_item: EB_FAVORITES_CLASS) is
 			-- Create a class stone and save the attached favorite item
 		require else
-			class_exists_in_universe: an_item.associated_class_stone /= Void
+			class_exists_in_universe: an_item.associated_stone /= Void
 			real_class_c: an_item.associated_class_c /= Void
 		do
 			default_create
 			old_make (an_item.associated_class_c)
 			origin := an_item
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -15,7 +15,8 @@ inherit
 			data,
 			set_data,
 			print_name,
-			internal_recycle
+			internal_recycle,
+			associate_with_window
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -197,9 +198,7 @@ feature -- Status setting
 			create new_class.make (a_class, l_name)
 			put_left (new_class)
 
-			if associated_window /= Void then
-				new_class.set_associated_window (associated_window)
-			end
+			new_class.associate_with_window (associated_window)
 			if associated_textable /= Void then
 				new_class.set_associated_textable (associated_textable)
 			end
@@ -276,9 +275,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						l_sub_path := path + cluster_separator + subfolders[i]
 						if l_fr.is_included (l_sub_path) then
 							l_subfolder := create_folder_item_with_options (data, l_sub_path)
-							if associated_window /= Void then
-								l_subfolder.associate_with_window (associated_window)
-							end
+							l_subfolder.associate_with_window (associated_window)
 							if associated_textable /= Void then
 								l_subfolder.associate_textable_with_classes (associated_textable)
 							end
@@ -315,9 +312,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						i > up
 					loop
 						l_subfolder := create_folder_item_with_options (data, path+ cluster_separator +subfolders[i])
-						if associated_window /= Void then
-							l_subfolder.associate_with_window (associated_window)
-						end
+						l_subfolder.associate_with_window (associated_window)
 						if associated_textable /= Void then
 							l_subfolder.associate_textable_with_classes (associated_textable)
 						end
@@ -363,9 +358,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 								end
 								l_name.prepend (data.name_prefix)
 								create a_class.make (classes.item_for_iteration, l_name)
-								if associated_window /= Void then
-									a_class.set_associated_window (associated_window)
-								end
+								a_class.associate_with_window (associated_window)
 								if associated_textable /= Void then
 									a_class.set_associated_textable (associated_textable)
 								end
@@ -492,18 +485,13 @@ feature -- Interactivity
 			end
 		end
 
-	associate_with_window (a_window: EB_DEVELOPMENT_WINDOW) is
+	associate_with_window (a_window: EB_STONABLE) is
 			-- Recursively associate `a_window' with sub-classes so they can call `set_stone' on `a_window'.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
-			if associated_window = Void then
-				pointer_button_press_actions.extend (agent double_press_action)
-			end
-
-			associated_window := a_window
-
+			Precursor (a_window)
 			from
 				start
 			until
@@ -514,7 +502,7 @@ feature -- Interactivity
 					conv_folder.associate_with_window (a_window)
 				else
 					conv_class ?= item
-					conv_class.set_associated_window (a_window)
+					conv_class.associate_with_window (a_window)
 				end
 				forth
 			end
@@ -585,9 +573,6 @@ feature {NONE} -- Recyclable
 		end
 
 feature {NONE} -- Implementation
-
-	associated_window: EB_DEVELOPMENT_WINDOW
-			-- Where should clicked classes set a stone?
 
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
 			-- Agents associated to double-clicks on classes.
@@ -726,16 +711,6 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
-						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Send a stone corresponding to `Current' to `associated_window'.
-		do
-			if a_button = 1 and then associated_window /= Void then
-				associated_window.set_stone (stone)
-			end
-		end
-
 	droppable (a_pebble: ANY): BOOLEAN is
 			-- Can user drop `a_pebble' on `Current'?
 		local
@@ -769,9 +744,7 @@ feature {NONE} -- Implementation
 					l_group := a_groups.item_for_iteration
 					a_folder := create_folder_item (l_group)
 
-					if associated_window /= Void then
-						a_folder.associate_with_window (associated_window)
-					end
+					a_folder.associate_with_window (associated_window)
 					if associated_textable /= Void then
 						a_folder.associate_textable_with_classes (associated_textable)
 					end

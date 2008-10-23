@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	EV_TREE_ITEM
+		rename
+			set_pebble as set_pebble_original
 		redefine
 			parent_tree
 		end
@@ -21,6 +23,11 @@ inherit
 		end
 
 	SHARED_EIFFEL_PROJECT
+		undefine
+			default_create, is_equal, copy
+		end
+
+	EV_SHARED_APPLICATION
 		undefine
 			default_create, is_equal, copy
 		end
@@ -50,6 +57,35 @@ feature -- Access
 
 	dummy_string: STRING is "DUMMY"
 			-- Dummy string used by `fake_load'
+
+	stone: STONE is
+			-- Class stone representing `Current'.
+		deferred
+		end
+
+feature -- Status Setting
+
+	set_pebble (a_pebble: like pebble)
+			-- Redirect pebbles to pebble functions in which we do specific control in ES.
+		require
+			a_pebble_not_void: a_pebble /= Void
+		do
+			set_pebble_function (agent pebble_adapter (a_pebble))
+		ensure
+			pebble_function_set: pebble_function /= Void
+		end
+
+feature -- Interactivity
+
+	associate_with_window (a_window: like associated_window) is
+			-- Associate recursively with `a_window' so that we can call `set_stone' on `a_window'.
+		do
+			if pointer_press_action_agent = Void then
+				pointer_press_action_agent := agent pointer_press_action
+				pointer_button_press_actions.force_extend (pointer_press_action_agent)
+			end
+			associated_window := a_window
+		end
 
 feature {NONE} -- Context menu
 
@@ -98,6 +134,38 @@ feature {NONE} -- Implementation
 				associated_textable.set_text (text)
 			end
 		end
+
+	associated_window: EB_STONABLE
+			-- Is `Current' already associated to a window?
+
+	pointer_press_action (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64;
+						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; action: PROCEDURE [ANY, TUPLE]) is
+			-- Send a stone corresponding to `Current' to `associated_window'.
+		local
+			l_stone: STONE
+		do
+			if a_button = 1 and then associated_window /= Void then
+				associated_window.set_stone (stone)
+			elseif a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_stone := stone
+				if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+				end
+			end
+		end
+
+	pebble_adapter (a_pebble: like pebble): like pebble
+			-- Pebble adapter to enable control right click
+		require
+			a_pebble_not_void: a_pebble /= Void
+		do
+			if not ev_application.ctrl_pressed then
+				Result := a_pebble
+			end
+		end
+
+	pointer_press_action_agent: PROCEDURE [ANY, TUPLE [x: INTEGER_32; y: INTEGER_32; button: INTEGER_32; x_tilt: REAL_64; y_tilt: REAL_64; pressure: REAL_64; screen_x: INTEGER_32; screen_y: INTEGER_32]];
+			-- `pointer_press_action' handler
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

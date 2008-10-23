@@ -351,18 +351,17 @@ feature -- Observer pattern
 	on_button_pressed (a_node: ANY; a_x, a_y, a_button: INTEGER) is
 			-- Action done when an item is selected.
 		local
-			l_class: EB_FAVORITES_CLASS
-			l_feat: EB_FAVORITES_FEATURE
+			l_item: EB_FAVORITES_ITEM
+			l_stone: STONE
 		do
-			if a_button = 1 then
-					-- We check if it is a class, and if not if it is a feature.
-				l_class ?= a_node
-				if l_class /= Void then
-					favorites_manager.go_to_class (l_class)
-				else
-					l_feat ?= a_node
-					if l_feat /= Void then
-						favorites_manager.go_to_feature (l_feat)
+			l_item ?= a_node
+			if l_item /= Void then
+				if a_button = 1 then
+					favorites_manager.go_to_favorite (l_item)
+				elseif a_button = 3 and then ev_application.ctrl_pressed then
+					l_stone := l_item.associated_stone
+					if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 					end
 				end
 			end

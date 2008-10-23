@@ -87,9 +87,9 @@ feature -- Element change
 	refresh is
 			-- Refresh information.
 		local
-			l_stone: like associated_feature_stone
+			l_stone: like associated_stone
 		do
-			l_stone ?= associated_feature_stone.synchronized_stone
+			l_stone ?= associated_stone.synchronized_stone
 			if l_stone /= Void then
 				make_from_feature_stone (l_stone, parent)
 			end
@@ -119,7 +119,7 @@ feature -- Convert
 	associated_class_c: CLASS_C
 			-- CLASS_C associated with Current, Void if none.
 
-	associated_feature_stone: FEATURE_STONE is
+	associated_stone: FEATURE_STONE is
 			-- FEATURE_STONE associated with favorite class, Void if none.
 		do
 			if associated_e_feature /= Void then

@@ -10,7 +10,7 @@ deferred class
 
 inherit
 	DISPOSABLE
-	
+
 feature {NONE} -- Initialization
 
 	make_by_pointer (an_item: POINTER) is
@@ -34,12 +34,12 @@ feature -- Status report
 		do
 			Result := last_call_success = 0
 		end
-		
-feature {NONE} -- Access 
+
+feature {NONE} -- Access
 
 	item: POINTER
 			-- Access to underlying COM object.
-	
+
 	last_call_success: INTEGER
 			-- Result of last COM calls. When successful it should be `0'.
 
@@ -72,12 +72,14 @@ feature {NONE} -- Disposal
 			"C inline use <stdio.h>"
 		alias
 			"[
+#ifndef EIF_IL_DLL
 				if ($type == 1) {
 					extern char *eif_typename(int16);
 					printf ("\nEntering dispose of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
 				} else {
 					printf ("Quitting dispose with item value 0x%lX nb_ref[%d]\n", $a_ptr, $a_nb_ref);
 				}
+#endif
 			]"
 		end
 

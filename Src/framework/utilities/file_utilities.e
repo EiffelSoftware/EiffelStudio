@@ -87,7 +87,7 @@ feature -- Basic operations
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
 		do
-			Result := scan_for_files_internal (({!STRING_GENERAL}) #? a_folder, a_levels, a_include, a_exclude, False)
+			Result := scan_for_files_internal (a_folder, a_levels, a_include, a_exclude, False)
 		ensure
 			result_contains_included_items: Result.for_all (agent (a_ia_item: !STRING; a_ia_include: ?RX_PCRE_MATCHER; a_ia_exclude: ?RX_PCRE_MATCHER): BOOLEAN
 				do

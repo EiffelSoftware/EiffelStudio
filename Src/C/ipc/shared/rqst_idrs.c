@@ -226,7 +226,8 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		if ((!exv) ||
 			(! (idr_unsigned_char (idrs, &exv->ex_type)
 			&& idr_unsigned_char (idrs, &exv->ex_retry)
-			&& idr_unsigned_char (idrs, &exv->ex_rescue)))) {
+			&& idr_unsigned_char (idrs, &exv->ex_rescue)
+			&& idr_unsigned_char (idrs, &exv->ex_is_invariant)))) {
 			return FALSE;
 		}
 		switch (exv->ex_type) {

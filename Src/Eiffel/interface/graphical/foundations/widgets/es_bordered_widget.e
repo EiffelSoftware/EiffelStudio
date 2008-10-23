@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_widget': The widget to surround with a border
 		require
+			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 			not_a_widget_is_parented: not a_widget.has_parent
 		do

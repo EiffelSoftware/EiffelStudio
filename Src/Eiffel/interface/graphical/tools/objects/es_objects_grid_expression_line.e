@@ -269,9 +269,18 @@ fixme ("find a smarter way to get a valid value")
 		end
 
 	sorted_once_routines: LIST [E_FEATURE] is
+			-- <Precursor>	
 		do
-			if object_dynamic_class /= Void then
-				Result := object_dynamic_class.once_routines
+			if {cl: like object_dynamic_class} object_dynamic_class then
+				Result := cl.once_routines
+			end
+		end
+
+	sorted_constant_features: LIST [E_CONSTANT] is
+			-- <Precursor>
+		do
+			if {cl: like object_dynamic_class} object_dynamic_class then
+				Result := cl.constant_features
 			end
 		end
 

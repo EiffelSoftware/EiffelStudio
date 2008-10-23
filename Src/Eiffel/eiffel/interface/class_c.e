@@ -3482,6 +3482,37 @@ feature -- Access
 			result_sorted: Result.sorted
 		end
 
+	constant_features: SORTED_TWO_WAY_LIST [E_CONSTANT] is
+			-- List of constant features.
+		local
+			f_table: FEATURE_TABLE
+			feat: FEATURE_I
+			cid: INTEGER
+		do
+			cid := class_id
+			create Result.make
+			f_table := feature_table
+			from
+				f_table.start
+			until
+				f_table.after
+			loop
+				feat := f_table.item_for_iteration
+				if feat.is_constant then
+					if {e_cst: E_CONSTANT} feat.api_feature (cid) then
+						Result.put_front (e_cst)
+					else
+						check invalid_constant_feature: False end
+					end
+				end
+				f_table.forth
+			end
+			Result.sort
+		ensure
+			non_void_result: Result /= Void
+			result_sorted: Result.sorted
+		end
+
 	is_valid: BOOLEAN is
 			-- Is the current class valid?
 			-- (After a compilation Current may become

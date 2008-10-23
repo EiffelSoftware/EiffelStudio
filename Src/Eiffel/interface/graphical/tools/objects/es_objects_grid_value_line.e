@@ -167,16 +167,22 @@ feature -- Query
 		end
 
 	sorted_once_routines: LIST [E_FEATURE] is
-		local
-			l_class: CLASS_C
 		do
-			l_class := object_dynamic_class
-			if l_class = Void then
+			if {l_class: like object_dynamic_class} object_dynamic_class then
+				Result := l_class.once_routines
+			else
 				--| Q: Why do we have Void dynamic_class ?
 				--| ANSWER : because of external class in dotnet system
 				--| Should be fixed now by using SYSTEM_OBJECT for unknown type
+			end
+		end
+
+	sorted_constant_features: LIST [E_CONSTANT] is
+		do
+			if {l_class: like object_dynamic_class} object_dynamic_class then
+				Result := l_class.constant_features
 			else
-				Result := l_class.once_routines
+				--| Q: Why do we have Void dynamic_class ?
 			end
 		end
 

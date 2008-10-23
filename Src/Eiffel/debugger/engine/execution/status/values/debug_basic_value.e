@@ -19,7 +19,7 @@ inherit
 			is_equal
 		end
 
-create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
+create {DBG_EVALUATOR, RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make, make_attribute
 
 feature {NONE} -- Initialization

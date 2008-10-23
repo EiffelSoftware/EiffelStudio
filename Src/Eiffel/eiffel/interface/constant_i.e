@@ -111,7 +111,7 @@ feature -- Settings
 			if not type.is_attached then
 					-- Type of constant is always attached.
 				if feat_tbl.associated_class.lace_class.is_void_safe then
-					type := type.as_attached
+					type := type.as_attached_type
 				elseif not type.is_implicitly_attached then
 					type := type.as_implicitly_attached
 				end

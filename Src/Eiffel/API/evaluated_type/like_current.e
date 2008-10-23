@@ -345,7 +345,7 @@ feature {COMPILER_EXPORTER} -- Modification
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `conformance_type'.
 		do
-			conformance_type := to_current_attachment (a)
+			conformance_type := a.to_other_attachment (Current)
 			actual_type := Current
 		end
 
@@ -354,7 +354,7 @@ feature {COMPILER_EXPORTER} -- Modification
 		do
 			Precursor
 			if not conformance_type.is_attached then
-				conformance_type := conformance_type.as_attached
+				conformance_type := conformance_type.as_attached_type
 			end
 		end
 
@@ -423,7 +423,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- i16 := (0x00FF).to_integer_16 & i8
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
-			Result := to_current_attachment (type.intrinsic_type)
+			Result := type.intrinsic_type.to_other_attachment (Current)
 		end
 
 	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A is
@@ -448,7 +448,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_like.set_actual_type (class_type.conformance_type)
 				Result := l_like
 			end
-			Result := to_current_attachment (Result)
+			Result := Result.to_other_attachment (Current)
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT is

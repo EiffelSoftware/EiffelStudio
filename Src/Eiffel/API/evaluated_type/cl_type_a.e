@@ -740,7 +740,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			loop
 				parent_actual_type := parent_type (l_conforming_parents.i_th (i))
 				if l_is_attached and then not parent_actual_type.is_attached then
-					parent_actual_type := parent_actual_type.as_attached
+					parent_actual_type := parent_actual_type.as_attached_type
 				elseif l_is_implicitly_attached and then not parent_actual_type.is_implicitly_attached then
 					parent_actual_type := parent_actual_type.as_implicitly_attached
 				end

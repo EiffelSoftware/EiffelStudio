@@ -77,7 +77,7 @@ feature -- Properties
 		do
 				-- `conformance_type' has to be called because
 				-- `actual_type' may yield yet another anchored type.
-			Result := to_current_attachment (actual_type.conformance_type)
+			Result := actual_type.conformance_type.to_other_attachment (Current)
 		end
 
 	has_associated_class: BOOLEAN is
@@ -236,7 +236,7 @@ feature -- Primitives
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
 		do
-			actual_type := to_current_attachment (a)
+			actual_type := a.to_other_attachment (Current)
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
@@ -301,7 +301,7 @@ feature -- Modification
 			Precursor
 			a := actual_type
 			if a /= Void and then not a.is_attached then
-				actual_type := a.as_attached
+				actual_type := a.as_attached_type
 			end
 		end
 

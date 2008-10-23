@@ -1844,7 +1844,7 @@ feature -- Implementation
 				if not l_tuple_type.is_attached then
 						-- Type of tuple is always attached
 					if context.current_class.lace_class.is_void_safe then
-						l_tuple_type := l_tuple_type.as_attached
+						l_tuple_type := l_tuple_type.as_attached_type
 					elseif not l_tuple_type.is_implicitly_attached then
 						l_tuple_type := l_tuple_type.as_implicitly_attached
 					end
@@ -1994,7 +1994,7 @@ feature -- Implementation
 						if not l_array_type.is_attached then
 								-- Type of a manifest array is always attached
 							if l_current_class_void_safe then
-								l_array_type := l_array_type.as_attached
+								l_array_type := l_array_type.as_attached_type
 							elseif not l_array_type.is_implicitly_attached then
 								l_array_type := l_array_type.as_implicitly_attached
 							end
@@ -2079,7 +2079,7 @@ feature -- Implementation
 							create l_array_type.make (system.array_id, l_generics)
 							if l_current_class_void_safe then
 									-- Type of a manifest array is always attached
-								l_array_type := l_array_type.as_attached
+								l_array_type := l_array_type.as_attached_type
 							else
 								l_array_type := l_array_type.as_implicitly_attached
 							end
@@ -2092,7 +2092,7 @@ feature -- Implementation
 						create l_array_type.make (system.array_id, l_generics)
 						if l_current_class_void_safe then
 								-- Type of a manifest array is always attached
-							l_array_type := l_array_type.as_attached
+							l_array_type := l_array_type.as_attached_type
 						else
 							l_array_type := l_array_type.as_implicitly_attached
 						end
@@ -2141,7 +2141,7 @@ feature -- Implementation
 			if t /= Void and then not t.is_attached then
 					-- Constants are always of an attached type
 				if context.current_class.lace_class.is_void_safe then
-					t := t.as_attached
+					t := t.as_attached_type
 				elseif not t.is_implicitly_attached then
 					t := t.as_implicitly_attached
 				end
@@ -2249,7 +2249,7 @@ feature -- Implementation
 								-- "Result" is of a detachable type, but it's safe
 								-- to use it as an attached one.
 							if context.current_class.lace_class.is_void_safe then
-								l_feat_type := l_feat_type.as_attached
+								l_feat_type := l_feat_type.as_attached_type
 							else
 								l_feat_type := l_feat_type.as_implicitly_attached
 							end
@@ -2531,7 +2531,7 @@ feature -- Implementation
 					context.is_argument_attached (l_as.feature_name.name_id)
 				then
 					if l_context_current_class.lace_class.is_void_safe then
-						l_type := l_type.as_attached
+						l_type := l_type.as_attached_type
 					elseif not l_type.is_implicitly_attached then
 						l_type := l_type.as_implicitly_attached
 					end
@@ -2580,7 +2580,7 @@ feature -- Implementation
 								-- Local is of a detachable type, but it's safe
 								-- to use it as an attached one.
 							if context.current_class.lace_class.is_void_safe then
-								l_type := l_type.as_attached
+								l_type := l_type.as_attached_type
 							else
 								l_type := l_type.as_implicitly_attached
 							end
@@ -2711,7 +2711,7 @@ feature -- Implementation
 						context.is_argument_attached (l_as.feature_name.name_id)
 					then
 						if context.current_class.lace_class.is_void_safe then
-							last_type := last_type.as_attached
+							last_type := last_type.as_attached_type
 						elseif not last_type.is_implicitly_attached then
 							last_type := last_type.as_implicitly_attached
 						end
@@ -3075,13 +3075,20 @@ feature -- Implementation
 						-- Set access id level analysis to `is_checking_postcondition': locals
 						-- are not taken into account
 					set_is_checking_postcondition (True)
-					context.add_result_instruction_scope
+					if l_feat_type.is_initialization_required and then not context.initialization_keeper.is_result_set then
+						context.set_result
+					end
+					if l_feat_type.is_attached then
+						context.add_result_instruction_scope
+					end
 					l_as.postcondition.process (Current)
 					if l_needs_byte_node and then error_level = l_error_level then
 						l_assertion_byte_code ?= last_byte_node
 						l_byte_code.set_postcondition (l_assertion_byte_code)
 					end
-					context.remove_result_scope
+					if l_feat_type.is_attached then
+						context.remove_result_scope
+					end
 						-- Reset the level
 					set_is_checking_postcondition (False)
 				end
@@ -3370,7 +3377,7 @@ feature -- Implementation
 			if not last_type.is_attached then
 					-- Type of strip expression is always attached.
 				if context.current_class.lace_class.is_void_safe then
-					last_type := last_type.as_attached
+					last_type := last_type.as_attached_type
 				elseif not last_type.is_implicitly_attached then
 					last_type := last_type.as_implicitly_attached
 				end
@@ -3686,7 +3693,7 @@ feature -- Implementation
 				if not l_type_type.is_attached then
 						-- The type is always attached
 					if context.current_class.lace_class.is_void_safe then
-						l_type_type := l_type_type.as_attached
+						l_type_type := l_type_type.as_attached_type
 					elseif not l_type_type.is_implicitly_attached then
 						l_type_type := l_type_type.as_implicitly_attached
 					end
@@ -4773,7 +4780,7 @@ feature -- Implementation
 			if local_type /= Void then
 				if not local_type.is_attached then
 					if context.current_class.lace_class.is_void_safe then
-						local_type := local_type.as_attached
+						local_type := local_type.as_attached_type
 					elseif not local_type.is_implicitly_attached then
 						local_type := local_type.as_implicitly_attached
 					end
@@ -5864,7 +5871,7 @@ feature -- Implementation
 						if l_explicit_type /= Void and then not l_explicit_type.is_attached then
 								-- Creation type is always attached
 							if l_current_class_void_safe then
-								l_explicit_type := l_explicit_type.as_attached
+								l_explicit_type := l_explicit_type.as_attached_type
 							elseif not l_explicit_type.is_implicitly_attached then
 								l_explicit_type := l_explicit_type.as_implicitly_attached
 							end
@@ -5911,7 +5918,7 @@ feature -- Implementation
 								l_creation_type := l_target_type
 								if not l_creation_type.is_attached and then l_current_class_void_safe then
 										-- Creation type is always attached.
-									l_creation_type := l_creation_type.as_attached
+									l_creation_type := l_creation_type.as_attached_type
 									last_type := l_creation_type
 								end
 							end
@@ -5974,7 +5981,7 @@ feature -- Implementation
 					if not l_creation_type.is_attached then
 							-- Type of a creation expression is always attached.
 						if context.current_class.lace_class.is_void_safe then
-							l_creation_type := l_creation_type.as_attached
+							l_creation_type := l_creation_type.as_attached_type
 						elseif not l_creation_type.is_implicitly_attached then
 							l_creation_type := l_creation_type.as_implicitly_attached
 						end
@@ -8200,7 +8207,7 @@ feature {NONE} -- Agents
 			if l_oargtypes.count > 0 and then not l_tuple.is_attached then
 					-- Type of an argument tuple is always attached.
 				if l_current_class_void_safe then
-					l_tuple := l_tuple.as_attached
+					l_tuple := l_tuple.as_attached_type
 				elseif not l_tuple.is_implicitly_attached then
 					l_tuple := l_tuple.as_implicitly_attached
 				end
@@ -8210,7 +8217,7 @@ feature {NONE} -- Agents
 
 				-- Type of an agent is always attached.
 			if l_current_class_void_safe then
-				l_result_type := l_result_type.as_attached
+				l_result_type := l_result_type.as_attached_type
 			else
 				l_result_type := l_result_type.as_implicitly_attached
 			end
@@ -8893,7 +8900,7 @@ feature {NONE} -- Implementation: type validation
 			end
 			if l_formal_type /= Void and then {l_attachable_type: ATTACHABLE_TYPE_A} a_type then
 					-- Preserve attachment status of the original type.
-				Result := l_attachable_type.to_current_attachment (Result)
+				Result := Result.to_other_attachment (l_attachable_type)
 			end
 		ensure
 			adapated_type_not_void: Result /= Void

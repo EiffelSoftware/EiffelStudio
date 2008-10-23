@@ -126,7 +126,7 @@ feature -- Duplication
 			end
 		ensure then
 			result_is_implicitly_attached: Result.is_implicitly_attached
-			result_is_attachable_to_attached: Result.is_attachable_to (as_attached)
+			result_is_attachable_to_attached: Result.is_attachable_to (as_attached_type)
 		end
 
 	as_implicitly_detachable: like Current
@@ -138,31 +138,6 @@ feature -- Duplication
 			else
 				Result := Current
 			end
-		end
-
-	to_current_attachment (other: TYPE_A): TYPE_A
-			-- `other' interpreted with current attachment status
-		require
-			other_attached: other /= Void
-		do
-			Result := other
-			if has_attached_mark then
-				if not Result.is_attached then
-					Result := Result.as_attached
-				end
-			elseif is_implicitly_attached then
-				if not Result.is_attached and then not Result.is_implicitly_attached then
-					Result := Result.as_implicitly_attached
-				end
-			elseif has_detachable_mark then
-				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
-					Result := Result.as_detachable
-				end
-			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
-				Result := Result.as_implicitly_detachable
-			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Attachment properties

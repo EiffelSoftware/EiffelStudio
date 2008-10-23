@@ -239,7 +239,7 @@ feature {NONE} -- Action handler
 				l_error.show_on_active_window
 				veto_close
 			else
-				contract := [({!STRING_32}) #? tag_text.text, ({!STRING_32}) #? contract_editor.wide_text]
+				contract := [tag_text.text.as_attached, contract_editor.wide_text.as_attached]
 			end
 			expression_parser.wipe_out
 			error_handler.wipe_out

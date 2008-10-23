@@ -83,9 +83,9 @@ feature -- Status report
 	is_cataloged (a_folder: STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
-			Result := cataloged_folder_files.has (({!STRING_8}) #? a_folder.as_string_8)
+			Result := cataloged_folder_files.has (a_folder.as_string_8.as_attached)
 		ensure then
-			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (({!STRING_8}) #? a_folder.as_string_8)
+			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (a_folder.as_string_8.as_attached)
 		end
 
 feature -- Query
@@ -298,7 +298,7 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, ({!STRING}) #? a_folder.as_string_8)
+			cataloged_folder_files.put (l_files, a_folder.as_string_8.as_attached)
 
 			if l_changed then
 				catalog_changed_event.publish (Void)

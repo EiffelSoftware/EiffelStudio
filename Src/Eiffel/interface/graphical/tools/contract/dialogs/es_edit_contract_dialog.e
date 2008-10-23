@@ -57,7 +57,7 @@ feature -- Element change
 			is_initialized: is_initialized
 			not_a_contract_is_empty: not a_contract.is_empty
 		do
-			tag_text.set_text (({!STRING_32}) #? a_tag.as_string_32)
+			tag_text.set_text (a_tag.as_string_32.as_attached)
 			contract_editor.load_text (a_contract.as_string_8)
 			set_is_dirty (False)
 		ensure

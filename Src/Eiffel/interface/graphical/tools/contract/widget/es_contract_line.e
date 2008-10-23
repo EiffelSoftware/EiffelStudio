@@ -163,7 +163,7 @@ feature {NONE} -- Basic operations
 				create l_contract.make_from_string (a_string.substring (l_rx.captured_end_position (2) + 1, a_string.count))
 				Result := [l_tag, l_contract]
 			else
-				Result := [Void, ({!STRING_32}) #? a_string.as_string_32]
+				Result := [Void, a_string.as_string_32.as_attached]
 			end
 		ensure
 			not_result_tag_is_empty: Result.tag /= Void implies not Result.tag.is_empty

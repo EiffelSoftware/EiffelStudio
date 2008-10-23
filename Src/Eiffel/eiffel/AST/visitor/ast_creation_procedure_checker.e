@@ -32,6 +32,11 @@ inherit
 			all
 		end
 
+	SHARED_SERVER
+		export {NONE}
+			all
+		end
+
 	SHARED_WORKBENCH
 		export {NONE}
 			all
@@ -67,23 +72,75 @@ feature {NONE} -- Processing
 			f_not_processed: not bodies.has (f.body_index)
 		local
 			g: FEATURE_I
+			s: ASSERT_ID_SET
+			a: INH_ASSERT_INFO
+			p: FEATURE_AS
+			b: ROUTINE_AS
+			i: INTEGER
 		do
 			g := context.current_feature
 			context.set_current_feature (f)
-			context.set_written_class (f.written_class)
+				-- Put body index to stack to avoid recursion
 			bodies.put (f.body_index)
-				-- TODO: pre- and postconditions
+				-- Process preconditions
+			s := f.assert_id_set
+			if s /= Void then
+				from
+					i := s.count
+				until
+					i <= 0
+				loop
+					a := s.item (i)
+					check a_attached: a /= Void end
+					if a.has_precondition then
+						p := body_server.item (a.body_index)
+						check
+							p_attached: p /= Void
+						end
+						b ?= p.body.content
+						check b_attached: b /= Void end
+						context.set_written_class (system.class_of_id (a.written_in))
+						b.precondition.process (Current)
+					end
+					i := i - 1
+				end
+			end
+				-- Process routine body
+			context.set_written_class (f.written_class)
 			f.body.process (Current)
+				-- Process postcondition
+			if s /= Void then
+				from
+					i := s.count
+				until
+					i <= 0
+				loop
+					a := s.item (i)
+					check a_attached: a /= Void end
+					if a.has_postcondition then
+						p := body_server.item (a.body_index)
+						check
+							p_attached: p /= Void
+						end
+						b ?= p.body.content
+						check b_attached: b /= Void end
+						context.set_written_class (system.class_of_id (a.written_in))
+						b.postcondition.process (Current)
+					end
+					i := i - 1
+				end
+			end
+				-- Remove body index
 			bodies.remove
 			context.set_current_feature (g)
 			context.set_written_class (g.written_class)
 		end
 
 	check_attributes (l: LOCATION_AS)
-			-- Verify that all attributes are properly initialized.
+			-- Verify that all attributes are properly initialized at location `l'.
+		require
+			l_attached: l /= Void
 		local
-			a: FEATURE_I
-			i: INTEGER_32
 			s: GENERIC_SKELETON
 		do
 			from
@@ -92,13 +149,30 @@ feature {NONE} -- Processing
 			until
 				s.after
 			loop
-				i := s.item_for_iteration.feature_id
-				a := current_class.feature_of_feature_id (i)
-				if a.type.is_initialization_required and then not variables.is_attribute_set (i) then
-						-- Attribute is not properly initialized.
-					error_handler.insert_error (create {VEVI}.make_attribute (a, current_class.class_id, context, l))
-				end
+				check_attribute (current_class.feature_of_feature_id (s.item_for_iteration.feature_id), l)
 				s.forth
+			end
+		end
+
+	check_attribute (f: FEATURE_I; l: LOCATION_AS)
+			-- Verify that the attribute `f' is initialized if required at location `l'
+			-- including recursive check of self-initializing attribute body and
+			-- report error if the attribute is not set and is not self-initializing.
+		require
+			f_attached: f /= Void
+			l_attached: l /= Void
+		do
+			if f.type.is_initialization_required and then not variables.is_attribute_set (f.feature_id) then
+				if {d: ATTRIBUTE_I} f and then d.has_body then
+						-- Attribute is self-initializing.
+					process (f)
+				else
+						-- Attribute is not properly initialized.
+					error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, context, l))
+				end
+					-- Mark that the attribute is initialized because it is self-initializing
+					-- or just to avoid repeated errors.
+				variables.set_attribute (f.feature_id)
 			end
 		end
 
@@ -132,17 +206,8 @@ feature {AST_EIFFEL} -- Visitor: access to features
 					elseif f.is_attribute then
 						if is_attachment then
 							variables.set_attribute (f.feature_id)
-						elseif f.type.is_initialization_required and then not variables.is_attribute_set (f.feature_id) then
-							if {d: ATTRIBUTE_I} f and then d.has_body then
-									-- Attribute is self-initializing.
-								process (f)
-								variables.set_attribute (f.feature_id)
-							else
-									-- Attribute is not properly initialized.
-								error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, context, a.feature_name))
-									-- Mark that the attribute is initialized to avoid repeated errors.
-								variables.set_attribute (f.feature_id)
-							end
+						else
+							check_attribute (f, a.feature_name)
 						end
 					end
 				end

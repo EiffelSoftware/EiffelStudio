@@ -458,7 +458,7 @@ feature -- Setting
 		ensure
 			current_class_set: current_class = a_class
 			current_class_type_set: current_class_type.conformance_type = a_type
-				or else current_class_type.conformance_type.same_as (a_type.as_attached)
+				or else current_class_type.conformance_type.same_as (a_type.as_attached_type)
 				or else current_class_type.conformance_type.same_as (a_type.as_implicitly_attached)
 			current_feature_table_set: current_feature_table = a_feat_tbl
 		end

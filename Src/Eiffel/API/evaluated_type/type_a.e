@@ -800,7 +800,7 @@ feature -- Access
 			-- Result := Void
 		end
 
-	as_attached: like Current
+	as_attached_type: like Current
 			-- Attached variant of the current type
 		require
 			not_is_attached: not is_attached
@@ -842,22 +842,41 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+		require
+			other_attached: other /= Void
+		do
+			Result := Current
+			if other.has_attached_mark then
+				if not is_attached then
+					Result := as_attached_type
+				end
+			elseif other.is_implicitly_attached then
+				if not is_attached and then not is_implicitly_attached then
+					Result := as_implicitly_attached
+				end
+			elseif other.has_detachable_mark then
+				if not is_expanded and then (is_attached or else is_implicitly_attached) then
+					Result := as_detachable
+				end
+			elseif not other.is_implicitly_attached and then is_implicitly_attached then
+				Result := as_implicitly_detachable
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Modification
 
 	set_attached_mark
 			-- Mark type as having an explicit attached mark.
 		do
-			debug ("to_implement")
-				(create {REFACTORING_HELPER}).to_implement ("Support attachment mark for tuples and formal generics")
-			end
 		end
 
 	set_detachable_mark
 			-- Mark type as having an explicit detachable mark.
 		do
-			debug ("to_implement")
-				(create {REFACTORING_HELPER}).to_implement ("Support attachment mark for tuples and formal generics")
-			end
 		end
 
 feature -- Output

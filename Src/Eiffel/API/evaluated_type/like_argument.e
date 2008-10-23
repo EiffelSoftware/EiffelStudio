@@ -160,7 +160,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				valid_position: a_arg_types.valid_index (position)
 			end
 				-- Preserve attachment status of the current type.
-			Result := to_current_attachment (a_arg_types.item (position))
+			Result := a_arg_types.item (position).to_other_attachment (Current)
 		end
 
 indexing

@@ -451,7 +451,7 @@ feature {COMPILER_EXPORTER}
 					end
 						-- Get the actual type for the formal generic parameter
 					l_constraints := System.current_class.constraints_if_possible (position)
-					Result := l_constraints.constraining_types (system.current_class).conform_to_type (other)
+					Result := l_constraints.constraining_types (system.current_class).to_other_attachment (Current).conform_to_type (other)
 				end
 			end
 		end
@@ -484,7 +484,7 @@ feature {COMPILER_EXPORTER}
 			-- assuming that Current is written in class of id `written_id'.
 		do
 			if {l_cl_type: CL_TYPE_A} type.actual_type then
-				Result := to_current_attachment (l_cl_type.instantiation_of (Current, written_id))
+				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
 			else
 				Result := Current
 			end
@@ -518,7 +518,7 @@ feature {COMPILER_EXPORTER}
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := to_current_attachment (class_type.generics.item (position))
+			Result := class_type.generics.item (position).to_other_attachment (Current)
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A is
@@ -533,7 +533,7 @@ feature {COMPILER_EXPORTER}
 			Result := l_feat.type.actual_type
 			if has_attached_mark then
 				if not Result.is_attached then
-					Result := Result.as_attached
+					Result := Result.as_attached_type
 				end
 			elseif has_detachable_mark then
 				if Result.is_attached or else Result.is_implicitly_attached then

@@ -404,6 +404,7 @@ test	obsolete-warning-in-obsolete-feature	valid219 tcf fail validity
 test	ancestor-anchor-type			valid220 tcf pass validity
 test	vtug2-not-reported-crash			valid221 tcf pass validity
 test	invalid-redefinition			valid222 tcf pass validity
+test	bad_formal_types			valid223 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

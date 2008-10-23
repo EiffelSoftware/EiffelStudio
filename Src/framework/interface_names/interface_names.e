@@ -1357,6 +1357,7 @@ feature -- Label texts
 	l_As_object: STRING_32 is				do Result := locale.translation("As object")	end
 	l_Onces: STRING_32 is					do Result := locale.translation("Once routines and constants")	end
 	l_Once_routines: STRING_32 is			do Result := locale.translation("Once routines")	end
+	l_Constant_features: STRING_32 is		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32 is			do Result := locale.translation("Only classes in same cluster")	end
 	l_open: STRING_32 is					do Result := locale.translation("Open")	end
 	l_Open_a_project: STRING_32 is			do Result := locale.translation("Open a project")	end

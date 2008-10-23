@@ -115,6 +115,106 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 			dbg_error_handler.reset
 		end
 
+feature -- Access
+
+	value_from_constant_i (a_constant_i: CONSTANT_I): ABSTRACT_DEBUG_VALUE is
+			-- Evaluate `a_constant_i'
+		require
+			a_constant_i_not_void: a_constant_i /= Void
+		local
+			a_value_i: VALUE_I
+			m: DUMMY_MESSAGE_DEBUG_VALUE
+		do
+			a_value_i := a_constant_i.value
+			if a_value_i.is_integer then
+				if {l_integer: INTEGER_CONSTANT} a_value_i then
+					Result := value_from_integer_constant (l_integer)
+				else
+					check False end
+				end
+			else
+				if a_value_i.is_string then
+					if {l_string: STRING_VALUE_I} a_value_i then
+						create m.make_with_name (a_constant_i.feature_name)
+						m.set_message (l_string.string_value)
+						m.set_display_kind ({VALUE_TYPES}.Reference_value)
+						Result := m
+					end
+				elseif a_value_i.is_boolean then
+					create {DEBUG_BASIC_VALUE[BOOLEAN]} Result.make ({SK_CONST}.sk_bool, a_value_i.boolean_value)
+				elseif a_value_i.is_character then
+					if {l_char: CHAR_VALUE_I} a_value_i then
+						if l_char.is_character_32 then
+							create {DEBUG_BASIC_VALUE[CHARACTER_32]} Result.make ({SK_CONST}.sk_wchar, l_char.character_value)
+						else
+							create {DEBUG_BASIC_VALUE[CHARACTER_8]} Result.make ({SK_CONST}.sk_char, l_char.character_value.to_character_8)
+						end
+					end
+				elseif a_value_i.is_real then
+					if {l_real: REAL_VALUE_I} a_value_i then
+						if l_real.is_real_32 then
+							create {DEBUG_BASIC_VALUE[REAL_32]} Result.make ({SK_CONST}.sk_real32, l_real.real_32_value)
+						else
+							create {DEBUG_BASIC_VALUE[REAL_64]} Result.make ({SK_CONST}.sk_real64, l_real.real_64_value)
+							check realis_64: l_real.is_real_64 end
+						end
+					end
+				elseif a_value_i.is_bit then
+--					if {l_bit: BIT_VALUE_I} a_value_i then
+--						create {DEBUG_BASIC_VALUE[BITS]} Result.make ({SK_CONST}.sk_bits, l_bit.bit_value)
+--					end
+				end
+			end
+		end
+
+	value_from_integer_constant (a_node: INTEGER_CONSTANT): ABSTRACT_DEBUG_VALUE is
+			-- Value from `a_node'.
+		local
+			l_type: TYPE_A
+			l_cl: CLASS_C
+			l_cli: CLASS_I
+			d_fact: DUMP_VALUE_FACTORY
+		do
+			l_type := a_node.type
+			if l_type /= Void then
+				l_cl := class_c_from_type_i (l_type)
+			end
+			if l_cl /= Void then
+				l_cli := l_cl.original_class
+				if l_type.is_natural then
+					if l_cli = System.natural_32_class then
+						create {DEBUG_BASIC_VALUE [NATURAL_32]} Result.make ({SK_CONST}.sk_uint32, a_node.natural_32_value)
+					elseif l_cli = System.natural_64_class then
+						create {DEBUG_BASIC_VALUE [NATURAL_64]} Result.make ({SK_CONST}.sk_uint64, a_node.natural_64_value)
+					elseif l_cli = System.natural_16_class then
+						create {DEBUG_BASIC_VALUE [NATURAL_16]} Result.make ({SK_CONST}.sk_uint16, a_node.natural_16_value)
+					elseif l_cli = System.natural_8_class then
+						create {DEBUG_BASIC_VALUE [NATURAL_8]} Result.make ({SK_CONST}.sk_uint8, a_node.natural_8_value)
+					else
+						check should_not_occur: False end
+						create {DEBUG_BASIC_VALUE [NATURAL_32]} Result.make ({SK_CONST}.sk_uint32, a_node.natural_32_value)
+					end
+				else
+					if l_cli = System.integer_32_class then
+						create {DEBUG_BASIC_VALUE [INTEGER_32]} Result.make ({SK_CONST}.sk_int32, a_node.integer_32_value)
+					elseif l_cli = System.integer_64_class then
+						create {DEBUG_BASIC_VALUE [INTEGER_64]} Result.make ({SK_CONST}.sk_int64, a_node.integer_64_value)
+					elseif l_cli = System.integer_16_class then
+						create {DEBUG_BASIC_VALUE [INTEGER_16]} Result.make ({SK_CONST}.sk_int16, a_node.integer_16_value)
+					elseif l_cli = System.integer_8_class then
+						create {DEBUG_BASIC_VALUE [INTEGER_8]} Result.make ({SK_CONST}.sk_int8, a_node.integer_8_value)
+					else
+						check should_not_occur: False end
+						create {DEBUG_BASIC_VALUE [INTEGER_32]} Result.make ({SK_CONST}.sk_int32, a_node.integer_32_value)
+					end
+				end
+			else
+					--| This should not occur, but in case it does
+					--| let's display it as INTEGER_64
+				create {DEBUG_BASIC_VALUE [INTEGER_64]} Result.make ({SK_CONST}.sk_int64, a_node.integer_64_value)
+			end
+		end
+
 feature {NONE} -- Query		
 
 	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is

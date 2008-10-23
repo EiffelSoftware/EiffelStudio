@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 				create headers.make (100)
 				headers.put_string ("#include %"eif_eiffel.h%"%N")
-				headers.put_string ("#include %"lib" + System.name + ".h%"%N")
+				headers.put_string ("#include %"" + l_file_name + ".h%"%N")
 
 				ext_inline_buffer := generation_ext_inline_buffer
 				ext_inline_buffer.clear_all

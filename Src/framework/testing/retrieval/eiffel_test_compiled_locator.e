@@ -45,8 +45,8 @@ feature {NONE} -- Implementation
 			l_ancestor: EIFFEL_CLASS_I
 		do
 			l_ancestor := common_ancestor
-			if l_ancestor /= Void and then l_ancestor.is_compiled then
-				report_descendants ({!EIFFEL_CLASS_C} #? l_ancestor.compiled_class)
+			if l_ancestor /= Void and then l_ancestor.is_compiled and then {a: EIFFEL_CLASS_C} l_ancestor.compiled_class then
+				report_descendants (a)
 			end
 		end
 
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			until
 				l_list.after
 			loop
-				if {l_ec: !EIFFEL_CLASS_C} l_list.item and then is_class_alive (l_ec) then
+				if {l_ec: EIFFEL_CLASS_C} l_list.item and then is_class_alive (l_ec) then
 					report_descendants (l_ec)
 				end
 				l_list.forth

@@ -57,7 +57,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.force_last ([{!STRING} #? eiffel_layout.precomp_platform_path (target.setting_msil_generation), 0])
+				Result.force_last ([eiffel_layout.precomp_platform_path (target.setting_msil_generation), 0])
 			end
 		end
 

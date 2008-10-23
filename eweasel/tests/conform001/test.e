@@ -32,26 +32,37 @@ feature {NONE} -- Implementation
 			create x
 			create att_x
 			create det_x
-			check_for_true ("anchors - 1", same_type (x, ""))
-			check_for_true ("anchors - 2", same_type (att_x, ""))
-			check_for_true ("anchors - 3", same_type (det_x, ""))
 
-			check_for_true ("anchors - 4", same_type (create a_1, create {A [?STRING]}))
-			check_for_true ("anchors - 5", same_type (create a_2, create {A [?STRING]}))
-			check_for_true ("anchors - 6", same_type (create a_3, create {A [!STRING]}))
+			create a_1
+			create a_2
+			create a_3
+			create a_4
+			create a_5
+			create a_6
+			create a_7
+			create a_8
+			create a_9
 
-			check_for_true ("anchors - 7", same_type (create a_4, create {A [!STRING]}))
-			check_for_true ("anchors - 8", same_type (create a_5, create {A [?STRING]}))
-			check_for_true ("anchors - 9", same_type (create a_6, create {A [!STRING]}))
+			check_for_true ("anchors - 1", is_same_type (x, ""))
+			check_for_true ("anchors - 2", is_same_type (att_x, ""))
+			check_for_true ("anchors - 3", is_same_type (det_x, ""))
 
-			check_for_true ("anchors - 10", same_type (create a_7, create {A [?STRING]}))
-			check_for_true ("anchors - 11", same_type (create a_8, create {A [?STRING]}))
-			check_for_true ("anchors - 12", same_type (create a_9, create {A [!STRING]}))
+			check_for_true ("anchors - 4", is_same_type (a_1, create {A [?C]}))
+			check_for_true ("anchors - 5", is_same_type (a_2, create {A [?C]}))
+			check_for_true ("anchors - 6", is_same_type (a_3, create {A [!C]}))
+
+			check_for_true ("anchors - 7", is_same_type (a_4, create {A [!C]}))
+			check_for_true ("anchors - 8", is_same_type (a_5, create {A [?C]}))
+			check_for_true ("anchors - 9", is_same_type (a_6, create {A [!C]}))
+
+			check_for_true ("anchors - 10", is_same_type (a_7, create {A [?C]}))
+			check_for_true ("anchors - 11", is_same_type (a_8, create {A [?C]}))
+			check_for_true ("anchors - 12", is_same_type (a_9, create {A [!C]}))
 		end
 
-	x: STRING
-	att_x: !STRING
-	det_x: ?STRING
+	x: C
+	att_x: !C
+	det_x: ?C
 
 	test_single_generic is
 		local
@@ -109,7 +120,7 @@ feature {NONE} -- Implementation
 
 			a_det ?= create {like anchor_1}
 			check_for_true ("single generic - 20", a_det /= Void)
-			a_det ?= create {like_anchor_2}
+			a_det ?= create {like anchor_2}
 			check_for_true ("single generic - 21", a_det /= Void)
 
 			a_att ?= create {like anchor_3}
@@ -119,7 +130,7 @@ feature {NONE} -- Implementation
 
 			a_det ?= create {like anchor_3}
 			check_for_true ("single generic - 24", a_det /= Void)
-			a_det ?= create {like_anchor_4}
+			a_det ?= create {like anchor_4}
 			check_for_true ("single generic - 25", a_det /= Void)
 
 			a_att ?= create {like anchor_5}
@@ -129,7 +140,7 @@ feature {NONE} -- Implementation
 
 			a_det ?= create {like anchor_5}
 			check_for_true ("single generic - 28", a_det /= Void)
-			a_det ?= create {like_anchor_6}
+			a_det ?= create {like anchor_6}
 			check_for_true ("single generic - 29", a_det /= Void)
 		end
 

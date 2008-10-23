@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 								l_item.row.enable_select
 								contract_editor.widget.enable_selection_on_click
 							end
-							on_row_selected_in_contract_editor (({!EV_GRID_ROW}) #? l_item.row, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
+							on_row_selected_in_contract_editor (l_item.row.as_attached, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
 						end
 					end
 				end)
@@ -1073,18 +1073,18 @@ feature {NONE} -- Action handlers
 				if {l_fc: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (feature_name_symbol_id)
-						l_value.set_value (({!STRING_32}) #? l_fc.context_feature.name.as_string_32)
+						l_value.set_value (l_fc.context_feature.name.as_string_32.as_attached)
 					else
-						create l_value.make (({!STRING_32}) #? l_fc.context_feature.name.as_string_32)
+						create l_value.make (l_fc.context_feature.name.as_string_32.as_attached)
 						l_symbol_table.put (l_value, feature_name_symbol_id)
 					end
 				end
 				if {l_cc: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (class_name_symbol_id)
-						l_value.set_value (({!STRING_32}) #? l_cc.context_class.name.as_string_32)
+						l_value.set_value (l_cc.context_class.name.as_string_32.as_attached)
 					else
-						create l_value.make (({!STRING_32}) #? l_cc.context_class.name.as_string_32)
+						create l_value.make (l_cc.context_class.name.as_string_32.as_attached)
 						l_symbol_table.put (l_value, class_name_symbol_id)
 					end
 				end

@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 		do
 			create l_dialog.make (stock_pixmaps.tool_output_icon_buffer, "Testing output")
 			l_dialog.is_modal := False
-			l_dialog.set_text ({!STRING_32} #? a_text.to_string_32)
+			l_dialog.set_text (a_text.to_string_32.as_attached)
 			l_dialog.show (development_window.window)
 		end
 

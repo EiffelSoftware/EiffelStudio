@@ -49,7 +49,7 @@ feature -- Basic operation
 			-- `a_end_token': The token to stop processing at, or Void to process to the end of the
 			--                document.
 		require
-			a_info_is_valid_state_info: is_valid_state_info (({!ES_EDITOR_ANALYZER_STATE_INFO}) #? a_info)
+			a_info_is_valid_state_info: is_valid_state_info ((({!ES_EDITOR_ANALYZER_STATE_INFO}) #? a_info).as_attached)
 			result_has_valid_start_token: is_valid_start_token (a_info.current_token, a_info.current_line)
 		do
 			reset
@@ -69,7 +69,7 @@ feature {NONE} -- Basic operation
 			-- `a_end_token': The token to stop processing at, or Void to process to the end of the
 			--                document.
 		require
-			a_info_is_valid_state_info: is_valid_state_info (({!ES_EDITOR_ANALYZER_STATE_INFO}) #? a_info)
+			a_info_is_valid_state_info: is_valid_state_info ((({!ES_EDITOR_ANALYZER_STATE_INFO}) #? a_info).as_attached)
 			a_start_token_is_valid_start_token: is_valid_start_token (a_info.current_token, a_info.current_line)
 			a_info_current_token_not_a_end_token: a_info.current_token /~ a_end_token
 		deferred

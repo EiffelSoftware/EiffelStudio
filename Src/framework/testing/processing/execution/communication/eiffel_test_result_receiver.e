@@ -65,7 +65,7 @@ feature -- Status setting
 				a_status.set_listening
 				l_socket.set_blocking
 				l_socket.listen (1)
-				create l_thread.make (agent listen ({!NETWORK_STREAM_SOCKET} #? l_socket, a_status))
+				create l_thread.make (agent listen (l_socket.as_attached, a_status))
 				l_thread.launch
 			end
 		ensure

@@ -745,7 +745,7 @@ feature {NONE} -- Population
 								l_tagged_text.prepend ("%T%T%T")
 							end
 								-- Call will set row data!
-							populate_editable_contract_row (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source, l_row)
+							populate_editable_contract_row (l_tagged_text.as_string_32.as_attached, l_contract_source, l_row)
 						else
 								-- Perform formatting with decorator, enabling clickable text.
 							l_class_c := l_mod_contract.modifier.context_class.compiled_class
@@ -775,7 +775,7 @@ feature {NONE} -- Population
 							l_token_generator.wipe_out_lines
 
 								-- Set contract line data
-							create l_contract_line.make_from_string (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source)
+							create l_contract_line.make_from_string (l_tagged_text.as_string_32.as_attached, l_contract_source)
 							l_row.set_data (l_contract_line)
 						end
 

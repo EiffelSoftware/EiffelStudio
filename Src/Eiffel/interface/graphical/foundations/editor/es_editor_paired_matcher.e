@@ -53,7 +53,7 @@ feature -- Status report
 				end
 			end
 		ensure
-			token_image_is_opening_brace: Result implies opening_brace_map.has (({!STRING_32}) #? a_token.wide_image)
+			token_image_is_opening_brace: Result implies opening_brace_map.has (a_token.wide_image.as_attached)
 		end
 
 	is_opening_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
@@ -87,7 +87,7 @@ feature -- Status report
 				end
 			end
 		ensure
-			token_image_is_opening_brace: Result implies closing_brace_map.has (({!STRING_32}) #? a_token.wide_image)
+			token_image_is_opening_brace: Result implies closing_brace_map.has (a_token.wide_image.as_attached)
 		end
 
 	is_closing_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
@@ -206,8 +206,8 @@ feature -- Query
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_closing_brace: Result /= Void implies is_closing_brace (Result.token)
-			result_is_correct_match: Result /= Void implies opening_brace_map.item (
-				({!STRING_32}) #? a_start_token.wide_image).is_equal (({!STRING_32}) #? Result.token.wide_image)
+			result_is_correct_match: Result /= Void implies opening_brace_map.item
+				(a_start_token.wide_image.as_attached).is_equal (Result.token.wide_image.as_attached)
 		end
 
 	match_closing_brace (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
@@ -282,8 +282,8 @@ feature -- Query
 		ensure
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_opening_brace: Result /= Void implies is_opening_brace (Result.token)
-			result_is_correct_match: Result /= Void implies closing_brace_map.item (
-				({!STRING_32}) #? a_start_token.wide_image).has (({!STRING_32}) #? Result.token.wide_image)
+			result_is_correct_match: Result /= Void implies closing_brace_map.item
+				(a_start_token.wide_image.as_attached).has (Result.token.wide_image.as_attached)
 		end
 
 feature {NONE} -- Query

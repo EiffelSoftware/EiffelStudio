@@ -290,7 +290,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.force_last ([{!STRING} #? eiffel_layout.library_path.string, 2])
+				Result.force_last ([eiffel_layout.library_path.string.as_attached, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -319,7 +319,7 @@ feature {NONE} -- Actions
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (l_fn)
 				if not l_loader.is_error and then {l_system: CONF_SYSTEM} l_loader.last_system and then {l_target: CONF_TARGET} l_system.library_target then
-					on_library_selected (l_system, ({!STRING_8}) #? l_fn.as_string_8)
+					on_library_selected (l_system, l_fn.as_string_8.as_attached)
 				end
 			end
 		end

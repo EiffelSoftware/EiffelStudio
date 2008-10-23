@@ -701,11 +701,11 @@ feature {NONE} -- Formatting
 			-- Character mappings, given a escape string.
 		once
 			create Result.make (5)
-			Result.put (({!STRING_32}) #? ("%"").as_string_32, ({!STRING_32}) #? ("&quote;").as_string_32)
-			Result.put (({!STRING_32}) #? ("%'").as_string_32, ({!STRING_32}) #? ("&apos;").as_string_32)
-			Result.put (({!STRING_32}) #? ("&").as_string_32, ({!STRING_32}) #? ("&amp;").as_string_32)
-			Result.put (({!STRING_32}) #? ("<").as_string_32, ({!STRING_32}) #? ("&lt;").as_string_32)
-			Result.put (({!STRING_32}) #? (">").as_string_32, ({!STRING_32}) #? ("&gt;").as_string_32)
+			Result.put (("%"").as_string_32.as_attached, ("&quote;").as_string_32.as_attached)
+			Result.put (("%'").as_string_32.as_attached, ("&apos;").as_string_32.as_attached)
+			Result.put (("&").as_string_32.as_attached, ("&amp;").as_string_32.as_attached)
+			Result.put (("<").as_string_32.as_attached, ("&lt;").as_string_32.as_attached)
+			Result.put ((">").as_string_32.as_attached, ("&gt;").as_string_32.as_attached)
 		end
 
 feature {NONE} -- State transistions

@@ -282,7 +282,7 @@ feature {NONE} -- Query
 				until
 					l_fcl.after
 				loop
-					if is_valid_feature_clause ({!FEATURE_CLAUSE_AS} #? l_fcl.item) then
+					if is_valid_feature_clause (l_fcl.item.as_attached) then
 						from
 							l_fl := l_fcl.item.features
 							l_old_fl := l_fl.cursor
@@ -290,8 +290,8 @@ feature {NONE} -- Query
 						until
 							l_fl.after
 						loop
-							if {l_f: !FEATURE_AS} l_fl.item and then is_valid_feature (l_f) then
-								Result.force (l_f, create {!STRING}.make_from_string (test_routine_name (l_f)))
+							if {l_f: FEATURE_AS} l_fl.item and then is_valid_feature (l_f) then
+								Result.force (l_f, create {STRING}.make_from_string (test_routine_name (l_f)))
 							end
 							l_fl.forth
 						end
@@ -452,7 +452,7 @@ feature {NONE} -- Status setting
 				create l_file.make (l_name)
 				l_file.recursive_open_write
 				if l_file.is_open_write then
-					root_writer.write_source (l_file, {!DS_LINEAR [!EIFFEL_CLASS_I]} #? test_class_map.keys)
+					root_writer.write_source (l_file, test_class_map.keys.as_attached)
 					l_file.close
 					l_system := eiffel_project.system.system
 					if not l_system.is_explicit_root (root_writer.class_name, root_writer.root_feature_name) then
@@ -552,7 +552,7 @@ feature {NONE} -- Element change
 			create l_tag.make (20)
 			l_tag.append ("class")
 			l_tag.append_character (tag_utilities.split_char)
-			add_class_path (l_tag, {!STRING} #? a_test_class.eiffel_class.name, Void)
+			add_class_path (l_tag, a_test_class.eiffel_class.name.as_attached, Void)
 			l_ctags.force_last (l_tag)
 
 

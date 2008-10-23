@@ -1133,6 +1133,10 @@ feature {NONE} -- Visitors
 				-- No arguments
 			l_tmp_ba.append_short_integer (0)
 
+
+			ba.append_raw_string ("_invariant")
+			ba.append_short_integer (context.class_type.static_type_id - 1)
+
 				-- No rescue
 			ba.append ('%U')
 			l_context.set_assertion_type ({ASSERT_TYPE}.in_invariant)

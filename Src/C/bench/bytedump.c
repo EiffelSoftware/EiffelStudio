@@ -535,13 +535,11 @@ static  void    print_byte_code (void)
 
 	NEWL;
 
-	/* If the routine id is zero it's a class invariant */
+	/* If the routine id is zero it's a class invariant 
+	 * but we get anyway the name and type */
 
-	if (rid)
-	{
-		fprintf (ofp,"Routine name : %s\n", get_string8(&ip, -1));
-		fprintf (ofp,"Written      : %d\n", (int) get_int16(&ip));
-	}
+	fprintf (ofp,"Routine name : %s\n", get_string8(&ip, -1));
+	fprintf (ofp,"Written      : %d\n", (int) get_int16(&ip));
 
 	/* Offset of rescue clause - if any */
 

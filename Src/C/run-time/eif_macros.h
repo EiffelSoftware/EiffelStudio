@@ -978,6 +978,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTES issues the setjmp call for remote control transfer via longjmp
  *  RTEJ sets the exception handling mechanism (must appear only once)
  *  RTEA(x,y,z) signal entry in routine 'x', origin 'y', object ID 'z'
+ *  RTEAA(x,y,z,i,j,b) signal entry in routine 'x', origin 'y', object ID 'z', locnum 'i', argnum 'j', body id 'b'
+ *  RTEAINV(x,y,z,i,b) signal entry in _invariant routine 'x', origin 'y', object ID 'z', locnum 'i',  body id 'b'
  *  RTEV signals entry in routine (simply gets an execution vector)
  *  RTET(t,x) raises an exception tagged 't' whose code is 'x'
  *  RTEC(x) raises an exception whose code is 'x'
@@ -1051,6 +1053,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 	if (!setjmp(exenv)) {
 
 #endif
+
+#define RTEAINV(x,y,z,i,b) RTEAA(x,y,z,i,0,b); exvect->ex_is_invariant = 1; /* argnum = 0 for _invariant */
 
 #define RTER		in_assertion = saved_assertion; \
 					exvect = exret(exvect); goto start

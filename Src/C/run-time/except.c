@@ -459,6 +459,7 @@ rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *obj
 	vector->ex_type = EX_CALL;		/* Signals entry in a new routine */
 	vector->ex_retry = 0;			/* Function not retried (yet!) */
 	vector->ex_rescue = 0;			/* Function not rescued (yet!) */
+	vector->ex_is_invariant = 0;				/* Function not set as _invariant routine (yet!) */
 	vector->ex_jbuf = NULL;		/* As far as we know, no rescue clause */
 	vector->ex_rout = name;			/* Set the routine name */
 	vector->ex_orig = origin;		/* And its origin (where it was written) */
@@ -775,7 +776,10 @@ rt_public struct ex_vect * extrl(void)
 	if (vector == 0) {
 		eif_panic("Missing execution vector.");
 	}
-	if (vector->ex_type != EX_CALL && vector->ex_type != EX_RESC && vector->ex_type != EX_RETY) {
+	if (   vector->ex_type != EX_CALL 
+		&& vector->ex_type != EX_RESC 
+		&& vector->ex_type != EX_RETY
+		) {
 		eif_panic("Wrong type of execution vector.");
 	}
 #endif
@@ -2002,7 +2006,11 @@ rt_public void exok(void)
 
 	while ((top = extop(&eif_stack))) {	/* Find last enclosing call */
 		type = top->ex_type;			/* Type of the current vector */
-		if (type == EX_CALL || type == EX_RESC || type == EX_RETY || type == EX_OSTK) {
+		if (   type == EX_CALL
+			|| type == EX_RESC
+			|| type == EX_RETY
+			|| type == EX_OSTK
+				) {
 			expop(&eif_stack);			/* remove current call from `eif_stack' */
 			break;						/* We found a calling record */
 		}
@@ -3484,6 +3492,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 	printf("\tex_type = %d\n", vector->ex_type);
 	printf("\tex_retry = %d\n", vector->ex_retry);
 	printf("\tex_rescue = %d\n", vector->ex_rescue);
+	printf("\tex_is_invariant = %d\n", vector->ex_is_invariant);
 	printf("\texu_lvl = %d\n", vector->ex_lvl);
 	printf("\texu_sig = %d\n", vector->ex_sig);
 	printf("\texu_errno = %d\n", vector->ex_errno);
@@ -3561,18 +3570,28 @@ rt_private struct ex_vect *top_n_call(struct xstack *stk, int n)
 	cur = stk->st_cur;
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
-			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-				if (++found >= n) {
-					return top;
+			if (	top->ex_type == EX_CALL ||
+					top->ex_type == EX_RETY || 
+					top->ex_type == EX_RESC 	)
+			{
+				if (top->ex_is_invariant == 0) {
+					if (++found >= n) {
+						return top;
+					}
 				}
 			}
 		} else { /* We are out of current chunk */
 			cur = cur->sk_prev;
 			if (cur){ /* There is a previous chunk. */
 				top = cur->sk_end - 1;
-				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-					if (++found >= n) {
-						return top;
+				if (	top->ex_type == EX_CALL ||
+						top->ex_type == EX_RETY || 
+						top->ex_type == EX_RESC		)
+				{
+					if (top->ex_is_invariant == 0) {
+						if (++found >= n) {
+							return top;
+						}
 					}
 				}
 			} else {	/* It is already bottom of the stack. */
@@ -3601,7 +3620,11 @@ rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 	cur = stk->st_cur;
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
-			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
+			if (	top->ex_type == EX_CALL 
+				 || top->ex_type == EX_RETY 
+				 || top->ex_type == EX_RESC
+				 )
+			{
 				if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
 					return top;
 				}
@@ -3610,7 +3633,11 @@ rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 			cur = cur->sk_prev;
 			if (cur) { /* There is a previous chunk. */
 				top = cur->sk_end - 1;
-				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) {
+				if (	top->ex_type == EX_CALL 
+					 || top->ex_type == EX_RETY 
+					 || top->ex_type == EX_RESC		
+					 )
+				{
 					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
 						return top;
 					}

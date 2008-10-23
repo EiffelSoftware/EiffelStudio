@@ -249,7 +249,10 @@ rt_private struct dump *get_next_execution_vector(void)
 	expop (&eif_stack);
 
 	if ( !( 
-			(top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC)
+			(	top->ex_type == EX_CALL 
+			 || top->ex_type == EX_RETY 
+			 || top->ex_type == EX_RESC 
+			 )
 			&& top->exu.exur.exur_id != NULL
 		  ) ) {
 		return (struct dump *) EIF_IGNORE;		/* This vector should not be sent */
@@ -359,7 +362,10 @@ rt_private uint32 go_ith_stack_level(int level)
 		expop (&eif_stack);
 
 		if ( !( 
-				(top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) 
+				(	top->ex_type == EX_CALL 
+				 || top->ex_type == EX_RETY 
+				 || top->ex_type == EX_RESC
+				 ) 
 				&& (top->exu.exur.exur_id != NULL)
 			) ) {
 			i--;		/* Rewind - This item should not be taken into account. */

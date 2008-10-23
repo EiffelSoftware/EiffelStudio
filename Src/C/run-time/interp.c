@@ -788,10 +788,16 @@ rt_private void interpret(int flag, int where)
 			break;
 
 		case INTERP_INVA:			/* An invariant */
+			string = get_string8(&IC, -1);
+			type = get_int16(&IC);		/* Dynamic type where feature is written */
 #ifdef DEBUG
 		dprintf(1)("\tInvariant on 0x%lx [%s]\n",
 			icurrent->it_ref, System(Dtype(icurrent->it_ref)).cn_generator);
 #endif
+
+			RTEAINV((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, 0 /* Invariant has no body id for now */);
+			dexset(exvect);
+
 			scur = op_stack.st_cur;		/* Save stack context */
 			stop = op_stack.st_top;		/* needed for setjmp() and calls */
 			dostk();					/* Record position in calling context */
@@ -3602,6 +3608,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		caller_assertion_level = saved_caller_assertion_level;
 		pop_registers();	/* Pop registers */
+		RTEE;	/* remove execution vector from stack */
 		return;
 
 	default:

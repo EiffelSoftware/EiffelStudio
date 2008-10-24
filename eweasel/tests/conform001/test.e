@@ -28,6 +28,18 @@ feature {NONE} -- Implementation
 			a_7: A [like det_x]
 			a_8: A [?like det_x]
 			a_9: A [!like det_x]
+
+			b_1: A [like y]
+			b_2: A [?like y]
+			b_3: A [!like y]
+
+			b_4: A [like att_y]
+			b_5: A [?like att_y]
+			b_6: A [!like att_y]
+
+			b_7: A [like det_y]
+			b_8: A [?like det_y]
+			b_9: A [!like det_y]
 		do
 			create x
 			check_for_true ("anchors - 1", is_same_type (x, create {C}))
@@ -63,6 +75,27 @@ feature {NONE} -- Implementation
 			check_for_true ("anchors - 14", is_same_type (a_8, create {A [?C]}))
 			create a_9
 			check_for_true ("anchors - 15", is_same_type (a_9, create {A [!C]}))
+
+			create b_1
+			check_for_true ("anchors - 16", is_same_type (b_1, create {A [?C]}))
+			create b_2
+			check_for_true ("anchors - 17", is_same_type (b_2, create {A [?C]}))
+			create b_3
+			check_for_true ("anchors - 18", is_same_type (b_3, create {A [!C]}))
+
+			create b_4
+			check_for_true ("anchors - 19", is_same_type (b_4, create {A [!C]}))
+			create b_5
+			check_for_true ("anchors - 20", is_same_type (b_5, create {A [?C]}))
+			create b_6
+			check_for_true ("anchors - 21", is_same_type (b_6, create {A [!C]}))
+
+			create b_7
+			check_for_true ("anchors - 22", is_same_type (b_7, create {A [?C]}))
+			create b_8
+			check_for_true ("anchors - 23", is_same_type (b_8, create {A [?C]}))
+			create b_9
+			check_for_true ("anchors - 24", is_same_type (b_9, create {A [!C]}))
 		end
 
 	x: C

@@ -140,7 +140,6 @@ typedef struct eif_gen_der {
 	char                is_expanded;/* Is it an expanded type? */
 	char                is_bit;     /* Is it a BIT type? */
 	char                is_tuple;   /* Is it a TUPLE type? */
-	char                is_array;   /* Is it an ARRAY type? */
 	struct eif_gen_der  *next;      /* Next derivation */
 } EIF_GEN_DER;
 /*------------------------------------------------------------------*/
@@ -1423,7 +1422,6 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 		result->is_expanded = is_exp;
 		result->is_bit      = ((size > 0) ? '1' : (char) 0);
 		result->is_tuple    = is_tuple;
-		result->is_array    = (char) 0;
 		result->name        = NULL;       /* Generated on request only */
 				/* `name' must be allocated dynamically. */
 		result->next        = (EIF_GEN_DER *)0;
@@ -1458,7 +1456,6 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 	result->is_expanded = is_exp;
 	result->is_bit      = (char) 0;
 	result->is_tuple    = is_tuple;
-	result->is_array    = (char) 0;
 	result->name        = NULL;       /* Generated on request only */
 				/* `name' must be allocated dynamically. */
 	result->next        = (EIF_GEN_DER *)0;
@@ -1480,16 +1477,11 @@ finish_simple:
 
 	cname = System((par_info(base_id))->dtype).cn_generator;
 
-	if (strcmp (cname, "ARRAY") == 0)
-		result->is_array = '1';
-
-	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt)
-	{
+	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt) {
 		if (*pt == (struct eif_par_types *)0)
 			continue;
 
-		if (strcmp (cname,System((*pt)->dtype).cn_generator) == 0)
-		{
+		if (strcmp (cname,System((*pt)->dtype).cn_generator) == 0) {
 			result->first_id = dt;
 			break;
 		}

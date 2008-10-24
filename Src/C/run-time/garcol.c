@@ -1347,6 +1347,27 @@ rt_public void reclaim(void)
 				eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
 #endif
+				/* Reclaim root creation procedure structures. */
+			if (egc_rlist) {
+				eif_free(egc_rlist);
+				egc_rlist = NULL;
+			}
+			if (egc_rcdt) {
+				eif_free(egc_rcdt);
+				egc_rcdt = NULL;
+			}
+			if (egc_rcorigin) {
+				eif_free(egc_rcorigin);
+				egc_rcorigin = NULL;
+			}
+			if (egc_rcoffset) {
+				eif_free(egc_rcoffset);
+				egc_rcoffset = NULL;
+			}
+			if (egc_rcarg) {
+				eif_free(egc_rcarg);
+				egc_rcarg = NULL;
+			}
 		}
 	}
 

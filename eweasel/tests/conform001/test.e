@@ -135,14 +135,14 @@ feature {NONE} -- Implementation
 			check_for_true ("single generic - 9", a_att /= Void)
 
 			a_det ?= create {A [?ANY]}
-			check_for_true ("single generic - 10", a_att /= Void)
+			check_for_true ("single generic - 10", a_det /= Void)
 			a_det ?= create {A [!ANY]}
-			check_for_true ("single generic - 11", a_att /= Void)
+			check_for_true ("single generic - 11", a_det /= Void)
 
 			a_det ?= create {A [?C]}
-			check_for_true ("single generic - 12", a_att /= Void)
+			check_for_true ("single generic - 12", a_det /= Void)
 			a_det ?= create {A [!C]}
-			check_for_true ("single generic - 13", a_att /= Void)
+			check_for_true ("single generic - 13", a_det /= Void)
 
 			a_det ?= create {A [?INTEGER]}
 			check_for_true ("single generic - 14", a_det /= Void)

@@ -25,25 +25,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_assigner: like assigner; a_project: like project; a_launcher: like debugger_launcher)
+	make (a_assigner: like assigner; a_project_helper: like project_helper)
 			-- Initialize `Current'.
 			--
 			-- `a_assigner': Assigner for retrieving test to be executed.
-			-- `a_project': Project containing tests to be debugged.
-			-- `a_launcher': Launcher used to run project in debugger.
+			-- `a_project_helper': Helper object for launching debugger
 		do
 			make_controller (a_assigner)
-			debugger_launcher := a_launcher
-			project := a_project
+			project_helper := a_project_helper
 		end
 
 feature {NONE} -- Access
 
-	project: !E_PROJECT
+	project_helper: !EIFFEL_TEST_PROJECT_HELPER_I
 			-- Project containing tests to be debugged.
-
-	debugger_launcher: !EIFFEL_TEST_DEBUGGER_LAUNCHER
-			-- Launcher used to run project in debugger.
 
 feature -- Status report
 
@@ -82,7 +77,8 @@ feature -- Status setting
 				a_args.forth
 			end
 			l_param.set_arguments (l_args)
-			debugger_launcher.launch (project, l_param)
+
+			project_helper.run (Void, l_args, Void)
 		end
 
 end

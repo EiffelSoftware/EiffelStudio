@@ -181,9 +181,11 @@ feature -- Basic operations
 			l_element: !EIFFEL_TEST_CAPTURED_STACK_ELEMENT
 			i: INTEGER
 			l_abort: BOOLEAN
+			l_type: !STRING
 		do
 			if {l_feature: !E_FEATURE} a_cse.routine then
-				create l_element.make (l_feature)
+				create l_type.make_from_string (a_cse.current_object_value.dump_value.generating_type_representation (True))
+				create l_element.make (l_feature, l_type)
 				if not l_element.is_creation_procedure then
 					if {l_adv1: !ABSTRACT_DEBUG_VALUE} a_cse.current_object_value then
 						compute_string_representation (l_adv1, 0)

@@ -20,11 +20,6 @@ inherit
 			{NONE}
 		end
 
---	EB_SHARED_WINDOW_MANAGER
---		export
---			{NONE}
---		end
-
 	SHARED_SERVER
 		export
 			{NONE}
@@ -35,6 +30,10 @@ inherit
 			{NONE}
 		end
 
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 

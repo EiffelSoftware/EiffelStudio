@@ -40,19 +40,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			make_with_launcher (default_compilation_launcher)
-		end
-
-	make_with_launcher (a_launcher: like compilation_launcher)
-			-- Initialize `Current' with eiffel compilation launcher
-			--
-			-- `a_launcher': Launcher used to compile project.
-		do
 			make_processor
 			create evaluators.make
-			compilation_launcher := a_launcher
-		ensure
-			launcher_set: compilation_launcher = a_launcher
 		end
 
 feature -- Access
@@ -104,22 +93,13 @@ feature {NONE} -- Access
 	evaluators: !DS_LINKED_LIST [like create_evaluator]
 			-- Evaluators executing tests
 
-	compilation_launcher: like default_compilation_launcher
-			-- Launcher used to compile eiffel project
-
-	default_compilation_launcher: !EIFFEL_TEST_COMPILATION_LAUNCHER
-			-- Default compilation launcher
-		once
-			create Result
-		end
-
 feature -- Status report
 
 	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
 		do
-			Result := Precursor (a_test_suite) and compilation_launcher.is_ready (a_test_suite.eiffel_project)
+			Result := Precursor (a_test_suite) and a_test_suite.eiffel_project_helper.can_compile
 		ensure then
-			result_implies_launcher_ready: Result implies compilation_launcher.is_ready (a_test_suite.eiffel_project)
+			result_implies_launcher_ready: Result implies a_test_suite.eiffel_project_helper.can_compile
 		end
 
 	is_running: BOOLEAN is
@@ -253,8 +233,8 @@ feature {NONE} -- Status setting
 			if not l_project.system.system.is_explicit_root (l_class, l_feature) then
 				l_project.system.system.add_explicit_root (Void, l_class, l_feature)
 			end
-			if compilation_launcher.is_ready (l_project) then
-				compilation_launcher.compile (l_project)
+			if test_suite.eiffel_project_helper.can_compile then
+				test_suite.eiffel_project_helper.compile
 				if l_project.successful then
 					last_compilation_successful := True
 				end

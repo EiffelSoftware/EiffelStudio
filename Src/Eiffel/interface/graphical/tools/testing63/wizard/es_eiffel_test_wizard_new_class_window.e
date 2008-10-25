@@ -41,11 +41,14 @@ feature {NONE} -- Initialization
 			l_parent.disable_item_expand (l_sep)
 
 			build_class_tree (l_parent)
-			create l_sep
-			l_parent.extend (l_sep)
-			l_parent.disable_item_expand (l_sep)
 
-			build_checkboxes (l_parent)
+			if wizard_information.is_new_manual_test_class then
+				create l_sep
+				l_parent.extend (l_sep)
+				l_parent.disable_item_expand (l_sep)
+				build_checkboxes (l_parent)
+			end
+
 			on_after_initialize
 		end
 
@@ -139,39 +142,40 @@ feature {NONE} -- Initialization
 
 	on_after_initialize
 			-- Called after all widgets have been initialized.
-		local
-			l_name: !STRING_32
 		do
-			if wizard_information.new_class_name /= Void then
-				l_name ?= wizard_information.new_class_name.to_string_32
-				class_name.set_text (l_name)
+			if {l_name: !STRING} wizard_information.new_class_name_cache then
+				if {l_name32: !STRING_32} l_name.to_string_32 then
+					class_name.set_text (l_name32)
+				end
 			end
 			class_name.validate
 
-			if {l_parent: !CONF_CLUSTER} wizard_information.parent then
-				if wizard_information.path /= Void then
-					class_tree.show_subfolder (l_parent, wizard_information.path)
+			if {l_cluster: !CONF_CLUSTER} wizard_information.cluster_cache then
+				if {l_path: !STRING} wizard_information.path_cache then
+					class_tree.show_subfolder (l_cluster, l_path)
 				else
-					class_tree.show_subfolder (l_parent, "")
+					class_tree.show_subfolder (l_cluster, "")
 				end
 			end
 
-			if wizard_information.has_setup then
-				setup_checkbox.enable_select
-			else
-				setup_checkbox.disable_select
+			if wizard_information.is_new_manual_test_class then
+				if wizard_information.has_prepare_cache then
+					setup_checkbox.enable_select
+				else
+					setup_checkbox.disable_select
+				end
+				if wizard_information.has_clean_cache then
+					tear_down_checkbox.enable_select
+				else
+					tear_down_checkbox.disable_select
+				end
+	--			if wizard_information.is_system_level_test then
+	--				system_level_test_checkbox.enable_select
+	--			else
+	--				system_level_test_checkbox.disable_select
+	--			end
+				system_level_test_checkbox.disable_sensitive
 			end
-			if wizard_information.has_tear_down then
-				tear_down_checkbox.enable_select
-			else
-				tear_down_checkbox.disable_select
-			end
---			if wizard_information.is_system_level_test then
---				system_level_test_checkbox.enable_select
---			else
---				system_level_test_checkbox.disable_select
---			end
-			system_level_test_checkbox.disable_sensitive
 			update_next_button_status
 		end
 
@@ -210,7 +214,7 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := class_name.is_valid and then wizard_information.parent /= Void
+			Result := class_name.is_valid and then wizard_information.cluster_cache /= Void
 		end
 
 feature {NONE} -- Events
@@ -236,9 +240,13 @@ feature {NONE} -- Events
 		do
 			if {l_item: ES_EIFFEL_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
 				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
-					if {l_parent: CONF_CLUSTER} l_eb_cluster.actual_cluster then
-						wizard_information.set_parent (l_parent)
-						wizard_information.set_path (l_item.path)
+					if {l_parent: !CONF_CLUSTER} l_eb_cluster.actual_cluster then
+						wizard_information.cluster_cache := l_parent
+						if {l_path: !STRING} l_item.path then
+							wizard_information.path_cache := l_path
+						else
+							wizard_information.path_cache := ""
+						end
 					end
 				end
 			end
@@ -248,19 +256,19 @@ feature {NONE} -- Events
 	on_setup_change
 			-- Called when selection state of `setup_checkbox' changes.
 		do
-			wizard_information.set_has_set_up (setup_checkbox.is_selected)
+			wizard_information.has_prepare := setup_checkbox.is_selected
 		end
 
 	on_tear_down_change
 			-- Called when selection state of `tear_down_checkbox' changes.
 		do
-			wizard_information.set_has_tear_down (tear_down_checkbox.is_selected)
+			wizard_information.has_clean := tear_down_checkbox.is_selected
 		end
 
 	on_system_level_test_change
 			-- Called when selection state of `system_level_test_checkbox' changes.
 		do
-			wizard_information.set_is_system_level_test (system_level_test_checkbox.is_selected)
+			wizard_information.is_system_level_test := system_level_test_checkbox.is_selected
 		end
 
 feature {NONE} -- Basic operations
@@ -268,7 +276,11 @@ feature {NONE} -- Basic operations
 	proceed_with_current_info
 			-- <Precursor>
 		do
-			proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
+			if wizard_information.is_extracted_test_class then
+				proceed_with_new_state (create {ES_EIFFEL_TEST_WIZARD_CALL_STACK_WINDOW}.make_window (development_window, wizard_information))
+			else
+				proceed_with_new_state (create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
+			end
 		end
 
 	display_state_text

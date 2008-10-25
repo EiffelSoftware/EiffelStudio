@@ -146,9 +146,9 @@ feature {NONE} -- Initialization
 			l_text: !STRING_32
 			l_feat: E_FEATURE
 		do
-			if {l_name: !STRING} wizard_information.test_name then
-				if {l_name_32: !STRING_32} l_name.to_string_32 then
-					test_name.set_text (l_name_32)
+			if {l_name: !STRING} wizard_information.name_cache then
+				if {l_name32: !STRING_32} l_name.to_string_32 then
+					test_name.set_text (l_name32)
 				end
 			end
 			test_name.validate
@@ -285,23 +285,23 @@ feature {NONE} -- Events
 	on_validate_test_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
 			-- Called when `class_name' content needs to be validated
 		local
-			l_name: !STRING
 			l_valid: BOOLEAN
 			l_msg: STRING_32
 		do
-			l_name ?= a_name.to_string_8
-			wizard_information.set_test_name (l_name)
-			if not wizard_information.is_new_class and then {l_class: !CLASS_I} wizard_information.test_class then
-				feature_name_validator.validate_new_feature_name (l_name, l_class)
-			else
-				feature_name_validator.validate_feature_name (l_name)
-			end
-			l_valid := feature_name_validator.is_valid
-			l_msg := feature_name_validator.last_error_message
-			if l_valid then
-				if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
-					l_valid := False
-					l_msg := local_formatter.translation (e_bad_test_name)
+			if {l_name: !STRING} a_name.to_string_8 then
+				wizard_information.name_cache := l_name
+				if not wizard_information.is_new_class and then {l_class: !CLASS_I} wizard_information.test_class then
+					feature_name_validator.validate_new_feature_name (l_name, l_class)
+				else
+					feature_name_validator.validate_feature_name (l_name)
+				end
+				l_valid := feature_name_validator.is_valid
+				l_msg := feature_name_validator.last_error_message
+				if l_valid then
+					if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
+						l_valid := False
+						l_msg := local_formatter.translation (e_bad_test_name)
+					end
 				end
 			end
 			Result := [l_valid, l_msg]
@@ -664,16 +664,15 @@ feature {NONE} -- Implementation: creation
 	create_new_class
 			-- Create test routine in new class
 		require
+			wizard_information_usable: wizard_information.is_interface_usable
 			new_test_class_requested: wizard_information.is_new_class
-			parent_attached: wizard_information.parent /= Void
-			class_name_set: wizard_information.new_class_name /= Void and then
-			                not wizard_information.new_class_name.is_empty
+
 		local
 			l_group: CONF_CLUSTER
 			l_name, l_fname, l_path: STRING
 			l_file: RAW_FILE
 		do
-			l_group := wizard_information.parent
+			l_group := wizard_information.cluster
 			l_name := wizard_information.new_class_name
 			l_fname := l_name.as_lower
 			l_fname.append (".e")
@@ -748,7 +747,7 @@ feature {NONE} -- Implementation: creation
 			l_count: INTEGER
 		do
 			create Result.make_default
-			if wizard_information.parent.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+			if wizard_information.cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
 					-- Use old syntax
 				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
 			else
@@ -764,7 +763,7 @@ feature {NONE} -- Implementation: creation
 			else
 				Result.force_last (test_set_ancestor, v_test_set_ancestor)
 			end
-			if wizard_information.has_setup or wizard_information.has_tear_down then
+			if wizard_information.has_prepare or wizard_information.has_clean then
 				create l_body.make (100)
 				l_body.append ("%N%T%T%T-- <Precursor>%N")
 				l_body.append ("%T%Tdo%N")
@@ -772,14 +771,14 @@ feature {NONE} -- Implementation: creation
 				l_body.append ("%T%Tend%N%N")
 				create l_redefine.make (300)
 				l_redefine.append ("%T%Tredefine%N")
-				if wizard_information.has_setup then
+				if wizard_information.has_prepare then
 					l_redefine.append ("%T%T%T")
 					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
-					if wizard_information.has_tear_down then
+					if wizard_information.has_clean then
 						l_redefine.append (",%N")
 					end
 				end
-				if wizard_information.has_tear_down then
+				if wizard_information.has_clean then
 					l_redefine.append ("%T%T%T")
 					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
 				end
@@ -787,21 +786,19 @@ feature {NONE} -- Implementation: creation
 				l_redefine.append ("feature {NONE} -- Events%N%N")
 
 
-				if wizard_information.has_setup then
+				if wizard_information.has_prepare then
 					l_redefine.append_character ('%T')
 					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
 					l_redefine.append (l_body)
 				end
-				if wizard_information.has_tear_down then
+				if wizard_information.has_clean then
 					l_redefine.append_character ('%T')
 					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
 					l_redefine.append (l_body)
 				end
 				Result.force_last (l_redefine, v_redefine_events)
 			end
-			if {l_name: !STRING} wizard_information.test_name then
-				Result.force_last (l_name, v_test_name)
-			end
+			Result.force_last (wizard_information.name, v_test_name)
 			if not wizard_information.tag_list.is_empty or wizard_information.class_covered /= Void then
 				create l_indexing.make (100)
 				l_indexing.append ("%T%Tindexing%N")

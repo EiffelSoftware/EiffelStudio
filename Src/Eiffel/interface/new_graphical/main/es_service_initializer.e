@@ -85,17 +85,15 @@ feature {NONE} -- Test suite extension
 		require
 			a_service_usable: a_service.is_interface_usable
 		local
-			l_comp: ES_EIFFEL_TEST_COMPILATION_LAUNCHER
 			l_bg_executor: EIFFEL_TEST_BACKGROUND_EXECUTOR
 			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
 
 			l_extractor: EIFFEL_TEST_EXTRACTOR
 		do
-			create l_comp
-			create l_bg_executor.make_with_launcher (l_comp)
+			create l_bg_executor.make
 			a_service.processor_registrar.register (l_bg_executor, {EIFFEL_TEST_BACKGROUND_EXECUTOR_I})
 
-			create l_dbg_executor.make_with_launcher (create {ES_EIFFEL_TEST_DEBUGGER_LAUNCHER}, l_comp)
+			create l_dbg_executor.make
 			a_service.processor_registrar.register (l_dbg_executor, {EIFFEL_TEST_DEBUGGER_I})
 
 			create l_extractor.make
@@ -147,7 +145,7 @@ feature {NONE} -- Factory
 		local
 			l_evapp: EV_SHARED_APPLICATION
 		do
-			create {EIFFEL_TEST_SUITE} Result.make
+			create {EIFFEL_TEST_SUITE} Result.make (create {ES_EIFFEL_TEST_PROJECT_HELPER})
 			register_test_suite_processors (Result)
 			create l_evapp
 			l_evapp.ev_application.add_idle_action (agent Result.synchronize_processors)

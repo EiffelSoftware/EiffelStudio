@@ -36,4 +36,13 @@ feature -- Access
 		deferred
 		end
 
+feature -- Query		
+
+	is_valid_typed_argument (a_arg: like configuration; a_test_suite: like test_suite): BOOLEAN
+			-- <Precursor>
+		deferred
+		ensure then
+			result_implies_usable: Result implies a_arg.is_interface_usable
+		end
+
 end

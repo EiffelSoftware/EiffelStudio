@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_project_helper: like eiffel_project_helper)
 			-- Initialize `Current'.
 		local
 			l_project_factory: SHARED_EIFFEL_PROJECT
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 			create l_project_factory
 			l_project ?= l_project_factory.eiffel_project
-			make_with_project (l_project)
+			make_with_project (l_project, a_project_helper)
 
 			register_locator (create {EIFFEL_TEST_COMPILED_LOCATOR})
 			register_locator (create {EIFFEL_TEST_UNCOMPILED_LOCATOR}.make)

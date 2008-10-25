@@ -110,7 +110,7 @@ feature {NONE} -- Query
 		do
 			Result := a_id.substring (2, a_id.count).to_natural
 		ensure
-			result_valid: a_id.is_equal ({!STRING} #? "#" + Result.out)
+			result_valid: a_id.is_equal (("#" + Result.out).as_attached)
 		end
 
 	object_for_id (a_id: !STRING): !ANY

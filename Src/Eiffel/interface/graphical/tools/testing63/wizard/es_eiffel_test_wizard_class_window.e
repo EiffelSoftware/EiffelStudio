@@ -119,10 +119,10 @@ feature {NONE}
 			l_featc: FEATURE_CLAUSE_AS
 			l_reuse: BOOLEAN
 		do
-			l_featc := wizard_information.feature_clause
-			l_reuse := not wizard_information.is_feature_clause_new
-			if wizard_information.test_class /= Void then
-				class_tree.show_class (wizard_information.test_class)
+			l_featc := wizard_information.feature_clause_cache
+			l_reuse := not wizard_information.is_new_feature_clause_cache
+			if {l_class: EIFFEL_CLASS_I} wizard_information.test_class_cache then
+				class_tree.show_class (l_class)
 			end
 			if selected_class = Void then
 				update_feature_clause_status
@@ -137,9 +137,9 @@ feature {NONE}
 					new_feature_clause_button.enable_select
 				end
 			end
-			if wizard_information.feature_clause_name /= Void then
-				if {l_s32: !STRING_32} wizard_information.feature_clause_name.to_string_32 then
-					new_feature_clause_name.set_text (l_s32)
+			if {l_name: !STRING} wizard_information.feature_clause_name then
+				if {l_name32: !STRING_32} l_name.to_string_32 then
+					new_feature_clause_name.set_text (l_name32)
 				end
 			end
 			new_feature_clause_name.validate
@@ -179,12 +179,12 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			if wizard_information.test_class /= Void then
-				if wizard_information.is_feature_clause_new then
-					Result := wizard_information.feature_clause_name /= Void and then
-					          not wizard_information.feature_clause_name.is_empty
+			if wizard_information.test_class_cache /= Void then
+				if wizard_information.is_new_feature_clause_cache then
+					Result := wizard_information.feature_clause_name_cache /= Void and then
+					          not wizard_information.feature_clause_name_cache.is_empty
 				else
-					Result := wizard_information.feature_clause /= Void
+					Result := wizard_information.feature_clause_cache /= Void
 				end
 			end
 		end
@@ -219,11 +219,11 @@ feature {NONE} -- Events
 				selected_class ?= class_tree.selected_item.data
 				if {l_eclass: !like selected_class} class_tree.selected_item.data then
 					selected_class := l_eclass
+					wizard_information.set_test_class (l_eclass)
 				else
 					selected_class := Void
 				end
 			end
-			wizard_information.set_test_class (selected_class)
 			update_feature_clause_status
 			update_next_button_status
 		end
@@ -238,7 +238,7 @@ feature {NONE} -- Events
 				feature_clause_box.disable_sensitive
 				new_feature_clause_name.text_field.enable_sensitive
 			end
-			wizard_information.set_is_feature_clause_new (new_feature_clause_button.is_selected)
+			wizard_information.is_new_feature_clause_cache := new_feature_clause_button.is_selected
 			new_feature_clause_name.validate
 			update_next_button_status
 		end
@@ -246,10 +246,10 @@ feature {NONE} -- Events
 	on_feature_clause_select
 			-- Called when item in `feature_clause_box' is selected.
 		do
-			wizard_information.set_feature_clause (Void)
+			wizard_information.feature_clause_cache := Void
 			if feature_clause_box.selected_item /= Void then
 				if {l_fc: FEATURE_CLAUSE_AS} feature_clause_box.selected_item.data then
-					wizard_information.set_feature_clause (l_fc)
+					wizard_information.feature_clause_cache := l_fc
 				end
 			end
 			update_next_button_status
@@ -258,10 +258,10 @@ feature {NONE} -- Events
 	on_validate_feature_clause_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
 			-- Called when `new_feature_clause_name' contents need to be validated.
 		local
-			l_name: STRING
+			l_name: !STRING
 		do
-			l_name := a_name.to_string_8
-			wizard_information.set_feature_clause_name (l_name)
+			l_name ?= a_name.to_string_8
+			wizard_information.feature_clause_name_cache := l_name
 			if new_feature_clause_name.text_field.is_sensitive and l_name.is_empty then
 				Result := [False, local_formatter.translation (e_new_feature_clause_name_empty)]
 			else
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM
 		do
 			feature_clause_box.wipe_out
-			wizard_information.set_feature_clause (Void)
+			wizard_information.feature_clause_cache := Void
 			if selected_class /= Void and then selected_class.is_compiled then
 				l_eclass := selected_class.compiled_class
 				if l_eclass.has_ast then

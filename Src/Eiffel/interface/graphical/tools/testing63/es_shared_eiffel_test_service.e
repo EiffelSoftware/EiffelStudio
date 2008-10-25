@@ -27,13 +27,19 @@ feature {NONE} -- Access
 	background_executor_type: !TYPE [EIFFEL_TEST_BACKGROUND_EXECUTOR_I]
 			-- Type for executor used to execute tests in background
 		do
-			Result ?= {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
+			Result := {EIFFEL_TEST_BACKGROUND_EXECUTOR_I}
 		end
 
 	debug_executor_type: !TYPE [EIFFEL_TEST_DEBUGGER_I]
 			-- Type for executor that runs tests in the debugger
 		do
-			Result ?= {EIFFEL_TEST_DEBUGGER_I}
+			Result := {EIFFEL_TEST_DEBUGGER_I}
+		end
+
+	extractor_factory_type: !TYPE [EIFFEL_TEST_EXTRACTOR_I]
+			-- Type for test case extractor
+		do
+			Result := {EIFFEL_TEST_EXTRACTOR_I}
 		end
 
 feature {NONE} -- Events

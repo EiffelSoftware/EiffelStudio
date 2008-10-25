@@ -286,7 +286,7 @@ feature {EIFFEL_TEST_CAPTURER} -- Events
 					stream.put_line (" an_arg2")
 				else
 					stream.put_string ("create {")
-					stream.put_string (l_feat.associated_class.name)
+					stream.put_string (a_stack_element.type)
 					stream.put_string ("}.")
 					stream.put_string (l_feat.name)
 					if a_stack_element.operands.count > 0 then
@@ -311,7 +311,7 @@ feature {EIFFEL_TEST_CAPTURER} -- Events
 				stream.dedent
 			else
 				stream.put_character ('{')
-				stream.put_string (l_feat.associated_class.name)
+				stream.put_string (a_stack_element.type)
 				stream.put_character ('}')
 				stream.put_character ('.')
 				stream.put_string (l_feat.name)

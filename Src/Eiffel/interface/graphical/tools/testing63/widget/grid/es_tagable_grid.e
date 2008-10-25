@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			grid.set_dynamic_content_function (agent computed_grid_item)
 
 				-- grid appearance
-			do_nothing
 			grid.set_focused_selection_color (colors.grid_focus_selection_color)
 			grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
@@ -240,7 +239,7 @@ feature {NONE} -- Events
 			-- Called when a item has been double clicked in `grid'
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_item.row.data then
+				if a_item /= Void and then {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_item.row.data then
 					item_pointer_double_press_actions.call ([l_data.item])
 				end
 			end

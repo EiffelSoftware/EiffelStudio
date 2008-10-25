@@ -23,7 +23,7 @@ inherit
 		end
 
 create
-	make, make_with_launcher
+	make
 
 feature -- Access
 

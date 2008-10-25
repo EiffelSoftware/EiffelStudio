@@ -14,60 +14,120 @@ indexing
 deferred class
 	EIFFEL_TEST_CONFIGURATION_I
 
-feature -- Access
+inherit
+	USABLE_I
+
+feature -- Access: general
 
 	name: !STRING
 			-- Name used for new test
-		deferred
-		end
-
-	new_parent_name: !STRING
-			-- Name of the new class
 		require
-			create_new_parent: create_new_parent
+			usable: is_interface_usable
+			single_routine: is_single_routine
 		deferred
-		end
-
-	new_location: !CONF_CLUSTER
-			-- Cluster in which the new class will be created
-		require
-			create_new_parent: create_new_parent
-		deferred
-		end
-
-	parent: EIFFEL_CLASS_I
-			-- Class to which new test will be added
-		require
-			not_create_new_parent: not create_new_parent
-		deferred
-		end
-
-	covered_classes: !DS_BILINEAR [!CLASS_I]
-			-- Classes beeing tested by new test
-		deferred
-		ensure
-			result_consistent: Result = covered_classes
-		end
-
-	covered_features: !DS_BILINEAR [!FEATURE_I]
-			-- Features beeing tested by new test
-		deferred
-		ensure
-			result_consistent: Result = covered_features
 		end
 
 	tags: !DS_LINEAR [!STRING]
 			-- Predefined tags for new test
+		require
+			usable: is_interface_usable
 		deferred
 		ensure
 			result_consistent: Result = tags
 			not_contains_empty: not Result.there_exists (agent {!STRING}.is_empty)
 		end
 
-feature -- Query
+feature -- Access: new class
 
-	create_new_parent: BOOLEAN
+	new_class_name: !STRING
+			-- Name of the new class
+		require
+			usable: is_interface_usable
+			new_class: is_new_class
+		deferred
+		end
+
+	cluster: !CONF_CLUSTER
+			-- Cluster in which the new class will be created
+		require
+			usable: is_interface_usable
+			new_class: is_new_class
+		deferred
+		end
+
+	path: !STRING
+			-- Path relativ to `cluster' location where new test class will be created
+		require
+			usable: is_interface_usable
+			new_class: is_new_class
+		deferred
+		end
+
+feature -- Access: existing class
+
+	test_class: !EIFFEL_CLASS_I
+			-- Class to which new test will be added
+		require
+			usable: is_interface_usable
+			not_new_class: not is_new_class
+		deferred
+		end
+
+	feature_clause: !FEATURE_CLAUSE_AS
+			-- Feature clause to which new test routine will be written to
+		require
+			usable: is_interface_usable
+			not_new_class: not is_new_class
+			not_new_feature_clause: not is_new_feature_clause
+		deferred
+		end
+
+	feature_clause_name: !STRING
+			-- Name of new feature clause
+		require
+			usable: is_interface_usable
+			not_new_class: not is_new_class
+			new_feature_clause: is_new_feature_clause
+		deferred
+		end
+
+feature -- Status report
+
+	is_single_routine: BOOLEAN
+			-- Will new test be a single test routine?
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	is_new_class: BOOLEAN
 			-- Will test be created in a new class?
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	is_new_feature_clause: BOOLEAN
+			-- Should test be created in new feature clause?
+		require
+			usable: is_interface_usable
+			not_new_class: not is_new_class
+		deferred
+		end
+
+	has_prepare: BOOLEAN
+			-- Should new test class redefine `on_prepare' routine?
+		require
+			usable: is_interface_usable
+			new_class: is_new_class
+		deferred
+		end
+
+	has_clean: BOOLEAN
+			-- Should new test class redefine `on_clean' routine?
+		require
+			usable: is_interface_usable
+			new_class: is_new_class
 		deferred
 		end
 

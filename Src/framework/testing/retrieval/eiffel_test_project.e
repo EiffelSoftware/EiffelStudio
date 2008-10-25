@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_project (a_project: like eiffel_project)
+	make_with_project (a_project: like eiffel_project; a_helper: like eiffel_project_helper)
 			-- Initialize `Current'.
 		local
 			l_manager: EB_PROJECT_MANAGER
@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			make_collection
 
 			internal_project := a_project
+			eiffel_project_helper := a_helper
 			l_manager := internal_project.manager
 			l_manager.load_agents.force (agent synchronize)
 			l_manager.compile_stop_agents.extend (agent synchronize)
@@ -56,8 +57,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eiffel_project: !E_PROJECT is
-			-- Project in which we look for tests
+	eiffel_project_helper: !EIFFEL_TEST_PROJECT_HELPER_I
+			-- <Precursor>
+
+	eiffel_project: !E_PROJECT
+			-- <Precursor>
 		do
 			Result := internal_project
 		end
@@ -83,7 +87,7 @@ feature {EIFFEL_TEST_CLASS_LOCATOR_I} -- Access
 feature {NONE} -- Access
 
 	internal_project: like eiffel_project
-			-- Internal storage of `eiffel_project'
+			-- Internal storage for `eiffel_project'
 
 	test_class_map: !DS_HASH_TABLE [!EIFFEL_TEST_CLASS, !EIFFEL_CLASS_I]
 			-- Hash table mapping test classes (descendants of {TEST_SET}) to a list of routines names
@@ -115,7 +119,7 @@ feature -- Status report
 	is_project_initialized: BOOLEAN
 			-- <Precursor>
 		do
-			Result := internal_project.initialized and then
+			Result := 	internal_project.initialized and then
 				internal_project.workbench.universe_defined and then
 				internal_project.system_defined and then
 				internal_project.system.universe.target /= Void

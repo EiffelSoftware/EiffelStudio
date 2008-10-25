@@ -15,9 +15,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like called_feature)
+	make (a_feature: like called_feature; a_type: like type)
 			-- Initialize `Current'.
 		do
+			type := a_type
 			called_feature := a_feature
 			if is_creation_procedure then
 				create internal_operands.make (called_feature.argument_count)
@@ -33,6 +34,9 @@ feature -- Access
 
 	called_feature: !E_FEATURE
 			-- Feature called in stack element
+
+	type: !STRING
+			-- Dynamic type for `called_feature'
 
 	operands: !DS_LINEAR [!STRING]
 			-- Operands needed to invoce `called_feature'

@@ -20,6 +20,13 @@ inherit
 
 feature -- Access
 
+	eiffel_project_helper: !EIFFEL_TEST_PROJECT_HELPER_I
+		require
+			usable: is_interface_usable
+			initialized: is_project_initialized
+		deferred
+		end
+
 	eiffel_project: !E_PROJECT
 			-- Project containing actual eiffel classes
 		require

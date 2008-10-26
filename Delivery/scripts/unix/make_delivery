@@ -36,6 +36,12 @@ NO_WIZARDS="True"
 else
 NO_WIZARDS=""
 fi
+awk 'index($0, "no_doc") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+NO_DOCUMENTATION="True"
+else
+NO_DOCUMENTATION=""
+fi
 awk 'index($0, "no_new_ec") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
 NO_NEW_EC="True"
@@ -213,11 +219,13 @@ else
 	quick_move -r studio/wizards
 fi
 
-remtrace Check out the documentation
-# When compiling for GTK 1.2, disable the building of the documentation
-# since on most machine GTK 1.2 is not installed.
-cd $INIT_DIR
-. ./make_xml_documentation
+if [ ! "$NO_DOCUMENTATION" ]; then
+	remtrace Check out the documentation
+	# When compiling for GTK 1.2, disable the building of the documentation
+	# since on most machine GTK 1.2 is not installed.
+	cd $INIT_DIR
+	. ./make_xml_documentation
+fi
 
 cd $INIT_DIR
 

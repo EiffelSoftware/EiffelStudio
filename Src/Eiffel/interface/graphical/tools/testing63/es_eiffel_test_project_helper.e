@@ -1,4 +1,4 @@
-note
+indexing
 	description: "[
 		Implementation of {EIFFEL_TEST_PROJECT_HELPER_I} for EiffelStudio UI.
 	]"

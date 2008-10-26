@@ -1,4 +1,4 @@
-note
+indexing
 	description: "Summary description for {EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I}."
 	author: ""
 	date: "$Date$"

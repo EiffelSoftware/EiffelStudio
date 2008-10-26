@@ -1,4 +1,4 @@
-note
+indexing
 	description: "Summary description for {ES_EIFFEL_TEST_WIZARD_CALL_STACK_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -278,8 +278,6 @@ feature {NONE} -- Basic functionality
 
 	proceed_with_current_info
 			-- <Precursor>
-		local
-			i: INTEGER
 		do
 			if {l_extr: !EIFFEL_TEST_EXTRACTOR_I} extractor and {l_conf: !EIFFEL_TEST_CONFIGURATION_I} wizard_information then
 				test_suite.service.launch_processor (l_extr, l_conf, False)

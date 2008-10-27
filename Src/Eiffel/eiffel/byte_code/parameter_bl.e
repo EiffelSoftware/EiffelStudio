@@ -221,6 +221,7 @@ feature -- Settings
 			expression := p.expression.enlarged
 			internal_attachment_type := p.internal_attachment_type
 			is_formal := p.is_formal
+			is_for_tuple_access := p.is_for_tuple_access
 			parent := p.parent
 		end
 

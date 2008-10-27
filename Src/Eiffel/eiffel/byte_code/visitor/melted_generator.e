@@ -1566,14 +1566,17 @@ feature {NONE} -- Visitors
 
 	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
 			-- Process `a_node'.
+		local
+			l_tuple_type: TYPE_A
 		do
+			l_tuple_type := context.real_type (a_node.tuple_element_type)
 				-- It is guaranteed that the TUPLE object is on the stack because
 				-- TUPLE_ACCESS_B is always the message of a NESTED_B node.
 			if a_node.source /= Void then
 					-- Assignment to a tuple entry.
 				generate_melted_debugger_hook
 				a_node.source.process (Current)
-				if a_node.tuple_element_type.c_type.is_pointer then
+				if l_tuple_type.c_type.is_pointer then
 					context.make_catcall_check (ba, a_node.tuple_type.generics.item (a_node.position), a_node.position, False)
 				end
 				ba.append (bc_tuple_assign)
@@ -1582,7 +1585,7 @@ feature {NONE} -- Visitors
 				ba.append (bc_tuple_access)
 			end
 			ba.append_integer_32 (a_node.position)
-			ba.append_uint32_integer (a_node.tuple_element_type.sk_value (context.context_class_type.type))
+			ba.append_uint32_integer (l_tuple_type.sk_value (context.context_class_type.type))
 		end
 
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is

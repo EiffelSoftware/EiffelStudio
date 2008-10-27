@@ -278,13 +278,6 @@ feature {NONE} -- Basic operations
 			proceed_with_new_state(create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
 		end
 
-	display_state_text
-			-- <Precursor>
-		do
-			title.set_text (local_formatter.translation (t_title))
-			subtitle.set_text (local_formatter.translation (t_subtitle))
-		end
-
 	clean_screen
 			-- <Precursor>
 		do

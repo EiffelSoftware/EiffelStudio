@@ -283,13 +283,6 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	display_state_text
-			-- <Precursor>
-		do
-			title.set_text (local_formatter.translation (t_title))
-			subtitle.set_text (local_formatter.translation (t_subtitle))
-		end
-
 	clean_screen
 			-- <Precursor>
 		do

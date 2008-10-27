@@ -126,17 +126,10 @@ feature -- Basic operations
 			end
 		end
 
-	display_state_text
-			-- <Precursor>
-		do
-			title.set_text (local_formatter.translation (t_title))
-			message.set_text (local_formatter.translation (m_message))
-		end
-
 feature {NONE} -- Constants
 
 	t_title: STRING = "New eiffel test wizard"
-	m_message: STRING = "This will create a new eiffel test"
+	t_subtitle: STRING = "This will create a new eiffel test"
 
 	b_new_class: STRING = "Create new test class"
 	b_existing_class: STRING = "Use existing test class"

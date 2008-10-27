@@ -76,4 +76,19 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 		do
 		end
 
+	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
+			-- Called when a processor raises an error
+			--
+			-- `a_test_suite': Test suite that triggered event.
+			-- `a_processor': Processor raising error.
+			-- `a_error' : Readable error message containing tokens
+			-- `a_token_values': Values for each token in `a_error'
+		require
+			usable: is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_processor_usable: a_processor.is_interface_usable
+			a_processor_stopped: a_processor.is_running
+		do
+		end
+
 end

@@ -702,21 +702,5 @@ feature {NONE} -- Constants
 	w_write_permissions: STRING = "Can not create new test class file $1"
 	w_already_exists: STRING = "Test class file $1 already exists"
 
-	v_note_keyword: !STRING = "NOTE_KEYWORD"
-	v_class_name: !STRING = "CLASS_NAME"
-	v_test_set_ancestor: !STRING = "TEST_SET_ANCESTOR"
-	v_redefine_events: !STRING = "REDEFINE_EVENTS"
-	v_test_name: !STRING = "TEST_NAME"
-	v_indexing: !STRING = "INDEXING"
-
-	test_set_ancestor: !STRING
-		do
-			Result := {EIFFEL_TEST_CONSTANTS}.common_test_class_ancestor_name
-		end
-
-	system_level_test_ancestor: !STRING
-		do
-			Result := {EIFFEL_TEST_CONSTANTS}.system_level_test_ancestor_name
-		end
 
 end

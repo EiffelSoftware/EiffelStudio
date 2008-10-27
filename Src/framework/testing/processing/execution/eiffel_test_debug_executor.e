@@ -14,7 +14,6 @@ inherit
 			make as make_executor
 		redefine
 			evaluator_count,
-			evaluator_test_count,
 			is_ready,
 			start_process_internal,
 			stop_process
@@ -42,9 +41,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	frozen evaluator_test_count: NATURAL = 0
-			-- <Precursor>
 
 	frozen evaluator_count: NATURAL = 1
 			-- <Precursor>

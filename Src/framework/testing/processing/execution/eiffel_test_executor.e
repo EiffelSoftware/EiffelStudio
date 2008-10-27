@@ -54,23 +54,6 @@ feature -- Access
 			end
 		end
 
-	evaluator_test_count: NATURAL
-			-- Number of tests an evaluator gets assigned per launch
-			--
-			-- Note: can be zero to indicate that all tests are assigned to a single evaluator.
-		do
-			Result := 0
-		end
-
-	evaluator_count: NATURAL
-			-- Number of evaluators running at the same time
-		do
-			Result := 1
-		ensure
-			positive: Result > 0
-			test_count_zero_implies_result_one: evaluator_test_count = 0 implies Result = 1
-		end
-
 feature {EIFFEL_TEST_EVALUATOR_CONTROLLER} -- Access
 
 	source_writer: !EIFFEL_TEST_EVALUATOR_SOURCE_WRITER
@@ -92,6 +75,14 @@ feature {NONE} -- Access
 
 	evaluators: !DS_LINKED_LIST [like create_evaluator]
 			-- Evaluators executing tests
+
+	evaluator_count: NATURAL
+			-- Number of evaluators running at the same time
+		do
+			Result := 1
+		ensure
+			positive: Result > 0
+		end
 
 feature -- Status report
 
@@ -124,6 +115,11 @@ feature {NONE} -- Status report
 
 	last_compilation_successful: BOOLEAN
 			-- True if last melting triggered by `Current' was successful
+
+	relaunch_evaluators: BOOLEAN
+			-- Should terminated evaluators be relaunched?
+		do
+		end
 
 feature -- Status setting
 
@@ -286,7 +282,11 @@ feature {NONE} -- Status setting
 				l_evaluator := l_cursor.item
 
 				if not (l_stop or l_evaluator.is_running) then
-					l_evaluator.launch
+					if not l_evaluator.is_launched or relaunch_evaluators then
+						l_evaluator.launch
+					else
+						l_remove := True
+					end
 				else
 					l_status := l_evaluator.status
 					l_remove := l_stop or l_status.is_finished
@@ -306,7 +306,7 @@ feature {NONE} -- Status setting
 					l_cursor.forth
 				end
 			end
-			if l_stop then
+			if l_stop or else evaluators.is_empty then
 				abort
 			end
 		ensure

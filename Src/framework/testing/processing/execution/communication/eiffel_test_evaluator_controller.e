@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			-- `a_assigner': Assigner for retrieving test to be executed.
 		do
 			assigner := a_assigner
-			create status.make2 (assigner)
+			create status.make (assigner)
 		ensure
 			assigner_set: assigner = a_assigner
 		end
@@ -32,7 +32,7 @@ feature -- Access
 	launch_time: !DATE_TIME
 			-- Date and time evaluator was last launched
 		require
-			running: is_running
+			launched: is_launched
 		do
 			Result ?= internal_launch_time
 		end
@@ -63,7 +63,13 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_running: BOOLEAN
-			-- Has evaluator been launched?
+			-- Is-evaluator currently running?
+
+	is_launched: BOOLEAN
+			-- Has evaluator been previously launched?
+		do
+			Result := internal_launch_time /= Void
+		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 

@@ -14,7 +14,7 @@ inherit
 		redefine
 			compile_project,
 			evaluator_count,
-			evaluator_test_count
+			relaunch_evaluators
 		end
 
 	EIFFEL_TEST_BACKGROUND_EXECUTOR_I
@@ -30,7 +30,10 @@ feature -- Access
 	evaluator_count: NATURAL = 4
 			-- <Precursor>
 
-	evaluator_test_count: NATURAL = 1
+feature {NONE} -- Status report
+
+	relaunch_evaluators: BOOLEAN = True
+			-- <Precursor>
 
 feature {NONE} -- Status setting
 

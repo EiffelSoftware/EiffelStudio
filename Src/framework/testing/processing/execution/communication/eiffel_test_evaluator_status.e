@@ -11,11 +11,11 @@ frozen class
 	EIFFEL_TEST_EVALUATOR_STATUS
 
 create
-	make2
+	make
 
 feature {NONE} -- Initialization
 
-	make2 (a_execution_assigner: like execution_assigner)
+	make (a_execution_assigner: like execution_assigner)
 			-- Initialize `Current'.
 			--
 			-- `a_execution_assigner': Assigner for retrieving tests to be executed.

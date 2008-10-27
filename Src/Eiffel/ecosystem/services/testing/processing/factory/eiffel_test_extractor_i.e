@@ -11,8 +11,18 @@ deferred class
 	EIFFEL_TEST_EXTRACTOR_I
 
 inherit
-	EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I]
-	
+	EIFFEL_TEST_FACTORY_I
+		redefine
+			configuration
+		end
+
+feature -- Access
+
+	configuration: !EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I
+			-- <Precursor>
+		deferred
+		end
+
 feature -- Query
 
 	is_valid_call_stack_element (a_index: INTEGER): BOOLEAN

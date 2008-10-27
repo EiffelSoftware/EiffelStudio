@@ -38,7 +38,7 @@ feature -- Access
 			result_conforms: a_type.attempt (Result) /= Void
 		end
 
-	factory (a_type: !TYPE [EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]]): !EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I] is
+	factory (a_type: !TYPE [EIFFEL_TEST_FACTORY_I]): !EIFFEL_TEST_FACTORY_I is
 			-- Test factory registered under `a_type'.
 			--
 			-- `a_type': Type under which factory is registered.
@@ -124,7 +124,7 @@ feature -- Status setting
 			not_blocking_equals_preparing_a_list: not a_blocking = a_executor.is_idle
 		end
 
-	create_tests (a_factory: !EIFFEL_TEST_FACTORY_I [!EIFFEL_TEST_CONFIGURATION_I]; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
+	create_tests (a_factory: !EIFFEL_TEST_FACTORY_I; a_conf: !EIFFEL_TEST_CONFIGURATION_I; a_blocking: BOOLEAN)
 			-- Launch test creation and notify all observers
 		require
 			usable: is_interface_usable

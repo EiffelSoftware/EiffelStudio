@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	last_added_class: !EIFFEL_CLASS_I
@@ -108,12 +113,16 @@ feature -- Element change
 
 	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING)
 			-- <Precursor>
+		local
+			l_stone: !CLASSI_STONE
 		do
 			internal_error := Void
 			internal_added_class := Void
 			manager.add_class_to_cluster (a_file_name, a_cluster, a_path)
 			if {l_class: like last_added_class} manager.last_added_class then
 				internal_added_class := l_class
+				create l_stone.make (internal_added_class)
+				window_manager.last_focused_development_window.advanced_set_stone (l_stone)
 			else
 				internal_error := local_formatter.translation ("unknown error occurred")
 			end

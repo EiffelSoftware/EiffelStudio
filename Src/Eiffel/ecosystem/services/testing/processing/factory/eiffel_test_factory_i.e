@@ -16,7 +16,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_FACTORY_I [G -> EIFFEL_TEST_CONFIGURATION_I]
+	EIFFEL_TEST_FACTORY_I
 
 inherit
 	EIFFEL_TEST_PROCESSOR_I
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	configuration: !G
+	configuration: !EIFFEL_TEST_CONFIGURATION_I
 			-- Configuration used in current test creation run
 		require else
 			usable: is_interface_usable

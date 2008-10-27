@@ -1,0 +1,14 @@
+test_name	agent-on-tuple-label
+test_description When an agent is defined as an open target which is a named TUPLE and that the routine being used for the agent is one of the labels, the compiler crashes.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE 	exec_output
+execute_result	ok
+compare	exec_output output
+
+test_end

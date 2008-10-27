@@ -1,21 +1,15 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
---| All rights reserved.
---| Your use of this work is governed under the terms of the GNU General
---| Public License version 2.
-
--- This is a test control file
-
 test_name bad_formal_types 
 test_description Bad feature names used in formal type should not crash compiler
 copy_sub Ace $TEST Ace
 
 copy_raw test.e $CLUSTER test.e
-compile_melted
-compile_result validity_error TEST VTAT(1)
 
-copy_raw test2.e $CLSUTER test.e
 compile_melted
 compile_result validity_error TEST VEEN
+
+copy_raw test2.e $CLUSTER test.e
+
+resume_compile
+compile_result validity_error TEST VTAT(1)
 
 test_end

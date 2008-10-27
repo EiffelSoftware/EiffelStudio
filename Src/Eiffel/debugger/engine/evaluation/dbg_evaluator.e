@@ -374,7 +374,7 @@ feature -- Concrete evaluation
 				else
 					create last_result.make_with_value (dv.dump_value)
 				end
-				if cl /= Void then
+				if cl /= Void and then last_result /= Void then
 					last_result.suggest_static_class (cl)
 				end
 --			elseif f.name.is_equal ("item") then

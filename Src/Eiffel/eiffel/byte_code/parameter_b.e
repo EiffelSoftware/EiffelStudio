@@ -54,6 +54,9 @@ feature -- Access
 			-- Is type of the corresponding argument
 			-- of the routine seed formal?
 
+	is_for_tuple_access: BOOLEAN
+			-- Is current used for setting a tuple element?
+
 	parent: ACCESS_B
 			-- Feature which is called with this parameter
 
@@ -82,6 +85,14 @@ feature -- Modification
 			-- Set parent of this parameter to `p'.
 		do
 			parent := p
+		end
+
+	set_is_for_tuple_access (v: BOOLEAN)
+			-- Set `is_for_tuple_access' with `v'.
+		do
+			is_for_tuple_access := v
+		ensure
+			is_for_tuple_access_set: is_for_tuple_access = v
 		end
 
 feature -- Status report
@@ -196,7 +207,7 @@ feature {NONE} -- Status report
 	is_compaund: BOOLEAN is
 			-- Shall a structure be used to pass the argument value?
 		do
-			Result := context.workbench_mode
+			Result := context.workbench_mode and not is_for_tuple_access
 		end
 
 indexing

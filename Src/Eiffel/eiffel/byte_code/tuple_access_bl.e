@@ -47,6 +47,9 @@ feature -- C Code generation
 	unanalyze is
 			-- <Precursor>
 		do
+			if source /= Void then
+				source.unanalyze
+			end
 			set_register (Void)
 		end
 
@@ -65,6 +68,7 @@ feature -- C Code generation
 			-- Generate C code for access.
 		local
 			buf: like buffer
+			l_target_type: TYPE_A
 		do
 			buf := buffer
 			if source /= Void then
@@ -72,8 +76,9 @@ feature -- C Code generation
 				generate_frozen_debugger_hook
 				source.generate
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
-					if tuple_element_type.c_type.is_pointer then
-						context.generate_catcall_check (source, tuple_type.generics.item (position), position, False)
+					l_target_type := real_type (tuple_element_type)
+					if l_target_type.c_type.is_pointer then
+						context.generate_catcall_check (source, l_target_type, position, False)
 					end
 				end
 				buf.put_new_line
@@ -115,7 +120,7 @@ feature -- C Code generation
 			-- String representation of TUPLE element type.
 		do
 			inspect
-				tuple_element_type.c_type.sk_value
+				real_type (tuple_element_type).c_type.sk_value
 			when {SK_CONST}.sk_bool then Result := once "boolean"
 			when {SK_CONST}.sk_char then Result := once "character"
 			when {SK_CONST}.sk_wchar then Result := once "wide_character"

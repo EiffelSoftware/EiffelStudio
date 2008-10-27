@@ -2870,7 +2870,7 @@ feature {NONE} -- Visitors
 					-- Call `fast_item' from TUPLE
 				il_generator.generate_feature_access (l_decl_type, l_item_feat.origin_feature_id, l_item_feat.argument_count, l_item_feat.has_return_value, True)
 
-				l_tuple_element_type := a_node.tuple_element_type
+				l_tuple_element_type := context.real_type (a_node.tuple_element_type)
 				if l_tuple_element_type.is_expanded then
 					l_actual_type ?= l_tuple_element_type
 					if l_actual_type /= Void then

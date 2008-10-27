@@ -5063,7 +5063,7 @@ feature -- Implementation
 			argument: PARAMETER_B
 			assigner_arguments: BYTE_LIST [PARAMETER_B]
 			l_instr: INSTR_CALL_B
-			l_tuple_access: TUPLE_ACCESS_B
+			l_tuple_access_b: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
 			l_multi_constraint_static: TYPE_A
 		do
@@ -5170,10 +5170,14 @@ feature -- Implementation
 							if l_is_tuple_access then
 									-- When assigning to a tuple, we simply transform the tuple
 									-- access by giving a source.
-								l_tuple_access ?= access_b
-								check l_tuple_access_not_void: l_tuple_access /= Void end
-								l_tuple_access.set_line_number (l_as.start_location.line)
-								l_tuple_access.set_source (source_byte_node)
+								l_tuple_access_b ?= access_b
+								check l_tuple_access_not_void: l_tuple_access_b /= Void end
+								l_tuple_access_b.set_line_number (l_as.start_location.line)
+								create argument
+								argument.set_expression (source_byte_node)
+								argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
+								argument.set_is_for_tuple_access (True)
+								l_tuple_access_b.set_source (argument)
 								last_byte_node := target_byte_node
 							else
 									-- Evaluate assigner command arguments:
@@ -8341,10 +8345,10 @@ feature {NONE} -- Agents
 	compute_named_tuple_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_named_tuple: NAMED_TUPLE_TYPE_A; a_label_pos: INTEGER;
 										a_target: BYTE_NODE; a_target_type: TYPE_A; a_agent_type: TYPE_A)
 		local
-			l_tuple_access: TUPLE_ACCESS_B
+			l_tuple_access_b: TUPLE_ACCESS_B
 		do
-			create l_tuple_access.make (a_named_tuple, a_label_pos)
-			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type, a_target, a_target_type, a_agent_type, Void)
+			create l_tuple_access_b.make (a_named_tuple, a_label_pos)
+			compute_fake_inline_agent (a_rc, l_tuple_access_b, l_tuple_access_b.type, a_target, a_target_type, a_agent_type, Void)
 		end
 
 	compute_fake_inline_agent (

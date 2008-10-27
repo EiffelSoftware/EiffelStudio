@@ -70,13 +70,13 @@ feature -- Access
 	tuple_element_type: TYPE_A is
 			-- Type of element of tuple we are accessing.
 		do
-			Result := context.real_type (tuple_type.generics.item (position))
+			Result := tuple_type.generics.item (position)
 		end
 
 	position: INTEGER
 			-- Position in tuple we are accessing.
 
-	source: EXPR_B
+	source: PARAMETER_B
 			-- If Current is used for assignment into a tuple, then `source'
 			-- is the source of the assignment.
 

@@ -1918,6 +1918,7 @@ test	agent-crash						agent004 tcf fail agents
 test	agent-too-many-arguments		agent005 tcf fail agents
 test	incorrect-agent-type			agent006 tcf fail agents
 test	agent-dotnet-failure			agent007 tcf fail agents dotnet
+test	agent-on-tuple-label			agent008 tcf fail agents tuple
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

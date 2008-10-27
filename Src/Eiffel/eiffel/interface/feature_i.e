@@ -1667,7 +1667,7 @@ feature -- Polymorphism
  		do
  			create Result
  			Result.set_body_index (body_index)
- 			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type.actual_type)
 
  			if has_replicated_ast then
  					-- If AST has been replicated, then we must use `access_in'
@@ -1690,7 +1690,7 @@ feature -- Polymorphism
  			is_attribute: is_attribute
  		do
  			create Result
- 			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type.actual_type)
  			Result.set_feature_id (feature_id)
  		end
 
@@ -1850,6 +1850,7 @@ feature -- Signature checking
 			vffd6: VFFD6
 			vffd7: VFFD7
 			l_class: CLASS_C
+			l_error_level: NATURAL_32
 		do
 			l_class := feat_table.associated_class
 			context.initialize (l_class, l_class.actual_type, feat_table)
@@ -1911,8 +1912,9 @@ feature -- Signature checking
 				end
 				if arguments /= Void then
 						-- Check types of arguments
+					l_error_level := error_handler.error_level
 					arguments.check_types (feat_table, Current)
-					if l_class.class_id = written_in then
+					if l_class.class_id = written_in and then l_error_level = error_handler.error_level then
 						arguments.check_type_validity (l_class, Current, type_a_checker, True)
 					end
 				end

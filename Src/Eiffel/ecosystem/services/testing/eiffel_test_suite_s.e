@@ -150,6 +150,17 @@ feature -- Status setting
 			not_blocking_equals_running: not a_blocking = a_processor.is_idle
 		end
 
+feature {EIFFEL_TEST_PROCESSOR_I} -- Status setting
+
+	proagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- Propagate error message raised by processor
+		require
+			usable: is_interface_usable
+			a_processor_usable: a_processor.is_interface_usable
+			a_processor_running: a_processor.is_running
+		deferred
+		end
+
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 
 	set_test_queued (a_test: !EIFFEL_TEST_I; a_executor: !EIFFEL_TEST_EXECUTOR_I) is
@@ -223,6 +234,7 @@ feature {NONE} -- Query
 				Result.force_last ([processor_proceeded_event, agent l_observer.on_processor_proceeded])
 				Result.force_last ([processor_finished_event, agent l_observer.on_processor_finished])
 				Result.force_last ([processor_stopped_event, agent l_observer.on_processor_stopped])
+				Result.force_last ([processor_error_event, agent l_observer.on_processor_error])
 			end
 		end
 
@@ -266,6 +278,18 @@ feature -- Events
 			--
 			-- test_suite: `Current'
 			-- processor: Processor that has just stopped
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I; error: !STRING; token_values: !TUPLE]]
+			-- Events called when a processor raises an error message
+			--
+			-- test_suite: `Current'
+			-- processor: Processor raising error
+			-- error: Readable error message containing tokens
+			-- token_values: Values for tokens in error message
 		require
 			usable: is_interface_usable
 		deferred

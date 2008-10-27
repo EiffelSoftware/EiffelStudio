@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			create processor_proceeded_event
 			create processor_finished_event
 			create processor_stopped_event
+			create processor_error_event
 
 			create l_project_factory
 			l_project ?= l_project_factory.eiffel_project
@@ -96,6 +97,14 @@ feature -- Status setting
 		do
 			a_processor.start (a_arg, Current)
 			processor_launched_event.publish ([Current, a_processor])
+		end
+
+feature {EIFFEL_TEST_PROCESSOR_I} -- Status setting
+
+	proagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		do
+			processor_error_event.publish ([Current, a_processor, a_error, a_token_values])
 		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
@@ -185,5 +194,7 @@ feature -- Events
 	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I]]
 			-- <Precursor>
 
+	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I; error: !STRING; token_values: !TUPLE]]
+			-- <Precursor>
 
 end

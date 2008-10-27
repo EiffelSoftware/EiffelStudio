@@ -341,7 +341,7 @@ feature {NONE} -- Implementation: access
 	default_synopsis: STRING = "Enter synopsis"
 			-- Default text for the bug report synopsis
 
-	default_description: STRING = "Enter supplimentry bug information"
+	default_description: STRING = "Enter supplementary bug information"
 			-- Default text for the bug report description
 
 feature {NONE} -- Status report

@@ -1,0 +1,14 @@
+test_name 	 conversion-for-tuple-assignment-crash
+test_description A tuple expecting something of type ANY is assigned a basic type via an assigner. Code should execute fine but crashes at runtime.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

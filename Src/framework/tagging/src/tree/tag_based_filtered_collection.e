@@ -476,6 +476,7 @@ feature {NONE} -- Implementation
 			-- Create new regular expression
 		do
 			create Result.make
+			Result.set_caseless (True)
 			Result.compile (a_expr)
 		end
 

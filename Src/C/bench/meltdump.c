@@ -64,17 +64,18 @@ static  int     ctype_max;
 
 /*------------------------------------------------------------------*/
 
-static  void    prepare_types (void);
-static  void    analyze_file (void);
-static  void    analyze_cnodes (void);
-static  void    analyze_routids (void);
-static  void    analyze_parents (void);
-static  void    analyze_cecil (void);
-static  void    analyze_options (void);
-static  void    analyze_routinfo (void);
-static  void    analyze_desc (void);
-static  void    read_byte_code (void);
-static  void    panic (void);
+static void prepare_types (void);
+static void analyze_file (void);
+static void analyze_cnodes (void);
+static void analyze_routids (void);
+static void analyze_parents (void);
+static void analyze_cecil (void);
+static void analyze_options (void);
+static void analyze_routinfo (void);
+static void analyze_desc (void);
+static void analyze_root (void);
+static void read_byte_code (void);
+static void panic (void);
 
 /*------------------------------------------------------------------*/
 
@@ -319,22 +320,7 @@ static  void    analyze_file (void)
 	analyze_options ();
 	analyze_routinfo ();
 	analyze_desc ();
-
-	fprintf (mfp,"Root class origin       : %d\n", rlong ());
-		/* Root type computation */
-	(void) rlong ();	/* Read dynamic type of ANY. */
-	fprintf (mfp,"Root type description: ");
-	{
-		short t;
-		fprintf (mfp, "{");
-		while ((t = rshort())!=-1) {
-			fprintf (mfp, "%d, ", (int) t);
-		}
-		fprintf (mfp, "-1}");
-		fprintf (mfp, "\n");
-	}
-	fprintf (mfp,"Root class offset       : %d\n", rlong ());
-	fprintf (mfp,"Root class arguments    : %d\n", rlong ());
+	analyze_root ();
 
 	print_line ();
 }
@@ -839,7 +825,6 @@ static  void    analyze_routinfo (void)
 /*------------------------------------------------------------------*/
 
 static  void    analyze_desc (void)
-
 {
 	long    count, tid, info, type, offset, i, j;
 	short   org_count, info_count, org_id;
@@ -849,44 +834,33 @@ static  void    analyze_desc (void)
 
 	fprintf (mfp,"Descriptors : (desc_tab)\n");
 
-	for (;;)
-	{
-		count = rlong ();
-
-		if (count == -1)
-			break;
-
-		while (count--)
-		{
+	while ((count = rlong()) != -1L) {
+		while (count-- > 0) {
 			tid       = (long) rshort ();
 			org_count = rshort ();
 
-			while (org_count--)
-			{
+			while (org_count-- > 0) {
 				org_id = rshort ();
 
 				fprintf (mfp,"Origin_id %5d  Dtype_id %8ld\n", (int) org_id, tid);
 
 				info_count = rshort ();
 
-				if (info_count > 0)
-				{
+				if (info_count > 0) {
 					dinfo = (short *) malloc (3*info_count * sizeof (short));
 
-					if (dinfo == (short *) 0)
-					{
+					if (dinfo == (short *) 0) {
 						fprintf (stderr,"Out of memory\n");
 						panic ();
 					}
-				}
-				else
+				} else {
 					dinfo = (short *) 0;
+				}
 
 				i = 0;
 				j = info_count;
 
-				while (j--)
-				{
+				while (j--) {
 					info = (long) rbody_index ();
 					offset = (long) ruint32 ();
 					type = (long) rshort ();
@@ -905,25 +879,59 @@ static  void    analyze_desc (void)
 
 				fprintf (mfp, "desc_tab [%d][%ld] = ", org_id, tid-1);
 
-				for (i = 0; i < info_count; ++i)
-				{
-					if ((i % 8) == 0)
+				for (i = 0; i < info_count; ++i) {
+					if ((i % 8) == 0) {
 						fprintf (mfp, "\n  ");
-
-					fprintf (mfp, "%ld: (%d,%d,%d) ",
-							 i, dinfo [3*i], dinfo [3*i+1], dinfo [3 * i + 2]);
+					}
+					fprintf (mfp, "%ld: (%d,%d,%d) ", i, dinfo [3*i], dinfo [3*i+1], dinfo [3 * i + 2]);
 				}
 
 				fprintf (mfp, "\n");
 
-				if (dinfo != (short *) 0)
+				if (dinfo != (short *) 0) {
 					free ((char *) dinfo);
+				}
 			}
 		}
 	}
 
 	print_line ();
 }
+
+/*------------------------------------------------------------------*/
+static void analyze_root (void)
+{
+	uint32 nb_roots, i, slen;
+
+	nb_roots = rlong();
+
+	fprintf(mfp, "Number of roots is %d\n", nb_roots);
+
+	for (i = 0; i < nb_roots; i++) {
+		fprintf(mfp, "Root class/feature name: ");
+		slen = rlong();
+		while (slen--) {
+			fprintf (mfp, "%c", rchar());
+			++i;
+		}
+		fprintf (mfp,"\nRoot class origin: %d\n", rlong ());
+			/* Root type computation */
+		(void) rlong ();	/* Read dynamic type of ANY. */
+		fprintf (mfp,"Root type description: ");
+		{
+			short t;
+			fprintf (mfp, "{");
+			while ((t = rshort())!=-1) {
+				fprintf (mfp, "%d, ", (int) t);
+			}
+			fprintf (mfp, "-1}");
+			fprintf (mfp, "\n");
+		}
+		fprintf (mfp,"Root class offset       : %d\n", rlong ());
+		fprintf (mfp,"Root class arguments    : %d\n", rlong ());
+	}
+}
+
 /*------------------------------------------------------------------*/
 
 static EIF_CHARACTER rchar (void)

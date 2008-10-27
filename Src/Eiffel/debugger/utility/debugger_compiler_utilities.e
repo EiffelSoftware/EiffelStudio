@@ -275,6 +275,7 @@ feature -- Feature access
 					-- case where we do a static call to an external routine
 					-- (e.g. when stepping into `sp_count' from ISE_RUNTIME from `count' of SPECIAL.)
 				if
+					a_dynamic_class /= Void and then
 					a_dynamic_class /= a_written_class and then
 					Result /= Void and then
 					not Result.is_inline_agent and then

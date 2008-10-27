@@ -41,7 +41,7 @@ feature -- Access
 			result_available: Result.is_project_initialized
 		end
 
-	argument: ANY
+	argument: !ANY
 			-- Argument with which `Current' has been launched
 		require
 			usable: is_interface_usable
@@ -164,7 +164,9 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
 			attach_test_suite (a_test_suite)
-			start_process (a_arg)
+			if {l_arg: like argument} a_arg then
+				start_process (l_arg)
+			end
 		ensure
 			idle: is_idle
 			test_suite_set: test_suite = a_test_suite

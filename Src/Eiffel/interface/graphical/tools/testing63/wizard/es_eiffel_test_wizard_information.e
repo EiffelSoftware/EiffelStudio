@@ -12,7 +12,17 @@ class
 inherit
 	EB_WIZARD_INFORMATION
 
+	EIFFEL_TEST_CONFIGURATION_I
+		rename
+			is_interface_usable as is_configuration_usable
+		select
+			is_configuration_usable
+		end
+
 	EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I
+		rename
+			is_interface_usable as is_extractor_configuration_usable
+		end
 
 create
 	make
@@ -51,9 +61,19 @@ feature -- Access
 				l_cover.append_character ('}')
 				if feature_covered /= Void then
 					l_cover.append_character ('.')
-					l_cover.append (feature_covered.name)
+					if feature_covered.is_prefix then
+						l_cover.append ("prefix_")
+						l_cover.append (feature_covered.prefix_symbol)
+					elseif feature_covered.is_infix then
+						l_cover.append ("infix_")
+						l_cover.append (feature_covered.infix_symbol)
+					else
+						l_cover.append (feature_covered.name)
+					end
 				end
+				l_list.force_last (l_cover)
 			end
+			Result := l_list
 		end
 
 	new_class_name: !STRING
@@ -153,25 +173,29 @@ feature {ES_EIFFEL_TEST_WIZARD_WINDOW} -- Access
 
 feature -- Status report
 
-	is_interface_usable: BOOLEAN
+	is_configuration_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := True
-			if Result and is_single_routine then
-				Result := name_cache /= Void
-			end
-			if Result and not is_manual_test_class then
-				Result := new_class_name_cache /= Void and
-				          cluster_cache /= Void and
-				          path_cache /= Void
-			elseif Result then
-				Result := test_class_cache /= Void
-				if Result and is_new_feature_clause then
-					Result := feature_clause_name_cache /= Void
-				elseif Result then
-					Result := feature_clause_cache /= Void
+			if not is_single_routine or name_cache /= Void then
+				if not is_manual_test_class then
+					Result := new_class_name_cache /= Void and
+				              cluster_cache /= Void and
+				              path_cache /= Void
+				elseif test_class_cache /= Void then
+					if is_new_feature_clause then
+						Result := feature_clause_name_cache /= Void
+					else
+						Result := feature_clause_cache /= Void
+					end
 				end
 			end
+
+		end
+
+	is_extractor_configuration_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_configuration_usable and is_extracted_test_class
 		end
 
 	is_new_manual_test_class: BOOLEAN

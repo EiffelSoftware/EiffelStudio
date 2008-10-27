@@ -396,9 +396,7 @@ feature {NONE} -- Basic operations
 			else
 				-- not implemented yet
 			end
-			if is_test_created then
-				cancel_actions
-			end
+			cancel_actions
 		end
 
 	display_state_text
@@ -664,183 +662,16 @@ feature {NONE} -- Implementation: creation
 	create_new_class
 			-- Create test routine in new class
 		require
-			wizard_information_usable: wizard_information.is_interface_usable
+			wizard_information_usable: wizard_information.is_configuration_usable
 			new_test_class_requested: wizard_information.is_new_class
-
 		local
-			l_group: CONF_CLUSTER
-			l_name, l_fname, l_path: STRING
-			l_file: RAW_FILE
+			l_factory: !EIFFEL_TEST_PROCESSOR_I
 		do
-			l_group := wizard_information.cluster
-			l_name := wizard_information.new_class_name
-			l_fname := l_name.as_lower
-			l_fname.append (".e")
-			l_path := wizard_information.path
-			if l_path = Void then
-				create l_path.make_empty
-			end
-			create l_file.make (l_group.location.build_path (l_path, l_fname))
-			if not l_file.exists then
-				if l_file.is_creatable then
-					render_class_text (l_file.name)
-					if is_test_created then
-						manager.add_class_to_cluster (l_fname, l_group, l_path)
-						if {l_classi: !EIFFEL_CLASS_I} manager.last_added_class then
-							if test_suite.is_service_available then
-								test_suite.service.synchronize_with_class (l_classi)
-							end
-							development_window.advanced_set_stone (create {CLASSI_STONE}.make (l_classi))
-							-- TODO: make new class available
-						end
-					end
-				else
-					show_error_prompt (w_write_permissions, [l_file.name])
+			if test_suite.is_service_available and then {l_ts: !EIFFEL_TEST_SUITE_S} test_suite.service then
+				if l_ts.processor_registrar.is_registered (manual_factory_type) then
+					l_factory := l_ts.processor_registrar.processor (manual_factory_type)
+					l_ts.launch_processor (l_factory, wizard_information.as_attached, False)
 				end
-			else
-				show_error_prompt (w_already_exists, [l_file.name])
-			end
-		end
-
-	render_class_text (a_file_name: STRING)
-			-- Render test class text from default template to file.
-			--
-			-- `a_file_name': Name of file to which class text will be rendered.
-		require
-			a_file_name_not_empty: a_file_name /= Void and then not a_file_name.is_empty
-			a_file_name_createable: (create {RAW_FILE}.make (a_file_name)).is_creatable
-		local
-			l_retried: BOOLEAN
-			l_template, l_user_template: FILE_NAME
-			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
-		do
-			if not l_retried then
-				create l_template.make_from_string (eiffel_layout.templates_path)
-				l_template.extend ("defaults")
-				l_template.set_file_name ("test.e.tpl")
-				l_user_template := eiffel_layout.user_priority_file_name (l_template, True)
-				if l_user_template /= Void then
-					l_template := l_user_template
-				end
-				if (create {RAW_FILE}.make (l_template)).exists then
-					create l_wizard
-					if l_wizard.is_service_available then
-						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
-						is_test_created := True
-					else
-						show_error_prompt (w_wizard_service_not_available, [])
-					end
-				else
-					show_error_prompt (w_template_file, [l_template])
-				end
-			end
-		rescue
-			l_retried := True
-			retry
-		end
-
-	template_parameters: DS_HASH_TABLE [!STRING, !STRING]
-			-- Template parameters for creating actual class text from template file.
-		local
-			l_redefine, l_body, l_indexing: !STRING
-			l_cursor: DS_BILINEAR_CURSOR [!STRING]
-			l_count: INTEGER
-		do
-			create Result.make_default
-			if wizard_information.cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
-					-- Use old syntax
-				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
-			else
-					-- Use new syntax
-				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
-			end
-			if {l_class_name: !STRING} wizard_information.new_class_name then
-				Result.force_last (l_class_name, v_class_name)
-			end
-			if wizard_information.is_system_level_test then
-					-- TODO: switch to system level tests
-				Result.force_last (test_set_ancestor, v_test_set_ancestor)
-			else
-				Result.force_last (test_set_ancestor, v_test_set_ancestor)
-			end
-			if wizard_information.has_prepare or wizard_information.has_clean then
-				create l_body.make (100)
-				l_body.append ("%N%T%T%T-- <Precursor>%N")
-				l_body.append ("%T%Tdo%N")
-				l_body.append ("%T%T%Tassert (%"not_implemented%", False)%N")
-				l_body.append ("%T%Tend%N%N")
-				create l_redefine.make (300)
-				l_redefine.append ("%T%Tredefine%N")
-				if wizard_information.has_prepare then
-					l_redefine.append ("%T%T%T")
-					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
-					if wizard_information.has_clean then
-						l_redefine.append (",%N")
-					end
-				end
-				if wizard_information.has_clean then
-					l_redefine.append ("%T%T%T")
-					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
-				end
-				l_redefine.append ("%N%T%Tend%N%N")
-				l_redefine.append ("feature {NONE} -- Events%N%N")
-
-
-				if wizard_information.has_prepare then
-					l_redefine.append_character ('%T')
-					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.prepare_routine_name)
-					l_redefine.append (l_body)
-				end
-				if wizard_information.has_clean then
-					l_redefine.append_character ('%T')
-					l_redefine.append ({EIFFEL_TEST_CONSTANTS}.clean_routine_name)
-					l_redefine.append (l_body)
-				end
-				Result.force_last (l_redefine, v_redefine_events)
-			end
-			Result.force_last (wizard_information.name, v_test_name)
-			if not wizard_information.tag_list.is_empty or wizard_information.class_covered /= Void then
-				create l_indexing.make (100)
-				l_indexing.append ("%T%Tindexing%N")
-				if not wizard_information.tag_list.is_empty then
-					l_indexing.append ("%T%T%Ttesting: ")
-					from
-						l_cursor := wizard_information.tag_list.new_cursor
-						l_cursor.start
-					until
-						l_cursor.after
-					loop
-						l_count := l_count + l_cursor.item.count
-						if l_count > 80 then
-							l_indexing.append ("%N%T%T%T         ")
-							l_count := l_cursor.item.count
-						end
-						l_indexing.append (" %"")
-						l_indexing.append (l_cursor.item)
-						l_indexing.append_character ('"')
-						if not l_cursor.is_last then
-							l_indexing.append_character (',')
-						else
-							l_indexing.append_character ('%N')
-						end
-						l_cursor.forth
-					end
-				end
-				if wizard_information.class_covered /= Void then
-					l_indexing.append ("%T%T%Ttesting: %"covers/{")
-					l_indexing.append (wizard_information.class_covered.name)
-					l_indexing.append ("}")
-					if wizard_information.feature_covered /= Void then
-						if {l_feat: !STRING} wizard_information.feature_covered.name then
-							if tag_utilities.is_valid_token (l_feat) then
-								l_indexing.append_character ('.')
-								l_indexing.append (l_feat)
-							end
-						end
-					end
-					l_indexing.append ("%"%N")
-				end
-				Result.force_last (l_indexing, v_indexing)
 			end
 		end
 

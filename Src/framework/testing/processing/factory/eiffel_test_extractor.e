@@ -10,14 +10,10 @@ class
 	EIFFEL_TEST_EXTRACTOR
 
 inherit
-	EIFFEL_TEST_EXTRACTOR_I
-
-	EIFFEL_TEST_PROCESSOR
-		rename
-			make as make_processor,
-			is_valid_argument as is_valid_configuration,
-			tests as created_tests,
-			argument as configuration
+	EIFFEL_TEST_FACTORY
+		redefine
+			internal_configuration,
+			is_valid_typed_argument
 		end
 
 	SHARED_DEBUGGER_MANAGER
@@ -25,23 +21,10 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make
-			-- Initialize `Current'.
-		do
-			create created_tests.make_default
-		end
-
-feature -- Access
-
-	created_tests: !DS_HASH_SET [!EIFFEL_TEST_I]
-			-- <Precursor>
-
 feature {NONE} -- Access
 
-	internal_configuration: ?like configuration
-			-- Internal storage for `configuration'
+	internal_configuration: ?EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I
+			-- <Precursor>
 
 	source_writer: !EIFFEL_TEST_EXTRACTED_SOURCE_WRITER
 			-- Source writer for creating extracted test set classes
@@ -56,25 +39,7 @@ feature {NONE} -- Access
 			Result.observers.force_last (source_writer)
 		end
 
-feature -- Status report
-
-	is_running: BOOLEAN
-			-- <Precursor>
-		do
-			Result := internal_configuration /= Void
-		end
-
-	is_finished: BOOLEAN
-			-- <Precursor>
-
 feature {NONE} -- Status setting
-
-	start_process_internal (a_arg: like configuration)
-			-- <Precursor>
-		do
-			is_finished := False
-			internal_configuration := a_arg
-		end
 
 	proceed_process
 			-- <Precursor>
@@ -110,14 +75,9 @@ feature {NONE} -- Status setting
 					end
 				end
 				l_file.close
+				add_class (configuration.cluster, configuration.path, l_filename)
 			end
 			is_finished := True
-		end
-
-	stop_process
-			-- <Precursor>
-		do
-			internal_configuration := Void
 		end
 
 feature -- Query
@@ -149,14 +109,6 @@ feature -- Query
 						Result := capturer.is_valid_call_stack_element (l_cse)
 					end
 				end
-			end
-		end
-
-	configuration: !EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I
-			-- <Precursor>
-		do
-			if {l_conf: !like configuration} internal_configuration then
-				Result := l_conf
 			end
 		end
 

@@ -37,9 +37,15 @@ feature {NONE} -- Access
 		end
 
 	extractor_factory_type: !TYPE [EIFFEL_TEST_EXTRACTOR_I]
-			-- Type for test case extractor
+			-- Factory type for test case extraction
 		do
 			Result := {EIFFEL_TEST_EXTRACTOR_I}
+		end
+
+	manual_factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
+			-- Type for manual test creation
+		do
+			Result := {EIFFEL_TEST_FACTORY_I}
 		end
 
 feature {NONE} -- Events

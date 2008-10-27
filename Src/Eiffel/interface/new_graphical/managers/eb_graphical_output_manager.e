@@ -330,7 +330,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		do
 			from

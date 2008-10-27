@@ -80,6 +80,7 @@ feature --Compare
 					open_map.forth
 				end
 			end
+			Result := Result.hash_code
 		end
 
 	is_equal (other: FEATURE_REORDERING): BOOLEAN is

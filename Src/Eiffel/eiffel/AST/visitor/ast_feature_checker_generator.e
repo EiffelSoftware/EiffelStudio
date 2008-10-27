@@ -6999,12 +6999,23 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_old_written_class: CLASS_C
 			l_written_class: CLASS_C
+			t: TYPE_A
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
 				context.clear_local_context
 				set_is_inherited (True)
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
+				if not process_preconditions then
+						-- Mark that result is initialized and attached if required.
+					t := a_feature.type
+					if t.is_initialization_required and then not context.initialization_keeper.is_result_set then
+						context.set_result
+					end
+					if t.is_attached then
+						context.add_result_instruction_scope
+					end
+				end
 				from
 					i := assert_id_set.count
 				until
@@ -7041,6 +7052,9 @@ feature {NONE} -- Implementation
 						context.set_written_class (l_old_written_class)
 					end
 					i := i - 1
+				end
+				if t /= Void and then t.is_attached then
+					context.remove_result_scope
 				end
 				set_is_inherited (False)
 			end

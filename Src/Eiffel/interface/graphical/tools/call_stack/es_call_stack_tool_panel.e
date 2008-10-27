@@ -185,6 +185,17 @@ feature {NONE} -- Initialization
 			update_call_stack_level_selection_mode (preferences.debug_tool_data.select_call_stack_level_on_double_click_preference)
 			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
 
+				-- Set scrolling preferences.
+			stack_grid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			stack_grid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			stack_grid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+				agent stack_grid.set_mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+				agent stack_grid.set_mouse_wheel_scroll_full_page)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+				agent stack_grid.set_scrolling_common_line_count)
+
 				--| Specific Grid's behavior
 			stack_grid.build_delayed_cleaning
 

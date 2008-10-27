@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.5"
+	generator: "geyacc version 3.8"
 
 class EXTERNAL_TOKENS
 
@@ -105,8 +105,8 @@ feature -- Access
 				Result := "TE_USE"
 			when TE_ID then
 				Result := "TE_ID"
-			when TE_INCLUDE_ID then
-				Result := "TE_INCLUDE_ID"
+			when TE_FILE_ID then
+				Result := "TE_FILE_ID"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -155,6 +155,6 @@ feature -- Token codes
 	TE_UNSIGNED: INTEGER is 296
 	TE_USE: INTEGER is 297
 	TE_ID: INTEGER is 298
-	TE_INCLUDE_ID: INTEGER is 299
+	TE_FILE_ID: INTEGER is 299
 
 end

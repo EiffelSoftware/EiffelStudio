@@ -193,7 +193,7 @@ N		[0-9]
 					-- that includes an hyphenation.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				last_token := TE_INCLUDE_ID
+				last_token := TE_FILE_ID
 			}
 
 .

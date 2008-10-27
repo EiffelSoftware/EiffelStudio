@@ -75,6 +75,16 @@ feature {NONE} -- Access
 			not_void: Result /= Void
 		end
 
+	t_title: !STRING
+			-- Window title
+		deferred
+		end
+
+	t_subtitle: !STRING
+			-- Window subtitle
+		deferred
+		end
+
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
@@ -91,6 +101,17 @@ feature {NONE} -- Status setting
 				first_window.enable_next_button
 			else
 				first_window.disable_next_button
+			end
+		end
+
+	display_state_text
+			-- <Precursor>
+		do
+			title.set_text (local_formatter.translation (t_title))
+			if {l_init: !ES_EIFFEL_TEST_WIZARD_INITIAL_WINDOW} Current then
+				message.set_text (local_formatter.translation (t_subtitle))
+			else
+				subtitle.set_text (local_formatter.translation (t_subtitle))
 			end
 		end
 

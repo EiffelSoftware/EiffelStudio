@@ -399,13 +399,6 @@ feature {NONE} -- Basic operations
 			cancel_actions
 		end
 
-	display_state_text
-			-- <Precursor>
-		do
-			title.set_text (local_formatter.translation (t_title))
-			subtitle.set_text (local_formatter.translation (t_subtitle))
-		end
-
 	clean_screen
 			-- <Precursor>
 		do
@@ -701,6 +694,5 @@ feature {NONE} -- Constants
 	w_template_file: STRING = "Template file $1 does not exists."
 	w_write_permissions: STRING = "Can not create new test class file $1"
 	w_already_exists: STRING = "Test class file $1 already exists"
-
 
 end

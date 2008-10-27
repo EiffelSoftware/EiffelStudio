@@ -117,14 +117,6 @@ feature {NONE} -- Status report
 			Result := not wizard_information.call_stack_elements.is_empty
 		end
 
-feature {NONE} -- Status setting
-
-	display_state_text
-			-- <Precursor>
-		do
-
-		end
-
 feature {NONE} -- Query
 
 	populate_row (a_row: !EV_GRID_ROW; a_cse: !CALL_STACK_ELEMENT)
@@ -314,6 +306,9 @@ feature {NONE} -- Events
 		end
 
 feature {NONE} -- Constants
+
+	t_title: !STRING = "Extract application state"
+	t_subtitle: !STRING = "Chose features on call stack for which test should be created"
 
 	feature_column_index: INTEGER = 1
 	position_column_index: INTEGER = 4

@@ -32,7 +32,7 @@ create
 %token	TE_JAVA_LANGUAGE, TE_DEFERRED, TE_OPERATOR, TE_INTEGER
 %token	TE_SET_FIELD, TE_SET_PROPERTY, TE_SIGNATURE, TE_STATIC, TE_CREATOR
 %token	TE_STATIC_FIELD, TE_SET_STATIC_FIELD, TE_STRUCT, TE_TYPE
-%token	TE_CONST, TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID, TE_INCLUDE_ID
+%token	TE_CONST, TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID, TE_FILE_ID
 
 %type <EXTERNAL_EXTENSION_AS>	External_declaration C_specification CPP_specification
 								DLL_specification DLLwin_specification IL_specification
@@ -387,7 +387,7 @@ File_identifier:
 		{
 			$$ := new_double_quote_id_as (token_buffer)
 		}
-	|	TE_DQUOTE TE_INCLUDE_ID TE_DQUOTE
+	|	TE_DQUOTE TE_FILE_ID TE_DQUOTE
 		{
 			$$ := new_double_quote_id_as (token_buffer)
 		}
@@ -396,7 +396,7 @@ File_identifier:
 		{
 			$$ := new_system_id_as (token_buffer)
 		}
-	|	TE_LT TE_INCLUDE_ID TE_GT
+	|	TE_LT TE_FILE_ID TE_GT
 		{
 			$$ := new_system_id_as (token_buffer)
 		}
@@ -408,6 +408,14 @@ File_identifier:
 
 Dll_identifier: 
 		TE_DQUOTE TE_ID TE_DQUOTE
+		{
+			$$ := new_double_quote_id_as (token_buffer)
+		}
+	|	TE_DQUOTE TE_FILE_ID TE_DQUOTE
+		{
+			$$ := new_double_quote_id_as (token_buffer)
+		}
+	|	TE_FILE_ID
 		{
 			$$ := new_double_quote_id_as (token_buffer)
 		}

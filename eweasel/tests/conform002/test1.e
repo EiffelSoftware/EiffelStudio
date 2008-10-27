@@ -7,6 +7,12 @@ feature {NONE} -- Creation
 
 	make (is_attached: BOOLEAN) is
 		do
+			io.put_string ((create {A [?G]}).generating_type)
+			io.put_new_line
+			io.put_string ((create {A [!G]}).generating_type)
+			io.put_new_line
+			io.put_string ((create {A [G]}).generating_type)
+			io.put_new_line
 			test_anchors
 			test_single_generic (is_attached)
 			test_same_types (is_attached)
@@ -119,63 +125,63 @@ feature {NONE} -- Implementation
 			if is_attached then
 				check_for_true ("single generic - 3", a_att /= Void)
 			else
-				check_for_true ("single generic - 3", a_att = Void)
+				check_for_true ("single generic - 4", a_att = Void)
 			end
 
 			a_det ?= create {A [?G]}
-			check_for_true ("single generic - 12", a_det /= Void)
+			check_for_true ("single generic - 5", a_det /= Void)
 			a_det ?= create {A [!G]}
-			check_for_true ("single generic - 13", a_det /= Void)
+			check_for_true ("single generic - 6", a_det /= Void)
 			a_det ?= create {A [G]}
-			check_for_true ("single generic - 13", a_det /= Void)
+			check_for_true ("single generic - 7", a_det /= Void)
 
 			a_neutral ?= create {A [?G]}
 			if is_attached then
-				check_for_true ("single generic - 1", a_neutral = Void)
+				check_for_true ("single generic - 8", a_neutral = Void)
 			else
-				check_for_true ("single generic - 1", a_neutral /= Void)
+				check_for_true ("single generic - 9", a_neutral /= Void)
 			end
 			a_neutral ?= create {A [!G]}
-			check_for_true ("single generic - 2", a_neutral /= Void)
+			check_for_true ("single generic - 10", a_neutral /= Void)
 			a_neutral ?= create {A [G]}
-			check_for_true ("single generic - 3", a_neutral /= Void)
+			check_for_true ("single generic - 11", a_neutral /= Void)
 
 				-- Case of anchors
 			a_att ?= create {like anchor_1}
-			check_for_true ("single generic - 18", a_att = Void)
+			check_for_true ("single generic - 12", a_att = Void)
 			a_att ?= create {like anchor_2}
-			check_for_true ("single generic - 19", a_att /= Void)
+			check_for_true ("single generic - 13", a_att /= Void)
 			a_att ?= create {like anchor_7}
 			if is_attached then
-				check_for_true ("single generic - 19", a_att /= Void)
+				check_for_true ("single generic - 14", a_att /= Void)
 			else
-				check_for_true ("single generic - 19", a_att = Void)
+				check_for_true ("single generic - 15", a_att = Void)
 			end
 
 			a_det ?= create {like anchor_1}
-			check_for_true ("single generic - 20", a_det /= Void)
+			check_for_true ("single generic - 16", a_det /= Void)
 			a_det ?= create {like anchor_2}
-			check_for_true ("single generic - 21", a_det /= Void)
+			check_for_true ("single generic - 17", a_det /= Void)
 			a_det ?= create {like anchor_7}
-			check_for_true ("single generic - 19", a_det /= Void)
+			check_for_true ("single generic - 18", a_det /= Void)
 
 			a_att ?= create {like anchor_3}
-			check_for_true ("single generic - 22", a_att = Void)
+			check_for_true ("single generic - 19", a_att = Void)
 			a_att ?= create {like anchor_4}
-			check_for_true ("single generic - 23", a_att /= Void)
+			check_for_true ("single generic - 20", a_att /= Void)
 			a_att ?= create {like anchor_8}
 			if is_attached then
-				check_for_true ("single generic - 19", a_att /= Void)
+				check_for_true ("single generic - 21", a_att /= Void)
 			else
-				check_for_true ("single generic - 19", a_att = Void)
+				check_for_true ("single generic - 22", a_att = Void)
 			end
 
 			a_det ?= create {like anchor_3}
-			check_for_true ("single generic - 24", a_det /= Void)
+			check_for_true ("single generic - 23", a_det /= Void)
 			a_det ?= create {like anchor_4}
-			check_for_true ("single generic - 25", a_det /= Void)
+			check_for_true ("single generic - 24", a_det /= Void)
 			a_det ?= create {like anchor_8}
-			check_for_true ("single generic - 19", a_det /= Void)
+			check_for_true ("single generic - 25", a_det /= Void)
 
 			a_att ?= create {like anchor_5}
 			check_for_true ("single generic - 26", a_att = Void)
@@ -183,17 +189,17 @@ feature {NONE} -- Implementation
 			check_for_true ("single generic - 27", a_att /= Void)
 			a_att ?= create {like anchor_9}
 			if is_attached then
-				check_for_true ("single generic - 19", a_att /= Void)
+				check_for_true ("single generic - 28", a_att /= Void)
 			else
-				check_for_true ("single generic - 19", a_att = Void)
+				check_for_true ("single generic - 29", a_att = Void)
 			end
 
 			a_det ?= create {like anchor_5}
-			check_for_true ("single generic - 28", a_det /= Void)
+			check_for_true ("single generic - 30", a_det /= Void)
 			a_det ?= create {like anchor_6}
-			check_for_true ("single generic - 29", a_det /= Void)
+			check_for_true ("single generic - 31", a_det /= Void)
 			a_det ?= create {like anchor_9}
-			check_for_true ("single generic - 19", a_det /= Void)
+			check_for_true ("single generic - 32", a_det /= Void)
 		end
 
 	test_same_types (is_attached: BOOLEAN) is

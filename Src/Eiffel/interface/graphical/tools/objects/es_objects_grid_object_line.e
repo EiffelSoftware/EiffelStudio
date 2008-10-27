@@ -1061,6 +1061,7 @@ feature {NONE} -- Agent filling
 			v_class_id,
 			v_feature_id: DEBUG_BASIC_VALUE [INTEGER]
 			v_is_precompiled: DEBUG_BASIC_VALUE [BOOLEAN]
+			cl_id, fe_id: INTEGER
 			v_nb: INTEGER
 			grid: EV_GRID
 			ag_fe: E_FEATURE
@@ -1100,33 +1101,31 @@ feature {NONE} -- Agent filling
 				list_cursor.forth
 			end
 			if v_nb >= 3 then
-				if v_is_precompiled.value then
-					ag_fe := agent_feature_for_origin_and_offset (
-									v_class_id.value,
-									v_feature_id.value
-								)
-				else
-					ag_fe := agent_feature_for_class_and_type_id (
-									v_class_id.value + 1, --| runtime value + 1: to get the eiffel compiler id
-									v_feature_id.value
-								)
-				end
-				if ag_fe /= Void then
-					ag_fe := real_feature (ag_fe)
-					r := 1
-					a_row.insert_subrow (r)
-					lrow := a_row.subrow (r)
+				cl_id := v_class_id.value
+				fe_id := v_feature_id.value
+				if cl_id > 0 and fe_id > 0 then
+					if v_is_precompiled.value then
+						ag_fe := agent_feature_for_origin_and_offset (cl_id, fe_id)
+					else
+						ag_fe := agent_feature_for_class_and_type_id (cl_id + 1, fe_id) --|cl_id: runtime value + 1: to get the eiffel compiler id
+					end
+					if ag_fe /= Void then
+						ag_fe := real_feature (ag_fe)
+						r := 1
+						a_row.insert_subrow (r)
+						lrow := a_row.subrow (r)
 
-					create glab.make_with_text ("Agent")
-					glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
-					lrow.set_item (Col_name_index, glab)
+						create glab.make_with_text ("Agent")
+						glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+						lrow.set_item (Col_name_index, glab)
 
-					create gf
-					gf.set_pixmap (pixmap_from_e_feature (ag_fe))
-					gf.set_overriden_fonts (label_font_table, label_font_height)
-					Grid_feature_style.set_e_feature (ag_fe)
-					gf.set_text_with_tokens (Grid_feature_style.text)
-					lrow.set_item (Col_value_index, gf)
+						create gf
+						gf.set_pixmap (pixmap_from_e_feature (ag_fe))
+						gf.set_overriden_fonts (label_font_table, label_font_height)
+						Grid_feature_style.set_e_feature (ag_fe)
+						gf.set_text_with_tokens (Grid_feature_style.text)
+						lrow.set_item (Col_value_index, gf)
+					end
 				end
 			end
 		end

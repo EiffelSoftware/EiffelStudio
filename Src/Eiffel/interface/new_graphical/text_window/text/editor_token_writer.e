@@ -175,7 +175,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 			-- Process class name text `t'.
 		local
 			tok: EDITOR_TOKEN_CLUSTER

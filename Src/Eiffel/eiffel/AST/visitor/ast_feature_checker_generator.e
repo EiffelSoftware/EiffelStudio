@@ -2895,9 +2895,16 @@ feature -- Implementation
 			l_nested: NESTED_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
+			l_is_assigner_call: BOOLEAN
 		do
-				-- Type check the target
+				-- Type check the target, but we reset the
+				-- assigner flag syntax, because it is only pertinent
+				-- to the message, not the target.
+			l_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 			l_as.target.process (Current)
+			is_assigner_call := l_is_assigner_call
+
 			l_target_type := last_type
 			if l_target_type /= Void then
 				if is_byte_node_enabled then

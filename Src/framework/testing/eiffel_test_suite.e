@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 				-- Create registrar
 			create processor_registrar.make
+			create active_processors.make
 
 				-- Create events
 			create processor_launched_event
@@ -55,6 +56,11 @@ feature -- Access
 	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR
 			-- <Precursor>
 
+feature {NONE} -- Access
+
+	active_processors: !DS_LINKED_LIST [!EIFFEL_TEST_PROCESSOR_I]
+			-- Processors proceeding a task whenever `synchronize_processors' is called
+
 feature -- Status report
 
 	count_executed: NATURAL
@@ -70,26 +76,27 @@ feature -- Status setting
 
 	synchronize_processors
 			-- <Precursor>
+		local
+			l_cursor: DS_LINKED_LIST_CURSOR [!EIFFEL_TEST_PROCESSOR_I]
+			l_proc: !EIFFEL_TEST_PROCESSOR_I
 		do
-			processor_registrar.processors.do_all (
-				agent (a_proc: !EIFFEL_TEST_PROCESSOR_I)
-					do
-						if a_proc.is_idle then
-							if a_proc.is_finished then
-								a_proc.stop
-								processor_stopped_event.publish_if ([Current, a_proc],
-									agent (ts: !like Current; p: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
-										do
-											Result := not p.is_running
-										end)
-							else
-								a_proc.proceed
-								if a_proc.is_finished then
-									processor_finished_event.publish ([Current, a_proc])
-								end
-							end
-						end
-					end)
+			from
+				l_cursor := active_processors.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_proc := l_cursor.item
+				l_cursor.forth
+				if l_proc.is_idle then
+					if l_proc.is_finished then
+						l_cursor.remove_left
+						stop_task (l_proc)
+					else
+						proceed_task (l_proc)
+					end
+				end
+			end
 		end
 
 	launch_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
@@ -97,6 +104,17 @@ feature -- Status setting
 		do
 			a_processor.start (a_arg, Current)
 			processor_launched_event.publish ([Current, a_processor])
+
+			if a_blocking then
+				from until
+					a_processor.is_finished
+				loop
+					proceed_task (a_processor)
+				end
+				stop_task (a_processor)
+			else
+				active_processors.force_last (a_processor)
+			end
 		end
 
 feature {EIFFEL_TEST_PROCESSOR_I} -- Status setting
@@ -180,6 +198,42 @@ feature {NONE} -- Element change
 			Precursor (a_id)
 		end
 
+feature {NONE} -- Basic operations
+
+	proceed_task (a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- Make `a_processor' proceed with its task. Notify observers of events.
+		require
+			a_processor_usable: a_processor.is_interface_usable
+			a_processor_running: a_processor.is_running
+			a_processor_idle: a_processor.is_idle
+			not_a_processor_fininshed: not a_processor.is_finished
+			a_processor_launched_by_current: a_processor.test_suite = Current
+		do
+			a_processor.proceed
+			if a_processor.is_finished then
+				processor_finished_event.publish ([Current, a_processor])
+			else
+				processor_proceeded_event.publish ([Current, a_processor])
+			end
+		end
+
+	stop_task (a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- Stop `a_processor' and notify observers as long as processor is not running.
+		require
+			a_processor_usable: a_processor.is_interface_usable
+			a_processor_running: a_processor.is_running
+			a_processor_idle: a_processor.is_idle
+			a_processor_fininshed: a_processor.is_finished
+			a_processor_launched_by_current: a_processor.test_suite = Current
+		do
+			a_processor.stop
+			processor_stopped_event.publish_if ([Current, a_processor],
+				agent (ts: !like Current; p: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
+					do
+						Result := not p.is_running
+					end)
+		end
+
 feature -- Events
 
 	processor_launched_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I]]
@@ -196,5 +250,9 @@ feature -- Events
 
 	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !EIFFEL_TEST_SUITE_S; processor: !EIFFEL_TEST_PROCESSOR_I; error: !STRING; token_values: !TUPLE]]
 			-- <Precursor>
+
+invariant
+	active_processors_usable: active_processors.for_all (agent {!EIFFEL_TEST_PROCESSOR_I}.is_interface_usable)
+	active_processors_running: active_processors.for_all (agent {!EIFFEL_TEST_PROCESSOR_I}.is_running)
 
 end

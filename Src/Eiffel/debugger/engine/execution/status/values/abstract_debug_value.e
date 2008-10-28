@@ -61,6 +61,11 @@ inherit
 			is_equal
 		end
 
+	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
 feature -- Properties
 
 	is_attribute: BOOLEAN;
@@ -230,6 +235,15 @@ feature {NONE} -- Implementation
 	Any_class: CLASS_C is
 		once
 			Result := Eiffel_system.any_class.compiled_class
+		end
+
+	debug_output: STRING
+			-- <Precursor>
+		do
+			create Result.make_empty
+			if {n: like name} name then
+				Result.append ("name=" + n)
+			end
 		end
 
 feature {NONE} -- Constants

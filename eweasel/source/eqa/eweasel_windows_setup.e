@@ -60,7 +60,6 @@ feature -- Config
 			not_void: a_arguments /= Void
 		local
 			l_factory: EW_EQA_TEST_FACTORY
-			l_test: EW_EQA_NAMED_EIFFEL_TEST
 		do
 
 			create l_factory
@@ -165,7 +164,6 @@ feature -- Command
 			-- Start eweasel testing
 		local
 			l_eweasel_63: EW_EQA_EWEASEL_MT
-			l_list: ARRAYED_LIST [EW_EQA_TEST_CATALOG_INSTRUCTIONS]
 		do
 			create l_eweasel_63.make_empty
 
@@ -181,7 +179,7 @@ feature -- Command
 			l_eweasel_63.define ("EWEASEL_PLATFORM", "WINDOWS")
 			l_eweasel_63.define ("WINDOWS", "1")
 			l_eweasel_63.define ("PLATFORM_TYPE", "$EWEASEL_PLATFORM")
-l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
+			l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
 
 			l_eweasel_63.define_file ("EWEASEL_COMPILE", <<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec.exe">>)
 			l_eweasel_63.define_file ("EWEASEL_EXECUTE", <<"$EWEASEL", "bin", "eiffel_execute.bat">>)
@@ -212,7 +210,6 @@ feature {NONE} -- Implementation
 			l_path: DIRECTORY_NAME
 		do
 			create l_path.make_from_string (output_path)
---			l_path.extend ("testing_tool_tmp")
 			l_test_dir := os.full_directory_name (l_path, a_test_dir_name) -- See {EWEASEL_TEST_CATALOG_SAMPLE}
 			associate (a_env, Test_dir_name, l_test_dir)
 			associate (a_env, Cluster_dir_name, os.full_directory_name (l_test_dir, "clusters"))

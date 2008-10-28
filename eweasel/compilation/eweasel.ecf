@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="eweasel_st">
 	<target name="common" abstract="true">
 		<root class="EWEASEL" feature="make_and_execute"/>
 		<file_rule>
@@ -25,6 +25,7 @@
 		<setting name="enforce_unique_class_names" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="eweasel" location="$EWEASEL\source\" recursive="true">
@@ -33,11 +34,11 @@
 		</cluster>
 	</target>
 	<target name="eweasel_st" extends="common">
-		<root class="EWEASEL_ST" feature="make_and_execute"/>
+		<root class="EW_EWEASEL_ST" feature="make_and_execute"/>
 		<setting name="executable_name" value="eweasel"/>
 	</target>
 	<target name="eweasel_mt" extends="common">
-		<root class="EWEASEL_MT" feature="make_and_execute"/>
+		<root class="EW_EWEASEL_MT" feature="make_and_execute"/>
 		<setting name="executable_name" value="eweasel-mt"/>
 		<setting name="multithreaded" value="true"/>
 	</target>

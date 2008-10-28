@@ -1118,22 +1118,23 @@ feature {NONE} -- Agents
 			if a_stone /= Void and then a_stone.is_valid then
 				development_window.set_dropping_on_editor (true)
 				l_editor := editor_with_stone (a_stone)
+				if l_editor = Void then
+					l_editor := a_editor
+				end
 				if l_editor /= Void then
+					-- Following line will change fake editor to real editor if `l_editor' is fake editor
 					l_editor.docking_content.set_focus
-					if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
-						l_editor.editor_drawing_area.set_focus
-					end
-				else
-					-- Following line will change fake editor to real editor if `a_editor' is fake editor
-					a_editor.docking_content.set_focus
 
-					-- If `a_editor' is fake editor, `editor_drawing_area' is void
-					if a_editor.editor_drawing_area /= Void then
+					-- If `l_editor' is fake editor, `editor_drawing_area' is void
+					if
+						{draw: EV_DRAWING_AREA} a_editor.editor_drawing_area and then
+						(draw.is_displayed and draw.is_sensitive)
+					then
 						a_editor.editor_drawing_area.set_focus
 					end
 				end
 
-				update_content_description (a_stone, a_editor.docking_content)
+				update_content_description (a_stone, l_editor.docking_content)
 				development_window.set_stone (a_stone)
 				development_window.set_dropping_on_editor (false)
 			end

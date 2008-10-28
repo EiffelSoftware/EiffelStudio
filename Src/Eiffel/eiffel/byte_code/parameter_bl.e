@@ -89,7 +89,7 @@ feature -- Settings
 		do
 			l_expression := expression
 			l_expression.analyze;
-			if is_compaund then
+			if is_compound then
 				register := context.get_argument_register (c_type)
 			else
 				compute_is_address_needed
@@ -132,7 +132,7 @@ feature -- Settings
 			if source_type.is_none and target_type.is_expanded then
 				buffer.put_new_line
 				buffer.put_string ("RTEC(EN_VEXP);")
-			elseif is_compaund then
+			elseif is_compound then
 				expression.generate_for_type (register, target_type)
 			else
 				if is_address_needed then
@@ -159,7 +159,7 @@ feature -- Settings
 			buf := buffer
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
-			if is_compaund then
+			if is_compound then
 				r ?= register
 				context.print_argument_register (r, buf)
 			elseif target_type.is_none then
@@ -208,7 +208,7 @@ feature -- Settings
 			-- Print expression value for immediate use,
 			-- not for passing as an argument.
 		do
-			if register /= Void and then is_compaund then
+			if register /= Void and then is_compound then
 				register.print_register
 			else
 				print_register
@@ -226,7 +226,7 @@ feature -- Settings
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

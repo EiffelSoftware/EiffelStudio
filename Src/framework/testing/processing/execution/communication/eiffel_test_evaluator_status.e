@@ -93,11 +93,12 @@ feature -- Status setting
 feature {EIFFEL_TEST_RESULT_RECEIVER} -- Status setting
 
 	set_listening
-			-- Set `is_listening' to True.
+			-- Set `is_listening' to True if not finished.
 		do
 			queue_mutex.lock
 			if not is_finished then
 				status := listening_status_code
+				is_termination_forced := False
 			end
 			queue_mutex.unlock
 		end
@@ -122,9 +123,10 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 
 feature {EIFFEL_TEST_RESULT_RECEIVER} -- Status setting
 
-
 	fetch_next (a_outcome: ?EQA_TEST_OUTCOME): NATURAL
 			-- Index of next test to be executed
+			--
+			-- `a_outcome': Outcome of current test
 		local
 			l_first: like fetch_progress
 			l_needs_outcome, l_new: BOOLEAN
@@ -154,7 +156,6 @@ feature {EIFFEL_TEST_RESULT_RECEIVER} -- Status setting
 							l_new := False
 						end
 					else
-						is_termination_forced := False
 						if l_first.attempts >= max_attempts then
 							l_first.outcome := create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, False)
 						else

@@ -101,7 +101,7 @@ feature -- Status setting
 
 feature {EIFFEL_TEST_PROCESSOR_I} -- Status setting
 
-	proagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	propagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			processor_error_event.publish ([Current, a_processor, a_error, a_token_values])

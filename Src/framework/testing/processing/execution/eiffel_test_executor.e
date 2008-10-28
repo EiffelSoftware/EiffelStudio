@@ -172,6 +172,7 @@ feature {NONE} -- Status setting
 				if last_root_class_successful then
 					compile_project
 					if not last_compilation_successful then
+						test_suite.propagate_error (e_compile_error, [], Current)
 						request_stop
 					end
 				end
@@ -282,24 +283,36 @@ feature {NONE} -- Status setting
 				l_evaluator := l_cursor.item
 
 				if not (l_stop or l_evaluator.is_running) then
-					if not l_evaluator.is_launched or relaunch_evaluators then
-						l_evaluator.launch
-					else
-						l_remove := True
-					end
+						-- Evaluator was never launched or has been terminated by `retrieve_results'
+					l_evaluator.launch
 				else
+						-- Evaluator was previously launched or stop requested by user
+
 					l_status := l_evaluator.status
+
+						-- Stop requested or all tests have been executed
 					l_remove := l_stop or l_status.is_finished
+
 					if l_remove or l_status.is_disconnected then
+							-- Either evaluator is already or has to be terminated
 						if l_evaluator.is_running then
 							l_evaluator.terminate
+							if not l_remove then
+									-- We only relaunch evaluator if `relaunch_evaluators' is True
+									--
+									-- Note:
+								l_remove := not relaunch_evaluators
+							end
 						end
 						if not l_remove then
 							l_evaluator.launch
 						end
 					end
 				end
+
+					-- Retrieve any available results regardless of evaluators status
 				retrieve_results (l_evaluator)
+
 				if l_remove then
 					l_cursor.remove
 				else
@@ -430,5 +443,9 @@ feature {NONE} -- Factory
 		ensure
 			result_uses_map: Result.assigner = assigner
 		end
+
+feature {NONE} -- Constants
+
+	e_compile_error: !STRING = "Tests can not be executed because last compilation failed"
 
 end

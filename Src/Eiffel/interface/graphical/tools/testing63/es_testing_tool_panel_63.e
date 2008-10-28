@@ -28,7 +28,8 @@ inherit
 			on_test_changed,
 			on_test_removed,
 			on_processor_launched,
-			on_processor_stopped
+			on_processor_stopped,
+			on_processor_error
 		end
 
 	ES_HELP_CONTEXT
@@ -662,6 +663,14 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			elseif debug_executor_type.attempt (a_processor) /= Void then
 				debug_button.enable_sensitive
 			end
+ 		end
+
+ 	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: !TUPLE)
+ 			-- <Precursor>
+ 		do
+ 			if window_manager.last_focused_window = develop_window then
+ 				prompts.show_error_prompt (local_formatter.formatted_translation (a_error, a_token_values), develop_window.window, Void)
+ 			end
  		end
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view

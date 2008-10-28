@@ -62,10 +62,10 @@ feature {NONE} -- Basic operations
 						is_test_created := False
 					end
 				else
-				--	show_error_prompt (w_write_permissions, [l_file.name])
+					test_suite.propagate_error (w_write_permissions, [l_file.name], Current)
 				end
 			else
-			--	show_error_prompt (w_already_exists, [l_file.name])
+				test_suite.propagate_error (w_already_exists, [l_file.name], Current)
 			end
 		end
 
@@ -95,10 +95,10 @@ feature {NONE} -- Basic operations
 						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
 						is_test_created := True
 					else
-					--	show_error_prompt (w_wizard_service_not_available, [])
+						test_suite.propagate_error (w_wizard_service_not_available, [], Current)
 					end
 				else
-				--	show_error_prompt (w_template_file, [l_template])
+					test_suite.propagate_error (w_template_file, [l_template], Current)
 				end
 			end
 		rescue
@@ -200,6 +200,11 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Constants
+
+	w_wizard_service_not_available: STRING = "Could not generate class text because wizard service not available."
+	w_template_file: STRING = "Template file $1 does not exists."
+	w_write_permissions: STRING = "Can not create new test class file $1"
+	w_already_exists: STRING = "Test class file $1 already exists"
 
 	v_note_keyword: !STRING = "NOTE_KEYWORD"
 	v_class_name: !STRING = "CLASS_NAME"

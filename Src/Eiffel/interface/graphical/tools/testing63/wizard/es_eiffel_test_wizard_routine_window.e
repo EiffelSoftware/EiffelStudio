@@ -24,6 +24,11 @@ inherit
 			cancel
 		end
 
+	EIFFEL_TEST_SUITE_OBSERVER
+		redefine
+			on_processor_error
+		end
+
 	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all
@@ -221,6 +226,11 @@ feature {NONE} -- Access: tag utilities
 			create Result.make_with_separators (", ")
 		end
 
+feature -- Status report
+
+	is_interface_usable: BOOLEAN = True
+			-- <Precursor>
+
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
@@ -236,8 +246,8 @@ feature {NONE} -- Status report
 			Result := True
 		end
 
-	is_test_created: BOOLEAN
-			-- Has test been created during last call to `create_new_class'?
+	error_occurred: BOOLEAN
+			-- Did an error occur during test creation?
 
 feature {NONE} -- Status setting
 
@@ -391,12 +401,15 @@ feature {NONE} -- Basic operations
 	proceed_with_current_info
 			-- <Precursor>
 		do
+			error_occurred := False
 			if wizard_information.is_new_class then
 				create_new_class
 			else
 				-- not implemented yet
 			end
-			cancel_actions
+			if not error_occurred then
+				cancel_actions
+			end
 		end
 
 	clean_screen
@@ -662,8 +675,10 @@ feature {NONE} -- Implementation: creation
 		do
 			if test_suite.is_service_available and then {l_ts: !EIFFEL_TEST_SUITE_S} test_suite.service then
 				if l_ts.processor_registrar.is_registered (manual_factory_type) then
+					l_ts.connect_events (Current)
 					l_factory := l_ts.processor_registrar.processor (manual_factory_type)
 					l_ts.launch_processor (l_factory, wizard_information.as_attached, False)
+					l_ts.disconnect_events (Current)
 				end
 			end
 		end
@@ -672,6 +687,18 @@ feature {NONE} -- Implementation: creation
 			-- Show error prompt with `a_message'.
 		do
 			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
+		end
+
+feature {EIFFEL_TEST_SUITE_S} -- Events
+
+	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
+			-- <Precursor>
+		do
+			if a_test_suite.processor_registrar.is_registered (manual_factory_type) then
+				if a_processor = a_test_suite.factory (manual_factory_type) then
+					error_occurred := True
+				end
+			end
 		end
 
 feature {NONE} -- Constants
@@ -689,10 +716,5 @@ feature {NONE} -- Constants
 	e_invalid_tag1: STRING = " is not a valid tag%N%N"
 	e_invalid_tag2: STRING = "Tags must have the form%N%N"
 	e_invalid_tag3: STRING = "%N%Nwhere tokens can contain letters, numbers or any of "
-
-	w_wizard_service_not_available: STRING = "Could not generate class text because wizard service not available."
-	w_template_file: STRING = "Template file $1 does not exists."
-	w_write_permissions: STRING = "Can not create new test class file $1"
-	w_already_exists: STRING = "Test class file $1 already exists"
 
 end

@@ -19,6 +19,14 @@ inherit
 			implementation
 		end
 
+	DEBUG_OUTPUT
+		undefine
+			out,
+			is_equal,
+			default_create,
+			copy
+		end
+
 create
 	default_create,
 	make_with_key_combination
@@ -224,6 +232,8 @@ feature -- Status report
 				a_key.to_upper
 			end
 			Result.append (a_key)
+		ensure then
+			Result_attached: Result /= Void
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
@@ -237,6 +247,14 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'
 		do
 			create {EV_ACCELERATOR_IMP} implementation.make (Current)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+			-- <Precursor>
+		do
+			Result := out
 		end
 
 invariant

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- OR KEEP A REFERENCE?
 		do
 			e_class := a_class
+			classi_make (a_class.original_class)
 		end
 
 feature -- Properties

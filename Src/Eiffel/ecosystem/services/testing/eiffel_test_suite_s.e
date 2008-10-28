@@ -152,7 +152,7 @@ feature -- Status setting
 
 feature {EIFFEL_TEST_PROCESSOR_I} -- Status setting
 
-	proagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	propagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- Propagate error message raised by processor
 		require
 			usable: is_interface_usable

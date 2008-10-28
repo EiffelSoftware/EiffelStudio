@@ -73,9 +73,13 @@ feature {NONE} -- Status setting
 						end
 						capturer.capture_objects
 					end
+				else
+					test_suite.propagate_error (e_no_application_status, [], Current)
 				end
 				l_file.close
 				add_class (configuration.cluster, configuration.path, l_filename)
+			else
+				test_suite.propagate_error (e_file_not_writable, [l_file.name], Current)
 			end
 			is_finished := True
 		end
@@ -111,5 +115,10 @@ feature -- Query
 				end
 			end
 		end
+
+feature {NONE} -- Constants
+
+	e_file_not_writable: STRING = "Could not create new class file $1"
+	e_no_application_status: STRING = "Could not retrieve application status"
 
 end

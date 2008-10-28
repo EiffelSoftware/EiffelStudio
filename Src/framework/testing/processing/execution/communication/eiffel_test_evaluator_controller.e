@@ -32,7 +32,7 @@ feature -- Access
 	launch_time: !DATE_TIME
 			-- Date and time evaluator was last launched
 		require
-			launched: is_launched
+			running: is_running
 		do
 			Result ?= internal_launch_time
 		end
@@ -64,12 +64,6 @@ feature -- Status report
 
 	is_running: BOOLEAN
 			-- Is-evaluator currently running?
-
-	is_launched: BOOLEAN
-			-- Has evaluator been previously launched?
-		do
-			Result := internal_launch_time /= Void
-		end
 
 feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 
@@ -107,6 +101,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 				end
 			end
 			is_running := False
+			internal_launch_time := Void
 		ensure
 			not_running: not is_running
 		end

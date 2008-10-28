@@ -5,9 +5,6 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true" postcondition="true"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false" use_application_options="true">
 			<condition>

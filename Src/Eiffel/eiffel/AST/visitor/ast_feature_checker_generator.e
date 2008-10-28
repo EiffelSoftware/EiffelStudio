@@ -3720,6 +3720,7 @@ feature -- Implementation
 			l_table: FEATURE_TABLE
 			l_unsupported: NOT_SUPPORTED
 			l_target_type: TYPE_A
+			l_return_type: TYPE_A
 			l_target_node: BYTE_NODE
 			l_needs_byte_node: BOOLEAN
 			l_feature_name: ID_AS
@@ -3828,10 +3829,21 @@ feature -- Implementation
 								end
 							end
 							l_access ?= last_byte_node
+							check
+								has_feature: not l_is_named_tuple implies l_feature /= Void
+							end
 							if l_is_named_tuple or else l_feature.is_attribute or else l_feature.is_constant then
 								is_byte_node_enabled := False
 
-								compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, l_feature.type,
+									-- Special processing for return type for named TUPLEs since they do not have an associated
+									-- feature.
+								if l_is_named_tuple then
+									l_return_type := last_type
+								else
+									l_return_type := l_feature.type
+								end
+
+								compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, l_return_type,
 										l_as, l_access, l_target_node)
 
 								if l_needs_byte_node then

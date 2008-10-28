@@ -139,14 +139,13 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 					if l_row = Void then
 						l_row := added_profile_text_row (l_prof, True)
 					else
---| Issue with grid:	l_row.ensure_visible
-						l_row.enable_select
+						request_select_row (l_row)
 					end
 					if l_row.is_expandable and then not l_row.is_expanded then
 						l_row.expand
 					end
 				else
-					default_profile_row.enable_select
+					request_select_row (default_profile_row)
 				end
 				if profiles_grid.column_count > 0 then
 					profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
@@ -155,7 +154,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 					end
 				end
 			else
-				default_profile_row.enable_select
+				request_select_row (default_profile_row)
 			end
 
 			set_changed (Void, False)
@@ -210,6 +209,22 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			debugger_manager.save_profiles_data
 
 			set_changed (Void, False)
+		end
+
+feature {NONE} -- Implementation
+
+	request_select_row (a_row: EV_GRID_ROW)
+			-- Request `a_row' to be selected
+		do
+			ev_application.add_idle_action_kamikaze (agent process_select_row (a_row))
+		end
+
+	process_select_row (a_row: EV_GRID_ROW)
+			-- Select `a_row'
+		do
+			if a_row /= Void and then a_row.parent /= Void then
+				a_row.enable_select
+			end
 		end
 
 feature -- Query
@@ -1618,9 +1633,6 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	parent_window: EV_WINDOW
-			-- Parent window.
-
 	execution_env: EXECUTION_ENVIRONMENT is
 		once
 			create Result
@@ -1671,9 +1683,6 @@ feature {NONE} -- Implementation
 			)
 			pop.accelerators.extend (acc)
 		end
-
-invariant
-	parent_not_void: parent_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

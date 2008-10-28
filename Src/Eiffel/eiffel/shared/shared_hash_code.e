@@ -29,9 +29,6 @@ feature -- Access
 
 	Pointer_code: INTEGER = 0x0E000000
 
-	Typed_pointer_code: INTEGER = 0x0F000000
-
-
 	Reference_code: INTEGER = 0x10000000
 	Expanded_code: INTEGER = 0x11000000
 	bit_code: INTEGER = 0x12000000

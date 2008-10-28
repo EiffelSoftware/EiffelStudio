@@ -677,7 +677,7 @@ feature {NONE} -- Implementation: creation
 				if l_ts.processor_registrar.is_registered (manual_factory_type) then
 					l_ts.connect_events (Current)
 					l_factory := l_ts.processor_registrar.processor (manual_factory_type)
-					l_ts.launch_processor (l_factory, wizard_information.as_attached, False)
+					l_ts.launch_processor (l_factory, wizard_information.as_attached, True)
 					l_ts.disconnect_events (Current)
 				end
 			end

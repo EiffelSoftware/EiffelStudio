@@ -753,8 +753,8 @@ feature -- Command
 			register_action (l_window.close_request_actions, agent develop_window.destroy)
 			l_window.set_icon_pixmap (develop_window.pixmap)
 
-			register_action (l_window.resize_actions, agent develop_window.save_size)
-			register_action (l_window.move_actions, agent develop_window.save_position)
+			register_action (l_window.resize_actions, agent (x,y,w,h: INTEGER) do develop_window.save_size end)
+			register_action (l_window.move_actions, agent (x,y,w,h: INTEGER) do develop_window.save_position end)
 
 				-- Initialize commands and connect them.
 			init_commands

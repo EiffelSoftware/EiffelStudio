@@ -634,6 +634,7 @@ feature {NONE} -- Implementation
 			show_line_numbers_preference := l_manager.new_boolean_preference_value (l_manager, show_line_numbers_string, False)
 			smart_home_preference := l_manager.new_boolean_preference_value (l_manager, smart_home_string, True)
 			font_zoom_factor_preference := l_manager.new_integer_preference_value (l_manager, font_zoom_factor_string, 0)
+			font_zoom_factor_preference.set_default_value ("0")
 			font_zoom_factor_cell.put (font_zoom_factor_preference)
 			editor_font_preference := l_manager.new_font_preference_value (l_manager, editor_font_string, create {EV_FONT})
 			font_cell.put (editor_font_preference)

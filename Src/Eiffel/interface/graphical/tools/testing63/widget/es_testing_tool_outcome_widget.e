@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			create l_text.make (30)
 			l_text.append (a_name)
 			l_text.append (": ")
-			if a_invocation.is_exceptional then
+			if a_invocation.is_exceptional and then not a_invocation.exception.trace.is_empty then
 				l_text.append ("exceptional")
 				add_exception_details (l_row, a_invocation.exception)
 				add_text (l_row, "trace", a_invocation.exception.trace)
@@ -243,6 +243,8 @@ feature {NONE} -- Implementation
 			-- `a_parent': Parent row for all new rows.
 			-- `a_name': Name describing text.
 			-- `a_text': Actual text to be added.
+		require
+			a_text_not_empty: not a_text.is_empty
 		local
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM
@@ -253,14 +255,14 @@ feature {NONE} -- Implementation
 			grid.insert_new_row_parented (l_pos, a_parent)
 			l_row := grid.row (l_pos)
 			create l_label.make_with_text (a_name)
-			l_label.pointer_double_press_actions.extend (agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_label.pointer_double_press_actions, agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
 			l_row.set_item (1, l_label)
 			create l_label
 			create l_font
 			l_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			l_label.set_font (l_font)
 			l_label.set_text ("double click to view")
-			l_label.pointer_double_press_actions.extend (agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_label.pointer_double_press_actions, agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
 			l_row.set_item (2, l_label)
 		end
 

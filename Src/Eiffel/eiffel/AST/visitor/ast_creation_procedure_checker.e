@@ -220,6 +220,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			f: FEATURE_I
 			i: CLASS_I
 			j: INTEGER_32
+			k: INTEGER_32
 			n: STRING
 			p: LIST [CLASS_C]
 			r: ROUT_ID_SET
@@ -242,11 +243,11 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			rc := r.count
 			from
 				p := current_class.parents_classes
-				p.start
+				k := p.count
 			until
-				p.after
+				k <= 0
 			loop
-				c := p.item
+				c := p [k]
 				if n = Void or else c.name.is_equal (n) then
 						-- Check if parent has an effective precursor.
 					from
@@ -263,7 +264,9 @@ feature {AST_EIFFEL} -- Visitor: access to features
 						rc - j + 1
 					end
 				end
-				p.forth
+				k := k - 1
+			variant
+				k
 			end
 		end
 

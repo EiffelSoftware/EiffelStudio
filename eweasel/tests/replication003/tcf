@@ -1,0 +1,14 @@
+test_name replicated-feature-merge
+test_description Test shows that unselected features with the same name from different parents should not merge, whereas selected features should
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+copy_raw b1.e $CLUSTER b1.e
+copy_raw b2.e $CLUSTER b2.e
+copy_raw d.e $CLUSTER d.e
+
+compile_melted
+compile_result OK
+
+test_end

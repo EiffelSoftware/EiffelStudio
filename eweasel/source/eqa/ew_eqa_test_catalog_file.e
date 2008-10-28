@@ -75,7 +75,6 @@ feature {NONE} -- Implementation
 		local
 			l_pos: INTEGER;
 			l_cmd, l_rest: STRING;
-			l_inst: EW_CATALOG_INSTRUCTION;
 			l_list: LIST [STRING]
 			l_arguments: STRING
 		do

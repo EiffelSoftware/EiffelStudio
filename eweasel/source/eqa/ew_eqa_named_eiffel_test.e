@@ -10,9 +10,6 @@ class
 
 inherit
 	EW_NAMED_EIFFEL_TEST
-		redefine
-			execute
-		end
 
 create
 	make_63
@@ -27,25 +24,6 @@ feature {NONE} -- Initialization
 			full_source_directory := a_src_directory
 			tcf := a_tcf
 			keywords := a_keys
-		end
-
-feature -- Command
-
-	execute (a_env: EW_TEST_ENVIRONMENT) is
-			-- Execute `Current' in the environment `env'.
-		local
-			l_tcf: EW_EQA_TEST_CONTROL_FILE
-			l_factory: EW_EQA_TEST_FACTORY
-		do
---			a_env.define (Source_dir_name, full_source_directory);
-
---			create l_factory
---			create l_tcf.make_63 (tcf.instructions, l_factory.environment)
---			l_tcf.execute (a_env)
-
---			last_test := l_tcf.last_test;
---			last_ok := l_tcf.last_ok;
---			errors := l_tcf.errors;
 		end
 
 feature {NONE} -- Implementation

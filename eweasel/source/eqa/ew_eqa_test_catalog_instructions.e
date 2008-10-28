@@ -100,9 +100,6 @@ feature -- Query
 			-- Convert new test to old test
 		require
 			ready: all_tests /= Void and then not all_tests.is_empty
-		local
-			l_item: EW_EQA_NAMED_EIFFEL_TEST
-			l_info: TUPLE [test_name: STRING; last_dir_name: STRING; tcf_name: STRING; keywords: ARRAYED_LIST [STRING]]
 		do
 			Result := catalog_file.tests
 		end

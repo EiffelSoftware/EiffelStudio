@@ -5,9 +5,11 @@ indexing
 	keywords: "Eiffel test";
 	date: "October 14, 1997"
 
-class EWEASEL_PROCESS
+class EW_EWEASEL_PROCESS
 
 inherit
+	ANY
+	
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -16,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end;
-	UNIX_OS_ACCESS
+	EW_UNIX_OS_ACCESS
 
 feature -- Creation
 
@@ -55,7 +57,7 @@ feature -- Creation
 				end
 				io.putstring ("End%N" );
 			end;
-			
+
 			count := args.count
 			create arg_array.make (1, count)
 			from
@@ -101,16 +103,16 @@ feature -- Creation
 		end;
 
 feature -- Status
-	
+
 	suspended: BOOLEAN;
 			-- Is process suspended awaiting user input?
 
 	end_of_file: BOOLEAN;
 			-- Has end of file been reached on output from process?
 
-	
+
 feature -- Control
-	
+
 	put_string (s: STRING) is
 			-- Send characters in `s' to process
 		require
@@ -147,17 +149,17 @@ feature -- Control
 
 feature {NONE} -- Implementation
 
-	child_process: UNIX_PROCESS;
+	child_process: EW_UNIX_PROCESS;
 			-- Child process
-			
+
 	input: RAW_FILE;
 			-- File for reading from process, if not void
-			
+
 	output: RAW_FILE;
 			-- File for writing to process, if not void
-	
+
 	savefile: RAW_FILE;
-			-- File to which output read from process is written, 
+			-- File to which output read from process is written,
 			-- if not void
 
 	savefile_name: STRING
@@ -237,12 +239,12 @@ feature {NONE} -- Implementation
 
 	last_string: STRING;
 			-- Result of last call to `read_line'
-	
+
 	Invalid_file_descriptor: INTEGER is -1;
 			-- File descriptor which is not valid
-	
+
 invariant
-	bad_file_desc_not_valid: 
+	bad_file_desc_not_valid:
 		not unix_os.valid_file_descriptor (Invalid_file_descriptor);
 
 indexing

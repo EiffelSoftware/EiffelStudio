@@ -4,7 +4,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class UNIX_PIPE
+class EW_UNIX_PIPE
 
 inherit
 	ANY
@@ -14,7 +14,7 @@ inherit
 		redefine
 			dispose
 		end
-	UNIX_EXTERNALS
+	EW_UNIX_EXTERNALS
 		export
 			{NONE} all
 		end
@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-feature {UNIX_OS} -- Creation
+feature {EW_UNIX_OS} -- Creation
 
 	make (read_fd, write_fd: INTEGER) is
 			-- Create a pipe object which represents the

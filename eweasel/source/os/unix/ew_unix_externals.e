@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class.";
 	date: "June 4, 2008"
 
-class UNIX_EXTERNALS
+class EW_UNIX_EXTERNALS
 
 feature -- File descriptors
 

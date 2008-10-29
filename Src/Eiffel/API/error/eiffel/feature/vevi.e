@@ -21,16 +21,21 @@ create
 
 feature {NONE} -- Creation
 
-	make_attribute (f: FEATURE_I; class_id: INTEGER; c: AST_CONTEXT; l: LOCATION_AS)
-			-- Create error object for feature `f' from a class identified by `class_id'.
+	make_attribute (f: FEATURE_I; class_id: INTEGER; p: FEATURE_I; c: AST_CONTEXT; l: LOCATION_AS)
+			-- Create error that attribute `f' from a class identified by `class_id'
+			-- is not initialized at location `l' in context `c' by the creation procedure `p'.
 		require
 			valid_f: f /= Void
 			valid_class_id: class_id > 0
+			p_attached: p /= Void
 			c_attached: c /= Void
 			l_attached: l /= Void
 		do
 			attribute_variable :=  f.enclosing_feature.api_feature (class_id)
 			c.init_error (Current)
+			if p /= c.current_feature then
+				creation_procedure := p.enclosing_feature.api_feature (class_id)
+			end
 			set_location (l)
 		ensure
 			attribute_variable_attached: attribute_variable /= Void
@@ -74,11 +79,23 @@ feature {NONE} -- Variable name
 	local_name: STRING
 			-- Local variable
 
+feature {NONE} -- Context
+
+	creation_procedure: ?E_FEATURE
+			-- Creation procedure that causes the error (if different from `current_feature')
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			Precursor (a_text_formatter)
+			if creation_procedure /= Void then
+				a_text_formatter.add ("Creation procedure: ")
+				creation_procedure.append_signature (a_text_formatter)
+				a_text_formatter.add (" declared in ")
+				creation_procedure.written_class.append_name (a_text_formatter)
+				a_text_formatter.add_new_line
+			end
 			append_variable_name (a_text_formatter)
 			a_text_formatter.add_new_line
 		end

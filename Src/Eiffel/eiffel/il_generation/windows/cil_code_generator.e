@@ -6179,7 +6179,10 @@ feature -- Assertions
 			l_list: SEARCH_TABLE [INTEGER]
 		do
 			from
-				parents := current_class_type.associated_class.parents
+					--| FIXME IEK: We currently only iterate conforming parents for invariant generation
+					--| as invariants from a non-conforming branch would have to be flat generated in the
+					--| current class.
+				parents := current_class_type.associated_class.conforming_parents
 				create l_list.make (parents.count)
 				parents.start
 			until

@@ -116,15 +116,23 @@ feature -- Access
 			if
 				fvalid
 				and then Precursor {OBJECT_STONE}
-				and then debugger_manager.safe_application_is_stopped
 			then
-				ecs := debugger_manager.application_status.current_call_stack
-				if ecs /= Void and then ecs.count >= level_number then
-					cs := ecs.i_th (level_number)
-					Result := cs /= Void and then cs.is_eiffel_call_stack_element
+				if debugger_manager.safe_application_is_stopped then
+					ecs := debugger_manager.application_status.current_call_stack
+					if ecs /= Void and then ecs.count >= level_number then
+						cs := ecs.i_th (level_number)
+						Result := cs /= Void and then cs.is_eiffel_call_stack_element
+					end
 				end
 			end
 		end
+
+--| Unused for now		
+--	is_invariant_routine_stack: BOOLEAN
+--			-- Is current stack related to an invariant routine?
+--		do
+--			Result := {ef: like e_feature} e_feature and then ef.is_invariant
+--		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

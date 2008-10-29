@@ -148,8 +148,10 @@ feature {NONE} -- Initialization: widget status
 			l_service: EIFFEL_TEST_SUITE_S
 		do
 			Precursor
-			l_service := test_suite.service
-			l_service.connect_events (Current)
+			if test_suite.is_service_available then
+				l_service := test_suite.service
+				l_service.connect_events (Current)
+			end
 			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT})
 			propagate_drop_actions (Void)
 

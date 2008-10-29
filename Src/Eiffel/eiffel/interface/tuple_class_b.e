@@ -49,6 +49,11 @@ feature -- Actual class type
 				create actual_generic.make (1, 0)
 			end
 			create Result.make (class_id, actual_generic)
+			if lace_class.is_attached_by_default then
+				Result.set_is_attached
+			else
+				Result.set_is_implicitly_attached
+			end
 		end
 
 feature {CLASS_TYPE_AS} -- Actual class type

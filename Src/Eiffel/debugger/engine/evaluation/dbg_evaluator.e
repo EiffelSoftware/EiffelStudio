@@ -173,7 +173,6 @@ feature -- Access
 			l_type: TYPE_A
 			l_cl: CLASS_C
 			l_cli: CLASS_I
-			d_fact: DUMP_VALUE_FACTORY
 		do
 			l_type := a_node.type
 			if l_type /= Void then

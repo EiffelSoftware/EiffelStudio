@@ -105,7 +105,7 @@ feature -- Access
 				create Result.make_from_string (as_string)
 			end
 		ensure
-			output_not_value: output /= value
+			output_not_value: output /= as_string
 		end
 
 	out: STRING

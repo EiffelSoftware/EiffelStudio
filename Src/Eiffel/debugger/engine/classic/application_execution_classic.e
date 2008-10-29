@@ -421,7 +421,6 @@ feature -- Query
 			cl: CLASS_C
 			dv: DUMP_VALUE
 			edv: DUMP_VALUE
-			f: FEATURE_I
 			val: ABSTRACT_REFERENCE_VALUE
 		do
 			val := e.debug_value

@@ -112,8 +112,6 @@ feature -- Error notification: main categories
 		require
 			valid_code: a_code /= 0
 		local
-			l_tag: STRING_32
-			l_msg: STRING_32
 			err: DBG_ERROR
 		do
 			error := error | a_code

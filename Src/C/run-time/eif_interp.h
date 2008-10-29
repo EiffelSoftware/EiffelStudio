@@ -75,6 +75,8 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 RT_LNK void xinterp(unsigned char *icval);					/* Compound from a given address */
 RT_LNK EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);			/* Push value on operational stack */
 RT_LNK EIF_TYPED_VALUE *opop(void);									/* Remove value from operational stack */
+RT_LNK void eif_override_byte_code_of_body (int body_id, unsigned char *bc, int count); /* Update byte-code for feature */
+
 
 /* Macro used to prepare a cell on top of the stack */
 #define iget()	opush((EIF_TYPED_VALUE *) 0)	/* Push empty cell on stack */

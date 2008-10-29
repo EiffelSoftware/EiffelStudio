@@ -102,7 +102,7 @@ feature -- Initialization
 	System_menu: EWB_MENU is
 			-- System menu options
 		once
-			create Result.make (1, 8)
+			create Result.make (1, 9)
 			Result.set_parent (Main_menu)
 			Result.add_entry (create {EWB_ACE})
 			Result.add_entry (create {EWB_CLASS_LIST})
@@ -112,6 +112,7 @@ feature -- Initialization
 			Result.add_entry (create {EWB_INDEXING})
 			Result.add_entry (create {EWB_MODIFIED})
 			Result.add_entry (create {EWB_STATISTICS})
+			Result.add_entry (create {EWB_AUTO_TEST})
 		ensure
 			system_menu_not_void: Result /= Void
 		end

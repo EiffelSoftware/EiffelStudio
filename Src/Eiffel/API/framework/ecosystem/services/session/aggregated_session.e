@@ -158,7 +158,7 @@ feature {NONE} -- Event handlers
 		end
 
 invariant
-	extension_name_set: equal (extension_name, inner_session.extension_name)
+	extension_name_set: not (is_actively_disposing or is_zombie) implies inner_session /= Void and then equal (extension_name, inner_session.extension_name)
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

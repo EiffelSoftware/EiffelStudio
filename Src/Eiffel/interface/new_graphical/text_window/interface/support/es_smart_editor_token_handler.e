@@ -24,12 +24,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Access
-
-	popup_window: ?ES_POPUP_EDITOR_TOKEN_CONTEXT_BUTTON
-			-- Pop up window used to display the token options
-
-feature
+feature -- Access
 
 	editor_class: EIFFEL_CLASS_I
 			-- Editor's class.
@@ -39,6 +34,27 @@ feature
 		do
 			if {l_class_stone: !CLASSI_STONE} editor.stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
 				Result := l_class
+			end
+		end
+
+feature {NONE} -- Access
+
+	popup_window: ?ES_POPUP_EDITOR_TOKEN_CONTEXT_BUTTON
+			-- Pop up window used to display the token options
+
+feature -- Status report
+
+	is_active: BOOLEAN
+			-- <Precursor>
+		local
+			l_window: ?like popup_window
+		do
+			l_window := popup_window
+			if l_window /= Void then
+				Result := l_window.is_interface_usable and then l_window.is_shown
+--				if Result and then l_window.is_popup_widget_available then
+--					Result := l_window.is_popup_widget_shown
+--				end
 			end
 		end
 
@@ -167,7 +183,8 @@ feature -- Basic operations
 			l_cursor_token: EDITOR_TOKEN
 			l_window: like popup_window
 		do
-			if a_instant then
+
+			if a_instant or else editor.preferences.editor_data.auto_show_feature_contract_tooltips then
 				l_window := popup_window
 				if last_token_handled /= a_token or else l_window = Void or else not l_window.is_interface_usable or else not l_window.is_shown then
 						-- Offset position by margin width
@@ -236,9 +253,6 @@ feature -- Basic operations
 							l_window.register_action (l_window.token_select_actions, l_action)
 						end
 
-							-- Register action on hide to reset the active state.
-						l_window.register_action (l_window.hide_actions, agent do is_active := False end)
-
 							-- Deactivate handler, when the token is selected
 						l_window.register_action (l_window.token_select_actions, agent on_token_selected (l_window, ?, ?, ?, ?))
 
@@ -258,7 +272,6 @@ feature -- Basic operations
 
 								-- The precusor will not be called because the handler is to be considered "active".
 							last_token_handled := a_token
-							is_active := True
 						end
 					end
 
@@ -280,15 +293,17 @@ feature -- Basic operations
 			-- It allows the handler to perform exit or shutdown functionality.
 			--
 			-- `a_force': True to ignore check and perform an exit; False otherwise
+		local
+			l_window: ?like popup_window
 		do
 				-- Exit is only performed if the popup window doesn't have the mouse.
-			if popup_window /= Void and then popup_window.is_interface_usable then
-				popup_window.recycle
+			l_window := popup_window
+			if l_window /= Void and then l_window.is_interface_usable then
+				l_window.recycle
 				popup_window := Void
 			end
 
 			last_token_handled := Void
-			is_active := False
 		ensure then
 			not_popup_window_is_interface_usable: old popup_window /= Void implies not (old popup_window).is_interface_usable
 			popup_window_detached: popup_window = Void
@@ -329,7 +344,6 @@ feature {NONE} -- Action handlers
 
 					-- Remove window
 				a_window.recycle
-				is_active := False
 
 					-- Forward call to editor drawing area
 				if editor.is_interface_usable then

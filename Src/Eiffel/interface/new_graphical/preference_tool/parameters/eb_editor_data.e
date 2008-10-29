@@ -339,6 +339,12 @@ feature -- Value
 			result_attached: Result /= Void
 		end
 
+	auto_show_feature_contract_tooltips: BOOLEAN
+			-- Should feature contract tool tips be automatically shown
+		do
+			Result := auto_show_feature_contract_tooltips_preference.value
+		end
+
 feature -- Preference
 
 	breakpoint_background_color_preference: COLOR_PREFERENCE
@@ -433,6 +439,9 @@ feature -- Preference
 	folder_background_color_preference: COLOR_PREFERENCE
 			-- Color of name of folders displayed in metric tool
 
+	auto_show_feature_contract_tooltips_preference: BOOLEAN_PREFERENCE
+			-- Should feature contract tool tips be automatically shown
+
 feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
@@ -521,6 +530,9 @@ feature {NONE} -- Preference Strings
 
 	highlight_matching_braces_string: STRING is "editor.eiffel.highlight_matching_braces"
 			-- Should matching braces be highlighted at the carets position?
+
+	auto_show_feature_contract_tooltips_string: STRING = "editor.eiffel.auto_show_feature_contract_tooltip"
+			-- Should feature contract tool tips be automatically shown
 
 feature {NONE} -- Init colors and fonts.
 
@@ -641,6 +653,7 @@ feature {NONE} -- Initialization
 			customized_string_3_preference := l_manager.new_string_preference_value (l_manager, customized_string_3_string, "")
 			customized_strings.extend (customized_string_3_preference)
 			new_tab_at_left_preference := l_manager.new_boolean_preference_value (l_manager, new_tab_at_left_string, True)
+			auto_show_feature_contract_tooltips_preference := l_manager.new_boolean_preference_value (l_manager, auto_show_feature_contract_tooltips_string, True)
 
 				-- Auto colors
 			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
@@ -1190,6 +1203,7 @@ invariant
 	argument_text_color_preference_attached: argument_text_color_preference /= Void
 	argument_background_color_preference_attached: argument_background_color_preference /= Void
 	highlight_matching_braces_preference_attached: highlight_matching_braces_preference /= Void
+	auto_show_feature_contract_tooltips_preference_attached: auto_show_feature_contract_tooltips_preference /= Void
 
 
 indexing

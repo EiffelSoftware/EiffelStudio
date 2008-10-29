@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_auto_show_check: !EV_CHECK_BUTTON
+			l_preference: BOOLEAN_PREFERENCE
 		do
 			a_widget.set_border_width (2)
 
@@ -45,21 +47,27 @@ feature {NONE} -- Initialization
 			a_widget.extend (contract_grid)
 
 			create l_hbox
+
+				-- `auto_show_check'
+			l_preference := preferences.editor_data.auto_show_feature_contract_tooltips_preference
+			if l_preference /= Void then
+				create l_auto_show_check.make_with_text (local_formatter.translation (l_do_not_auto_show))
+				l_auto_show_check.set_tooltip (local_formatter.translation (f_do_not_auto_show))
+
+				create auto_show_check.make (l_auto_show_check, l_preference)
+				l_hbox.extend (auto_show_check)
+				l_hbox.disable_item_expand (auto_show_check)
+				auto_recycle (l_auto_show_check)
+			end
+
+				-- Padding between the check box and edit
 			l_hbox.extend (create {EV_CELL})
 
-			create edit_contract_label.make_with_text ("Edit Contracts...")
+			create edit_contract_label.make_with_text (local_formatter.translation (l_edit_contracts))
+			edit_contract_label.set_tooltip (local_formatter.translation (f_edit_contracts))
 			edit_contract_label.align_text_right
 			register_action (edit_contract_label.select_actions, agent on_edit_contracts)
 			l_hbox.extend (edit_contract_label)
-
-				-- Edit contracts button
-			create edit_contracts_button.make_with_text ("Edit Contracts...")
-			edit_contracts_button.set_tooltip ("Edit the contracts for this feature.")
-			register_action (edit_contracts_button.select_actions, agent on_edit_contracts)
---			l_hbox.extend (edit_contracts_button)
---			l_hbox.disable_item_expand (edit_contracts_button)
-
-			edit_contracts_button.hide
 
 			a_widget.extend (l_hbox)
 			a_widget.disable_item_expand (l_hbox)
@@ -357,6 +365,9 @@ feature -- User interface elements
 	edit_contract_label: !EVS_LINK_LABEL
 			-- Label used to edit contracts
 
+	auto_show_check: !ES_CHECK_BUTTON_PREFERENCED_WIDGET
+			-- Option to automatially show the view widget.
+
 feature {NONE} -- Action handlers
 
 	on_edit_contracts
@@ -405,6 +416,13 @@ feature {NONE} -- Regular expressions
 		ensure
 			result_is_compiled: Result.is_compiled
 		end
+
+feature {NONE} -- Internationalization
+
+	l_do_not_auto_show: !STRING = "Pop-up automatically"
+	f_do_not_auto_show: !STRING = "Uncheck to prevent the contract viewer from being displayed automatically. Use CTRL to force the show of this information in the future."
+	l_edit_contracts: !STRING = "Edit Contracts..."
+	f_edit_contracts: !STRING = "Places the current feature in the contract editor for edition"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

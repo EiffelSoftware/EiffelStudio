@@ -275,7 +275,7 @@ feature -- Status report
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the foundation should be recycled on closing.
 		do
-			Result := False
+			Result := True
 		end
 
 feature {NONE} -- Action handlers

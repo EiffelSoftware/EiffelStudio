@@ -58,8 +58,6 @@ feature -- Execution
 
 	execute (a_project: E_PROJECT; a_arguments: DS_LIST [STRING]; a_project_helper: like project_helper) is
 			-- Start testing.
-		local
-			a: ITP_INTERPRETER
 		do
 			project_helper := a_project_helper
 			system := a_project.system.system

@@ -50,9 +50,13 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_active: BOOLEAN assign set_is_active
+	is_active: BOOLEAN
 			-- Determines if the handler is active. This is to be used by clients
 			-- to determine when and when not to use the handler.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
 
 	is_interface_usable: BOOLEAN
 			-- Dtermines if the interface was usable
@@ -60,18 +64,6 @@ feature -- Status report
 			Result := Precursor {EB_RECYCLABLE} and then editor.is_interface_usable
 		ensure then
 			editor_is_interface_usable: Result implies editor.is_interface_usable
-		end
-
-feature {NONE} -- Status setting
-
-	set_is_active (a_active: BOOLEAN)
-			-- Set's handler's active state.
-			--
-			-- `a_active': True to indicate the handler is active; False otherwise
-		do
-			is_active := a_active
-		ensure
-			is_active_set: is_active = a_active
 		end
 
 feature -- Query
@@ -146,7 +138,6 @@ feature -- Basic operations
 			can_perform_exit: can_perform_exit (a_force)
 		do
 			last_token_handled := Void
-			is_active := False
 		ensure
 			last_token_handled_detached: can_perform_exit (a_force) implies last_token_handled = Void
 			not_is_active: can_perform_exit (a_force) implies not is_active

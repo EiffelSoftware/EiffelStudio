@@ -25,6 +25,7 @@ inherit
 			foundation_window as popup_window
 		redefine
 			internal_recycle,
+			internal_detach_entities,
 			is_shown,
 			on_after_initialized,
 			on_shown,
@@ -109,6 +110,14 @@ feature {NONE} -- User interface initialization
 
 			build_window_interface (l_container)
 
+				-- Register the enter event, to ensure all contain recieve an enter action.
+			propagate_register_action (l_container, agent {EV_WIDGET}.pointer_enter_actions, agent
+				do
+					if not has_mouse_pointer then
+						on_pointer_enter
+					end
+				end, Void)
+
 				-- Register focus actions to handle focus sensitivity. See `is_focus_sensitive' for more information
 			register_action (popup_window.focus_out_actions, agent do
 					if is_interface_usable then
@@ -140,7 +149,7 @@ feature {NONE} -- User interface initialization
 feature {NONE} -- Clean up
 
 	internal_recycle
-			-- To be called when the window has became useless.
+			-- <Precursor>
 		do
 			if is_initialized then
 				if internal_popup_window /= Void and not internal_popup_window.is_destroyed then
@@ -149,6 +158,15 @@ feature {NONE} -- Clean up
 				end
 			end
 			Precursor {ES_WINDOW_FOUNDATIONS}
+		end
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			Precursor
+			relative_widget := Void
+		ensure then
+			relative_widget_detached: relative_widget = Void
 		end
 
 feature -- Access
@@ -330,7 +348,6 @@ feature -- Basic operations
 			create l_screen
 			popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
 			register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
-			register_kamikaze_action (show_actions, agent on_application_pointer_motion (popup_window, a_mouse_x, a_mouse_y))
 
 			on_before_show
 			popup_window.show
@@ -461,7 +478,6 @@ feature -- Basic operations
 			on_cancel_popup
 		ensure
 			not_is_committed_on_closed: not is_committed_on_closed
-			relative_widget_detached: not is_shown implies relative_widget = Void
 			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
 		end
 

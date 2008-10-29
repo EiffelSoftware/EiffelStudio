@@ -17,13 +17,17 @@ inherit
 			process_assign_as,
 			process_case_as,
 			process_creation_as,
+			process_creation_expr_as,
 			process_current_as,
 			process_debug_as,
+			process_eiffel_list,
 			process_elseif_as,
 			process_if_as,
 			process_inspect_as,
 			process_like_cur_as,
 			process_loop_as,
+			process_nested_expr_as,
+			process_nested_as,
 			process_precursor_as
 		end
 
@@ -77,8 +81,11 @@ feature {NONE} -- Processing
 			p: FEATURE_AS
 			b: ROUTINE_AS
 			i: INTEGER
+			q: BOOLEAN
 		do
 			g := context.current_feature
+			q := is_qualified
+			is_qualified := False
 			context.set_current_feature (f)
 				-- Put body index to stack to avoid recursion
 			bodies.put (f.body_index)
@@ -132,6 +139,7 @@ feature {NONE} -- Processing
 			end
 				-- Remove body index
 			bodies.remove
+			is_qualified := q
 			context.set_current_feature (g)
 			context.set_written_class (g.written_class)
 		end
@@ -168,7 +176,7 @@ feature {NONE} -- Processing
 					process (f)
 				else
 						-- Attribute is not properly initialized.
-					error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, context, l))
+					error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, creation_procedure, context, l))
 				end
 					-- Mark that the attribute is initialized because it is self-initializing
 					-- or just to avoid repeated errors.
@@ -192,26 +200,29 @@ feature {AST_EIFFEL} -- Visitor: access to features
 		local
 			f: FEATURE_I
 		do
-			f := written_class.feature_of_name_id (a.feature_name.name_id)
-			if f /= Void then
-					-- This is indeed a feature rather than a local or an argument.
-					-- Find it in the current class.
-				if current_class /= written_class then
-					f := current_class.feature_of_rout_id (f.rout_id_set.first)
-				end
-				if not bodies.has (f.body_index) then
-						-- This feature has not been processed yet.
-					if f.is_routine then
-						process (f)
-					elseif f.is_attribute then
-						if is_attachment then
-							variables.set_attribute (f.feature_id)
-						else
-							check_attribute (f, a.feature_name)
+			if not is_qualified then
+				f := written_class.feature_of_name_id (a.feature_name.name_id)
+				if f /= Void then
+						-- This is indeed a feature rather than a local or an argument.
+						-- Find it in the current class.
+					if current_class /= written_class then
+						f := current_class.feature_of_rout_id (f.rout_id_set.first)
+					end
+					if not bodies.has (f.body_index) then
+							-- This feature has not been processed yet.
+						if f.is_routine then
+							process (f)
+						elseif f.is_attribute then
+							if is_attachment then
+								variables.set_attribute (f.feature_id)
+							else
+								check_attribute (f, a.feature_name)
+							end
 						end
 					end
 				end
 			end
+			safe_process (a.internal_parameters)
 		end
 
 	process_precursor_as (a: PRECURSOR_AS)
@@ -294,8 +305,13 @@ feature {AST_EIFFEL} -- Visitor: reattachment
 		end
 
 	process_creation_as (a: CREATION_AS)
+		local
+			q: BOOLEAN
 		do
+			q := is_qualified
+			is_qualified := True
 			safe_process (a.call)
+			is_qualified := q
 			is_attachment := True
 			a.target.process (Current)
 			is_attachment := False
@@ -337,14 +353,14 @@ feature {AST_EIFFEL} -- Visitor: compound
 			process_compound (a.else_part)
 		end
 
-	process_inspect_as (a: INSPECT_AS) is
+	process_inspect_as (a: INSPECT_AS)
 		do
 			a.switch.process (Current)
 			safe_process (a.case_list)
 			process_compound (a.else_part)
 		end
 
-	process_loop_as (a: LOOP_AS) is
+	process_loop_as (a: LOOP_AS)
 		do
 			safe_process (a.from_part)
 			safe_process (a.invariant_part)
@@ -353,10 +369,57 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.variant_part)
 		end
 
+feature {AST_EIFFEL} -- Nested call
+
+	process_creation_expr_as (a: CREATION_EXPR_AS)
+		local
+			q: BOOLEAN
+		do
+			q := is_qualified
+			is_qualified := True
+			Precursor (a)
+			is_qualified := q
+		end
+
+	process_nested_expr_as (a: NESTED_EXPR_AS)
+		local
+			q: BOOLEAN
+		do
+			q := is_qualified
+			a.target.process (Current)
+			is_qualified := True
+			a.message.process (Current)
+			is_qualified := q
+		end
+
+	process_nested_as (a: NESTED_AS)
+		local
+			q: BOOLEAN
+		do
+			q := is_qualified
+			a.target.process (Current)
+			is_qualified := True
+			a.message.process (Current)
+			is_qualified := q
+		end
+
+	process_eiffel_list (a: EIFFEL_LIST [AST_EIFFEL])
+		local
+			q: BOOLEAN
+		do
+			q := is_qualified
+			is_qualified := False
+			Precursor (a)
+			is_qualified := q
+		end
+
 feature {NONE} -- Status report
 
 	is_attachment: BOOLEAN
 			-- Is attachment being performed?
+
+	is_qualified: BOOLEAN
+			-- Is qualified call being performed?
 
 feature {NONE} -- Access
 

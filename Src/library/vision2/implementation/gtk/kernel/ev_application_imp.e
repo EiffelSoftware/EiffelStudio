@@ -483,7 +483,7 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_UNMAP%N")
 						end
-						l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
+						l_gtk_widget_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_gtk_widget_imp /= Void then
 							if currently_shown_control = l_gtk_widget_imp.interface then
 								set_currently_shown_control (Void)

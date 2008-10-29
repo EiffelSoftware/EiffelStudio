@@ -122,8 +122,14 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result := Debugger_manager.safe_application_is_stopped
-					and then Debugger_manager.application.is_valid_object_address (object_address)
+			if
+				{dbg: like debugger_manager} Debugger_manager and then
+				dbg.application_is_executing
+			then
+				Result := {app: APPLICATION_EXECUTION} dbg.application and then
+						app.is_stopped and then
+						app.is_valid_object_address (object_address)
+			end
 		end
 
 	ev_item: EV_ANY

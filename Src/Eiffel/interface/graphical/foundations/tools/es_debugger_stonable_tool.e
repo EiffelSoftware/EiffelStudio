@@ -16,9 +16,19 @@ inherit
 			profile_kind
 		end
 
-	ES_DEBUGGER_TOOL [G]
-
 	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G]
+		redefine
+			reset
+		end
+
+feature {DEBUGGER_MANAGER, EB_TOOL} -- Access		
+
+	reset
+			-- <Precursor>
+		do
+			set_stone (Void)
+			Precursor {ES_DEBUGGING_UPDATE_ON_IDLE_TOOL}
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

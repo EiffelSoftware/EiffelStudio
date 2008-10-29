@@ -1,12 +1,14 @@
 indexing
-	description: "Summary description for {EWEASEL_WINDOWS_SETUP}."
+	description: "[
+					Helper to setup environment values before running eweasel test cases
+																							]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
 	date: "93/08/30"
 
 class
-	EWEASEL_WINDOWS_SETUP
+	EW_EQA_WINDOWS_SETUP
 
 inherit
 	ANY
@@ -43,14 +45,54 @@ feature {NONE} -- Initialization
 
 feature -- Config
 
-	ise_eiffel: STRING is "e:\PROGRA~1\EIFFEL~1\EIFFEL~1.3GP"
+	ise_eiffel: STRING
 			-- ISE_EIFFEL environment variable
+		require
+			environment_set: is_environment_set
+		local
+			l_env: EXECUTION_ENVIRONMENT
+		once
+			create l_env
+			Result := l_env.get ("ISE_EIFFEL")
+		ensure
+			not_void: Result /= Void
+		end
 
-	output_path: STRING is "e:\temp_del_it"
+	output_path: DIRECTORY_NAME
 			-- eweasel output path
+		require
+			environment_set: is_environment_set
+		once
+			Result := eweasel_path.twin
+			Result.extend ("tmp")
+		end
 
-	source_directory: STRING is "e:\eweasel\tests"
+	source_directory: DIRECTORY_NAME
 			-- Test case source path
+		require
+			environment_set: is_environment_set
+		once
+			Result := eweasel_path.twin
+			Result.extend ("tests")
+		ensure
+			not_void: Result /= Void
+		end
+
+	eweasel_path: DIRECTORY_NAME
+			-- EWEASEL environment path
+		require
+			environment_set: is_environment_set
+		local
+			l_string: STRING
+			l_env: EXECUTION_ENVIRONMENT
+		once
+			create l_env
+			l_string := l_env.get ("EWEASEL")
+			check not_void: l_string /= Void end
+			create Result.make_from_string (l_string)
+		ensure
+			not_void: Result /= Void
+		end
 
 	setup_one_test_case (a_test_name, a_test_folder_name, a_arguments: STRING) is
 			-- Setup for one test case
@@ -60,7 +102,15 @@ feature -- Config
 			not_void: a_arguments /= Void
 		local
 			l_factory: EW_EQA_TEST_FACTORY
+			l_temp_dir: DIRECTORY
 		do
+			create l_temp_dir.make (output_path)
+			if not l_temp_dir.exists then
+				l_temp_dir.create_dir
+			end
+			if not l_temp_dir.is_closed then
+				l_temp_dir.close
+			end
 
 			create l_factory
 			-- Prepare {EW_EQA_NAMED_EIFFEL_TEST}, so following `' will take effect
@@ -93,6 +143,19 @@ feature -- Query
 		do
 			create l_dir.make (a_dir)
 			Result := l_dir.exists
+		end
+
+	is_environment_set: BOOLEAN is
+			-- If environment set?
+		local
+			l_env: EXECUTION_ENVIRONMENT
+			l_ise_eiffel_set: BOOLEAN
+			l_eweasel_set: BOOLEAN
+		do
+			create l_env
+			l_ise_eiffel_set := l_env.get ("ISE_EIFFEL") /= Void
+			l_eweasel_set := l_env.get ("EWEASEL") /= Void
+			Result := l_ise_eiffel_set and l_eweasel_set
 		end
 
 feature -- Util

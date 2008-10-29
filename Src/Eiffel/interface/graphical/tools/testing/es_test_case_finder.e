@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	agent_cell: !CELL [PROCEDURE [ES_TEST_CASE_FINDER, TUPLE]] is
 			-- Agent cell for `add_all_test_case_classes_to_compile'
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	add_all_test_case_classes_to_compile is

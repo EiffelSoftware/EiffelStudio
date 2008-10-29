@@ -217,7 +217,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 		indexing
 			once_status: global
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -227,7 +227,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 		indexing
 			once_status: global
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end

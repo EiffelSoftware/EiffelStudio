@@ -94,7 +94,7 @@ feature {NONE} -- Onces for global setting of layout values.
 
 	internal_padding_size: CELL [INTEGER] is
 		once
-			create Result
+			create Result.put (0)
 		end
 
 end

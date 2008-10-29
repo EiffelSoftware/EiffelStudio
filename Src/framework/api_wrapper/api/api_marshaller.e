@@ -252,7 +252,7 @@ feature -- Basic operations
 				do
 					l_data := marshalled_data
 					if l_data.has (ia_ptr) then
-						l_handler := l_data.item (ia_ptr)
+						l_handler := l_data.item (ia_ptr).as_attached
 						l_data.remove (ia_ptr)
 						if unicode_marshaller.is_valid_string_handler (l_handler) then
 								-- The string is a unicode string so free it.

@@ -82,8 +82,7 @@ feature -- Basic operations
 			l_constraints		: TYPE_SET_A
 		do
 			if is_ok_for_completion then
-				create insertion
-				insertion.put ("")
+				create insertion.put ("")
 				is_create := False
 				is_static := False
 				last_type := Void
@@ -361,8 +360,7 @@ feature -- Class names completion
 			cnt, i				: INTEGER
 			l_class_i			: CLASS_I
 		do
-			create insertion
-			insertion.put ("")
+			create insertion.put ("")
 			is_create := False
 			class_completion_possibilities := Void
 			token_writer.set_context_group (group)
@@ -638,7 +636,7 @@ feature {NONE} -- Implementation
 					if not l_result.current_frame.is_empty then
 						l_locals := l_result.current_frame.all_locals
 						from l_locals.start until l_locals.after loop
-							l_name := l_locals.key_for_iteration
+							l_name := l_locals.key_for_iteration.as_attached
 							l_type := l_locals.item_for_iteration
 							if l_type /= Void and then l_type.is_valid_for_class (l_class) then
 									-- The type is valid for the given class
@@ -1430,7 +1428,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

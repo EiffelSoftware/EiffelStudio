@@ -76,7 +76,7 @@ feature {NONE} -- IPC implementation
 	Ipc_engine_cell: CELL [IPC_ENGINE] is
 			-- cell containing `ipc_engine'.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 feature -- recycling data
@@ -537,7 +537,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

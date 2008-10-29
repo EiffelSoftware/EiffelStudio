@@ -171,7 +171,7 @@ feature -- Query
 			-- otherwise there will be recycling problem if other development window closed
 		do
 			if docking_menu_items_cell_cache = Void then
-				create docking_menu_items_cell_cache
+				create docking_menu_items_cell_cache.put (Void)
 			end
 			Result := docking_menu_items_cell_cache
 		ensure
@@ -485,7 +485,7 @@ feature -- Recycle
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

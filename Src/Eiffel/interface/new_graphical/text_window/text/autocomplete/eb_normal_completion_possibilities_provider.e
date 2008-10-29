@@ -93,7 +93,7 @@ feature -- Basic operation
 			-- Prepare completion
 		do
 			Precursor
-			create insertion_cell
+			create insertion_cell.put (Void)
 			if dynamic_context_class_c_function /= Void then
 				context_class_c := dynamic_context_class_c_function.item (Void)
 			end
@@ -388,7 +388,7 @@ feature {NONE} -- Build completion possibilities
 			-- Function to retrieve group
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -39,7 +39,7 @@ feature {EIS_STORAGE} -- Element change
 			l_entries := entries
 			l_entries.search (a_id)
 			if l_entries.found then
-				l_entry_list := l_entries.found_item
+				l_entry_list := l_entries.found_item.as_attached
 				l_entry_list.search (a_entry)
 				if not l_entry_list.found then
 					l_entry_list.force (a_entry)
@@ -64,7 +64,7 @@ feature {EIS_STORAGE} -- Element change
 				l_entries := entries
 				l_entries.search (a_id)
 				if l_entries.found then
-					l_entry_list := l_entries.found_item
+					l_entry_list := l_entries.found_item.as_attached
 					l_entry_list.search (a_entry)
 					if l_entry_list.found then
 						l_entry_list.remove (a_entry)

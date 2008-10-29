@@ -23,7 +23,7 @@ feature {NONE} -- Access
 	port_counter: !CELL [INTEGER]
 			-- Counter for port number `Current' listens to
 		once
-			create Result
+			create Result.put (0)
 		end
 
 	min_port: INTEGER = 49152
@@ -169,6 +169,5 @@ feature {NONE} -- Implementation
 			l_rescued := True
 			retry
 		end
-
 
 end

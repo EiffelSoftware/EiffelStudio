@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 	is_deferred: CELL [BOOLEAN] is
 			-- Is current feature call a deferred feature without implementation?
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			is_deferred_not_void: Result /= Void
 		end
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 	is_direct_once: CELL [BOOLEAN] is
 			-- Is current call done on a once which value can be accessed directly?
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			is_direct_once_not_void: Result /= Void
 		end
@@ -540,13 +540,13 @@ feature {NONE} -- Implementation
 			-- Does current call require to close a parenthesis?
 			-- Case when one use `nstcall' or `eif_optimize_return'.
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			is_right_parenthesis_needed_not_void: Result /= Void
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

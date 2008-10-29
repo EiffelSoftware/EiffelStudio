@@ -303,10 +303,10 @@ feature {NONE} -- Query
 			if not a_map.is_empty then
 				l_cursor := a_map.cursor
 				from a_map.start until a_map.after loop
-					l_key := a_map.key_for_iteration
-					l_value := a_map.item_for_iteration
+					l_key := a_map.key_for_iteration.as_attached
+					l_value := a_map.item_for_iteration.as_attached
 					if Result.has (l_value) then
-						l_list := Result.item (l_value)
+						l_list := Result.item (l_value).as_attached
 					else
 						create l_list.make (1)
 						l_list.compare_objects

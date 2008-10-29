@@ -229,8 +229,8 @@ feature -- Element change
 			until
 				l_entries.after
 			loop
-				if not id_valid (l_entries.key_for_iteration) then
-					deregister_entries_of_component_id (l_entries.key_for_iteration)
+				if not id_valid (l_entries.key_for_iteration.as_attached) then
+					deregister_entries_of_component_id (l_entries.key_for_iteration.as_attached)
 				end
 				l_entries.forth
 			end

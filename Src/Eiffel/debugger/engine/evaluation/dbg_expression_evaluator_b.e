@@ -1081,9 +1081,7 @@ feature {BYTE_NODE} -- Visitor
 	process_local_b (a_node: LOCAL_B) is
 			-- Process `a_node'.
 		local
-			cse: EIFFEL_CALL_STACK_ELEMENT
 			dv: ABSTRACT_DEBUG_VALUE
-			cf: E_FEATURE
 			t: like current_call_stack_data_for_evaluation
 		do
 --FIXME: check with process_object_test_local_b
@@ -1531,7 +1529,6 @@ feature {NONE} -- Visitor: implementation
 			--|      LOCAL_B, OBJECT_TEST_LOCAL_B, ARGUMENT_B
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
-			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
 			cse ?= application_status.current_call_stack_element
@@ -1566,9 +1563,7 @@ feature {NONE} -- Visitor: implementation
 			l_char: CHAR_VALUE_I
 			l_real: REAL_VALUE_I
 			l_string: STRING_VALUE_I
-			l_type: TYPE_A
 			l_cl: CLASS_C
-			l_cli: CLASS_I
 			d_fact: DUMP_VALUE_FACTORY
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 			dv: DUMP_VALUE
@@ -1808,8 +1803,6 @@ feature {NONE} -- Evaluation: implementation
 	retrieve_dbg_evaluation is
 			-- Get the effective evaluation's result and info
 		local
-			dv: DUMP_VALUE
-			cl: CLASS_C
 			r: like tmp_result
 		do
 			r := dbg_evaluator.last_result

@@ -157,7 +157,7 @@ feature -- Thread info
 			edti: EIFNET_DEBUGGER_THREAD_INFO
 		do
 			dbg_info := Eifnet_debugger.info
-			if current_thread_id = 0 then
+			if current_thread_id = Default_pointer then
 				set_current_thread_id (dbg_info.last_icd_thread_id)
 			end
 			if not dbg_info.is_valid_managed_thread_id (current_thread_id) then

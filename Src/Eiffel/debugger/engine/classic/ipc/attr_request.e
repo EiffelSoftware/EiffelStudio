@@ -165,7 +165,6 @@ feature {NONE} -- Implementation
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
-			add: DBG_ADDRESS
 			attr_name: STRING;
 			sk_type: INTEGER
 			i, attr_nb: INTEGER;

@@ -141,7 +141,6 @@ feature {APPLICATION_STATUS} -- Restricted access
 			l_stack_object: ICOR_DEBUG_VALUE
 			l_stack_adv: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
-			l_hexaddress: STRING
 			l_extra_info: STRING
 			addr: DBG_ADDRESS
 			tid: like thread_id

@@ -4,16 +4,16 @@ indexing
 	status: "See notice at end of class.";
 	date: "October 7, 1997"
 
-class OS_ACCESS
+class EW_OS_ACCESS
 
 feature
 
-	os: OPERATING_SYSTEM is
+	os: EW_OPERATING_SYSTEM is
 			-- Access to generic operating system services
 		once
-			create {UNIX_OS} Result
+			create {EW_UNIX_OS} Result
 		end;
-		
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

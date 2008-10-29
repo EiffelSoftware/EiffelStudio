@@ -4,7 +4,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class UNIX_PROCESS
+class EW_UNIX_PROCESS
 
 inherit
 	UNIX_SIGNALS
@@ -16,7 +16,7 @@ inherit
 				reset_all_default, reset_default, is_caught,
 				c_signal_map, c_signal_name
 		end
-	UNIX_OS
+	EW_UNIX_OS
 		rename
 			send_signal as unix_send_signal,
 			terminate_hard as unix_terminate_hard
@@ -35,7 +35,7 @@ inherit
 create
 	make
 
-feature {UNIX_OS} -- Creation
+feature {EW_UNIX_OS} -- Creation
 
 	make (fname: STRING) is
 			-- Create a process object which represents an
@@ -671,13 +671,13 @@ feature {NONE} -- Implementation
 			-- File to be used by child process for standard error
 			-- when it goes to a file
 	
-	shared_input_pipe: UNIX_PIPE
+	shared_input_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard input
 	
-	shared_output_pipe: UNIX_PIPE
+	shared_output_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard output
 	
-	shared_error_pipe: UNIX_PIPE
+	shared_error_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard error
 	
 	arguments_for_exec: ARRAY [STRING]

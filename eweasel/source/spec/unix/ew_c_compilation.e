@@ -1,51 +1,47 @@
 indexing
-	description: "An Eiffel system execution"
+	description: "A C compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	keywords: "Eiffel test";
 	date: "93/08/30"
 
-class SYSTEM_EXECUTION
+class EW_C_COMPILATION
 
 inherit
-	EWEASEL_PROCESS
+	EW_EWEASEL_PROCESS
 		rename
 			make as process_make
 		end;
-	
+
 create
 	make
 
 feature
 
-	make (prog: STRING; args: LINKED_LIST [STRING]; execute_cmd, dir, inf, outf, savef: STRING) is
-			-- Start a new process to execute `prog' with
-			-- arguments `args' using execution command 
-			-- `execute_cmd' in directory `dir'.
-			-- `inf' is the input file to be fed into the
-			-- new process (void to set up pipe).
-			-- `outf' is the file where new process is
-			-- write its output (void to set up pipe).
+	make (dir, save, freeze_cmd: STRING max_procs: INTEGER) is
+			-- Start a new process to do any necessary
+			-- C compilations (freezing) in directory `dir',
+			-- using at most `max_procs' simultaneous processes
+			-- to do C compilations.
 			-- Write all output from the new process to
-			-- file `savef'.
+			-- file `save'.
 		require
-			program_not_void: prog /= Void;
-			arguments_not_void: args /= Void;
 			directory_not_void: dir /= Void;
-			save_name_not_void: savef /= Void;
+			save_name_not_void: save /= Void;
 		local
-			real_args: LINKED_LIST [STRING];
+			args: LINKED_LIST [STRING];
 		do
-			create real_args.make;
-			real_args.extend (execute_cmd);
-			real_args.extend (dir);
-			real_args.extend (prog);
-			real_args.finish;
-			real_args.merge_right (args);
-			process_make (Shell_command, real_args, inf, outf, savef);
+			create args.make;
+			args.extend (freeze_cmd);
+			args.extend (dir);
+			if max_procs > 0 then
+				args.extend ("-nproc");
+				args.extend (max_procs.out);
+			end
+			process_make (Shell_command, args, Void, Void, save);
 		end;
 
-	next_execution_result: EXECUTION_RESULT is
+	next_compile_result: EW_C_COMPILATION_RESULT is
 		local
 			time_to_stop: BOOLEAN;
 		do

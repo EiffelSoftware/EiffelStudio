@@ -5,18 +5,18 @@ indexing
 	keywords: "Eiffel test";
 	date: "93/08/30"
 
-class EIFFEL_COMPILATION
+class EW_EIFFEL_COMPILATION
 
 inherit
-	EWEASEL_PROCESS
+	EW_EWEASEL_PROCESS
 		rename
 			make as process_make
 		redefine
 			terminate, read_line
 		end;
-	
-	EIFFEL_COMPILER_CONSTANTS;
-	
+
+	EW_EIFFEL_COMPILER_CONSTANTS;
+
 create
 	make
 
@@ -38,7 +38,7 @@ feature
 			output_file_available: output /= Void;
 		end;
 
-	next_compile_result: EIFFEL_COMPILATION_RESULT is
+	next_compile_result: EW_EIFFEL_COMPILATION_RESULT is
 		local
 			time_to_stop: BOOLEAN;
 		do
@@ -87,17 +87,17 @@ feature
 	terminate is
 			-- Terminate Eiffel compilation
 		local
-			e: EIFFEL_COMPILATION_RESULT
+			e: EW_EIFFEL_COMPILATION_RESULT
 		do
 			if suspended then
 				quit;
 				e := next_compile_result;
 					-- Discard any pending compile result
 			end;
-			Precursor {EWEASEL_PROCESS}
+			Precursor {EW_EWEASEL_PROCESS}
 		end;
 
-	
+
 feature {NONE} -- Implementation
 
 	read_line is
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 						is_suspend_prompt := is_resume_prompt or is_missing_precomp
 					end
 				end;
-			end;	
+			end;
 			if line /= Void and then line.count > 0 and then line.item (line.count) = '%N' then
 				line.keep_head (line.count - 1);
 			end;

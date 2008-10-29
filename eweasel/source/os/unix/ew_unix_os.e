@@ -4,26 +4,29 @@ indexing
 	status: "See notice at end of class.";
 	date: "October 7, 1997"
 
-class UNIX_OS
+class EW_UNIX_OS
 
 inherit
-	OPERATING_SYSTEM
+	EW_OPERATING_SYSTEM
+
 	UNIX_SIGNALS
 		rename
 			meaning as signal_meaning
 		end
+
 	EXECUTION_ENVIRONMENT
 		export
 			{ANY} return_code ;
 			{NONE} all
 		end
-	UNIX_EXTERNALS
+		
+	EW_UNIX_EXTERNALS
 
 feature -- Path names
 
 	null_file_name: STRING is "/dev/null";
 			-- File name which represents null input or output
-	
+
 	full_file_name (dir_name, f_name: STRING): STRING is
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
@@ -46,7 +49,7 @@ feature -- Path names
 		end;
 
 	full_directory_name (dir_name, subdir: STRING): STRING is
-			-- Full name of subdirectory `subdir' of directory 
+			-- Full name of subdirectory `subdir' of directory
 			-- `dir_name'
 		do
 			Result := full_file_name (dir_name, subdir);
@@ -55,7 +58,7 @@ feature -- Path names
 
 feature -- Pipes
 
-	new_pipe: UNIX_PIPE is
+	new_pipe: EW_UNIX_PIPE is
 			-- New pipe object for interprocess communication
 		local
 			read_fd, write_fd: INTEGER
@@ -77,7 +80,7 @@ feature -- Process operations
 			process_id_nonnegative: Result >= 0
 		end;
 
-	exec_process (prog_file: STRING; args: ARRAY [STRING]; 
+	exec_process (prog_file: STRING; args: ARRAY [STRING];
 			close_nonstd_files: BOOLEAN) is
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
@@ -117,7 +120,7 @@ feature -- Process operations
 		end;
 
 	wait_for_process_block (pid: INTEGER): INTEGER is
-			-- Wait for any process specified by process id 
+			-- Wait for any process specified by process id
 			-- `pid' to return status.  Block until there
 			-- a process returns status.  Return the exit
 			-- or termination status of the process that
@@ -131,7 +134,7 @@ feature -- Process operations
 		do
 			Result := unix_waitpid (pid, True, $dummy);
 		end;
-	
+
 	wait_for_process_noblock (pid: INTEGER; status_avail_addr: POINTER): INTEGER is
 			-- Wait for any process specified by process
 			-- id `pid' to return status.  Do not block if
@@ -145,7 +148,7 @@ feature -- Process operations
 		do
 			Result := unix_waitpid (pid, False, status_avail_addr);
 		end;
-	
+
 	send_signal (sig, pid: INTEGER) is
 			-- Send signal `sig' to the process(es) identified by
 			-- `pid'.  If signal is 0, error checking is done but
@@ -161,14 +164,14 @@ feature -- Process operations
 		do
 			unix_kill (pid, sig);
 		end;
-	
+
 	terminate_hard (pid: INTEGER) is
-			-- Send a kill signal (SIGKILL) to the process(es) 
+			-- Send a kill signal (SIGKILL) to the process(es)
 			-- identified by `pid'
 		do
 			send_signal (Sigkill, pid)
 		end
-	
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

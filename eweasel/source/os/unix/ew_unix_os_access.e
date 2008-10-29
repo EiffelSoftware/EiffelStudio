@@ -4,11 +4,11 @@ indexing
 	status: "See notice at end of class.";
 	date: "October 7, 1997"
 
-class UNIX_OS_ACCESS
+class EW_UNIX_OS_ACCESS
 
 feature
 
-	unix_os: UNIX_OS is
+	unix_os: EW_UNIX_OS is
 			-- Access to Unix-specific operating system services
 		once
 			create Result;

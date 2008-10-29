@@ -55,6 +55,12 @@ extern "C" {
 
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
+#elif defined EIF_VMS
+# if __INITIAL_POINTER_SIZE > 32
+# define CHUNK_DEFAULT 4194224		/* VMS: default chunk size for 64-bit pointers (4MB less 80) */
+# else
+# define CHUNK_DEFAULT 4194256		/* VMS: default chunk size for 32-bit pointers (4MB less 48) */
+# endif
 #else
 #define CHUNK_DEFAULT	4194304		/* Number of bytes in standard chunk (4MB) */
 #endif

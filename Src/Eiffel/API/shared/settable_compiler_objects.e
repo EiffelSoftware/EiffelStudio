@@ -47,15 +47,14 @@ feature {NONE} -- Implementation
 	command_executor_cell: CELL [COMMAND_EXECUTOR] is
 			-- Storage for `command_executor'.
 		once
-			create Result
-			Result.put (create {COMMAND_EXECUTOR})
+			create Result.put (create {COMMAND_EXECUTOR})
 		ensure
 			command_executor_cell_not_void: Result /= Void
 			command_executor_not_void: Result.item /= Void
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

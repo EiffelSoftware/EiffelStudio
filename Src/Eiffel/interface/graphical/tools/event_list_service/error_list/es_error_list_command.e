@@ -71,7 +71,7 @@ feature -- Access
 		do
 			l_item := internal_pixmap
 			if l_item = Void then
-				create l_item
+				create l_item.put (Void)
 				internal_pixmap := l_item
 				if pixel_buffer /= Void then
 					l_item.put (pixel_buffer.to_pixmap)
@@ -111,7 +111,7 @@ invariant
 	tool_commander_attached: is_interface_usable implies tool_commander /= Void
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -157,7 +157,7 @@ feature {NONE} -- Access
 		do
 			l_cache := internal_discard_preference
 			if l_cache = Void then
-				create l_cache
+				create l_cache.put (Void)
 				internal_discard_preference := l_cache
 
 				if preferences.preferences.has_preference (full_preference_name) then
@@ -310,7 +310,7 @@ invariant
 	buttons_contains_discard_button: buttons.has (discard_button)
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

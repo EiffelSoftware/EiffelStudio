@@ -202,7 +202,7 @@ feature -- Query
 				l_checker := type_checker
 				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void, Void)
 				from l_locals.start until l_locals.after loop
-					l_name := l_locals.key_for_iteration
+					l_name := l_locals.key_for_iteration.as_attached
 					l_type := l_generator.evaluate_type_if_possible (l_locals.item_for_iteration, l_class)
 					if l_type /= Void then
 						l_type := l_checker.solved (l_type, l_locals.item_for_iteration)

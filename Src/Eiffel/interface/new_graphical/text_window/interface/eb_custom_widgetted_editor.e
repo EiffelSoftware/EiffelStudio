@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 	shared_quick_search_mode: CELL [BOOLEAN] is
 			-- Shared quick search mode.
 		once
-			create Result
+			create Result.put (False)
 		end
 
 	prepare_search_tool (a_replace: BOOLEAN) is
@@ -761,7 +761,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -791,4 +791,5 @@ feature {NONE} -- Internal implentation cache
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end

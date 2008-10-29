@@ -87,7 +87,7 @@ feature {NONE} -- Access
         do
             l_cell := internal_tool_bar_widget
             if l_cell = Void then
-                create l_cell
+                create l_cell.put (Void)
                 internal_tool_bar_widget := l_cell
 
                 l_items := create_tool_bar_items
@@ -112,7 +112,7 @@ feature {NONE} -- Access
         do
             l_cell := internal_right_tool_bar_widget
             if l_cell = Void then
-                create l_cell
+                create l_cell.put (Void)
                 internal_right_tool_bar_widget := l_cell
 
                 l_items := create_right_tool_bar_items
@@ -212,7 +212,7 @@ feature {NONE} -- Internal implementation cache
             -- Cached version of `right_tool_bar_widget'
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

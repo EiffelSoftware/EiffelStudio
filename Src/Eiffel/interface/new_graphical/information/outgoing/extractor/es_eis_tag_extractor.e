@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			-- other extractors.
 		do
 			if storage.tag_server.entries.has (tag) then
-				eis_entries := storage.tag_server.entries.item (tag)
+				eis_entries := storage.tag_server.entries.item (tag).as_attached
 			else
 				create eis_entries.make (0)
 			end

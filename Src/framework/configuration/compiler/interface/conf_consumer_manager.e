@@ -732,7 +732,7 @@ feature {CONSUMER_EXPORT} -- il emitter
 	internal_il_emitter: CELL [IL_EMITTER] is
 			-- Unique instance of IL_EMITTER
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -887,7 +887,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

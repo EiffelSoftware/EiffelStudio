@@ -137,13 +137,13 @@ feature {NONE} -- Implementation
 	file_counter_cell: CELL [INTEGER] is
 			-- Shared value for file name generation in final mode only.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			file_counter_cell_not_void: Result /= Void
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

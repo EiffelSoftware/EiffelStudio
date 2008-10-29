@@ -67,11 +67,11 @@ feature {NONE} -- Onces
 	Pixmap_cell: CELL [CONF_PIXMAPS] is
 			-- Cell to hold the pixmap.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

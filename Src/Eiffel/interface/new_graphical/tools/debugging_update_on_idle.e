@@ -119,7 +119,7 @@ feature {NONE} -- Implementation status
 			-- Keep info that a real update on idle is processing (or not) in the system.
 			-- we keep this per thread for now.
 		once
-			create Result
+			create Result.put (False)
 		end
 
 feature {NONE} -- Implementation change
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation change
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

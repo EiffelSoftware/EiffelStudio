@@ -718,7 +718,7 @@ feature {NONE} -- User interface elements
         do
             l_cell := internal_mini_tool_bar_widget
             if l_cell = Void then
-                create l_cell
+                create l_cell.put (Void)
                 internal_mini_tool_bar_widget := l_cell
                 l_multi := tool_descriptor.is_supporting_multiple_instances
 				if {l_context: HELP_CONTEXT_I} Current then
@@ -766,7 +766,7 @@ feature {NONE} -- User interface elements
         do
             l_cell := internal_tool_bar_widget
             if l_cell = Void then
-                create l_cell
+                create l_cell.put (Void)
                 internal_tool_bar_widget := l_cell
 
                 l_items := create_tool_bar_items
@@ -791,7 +791,7 @@ feature {NONE} -- User interface elements
         do
             l_cell := internal_right_tool_bar_widget
             if l_cell = Void then
-                create l_cell
+                create l_cell.put (Void)
                 internal_right_tool_bar_widget := l_cell
 
                 l_items := create_right_tool_bar_items
@@ -1024,7 +1024,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;indexing
-    copyright:    "Copyright (c) 1984-2007, Eiffel Software"
+    copyright:    "Copyright (c) 1984-2008, Eiffel Software"
     license:    "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
     licensing_options:    "http://www.eiffel.com/licensing"
     copying: "[

@@ -61,8 +61,6 @@ feature {NONE} -- Initialization
 			else
 				is_void := True
 			end
-		ensure
-			new_string: value /= Default_pointer implies value /= s
 		end
 
 	make_from_pointer (p: POINTER)
@@ -102,7 +100,7 @@ feature -- Access
 			if is_void then
 				create Result.make_from_string ("Void")
 			else
-				create Result.make_from_string (as_string)
+				Result := as_string
 			end
 		ensure
 			output_not_value: output /= as_string
@@ -114,8 +112,6 @@ feature -- Access
 			Result := as_string
 			if Result = Void then
 				create Result.make_empty
-			else
-				Result := Result.twin
 			end
 		end
 

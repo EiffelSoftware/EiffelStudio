@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Access
 
-	frozen test_suite: !SERVICE_CONSUMER [!EIFFEL_TEST_SUITE_S]
+	frozen test_suite: !SERVICE_CONSUMER [EIFFEL_TEST_SUITE_S]
 			-- Access to a test suite service {EIFFEL_TEST_SUITE_S} consumer
 		once
 			manager.add_observer (Current)

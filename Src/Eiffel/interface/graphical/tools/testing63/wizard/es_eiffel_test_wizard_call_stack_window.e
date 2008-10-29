@@ -272,7 +272,9 @@ feature {NONE} -- Basic functionality
 			-- <Precursor>
 		do
 			if {l_extr: !EIFFEL_TEST_EXTRACTOR_I} extractor and {l_conf: !EIFFEL_TEST_CONFIGURATION_I} wizard_information then
-				test_suite.service.launch_processor (l_extr, l_conf, False)
+				if test_suite.is_service_available then
+					test_suite.service.launch_processor (l_extr, l_conf, False)
+				end
 				cancel_actions
 			end
 		end

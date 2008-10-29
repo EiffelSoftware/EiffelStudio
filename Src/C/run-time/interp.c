@@ -6155,6 +6155,25 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 	/* NOT REACHED */
 }
 
+rt_public void eif_override_byte_code_of_body (int body_id, unsigned char *bc, int count) {
+	unsigned char *bcode;
+	
+		/* Let's free the previously allocated byte code. */
+	bcode = melt [body_id];
+	if(bcode!=NULL) {
+		eif_rt_xfree (bcode);
+	}	
+		/* Allocate a new area for the new byte code to store. */
+	bcode = (unsigned char *) cmalloc (count * sizeof(unsigned char));
+	if (!bcode) {
+		enomem();
+	} else {
+		memcpy(bcode, bc, count * sizeof(unsigned char));
+		melt [body_id] = bcode;
+		egc_frozen [body_id] = 0;
+	}
+}
+
 #endif
 
 /*

@@ -144,6 +144,7 @@
 			</condition>
 		</external_object>
 		<variable name="batch_framework" value="false"/>
+		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf" readonly="false"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_gui" location="$EIFFEL_SRC\framework\configuration\configuration_gui.ecf" readonly="false"/>

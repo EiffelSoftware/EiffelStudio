@@ -6,10 +6,13 @@ indexing
 	revision: "$Revision$"
 
 class
-	MELT_FEATURE 
+	MELT_FEATURE
 
 inherit
 	CHARACTER_ARRAY
+		export{ANY}
+			area
+		end
 
 	IDABLE
 		rename
@@ -19,7 +22,31 @@ inherit
 
 create
 	make
-	
+
+feature -- Access
+
+	string_representation: STRING is
+			-- String representing content of Current array
+		local
+			i: INTEGER
+			l_count: INTEGER
+			l_area: like area
+		do
+			l_count := count
+			l_area := area
+			create Result.make (l_count)
+			from
+				i := 0
+			until
+				i = l_count
+			loop
+				Result.append_character (l_area.item (i))
+				i := i + 1
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

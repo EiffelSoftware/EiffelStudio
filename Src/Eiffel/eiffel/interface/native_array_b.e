@@ -152,6 +152,11 @@ feature -- Actual class type
 				end
 			end
 				-- Note that NATIVE_ARRAY is not expanded by default
+			if lace_class.is_attached_by_default then
+				Result.set_is_attached
+			else
+				Result.set_is_implicitly_attached
+			end
 		end
 
 	constraint_actual_type: CL_TYPE_A is

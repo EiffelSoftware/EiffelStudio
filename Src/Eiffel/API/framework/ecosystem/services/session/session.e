@@ -518,7 +518,7 @@ feature {NONE} -- Conversion type tables
 		end
 
 invariant
-	manager_attached: manager /= Void
+	manager_attached: not is_zombie implies manager /= Void
 	manager_is_zombie: not is_zombie implies manager.is_interface_usable
 	data_attached: data /= Void
 

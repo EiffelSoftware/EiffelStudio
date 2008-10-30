@@ -212,7 +212,7 @@ feature -- Properties
 				-- Retrieve the applicable targets for a class within a library. Applicable targets are direct
 				-- references of the library.
 			l_class_target := l_target_system.library_target
-			if l_class_target /= target then
+			if l_class_target /= Void and then l_class_target /= target then
 				create l_apt_library_targets.make (13)
 
 					-- The class is from a library, we need to navigate down to find first level libraries.

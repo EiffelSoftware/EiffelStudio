@@ -19,18 +19,64 @@ deferred class NETWORK_SOCKET inherit
 			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
-			address, is_valid_peer_address, create_from_descriptor
+			make_socket, address, peer_address, is_valid_peer_address, connect
 		end
 
-feature -- Initialization
+feature
 
-	create_from_descriptor (fd: INTEGER) is
-			-- Create socket from descriptor `fd'.
+	close_socket is
+			--
 		do
-			Precursor (fd)
-			timeout := default_timeout
-		ensure then
-			timeout_set_to_default: timeout = default_timeout
+			if not is_closed then
+				if is_created then
+					c_close (fd, fd1)
+				end
+				is_closed := True
+			end
+			descriptor_available := False
+			is_open_read := False
+			is_open_write := False
+		end
+
+	descriptor: INTEGER is
+			-- Socket descriptor of current socket
+		do
+			Result := fd
+		end
+
+	connect is
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				do_connect
+				is_open_write := True;
+				is_open_read := True
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
+		end
+
+	bind is
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				do_bind
+				is_open_read := True
+				is_bound := True
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				retried := True
+				retry
+			end
 		end
 
 feature -- Status report
@@ -38,16 +84,35 @@ feature -- Status report
 	address: NETWORK_SOCKET_ADDRESS;
 			-- Local address of socket
 
+	peer_address: NETWORK_SOCKET_ADDRESS;
+			-- Peer address of socket
+
+	is_closed: BOOLEAN
+
+	is_created: BOOLEAN
+
+	is_connected: BOOLEAN
+
+	is_bound: BOOLEAN
+
 	port: INTEGER is
-			-- Port socket is bound to.
-		require
-			valid_socket: exists
-		local
-			temp_addr: like address
+			--
 		do
-			create temp_addr.make;
-			c_sock_name (descriptor, temp_addr.socket_address.item, temp_addr.count);
-			Result := temp_addr.port
+			if not is_connected then
+				Result := 0
+			else
+				Result := the_port
+			end
+		end
+
+	local_port: INTEGER is
+			--
+		do
+			if not is_bound then
+				Result := -1
+			else
+				Result := the_local_port
+			end
 		end
 
 	reuse_address: BOOLEAN is
@@ -68,7 +133,7 @@ feature -- Status report
 		end
 
 	ready_for_reading: BOOLEAN is
-			-- Is data available for reading from the socket within 
+			-- Is data available for reading from the socket within
 			-- `timeout' seconds?
 		local
 			retval: INTEGER
@@ -76,7 +141,7 @@ feature -- Status report
 			retval := c_select_poll_with_timeout (descriptor, True, timeout)
 			Result := (retval > 0)
 		end
-	
+
 	ready_for_writing: BOOLEAN is
 			-- Can data be written to the socket within `timeout' seconds?
 		local
@@ -85,7 +150,7 @@ feature -- Status report
 			retval := c_select_poll_with_timeout (descriptor, False, timeout)
 			Result := (retval > 0)
 		end
-	
+
 	has_exception_state: BOOLEAN is
 			-- Is socket in exception state within `timeout' seconds?
 		local
@@ -94,10 +159,10 @@ feature -- Status report
 			retval := c_check_exception_with_timeout (descriptor, timeout)
 			Result := (retval > 0)
 		end
-	
+
 	timeout: INTEGER
 			-- Duration of timeout in seconds
-		
+
 feature -- Status setting
 
 	set_reuse_address is
@@ -130,6 +195,42 @@ feature -- Status setting
 			timeout_set: timeout = n or timeout = default_timeout
 		end
 
+feature {NONE} -- Implementation
+
+	make_socket is
+		do
+			do_create
+			if fd > - 1 then
+				descriptor_available := True
+				set_blocking
+			end
+		end
+
+	shutdown is
+		do
+			-- TODO
+		end
+
+	fd: INTEGER
+
+	fd1: INTEGER
+
+	the_port: INTEGER
+
+	the_local_port: INTEGER
+
+	do_create is
+		deferred
+		end
+
+	do_connect
+		deferred
+		end
+
+	do_bind is
+		deferred
+		end
+
 feature {NONE} -- Constants
 
 	default_timeout: INTEGER is 20
@@ -137,18 +238,25 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Externals
 
-	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
+	c_close (an_fd: INTEGER; an_fd1: INTEGER) is
+		external
+			"C"
+		alias
+			"en_socket_close"
+		end
+
+	c_select_poll_with_timeout (an_fd: INTEGER; is_read_mode: BOOLEAN;
 								timeout_secs: INTEGER): INTEGER is
 		external
 			"C blocking"
 		end
-		
-	c_check_exception_with_timeout (fd: INTEGER;
+
+	c_check_exception_with_timeout (an_fd: INTEGER;
 								timeout_secs: INTEGER): INTEGER is
 		external
 			"C blocking"
 		end
-		
+
 invariant
 
 	timeout_set: timeout > 0

@@ -209,7 +209,7 @@ feature -- Input
 			last_packet_size := 0
 		end
 
-feature {NONE} -- Constants
+feature -- Constants
 
 	Read_only, Write_only: INTEGER is unique
 			-- Constants determinint the transfer direction for `check_socket'

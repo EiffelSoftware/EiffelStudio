@@ -14,6 +14,14 @@ class
 
 inherit
 
+	INET_ADDRESS_FACTORY
+		export {NONE}
+			All
+		undefine
+			copy, is_equal
+		end
+
+
 	SOCKET_RESOURCES
 		undefine
 			copy, is_equal
@@ -26,76 +34,53 @@ inherit
 			address_size, set_sock_family, get_sock_family
 		end
 
-	SOCKET_ADDRESS
-		redefine
-			address_size, set_sock_family, get_sock_family, make
-		select 
-			make
-		end
-
 create
 
-	make, make_local_from_port, make_from_name_and_port,
-		make_from_ip_and_port
+	make_from_hostname_and_port, make_from_address_and_port, make_any_local
+
 
 feature -- Initialization
 
-	make is
-			-- Create a network address.
+	make_from_address_and_port (an_address: INET_ADDRESS;  a_port: INTEGER) is
+		require
+			valid_address: an_address /= Void
+			valid_port: a_port >= 0 and then a_port <= 0xFFFF
 		do
-			socket_address_make;
-			set_family (af_inet)
-		end;
-
-	make_local_from_port (a_port: INTEGER) is
-			-- Create a local address with port `a_port'.
-		local
-			an_host_address: HOST_ADDRESS
-		do
-			make;
-			create an_host_address.make_local;
-			set_host_address (an_host_address);
-			set_port (a_port)
-		end;
-
-	make_from_name_and_port (a_hostname: STRING; a_port: INTEGER) is
-			-- Create an address from host name `a_hostname' and
-			-- port `a_port'.
-		local
-			an_host_address: HOST_ADDRESS
-		do
-			make;
-			create an_host_address.make_from_name (a_hostname);
-			set_host_address (an_host_address);
-			set_port (a_port)
-		end;
-
-	make_from_ip_and_port (an_ip_number: STRING; a_port: INTEGER) is
-			-- Create an address from ip number `an_ip_number'
-			-- (in dotted format) and port `a_port'.
-		local
-			an_host_address: HOST_ADDRESS
-		do
-			make;
-			create an_host_address.make_from_ip_number (an_ip_number);
-			set_host_address (an_host_address);
-			set_port (a_port)
+			socket_address := an_address.sockaddr (a_port)
 		end
-			
-			
+
+	make_from_hostname_and_port (a_hostname: STRING;  a_port: INTEGER) is
+		require
+			valid_hostname: a_hostname /= Void
+			valid_port: a_port >= 0 and then a_port <= 0xFFFF
+		local
+			addr: INET_ADDRESS
+		do
+			addr := create_from_name (a_hostname)
+			socket_address := addr.sockaddr (a_port)
+		end
+
+	make_any_local (a_port: INTEGER) is
+			--
+		local
+			addr: INET_ADDRESS
+		do
+			addr := create_any_local
+			socket_address := addr.sockaddr (a_port)
+		end
+
 feature -- Status report
 
 	port: INTEGER is
 			-- Port number
 		do
 			Result := get_sock_port (socket_address.item)
-		end;
+		end
 
-	host_address: HOST_ADDRESS is
+	host_address: INET_ADDRESS is
 			-- Host address of address
 		do
-			create Result.make;
-			Result.from_c (get_sock_addr_in (socket_address.item))
+			Result := create_from_sockaddr(get_sock_addr_in (socket_address.item))
 		end
 
 feature -- Status setting
@@ -117,20 +102,12 @@ feature -- Status setting
 			-- Set port to `p'.
 		do
 			set_sock_port (socket_address.item, p)
-		end;
+		end
 
-	set_host_address (a_host_address: HOST_ADDRESS) is
+	set_host_address (a_host_address: INET_ADDRESS) is
 			-- Set host address to `a_host_address'
 		do
-			set_sock_addr_in (socket_address.item, a_host_address.address_host.item)
-		end;
-
-	clear_zero is
-			-- Set zero attribute in address structure.
-		local
-			null_pointer: POINTER
-		do
-			set_sock_zero (socket_address.item, null_pointer)
+			make_from_address_and_port (a_host_address, port)
 		end
 
 feature {NONE} -- External
@@ -141,7 +118,7 @@ feature {NONE} -- External
 			"C"
 		alias
 			"inet_address_size"
-		end;
+		end
 
 	set_sock_family (address: POINTER; a_family: INTEGER) is
 			-- Set the family in the address structure.
@@ -149,7 +126,7 @@ feature {NONE} -- External
 			"C"
 		alias
 			"set_inet_sock_family"
-		end;
+		end
 
 	get_sock_family (address: POINTER): INTEGER is
 			-- Get the family from the address structure.
@@ -157,43 +134,25 @@ feature {NONE} -- External
 			"C"
 		alias
 			"get_inet_sock_family"
-		end;
+		end
 
 	set_sock_port (address: POINTER; a_port: INTEGER) is
 			-- Set the port in the address structure.
 		external
 			"C"
-		end;
+		end
 
 	get_sock_port (address: POINTER): INTEGER is
 			-- Get the port from the address structure.
 		external
 			"C"
-		end;
-
-	set_sock_addr_in (address: POINTER; a_addr_in: POINTER) is
-			-- Set the host address in the address structure.
-		external
-			"C"
-		end;
+		end
 
 	get_sock_addr_in (address: POINTER): POINTER is
 			-- Get the host address from the address structure.
 		external
 			"C"
-		end;
-
-	set_sock_zero (address: POINTER; a_zero: POINTER) is
-			-- Set zero attribute in address structure.
-		external
-			"C"
-		end;
-
-	get_sock_zero (address: POINTER): POINTER is
-			-- Get zero attribute from address structure.
-		external
-			"C"
-		end;
+		end
 
 	get_servent_port (name, proto: POINTER): INTEGER is
 			-- Get the services entry using `name' and `proto'
@@ -211,8 +170,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end -- class NETWORK_SOCKET_ADDRESS

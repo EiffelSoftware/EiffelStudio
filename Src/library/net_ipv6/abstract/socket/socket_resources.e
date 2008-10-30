@@ -199,7 +199,7 @@ feature -- Status report
 feature -- Externals: flags for send, sendto recv and recvfrom socket calls
 
 	c_oobmsg: INTEGER is
-			-- Out of bound message 
+			-- Out of bound message
 		external
 			"C"
 		end;
@@ -582,6 +582,12 @@ feature {NONE} -- Externals: socket families
 		end;
 
 	af_inet: INTEGER is
+			-- Network (internet) socket family
+		external
+			"C"
+		end;
+
+	af_inet6: INTEGER is
 			-- Network (internet) socket family
 		external
 			"C"

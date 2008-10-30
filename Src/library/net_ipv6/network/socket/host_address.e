@@ -1,15 +1,15 @@
 indexing
-
-	description:
-		"A host address."
+	description: "A host address."
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
 	HOST_ADDRESS
+
+obsolete
+	"Use the INET_ADDRESS_FACTORY instead to create addresses."
 
 inherit
 	ANY

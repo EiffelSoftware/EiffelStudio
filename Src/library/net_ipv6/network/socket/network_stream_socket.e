@@ -114,16 +114,24 @@ feature
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		local
+			retried: BOOLEAN
 			pass_address: like address
 			return: INTEGER;
 		do
-			pass_address := address.twin
-			return := c_accept (Current, pass_address.socket_address.item, 0);
-			if return > 0 then
-				create accepted.make_from_fd (return, address.twin);
-				accepted.set_peer_address (pass_address)
-			else
-				accepted := Void
+			if not retried then
+				pass_address := address.twin
+				return := c_accept (Current, pass_address.socket_address.item, 0);
+				if return > 0 then
+					create accepted.make_from_fd (return, address.twin);
+					accepted.set_peer_address (pass_address)
+				else
+					accepted := Void
+				end
+			end
+		rescue
+			if not assertion_violation then
+				retried := True
+				retry
 			end
 		end
 

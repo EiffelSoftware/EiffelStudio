@@ -67,6 +67,7 @@ OBJECTS = \
 	hostname.o \
 	syncpoll.o \
 	storable.o \
+	ipv6.o \
 	ipv6ux.o
 
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)

@@ -12,7 +12,7 @@ LN = copy
 MV = $mv
 RM = $del
 MKDIR_TARGET = $mkdir_target
-OBJECTS = network.$obj network_r.$obj hostname.$obj syncpoll.$obj storable.$obj ipv6win.$obj
+OBJECTS = network.$obj network_r.$obj hostname.$obj syncpoll.$obj storable.$obj ipv6.$obj ipv6win.$obj
 MT_OBJECTS = MTnetwork.$obj MTnetwork_r.$obj MThostname.$obj MTsyncpoll.$obj MTstorable.$obj
 IL_OBJECTS = ILnetwork.$obj ILnetwork_r.$obj ILhostname.$obj ILsyncpoll.$obj ILstorable.$obj
 

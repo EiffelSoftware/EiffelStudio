@@ -49,6 +49,11 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 
 feature -- Access
 
+	host_address: STRING is
+		do
+			Result := numeric_to_text(raw_address)
+		end
+
     is_multicast_address: BOOLEAN is
     	do
 			Result := (the_address & 0xf0000000) = 0xe0000000
@@ -117,10 +122,10 @@ feature -- Access
 	raw_address: ARRAY[INTEGER_8] is
 		do
 			create Result.make(1,INADDRSZ)
-			Result.put (1, ((the_address |>> 24) & 0xFF).to_integer_8)
-			Result.put (2, ((the_address |>> 16) & 0xFF).to_integer_8)
-			Result.put (3, ((the_address |>> 8) & 0xFF).to_integer_8)
-			Result.put (4, (the_address & 0xFF).to_integer_8)
+			Result.put (((the_address |>> 24) & 0xFF).to_integer_8, 1)
+			Result.put (((the_address |>> 16) & 0xFF).to_integer_8, 2)
+			Result.put (((the_address |>> 8) & 0xFF).to_integer_8, 3)
+			Result.put ((the_address & 0xFF).to_integer_8, 4)
 		end
 
 feature {NETWORK_SOCKET_ADDRESS}
@@ -134,6 +139,20 @@ feature {NETWORK_SOCKET_ADDRESS}
 feature {NONE} -- Implementation
 
 	the_address: INTEGER_32
+
+	numeric_to_text (addr: ARRAY[INTEGER_8]): STRING is
+		require
+			addr /= Void and then addr.count = INADDRSZ
+		do
+			create Result.make_empty
+			Result.append_integer(addr[1])
+			Result.append_character('.')
+			Result.append_integer(addr[2])
+			Result.append_character('.')
+			Result.append_integer(addr[3])
+			Result.append_character('.')
+			Result.append_integer(addr[4])
+		end
 
 feature {NONE} -- Externals
 

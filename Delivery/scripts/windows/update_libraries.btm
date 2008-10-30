@@ -17,6 +17,9 @@ default_make
 remtrace net
 cd %EIFFEL_SRC\library\net\Clib
 default_make
+remtrace net_ipv6
+cd %EIFFEL_SRC\library\net_ipv6\Clib
+default_make
 remtrace wel
 cd %EIFFEL_SRC\library\wel\clib
 default_make

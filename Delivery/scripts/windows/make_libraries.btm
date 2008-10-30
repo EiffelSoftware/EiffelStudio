@@ -23,6 +23,8 @@ remtrace memory_analyzer
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer
 remtrace net
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/net net
+remtrace net_ipv6
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/net_ipv6 net_ipv6
 remtrace obsolete
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete
 remtrace parse
@@ -78,6 +80,8 @@ iff not defined NO_COMPILE then
 	endiff
 	remtrace net
 	cd %STUDIO_DIR\library\net\Clib
+	remtrace net_ipv6
+	cd %STUDIO_DIR\library\net_ipv6\Clib
 	all_makes
 	remtrace store
 	cd %STUDIO_DIR\library\store\dbms\rdbms\odbc\clib
@@ -101,6 +105,7 @@ else
 	fullrd %STUDIO_DIR\library\com\Clib
 	fullrd %STUDIO_DIR\library\com\Clib_runtime
 	quick_move /s library\net\spec
+	quick_move /s library\net_ipv6\spec
 	quick_move /s library\store\spec
 	quick_move /s library\vision2\spec
 	quick_move /s library\wel\spec

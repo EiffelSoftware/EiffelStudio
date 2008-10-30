@@ -199,8 +199,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 					-- and then not is_inherited
 					and then context.current_class.lace_class.options.is_warning_enabled (w_obsolete_feature)
 				then
-					create obs_warn
-					obs_warn.set_class (context.current_class)
+					create obs_warn.make_with_class (context.current_class)
 					obs_warn.set_feature (context.current_feature)
 					obs_warn.set_obsolete_class (class_c)
 					obs_warn.set_obsolete_feature (feature_i)

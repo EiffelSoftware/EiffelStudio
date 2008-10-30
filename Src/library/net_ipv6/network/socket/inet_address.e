@@ -62,7 +62,7 @@ feature
 		end
 
 	host_address: STRING is
-		do
+		deferred
 		end
 
 	raw_address: ARRAY[INTEGER_8] is

@@ -504,13 +504,13 @@ feature {NONE} -- Implementation
 				loop
 					inspect ai.family
 					when  {ADDRINFO}.af_inet then
-						-- TODO !!! Read the address from the structure
 						create {INET4_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
 						Result.force (ia, Result.count+1)
 					when  {ADDRINFO}.af_inet6 then
-						-- TODO !!! Read the address from the structure
-						create {INET6_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
-						Result.force (ia, Result.count+1)
+						if is_ipv6_available then
+							create {INET6_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
+							Result.force (ia, Result.count+1)
+						end
 					end
 					ai := ai.next
 				end

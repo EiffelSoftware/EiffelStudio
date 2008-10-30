@@ -38,13 +38,16 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 
 	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY[INTEGER_8]; an_iface_name: STRING) is
 		do
+			-- TODO Implement scope check
 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
+			is_scope_ifname_set := True
 		end
 
 	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY[INTEGER_8]; a_scope_id: INTEGER) is
 		do
 			make_from_host_and_address (a_hostname, an_address)
 			the_scope_id := a_scope_id
+			is_scope_id_set := True
 		end
 
 	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER) is
@@ -71,6 +74,18 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 		end
 
 feature -- Access
+
+	host_address: STRING is
+		do
+			Result := numeric_to_text(the_address)
+			if is_scope_ifname_set then -- must check this first
+	    		Result.append_character('%%')
+	    		Result.append_string(the_scope_ifname)
+	    	elseif is_scope_id_set then
+	    		Result.append_character('%%')
+	    		Result.append_integer(the_scope_id)
+			end
+		end
 
     is_multicast_address: BOOLEAN is
     	do
@@ -168,6 +183,34 @@ feature {NONE} -- Implementation
 	the_address: ARRAY[INTEGER_8]
 
 	the_scope_id: INTEGER
+
+	the_scope_ifname: STRING
+
+	is_scope_ifname_set: BOOLEAN
+
+	is_scope_id_set: BOOLEAN
+
+	numeric_to_text (addr: ARRAY[INTEGER_8]): STRING is
+		require
+			addr /= Void and then addr.count = INADDRSZ
+		local
+			i: INTEGER
+			e: INTEGER_16
+		do
+			create Result.make_empty
+			from
+				i := 1
+			until
+				i >= INADDRSZ
+			loop
+				e := ((( addr[i] |<< 8 ) & 0xff00) | (addr[i+1] & 0xff)).as_integer_16
+				Result.append_string(e.to_hex_string)
+				if i <  INADDRSZ-1 then
+					Result.append_character(':')
+				end
+				i := i + 2
+			end
+		end
 
 feature {NONE} -- Externals
 

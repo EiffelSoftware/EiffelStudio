@@ -379,15 +379,14 @@ feature {NONE} -- Implementation
 		require
 			port_positive: p > 0
 		local
+			af: INET_ADDRESS_FACTORY
 			str: STRING
-			h_addr: HOST_ADDRESS
+			h_addr: INET_ADDRESS
 		do
-			create h_addr.make
-			h_addr.set_address_from_name (h_addr.local_host_name)
+			create af
 			Result := Ftp_port_command.twin
 			Result.extend (' ')
-			str := byte_list (h_addr.host_number, 4, True)
-			Result.append (str)
+			Result.append (af.create_localhost.host_address)
 			Result.append (",")
 			str := byte_list (p, 2, False)
 			Result.append (str)

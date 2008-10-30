@@ -1,143 +1,6 @@
+#include "ipv6.h"
 
-#define EIF_NET_INITIALIZE do_init()
-
-#include <Winsock2.h>
-#include <ws2tcpip.h>
-
-#include "eif_eiffel.h"
-
-
-
-#ifndef IPTOS_TOS_MASK
-#define IPTOS_TOS_MASK 0x1e
-#endif
-#ifndef IPTOS_PREC_MASK
-#define IPTOS_PREC_MASK 0xe0
-#endif 
-
-/* used to disable connection reset messages on Windows XP */
-#ifndef SIO_UDP_CONNRESET
-#define SIO_UDP_CONNRESET _WSAIOW(IOC_VENDOR,12)
-#endif
-
-extern void do_init ();
-
-typedef union {
-    struct sockaddr	him;
-    struct sockaddr_in	him4;
-    struct sockaddr_in6 him6;
-} SOCKETADDRESS;
-
-struct ipv6bind {
-    SOCKETADDRESS	*addr;
-    SOCKET	 	 ipv4_fd;
-    SOCKET 	 	 ipv6_fd;
-};
-
-#define SOCKETADDRESS_LEN(X)	\
-	(((X)->him.sa_family==AF_INET6)? sizeof(struct sockaddr_in6) : \
-			 sizeof(struct sockaddr_in))
-
-
-#define SET_PORT(X,Y) {				\
-    if ((X)->him.sa_family == AF_INET) {	\
-    	(X)->him4.sin_port = (Y);		\
-    } else {					\
-    	(X)->him6.sin6_port = (Y);		\
-    }						\
-}
-
-#define GET_PORT(X) ((X)->him.sa_family==AF_INET ?(X)->him4.sin_port: (X)->him6.sin6_port)
-
-
-/* Macro, which cleans-up the iv6bind structure,
- * closes the two sockets (if open),
- * and returns SOCKET_ERROR. Used in NET_BindV6 only.
- */
-
-#define CLOSE_SOCKETS_AND_RETURN {	\
-    if (fd != -1) {			\
-	closesocket (fd); 		\
-	fd = -1;			\
-    }					\
-    if (ofd != -1) {			\
-	closesocket (ofd); 		\
-	ofd = -1;			\
-    }					\
-    if (close_fd != -1) {		\
-	closesocket (close_fd);		\
-	close_fd = -1;			\
-    }					\
-    if (close_ofd != -1) {		\
-	closesocket (close_ofd);	\
-	close_ofd = -1;			\
-    }					\
-    b->ipv4_fd = b->ipv6_fd = -1;	\
-    return SOCKET_ERROR;		\
-}
-
-#ifndef IN6_IS_ADDR_ANY
-#define IN6_IS_ADDR_ANY(a)	\
-    (((a)->s6_words[0] == 0) && ((a)->s6_words[1] == 0) &&	\
-    ((a)->s6_words[2] == 0) && ((a)->s6_words[3] == 0) &&	\
-    ((a)->s6_words[4] == 0) && ((a)->s6_words[5] == 0))
-#endif
-
-
-static int en_ipv6_supported() {
-    static int res = -1;
-    if (res == -1) {
-        HMODULE lib;
-        int fd = socket(AF_INET6, SOCK_STREAM, 0);
-        if (fd < 0) {
-            printf ("en_ipv6_supported fd < 0\n");
-    	    return (res = 0);
-        } 
-        closesocket (fd);
-        if ((lib = LoadLibrary ("ws2_32.dll")) == 0) {
-            printf ("en_ipv6_supported loadLibrary = 0\n");
-    	    return (res = 0);
-        }
-        if (GetProcAddress (lib, "getaddrinfo") == 0) {
-            printf ("en_ipv6_supported getaddrinfo = 0\n");
-    	    FreeLibrary (lib);
-    	    return (res = 0);
-        }
-        if (GetProcAddress (lib, "freeaddrinfo") == 0) {
-    	    FreeLibrary (lib);
-    	    return (res = 0);
-        }
-        if (GetProcAddress (lib, "getnameinfo") == 0) {
-    	    FreeLibrary (lib);
-    	    return (res = 0);
-        }
-        FreeLibrary(lib);        
-        return (res = 1);
-    }
-    return res;
-}
-
-static EIF_BOOLEAN prefer_ipv4 = 0;
-
-void en_set_prefer_ipv4(EIF_BOOLEAN prefer) {
-    prefer_ipv4 = prefer;
-}
-
-EIF_BOOLEAN en_get_prefer_ipv4() {
-    return prefer_ipv4;
-}
-
-int en_ipv6_available() {
-    int res = !en_get_prefer_ipv4() && en_ipv6_supported();
-    printf ("en_ipv6_available = %d\n", res);
-    return res;
-}
-
-int en_socket_address_len() {
-    return sizeof(SOCKETADDRESS);
-}
-
-int NET_Bind(int s, struct sockaddr *him, int len)
+static int net_bind(int s, struct sockaddr *him, int len)
 {
     int rv = bind(s, him, len);
 
@@ -154,7 +17,7 @@ int NET_Bind(int s, struct sockaddr *him, int len)
     return rv;
 }
 
-int NET_BindV6(struct ipv6bind* b) {
+static int net_bindV6(struct ipv6bind* b) {
     int fd=-1, ofd=-1, rv, len;
     /* need to defer close until new sockets created */
     int close_fd=-1, close_ofd=-1; 
@@ -167,7 +30,7 @@ int NET_BindV6(struct ipv6bind* b) {
     if (family == AF_INET && (b->addr->him4.sin_addr.s_addr != INADDR_ANY)) {
 	/* bind to v4 only */
 	int ret;
-	ret = NET_Bind (b->ipv4_fd, (struct sockaddr *)b->addr, 
+	ret = net_bind (b->ipv4_fd, (struct sockaddr *)b->addr, 
 				sizeof (struct sockaddr_in));
         if (ret == SOCKET_ERROR) {
 	    CLOSE_SOCKETS_AND_RETURN;
@@ -179,7 +42,7 @@ int NET_BindV6(struct ipv6bind* b) {
     if (family == AF_INET6 && (!IN6_IS_ADDR_ANY(&b->addr->him6.sin6_addr))) {
 	/* bind to v6 only */
 	int ret;
-	ret = NET_Bind (b->ipv6_fd, (struct sockaddr *)b->addr, 
+	ret = net_bind (b->ipv6_fd, (struct sockaddr *)b->addr, 
 				sizeof (struct sockaddr_in6));
         if (ret == SOCKET_ERROR) {
 	    CLOSE_SOCKETS_AND_RETURN;
@@ -209,7 +72,7 @@ int NET_BindV6(struct ipv6bind* b) {
 	oaddr.him4.sin_addr.s_addr = INADDR_ANY;
     }
 
-    rv = NET_Bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
+    rv = net_bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
     if (rv == SOCKET_ERROR) {
     	CLOSE_SOCKETS_AND_RETURN;
     }
@@ -221,7 +84,7 @@ int NET_BindV6(struct ipv6bind* b) {
     }
     bound_port = GET_PORT (b->addr);
     SET_PORT (&oaddr, bound_port);
-    if ((rv=NET_Bind (ofd, (struct sockaddr *) &oaddr, 
+    if ((rv=net_bind (ofd, (struct sockaddr *) &oaddr, 
 				SOCKETADDRESS_LEN (&oaddr))) == SOCKET_ERROR) {
 	int retries;
 	int sotype, arglen=sizeof(sotype);
@@ -258,7 +121,7 @@ int NET_BindV6(struct ipv6bind* b) {
 
 	    /* bind random port on first socket */
 	    SET_PORT (&oaddr, 0);
-    	    rv = NET_Bind (ofd, (struct sockaddr *)&oaddr, SOCKETADDRESS_LEN(&oaddr));
+    	    rv = net_bind (ofd, (struct sockaddr *)&oaddr, SOCKETADDRESS_LEN(&oaddr));
     	    if (rv == SOCKET_ERROR) {
     	        CLOSE_SOCKETS_AND_RETURN;
 	    }
@@ -274,7 +137,7 @@ int NET_BindV6(struct ipv6bind* b) {
             }
     	    bound_port = GET_PORT (&oaddr);
 	    SET_PORT (b->addr, bound_port);
-    	    rv = NET_Bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
+    	    rv = net_bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
 
     	    if (rv != SOCKET_ERROR) {
 		if (family == AF_INET) {
@@ -296,7 +159,7 @@ int NET_BindV6(struct ipv6bind* b) {
 /*
  * Return the default TOS value
  */
-int NET_GetDefaultTOS() {
+static int net_get_default_tos() {
     static int default_tos = -1;
     OSVERSIONINFO ver;
     HKEY hKey;
@@ -358,7 +221,7 @@ int NET_GetDefaultTOS() {
     return default_tos;
 }
 
-int NET_GetSockOpt(int s, int level, int optname, void *optval,
+static int net_get_sock_opt(int s, int level, int optname, void *optval,
 	       int *optlen)
 {
     int rv;
@@ -377,7 +240,7 @@ int NET_GetSockOpt(int s, int level, int optname, void *optval,
 
 	    int *tos;
 	    tos = (int *)optval;
-	    *tos = NET_GetDefaultTOS();
+	    *tos = net_get_default_tos();
 
 	    rv = 0;
 	}
@@ -386,7 +249,7 @@ int NET_GetSockOpt(int s, int level, int optname, void *optval,
     return rv;
 }
 
-int NET_SetSockOpt(int s, int level, int optname, const void *optval, int optlen)
+static int net_set_sock_opt(int s, int level, int optname, const void *optval, int optlen)
 {   
     int rv;
 
@@ -421,7 +284,7 @@ int NET_SetSockOpt(int s, int level, int optname, const void *optval, int optlen
     return rv;
 }
 
-int NET_SocketClose(int fd) {
+static int net_socket_close(int fd) {
     struct linger l;
     int ret;
     int len = sizeof (l);
@@ -434,7 +297,7 @@ int NET_SocketClose(int fd) {
     return ret;
 }
 
-int NET_Timeout(int fd, long timeout) {
+static int net_timeout(int fd, long timeout) {
     int ret;
     fd_set tbl;
     struct timeval t;
@@ -446,122 +309,80 @@ int NET_Timeout(int fd, long timeout) {
     return ret;
 }
 
-int en_addrinfo_ai_flags(struct addrinfo *s) {
-    return s->ai_flags;
-}
-
-int en_addrinfo_ai_family(struct addrinfo *s) {
-    return s->ai_family;
-}
-
-int en_addrinfo_ai_socktype(struct addrinfo *s) {
-    return s->ai_socktype;
-}
-
-int en_addrinfo_ai_protocol(struct addrinfo *s) {
-    return s->ai_protocol;
-}
-
-int en_addrinfo_ai_addrlen(struct addrinfo *s) {
-    return s->ai_addrlen;
-}
-
-char* en_addrinfo_ai_canonname(struct addrinfo *s) {
-    return s->ai_canonname;
-}
-
-void* en_addrinfo_ai_addr(struct addrinfo *s) {
-    return s->ai_addr;
-}
-
-void* en_addrinfo_ai_next(struct addrinfo *s) {
-    return s->ai_next;
-}
-
-void en_free_addrinfo(struct addrinfo *s) {
-    freeaddrinfo(s);
-}
-
-int en_addrinfo_get_ipv4_address (struct sockaddr *s) {
-    if (s->sa_family == AF_INET) {
-    	struct sockaddr_in *him4 = (struct sockaddr_in *)s;
-    	return ntohl(him4->sin_addr.s_addr);
+EIF_BOOLEAN en_ipv6_supported() {
+    static int res = -1;
+    if (res == -1) {
+        HMODULE lib;
+        int fd = socket(AF_INET6, SOCK_STREAM, 0);
+        if (fd < 0) {
+    	    return (res = 0);
+        } 
+        closesocket (fd);
+        if ((lib = LoadLibrary ("ws2_32.dll")) == 0) {
+    	    return (res = 0);
+        }
+        if (GetProcAddress (lib, "getaddrinfo") == 0) {
+    	    FreeLibrary (lib);
+    	    return (res = 0);
+        }
+        if (GetProcAddress (lib, "freeaddrinfo") == 0) {
+    	    FreeLibrary (lib);
+    	    return (res = 0);
+        }
+        if (GetProcAddress (lib, "getnameinfo") == 0) {
+    	    FreeLibrary (lib);
+    	    return (res = 0);
+        }
+        FreeLibrary(lib);        
+        return (res = 1);
     }
-    return 0;
-}
-
-void* en_addrinfo_get_ipv6_address (struct sockaddr *s) {
-    if (s->sa_family == AF_INET6) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s;
-	return &(him6->sin6_addr);
-    }
-    return 0;
-}
-
-int en_addrinfo_get_port (SOCKETADDRESS *s) {
-    return GET_PORT(s);
-}
-
-unsigned long en_addrinfo_get_ipv6_address_scope (struct addrinfo *s) {
-    if (s->ai_family == AF_INET6) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s->ai_addr;
-	return him6->sin6_scope_id;
-    }
-    return 0;
-}
-
-void* en_addrinfo_get_address_pointer(struct addrinfo *s) {
-    if (s->ai_family == AF_INET) {
-    	struct sockaddr_in *him4 = (struct sockaddr_in *) s->ai_addr;
-    	return &(him4->sin_addr.s_addr);
-    } else if (s->ai_family == AF_INET6) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s->ai_addr;
-	return &(him6->sin6_addr);
-    }
-    return 0;
-}
-
-void* en_getaddrinfo(char *hostname) {
-    struct addrinfo *res = 0;
-    int error;
-
-    EIF_NET_INITIALIZE;
-
-    error = getaddrinfo(hostname, 0, 0, & res);
-    if (error != 0) {
-        // TODO Handle Error
-	res = 0;
-    } 
     return res;
 }
 
+static SOCKET check_socket_bounds (SOCKET l_socket) {
+#ifdef EIF_64_BITS
+    /* On 64-bit system `SOCKET' is actually a pointer. For the moment, we check that
+     * it is not coded on the whole 64-bit. */
+    if (l_socket != INVALID_SOCKET) {
+        if ((l_socket & RTU64C(0x00000000FFFFFFFF)) != l_socket) {
+	    /* We are in trouble. Raise an exception for the moment. */
+            eraise ("Descriptor too big to be represented as INTEGER_32", EN_PROG);
+	}
+     }
+#endif
+    return l_socket;
+}
+
+
 void en_socket_stream_create (EIF_OBJECT current) {
 
-    int fd;
+    SOCKET fd, fd1;
 
     EIF_NET_INITIALIZE;
 
-    fd = socket(AF_INET, SOCK_STREAM, 0);
+    fd = check_socket_bounds(socket(AF_INET, SOCK_STREAM, 0));
 
-    if (fd == -1) {
-        printf("create error\n");
-        // TODO Handle Error
-	return;
+    if (fd == INVALID_SOCKET) {
+        eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+        eif_net_check ((int)fd);
+        return;
     } else {
-        printf("create fd = %d\n", fd);
 	/* Set socket attribute so it is not passed to any child process */
-	SetHandleInformation((HANDLE)(UINT_PTR)fd, HANDLE_FLAG_INHERIT, FALSE);
-        eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+	SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, FALSE);
+        eif_field (eif_access(current), "fd", EIF_INTEGER) = (int) fd;
     }
     if (en_ipv6_available()) {
-        fd = socket(AF_INET6, SOCK_STREAM, 0);
-        if (fd == -1) {
-            // TODO Handle Error
+        fd1 = check_socket_bounds(socket(AF_INET6, SOCK_STREAM, 0));
+        if (fd1 == INVALID_SOCKET) {
             eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
-	    NET_SocketClose(fd);
-	    return;
+            eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+	    net_socket_close(fd);
+            eif_net_check ((int)fd1);
+            return;
         } else {
-            eif_field (eif_access(current), "fd1", EIF_INTEGER) = fd;
+            /* Set socket attribute so it is not passed to any child process */
+            SetHandleInformation((HANDLE)fd1, HANDLE_FLAG_INHERIT, FALSE);
+            eif_field (eif_access(current), "fd1", EIF_INTEGER) = (int)fd1;
         }
     } else {
         eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
@@ -570,22 +391,22 @@ void en_socket_stream_create (EIF_OBJECT current) {
 
 void en_socket_datagram_create (EIF_OBJECT current) {
 
-    int fd, fd1;
+    SOCKET fd, fd1;
     int t = TRUE;
     DWORD x1, x2; /* ignored result codes */
 
     EIF_NET_INITIALIZE;
-    fd =  (int) socket (AF_INET, SOCK_DGRAM, 0);
+    fd = check_socket_bounds(socket (AF_INET, SOCK_DGRAM, 0));
 
-    if (fd == -1) {
-        printf("create error\n");
-        // TODO Handle Error
-	return;
+    if (fd == INVALID_SOCKET) {
+        eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+        eif_net_check ((int)fd);
+        return;
     } else {
-        printf("create fd = %d\n", fd);
-        SetHandleInformation((HANDLE)(UINT_PTR)fd, HANDLE_FLAG_INHERIT, FALSE);
-        eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
-        NET_SetSockOpt(fd, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
+	/* Set socket attribute so it is not passed to any child process */
+	SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, FALSE);
+        eif_field (eif_access(current), "fd", EIF_INTEGER) = (int)fd;
+        net_set_sock_opt(fd, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
     }
 
     if (en_ipv6_available()) {
@@ -597,16 +418,20 @@ void en_socket_datagram_create (EIF_OBJECT current) {
 	t = FALSE; 
 	WSAIoctl(fd,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
     	t = TRUE;
-	fd1 = socket (AF_INET6, SOCK_DGRAM, 0);
-        if (fd1 == -1) {
-            // TODO Handle Error
-	    return;
+	fd1 = check_socket_bounds(socket (AF_INET6, SOCK_DGRAM, 0));
+
+        if (fd1 == INVALID_SOCKET) {
+            eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+            eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+            eif_net_check ((int)fd1);
+            return;
+        } else {
+            net_set_sock_opt(fd1, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
+	    t = FALSE;
+	    WSAIoctl(fd1,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
+    	    SetHandleInformation((HANDLE)fd1, HANDLE_FLAG_INHERIT, FALSE);
+            eif_field (eif_access(current), "fd1", EIF_INTEGER) = fd1;
         }
-        NET_SetSockOpt(fd1, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
-	t = FALSE;
-	WSAIoctl(fd1,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
-        eif_field (eif_access(current), "fd1", EIF_INTEGER) = fd;
-    	SetHandleInformation((HANDLE)(UINT_PTR)fd1, HANDLE_FLAG_INHERIT, FALSE);
     } else {
     	eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
     }
@@ -635,39 +460,34 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 
     family = him->him.sa_family; 
     if (family == AF_INET6) {
-        printf("connect family == AF_INET6\n");
 	if (!ipv6_supported) {
-	    // TODO Handle Error 
+	    eraise ("Protocol family not supported", EN_PROG);
 	    return;
 	} else {
 	    if (fd1 == -1) {
-                printf("connect fd1 == -1\n");
-	    	// TODO Handle Error 
+                eraise ("Destination unreachable", EN_PROG);
 	    	return;
 	    }
 	    /* close the v4 socket, and set fd to be the v6 socket */
             eif_field (eif_access(current), "fd", EIF_INTEGER) = fd1;
             eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
-	    NET_SocketClose(fd); 
+	    net_socket_close(fd); 
 	    fd = fd1;
 	}
     } else {
-        printf("connect family = AF_INET4\n");
 	if (fd1 != -1) {
+	    /* close the v6 socket */
             eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
-	    NET_SocketClose(fd1); 
+	    net_socket_close(fd1); 
 	}
 	if (fd == -1) {
-            // TODO Handle Error 
+            eraise ("Destination unreachable", EN_PROG);
 	    return;
 	} 
     }
 
     if (timeout <= 0) {
         connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
-	if (connect_res == SOCKET_ERROR) {
-	    connect_res = WSAGetLastError();
-	}
     } else {
 	int optval;
         int optlen = sizeof(optval);
@@ -679,9 +499,7 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
         /* initiate the connect */
         connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
         if (connect_res == SOCKET_ERROR) {
-            if (WSAGetLastError() != WSAEWOULDBLOCK) {
-                connect_res = WSAGetLastError();
-            } else {
+            if (WSAGetLastError() == WSAEWOULDBLOCK) {
                 fd_set wr, ex;
                 struct timeval t;
 
@@ -705,11 +523,11 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 		 * The socket should be closed immediately by the caller.
 		 */
 		if (connect_res == 0) {
-                    // TODO Handle Error 
 		    shutdown( fd, SD_BOTH );
 		     /* make socket blocking again - just in case */
 		    optval = 0;
 		    ioctlsocket( fd, FIONBIO, &optval );
+                    eraise("connect timed out", EN_PROG);
 		    return;
 		}
 
@@ -727,7 +545,7 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 		} else {
 		    int retry;
 		    for (retry=0; retry<3; retry++) {
-			NET_GetSockOpt(fd, SOL_SOCKET, SO_ERROR, 
+			net_get_sock_opt(fd, SOL_SOCKET, SO_ERROR, 
 				       (char*)&connect_res, &optlen);
 			if (connect_res) {
 			    break;
@@ -736,7 +554,7 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 		    }
 
 		    if (connect_res == 0) {
-                        // TODO Handle Error 
+                        eraise("Unable to establish connection", EN_PROG);
 			return;
 		    }
 		}
@@ -748,18 +566,12 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 	ioctlsocket(fd, FIONBIO, &optval);
     }
 
-    printf("connect_res= %d\n", connect_res);
     if (connect_res) {
-	if (connect_res == WSAEADDRNOTAVAIL) {
-            // TODO Handle Error 
-	} else {
-            // TODO Handle Error 
-	}
+        eif_net_check(connect_res);
 	return;
     }
 
     eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
-
 
     /*
      * we need to initialize the local port field if bind was called
@@ -775,9 +587,9 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 	if (getsockname(fd, (struct sockaddr *)him, &len) == -1) {
 
 	    if (WSAGetLastError() == WSAENOTSOCK) {
-                // TODO Handle Error 
+                eraise("Socket closed", EN_PROG);
 	    } else {
-	        // TODO Handle Error 
+                eraise("getsockname failed", EN_PROG);
 	    }
 	    return;
 	}
@@ -816,12 +628,10 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 	v6bind.addr = him;
 	v6bind.ipv4_fd = fd;
 	v6bind.ipv6_fd = fd1;
-	rv = NET_BindV6(&v6bind);
-        printf("bindv6 res= %d\n", rv);
+	rv = net_bindV6(&v6bind);
 	if (rv != -1) {
 	    /* check if the fds have changed */
 	    if (v6bind.ipv4_fd != fd) {
-                printf("v6bind.ipv4_fd != fd\n");
 		fd = v6bind.ipv4_fd;
 		if (fd == -1) {
 		    /* socket is closed. */
@@ -832,7 +642,6 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 		}
 	    }
 	    if (v6bind.ipv6_fd != fd1) {
-                printf("v6bind.ipv6_fd != fd1\n");
 		fd1 = v6bind.ipv6_fd;
 		if (fd1 == -1) {
 		    /* socket is closed. */
@@ -844,13 +653,11 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 	    }
 	}
     } else {
-    	rv = NET_Bind(fd, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
+    	rv = net_bind(fd, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
     }
 
-    printf("bind_res= %d\n", rv);
-
     if (rv == -1) {	
-	// TODO Handle Error
+	eraise("bind error", EN_PROG);
 	return;
     }
 
@@ -863,8 +670,8 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 	u_short port;
     	fd = him->him.sa_family == AF_INET? fd: fd1;
 
-	if (getsockname(fd, (struct sockaddr *)him, &len) == -1) {
-	    // TODO Handle Error
+	if ((rv=getsockname(fd, (struct sockaddr *)him, &len)) == -1) {
+	    eif_net_check(rv);
 	    return;
 	}
 	port = ntohs ((u_short) GET_PORT (him));
@@ -872,13 +679,13 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
     } else {
         eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = localport;
     }
-    printf("bind_end\n");
 }
 
 void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTEGER count) {
     int fd, fd1;
     SOCKETADDRESS *addr;
     int ipv6_supported;
+    int res;
 
     EIF_NET_INITIALIZE;
 
@@ -886,17 +693,15 @@ void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTE
     addr = (SOCKETADDRESS*) sockaddr;
     ipv6_supported = en_ipv6_available();
 
-    printf("listen start\n");
-
     fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
 
     if (addr->him.sa_family == AF_INET || IN6ADDR_ISANY(&addr->him6)) {
 	/* listen on v4 */
-    	if (listen(fd, count) == -1) {
-	    // TODO Handle Error
+    	if ((res=listen(fd, count)) == -1) {
+	    eif_net_check(res);
         }
     } else {
-	NET_SocketClose (fd);
+	net_socket_close(fd);
 	eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
     }
 
@@ -904,15 +709,14 @@ void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTE
         fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
         if (addr->him.sa_family == AF_INET6 || addr->him4.sin_addr.s_addr == INADDR_ANY) {
 	    /* listen on v6 */
-    	    if (listen(fd1, count) == -1) {
-	        //TODO Handle Error
+    	    if ((res=listen(fd1, count)) == -1) {
+	        eif_net_check(res);
             }
         } else {
-	    NET_SocketClose (fd1);
+	    net_socket_close(fd1);
 	    eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
         }
     }
-    printf("listen end\n");
 }
 
 
@@ -921,13 +725,12 @@ EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF
 
     int fd=-1, fd1=-1;
     int len;
+    SOCKET accepted;
 
     EIF_NET_INITIALIZE;
 
     fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
     fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
-
-    printf("accept_start fd = %d, fd1 = %d\n", fd, fd1);
 
     if (fd != -1 && fd1 != -1) {
 	fd_set rfds;
@@ -944,7 +747,7 @@ EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF
 	}
 	res = select (fd, &rfds, NULL, NULL, tP);
 	if (res == 0) {
-	    // TODO Handle error
+	    eraise("Accept timed out", EN_PROG);
 	    return -1;
 	} else if (res == 1) {
 	    fd2 = FD_ISSET(fd, &rfds)? fd: fd1;
@@ -958,7 +761,7 @@ EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF
 	    }
             eif_field (eif_access(current), "lastfd", EIF_INTEGER) = fd2;
 	} else {
-	    // TODO Handle error
+	    eraise("select failed", EN_PROG);
 	    return -1;
 	}
 	if (fd2 == fd) { /* v4 */
@@ -976,62 +779,36 @@ EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF
 	    len = sizeof (struct sockaddr_in);
 	}
 	if (timeout) {
-            ret = NET_Timeout(fd, timeout);
+            ret = net_timeout(fd, timeout);
 	    if (ret == 0) {
-	        // TODO Handle error
+	        eraise("Accept timed out", EN_PROG);
 	        return -1;
 	    } else if (ret == -1) {
-	      // TODO Handle error
+                eraise("Socket closed", EN_PROG);
 	        return -1;
 	    } else if (ret == -2) {
-	      // TODO Handle error
+                eraise("operation interrupted", EN_PROG);
 	        return -1;
 	    }
 	}
     }
-    fd = accept(fd, (struct sockaddr *)him, &len);
-    printf("accept fd = %d\n", fd);
-    if (fd < 0) {
-	/* REMIND: SOCKET CLOSED PROBLEM */
-        if (fd == -2) {
-	    // TODO Handle error
-        } else {
-	    // TODO Handle error
-        }
+
+    accepted = check_socket_bounds(accept(fd, (struct sockaddr *)him, &len));
+    if (accepted == INVALID_SOCKET) {
+        eif_net_check ((int)accepted);
+        return -1;
+    } else {
+        return (int)accepted;
     }
-    return fd;
 }
 
 void en_socket_close(int fd, int fd1) {
 
     if (fd != -1) {
-	NET_SocketClose(fd);
+	net_socket_close(fd);
     }
 
     if (fd1 != -1) {
-	NET_SocketClose(fd1);
-    }
-}
-
-void en_socket_address_fill_ipv4(EIF_POINTER sockaddr, EIF_INTEGER address, EIF_INTEGER port) {
-    	struct sockaddr_in *him4 = (struct sockaddr_in*)sockaddr;
-    	memset((char *) him4, 0, sizeof(struct sockaddr_in));
-    	him4->sin_port = htons((short) port);
-    	him4->sin_addr.s_addr = (u_long) htonl(address);
-    	him4->sin_family = AF_INET;
-}
-
-void en_socket_address_fill_ipv6(EIF_POINTER sockaddr, EIF_POINTER caddr, EIF_INTEGER port, EIF_INTEGER scopeid) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*)sockaddr;
-	memset((char *)him6, 0, sizeof(struct sockaddr_in6));
-	him6->sin6_port = (u_short) htons((u_short)port);
-	memcpy((void *)&(him6->sin6_addr), caddr, sizeof(struct in6_addr) );
-	him6->sin6_family = AF_INET6; 
-	him6->sin6_scope_id = scopeid;
-}
-
-void en_local_host_name (EIF_POINTER data) {
-    if (gethostname(data, 256) == -1) {
-	strcpy(data, "localhost");
+	net_socket_close(fd1);
     }
 }

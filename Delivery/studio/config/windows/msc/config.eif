@@ -57,7 +57,7 @@ shared_rt_suffix: ".lib"
 -- libraries
 libs: ""
 mtlibs: ""
-sharedlibs: "USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib MSIMG32.lib \%N%
+sharedlibs: "USER32.lib WS2_32.lib ADVAPI32.lib GDI32.lib SHELL32.lib MSIMG32.lib \%N%
 			%%TCOMDLG32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib MPR.LIB $(ISE_SHAREDLIBS)"
 
 mkdep: ""

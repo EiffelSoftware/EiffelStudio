@@ -57,7 +57,7 @@ shared_rt_suffix: ".dll"
 -- libraries
 libs: ""
 mtlibs: ""
-sharedlibs: "-luser32 -lwsock32 -ladvapi32 -lgdi32 -lshell32 -lmsimg32 -lcomdlg32 -luuid -lole32 %
+sharedlibs: "-luser32 -lws2_32 -ladvapi32 -lgdi32 -lshell32 -lmsimg32 -lcomdlg32 -luuid -lole32 %
 			%-loleaut32 -lcomctl32 -lmpr $(ISE_SHAREDLIBS)"
 
 mkdep: ""

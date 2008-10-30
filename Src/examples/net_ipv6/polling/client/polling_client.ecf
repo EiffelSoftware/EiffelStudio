@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="polling_client" uuid="CC28B4AA-92F9-4703-99E3-D7D0C1456662">
+	<target name="polling_client">
+		<root class="POLLING_CLIENT" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="net_ipv6" location="$ISE_LIBRARY\library\net_ipv6\net.ecf"/>
+		<cluster name="common_classes" location="..\common\"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+</system>

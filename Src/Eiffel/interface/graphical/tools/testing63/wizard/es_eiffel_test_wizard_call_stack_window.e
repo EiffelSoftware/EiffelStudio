@@ -10,16 +10,12 @@ class
 inherit
 	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
-			wizard_information,
-			clean_screen,
-			cancel
+			wizard_information
 		end
 
 	ES_EIFFEL_TEST_WIZARD_WINDOW
 		redefine
-			wizard_information,
-			clean_screen,
-			cancel
+			wizard_information
 		end
 
 create
@@ -277,16 +273,6 @@ feature {NONE} -- Basic functionality
 				end
 				cancel_actions
 			end
-		end
-
-	clean_screen
-		do
-			Precursor
-		end
-
-	cancel
-		do
-			Precursor
 		end
 
 feature {NONE} -- Events

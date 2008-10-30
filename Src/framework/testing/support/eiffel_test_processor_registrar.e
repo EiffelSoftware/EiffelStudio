@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	processor (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]): !EIFFEL_TEST_PROCESSOR_I
+	processor (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]): !EIFFEL_TEST_PROCESSOR_I
 			-- <Precursor>
 		do
 			Result := registered_processors.item (type_hash (a_type))
@@ -50,7 +50,7 @@ feature -- Status report
 			Result := True
 		end
 
-	is_registered (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I]): BOOLEAN
+	is_registered (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]): BOOLEAN
 			-- <Precursor>
 		do
 			Result := registered_processors.has (type_hash (a_type))
@@ -69,19 +69,19 @@ feature {NONE} -- Query
 			if {l_hashable: HASHABLE} a_type then
 				Result := l_hashable
 			else
-				Result ?= a_type.generating_type
+				Result := a_type.generating_type.as_attached
 			end
 		end
 
 feature -- Element change
 
-	register (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I])
+	register (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I])
 			-- <Precursor>
 		do
 			registered_processors.put (a_processor, type_hash (a_type))
 		end
 
-	unregister (a_type: !TYPE [!EIFFEL_TEST_PROCESSOR_I])
+	unregister (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I])
 			-- <Precursor>
 		do
 			registered_processors.remove (type_hash (a_type))

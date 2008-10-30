@@ -780,6 +780,17 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	auto_test_path: !DIRECTORY_NAME
+			-- Path containing auto test specific files
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := tools_path.twin
+			Result.extend ("auto_test")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Directories (top-level user)
 
 	user_application_files_path: !DIRECTORY_NAME

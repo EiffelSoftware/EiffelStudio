@@ -1,0 +1,170 @@
+body
+{
+}
+
+#input_text
+{
+  border:	1px solid #9097A2;
+  background: #f3f3f3;
+  padding: 2px;
+}
+
+#input_text:hover, #input_text:focus
+{
+  background: #fff;
+}
+
+#content
+{
+  margin-left:3em;
+  margin-right:3em;
+}
+
+#menu
+{
+	margin-left:2em;
+}
+
+td
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #666;
+	white-space: nowrap;
+//	font-size:large;
+//	margin-left: 3em;
+//	margin-right: 3em;
+}
+
+tr
+{
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+
+a:link, a:visited
+{
+	text-decoration: underline;
+}
+a:hover
+{
+	background-color: #eee;
+}
+
+a.img, a.img:hover
+{
+  background-color: #FFFFFF;
+  text-decoration: none;
+  border: none;
+}
+
+img
+{
+  border: none;
+}
+
+pre.witness
+{
+	overflow:scroll;
+	width:60em;
+	height:15em
+}
+
+i
+{
+	font-style: normal;
+	color:#990000;
+}
+
+table.header
+{
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000000;
+}
+
+h1
+{
+		font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
+		font-size: 14pt;
+		font-weight: normal;
+		font-style: italic;
+		background-color: #e6e6fa;
+}
+
+h2
+{
+		font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
+		font-size: 1em;
+		font-weight: bold;
+		color: #000099;
+		padding-left: 5px;
+}
+
+h3
+{
+		font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
+		color: #009933;
+		font-size: 1em;
+		font-weight: bold;
+		margin-top: 15px;
+}
+
+h4
+{
+		font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
+		color: #000099;
+		background-color: #FFFF99;
+		font-weight: bolder;
+		text-indent: 5px;
+
+}
+
+h5
+{
+		font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
+		font-weight: bolder;
+}
+
+h6
+{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: smaller;
+		font-weight: bold;
+		color: #0033CC;
+		background-color: #CCCFEE;
+}
+
+h1.title
+{
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size: 24px;
+   color: #990000;
+   text-align: center;
+   font-style: italic;
+   background-color: #FFFFFF;
+}
+
+h2.title
+{
+   font-size: 14px;
+   color: #990000;
+   background-color: #FFFFFF;
+   font-style: italic;
+   text-align: center;
+}
+
+code
+{
+	color: navy;
+}
+
+pre
+{
+	color: navy;
+	border-style:solid;
+	border-color: teal;
+	border-width:1px;
+	padding: 3px;
+}
+

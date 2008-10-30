@@ -16,13 +16,13 @@ inherit
 			make as make_with_class
 		redefine
 			modified_data,
-			create_modified_data
+			new_modified_data
 		end
 
 	ES_FEATURE_TEXT_AST_MODIFIER
 		redefine
 			modified_data,
-			create_modified_data
+			new_modified_data
 		end
 
 feature {NONE} -- Access
@@ -32,7 +32,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Factory
 
-	create_modified_data: !like modified_data
+	new_modified_data: !like modified_data
 			-- <Precursor {ES_FEATURE_TEXT_AST_MODIFIER}>
 		do
 			Result := Precursor {ES_FEATURE_TEXT_AST_MODIFIER}

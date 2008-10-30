@@ -59,7 +59,7 @@ feature {NONE} -- Access
 	template_identifier: !STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("require")
+			create Result.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
 		end
 
 feature {NONE} -- Element change
@@ -77,18 +77,13 @@ feature {NONE} -- Element change
 			if l_parents = Void or else l_parents.is_empty then
 				create l_value.make_empty
 			else
-				create l_str_value.make (else_id_name.count + 1)
+				create l_str_value.make ({EIFFEL_KEYWORD_CONSTANTS}.else_keyword.count + 1)
 				l_str_value.append_character (' ')
-				l_str_value.append (else_id_name)
+				l_str_value.append ({EIFFEL_KEYWORD_CONSTANTS}.else_keyword)
 				create l_value.make (l_str_value)
 			end
-			a_table.force (l_value, else_id_name)
+			a_table.force (l_value, {EIFFEL_KEYWORD_CONSTANTS}.else_keyword)
 		end
-
-feature {NONE} -- Constants
-
-	else_id_name: !STRING = "else"
-			-- Else identifier name
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

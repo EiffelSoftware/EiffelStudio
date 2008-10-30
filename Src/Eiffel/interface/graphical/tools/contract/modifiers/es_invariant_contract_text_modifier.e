@@ -57,7 +57,7 @@ feature {NONE} -- Access
 	template_identifier: !STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("invariant")
+			create Result.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.invariant_keyword)
 		end
 
 feature {NONE} -- Element change

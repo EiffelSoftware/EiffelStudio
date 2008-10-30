@@ -153,9 +153,9 @@ feature {NONE} -- Implementation
 		do
 			l_syntax_level := context_class.options.syntax_level
 			if l_syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete  then
-				Result := "note"
+				Result := {EIFFEL_KEYWORD_CONSTANTS}.note_keyword
 			else
-				Result := "indexing"
+				Result := {EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword
 			end
 		end
 

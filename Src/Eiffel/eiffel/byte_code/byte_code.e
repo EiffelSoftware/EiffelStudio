@@ -750,7 +750,7 @@ end
 		require
 			ba_not_void: ba /= Void
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			l_argument_types: like arguments
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
@@ -767,13 +767,15 @@ end
 				(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
 				l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
 			then
-				i := argument_count
-				if i > 0 then
+				nb := argument_count
+				if nb > 0 then
 					from
 						l_argument_types := arguments
+						i := l_argument_types.lower
+						nb := i + l_argument_types.upper
 						ba.append ({BYTE_CONST}.bc_start_catcall)
 					until
-						i <= 0
+						i = nb
 					loop
 						l_type := l_argument_types [i]
 							-- We instantiate `l_type' in current context to see if it is
@@ -797,7 +799,7 @@ end
 								ba.append_uint32_integer (1)
 							end
 						end
-						i := i - 1
+						i := i + 1
 					end
 					ba.append ({BYTE_CONST}.bc_end_catcall)
 				end

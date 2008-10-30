@@ -1,5 +1,7 @@
 #include "ipv6.h"
 
+extern void eif_net_check (int retcode);
+
 static int net_socket_close(int fd) {
     int ret = close(fd);
     return ret;

@@ -1,0 +1,15 @@
+test_name 	 redefine-attached-attribute-init
+test_description Attributes can be redefined as self-initialized attributes and vice-versa.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	base.e $CLUSTER base.e
+copy_raw	attributes.e $CLUSTER attributes.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

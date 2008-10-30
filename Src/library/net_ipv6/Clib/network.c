@@ -21,9 +21,13 @@ indexing
 #pragma module NET_NETWORK
 #endif /* __VMS */
 
+
 #include "eif_config.h"
 
+
 #ifdef EIF_WINDOWS
+#include <Winsock2.h>
+#include <ws2tcpip.h>
 #define FD_SETSIZE 256
 #endif
 
@@ -35,7 +39,6 @@ indexing
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
-#include <winsock.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define EINPROGRESS WSAEINPROGRESS
 #include <stdio.h>
@@ -116,6 +119,14 @@ extern void eif_register_cleanup(EIF_CLEANUP f);
 #define EIF_SOCKET_TYPE	int
 #define EIFNET_ERROR_HAPPENED -1
 #endif
+
+
+typedef union {
+    struct sockaddr	him;
+    struct sockaddr_in	him4;
+    struct sockaddr_in6 him6;
+} SOCKETADDRESS;
+
 
 	/* Raise an Eiffel exception in case an error occurred */
 void eif_net_check (int retcode) {
@@ -328,7 +339,7 @@ EIF_INTEGER inet_address_size()
 	/*x return the size of struct sockaddr_in */
 {
 
-	return (EIF_INTEGER) sizeof(struct sockaddr_in);
+	return (EIF_INTEGER) sizeof(SOCKETADDRESS);
 }
 
 EIF_INTEGER in_addr_size()

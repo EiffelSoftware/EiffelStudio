@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
+deferred class
 
 	SOCKET
 
@@ -31,38 +31,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-create {SOCKET}
-
-	create_from_descriptor
-
-feature -- Initialization
-
-	create_from_descriptor (fd: INTEGER) is
-			-- Create socket from descriptor `fd'.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				descriptor := fd;
-				create address.make;
-				c_sock_name (descriptor, address.socket_address.item, address.count);
-				family := address.family;
-				descriptor_available := True;
-				is_open_read := True;
-				is_open_write := True
-			end
-		ensure
-			family_valid: family = address.family;
-			opened_all: is_open_write and is_open_read
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
-				retried := True
-				retry
-			end
-		end;
 
 feature -- Access
 
@@ -154,42 +122,16 @@ feature -- Basic commands
 		require
 			socket_exists: exists;
 			valid_local_address: address /= Void
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				c_bind (descriptor, address.socket_address.item, address.count);
-				is_open_read := True
-			end
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				retried := True
-				retry
-			end
-		end;
+		deferred
+		end
 
 	connect is
 			-- Connect socket to peer address.
 		require
 			socket_exists: exists;
 			valid_peer_address: peer_address /= Void
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				c_connect (descriptor, peer_address.socket_address.item, peer_address.count);
-				is_open_write := True;
-				is_open_read := True
-			end
-		rescue
-			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
-				retried := True
-				retry
-			end
-		end;
+		deferred
+		end
 
 	make_socket is
 			-- Create socket descriptor.
@@ -197,13 +139,8 @@ feature -- Basic commands
 			valid_family: family >= 0;
 			valid_type: type >= 0;
 			valid_protocol: protocol >= 0
-		do
-			descriptor := c_socket (family, type, protocol);
-			if descriptor > -1 then
-				descriptor_available := True;
-				set_blocking
-			end
-		end;
+		deferred
+		end
 
 	cleanup is
 			-- Cleanup socket.
@@ -219,7 +156,7 @@ feature -- Basic commands
 			socket_exists: exists
 		do
 			if is_open_read or is_open_write then
-				c_shutdown (descriptor, 2)
+				shutdown
 				close_socket
 			end
 		end
@@ -229,12 +166,7 @@ feature -- Basic commands
 		require
 			socket_exists: exists
 			is_open: is_open_read or is_open_write
-		do
-			c_close_socket (descriptor);
-			descriptor := -2;
-			descriptor_available := False;
-			is_open_read := False;
-			is_open_write := False
+		deferred
 		ensure
 			is_closed: is_closed
 			not_is_open: not is_open_read and not is_open_write
@@ -242,9 +174,8 @@ feature -- Basic commands
 
 	is_closed: BOOLEAN is
 			-- Is socket closed?
-		do
-			Result := descriptor = -2
-		end;
+		deferred
+		end
 
 	descriptor_available: BOOLEAN;
 			-- Is descriptor available?
@@ -287,9 +218,6 @@ feature -- Basic commands
 		ensure
 			address_set: address = addr
 		end;
-
-	descriptor: INTEGER;
-			-- Socket descriptor of current socket
 
 feature -- Miscellaneous
 
@@ -1010,6 +938,12 @@ feature -- socket options
 			Result := c_fcntl (descriptor, c_fgetown, 0)
 		end
 
+feature {NONE} -- Implementation
+
+	shutdown is
+		deferred
+		end
+
 feature {NONE} -- Externals
 
 	socket_buffer: MANAGED_POINTER is
@@ -1023,52 +957,6 @@ feature {NONE} -- Externals
 
 	internal_socket_buffer: MANAGED_POINTER
 			-- Internal integer buffer
-
-	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
-			-- External c routine to create the socket descriptor
-		external
-			"C"
-		end;
-
-	c_bind (soc: INTEGER; addr: POINTER; length: INTEGER) is
-			-- External c routine to bind the socket descriptor
-			-- to a local address
-		external
-			"C"
-		end;
-
-	c_connect (soc: INTEGER; addr: POINTER; length: INTEGER) is
-			-- External c routine that connect the socket
-			-- to the peer address
-		external
-			"C blocking"
-		end;
-
-	c_shutdown (s: INTEGER; how: INTEGER) is
-			-- Shut down socket `s' with `how' modality
-			-- (0 no more receive, 1 no more send, 2 no more both)
-		external
-			"C blocking"
-		end;
-
-	c_close_socket (s: INTEGER) is
-			-- External c routine to close the socket identified
-			-- by the descriptor `s'
-		external
-			"C"
-		end;
-
-	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER) is
-			-- External c routine that returns the socket name.
-		external
-			"C"
-		end;
-
-	c_peer_name (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
-			-- External routine that returns the peers socket name
-		external
-			"C"
-		end;
 
 	c_put_char (fd: INTEGER; c: CHARACTER) is
 			-- External routine to write character `c' to socket `fd'

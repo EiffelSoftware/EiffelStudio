@@ -18,11 +18,16 @@ indexing
 
 
 #include "eif_config.h"
+
+#ifdef EIF_WINDOWS
+#include <Winsock2.h>
+#include <ws2tcpip.h>
+#endif
+
 #include "eif_portable.h"	/* required for VMS, recommended for all */
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
-#include <winsock.h>
 #define EWOULDBLOCK             WSAEWOULDBLOCK
 #define EINPROGRESS             WSAEINPROGRESS
 #define EALREADY                WSAEALREADY
@@ -250,6 +255,12 @@ EIF_INTEGER af_inet()
 	/*x Internet protocols family */
 {
 	return (EIF_INTEGER) AF_INET;
+}
+
+EIF_INTEGER af_inet6()
+	/*x Internet protocols family */
+{
+	return (EIF_INTEGER) AF_INET6;
 }
 
 EIF_INTEGER af_ns()

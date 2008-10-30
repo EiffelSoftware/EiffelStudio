@@ -66,7 +66,8 @@ OBJECTS = \
 	network_r.o \
 	hostname.o \
 	syncpoll.o \
-	storable.o
+	storable.o \
+	ipv6ux.o
 
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 MTlocal.o: local.c

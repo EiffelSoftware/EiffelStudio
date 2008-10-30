@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="net" uuid="65E3E91A-6C89-45B1-9F59-079A081D32DC" library_target="net">
-	<target name="net">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="net_ipv6" uuid="A806012E-91F3-4d4c-AAAA-E05F6F2BACAA" library_target="net_ipv6">
+	<target name="net_ipv6">
 		<description>Net library: Networking library with serialization facilities.
       Copyright (c) 1984-2006, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -11,33 +11,33 @@
 		<option namespace="EiffelSoftware.Library.Net">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
+		<external_object location="$(ISE_LIBRARY)/library/net_ipv6/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a">
+		<external_object location="$(ISE_LIBRARY)/library/net_ipv6/spec/$(ISE_PLATFORM)/lib/libnet.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtnet.lib">
+		<external_object location="$(ISE_LIBRARY)\library\net_ipv6\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtnet.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="true"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\net.lib">
+		<external_object location="$(ISE_LIBRARY)\library\net_ipv6\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\net.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilnet.lib">
+		<external_object location="$(ISE_LIBRARY)\library\net_ipv6\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilnet.lib">
 			<condition>
 				<platform value="windows"/>
 				<dotnet value="true"/>

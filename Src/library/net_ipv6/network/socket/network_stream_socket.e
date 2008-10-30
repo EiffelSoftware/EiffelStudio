@@ -14,29 +14,38 @@ class
 
 inherit
 
+	INET_ADDRESS_FACTORY
+		export {NONE}
+			All
+		undefine
+			copy, is_equal
+		end
+
 	NETWORK_SOCKET
 		undefine
 			support_storable
 		select
 			address,
+			peer_address,
 			set_peer_address
 		end
 
 	STREAM_SOCKET
 		rename
 			address as old_socket_address,
+			peer_address as old_socket_peer_address,
 			set_peer_address as old_socket_set_peer_address
 		undefine
-			is_valid_peer_address, create_from_descriptor
+			is_valid_peer_address
 		end
-
-create {NETWORK_STREAM_SOCKET}
-
-	create_from_descriptor
 
 create
 
 	make, make_client_by_port, make_server_by_port
+
+create {NETWORK_STREAM_SOCKET}
+
+	make_from_fd
 
 feature -- Initialization
 
@@ -50,56 +59,72 @@ feature -- Initialization
 			timeout := default_timeout
 		ensure
 			timeout_set_to_default: timeout = default_timeout
-		end;
+		end
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
 				-- Create a client connection to `a_peer_host' on
 				-- `a_peer_port'.
 		require
-			valid_peer_host: a_peer_host /= Void and then
-					not a_peer_host.is_empty
+			valid_peer_host: a_peer_host /= Void and then not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
-		local
-			h_address: HOST_ADDRESS;
-			i, code: INTEGER;
-			is_hostname: BOOLEAN
 		do
-			make;
-			from
-				i := 1
-			until
-				i > a_peer_host.count or is_hostname
-			loop
-				code := a_peer_host.item_code (i);
-				is_hostname := (code /= 46 and then
-					(code < 48 or else code > 57));
-				i := i + 1
-			end;
-			create h_address.make;
-			if is_hostname then
-				h_address.set_address_from_name (a_peer_host)
-			else
-				h_address.set_host_address (a_peer_host)
-			end;
-			create peer_address.make;
-			peer_address.set_host_address (h_address);
-			peer_address.set_port (a_peer_port)
-		end;
+			make
+			create peer_address.make_from_hostname_and_port (a_peer_host, a_peer_port)
+		end
 
 	make_server_by_port (a_port: INTEGER) is
 			-- Create server socket on `a_port'.
 		require
 			valid_port: a_port >= 0
 		local
-			h_address: HOST_ADDRESS
+			addr: INET_ADDRESS
 		do
 			make;
-			create h_address.make;
-			h_address.set_in_address_any;
-			create address.make;
-			address.set_host_address (h_address);
-			address.set_port (a_port);
+			addr := create_any_local
+			create address.make_from_address_and_port (addr, a_port)
 			bind
+		end
+
+feature {NETWORK_STREAM_SOCKET} -- Initialization
+
+	make_from_fd (an_fd: INTEGER; an_address: like address) is
+		do
+			fd :=an_fd
+			address := an_address
+			family := address.family;
+			descriptor_available := True;
+			is_created := True
+			is_open_read := True
+			is_open_write := True
+			timeout := default_timeout
+		ensure
+			family_valid: family = address.family;
+			opened_all: is_open_write and is_open_read
+		end
+
+feature
+
+	listen (queue: INTEGER) is
+			-- Listen on socket for at most `queue' connections.
+		do
+			c_listen (Current, address.socket_address.item, queue)
+		end
+
+	accept is
+			-- Accept a new connection on listen socket.
+			-- Accepted service socket available in `accepted'.
+		local
+			pass_address: like address
+			return: INTEGER;
+		do
+			pass_address := address.twin
+			return := c_accept (Current, pass_address.socket_address.item, 0);
+			if return > 0 then
+				create accepted.make_from_fd (return, address.twin);
+				accepted.set_peer_address (pass_address)
+			else
+				accepted := Void
+			end
 		end
 
 feature -- Status report
@@ -226,19 +251,72 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 0)
 		end;
 
+feature {NONE} -- Implementation
+
+	do_connect is
+		do
+			c_connect (Current, peer_address.socket_address.item, 0)
+		end
+
+	do_bind is
+		do
+			c_bind (Current, address.socket_address.item)
+		end
+
+	do_create
+		do
+			c_create(Current)
+			is_created := True
+		end
+
 feature {NONE} -- Externals
 
-	c_set_sock_opt_linger (fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER is
+	c_create (obj: NETWORK_STREAM_SOCKET) is
+		external
+			"C"
+		alias
+			"en_socket_stream_create"
+		end
+
+	c_connect (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_timeout: INTEGER) is
+		external
+			"C"
+		alias
+			"en_socket_stream_connect"
+		end
+
+	c_bind (obj: NETWORK_STREAM_SOCKET; an_address: POINTER) is
+		external
+			"C"
+		alias
+			"en_socket_stream_bind"
+		end
+
+	c_listen (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_queue: INTEGER) is
+		external
+			"C"
+		alias
+			"en_socket_stream_listen"
+		end
+
+	c_accept (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_timeout: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"en_socket_stream_accept"
+		end
+
+	c_set_sock_opt_linger (an_fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	c_is_linger_on (fd: INTEGER): BOOLEAN is
+	c_is_linger_on (an_fd: INTEGER): BOOLEAN is
 		external
 			"C"
 		end;
 
-	c_linger_time (fd: INTEGER): INTEGER is
+	c_linger_time (an_fd: INTEGER): INTEGER is
 		external
 			"C"
 		end

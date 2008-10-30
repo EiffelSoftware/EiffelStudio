@@ -45,7 +45,7 @@ feature -- Initialization
 		do
 			c_reset_error
 			family := af_unix;
-			type := sock_stream;			
+			type := sock_stream;
 			make_socket
 		end;
 
@@ -70,6 +70,46 @@ feature -- Initialization
 			create address.make;
 			address.set_path (a_name.twin);
 			bind
+		end
+
+feature
+
+	listen (queue: INTEGER) is
+			-- Listen on socket for at most `queue' connections.
+		do
+			c_listen (descriptor, queue)
+		end
+
+	accept is
+			-- Accept a new connection on listen socket.
+			-- Accepted service socket available in `accepted'.
+		local
+			pass_address: like address;
+			return: INTEGER;
+		do
+			pass_address := address.twin
+			return := c_accept (descriptor, pass_address.socket_address.item, address.count);
+			if return > 0 then
+				create accepted.create_from_descriptor (return);
+				accepted.set_peer_address (pass_address)
+			else
+				accepted := Void
+			end
+		end
+
+feature {NONE} -- Externals
+
+	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
+			-- External c routine to accept a socket connection
+		external
+			"C blocking"
+		end;
+
+	c_listen (soc, backlog: INTEGER) is
+			-- External c routine to make socket passive and accept
+			-- at most `backlog' number of pending connections
+		external
+			"C blocking"
 		end
 
 indexing

@@ -16,6 +16,19 @@ inherit
 			is_defined, print_single_line_error_message
 		end;
 
+create
+	make_with_class
+
+feature {NONE} -- Initialization
+
+	make_with_class (c: CLASS_C)
+			-- Instanciate with class `c'
+		require
+			c_attached: c /= Void
+		do
+			set_class (c)
+		end
+
 feature -- Properties
 
 	obsolete_class: CLASS_C;

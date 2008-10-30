@@ -8,15 +8,9 @@ class
 	ES_EIFFEL_TEST_WIZARD_AUTO_TEST_WINDOW
 
 inherit
-	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
+	ES_EIFFEL_TEST_WIZARD_FINAL_WINDOW
 		redefine
-			wizard_information
-		end
-
-	ES_EIFFEL_TEST_WIZARD_WINDOW
-		redefine
-			make_window,
-			wizard_information
+			make_window
 		end
 
 create
@@ -53,14 +47,17 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	wizard_information: ES_EIFFEL_TEST_WIZARD_INFORMATION
-			-- Information user has provided to the wizard
-
 	arguments: ES_VALIDATION_TEXT_FIELD
 			-- Text field for new test class name
 
 	splitter: ST_SPLITTER
 			-- Splitter for `arguments'
+
+	factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
+			-- <Precursor>
+		do
+			Result := generator_factory_type
+		end
 
 feature {NONE} -- Status report
 
@@ -68,21 +65,6 @@ feature {NONE} -- Status report
 			-- <Precursor>
 		do
 			Result := not wizard_information.arguments.is_empty
-		end
-
-feature {NONE} -- Basic functionality
-
-	proceed_with_current_info
-			-- <Precursor>
-		local
-			l_reg: EIFFEL_TEST_PROCESSOR_REGISTRAR_I [EIFFEL_TEST_PROCESSOR_I]
-		do
-			if test_suite.is_service_available then
-				l_reg := test_suite.service.processor_registrar
-				if l_reg.is_registered (generator_factory_type) then
-					test_suite.service.launch_processor (l_reg.processor (generator_factory_type), wizard_information.as_attached, False)
-				end
-			end
 		end
 
 feature {NONE} -- Events

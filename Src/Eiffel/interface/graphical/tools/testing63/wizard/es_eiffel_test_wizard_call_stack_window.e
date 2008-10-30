@@ -8,15 +8,7 @@ class
 	ES_EIFFEL_TEST_WIZARD_CALL_STACK_WINDOW
 
 inherit
-	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
-		redefine
-			wizard_information
-		end
-
-	ES_EIFFEL_TEST_WIZARD_WINDOW
-		redefine
-			wizard_information
-		end
+	ES_EIFFEL_TEST_WIZARD_FINAL_WINDOW
 
 create
 	make_window
@@ -96,8 +88,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	wizard_information: ES_EIFFEL_TEST_WIZARD_INFORMATION
-			-- Information user has provided to the wizard
+	factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
+			-- <Precursor>
+		do
+			Result := extractor_factory_type
+		end
 
 	grid: !ES_GRID
 			-- Grid showing call stack
@@ -260,19 +255,6 @@ feature {NONE} -- Query
 			end
 			glab.set_tooltip (l_orig_class_info)
 			a_row.set_item (Stype_column_index, glab)
-		end
-
-feature {NONE} -- Basic functionality
-
-	proceed_with_current_info
-			-- <Precursor>
-		do
-			if {l_extr: !EIFFEL_TEST_EXTRACTOR_I} extractor and {l_conf: !EIFFEL_TEST_CONFIGURATION_I} wizard_information then
-				if test_suite.is_service_available then
-					test_suite.service.launch_processor (l_extr, l_conf, False)
-				end
-				cancel_actions
-			end
 		end
 
 feature {NONE} -- Events

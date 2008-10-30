@@ -8,30 +8,10 @@ class
 	ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW
 
 inherit
-	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
+	ES_EIFFEL_TEST_WIZARD_FINAL_WINDOW
 		redefine
-			is_final_state,
-			wizard_information,
 			clean_screen,
 			cancel
-		end
-
-	ES_EIFFEL_TEST_WIZARD_WINDOW
-		redefine
-			is_final_state,
-			wizard_information,
-			clean_screen,
-			cancel
-		end
-
-	EIFFEL_TEST_SUITE_OBSERVER
-		redefine
-			on_processor_error
-		end
-
-	ES_SHARED_PROMPT_PROVIDER
-		export
-			{NONE} all
 		end
 
 	SHARED_ERROR_HANDLER
@@ -187,8 +167,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	wizard_information: ES_EIFFEL_TEST_WIZARD_INFORMATION
-			-- Information user has provided to the wizard
+	factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
+			-- <Precursor>
+		do
+			Result := manual_factory_type
+		end
 
 	feature_name_validator: ES_FEATURE_NAME_VALIDATOR
 			-- Validator for `test_name'
@@ -226,11 +209,6 @@ feature {NONE} -- Access: tag utilities
 			create Result.make_with_separators (", ")
 		end
 
-feature -- Status report
-
-	is_interface_usable: BOOLEAN = True
-			-- <Precursor>
-
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
@@ -240,14 +218,6 @@ feature {NONE} -- Status report
 				Result := tag_list.is_valid
 			end
 		end
-
-	is_final_state: BOOLEAN
-		do
-			Result := True
-		end
-
-	error_occurred: BOOLEAN
-			-- Did an error occur during test creation?
 
 feature {NONE} -- Status setting
 
@@ -397,20 +367,6 @@ feature {NONE} -- Events
 		end
 
 feature {NONE} -- Basic operations
-
-	proceed_with_current_info
-			-- <Precursor>
-		do
-			error_occurred := False
-			if wizard_information.is_new_class then
-				create_new_class
-			else
-				-- not implemented yet
-			end
-			if not error_occurred then
-				cancel_actions
-			end
-		end
 
 	clean_screen
 			-- <Precursor>
@@ -665,41 +621,6 @@ feature {NONE} -- Implementation: feature tree
 
 feature {NONE} -- Implementation: creation
 
-	create_new_class
-			-- Create test routine in new class
-		require
-			wizard_information_usable: wizard_information.is_configuration_usable
-			new_test_class_requested: wizard_information.is_new_class
-		local
-			l_factory: !EIFFEL_TEST_PROCESSOR_I
-		do
-			if test_suite.is_service_available and then {l_ts: !EIFFEL_TEST_SUITE_S} test_suite.service then
-				if l_ts.processor_registrar.is_registered (manual_factory_type) then
-					l_ts.connect_events (Current)
-					l_factory := l_ts.processor_registrar.processor (manual_factory_type)
-					l_ts.launch_processor (l_factory, wizard_information.as_attached, True)
-					l_ts.disconnect_events (Current)
-				end
-			end
-		end
-
-	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
-			-- Show error prompt with `a_message'.
-		do
-			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
-		end
-
-feature {EIFFEL_TEST_SUITE_S} -- Events
-
-	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
-			-- <Precursor>
-		do
-			if a_test_suite.processor_registrar.is_registered (manual_factory_type) then
-				if a_processor = a_test_suite.factory (manual_factory_type) then
-					error_occurred := True
-				end
-			end
-		end
 
 feature {NONE} -- Constants
 

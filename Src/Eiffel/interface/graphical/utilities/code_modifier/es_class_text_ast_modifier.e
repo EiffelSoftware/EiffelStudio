@@ -14,7 +14,12 @@ inherit
 	ES_CLASS_TEXT_MODIFIER
 		redefine
 			modified_data,
-			create_modified_data
+			new_modified_data
+		end
+
+	SHARED_EIFFEL_PARSER_WRAPPER
+		export
+			{NONE} all
 		end
 
 create
@@ -59,6 +64,14 @@ feature -- Status report
 			end
 		ensure
 			modified_data_is_ast_available: Result implies (modified_data.is_prepared and then modified_data.is_ast_available)
+		end
+
+feature {NONE} -- Helpers
+
+	validating_parser: !EIFFEL_PARSER
+			-- A parser used to validate a parse
+		once
+			create Result.make_with_factory (create {AST_NULL_FACTORY})
 		end
 
 feature -- Query
@@ -175,7 +188,7 @@ feature -- Operation constants
 
 feature {NONE} -- Factory
 
-	create_modified_data: !like modified_data
+	new_modified_data: !like modified_data
 			-- <Precursor>
 		local
 			l_class: !like context_class

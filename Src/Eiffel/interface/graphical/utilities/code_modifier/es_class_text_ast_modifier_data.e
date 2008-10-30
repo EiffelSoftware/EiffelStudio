@@ -17,6 +17,11 @@ inherit
 			prepare
 		end
 
+	SHARED_EIFFEL_PARSER_WRAPPER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -56,70 +61,39 @@ feature -- Basic operations
 		local
 			l_parser: !like parser
 			l_class: !like associated_class
+			l_wrapper: !like eiffel_parser_wrapper
 			l_current_class: ?CLASS_C
 			l_current_group: ?CONF_GROUP
 			l_options: CONF_OPTION
-			l_errors: LINKED_LIST [ERROR]
-			l_error_index: INTEGER
-			retried: BOOLEAN
 		do
-			if not retried then
-				reset
-				l_class := associated_class
-				if l_class.is_compiled then
-					l_current_class := system.current_class
-					system.set_current_class (l_class.compiled_class)
-				end
-				l_current_group := inst_context.group
-				inst_context.set_group (l_class.group)
+			reset
+			l_class := associated_class
+			if l_class.is_compiled then
+				l_current_class := system.current_class
+				system.set_current_class (l_class.compiled_class)
+			end
+			l_current_group := inst_context.group
+			inst_context.set_group (l_class.group)
 
-					-- Log last error index
-				l_errors := error_handler.error_list
-				if l_errors /= Void then
-					l_error_index := l_errors.count
-				end
+				-- Perform parse
+			l_parser := parser
+			l_options := l_class.config_class.options
+			check l_options_attached: l_options /= Void end
 
-					-- Perform parse
-				l_parser := parser
-				l_options := l_class.config_class.options
-				l_parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
-				l_parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-				l_parser.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-				l_parser.parse_from_string (text)
-
-				if l_parser.root_node /= Void and then l_parser.match_list /= Void then
-					ast := l_parser.root_node
-					ast_match_list := l_parser.match_list
-				else
-					ast := Void
-					ast_match_list := Void
-				end
-
-				inst_context.set_group (l_current_group)
-				if l_current_class /= Void then
-					system.set_current_class (l_current_class)
-				end
+			l_wrapper := eiffel_parser_wrapper
+			l_wrapper.parse_with_option (l_parser, text, l_options, True)
+			if not l_wrapper.has_error then
+				ast ?= l_wrapper.ast_node
+				check ast_attached: ast /= Void end
+				ast_match_list := l_wrapper.ast_match_list
 			end
 
-				-- Remove any added errors
-			l_errors := error_handler.error_list
-			if l_errors /= Void then
-				if l_errors.count > l_error_index then
-					l_errors.go_i_th (l_error_index)
-					from until l_errors.count = l_error_index loop
-						l_errors.remove_right
-					end
-				end
-			end
-
-			if retried then
-				reset
+			inst_context.set_group (l_current_group)
+			if l_current_class /= Void then
+				system.set_current_class (l_current_class)
 			end
 
 			is_prepared := True
-		rescue
-			retried := True
-			retry
 		end
 
 feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations

@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			original_text ?= l_text
 			original_file_date := a_class.file_date
 
-			modified_data := create_modified_data
+			modified_data := new_modified_data
 		ensure
 			context_class_set: context_class = a_class
 			not_is_dirty: not is_dirty
@@ -435,7 +435,7 @@ feature -- Basic operations
 				not_is_committing: not is_committing
 			end
 
-			modified_data := create_modified_data
+			modified_data := new_modified_data
 			set_is_dirty (False)
 		ensure
 			not_is_dirty: not is_dirty
@@ -636,7 +636,7 @@ feature -- Modifications (positional)
 
 feature {NONE} -- Factory
 
-	create_modified_data: like modified_data
+	new_modified_data: like modified_data
 			-- Creates a new class modifier data object based on Current's state
 		require
 			is_interface_usable: is_interface_usable

@@ -1408,7 +1408,7 @@ end
 	generate_catcall_check is
 			-- Add a check for catcall at runtime.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			l_argument_types: like arguments
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
@@ -1426,12 +1426,14 @@ end
 					(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
 					l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
 				then
-					i := argument_count
-					if i > 0 then
+					nb := argument_count
+					if nb > 0 then
 						from
 							l_argument_types := arguments
+							i := l_argument_types.lower
+							nb := i + l_argument_types.upper
 						until
-							i <= 0
+							i = nb
 						loop
 							l_type := l_argument_types [i]
 								-- We instantiate `l_type' in current context to see if it is
@@ -1449,7 +1451,7 @@ end
 									context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
 								end
 							end
-							i := i - 1
+							i := i + 1
 						end
 					end
 				end

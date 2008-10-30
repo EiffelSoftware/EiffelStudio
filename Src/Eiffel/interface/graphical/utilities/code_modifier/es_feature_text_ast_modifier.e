@@ -16,7 +16,7 @@ inherit
 			make as make_with_class
 		redefine
 			modified_data,
-			create_modified_data
+			new_modified_data
 		end
 
 create
@@ -102,7 +102,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	create_modified_data: !like modified_data
+	new_modified_data: !like modified_data
 			-- <Precursor>
 		local
 			l_class: !like context_class

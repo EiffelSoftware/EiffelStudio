@@ -1636,8 +1636,7 @@ feature -- Implementation
 									-- Warning not disabled
 								and then l_context_current_class.is_warning_enabled (w_obsolete_feature)
 							then
-								create l_obs_warn
-								l_obs_warn.set_class (l_context_current_class)
+								create l_obs_warn.make_with_class (l_context_current_class)
 								if current_feature /= Void then
 									l_obs_warn.set_feature (current_feature)
 								end

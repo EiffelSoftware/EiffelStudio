@@ -13,11 +13,6 @@ class
 inherit
 	ES_CLASS_TEXT_AST_MODIFIER
 
-	SHARED_ERROR_HANDLER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -160,6 +155,10 @@ feature -- Element change
 			l_ast: ?AST_EIFFEL
 			l_pos: !like ast_position
 			l_license: !STRING_32
+			l_data: like modified_data
+			l_parser: !like indexing_parser
+			l_wrapper: !like eiffel_parser_wrapper
+			l_options: CONF_OPTION
 		do
 			if a_license = Void then
 					-- Remove the license
@@ -182,6 +181,29 @@ feature -- Element change
 							l_license.append_character ('%N')
 							l_pos := ast_position (l_ast)
 							insert_code (l_pos.start_position, l_license)
+
+							l_wrapper := eiffel_parser_wrapper
+							l_parser := validating_parser
+							l_options := context_class.options
+							check l_options_attached: l_options /= Void end
+
+							l_wrapper.parse_with_option (l_parser, text, l_options, True)
+							if l_wrapper.has_error then
+									-- It is quite possible for the license to introduce a syntax error because the last
+									-- feature may be an attribute, in which case we need to inject a ;.
+
+									-- Undo changes.
+								rollback
+								l_data := modified_data
+								if not l_data.is_prepared then
+										-- Need to reprepare the text again
+									l_data.prepare
+								end
+
+									-- Add ; to license and reapply.
+								l_license.prepend_character (';')
+								insert_code (l_pos.start_position, l_license)
+							end
 						end
 					end
 				end
@@ -247,34 +269,19 @@ feature {NONE} -- Status report
 			a_license_attached: a_license /= Void
 			not_a_license_is_empty: not a_license.is_empty
 		local
-			l_syn_level: NATURAL_8
 			l_parser: !like indexing_parser
-			l_errors: LINKED_LIST [ERROR]
-			l_error_index: INTEGER_32
+			l_wrapper: !like eiffel_parser_wrapper
+			l_options: CONF_OPTION
 		do
+			l_wrapper := eiffel_parser_wrapper
 			l_parser := indexing_parser
 
-				-- Log last error index
-			l_errors := error_handler.error_list
-			if l_errors /= Void then
-				l_error_index := l_errors.count
-			end
+			l_options := context_class.options
+			check l_options_attached: l_options /= Void end
 
-			l_syn_level := context_class.options.syntax_level.item
-			l_parser.set_is_indexing_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_standard)
-			l_parser.set_is_note_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
-			l_parser.parse_from_string (a_license.as_string_8)
-			Result := l_parser.indexing_node /= Void
-
-				-- Remove any added errors
-			l_errors := error_handler.error_list
-			if l_errors /= Void then
-				if l_errors.count > l_error_index then
-					l_errors.go_i_th (l_error_index)
-					from until l_errors.count = l_error_index loop
-						l_errors.remove_right
-					end
-				end
+			l_wrapper.parse_with_option (l_parser, a_license, l_options, True)
+			if not l_wrapper.has_error then
+				Result := l_wrapper.ast_node /= Void
 			end
 		end
 

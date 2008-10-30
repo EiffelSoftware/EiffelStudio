@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="our_server" uuid="FB247839-75DC-4D04-97AC-5AC43EC0EA4A">
+	<target name="our_server">
+		<root class="OUR_SERVER" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="net_ipv6" location="$ISE_LIBRARY\library\net_ipv6\net.ecf"/>
+		<cluster name="common_classes" location="..\common\"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+</system>

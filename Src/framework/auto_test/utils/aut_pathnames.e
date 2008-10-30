@@ -23,6 +23,11 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -42,15 +47,16 @@ feature -- Directory names
 			-- then the ${AUTO_TEST} environment variable will be used.
 			-- If no other information is available, the current directly will be assumed.
 		once
-			if registry.is_available then
-				Result := registry.string_value (auto_test_key_name + "\AUTO_TEST")
-			end
-			if Result = Void then
-				Result := execution_environment.variable_value ("AUTO_TEST")
-			end
-			if Result = Void then
-				Result := ""
-			end
+			Result := eiffel_layout.auto_test_path
+--			if registry.is_available then
+--				Result := registry.string_value (auto_test_key_name + "\AUTO_TEST")
+--			end
+--			if Result = Void then
+--				Result := execution_environment.variable_value ("AUTO_TEST")
+--			end
+--			if Result = Void then
+--				Result := ""
+--			end
 		ensure
 			directory_not_void: Result /= Void
 		end

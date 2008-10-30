@@ -78,7 +78,7 @@ feature -- Execution
 				error_handler.report_info_message (help_message)
 			else
 					-- Generate interpreter.			
-				generate_interpreter (a_project)
+				generate_interpreter
 
 				if interpreter /= Void then
 					update_remaining_time
@@ -106,13 +106,12 @@ feature -- Execution
 
 feature {NONE} -- Interpreter generation
 
-	generate_interpreter (a_project: E_PROJECT) is
+	generate_interpreter
 			-- Generate interpreter for `a_project' and store result in `interpreter'.		
 			-- The generated interpreter classes will be located in auto_test_gen directory in project directoryin EIFGENs
 			-- for example EIFGENs/project01/auto_test_gen
 		require
-			a_project_attached: a_project /= Void
-			system_compiled: a_project.system.workbench /= Void
+			system_compiled: system.workbench /= Void
 		local
 			factory: AUT_INTERPRETER_GENERATOR
 			interpreter_base_dirname: STRING
@@ -130,7 +129,7 @@ feature {NONE} -- Interpreter generation
 			end
 
 				-- Melt system with interpreter as its new root.			
-			compile_project (system.eiffel_project, interpreter_root_class_name, interpreter_root_feature_name)
+			compile_project (interpreter_root_class_name, interpreter_root_feature_name)
 			system.make_update (False)
 
 				-- Generate interpreter.
@@ -141,24 +140,21 @@ feature {NONE} -- Interpreter generation
 			end
 		end
 
-	compile_project (a_project: E_PROJECT; a_root_class: STRING; a_root_feature: STRING) is
+	compile_project (a_root_class: STRING; a_root_feature: STRING) is
 			-- Compile `a_project' with new `a_root_class' and `a_root_feature'.
 		require
-			a_project_attached: a_project /= Void
 			a_root_class_attached: a_root_class /= Void
 			not_a_root_class_is_empty: not a_root_class.is_empty
 			a_root_feature_attached: a_root_feature /= Void
 			not_a_root_feature_is_empty: not a_root_feature.is_empty
 		do
-			if not a_project.system.system.is_explicit_root (a_root_class, a_root_feature) then
-				a_project.system.system.add_explicit_root (Void, a_root_class, a_root_feature)
+			if not system.is_explicit_root (a_root_class, a_root_feature) then
+				system.add_explicit_root (Void, a_root_class, a_root_feature)
 			end
-			if a_project /= Void then
-				if project_helper.can_compile then
-					project_helper.compile
-				end
-				a_project.system.system.remove_explicit_root (a_root_class, a_root_feature)
+			if project_helper.can_compile then
+				project_helper.compile
 			end
+			system.remove_explicit_root (a_root_class, a_root_feature)
 		end
 
 feature{NONE} -- Test case generation and execution

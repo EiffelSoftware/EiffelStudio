@@ -89,6 +89,7 @@ feature {NONE} -- Test suite extension
 			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
 			l_factory: EIFFEL_TEST_MANUAL_FACTORY
 			l_extractor: EIFFEL_TEST_EXTRACTOR
+			l_generator: EIFFEL_TEST_GENERATOR
 		do
 			create l_bg_executor.make
 			a_service.processor_registrar.register (l_bg_executor, {EIFFEL_TEST_BACKGROUND_EXECUTOR_I})
@@ -101,6 +102,9 @@ feature {NONE} -- Test suite extension
 
 			create l_factory.make
 			a_service.processor_registrar.register (l_factory, {EIFFEL_TEST_FACTORY_I})
+
+			create l_generator.make
+			a_service.processor_registrar.register (l_generator, {EIFFEL_TEST_GENERATOR_I})
 		end
 
 feature {NONE} -- Factory

@@ -10,6 +10,8 @@ class
 	EIFFEL_TEST_EXTRACTOR
 
 inherit
+	EIFFEL_TEST_EXTRACTOR_I
+
 	EIFFEL_TEST_FACTORY
 		redefine
 			internal_configuration,

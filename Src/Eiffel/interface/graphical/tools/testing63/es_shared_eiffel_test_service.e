@@ -48,6 +48,12 @@ feature {NONE} -- Access
 			Result := {EIFFEL_TEST_FACTORY_I}
 		end
 
+	generator_factory_type: !TYPE [EIFFEL_TEST_GENERATOR_I]
+			-- Factory type for test case generation
+		do
+			Result := {EIFFEL_TEST_GENERATOR_I}
+		end
+
 feature {NONE} -- Events
 
 	on_class_removed (a_class: CLASS_I)

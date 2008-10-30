@@ -81,10 +81,9 @@ feature {NONE} -- Initialization
 			end
 
 				-- Auto Test not implemented yet
-			generate_button.disable_sensitive
---			if wizard_information.is_generated_test_class then
---				l_button := generate_button
---			end
+			if wizard_information.is_generated_test_class then
+				l_button := generate_button
+			end
 
 			l_button.enable_select
 			update_next_button_status

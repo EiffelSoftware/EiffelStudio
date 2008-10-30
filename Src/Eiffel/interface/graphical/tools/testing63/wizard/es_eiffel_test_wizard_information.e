@@ -24,6 +24,11 @@ inherit
 			is_interface_usable as is_extractor_configuration_usable
 		end
 
+	EIFFEL_TEST_GENERATOR_CONFIGURATION_I
+		rename
+			is_interface_usable as is_generator_configuration_usable
+		end
+
 create
 	make
 
@@ -35,6 +40,7 @@ feature {NONE} -- Initialization
 			set_new_manual_test_class
 			create tag_list.make_default
 			create call_stack_elements.make_default
+			create arguments.make_default
 		end
 
 feature -- Access
@@ -127,6 +133,9 @@ feature -- Access
 	call_stack_elements: !DS_HASH_SET [INTEGER]
 			-- <Precursor>
 
+	arguments: !DS_ARRAYED_LIST [!STRING]
+			-- <Precursor>
+
 feature {ES_EIFFEL_TEST_WIZARD_WINDOW} -- Access
 
 	type: NATURAL
@@ -196,6 +205,12 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := is_configuration_usable and is_extracted_test_class
+		end
+
+	is_generator_configuration_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_configuration_usable and is_generated_test_class
 		end
 
 	is_new_manual_test_class: BOOLEAN

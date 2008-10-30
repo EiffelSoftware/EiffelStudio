@@ -278,6 +278,8 @@ feature {NONE} -- Basic operations
 		do
 			if wizard_information.is_extracted_test_class then
 				proceed_with_new_state (create {ES_EIFFEL_TEST_WIZARD_CALL_STACK_WINDOW}.make_window (development_window, wizard_information))
+			elseif wizard_information.is_generated_test_class then
+				proceed_with_new_state (create {ES_EIFFEL_TEST_WIZARD_AUTO_TEST_WINDOW}.make_window (development_window, wizard_information))
 			else
 				proceed_with_new_state (create {ES_EIFFEL_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
 			end

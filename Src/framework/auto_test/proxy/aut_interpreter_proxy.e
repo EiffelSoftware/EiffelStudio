@@ -670,7 +670,7 @@ feature{NONE} -- Process scheduling
 				-- will crash when it tries to use its standard output or error. Jason 2008.10.21
 			fixme ("Should only redirect input.")
 			process.redirect_input_to_stream
-			--process.redirect_error_to_same_as_output
+			process.redirect_error_to_same_as_output
 			process.redirect_output_to_agent (agent stdout_reader.put_string)
 			if operating_system.is_windows then
 				process.set_hidden (True)

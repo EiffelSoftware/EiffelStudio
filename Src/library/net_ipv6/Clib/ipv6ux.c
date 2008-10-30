@@ -48,14 +48,6 @@ static int convert_v4_to_v6_sockaddr (struct sockaddr* dst, struct sockaddr* src
    }
 }
 
-EIF_BOOLEAN en_ipv6_supported() {
-    static int res = -1;
-    if (res == -1) {
-        res = ipv6_supported_();
-    }
-    return res;
-}
-
 int ipv6_supported_()
 {
     int fd;
@@ -101,6 +93,16 @@ int ipv6_supported_()
 
     return 1; 
 }
+
+EIF_BOOLEAN en_ipv6_supported() {
+    static int res = -1;
+    if (res == -1) {
+        res = ipv6_supported_();
+    }
+    return res;
+}
+
+
 
 void en_socket_stream_create (EIF_OBJECT current) {
     int fd;

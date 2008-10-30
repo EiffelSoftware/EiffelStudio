@@ -17,6 +17,9 @@ inherit
 			print_single_line_error_message_extended
 		end;
 
+create
+	make_with_class
+
 feature -- Properties
 
 	code: STRING is

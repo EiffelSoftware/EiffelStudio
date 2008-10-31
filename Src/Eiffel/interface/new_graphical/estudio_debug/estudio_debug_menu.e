@@ -36,6 +36,14 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+			{ANY} file_system
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make_with_window
 
@@ -146,12 +154,12 @@ feature {NONE} -- Initialization
 		local
 			l_menu_item: !EV_MENU_ITEM
 		do
-				--| Set class license
-			create l_menu_item.make_with_text_and_action ("Set Class License", agent on_set_license)
+				--| Force compilation
+			create l_menu_item.make_with_text_and_action ("Force Compilation", agent on_force_compile_class)
 			a_menu.extend (l_menu_item)
 
 				--| Force compilation
-			create l_menu_item.make_with_text_and_action ("Force Class Compilation", agent on_force_compile_class)
+			create l_menu_item.make_with_text_and_action ("Force Compilation On All Open", agent on_force_compile_all_classes)
 			a_menu.extend (l_menu_item)
 		end
 
@@ -185,6 +193,20 @@ feature {NONE} -- Services
 			create Result
 		end
 
+feature {NONE} -- Query
+
+	active_editor: ?EB_SMART_EDITOR
+			-- Attempts to locate the last active editor.
+		do
+			if {l_window: EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window and then l_window.is_interface_usable then
+				if {l_editor: EB_SMART_EDITOR} l_window.editors_manager.current_editor and then l_editor.is_interface_usable then
+					Result := l_editor
+				end
+			end
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 feature {NONE} -- Basic operations
 
 	paste_new_uuid (tf: EV_TEXTABLE) is
@@ -196,35 +218,6 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Actions
-
-	on_set_license
-			-- Set license on current class
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_editor: EB_SMART_EDITOR
-			l_class_i: CLASS_I
-			l_modifier: ES_CLASS_LICENSER
-			l_error: ES_ERROR_PROMPT
-		do
-			if not eiffel_project.is_compiling then
-					-- Do not process this whilst compiling
-				l_window := window_manager.last_focused_development_window
-				if l_window /= Void and then l_window.is_interface_usable then
-					l_editor := l_window.editors_manager.current_editor
-					if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
-							-- We have the class stone
-						l_class_i := l_class.class_i
-						if l_class_i /= Void then
-							create l_modifier
-							l_modifier.relicense (l_class_i)
-						end
-					end
-				end
-			else
-				create l_error.make_standard ("Unable to force compilation whilst compiling.")
-				l_error.show_on_active_window
-			end
-		end
 
 	on_launch_memory_analyzer is
 			-- Launch Memory Analyzer.
@@ -295,26 +288,58 @@ feature {NONE} -- Actions
 	on_force_compile_class
 			-- Forces the active editor's class to be compiled.
 		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_editor: EB_SMART_EDITOR
-			l_class_i: CLASS_I
 			l_error: ES_ERROR_PROMPT
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
-				l_window := window_manager.last_focused_development_window
-				if l_window /= Void and then l_window.is_interface_usable then
-					l_editor := l_window.editors_manager.current_editor
-					if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+				if {l_window: EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window and then l_window.is_interface_usable then
+					if {l_editor: EB_SMART_EDITOR} active_editor and then {l_class: CLASSI_STONE} l_editor.stone then
 							-- We have the class stone
-						l_class_i := l_class.class_i
-						if l_class_i /= Void then
+						if {l_class_i: CLASS_I} l_class.class_i then
 							if l_class_i.is_compiled then
 								create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
 								l_error.show_on_active_window
 							else
 									-- Add the class
 								l_class_i.system.add_unref_class (l_class_i)
+							end
+						end
+					end
+				end
+			else
+				create l_error.make_standard ("Unable to force compilation whilst compiling.")
+				l_error.show_on_active_window
+			end
+		end
+
+	on_force_compile_all_classes
+			-- Forces the active editor's class to be compiled.
+		local
+			l_windows: BILINEAR [EB_WINDOW]
+			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+			l_error: ES_ERROR_PROMPT
+		do
+			if not eiffel_project.is_compiling then
+					-- Do not process this whilst compiling
+				l_windows := window_manager.windows
+				if l_windows /= Void then
+					if {l_window: EB_DEVELOPMENT_WINDOW} l_windows.item and then l_window.is_interface_usable then
+						l_editors := l_window.editors_manager.editors
+						if l_editors /= Void then
+							from l_editors.start until l_editors.after loop
+								if {l_editor: EB_SMART_EDITOR} l_editors.item and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+										-- We have the class stone
+									if {l_class_i: CLASS_I} l_class.class_i then
+										if l_class_i.is_compiled then
+											create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
+											l_error.show_on_active_window
+										else
+												-- Add the class
+											l_class_i.system.add_unref_class (l_class_i)
+										end
+									end
+								end
+								l_editors.forth
 							end
 						end
 					end

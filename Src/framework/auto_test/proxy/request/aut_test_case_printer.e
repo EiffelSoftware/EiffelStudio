@@ -64,7 +64,7 @@ feature -- Access
 	output_stream: KI_TEXT_OUTPUT_STREAM
 			-- Stream that printer writes to
 
-feature -- Setting
+feature -- Status setting
 
 	set_output_stream (an_output_stream: like output_stream) is
 			-- Set `output_stream' to `an_output_stream'.
@@ -77,6 +77,8 @@ feature -- Setting
 			output_stream_set: output_stream = an_output_stream
 		end
 
+feature -- Basic operations
+
 	print_test_case (a_request_list: DS_LINEAR [AUT_REQUEST]; a_var_list: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]) is
 			-- Print the request list `a_list' as an Eiffel test case.
 		require
@@ -86,20 +88,11 @@ feature -- Setting
 			cs: DS_LINEAR_CURSOR [AUT_REQUEST]
 		do
 			used_vars := a_var_list
-			output_stream.put_line ("class GENERATED_TEST_CASE")
-			output_stream.put_new_line
-			output_stream.put_line ("inherit")
-			output_stream.put_new_line
+			print_header
 			indent
 			print_indentation
-			output_stream.put_line ("AUT_TEST_CASE")
-			dedent
-			output_stream.put_new_line
-			output_stream.put_line ("feature")
-			output_stream.put_new_line
-			indent
-			print_indentation
-			output_stream.put_line ("test is")
+			print_routine_name
+			output_stream.put_line (" is")
 			indent
 			print_indentation
 			output_stream.put_line ("local")
@@ -137,7 +130,6 @@ feature -- Setting
 			output_stream.put_line ("end")
 			dedent
 			output_stream.put_new_line
-			output_stream.put_line ("end")
 		end
 
 feature {AUT_REQUEST} -- Processing
@@ -203,6 +195,12 @@ feature {AUT_REQUEST} -- Processing
 
 feature {NONE} -- Printing
 
+	print_routine_name
+			-- Print new test routine name
+		do
+			output_stream.put_string ("test")
+		end
+
 	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
 			-- Print argument list `an_arinstruction' to `output_stream'.
 		require
@@ -236,6 +234,29 @@ feature {NONE} -- Printing
 				end
 				output_stream.put_character  (')')
 			end
+		end
+
+	print_header
+			-- Print class text before actual test routine.
+		do
+			output_stream.put_line ("class GENERATED_TEST_CASE")
+			output_stream.put_new_line
+			output_stream.put_line ("inherit")
+			output_stream.put_new_line
+			indent
+			print_indentation
+			output_stream.put_line ("AUT_TEST_CASE")
+			dedent
+			output_stream.put_new_line
+			output_stream.put_line ("feature")
+			output_stream.put_new_line
+		end
+
+	print_footer
+			-- Print class text after actual test routine.
+		do
+			output_stream.put_line ("end")
+			output_stream.put_new_line
 		end
 
 feature {NONE} -- Indentation

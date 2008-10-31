@@ -1,0 +1,14 @@
+test_name vmcs-warning2
+test_description Show a situation VMCS warning should be raised.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_raw b1.e $CLUSTER b1.e
+copy_raw b2.e $CLUSTER b2.e
+copy_raw d.e $CLUSTER d.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_warning D VMCS
+
+test_end

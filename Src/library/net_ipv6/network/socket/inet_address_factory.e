@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	INT16SZ: INTEGER = 2
+	INT16SZ: INTEGER is 2
 
     get_all_by_name (a_host: STRING): ARRAY[INET_ADDRESS] is
     	local
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
     		valid_src: src /= Void
     	local
 			splitted: ARRAY[STRING]
-			val: INTEGER_32
+			val: INTEGER
 			i: INTEGER
     	do
 			if not src.is_empty then
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
     		length: INTEGER
     		i, j, k, n, curtok, colon_position: INTEGER
     		saw_xdigit: BOOLEAN
-    		val: INTEGER_32
+    		val: INTEGER
     		ch: CHARACTER
     		ia4: STRING
     		dot_count, index: INTEGER
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 	    	end
 	    end
 
-	hex_character_to_integer (c: CHARACTER_8): NATURAL_8 is
+	hex_character_to_integer (c: CHARACTER): NATURAL_8 is
 			--
 		do
 			if c >= '0' and then c <= '9' then

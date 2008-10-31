@@ -24,7 +24,7 @@ create {INET_ADDRESS_FACTORY}
 
 feature -- Constants
 
-	INADDRSZ: INTEGER = 16
+	INADDRSZ: INTEGER is 16
 
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
@@ -55,7 +55,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			ptr: POINTER
 			addr: ARRAY [NATURAL_8]
 			i: INTEGER
-			scope: INTEGER_32
+			scope: INTEGER
 		do
 			create addr.make (1, INADDRSZ)
 			if a_pointer /= default_pointer then
@@ -77,13 +77,13 @@ feature -- Access
 
 	host_address: STRING is
 		do
-			Result := numeric_to_text(the_address)
+			Result := numeric_to_text (the_address)
 			if is_scope_ifname_set then -- must check this first
-	    		Result.append_character('%%')
-	    		Result.append_string(the_scope_ifname)
-	    	elseif is_scope_id_set then
-	    		Result.append_character('%%')
-	    		Result.append_integer(the_scope_id)
+				Result.append_character ('%%')
+				Result.append_string(the_scope_ifname)
+			elseif is_scope_id_set then
+				Result.append_character ('%%')
+				Result.append_integer (the_scope_id)
 			end
 		end
 
@@ -137,7 +137,6 @@ feature -- Access
 	is_mc_global: BOOLEAN is
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x0e)
-
 		end
 
 	is_mc_node_local: BOOLEAN is
@@ -150,7 +149,7 @@ feature -- Access
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x02)
 		end
 
-		is_mc_site_local: BOOLEAN is
+	is_mc_site_local: BOOLEAN is
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x05)
 		end
@@ -203,7 +202,7 @@ feature {NONE} -- Implementation
 			loop
 				e := ((( addr[i] |<< 8 ) & 0xff00) | (addr[i+1] & 0xff)).as_natural_16
 				Result.append_string(e.to_hex_string)
-				if i <  INADDRSZ-1 then
+				if i < INADDRSZ-1 then
 					Result.append_character(':')
 				end
 				i := i + 2
@@ -226,7 +225,7 @@ feature {NONE} -- Externals
 			"en_addrinfo_get_ipv6_address"
 		end
 
-	c_addrinfo_get_ipv6_address_scope (a_pointer: POINTER): INTEGER_32 is
+	c_addrinfo_get_ipv6_address_scope (a_pointer: POINTER): INTEGER is
 		external
 			"C"
 		alias

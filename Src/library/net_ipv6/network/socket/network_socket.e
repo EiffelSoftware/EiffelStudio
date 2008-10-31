@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	do_connect
+	do_connect is
 		deferred
 		end
 

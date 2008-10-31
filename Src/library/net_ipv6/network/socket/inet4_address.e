@@ -22,7 +22,7 @@ create {INET_ADDRESS_FACTORY}
 
 feature -- Constants
 
-	INADDRSZ: INTEGER = 4
+	INADDRSZ: INTEGER is 4
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
@@ -31,10 +31,10 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			the_host_name := a_hostname
 			family := ipv4
 			if an_address /= Void and then an_address.count = INADDRSZ then
-				the_address := an_address[4].to_integer_32 & 0xFF
-				the_address := the_address | ((an_address[3].to_integer_32 |<< 8) & 0xFF00)
-				the_address := the_address | ((an_address[2].to_integer_32 |<< 16) & 0xFF0000)
-				the_address := the_address | ((an_address[1].to_integer_32 |<< 24) & 0xFF000000)
+				the_address := an_address.item(4).to_integer_32 & 0xFF
+				the_address := the_address | ((an_address.item(3).to_integer_32 |<< 8) & 0xFF00)
+				the_address := the_address | ((an_address.item(2).to_integer_32 |<< 16) & 0xFF0000)
+				the_address := the_address | ((an_address.item(1).to_integer_32 |<< 24) & 0xFF000000)
 			end
 		end
 
@@ -51,7 +51,7 @@ feature -- Access
 
 	host_address: STRING is
 		do
-			Result := numeric_to_text(raw_address)
+			Result := numeric_to_text (raw_address)
 		end
 
     is_multicast_address: BOOLEAN is
@@ -85,7 +85,7 @@ feature -- Access
 
     is_mc_global: BOOLEAN is
     	local
-    		byte_1, byte_2, byte_3: INTEGER_32
+    		byte_1, byte_2, byte_3: INTEGER
 		do
     		byte_1 := ((the_address |>> 24) & 0xFF)
     		byte_2 := ((the_address |>> 16) & 0xFF)
@@ -138,20 +138,20 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 feature {NONE} -- Implementation
 
-	the_address: INTEGER_32
+	the_address: INTEGER
 
 	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING is
 		require
 			addr /= Void and then addr.count = INADDRSZ
 		do
 			create Result.make_empty
-			Result.append_integer(addr[1])
+			Result.append_integer(addr.item (1))
 			Result.append_character('.')
-			Result.append_integer(addr[2])
+			Result.append_integer(addr.item (2))
 			Result.append_character('.')
-			Result.append_integer(addr[3])
+			Result.append_integer(addr.item (3))
 			Result.append_character('.')
-			Result.append_integer(addr[4])
+			Result.append_integer(addr.item (4))
 		end
 
 feature {NONE} -- Externals
@@ -163,7 +163,7 @@ feature {NONE} -- Externals
 			"en_socket_address_fill_ipv4"
 		end
 
-	c_addrinfo_get_ipv4_address (a_pointer: POINTER): INTEGER_32 is
+	c_addrinfo_get_ipv4_address (a_pointer: POINTER): INTEGER is
 		external
 			"C"
 		alias

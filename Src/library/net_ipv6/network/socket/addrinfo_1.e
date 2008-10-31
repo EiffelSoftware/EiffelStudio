@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	flags: INTEGER_32 is
+	flags: INTEGER is
 		do
 			Result := c_ai_flags (object_ptr)
 		end
@@ -40,7 +40,7 @@ feature -- Access
 			Result := c_ai_protocol (object_ptr)
 		end
 
-	addrlen: INTEGER
+	addrlen: INTEGER is
 		do
 			Result := c_ai_addrlen (object_ptr)
 		end
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	c_ai_flags (obj_ptr: POINTER): INTEGER_32 is
+	c_ai_flags (obj_ptr: POINTER): INTEGER is
 		external
 			"C"
 		alias
@@ -95,7 +95,7 @@ feature {NONE} -- Externals
 			"en_addrinfo_ai_protocol"
 		end
 
-	c_ai_addrlen (obj_ptr: POINTER): INTEGER
+	c_ai_addrlen (obj_ptr: POINTER): INTEGER is
 		external
 			"C"
 		alias

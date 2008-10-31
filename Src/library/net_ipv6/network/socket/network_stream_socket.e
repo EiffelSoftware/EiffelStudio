@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			c_bind (Current, address.socket_address.item)
 		end
 
-	do_create
+	do_create is
 		do
 			c_create(Current)
 			is_created := True

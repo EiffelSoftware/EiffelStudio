@@ -26,7 +26,7 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY[NATURAL_8]) is
+	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8]) is
 		do
 			the_host_name := a_hostname
 			family := ipv4
@@ -119,7 +119,7 @@ feature -- Access
 	    	and (((the_address |>> 16) & 0xFF) <= 195);
     	end
 
-	raw_address: ARRAY[NATURAL_8] is
+	raw_address: ARRAY [NATURAL_8] is
 		do
 			create Result.make(1,INADDRSZ)
 			Result.put (((the_address |>> 24) & 0xFF).to_natural_8, 1)
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 
 	the_address: INTEGER_32
 
-	numeric_to_text (addr: ARRAY[NATURAL_8]): STRING is
+	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING is
 		require
 			addr /= Void and then addr.count = INADDRSZ
 		do

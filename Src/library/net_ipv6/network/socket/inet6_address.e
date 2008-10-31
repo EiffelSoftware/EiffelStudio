@@ -29,21 +29,21 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY[NATURAL_8]) is
+	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8]) is
 		do
 			family := ipv6
 			the_host_name := a_hostname
 			the_address := an_address
 		end
 
-	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY[NATURAL_8]; an_iface_name: STRING) is
+	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING) is
 		do
 			-- TODO Implement scope check
 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
 			is_scope_ifname_set := True
 		end
 
-	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY[NATURAL_8]; a_scope_id: INTEGER) is
+	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER) is
 		do
 			make_from_host_and_address (a_hostname, an_address)
 			the_scope_id := a_scope_id
@@ -53,7 +53,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER) is
 		local
 			ptr: POINTER
-			addr: ARRAY[NATURAL_8]
+			addr: ARRAY [NATURAL_8]
 			i: INTEGER
 			scope: INTEGER_32
 		do
@@ -160,7 +160,7 @@ feature -- Access
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x08)
 		end
 
-	raw_address: ARRAY[NATURAL_8] is
+	raw_address: ARRAY [NATURAL_8] is
 		do
 			Result := the_address.twin
 		end
@@ -178,7 +178,7 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 feature {NONE} -- Implementation
 
-	the_address: ARRAY[NATURAL_8]
+	the_address: ARRAY [NATURAL_8]
 
 	the_scope_id: INTEGER
 
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 	is_scope_id_set: BOOLEAN
 
-	numeric_to_text (addr: ARRAY[NATURAL_8]): STRING is
+	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING is
 		require
 			addr /= Void and then addr.count = INADDRSZ
 		local

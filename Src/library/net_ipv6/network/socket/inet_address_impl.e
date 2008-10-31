@@ -22,7 +22,7 @@ feature -- Access
 		deferred
 		end
 
---	host_by_address (an_address: ARRAY[NATURAL_8]): STRING is
+--	host_by_address (an_address: ARRAY [NATURAL_8]): STRING is
 --		deferred
 --		end
 

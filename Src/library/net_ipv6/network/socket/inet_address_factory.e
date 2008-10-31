@@ -40,12 +40,12 @@ feature
 			end
 		end
 
-	create_from_address (address: ARRAY[NATURAL_8]) : INET_ADDRESS is
+	create_from_address (address: ARRAY [NATURAL_8]) : INET_ADDRESS is
 			--
 		require
 			valid_address: address /= Void
 		local
-			new_addr: ARRAY[NATURAL_8]
+			new_addr: ARRAY [NATURAL_8]
 		do
 		    if address.count = {INET4_ADDRESS}.INADDRSZ then
 				create {INET4_ADDRESS} Result.make_from_host_and_address (Void, address)
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
-    		addr_array: ARRAY[NATURAL_8]
+    		addr_array: ARRAY [NATURAL_8]
     		addr: INET_ADDRESS
     		numeric_zone: INTEGER
     		iface_name: STRING
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    text_to_numeric_format_v4 (src: STRING): ARRAY[NATURAL_8] is
+    text_to_numeric_format_v4 (src: STRING): ARRAY [NATURAL_8] is
     	require
     		valid_src: src /= Void
     	local
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			end
     	end
 
-    text_to_numeric_format_v6 (src: STRING): ARRAY[NATURAL_8] is
+    text_to_numeric_format_v6 (src: STRING): ARRAY [NATURAL_8] is
     	require
     		valid_src: src /= Void
     	local
@@ -285,9 +285,9 @@ feature {NONE} -- Implementation
     		ch: CHARACTER
     		ia4: STRING
     		dot_count, index: INTEGER
-    		v4addr: ARRAY[NATURAL_8]
+    		v4addr: ARRAY [NATURAL_8]
     		done: BOOLEAN
-    		new_result: ARRAY[NATURAL_8]
+    		new_result: ARRAY [NATURAL_8]
     	do
     		if src.count >= 2 then
     			length := src.count
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_from_ipv4_mappedd_address (addr: ARRAY[NATURAL_8]): ARRAY[NATURAL_8] is
+	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ARRAY [NATURAL_8] is
 		local
 			i: INTEGER
 		do
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 	    	end
 		end
 
-    is_ipv4_mapped_address (addr: ARRAY[NATURAL_8]): BOOLEAN is
+    is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN is
     	require
     		valid_addr: addr /= Void
     	do

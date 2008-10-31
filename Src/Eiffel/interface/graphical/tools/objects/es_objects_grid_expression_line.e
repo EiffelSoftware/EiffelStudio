@@ -198,7 +198,7 @@ feature -- change properties
 				a_item.set_foreground_color (parent_grid.error_row_fg_color)
 			else
 				if parent_grid.parent /= Void then
-					a_item.set_foreground_color (parent_grid.parent.foreground_color)
+					a_item.set_foreground_color (parent_grid.foreground_color)
 				end
 			end
 		end

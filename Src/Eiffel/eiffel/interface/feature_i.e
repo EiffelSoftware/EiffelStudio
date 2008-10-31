@@ -3010,7 +3010,7 @@ feature {NONE} -- Debug output
 
 invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_body_id > 0
-	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0
+	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

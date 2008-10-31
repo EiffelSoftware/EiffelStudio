@@ -191,7 +191,10 @@ feature {NONE} -- Evaluation
 									implies (
 										error_occurred
 										or (final_result /= Void and then final_result.failed)
-										or (final_result /= Void and then {pdv: DUMP_VALUE} final_result.value and then pdv.is_type_procedure_return)
+										or (final_result /= Void and then
+											{pdv: DUMP_VALUE} final_result.value and then
+												(pdv.is_type_procedure_return or pdv.is_void)
+											)
 										)
 		end
 

@@ -97,7 +97,7 @@ feature {EIFFEL_TEST_CAPTURER} -- Status report
 feature -- Status setting
 
 	prepare (a_file: !KI_TEXT_OUTPUT_STREAM; a_class_name: !STRING)
-			--
+			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
 			a_file_open_write: a_file.is_open_write

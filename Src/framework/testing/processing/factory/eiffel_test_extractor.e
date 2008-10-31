@@ -49,7 +49,6 @@ feature {NONE} -- Status setting
 			l_filename: !STRING
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_name: STRING
-
 		do
 			l_filename := configuration.new_class_name.as_lower
 			l_filename.append (".e")

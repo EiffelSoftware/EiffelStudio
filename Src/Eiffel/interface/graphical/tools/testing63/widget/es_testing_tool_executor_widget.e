@@ -10,60 +10,18 @@ class
 	ES_TESTING_TOOL_EXECUTOR_WIDGET
 
 inherit
-	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
+	ES_TESTING_TOOL_PROCESSOR_WIDGET
 		rename
-			make as make_widget
+			processor as executor
 		redefine
+			executor,
 			on_after_initialized
-		end
-
-	EIFFEL_TEST_SUITE_OBSERVER
-		redefine
-			on_processor_launched,
-			on_processor_finished,
-			on_processor_stopped
-		end
-
-	ES_SHARED_EIFFEL_TEST_SERVICE
-		export
-			{NONE} all
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-
-	make (a_executor: like executor; a_window: like development_window)
-			-- Initialize `Current'.
-			--
-			-- `a_executor': Executor to be shown.
-		require
-			a_window_attached: a_window /= Void
-			a_window_is_interface_usable: a_window.is_interface_usable
-		do
-			if test_suite.is_service_available then
-				test_suite.service.connect_events (Current)
-			end
-			executor := a_executor
-			development_window := a_window
-			make_widget
-		ensure
-			is_initialized: is_initialized
-			is_initializing_unchanged: old is_initializing = is_initializing
-			executor_set: executor = a_executor
-		end
-
-	build_notebook_widget_interface (a_widget: like widget)
-			-- <Precursor>
-		do
-			create grid.make (development_window)
-			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT})
-			grid.connect (executor)
-			register_action (grid.item_selected_actions, agent on_selection_change)
-			register_action (grid.item_deselected_actions, agent on_selection_change)
-			a_widget.extend (grid.widget)
-		end
 
 	on_after_initialized
 			-- <Precursor>
@@ -75,9 +33,6 @@ feature -- Access
 
 	executor: !EIFFEL_TEST_EXECUTOR_I
 			-- Executor being visualized by `Current'
-
-	grid: !ES_TAGABLE_LIST_GRID [!EIFFEL_TEST_I]
-			-- Grid displaying list of tests
 
 	title: !STRING_32
 			-- Caption for tab
@@ -112,11 +67,6 @@ feature -- Access
 				Result := stock_pixmaps.debug_run_icon
 			end
 		end
-
-feature {NONE} -- Access
-
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Window in which `Current' is shown
 
 feature {NONE} -- Access: buttons
 
@@ -167,30 +117,12 @@ feature {NONE} -- Status setting
 			end
 		end
 
-feature {NONE} -- Events: executor
+feature {NONE} -- Events: processor
 
-	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	on_processor_changed
 			-- <Precursor>
 		do
-			if a_processor = executor then
-				adapt_executor_status
-			end
-		end
-
-	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
-			-- <Precursor>
-		do
-			if a_processor = executor then
-				adapt_executor_status
-			end
-		end
-
-	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
-			-- <Precursor>
-		do
-			if a_processor = executor then
-				adapt_executor_status
-			end
+			adapt_executor_status
 		end
 
 feature {NONE} -- Events: widgets
@@ -246,7 +178,7 @@ feature {NONE} -- Events: widgets
 		end
 
 	on_selection_change (a_test: !EIFFEL_TEST_I)
-			-- Called when selection in `grid' changes
+			-- <Precursor>
 		do
 			adapt_executor_status
 		end

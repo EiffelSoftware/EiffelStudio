@@ -89,8 +89,10 @@ feature {NONE} -- Basic operations
 			l_process.set_detached_console (True)
 			l_process.set_hidden (True)
 			l_process.launch
-			l_process.wait_for_exit
-			Result := l_process.exit_code = 0
+
+				-- Wait for an exit, but not infinitly because a new process may be blocking.
+			l_process.wait_for_exit_with_timeout (100)
+			Result := l_process.is_running or else l_process.exit_code = 0
 		end
 
 ;indexing

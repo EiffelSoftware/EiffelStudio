@@ -145,6 +145,8 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	left_debug_layout_preference: ARRAY_PREFERENCE
 	right_debug_layout_preference: ARRAY_PREFERENCE
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
+	grid_background_color_preference: COLOR_PREFERENCE
+	grid_foreground_color_preference: COLOR_PREFERENCE
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	row_highlight_background_color_preference: COLOR_PREFERENCE
@@ -220,11 +222,13 @@ feature -- Preference Strings
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"
 	right_debug_layout_string: STRING is "debugger.right_debug_layout"
 	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
+	grid_background_color_string: STRING is "debugger.colors.grid_background_color"
+	grid_foreground_color_string: STRING is "debugger.colors.grid_foreground_color"
+	row_highlight_background_color_string: STRING is "debugger.colors.row_highlight_background_color"
+	unsensitive_foreground_color_string: STRING is "debugger.colors.unsensitive_foreground_color"
+	row_replayable_background_color_string: STRING is "debugger.colors.row_replayable_background_color"
 	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
 	delay_before_cleaning_objects_string: STRING is "debugger.delay_before_cleaning_objects_grid"
-	row_highlight_background_color_string: STRING is "debugger.row_highlight_background_color"
-	unsensitive_foreground_color_string: STRING is "debugger.unsensitive_foreground_color"
-	row_replayable_background_color_string: STRING is "debugger.row_replayable_background_color"
 	select_call_stack_level_on_double_click_string: STRING is "debugger.select_call_stack_level_on_double_click"
 	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
 	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
@@ -259,6 +263,9 @@ feature {NONE} -- Implementation
 			left_debug_layout_preference := l_manager.new_array_preference_value (l_manager, left_debug_layout_string, <<>>)
 			right_debug_layout_preference := l_manager.new_array_preference_value (l_manager, right_debug_layout_string, <<>>)
 			expanded_display_bgcolor_preference := l_manager.new_color_preference_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
+			grid_background_color_preference := l_manager.new_color_preference_value (l_manager, grid_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			grid_foreground_color_preference := l_manager.new_color_preference_value (l_manager, grid_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+
 			number_of_watch_tools_preference := l_manager.new_integer_preference_value (l_manager, number_of_watch_tools_string, 1)
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_preference_value (l_manager, delay_before_cleaning_objects_string, 500)
 			row_highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
@@ -287,6 +294,8 @@ invariant
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void
+	grid_background_color_preference_attached: grid_background_color_preference /= Void
+	grid_foreground_color_preference_attached: grid_foreground_color_preference /= Void
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void

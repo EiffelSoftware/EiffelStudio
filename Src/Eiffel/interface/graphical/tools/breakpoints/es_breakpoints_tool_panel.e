@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			-- `a_widget': A widget to build the tool interface using.
 		local
 			box: EV_VERTICAL_BOX
+			g: like grid
 		do
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
 			set_row_highlight_bg_color_agent := agent set_row_highlight_bg_color
@@ -61,44 +62,46 @@ feature {NONE} -- Initialization
 			create box
 			box.set_padding (3)
 
-			create grid
-			grid.enable_tree
-			grid.enable_multiple_row_selection
-			grid.enable_border
-			grid.enable_partial_dynamic_content
-			grid.set_dynamic_content_function (agent computed_grid_item)
-			grid.enable_default_tree_navigation_behavior (True, True, True, True)
-			grid.key_press_actions.extend (agent key_pressed_on_grid)
+			create g
+			grid := g
+			g.enable_tree
+			g.enable_multiple_row_selection
+			g.enable_border
+			g.enable_partial_dynamic_content
+			g.set_dynamic_content_function (agent computed_grid_item)
+			g.enable_default_tree_navigation_behavior (True, True, True, True)
+			g.key_press_actions.extend (agent key_pressed_on_grid)
 
-			grid.set_column_count_to (4)
-			grid.column (Data_column_index).set_title (interface_names.l_data)
-			grid.column (Status_column_index).set_title (interface_names.l_status)
-			grid.column (Details_column_index).set_title (interface_names.l_details)
-			grid.column (Tags_column_index).set_title (interface_names.l_tags)
+			g.set_column_count_to (4)
+			g.column (Data_column_index).set_title (interface_names.l_data)
+			g.column (Status_column_index).set_title (interface_names.l_status)
+			g.column (Details_column_index).set_title (interface_names.l_details)
+			g.column (Tags_column_index).set_title (interface_names.l_tags)
 
-			grid.set_auto_resizing_column (Data_column_index, True)
-			grid.set_auto_resizing_column (Status_column_index, True)
-			grid.set_auto_resizing_column (Details_column_index, True)
-			grid.set_auto_resizing_column (Tags_column_index, True)
+			g.set_auto_resizing_column (Data_column_index, True)
+			g.set_auto_resizing_column (Status_column_index, True)
+			g.set_auto_resizing_column (Details_column_index, True)
+			g.set_auto_resizing_column (Tags_column_index, True)
 
-			register_action (grid.row_expand_actions, agent grid.request_columns_auto_resizing)
-			register_action (grid.row_collapse_actions, agent grid.request_columns_auto_resizing)
+			register_action (g.row_expand_actions, agent g.request_columns_auto_resizing)
+			register_action (g.row_collapse_actions, agent g.request_columns_auto_resizing)
 
-			grid.set_item_pebble_function (agent on_item_pebble_function)
-			grid.set_item_accept_cursor_function (agent on_item_pebble_accept_cursor)
-			grid.set_item_deny_cursor_function (agent on_item_pebble_deny_cursor)
+			g.set_item_pebble_function (agent on_item_pebble_function)
+			g.set_item_accept_cursor_function (agent on_item_pebble_accept_cursor)
+			g.set_item_deny_cursor_function (agent on_item_pebble_deny_cursor)
 
-			register_action (grid.drop_actions, agent on_stone_dropped)
-			grid.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
+			register_action (g.drop_actions, agent on_stone_dropped)
+			g.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 
-			box.extend (grid)
+			load_preferences
 
-			grid.build_delayed_cleaning
-			grid.set_delayed_cleaning_action (agent clean_breakpoints_info)
+			box.extend (g)
 
-			grid.set_configurable_target_menu_mode
-			grid.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
+			g.build_delayed_cleaning
+			g.set_delayed_cleaning_action (agent clean_breakpoints_info)
 
+			g.set_configurable_target_menu_mode
+			g.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
 
 			create_filter_bar (a_widget)
 			a_widget.extend (box)
@@ -193,6 +196,29 @@ feature {NONE} -- Initialization
 			end
 
 			update
+		end
+
+	load_preferences is
+			-- Load preferences
+		require
+			grid_attached: grid /= Void
+		local
+			colp: COLOR_PREFERENCE
+		do
+			colp := preferences.debug_tool_data.grid_background_color_preference
+			grid.set_background_color (colp.value)
+			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
+					do
+						grid.set_background_color (c)
+					end
+				)
+			colp := preferences.debug_tool_data.grid_foreground_color_preference
+			grid.set_foreground_color (colp.value)
+			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
+					do
+						grid.set_foreground_color (c)
+					end
+				)
 		end
 
 feature -- Access: Help

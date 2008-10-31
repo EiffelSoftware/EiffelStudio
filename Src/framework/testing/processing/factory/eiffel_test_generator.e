@@ -12,6 +12,7 @@ inherit
 
 	EIFFEL_TEST_FACTORY
 		redefine
+			stop_process,
 			internal_configuration
 		end
 
@@ -180,8 +181,14 @@ feature {NONE} -- Basic operations
 				types_under_test := Void
 				classes_under_test := Void
 				result_repository := Void
-				status := compile_status_code
 			end
+		end
+
+	stop_process
+			-- <Precursor>
+		do
+			Precursor
+			status := compile_status_code
 		end
 
 feature {NONE} -- Implementation

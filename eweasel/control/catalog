@@ -117,6 +117,8 @@ test non-conform-precondition-inheritance			noncon019 tcf pass non-conforming
 test replicate-precursor				replication001 tcf pass replication
 test replicated-feature-merge				replication002 tcf fail replication
 test wrong-vupr-error					replication003 tcf pass replication
+test vmcs-warning1					replication004 tcf pass replication
+test vmcs-warning2					replication005 tcf pass replication
 
 -- For testing only
 

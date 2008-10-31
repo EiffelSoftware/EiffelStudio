@@ -55,12 +55,26 @@ feature {NONE} -- Initialization
 	load_preferences is
 		local
 			bp: BOOLEAN_PREFERENCE
+			colp: COLOR_PREFERENCE
 		do
 			bp := preferences.debugger_data.generating_type_evaluation_enabled_preference
 			generating_type_evaluation_enabled := bp.value
 			bp.typed_change_actions.extend (agent (b: BOOLEAN)
 					do
 						generating_type_evaluation_enabled := b
+					end)
+
+			colp := preferences.debug_tool_data.grid_background_color_preference
+			set_background_color (colp.value)
+			colp.typed_change_actions.extend (agent (c: EV_COLOR)
+					do
+						set_background_color (c)
+					end)
+			colp := preferences.debug_tool_data.grid_foreground_color_preference
+			set_foreground_color (colp.value)
+			colp.typed_change_actions.extend (agent (c: EV_COLOR)
+					do
+						set_foreground_color (c)
 					end)
 		end
 

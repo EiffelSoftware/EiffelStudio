@@ -1,5 +1,5 @@
-test_name replicated-feature-merge
-test_description Test shows that unselected features with the same name from different parents should not merge, whereas selected features should
+test_name wrong-vupr-error
+test_description Test shows incorrectly VUPR errors.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

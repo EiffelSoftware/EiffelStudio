@@ -22,7 +22,8 @@ inherit
 
 	EIFFEL_TEST_SUITE_OBSERVER
 		redefine
-			on_processor_error
+			on_processor_error,
+			on_processor_finished
 		end
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -74,11 +75,6 @@ feature {NONE} -- Basic operations
 							first_window.disable_sensitive
 							l_ts.connect_events (Current)
 							l_ts.launch_processor (l_factory, wizard_information.as_attached, False)
-							l_ts.disconnect_events (Current)
-							first_window.enable_sensitive
-							if not error_occurred then
-								cancel_actions
-							end
 						else
 							show_error_prompt (e_configuration_not_valid, [])
 						end
@@ -101,11 +97,27 @@ feature {NONE} -- Basic operations
 
 feature {EIFFEL_TEST_SUITE_S} -- Events
 
+	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		do
+			if a_test_suite.processor_registrar.is_registered (factory_type) then
+				if a_processor = a_test_suite.factory (factory_type) then
+					if not error_occurred then
+						a_test_suite.disconnect_events (Current)
+						first_window.enable_sensitive
+						if not error_occurred then
+							cancel_actions
+						end
+					end
+				end
+			end
+		end
+
 	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
 			-- <Precursor>
 		do
-			if a_test_suite.processor_registrar.is_registered (manual_factory_type) then
-				if a_processor = a_test_suite.factory (manual_factory_type) then
+			if a_test_suite.processor_registrar.is_registered (factory_type) then
+				if a_processor = a_test_suite.factory (factory_type) then
 					error_occurred := True
 				end
 			end

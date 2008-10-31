@@ -126,6 +126,7 @@ feature -- Basic operations
 			create successfully_minimized_witnesses.make_default
 			cursor := result_repository.witnesses.new_cursor
 			cursor.start
+			has_next_step := True
 		end
 
 	step

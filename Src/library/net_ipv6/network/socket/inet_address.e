@@ -65,7 +65,7 @@ feature
 		deferred
 		end
 
-	raw_address: ARRAY[INTEGER_8] is
+	raw_address: ARRAY[NATURAL_8] is
 		deferred
 		end
 

@@ -47,17 +47,24 @@ feature -- Initialization
 			valid_port: a_port >= 0 and then a_port <= 0xFFFF
 		do
 			socket_address := an_address.sockaddr (a_port)
+		ensure
+			socket_address /= Void
 		end
 
 	make_from_hostname_and_port (a_hostname: STRING;  a_port: INTEGER) is
 		require
-			valid_hostname: a_hostname /= Void
+			non_void_hostname: a_hostname /= Void
+			-- TODO look at this valid_host: is_valid_host (a_hostname)
 			valid_port: a_port >= 0 and then a_port <= 0xFFFF
 		local
 			addr: INET_ADDRESS
 		do
 			addr := create_from_name (a_hostname)
-			socket_address := addr.sockaddr (a_port)
+			if addr /= Void then
+				socket_address := addr.sockaddr (a_port)
+			end
+		ensure
+			socket_address /= Void
 		end
 
 	make_any_local (a_port: INTEGER) is
@@ -66,7 +73,11 @@ feature -- Initialization
 			addr: INET_ADDRESS
 		do
 			addr := create_any_local
-			socket_address := addr.sockaddr (a_port)
+			if addr /= Void then
+				socket_address := addr.sockaddr (a_port)
+			end
+		ensure
+			socket_address /= Void
 		end
 
 feature -- Status report
@@ -81,6 +92,16 @@ feature -- Status report
 			-- Host address of address
 		do
 			Result := create_from_sockaddr(get_sock_addr_in (socket_address.item))
+		end
+
+feature --
+
+	is_valid_host (hostname: STRING): BOOLEAN is
+			--
+		require
+			hostname_not_void: hostname /= Void
+		do
+			Result := create_from_name (hostname) /= Void
 		end
 
 feature -- Status setting

@@ -41,7 +41,7 @@ inherit
 
 create
 
-	make, make_client_by_port, make_server_by_port
+	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
 
@@ -52,8 +52,9 @@ feature -- Initialization
 	make is
 			-- Create a network stream socket.
 		do
+			is_closed := True
 			c_reset_error
-			family := af_inet;
+			family := af_inet
 			type := sock_stream;
 			make_socket
 			timeout := default_timeout
@@ -67,9 +68,11 @@ feature -- Initialization
 		require
 			valid_peer_host: a_peer_host /= Void and then not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
+		local
+			an_address: INET_ADDRESS
 		do
-			make
-			create peer_address.make_from_hostname_and_port (a_peer_host, a_peer_port)
+			an_address := create_from_name (a_peer_host)
+			make_client_by_address_and_port (an_address, a_peer_port)
 		end
 
 	make_server_by_port (a_port: INTEGER) is
@@ -85,6 +88,17 @@ feature -- Initialization
 			bind
 		end
 
+	make_client_by_address_and_port (a_peer_address: INET_ADDRESS; a_peer_port: INTEGER) is
+				-- Create a client connection to `a_peer_host' on
+				-- `a_peer_port'.
+		require
+			valid_peer_address: a_peer_address /= Void
+			valid_port: a_peer_port >= 0
+		do
+			make
+			create peer_address.make_from_address_and_port (a_peer_address, a_peer_port)
+		end
+
 feature {NETWORK_STREAM_SOCKET} -- Initialization
 
 	make_from_fd (an_fd: INTEGER; an_address: like address) is
@@ -93,6 +107,7 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			address := an_address
 			family := address.family;
 			descriptor_available := True;
+			is_closed := False
 			is_created := True
 			is_open_read := True
 			is_open_write := True

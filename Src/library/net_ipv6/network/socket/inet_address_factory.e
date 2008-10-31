@@ -40,12 +40,12 @@ feature
 			end
 		end
 
-	create_from_address (address: ARRAY[INTEGER_8]) : INET_ADDRESS is
+	create_from_address (address: ARRAY[NATURAL_8]) : INET_ADDRESS is
 			--
 		require
 			valid_address: address /= Void
 		local
-			new_addr: ARRAY[INTEGER_8]
+			new_addr: ARRAY[NATURAL_8]
 		do
 		    if address.count = {INET4_ADDRESS}.INADDRSZ then
 				create {INET4_ADDRESS} Result.make_from_host_and_address (Void, address)
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
-    		addr_array: ARRAY[INTEGER_8]
+    		addr_array: ARRAY[NATURAL_8]
     		addr: INET_ADDRESS
     		numeric_zone: INTEGER
     		iface_name: STRING
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    text_to_numeric_format_v4 (src: STRING): ARRAY[INTEGER_8] is
+    text_to_numeric_format_v4 (src: STRING): ARRAY[NATURAL_8] is
     	require
     		valid_src: src /= Void
     	local
@@ -209,10 +209,10 @@ feature {NONE} -- Implementation
 			    	if splitted.item(1).is_integer_32 then
 						val := splitted.item(1).to_integer_32
 						if val >= 0 and then val <= 0xffffffff then
-							Result.put (((val |>> 24) & 0xff).as_integer_8, 1)
-							Result.put ((((val & 0xffffff) |>> 16) & 0xff).as_integer_8, 2)
-							Result.put ((((val & 0xffff) |>> 8) & 0xff).as_integer_8, 3)
-							Result.put ((val & 0xff).as_integer_8, 4)
+							Result.put (((val |>> 24) & 0xff).as_natural_8, 1)
+							Result.put ((((val & 0xffffff) |>> 16) & 0xff).as_natural_8, 2)
+							Result.put ((((val & 0xffff) |>> 8) & 0xff).as_natural_8, 3)
+							Result.put ((val & 0xff).as_natural_8, 4)
 						else
 							Result := Void
 						end
@@ -223,13 +223,13 @@ feature {NONE} -- Implementation
 			    	if splitted.item(1).is_integer_32 then
 						val := splitted.item(1).to_integer_32
 						if val >= 0 and then val <= 0xff then
-							Result.put ((val & 0xff).as_integer_8, 1)
+							Result.put ((val & 0xff).as_natural_8, 1)
 							if splitted.item(2).is_integer_32 then
 								val := splitted.item(2).to_integer_32
 								if val >= 0 and then val <= 0xffffffff then
-									Result.put (((val |>> 16) & 0xff).as_integer_8, 2)
-									Result.put ((((val & 0xffff) |>> 8) & 0xff).as_integer_8, 3)
-									Result.put ((val & 0xff).as_integer_8, 4)
+									Result.put (((val |>> 16) & 0xff).as_natural_8, 2)
+									Result.put ((((val & 0xffff) |>> 8) & 0xff).as_natural_8, 3)
+									Result.put ((val & 0xff).as_natural_8, 4)
 								else
 									Result := Void
 								end
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			    		if splitted.item(i).is_integer_32 then
 			    			val := splitted.item(i).to_integer_32
 		    				if val >= 0 and then val <= 0xff then
-		    					Result.put ((val & 0xff).as_integer_8, i)
+		    					Result.put ((val & 0xff).as_natural_8, i)
 		    				else
 								Result := Void
 		    				end
@@ -261,8 +261,8 @@ feature {NONE} -- Implementation
 			    	if splitted.item(3).is_integer_32 then
 			    		val := splitted.item(3).to_integer_32
 		    			if val >= 0 and then val <= 0xffff then
-							Result.put (((val |>> 8) & 0xff).as_integer_8, 3)
-							Result.put ((val & 0xff).as_integer_8, 4)
+							Result.put (((val |>> 8) & 0xff).as_natural_8, 3)
+							Result.put ((val & 0xff).as_natural_8, 4)
 		    			else
 							Result := Void
 		    			end
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			end
     	end
 
-    text_to_numeric_format_v6 (src: STRING): ARRAY[INTEGER_8] is
+    text_to_numeric_format_v6 (src: STRING): ARRAY[NATURAL_8] is
     	require
     		valid_src: src /= Void
     	local
@@ -285,9 +285,9 @@ feature {NONE} -- Implementation
     		ch: CHARACTER
     		ia4: STRING
     		dot_count, index: INTEGER
-    		v4addr: ARRAY[INTEGER_8]
+    		v4addr: ARRAY[NATURAL_8]
     		done: BOOLEAN
-    		new_result: ARRAY[INTEGER_8]
+    		new_result: ARRAY[NATURAL_8]
     	do
     		if src.count >= 2 then
     			length := src.count
@@ -381,9 +381,9 @@ feature {NONE} -- Implementation
 	    						if j + INT16SZ > {INET6_ADDRESS}.INADDRSZ + 1 then
 									Result := Void
 								else
-	    							Result.put (((val |>> 8) & 0xff).as_integer_8, j)
+	    							Result.put (((val |>> 8) & 0xff).as_natural_8, j)
 	    							j := j + 1
-	    							Result.put ((val & 0xff).as_integer_8, j)
+	    							Result.put ((val & 0xff).as_natural_8, j)
 	    							j := j + 1
 	    						end
 							end
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 									until
 										i > n
 									loop
-	    								Result.put (((val |>> 8) & 0xff).as_integer_8, j)
+	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
 										Result.put (Result.item (colon_position + n - i), {INET6_ADDRESS}.INADDRSZ - i)
 										Result.put (0, colon_position + n - i)
 									end
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_from_ipv4_mappedd_address (addr: ARRAY[INTEGER_8]): ARRAY[INTEGER_8] is
+	convert_from_ipv4_mappedd_address (addr: ARRAY[NATURAL_8]): ARRAY[NATURAL_8] is
 		local
 			i: INTEGER
 		do
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 	    	end
 		end
 
-    is_ipv4_mapped_address (addr: ARRAY[INTEGER_8]): BOOLEAN is
+    is_ipv4_mapped_address (addr: ARRAY[NATURAL_8]): BOOLEAN is
     	require
     		valid_addr: addr /= Void
     	do
@@ -452,15 +452,15 @@ feature {NONE} -- Implementation
 	    	end
 	    end
 
-	hex_character_to_integer (c: CHARACTER_8) : INTEGER_8 is
+	hex_character_to_integer (c: CHARACTER_8): NATURAL_8 is
 			--
 		do
 			if c >= '0' and then c <= '9' then
-				Result := (c.code - ('0').code).as_integer_8
+				Result := (c.code - ('0').code).as_natural_8
 			elseif c >= 'a' and then c <= 'f' then
-				Result := (c.code - ('a').code).as_integer_8
+				Result := (c.code - ('a').code).as_natural_8
 			elseif c >= 'A' and then c <= 'F' then
-				Result := (c.code - ('A').code).as_integer_8
+				Result := (c.code - ('A').code).as_natural_8
 			end
 		end
 

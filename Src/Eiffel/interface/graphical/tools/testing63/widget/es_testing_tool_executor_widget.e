@@ -15,7 +15,9 @@ inherit
 			processor as executor
 		redefine
 			executor,
-			on_after_initialized
+			on_after_initialized,
+			on_processor_changed,
+			create_tool_bar_items
 		end
 
 create
@@ -26,6 +28,9 @@ feature {NONE} -- Initialization
 	on_after_initialized
 			-- <Precursor>
 		do
+			Precursor
+			register_action (grid.item_selected_actions, agent on_selection_change)
+			register_action (grid.item_deselected_actions, agent on_selection_change)
 			adapt_executor_status
 		end
 
@@ -35,7 +40,7 @@ feature -- Access
 			-- Executor being visualized by `Current'
 
 	title: !STRING_32
-			-- Caption for tab
+			-- <Precursor>
 		do
 			create Result.make (25)
 			Result.append (local_formatter.translation (t_title))
@@ -48,7 +53,7 @@ feature -- Access
 			Result.append_character (')')
 		end
 
-	icon: EV_PIXEL_BUFFER
+	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			if debug_executor_type.attempt (executor) /= Void then
@@ -58,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	icon_pixmap: EV_PIXMAP
+	icon_pixmap: !EV_PIXMAP
 			-- <Precursor>
 		do
 			if debug_executor_type.attempt (executor) /= Void then
@@ -73,9 +78,6 @@ feature {NONE} -- Access: buttons
 	run_button: !SD_TOOL_BAR_BUTTON
 			-- Button for relaunching past execution
 
-	stop_button: !SD_TOOL_BAR_BUTTON
-			-- Button for stopping test execution
-
 	skip_button: !SD_TOOL_BAR_BUTTON
 			-- Button for skipping tests during execution
 
@@ -84,12 +86,11 @@ feature {NONE} -- Status setting
 	adapt_executor_status
 			-- Adapt widgets according to state of `executor'
 		local
-			l_run, l_stop, l_skip: BOOLEAN
+			l_run, l_skip: BOOLEAN
 		do
 			if executor.is_interface_usable then
 				if executor.is_running then
 					if not executor.is_finished then
-						l_stop := True
 						if not grid.selected_items.is_empty then
 							l_skip := True
 						end
@@ -104,11 +105,6 @@ feature {NONE} -- Status setting
 				run_button.enable_sensitive
 			else
 				run_button.disable_sensitive
-			end
-			if l_stop then
-				stop_button.enable_sensitive
-			else
-				stop_button.disable_sensitive
 			end
 			if l_skip then
 				skip_button.enable_sensitive
@@ -149,14 +145,6 @@ feature {NONE} -- Events: widgets
 			end
 		end
 
-	on_stop
-			-- Called when `stop_button' is selected
-		do
-			if executor.is_interface_usable and then executor.is_running then
-				executor.request_stop
-			end
-		end
-
 	on_skip
 			-- Called when `skip_button' is selected
 		local
@@ -185,7 +173,7 @@ feature {NONE} -- Events: widgets
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: !DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 			create Result.make (4)
@@ -197,12 +185,7 @@ feature {NONE} -- Factory
 			register_action (run_button.select_actions, agent on_run)
 			Result.force_last (run_button)
 
-			create stop_button.make
-			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
-			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
-			stop_button.set_tooltip (tt_stop)
-			register_action (stop_button.select_actions, agent on_stop)
-			Result.force_last (stop_button)
+			Result.append_last (Precursor)
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
@@ -212,12 +195,6 @@ feature {NONE} -- Factory
 			Result.force_last (skip_button)
 		end
 
-	create_notebook_widget: !EV_VERTICAL_BOX
-			-- <Precursor>
-		do
-			create Result
-		end
-
 feature {NONE} -- Constants
 
 	t_title: !STRING = "Execution"
@@ -225,7 +202,6 @@ feature {NONE} -- Constants
 	t_title_debugger: !STRING = "debugger"
 
 	tt_run: STRING = "Relaunch previous execution"
-	tt_stop: STRING = "Stop current execution"
 	b_skip: STRING = "Skip"
 
 end

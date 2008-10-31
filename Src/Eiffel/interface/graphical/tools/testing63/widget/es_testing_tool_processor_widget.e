@@ -14,13 +14,21 @@ inherit
 	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
 		rename
 			make as make_widget
+		redefine
+			on_after_initialized
 		end
 
 	EIFFEL_TEST_SUITE_OBSERVER
+		rename
+			on_processor_launched as on_processor_launched_frozen,
+			on_processor_finished as on_processor_finished_frozen,
+			on_processor_stopped as on_processor_stopped_frozen,
+			on_processor_proceeded as on_processor_proceeded_frozen
 		redefine
-			on_processor_launched,
-			on_processor_finished,
-			on_processor_stopped
+			on_processor_launched_frozen,
+			on_processor_finished_frozen,
+			on_processor_stopped_frozen,
+			on_processor_proceeded_frozen
 		end
 
 	ES_SHARED_EIFFEL_TEST_SERVICE
@@ -36,7 +44,6 @@ feature {NONE} -- Initialization
 			-- `a_processor': Processor to be shown.
 			-- `a_window': Window in which `Current' is shown
 		require
-			a_window_attached: a_window /= Void
 			a_window_is_interface_usable: a_window.is_interface_usable
 		do
 			if test_suite.is_service_available then
@@ -54,12 +61,22 @@ feature {NONE} -- Initialization
 	build_notebook_widget_interface (a_widget: like widget)
 			-- <Precursor>
 		do
+			build_grid (a_widget)
+		end
+
+	build_grid (a_widget: like widget)
+			-- Create `grid'.
+		do
 			create grid.make (development_window)
 			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT})
 			grid.connect (processor)
-			register_action (grid.item_selected_actions, agent on_selection_change)
-			register_action (grid.item_deselected_actions, agent on_selection_change)
 			a_widget.extend (grid.widget)
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			on_processor_changed_frozen
 		end
 
 feature -- Access
@@ -70,49 +87,141 @@ feature -- Access
 	grid: !ES_TAGABLE_LIST_GRID [!EIFFEL_TEST_I]
 			-- Grid displaying list of tests
 
+	title: !STRING_32
+			-- Caption for tab
+		deferred
+		end
+
+	icon: !EV_PIXEL_BUFFER
+			-- Pixel buffer for widget
+		deferred
+		end
+
+	icon_pixmap: !EV_PIXMAP
+			-- Icon for widget
+		deferred
+		end
+
 feature {NONE} -- Access
 
-	development_window: EB_DEVELOPMENT_WINDOW
+	development_window: !EB_DEVELOPMENT_WINDOW
 			-- Window in which `Current' is shown
+
+	stop_button: !SD_TOOL_BAR_BUTTON
+			-- Button for stopping test execution
 
 feature {NONE} -- Events: test suite
 
-	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_launched_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
-				on_processor_changed
+				on_processor_changed_frozen
+				on_processor_launched
 			end
 		end
 
-	on_processor_finished (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_finished_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
-				on_processor_changed
+				on_processor_changed_frozen
+				on_processor_finished
 			end
 		end
 
-	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_stopped_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
-				on_processor_changed
+				on_processor_changed_frozen
+				on_processor_stopped
+			end
+		end
+
+	frozen on_processor_proceeded_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		do
+			if a_processor = processor then
+				on_processor_changed_frozen
+				on_processor_proceeded
 			end
 		end
 
 feature {NONE} -- Events: widgets
 
-	on_selection_change (a_test: !EIFFEL_TEST_I)
-			-- Called when selection in `grid' changes
-		deferred
+	on_stop
+			-- Called when `stop_button' is selected
+		do
+			if processor.is_interface_usable and then processor.is_running then
+				processor.request_stop
+			end
 		end
 
 feature {NONE} -- Events: processor
 
+	frozen on_processor_changed_frozen
+			-- Called when `processor' changes its status
+		do
+			on_processor_changed
+			if processor.is_interface_usable and then
+			   processor.is_running and then
+			   not processor.is_finished
+			then
+				stop_button.enable_sensitive
+			else
+				stop_button.disable_sensitive
+			end
+		end
+
 	on_processor_changed
 			-- Called when `processor' changes its status
-		deferred
+		do
 		end
+
+	on_processor_launched
+			-- Called when `processor' is launched.
+		do
+		end
+
+	on_processor_proceeded
+			-- Called when `processor' proceeds.
+		do
+		end
+
+	on_processor_finished
+			-- Called when `processor' is finished.
+		do
+		end
+
+	on_processor_stopped
+			-- Called when `processor' is stopped.
+		do
+		end
+
+feature {NONE} -- Factory
+
+	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+			create Result.make (1)
+
+			create stop_button.make
+			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
+			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
+			stop_button.set_tooltip (tt_stop)
+			register_action (stop_button.select_actions, agent on_stop)
+			Result.force_last (stop_button)
+		end
+
+	create_notebook_widget: !EV_VERTICAL_BOX
+			-- <Precursor>
+		do
+			create Result
+		end
+
+feature {NONE} -- Constants
+
+	tt_stop: STRING = "Stop current execution"
 
 end

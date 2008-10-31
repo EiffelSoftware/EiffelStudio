@@ -624,23 +624,32 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
-			l_new_tab: ES_TESTING_TOOL_EXECUTOR_WIDGET
+			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
 			l_found: BOOLEAN
 		do
-			if {l_exec: EIFFEL_TEST_EXECUTOR_I} a_processor then
-				from
-					notebook.start
-				until
-					notebook.after or l_found
-				loop
-					if {l_tab: ES_TESTING_TOOL_EXECUTOR_WIDGET} notebook.item_for_iteration.data then
-						l_found := l_tab.executor = l_exec
+			from
+				notebook.start
+			until
+				notebook.after or l_found
+			loop
+				if {l_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET} notebook.item_for_iteration.data then
+					if l_tab.processor = a_processor then
+						l_found := True
 						notebook.item_tab (l_tab.widget).enable_select
 					end
-					notebook.forth
 				end
-				if not l_found then
-					create l_new_tab.make (l_exec, develop_window)
+				notebook.forth
+			end
+
+			if not l_found then
+				if {l_executor: !EIFFEL_TEST_EXECUTOR_I} a_processor then
+					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, develop_window.as_attached)
+				elseif {l_generator: !EIFFEL_TEST_GENERATOR_I} a_processor then
+					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, develop_window.as_attached)
+				elseif {l_factory: !EIFFEL_TEST_FACTORY_I} a_processor then
+					create {ES_TESTING_TOOL_FACTORY_WIDGET} l_new_tab.make (l_factory, develop_window.as_attached)
+				end
+				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)
 					register_action (l_new_tab.grid.item_pointer_double_press_actions, agent on_item_double_press)
 					notebook.go_i_th (notebook.count)
@@ -650,6 +659,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 					notebook.item_tab (l_new_tab.widget).enable_select
 				end
 			end
+
 			if background_executor_type.attempt (a_processor) /= Void then
 				run_button.disable_sensitive
 			elseif debug_executor_type.attempt (a_processor) /= Void then

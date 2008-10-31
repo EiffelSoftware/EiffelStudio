@@ -10,9 +10,9 @@ deferred class
 
 feature -- Constants
 
-    ipv4: INTEGER = 1
+    ipv4: INTEGER is 1
 
-    ipv6: INTEGER = 2
+    ipv6: INTEGER is 2
 
 feature
 

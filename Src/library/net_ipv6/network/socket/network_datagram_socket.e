@@ -204,7 +204,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	do_create
+	do_create is
 		do
 			c_create(Current)
 			is_created := True

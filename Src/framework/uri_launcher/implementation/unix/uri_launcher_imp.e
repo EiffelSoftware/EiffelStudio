@@ -45,7 +45,7 @@ feature {NONE} -- Basic operations
 			create l_cmd.make (a_app.count + 13)
 			l_cmd.append ("/bin/sh -c %'")
 			l_cmd.append_string_general (a_app)
-			l_cmd.append_character ('%'')
+			l_cmd.append (" %"$url%" %'")
 			Result := Precursor (a_uri, l_cmd)
 		end
 

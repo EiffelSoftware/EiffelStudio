@@ -57,7 +57,7 @@ feature {NONE} -- Status report
 						-- like 'and' or 'ensure'.
 					l_prev := previous_text_token (a_token, a_line, True, Void)
 						-- There is another keyword, which means it's not a single 'then' end token.
-					Result := l_prev = Void or else not is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.not_keyword)
+					Result := l_prev = Void or else not is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.and_keyword)
 				end
 			end
 		ensure

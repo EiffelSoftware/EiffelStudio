@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (f_name: STRING; ec: CLASS_C) is
 		require
 			valid_f_name: f_name /= Void
-			ec_not_void: ec /= Void
+			ec_attached: ec /= Void
 		do
 			feature_class := ec
 			e_class := ec

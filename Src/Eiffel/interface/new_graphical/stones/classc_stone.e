@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 	make (a_class: CLASS_C) is
 			-- Copy all information from argument
 			-- OR KEEP A REFERENCE?
+		require
+			a_class_attached: a_class /= Void
 		do
 			e_class := a_class
 			classi_make (a_class.original_class)
@@ -38,18 +40,22 @@ feature -- Properties
 
 	group: CONF_GROUP is
 		do
-			Result := e_class.group
+			if {c: like e_class} e_class then
+				Result := c.group
+			end
 		end
 
 	class_name: STRING is
 		do
-			Result := e_class.name
+			if {c: like e_class} e_class then
+				Result := c.name
+			end
 		end
 
 	class_i: CLASS_I is
 		do
-			if e_class /= Void then
-				Result := e_class.lace_class
+			if {c: like e_class} e_class then
+				Result := c.lace_class
 			end
 		end
 
@@ -57,7 +63,9 @@ feature -- Access
 
 	stone_signature: STRING is
 		do
-			Result := e_class.class_signature
+			if {c: like e_class} e_class then
+				Result := c.class_signature
+			end
 		end
 
 	history_name: STRING_GENERAL is
@@ -69,17 +77,19 @@ feature -- Access
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			if e_class.is_precompiled then
-				Result := interface_names.l_classc_header_precompiled (eiffel_system.name,
-																		eiffel_universe.target_name,
-																		e_class.group.name,
-																		stone_signature)
-			else
-				Result := interface_names.l_classc_header (eiffel_system.name,
-															eiffel_universe.target_name,
-															e_class.group.name,
-															stone_signature,
-															e_class.lace_class.file_name)
+			if {c: like e_class} e_class then
+				if c.is_precompiled then
+					Result := interface_names.l_classc_header_precompiled (eiffel_system.name,
+																			eiffel_universe.target_name,
+																			c.group.name,
+																			stone_signature)
+				else
+					Result := interface_names.l_classc_header (eiffel_system.name,
+																eiffel_universe.target_name,
+																c.group.name,
+																stone_signature,
+																c.lace_class.file_name)
+				end
 			end
 		end
 

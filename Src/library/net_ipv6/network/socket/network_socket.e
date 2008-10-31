@@ -50,11 +50,13 @@ feature
 		do
 			if not retried then
 				do_connect
+				is_connected := True
 				is_open_write := True;
 				is_open_read := True
 			end
 		rescue
 			if not assertion_violation then
+				is_connected := False
 				is_open_read := False
 				is_open_write := False
 				retried := True
@@ -73,6 +75,7 @@ feature
 			end
 		rescue
 			if not assertion_violation then
+				is_bound := False
 				is_open_read := False
 				retried := True
 				retry
@@ -201,6 +204,7 @@ feature {NONE} -- Implementation
 		do
 			do_create
 			if fd > - 1 then
+				is_closed := False
 				descriptor_available := True
 				set_blocking
 			end

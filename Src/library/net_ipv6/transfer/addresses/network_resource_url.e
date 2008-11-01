@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create password.make (0)
 			Precursor {URL} (a)
 		end
-		
+
 feature -- Access
 
 	host: STRING
@@ -56,7 +56,7 @@ feature -- Access
 				Result.append (path)
 			end
 		end
-			
+
 	hash_code: INTEGER is
 			-- Hash function
 		local
@@ -76,7 +76,7 @@ feature -- Comparison
 			-- Is equal to `other'?
 		do
 			if host /= Void and username /= Void and other /= Void then
-				Result := equal (host, other.host) and 
+				Result := equal (host, other.host) and
 					equal (username, other.username)
 				if Result then
 					Result := equal (is_proxy_used, other.is_proxy_used)
@@ -112,7 +112,7 @@ feature -- Status report
 		do
 			Result := not username.is_empty
 		end
-		
+
 feature -- Status setting
 
 	set_username (un: STRING) is
@@ -122,7 +122,7 @@ feature -- Status setting
 		ensure then
 			username_set: username = un
 		end
-	 
+
 	set_password (pw: STRING) is
 			-- Set password.
 		do
@@ -130,7 +130,7 @@ feature -- Status setting
 		ensure then
 			password_set: password = pw
 		end
-	 
+
 feature {NONE} -- Basic operations
 
 	analyze is
@@ -151,20 +151,20 @@ feature {NONE} -- Basic operations
 				host := address.substring (1, pos - 1)
 				address.remove_head (pos)
 				path := address.twin
-			elseif l_sep_pos > 0 and 
+			elseif l_sep_pos > 0 and
 				address.substring_index (Service + ":", 1) > 0 then
 				pos2 := address.index_of ('/', pos + 2)
 				host := address.substring (pos + 2, pos2 - 1)
 				address.remove_head (pos2)
 				path := address.twin
-			end		
-			
-			if not host.is_empty and has_username and 
+			end
+
+			if not host.is_empty and has_username and
 				host.occurrences ('@') = 1 then
 				pos := host.index_of ('@', 1)
 				username := host.substring (1, pos - 1)
 				host.remove_head (pos)
-				if not username.is_empty and 
+				if not username.is_empty and
 					username.occurrences (':') = 1 then
 					pos := username.index_of (':', 1)
 					password := username.substring (pos + 1, username.count)
@@ -173,13 +173,24 @@ feature {NONE} -- Basic operations
 			end
 
 			host.to_lower
-			if not host.is_empty and host.occurrences (':') = 1 then
-				pos := host.index_of (':', 1)
+			if not host.is_empty then
+					--  look for port
+				if host.item (1) = '[' then
+					-- IPv6 numeric address ?
+					pos := host.last_index_of (']', host.count)
+					if pos /= 0 then
+						pos := host.index_of (':', pos)
+					else
+						-- TODO this is an incorrect situation actually
+						-- The IPv6 address should be terminated by the ']'
+						-- We should handle it somehow
+					end
+				else
+					pos := host.last_index_of (':', host.count)
+				end
 				if pos = host.count then
 					host.remove_tail (1)
-					pos := 0
-				elseif pos > 0 and 
-					host.substring (pos + 1, host.count).is_integer then
+				elseif pos > 0 and host.substring (pos + 1, host.count).is_integer then
 					port := host.substring (pos + 1, host.count).to_integer
 					host.keep_head (pos - 1)
 				end
@@ -197,12 +208,12 @@ feature {NONE} -- Implementation
 			path_charset_not_void: Result /= Void
 			path_charset_not_empty: not path_charset.is_empty
 		end
-	
+
 invariant
 	username_exists: username /= Void
 	password_exists: password /= Void
 	password_constraint: not password.is_empty implies not username.is_empty
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

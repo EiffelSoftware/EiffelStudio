@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 					save_inner_container_data (l_inner_containers.item.item, l_datum)
 					l_floating_zone := l_inner_containers.item.parent_floating_zone
 					if l_floating_zone /= Void then
-						if not l_floating_zone.is_displayed and then l_floating_zone.is_last_sizes_record then
+						if not l_floating_zone.is_displayed and then l_floating_zone.is_last_size_or_position_recorded then
 							-- See bug#13685 which only happens on GTK.
 							l_datum.set_screen_x (l_floating_zone.last_screen_x)
 							l_datum.set_screen_y (l_floating_zone.last_screen_y)

@@ -176,7 +176,8 @@ feature -- Command
 			last_screen_y := screen_y
 			last_width := width
 			last_height := height
-
+			is_last_size_recorded := True
+			is_last_position_recorded := True
 			Precursor {SD_SIZABLE_POPUP_WINDOW}
 		end
 
@@ -277,6 +278,7 @@ feature -- Query
 		do
 			last_screen_x := a_screen_x
 			last_screen_y := a_screen_y
+			is_last_position_recorded := True
 			Precursor {SD_SIZABLE_POPUP_WINDOW}(a_screen_x, a_screen_y)
 		ensure then
 			set: last_screen_x = a_screen_x
@@ -288,22 +290,23 @@ feature -- Query
 		do
 			last_width := a_width
 			last_height := a_height
+			is_last_size_recorded := True
 			Precursor {SD_SIZABLE_POPUP_WINDOW}(a_width, a_height)
 		end
 
-	is_last_sizes_record: BOOLEAN is
-			-- If `last_width', `last_height', `last_screen_x' and `last_screen_y' have been set?
-		do
-			Result := 	last_width /= 0 or
-						last_height /= 0 or
-						last_screen_x /= 0 or
-						last_screen_y /= 0
-		end
+	is_last_size_recorded: BOOLEAN
+			-- If `last_width' and `last_height' have been set?
+
+	is_last_position_recorded: BOOLEAN
+			-- If `last_screen_x' and `last_screen_y' have been set?
+
+	is_last_size_or_position_recorded: BOOLEAN
+			-- If any of `last_width', `last_height', `last_screen_x' or `last_screen_y' have been set?
 
 	screen_y: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record then
+			if not is_displayed and then is_last_position_recorded then
 				Result := last_screen_y
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
@@ -313,7 +316,7 @@ feature -- Query
 	screen_x: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record then
+			if not is_displayed and then is_last_position_recorded then
 				Result := last_screen_x
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
@@ -323,7 +326,7 @@ feature -- Query
 	width: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record then
+			if not is_displayed and then is_last_size_recorded then
 				Result := last_width
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
@@ -333,7 +336,7 @@ feature -- Query
 	height: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record then
+			if not is_displayed and then is_last_size_recorded then
 				Result := last_height
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}

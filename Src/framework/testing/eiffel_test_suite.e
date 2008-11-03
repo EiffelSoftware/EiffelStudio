@@ -19,6 +19,11 @@ inherit
 			remove_test
 		end
 
+	EIFFEL_TEST_PROCESSOR_REGISTRAR_I
+		redefine
+			is_valid_processor
+		end
+
 create
 	make
 
@@ -31,8 +36,7 @@ feature {NONE} -- Initialization
 			l_project: !E_PROJECT
 		do
 				-- Create registrar
-			create processor_registrar.make
-			create active_processors.make
+			create internal_processors.make
 
 				-- Create events
 			create processor_launched_event
@@ -53,15 +57,40 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR
+	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 			-- <Precursor>
+		do
+			Result := Current
+		end
+
+	processor_instances (a_test_suite: !EIFFEL_TEST_SUITE_S): !DS_LINEAR [!EIFFEL_TEST_PROCESSOR_I]
+			-- <Precursor>
+		do
+			if a_test_suite = Current then
+				Result := internal_processors
+			else
+				Result := empty_processor_list
+			end
+		end
 
 feature {NONE} -- Access
 
-	active_processors: !DS_LINKED_LIST [!EIFFEL_TEST_PROCESSOR_I]
-			-- Processors proceeding a task whenever `synchronize_processors' is called
+	internal_processors: !DS_LINKED_LIST [!EIFFEL_TEST_PROCESSOR_I]
+			-- Internal storage for `processor_instances'
+
+	empty_processor_list: !DS_LINEAR [!EIFFEL_TEST_PROCESSOR_I]
+			-- Empty list for `processor_instances'
+		once
+			create {!DS_LINKED_LIST [!EIFFEL_TEST_PROCESSOR_I]} Result.make
+		end
 
 feature -- Status report
+
+	is_registered (a_processor: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := internal_processors.has (a_processor)
+		end
 
 	count_executed: NATURAL
 			-- <Precursor>
@@ -77,20 +106,17 @@ feature -- Status setting
 	synchronize_processors
 			-- <Precursor>
 		local
-			l_cursor: DS_LINKED_LIST_CURSOR [!EIFFEL_TEST_PROCESSOR_I]
 			l_proc: !EIFFEL_TEST_PROCESSOR_I
 		do
 			from
-				l_cursor := active_processors.new_cursor
-				l_cursor.start
+				internal_processors.start
 			until
-				l_cursor.after
+				internal_processors.after
 			loop
-				l_proc := l_cursor.item
-				l_cursor.forth
+				l_proc := internal_processors.item_for_iteration
+				internal_processors.forth
 				if l_proc.is_idle then
 					if l_proc.is_finished then
-						l_cursor.remove_left
 						stop_task (l_proc)
 					else
 						proceed_task (l_proc)
@@ -102,7 +128,7 @@ feature -- Status setting
 	launch_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
 			-- <Precursor>
 		do
-			a_processor.start (a_arg, Current)
+			a_processor.start (a_arg)
 			processor_launched_event.publish ([Current, a_processor])
 
 			if a_blocking then
@@ -112,8 +138,6 @@ feature -- Status setting
 					proceed_task (a_processor)
 				end
 				stop_task (a_processor)
-			else
-				active_processors.force_last (a_processor)
 			end
 		end
 
@@ -177,6 +201,80 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			a_test.abort
 			test_changed_event.publish ([Current, a_test])
 			a_test.clear_changes
+		end
+
+feature -- Query
+
+	is_valid_type (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
+			-- <Precursor>
+		local
+			l_start: BOOLEAN
+		do
+			from
+			until
+				Result or (l_start and internal_processors.after)
+			loop
+				if not internal_processors.off then
+					Result := a_type.attempt (internal_processors.item_for_iteration) /= Void
+				end
+				if not Result then
+					if l_start then
+						internal_processors.forth
+					else
+						internal_processors.start
+						l_start := True
+					end
+				end
+			end
+		end
+
+	is_valid_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := a_processor.test_suite = Current
+		end
+
+	processor (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_test_suite: !EIFFEL_TEST_SUITE_S): !EIFFEL_TEST_PROCESSOR_I
+			-- <Precursor>
+		local
+			l_start: BOOLEAN
+			l_result: ?like processor
+		do
+			from
+			until
+				l_result /= Void or (l_start and internal_processors.after)
+			loop
+				if not internal_processors.off then
+					l_result := a_type.attempt (internal_processors.item_for_iteration)
+				end
+				if l_result = Void then
+					if l_start then
+						internal_processors.forth
+					else
+						internal_processors.start
+						l_start := True
+					end
+				end
+			end
+			Result := l_result.as_attached
+		end
+
+feature -- Element change
+
+	register (a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		do
+			internal_processors.force_last (a_processor)
+		end
+
+	unregister (a_processor: !EIFFEL_TEST_PROCESSOR_I)
+			-- <Precursor>
+		do
+			internal_processors.start
+			internal_processors.search_forth (a_processor)
+			if not internal_processors.off then
+				internal_processors.remove_at
+			end
 		end
 
 feature {NONE} -- Element change
@@ -252,7 +350,6 @@ feature -- Events
 			-- <Precursor>
 
 invariant
-	active_processors_usable: active_processors.for_all (agent {!EIFFEL_TEST_PROCESSOR_I}.is_interface_usable)
-	active_processors_running: active_processors.for_all (agent {!EIFFEL_TEST_PROCESSOR_I}.is_running)
+	internal_processors_usable: internal_processors.for_all (agent {!EIFFEL_TEST_PROCESSOR_I}.is_interface_usable)
 
 end

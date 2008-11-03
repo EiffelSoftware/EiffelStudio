@@ -36,9 +36,9 @@ feature -- Access
 		deferred
 		end
 
-feature -- Query		
+feature {NONE} -- Query		
 
-	is_valid_typed_argument (a_arg: like configuration; a_test_suite: like test_suite): BOOLEAN
+	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
 			-- <Precursor>
 		deferred
 		ensure then

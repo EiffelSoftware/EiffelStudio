@@ -34,10 +34,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_test_suite: like test_suite)
 			-- Initialize `Current' with launcher.
 		do
-			make_executor
+			make_executor (a_test_suite)
 		end
 
 feature -- Access
@@ -52,11 +52,11 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
+	is_ready: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {EIFFEL_TEST_EXECUTOR} (a_test_suite) and then
-				a_test_suite.eiffel_project_helper.can_run
+			Result := Precursor {EIFFEL_TEST_EXECUTOR} and then
+				test_suite.eiffel_project_helper.can_run
 		end
 
 feature {NONE} -- Status setting

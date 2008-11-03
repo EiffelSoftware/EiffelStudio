@@ -37,11 +37,11 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_test_suite: like test_suite)
 			-- Initialize `Current'
 		do
-			make_processor
 			create evaluators.make
+			make_processor (a_test_suite)
 		end
 
 feature -- Access
@@ -86,11 +86,11 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_ready (a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
+	is_ready: BOOLEAN
 		do
-			Result := Precursor (a_test_suite) and a_test_suite.eiffel_project_helper.can_compile
+			Result := Precursor and test_suite.eiffel_project_helper.can_compile
 		ensure then
-			result_implies_launcher_ready: Result implies a_test_suite.eiffel_project_helper.can_compile
+			result_implies_launcher_ready: Result implies test_suite.eiffel_project_helper.can_compile
 		end
 
 	is_running: BOOLEAN is

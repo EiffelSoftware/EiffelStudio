@@ -55,12 +55,14 @@ feature {NONE} -- Initialization
 		local
 			l_stack: ?EIFFEL_CALL_STACK
 			i: INTEGER
-			l_reg: EIFFEL_TEST_PROCESSOR_REGISTRAR_I [EIFFEL_TEST_PROCESSOR_I]
+			l_reg: EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 		do
 			if test_suite.is_service_available then
 				l_reg := test_suite.service.processor_registrar
-				if l_reg.is_registered (extractor_factory_type) then
-					extractor ?= l_reg.processor (extractor_factory_type)
+				if l_reg.is_valid_type (extractor_factory_type, test_suite.service) then
+					if {l_extractor: like extractor} test_suite.service.factory (extractor_factory_type) then
+						extractor := l_extractor
+					end
 				end
 			end
 			if debugger_manager.application_is_executing then

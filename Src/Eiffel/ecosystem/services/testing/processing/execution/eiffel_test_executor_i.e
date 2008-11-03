@@ -38,10 +38,10 @@ feature -- Access
 
 feature -- Query
 
-	is_valid_test_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_test_suite: like test_suite): BOOLEAN
+	is_valid_test_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_test_suite.is_subset (a_list) and a_list.for_all (agent is_test_executable)
+			Result := test_suite.is_subset (a_list) and a_list.for_all (agent is_test_executable)
 		end
 
 	is_test_executable (a_test: !EIFFEL_TEST_I): BOOLEAN is

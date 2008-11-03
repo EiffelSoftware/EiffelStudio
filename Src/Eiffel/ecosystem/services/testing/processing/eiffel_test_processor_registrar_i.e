@@ -13,89 +13,105 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_TEST_PROCESSOR_REGISTRAR_I [G]
+	EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 
 inherit
 	USABLE_I
 
 feature -- Access
 
-	processors: !DS_LINEAR [!G]
-			-- Registered processors
+	processor_instances (a_test_suite: !EIFFEL_TEST_SUITE_S): !DS_LINEAR [!EIFFEL_TEST_PROCESSOR_I]
+			-- Registered processors for `a_test_suite'.
 		require
 			usable: is_interface_usable
 		deferred
 		ensure
-			result_consistent: Result = processors
+			result_consistent: Result = processor_instances (a_test_suite)
+			processors_valid: Result.for_all (agent (a_p: !EIFFEL_TEST_PROCESSOR_I; a_ts: !EIFFEL_TEST_SUITE_S): BOOLEAN
+				do
+					if a_p.is_interface_usable then
+						Result := a_p.test_suite = a_ts
+					end
+				end (?, a_test_suite))
 		end
 
 feature -- Status report
 
-	is_registered (a_type: !TYPE [G]): BOOLEAN
-			-- Is an item available for `a_type'?
+	is_registered (a_processor: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
+			-- Is processor registered?
 			--
-			-- `a_type': Type requested processor conforms to.
-			-- `Result': True if processor of `a_type' is registered, False otherwise.
+			-- `a_processor': Eiffel test processor instance.
+			-- `Result': True if processor is registered, False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_implies_processors_has_a_processor: Result implies
+				processor_instances (a_processor.test_suite).has (a_processor)
 		end
 
 feature -- Query
 
-	processor (a_type: !TYPE [G]): !G
+	is_valid_type (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_test_suite: !EIFFEL_TEST_SUITE_S): BOOLEAN
+			-- Is processor for `a_type' available?
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	processor (a_type: !TYPE [EIFFEL_TEST_PROCESSOR_I]; a_test_suite: !EIFFEL_TEST_SUITE_S): !EIFFEL_TEST_PROCESSOR_I
 			-- Processor registered for type.
 			--
 			-- `a_type': Type requested processor conforms to.
 			-- `Result': Conforming processor registered under `a_type'.
 		require
 			is_interface_usable: is_interface_usable
-			a_type_is_registered: is_registered (a_type)
+			a_type_is_registered: is_valid_type (a_type, a_test_suite)
 		deferred
 		ensure
-			items_has_result: processors.has (Result)
-			conforming_type: a_type.attempt (Result) /= Void
+			result_usable: Result.is_interface_usable
+			result_conforms: a_type.attempt (Result) /= Void
+			result_consistent: Result = processor (a_type, a_test_suite)
+			instances_has_result: processor_instances (Result.test_suite).has (Result)
 		end
 
-	is_valid_processor (a_processor: !G): BOOLEAN
+	is_valid_processor (a_processor: !EIFFEL_TEST_PROCESSOR_I): BOOLEAN
 			-- Can processor be registered?
 			--
 			-- `a_processor': Processor to be registered.
 			-- `Result': True if `a_processor' can be registered, False otherwise.
 		require
 			usable: is_interface_usable
-		do
-			Result := True
+		deferred
 		end
 
 feature -- Element change
 
-	register (a_processor: !G; a_type: !TYPE [G]) is
+	register (a_processor: !EIFFEL_TEST_PROCESSOR_I) is
 			-- Register processor associated with type.
 			--
 			-- `a_processor': Processor to be registered.
 			-- `a_type': Type under which processor shall be registered and conforms to.
 		require
 			is_interface_usable: is_interface_usable
-			a_item_valid: is_valid_processor (a_processor)
-			conforming_type: a_type.attempt (a_processor) /= Void
-			not_is_registered: not is_registered (a_type)
+			a_processor_valid: is_valid_processor (a_processor)
+			a_processor_not_registered: not is_registered (a_processor)
 		deferred
 		ensure
-			is_registered: is_registered (a_type)
-			items_has_a_item: processors.has (a_processor)
+			is_registered: is_registered (a_processor)
 		end
 
-	unregister (a_type: !TYPE [G])
+	unregister (a_processor: !EIFFEL_TEST_PROCESSOR_I)
 			-- Unregister processor associated with type.
 			--
 			-- `a_type': Type processor is registered with.
 		require
 			is_interface_usable: is_interface_usable
-			is_registered: is_registered (a_type)
+			is_registered: is_registered (a_processor)
+			a_processor_not_running: not a_processor.is_running
 		deferred
 		ensure
-			not_is_registered: not is_registered (a_type)
+			not_is_registered: not is_registered (a_processor)
 		end
 
 end

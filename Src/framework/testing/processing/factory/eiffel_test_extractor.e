@@ -87,7 +87,7 @@ feature {NONE} -- Status setting
 
 feature -- Query
 
-	is_valid_typed_argument (a_arg: like configuration; a_test_suite: like test_suite): BOOLEAN
+	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
 			-- <Precursor>
 		do
 			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then

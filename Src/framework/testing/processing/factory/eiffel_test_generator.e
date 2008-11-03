@@ -74,11 +74,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_test_suite: like test_suite)
 			-- <Precursor>
 		do
+			Precursor (a_test_suite)
 			create source_writer
-			Precursor
 		end
 
 feature {NONE} -- Access

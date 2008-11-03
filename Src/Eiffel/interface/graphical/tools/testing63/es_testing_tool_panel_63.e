@@ -471,21 +471,17 @@ feature {NONE} -- Events: test execution
 	on_run_current (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
-			if test_suite.is_service_available then
-				if not tree_view.selected_items.is_empty then
-					on_run_selected (a_type)
-				else
-					on_run_filtered (a_type)
-				end
+			if not tree_view.selected_items.is_empty then
+				on_run_selected (a_type)
+			else
+				on_run_filtered (a_type)
 			end
 		end
 
 	on_run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run all" item of `run_button'.
 		do
-			if test_suite.is_service_available then
-				execute_list (test_suite.service.tests, a_type)
-			end
+			execute_list (test_suite.service.tests, a_type)
 		end
 
 	on_run_failing (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
@@ -518,42 +514,41 @@ feature {NONE} -- Events: test execution
 	on_run_filtered (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
-			if test_suite.is_service_available then
-				execute_list (filter.items, a_type)
-			end
+			execute_list (filter.items, a_type)
 		end
 
 	on_run_selected (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
 			-- Called when user selects "run selected" item of `run_button'.
 		do
-			if test_suite.is_service_available then
-				execute_list (tree_view.selected_items, a_type)
-			end
+			execute_list (tree_view.selected_items, a_type)
 		end
 
 	execute_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
-		require
-			test_suite_available: test_suite.is_service_available
 		local
 			l_executor: EIFFEL_TEST_EXECUTOR_I
 			l_test_suite: EIFFEL_TEST_SUITE_S
 		do
 			l_test_suite := test_suite.service
-			if l_test_suite.processor_registrar.is_registered (a_type) then
-				l_executor := l_test_suite.executor (a_type)
-				if l_executor.is_ready (l_test_suite) then
-					if l_executor.is_valid_test_list (a_list, l_test_suite) then
-						l_test_suite.run_list (l_executor, a_list, False)
+			if test_suite.is_service_available then
+				if l_test_suite.processor_registrar.is_valid_type (a_type, l_test_suite) then
+					l_executor := l_test_suite.executor (a_type)
+					if l_executor.is_ready then
+						if l_executor.is_valid_test_list (a_list) then
+							l_test_suite.run_list (l_executor, a_list, False)
+						else
+							show_error_prompt (e_invalid_test_list, [])
+						end
 					else
-						-- TODO: message saying choosen tests can not be executed...
+						show_error_prompt (e_executor_already_running, [])
+
 					end
 				else
-					-- TODO: message saying executor is currently running tests
+					show_error_prompt (e_executor_unavailable, [])
 				end
 			else
-				-- TODO: message saying executor is not available
+				show_error_prompt (e_test_suite_unavailable, [])
 			end
 		end
 
@@ -564,7 +559,7 @@ feature {NONE} -- Events: test execution
 		do
 			if test_suite.is_service_available then
 				from
-					l_cursor := test_suite.service.processor_registrar.processors.new_cursor
+					l_cursor := test_suite.service.processor_registrar.processor_instances (test_suite.service).new_cursor
 					l_cursor.start
 				until
 					l_cursor.after
@@ -706,6 +701,14 @@ feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 				run_selected_menu.enable_sensitive
 				debug_selected_menu.enable_sensitive
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
+			-- Show error prompt with `a_message'.
+		do
+			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), develop_window.window, Void)
 		end
 
 feature {NONE} -- Factory
@@ -871,6 +874,11 @@ feature {NONE} -- Internationalization
 	l_filter: STRING = "Filter"
 	l_outcome_view: STRING = "outcome"
 	l_filter_not_passing: STRING = "-outcome/passes"
+
+	e_invalid_test_list: STRING = "Selected tests can not be executed. Make sure none of the selected tests are currently being tested."
+	e_executor_already_running: STRING = "Executor is already running tests."
+	e_executor_unavailable: STRING = "Executor is not available"
+	e_test_suite_unavailable: STRING = "Test suite service is not available"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

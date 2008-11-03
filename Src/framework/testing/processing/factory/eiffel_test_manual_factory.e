@@ -10,7 +10,12 @@ class
 	EIFFEL_TEST_MANUAL_FACTORY
 
 inherit
+	EIFFEL_TEST_MANUAL_FACTORY_I
+
 	EIFFEL_TEST_FACTORY
+		redefine
+			internal_configuration
+		end
 
 	EIFFEL_LAYOUT
 		export
@@ -19,6 +24,11 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Access
+
+	internal_configuration: ?EIFFEL_TEST_MANUAL_CONFIGURATION_I
+			-- <Precursor>
 
 feature {NONE} -- Status report
 

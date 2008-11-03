@@ -15,7 +15,9 @@ inherit
 		rename
 			make as make_widget
 		redefine
-			on_after_initialized
+			on_after_initialized,
+			create_right_tool_bar_items,
+			internal_recycle
 		end
 
 	EIFFEL_TEST_SUITE_OBSERVER
@@ -101,6 +103,11 @@ feature -- Access
 			-- Icon for widget
 		deferred
 		end
+
+feature -- Access
+
+	close_button: !SD_TOOL_BAR_BUTTON
+			-- Button for closing/removing `Current' from widget
 
 feature {NONE} -- Access
 
@@ -199,6 +206,17 @@ feature {NONE} -- Events: processor
 		do
 		end
 
+feature {NONE} -- Implementation
+
+	internal_recycle
+			-- <Precursor>
+		do
+			Precursor
+			if test_suite.is_service_available then
+				test_suite.service.disconnect_events (Current)
+			end
+		end
+
 feature {NONE} -- Factory
 
 	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -214,6 +232,18 @@ feature {NONE} -- Factory
 			Result.force_last (stop_button)
 		end
 
+	create_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+			create Result.make (1)
+
+			create close_button.make
+			close_button.set_text (local_formatter.translation (b_close))
+			close_button.set_tooltip (local_formatter.translation (tt_close))
+
+			Result.force_last (close_button)
+		end
+
 	create_notebook_widget: !EV_VERTICAL_BOX
 			-- <Precursor>
 		do
@@ -222,6 +252,9 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	tt_stop: STRING = "Stop current execution"
+	b_close: !STRING = "Close"
+
+	tt_stop: !STRING = "Stop current execution"
+	tt_close: !STRING = "Close tab"
 
 end

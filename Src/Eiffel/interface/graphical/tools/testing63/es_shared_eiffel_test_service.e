@@ -42,10 +42,10 @@ feature {NONE} -- Access
 			Result := {EIFFEL_TEST_EXTRACTOR_I}
 		end
 
-	manual_factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
+	manual_factory_type: !TYPE [EIFFEL_TEST_MANUAL_FACTORY_I]
 			-- Type for manual test creation
 		do
-			Result := {EIFFEL_TEST_FACTORY_I}
+			Result := {EIFFEL_TEST_MANUAL_FACTORY_I}
 		end
 
 	generator_factory_type: !TYPE [EIFFEL_TEST_GENERATOR_I]

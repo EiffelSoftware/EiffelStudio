@@ -13,10 +13,13 @@ inherit
 	EB_WIZARD_INFORMATION
 
 	EIFFEL_TEST_CONFIGURATION_I
-		rename
-			is_interface_usable as is_configuration_usable
 		select
-			is_configuration_usable
+			is_interface_usable
+		end
+
+	EIFFEL_TEST_MANUAL_CONFIGURATION_I
+		rename
+			is_interface_usable as is_manual_configuration_usable
 		end
 
 	EIFFEL_TEST_EXTRACTOR_CONFIGURATION_I
@@ -182,7 +185,7 @@ feature {ES_EIFFEL_TEST_WIZARD_WINDOW} -- Access
 
 feature -- Status report
 
-	is_configuration_usable: BOOLEAN
+	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
 			if not is_single_routine or name_cache /= Void then
@@ -198,19 +201,24 @@ feature -- Status report
 					end
 				end
 			end
+		end
 
+	is_manual_configuration_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_interface_usable
 		end
 
 	is_extractor_configuration_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_configuration_usable and is_extracted_test_class
+			Result := is_interface_usable and is_extracted_test_class
 		end
 
 	is_generator_configuration_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_configuration_usable and is_generated_test_class
+			Result := is_interface_usable and is_generated_test_class
 		end
 
 	is_new_manual_test_class: BOOLEAN

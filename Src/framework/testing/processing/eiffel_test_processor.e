@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			test_suite := a_test_suite
+			test_suite.connect_events (Current)
 			make_collection
 		end
 

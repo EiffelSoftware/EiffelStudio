@@ -647,6 +647,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)
 					register_action (l_new_tab.grid.item_pointer_double_press_actions, agent on_item_double_press)
+					register_kamikaze_action (l_new_tab.close_button.select_actions, agent on_notebook_tab_close (l_new_tab))
 					notebook.go_i_th (notebook.count)
 					notebook.put_right (l_new_tab.widget)
 					notebook.set_item_text (l_new_tab.widget, l_new_tab.title)
@@ -700,6 +701,28 @@ feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 			else
 				run_selected_menu.enable_sensitive
 				debug_selected_menu.enable_sensitive
+			end
+		end
+
+feature {NONE} -- Events: notebook
+
+	on_notebook_tab_close (a_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET)
+			-- Called when `close_button' on `a_tab' was pressed.
+		local
+			l_found: BOOLEAN
+		do
+			from
+				notebook.start
+			until
+				notebook.after or l_found
+			loop
+				if notebook.item_for_iteration.data = a_tab then
+					notebook.remove
+					a_tab.recycle
+					l_found := True
+				else
+					notebook.forth
+				end
 			end
 		end
 

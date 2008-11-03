@@ -30,12 +30,17 @@ feature -- Access
 			-- `Result': Executor registered in `processor_registrar' for `a_type'.
 		require
 			usable: is_interface_usable
-			a_type_registered: processor_registrar.is_registered (a_type)
+			a_type_registered: processor_registrar.is_valid_type (a_type, Current)
 		do
-			Result ?= processor_registrar.processor (a_type)
+			if {l_executor: like executor} processor_registrar.processor (a_type, Current) then
+				Result := l_executor
+			else
+				check
+					False
+				end
+			end
 		ensure
-			result_registered: Result = processor_registrar.processor (a_type)
-			result_conforms: a_type.attempt (Result) /= Void
+			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
 		end
 
 	factory (a_type: !TYPE [EIFFEL_TEST_FACTORY_I]): !EIFFEL_TEST_FACTORY_I is
@@ -45,15 +50,20 @@ feature -- Access
 			-- `Result': Factory registered in `processor_registrar' for `a_type'.
 		require
 			usable: is_interface_usable
-			a_type_registered: processor_registrar.is_registered (a_type)
+			a_type_registered: processor_registrar.is_valid_type (a_type, Current)
 		do
-			Result ?= processor_registrar.processor (a_type)
+			if {l_factory: like factory} processor_registrar.processor (a_type, Current) then
+				Result := l_factory
+			else
+				check
+					False
+				end
+			end
 		ensure
-			result_registered: Result = processor_registrar.processor (a_type)
-			result_conforms: a_type.attempt (Result) /= Void
+			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
 		end
 
-	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR_I [EIFFEL_TEST_PROCESSOR_I]
+	processor_registrar: !EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 			-- Registrar managing available test processors
 		require
 			usable: is_interface_usable
@@ -102,8 +112,8 @@ feature -- Status setting
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			executor_ready: a_executor.is_ready (Current)
-			executor_suitable: a_executor.is_valid_test_list (tests, Current)
+			executor_ready: a_executor.is_ready
+			executor_suitable: a_executor.is_valid_test_list (tests)
 		do
 			run_list (a_executor, tests, a_blocking)
 		ensure
@@ -116,8 +126,8 @@ feature -- Status setting
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			executor_ready: a_executor.is_ready (Current)
-			executor_suitable: a_executor.is_valid_test_list (tests, Current)
+			executor_ready: a_executor.is_ready
+			executor_suitable: a_executor.is_valid_test_list (tests)
 		do
 			launch_processor (a_executor, a_list, a_blocking)
 		ensure
@@ -129,8 +139,8 @@ feature -- Status setting
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			factory_ready: a_factory.is_ready (Current)
-			factory_suitable: a_factory.is_valid_configuration (a_conf, Current)
+			factory_ready: a_factory.is_ready
+			factory_suitable: a_factory.is_valid_configuration (a_conf)
 		do
 			launch_processor (a_factory, a_conf, a_blocking)
 		ensure
@@ -143,8 +153,8 @@ feature -- Status setting
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
-			processor_ready: a_processor.is_ready (Current)
-			processor_suitable: a_processor.is_valid_argument (a_arg, Current)
+			processor_ready: a_processor.is_ready
+			processor_suitable: a_processor.is_valid_argument (a_arg)
 		deferred
 		ensure
 			not_blocking_equals_running: not a_blocking = a_processor.is_idle

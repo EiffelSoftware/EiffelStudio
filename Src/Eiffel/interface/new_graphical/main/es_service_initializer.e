@@ -85,26 +85,14 @@ feature {NONE} -- Test suite extension
 		require
 			a_service_usable: a_service.is_interface_usable
 		local
-			l_bg_executor: EIFFEL_TEST_BACKGROUND_EXECUTOR
-			l_dbg_executor: EIFFEL_TEST_DEBUG_EXECUTOR
-			l_factory: EIFFEL_TEST_MANUAL_FACTORY
-			l_extractor: EIFFEL_TEST_EXTRACTOR
-			l_generator: EIFFEL_TEST_GENERATOR
+			a_registrar: EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 		do
-			create l_bg_executor.make
-			a_service.processor_registrar.register (l_bg_executor, {EIFFEL_TEST_BACKGROUND_EXECUTOR_I})
-
-			create l_dbg_executor.make
-			a_service.processor_registrar.register (l_dbg_executor, {EIFFEL_TEST_DEBUGGER_I})
-
-			create l_extractor.make
-			a_service.processor_registrar.register (l_extractor, {EIFFEL_TEST_EXTRACTOR_I})
-
-			create l_factory.make
-			a_service.processor_registrar.register (l_factory, {EIFFEL_TEST_FACTORY_I})
-
-			create l_generator.make
-			a_service.processor_registrar.register (l_generator, {EIFFEL_TEST_GENERATOR_I})
+			a_registrar := a_service.processor_registrar
+			a_registrar.register (create {EIFFEL_TEST_BACKGROUND_EXECUTOR}.make (a_service))
+			a_registrar.register (create {EIFFEL_TEST_DEBUG_EXECUTOR}.make (a_service))
+			a_registrar.register (create {EIFFEL_TEST_MANUAL_FACTORY}.make (a_service))
+			a_registrar.register (create {EIFFEL_TEST_EXTRACTOR}.make (a_service))
+			a_registrar.register (create {EIFFEL_TEST_GENERATOR}.make (a_service))
 		end
 
 feature {NONE} -- Factory

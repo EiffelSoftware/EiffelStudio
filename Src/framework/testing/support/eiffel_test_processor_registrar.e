@@ -10,7 +10,7 @@ class
 	EIFFEL_TEST_PROCESSOR_REGISTRAR
 
 inherit
-	EIFFEL_TEST_PROCESSOR_REGISTRAR_I [EIFFEL_TEST_PROCESSOR_I]
+	EIFFEL_TEST_PROCESSOR_REGISTRAR_I
 
 create
 	make
@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 		do
 			create registered_processors.make_default
 		end
-
 
 feature -- Access
 

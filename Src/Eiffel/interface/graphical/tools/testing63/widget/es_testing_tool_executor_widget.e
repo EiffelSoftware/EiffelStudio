@@ -95,7 +95,7 @@ feature {NONE} -- Status setting
 							l_skip := True
 						end
 					end
-				elseif executor.is_test_suite_valid then
+				elseif executor.are_tests_available then
 					if not executor.active_tests.is_empty then
 						l_run := True
 					end
@@ -132,13 +132,13 @@ feature {NONE} -- Events: widgets
 		do
 			if executor.is_interface_usable and test_suite.is_service_available then
 				l_test_suite := test_suite.service
-				if executor.is_test_suite_valid and l_test_suite.is_interface_usable then
+				if executor.are_tests_available then
 					if not grid.selected_items.is_empty then
 						create l_list.make_from_linear (grid.selected_items)
 					else
 						create l_list.make_from_linear (executor.active_tests)
 					end
-					if executor.is_ready (l_test_suite) and executor.is_valid_test_list (l_list, l_test_suite) then
+					if executor.is_ready and executor.is_valid_test_list (l_list) then
 						l_test_suite.run_list (executor, l_list, False)
 					end
 				end

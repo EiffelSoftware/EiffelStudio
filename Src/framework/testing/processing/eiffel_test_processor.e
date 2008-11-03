@@ -14,7 +14,7 @@ inherit
 
 	EIFFEL_TEST_COLLECTION
 		rename
-			are_tests_available as is_test_suite_valid
+			make as make_collection
 		undefine
 			events
 		end
@@ -24,28 +24,21 @@ inherit
 			on_test_changed
 		end
 
+feature {NONE} -- Initialization
+
+	make (a_test_suite: like test_suite)
+			-- Initialize `Current'.
+		do
+			test_suite := a_test_suite
+			make_collection
+		end
+
 feature -- Access
 
 	test_suite: !EIFFEL_TEST_SUITE_S
 			-- <Precursor>
-		do
-			Result ?= internal_test_suite
-		end
-
-feature {NONE} -- Access
-
-	internal_test_suite: ?like test_suite
-			-- Internal storage for `test_suite'
 
 feature -- Status report
-
-	is_test_suite_valid: BOOLEAN
-			-- <Precursor>
-		do
-			Result := internal_test_suite /= Void and then
-			          internal_test_suite.is_interface_usable and then
-			          internal_test_suite.is_project_initialized
-		end
 
 	is_idle: BOOLEAN
 			-- <Precursor>
@@ -81,16 +74,6 @@ feature {EIFFEL_TEST_SUITE_S} -- Status setting
 
 feature {NONE} -- Status setting
 
-	attach_test_suite (a_test_suite: like test_suite)
-			-- <Precursor>
-		do
-			if internal_test_suite /= Void then
-				internal_test_suite.disconnect_events (Current)
-			end
-			internal_test_suite := a_test_suite
-			internal_test_suite.connect_events (Current)
-		end
-
 	frozen start_process (a_arg: like argument)
 			-- <Precursor>
 		do
@@ -105,9 +88,9 @@ feature {NONE} -- Status setting
 			--
 			-- `a_arg': Arguments defining the task.
 		require
-			test_suite_valid: is_test_suite_valid
-			ready: is_ready (test_suite)
-			a_arg_valid: is_valid_argument (a_arg, test_suite)
+			test_suite_valid: are_tests_available
+			ready: is_ready
+			a_arg_valid: is_valid_argument (a_arg)
 		deferred
 		end
 

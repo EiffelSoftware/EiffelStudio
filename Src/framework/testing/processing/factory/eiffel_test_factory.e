@@ -26,11 +26,11 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_test_suite: like test_suite)
 			-- Initialize `Current'.
 		do
-			make_processor
 			create internal_created_tests.make_default
+			make_processor (a_test_suite)
 		end
 
 feature -- Access
@@ -90,7 +90,7 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query	
 
-	is_valid_typed_argument (a_arg: like configuration; a_test_suite: like test_suite): BOOLEAN
+	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_arg.is_interface_usable
@@ -129,7 +129,11 @@ feature {NONE} -- Events
 	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
 			-- <Precursor>
 		do
-
+			internal_created_tests.search (a_item)
+			if internal_created_tests.found then
+				internal_created_tests.remove_found_item
+				test_removed_event.publish ([Current, a_item])
+			end
 		end
 
 end

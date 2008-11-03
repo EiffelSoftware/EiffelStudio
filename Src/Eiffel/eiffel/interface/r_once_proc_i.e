@@ -11,10 +11,19 @@ inherit
 	ONCE_PROC_I
 		redefine
 			replicated, code_id, unselected, transfer_to,
-			is_replicated, set_code_id, transfer_from
+			is_replicated, set_code_id, transfer_from, access_in, set_access_in
 		end
 
 feature
+
+	access_in: INTEGER;
+			-- Access class id
+
+	set_access_in (i: INTEGER) is
+			-- Assign `i' to `access_in'
+		do
+			access_in := i
+		end
 
 	code_id: INTEGER;
 			-- Code id

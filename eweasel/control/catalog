@@ -737,6 +737,7 @@ test	unresolved-c-externals-2		incr291  tcf pass incrementality
 test	bogus-vmrc-2					incr292  tcf pass incrementality
 test	inherited-code-checking-crash	incr293  tcf fail incrementality
 test	invalid-root-procedure			incr294	tcf pass incrementality
+test	generic-replication-nc-crash		incr295	tcf pass incrementality
 
 
 -- Melting

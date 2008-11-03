@@ -224,6 +224,39 @@ feature {NONE} -- Element change
 			tree.grid.remove_row (i)
 		end
 
+feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Basic functionality
+
+	show_nodes_for_item (a_item: !G; a_tag: !STRING)
+			-- Expand rows for children showing item in given tag and select row that contains item.
+		require
+			a_tag_valid: is_valid_tag (a_tag)
+			a_item_has_tag: a_item.tags.has (join_tags (tag, a_tag))
+			evaluated: is_evaluated
+		local
+			l_token: !STRING
+			l_child: ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
+		do
+			if a_tag.is_empty then
+				show_subrow_with_item (a_item, row)
+			else
+				l_token := first_token (a_tag)
+				l_child := child_for_token (l_token)
+				if not l_child.row.is_expanded then
+					l_child.row.expand
+				end
+				l_child.show_nodes_for_item (a_item, suffix (l_token, a_tag))
+			end
+		end
+
+	show_subrow_with_item (a_item: !G; a_row: !EV_GRID_ROW)
+			-- Select row containing `a_item'.
+		local
+			l_data: like row_data_for_item
+		do
+			l_data := row_data_for_item (a_item)
+			tree.grid.set_first_visible_row (l_data.row.index)
+		end
+
 invariant
 	items_not_empty_implies_subrow: (is_interface_usable and then is_evaluated and then not items.is_empty)
 		implies first_item_subrow /= Void

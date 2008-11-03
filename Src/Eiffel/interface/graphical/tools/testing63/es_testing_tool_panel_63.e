@@ -126,7 +126,7 @@ feature {NONE} -- Initialization: widgets
 			split_area.set_first (tree_view.widget)
 			register_action (tree_view.item_selected_actions, agent on_selection_change (?, True))
 			register_action (tree_view.item_deselected_actions, agent on_selection_change (?, False))
-			register_action (tree_view.item_pointer_double_press_actions, agent on_item_double_press)
+			register_action (tree_view.item_pointer_double_press_actions, agent on_item_double_press (?, True))
 		end
 
 	build_notebook
@@ -646,7 +646,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 				end
 				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)
-					register_action (l_new_tab.grid.item_pointer_double_press_actions, agent on_item_double_press)
+					register_action (l_new_tab.grid.item_pointer_double_press_actions, agent on_item_double_press (?, False))
 					register_kamikaze_action (l_new_tab.close_button.select_actions, agent on_notebook_tab_close (l_new_tab))
 					notebook.go_i_th (notebook.count)
 					notebook.put_right (l_new_tab.widget)
@@ -683,13 +683,17 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
-	on_item_double_press (a_item: !EIFFEL_TEST_I)
+	on_item_double_press (a_item: !EIFFEL_TEST_I; a_in_tree_view: BOOLEAN)
 			-- Called when user double presses on item in of the grids
 		do
-			if not outcome_tab.is_active or else outcome_tab.test /= a_item then
-				outcome_tab.show_test (a_item)
+			if a_in_tree_view then
+				if not outcome_tab.is_active or else outcome_tab.test /= a_item then
+					outcome_tab.show_test (a_item)
+				end
+				notebook.item_tab (outcome_tab.widget).enable_select
+			else
+				tree_view.show_row_for_item (a_item)
 			end
-			notebook.item_tab (outcome_tab.widget).enable_select
 		end
 
 	on_selection_change (a_test: !EIFFEL_TEST_I; a_is_selected: BOOLEAN)

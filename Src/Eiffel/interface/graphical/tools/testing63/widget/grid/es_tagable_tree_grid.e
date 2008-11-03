@@ -29,7 +29,6 @@ inherit
 			make as make_tree,
 			parent as unused_parent
 		undefine
-			is_interface_usable,
 			unused_parent,
 			child_for_token,
 			insert_tag_for_item,
@@ -141,14 +140,6 @@ feature {NONE} -- Access
 			Result := grid.row_count + 1
 		end
 
-feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- <Precursor>
-		do
-			Result := Precursor {TAG_BASED_TREE}
-		end
-
 feature {NONE} -- Status report
 
 	is_untagged_subrow_expanded: BOOLEAN
@@ -235,6 +226,29 @@ feature {NONE} -- Element change
 					i := i + grid.row (i).subrow_count_recursive + 1
 				end
 				grid.remove_row (i)
+			end
+		end
+
+feature -- Basic functionality
+
+	show_row_for_item (a_item: !G)
+			-- Expand all rows in `Current' displaying `a_item' and select them.
+		require
+			connected: is_connected
+			a_item_in_collection: collection.items.has (a_item)
+		local
+			l_tags: !DS_HASH_SET [!STRING]
+		do
+			l_tags := tag_suffixes (a_item.tags, tag_prefix)
+			if not l_tags.is_empty then
+				l_tags.do_all (agent show_nodes_for_item (a_item, ?))
+			else
+				check
+						-- `untagged_subrow' must be attached since item is in collection and does not have any
+						-- matching tags.
+					untagged_subrow_attached: untagged_subrow /= Void
+				end
+				show_subrow_with_item (a_item, untagged_subrow.as_attached)
 			end
 		end
 

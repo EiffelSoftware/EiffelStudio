@@ -49,8 +49,10 @@ feature -- Access
 	active_tests: !DS_LINEAR [!EIFFEL_TEST_I]
 			-- <Precursor>
 		do
-			if {l_values: !DS_LINEAR [!EIFFEL_TEST_I]} test_map then
-				Result := l_values
+			if test_map /= Void then
+				Result := test_map.as_attached
+			else
+				Result := empty_test_list
 			end
 		end
 
@@ -69,6 +71,12 @@ feature {NONE} -- Access
 			--
 			-- values: Tests which are executed by `Current'.
 			-- keys: Corresponding indices.
+
+	empty_test_list: !DS_LINEAR [!EIFFEL_TEST_I]
+			-- Empty list of tests
+		once
+			create {DS_ARRAYED_LIST [!EIFFEL_TEST_I]} Result.make (0)
+		end
 
 	assigner: ?EIFFEL_TEST_EXECUTION_ASSIGNER
 			-- Assigner for evaluators

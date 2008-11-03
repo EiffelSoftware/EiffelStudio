@@ -119,6 +119,7 @@ test replicated-feature-merge				replication002 tcf fail replication
 test wrong-vupr-error					replication003 tcf pass replication
 test vmcs-warning1					replication004 tcf pass replication
 test vmcs-warning2					replication005 tcf pass replication
+test repeated_onces					replication006 tcf pass replication
 
 -- For testing only
 

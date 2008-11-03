@@ -2,7 +2,7 @@
 <project name="build_net" default="help">
 
 	<description>
-		description: "EiffelNET library compilation"
+		description: "EiffelNET (ipv6) library compilation"
 	</description>
 
 	<target name="help">

@@ -123,14 +123,13 @@ feature -- Processing
 
 						-- Copy the routine id to avoid aliasing from other descendents of inherited routine.
 					a_feature.set_rout_id_set (a_feature.rout_id_set.twin)
-
-						-- Set direct replication flag so that it is easy to determine
-						-- whether the feature has been replicated in the current class
-						-- Currently once a feature is marked as replicated (by its type) it
-						-- is not unreplicated if then inherited by a descendent so we need
-						-- a flag to distinguish the two types of replicated features.
-					a_feature.set_is_replicated_directly (True)
 				end
+					-- Set direct replication flag so that it is easy to determine
+					-- whether the feature has been replicated in the current class
+					-- Currently once a feature is marked as replicated (by its type) it
+					-- is not unreplicated if then inherited by a descendent so we need
+					-- a flag to distinguish the two types of replicated features.
+				a_feature.set_is_replicated_directly (True)
 			else
 					-- This routine is either joined or redefined in `a_current_class', if redefined
 					-- in current class then we need to set it as directly replicated so that

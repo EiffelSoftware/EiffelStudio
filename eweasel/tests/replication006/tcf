@@ -1,4 +1,4 @@
-test_name repeated_onces
+test_name repeated-onces
 test_description Show strange VMCS warnings and run-time crash when calling repeated once.
 
 copy_sub Ace $TEST Ace

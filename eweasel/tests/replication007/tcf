@@ -1,0 +1,15 @@
+test_name nc-replication-not-apply-vmcs
+test_description Show the behavior routines from non-conforming inheritance should not apply VMCS rule.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output1
+execute_result 	ok
+compare output 	exec_output1
+
+test_end

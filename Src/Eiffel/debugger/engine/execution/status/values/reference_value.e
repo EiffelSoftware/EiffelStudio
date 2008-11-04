@@ -48,10 +48,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						type: like dynamic_type_id; addr: like address) is
+						type: like dynamic_type_id; addr: !like address) is
 		require
 			not_attr_name_void: attr_name /= Void
-			addr_attached: addr /= Void
 		do
 			name := attr_name;
 			if a_class /= Void then
@@ -60,9 +59,9 @@ feature {NONE} -- Initialization
 			end
 			dynamic_type_id := type
 			address := addr
-			is_null := address = Void or else address.is_void
+			is_null := addr.is_void
 			get_is_expanded
-		end;
+		end
 
 feature -- Access
 

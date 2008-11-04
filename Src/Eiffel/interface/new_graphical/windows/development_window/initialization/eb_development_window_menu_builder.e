@@ -1144,9 +1144,9 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_BREAKPOINTS_TOOL})
 
-			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
-			insert_show_tool_menu_item (Result, {ES_TESTING_RESULT_TOOL})
+--			Result.extend (create {EV_MENU_SEPARATOR})
+--			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
+--			insert_show_tool_menu_item (Result, {ES_TESTING_RESULT_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL_63})
 
@@ -1407,7 +1407,7 @@ feature -- Docking library menu items
 				l_new_menu_item := l_last_development_window.commands.restore_editor_area_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
-				
+
 					-- Separator --------------------------------------
 				Result.extend (create {EV_MENU_SEPARATOR})
 

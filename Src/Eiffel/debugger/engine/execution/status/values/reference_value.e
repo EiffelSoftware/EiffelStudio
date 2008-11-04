@@ -34,11 +34,9 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (ref: like address; id: like dynamic_type_id) is
-			-- Set `address' to `a_reference' address
+	make (ref: !like address; id: like dynamic_type_id) is
+			-- Set `address' to (attached)  `ref' address
 			-- and `dynamic_type_id' to `id'.
-		require
-			ref_attached: ref /= Void
 		do
 			set_default_name
 			address := ref

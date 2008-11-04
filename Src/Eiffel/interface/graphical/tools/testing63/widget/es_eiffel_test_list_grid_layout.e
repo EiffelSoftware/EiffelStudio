@@ -1,11 +1,11 @@
 indexing
-	description: "Summary description for {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT}."
+	description: "Summary description for {ES_EIFFEL_TEST_LIST_GRID_LAYOUT}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT
+	ES_EIFFEL_TEST_LIST_GRID_LAYOUT
 
 inherit
 	ES_TAGABLE_GRID_LAYOUT [!EIFFEL_TEST_I]
@@ -63,6 +63,8 @@ feature -- Status report
 				a_index
 			when status_column then
 				Result := 190
+			else
+
 			end
 		end
 
@@ -209,6 +211,8 @@ feature {NONE} -- Implementation
 				token_writer.add (a_test.name)
 			end
 
+			append_class_name (a_test)
+
 			create l_eitem
 			l_eitem.set_text_with_tokens (token_writer.last_line.content)
 			l_eitem.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
@@ -240,6 +244,19 @@ feature {NONE} -- Implementation
 			end
 			l_label.set_tooltip (l_tooltip)
 			Result := l_label
+		end
+
+	append_class_name (a_test: !EIFFEL_TEST_I)
+			-- Item showing class for `a_test'.
+		do
+			token_writer.add_space
+			token_writer.add_char ('(')
+			if {l_class: EIFFEL_CLASS_I} test_suite.service.class_for_test (a_test) then
+				token_writer.add_class (l_class)
+			else
+				token_writer.add_string (a_test.class_name)
+			end
+			token_writer.add_char (')')
 		end
 
 feature {NONE} -- Constants

@@ -152,7 +152,7 @@ feature {NONE} -- Initialization: widget status
 				l_service := test_suite.service
 				l_service.connect_events (Current)
 			end
-			tree_view.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT})
+			tree_view.set_layout (create {ES_EIFFEL_TEST_TREE_GRID_LAYOUT})
 			propagate_drop_actions (Void)
 
 			initialize_tool_bar

@@ -4,6 +4,8 @@ remtrace Retrieve libraries
 cd $INSTALL_DIR
 md library
 cd library
+remtrace argument_parser
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/argument_parser argument_parser
 remtrace base
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/base base 
 remtrace diff
@@ -37,6 +39,8 @@ remtrace process
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/process process 
 remtrace store
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/store store 
+remtrace testing
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/testing testing
 remtrace thread
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/thread thread 
 remtrace time

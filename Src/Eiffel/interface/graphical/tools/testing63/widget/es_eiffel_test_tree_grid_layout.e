@@ -8,16 +8,17 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_EIFFEL_TEST_GRID_LAYOUT
+	ES_EIFFEL_TEST_TREE_GRID_LAYOUT
 
 inherit
-	ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT
+	ES_EIFFEL_TEST_LIST_GRID_LAYOUT
 		redefine
 			column_width,
 			populate_item_row,
 			column_count,
 			populate_header,
-			exception_text
+			exception_text,
+			append_class_name
 		end
 
 feature -- Status report
@@ -64,7 +65,8 @@ feature -- Basic functionality
 		local
 			l_label: EV_GRID_LABEL_ITEM
 		do
-			Precursor (a_row, a_item)
+			a_row.set_item (tests_column, test_item (a_item))
+			a_row.set_item (status_column, status_item (a_item))
 			if a_item.is_outcome_available then
 				a_row.set_item (last_tested_column, date_time_item (a_item.last_outcome.date))
 			else
@@ -72,6 +74,8 @@ feature -- Basic functionality
 				a_row.set_item (last_tested_column, l_label)
 			end
 		end
+
+feature {NONE} -- Basic functionality
 
 	date_time_item (a_date: !DATE_TIME): !EV_GRID_ITEM is
 			-- Item displaying how long a given date is in the past.
@@ -123,6 +127,11 @@ feature -- Basic functionality
 			l_label.set_text (l_text)
 			l_label.set_tooltip (l_tooltip)
 			Result := l_label
+		end
+
+	append_class_name (a_test: !EIFFEL_TEST_I)
+			-- <Precursor>
+		do
 		end
 
 feature {NONE} -- Constants

@@ -17,10 +17,17 @@ class
 	ES_TAGABLE_GRID_LAYOUT [G -> TAGABLE_I]
 
 inherit
-
 	TAG_UTILITIES
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -205,13 +212,15 @@ feature {NONE} -- Factory
 			l_pnode ?= a_node.parent
 			if l_token.starts_with (class_prefix) then
 				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
-				l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
 				if l_pnode /= Void then
 					l_cluster ?= l_pnode.data
 				end
 				if {l_class: !CLASS_I} class_from_name (l_name, l_cluster) then
 					a_node.set_data (l_class)
 					token_writer.add_class (l_class)
+					l_pixmap := pixmap_from_class_i (l_class)
+				else
+					l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
 				end
 			elseif l_token.starts_with (feature_prefix) then
 				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)

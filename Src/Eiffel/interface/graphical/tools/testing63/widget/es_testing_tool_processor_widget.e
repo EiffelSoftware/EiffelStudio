@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			-- Create `grid'.
 		do
 			create grid.make (development_window)
-			grid.set_layout (create {ES_EIFFEL_TEST_GRID_LAYOUT_LIGHT})
+			grid.set_layout (create {ES_EIFFEL_TEST_LIST_GRID_LAYOUT})
 			grid.connect (processor)
 			a_widget.extend (grid.widget)
 		end

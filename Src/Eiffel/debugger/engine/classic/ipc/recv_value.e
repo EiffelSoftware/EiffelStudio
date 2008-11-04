@@ -123,7 +123,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a reference value.
 		local
 			cl: CLASS_C
-			add: DBG_ADDRESS
+			add: !DBG_ADDRESS
 		do
 			fixme ("[
 				Maybe we should modified the runtime, to add the 'SPECIAL' case
@@ -148,7 +148,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a exception reference value.
 		local
 			rf: REFERENCE_VALUE
-			add: DBG_ADDRESS
+			add: !DBG_ADDRESS
 		do
 			is_exception := True
 

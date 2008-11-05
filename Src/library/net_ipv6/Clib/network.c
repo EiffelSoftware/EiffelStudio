@@ -28,6 +28,7 @@ indexing
 #ifdef EIF_WINDOWS
 #include <Winsock2.h>
 #include <ws2tcpip.h>
+#define FD_SETSIZE 256
 #endif
 
 #include "eif_portable.h" 	/* required for VMS, recommended for others */

@@ -55,6 +55,9 @@ inherit
 			make_node
 		end
 
+create
+	init
+
 feature -- Code generation
 
 	generate_on (reg: REGISTRABLE) is
@@ -140,8 +143,8 @@ feature -- Code generation
 		do
 			fill_from (a)
 
-			if system.in_final_mode and
-			then
+			if
+				system.in_final_mode and then
 				not (system.keep_assertions and then rout_class.lace_class.options.assertions.is_precondition)
 			then
 				create_optimized_parameters
@@ -154,12 +157,8 @@ feature -- Code generation
 	enlarged: CALL_ACCESS_B is
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
-		local
-			l_agent_call: AGENT_CALL_BL
 		do
-			create l_agent_call
-			l_agent_call.fill_from (Current)
-			Result := l_agent_call
+			Result := Current
 		end
 
 	fill_from (a: AGENT_CALL_B) is
@@ -172,9 +171,8 @@ feature -- Code generation
 			cl_type ?= a.context_type
 
 			rout_class := cl_type.associated_class.eiffel_class_c
-			is_function := rout_class.class_id = system.function_class_id or else
-						   rout_class.class_id = system.predicate_class_id
 			is_predicate := rout_class.class_id = system.predicate_class_id
+			is_function := rout_class.class_id = system.function_class_id or is_predicate
 
 			if is_function then
 				if is_predicate then

@@ -291,10 +291,8 @@ feature {NONE} -- Implementation
 
 	process_tagged_as (l_as: TAGGED_AS) is
 		do
-			if l_as.expr /= Void then
-					-- It is valid to have tags without expressions.
-				l_as.expr.process (Current)
-			end
+			safe_process (l_as.expr)
+				-- It is valid to have tags without expressions.
 		end
 
 	process_variant_as (l_as: VARIANT_AS) is

@@ -17,15 +17,7 @@ deferred class
 inherit
 	USABLE_I
 
-feature -- Access: general
-
-	name: !STRING
-			-- Name used for new test
-		require
-			usable: is_interface_usable
-			single_routine: is_single_routine
-		deferred
-		end
+feature -- Access: tags
 
 	tags: !DS_LINEAR [!STRING]
 			-- Predefined tags for new test
@@ -40,7 +32,8 @@ feature -- Access: general
 feature -- Access: new class
 
 	new_class_name: !STRING
-			-- Name of the new class
+			-- Name of the new class. If `is_multiple_new_classes' is true, it will be used as a prefix for
+			-- all new classes.
 		require
 			usable: is_interface_usable
 			new_class: is_new_class
@@ -48,7 +41,7 @@ feature -- Access: new class
 		end
 
 	cluster: !CONF_CLUSTER
-			-- Cluster in which the new class will be created
+			-- Cluster in which new test classes will be created
 		require
 			usable: is_interface_usable
 			new_class: is_new_class
@@ -56,49 +49,14 @@ feature -- Access: new class
 		end
 
 	path: !STRING
-			-- Path relativ to `cluster' location where new test class will be created
+			-- Path relativ to location of `cluster' where new test classes will be created
 		require
 			usable: is_interface_usable
 			new_class: is_new_class
 		deferred
 		end
 
-feature -- Access: existing class
-
-	test_class: !EIFFEL_CLASS_I
-			-- Class to which new test will be added
-		require
-			usable: is_interface_usable
-			not_new_class: not is_new_class
-		deferred
-		end
-
-	feature_clause: !FEATURE_CLAUSE_AS
-			-- Feature clause to which new test routine will be written to
-		require
-			usable: is_interface_usable
-			not_new_class: not is_new_class
-			not_new_feature_clause: not is_new_feature_clause
-		deferred
-		end
-
-	feature_clause_name: !STRING
-			-- Name of new feature clause
-		require
-			usable: is_interface_usable
-			not_new_class: not is_new_class
-			new_feature_clause: is_new_feature_clause
-		deferred
-		end
-
 feature -- Status report
-
-	is_single_routine: BOOLEAN
-			-- Will new test be a single test routine?
-		require
-			usable: is_interface_usable
-		deferred
-		end
 
 	is_new_class: BOOLEAN
 			-- Will test be created in a new class?
@@ -107,28 +65,13 @@ feature -- Status report
 		deferred
 		end
 
-	is_new_feature_clause: BOOLEAN
-			-- Should test be created in new feature clause?
+	is_multiple_new_classes: BOOLEAN
+			-- Will factory create one or more new test classes?
 		require
 			usable: is_interface_usable
-			not_new_class: not is_new_class
 		deferred
-		end
-
-	has_prepare: BOOLEAN
-			-- Should new test class redefine `on_prepare' routine?
-		require
-			usable: is_interface_usable
-			new_class: is_new_class
-		deferred
-		end
-
-	has_clean: BOOLEAN
-			-- Should new test class redefine `on_clean' routine?
-		require
-			usable: is_interface_usable
-			new_class: is_new_class
-		deferred
+		ensure
+			result_implies_new_class: Result implies is_new_class
 		end
 
 end

@@ -32,7 +32,7 @@ feature -- Status report
 --	ecf_target: STRING
 --			-- Name of target in file named `ecf_filename'; Void if no target was specified.
 
-	class_names: DS_LINKED_LIST [STRING]
+	class_names: DS_LIST [STRING]
 			-- List of class names to be tested
 
 	time_out: DT_DATE_TIME_DURATION
@@ -111,7 +111,6 @@ feature -- Parsing
 			time_out_option: AP_INTEGER_OPTION
 			seed_option: AP_INTEGER_OPTION
 			statistics_format_op: AP_STRING_OPTION
-			cs: DS_LINEAR_CURSOR [STRING]
 			time: TIME
 			proxy_time_out_option: AP_INTEGER_OPTION
 			l_log_to_replay: AP_STRING_OPTION
@@ -298,17 +297,18 @@ feature -- Parsing
 --				Exceptions.die (1)
 --			else
 --				ecf_filename := parser.parameters.first
-				create class_names.make
-				from
-					cs := parser.parameters.new_cursor
-					cs.start
+				class_names := parser.parameters.twin
+--				create {DS_ARRAYED_LIST []} class_names.make
+--				from
+--					cs := parser.parameters.new_cursor
+--					cs.start
+----					cs.forth
+--				until
+--					cs.off
+--				loop
+--					class_names.force_last (cs.item)
 --					cs.forth
-				until
-					cs.off
-				loop
-					class_names.force_last (cs.item)
-					cs.forth
-				end
+--				end
 --			end
 		ensure
 			help_message_set_when_required: should_display_help_message implies help_message /= Void

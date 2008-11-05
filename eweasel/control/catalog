@@ -1963,7 +1963,8 @@ test	generic-attached-attribute-init					attach028 tcf fail attached_types self_
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance
 test	formal-conformance		conform002 tcf pass conformance
-test	 catcall-checking-conformance	conform003 tcf pass conformance
+test	catcall-checking-conformance	conform003 tcf pass conformance
+test	tuple-conformance-broken	conform004 tcf pass conformance
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -10,12 +10,14 @@ class
 inherit
 	AST_ITERATOR
 		redefine
+			process_routine_as,
 			process_access_id_as,
 			process_access_assert_as,
 			process_require_as,
 			process_require_else_as,
 			process_ensure_as,
-			process_ensure_then_as
+			process_ensure_then_as,
+			process_precursor_as
 		end
 
 	SHARED_SERVER
@@ -136,9 +138,17 @@ feature -- Processing
 					-- VMCS errors are correctly detected.
 				a_feature.set_is_replicated_directly (a_current_class.class_id = a_feature.written_in)
 			end
+
+				-- Reset values
+			routine_as := Void
+			feature_i := Void
+			parent_c := Void
 		end
 
 feature -- Access
+
+	routine_as: ROUTINE_AS
+		-- Routine AS that is currently being processed
 
 	feature_i: FEATURE_I
 		-- Feature that is currently being processed
@@ -148,6 +158,37 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	call_is_valid_for_processing (a_name_id: INTEGER): BOOLEAN
+			-- Is call to `a_name_id' valid for replication processing.
+		require
+			values_set: feature_i /= Void and then routine_as /= Void
+		do
+			Result := feature_i.argument_position (a_name_id) = 0
+					-- Call must not be an argument.
+			if Result and then routine_as.locals /= Void then
+					-- Call must not be a local.
+				from
+					routine_as.locals.start
+				until
+					not Result or else routine_as.locals.after
+				loop
+					Result := not routine_as.locals.item.id_list.has (a_name_id)
+					routine_as.locals.forth
+				end
+			end
+			if Result and then routine_as.object_test_locals /= Void then
+					-- Call must not be an object test local.
+				from
+					routine_as.object_test_locals.start
+				until
+					not Result or else routine_as.object_test_locals.after
+				loop
+					Result := routine_as.object_test_locals.item.name.name_id /= a_name_id
+					routine_as.object_test_locals.forth
+				end
+			end
+		end
+
 	process_renaming (a_access_inv_as: ACCESS_INV_AS) is
 			-- Process renaming for unqualified call.
 		require
@@ -155,32 +196,57 @@ feature {NONE} -- Implementation
 		local
 			l_renaming: RENAMING
 			l_feature_name: ID_AS
+			l_feature_name_id: INTEGER
+			l_parent_feature_table: FEATURE_TABLE
+			l_parent_feature, l_written_feature, l_new_feature: FEATURE_I
 		do
 			l_feature_name := a_access_inv_as.feature_name
+			l_feature_name_id := l_feature_name.name_id
 			if
 				parent_c /= Void and then
-				not a_access_inv_as.is_argument and then
-				not a_access_inv_as.is_local and then
-				not a_access_inv_as.is_qualified and then
-				not a_access_inv_as.is_object_test_local and then
-				not a_access_inv_as.is_tuple_access
+				call_is_valid_for_processing (l_feature_name_id)
 			then
-				if parent_c.is_renaming (l_feature_name.name_id) then
+				if parent_c.is_renaming (l_feature_name_id) then
 						-- The unqualified routine call to `l_feature_name' is being renamed in the branch so
 						-- therefore we need to perform the textual update.
-					l_renaming := parent_c.renaming.item (l_feature_name.name_id)
+					l_renaming := parent_c.renaming.item (l_feature_name_id)
 					a_access_inv_as.set_class_id (System.current_class.class_id)
+						-- Reset now invalid routine id.
 					a_access_inv_as.wipe_out
-					debug ("Feature Replication")
-						print ("{" + System.current_class.name + "}." + feature_i.feature_name + " is calling " + l_feature_name.name + " when it should be calling " + System.names.item (l_renaming.feature_name_id) + "%N")
-					end
 					l_feature_name.set_name (l_renaming.names_heap.item (l_renaming.feature_name_id))
-
 					needs_explicit_replication := needs_explicit_replication or else parent_c.is_redefining (l_feature_name.name_id)
+				else
+						-- Check if the routine has been renamed or redefined from the callee's class.
+					l_written_feature := feature_i.written_class.feature_table.item_id (l_feature_name_id)
+					if l_written_feature /= Void then
+						l_parent_feature_table := parent_c.parent.feature_table
+						l_parent_feature := l_parent_feature_table.item_id (l_feature_name_id)
+						if (l_parent_feature = Void or else l_written_feature.body_index /= l_parent_feature.body_index) then
+								-- Feature has been changed from its origin so we need to retrieve the new feature in immediate parent.
+							l_new_feature := l_parent_feature_table.feature_of_rout_id_set (l_written_feature.rout_id_set)
+							a_access_inv_as.set_class_id (System.current_class.class_id)
+								-- Reset now invalid routine id.
+							a_access_inv_as.wipe_out
+							l_feature_name.set_name (l_new_feature.feature_name)
+							needs_explicit_replication := True
+						end
+					end
 				end
 			end
 		end
 
+	process_routine_as (l_as: ROUTINE_AS) is
+			-- <Precursor>
+		do
+			routine_as := l_as
+			Precursor (l_as)
+		end
+
+	process_precursor_as (l_as: PRECURSOR_AS) is
+			-- <Precursor>
+		do
+			Precursor (l_as)
+		end
 
 	process_access_id_as (l_as: ACCESS_ID_AS) is
 			-- <Precursor>

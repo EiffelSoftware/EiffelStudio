@@ -66,6 +66,7 @@ feature -- Status setting
 			-- `a_test': Test to be removed from active tests.
 		require
 			usable: is_interface_usable
+			running: is_running
 			a_test_active: active_tests.has (a_test)
 		deferred
 		ensure

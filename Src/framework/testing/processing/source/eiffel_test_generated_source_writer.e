@@ -54,7 +54,10 @@ feature -- Status setting
 			a_request_list_not_void: a_request_list /= Void
 			no_request_void: not a_request_list.has (Void)
 		do
-			test_writer.print_test_case (a_request_list, a_var_list)
+				-- For now we do not print the test if the locals are missing
+			if a_var_list /= Void then
+				test_writer.print_test_case (a_request_list, a_var_list)
+			end
 		end
 
 	finish

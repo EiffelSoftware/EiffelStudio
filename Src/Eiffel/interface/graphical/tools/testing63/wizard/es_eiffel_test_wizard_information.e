@@ -43,7 +43,14 @@ feature {NONE} -- Initialization
 			set_new_manual_test_class
 			create tag_list.make_default
 			create call_stack_elements.make_default
-			create arguments.make_default
+			create class_names.make_default
+			class_names.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+
+				-- Auto Test defaults
+			is_slicing_enabled := True
+			time_out := 15
+			proxy_time_out := 5
+			is_html_output := True
 		end
 
 feature -- Access
@@ -136,7 +143,18 @@ feature -- Access
 	call_stack_elements: !DS_HASH_SET [INTEGER]
 			-- <Precursor>
 
-	arguments: !DS_ARRAYED_LIST [!STRING]
+feature -- Access: AutoTest
+
+	time_out: NATURAL assign set_time_out
+			-- <Precursor>
+
+	proxy_time_out: NATURAL assign set_proxy_time_out
+			-- <Precursor>
+
+	seed: NATURAL assign set_seed
+			-- <Precursor>
+
+	class_names: !DS_HASH_SET [!STRING]
 			-- <Precursor>
 
 feature {ES_EIFFEL_TEST_WIZARD_WINDOW} -- Access
@@ -188,17 +206,15 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			if not is_single_routine or name_cache /= Void then
-				if not is_manual_test_class then
-					Result := new_class_name_cache /= Void and
-				              cluster_cache /= Void and
-				              path_cache /= Void
-				elseif test_class_cache /= Void then
-					if is_new_feature_clause then
-						Result := feature_clause_name_cache /= Void
-					else
-						Result := feature_clause_cache /= Void
-					end
+			if not is_manual_test_class then
+				Result := new_class_name_cache /= Void and
+			              cluster_cache /= Void and
+			              path_cache /= Void
+			elseif test_class_cache /= Void then
+				if is_new_feature_clause then
+					Result := feature_clause_name_cache /= Void
+				else
+					Result := feature_clause_cache /= Void
 				end
 			end
 		end
@@ -206,7 +222,7 @@ feature -- Status report
 	is_manual_configuration_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_interface_usable
+			Result := is_interface_usable and then name_cache /= Void
 		end
 
 	is_extractor_configuration_usable: BOOLEAN
@@ -253,16 +269,18 @@ feature -- Status report
 			correct_result: Result = (type = generated_test_class_code)
 		end
 
-	is_single_routine: BOOLEAN
-			-- <Precursor>
-		do
-			Result := is_new_manual_test_class or is_manual_test_class
-		end
-
 	is_new_class: BOOLEAN
 			-- <Precursor>
 		do
 			Result := not is_manual_test_class
+		end
+
+	is_multiple_new_classes: BOOLEAN
+			-- <Precursor>
+		do
+			if is_new_class then
+				Result := is_generated_test_class
+			end
 		end
 
 	has_prepare: BOOLEAN assign set_has_prepare
@@ -285,6 +303,17 @@ feature -- Status report
 
 	is_system_level_test: BOOLEAN assign set_is_system_level_test
 			-- Is new test a system level test?
+
+	is_benchmarking: BOOLEAN assign set_benchmarking
+			-- <Precursor>
+
+	is_slicing_enabled: BOOLEAN assign set_slicing_enabled
+			-- <Precursor>
+
+	is_ddmin_enabled: BOOLEAN assign set_ddmin_enabled
+			-- <Precursor>
+
+	is_html_output: BOOLEAN assign set_html_output
 
 feature -- Status setting
 
@@ -414,6 +443,62 @@ feature -- Status setting
 			is_system_level_test := a_is_system_level_test
 		ensure
 			is_system_level_test_set: is_system_level_test = a_is_system_level_test
+		end
+
+	set_benchmarking (a_is_benchmarking: like is_benchmarking)
+			-- Set `is_benchmarking' to `a_is_benchmarking'.
+		do
+			is_benchmarking := a_is_benchmarking
+		ensure
+			is_benchmarking_set: is_benchmarking = a_is_benchmarking
+		end
+
+	set_ddmin_enabled (a_is_ddmin_enabled: like is_ddmin_enabled)
+			-- Set `is_ddmin_enabled' to `a_is_ddmin_enabled'.
+		do
+			is_ddmin_enabled := a_is_ddmin_enabled
+		ensure
+			is_ddmin_enabled_set: is_ddmin_enabled = a_is_ddmin_enabled
+		end
+
+	set_slicing_enabled (a_is_slicing_enabled: like is_slicing_enabled)
+			-- Set `is_slicing_enabled' to `a_is_slicing_enabled'.
+		do
+			is_slicing_enabled := a_is_slicing_enabled
+		ensure
+			is_slicing_enabled_set: is_slicing_enabled = a_is_slicing_enabled
+		end
+
+	set_html_output (a_is_html_output: like is_html_output)
+			-- Set `is_html_output' to `a_is_html_output'.
+		do
+			is_html_output := a_is_html_output
+		ensure
+			is_html_output_set: is_html_output = a_is_html_output
+		end
+
+	set_seed (a_seed: like seed)
+			-- Set `seed' to `a_seed'.
+		do
+			seed := a_seed
+		ensure
+			seed_set: seed = a_seed
+		end
+
+	set_time_out (a_time_out: like time_out)
+			-- Set `time_out' to `a_time_out'.
+		do
+			time_out := a_time_out
+		ensure
+			time_out_set: time_out = a_time_out
+		end
+
+	set_proxy_time_out (a_proxy_time_out: like proxy_time_out)
+			-- Set `proxy_time_out' to `a_proxy_time_out'.
+		do
+			proxy_time_out := a_proxy_time_out
+		ensure
+			proxy_time_out_set: proxy_time_out = a_proxy_time_out
 		end
 
 feature {NONE} -- Constants

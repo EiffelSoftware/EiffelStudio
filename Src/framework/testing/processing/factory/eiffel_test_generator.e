@@ -13,6 +13,7 @@ inherit
 	EIFFEL_TEST_FACTORY
 		redefine
 			make,
+			is_valid_typed_argument,
 			stop_process,
 			internal_configuration
 		end
@@ -126,6 +127,14 @@ feature -- Status report
 			Result := status = statistic_status_code
 		end
 
+feature {NONE} -- Query
+
+	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_arg) and then a_arg.is_multiple_new_classes
+		end
+
 feature {NONE} -- Basic operations
 
 	proceed_process
@@ -215,7 +224,8 @@ feature {NONE} -- Implementation
 			create error_handler.make (system)
 			error_handler.set_start_time (system_clock.date_time_now)
 
-			process_arguments (configuration.arguments)
+			process_configuration
+			--process_arguments (configuration.arguments)
 
 			if should_display_help_message then
 				error_handler.report_info_message (help_message)
@@ -237,6 +247,28 @@ feature {NONE} -- Implementation
 					is_finished := True
 				end
 			end
+		end
+
+	process_configuration
+		do
+			is_slicing_enabled := configuration.is_slicing_enabled
+			is_ddmin_enabled := configuration.is_ddmin_enabled
+			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled
+
+			create time_out.make (0, 0, 0, 0, configuration.time_out.as_integer_32, 0)
+
+			if configuration.seed > 0 then
+				random.set_seed (configuration.seed.to_integer_32)
+			else
+				random.set_seed ((create {TIME}.make_now).milli_second)
+			end
+
+			is_text_statistics_format_enabled := True
+			is_html_statistics_format_enabled := configuration.is_html_output
+
+			proxy_time_out := configuration.proxy_time_out.as_integer_32
+
+			create {DS_ARRAYED_LIST [STRING]} class_names.make_from_linear (configuration.class_names)
 		end
 
 	prepare_witness_minimization

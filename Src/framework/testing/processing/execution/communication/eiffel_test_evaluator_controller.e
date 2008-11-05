@@ -89,7 +89,7 @@ feature {EIFFEL_TEST_EXECUTOR_I} -- Status setting
 			running: is_running
 		do
 			terminate_evaluator
-			if not status.is_finished then
+			if not status.is_disconnected then
 					-- The evaluator might be still waiting for a connection or is currently still connected to
 					-- the result receiver. However to make sure all connections are closed we first try connect
 					-- to any still listining port and then wait until it is closed.

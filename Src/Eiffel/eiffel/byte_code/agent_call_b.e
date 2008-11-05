@@ -45,6 +45,25 @@ feature -- Attributes
 	is_item: BOOLEAN
 		-- Is it an item call? If false, it is a call to call
 
+	is_result_optimizable: BOOLEAN
+			-- Can we optimize the result of an agent call?
+		local
+			l_type: like context_type
+		do
+				-- Because in finalized mode, we could have a function whose actual return type is basic
+				-- but called via an agent which returns a reference and our code does not perform
+				-- the conversion, we have to prevent the optimization (see eweasel test#final067).
+			Result := not is_item
+			if not Result then
+				l_type := context_type
+				if l_type.associated_class.eiffel_class_c.class_id = system.predicate_class_id then
+					Result := True
+				else
+					Result := l_type.instantiated_in (context.context_class_type.type).generics.item (3).is_basic
+				end
+			end
+		end
+
 feature -- Access
 
 	enlarged: CALL_ACCESS_B is
@@ -52,23 +71,19 @@ feature -- Access
 			-- new enlarged tree node.
 		local
 			l_assert: ASSERTION_I
-			l_agent_call: AGENT_CALL_BL
 		do
-			if context.workbench_mode then
-				Result := Precursor
-			elseif system.keep_assertions then
-				l_assert := context_type.associated_class.lace_class.assertion_level
-				if l_assert.is_precondition or l_assert.is_invariant then
-					Result := Precursor
-				else
-					create l_agent_call
-					l_agent_call.init (Current)
-					Result := l_agent_call
+			if context.final_mode then
+				if system.keep_assertions then
+					l_assert := context_type.associated_class.lace_class.assertion_level
+					if (not l_assert.is_precondition and not l_assert.is_invariant) and is_result_optimizable then
+						create {AGENT_CALL_BL} Result.init (Current)
+					end
+				elseif is_result_optimizable then
+					create {AGENT_CALL_BL} Result.init (Current)
 				end
-			else
-				create l_agent_call
-				l_agent_call.init (Current)
-				Result := l_agent_call
+			end
+			if Result = Void then
+				Result := Precursor
 			end
 		end
 

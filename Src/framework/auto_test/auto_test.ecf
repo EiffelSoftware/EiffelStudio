@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="auto_test_library" uuid="197D2624-6547-4BAB-904B-131A4FA4EA32" library_target="auto_test">
 	<target name="auto_test">
 		<root all_classes="true"/>
-		<option warning="true">
+		<option warning="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="multithreaded" value="true"/>

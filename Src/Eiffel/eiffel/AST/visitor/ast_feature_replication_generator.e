@@ -17,7 +17,8 @@ inherit
 			process_require_else_as,
 			process_ensure_as,
 			process_ensure_then_as,
-			process_precursor_as
+			process_precursor_as,
+			process_tagged_as
 		end
 
 	SHARED_SERVER
@@ -260,6 +261,12 @@ feature {NONE} -- Implementation
 		do
 			process_renaming (l_as)
 			Precursor (l_as)
+		end
+
+	process_tagged_as (l_as: TAGGED_AS) is
+			-- <Precursor>
+		do
+			safe_process (l_as.expr)
 		end
 
 	process_require_as (l_as: REQUIRE_AS)

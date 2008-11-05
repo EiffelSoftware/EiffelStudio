@@ -106,20 +106,19 @@ feature {NONE} -- Implementation
 		local
 			l_rescued, l_stop: BOOLEAN
 			l_next, l_flag: NATURAL
-			l_last_outcome: ?EQA_TEST_OUTCOME
 		do
 			if not l_rescued then
 				from until
 					not a_socket.is_open_read or a_status.is_finished or l_stop
 				loop
 					l_stop := True
-					l_next := a_status.fetch_next (l_last_outcome)
+					l_next := a_status.next
 					if l_next > 0 then
 						a_socket.put_natural (l_next)
 						l_flag := evaluator_status (a_socket)
 						if l_flag = l_next then
 							if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then
-								l_last_outcome := l_outcome
+								a_status.put_outcome (l_outcome)
 								l_stop := False
 							end
 						end
@@ -129,7 +128,6 @@ feature {NONE} -- Implementation
 			a_socket.close
 		ensure
 			a_socket_closed: a_socket.is_closed
-			a_status_not_listening: not a_status.is_listening
 		rescue
 			l_rescued := True
 			retry

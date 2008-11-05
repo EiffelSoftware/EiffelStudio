@@ -49,6 +49,25 @@ feature {NONE} -- Access
 
 feature {EIFFEL_TEST_EVALUATOR_STATUS} -- Query
 
+	has_next: BOOLEAN
+			-- Are there any tests left to be executed?
+		local
+			l_cursor: like cursor
+		do
+			cursor_mutex.lock
+			if cursor <= test_count then
+				from
+					l_cursor := cursor + 1
+				until
+					Result or l_cursor > test_count
+				loop
+					Result := aborted_tests.has (l_cursor)
+					l_cursor := l_cursor + 1
+				end
+			end
+			cursor_mutex.unlock
+		end
+
 	next_test: like test_count
 			-- Index of next test to be executed, zero if tests have been executed.
 			--

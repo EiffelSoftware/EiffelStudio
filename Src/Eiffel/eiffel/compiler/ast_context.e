@@ -359,6 +359,24 @@ feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 
+	remove_object_test_scopes (s: like scope)
+			-- Remove scopes of any known object test locals registered after scope identified by `s'.
+		do
+			from
+				scopes.go_i_th (s + 1)
+			until
+				scopes.after
+			loop
+				if object_test_locals.has (scopes.item) then
+					scopes.remove
+				else
+					scopes.forth
+				end
+			variant
+				scopes.count - scopes.index + 1
+			end
+		end
+
 	remove_local_scope (id: INTEGER_32)
 			-- Mark that an attached scope of a local identified by `id' is terminated.
 		do

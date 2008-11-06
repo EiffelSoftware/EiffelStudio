@@ -4749,7 +4749,6 @@ feature -- Implementation
 			local_info: LOCAL_INFO
 			local_b: OBJECT_TEST_LOCAL_B
 			expr: EXPR_B
-			not_implemented: NOT_SUPPORTED
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -4773,25 +4772,6 @@ feature -- Implementation
 			if context.is_object_test_local_used (local_name_id) then
 					-- The object-test local is a name of a local of another object test
 				error_handler.insert_error (create {VUOT3}.make (context, l_as.name))
-			end
-			if is_checking_precondition then
-				debug ("to_implement")
-					to_implement ("Support code generation for object test in precondition when assertions are not monitored")
-				end
-				create not_implemented
-				context.init_error (not_implemented)
-				not_implemented.set_location (l_as.lcurly_symbol)
-				not_implemented.set_message ("Object test in precondition is not supported.")
-				error_handler.insert_error (not_implemented)
-			elseif is_checking_check then
-				debug ("to_implement")
-					to_implement ("Support code generation for object test in check instruction when assertions are not monitored")
-				end
-				create not_implemented
-				context.init_error (not_implemented)
-				not_implemented.set_location (l_as.lcurly_symbol)
-				not_implemented.set_message ("Object test in check instruction is not supported.")
-				error_handler.insert_error (not_implemented)
 			end
 			check_type (l_as.type)
 			local_type := last_type
@@ -5364,10 +5344,13 @@ feature -- Implementation
 		local
 			l_check: CHECK_B
 			l_list: BYTE_LIST [BYTE_NODE]
+			s: INTEGER
 		do
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
+				s := context.scope
 				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
+				context.remove_object_test_scopes (s)
 				set_is_checking_check (False)
 
 				if is_byte_node_enabled then
@@ -6817,6 +6800,7 @@ feature -- Implementation
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
+			s: INTEGER
 		do
 			a := l_as.assertions
 			if a /= Void then
@@ -6824,7 +6808,9 @@ feature -- Implementation
 					create b.make (a.count)
 					i := context.next_object_test_local_position
 				end
+				s := context.scope
 				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+				context.remove_object_test_scopes (s)
 				if b /= Void then
 					if b.is_empty then
 						b := Void

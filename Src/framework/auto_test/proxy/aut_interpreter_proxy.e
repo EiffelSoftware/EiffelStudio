@@ -77,7 +77,6 @@ feature {NONE} -- Initialization
 			a_proxy_log_filename_not_void: a_proxy_log_filename /= Void
 			a_error_handler_not_void: a_error_handler /= Void
 		do
-			create mutex.make
 			create variable_table.make (a_system)
 			create raw_response_analyzer
 			make_response_parser (a_system)
@@ -127,6 +126,9 @@ feature -- Status
 			-- Is the client currently running?
 		do
 			Result := process /= Void and then process.is_running
+		ensure
+			result_implies_attached: Result implies process /= Void
+			result_implies_running: Result implies process.is_running
 		end
 
 	is_launched: BOOLEAN is
@@ -134,7 +136,10 @@ feature -- Status
 			-- Note that `is_launched' will be True also when the child has
 			-- terminated in the meanwhile.
 		do
-			Result := process /= Void and then process.launched
+			Result := process /= Void and then process.is_launched
+		ensure
+			result_implies_attached: Result implies process /= Void
+			result_implies_launched: Result implies process.is_launched
 		end
 
 	is_in_replay_mode: BOOLEAN
@@ -216,8 +221,7 @@ feature -- Execution
 		require
 			not_running: not is_running
 		local
-			l_socket: like socket
-			l_locked: BOOLEAN
+			l_listener: AUT_SOCKET_LISTENER
 		do
 			log_time_stamp ("start")
 			create {AUT_START_REQUEST} last_request.make (system)
@@ -228,53 +232,58 @@ feature -- Execution
 				socket.cleanup
 			end
 
-				-- Initialize a new socket for IPC.
-				-- Fixeme: port number is increased every time when we try to launch the interpreter
-				-- It should be possible to reuse port number, but when I tried it, I always got
-				-- socket connection problems. Jason 2008.10.21
-			fixme ("Try to reuse port number.")
-			port := next_port_number
-			create l_socket.make_server_by_port (port)
-			l_socket.set_blocking
-			l_socket.listen (1)
+--				-- Initialize a new socket for IPC.
+--				-- Fixeme: port number is increased every time when we try to launch the interpreter
+--				-- It should be possible to reuse port number, but when I tried it, I always got
+--				-- socket connection problems. Jason 2008.10.21
+--			fixme ("Try to reuse port number.")
+--			port := next_port_number
+--			create l_socket.make_server_by_port (port)
+--			l_socket.set_blocking
+--			l_socket.listen (1)
 
-				-- Launch interpreter process.			
-			mutex.lock
-			l_locked := True
-			launch_process
+			create l_listener.make
+			l_listener.open_new_socket
+			if l_listener.is_listening then
+				port := l_listener.current_port
 
-			if is_running then
+					-- Launch interpreter process.			
+				launch_process
 
-					-- Get socket to communicate with interpreter.
-				l_socket.accept
-				fixme ("If interpreter process dies now, current thread will be blocked forever.")
-				(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
-				socket := l_socket.accepted
-					-- Start time out check thread if not started.				
-				safe_launch_time_out_checker_thread
+				if is_running then
 
-				log_stream.string.wipe_out
-				last_request.process (request_printer)
-				flush_process
-				log_line (proxy_has_started_and_connected_message)
-				log_line (itp_start_time_message + error_handler.duration_to_now.second_count.out)
-				parse_start_response
-				last_request.set_response (last_response)
-				if last_response.is_bad then
-					log_bad_response
+						-- Get socket to communicate with interpreter.
+--					l_socket.accept
+--					fixme ("If interpreter process dies now, current thread will be blocked forever.")
+--					(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
+--					socket := l_socket.accepted
+
+						-- Arno: no idea how long this time out is (probably platform dependent)...
+					if {l_socket: like socket} l_listener.wait_for_connection (1000000000) then
+						socket := l_socket
+						process.set_timeout (timeout)
+						log_stream.string.wipe_out
+						last_request.process (request_printer)
+						flush_process
+						log_line (proxy_has_started_and_connected_message)
+						log_line (itp_start_time_message + error_handler.duration_to_now.second_count.out)
+						parse_start_response
+						last_request.set_response (last_response)
+						if last_response.is_bad then
+							log_bad_response
+						end
+						is_ready := is_running
+					else
+						log_line ("-- Error: Interpreter was not able to connect.")
+					end
+				else
+					log_line ("-- Error: Could not start and connect to interpreter.")
 				end
-				is_ready := is_running
 			else
-				log_line ("-- Error: Could not start and connect to interpreter.")
+				log_line ("-- Error: Could not find available port for listening.")
 			end
-			mutex.unlock
-			l_locked := False
 		ensure
 			last_request_not_void: last_request /= Void
-		rescue
-			if l_locked then
-				mutex.unlock
-			end
 		end
 
 	stop is
@@ -287,7 +296,6 @@ feature -- Execution
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				mutex.lock
 				if process.is_running then
 
 					create {AUT_STOP_REQUEST} last_request.make (system)
@@ -303,20 +311,17 @@ feature -- Execution
 
 							-- Set flag to indicate that the interpreter should be terminated.
 							-- When `time_out_checker_thread' sees this flag, it will terminate the interpreter.
-						check is_time_out_checker_thread_initialized end
-						terminate_process
+						process.terminate
 						log_line ("-- Warning: proxy forced termination of interpreter.")
 					else
 						log_line ("-- Proxy has terminated interpreter.")
 					end
 				end
-				mutex.unlock
 				cleanup_socket
 			end
 		ensure
 			last_request_not_void: last_request /= Void
 		rescue
-			mutex.unlock
 			l_retried := True
 			cleanup_socket
 			retry
@@ -588,40 +593,13 @@ feature -- Response parsing
 			last_response := raw_response_analyzer.response
 		end
 
-feature{AUT_TIME_OUT_CHECKER_THREAD} -- Process scheduling
+feature {NONE} -- Process scheduling
 
-	process: PROCESS
-			-- Client process
+	process: AUT_PROCESS_CONTROLLER
+			-- Process controller
 
 	request_count: NATURAL_64
 			-- Number of requests that have been sent to interpreter so far
-
-	terminate_process is
-			-- Terminate interpreter process.
-		require
-			process_attached: process /= Void
-			socket_attached: socket /= Void
-		local
-			l_process: PROCESS
-		do
-			l_process := process
-			if l_process.is_running then
-				if not l_process.force_terminated then
-					l_process.terminate_tree
-				end
-					-- Fixme: We assume that the termination will terminate the process,
-					-- so we use a blocking wait here. Although it is slightly possible that
-					-- the process cannot be terminated. Jason 2008.10.10
-				l_process.wait_for_exit
-			else
-				if l_process.launched and then not l_process.has_exited then
-					l_process.wait_for_exit
-				end
-			end
-			is_ready := False
-		ensure
-			process_attached: process /= Void and then process.has_exited
-		end
 
 feature{NONE} -- Process scheduling
 
@@ -630,24 +608,10 @@ feature{NONE} -- Process scheduling
 			-- This is a walkaround for the problem that the process libarry
 			-- cannot launch interpreter just with input redirected.
 
-	mutex: MUTEX
-			-- Mutex used to make sure only one thread can try to terminate `process'.
-
-	time_out_checker_thread: AUT_TIME_OUT_CHECKER_THREAD
-			-- Interpreter time out checker.
-
 	is_waiting_for_type: BOOLEAN
 			-- Are we waiting for repsone for a type request
 			-- This is a walkaround for the problem that the process libarry
 			-- cannot launch interpreter just with input redirected.
-
-	is_time_out_checker_thread_initialized: BOOLEAN is
-			-- Is `time_out_checker_thread' initialized?
-		do
-			Result := time_out_checker_thread /= Void
-		ensure
-			good_result: Result = (time_out_checker_thread /= Void)
-		end
 
 	launch_process is
 			-- Launch `process'.
@@ -662,22 +626,10 @@ feature{NONE} -- Process scheduling
 				-- We need `injected_feature_body_id'-1 because the underlying C array is 0-based.
 			l_body_id := injected_feature_body_id - 1
 			create arguments.make_from_array (<<"localhost", port.out, l_body_id.out, interpreter_log_filename, "-eif_root", interpreter_root_class_name + "." + interpreter_root_feature_name>>)
-			process := process_launcher (executable_file_name, arguments, ".")
-			process.enable_launch_in_new_process_group
 
-				-- Fixme: We should only redirect input and left output and error not redirected.
-				-- But maybe due to a bug in process library, if we do this, the launched process
-				-- will crash when it tries to use its standard output or error. Jason 2008.10.21
-			fixme ("Should only redirect input.")
-			process.redirect_input_to_stream
-			process.redirect_error_to_same_as_output
-			process.redirect_output_to_agent (agent stdout_reader.put_string)
-			if operating_system.is_windows then
-				process.set_hidden (True)
-				process.set_separate_console (False)
-			end
-			process.launch
-			-- TODO: both process.launch and process.is_running must be true, otherwise report error.
+			create process.make (executable_file_name, arguments, ".")
+			process.set_timeout (0)
+			process.launch (agent stdout_reader.put_string)
 		end
 
 	flush_process is
@@ -691,6 +643,7 @@ feature{NONE} -- Process scheduling
 				if process.input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 					log (log_stream.string)
 					request_count := request_count + 1
+					process.reset_timer
 					if socket.is_open_write then
 						socket.independent_store (socket_data_printer.last_request)
 					end
@@ -739,17 +692,6 @@ feature{NONE} -- Process scheduling
 			end
 		end
 
-	safe_launch_time_out_checker_thread is
-			-- Launch `time_out_checker_thread' if it is not launched.
-		do
-			if time_out_checker_thread = Void or else time_out_checker_thread.terminated then
-				create time_out_checker_thread.make (Current, timeout, mutex)
-				time_out_checker_thread.launch
-			end
-		ensure
-			time_out_checker_thread_launched: is_time_out_checker_thread_initialized
-		end
-
 feature -- Socket IPC
 
 	port: INTEGER
@@ -780,18 +722,7 @@ feature -- Socket IPC
 	cleanup is
 			-- Clean up Current proxy.
 		do
-			if is_time_out_checker_thread_initialized then
-				time_out_checker_thread.set_should_exit (True)
-				from until
-					time_out_checker_thread.terminated
-				loop
-					sleep (1000000)
-				end
-				cleanup_socket
-			end
-		ensure
-			time_out_checker_thread_terminated:
-			is_time_out_checker_thread_initialized implies time_out_checker_thread.terminated
+			cleanup_socket
 		end
 
 	cleanup_socket is
@@ -950,7 +881,6 @@ feature {NONE} -- Implementation
 			-- Default value in second for `timeout'
 
 invariant
-	process_not_void: is_running implies process /= Void
 	is_running_implies_reader: is_running implies (stdout_reader /= Void)
 	request_printer_not_void: request_printer /= Void
 	executable_file_name_not_void: executable_file_name /= Void
@@ -962,7 +892,6 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	variable_table_attached: variable_table /= Void
 	socket_data_printer_attached: socket_data_printer /= Void
-	mutex_attached: mutex /= Void
 	response_printer_attached: response_printer /= Void
 	raw_response_analyzer_attached: raw_response_analyzer /= Void
 

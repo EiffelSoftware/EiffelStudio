@@ -88,6 +88,8 @@ feature {NONE} -- Implementation
 		local
 			done: BOOLEAN
 		do
+			io.put_string ("accepted client, address = " + socket.peer_address.host_address.host_address)
+			io.put_new_line
 			from
 				done := False
 			until
@@ -95,6 +97,8 @@ feature {NONE} -- Implementation
 			loop
 				done := receive_message_and_send_replay (socket)
 			end
+			io.put_string ("finished client, address = " + socket.peer_address.host_address.host_address)
+			io.put_new_line
 		end
 
 	receive_message_and_send_replay (client_socket: NETWORK_STREAM_SOCKET): BOOLEAN is
@@ -127,7 +131,6 @@ feature {NONE} -- Implementation
 			socket_attached: client_socket /= Void
 			socket_valid: client_socket.is_open_write
 			message_attached: message /= Void
-			message_not_empty: not message.is_empty
 		do
 			client_socket.put_string (message + "%N")
 		end

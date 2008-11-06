@@ -13,8 +13,8 @@ MV = $mv
 RM = $del
 MKDIR_TARGET = $mkdir_target
 OBJECTS = network.$obj network_r.$obj hostname.$obj syncpoll.$obj storable.$obj ipv6.$obj ipv6win.$obj
-MT_OBJECTS = MTnetwork.$obj MTnetwork_r.$obj MThostname.$obj MTsyncpoll.$obj MTstorable.$obj
-IL_OBJECTS = ILnetwork.$obj ILnetwork_r.$obj ILhostname.$obj ILsyncpoll.$obj ILstorable.$obj
+MT_OBJECTS = MTnetwork.$obj MTnetwork_r.$obj MThostname.$obj MTsyncpoll.$obj MTstorable.$obj MTipv6.$obj MTipv6win.$obj
+IL_OBJECTS = ILnetwork.$obj ILnetwork_r.$obj ILhostname.$obj ILsyncpoll.$obj ILstorable.$obj ILipv6.$obj ILipv6win.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
@@ -71,6 +71,12 @@ MTsyncpoll.$obj: syncpoll.c
 MTstorable.$obj: storable.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
+MTipv6.$obj: ipv6.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
+MTipv6win.$obj: ipv6win.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
 ILnetwork.$obj: network.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
@@ -84,4 +90,10 @@ ILsyncpoll.$obj: syncpoll.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 ILstorable.$obj: storable.c
+	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
+ILipv6.$obj: ipv6.c
+	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
+ILipv6win.$obj: ipv6win.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?

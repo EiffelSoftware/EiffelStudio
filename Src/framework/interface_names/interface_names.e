@@ -1171,7 +1171,7 @@ feature -- Label texts
 	l_Discard_finalize_precompile_dialog: STRING_32 is do Result := locale.translation("always finalize.")	end
 	l_Discard_freeze_dialog: STRING_32 is			do Result := locale.translation("always compile C/++ code.")	end
 	l_Discard_save_before_compile_dialog: STRING_32 is	do Result := locale.translation("always save files before compiling.")	end
-	l_Discard_starting_dialog: STRING_32 is			do Result := locale.translation("hide this dialog at startup.")	end
+	l_Discard_starting_dialog: STRING_32 is			do Result := locale.translation("Hide this dialog at startup")	end
 	l_Discard_replace_all_warning_dialog: STRING_32 is do Result := locale.translation("always replace all.")	end
 	l_Discard_terminate_freezing: STRING_32 is		do Result := locale.translation("always terminate freezing when needed.")	end
 	l_Discard_terminate_external_command: STRING_32 is do Result := locale.translation("always terminate running external command.")	end

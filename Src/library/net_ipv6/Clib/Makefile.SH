@@ -48,7 +48,7 @@ all: $(NET_LIBS)
 	$(MV) $? ../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
-SMODE = local.c network.c network_r.c storable.c
+SMODE = local.c network.c network_r.c storable.c ipv6.c ipv6ux.c
 
 LSRCS = $(SMODE)
 
@@ -58,7 +58,9 @@ MT_OBJECTS = \
 	MTnetwork_r.o \
 	MThostname.o \
 	MTsyncpoll.o \
-	MTstorable.o
+	MTstorable.o \
+	MTipv6.o \
+	MTipv6ux.o
 
 OBJECTS = \
 	local.o \
@@ -87,6 +89,12 @@ MThostname.o: hostname.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTstorable.o: storable.c
+	$(CC) -c $(MTCFLAGS) $? -o $@
+
+MTipv6.o: ipv6.c
+	$(CC) -c $(MTCFLAGS) $? -o $@
+
+MTipv6ux.o: ipv6ux.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 libmtnet.a: $(MT_OBJECTS)

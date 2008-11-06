@@ -57,6 +57,14 @@ feature -- Query
 			Result := catalog_file /= Void
 		end
 
+	has_folder_name (a_test_folder_name: STRING): BOOLEAN
+			-- If `a_test_folder_name' can be found in catalog file?
+		require
+			is_ready: is_ready
+		do
+			Result := catalog_file.all_test_instructions.has (a_test_folder_name)
+		end
+
 feature {NONE} -- Implementation
 
 	catalog_file: EW_EQA_TEST_CATALOG_FILE

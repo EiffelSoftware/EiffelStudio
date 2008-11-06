@@ -12,6 +12,8 @@ inherit
 
 	INET_PROPERTIES
 
+	SOCKET_RESOURCES
+
 feature
 
 	create_any_local: INET_ADDRESS is
@@ -64,7 +66,14 @@ feature
 		require
 			valid_sockaddr: sockaddr /= default_pointer
 		local
+			family:	INTEGER
 		do
+			family := get_sock_family (sockaddr)
+			if family = af_inet then
+				create {INET4_ADDRESS} Result.make_from_host_and_pointer (Void, sockaddr)
+			elseif family = af_inet6 then
+				create {INET6_ADDRESS} Result.make_from_host_and_pointer (Void, sockaddr)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -90,69 +99,69 @@ feature {NONE} -- Implementation
     		iface_name: STRING
     		pos: INTEGER
     		failed: BOOLEAN
-		do
-			host := a_host
-			if host = Void or else host.is_empty then
-	    		create Result.make (1, 1)
-		    	Result.put (impl.loopback_address, 1)
-			else
-				failed := False
-				if host.item (1) = '[' then
-	    			if host.count > 2 and then host.item(host.count) = ']' then
-						host := host.substring (2, host.count)
-						ipv6_expected := True;
+	do
+		host := a_host
+		if host = Void or else host.is_empty then
+			create Result.make (1, 1)
+			Result.put (impl.loopback_address, 1)
+		else
+			failed := False
+			if host.item (1) = '[' then
+				if host.count > 2 and then host.item(host.count) = ']' then
+					host := host.substring (2, host.count)
+					ipv6_expected := True;
 	    			else
-						-- This was supposed to be a IPv6 address, but it's not!
-						-- TODO report error
-						failed := True
-					end
+					-- This was supposed to be a IPv6 address, but it's not!
+					-- TODO report error
+					failed := True
+				end
 	    		end
 	    		if not failed then
-					if host.item(1).is_hexa_digit or else host.item(1) = ':' then
+				if host.item(1).is_hexa_digit or else host.item(1) = ':' then
 	    				addr_array := text_to_numeric_format_v4 (host)
 	    				if addr_array = Void then
-							pos :=  host.index_of ('%%', 1)
-							if  pos /= 0 then
+						pos :=  host.index_of ('%%', 1)
+						if  pos /= 0 then
 		    					numeric_zone := check_numeric_zone (host)
-		    					if numeric_zone = -1 then
-									iface_name := host.substring (pos+1, host.count)
-		    					end
+							if numeric_zone = -1 then
+								iface_name := host.substring (pos+1, host.count)
 							end
-							addr_array := text_to_numeric_format_v6 (host);
+						end
+						addr_array := text_to_numeric_format_v6 (host);
 	    				elseif  ipv6_expected then
-							-- Means an IPv4 litteral between brackets!
-							-- TODO throw new UnknownHostException("["+host+"]");
-							-- TODO report error
-							failed := True
+						-- Means an IPv4 litteral between brackets!
+						-- TODO throw new UnknownHostException("["+host+"]");
+						-- TODO report error
+						failed := True
 	    				end
 	    				if not failed then
 	    					if addr_array /= Void then
-		    					create Result.make (1, 1)
-								if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
-									create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
+							create Result.make (1, 1)
+							if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
+								create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
+							else
+								if iface_name /= Void then
+									create {INET6_ADDRESS} addr.make_from_host_and_address_and_interface_name (Void, addr_array, iface_name)
 								else
-		    						if iface_name /= Void then
-										create {INET6_ADDRESS} addr.make_from_host_and_address_and_interface_name (Void, addr_array, iface_name)
-		    						else
-										create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
-		    						end
+									create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
 								end
+							end
 		    					Result.put (addr, 1)
 		    				end
-						end
-	    			elseif ipv6_expected then
-						-- TODO We were expecting an IPv6 Litteral, but got something else
-						-- throw new UnknownHostException("["+host+"]");
-						-- TODO report error
-						failed := True
-						Result := Void
+					end
+				elseif ipv6_expected then
+					-- TODO We were expecting an IPv6 Litteral, but got something else
+					-- throw new UnknownHostException("["+host+"]");
+					-- TODO report error
+					failed := True
+					Result := Void
 	    			end
 	    			if Result = Void and then not failed then
-						Result := get_all_by_name_0 (host)
+					Result := get_all_by_name_0 (host)
 	    			end
 	    		end
-    		end
 		end
+	end
 
     check_numeric_zone (s: STRING): INTEGER is
     		--
@@ -539,6 +548,14 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"en_getaddrinfo"
+		end
+
+	get_sock_family (address: POINTER): INTEGER is
+			-- Get the family from the address structure.
+		external
+			"C"
+		alias
+			"en_sockaddr_get_family"
 		end
 
 end

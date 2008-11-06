@@ -58,7 +58,7 @@ feature
 
 	host_name: STRING is
 		do
-			Result := get_host_name(true);
+			Result := get_host_name
 		end
 
 	host_address: STRING is
@@ -79,8 +79,12 @@ feature {NONE} -- Implementation
 
     the_host_name: STRING
 
-    get_host_name (test: BOOLEAN): STRING is
+    get_host_name: STRING is
 		do
+			if the_host_name = Void then
+				-- TODO For now we provide just the textual representation of the IP address
+				the_host_name := host_address.twin
+			end
 		end
 
 feature {NONE} -- Externals

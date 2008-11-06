@@ -59,7 +59,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 		do
 			create addr.make (1, INADDRSZ)
 			if a_pointer /= default_pointer then
-				ptr := c_addrinfo_get_ipv6_address (a_pointer)
+				ptr := c_sockaddr_get_ipv6_address (a_pointer)
 				from
 					i := 1
 				until
@@ -68,7 +68,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 					addr.put (c_get_addr_element (ptr, i-1), i)
 					i := i + 1
 				end
-				scope := c_addrinfo_get_ipv6_address_scope (a_pointer)
+				scope := c_sockaddr_get_ipv6_address_scope (a_pointer)
 			end
 			make_from_host_and_address_and_scope (a_hostname, addr, scope)
 		end
@@ -184,8 +184,12 @@ feature {NONE} -- Implementation
 	the_scope_ifname: STRING
 
 	is_scope_ifname_set: BOOLEAN
+		-- This will be set to true if the object is constructed with a scoped
+		-- interface instead of a numeric scope id.
 
 	is_scope_id_set: BOOLEAN
+		-- This will be set to true when the scope_id field contains a valid
+		-- integer scope_id.
 
 	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING is
 		require
@@ -218,18 +222,18 @@ feature {NONE} -- Externals
 			"en_socket_address_fill_ipv6"
 		end
 
-	c_addrinfo_get_ipv6_address (a_pointer: POINTER): POINTER is
+	c_sockaddr_get_ipv6_address (a_pointer: POINTER): POINTER is
 		external
 			"C"
 		alias
-			"en_addrinfo_get_ipv6_address"
+			"en_sockaddr_get_ipv6_address"
 		end
 
-	c_addrinfo_get_ipv6_address_scope (a_pointer: POINTER): INTEGER is
+	c_sockaddr_get_ipv6_address_scope (a_pointer: POINTER): INTEGER is
 		external
 			"C"
 		alias
-			"en_addrinfo_get_ipv6_address_scope"
+			"en_sockaddr_get_ipv6_address_scope"
 		end
 
 	c_get_addr_element (ptr: POINTER; index: INTEGER): NATURAL_8 is

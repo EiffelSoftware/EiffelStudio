@@ -54,34 +54,6 @@ void en_free_addrinfo(struct addrinfo *s) {
     freeaddrinfo(s);
 }
 
-int en_addrinfo_get_ipv4_address (struct sockaddr *s) {
-    if (s->sa_family == AF_INET) {
-    	struct sockaddr_in *him4 = (struct sockaddr_in *)s;
-    	return ntohl(him4->sin_addr.s_addr);
-    }
-    return 0;
-}
-
-void* en_addrinfo_get_ipv6_address (struct sockaddr *s) {
-    if (s->sa_family == AF_INET6) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s;
-	return &(him6->sin6_addr);
-    }
-    return 0;
-}
-
-int en_addrinfo_get_port (SOCKETADDRESS *s) {
-    return GET_PORT(s);
-}
-
-unsigned long en_addrinfo_get_ipv6_address_scope (struct addrinfo *s) {
-    if (s->ai_family == AF_INET6) {
-	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s->ai_addr;
-	return him6->sin6_scope_id;
-    }
-    return 0;
-}
-
 void* en_addrinfo_get_address_pointer(struct addrinfo *s) {
     if (s->ai_family == AF_INET) {
     	struct sockaddr_in *him4 = (struct sockaddr_in *) s->ai_addr;
@@ -108,6 +80,44 @@ void* en_getaddrinfo(char *hostname) {
 	res = 0;
     } 
     return res;
+}
+
+int en_sockaddr_get_family(SOCKETADDRESS *s) {
+    return s->him.sa_family;
+}
+
+void en_sockaddr_set_family(SOCKETADDRESS *s, int family) {
+    s->him.sa_family = family;
+}
+
+int en_sockaddr_get_ipv4_address (SOCKETADDRESS *s) {
+    if (s->him.sa_family == AF_INET) {
+    	return ntohl(s->him4.sin_addr.s_addr);
+    }
+    return 0;
+}
+
+void* en_sockaddr_get_ipv6_address (SOCKETADDRESS *s) {
+    if (s->him.sa_family == AF_INET6) {
+	return &(s->him6.sin6_addr);
+    }
+    return 0;
+}
+
+int en_sockaddr_get_port (SOCKETADDRESS *s) {
+    return ntohs(GET_PORT(s));
+}
+
+void en_sockaddr_set_port (SOCKETADDRESS *s, int port) {
+    SET_PORT(s, htons(port));
+}
+
+unsigned long en_sockaddr_get_ipv6_address_scope (struct addrinfo *s) {
+    if (s->ai_family == AF_INET6) {
+	struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s->ai_addr;
+	return him6->sin6_scope_id;
+    }
+    return 0;
 }
 
 void en_socket_address_fill_ipv4(EIF_POINTER sockaddr, EIF_INTEGER address, EIF_INTEGER port) {

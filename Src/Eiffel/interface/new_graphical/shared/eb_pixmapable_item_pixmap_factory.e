@@ -306,6 +306,7 @@ feature -- Query (Pixel buffer)
 			l_pixcode: NATURAL_8
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 			l_overrides_valid: BOOLEAN
+			l_pixmap: EV_PIXMAP
 		do
 			l_conf_class := a_class.config_class
 
@@ -361,7 +362,8 @@ feature -- Query (Pixel buffer)
 			end
 
 			check correct_pixcode: class_icon_map.has (l_pixcode) end
-			Result := class_icon_map.item (l_pixcode)
+			l_pixmap := class_icon_map.item (l_pixcode)
+			Result := l_pixmap
 		ensure
 			result_not_void: Result /= Void
 		end

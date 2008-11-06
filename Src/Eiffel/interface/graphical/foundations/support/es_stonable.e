@@ -15,15 +15,15 @@ inherit
 
 feature -- Access
 
-	stone: STONE assign set_stone
+	stone: ?STONE assign set_stone
 			-- <Precursor>
 
 feature -- Element change
 
-	set_stone (a_stone: ?like stone)
+	set_stone (a_stone: like stone)
 			-- <Precursor>
 		local
-			l_old_stone: ?like stone
+			l_old_stone: like stone
 		do
 			l_old_stone := stone
 			if l_old_stone /= a_stone then

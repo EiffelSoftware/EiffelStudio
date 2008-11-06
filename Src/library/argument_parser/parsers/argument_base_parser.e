@@ -1106,7 +1106,6 @@ feature {NONE} -- Validation
 			a_group_attached: a_group /= Void
 		local
 			l_switch_appurtenances: ?like switch_dependencies
-			l_appurtenances: !ARRAY [!ARGUMENT_SWITCH]
 			l_switch: !ARGUMENT_SWITCH
 			l_switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			l_group_switches: !ARRAY [!ARGUMENT_SWITCH]
@@ -1121,8 +1120,11 @@ feature {NONE} -- Validation
 				l_icount := l_group_switches.count
 				from i := 1 until i > l_icount loop
 					l_switch := l_group_switches [i]
-					if l_switch_appurtenances.has (l_switch) then
-						l_appurtenances := l_switch_appurtenances [l_switch]
+					l_switch_appurtenances.search (l_switch)
+					if
+						l_switch_appurtenances.found and then
+						{l_appurtenances: ARRAY [!ARGUMENT_SWITCH]} l_switch_appurtenances.found_item
+					then
 						l_jcount := l_appurtenances.count
 						from j := 1 until j > l_jcount loop
 							l_switch := l_appurtenances [j]

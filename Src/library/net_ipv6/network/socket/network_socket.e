@@ -132,7 +132,7 @@ feature -- Status report
 	is_valid_peer_address (addr: like address): BOOLEAN is
 			-- Is `addr' a valid peer address?
 		do
-			Result := (addr.family = family)
+			Result := (addr.family = family) or else (family = af_inet6 and then addr.family = af_inet)
 		end
 
 	ready_for_reading: BOOLEAN is

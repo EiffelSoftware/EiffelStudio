@@ -43,7 +43,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			the_host_name := a_hostname
 			family := ipv4
 			if a_pointer /= default_pointer then
-				the_address := c_addrinfo_get_ipv4_address (a_pointer)
+				the_address := c_sockaddr_get_ipv4_address (a_pointer)
 			end
 		end
 
@@ -163,11 +163,11 @@ feature {NONE} -- Externals
 			"en_socket_address_fill_ipv4"
 		end
 
-	c_addrinfo_get_ipv4_address (a_pointer: POINTER): INTEGER is
+	c_sockaddr_get_ipv4_address (a_pointer: POINTER): INTEGER is
 		external
 			"C"
 		alias
-			"en_addrinfo_get_ipv4_address"
+			"en_sockaddr_get_ipv4_address"
 		end
 
 end

@@ -18,7 +18,7 @@ inherit
 		export {NONE}
 			All
 		undefine
-			copy, is_equal
+			copy, is_equal, get_sock_family
 		end
 
 
@@ -91,7 +91,7 @@ feature -- Status report
 	host_address: INET_ADDRESS is
 			-- Host address of address
 		do
-			Result := create_from_sockaddr(get_sock_addr_in (socket_address.item))
+			Result := create_from_sockaddr(socket_address.item)
 		end
 
 feature --
@@ -146,7 +146,7 @@ feature {NONE} -- External
 		external
 			"C"
 		alias
-			"set_inet_sock_family"
+			"en_sockaddr_set_family"
 		end
 
 	get_sock_family (address: POINTER): INTEGER is
@@ -154,25 +154,23 @@ feature {NONE} -- External
 		external
 			"C"
 		alias
-			"get_inet_sock_family"
+			"en_sockaddr_get_family"
 		end
 
 	set_sock_port (address: POINTER; a_port: INTEGER) is
 			-- Set the port in the address structure.
 		external
 			"C"
+		alias
+			"en_sockaddr_set_port"
 		end
 
 	get_sock_port (address: POINTER): INTEGER is
 			-- Get the port from the address structure.
 		external
 			"C"
-		end
-
-	get_sock_addr_in (address: POINTER): POINTER is
-			-- Get the host address from the address structure.
-		external
-			"C"
+		alias
+			"en_sockaddr_get_port"
 		end
 
 	get_servent_port (name, proto: POINTER): INTEGER is

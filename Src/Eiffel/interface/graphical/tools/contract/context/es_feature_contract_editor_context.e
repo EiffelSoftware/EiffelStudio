@@ -92,7 +92,7 @@ feature -- Contracts
 				end
 			end
 
-			Result ?= [l_result, ({!ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier]
+			Result := [l_result, (({!ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier).as_attached]
 		end
 
 feature {NONE} -- Contracts

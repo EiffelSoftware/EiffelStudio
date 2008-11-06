@@ -39,6 +39,11 @@ feature -- Access
 	test_suite: !EIFFEL_TEST_SUITE_S
 			-- <Precursor>
 
+feature {NONE} -- Access
+
+	internal_progress: like progress
+			-- Internal storage of `progress'
+
 feature -- Status report
 
 	is_idle: BOOLEAN
@@ -46,6 +51,16 @@ feature -- Status report
 
 	is_stop_requested: BOOLEAN
 			-- <Precursor>
+
+	progress: REAL
+			-- <Precursor>
+		do
+			if is_finished then
+				Result := {REAL} 1.0
+			else
+				Result := internal_progress
+			end
+		end
 
 feature -- Status setting
 
@@ -79,6 +94,7 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		do
 			start_process_internal (a_arg)
+			internal_progress := {REAL} 0.0
 			is_idle := True
 		end
 
@@ -122,5 +138,8 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 				test_changed_event.publish ([Current, a_item])
 			end
 		end
+
+invariant
+	internal_progress_valid: internal_progress >= {REAL} 0.0 and internal_progress <= {REAL} 1.0
 
 end

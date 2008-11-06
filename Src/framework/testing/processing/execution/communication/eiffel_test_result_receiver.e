@@ -60,13 +60,14 @@ feature -- Status setting
 				create l_socket.make_server_by_port (last_port)
 				l_tries := l_tries + 1
 			end
-			if l_tries <= 20 then
-						-- TODO: error handling
+			if l_socket.is_open_read then
 				a_status.set_listening
 				l_socket.set_blocking
 				l_socket.listen (1)
 				create l_thread.make (agent listen (l_socket.as_attached, a_status))
 				l_thread.launch
+			else
+				-- TODO: error handling
 			end
 		ensure
 			last_port_valid: last_port >= min_port and last_port <= max_port

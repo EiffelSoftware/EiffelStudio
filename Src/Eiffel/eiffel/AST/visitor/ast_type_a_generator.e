@@ -129,16 +129,16 @@ feature {NONE} -- Visitor implementation
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
+		local
+			t: FORMAL_A
 		do
-			create {FORMAL_A} last_type.make (l_as.is_reference, l_as.is_expanded, l_as.position)
+			create t.make (l_as.is_reference, l_as.is_expanded, l_as.position)
+			last_type := t
 			if l_as.has_attached_mark then
-				last_type.set_attached_mark
-				check last_type.is_attached end
+				t.set_attached_mark
+				check t.is_attached end
 			elseif l_as.has_detachable_mark then
-				last_type.set_detachable_mark
-			elseif current_class.lace_class.is_attached_by_default then
-					-- It's not clear yet whether ECMA-367 will mark such types as attached or not.
-				-- last_type.set_is_attached
+				t.set_detachable_mark
 			end
 		end
 

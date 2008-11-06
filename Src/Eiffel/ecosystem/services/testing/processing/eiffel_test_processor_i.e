@@ -106,6 +106,18 @@ feature -- Status report
 		deferred
 		end
 
+	progress: REAL
+			-- Progress of current run between 0 and 1
+		require
+			usable: is_interface_usable
+			running: is_running
+		deferred
+		ensure
+			not_negative: Result >= {REAL} 0.0
+			smaller_equal_one: Result <= {REAL} 1.0
+			finished_implies_one: is_finished implies Result = {REAL} 1.0
+		end
+
 feature -- Query
 
 	frozen is_valid_argument (a_arg: like argument): BOOLEAN

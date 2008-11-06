@@ -92,6 +92,9 @@ feature {NONE} -- Access
 			positive: Result > 0
 		end
 
+	completed_tests_count: NATURAL
+			-- Number of tests that have been either aborted or executed in current run
+
 feature -- Status report
 
 	is_ready: BOOLEAN
@@ -168,6 +171,7 @@ feature {NONE} -- Status setting
 			create assigner.make (l_count)
 			is_compiled := False
 			initialize_evaluators
+			completed_tests_count := 0
 		ensure then
 			not_compiled: not is_compiled
 		end
@@ -189,6 +193,7 @@ feature {NONE} -- Status setting
 				is_compiled := True
 			end
 			syncronize_evaluators
+			internal_progress := progress_compile_fraction + (1 - progress_compile_fraction)*(completed_tests_count/assigner.test_count).truncated_to_real
 		end
 
 	stop_process
@@ -358,6 +363,7 @@ feature {NONE} -- Status setting
 							test_suite.set_test_running (l_test)
 						end
 						if {l_outcome: !EQA_TEST_OUTCOME} l_tuple.outcome then
+							completed_tests_count := completed_tests_count + 1
 							test_suite.add_outcome_to_test (l_test, l_outcome)
 						end
 					else
@@ -412,6 +418,7 @@ feature {NONE} -- Status setting
 						assigner.set_aborted (test_map.key_for_iteration)
 						if (a_test.is_queued or a_test.is_running) then
 							if a_test.executor = Current and not a_remove then
+								completed_tests_count := completed_tests_count + 1
 								if a_test.is_running then
 									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, True))
 								else
@@ -458,6 +465,8 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Constants
+
+	progress_compile_fraction: like progress = {REAL} 0.2
 
 	e_compile_error: !STRING = "Tests can not be executed because last compilation failed"
 

@@ -152,6 +152,7 @@ feature {NONE} -- Basic operations
 			elseif is_compiling then
 				prepare
 				status := execute_status_code
+				internal_progress := {REAL} 0.25
 			elseif is_executing then
 				if current_task = Void then
 					error_handler.report_random_testing
@@ -164,6 +165,7 @@ feature {NONE} -- Basic operations
 						status := minimize_status_code
 					end
 				end
+				internal_progress := {REAL} 0.5
 			elseif is_replaying_log then
 				if current_task = Void then
 					replay_log (log_to_replay)
@@ -171,6 +173,7 @@ feature {NONE} -- Basic operations
 					current_task := Void
 					status := minimize_status_code
 				end
+				internal_progress := {REAL} 0.6
 			elseif is_minimizing_witnesses then
 				if current_task = Void then
 					if interpreter.is_running then
@@ -187,6 +190,7 @@ feature {NONE} -- Basic operations
 					current_task := Void
 					status := statistic_status_code
 				end
+				internal_progress := {REAL} 0.75
 			elseif is_generating_statistics then
 				generate_statistics
 				generate_test_class
@@ -251,6 +255,8 @@ feature {NONE} -- Implementation
 
 	process_configuration
 		do
+			error_handler.enable_verbose
+
 			is_slicing_enabled := configuration.is_slicing_enabled
 			is_ddmin_enabled := configuration.is_ddmin_enabled
 			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled

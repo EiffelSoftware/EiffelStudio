@@ -102,14 +102,22 @@ feature {NONE} -- Status setting
 				end
 			end
 			if l_run then
-				run_button.enable_sensitive
+				if not run_button.is_sensitive then
+					run_button.enable_sensitive
+				end
 			else
-				run_button.disable_sensitive
+				if run_button.is_sensitive then
+					run_button.disable_sensitive
+				end
 			end
 			if l_skip then
-				skip_button.enable_sensitive
+				if not skip_button.is_sensitive then
+					skip_button.enable_sensitive
+				end
 			else
-				skip_button.disable_sensitive
+				if skip_button.is_sensitive then
+					skip_button.disable_sensitive
+				end
 			end
 		end
 
@@ -185,7 +193,9 @@ feature {NONE} -- Factory
 			register_action (run_button.select_actions, agent on_run)
 			Result.force_last (run_button)
 
-			Result.append_last (Precursor)
+			if {l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]} Precursor then
+				Result.append_last (l_items)
+			end
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 

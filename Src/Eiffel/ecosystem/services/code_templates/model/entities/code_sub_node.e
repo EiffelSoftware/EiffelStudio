@@ -37,7 +37,7 @@ feature -- Access
 	definition: !CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		do
-			Result := (({!G}) #? parent).definition
+			Result := parent.definition
 		end
 
 	parent: !G assign set_parent

@@ -156,7 +156,7 @@ feature -- Logger
 		do
 			l_logger := logger_service
 			if l_logger.is_service_available then
-				l_logger.service.put_message_with_severity (({!STRING_32}) #? s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
+				l_logger.service.put_message_with_severity (s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
 			end
 		end
 
@@ -178,7 +178,7 @@ feature {NONE} -- Logger
 			-- Note: Do not use directly!	
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

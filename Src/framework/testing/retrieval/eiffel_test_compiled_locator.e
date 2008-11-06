@@ -28,13 +28,19 @@ feature {NONE} -- Query
 			-- <Precursor>
 		local
 			l_ancestor: like common_ancestor
+			l_retried: BOOLEAN
 		do
-			if a_class.is_compiled and then {l_class: !EIFFEL_CLASS_C} a_class.compiled_class then
-				l_ancestor := common_ancestor
-				if l_ancestor /= Void and then l_ancestor.is_compiled then
-					Result := l_class.conform_to (l_ancestor.compiled_class)
+			if not l_retried then
+				if a_class.is_compiled and then {l_class: !EIFFEL_CLASS_C} a_class.compiled_class then
+					l_ancestor := common_ancestor
+					if l_ancestor /= Void and then l_ancestor.is_compiled then
+						Result := l_class.conform_to (l_ancestor.compiled_class)
+					end
 				end
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

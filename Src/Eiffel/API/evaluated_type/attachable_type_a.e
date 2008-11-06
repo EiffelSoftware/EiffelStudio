@@ -10,12 +10,12 @@ deferred class ATTACHABLE_TYPE_A
 inherit
 	TYPE_A
 		redefine
+			as_attached_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
 			is_attached,
 			is_implicitly_attached,
-			set_attached_mark,
-			set_detachable_mark
+			to_other_attachment
 		end
 
 feature -- Status report
@@ -115,6 +115,13 @@ feature -- Comparison
 
 feature -- Duplication
 
+	as_attached_type: like Current
+			-- Attached variant of the current type
+		do
+			Result := duplicate
+			Result.set_attached_mark
+		end
+
 	as_implicitly_attached: like Current
 			-- Implicitly attached type
 		do
@@ -137,6 +144,29 @@ feature -- Duplication
 				Result.unset_is_implicitly_attached
 			else
 				Result := Current
+			end
+		end
+
+	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+		do
+			Result := Current
+			if other.has_attached_mark then
+				if not has_attached_mark then
+					Result := duplicate
+					Result.set_attached_mark
+				end
+			elseif other.is_implicitly_attached then
+				if not is_attached and then not is_implicitly_attached then
+					Result := as_implicitly_attached
+				end
+			elseif other.has_detachable_mark then
+				if not is_expanded and then not has_detachable_mark then
+					Result := duplicate
+					Result.set_detachable_mark
+				end
+			elseif not other.is_implicitly_attached and then is_implicitly_attached then
+				Result := as_implicitly_detachable
 			end
 		end
 

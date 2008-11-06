@@ -429,14 +429,13 @@ feature {COMPILER_EXPORTER}
 			-- Does Current conform to `other'?
 		local
 			l_constraints: TYPE_SET_A
-			c: like Current
+			t: TYPE_A
 		do
-			Result := same_as (other.conformance_type)
-			if not Result then
-				c ?= other
-				if c /= Void then
-					Result := is_equivalent (c) and then is_attachable_to (c)
-				end
+				-- Use `other.conformance_type' rather than `other' to get deanchored form.
+			t := other.conformance_type
+			Result := same_as (t)
+			if not Result and then {c: like Current} t then
+				Result := is_equivalent (c) and then is_attachable_to (c)
 			end
 			if not Result then
 					-- We do not treat the case `is_expanded' as if it is an
@@ -530,16 +529,7 @@ feature {COMPILER_EXPORTER}
 				-- Get associated feature in descendant.
 			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
 			check l_feat_not_void: l_feat /= Void end
-			Result := l_feat.type.actual_type
-			if has_attached_mark then
-				if not Result.is_attached then
-					Result := Result.as_attached_type
-				end
-			elseif has_detachable_mark then
-				if Result.is_attached or else Result.is_implicitly_attached then
-					Result := Result.as_detachable
-				end
-			end
+			Result := l_feat.type.actual_type.to_other_attachment (Current)
 		end
 
 	create_info: CREATE_FORMAL_TYPE is

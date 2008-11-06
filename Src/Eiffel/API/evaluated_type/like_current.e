@@ -353,18 +353,14 @@ feature {COMPILER_EXPORTER} -- Modification
 			-- Mark type declaration as having an explicit attached mark.
 		do
 			Precursor
-			if not conformance_type.is_attached then
-				conformance_type := conformance_type.as_attached_type
-			end
+			conformance_type := conformance_type.to_other_attachment (Current)
 		end
 
 	set_detachable_mark is
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
-			if not is_expanded and then (conformance_type.is_attached or else conformance_type.is_implicitly_attached) then
-				conformance_type := conformance_type.as_detachable
-			end
+			conformance_type := conformance_type.to_other_attachment (Current)
 		end
 
 	set_is_implicitly_attached
@@ -373,8 +369,8 @@ feature {COMPILER_EXPORTER} -- Modification
 		do
 			Precursor
 			a := conformance_type
-			if a /= Void and then not a.is_attached and then not a.is_implicitly_attached then
-				conformance_type := a.as_implicitly_attached
+			if a /= Void then
+				conformance_type := a.to_other_attachment (Current)
 			end
 		end
 
@@ -384,8 +380,8 @@ feature {COMPILER_EXPORTER} -- Modification
 		do
 			Precursor
 			a := conformance_type
-			if a /= Void and then not a.is_attached and then a.is_implicitly_attached then
-				conformance_type := a.as_implicitly_detachable
+			if a /= Void then
+				conformance_type := a.to_other_attachment (Current)
 			end
 		end
 
@@ -456,11 +452,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			if a_ancestor /= a_descendant then
 				create Result
 				Result.set_actual_type (a_descendant.actual_type)
-				if has_attached_mark then
-					Result.set_attached_mark
-				elseif has_detachable_mark then
-					Result.set_detachable_mark
-				end
+				Result := Result.to_other_attachment (Current)
 			else
 				Result := Current
 			end

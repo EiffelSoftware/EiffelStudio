@@ -312,8 +312,8 @@ feature -- Modification
 		do
 			Precursor
 			a := actual_type
-			if not is_expanded and then a /= Void and then (a.is_attached or else a.is_implicitly_attached) then
-				actual_type := a.as_detachable
+			if a /= Void then
+				actual_type := a.to_other_attachment (Current)
 			end
 		end
 
@@ -323,8 +323,8 @@ feature -- Modification
 		do
 			Precursor
 			a := actual_type
-			if a /= Void and then not a.is_attached and then not a.is_implicitly_attached then
-				actual_type := a.as_implicitly_attached
+			if a /= Void then
+				actual_type := a.to_other_attachment (Current)
 			end
 		end
 
@@ -334,8 +334,8 @@ feature -- Modification
 		do
 			Precursor
 			a := actual_type
-			if a /= Void and then not a.is_attached and then a.is_implicitly_attached then
-				actual_type := a.as_implicitly_detachable
+			if a /= Void then
+				actual_type := a.to_other_attachment (Current)
 			end
 		end
 

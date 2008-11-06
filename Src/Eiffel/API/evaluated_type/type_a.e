@@ -800,24 +800,14 @@ feature -- Access
 			-- Result := Void
 		end
 
+feature -- Attachment properties
+
 	as_attached_type: like Current
 			-- Attached variant of the current type
 		require
 			not_is_attached: not is_attached
 		do
-			Result := duplicate
-			Result.set_attached_mark
-		ensure
-			result_attached: Result /= Void
-		end
-
-	as_detachable: like Current
-			-- Detachable variant of the current type
-		require
-			is_attached: is_attached or else is_implicitly_attached
-		do
-			Result := duplicate
-			Result.set_detachable_mark
+			Result := Current
 		ensure
 			result_attached: Result /= Void
 		end
@@ -848,35 +838,8 @@ feature -- Access
 			other_attached: other /= Void
 		do
 			Result := Current
-			if other.has_attached_mark then
-				if not is_attached then
-					Result := as_attached_type
-				end
-			elseif other.is_implicitly_attached then
-				if not is_attached and then not is_implicitly_attached then
-					Result := as_implicitly_attached
-				end
-			elseif other.has_detachable_mark then
-				if not is_expanded and then (is_attached or else is_implicitly_attached) then
-					Result := as_detachable
-				end
-			elseif not other.is_implicitly_attached and then is_implicitly_attached then
-				Result := as_implicitly_detachable
-			end
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature -- Modification
-
-	set_attached_mark
-			-- Mark type as having an explicit attached mark.
-		do
-		end
-
-	set_detachable_mark
-			-- Mark type as having an explicit detachable mark.
-		do
 		end
 
 feature -- Output

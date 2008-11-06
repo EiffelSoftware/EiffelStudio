@@ -101,7 +101,7 @@ feature -- Command
 				l_fn := layout_file_name (a_name.as_string_8, is_normal_mode)
 			end
 			create l_file_utils
-			l_file_utils.create_directory_for_file (({!STRING_GENERAL}) #? l_fn.string)
+			l_file_utils.create_directory_for_file (l_fn.string)
 			Result := development_window.docking_manager.save_tools_data_with_name (l_fn, a_name)
 		end
 

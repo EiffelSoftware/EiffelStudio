@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			l_class: CLASS_I
 		do
 			create class_list
-			class_list.enable_multiple_selection
 			class_list.set_minimum_width (200)
 			a_parent.extend (class_list)
 
@@ -75,8 +74,8 @@ feature {NONE} -- Initialization
 					l_list.forth
 				end
 			end
-			class_list.select_actions.extend (agent on_class_select_change)
-			class_list.deselect_actions.extend (agent on_class_select_change)
+			class_list.check_actions.extend (agent on_class_select_change)
+			class_list.uncheck_actions.extend (agent on_class_select_change)
 		end
 
 	build_options (a_parent: EV_BOX)
@@ -173,6 +172,8 @@ feature {NONE} -- Initialization
 				html_output.disable_select
 			end
 			update_next_button_status
+
+			class_list.set_focus
 		end
 
 feature {NONE} -- Access
@@ -186,7 +187,7 @@ feature {NONE} -- Access
 			Result := generator_factory_type
 		end
 
-	class_list: EV_LIST
+	class_list: EV_CHECKABLE_LIST
 			-- Tree showing all classes in the system
 
 feature {NONE} -- Access: widgets
@@ -224,7 +225,7 @@ feature {NONE} -- Events
 
 	on_class_select_change (a_item: EV_LIST_ITEM)
 		do
-			if a_item.is_selected then
+			if class_list.is_item_checked (a_item) then
 				wizard_information.class_names.force_last (a_item.text.to_string_8.as_attached)
 			else
 				wizard_information.class_names.remove (a_item.text.to_string_8.as_attached)

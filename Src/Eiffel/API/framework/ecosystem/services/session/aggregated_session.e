@@ -86,12 +86,12 @@ feature {NONE} -- Clean up
 
 feature {SESSION_MANAGER_S} -- Access
 
-	inner_session: SESSION_I assign set_inner_session
+	inner_session: ?SESSION_I assign set_inner_session
 			-- Inner session object
 
 feature {SESSION_MANAGER_S} -- Element change
 
-	set_inner_session (a_session: ?like inner_session)
+	set_inner_session (a_session: like inner_session)
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
@@ -161,7 +161,7 @@ invariant
 	extension_name_set: not (is_actively_disposing or is_zombie) implies inner_session /= Void and then equal (extension_name, inner_session.extension_name)
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

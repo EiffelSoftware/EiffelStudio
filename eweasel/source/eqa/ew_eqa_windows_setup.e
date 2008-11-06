@@ -203,6 +203,7 @@ feature -- Util
 
 			from
 				create converter.make_default
+				converter.set_ignore_non_exist_test_cases (True)
 				l_list := l_dir.linear_representation
 
 				l_list.start

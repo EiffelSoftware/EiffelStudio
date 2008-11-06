@@ -45,19 +45,39 @@ feature {NONE} -- Initialization
 			prepare_catalog
 		end
 
-l_catalog_converter: EW_EQA_TEST_EWEASEL_CATALOG_CONVERTER
-		--
+	catalog_converter: EW_EQA_TEST_EWEASEL_CATALOG_CONVERTER
+			-- Catalog file converter
 
-prepare_catalog is
-		-- Prepare related catalog files
-	local
+	prepare_catalog is
+			-- Prepare related catalog files
+		local
+			l_factory: EW_EQA_TEST_FACTORY
+			l_path: FILE_NAME
+			l_tmp: STRING
+		do
+			create catalog_converter
 
-	do
-		create l_catalog_converter
-		l_catalog_converter.convert_catalog ("C:\eweasel\control\catalog")
-	end
+			create l_factory
+
+			l_tmp := l_factory.environment.value ("EWEASEL")
+			l_tmp := l_factory.environment.substitute (l_tmp)
+
+			create l_path.make_from_string (l_tmp)
+			l_path.extend ("control")
+			l_path.set_file_name ("catalog")
+
+			catalog_converter.convert_catalog (l_path)
+		end
 
 feature -- Command
+
+	set_ignore_non_exist_test_cases (a_bool: BOOLEAN) is
+			-- Set `is_ignore_non_exist_test_cases' with `a_bool'
+		do
+			is_ignore_non_exist_test_cases := a_bool
+		ensure
+			set: is_ignore_non_exist_test_cases = a_bool
+		end
 
 	append_one_test_routine (a_input_tcf: STRING; a_test_name: STRING) is
 			-- Convert testing instructions in `a_input_file'
@@ -69,7 +89,13 @@ feature -- Command
 				temp_converted := ""
 			end
 
-			temp_converted.append ("%N" + convert_one_tcf (a_input_tcf, a_test_name))
+			if is_ignore_non_exist_test_cases then
+				if catalog_converter.has_folder_name (a_test_name) then
+					temp_converted.append ("%N" + convert_one_tcf (a_input_tcf, a_test_name))
+				end
+			else
+				temp_converted.append ("%N" + convert_one_tcf (a_input_tcf, a_test_name))
+			end
 		end
 
 	flush_to_output_file (a_output_file: STRING) is
@@ -81,6 +107,11 @@ feature -- Command
 			write_content_to_template (temp_converted, a_output_file)
 			temp_converted := Void
 		end
+
+feature -- Query
+
+	is_ignore_non_exist_test_cases: BOOLEAN
+			-- If test case not found in catalog file, should we ignore it?
 
 feature {NONE} -- Implementation
 
@@ -120,8 +151,8 @@ feature {NONE} -- Implementation
 				Result.append ("%N%T%T%T-- Test " + a_routine_name)
 				Result.append ("%N%T%Tdo")
 
-				l_catalog_converter.append_related_setup (a_routine_name, Result)
-				
+				catalog_converter.append_related_setup (a_routine_name, Result)
+
 			until
 				l_instructions.after
 			loop
@@ -290,7 +321,7 @@ feature {NONE} -- Implementation
 			elseif l_keyword.is_equal (compile_precompiled_keyword) then
 				Result := "compile_precompiled"
 			elseif l_keyword.is_equal (compile_quick_melted_keyword) then
-				Result := "compile_precompiled"
+				Result := "compile_quick_melted"
 			elseif l_keyword.is_equal (compile_result_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
@@ -346,7 +377,7 @@ feature {NONE} -- Implementation
 					l_array := "<<"
 					l_list.go_i_th (2)
 				until
-					l_list.index >= l_list.count - 1
+					l_list.index > l_list.count - 1
 				loop
 					if l_list.index = 2 then
 						l_array.append ("%"" + l_list.item + "%"")
@@ -367,13 +398,10 @@ feature {NONE} -- Implementation
 
 				l_arg.remove_substring (1, l_list.i_th (1).count + 1)
 				l_arg.left_adjust
-				if not l_arg.starts_with ("%"") then
-					decorate_quote (l_arg, False)
-					Result := "define (%"" + l_list.i_th (1) + "%", %"" + l_arg + "%")"
-				else
-					decorate_quote (l_arg, False)
-					Result := "define (%"" + l_list.i_th (1) + "%", " + l_arg + ")"
-				end
+
+				decorate_quote (l_arg, True)
+				Result := "define (%"" + l_list.i_th (1) + "%", %"" + l_arg + "%")"
+
 			elseif l_keyword.is_equal (delete_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)

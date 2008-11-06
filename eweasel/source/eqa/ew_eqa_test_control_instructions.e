@@ -443,6 +443,7 @@ feature -- Command
 			l_inst: EW_TEST_INSTRUCTION
 			l_path: STRING
 			l_count, l_max: INTEGER
+			l_factory: EW_EQA_TEST_FACTORY
 		do
 			l_inst := test_command_table.item (Define_directory_keyword)
 			from
@@ -455,7 +456,9 @@ feature -- Command
 				l_path := l_path + " " + a_dir_path.item (l_count)
 				l_count := l_count + 1
 			end
-			init_command (l_inst, "define_directory", l_path)
+			create l_factory
+			l_path := l_factory.environment.substitute (l_path)
+			init_command (l_inst, "define_directory", a_name + " " + l_path)
 			execute_inst (l_inst)
 		end
 
@@ -473,6 +476,7 @@ feature -- Command
 			l_inst: EW_TEST_INSTRUCTION
 			l_path: STRING
 			l_count, l_max: INTEGER
+			l_factory: EW_EQA_TEST_FACTORY
 		do
 			l_inst := test_command_table.item (Define_file_keyword)
 			from
@@ -486,7 +490,10 @@ feature -- Command
 				l_count := l_count + 1
 			end
 			l_path := l_path + " " + a_file_name
-			init_command (l_inst, "define_file", l_path)
+			create l_factory
+			l_path := l_factory.environment.substitute (l_path)
+			init_command (l_inst, "define_file", a_name + " " + l_path)
+
 			execute_inst (l_inst)
 		end
 
@@ -519,12 +526,16 @@ feature -- Command
 		local
 			l_inst: EW_TEST_INSTRUCTION
 			l_value: STRING
+			l_factory: EW_EQA_TEST_FACTORY
 		do
 			l_inst := test_command_table.item (Define_keyword)
 			l_value := a_value
 			if l_value.is_empty then
 				l_value := "%"%""
 			end
+
+			create l_factory
+			l_value := l_factory.environment.substitute (l_value)
 			init_command (l_inst, "define", a_name + " " + l_value)
 			execute_inst (l_inst)
 		end

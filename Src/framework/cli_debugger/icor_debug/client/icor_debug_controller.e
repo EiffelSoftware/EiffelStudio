@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			"Stop"
 		end
 
-	cpp_is_running (obj: POINTER; a_is_running: POINTER): INTEGER is
+	cpp_is_running (obj: POINTER; a_is_running: TYPED_POINTER [INTEGER]): INTEGER is
 			-- Call `ICorDebugController->IsRunning'.
 			-- IsRunning returns TRUE if the threads in the process are running freely
 		external
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			"IsRunning"
 		end
 
-	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: POINTER): INTEGER is
+	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 			-- Call `ICorDebugController->HasQueuedCallbacks'.
 		external
 			"[
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"Terminate"
 		end
 
-	cpp_enumerate_threads (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_enumerate_threads (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugController signature(ICorDebugThreadEnum **): EIF_INTEGER
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 
 feature {ICOR_EXPORTER} -- Query
 
-	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias

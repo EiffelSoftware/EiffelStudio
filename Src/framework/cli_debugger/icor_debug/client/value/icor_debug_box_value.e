@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_object (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_object (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugBoxValue signature(ICorDebugObjectValue**): EIF_INTEGER 

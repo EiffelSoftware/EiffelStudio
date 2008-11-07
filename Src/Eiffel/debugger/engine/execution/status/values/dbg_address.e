@@ -29,7 +29,8 @@ create
 	make_void,
 	make_from_string,
 	make_from_pointer,
-	make_from_integer_64
+	make_from_integer_64,
+	make_from_natural_64
 
 --| Keep it during refactorying.	
 --convert
@@ -87,6 +88,25 @@ feature {NONE} -- Initialization
 				else
 					i32 := i64.to_integer_32;
 					($p).memory_copy ($i32, Pointer_bytes)
+				end
+				make_from_pointer (p)
+			end
+		end
+
+	make_from_natural_64 (n64: NATURAL_64)
+			-- Create address from narual 64 `n64'
+		local
+			p: POINTER
+			n32: NATURAL_32
+		do
+			if n64 = 0 then
+				is_void := True
+			else
+				if Pointer_bytes = Natural_64_bytes then
+					($p).memory_copy ($n64, Pointer_bytes)
+				else
+					n32 := n64.to_natural_32;
+					($p).memory_copy ($n32, Pointer_bytes)
 				end
 				make_from_pointer (p)
 			end

@@ -493,7 +493,7 @@ feature {NONE} -- preparing
 			l_new_value: ICOR_DEBUG_VALUE
 			do_break: BOOLEAN
 			l_is_null: BOOLEAN
-			l_real_value_mp: MANAGED_POINTER
+			l_real_cordbg_value_mp: MANAGED_POINTER
 		do
 			last_strip_references_call_success := 0
 			from
@@ -532,8 +532,8 @@ feature {NONE} -- preparing
 				end
 					--| GetValue
 				if not do_break then
-					create l_real_value_mp.make (sizeof_CORDB_ADDRESS)
-					l_icor_ref.get_value (l_real_value_mp.item)
+					create l_real_cordbg_value_mp.make (sizeof_CORDB_ADDRESS)
+					l_icor_ref.get_value (l_real_cordbg_value_mp.item)
 					if not l_icor_ref.last_call_succeed then
 						last_strip_references_call_success := l_icor_ref.last_call_success
 						debug ("debugger_icor_data")
@@ -567,7 +567,7 @@ feature {NONE} -- preparing
 						last_strip_references_call_success := l_icor_ref.last_call_success
 						debug ("debugger_icor_data")
 							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x"
-													+ l_real_value_mp.out +"%N")
+													+ l_real_cordbg_value_mp.out +"%N")
 						end
 						l_icor_ref.clean_on_dispose
 
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 	value_data_pointer (a_icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER is
 		local
 			l_icd_with_value: ICOR_DEBUG_VALUE_WITH_VALUE
-			l_size: INTEGER
+			l_size: NATURAL_32
 			l_mp: MANAGED_POINTER
 		do
 			l_icd_with_value := a_icdvalue.query_interface_icor_debug_generic_value
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			if l_icd_with_value /= Void and then a_icdvalue.last_call_succeed then
 				l_size := l_icd_with_value.get_size
 				if l_icd_with_value.last_call_succeed then
-					create l_mp.make (l_size)
+					create l_mp.make (l_size.to_integer_32) --| FIXME: truncated from NATURAL_32 to INTEGER
 					l_icd_with_value.get_value (l_mp.item)
 					if l_icd_with_value.last_call_succeed then
 						Result := l_mp
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 
 	get_string_value (icd: ICOR_DEBUG_STRING_VALUE): STRING_32 is
 		local
-			l_length: INTEGER
+			l_length: NATURAL_32
 		do
 			l_length := icd.get_length
 			if icd.last_call_succeed then
@@ -663,12 +663,12 @@ feature {NONE} -- Implementation
 		require
 			a_size = -1 or a_size > 0
 		local
-			l_length: INTEGER
+			l_length: NATURAL_32
 		do
 			l_length := icd.get_length
 			if icd.last_call_succeed then
 				if a_size /= -1 then
-					l_length := a_size.min (l_length)
+					l_length := a_size.as_natural_32.min (l_length)
 				end
 				Result := icd.get_string (l_length)
 			end

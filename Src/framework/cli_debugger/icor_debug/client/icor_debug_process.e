@@ -51,11 +51,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_app_domains: ICOR_DEBUG_APP_DOMAIN_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_app_domains (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_app_domains (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Get Handle
 
-	frozen cpp_get_handle (obj: POINTER; a_p_handle: POINTER): INTEGER is
+	frozen cpp_get_handle (obj: POINTER; a_p_handle: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugProcess signature(HPROCESS *): EIF_INTEGER
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Get Handle
 	
 feature {NONE} -- Implementation
 
-	cpp_get_id (obj: POINTER; a_p_id: POINTER): INTEGER is
+	cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			"GetID"
 		end
 		
-	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: POINTER): INTEGER is
+	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD, ICorDebugThread**): EIF_INTEGER 
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			"GetThread"
 		end		
 
-	cpp_enumerate_app_domains (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_enumerate_app_domains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugProcess signature(ICorDebugAppDomainEnum **): EIF_INTEGER 
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			"EnumerateAppDomains"
 		end
 
-	cpp_get_helper_thread_id (obj: POINTER; a_p_id: POINTER): INTEGER is
+	cpp_get_helper_thread_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			Precursor
 			type := get_type
 			size := get_size
-			address_as_string := get_address.to_integer.to_hex_string
+			address_as_string := get_address.to_hex_string
 		end
 
 feature {ICOR_EXPORTER} -- Pseudo twin
@@ -62,7 +62,7 @@ feature {ICOR_EXPORTER} -- Properties
 
 	type: INTEGER
 
-	size: INTEGER
+	size: NATURAL_32
 
 	address_as_string: STRING
 
@@ -283,7 +283,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0 or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_size: INTEGER is
+	get_size: NATURAL_32 is
 			-- GetSize returns the size in bytes
 		require
 			item_not_null: item_not_null
@@ -293,7 +293,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0 or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_address: INTEGER_64 is
+	get_address: NATURAL_64 is
 			-- GetAddress returns the address of the value in the debugee
 			-- process.  This might be useful information for the debugger to
 			-- show.
@@ -318,7 +318,7 @@ feature {NONE} -- External Implementation
 			"GetType"
 		end
 
-	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugValue signature(ULONG32*): EIF_INTEGER 
@@ -328,7 +328,7 @@ feature {NONE} -- External Implementation
 			"GetSize"
 		end
 
-	cpp_get_address (obj: POINTER; a_p_size: TYPED_POINTER [INTEGER_64]): INTEGER is
+	cpp_get_address (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_64]): INTEGER is
 		external
 			"[
 				C++ ICorDebugValue signature(CORDB_ADDRESS*): EIF_INTEGER 
@@ -340,7 +340,7 @@ feature {NONE} -- External Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	cpp_query_interface_ICorDebugGenericValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugGenericValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugGenericValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugReferenceValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHandleValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugHandleValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHandleValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHeapValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugHeapValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHeapValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHeapValue2 (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugHeapValue2 (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHeapValue2, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugObjectValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugObjectValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation / Constants
 
 feature {NONE} -- Implementation / QueryInterface HEAP
 
-	cpp_query_interface_ICorDebugBoxValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugBoxValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugBoxValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugStringValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugStringValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugStringValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugArrayValue (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugArrayValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		require
 			obj /= Default_pointer
 		external

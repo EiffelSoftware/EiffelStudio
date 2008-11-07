@@ -121,13 +121,13 @@ feature {ICOR_EXPORTER} -- Access
 
 	create_stepper: ICOR_DEBUG_STEPPER is
 		local
-			l_p: POINTER
+			p: POINTER
 			l_app_domain: ICOR_DEBUG_APP_DOMAIN
 			l_enum: ICOR_DEBUG_STEPPER_ENUM
 		do
-			last_call_success := cpp_create_stepper (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_create_stepper (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 			
 			debug ("DEBUGGER_EIFNET_DATA")
@@ -141,11 +141,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_chains: ICOR_DEBUG_CHAIN_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_chains (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_chains (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		end
 
@@ -198,7 +198,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p_process: POINTER): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p_process: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugProcess**): EIF_INTEGER 
@@ -208,7 +208,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetProcess"
 		end
 
-	frozen cpp_get_id (obj: POINTER; a_p_thread_id: POINTER): INTEGER is
+	frozen cpp_get_id (obj: POINTER; a_p_thread_id: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(DWORD*): EIF_INTEGER 
@@ -218,7 +218,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetID"
 		end
 
-	frozen cpp_get_app_domain (obj: POINTER; a_p_app_domain: POINTER): INTEGER is
+	frozen cpp_get_app_domain (obj: POINTER; a_p_app_domain: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugAppDomain**): EIF_INTEGER 
@@ -258,7 +258,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetUserState"
 		end
 
-	frozen cpp_get_current_exception (obj: POINTER; a_p_ex: POINTER): INTEGER is
+	frozen cpp_get_current_exception (obj: POINTER; a_p_ex: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 
@@ -278,7 +278,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"ClearCurrentException"
 		end
 
-	frozen cpp_create_stepper (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugStepper**): EIF_INTEGER 
@@ -288,7 +288,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"CreateStepper"
 		end
 
-	frozen cpp_enumerate_chains (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_enumerate_chains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChainEnum **): EIF_INTEGER 
@@ -298,7 +298,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"EnumerateChains"
 		end
 
-	frozen cpp_get_active_chain (obj: POINTER; a_p_active_chain: POINTER): INTEGER is
+	frozen cpp_get_active_chain (obj: POINTER; a_p_active_chain: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChain**): EIF_INTEGER 
@@ -308,7 +308,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetActiveChain"
 		end
 
-	frozen cpp_get_active_frame (obj: POINTER; a_p_active_frame: POINTER): INTEGER is
+	frozen cpp_get_active_frame (obj: POINTER; a_p_active_frame: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugFrame**): EIF_INTEGER 
@@ -318,7 +318,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetActiveFrame"
 		end
 
-	frozen cpp_create_eval (obj: POINTER; a_p_eval: POINTER): INTEGER is
+	frozen cpp_create_eval (obj: POINTER; a_p_eval: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugEval**): EIF_INTEGER 
@@ -328,7 +328,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"CreateEval"
 		end
 
-	frozen cpp_get_object (obj: POINTER; a_p_obj: POINTER): INTEGER is
+	frozen cpp_get_object (obj: POINTER; a_p_obj: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 

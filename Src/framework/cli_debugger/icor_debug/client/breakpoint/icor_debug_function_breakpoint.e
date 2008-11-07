@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_offset: INTEGER is
+	get_offset: NATURAL_32 is
 			-- Get Offset.
 		do
 			last_call_success := cpp_get_offset (item, $Result)
@@ -40,7 +40,7 @@ feature {ICOR_EXPORTER} -- Access
 		
 feature {NONE} -- Implementation
 
-	cpp_get_function (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_function (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ICorDebugFunction**): EIF_INTEGER 
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end	
 
-	cpp_get_offset (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_offset (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ULONG32*): EIF_INTEGER 

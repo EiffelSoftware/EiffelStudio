@@ -16,6 +16,8 @@ feature -- Synchro Initialization
 
 	init_dbg_synchronisation (a_wel_item_pointer: POINTER) is
 			-- Initialize eStudio/.NET debugger synchronisation
+		require
+			a_wel_item_pointer_not_null: a_wel_item_pointer /= default_pointer
 		do
 			debug ("debugger_eifnet_synchro")
 				io.error.put_string (">>Initialize eStudio/.NET debugger synchronisation%N")

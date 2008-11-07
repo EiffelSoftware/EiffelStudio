@@ -44,7 +44,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Properties
 
-	ip: INTEGER
+	ip: like get_ip
 
 	last_cordebugmapping_result: INTEGER
 
@@ -55,11 +55,17 @@ feature {ICOR_EXPORTER} -- Properties
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_ip: INTEGER is
+	get_ip_as_integer_32: INTEGER
+			-- Truncated value from NATURAL_32
+		do
+			Result := get_ip.as_integer_32
+		end
+
+	get_ip: NATURAL_32 is
 			-- get OffSet
 			-- set `last_cordebugmapping_result' value
 		local
-			l_noffset: INTEGER
+			l_noffset: NATURAL_32
 		do
 			last_call_success := cpp_get_ip (item, $l_noffset, $last_cordebugmapping_result)
 			Result := l_noffset
@@ -76,11 +82,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_local_variables: ICOR_DEBUG_VALUE_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_local_variables (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_local_variables (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -88,11 +94,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	get_local_variable (a_index: INTEGER): ICOR_DEBUG_VALUE is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_get_local_variable (item, a_index, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_value_by_pointer (l_p)
+			last_call_success := cpp_get_local_variable (item, a_index, $p)
+			if p /= default_pointer then
+				create Result.make_value_by_pointer (p)
 			end
 		ensure
 			success: last_call_succeed
@@ -100,11 +106,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_arguments: ICOR_DEBUG_VALUE_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_arguments (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_arguments (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_succeed
@@ -112,22 +118,22 @@ feature {ICOR_EXPORTER} -- Access
 
 	get_argument (a_index: INTEGER): ICOR_DEBUG_VALUE is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_get_argument (item, a_index, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_value_by_pointer (l_p)
+			last_call_success := cpp_get_argument (item, a_index, $p)
+			if p /= default_pointer then
+				create Result.make_value_by_pointer (p)
 			end
 		end
 
-	get_stack_depth: INTEGER is
+	get_stack_depth: NATURAL_32 is
 		do
 			last_call_success := cpp_get_stack_depth (item, $Result)
 		end
 
 feature {NONE} -- Implementation
 
-	cpp_get_ip (obj: POINTER; a_p_offset: POINTER; a_p_mapping: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_ip (obj: POINTER; a_p_offset: TYPED_POINTER [NATURAL_32]; a_p_mapping: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32*, CorDebugMappingResult*): EIF_INTEGER 
@@ -137,7 +143,7 @@ feature {NONE} -- Implementation
 			"GetIP"
 		end
 
-	cpp_enumerate_local_variables (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_enumerate_local_variables (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
@@ -147,7 +153,7 @@ feature {NONE} -- Implementation
 			"EnumerateLocalVariables"
 		end
 
-	cpp_get_local_variable (obj: POINTER; a_index: INTEGER; a_result: POINTER): INTEGER is
+	cpp_get_local_variable (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
@@ -157,7 +163,7 @@ feature {NONE} -- Implementation
 			"GetLocalVariable"
 		end
 
-	cpp_enumerate_arguments (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_enumerate_arguments (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
@@ -167,7 +173,7 @@ feature {NONE} -- Implementation
 			"EnumerateArguments"
 		end
 
-	cpp_get_argument (obj: POINTER; a_index: INTEGER; a_result: POINTER): INTEGER is
+	cpp_get_argument (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
@@ -177,7 +183,7 @@ feature {NONE} -- Implementation
 			"GetArgument"
 		end
 
-	cpp_get_stack_depth (obj: POINTER; a_depth: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_stack_depth (obj: POINTER; a_depth: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32 *): EIF_INTEGER 

@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			if is_null then
 				create address.make_void
 			else
-				create address.make_from_integer_64 (icd_value_info.object_address)
+				create address.make_from_natural_64 (icd_value_info.object_address)
 				if dynamic_class_type = Void then
 					is_external_type := True
 				else
@@ -97,7 +97,7 @@ feature -- Access
 	object_value: ICOR_DEBUG_OBJECT_VALUE
 			-- Interface to ICorDebugObjectValue
 
-	value_class_token: INTEGER
+	value_class_token: NATURAL_32
 			-- class token related to `object_value'
 
 	value_module_file_name: STRING
@@ -288,7 +288,7 @@ feature {NONE} -- Children implementation
 		require
 			object_value_not_void: a_obj_value /= Void
 		local
-			l_att_token: INTEGER
+			l_att_token: NATURAL_32
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_statcl: CLASS_C
 			icdm: ICOR_DEBUG_MODULE

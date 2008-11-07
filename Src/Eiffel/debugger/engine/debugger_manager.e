@@ -999,6 +999,7 @@ feature -- Access
 		end
 
 	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
+			-- Table of environment variables
 		local
 			l_envs: HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
 		do
@@ -1013,7 +1014,7 @@ feature -- Access
 				l_envs.forth
 			end
 		ensure
-			Result /= Void
+			Result_attached: Result /= Void
 		end
 
 	sorted_comparable_string32_keys_from (env: like environment_variables_table): DS_LIST [STRING_32] is

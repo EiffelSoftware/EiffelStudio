@@ -20,10 +20,10 @@ feature {ICOR_EXPORTER} -- Access
 	is_il: BOOLEAN is
 			-- IsIL returns whether the code is IL (as opposed to native)
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_il (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_il (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 --		ensure
 --			success: last_call_success = 0
 		end
@@ -40,7 +40,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_address: INTEGER_64 is
+	get_address: NATURAL_64 is
 			-- GetAddress returns the address of the code
 		do
 			last_call_success := cpp_get_address (item, $Result)
@@ -48,7 +48,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_size: INTEGER is
+
+	get_size_as_integer_32: INTEGER
+			-- Truncated value from NATURAL_32
+		do
+			Result := get_size.as_integer_32
+		end		
+
+	get_size: NATURAL_32 is
 			-- GetSize returns the size in bytes of the code
 		do
 			last_call_success := cpp_get_size (item, $Result)
@@ -56,7 +63,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	create_breakpoint (a_offset: INTEGER_64): ICOR_DEBUG_FUNCTION_BREAKPOINT is
+	create_breakpoint (a_offset: NATURAL_32): ICOR_DEBUG_FUNCTION_BREAKPOINT is
 		local
 			p: POINTER
 		do
@@ -68,21 +75,23 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	get_code (a_size: INTEGER): STRING is
+	get_code (a_size: NATURAL_32): STRING is
 			-- Returns the code of the method suitable for disassembly.
 			-- Note that instruction boundaries aren't checked
 		local
-			l_codesize: INTEGER
-			p_buffersize: INTEGER
+			l_codesize: NATURAL_32
+			l_codesize_int: INTEGER
+			p_buffersize: NATURAL_32
 			mp_code: MANAGED_POINTER
 			i, nb: INTEGER
 --			l_opcode_dico: EIFNET_OPCODE_CONSTANTS
-			l_platform: PLATFORM
+			l_elt_size: INTEGER
 		do
-
+			--| FIXME jfiat [2008/11/07] : mixed of INTEGER and NATURAL_32
 			l_codesize := a_size
+			l_codesize_int := l_codesize.as_integer_32
 
-			create mp_code.make (l_codesize)
+			create mp_code.make ((l_codesize_int * 1))
 
 			last_call_success := cpp_get_code (item, 
 					0, l_codesize, l_codesize, -- [IN]
@@ -91,21 +100,21 @@ feature {ICOR_EXPORTER} -- Access
 --			Result := (create {UNI_STRING}.make_by_pointer (mp_code.item)).string
 			from
 				i := 1
-				nb := p_buffersize
-				create Result.make (l_codesize)
-				create l_platform
+				nb := p_buffersize.as_integer_32
+				create Result.make (l_codesize_int)
+				l_elt_size := {PLATFORM}.Natural_32_bytes
 			until
 				i > nb
 			loop
 				Result.append ("0x")
-				Result.append (mp_code.read_integer_8 ((i - 1) * l_platform.Integer_8_bytes).to_hex_string)
+				Result.append (mp_code.read_natural_32 ((i - 1) * l_elt_size).to_hex_string)
 				i := i + 1
 			end
 		ensure
 			success: last_call_success = 0
 		end
 
-	get_version_number: INTEGER is
+	get_version_number: NATURAL_32 is
 			-- Returns version number of code
 		do
 			last_call_success := cpp_get_version_number (item, $Result)
@@ -125,7 +134,7 @@ feature {NONE} -- Implementation
 			"IsIL"
 		end
 
-	cpp_get_function (obj: POINTER; a_p_function: POINTER): INTEGER is
+	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(ICorDebugFunction**): EIF_INTEGER 
@@ -135,7 +144,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end
 
-	cpp_get_address (obj: POINTER; a_p_start: TYPED_POINTER [INTEGER_64]): INTEGER is
+	cpp_get_address (obj: POINTER; a_p_start: TYPED_POINTER [NATURAL_64]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(CORDB_ADDRESS*): EIF_INTEGER 
@@ -145,7 +154,7 @@ feature {NONE} -- Implementation
 			"GetAddress"
 		end
 
-	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32*): EIF_INTEGER 
@@ -155,7 +164,7 @@ feature {NONE} -- Implementation
 			"GetSize"
 		end
 		
-	cpp_create_breakpoint (obj: POINTER; a_offset: INTEGER_64; a_p: POINTER): INTEGER is
+	cpp_create_breakpoint (obj: POINTER; a_offset: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32, ICorDebugFunctionBreakpoint**): EIF_INTEGER 
@@ -165,8 +174,8 @@ feature {NONE} -- Implementation
 			"CreateBreakpoint"
 		end
 		
-	cpp_get_code (obj: POINTER; a_startoffset, a_endoffset: INTEGER; a_bufferalloc: INTEGER;
-					a_buffer: POINTER; a_buffersize: POINTER): INTEGER is
+	cpp_get_code (obj: POINTER; a_startoffset, a_endoffset: NATURAL_32; a_bufferalloc: NATURAL_32;
+					a_buffer: POINTER; a_buffersize: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32, ULONG32, ULONG32, BYTE*, ULONG32*): EIF_INTEGER 
@@ -176,7 +185,7 @@ feature {NONE} -- Implementation
 			"GetCode"
 		end		
 
-	cpp_get_version_number (obj: POINTER; a_p_vers_number: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_version_number (obj: POINTER; a_p_vers_number: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32*): EIF_INTEGER 

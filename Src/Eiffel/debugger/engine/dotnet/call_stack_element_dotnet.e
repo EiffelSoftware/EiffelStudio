@@ -200,7 +200,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 										end
 										icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
 										check
-											same_ip: il_offset = icd_il_frame.get_ip
+											same_ip: il_offset = icd_il_frame.get_ip_as_integer_32
 										end
 									end
 								end
@@ -259,7 +259,7 @@ feature -- Current object
 
 feature -- Dotnet Properties
 
-	dotnet_class_token: INTEGER is
+	dotnet_class_token: NATURAL_32 is
 			--
 		do
 			if not dotnet_initialized then
@@ -268,7 +268,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_class_token
 		end
 
-	dotnet_feature_token: INTEGER is
+	dotnet_feature_token: NATURAL_32 is
 			--
 		do
 			if not dotnet_initialized then
@@ -315,9 +315,9 @@ feature {NONE} -- Implementation Dotnet Properties
 	initialized_arguments,
 	initialized_locals: BOOLEAN
 
-	private_dotnet_class_token: INTEGER
+	private_dotnet_class_token: NATURAL_32
 
-	private_dotnet_feature_token: INTEGER
+	private_dotnet_feature_token: NATURAL_32
 
 	private_dotnet_module_name: STRING
 

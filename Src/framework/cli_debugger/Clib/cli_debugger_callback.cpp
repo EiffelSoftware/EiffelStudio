@@ -43,7 +43,7 @@ rt_public void trace_event_cb_hr (char* mesg,HRESULT hr)
 #define DBGTRACE_HR(msg)
 #endif
 
-#ifdef ASSERTIONS
+#ifdef EIF_ASSERTIONS
 	/* Error message for exceptions */
 rt_private char message [1024];
 rt_private void raise_error (HRESULT hr,char *pref, char *msg)
@@ -67,7 +67,7 @@ rt_private void raise_error (HRESULT hr,char *pref, char *msg)
 feature -- COM specific
 */
 
-#ifdef ASSERTIONS
+#ifdef EIF_ASSERTIONS
 rt_private void raise_error (HRESULT hr, char *msg)
 	/* Raise an Eiffel exception */
 {

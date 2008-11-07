@@ -87,7 +87,7 @@ feature -- exception
 
 feature {NONE} -- get member data
 
---	icor_debug_string_value_from (v: ICOR_DEBUG_VALUE; token: INTEGER): ICOR_DEBUG_STRING_VALUE is
+--	icor_debug_string_value_from (v: ICOR_DEBUG_VALUE; token: NATURAL_32): ICOR_DEBUG_STRING_VALUE is
 --		require
 --			v_not_void: v /= Void
 --		local
@@ -116,7 +116,7 @@ feature {NONE} -- get member data
 --			end
 --		end
 
---	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
+--	string_from (v: ICOR_DEBUG_VALUE; token: NATURAL_32): STRING is
 --		require
 --			v_not_void: v /= Void
 --		local
@@ -135,7 +135,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			-- token of "EiffelSoftware.Runtime.ISE_RUNTIME.exception_manager"
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_type_token: INTEGER
+			l_type_token: NATURAL_32
 		do
 			l_icd_module := debugger_info.icor_debug_module_for_ise_runtime
 			if l_icd_module /= Void then
@@ -147,7 +147,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime: INTEGER is
+	token_IseRuntime: NATURAL_32 is
 			-- token of ISE_RUNTIME
 		do
 			Result := private_token_IseRuntime
@@ -157,7 +157,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__check_assert: INTEGER is
+	token_IseRuntime__check_assert: NATURAL_32 is
 			-- Attribute token of ISE_RUNTIME::check_assert
 		do
 			Result := private_token_IseRuntime__check_assert
@@ -167,7 +167,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__rt_extension_object: INTEGER is
+	token_IseRuntime__rt_extension_object: NATURAL_32 is
 			-- Attribute token of ISE_RUNTIME::rt_extension_object
 		do
 			Result := private_token_IseRuntime__rt_extension_object
@@ -177,7 +177,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__get_exception_manager: INTEGER is
+	token_IseRuntime__get_exception_manager: NATURAL_32 is
 			-- Attribute token of ISE_RUNTIME::get_exception_manager
 		do
 			Result := private_token_IseRuntime__get_exception_manager
@@ -189,16 +189,16 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 
 feature {NONE} -- ISE_RUNTIME: Once per instance implementation
 
-	private_token_IseRuntime: INTEGER
+	private_token_IseRuntime: NATURAL_32
 			-- token of class ISE_RUNTIME.
 
-	private_token_IseRuntime__check_assert: INTEGER
+	private_token_IseRuntime__check_assert: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::check_assert .		
 
-	private_token_IseRuntime__rt_extension_object: INTEGER
+	private_token_IseRuntime__rt_extension_object: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::rt_extension_object .
 
-	private_token_IseRuntime__get_exception_manager: INTEGER
+	private_token_IseRuntime__get_exception_manager: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::get_exception_manager .				
 
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
@@ -206,7 +206,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --	get_system_text_stringbuilder_tokens is
 --		local
 --			l_icd_module: ICOR_DEBUG_MODULE
---			l_type_token: INTEGER
+--			l_type_token: NATURAL_32
 --		do
 --			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
 --			if l_icd_module /= Void then
@@ -219,7 +219,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 	get_system_exception_tokens is
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_type_token: INTEGER
+			l_type_token: NATURAL_32
 		do
 			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
 			if l_icd_module /= Void then
@@ -235,7 +235,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 	get_system_threading_thread_tokens is
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_type_token: INTEGER
+			l_type_token: NATURAL_32
 		do
 			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
 			if l_icd_module /= Void then
@@ -246,7 +246,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
---	token_StringBuilder_m_StringValue: INTEGER is
+--	token_StringBuilder_m_StringValue: NATURAL_32 is
 --			-- Attribute token of System.StringBuilder::m_StringValue	
 --		do
 --			Result := private_token_StringBuilder_m_StringValue
@@ -256,7 +256,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --			end
 --		end
 
---	token_Exception__message: INTEGER is
+--	token_Exception__message: NATURAL_32 is
 --			-- Attribute token of System.Exception::_message
 --		do
 --			Result := private_token_Exception__message
@@ -266,7 +266,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --			end
 --		end
 
---	token_Exception__className: INTEGER is
+--	token_Exception__className: NATURAL_32 is
 --			-- Attribute token of System.Exception::_className
 --		do
 --			Result := private_token_Exception__className
@@ -276,7 +276,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --			end
 --		end
 
-	token_Exception_ToString: INTEGER is
+	token_Exception_ToString: NATURAL_32 is
 			-- Attribute token of System.Exception::ToString
 		do
 			Result := private_token_Exception_ToString
@@ -286,7 +286,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Exception_get_Message: INTEGER is
+	token_Exception_get_Message: NATURAL_32 is
 			-- Attribute token of System.Exception::get_Message
 		do
 			Result := private_token_Exception_get_Message
@@ -296,7 +296,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Thread_m_Name: INTEGER is
+	token_Thread_m_Name: NATURAL_32 is
 			-- Attribute token of System.Threading.Thread::m_Name
 		do
 			Result := private_token_System_Threading_Thread_m_Name
@@ -306,7 +306,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Thread_m_Priority: INTEGER is
+	token_Thread_m_Priority: NATURAL_32 is
 			-- Attribute token of System.Threading.Thread::m_Priority
 		do
 			Result := private_token_System_Threading_Thread_m_Priority
@@ -318,25 +318,25 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 
 feature {NONE} -- Once per instance implementation
 
---	private_token_StringBuilder_m_StringValue: INTEGER
+--	private_token_StringBuilder_m_StringValue: NATURAL_32
 --			-- Attribute token of System.StringBuilder::m_StringValue	
 
---	private_token_Exception__message: INTEGER
+--	private_token_Exception__message: NATURAL_32
 --			-- Attribute token of System.Exception::ToString
 
---	private_token_Exception__className: INTEGER
+--	private_token_Exception__className: NATURAL_32
 --			-- Attribute token of System.Exception::_className
 
-	private_token_Exception_ToString: INTEGER
+	private_token_Exception_ToString: NATURAL_32
 			-- Attribute token of System.Exception::ToString
 
-	private_token_Exception_get_Message: INTEGER
+	private_token_Exception_get_Message: NATURAL_32
 			-- Attribute token of System.Exception::get_Message
 
-	private_token_System_Threading_Thread_m_Name: INTEGER
+	private_token_System_Threading_Thread_m_Name: NATURAL_32
 			-- Attribute token of System.Threading.Thread::m_Name
 
-	private_token_System_Threading_Thread_m_Priority: INTEGER;
+	private_token_System_Threading_Thread_m_Priority: NATURAL_32;
 			-- Attribute token of System.Threading.Thread::m_Priority
 
 indexing

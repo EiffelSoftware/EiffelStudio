@@ -60,31 +60,31 @@ feature {ICOR_EXPORTER} -- Access
 	is_active: BOOLEAN is
 			-- Is active ?
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_active (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_active (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
 
 feature {NONE} -- QueryInterface Implementation
 
-	cpp_query_interface_ICorDebugFunctionBreakpoint (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugFunctionBreakpoint (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugBreakpoint *) $obj)->QueryInterface (IID_ICorDebugFunctionBreakpoint, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugValueBreakpoint (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugValueBreakpoint (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugBreakpoint *) $obj)->QueryInterface (IID_ICorDebugValueBreakpoint, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugModuleBreakpoint (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugModuleBreakpoint (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			"Activate"
 		end		
 
-	cpp_is_active (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_is_active (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugBreakpoint signature(BOOL*): EIF_INTEGER 

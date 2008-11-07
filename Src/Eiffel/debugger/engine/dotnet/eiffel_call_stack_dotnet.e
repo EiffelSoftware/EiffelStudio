@@ -128,8 +128,8 @@ feature {APPLICATION_STATUS} -- Restricted access
 			l_func: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
-			l_class_token: INTEGER
-			l_feature_token: INTEGER
+			l_class_token: NATURAL_32
+			l_feature_token: NATURAL_32
 			l_module_name: STRING
 
 			l_class_type: CLASS_TYPE
@@ -190,7 +190,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 										l_class_token   := l_class.get_token
 										l_module_name   := l_module.get_name
 
-										l_il_offset := l_frame_il.get_ip
+										l_il_offset := l_frame_il.get_ip_as_integer_32
 										l_stack_object := l_frame_il.get_argument (0)
 										if l_stack_object /= Void then
 											check
@@ -215,7 +215,11 @@ feature {APPLICATION_STATUS} -- Restricted access
 														--| Compute data to get address and co ...
 													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 													l_stack_adv := debug_value_from_icdv (l_stack_object, l_class_type.associated_class)
-													addr := l_stack_adv.address
+													if l_stack_adv /= Void then
+														addr := l_stack_adv.address
+													else
+														addr := Void
+													end
 													if addr /= Void then
 														l_stack_drv ?= l_stack_adv
 														if l_stack_drv /= Void then
@@ -253,7 +257,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 													-- Here we have an External CallStack
 												create external_cse.make (level, tid)
 												if l_stack_object /= Void then
-													create addr.make_from_integer_64 (l_stack_object.get_address)
+													create addr.make_from_natural_64 (l_stack_object.get_address)
 												else
 													create addr.make_void
 												end

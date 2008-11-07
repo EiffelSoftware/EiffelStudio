@@ -194,9 +194,9 @@ feature -- Current CallStack
 							l_curr_stk_info.set_current_module_name        (l_module.get_name)
 							l_curr_stk_info.set_current_class_token        (l_class.get_token)
 							l_curr_stk_info.set_current_feature_token      (l_func.get_token)
-							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size)
-							l_curr_stk_info.set_current_il_offset          (l_il_frame.get_ip)
-							l_curr_stk_info.set_current_stack_address      (create {DBG_ADDRESS}.make_from_integer_64 (l_code.get_address))
+							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size_as_integer_32)
+							l_curr_stk_info.set_current_il_offset          (l_il_frame.get_ip_as_integer_32)
+							l_curr_stk_info.set_current_stack_address      (create {DBG_ADDRESS}.make_from_natural_64 (l_code.get_address))
 
 							debug("debugger_trace_callback")
 								io.error.put_string (generator + ".init_current_callstack: "

@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_DEBUG_VALUE} -- Implementation
 
-	frozen cpp_create_handle (obj: POINTER; a_hdl_type: INTEGER; a_handle_value_ptr: POINTER): INTEGER is
+	frozen cpp_create_handle (obj: POINTER; a_hdl_type: INTEGER; a_handle_value_ptr: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugHeapValue2 signature(CorDebugHandleType, ICorDebugHandleValue**): EIF_INTEGER 

@@ -210,12 +210,12 @@ feature -- Breakpoint related
 			Result := eifnet_debugger_info.current_breakpoint_location
 		end
 
-	request_breakpoint_add (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_add (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER) is
 		do
 			eifnet_debugger_info.request_breakpoint_add (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end
 
-	request_breakpoint_remove (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_remove (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER) is
 		do
 			eifnet_debugger_info.request_breakpoint_remove (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end

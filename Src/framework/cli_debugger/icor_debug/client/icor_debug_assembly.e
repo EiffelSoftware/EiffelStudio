@@ -45,11 +45,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_modules: ICOR_DEBUG_MODULE_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_modules (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_modules (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -58,7 +58,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_name: STRING is
 			-- GetName returns the name of the assembly
 		local
-			p_cchname: INTEGER
+			p_cchname: NATURAL_32
 			mp_name: MANAGED_POINTER
 		do
 			create mp_name.make (256 * 2)
@@ -73,7 +73,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugProcess**): EIF_INTEGER 
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetProcess"
 		end		
 
-	frozen cpp_get_app_domain (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_get_app_domain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugAppDomain**): EIF_INTEGER 
@@ -93,7 +93,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetAppDomain"
 		end		
 
-	frozen cpp_enumerate_modules (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_enumerate_modules (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugModuleEnum **): EIF_INTEGER 
@@ -103,7 +103,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"EnumerateModules"
 		end
 
-	frozen cpp_get_name (obj: POINTER; a_cchname: INTEGER; a_pcchname: POINTER; a_szname: POINTER): INTEGER is
+	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugAssembly signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 

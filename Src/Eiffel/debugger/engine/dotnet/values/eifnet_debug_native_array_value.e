@@ -50,12 +50,12 @@ feature {NONE} -- Initialization
 			if is_null then
 				create address.make_void
 			else
-				create address.make_from_integer_64 (icd_value_info.object_address)
+				create address.make_from_natural_64 (icd_value_info.object_address)
 			end
 
 			get_array_value
 			if array_value /= Void then
-				capacity := array_value.get_count
+				capacity := array_value.get_count_as_integer_32
 				release_array_value
 			end
 			register_dotnet_data
@@ -76,8 +76,10 @@ feature -- get
 	release_array_value is
 			-- Release `array_value'
 		do
-			array_value.clean_on_dispose
-			array_value := Void
+			if array_value /= Void then
+				array_value.clean_on_dispose
+				array_value := Void
+			end
 		end
 
 feature -- Access
@@ -162,20 +164,22 @@ feature -- Output
 						items.resize (nb_items)
 					end
 					get_array_value
-					from
-						i := sp_lower
-					until
-						i > sp_upper
-					loop
-						l_elt := array_value.get_element_at_position (i)
-						if l_elt /= Void then
-							l_att_debug_value := debug_value_from_icdv (l_elt, Void)
-							l_att_debug_value.set_name (i.out)
-							items.put_last (l_att_debug_value)
+					if {arrval: like array_value} array_value then
+						from
+							i := sp_lower
+						until
+							i > sp_upper
+						loop
+							l_elt := arrval.get_element_at_integer_position (i)
+							if l_elt /= Void then
+								l_att_debug_value := debug_value_from_icdv (l_elt, Void)
+								l_att_debug_value.set_name (i.out)
+								items.put_last (l_att_debug_value)
+							end
+							i := i + 1
 						end
-						i := i + 1
+						release_array_value
 					end
-					release_array_value
 				end
 			end
 			items_computed := True

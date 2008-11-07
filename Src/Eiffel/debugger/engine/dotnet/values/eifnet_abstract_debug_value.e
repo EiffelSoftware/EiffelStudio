@@ -123,7 +123,7 @@ feature {NONE} -- Special childrens
 			l_object_value: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_frame: ICOR_DEBUG_FRAME
-			l_class_token: INTEGER
+			l_class_token: NATURAL_32
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
@@ -155,12 +155,12 @@ feature {NONE} -- Special childrens
 			end
 		end
 
-	field_values_for (l_class_token: INTEGER; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
+	field_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
 				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		local
 			l_md_import: MD_IMPORT
-			l_tokens: LIST [INTEGER]
-			l_att_token: INTEGER
+			l_tokens: LIST [NATURAL_32]
+			l_att_token: NATURAL_32
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
@@ -232,21 +232,21 @@ feature {NONE} -- Special childrens
 			end
 		end
 
-	property_values_for (l_class_token: INTEGER; l_icd_class: ICOR_DEBUG_CLASS; a_icd_value: ICOR_DEBUG_VALUE;
+	property_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; a_icd_value: ICOR_DEBUG_VALUE;
 				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE;
 			): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		local
 			l_md_import: MD_IMPORT
-			l_tokens: LIST [INTEGER]
-			l_token: INTEGER
+			l_tokens: LIST [NATURAL_32]
+			l_token: NATURAL_32
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
 			l_name: STRING
-			l_getter_token: INTEGER
+			l_getter_token: NATURAL_32
 			l_icd_func: ICOR_DEBUG_FUNCTION
 			l_error_message: STRING
-			t: TUPLE [name:STRING; getter:INTEGER; flag:INTEGER]
+			t: TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER]
 			l_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR
 		do
 			l_md_import := l_icd_module.interface_md_import

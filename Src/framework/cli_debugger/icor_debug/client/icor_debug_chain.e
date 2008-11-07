@@ -97,21 +97,21 @@ feature {ICOR_EXPORTER} -- Access
 
 	is_managed: BOOLEAN is
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_managed (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_managed (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
 
 	enumerate_frames: ICOR_DEBUG_FRAME_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_frames (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_frames (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -144,7 +144,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_thread (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_thread (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugThread**): EIF_INTEGER 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			"GetThread"
 		end
 
-	cpp_get_active_frame (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_active_frame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrame**): EIF_INTEGER 
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			"GetActiveFrame"
 		end
 
-	cpp_get_caller (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			"GetCaller"
 		end
 
-	cpp_get_callee (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			"GetCallee"
 		end
 
-	cpp_get_previous (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_previous (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			"GetPrevious"
 		end
 
-	cpp_get_next (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_next (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			"GetNext"
 		end
 
-	cpp_is_managed (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_is_managed (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(BOOL*): EIF_INTEGER 
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			"IsManaged"
 		end
 
-	cpp_enumerate_frames (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_enumerate_frames (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrameEnum **): EIF_INTEGER 
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			"EnumerateFrames"
 		end
 
-	cpp_get_reason (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_get_reason (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugChain signature(CorDebugChainReason*): EIF_INTEGER 

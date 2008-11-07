@@ -178,10 +178,10 @@ feature {NONE} -- Internal Initialisation
 
 feature -- Access
 
-	referenced_address: INTEGER_64
+	referenced_address: NATURAL_64
 			-- Address of `icd_referenced_value'
 
-	object_address: INTEGER_64
+	object_address: NATURAL_64
 			-- Address of `icd_prepared_value'
 			-- or physical address
 
@@ -347,7 +347,7 @@ feature -- Queries
 
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
-	value_class_token: INTEGER is
+	value_class_token: NATURAL_32 is
 			-- Dotnet class token for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -365,7 +365,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		local
-			l_ct: INTEGER
+			l_ct: NATURAL_32
 		do
 			l_ct := value_class_token
 			if l_ct > 0 then
@@ -410,7 +410,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			valid_feature_name: f_name /= Void and then not f_name.is_empty
 		local
 			icdm: like value_icd_module
-			classtok: INTEGER
+			classtok: NATURAL_32
 		do
 			icdm := value_icd_module
 			if icdm /= Void then

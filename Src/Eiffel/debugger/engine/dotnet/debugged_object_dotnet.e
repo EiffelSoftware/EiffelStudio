@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 					l_str_val ?= l_val
 					if l_str_val /= Void then
 						is_string_value := True
-						capacity := l_str_val.length
+						capacity := l_str_val.length_as_integer_32
 					end
 				end
 

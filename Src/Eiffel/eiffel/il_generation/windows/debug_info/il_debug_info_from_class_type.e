@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Queries feature_token
 
-	feature_token (a_feature_i: FEATURE_I): INTEGER is
+	feature_token (a_feature_i: FEATURE_I): NATURAL_32 is
 			-- `feature_token' associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -96,7 +96,7 @@ feature -- Queries feature_token
 
 feature -- Recording Operation feature_token
 
-	record_feature_token (a_feature_token: INTEGER; a_feature_i: FEATURE_I) is
+	record_feature_token (a_feature_token: NATURAL_32; a_feature_i: FEATURE_I) is
 			-- Record the correspondance
 			-- a_feature_i.feature_name_id => a_feature_token.
 		require
@@ -125,7 +125,7 @@ feature -- Recording Operation feature_token
 
 feature -- Queries once_tokens
 
-	once_tokens (a_feature_i: FEATURE_I): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	once_tokens (a_feature_i: FEATURE_I): TUPLE [data_class_tok: NATURAL_32; done_tok: NATURAL_32; result_tok: NATURAL_32; exception_tok: NATURAL_32] is
 			-- data class token,  `_done' and `_result' tokens associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -147,7 +147,7 @@ feature -- Queries once_tokens
 feature -- Recording Operation once_tokens
 
 	record_once_tokens (a_data_class_token,
-					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
+					a_once_done_token, a_once_result_token, a_once_exception_token: NATURAL_32;
 					a_feature_i: FEATURE_I) is
 			-- Record the correspondance
 			-- a_feature_i.feature_name_id =>
@@ -158,7 +158,7 @@ feature -- Recording Operation once_tokens
 			feature_i_not_void: a_feature_i /= Void
 		local
 			l_feature_name_id: INTEGER
-			l_entry: TUPLE [data_class_tok: INTEGER_32; done_tok: INTEGER_32; result_tok: INTEGER_32; exception_tok: INTEGER_32]
+			l_entry: like once_tokens
 		do
 			l_feature_name_id := a_feature_i.feature_name_id
 			if not list_once_tokens.has (l_feature_name_id) then
@@ -323,10 +323,10 @@ feature -- Cleaning operation
 
 feature {NONE} -- Storage Implementation
 
-	list_feature_token: HASH_TABLE [INTEGER, INTEGER]
-			-- {feature_name_id} => {feature_token}
+	list_feature_token: HASH_TABLE [NATURAL_32, INTEGER]
+			-- {feature_token} <= {feature_name_id}
 
-	list_once_tokens: HASH_TABLE [TUPLE [data_class_tok: INTEGER; done_tok: INTEGER; result_tok: INTEGER; exception_tok: INTEGER], INTEGER]
+	list_once_tokens: HASH_TABLE [TUPLE [data_class_tok: NATURAL_32; done_tok: NATURAL_32; result_tok: NATURAL_32; exception_tok: NATURAL_32], INTEGER]
 			-- feature_tokens[_data_class|_done|_result|_exception] <= [feature_name_id]
 
 	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offsets: IL_OFFSET_SET]], INTEGER]

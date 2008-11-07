@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_function_token: INTEGER is
+	get_function_token: NATURAL_32 is
 		require
 			item /= Default_pointer
 		do
@@ -132,7 +132,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_chain (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_chain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugChain**): EIF_INTEGER 
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			"GetChain"
 		end
 
-	cpp_get_code (obj: POINTER; a_p_code: POINTER): INTEGER is
+	cpp_get_code (obj: POINTER; a_p_code: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugCode**): EIF_INTEGER 
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			"GetCode"
 		end
 
-	cpp_get_function (obj: POINTER; a_p_function: POINTER): INTEGER is
+	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFunction**): EIF_INTEGER 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end
 
-	cpp_get_function_token (obj: POINTER; a_p: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_function_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(mdMethodDef*): EIF_INTEGER 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			"GetFunctionToken"
 		end
 
-	cpp_get_caller (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			"GetCaller"
 		end
 
-	cpp_get_callee (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			"GetCallee"
 		end
 
-	cpp_create_stepper (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugStepper**): EIF_INTEGER 
@@ -204,14 +204,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	cpp_query_interface_ICorDebugILFrame (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugILFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugFrame *) $obj)->QueryInterface (IID_ICorDebugILFrame, (void **) $a_p)"
 		end
 		
-	cpp_query_interface_ICorDebugNativeFrame (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_query_interface_ICorDebugNativeFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias

@@ -106,7 +106,7 @@ feature -- Properties
 
 feature -- Queries Class
 
-	class_type_for_token (a_class_token: INTEGER): CLASS_TYPE is
+	class_type_for_token (a_class_token: NATURAL_32): CLASS_TYPE is
 			-- CLASS_TYPE associated with `a_class_token'
 		require
 			class_token_valid: a_class_token /= 0
@@ -121,7 +121,7 @@ feature -- Queries Class
 			Result /= Void implies list_class_type_id.has (a_class_token)
 		end
 
-	know_class_from_token (a_class_token: INTEGER): BOOLEAN is
+	know_class_from_token (a_class_token: NATURAL_32): BOOLEAN is
 			-- Know class from token `a_class_token' ?
 		do
 			Result := list_class_type_id.has (a_class_token)
@@ -129,7 +129,7 @@ feature -- Queries Class
 
 feature -- Reverse Queries Class
 
-	class_token_for_class_type (a_class_type: CLASS_TYPE): INTEGER is
+	class_token_for_class_type (a_class_type: CLASS_TYPE): NATURAL_32 is
 		require
 			class_type_not_void: a_class_type /= Void
 		local
@@ -158,7 +158,7 @@ feature -- Reverse Queries Class
 
 feature -- Queries Feature
 
-	feature_i_for_token (a_feature_token: INTEGER): FEATURE_I is
+	feature_i_for_token (a_feature_token: NATURAL_32): FEATURE_I is
 			-- FEATURE_I associated with `a_feature_token'
 		require
 			feature_token_valid: a_feature_token /= 0
@@ -191,7 +191,7 @@ feature -- Queries Feature
 			Result /= Void implies list_feature_info.has (a_feature_token)
 		end
 
-	know_feature_from_token (a_feature_token: INTEGER): BOOLEAN is
+	know_feature_from_token (a_feature_token: NATURAL_32): BOOLEAN is
 			-- Know feature from token `a_feature_token' ?
 		do
 			Result := list_feature_info.has (a_feature_token)
@@ -199,7 +199,7 @@ feature -- Queries Feature
 
 feature -- Recording Operation
 
-	record_class_type (a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+	record_class_type (a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
 		require
 			class_type_not_void: a_class_type /= Void
 		local
@@ -221,7 +221,7 @@ feature -- Recording Operation
 			--| This can be forced any time
 		end
 
-	record_feature_i (a_class_type: CLASS_TYPE; a_feature_i: FEATURE_I; a_feature_token: INTEGER) is
+	record_feature_i (a_class_type: CLASS_TYPE; a_feature_i: FEATURE_I; a_feature_token: NATURAL_32) is
 		require
 			class_type_not_void: a_class_type /= Void
 			feature_i_not_void: a_feature_i /= Void
@@ -253,7 +253,7 @@ feature -- Recording Operation
 
 feature -- Cleaning operation
 
-	clean_feature_token (a_feature_token: INTEGER) is
+	clean_feature_token (a_feature_token: NATURAL_32) is
 		require
 			know_feature_from_token: know_feature_from_token (a_feature_token)
 		do
@@ -267,10 +267,10 @@ feature -- Cleaning operation
 
 feature {IL_DEBUG_INFO_FROM_MODULE} -- Storage Implementation
 
-	list_class_type_id: HASH_TABLE [INTEGER, INTEGER]
+	list_class_type_id: HASH_TABLE [INTEGER, NATURAL_32]
 			-- {static_type_id} <= {ClassToken}
 
-	list_feature_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+	list_feature_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], NATURAL_32]
 			-- {class_id, name_id} <= {feature_token}
 
 feature

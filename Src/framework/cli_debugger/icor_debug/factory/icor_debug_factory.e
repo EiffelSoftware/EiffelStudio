@@ -58,7 +58,7 @@ feature {ICOR_EXPORTER} -- Initialization
 
 feature {NONE} -- Externals
 
-	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: POINTER): INTEGER is
+	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: TYPED_POINTER [POINTER]): INTEGER is
 			-- New instance of ICorDebug
 		external
 			"C signature (LPWSTR, EIF_POINTER **): EIF_INTEGER use %"cli_debugger.h%""

@@ -52,7 +52,7 @@ feature {ICOR_EXPORTER} -- Access
 			l_arg_pointer: POINTER
 		do
 			if a_args /= Void and then a_args.count > 0 then
-				l_pointer_size := (create {PLATFORM}).Pointer_bytes
+				l_pointer_size := {PLATFORM}.Pointer_bytes
 				create l_mp_args.make (a_args.count * l_pointer_size)
 				from
 					i := a_args.lower
@@ -75,7 +75,7 @@ feature {ICOR_EXPORTER} -- Access
 				--| l_args_count is 0
 			end
 
-			last_call_success := cpp_call_function (item, a_func.item, l_args_count, l_args_pointer)
+			last_call_success := cpp_call_function (item, a_func.item, l_args_count.to_natural_32, l_args_pointer)
 
 --			debug ("DEBUGGER_TRACE_EVAL")
 --				print ("ICOR_DEBUG_EVAL.call_function : " +a_func.to_string + "%N%T=> return code = " + last_call_success.out + "%N")
@@ -170,7 +170,7 @@ feature {ICOR_EXPORTER} -- Access
 			l_item: ICOR_DEBUG_VALUE
 			l_size: INTEGER
 		do
-			l_size := (create {PLATFORM}).Pointer_bytes
+			l_size := {PLATFORM}.Pointer_bytes
 			create l_mp_args.make (a_args.count * l_size)
 			from
 				i := a_args.lower
@@ -184,7 +184,7 @@ feature {ICOR_EXPORTER} -- Access
 				l_mp_args.put_pointer (l_item.item, (i - a_args.lower)*l_size)
 				i := i + 1
 			end
-			last_call_success := cpp_new_object (item, a_func.item, a_args.count, l_mp_args.item)
+			last_call_success := cpp_new_object (item, a_func.item, a_args.count.to_natural_32, l_mp_args.item)
 		end
 
 	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS) is
@@ -203,7 +203,7 @@ feature {ICOR_EXPORTER} -- Enhanced Access
 
 feature {NONE} -- Implementation
 
-	cpp_call_function (obj: POINTER; a_p_function: POINTER; a_nb: INTEGER; a_pp_args: POINTER): INTEGER is
+	cpp_call_function (obj: POINTER; a_p_function: POINTER; a_nb: NATURAL_32; a_pp_args: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*, ULONG32, ICorDebugValue**): EIF_INTEGER
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"CallFunction"
 		end
 
-	cpp_is_active (obj: POINTER; a_pb_active: POINTER): INTEGER is
+	cpp_is_active (obj: POINTER; a_pb_active: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugEval signature(BOOL*): EIF_INTEGER
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			"Abort"
 		end
 
-	cpp_get_result (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_result (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugValue**): EIF_INTEGER
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			"GetResult"
 		end
 
-	cpp_create_value (obj: POINTER; a_cor_elt_type: INTEGER; a_class_p: POINTER; a_p: POINTER): INTEGER is
+	cpp_create_value (obj: POINTER; a_cor_elt_type: INTEGER; a_class_p: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugEval signature(CorElementType, ICorDebugClass*, ICorDebugValue**): EIF_INTEGER
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			"NewString"
 		end
 
-	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: INTEGER; a_p_args: POINTER): INTEGER is
+	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: NATURAL_32; a_p_args: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER

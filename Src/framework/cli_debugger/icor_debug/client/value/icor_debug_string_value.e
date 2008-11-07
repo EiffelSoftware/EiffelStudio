@@ -32,37 +32,37 @@ feature {NONE} -- Initialization
 
 feature {ICOR_EXPORTER} -- Properties
 
-	length: INTEGER
+	length: like get_length
 
 	string: STRING_32
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_length: INTEGER is
+	get_length: NATURAL_32 is
 			-- GetLength
 		do
 			last_call_success := cpp_get_length (item, $Result)
 		end
 
-	get_string (a_len: INTEGER): STRING_32 is
+	get_string (a_len: NATURAL_32): STRING_32 is
 			-- GetString
 		local
-			p_nbfetched: INTEGER
+			p_nbfetched: NATURAL_32
 			mp_name: MANAGED_POINTER
 			ws: WEL_STRING
 		do
-			create mp_name.make (( 1 + a_len ) * sizeof_WCHAR)
+			create mp_name.make ((1 + a_len.as_integer_32) * sizeof_WCHAR)
 
 			last_call_success := cpp_get_string (item, a_len, $p_nbfetched, mp_name.item)
 			if mp_name.item /= default_pointer then
 				create ws.make_by_pointer (mp_name.item)
-				Result := ws.string -- ubstring (1, a_len.min (p_nbfetched))
+				Result := ws.string -- ubstring (1, a_len.min (p_nbfetched.to_integer_32))
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	cpp_get_length (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_get_length (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32*): EIF_INTEGER 
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			"GetLength"
 		end
 
-	cpp_get_string (obj: POINTER; a_cchstring: INTEGER; a_pcchstring: POINTER; a_pstring: POINTER): INTEGER is
+	cpp_get_string (obj: POINTER; a_cchstring: NATURAL_32; a_pcchstring: TYPED_POINTER [NATURAL_32]; a_pstring: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32, ULONG32*, WCHAR*): EIF_INTEGER 

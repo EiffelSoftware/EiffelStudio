@@ -60,6 +60,7 @@ feature {ICOR_EXPORTER} -- Access
 			p_cmd,
 			p_cwd,
 			p_env: POINTER
+			h: like last_icor_debug_process_handle
 		do
 			create process_info.make
 
@@ -96,7 +97,8 @@ feature {ICOR_EXPORTER} -- Access
 				last_icor_debug_process_id := process_info.process_id
 
 				Result := icordebug_process
-				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
+				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $h)
+				last_icor_debug_process_handle := h
 			else
 				last_icor_debug_process_id     := 0
 				last_icor_debug_process_handle := default_pointer
@@ -184,7 +186,7 @@ feature {NONE} -- Implementation
 						a_flag: INTEGER;
 						a_environnement, a_directory, a_startup_info, a_process_info: POINTER;
 					 	a_cordebug_createprocess_flags: INTEGER;
-						icordebugprocess: POINTER
+						icordebugprocess: TYPED_POINTER [POINTER]
 						): INTEGER is
 			-- Call `ICorDebug->CreateProcess'.
 		external
@@ -230,7 +232,7 @@ feature {NONE} -- Implementation
 			"SetUnmanagedHandler"
 		end
 
-	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: POINTER): INTEGER is
+	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebug signature(DWORD, ICorDebugProcess**): EIF_INTEGER 
@@ -242,7 +244,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: POINTER): INTEGER is
+	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: TYPED_POINTER [POINTER]): INTEGER is
 			-- Call `ICorDebug->DebugActiveProcess'.
 		external
 			"[

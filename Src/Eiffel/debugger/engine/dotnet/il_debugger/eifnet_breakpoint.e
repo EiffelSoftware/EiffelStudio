@@ -31,7 +31,7 @@ create
 
 feature
 
-	make (a_bp_loc: BREAKPOINT_LOCATION; a_module_key: STRING; a_class, a_feature: INTEGER; a_line: INTEGER_64) is
+	make (a_bp_loc: BREAKPOINT_LOCATION; a_module_key: STRING; a_class, a_feature: NATURAL_32; a_line: INTEGER) is
 			-- Initialize BP item data
 		require
 			module_key_lower_case: is_lower_case (a_module_key)
@@ -40,7 +40,7 @@ feature
 			module_key := a_module_key
 			class_token := a_class
 			feature_token := a_feature
-			break_index := a_line
+			break_index := a_line.as_natural_32 --| FIXME: truncated from INTEGER
 		end
 
 feature -- Hashable interface
@@ -91,13 +91,13 @@ feature -- access
 			-- modulename view as key
 			-- this means in our case, lowered
 
-	class_token: INTEGER
+	class_token: NATURAL_32
 			-- class token
 
-	feature_token: INTEGER
+	feature_token: NATURAL_32
 			-- feature token
 
-	break_index: INTEGER_64
+	break_index: NATURAL_32
 			-- il line index (il offset)
 
 feature -- dotnet properties

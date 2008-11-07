@@ -296,7 +296,7 @@ feature {NONE} -- Implementation dotnet
 
 	icd_value_info: EIFNET_DEBUG_VALUE_INFO
 
-	dotnet_value_class_token: INTEGER;
+	dotnet_value_class_token: NATURAL_32
 			-- Class token for the dotnet value
 
 	dotnet_value_class_name: STRING is

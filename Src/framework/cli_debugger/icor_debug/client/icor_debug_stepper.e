@@ -24,10 +24,10 @@ feature {ICOR_EXPORTER} -- Access
 
 	is_active: BOOLEAN is
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_active (item, $Result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_active (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
@@ -109,6 +109,8 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
+			-- Step ranges.
+			-- FIXME jfiat [2008/11/07] : a_ranges should be made of NATURAL_32
 		require
 			a_ranges /= Void
 		local
@@ -136,12 +138,12 @@ feature {ICOR_EXPORTER} -- Access
 				l_struct_ptr := l_mp_ranges.item + ((i - a_ranges.lower) * l_size)
 
 				--| Set value of Struct |--
-				set_struct_start_offset (l_struct_ptr, l_item.left)
-				set_struct_end_offset   (l_struct_ptr, l_item.right)
+				set_struct_start_offset (l_struct_ptr, l_item.left.as_natural_32)
+				set_struct_end_offset   (l_struct_ptr, l_item.right.as_natural_32)
 
 				i := i + 1
 			end
-			last_call_success := cpp_step_range (item, a_b_step_in.to_integer, l_mp_ranges.item, a_ranges.count)
+			last_call_success := cpp_step_range (item, a_b_step_in.to_integer, l_mp_ranges.item, a_ranges.count.to_natural_32)
 		ensure
 			success: last_call_success = 0
 		end
@@ -155,7 +157,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_active (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_is_active (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL*): EIF_INTEGER 
@@ -215,7 +217,7 @@ feature {NONE} -- Implementation
 			"StepOut"
 		end
 
-	cpp_step_range (obj: POINTER; a_b_stepin: INTEGER; a_ranges: POINTER; a_count: INTEGER): INTEGER is
+	cpp_step_range (obj: POINTER; a_b_stepin: INTEGER; a_ranges: POINTER; a_count: NATURAL_32): INTEGER is
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL, COR_DEBUG_STEP_RANGE*, ULONG32): EIF_INTEGER 
@@ -352,25 +354,25 @@ feature -- enum CorDebugUnmappedStop
 
 feature {NONE} -- External Struct implementation
 
---	start_offset (p: POINTER): INTEGER_64 is
+--	start_offset (p: POINTER): NATURAL_32 is
 --			-- Access field StartOffset of struct pointed by `p'.
 --		external
 --			"C struct COR_DEBUG_STEP_RANGE access startOffset use %"cli_debugger_headers.h%" "
 --		end
 --
---	end_offset (p: POINTER): INTEGER_64 is
+--	end_offset (p: POINTER):NATURAL_32 is
 --			-- Access field EndOffset of struct pointed by `p'.
 --		external
 --			"C struct COR_DEBUG_STEP_RANGE access endOffset use %"cli_debugger_headers.h%" "
 --		end
 
-	set_struct_start_offset (p: POINTER; v: INTEGER_64) is
+	set_struct_start_offset (p: POINTER; v: NATURAL_32) is
 			-- Set field `StartOffset' of struct pointed by `p'.
 		external
 			"C struct COR_DEBUG_STEP_RANGE access startOffset type ULONG32 use %"cli_debugger_headers.h%" "
 		end
 
-	set_struct_end_offset (p: POINTER; v: INTEGER_64) is
+	set_struct_end_offset (p: POINTER; v: NATURAL_32) is
 			-- Set field `EndOffset' of struct pointed by `p'.
 		external
 			"C struct COR_DEBUG_STEP_RANGE access endOffset type ULONG32 use %"cli_debugger_headers.h%" "

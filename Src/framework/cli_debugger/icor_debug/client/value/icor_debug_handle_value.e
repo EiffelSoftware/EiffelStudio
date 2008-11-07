@@ -88,7 +88,7 @@ feature -- Cleaning / Dispose
 		
 feature {NONE} -- Implementation
 
-	cpp_get_handle_type (obj: POINTER; a_result: TYPED_POINTER[INTEGER]): INTEGER is
+	cpp_get_handle_type (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugHandleValue signature(CorDebugHandleType *): EIF_INTEGER 

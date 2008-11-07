@@ -14,7 +14,7 @@ inherit
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
-	eifnet_breakpoint (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64): EIFNET_BREAKPOINT is
+	eifnet_breakpoint (a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32 a_line: INTEGER): EIFNET_BREAKPOINT is
 			-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -25,7 +25,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			end
 		end
 
-	request_breakpoint_add (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_add (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER) is
 			-- request a new breakpoint addition
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -48,7 +48,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			end
 		end
 
-	request_breakpoint_remove (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_remove (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER) is
 			-- request a breakpoint removal
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 				end
 				if l_icd_code /= Void then
 					--| Let create the BreakPoint with offset
-					l_icd_bp := l_icd_code.create_breakpoint (a_bp.break_index)
+					l_icd_bp := l_icd_code.create_breakpoint (a_bp.break_index.as_natural_32)
 					if l_icd_bp /= Void and then l_icd_code.last_call_succeed then
 						a_bp.set_icor_breakpoint (l_icd_bp)
 						l_icd_bp.activate (True) -- not useful ... by default, but .. just to be sure ;)

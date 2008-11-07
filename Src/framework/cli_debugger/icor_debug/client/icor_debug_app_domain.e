@@ -32,11 +32,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_assemblies: ICOR_DEBUG_ASSEMBLY_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_assemblies (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_assemblies (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -44,11 +44,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_breakpoints: ICOR_DEBUG_BREAKPOINT_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_breakpoints (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_breakpoints (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -56,11 +56,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	enumerate_steppers: ICOR_DEBUG_STEPPER_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_enumerate_steppers (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_enumerate_steppers (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -70,10 +70,10 @@ feature {ICOR_EXPORTER} -- Access
 			-- IsAttached returns whether or not the debugger is attached to the
 			-- app domain
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_attached (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_attached (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
@@ -81,7 +81,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_name: STRING is
 			-- GetName returns the name of the app domain
 		local
-			p_cchname: INTEGER
+			p_cchname: NATURAL_32
 			mp_name: MANAGED_POINTER
 		do
 			create mp_name.make (256 * 2)
@@ -103,7 +103,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_id: INTEGER is
+	get_id: NATURAL_32 is
 			-- Get the ID of this app domain
 		do
 			last_call_success := cpp_get_id (item, $Result)
@@ -113,7 +113,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugProcess**): EIF_INTEGER 
@@ -133,7 +133,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"Attach"
 		end
 
-	frozen cpp_is_attached (obj: POINTER; a_pb_attached: POINTER): INTEGER is
+	frozen cpp_is_attached (obj: POINTER; a_pb_attached: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(BOOL*): EIF_INTEGER
@@ -145,7 +145,7 @@ feature {ICOR_EXPORTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugAssemblyEnum **): EIF_INTEGER 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			"EnumerateAssemblies"
 		end
 
-	frozen cpp_enumerate_breakpoints (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_enumerate_breakpoints (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugBreakpointEnum **): EIF_INTEGER 
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			"EnumerateBreakpoints"
 		end
 
-	frozen cpp_enumerate_steppers (obj: POINTER; a_p: POINTER): INTEGER is
+	frozen cpp_enumerate_steppers (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugStepperEnum **): EIF_INTEGER 
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			"EnumerateSteppers"
 		end
 
-	frozen cpp_get_name (obj: POINTER; a_cchname: INTEGER; a_pcchname: POINTER; a_szname: POINTER): INTEGER is
+	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			"GetName"
 		end
 
-	frozen cpp_get_id (obj: POINTER; a_p_id: POINTER): INTEGER is
+	frozen cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32*): EIF_INTEGER 

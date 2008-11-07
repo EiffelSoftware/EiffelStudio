@@ -22,10 +22,10 @@ feature {ICOR_EXPORTER} -- Access
 	is_valid: BOOLEAN is
 			-- IsValid tests whether the object is valid
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_valid (item, $l_result)
-			Result := (l_result /= 0) --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_valid (item, $r)
+			Result := (r /= 0) --| TRUE = 1 , FALSE = 0
 		end
 		
 	last_error_was_object_neutered: BOOLEAN is
@@ -36,7 +36,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_valid (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_is_valid (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugHeapValue signature(BOOL*): EIF_INTEGER 

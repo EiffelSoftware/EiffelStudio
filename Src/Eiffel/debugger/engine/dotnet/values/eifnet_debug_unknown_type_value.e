@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			if icd_value_info.is_null then
 				create address.make_void
 			else
-				create address.make_from_integer_64 (icd_value_info.object_address)
+				create address.make_from_natural_64 (icd_value_info.object_address)
 			end
 			register_dotnet_data
 		ensure

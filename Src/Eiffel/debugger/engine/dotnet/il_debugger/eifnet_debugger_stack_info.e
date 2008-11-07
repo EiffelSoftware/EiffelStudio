@@ -46,10 +46,10 @@ feature -- Access
 	current_stack_address: DBG_ADDRESS
 	current_stack_pseudo_depth: INTEGER
 	current_module_name: STRING
-	current_class_token: INTEGER
-	current_feature_token: INTEGER
-	current_il_offset: INTEGER
-	current_il_code_size: INTEGER
+	current_class_token: NATURAL_32
+	current_feature_token: NATURAL_32
+	current_il_offset: INTEGER -- FIXME: we should use NATURAL_32
+	current_il_code_size: INTEGER -- FIXME: we should use NATURAL_32
 
 	to_string: STRING is
 			-- String representation

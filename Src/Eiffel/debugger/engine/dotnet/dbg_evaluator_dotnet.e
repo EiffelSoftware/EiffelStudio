@@ -169,9 +169,9 @@ feature {NONE} -- Implementation
 				fn := f.feature_name
 				if fn /= Void then
 					if fn.is_equal ("count") then
-						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count, system.integer_32_class.compiled_class))
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count_as_integer_32, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("upper") then
-						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count - 1, system.integer_32_class.compiled_class))
+						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (nat_edv.array_value.get_count_as_integer_32 - 1, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("lower") then
 						create last_result.make_with_value (debugger_manager.dump_value_factory.new_integer_32_value (0, system.integer_32_class.compiled_class))
 					elseif fn.is_equal ("item") or else fn.is_equal ("infix %"@%"") then
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 							dv := a_params [a_params.lower]
 							if dv.is_type_integer_32 then
 								i := dv.as_dump_value_basic.value_integer_32
-								idv := nat_edv.array_value.get_element_at_position (i)
+								idv := nat_edv.array_value.get_element_at_integer_position (i)
 								if idv /= Void then
 									l_adv := debug_value_from_icdv (idv, Void)
 									create last_result.make_with_value (l_adv.dump_value)

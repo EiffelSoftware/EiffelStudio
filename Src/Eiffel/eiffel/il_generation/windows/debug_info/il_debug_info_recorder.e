@@ -164,8 +164,17 @@ feature -- Queries : eStudio data
 
 	implemented_type (a_class_c: CLASS_C; a_class_type: CLASS_TYPE): CLASS_TYPE is
 			-- Return CLASS_TYPE from `a_class_c' related to the derivation of `a_class_type'
+		require
+			a_class_c_attached: a_class_c /= Void
+			a_class_type_attached: a_class_type /= Void
 		do
-			Result := a_class_type.type.implemented_type (a_class_c.class_id).associated_class_type (Void)
+			if {clta: CL_TYPE_A} a_class_type.type.implemented_type (a_class_c.class_id) then
+				Result := clta.associated_class_type (Void)
+			else
+				Result := a_class_type
+			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Queries : eStudio data from debugger data
@@ -179,7 +188,7 @@ feature -- Queries : eStudio data from debugger data
 			Result := info_from_module_if_exists (a_module_filename) /= Void
 		end
 
-	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): BOOLEAN is
+	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): BOOLEAN is
 			-- Do we have information for Class identified by `a_module_filename' and `a_class_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -194,7 +203,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: INTEGER; a_feature_token: INTEGER): BOOLEAN is
+	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32; a_feature_token: NATURAL_32): BOOLEAN is
 			-- Do we have information for feature identified by `a_module_filename' , `a_class_token', and `a_feature_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -209,7 +218,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): CLASS_TYPE is
+	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): CLASS_TYPE is
 			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -224,7 +233,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	compiled_class_for_class_token_and_module (a_class_token: INTEGER; a_module_filename: STRING): CLASS_C is
+	compiled_class_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): CLASS_C is
 			-- Compiled CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_valid: a_class_token > 0
@@ -238,7 +247,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_name_for_class_token_and_module (a_class_token: INTEGER; a_module_filename: STRING): STRING is
+	class_name_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): STRING is
 			-- Class name for CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_positive: a_class_token > 0
@@ -256,7 +265,7 @@ feature -- Queries : eStudio data from debugger data
 			class_name_ok: Result /= Void and then not Result.is_empty
 		end
 
-	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: INTEGER): FEATURE_I is
+	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: NATURAL_32): FEATURE_I is
 			-- Feature_i identified by `a_module_filename'  and `a_feature_token'
 			--| Nota: class token is useless
 			--| since in a ICorDebugModule feature_token are unique
@@ -396,7 +405,7 @@ feature -- Access to module name computing
 
 feature -- Queries : dotnet data from estudio data
 
-	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): INTEGER is
+	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): NATURAL_32 is
 			-- Class token for CLASS_TYPE.
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
@@ -426,7 +435,7 @@ feature -- Queries : dotnet data from estudio data
 			class_token_positive: Result > 0
 		end
 
-	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): INTEGER is
+	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): NATURAL_32 is
 			-- Feature token identified for `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -440,7 +449,7 @@ feature -- Queries : dotnet data from estudio data
 			end
 		end
 
-	feature_token_for_non_generic (a_feat: FEATURE_I): INTEGER is
+	feature_token_for_non_generic (a_feat: FEATURE_I): NATURAL_32 is
 			-- Feature token identified for `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -452,7 +461,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := feature_token_for_feat_and_class_type (a_feat, l_class_type)
 		end
 
-	once_feature_tokens_for_feat_and_class (a_feat: FEATURE_I; a_class_c: CLASS_C): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	once_feature_tokens_for_feat_and_class (a_feat: FEATURE_I; a_class_c: CLASS_C): TUPLE [NATURAL_32, NATURAL_32, NATURAL_32, NATURAL_32] is
 			-- `_done' and `_result' Tokens for the once `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -475,7 +484,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [i:INTEGER; set: IL_OFFSET_SET]]
+			l_il_offset_list: like feature_breakable_il_offsets
 			l_offsets_info: IL_OFFSET_SET
 		do
 			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
@@ -485,7 +494,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 				until
 					l_il_offset_list.after or Result
 				loop
-					l_offsets_info := l_il_offset_list.item.set
+					l_offsets_info := l_il_offset_list.item.il_offset
 					Result := l_offsets_info.has (a_il_offset)
 					l_il_offset_list.forth
 				end
@@ -498,7 +507,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [i:INTEGER; set: IL_OFFSET_SET]]
+			l_il_offset_list: like feature_breakable_il_offsets
 			l_offsets_info: IL_OFFSET_SET
 			l_offset_before: INTEGER
 			l_breakable_line: INTEGER
@@ -514,7 +523,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 				until
 					l_il_offset_list.after
 				loop
-					l_offsets_info := l_il_offset_list.item.set
+					l_offsets_info := l_il_offset_list.item.il_offset
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower
@@ -570,7 +579,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			feat_not_void: a_feat /= Void
 		local
 			l_index: INTEGER
-			l_list: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]
+			l_list: like feature_breakable_il_offsets
 		do
 			l_index := a_breakable_line_number + 1
 			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
@@ -579,7 +588,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 				l_list /= Void
 				and then l_list.valid_index (l_index)
 			then
-				Result := l_list.i_th (l_index).set
+				Result := l_list.i_th (l_index).il_offset
 			else
 				Result:= Void
 			end
@@ -640,7 +649,7 @@ feature {NONE} -- line debug exploitation
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [ TUPLE [i:INTEGER; set:IL_OFFSET_SET]]
+			l_il_offset_list: like feature_breakable_il_offsets
 			l_offsets_info: IL_OFFSET_SET
 			i, upper: INTEGER
 		do
@@ -653,7 +662,7 @@ feature {NONE} -- line debug exploitation
 				until
 					l_il_offset_list.after
 				loop
-					l_offsets_info := l_il_offset_list.item.set
+					l_offsets_info := l_il_offset_list.item.il_offset
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower
@@ -686,7 +695,7 @@ feature {NONE} -- line debug exploitation
 
 feature {NONE} -- Implementation for class token finder
 
-	internal_requested_class_tokens: HASH_TABLE [INTEGER, INTEGER]
+	internal_requested_class_tokens: HASH_TABLE [NATURAL_32, INTEGER]
 			-- [Class token] <= [Class type]
 
 feature {CIL_CODE_GENERATOR} -- Recording context
@@ -778,12 +787,14 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 
 feature {CIL_CODE_GENERATOR} -- Token recording
 
-	record_once_info_for_class (a_data_class_token: INTEGER;
+	record_once_info_for_class (a_data_class_token,
 					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
 					a_feature: FEATURE_I; a_class_c: CLASS_C) is
 			--  Record `_done' `_result' and `_exception' tokens for once `a_once_name' from `a_class_type'.
 		local
 			l_class_types: LIST [CLASS_TYPE]
+			l_data_class_token,
+			l_once_done_token, l_once_result_token, l_once_exception_token: NATURAL_32
 		do
 			fixme ("[
 						JFIAT: 2005-09-20 : maybe we should record only once for CLASS_C
@@ -791,6 +802,12 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 						This would implies a new storage indexed by CLASS_C.
 						However, this is optimisation for generic classes
 					]")
+
+			l_data_class_token := a_data_class_token.as_natural_32
+			l_once_done_token := a_once_done_token.as_natural_32
+			l_once_result_token := a_once_result_token.as_natural_32
+			l_once_exception_token := a_once_exception_token.as_natural_32
+
 			if
 				is_debug_info_enabled
 			then
@@ -800,16 +817,16 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 				until
 					l_class_types.after
 				loop
-					record_once_info_for_class_type	(a_data_class_token,
-							a_once_done_token, a_once_result_token, a_once_exception_token,
+					record_once_info_for_class_type	(l_data_class_token,
+							l_once_done_token, l_once_result_token, l_once_exception_token,
 							a_feature, l_class_types.item)
 					l_class_types.forth
 				end
 			end
 		end
 
-	record_once_info_for_class_type (a_data_class_token: INTEGER;
-					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
+	record_once_info_for_class_type (a_data_class_token: NATURAL_32;
+					a_once_done_token, a_once_result_token, a_once_exception_token: NATURAL_32;
 					a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
 		require
 			a_feature_i /= Void
@@ -842,17 +859,21 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 
 	record_il_feature_info (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
 			-- Record feature information : class, feature token, and module name throught the other data.
+		local
+			l_class_token, l_feature_token: NATURAL_32
 		do
 			if is_debug_info_enabled then
+				l_class_token := a_class_token.as_natural_32
+				l_feature_token := a_feature_token.as_natural_32
 				if is_attribute then
 						if not in_interface and is_static then
-							process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
+							process_il_feature_info_recording (a_module, a_class_type, a_feat, l_class_token, l_feature_token)
 						elseif a_class_type.associated_class.is_single then
-							process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
+							process_il_feature_info_recording (a_module, a_class_type, a_feat, l_class_token, l_feature_token)
 						end
 				else -- not is_attribute
 					if not in_interface and is_static then
-						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
+						process_il_feature_info_recording (a_module, a_class_type, a_feat, l_class_token, l_feature_token)
 					else
 						do_nothing
 					end
@@ -879,7 +900,7 @@ feature {NONE} -- Record processing
 		end
 
 	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE;
-				a_feature: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
+				a_feature: FEATURE_I; a_class_token, a_feature_token: NATURAL_32) is
 			-- Record feature information regarding token
 		require
 			module_not_void: a_module /= Void
@@ -923,7 +944,7 @@ feature {NONE} -- Record processing
 
 feature {NONE} -- Class Specific info
 
-	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
 			-- Record class information regarding token
 		require
 			module_not_void: a_module /= Void
@@ -934,7 +955,7 @@ feature {NONE} -- Class Specific info
 		end
 
 	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING;
-			a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+			a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
 				--| New mecanism
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty

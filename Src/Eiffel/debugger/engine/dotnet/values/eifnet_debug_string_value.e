@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			if is_null then
 				create address.make_void
 			else
-				create address.make_from_integer_64 (icd_value_info.object_address)
+				create address.make_from_natural_64 (icd_value_info.object_address)
 			end
 			register_dotnet_data
 		ensure
@@ -90,8 +90,14 @@ feature -- Access
 	icd_string_value: ICOR_DEBUG_STRING_VALUE
 			-- String value
 
-	length: INTEGER
+	length: NATURAL_32
 			-- Capacity/Size of the String value
+
+	length_as_integer_32: INTEGER
+			-- Truncated from NATURAL_32
+		do
+			Result := length.as_integer_32
+		end
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.

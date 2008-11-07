@@ -165,7 +165,7 @@ rt_private void reset_variables() {
 //////////////////////////////////////////////////
 */
 
-#ifdef ASSERTIONS
+#ifdef EIF_ASSERTIONS
 
 	/* Error message for exceptions */
 rt_private char message [1024];

@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Properties
 
-	token: INTEGER
+	token: like get_token
 
 feature {ICOR_EXPORTER} -- Access
 
@@ -47,14 +47,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_token: INTEGER is
+	get_token: NATURAL_32 is
 		do
 			last_call_success := cpp_get_token (item, $Result)
 		ensure
 			success: last_call_success = 0
 		end
 
-	get_static_field_value (mdfielddef: INTEGER; a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
+	get_static_field_value (mdfielddef: NATURAL_32; a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
 			-- GetStaticFieldValue returns a value object (ICorDebugValue)
 			-- for the given static field
 			-- variable. If the static field could possibly be relative to either
@@ -74,7 +74,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_module (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugClass signature(ICorDebugModule**): EIF_INTEGER 
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			"GetModule"
 		end
 
-	cpp_get_token (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugClass signature(mdTypeDef*): EIF_INTEGER 
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			"GetToken"
 		end
 
-	cpp_get_static_field_value (obj: POINTER; a_mdfielddef: INTEGER; a_p_frame: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_static_field_value (obj: POINTER; a_mdfielddef: NATURAL_32; a_p_frame: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugClass signature(mdFieldDef, ICorDebugFrame*, ICorDebugValue**): EIF_INTEGER 

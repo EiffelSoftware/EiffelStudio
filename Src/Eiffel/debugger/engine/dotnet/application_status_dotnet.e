@@ -36,7 +36,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			-- position in source code.
 		local
 			curr_mod_name: STRING
-			curr_ctok, curr_ftok: INTEGER
+			curr_ctok, curr_ftok: NATURAL_32
 			curr_il_offset: INTEGER
 			dyn_ctype: CLASS_TYPE
 			feat_i: FEATURE_I

@@ -374,7 +374,7 @@ feature -- Remote access to RT_
 			m: ICOR_DEBUG_MODULE
 			f: ICOR_DEBUG_FRAME
 			icl: ICOR_DEBUG_CLASS
-			ctok, ftok: INTEGER
+			ctok, ftok: NATURAL_32
 		do
 			m := eifnet_debugger.ise_runtime_module
 			if m /= Void then
@@ -474,7 +474,7 @@ feature -- Remote access to Exceptions
 			m: ICOR_DEBUG_MODULE
 			f: ICOR_DEBUG_FRAME
 			fct: ICOR_DEBUG_FUNCTION
-			ctok, ftok: INTEGER
+			ctok, ftok: NATURAL_32
 		do
 			m := eifnet_debugger.ise_runtime_module
 			if m /= Void then
@@ -950,7 +950,7 @@ feature {NONE} -- Stepping
 			curr_il_offset: INTEGER
 			csed: CALL_STACK_ELEMENT_DOTNET
 			do_not_use_range: BOOLEAN
-			l_ranges:  ARRAY [TUPLE [INTEGER,INTEGER]]
+			l_ranges:  ARRAY [TUPLE [INTEGER, INTEGER]]
 			l_origin_cc: CLASS_C
 			l_impl_ct: CLASS_TYPE
 		do
@@ -1052,12 +1052,12 @@ feature {NONE} -- BreakPoints
 		local
 			f: E_FEATURE
 			ln: INTEGER
-			l_feature_token: INTEGER
+			l_feature_token: NATURAL_32
 			l_il_offset_set: IL_OFFSET_SET
 			l_il_offset: INTEGER
 			l_module_name: STRING
 			l_class_c: CLASS_C
-			l_class_token: INTEGER
+			l_class_token: NATURAL_32
 
 			l_class_type_list: TYPE_LIST
 			l_class_type: CLASS_TYPE
@@ -1126,7 +1126,7 @@ feature {NONE} -- Implementation
 			l_types: TYPE_LIST
 			l_class_type: CLASS_TYPE
 
-			l_class_token: INTEGER
+			l_class_token: NATURAL_32
 			l_module_name: STRING
 		do
 			l_str := "----%N"
@@ -1404,8 +1404,8 @@ feature -- Call stack related
 			l_func: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
-			l_class_token: INTEGER
-			l_feature_token: INTEGER
+			l_class_token: NATURAL_32
+			l_feature_token: NATURAL_32
 			l_module_name: STRING
 			l_module_display: STRING
 
@@ -1452,7 +1452,7 @@ feature -- Call stack related
 					end
 
 					if l_class_type /= Void and then l_feature_i /= Void then
-						l_il_offset := l_frame_il.get_ip
+						l_il_offset := l_frame_il.get_ip_as_integer_32
 						l_mapping := l_frame_il.last_cordebugmapping_result_to_string
 						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_class_type, l_feature_i, l_il_offset)
 						l_output.append_string ("  + <"

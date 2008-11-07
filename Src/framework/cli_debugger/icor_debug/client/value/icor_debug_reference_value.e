@@ -22,21 +22,21 @@ feature {ICOR_EXPORTER} -- Access
 	is_null: BOOLEAN is
 			-- IsNull tests whether the reference is null
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_null (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0			
+			last_call_success := cpp_is_null (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0			
 		ensure
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_value (a_result_64: POINTER) is
+	get_value (a_p_cordb_address: POINTER) is
 			-- GetValue copies the value into the specified buffer
 		do
-			last_call_success := cpp_get_value (item, a_result_64)
+			last_call_success := cpp_get_value (item, a_p_cordb_address)
 		end
 	
-	set_value (a_cordb_address: INTEGER_64) is
+	set_value (a_cordb_address: NATURAL_64) is
 			-- SetValue copies a new value from the specified buffer. The buffer should
 			-- be the appropriate size for the simple type.
 		do
@@ -73,7 +73,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_null (obj: POINTER; a_result: TYPED_POINTER[INTEGER]): INTEGER is
+	cpp_is_null (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(BOOL*): EIF_INTEGER 
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			"IsNull"
 		end
 
-	cpp_get_value (obj: POINTER; a_i64: POINTER): INTEGER is
+	cpp_get_value (obj: POINTER; a_p_cordb_address: POINTER): INTEGER is
 			--| Nb: typedef ULONG64 CORDB_ADDRESS;
 		external
 			"[
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			"GetValue"
 		end
 		
-	cpp_set_value (obj: POINTER; a_cordb_address: INTEGER_64): INTEGER is
+	cpp_set_value (obj: POINTER; a_cordb_address: NATURAL_64): INTEGER is
 			--| Nb: typedef ULONG64 CORDB_ADDRESS;
 		external
 			"[
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			"SetValue"
 		end
 		
-	cpp_dereference (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_dereference (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			"Dereference"
 		end
 		
-	cpp_dereference_strong (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_dereference_strong (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 

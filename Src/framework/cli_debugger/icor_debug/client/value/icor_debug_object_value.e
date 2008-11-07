@@ -47,7 +47,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_field_value (a_class: ICOR_DEBUG_CLASS; a_mdfield_def: INTEGER): ICOR_DEBUG_VALUE is
+	get_field_value (a_class: ICOR_DEBUG_CLASS; a_mdfield_def: NATURAL_32): ICOR_DEBUG_VALUE is
 			-- GetFieldValue returns a value for the given field in the given
 			-- class. The class must be on the class hierarchy of the object's
 			-- class, and the field must be a field of that class.
@@ -62,10 +62,10 @@ feature {ICOR_EXPORTER} -- Access
 
 	is_value_class: BOOLEAN is
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_value_class (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0			
+			last_call_success := cpp_is_value_class (item, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0			
 		ensure
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
@@ -95,7 +95,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_class (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_class (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass**): EIF_INTEGER 
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			"GetClass"
 		end
 
-	cpp_get_field_value (obj: POINTER; a_class: POINTER; a_mdfield_def: INTEGER; a_p: POINTER): INTEGER is
+	cpp_get_field_value (obj: POINTER; a_class: POINTER; a_mdfield_def: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass*,mdFieldDef, ICorDebugValue**): EIF_INTEGER 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			"GetFieldValue"
 		end
 		
-	cpp_is_value_class (obj: POINTER; a_is_value_class: POINTER): INTEGER is
+	cpp_is_value_class (obj: POINTER; a_is_value_class: TYPED_POINTER [INTEGER]): INTEGER is
 			-- Call `ICorDebugObjectValue->IsValueClass'.
 		external
 			"[
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			"IsValueClass"
 		end
 
-	cpp_get_managed_copy (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_managed_copy (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugObjectValue signature(IUnknown**): EIF_INTEGER 

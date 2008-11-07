@@ -21,7 +21,7 @@ feature {ICOR_EXPORTER} -- Access
 --		require
 --			celt_positive: a_celt > 0
 --		local
---			l_p: POINTER
+--			p: POINTER
 --			p_celt_fetched: INTEGER
 --			mp_tab: MANAGED_POINTER
 --			i: INTEGER
@@ -36,8 +36,8 @@ feature {ICOR_EXPORTER} -- Access
 --				until
 --					i > p_celt_fetched
 --				loop
---					l_p := mp_tab.read_pointer(i - 1)
---					create l_icor.make_by_pointer (l_p)
+--					p := mp_tab.read_pointer(i - 1)
+--					create l_icor.make_by_pointer (p)
 --					l_icor.add_ref
 --					Result.put (l_icor, i)
 --					i := i + 1
@@ -49,12 +49,12 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
+	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
 		do
 			Result := cpp_next (obj, a_celt, a_p, a_pceltfetched)
 		end
 
-	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
+	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomainEnum signature(ULONG,ICorDebugAppDomain**, ULONG*): EIF_INTEGER 

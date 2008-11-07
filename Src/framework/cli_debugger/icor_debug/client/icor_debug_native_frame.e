@@ -27,7 +27,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_ip: INTEGER is
+	get_ip: NATURAL_32 is
 			-- get OffSet
 		do
 			last_call_success := cpp_get_ip (item, $Result)
@@ -50,7 +50,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_ip (obj: POINTER; a_p_offset: POINTER): INTEGER is
+	cpp_get_ip (obj: POINTER; a_p_offset: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ ICorDebugNativeFrame signature(ULONG32*): EIF_INTEGER 
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			"GetIP"
 		end
 
-	cpp_get_register_set (obj: POINTER; a_p_register: POINTER): INTEGER is
+	cpp_get_register_set (obj: POINTER; a_p_register: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugNativeFrame signature(ICorDebugRegisterSet**): EIF_INTEGER 

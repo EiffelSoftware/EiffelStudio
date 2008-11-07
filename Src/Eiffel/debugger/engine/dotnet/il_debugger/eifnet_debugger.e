@@ -865,8 +865,8 @@ feature {NONE} -- Callback actions
 			is_valid_callstack_offset: BOOLEAN
 			execution_stopped: like execution_stopped_on_end_of_step_complete_callback
 
-			l_class_token: INTEGER
-			l_feat_token: INTEGER
+			l_class_token: NATURAL_32
+			l_feat_token: NATURAL_32
 
 			l_module_name: STRING
 			l_current_il_offset: INTEGER
@@ -1246,6 +1246,7 @@ feature -- Stepping Access
 
 	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
 			-- Step next.
+			-- FIXME: a_il_ranges should be made of NATURAL_32
 		local
 			l_stepper: ICOR_DEBUG_STEPPER
 		do
@@ -1409,7 +1410,7 @@ feature -- Assertion change
 			l_frame: ICOR_DEBUG_FRAME
 			l_bool, l_icd: ICOR_DEBUG_VALUE
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_token: INTEGER
+			l_token: NATURAL_32
 			l_func: ICOR_DEBUG_FUNCTION
 		do
 			l_icd_module := ise_runtime_module
@@ -1619,7 +1620,7 @@ feature -- Easy access
 			arg_class_type_not_void: a_class_type /= Void
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_class_token: INTEGER
+			l_class_token: NATURAL_32
 		do
 			l_icd_module := icor_debug_module_for_class_type (a_class_type)
 			if l_icd_module /= Void then
@@ -1630,7 +1631,7 @@ feature -- Easy access
 
 feature -- Bridge to MD_IMPORT
 
-	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): INTEGER is
+	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): NATURAL_32 is
 			-- Find class token using Meta Data.
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -1652,7 +1653,7 @@ feature -- Function Evaluation
 			valid_class_name: cl_name /= Void and then not cl_name.is_empty
 			valid_feature_name: f_name /= Void and then not f_name.is_empty
 		local
-			l_cl_tok: INTEGER
+			l_cl_tok: NATURAL_32
 			icdm: ICOR_DEBUG_MODULE
 		do
 			l_cl_tok := a_icdmod.md_class_token_by_type_name (cl_name)
@@ -1670,7 +1671,7 @@ feature -- Function Evaluation
 			end
 		end
 
-	icd_function_by_name (a_icdmod: ICOR_DEBUG_MODULE; a_classtok: INTEGER; f_name: STRING): ICOR_DEBUG_FUNCTION is
+	icd_function_by_name (a_icdmod: ICOR_DEBUG_MODULE; a_classtok: NATURAL_32; f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `a_icdmod' module,
 			-- with class token `a_classtok'
 			-- with feature name `f_name'.
@@ -1680,7 +1681,7 @@ feature -- Function Evaluation
 			valid_feature_name: f_name /= Void and then not f_name.is_empty
 		local
 			icdm: ICOR_DEBUG_MODULE
-			classtok, feattok: INTEGER
+			classtok, feattok: NATURAL_32
 		do
 			icdm := a_icdmod
 			classtok := a_classtok
@@ -1719,7 +1720,7 @@ feature -- Function Evaluation
 			-- ICorDebugFunction for `ct'.`a_feat'
 			-- and optionally on object `icdv'
 		local
-			l_feat_tok: INTEGER
+			l_feat_tok: NATURAL_32
 			l_feat_name: STRING
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -1792,7 +1793,7 @@ feature -- Specific function evaluation
 --			l_class: ICOR_DEBUG_CLASS
 --			l_string_class: CLASS_C
 --			l_feat_count: FEATURE_I
---			l_feat_count_token: INTEGER
+--			l_feat_count_token: NATURAL_32
 --		do
 --				--| Get STRING info from compilo
 --			l_string_class := Eiffel_system.String_class.compiled_class
@@ -1822,7 +1823,7 @@ feature -- Specific function evaluation
 			l_module: ICOR_DEBUG_MODULE
 
 			l_feat_to_cil: FEATURE_I
-			l_feat_to_cil_token: INTEGER
+			l_feat_to_cil_token: NATURAL_32
 			l_function_to_cil: ICOR_DEBUG_FUNCTION
 		do
 				--| Get STRING info from compilo
@@ -1879,8 +1880,7 @@ feature -- Specific function evaluation
 	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING_32 is
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
-			l_size: INTEGER
-			l_len: INTEGER
+			l_size, l_len: NATURAL_32
 			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
 		do
 			last_string_value_length := 0
@@ -1888,15 +1888,15 @@ feature -- Specific function evaluation
 			if l_icd_string_value /= Void then
 				l_len := l_icd_string_value.get_length
 				if not l_icd_string_value.last_error_was_object_neutered then
-					last_string_value_length := l_len
+					last_string_value_length := l_len.as_integer_32
 						--| Be careful, in this context min,max correspond to string starting at position '0'
 					if max < 0 then
 						l_size := l_len
 					else
-						l_size := (max + 1).min (l_len)
+						l_size := (max + 1).as_natural_32.min (l_len)
 					end
 					Result := l_icd_string_value.get_string (l_size)
-					Result := Result.substring ((min + 1).max (1), l_size.min (Result.count))
+					Result := Result.substring ((min + 1).max (1), l_size.as_integer_32.min (Result.count))
 				end
 			end
 		end
@@ -1931,7 +1931,7 @@ feature -- Specific function evaluation
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
-			l_feature_token: INTEGER
+			l_feature_token: NATURAL_32
 
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
@@ -2004,7 +2004,7 @@ feature -- Specific function evaluation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_feature_token: INTEGER
+			l_feature_token: NATURAL_32
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
@@ -2088,7 +2088,7 @@ feature -- Specific function evaluation
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
-			l_feature_token: INTEGER
+			l_feature_token: NATURAL_32
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do
@@ -2141,7 +2141,7 @@ feature -- Specific function evaluation
 		local
 			l_icd: ICOR_DEBUG_VALUE
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_feature_token: INTEGER
+			l_feature_token: NATURAL_32
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
@@ -2188,8 +2188,8 @@ feature -- Specific function evaluation
 			a_class_c_not_void: a_class_c /= Void
 			a_feat_not_void: a_feat /= Void
 		local
-			l_once_info_tokens: TUPLE [cl: INTEGER; done: INTEGER; res: INTEGER; ex: INTEGER]
-			l_data_class_token, l_done_token, l_result_token, l_exception_token: INTEGER
+			l_once_info_tokens: TUPLE [cl: NATURAL_32; done: NATURAL_32; res: NATURAL_32; ex: NATURAL_32]
+			l_data_class_token, l_done_token, l_result_token, l_exception_token: NATURAL_32
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_already_called: BOOLEAN
@@ -2331,8 +2331,8 @@ feature -- Specific function evaluation
 --		local
 --			l_icdm: ICOR_DEBUG_MODULE
 --			l_md_import: MD_IMPORT
---			l_gc_class_token: INTEGER
---			l_meth_token: INTEGER
+--			l_gc_class_token: NATURAL_32
+--			l_meth_token: NATURAL_32
 --			l_icdf: ICOR_DEBUG_FUNCTION
 --		do
 --			l_icdm := info.icor_debug_module_for_mscorlib

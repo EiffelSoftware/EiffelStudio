@@ -32,7 +32,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_module (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugModuleBreakpoint signature(ICorDebugModule**): EIF_INTEGER 

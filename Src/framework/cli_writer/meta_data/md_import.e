@@ -79,7 +79,7 @@ feature -- Enumerating collections
 			last_call_success := cpp_reset_enum (item, a_enum_hdl, a_pos)
 		end
 
-	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all TypedDefs within the current scope.
 			-- Note: the collection will contain Classes, Interfaces, etc,
 			-- as well as any TypeDefs added via an extensibility mechanism.
@@ -96,11 +96,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_size: INTEGER): ARRAY [INTEGER] is
+	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_size: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all interfaces implemented by the specified TypeDef.
 			-- Tokens will be returned in the order the interfaces were specified
 			-- (through DefineTypeDef or SetTypeDefProps).
@@ -118,11 +118,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all members (fields and methods, but not properties or events)
 			-- defined by the class specified by cl.
 			-- This does not include any members inherited by that class;
@@ -140,11 +140,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all methods defined by the specified TypeDef.
 			-- Tokens are returned in the same order they were emitted.
 			-- If you supply a nil token for the cl argument the method will enumerate
@@ -162,11 +162,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all fields defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -185,11 +185,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_properties (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_properties (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all properties defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -208,11 +208,11 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
-	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32] is
 			-- Enumerates all attributed parameters for the method specified by md.
 			-- By attributed parameters, we mean those parameters of a method
 			-- which have been explicitly defined via a call to DefineParam
@@ -229,13 +229,13 @@ feature -- Enumerating collections
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0
 			then
-				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
 feature -- Finding specific item in MetaData
 
-	find_type_def_by_name (a_name: STRING; a_encloser_tok: INTEGER): INTEGER is
+	find_type_def_by_name (a_name: STRING; a_encloser_tok: NATURAL_32): NATURAL_32 is
 		local
 			l_name: UNI_STRING
 		do
@@ -243,7 +243,7 @@ feature -- Finding specific item in MetaData
 			last_call_success := cpp_find_type_def_by_name (item, l_name.item, a_encloser_tok, $Result)
 		end
 
-	find_member (a_typedef: INTEGER; a_name: STRING): INTEGER is
+	find_member (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32 is
 		local
 			l_name: UNI_STRING
 		do
@@ -253,7 +253,7 @@ feature -- Finding specific item in MetaData
 					$Result)
 		end
 
-	find_method (a_typedef: INTEGER; a_name: STRING): INTEGER is
+	find_method (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32 is
 		local
 			l_name: UNI_STRING
 		do
@@ -263,7 +263,7 @@ feature -- Finding specific item in MetaData
 					$Result)
 		end
 
-	find_field (a_typedef: INTEGER; a_name: STRING): INTEGER is
+	find_field (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32 is
 		local
 			l_name: UNI_STRING
 		do
@@ -275,13 +275,13 @@ feature -- Finding specific item in MetaData
 
 feature -- Obtaining Properties of a Specified Object
 
-	get_typedef_props (a_tok: INTEGER): STRING is
+	get_typedef_props (a_tok: NATURAL_32): STRING is
 			--
 		local
 			mp_name: MANAGED_POINTER
 			l_rsize: INTEGER
 			l_flag: POINTER
-			l_tkext: INTEGER
+			l_tkext: NATURAL_32
 		do
 			create mp_name.make (256 * 2)
 
@@ -289,19 +289,19 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
 
-	get_interface_impl_props (a_interface_impl: INTEGER): INTEGER is
+	get_interface_impl_props (a_interface_impl: NATURAL_32): NATURAL_32 is
 			-- Gets the information stored in metadata for a specified interface implementation
 		local
-			l_interf_tok: INTEGER
+			l_interf_tok: NATURAL_32
 		do
 			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
 		end
 
-	get_member_props (a_tok: INTEGER): TUPLE [name:STRING; flag:INTEGER] is
+	get_member_props (a_tok: NATURAL_32): TUPLE [name:STRING; flag:INTEGER] is
 			-- Get member 's name property
 		local
 			mp_name: MANAGED_POINTER
-			l_r_classtoken: INTEGER
+			l_r_classtoken: NATURAL_32
 			l_rsize: INTEGER
 			l_flag: INTEGER
 			l_sig: POINTER
@@ -310,7 +310,6 @@ feature -- Obtaining Properties of a Specified Object
 			l_pdwimpl_flags, l_cplustype_flag: POINTER
 			l_cst_ppvalue: POINTER
 			l_pcchvalue: INTEGER
-
 		do
 			create mp_name.make (256 * 2)
 
@@ -322,11 +321,11 @@ feature -- Obtaining Properties of a Specified Object
 			Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_flag]
 		end
 
-	get_method_props (a_tok: INTEGER): STRING is
+	get_method_props (a_tok: NATURAL_32): STRING is
 			-- Get method 's name property
 		local
 			mp_name: MANAGED_POINTER
-			l_r_classtoken: INTEGER
+			l_r_classtoken: NATURAL_32
 			l_rsize: INTEGER
 			l_flag: POINTER
 			l_sig: POINTER
@@ -343,11 +342,11 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
 
-	get_field_props (a_tok: INTEGER): STRING is
+	get_field_props (a_tok: NATURAL_32): STRING is
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
-			l_r_classtoken: INTEGER
+			l_r_classtoken: NATURAL_32
 			l_rsize: INTEGER
 			l_sig: POINTER
 			l_sigsize: INTEGER
@@ -363,19 +362,19 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
 
-	get_property_props (a_tok: INTEGER): TUPLE [name:STRING; getter:INTEGER; flag:INTEGER] is
+	get_property_props (a_tok: NATURAL_32): TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER] is
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
-			l_r_classtoken: INTEGER
+			l_r_classtoken: NATURAL_32
 			l_rsize: INTEGER
 			l_sig: POINTER
 			l_sigsize: INTEGER
 			l_pdwdef_type: POINTER
 			l_ppvalue: POINTER
 			l_pcbvalue: INTEGER
-			l_setter: INTEGER
-			l_getter: INTEGER
+			l_setter: NATURAL_32
+			l_getter: NATURAL_32
 			l_cmax: INTEGER
 			l_pcothermethod: INTEGER
 			l_mp_tokens: MANAGED_POINTER
@@ -410,61 +409,61 @@ feature -- Obtaining Properties of a Specified Object
 
 feature -- Status
 
-	is_valid_token (a_tok: INTEGER): BOOLEAN is
+	is_valid_token (a_tok: NATURAL_32): BOOLEAN is
 			-- Returns true if tk is a valid metadata token in the current scope.
 			-- [The method checks the token type is one of those in the CorTokenType
 			-- enumeration in CorHdr.h, and then that its RID is less than or equal
 			-- to the current count of those token types]
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			l_result := cpp_is_valid_token (item, a_tok)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			r := cpp_is_valid_token (item, a_tok)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
 
-	is_global (a_tok: INTEGER): BOOLEAN is
+	is_global (a_tok: NATURAL_32): BOOLEAN is
 			-- is type, field or method identified by `_a_tok' global ?
 		local
-			l_result: INTEGER
+			r: INTEGER
 		do
-			last_call_success := cpp_is_global (item, a_tok, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			last_call_success := cpp_is_global (item, a_tok, $r)
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
 		end
 
 feature -- Queries
 
-	field_tokens (a_class_token: INTEGER): ARRAYED_LIST [INTEGER] is
+	field_tokens (a_class_token: NATURAL_32): ARRAYED_LIST [NATURAL_32] is
 		require
 			a_class_token > 0
 		do
 			Result := enum_tokens (a_class_token, agent enum_fields)
 		end
 
-	property_tokens (a_class_token: INTEGER): ARRAYED_LIST [INTEGER] is
+	property_tokens (a_class_token: NATURAL_32): ARRAYED_LIST [NATURAL_32] is
 		require
 			a_class_token > 0
 		do
 			Result := enum_tokens (a_class_token, agent enum_properties)
 		end
 
-	enum_tokens (   a_class_token: INTEGER;
-					enum_agent: FUNCTION [ANY, TUPLE [TYPED_POINTER [POINTER], INTEGER, INTEGER], ARRAY [INTEGER]];
-				): ARRAYED_LIST [INTEGER] is
+	enum_tokens (   a_class_token: NATURAL_32;
+					enum_agent: FUNCTION [ANY, TUPLE [TYPED_POINTER [POINTER], NATURAL_32, INTEGER], ARRAY [NATURAL_32]];
+				): ARRAYED_LIST [NATURAL_32] is
 		require
 			a_class_token > 0
 		local
 			l_tp: TYPED_POINTER [POINTER]
-			l_tokens: ARRAYED_LIST [INTEGER]
-			l_tokens_array: ARRAY [INTEGER]
+			l_tokens: ARRAYED_LIST [NATURAL_32]
+			l_tokens_array: ARRAY [NATURAL_32]
 			l_t_index: INTEGER
 			l_t_upper: INTEGER
 			l_tokens_count: INTEGER
 			l_enum_hdl: POINTER
-			l_token: INTEGER
+			l_token: NATURAL_32
 		do
 				--| Get inherited "direct" entry
 			create l_tokens.make (5)
@@ -549,7 +548,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumTypeDefs"
 		end
 
-	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdInterfaceImpl*, ULONG, ULONG*): EIF_INTEGER 
@@ -559,7 +558,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumInterfaceImpls"
 		end
 
-	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdToken*, ULONG, ULONG*): EIF_INTEGER 
@@ -569,7 +568,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumMembers"
 		end
 
-	frozen cpp_enum_methods (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_methods: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_methods (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_methoddef: NATURAL_32; r_methods: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdMethodDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -579,7 +578,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumMethods"
 		end
 
-	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdFieldDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -589,7 +588,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumFields"
 		end
 
-	frozen cpp_enum_properties (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_properties: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_properties (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; r_properties: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdProperty*, ULONG, ULONG*): EIF_INTEGER 
@@ -599,7 +598,7 @@ feature {NONE} -- Implementation Enum...
 			"EnumProperties"
 		end
 
-	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_methoddef: NATURAL_32; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(HCORENUM*, mdMethodDef, mdParamDef*, ULONG, ULONG*): EIF_INTEGER 
@@ -611,8 +610,8 @@ feature {NONE} -- Implementation Enum...
 
 feature {NONE} -- Implementation Finding
 
-	frozen cpp_find_type_def_by_name (obj: POINTER; a_name: POINTER; a_token: INTEGER;
-			r_typedef: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_find_type_def_by_name (obj: POINTER; a_name: POINTER; a_token: NATURAL_32;
+			r_typedef: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(LPCWSTR, mdToken, mdTypeDef*): EIF_INTEGER 
@@ -622,9 +621,9 @@ feature {NONE} -- Implementation Finding
 			"FindTypeDefByName"
 		end
 
-	frozen cpp_find_member (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
+	frozen cpp_find_member (obj: POINTER; md_typedef: NATURAL_32; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
-			r_mdtoken: TYPED_POINTER [INTEGER]): INTEGER is
+			r_mdtoken: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(mdTypeDef, LPCWSTR, PCCOR_SIGNATURE, ULONG , mdToken*): EIF_INTEGER 
@@ -634,9 +633,9 @@ feature {NONE} -- Implementation Finding
 			"FindMember"
 		end
 
-	frozen cpp_find_method (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
+	frozen cpp_find_method (obj: POINTER; md_typedef: NATURAL_32; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
-			r_mdtoken: TYPED_POINTER [INTEGER]): INTEGER is
+			r_mdtoken: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(mdTypeDef, LPCWSTR, PCCOR_SIGNATURE, ULONG , mdMethodDef*): EIF_INTEGER 
@@ -646,9 +645,9 @@ feature {NONE} -- Implementation Finding
 			"FindMethod"
 		end
 
-	frozen cpp_find_field (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
+	frozen cpp_find_field (obj: POINTER; md_typedef: NATURAL_32; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
-			r_mdtoken: TYPED_POINTER [INTEGER]): INTEGER is
+			r_mdtoken: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(mdTypeDef, LPCWSTR, PCCOR_SIGNATURE, ULONG , mdFieldDef*): EIF_INTEGER 
@@ -660,9 +659,9 @@ feature {NONE} -- Implementation Finding
 
 feature {NONE} -- Implementation Obtaining information
 
-	frozen cpp_get_typedef_props (obj: POINTER; a_typedef: INTEGER; r_name: POINTER;
+	frozen cpp_get_typedef_props (obj: POINTER; a_typedef: NATURAL_32; r_name: POINTER;
 										a_wcharsize: INTEGER; r_wchsize: POINTER;
-										r_flags: POINTER; r_ext: POINTER): INTEGER is
+										r_flags: POINTER; r_ext: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(mdTypeDef, LPWSTR, ULONG, ULONG*, DWORD*, mdToken*): EIF_INTEGER 
@@ -672,8 +671,8 @@ feature {NONE} -- Implementation Obtaining information
 			"GetTypeDefProps"
 		end
 
-	frozen cpp_get_interface_impl_props (obj: POINTER; a_inter_impl: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
-										r_interface_token: TYPED_POINTER [INTEGER]
+	frozen cpp_get_interface_impl_props (obj: POINTER; a_inter_impl: NATURAL_32; r_class_token: TYPED_POINTER [NATURAL_32];
+										r_interface_token: TYPED_POINTER [NATURAL_32]
 										): INTEGER is
 		external
 			"[
@@ -685,7 +684,7 @@ feature {NONE} -- Implementation Obtaining information
 		end
 
 	frozen cpp_get_member_props (obj: POINTER;
-				a_member_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				a_member_token: NATURAL_32; r_class_token: TYPED_POINTER [NATURAL_32];
 				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
 				r_pdwattr_flags: POINTER;
 				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
@@ -710,7 +709,7 @@ feature {NONE} -- Implementation Obtaining information
 		end
 
 	frozen cpp_get_method_props (obj: POINTER;
-				a_method_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				a_method_token: NATURAL_32; r_class_token: TYPED_POINTER [NATURAL_32];
 				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
 				r_flags: POINTER;
 				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
@@ -730,7 +729,7 @@ feature {NONE} -- Implementation Obtaining information
 		end
 
 	frozen cpp_get_field_props (obj: POINTER;
-				a_field_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				a_field_token: NATURAL_32; r_class_token: TYPED_POINTER [NATURAL_32];
 				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
 				r_flags: POINTER; ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
 				a_elt_type_cst_value: POINTER; a_def_val_p: POINTER;
@@ -751,12 +750,12 @@ feature {NONE} -- Implementation Obtaining information
 		end
 
 	frozen cpp_get_property_props (obj: POINTER;
-				a_property_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				a_property_token: NATURAL_32; r_class_token: TYPED_POINTER [NATURAL_32];
 				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
 				r_flags: POINTER; ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
 				a_elt_type_cst_value: POINTER; a_def_val_p: POINTER;
 				a_def_val_byte_count: TYPED_POINTER [INTEGER];
-				a_setter: TYPED_POINTER [INTEGER]; a_getter: TYPED_POINTER [INTEGER];
+				a_setter: TYPED_POINTER [NATURAL_32]; a_getter: TYPED_POINTER [NATURAL_32];
 				a_othermethod: POINTER;	a_cmax: INTEGER; a_pcothermethod: TYPED_POINTER [INTEGER]
 						): INTEGER is
 		external
@@ -780,7 +779,7 @@ feature {NONE} -- Implementation Obtaining information
 
 feature {NONE} -- Implementation Status
 
-	frozen cpp_is_valid_token (obj: POINTER; a_tok: INTEGER): INTEGER is
+	frozen cpp_is_valid_token (obj: POINTER; a_tok: NATURAL_32): INTEGER is
 		external
 			"[
 				C++ IMetaDataImport signature(mdToken): EIF_INTEGER 
@@ -791,7 +790,7 @@ feature {NONE} -- Implementation Status
 		end
 
 	frozen cpp_is_global (obj: POINTER;
-				a_md_token: INTEGER; r_b_global: TYPED_POINTER [INTEGER];
+				a_md_token: NATURAL_32; r_b_global: TYPED_POINTER [INTEGER];
 							): INTEGER is
 		external
 			"[
@@ -860,14 +859,14 @@ feature {NONE} -- Implementation
 			"sizeof(mdInterfaceImpl)"
 		end
 
-	array_of_integer_from (a_mp: MANAGED_POINTER; a_elt_size: INTEGER; a_count: INTEGER): ARRAY [INTEGER] is
+	array_of_mdtoken_from (a_mp: MANAGED_POINTER; a_elt_size: INTEGER; a_count: INTEGER): ARRAY [NATURAL_32] is
 			-- ARRAY [INTEGER] filled with `a_count' elements from the MANAGED_POINTER `a_mp' with element of size `a_elt_size'.
 		require
 			value_source_not_void: a_mp /= Void
 			element_size_valid: a_elt_size > 0
 			not_empty: a_count > 0
 		local
-			l_mdtypedef_value: INTEGER
+			l_mdtypedef_value: NATURAL_32
 			i: INTEGER
 		do
 			from
@@ -876,7 +875,7 @@ feature {NONE} -- Implementation
 			until
 				i > a_count
 			loop
-				l_mdtypedef_value := a_mp.read_integer_32 ((i - 1) * a_elt_size)
+				l_mdtypedef_value := a_mp.read_natural_32 ((i - 1) * a_elt_size)
 				Result.put (l_mdtypedef_value, i)
 				i := i + 1
 			end

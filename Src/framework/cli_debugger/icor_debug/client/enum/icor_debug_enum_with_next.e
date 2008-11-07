@@ -37,7 +37,7 @@ feature {ICOR_EXPORTER} -- Access
 		require
 			celt_positive: a_celt > 0
 		local
-			l_p: POINTER
+			p: POINTER
 			p_celt_fetched: INTEGER
 			mp_tab: MANAGED_POINTER
 			i: INTEGER
@@ -45,7 +45,7 @@ feature {ICOR_EXPORTER} -- Access
 			retried: BOOLEAN
 			l_pointer_size: INTEGER
 		do
-			l_pointer_size := (create {PLATFORM}).Pointer_bytes
+			l_pointer_size := {PLATFORM}.Pointer_bytes
 
 			if not retried then
 				create mp_tab.make (a_celt * l_pointer_size)
@@ -57,8 +57,8 @@ feature {ICOR_EXPORTER} -- Access
 					until
 						i > p_celt_fetched
 					loop
-						l_p := mp_tab.read_pointer((i - 1) * l_pointer_size)
-						l_icor := icor_object_made_by_pointer (l_p)
+						p := mp_tab.read_pointer((i - 1) * l_pointer_size)
+						l_icor := icor_object_made_by_pointer (p)
 						Result.put (l_icor, i)
 						i := i + 1
 					end
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_pointer (a_p)
 		end
 		
-	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
+	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
 		deferred
 		end
 

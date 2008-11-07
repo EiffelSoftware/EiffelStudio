@@ -56,11 +56,11 @@ feature {ICOR_EXPORTER} -- Access
 
 	get_clone: ICOR_DEBUG_ENUM is
 		local
-			l_p: POINTER
+			p: POINTER
 		do
-			last_call_success := cpp_clone (item, $l_p)
-			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+			last_call_success := cpp_clone (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			"Reset"
 		end
 
-	cpp_clone (obj: POINTER; a_result: POINTER): INTEGER is
+	cpp_clone (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugEnum signature(ICorDebugEnum**): EIF_INTEGER 
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			"Clone"
 		end
 
-	cpp_get_count (obj: POINTER; a_p_count: POINTER): INTEGER is
+	cpp_get_count (obj: POINTER; a_p_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugEnum signature(ULONG*): EIF_INTEGER 

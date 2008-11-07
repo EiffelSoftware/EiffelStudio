@@ -28,12 +28,12 @@ feature {NONE} -- Implementation
 			create Result.make_value_by_pointer (a_p)
 		end
 
-	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
+	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
 		do
 			Result := cpp_next (obj, a_celt, a_p, a_pceltfetched)
 		end
 
-	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
+	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
 				C++ ICorDebugValueEnum signature(ULONG,ICorDebugValue**, ULONG*): EIF_INTEGER 

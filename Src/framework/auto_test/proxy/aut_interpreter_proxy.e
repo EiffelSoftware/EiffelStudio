@@ -755,6 +755,7 @@ feature -- Socket IPC
 				if l_socket.is_readable then
 					l_socket.read_natural_32
 					l_data ?= l_socket.retrieved
+					process.set_timeout (0)
 					if l_data /= Void then
 						create last_raw_response.make (l_data.output, l_data.error, l_data.is_interpreter_error)
 

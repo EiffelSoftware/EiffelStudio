@@ -97,48 +97,51 @@ feature -- Analysis preparation
 							-- no interesting token : skip
 					elseif is_comment (token) then
 							-- no interesting token : skip
-					elseif is_string (token) then
-							-- no interesting token : skip
-
-							-- If a string is written one several lines (more than 2 in fact),
-							-- it will be made of several token, some of which may not be
-							-- string tokens (those like % .... % )
-						if split_string then
-							split_string := False
-						elseif token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
-							split_string := True
-						else
-								-- It might be an operator name
-							token.set_is_clickable (True)
-						end
 					else
-						if not split_string then
-								-- "Normal" text token
-							if not features_position.after and then pos_in_file >= features_position.item.start_pos then
-									-- `current_token' is the beginning of a feature
-									-- we replace this text token with a "feature start token"
-								prev := token.previous
-								next := token.next
-								create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
-									features_position.item.start_pos, features_position.item.end_pos)
-								tfs.set_is_clickable (True)
-								tfs.set_feature_index_in_table (features_position.index)
-								if prev /= Void then
-									prev.set_next_token (tfs)
-								end
-								tfs.set_previous_token (prev)
-								tfs.set_next_token (next)
-								tfs.update_position
-								tfs.update_width
-								if next /= Void then
-									next.set_previous_token (tfs)
-								end
-								features_position.forth
-								token := tfs
+							-- "Normal" text token
+						if not split_string and then not features_position.after and then pos_in_file >= features_position.item.start_pos then
+								-- `current_token' is the beginning of a feature
+								-- we replace this text token with a "feature start token"
+							prev := token.previous
+							next := token.next
+							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
+								features_position.item.start_pos, features_position.item.end_pos)
+							if is_string (token) or else ({l_fst: EDITOR_TOKEN_FEATURE_START} token and then l_fst.text_color_id = l_fst.string_text_color_id) then
+									-- This happens when processing a prefix/infix feature or reprocessing
+									-- the click text.
+								tfs.set_text_color_string
+							end
+							tfs.set_is_clickable (True)
+							tfs.set_feature_index_in_table (features_position.index)
+							if prev /= Void then
+								prev.set_next_token (tfs)
+							end
+							tfs.set_previous_token (prev)
+							tfs.set_next_token (next)
+							tfs.update_position
+							tfs.update_width
+							if next /= Void then
+								next.set_previous_token (tfs)
+							end
+							features_position.forth
+							token := tfs
+						elseif is_string (token) then
+								-- no interesting token : skip
+
+								-- If a string is written one several lines (more than 2 in fact),
+								-- it will be made of several token, some of which may not be
+								-- string tokens (those like % .... % )
+							if split_string then
+								split_string := False
+							elseif token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
+								split_string := True
 							else
-								if not has_colon_followed (token, line) then
-									token.set_is_clickable (True)
-								end
+									-- It might be an operator name
+								token.set_is_clickable (True)
+							end
+						else
+							if not has_colon_followed (token, line) then
+								token.set_is_clickable (True)
 							end
 						end
 					end
@@ -378,55 +381,9 @@ feature -- Click list update
 			loop
 				if token.is_text then
 					if is_keyword (token) then
-							-- no interesting token : skip
+						-- no interesting token : skip
 					elseif is_comment (token) then
 							-- no interesting token : skip
-					elseif is_string (token) then
-							-- no interesting token : skip
-
-							-- If a string is written one several lines (more than 2 in fact),
-							-- it will be made of several token, some of which may not be
-							-- string tokens (those like % .... % )
-						if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
-							from
-								if token.next /= Void then
-									pos_in_file := token.length + pos_in_file
-									token.set_pos_in_text (pos_in_file)
-									token := token.next
-								elseif line.next /= Void then
-									line := line.next
-									pos_in_file := pos_in_file + 1
-									if file_standard_is_windows then
-										pos_in_file := pos_in_file + 1
-									end
-									token.set_pos_in_text (pos_in_file)
-									token := line.first_token
-								end
-							invariant
-								token /= Void
-							until
-								is_string (token) or token = Void
-							loop
-								if token.next /= Void then
-									pos_in_file := token.length + pos_in_file
-									token.set_pos_in_text (pos_in_file)
-									token := token.next
-								elseif line.next /= Void then
-									line := line.next
-									pos_in_file := pos_in_file + 1
-									if file_standard_is_windows then
-										pos_in_file := pos_in_file + 1
-									end
-									token.set_pos_in_text (pos_in_file)
-									token := line.first_token
-								else
-									token := Void
-								end
-							end
-						else
-								-- It might be an operator name
-							token.set_is_clickable (True)
-						end
 					else
 							-- "Normal" text token
 						if not features_position.after and then pos_in_file >= features_position.item.start_pos then
@@ -434,6 +391,11 @@ feature -- Click list update
 							next := token.next
 							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
 								features_position.item.start_pos, features_position.item.end_pos)
+							if is_string (token) or else ({l_fst: EDITOR_TOKEN_FEATURE_START} token and then l_fst.text_color_id = l_fst.string_text_color_id) then
+									-- This happens when processing a prefix/infix feature or reprocessing
+									-- the click text.
+								tfs.set_text_color_string
+							end
 							token.set_is_clickable (True)
 							tfs.set_feature_index_in_table (features_position.index)
 							if prev /= Void then
@@ -448,6 +410,50 @@ feature -- Click list update
 							end
 							features_position.forth
 							token := tfs
+						elseif is_string (token) then
+								-- If a string is written one several lines (more than 2 in fact),
+								-- it will be made of several token, some of which may not be
+								-- string tokens (those like % .... % )
+							if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
+								from
+									if token.next /= Void then
+										pos_in_file := token.length + pos_in_file
+										token.set_pos_in_text (pos_in_file)
+										token := token.next
+									elseif line.next /= Void then
+										line := line.next
+										pos_in_file := pos_in_file + 1
+										if file_standard_is_windows then
+											pos_in_file := pos_in_file + 1
+										end
+										token.set_pos_in_text (pos_in_file)
+										token := line.first_token
+									end
+								invariant
+									token /= Void
+								until
+									is_string (token) or token = Void
+								loop
+									if token.next /= Void then
+										pos_in_file := token.length + pos_in_file
+										token.set_pos_in_text (pos_in_file)
+										token := token.next
+									elseif line.next /= Void then
+										line := line.next
+										pos_in_file := pos_in_file + 1
+										if file_standard_is_windows then
+											pos_in_file := pos_in_file + 1
+										end
+										token.set_pos_in_text (pos_in_file)
+										token := line.first_token
+									else
+										token := Void
+									end
+								end
+							else
+									-- It might be an operator name
+								token.set_is_clickable (True)
+							end
 						else
 							if not has_colon_followed (token, line) then
 								token.set_is_clickable (True)
@@ -604,9 +610,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -617,19 +623,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

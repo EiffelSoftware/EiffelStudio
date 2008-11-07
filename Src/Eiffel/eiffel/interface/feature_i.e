@@ -2892,6 +2892,17 @@ feature -- Debugging
 			Result := execution_table.real_body_id (body_index, class_type)
 		end
 
+	real_pattern_id (class_type: CLASS_TYPE): INTEGER is
+			-- Real pattern id at compilation time for `class_type'.
+			-- This id might be obsolete after supermelting this feature.
+			--| In latter case, new real body id is kept
+			--| in DEBUGGABLE objects.
+		require
+			valid_body_id: valid_body_id
+		do
+			Result := execution_table.real_pattern_id (body_index, class_type)
+		end
+
 	valid_body_id: BOOLEAN is
 			-- Use of this routine as precondition for real_body_id.
 		do

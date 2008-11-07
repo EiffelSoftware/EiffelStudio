@@ -97,6 +97,18 @@ feature -- Access
 			end
 		end
 
+	real_pattern_id (body_index: INTEGER; class_type: CLASS_TYPE): INTEGER is
+			-- Real pattern id associated to an instance of FEATURE_I of
+			-- body index `body_index' in a class type `class_type'.
+		local
+			unit: EXECUTION_UNIT
+		do
+			unit := unit_of_body_index (body_index, class_type)
+			if unit /= Void then
+				Result := unit.real_pattern_id
+			end
+		end
+
 feature -- Element change
 
 	update_with (t: EXECUTION_UNIT) is

@@ -6155,7 +6155,7 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 	/* NOT REACHED */
 }
 
-rt_public void eif_override_byte_code_of_body (int body_id, unsigned char *bc, int count) {
+rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsigned char *bc, int count) {
 	unsigned char *bcode;
 	
 		/* Let's free the previously allocated byte code. */
@@ -6170,6 +6170,7 @@ rt_public void eif_override_byte_code_of_body (int body_id, unsigned char *bc, i
 	} else {
 		memcpy(bcode, bc, count * sizeof(unsigned char));
 		melt [body_id] = bcode;
+		mpatidtab [body_id] = pattern_id;
 		egc_frozen [body_id] = 0;
 	}
 }

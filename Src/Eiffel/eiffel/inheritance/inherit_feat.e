@@ -33,6 +33,15 @@ feature
 
 	deferred_features: LINKED_LIST [INHERIT_INFO]
 			-- List of deferred inherited features informations
+		do
+			Result := deferred_features_internal
+			if Result = Void then
+				create Result.make
+				deferred_features_internal := Result
+			end
+		end
+
+	deferred_features_internal: like deferred_features
 
 	features: LINKED_LIST [INHERIT_INFO]
 			-- List of informations on non-deferred inherited features
@@ -48,7 +57,6 @@ feature
 	make is
 			-- Lists creation
 		do
-			create deferred_features.make
 			create features.make
 			create rout_id_set.make
 		end

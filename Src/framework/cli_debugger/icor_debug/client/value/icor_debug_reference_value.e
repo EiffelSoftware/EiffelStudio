@@ -33,7 +33,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_value (a_result_64: POINTER) is
 			-- GetValue copies the value into the specified buffer
 		do
-			last_call_success := cpp_get_value (item, $a_result_64)
+			last_call_success := cpp_get_value (item, a_result_64)
 		end
 	
 	set_value (a_cordb_address: INTEGER_64) is

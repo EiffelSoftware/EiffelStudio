@@ -187,6 +187,12 @@ feature -- Access
 			Result := feature_flags & has_replicated_ast_mask = has_replicated_ast_mask
 		end
 
+	frozen is_selected: BOOLEAN is
+			-- Is feature from a selected branch?
+		do
+			Result := feature_flags & is_selected_mask = is_selected_mask
+		end
+
 	frozen is_replicated_directly: BOOLEAN is
 			-- Is feature directly replicated in class it is created in?
 			-- This flag is needed to distinguish between newly replicated features
@@ -665,6 +671,14 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (b, is_origin_mask)
 		ensure
 			is_origin_set: is_origin = b
+		end
+
+	frozen set_is_selected (b: BOOLEAN) is
+			-- Assign `b' to `is_selected'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_selected_mask)
+		ensure
+			is_selected_set: is_selected = b
 		end
 
 	frozen set_has_replicated_ast (b: BOOLEAN) is
@@ -2960,6 +2974,7 @@ feature {FEATURE_I} -- Implementation
 	has_body_mask: NATURAL_32 is 0x200000 -- Used in ATTRIBUTE_I
 	is_replicated_directly_mask: NATURAL_32 is 0x400000
 	from_non_conforming_parent_mask: NATURAL_32 is 0x800000
+	is_selected_mask: NATURAL_32 is 0x1000000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

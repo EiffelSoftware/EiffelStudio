@@ -1716,13 +1716,21 @@ feature {NONE}-- Implementation
 
 	after_searched_token: BOOLEAN is
 			-- is `current_token' after `searched_token' ?
-			-- True if current_token is Void
+			-- True if `current_token' is Void
+		local
+			l_cur_index, l_searched_index: INTEGER
 		do
 			if current_token = Void then
 				Result := True
 			else
-				Result := (current_line.index > searched_line.index) or else
-					((current_line.index = searched_line.index) and then (current_token.position > searched_token.position))
+				check
+					current_line_is_valid: current_line.is_valid
+					searched_line_is_valid: searched_line.is_valid
+				end
+				l_cur_index := current_line.index
+				l_searched_index := searched_line.index
+				Result := (l_cur_index > l_searched_index) or else
+					((l_cur_index = l_searched_index) and then (current_token.position > searched_token.position))
 			end
 		end
 

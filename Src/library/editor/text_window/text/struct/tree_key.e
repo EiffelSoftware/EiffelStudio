@@ -33,10 +33,16 @@ feature -- Access
 
 feature -- Status report
 
+	is_valid: BOOLEAN
+			-- Is current valid as key of parent?
+		do
+			Result := parent /= Void and then parent.valid_key (Current)
+		end
+
 	pos_in_parent: INTEGER is
 			-- position of node in parent.
 		require
-			has_parent: parent /= Void
+			valid_key: is_valid
 		do
 			from
 				Result := 1
@@ -47,7 +53,7 @@ feature -- Status report
 				check
 					no_overflow: Result <= parent.arity - 1
 				end
-			end			
+			end
 		end
 --| FIXME
 --| Christophe, 14 jan 2000
@@ -56,7 +62,7 @@ feature -- Status report
 	number: INTEGER is
 			-- position of node in tree.
 		require
-			has_parent: parent /= Void	
+			valid_key: is_valid
 		do
 				Result := parent.keys_before_child (pos_in_parent + 1)
 					--| Tricky: We ask for the number of keys

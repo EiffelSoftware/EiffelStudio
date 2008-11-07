@@ -35,6 +35,13 @@ feature -- Initialization
 	make_from_relative_pos (a_line: like line; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text) is
 			-- Create a cursor for `text', at position given by
 			-- `a_line', `a_token' and `pos'.
+		require
+			a_line_not_void: a_line /= Void
+			a_line_valid: a_line.is_valid
+			a_token_not_void: a_token /= Void
+			a_text_not_void: a_text /= Void
+			pos_positive_not_null: pos >= 0
+			line_has_token: a_line.count > 0
 		do
 			text := a_text
 			line := a_line
@@ -104,6 +111,7 @@ feature -- Initialization
 			end
 			check
 				token_exists: t /= Void
+				cline_valid: cline.is_valid
 					-- position in file exists, therefore t exists.
 			end
 			make_from_relative_pos (cline, t, pos, text)
@@ -231,6 +239,7 @@ feature -- Element change
 			-- Make `a_line' the new value of `line'.
 		require
 			a_line_exists: a_line /= Void
+			a_line_valid: a_line.is_valid
 		do
 			line := a_line
 			y_in_lines := line.index
@@ -458,6 +467,7 @@ feature -- Cursor movement
 			-- Move up one line (to preceding line), if possible.
 		do
 			if line.previous /= Void then
+				check previous_is_valid: line.next.is_valid end
 				set_line (line.previous)
 			end
 		end
@@ -466,6 +476,7 @@ feature -- Cursor movement
 			-- Move down one line (to next line), if possible.
 		do
 			if line.next /= Void then
+				check next_is_valid: line.next.is_valid end
 				set_line (line.next)
 			end
 		end
@@ -759,7 +770,7 @@ feature {NONE} -- Implementation
 invariant
 	y_in_lines_positive_or_null		: y_in_lines >= 0
 	pos_in_token_positive			: pos_in_token > 0
-	text_not_void			: text /= Void
+	text_not_void					: text /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

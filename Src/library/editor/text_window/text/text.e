@@ -513,6 +513,9 @@ feature -- Memory management
 			finish_reading_string_agent := Void
 		end
 
+invariant
+	current_line_valid: current_line /= Void implies current_line.is_valid
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

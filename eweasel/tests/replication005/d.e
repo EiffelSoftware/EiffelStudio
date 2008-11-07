@@ -9,7 +9,7 @@ inherit
 
 	B2
 		select
-			f2
+			f
 		end
 
 	A
@@ -21,7 +21,7 @@ feature
 
 	make
 		do
-			f f1 f2
+			f f1
 		end
 
 end

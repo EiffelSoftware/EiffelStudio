@@ -108,22 +108,18 @@ feature -- Access
 		-- Pattern id of feature corresponding to Current
 		-- unit
 
-	access_in: INTEGER
-		-- Id of the class where the associated feature can be access through its routine id.
-		--|Note: for ATTRIBUTE_I it is the `generate_in' value.
-
 	written_in: INTEGER
 		-- Id of the class where the associated feature of the unit is written in.
 
 	real_pattern_id: INTEGER is
 			-- Pattern id associated with Current execution unit
 		local
-			written_class: CLASS_C
 			l_written_type_id: INTEGER_32
+			l_system: like system
 		do
-			written_class := System.class_of_id (written_in)
-			l_written_type_id := written_class.meta_type (class_type).type_id
-			Result := Pattern_table.c_pattern_id_in (pattern_id, system.class_type_of_id (l_written_type_id)) - 1
+			l_system := System
+			l_written_type_id := l_system.class_of_id (written_in).meta_type (class_type).type_id
+			Result := l_system.pattern_table.c_pattern_id_in (pattern_id, l_system.class_type_of_id (l_written_type_id)) - 1
 		end
 
 	is_valid: BOOLEAN is
@@ -133,7 +129,7 @@ feature -- Access
 			written_class: CLASS_C
 			f: FEATURE_AS
 		do
-			written_class := System.class_of_id (access_in)
+			written_class := System.class_of_id (written_in)
 			if
 				written_class /= Void and then
 				System.class_type_of_id (type_id) = class_type
@@ -179,7 +175,7 @@ feature -- Access
 			encapsulated_feat: ENCAPSULATED_I
 			l_access_class: CLASS_C
 		do
-			l_access_class := system.class_of_id (access_in)
+			l_access_class := system.class_of_id (written_in)
 			check
 				has_feature_table: l_access_class.has_feature_table
 			end
@@ -245,16 +241,6 @@ feature -- Setting
 			pattern_id := id
 		ensure
 			pattern_id_set: pattern_id = id
-		end
-
-	set_access_in (id: INTEGER) is
-			-- Assign `id' to `access_in'.
-		require
-			valid_id: id >= 0
-		do
-			access_in := id
-		ensure
-			access_in_set: access_in = id
 		end
 
 	set_written_in (id: INTEGER) is

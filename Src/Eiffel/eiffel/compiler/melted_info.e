@@ -32,24 +32,13 @@ feature {NONE} -- Initialization
 		require
 			feature_not_void: f /= Void
 			class_not_void: associated_class /= Void
-		local
-			attr: ATTRIBUTE_I
 		do
 			body_index := f.body_index
 			pattern_id := f.pattern_id
-			attr ?= f
-
-			if attr /= Void then
-				access_in := attr.generate_in
-				written_in := access_in
+			if {l_attr: ATTRIBUTE_I} f then
+				written_in := l_attr.generate_in
 			else
-					--| IEK: Changed from written_in for replication purposes.
 				written_in := f.written_in
-				if f.has_replicated_ast then
-					access_in := f.access_in
-				else
-					access_in := written_in
-				end
 			end
 			result_type := f.type
 		end
@@ -66,11 +55,8 @@ feature -- Update
 
 	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE) is
 			-- Melt the feature
-		local
-			exec_unit: EXECUTION_UNIT
 		do
-			exec_unit := execution_unit (class_type)
-			associated_feature (class_type.associated_class, feat_tbl).melt (exec_unit)
+			associated_feature (class_type.associated_class, feat_tbl).melt (execution_unit (class_type))
 		end
 
 feature -- Access
@@ -79,13 +65,10 @@ feature -- Access
 			-- Body index of feature to melt.
 
 	pattern_id: INTEGER
-			-- Pattern id of feature to mel.
+			-- Pattern id of feature to melt.
 
 	written_in: INTEGER
 			-- Class where current feature is to melt.
-
-	access_in: INTEGER
-			-- Class where current feature may be accessed by its routine id.
 
 	result_type: TYPE_A
 			-- Return type of current feature to melt.

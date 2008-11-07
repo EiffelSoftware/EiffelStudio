@@ -55,8 +55,6 @@ feature {NONE} -- Implementation
 			end
 			Result.set_body_index (body_index)
 			Result.set_pattern_id (pattern_id)
-
-			Result.set_access_in (access_in)
 			Result.set_written_in (written_in)
 
 			Result.set_type (result_type.adapted_in (class_type).c_type)

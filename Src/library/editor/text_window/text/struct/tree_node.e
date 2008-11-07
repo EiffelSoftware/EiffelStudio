@@ -20,8 +20,8 @@ feature -- Initialization
 			create children.make (1, Child_number +1)
 			create keys.make (1, Child_number)
 			children.put (Void, 1)
-			arity := 1			
-			keys_plus_one := 1		
+			arity := 1
+			keys_plus_one := 1
 		end
 
 	make_with_child (first_child: like Current) is
@@ -157,7 +157,7 @@ feature -- Status report
 				check
 					no_overflow: Result <= parent.arity
 				end
-			end			
+			end
 		end
 --| FIXME
 --| Christophe, 14 jan 2000
@@ -188,6 +188,14 @@ feature -- Status report
 					j := j + 1
 				end
 			end
+		end
+
+feature -- Status report
+
+	valid_key (a_key: like item): BOOLEAN
+			-- Is `a_key' valid as in current node?
+		do
+			Result := keys.has (a_key)
 		end
 
 feature {TREE_NODE} -- Status report
@@ -232,9 +240,9 @@ feature -- Element change
 			until
 				i <= pos
 			loop
-				children.put (children @ i, i+1)	
+				children.put (children @ i, i+1)
 				keys.put (keys @ (i-1), i)
-				i := i - 1	
+				i := i - 1
 			end
 			children.put (node, pos +1)
 			keys.put (key, pos)
@@ -269,9 +277,9 @@ feature -- Element change
 			until
 				i <= pos
 			loop
-				children.put (children @ i, i+1)	
+				children.put (children @ i, i+1)
 				keys.put (keys @ (i-1), i)
-				i := i - 1	
+				i := i - 1
 			end
 			children.put (children @ pos, pos +1)
 			children.put (node, pos)
@@ -353,7 +361,7 @@ feature -- Removal
 				parent_pk.delete_key_and_right_child (parent_pk.arity -1)
 			end
 		end
-				
+
 feature -- Resizing
 
 	Child_number: INTEGER is 5
@@ -390,7 +398,7 @@ feature -- Transformation
 				create aux_node.make_with_child (children @ 1)
 				aux_node.insert_key_and_right_child (keys @ 1, children @ 2, 1)
 				aux_node.insert_key_and_right_child (keys @ 2, children @ 3, 2)
-				
+
 				make_with_child (aux_node)
 				insert_key_and_right_child (parent_key, node2, 1)
 			else
@@ -411,7 +419,7 @@ feature -- Transformation
 				end
 				parent.insert_key_and_right_child (parent_key, node2, pos_in_parent)
 			end
-		end		
+		end
 
 	balance_light_root is
 			-- Rebalance the root node by merging it with its children.
@@ -509,8 +517,8 @@ feature -- Transformation
 					check
 						never_reach: false
 					end
-				end		
-			end		
+				end
+			end
 		end
 
 feature -- Conversion

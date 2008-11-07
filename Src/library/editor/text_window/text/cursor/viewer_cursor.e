@@ -46,6 +46,7 @@ feature -- Initialization
 		require
 			a_text_valid: a_text /= Void
 			a_line_valid: a_line /= Void
+			a_line_valid: a_line.is_valid
 			a_token_valid: a_token /= Void
 			pos_valid: pos >= 1
 		do
@@ -248,9 +249,10 @@ feature -- Element change
 			-- Make `a_line' the new value of `line'.
 		require
 			a_line_exists: a_line /= Void
+			a_line_valid: a_line.is_valid
 		do
 			line := a_line
-			y_in_lines := line.index
+			y_in_lines := a_line.index
 			update_current_char
 		end
 

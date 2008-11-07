@@ -249,6 +249,7 @@ feature -- Basic Operations
 					if ln.item.is_text then
 						l_comment_token ?= ln.item
 						if l_comment_token /= Void then
+							check line_valid: ln.is_valid end
 							create cursor.make_from_relative_pos (ln, l_comment_token, 1, Current)
 							delete_n_chars_at_cursor_pos (2)
 							history.record_uncomment ("--")
@@ -943,6 +944,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			t : EDITOR_TOKEN
 			line_number: INTEGER
 			x: INTEGER
+			l_index: INTEGER
 		do
 			is_removing_block := True
 			on_text_edited (True)
@@ -1013,8 +1015,9 @@ feature {UNDO_CMD} -- Operations on selected text
 				execute_lexer_with_wide_string (s)
 				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 			end
-
-			cursor.make_from_character_pos (x, ln.index, Current)
+			l_index := ln.index
+			go_i_th (l_index)
+			cursor.make_from_character_pos (x, l_index, Current)
 
 				-- reset pos_in_file values of tokens if possible
 			restore_tokens_properties (ln, ln)
@@ -1218,6 +1221,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					-- reset pos_in_file values of tokens if possible
 				restore_tokens_properties (cursor.line, new_line)
 
+				check cline.next.is_valid end
 				cursor.set_line (cline.next)
 			end
 			cursor.set_x_in_characters (end_pos)

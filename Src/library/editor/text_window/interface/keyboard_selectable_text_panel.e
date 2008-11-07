@@ -166,6 +166,7 @@ feature -- Cursor Management
 							tw := pointed_token.width
 						end
 					end
+					check pointed_line.is_valid end
 					if pointed_token /= Void then
 						debug ("editor")
 							print (pointed_token.out + "%N")

@@ -317,6 +317,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 
 						-- Set new cursor position
 					if {l_eiffel_line: EIFFEL_EDITOR_LINE} l_brace.line then
+						check valid_line: l_eiffel_line.is_valid end
 						text_displayed.cursor.set_line (l_eiffel_line)
 						if brace_matcher.is_closing_brace (l_brace.token) then
 							if l_caret_outside then
@@ -878,6 +879,7 @@ feature {NONE} -- Brace matching
 			l_brace: ?like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: !like last_highlighted_matched_braces
+			l_invalidated_line: ?EDITOR_LINE
 		do
 			create l_invalidated_lines.make (2)
 
@@ -926,7 +928,10 @@ feature {NONE} -- Brace matching
 			if a_update and then not l_invalidated_lines.is_empty then
 					-- Perform line redraws
 				from l_invalidated_lines.start until l_invalidated_lines.after loop
-					invalidate_line (l_invalidated_lines.item.index, True)
+					l_invalidated_line := l_invalidated_lines.item
+					if l_invalidated_line.is_valid then
+						invalidate_line (l_invalidated_line.index, True)
+					end
 					l_invalidated_lines.forth
 				end
 			end
@@ -1351,6 +1356,7 @@ feature {NONE} -- Code completable implementation
 							l_kt ?= l_line.item
 							if l_kt /= Void then
 								l_end_loop := True
+								check l_line_valid: l_line.is_valid end
 								create l_cursor.make_from_relative_pos (l_line, l_kt, 1, text_displayed)
 								if l_cursor.pos_in_text < text_displayed.cursor.pos_in_text then
 									set_discard_feature_signature (False)
@@ -1556,6 +1562,7 @@ feature {NONE} -- Code completable implementation
 			if has_selection then
 				disable_selection
 			end
+			check a_line_valid: a_line.is_valid end
 			text_displayed.cursor.make_from_relative_pos (a_line, a_token, 1, text_displayed)
 		end
 
@@ -1564,6 +1571,10 @@ feature {NONE} -- Code completable implementation
 		do
 			if has_selection then
 				disable_selection
+			end
+			check
+				start_line_valid: a_start_line.is_valid
+				end_line_valid: a_end_line.is_valid
 			end
 			text_displayed.selection_cursor.make_from_relative_pos (a_start_line, a_start_token, 1, text_displayed)
 			text_displayed.cursor.make_from_relative_pos (a_end_line, a_end_token, 1, text_displayed)

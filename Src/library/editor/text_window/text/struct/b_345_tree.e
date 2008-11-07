@@ -121,6 +121,10 @@ feature {NONE} -- Implementation
 
 	root_node: TREE_NODE [like first_data];
 
+invariant
+	first_data_valid: first_data /= Void implies first_data.is_valid
+	last_data_valid: last_data /= Void implies last_data.is_valid
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

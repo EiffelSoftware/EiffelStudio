@@ -29,11 +29,21 @@ feature -- Access
 
 	index: INTEGER is
 			-- index of item in tree
+		require
+			is_valid: is_valid
 		do
 			Result := key.number
 		end
 
 feature -- Status report
+
+	is_valid: BOOLEAN
+			-- Is current item valid in the tree?
+		do
+			Result := tree /= Void and then
+					key /= Void and then
+					key.is_valid
+		end
 
 feature -- Element change
 

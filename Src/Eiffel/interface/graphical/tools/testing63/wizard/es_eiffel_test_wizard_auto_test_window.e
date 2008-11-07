@@ -13,6 +13,11 @@ inherit
 			make_window
 		end
 
+	CLASS_TYPE_NAME_SYNTAX_CHECKER
+		export
+			{NONE} all
+		end
+
 create
 	make_window
 
@@ -22,7 +27,6 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_development_window, a_wizard_info)
-			create splitter.make_with_separators (" ")
 		end
 
 	build
@@ -34,48 +38,11 @@ feature {NONE} -- Initialization
 			l_parent := initialize_container (choice_box)
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			build_class_tree (l_hbox)
+			build_types (l_hbox)
 			build_options (l_hbox)
 			l_parent.extend (l_hbox)
 
 			on_after_initialize
-		end
-
-	build_class_tree (a_parent: EV_BOX)
-			-- Build class tree for selecting classes to test.
-		local
-			l_list: ?DS_ARRAYED_LIST [CLASS_I]
-			l_item: EV_LIST_ITEM
-			l_class: CLASS_I
-		do
-			create class_list
-			class_list.set_minimum_width (200)
-			a_parent.extend (class_list)
-
-			if test_suite.is_service_available then
-				if test_suite.service.is_project_initialized then
-					create l_list.make_from_linear(test_suite.service.eiffel_project.universe.all_classes)
-				end
-			end
-			if l_list /= Void then
-				l_list.sort (create {DS_QUICK_SORTER [CLASS_I]}.make (create {KL_COMPARABLE_COMPARATOR [CLASS_I]}.make))
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					l_class := l_list.item_for_iteration
-					create l_item.make_with_text (l_class.name)
-					l_item.set_pixmap (pixmaps.icon_pixmaps.class_normal_icon)
-					class_list.extend (l_item)
-					if wizard_information.class_names.has (l_class.name.as_attached) then
-						l_item.enable_select
-					end
-					l_list.forth
-				end
-			end
-			class_list.check_actions.extend (agent on_class_select_change)
-			class_list.uncheck_actions.extend (agent on_class_select_change)
 		end
 
 	build_options (a_parent: EV_BOX)
@@ -130,13 +97,71 @@ feature {NONE} -- Initialization
 			a_parent.extend (l_vbox)
 		end
 
+	build_types (a_parent: EV_BOX)
+			-- Create `types' widget.
+		local
+			l_textfield: EV_TEXT_FIELD
+			l_label: EV_LABEL
+
+			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+		do
+			create l_vbox
+			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
+
+			create type_list
+			type_list.set_minimum_width (200)
+			type_list.select_actions.extend (agent on_selection_change)
+			type_list.deselect_actions.extend (agent on_selection_change)
+			type_list.key_press_actions.extend (agent on_type_list_key_press)
+			l_vbox.extend (type_list)
+
+			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			create l_label.make_with_text (local_formatter.translation (b_new_type))
+			l_hbox.extend (l_label)
+			l_hbox.disable_item_expand (l_label)
+
+			create l_textfield
+			l_textfield.return_actions.extend (agent on_add_type)
+			create type_field.make (l_textfield, agent on_validate_type)
+			l_hbox.extend (type_field)
+
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
+
+			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+
+			l_hbox.extend (create {EV_CELL})
+
+			create add_type_button
+			add_type_button.set_text (local_formatter.translation (b_add_type))
+			add_type_button.select_actions.extend (agent on_add_type)
+			l_hbox.extend (add_type_button)
+			l_hbox.disable_item_expand (add_type_button)
+
+			create remove_type_button
+			remove_type_button.set_text (local_formatter.translation (b_remove_type))
+			remove_type_button.select_actions.extend (agent on_remove_type)
+			l_hbox.extend (remove_type_button)
+			l_hbox.disable_item_expand (remove_type_button)
+
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
+
+			a_parent.extend (l_vbox)
+		end
+
 	append_option (a_parent: EV_BOX; a_name: !STRING; a_widget: EV_WIDGET)
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
 		do
 			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label.make_with_text (local_formatter.translation (a_name))
+			l_label.align_text_right
 			l_label.align_text_left
 			l_hbox.extend (l_label)
 			l_hbox.extend (a_widget)
@@ -147,6 +172,9 @@ feature {NONE} -- Initialization
 
 	on_after_initialize
 			-- Called after all widgets have been created
+		local
+			l_cursor: DS_LINEAR_CURSOR [!STRING]
+			l_types: STRING_32
 		do
 			timeout_field.set_text (wizard_information.time_out.out)
 			proxy_time_out.set_text (wizard_information.proxy_time_out.out)
@@ -173,22 +201,37 @@ feature {NONE} -- Initialization
 			end
 			update_next_button_status
 
-			class_list.set_focus
+			from
+				l_cursor := wizard_information.types.new_cursor
+				l_cursor.start
+				create l_types.make (wizard_information.types.count * 25)
+			until
+				l_cursor.after
+			loop
+				l_types.append (l_cursor.item)
+				l_cursor.forth
+				if not l_cursor.after then
+					l_types.append (", ")
+				end
+			end
+
+			wizard_information.types.do_all (
+				agent (a_type: !STRING)
+					do
+						type_list.extend (create {EV_LIST_ITEM}.make_with_text (a_type))
+					end)
+
+			type_field.validate
+			remove_type_button.disable_sensitive
 		end
 
 feature {NONE} -- Access
-
-	splitter: ST_SPLITTER
-			-- Splitter for `arguments'
 
 	factory_type: !TYPE [EIFFEL_TEST_FACTORY_I]
 			-- <Precursor>
 		do
 			Result := generator_factory_type
 		end
-
-	class_list: EV_CHECKABLE_LIST
-			-- Tree showing all classes in the system
 
 feature {NONE} -- Access: widgets
 
@@ -213,24 +256,98 @@ feature {NONE} -- Access: widgets
 	html_output: EV_CHECK_BUTTON
 			-- Check box for html output
 
+	type_list: EV_LIST
+			-- List showing types entered so far
+
+	type_field: ES_VALIDATION_TEXT_FIELD
+
+	add_type_button: EV_BUTTON
+
+	remove_type_button: EV_BUTTON
+
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not wizard_information.class_names.is_empty
+			Result := not wizard_information.types.is_empty
 		end
 
 feature {NONE} -- Events
 
-	on_class_select_change (a_item: EV_LIST_ITEM)
+	on_validate_type (a_input: !STRING_32): !TUPLE [valid: BOOLEAN; error: ?STRING_32]
+			-- Called when input of `types' has to be validated.
 		do
-			if class_list.is_item_checked (a_item) then
-				wizard_information.class_names.force_last (a_item.text.to_string_8.as_attached)
+			if a_input.is_empty then
+				Result := [True, Void]
 			else
-				wizard_information.class_names.remove (a_item.text.to_string_8.as_attached)
+				if is_valid_class_type_name (a_input.to_string_8) then
+					Result := [True, Void]
+				else
+					Result := [False, local_formatter.translation (e_no_valid_type_name)]
+				end
 			end
-			update_next_button_status
+			if not a_input.is_empty and Result.valid then
+				if not add_type_button.is_sensitive then
+					add_type_button.enable_sensitive
+				end
+			else
+				if add_type_button.is_sensitive then
+					add_type_button.disable_sensitive
+				end
+			end
+		end
+
+	on_add_type
+			-- Called when user presses `add_type' button or hits enter.
+		local
+			l_new: !STRING
+		do
+			if not type_field.text.is_empty and type_field.is_valid then
+				l_new := type_field.text.to_string_8.as_attached
+				wizard_information.types.search (l_new)
+				if not wizard_information.types.found then
+					wizard_information.types.force_last (l_new)
+					type_list.extend (create {EV_LIST_ITEM}.make_with_text (l_new))
+				end
+				type_field.set_text (create {STRING_32}.make_empty)
+				update_next_button_status
+			end
+		end
+
+	on_remove_type
+			-- Called when user presses `remove_type' button
+		local
+			l_type: !STRING
+		do
+			if type_list.selected_item /= Void then
+				l_type := type_list.selected_item.text.to_string_8.as_attached
+				wizard_information.types.remove (l_type)
+				type_list.prune (type_list.selected_item)
+				update_next_button_status
+			end
+		end
+
+	on_selection_change (a_item: EV_LIST_ITEM)
+			-- Called when selection of `type_list' changes.
+		do
+			if a_item.is_selected then
+				if not remove_type_button.is_sensitive then
+					remove_type_button.enable_sensitive
+				end
+			else
+				if remove_type_button.is_sensitive then
+					remove_type_button.disable_sensitive
+				end
+			end
+		end
+
+	on_type_list_key_press (a_key: EV_KEY)
+			-- Called when key is pressed in `type_list'.
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+				on_remove_type
+			end
 		end
 
 	on_timeout_change (a_value: INTEGER_32)
@@ -280,5 +397,10 @@ feature {NONE} -- Constants
 	b_ddmin: !STRING = "Use ddmin for minimization"
 	b_slicing: !STRING = "Use slicing for minimization"
 	b_html_output: !STRING = "Create HTML output"
+	b_new_type: !STRING = "Typename"
+	b_add_type: !STRING = "+"
+	b_remove_type: !STRING = "-"
+
+	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
 
 end

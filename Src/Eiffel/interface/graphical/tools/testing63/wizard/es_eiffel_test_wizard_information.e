@@ -43,8 +43,7 @@ feature {NONE} -- Initialization
 			set_new_manual_test_class
 			create tag_list.make_default
 			create call_stack_elements.make_default
-			create class_names.make_default
-			class_names.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+			create types.make_default
 
 				-- Auto Test defaults
 			is_slicing_enabled := True
@@ -154,7 +153,7 @@ feature -- Access: AutoTest
 	seed: NATURAL assign set_seed
 			-- <Precursor>
 
-	class_names: !DS_HASH_SET [!STRING]
+	types: !DS_HASH_SET [!STRING]
 			-- <Precursor>
 
 feature {ES_EIFFEL_TEST_WIZARD_WINDOW} -- Access

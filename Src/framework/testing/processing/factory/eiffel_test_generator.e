@@ -254,6 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 	process_configuration
+			-- use `configuration' to initialize AutoTest settings
 		do
 			error_handler.enable_verbose
 
@@ -274,10 +275,11 @@ feature {NONE} -- Implementation
 
 			proxy_time_out := configuration.proxy_time_out.as_integer_32
 
-			create {DS_ARRAYED_LIST [STRING]} class_names.make_from_linear (configuration.class_names)
+			create {DS_ARRAYED_LIST [STRING]} class_names.make_from_linear (configuration.types)
 		end
 
 	prepare_witness_minimization
+			-- Create and launch task for witness minimization
 		local
 			l_task: AUT_WITNESS_MINIMIZER
 		do
@@ -345,7 +347,7 @@ feature {NONE} -- Interpreter generation
 feature{NONE} -- Test case generation and execution
 
 	build_types_and_classes_under_test is
-			-- Build `types_under_test' and `classes_under_test' from `class_names'.
+			-- Build `types_under_test' and `classes_under_test' from `types'.
 		require
 			system_attached: system /= Void
 		local

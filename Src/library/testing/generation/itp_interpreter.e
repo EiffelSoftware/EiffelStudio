@@ -40,12 +40,13 @@ feature{NONE} -- Initialization
 			l_trace: STRING
 			l_port: INTEGER
 		do
-			if argument_count = 4 then
+			if argument_count = 5 then
 					-- Read command line argument
 				l_server_url := argument (1)
 				l_port := argument (2).to_integer
 				byte_code_feature_body_id := argument (3).to_integer
-				l_log_filename := argument (4)
+				byte_code_feature_pattern_id := argument (4).to_integer
+				l_log_filename := argument (5)
 
 					-- Redirect standard output to `output_buffer'.
 				create output_buffer.make (buffer_size)
@@ -177,6 +178,7 @@ feature {NONE} -- Handlers
 						-- Inject received byte-code into byte-code array of Current process.
 					eif_override_byte_code_of_body (
 						byte_code_feature_body_id,
+						byte_code_feature_pattern_id,
 						pointer_for_byte_code (l_byte_code),
 						l_byte_code.count)
 
@@ -430,6 +432,9 @@ feature{NONE} -- Byte code
 	byte_code_feature_body_id: INTEGER
 			-- ID for feature whose byte-code is to be injected
 
+	byte_code_feature_pattern_id: INTEGER
+			-- Pattern ID for feature whose byte-code is to be injected
+
 	execute_protected is
 			-- Execute `procedure' in a protected way.
 		local
@@ -496,7 +501,7 @@ feature{NONE} -- Byte code
 			Result := store.variable_value (a_index)
 		end
 
-	eif_override_byte_code_of_body (a_body_id: INTEGER; a_byte_code: POINTER; a_length: INTEGER) is
+	eif_override_byte_code_of_body (a_body_id: INTEGER; a_pattern_id: INTEGER; a_byte_code: POINTER; a_length: INTEGER) is
 			-- Store `a_byte_code' of `a_length' byte long for feature with `a_body_id'.
 		require
 			a_body_id_not_negative: a_body_id >= 0

@@ -9,6 +9,9 @@ indexing
 frozen class
 	AUT_SOCKET_LISTENER
 
+inherit
+	EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -78,20 +81,34 @@ feature -- Basic functionality
 	wait_for_connection (a_timeout: NATURAL): like connection
 			-- Stop listening and close open port
 			--
-			-- `a_timeout': Max number of nanoseconds spent waiting for socket. If zero, it will wait
+			-- `a_timeout': Number of seconds spent waiting for socket. If zero, it will wait
 			--              without timeout for socket to become attached.
 		require
 			listening: is_listening
 		local
 			l_res: BOOLEAN
+			i: NATURAL
 		do
 			mutex.lock
 			if connection = Void then
 				if a_timeout = 0 then
 					condition.wait (mutex)
 				else
-					l_res := condition.wait_with_timeout (mutex, a_timeout.as_integer_32)
-					if l_res then
+					from
+						i := 1
+					until
+						i > a_timeout or connection /= Void
+					loop
+						sleep (1000000000)
+						i := i + 1
+					end
+
+						-- Note: not sure what the time resolution is for `wait_with_timeout', so for now we just
+						--       simply loop until we reached the timeout...
+
+					--l_res := condition.wait_with_timeout (mutex, a_timeout.as_integer_32)
+
+					if connection = Void then
 						close_listener
 					end
 				end

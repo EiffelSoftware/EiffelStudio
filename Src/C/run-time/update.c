@@ -362,8 +362,11 @@ rt_public void update(char ignore_updt, char *argv0)
 
 		/* Allocation of the variable `melt' */
 	SAFE_ALLOC(melt, unsigned char *, melt_count);
+	memset (melt, 0, melt_count * sizeof(unsigned char *));
+
 		/* Allocation of the variable `mpatidtab' */
 	SAFE_ALLOC(mpatidtab, int, melt_count);
+	memset (mpatidtab, 0, melt_count * sizeof(int));
 
 	while ((body_id = wuint32()) != INVALID_ID) {
 		bsize = wint32();

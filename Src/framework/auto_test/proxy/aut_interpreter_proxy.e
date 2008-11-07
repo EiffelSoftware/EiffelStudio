@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 
 				-- You can only do this after the compilation of the interpreter.
 			injected_feature_body_id := interpreter_root_class.feature_named (feature_name_for_byte_code_injection).real_body_id (interpreter_root_class.types.first)
+			injected_feature_pattern_id := interpreter_root_class.feature_named (feature_name_for_byte_code_injection).real_pattern_id (interpreter_root_class.types.first)
 
 				-- Setup request printers.
 			create socket_data_printer.make (system, variable_table)
@@ -259,7 +260,7 @@ feature -- Execution
 --					socket := l_socket.accepted
 
 						-- Arno: no idea how long this time out is (probably platform dependent)...
-					if {l_socket: like socket} l_listener.wait_for_connection (1000000000) then
+					if {l_socket: like socket} l_listener.wait_for_connection (5) then
 						socket := l_socket
 						process.set_timeout (timeout)
 						log_stream.string.wipe_out
@@ -625,7 +626,7 @@ feature{NONE} -- Process scheduling
 
 				-- We need `injected_feature_body_id'-1 because the underlying C array is 0-based.
 			l_body_id := injected_feature_body_id - 1
-			create arguments.make_from_array (<<"localhost", port.out, l_body_id.out, interpreter_log_filename, "-eif_root", interpreter_root_class_name + "." + interpreter_root_feature_name>>)
+			create arguments.make_from_array (<<"localhost", port.out, l_body_id.out, injected_feature_pattern_id.out, interpreter_log_filename, "-eif_root", interpreter_root_class_name + "." + interpreter_root_feature_name>>)
 
 			create process.make (executable_file_name, arguments, ".")
 			process.set_timeout (0)
@@ -722,7 +723,9 @@ feature -- Socket IPC
 	cleanup is
 			-- Clean up Current proxy.
 		do
-			cleanup_socket
+			if socket /= Void then
+				cleanup_socket
+			end
 		end
 
 	cleanup_socket is
@@ -864,7 +867,10 @@ feature {NONE} -- Implementation
 			-- Output stream used by `request_printer' for log file generation
 
 	injected_feature_body_id: INTEGER
-			-- Feature ID of the feature whose byte-code is to be injected
+			-- Feature body ID of the feature whose byte-code is to be injected
+
+	injected_feature_pattern_id: INTEGER
+			-- Pattern ID of the feature whose byte-code is to be injected
 
 	error_handler: AUT_ERROR_HANDLER
 			-- Error handler

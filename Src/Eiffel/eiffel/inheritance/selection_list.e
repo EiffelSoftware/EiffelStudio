@@ -133,6 +133,7 @@ end;
 				end
 
 					-- Add selected feature to new feature table.
+				l_selected_feature.set_is_selected (True)
 				new_t.replace (l_selected_feature, l_selected_feature.feature_name_id)
 			end
 
@@ -373,6 +374,7 @@ end;
 			a_info.set_a_feature (a_feature)
 
 				-- Add unselected feature to feature table, replacing the previous one.
+			a_feature.set_is_selected (False)
 			new_t.replace (a_feature, feature_name_id);
 		end;
 

@@ -34,6 +34,16 @@
 			<class_option class="TWO_WAY_CURSOR_TREE" is_void_safe="false">
 			</class_option>
 			<file_rule>
+				<exclude>/support/c_string.e$</exclude>
+				<exclude>/structures/list/cell.e$</exclude>
+				<exclude>/structures/tree/fixed_tree.e</exclude>
+				<exclude>/kernel/file_name.e$</exclude>
+				<exclude>/kernel/immutable_string_32.e$</exclude>
+				<exclude>/kernel/immutable_string_8.e$</exclude>
+				<exclude>/kernel/string_32.e$</exclude>
+				<exclude>/kernel/string_8.e$</exclude>
+			</file_rule>
+			<file_rule>
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>
@@ -83,16 +93,10 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
-			<file_rule>
-				<exclude>structures/tree/fixed_tree.e</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="ise" location="ise\" recursive="true">
 			<option namespace="Base">
 			</option>
-			<file_rule>
-				<exclude>/safe$</exclude>
-			</file_rule>
 			<file_rule>
 				<exclude>/dotnet$</exclude>
 				<condition>
@@ -131,8 +135,5 @@
 				</condition>
 			</file_rule>
 		</cluster>
-		<override name="elks_override" location="ise\safe\" recursive="true">
-			<overrides group="elks"/>
-		</override>
 	</target>
 </system>

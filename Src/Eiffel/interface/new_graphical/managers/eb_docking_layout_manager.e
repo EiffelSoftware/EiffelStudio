@@ -224,6 +224,7 @@ feature -- Debug mode command
 			l_sd_button: SD_TOOL_BAR_ITEM
 			l_wt_lst: LINKED_SET [ES_WATCH_TOOL]
 			l_debugger_manager: EB_DEBUGGER_MANAGER
+			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 		do
 			l_debugger_manager := develop_window.eb_debugger_manager
 
@@ -257,6 +258,10 @@ feature -- Debug mode command
 			if l_sd_button /= Void then
 				l_sd_button.enable_displayed
 			end
+
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (develop_window.Interface_names.t_project_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.refresh
 
 			-- Setup tools
 			develop_window.close_all_tools

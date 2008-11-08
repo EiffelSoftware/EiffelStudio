@@ -15,12 +15,12 @@ inherit
 			make as make_widget
 		end
 
-	ES_SHARED_EIFFEL_TEST_SERVICE
+	ES_SHARED_TEST_SERVICE
 		export
 			{NONE} all
 		end
 
-	ES_EIFFEL_TEST_COMMANDER_I
+	ES_TEST_COMMANDER_I
 
 	EXCEPTION_CODE_MEANING
 
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test: !EIFFEL_TEST_I
+	test: !TEST_I
 			-- Test being displayed by `Current'
 		do
 			Result ?= internal_test
@@ -123,7 +123,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	show_test (a_test: !EIFFEL_TEST_I)
+	show_test (a_test: !TEST_I)
 			-- <Precursor>
 		local
 			i: INTEGER

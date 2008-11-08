@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Widgets showing differents states and controls for {EIFFEL_TEST_GENERATOR_I}.
+		Widgets showing differents states and controls for {TEST_GENERATOR_I}.
 	]"
 	author: ""
 	date: "$Date$"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	factory: !EIFFEL_TEST_GENERATOR_I
+	factory: !TEST_GENERATOR_I
 			-- <Precursor>
 
 feature {NONE} -- Access

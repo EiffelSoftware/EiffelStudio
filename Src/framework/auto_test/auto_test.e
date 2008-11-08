@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 			-- Needed to locate the correct registry keys on windows
 			-- in order to find it's install path.
 
-	project_helper: EIFFEL_TEST_PROJECT_HELPER_I
+	project_helper: TEST_PROJECT_HELPER_I
 			-- Project helper for compiling `project'
 
 end

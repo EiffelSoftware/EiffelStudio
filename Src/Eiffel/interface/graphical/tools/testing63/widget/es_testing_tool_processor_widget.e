@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Widget displaying tests of any {EIFFEL_TEST_PROCESSOR_I} in a grid, also providing basic test
+		Widget displaying tests of any {TEST_PROCESSOR_I} in a grid, also providing basic test
 		    suite eventing for its implementors.
 	]"
 	author: ""
@@ -20,7 +20,7 @@ inherit
 			internal_recycle
 		end
 
-	EIFFEL_TEST_SUITE_OBSERVER
+	TEST_SUITE_OBSERVER
 		rename
 			on_processor_launched as on_processor_launched_frozen,
 			on_processor_finished as on_processor_finished_frozen,
@@ -33,7 +33,7 @@ inherit
 			on_processor_proceeded_frozen
 		end
 
-	ES_SHARED_EIFFEL_TEST_SERVICE
+	ES_SHARED_TEST_SERVICE
 		export
 			{NONE} all
 		end
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			-- Create `grid'.
 		do
 			create grid.make (development_window)
-			grid.set_layout (create {ES_EIFFEL_TEST_LIST_GRID_LAYOUT})
+			grid.set_layout (create {ES_TEST_LIST_GRID_LAYOUT})
 			grid.connect (processor)
 			a_widget.extend (grid.widget)
 		end
@@ -112,10 +112,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	processor: !EIFFEL_TEST_PROCESSOR_I
+	processor: !TEST_PROCESSOR_I
 			-- Executor being visualized by `Current'
 
-	grid: !ES_TAGABLE_LIST_GRID [!EIFFEL_TEST_I]
+	grid: !ES_TAGABLE_LIST_GRID [!TEST_I]
 			-- Grid displaying list of tests
 
 	title: !STRING_32
@@ -154,7 +154,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events: test suite
 
-	frozen on_processor_launched_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_launched_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -163,7 +163,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_finished_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_finished_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -172,7 +172,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_stopped_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_stopped_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -181,7 +181,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_proceeded_frozen (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	frozen on_processor_proceeded_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then

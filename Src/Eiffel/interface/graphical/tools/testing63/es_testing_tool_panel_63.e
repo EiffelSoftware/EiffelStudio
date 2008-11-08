@@ -17,12 +17,12 @@ inherit
 			create_right_tool_bar_items
 		end
 
-	ES_SHARED_EIFFEL_TEST_SERVICE
+	ES_SHARED_TEST_SERVICE
 		export
 			{NONE} all
 		end
 
-	EIFFEL_TEST_SUITE_OBSERVER
+	TEST_SUITE_OBSERVER
 		redefine
 			on_test_added,
 			on_test_changed,
@@ -145,14 +145,14 @@ feature {NONE} -- Initialization: widget status
 	on_after_initialized
 			-- <Precursor>
 		local
-			l_service: EIFFEL_TEST_SUITE_S
+			l_service: TEST_SUITE_S
 		do
 			Precursor
 			if test_suite.is_service_available then
 				l_service := test_suite.service
 				l_service.connect_events (Current)
 			end
-			tree_view.set_layout (create {ES_EIFFEL_TEST_TREE_GRID_LAYOUT})
+			tree_view.set_layout (create {ES_TEST_TREE_GRID_LAYOUT})
 			propagate_drop_actions (Void)
 
 			initialize_tool_bar
@@ -194,10 +194,10 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	tree_view: !ES_TAGABLE_TREE_GRID [!EIFFEL_TEST_I]
+	tree_view: !ES_TAGABLE_TREE_GRID [!TEST_I]
 			-- Tree view displaying tests
 
-	filter: !TAG_BASED_FILTERED_COLLECTION [!EIFFEL_TEST_I]
+	filter: !TAG_BASED_FILTERED_COLLECTION [!TEST_I]
 			-- Collection used for filter
 
 	outcome_tab: !ES_TESTING_TOOL_OUTCOME_WIDGET
@@ -432,7 +432,7 @@ feature {NONE} -- Status settings: widgets
 			-- Update text in `runs_label' and `errors_label'.
 		local
 			l_text: STRING_32
-			l_ts: EIFFEL_TEST_SUITE_S
+			l_ts: TEST_SUITE_S
 		do
 			if test_suite.is_service_available then
 				l_ts := test_suite.service
@@ -468,7 +468,7 @@ feature {NONE} -- Status settings: widgets
 
 feature {NONE} -- Events: test execution
 
-	on_run_current (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+	on_run_current (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
 			if not tree_view.selected_items.is_empty then
@@ -478,18 +478,18 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_all (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+	on_run_all (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run all" item of `run_button'.
 		do
 			execute_list (test_suite.service.tests, a_type)
 		end
 
-	on_run_failing (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+	on_run_failing (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selectes "run failing" item of `run_button'.
 		local
-			l_item: !EIFFEL_TEST_I
-			l_list: !DS_ARRAYED_LIST [!EIFFEL_TEST_I]
-			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
+			l_item: !TEST_I
+			l_list: !DS_ARRAYED_LIST [!TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
 		do
 			if test_suite.is_service_available then
 				create l_list.make (test_suite.service.tests.count)
@@ -511,24 +511,24 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_filtered (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+	on_run_filtered (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
 			execute_list (filter.items, a_type)
 		end
 
-	on_run_selected (a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I]) is
+	on_run_selected (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run selected" item of `run_button'.
 		do
 			execute_list (tree_view.selected_items, a_type)
 		end
 
-	execute_list (a_list: !DS_LINEAR [!EIFFEL_TEST_I]; a_type: !TYPE [EIFFEL_TEST_EXECUTOR_I])
+	execute_list (a_list: !DS_LINEAR [!TEST_I]; a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		local
-			l_executor: EIFFEL_TEST_EXECUTOR_I
-			l_test_suite: EIFFEL_TEST_SUITE_S
+			l_executor: TEST_EXECUTOR_I
+			l_test_suite: TEST_SUITE_S
 		do
 			l_test_suite := test_suite.service
 			if test_suite.is_service_available then
@@ -555,7 +555,7 @@ feature {NONE} -- Events: test execution
 	on_stop
 			-- Stop any running test processor
 		local
-			l_cursor: DS_LINEAR_CURSOR [EIFFEL_TEST_PROCESSOR_I]
+			l_cursor: DS_LINEAR_CURSOR [TEST_PROCESSOR_I]
 		do
 			if test_suite.is_service_available then
 				from
@@ -590,15 +590,15 @@ feature {NONE} -- Events: labels
 			update_view
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
+feature {TEST_SUITE_S} -- Events: test suite
 
-	on_test_added (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
+	on_test_added (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_item: !TEST_I)
 			-- <Precursor>
 		do
 			update_run_labels
 		end
 
-	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_test: !EIFFEL_TEST_I)
+	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_test then
@@ -607,7 +607,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!EIFFEL_TEST_I]; a_item: !EIFFEL_TEST_I)
+	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_item: !TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_item then
@@ -616,7 +616,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_processor_launched (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+	on_processor_launched (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
 			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
@@ -637,11 +637,11 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			end
 
 			if not l_found then
-				if {l_executor: !EIFFEL_TEST_EXECUTOR_I} a_processor then
+				if {l_executor: !TEST_EXECUTOR_I} a_processor then
 					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, develop_window.as_attached)
-				elseif {l_generator: !EIFFEL_TEST_GENERATOR_I} a_processor then
+				elseif {l_generator: !TEST_GENERATOR_I} a_processor then
 					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, develop_window.as_attached)
-				elseif {l_factory: !EIFFEL_TEST_FACTORY_I} a_processor then
+				elseif {l_factory: !TEST_CREATOR_I} a_processor then
 					create {ES_TESTING_TOOL_FACTORY_WIDGET} l_new_tab.make (l_factory, develop_window.as_attached)
 				end
 				if l_new_tab /= Void then
@@ -663,7 +663,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			end
 		end
 
- 	on_processor_stopped (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I)
+ 	on_processor_stopped (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
  			-- <Precursor>
  		do
  			if background_executor_type.attempt (a_processor) /= Void then
@@ -673,7 +673,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 			end
  		end
 
- 	on_processor_error (a_test_suite: !EIFFEL_TEST_SUITE_S; a_processor: !EIFFEL_TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: !TUPLE)
+ 	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: !TUPLE)
  			-- <Precursor>
  		do
  			if window_manager.last_focused_window = develop_window then
@@ -683,7 +683,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events: test suite
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
-	on_item_double_press (a_item: !EIFFEL_TEST_I; a_in_tree_view: BOOLEAN)
+	on_item_double_press (a_item: !TEST_I; a_in_tree_view: BOOLEAN)
 			-- Called when user double presses on item in of the grids
 		do
 			if a_in_tree_view then
@@ -696,7 +696,7 @@ feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 			end
 		end
 
-	on_selection_change (a_test: !EIFFEL_TEST_I; a_is_selected: BOOLEAN)
+	on_selection_change (a_test: !TEST_I; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
 		do
 			if tree_view.selected_items.is_empty then
@@ -757,7 +757,7 @@ feature {NONE} -- Factory
 			wizard_button.set_text ("New test")
 			register_action (wizard_button.select_actions, agent
 				local
-					l_wizard: ES_EIFFEL_TEST_WIZARD_MANAGER
+					l_wizard: ES_TEST_WIZARD_MANAGER
 				do
 					create l_wizard.make (develop_window)
 				end)

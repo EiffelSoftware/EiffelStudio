@@ -142,13 +142,9 @@ io.error.put_new_line
 end
 			l_access_type_id := access_class.meta_type (class_type).type_id
 			Result.set_access_type_id (l_access_type_id)
-			if access_in /= written_in then
-					-- We have a replicated feature so we need to generate
-					-- the pattern info from the written in type.
-				l_written_type_id := written_class.meta_type (class_type).type_id
-			else
-				l_written_type_id := l_access_type_id
-			end
+
+				-- Generate pattern info for result.
+			l_written_type_id := written_class.meta_type (class_type).type_id
 			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
 
 			if is_attribute then
@@ -165,15 +161,9 @@ feature -- update
 		do
 			Precursor (class_type)
 			set_access_type_id (access_class.meta_type (class_type).type_id)
-				-- It is ok to call `written_class_type' since the above line is initializing it.
 
-			if access_in /= written_in then
-					-- We have a replicated feature so we need to generate
-					-- the pattern info from the written in type.
-				l_written_type_id := written_class.meta_type (class_type).type_id
-			else
-				l_written_type_id := access_type_id
-			end
+				-- Generate pattern id from written class.
+			l_written_type_id := written_class.meta_type (class_type).type_id
 			set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
 		end
 

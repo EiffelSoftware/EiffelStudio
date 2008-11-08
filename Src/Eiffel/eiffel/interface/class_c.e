@@ -1611,8 +1611,21 @@ feature -- Order relation for inheritance and topological sort
 						-- Check conformance table
 		end
 
+	inherits_from (other: CLASS_C): BOOLEAN is
+			-- Is `other' a conforming/non-conforming ancestor of `Current'?
+			-- Returns True if `other' is `Current'.
+		require
+			good_argument: other /= Void
+		do
+			Result := conform_to (other)
+			if not Result then
+					-- Loop through all ancestors to check non-conforming parents.
+				Result := inherits_from_internal (other)
+			end
+		end
+
 	conform_to (other: CLASS_C): BOOLEAN is
-			-- Is `other' an ancestor of Current ?
+			-- Is `other' a conforming ancestor of Current ?
 		require
 			good_argument: other /= Void
 		local
@@ -4469,6 +4482,29 @@ feature -- output
 			Result.append_character (':')
 			Result.append_character (' ')
 			Result.append (l_name)
+		end
+
+feature {CLASS_C} -- Implementation
+
+	inherits_from_internal (other: CLASS_C): BOOLEAN is
+			-- Is `other' a conforming/non-conforming ancestor of `Current'?
+		require
+			good_argument: other /= Void
+		local
+			l_parent_classes: like parents_classes
+			i, l_count: INTEGER
+		do
+			Result := other = Current
+			l_parent_classes := parents_classes
+			from
+				i := 1
+				l_count := l_parent_classes.count
+			until
+				Result or else i > l_count
+			loop
+				Result := l_parent_classes [i].inherits_from_internal (other)
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Implementation

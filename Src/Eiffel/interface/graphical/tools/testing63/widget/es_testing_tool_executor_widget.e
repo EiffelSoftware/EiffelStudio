@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Widget showing status and control buttons for an {EIFFEL_TEST_EXECUTOR_I}.
+		Widget showing status and control buttons for an {TEST_EXECUTOR_I}.
 	]"
 	author: ""
 	date: "$Date$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executor: !EIFFEL_TEST_EXECUTOR_I
+	executor: !TEST_EXECUTOR_I
 			-- Executor being visualized by `Current'
 
 	title: !STRING_32
@@ -134,8 +134,8 @@ feature {NONE} -- Events: widgets
 	on_run
 			-- Called when `run_button' is selected
 		local
-			l_test_suite: !EIFFEL_TEST_SUITE_S
-			l_list: !DS_ARRAYED_LIST [!EIFFEL_TEST_I]
+			l_test_suite: !TEST_SUITE_S
+			l_list: !DS_ARRAYED_LIST [!TEST_I]
 
 		do
 			if executor.is_interface_usable and test_suite.is_service_available then
@@ -156,7 +156,7 @@ feature {NONE} -- Events: widgets
 	on_skip
 			-- Called when `skip_button' is selected
 		local
-			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
 		do
 			if executor.is_interface_usable and then executor.is_running then
 				l_cursor := grid.selected_items.new_cursor
@@ -173,7 +173,7 @@ feature {NONE} -- Events: widgets
 			end
 		end
 
-	on_selection_change (a_test: !EIFFEL_TEST_I)
+	on_selection_change (a_test: !TEST_I)
 			-- <Precursor>
 		do
 			adapt_executor_status

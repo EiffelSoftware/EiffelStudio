@@ -38,7 +38,7 @@ feature -- Execution
 		local
 			l_auto_test: AUTO_TEST
 		do
-			create l_auto_test.execute (system.eiffel_project, auto_test_arguments, create {EIFFEL_TEST_PROJECT_HELPER})
+			create l_auto_test.execute (system.eiffel_project, auto_test_arguments, create {TEST_PROJECT_HELPER})
 		end
 
 	auto_test_arguments: DS_LIST [STRING]

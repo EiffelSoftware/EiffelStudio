@@ -34,7 +34,7 @@ feature -- Services
 			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent create_help_providers_service, False)
 			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
-			a_container.register_with_activator ({EIFFEL_TEST_SUITE_S}, agent create_testing_servive, False)
+			a_container.register_with_activator ({TEST_SUITE_S}, agent create_testing_servive, False)
 		end
 
 feature {NONE} -- Help registration
@@ -78,21 +78,21 @@ feature {NONE} -- Code template cataloging
 
 feature {NONE} -- Test suite extension
 
-	register_test_suite_processors (a_service: !EIFFEL_TEST_SUITE_S) is
+	register_test_suite_processors (a_service: !TEST_SUITE_S) is
 			-- Register standard test processors for test suite service.
 			--
 			-- `a_service': Service in which test processors are registered.
 		require
 			a_service_usable: a_service.is_interface_usable
 		local
-			a_registrar: EIFFEL_TEST_PROCESSOR_REGISTRAR_I
+			a_registrar: TEST_PROCESSOR_REGISTRAR_I
 		do
 			a_registrar := a_service.processor_registrar
-			a_registrar.register (create {EIFFEL_TEST_BACKGROUND_EXECUTOR}.make (a_service))
-			a_registrar.register (create {EIFFEL_TEST_DEBUG_EXECUTOR}.make (a_service))
-			a_registrar.register (create {EIFFEL_TEST_MANUAL_FACTORY}.make (a_service))
-			a_registrar.register (create {EIFFEL_TEST_EXTRACTOR}.make (a_service))
-			a_registrar.register (create {EIFFEL_TEST_GENERATOR}.make (a_service))
+			a_registrar.register (create {TEST_BACKGROUND_EXECUTOR}.make (a_service))
+			a_registrar.register (create {TEST_DEBUG_EXECUTOR}.make (a_service))
+			a_registrar.register (create {TEST_MANUAL_CREATOR}.make (a_service))
+			a_registrar.register (create {TEST_EXTRACTOR}.make (a_service))
+			a_registrar.register (create {TEST_GENERATOR}.make (a_service))
 		end
 
 feature {NONE} -- Factory
@@ -135,12 +135,12 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_testing_servive: ?EIFFEL_TEST_SUITE_S
+	create_testing_servive: ?TEST_SUITE_S
 			-- Create test suite service
 		local
 			l_evapp: EV_SHARED_APPLICATION
 		do
-			create {EIFFEL_TEST_SUITE} Result.make (create {ES_EIFFEL_TEST_PROJECT_HELPER})
+			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
 			register_test_suite_processors (Result)
 			create l_evapp
 			l_evapp.ev_application.add_idle_action (agent Result.synchronize_processors)

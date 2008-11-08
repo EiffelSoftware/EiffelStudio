@@ -132,7 +132,8 @@ feature -- Access
 			written_class := System.class_of_id (written_in)
 			if
 				written_class /= Void and then
-				System.class_type_of_id (type_id) = class_type
+				System.class_type_of_id (type_id) = class_type and then
+				class_type.associated_class.inherits_from (written_class)
 			then
 				written_type :=	class_type.written_type (written_class)
 				if written_type.is_precompiled then

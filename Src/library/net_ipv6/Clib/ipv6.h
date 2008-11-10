@@ -30,31 +30,31 @@
  */
 
 #define CLOSE_SOCKETS_AND_RETURN {	\
-    if (fd != -1) {			\
-	closesocket (fd); 		\
-	fd = -1;			\
-    }					\
-    if (ofd != -1) {			\
-	closesocket (ofd); 		\
-	ofd = -1;			\
-    }					\
-    if (close_fd != -1) {		\
-	closesocket (close_fd);		\
-	close_fd = -1;			\
-    }					\
-    if (close_ofd != -1) {		\
-	closesocket (close_ofd);	\
-	close_ofd = -1;			\
-    }					\
-    b->ipv4_fd = b->ipv6_fd = -1;	\
-    return SOCKET_ERROR;		\
+	if (fd != -1) {			\
+		closesocket (fd); 		\
+		fd = -1;			\
+	}					\
+	if (ofd != -1) {			\
+		closesocket (ofd); 		\
+		ofd = -1;			\
+	}					\
+	if (close_fd != -1) {		\
+		closesocket (close_fd);		\
+		close_fd = -1;			\
+	}					\
+	if (close_ofd != -1) {		\
+		closesocket (close_ofd);	\
+		close_ofd = -1;			\
+	}					\
+	b->ipv4_fd = b->ipv6_fd = -1;	\
+	return SOCKET_ERROR;		\
 }
 
 void do_init ();
 
 void eif_net_check (int retcode);
 
-#else // Not EIF_WINDOWS
+#else /* Not EIF_WINDOWS */
 
 #include "eif_eiffel.h"
 
@@ -69,32 +69,32 @@ void eif_net_check (int retcode);
 #define EIF_NET_INITIALIZE
 
 #define SET_NONBLOCKING(fd) {		\
-        int flags = fcntl(fd, F_GETFL);	\
-        flags |= O_NONBLOCK; 		\
-        fcntl(fd, F_SETFL, flags);	\
+	int flags = fcntl(fd, F_GETFL);	\
+	flags |= O_NONBLOCK; 		\
+	fcntl(fd, F_SETFL, flags);	\
 }
 
 #define SET_BLOCKING(fd) {		\
-        int flags = fcntl(fd, F_GETFL); \
+	int flags = fcntl(fd, F_GETFL); \
 	flags &= ~O_NONBLOCK;		\
-        fcntl(fd, F_SETFL, flags);      \
+	fcntl(fd, F_SETFL, flags);	  \
 }
 
-#endif // EIF_WINDOWS
+#endif /* EIF_WINDOWS */
 
 typedef union {
-    struct sockaddr	him;
-    struct sockaddr_in	him4;
-    struct sockaddr_in6 him6;
+	struct sockaddr	him;
+	struct sockaddr_in	him4;
+	struct sockaddr_in6 him6;
 } SOCKETADDRESS;
 
 #ifdef EIF_WINDOWS
 struct ipv6bind {
-    SOCKETADDRESS	*addr;
-    SOCKET	 	 ipv4_fd;
-    SOCKET 	 	 ipv6_fd;
+	SOCKETADDRESS	*addr;
+	SOCKET		ipv4_fd;
+	SOCKET		ipv6_fd;
 };
-#endif // EIF_WINDOWS
+#endif
 
 
 #define SOCKETADDRESS_LEN(X)	\
@@ -103,20 +103,20 @@ struct ipv6bind {
 
 
 #define SET_PORT(X,Y) {				\
-    if ((X)->him.sa_family == AF_INET) {	\
-    	(X)->him4.sin_port = (Y);		\
-    } else {					\
-    	(X)->him6.sin6_port = (Y);		\
-    }						\
+	if ((X)->him.sa_family == AF_INET) {	\
+		(X)->him4.sin_port = (Y);		\
+	} else {					\
+		(X)->him6.sin6_port = (Y);		\
+	}						\
 }
 
 #define GET_PORT(X) ((X)->him.sa_family==AF_INET ?(X)->him4.sin_port: (X)->him6.sin6_port)
 
 #ifndef IN6_IS_ADDR_ANY
 #define IN6_IS_ADDR_ANY(a)	\
-    (((a)->s6_words[0] == 0) && ((a)->s6_words[1] == 0) &&	\
-    ((a)->s6_words[2] == 0) && ((a)->s6_words[3] == 0) &&	\
-    ((a)->s6_words[4] == 0) && ((a)->s6_words[5] == 0))
+	(((a)->s6_words[0] == 0) && ((a)->s6_words[1] == 0) &&	\
+	((a)->s6_words[2] == 0) && ((a)->s6_words[3] == 0) &&	\
+	((a)->s6_words[4] == 0) && ((a)->s6_words[5] == 0))
 #endif
 
 void en_set_prefer_ipv4(EIF_BOOLEAN prefer);
@@ -127,4 +127,4 @@ EIF_BOOLEAN en_ipv6_available();
 EIF_BOOLEAN en_ipv6_supported();
 
 
-#endif //IPV6_H
+#endif

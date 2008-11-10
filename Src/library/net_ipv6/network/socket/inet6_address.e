@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			until
 				i >= INADDRSZ
 			loop
-				e := ((( addr[i] |<< 8 ) & 0xff00) | (addr[i+1] & 0xff)).as_natural_16
+				e := ((0xff00 & (addr[i].as_natural_16 |<< 8)) | (0xff & (addr[i+1].as_natural_16))).as_natural_16
 				Result.append_string(e.to_hex_string)
 				if i < INADDRSZ-1 then
 					Result.append_character(':')

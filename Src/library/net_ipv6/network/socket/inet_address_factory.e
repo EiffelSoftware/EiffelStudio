@@ -438,31 +438,32 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if is_ipv4_mapped_address(addr) then
-	    		create Result.make (1, {INET4_ADDRESS}.INADDRSZ)
-	    		from
-	    			i := 1
-	    		until
-	    			i > {INET4_ADDRESS}.INADDRSZ
-	    		loop
-	    			Result.put (addr.item (i + 12), i)
-	    		end
-	    	end
+				create Result.make (1, {INET4_ADDRESS}.INADDRSZ)
+				from
+					i := 1
+				until
+					i > {INET4_ADDRESS}.INADDRSZ
+				loop
+					Result.put (addr.item (i + 12), i)
+					i := i + 1
+				end
+			end
 		end
 
-    is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN is
-    	require
-    		valid_addr: addr /= Void
-    	do
+	is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN is
+		require
+			valid_addr: addr /= Void
+		do
 			if addr.count = {INET6_ADDRESS}.INADDRSZ then
 				Result :=
 					((addr[1] = 0x00) and then (addr[2] = 0x00) and then
-	    			(addr[3] = 0x00) and then (addr[4] = 0x00) and then
-	    			(addr[5] = 0x00) and then (addr[6] = 0x00) and then
-	    			(addr[7] = 0x00) and then (addr[8] = 0x00) and then
-	    			(addr[9] = 0x00) and then (addr[10] = 0x00) and then
-	    			(addr[11] = 0xff) and then (addr[12] = 0xff))
-	    	end
-	    end
+					(addr[3] = 0x00) and then (addr[4] = 0x00) and then
+					(addr[5] = 0x00) and then (addr[6] = 0x00) and then
+					(addr[7] = 0x00) and then (addr[8] = 0x00) and then
+					(addr[9] = 0x00) and then (addr[10] = 0x00) and then
+					(addr[11] = 0xff) and then (addr[12] = 0xff))
+			end
+		end
 
 	hex_character_to_integer (c: CHARACTER): NATURAL_8 is
 			--

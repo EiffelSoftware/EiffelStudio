@@ -1307,7 +1307,11 @@ feature {NONE} -- Events on notification
 			loc: BREAKPOINT_LOCATION
 		do
 			loc := Eifnet_debugger.current_breakpoint_location
-			bps := debugger_manager.breakpoints_manager.breakpoints_at (loc)
+			if loc /= Void then
+					-- `loc' may be Void when stepping back to a replicated routine.
+					--| FIXME IEK: Is this valid as the routine ast is virtual?
+				bps := debugger_manager.breakpoints_manager.breakpoints_at (loc)
+			end
 			if bps /= Void then
 				from
 					bps.start

@@ -20,9 +20,13 @@ feature -- Query
 		local
 			chgs: like changes_between
 			c,v: CURSOR
+			r: ?like changes_between
 		do
 			if csr1.is_flat then
-				Result := csr1.value_records
+				r := csr1.value_records
+			end
+			if r /= Void then
+				Result := r
 			else
 				create Result.make (30)
 					--| Get Full records
@@ -51,10 +55,9 @@ feature -- Query
 			result_not_void: Result /= Void
 		end
 
-
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,6 +16,7 @@ inherit
 	INTERACTIVE_LIST [G]
 		redefine
 			default_create,
+			make_filled,
 			on_item_added_at,
 			on_item_removed_at
 		end
@@ -24,8 +25,6 @@ create
 	default_create
 
 create {ACTIVE_LIST}
-	array_make,
-	make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -33,9 +32,17 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Initialize
 		do
-			Precursor {INTERACTIVE_LIST}
 			create add_actions
 			create remove_actions
+			Precursor {INTERACTIVE_LIST}
+		end
+
+	make_filled (n: INTEGER) is
+			-- <Precursor>
+		do
+			create add_actions
+			create remove_actions
+			Precursor {INTERACTIVE_LIST} (n)
 		end
 
 feature -- Access
@@ -75,14 +82,14 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_filled (n)
 		end
-		
+
 invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -91,12 +98,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ACTIVE_LIST
 

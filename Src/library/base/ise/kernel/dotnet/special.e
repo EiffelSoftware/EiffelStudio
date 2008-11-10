@@ -151,6 +151,17 @@ feature -- Measurement
 
 feature -- Status report
 
+	is_default (i: INTEGER): BOOLEAN
+			-- Is item at index `i' set to a default value (or not set at all for attached reference types)?
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i < count
+		local
+			default_value: ?T
+		do
+			Result := item (i) = default_value
+		end
+
 	all_default (start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
 			-- set to default values?
@@ -414,6 +425,41 @@ feature -- Removal
 			cleared: all_default (0, upper)
 		end
 
+	put_default (i: INTEGER)
+			-- Clear item at index `i', so that no references are kept to the object at this index.
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i < count
+		local
+			default_value: ?T
+		do
+			put (default_value, i)
+		ensure
+			is_default: is_default (i)
+		end
+
+	fill_with_default (start_index, end_index: INTEGER)
+			-- Clear items between `start_index' and `end_index'.
+		require
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := start_index
+				nb := end_index + 1
+			until
+				i = nb
+			loop
+				put_default (i)
+				i := i + 1
+			end
+		ensure
+			filled: -- For every `i' in `start_index' .. `end_index', `is_default' (`i')
+		end
+
 feature {SPECIAL} -- Implementation: Access
 
 	internal_native_array: like native_array;
@@ -421,7 +467,7 @@ feature {SPECIAL} -- Implementation: Access
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -431,8 +477,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
 end -- class SPECIAL
-
-

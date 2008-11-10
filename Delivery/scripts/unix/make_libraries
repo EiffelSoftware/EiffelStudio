@@ -29,6 +29,8 @@ remtrace memory_analyzer
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer 
 remtrace net
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/net net 
+remtrace net_ipv6
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/net_ipv6 net_ipv6 
 remtrace obsolete
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete 
 remtrace parse
@@ -85,6 +87,8 @@ remtrace lex
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/lex lex 
 remtrace net
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/net net 
+remtrace net_ipv6
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/net_ipv6 net_ipv6 
 remtrace parse
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/parse parse 
 remtrace preferences

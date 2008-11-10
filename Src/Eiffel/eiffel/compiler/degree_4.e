@@ -448,8 +448,8 @@ feature {INHERIT_TABLE} -- Propagation
 				-- If any routines are changed then check for any descendents that are replicating features.
 				-- If found then these routines must be fully recompiled
 				--| FIXME IEK We could optimize to check if the access_in values relate to the current class
-			if a_changed_features /= Void and then a_changed_features.count > 0 then
-					-- We need to check if any descendents are replicating features of `a_class'
+			if not System.compilation_straight and then a_changed_features /= Void and then a_changed_features.count > 0 then
+					-- We need to check if any descendents are replicating features of `a_class' during an incremental compilation.
 				l_descendents_with_replicated_features := a_class.descendents_with_changed_replicated_features (a_class)
 				if l_descendents_with_replicated_features /= Void and then not l_descendents_with_replicated_features.is_empty then
 					from

@@ -287,7 +287,7 @@ feature {NONE} -- Execution replay
 		indexing
 			description: "Once per thread"
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 feature -- Execution replay		

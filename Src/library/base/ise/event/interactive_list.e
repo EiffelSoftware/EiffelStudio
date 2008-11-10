@@ -234,7 +234,7 @@ feature -- Element Change
 			offset: INTEGER
 			res: BOOLEAN
 			obj_cmp: BOOLEAN
-			l_item, default_val: like item
+			l_item: like item
 			l_area: like area
 		do
 			obj_cmp := object_comparison
@@ -262,7 +262,7 @@ feature -- Element Change
 						i := i + 1
 					end
 				else
-					l_area.put (default_val, i)
+					l_area.put_default (i)
 					i := i + 1
 				end
 			end
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

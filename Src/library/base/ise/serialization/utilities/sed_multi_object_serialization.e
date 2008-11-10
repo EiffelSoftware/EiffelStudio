@@ -24,7 +24,7 @@ feature -- Access
 	last_file_position: INTEGER
 			-- Position after last serialization
 
-	error_message: STRING
+	error_message: ?STRING
 			-- Reason for failure
 
 feature -- Status report

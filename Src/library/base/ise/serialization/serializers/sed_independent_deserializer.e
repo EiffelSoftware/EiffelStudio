@@ -171,6 +171,7 @@ feature {NONE} -- Implementation
 			l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
+			l_item: ?TUPLE [INTEGER, INTEGER]
 		do
 			l_deser := deserializer
 
@@ -198,11 +199,14 @@ feature {NONE} -- Implementation
 
 					l_map.search (l_name)
 					if l_map.found then
-						if l_map.found_item.integer_32_item (2) /= l_dtype then
-							set_has_error
-							i := nb - 1 -- Jump out of loop
-						else
-							l_mapping.put (l_map.found_item.integer_32_item (1), i)
+						l_item := l_map.found_item
+						if l_item /= Void then
+							if l_item.integer_32_item (2) /= l_dtype then
+								set_has_error
+								i := nb - 1 -- Jump out of loop
+							else
+								l_mapping.put (l_item.integer_32_item (1), i)
+							end
 						end
 					else
 						set_has_error

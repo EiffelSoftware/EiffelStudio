@@ -35,7 +35,7 @@ feature -- Initialization
 		end
 
 feature -- Element change
-	
+
 	extend (v: INTEGER) is
 			-- Make sure that interval goes all the way
 			-- to `v' (up or down).
@@ -52,7 +52,7 @@ feature -- Element change
 			l_change := v < lower_internal or else v > upper_internal
 			Precursor (v)
 			if l_change then
-				on_change				
+				on_change
 			end
 		end
 
@@ -68,7 +68,7 @@ feature -- Resizing
 			l_change := lower_internal /= min_index or else upper_internal /= max_index
 			Precursor (min_index, max_index)
 			if l_change then
-				on_change	
+				on_change
 			end
 		end
 
@@ -77,7 +77,7 @@ feature -- Resizing
 			-- `min_index' to `max_index'.
 		local
 			l_change: BOOLEAN
-		do	 
+		do
 			l_change := lower_internal /= min_index or else upper_internal /= max_index
 			Precursor (min_index, max_index)
 			if l_change then
@@ -98,11 +98,15 @@ feature -- Event handling
 
 	change_actions: ACTION_SEQUENCE [TUPLE] is
 			-- Actions performed when interval changes.
+		local
+			r: ?ACTION_SEQUENCE [TUPLE]
 		do
-			if opo_change_actions = Void then
-				create opo_change_actions
+			r := opo_change_actions
+			if r = Void then
+				create r
+				opo_change_actions := r
 			end
-			Result := opo_change_actions
+			Result := r
 		ensure
 			not_void: Result /= Void
 		end
@@ -111,18 +115,21 @@ feature {NONE} -- Implementation
 
 	on_change is
 			-- Called when interval changes.
+		local
+			a: ?ACTION_SEQUENCE [TUPLE]
 		do
-			if opo_change_actions /= Void then
-				opo_change_actions.call (Void)
+			a := opo_change_actions
+			if a /= Void then
+				a.call (Void)
 			end
 		end
 
-	opo_change_actions: ACTION_SEQUENCE [TUPLE];
+	opo_change_actions: ?ACTION_SEQUENCE [TUPLE];
 			-- Once per object implementation for `change_actions'
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -131,12 +138,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ACTIVE_INTEGER_INTERVAL
 

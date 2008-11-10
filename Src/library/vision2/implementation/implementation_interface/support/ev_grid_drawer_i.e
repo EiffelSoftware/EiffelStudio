@@ -1066,27 +1066,25 @@ feature -- Basic operations
 																		-- drawing.
 																	l_parent_row := loop_parent_row.interface
 																	l_subrow_index := l_parent_row.subrow_count
-																	loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
-
-																	if not loop_parent_row_last_displayed_subrow.is_show_requested then
-																			-- The final subrow of the parent row is not displayed, so we must iterate until we find the last that is.
-																		from
-																		until
-																			loop_parent_row_last_displayed_subrow.is_show_requested
-																		loop
-																			l_subrow_index := l_subrow_index - 1
-																			loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+																	if l_subrow_index > 0 then
+																		loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+																		if not loop_parent_row_last_displayed_subrow.is_show_requested then
+																				-- The final subrow of the parent row is not displayed, so we must iterate until we find the last that is.
+																			from
+																			until
+																				loop_parent_row_last_displayed_subrow.is_show_requested
+																			loop
+																				l_subrow_index := l_subrow_index - 1
+																				loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+																			end
+																		end
+																		if loop_parent_row_last_displayed_subrow.index > loop_current_row.index then
+																				-- If the current item is not the last visible item contained within the parent then a line must be drawn.
+																			item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
+																				-- Draw the vertical line from the bottom of the item to the top.
 																		end
 																	end
-
-																	if loop_parent_row_last_displayed_subrow.index > loop_current_row.index then
-																			-- If the current item is not the last visible item contained within the parent then a line must be drawn.
-
-																		item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
-																			-- Draw the vertical line from the bottom of the item to the top.
-																	end
 																end
-
 																	-- Move one position upwards within the parenting node structure
 																loop_current_row := loop_parent_row
 																loop_parent_row := loop_parent_row.parent_row_i

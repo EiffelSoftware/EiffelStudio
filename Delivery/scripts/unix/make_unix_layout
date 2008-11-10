@@ -123,5 +123,6 @@ if [ $ISE_PLATFORM != "unix" ]; then
     mv $LIB_DIR/library/gobo/spec/$ISE_PLATFORM $LIB_DIR/library/gobo/spec/unix
     mv $LIB_DIR/library/vision2/spec/$ISE_PLATFORM $LIB_DIR/library/vision2/spec/unix
     mv $LIB_DIR/library/net/spec/$ISE_PLATFORM $LIB_DIR/library/net/spec/unix
+    mv $LIB_DIR/library/net_ipv6/spec/$ISE_PLATFORM $LIB_DIR/library/net_ipv6/spec/unix
     mv $SHARE_DIR/studio/config/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
 fi

@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make_with_project (a_project: like eiffel_project; a_helper: like eiffel_project_helper)
@@ -409,7 +414,7 @@ feature -- Status setting
 		do
 			if not is_updating_tests then
 				is_updating_tests := True
-				if (create {RAW_FILE}.make (a_class.file_name)).exists and then is_class_in_project (a_class) then
+				if file_system.file_exists (a_class.file_name) and then is_class_in_project (a_class) then
 					l_is_test_class := locators.there_exists (agent {!TEST_CLASS_LOCATOR_I}.is_test_class (a_class, Current))
 				end
 				test_class_map.search (a_class)
@@ -447,7 +452,18 @@ feature {NONE} -- Status setting
 			l_system: SYSTEM_I
 			l_name: FILE_NAME
 			l_file: KL_TEXT_OUTPUT_FILE
+			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_CLASS_I]
+			l_file_system: KL_SHARED_FILE_SYSTEM
 		do
+			if not is_test_class_map_modified then
+				test_class_map.keys.do_all (
+					agent (a_class: !EIFFEL_CLASS_I)
+						do
+							if not file_system.file_exists (a_class.file_name) then
+								synchronize_with_class (a_class)
+							end
+						end)
+			end
 			if is_project_initialized and is_test_class_map_modified then
 				is_test_class_map_modified := False
 				create l_name.make_from_string (eiffel_project.project_directory.eifgens_cluster_path)
@@ -675,7 +691,7 @@ feature {TEST_CLASS_LOCATOR_I} -- Implementation
 			l_parser: EIFFEL_PARSER
 			l_file: KL_BINARY_INPUT_FILE
 		do
-			if not test_class_map.has (a_class) then
+			if not test_class_map.has (a_class) and file_system.file_exists (a_class.file_name) then
 				if a_class.is_compiled then
 					l_ast ?= a_class.compiled_class.ast
 				else

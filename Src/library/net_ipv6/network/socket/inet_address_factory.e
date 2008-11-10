@@ -51,7 +51,7 @@ feature
 		do
 		    if address.count = {INET4_ADDRESS}.INADDRSZ then
 				create {INET4_ADDRESS} Result.make_from_host_and_address (Void, address)
-	    	elseif address.count ={INET4_ADDRESS}.INADDRSZ then
+	    	elseif address.count ={INET6_ADDRESS}.INADDRSZ then
 				new_addr := convert_from_ipv4_mappedd_address (address)
 				if new_addr /= Void then
 					create {INET4_ADDRESS} Result.make_from_host_and_address (Void, new_addr)
@@ -73,6 +73,9 @@ feature
 				create {INET4_ADDRESS} Result.make_from_host_and_pointer (Void, sockaddr)
 			elseif family = af_inet6 then
 				create {INET6_ADDRESS} Result.make_from_host_and_pointer (Void, sockaddr)
+				if is_ipv4_mapped_address (Result.raw_address) then
+					create {INET4_ADDRESS} Result.make_from_host_and_address (Void, convert_from_ipv4_mappedd_address (Result.raw_address))
+				end
 			end
 		end
 

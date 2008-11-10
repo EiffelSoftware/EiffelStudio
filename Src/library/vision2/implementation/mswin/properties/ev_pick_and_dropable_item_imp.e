@@ -73,31 +73,35 @@ feature -- Access
 					if (a_button = 1 and not mode_is_pick_and_drop) or
 						(a_button = 3 and mode_is_pick_and_drop) then
 						set_pnd_original_parent
-						start_transport (a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x,
-							a_screen_y, False)
-						if application_imp.pick_and_drop_source /= Void then
-							if pebble /= Void then
-								pnd_original_parent.set_parent_source_true
-								pnd_original_parent.set_item_source (Current)
-								pnd_original_parent.set_item_source_true
+						if pnd_original_parent /= Void then
+							start_transport (a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x,
+								a_screen_y, False)
+							if application_imp.pick_and_drop_source /= Void then
+								if pebble /= Void then
+									pnd_original_parent.set_parent_source_true
+									pnd_original_parent.set_item_source (Current)
+									pnd_original_parent.set_item_source_true
+								end
+							else
+								pnd_original_parent.set_parent_source_false
 							end
-						else
-							pnd_original_parent.set_parent_source_false
 						end
 					end
 				end
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
-				pnd_original_parent.set_parent_source_false
-				pnd_original_parent.set_item_source (Void)
-				pnd_original_parent.set_item_source_false
-					-- If the user cancelled a pick and drop with the left
-					-- button then we need to make sure that the
-					-- pointer_button_press_actions are not called on
-					-- `pnd_original_parent' or an item at the current
-					-- pointer position within `pnd_original_parent'.
-				if a_button = 1 then
-					pnd_original_parent.discard_press_event
+				if pnd_original_parent /= Void then
+					pnd_original_parent.set_parent_source_false
+					pnd_original_parent.set_item_source (Void)
+					pnd_original_parent.set_item_source_false
+						-- If the user cancelled a pick and drop with the left
+						-- button then we need to make sure that the
+						-- pointer_button_press_actions are not called on
+						-- `pnd_original_parent' or an item at the current
+						-- pointer position within `pnd_original_parent'.
+					if a_button = 1 then
+						pnd_original_parent.discard_press_event
+					end
 				end
 			elseif pnd_original_parent /= Void then
 				pnd_original_parent.set_parent_source_false

@@ -84,6 +84,7 @@ iff not defined NO_COMPILE then
 	endiff
 	remtrace net
 	cd %STUDIO_DIR\library\net\Clib
+	all_makes
 	remtrace net_ipv6
 	cd %STUDIO_DIR\library\net_ipv6\Clib
 	all_makes

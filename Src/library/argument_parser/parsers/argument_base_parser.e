@@ -45,9 +45,8 @@ feature -- Access
 
 	frozen values: !LIST [!STRING]
 			-- List of arguments values that were not qualified with a switch (aka loose arguments).
-		require
-			is_successful: is_successful
 		do
+			check has_parsed: has_parsed end
 			Result := internal_values
 		ensure
 			result_contains_attached_valid_items: Result.for_all (
@@ -59,9 +58,8 @@ feature -- Access
 
 	frozen option_values: !LIST [!ARGUMENT_OPTION]
 			-- Option values parsed via command line, these do not include the loose arguments. See `values'.
-		require
-			is_successful: is_successful
 		do
+			check has_parsed: has_parsed end
 			Result := internal_option_values
 		end
 
@@ -85,7 +83,7 @@ feature {NONE} -- Access
 			l_path: STRING
 			i: INTEGER
 		do
-			l_path := argument_source.application_base
+			l_path := argument_source.application
 			if l_path /= Void and then not l_path.is_empty then
 				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 				if i > 0 then
@@ -760,7 +758,7 @@ feature {NONE} -- Parsing
 						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
 					end
 					l_arg ?= l_args[i]
-					if not l_arg.is_empty and then l_prefixes.has (l_arg.item (1)) then
+					if not l_arg.is_empty and then l_arg.count > 1 and then l_prefixes.has (l_arg.item (1)) then
 						l_last_switch := Void
 
 						if l_arg.count > 2 and then l_prefixes.has (l_arg.item (2)) then

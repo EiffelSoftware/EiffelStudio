@@ -10,34 +10,19 @@ class
 	ES_TESTING_TOOL_OUTCOME_WIDGET
 
 inherit
-	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
-		rename
-			make as make_widget
-		end
-
-	ES_SHARED_TEST_SERVICE
-		export
-			{NONE} all
-		end
+	ES_TESTING_TOOL_NOTEBOOK_WIDGET
 
 	ES_TEST_COMMANDER_I
 
 	EXCEPTION_CODE_MEANING
+		export
+			{NONE} all
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-
-	make (a_window: like development_window)
-			-- Initialize `Current'.
-		require
-			a_window_attached: a_window /= Void
-			a_window_is_interface_usable: a_window.is_interface_usable
-		do
-			development_window := a_window
-			make_widget
-		end
 
 	build_notebook_widget_interface (a_widget: like widget)
 			-- <Precursor>
@@ -82,19 +67,16 @@ feature -- Access
 	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
-			Result := stock_pixmaps.feature_routine_icon_buffer
+			Result := icon_provider.icons.test_routine_icon_buffer
 		end
 
 	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
-			Result := stock_pixmaps.feature_routine_icon
+			Result := icon_provider.icons.test_routine_icon
 		end
 
 feature {NONE} -- Access
-
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Window in which `Current' is shown
 
 	grid: !ES_GRID
 			-- Grid for listing test results
@@ -370,15 +352,6 @@ feature {NONE} -- Factory
 	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
-		end
-
-	create_notebook_widget: !EV_VERTICAL_BOX
-			-- <Precursor>
-		do
-			create Result
-			Result.set_data (Current)
-		ensure then
-			data_set: Result.data = Current
 		end
 
 feature {NONE} -- Constants

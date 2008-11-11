@@ -10,11 +10,26 @@ frozen class
 
 inherit
 	ES_STONABLE_TOOL [ES_TESTING_TOOL_PANEL_63]
+		redefine
+			name
+		end
+
+inherit {NONE}
+	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+		export
+			{NONE} all
+		end
 
 create {NONE}
 	default_create
 
 feature -- Access
+
+	name: !STRING
+			-- <Precursor>
+		do
+			Result := "testing"
+		end
 
 	title: STRING_32
 			-- <Precursor>

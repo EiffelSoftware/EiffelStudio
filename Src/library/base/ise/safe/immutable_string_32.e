@@ -29,7 +29,7 @@ create
 	make,
 	make_empty,
 	make_filled,
-	make_from_other_string,
+	make_from_string,
 	make_from_string_8,
 	make_from_c_pointer,
 	make_from_cil

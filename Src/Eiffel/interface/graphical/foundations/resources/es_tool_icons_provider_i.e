@@ -17,7 +17,7 @@ deferred class
 inherit
 	ES_TOOL_PROVIDER_I
 
-feature {NONE} -- Access
+feature -- Access
 
 	frozen icons: !G
 			-- Access to the a tool's icons (16x16).

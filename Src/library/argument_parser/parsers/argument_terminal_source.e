@@ -20,7 +20,7 @@ feature -- Access
 	application: !STRING
 			-- <Precursor>
 		once
-			create Result.make_from_other_string (argument (0))
+			create Result.make_from_string (argument (0))
 		end
 
 	application_base: !STRING

@@ -205,8 +205,14 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	do_create is
+		local
+			l_fd, l_fd1: INTEGER
 		do
-			c_create(Current)
+			l_fd := fd
+			l_fd1 := fd1
+			c_create($l_fd, $l_fd1)
+			fd := l_fd
+			fd1 := l_fd1
 			is_created := True
 		end
 
@@ -220,9 +226,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_create (obj: NETWORK_DATAGRAM_SOCKET) is
+	c_create (a_fd, a_fd1: TYPED_POINTER [INTEGER]) is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_datagram_create"
 		end

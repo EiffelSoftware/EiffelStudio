@@ -102,7 +102,7 @@ EIF_BOOLEAN en_ipv6_supported() {
 
 
 
-void en_socket_stream_create (EIF_OBJECT current) {
+void en_socket_stream_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	int fd;
 	
 	if (en_ipv6_available()) {
@@ -115,12 +115,12 @@ void en_socket_stream_create (EIF_OBJECT current) {
 		eif_net_check(fd);
 		return;
 	}
-	eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+	*a_fd = fd;
 		/* fd1 not used in solaris/linux */
-	eif_field (eif_access(current), "fd1", EIF_INTEGER) = 0;
+	*a_fd1 = 0;
 }
 
-void en_socket_datagram_create (EIF_OBJECT current) {
+void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	int fd;
 	int t = 1;
 
@@ -135,7 +135,7 @@ void en_socket_datagram_create (EIF_OBJECT current) {
 		return;
 	}
 
-	eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+	*a_fd = fd;
 	setsockopt(fd, SOL_SOCKET, SO_BROADCAST, (char*) &t, sizeof(int));
 
 		/* On Linux for IPv6 sockets we must set the hop limit
@@ -146,12 +146,10 @@ void en_socket_datagram_create (EIF_OBJECT current) {
 	}
 
 		/* fd1 not used in solaris/linux */
-	eif_field (eif_access(current), "fd1", EIF_INTEGER) = 0;
+	*a_fd1 = 0;
 }
 
-void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
-
-	EIF_INTEGER localport;
+void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
 
 	SOCKETADDRESS h;
 	SOCKETADDRESS* him;
@@ -162,9 +160,8 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 	int connect_res;
 
 	ipv6_supported = en_ipv6_available();
-	localport = eif_field (eif_access(current), "the_local_port", EIF_INTEGER);
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
+	fd = *a_fd;
 
 	if (convert_v4_to_v6_sockaddr((struct sockaddr*)&h, (struct sockaddr*)sockaddr)) {
 		him = &h;
@@ -235,12 +232,12 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 		return;
 	}
 
-	eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+	*a_fd = fd;
 
 		/* we need to initialize the local port field if bind was called
 		 * previously to the connect (by the client) then localport field
 		 * will already be initialized */
-	if (localport == 0) {
+	if (*a_local_port == 0) {
 			/* Now that we're a connected socket, let's extract the port number
 			 * that the system chose for us and store it in the Socket object. */
 		u_short port;
@@ -250,15 +247,14 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 			return;
 		}
 		port = ntohs ((u_short)GET_PORT(him));
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = port;
+		*a_local_port = port;
 	}
 }
 
-void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
+void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
 
 	SOCKETADDRESS h;
 	SOCKETADDRESS* him;
-	int fd;
 	int localport;
 	int rv;
 
@@ -270,7 +266,7 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 
 	localport = ntohs ((u_short) GET_PORT (him));
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
+	fd = *a_fd;
 	rv = bind(fd, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
 
 	if (rv == -1) {	
@@ -290,22 +286,20 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 			return;
 		}
 		port = ntohs ((u_short) GET_PORT (him));
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = port;
+		*a_local_port = port;
 	} else {
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = localport;
+		*a_local_port = localport;
 	}
 }
 
-void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTEGER count) {
-	eif_net_check(listen(eif_field (eif_access(current), "fd", EIF_INTEGER), count));
+void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER sockaddr, EIF_INTEGER count) {
+	eif_net_check(listen(*a_fd, count));
 }
 
 
-EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF_INTEGER timeout) {
-	int fd=-1;
+EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, SOCKETADDRESS *him, EIF_INTEGER timeout) {
 	int len;
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
 	if (timeout) {
 		int ret = net_timeout(fd, timeout);
 		if (ret == 0) {

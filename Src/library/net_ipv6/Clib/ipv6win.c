@@ -323,7 +323,7 @@ static SOCKET check_socket_bounds (SOCKET l_socket) {
 }
 
 
-void en_socket_stream_create (EIF_OBJECT current) {
+void en_socket_stream_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	SOCKET fd, fd1;
 
 	EIF_NET_INITIALIZE;
@@ -331,33 +331,33 @@ void en_socket_stream_create (EIF_OBJECT current) {
 	fd = check_socket_bounds(socket(AF_INET, SOCK_STREAM, 0));
 
 	if (fd == INVALID_SOCKET) {
-		eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+		*a_fd = -1;
 		eif_net_check ((int)fd);
 		return;
 	} else {
 			/* Set socket attribute so it is not passed to any child process */
 		SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, FALSE);
-		eif_field (eif_access(current), "fd", EIF_INTEGER) = (int) fd;
+		*a_fd = (EIF_INTEGER) fd;
 	}
 	if (en_ipv6_available()) {
 		fd1 = check_socket_bounds(socket(AF_INET6, SOCK_STREAM, 0));
 		if (fd1 == INVALID_SOCKET) {
-			eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
-			net_socket_close(fd);
+			*a_fd = -1;
+			*a_fd1 = -1;
+			net_socket_close((int)fd);
 			eif_net_check ((int)fd1);
 			return;
 		} else {
 				/* Set socket attribute so it is not passed to any child process */
 			SetHandleInformation((HANDLE)fd1, HANDLE_FLAG_INHERIT, FALSE);
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = (int)fd1;
+			*a_fd1 = (EIF_INTEGER) fd1;
 		}
 	} else {
-		eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+		*a_fd1 = -1;
 	}
 }
 
-void en_socket_datagram_create (EIF_OBJECT current) {
+void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	SOCKET fd, fd1;
 	int t = TRUE;
 	DWORD x1, x2; /* ignored result codes */
@@ -366,14 +366,14 @@ void en_socket_datagram_create (EIF_OBJECT current) {
 	fd = check_socket_bounds(socket (AF_INET, SOCK_DGRAM, 0));
 
 	if (fd == INVALID_SOCKET) {
-		eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+		*a_fd = -1;
 		eif_net_check ((int)fd);
 		return;
 	} else {
 			/* Set socket attribute so it is not passed to any child process */
 		SetHandleInformation((HANDLE)fd, HANDLE_FLAG_INHERIT, FALSE);
-		eif_field (eif_access(current), "fd", EIF_INTEGER) = (int)fd;
-		net_set_sock_opt(fd, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
+		*a_fd = (EIF_INTEGER) fd;
+		net_set_sock_opt((int) fd, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
 	}
 
 	if (en_ipv6_available()) {
@@ -387,25 +387,24 @@ void en_socket_datagram_create (EIF_OBJECT current) {
 		fd1 = check_socket_bounds(socket (AF_INET6, SOCK_DGRAM, 0));
 
 		if (fd1 == INVALID_SOCKET) {
-			eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+			*a_fd = -1;
+			*a_fd1 = -1;
 			eif_net_check ((int)fd1);
 			return;
 		} else {
-			net_set_sock_opt(fd1, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
+			net_set_sock_opt((int)fd1, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
 			t = FALSE;
 			WSAIoctl(fd1,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
 			SetHandleInformation((HANDLE)fd1, HANDLE_FLAG_INHERIT, FALSE);
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = fd1;
+			*a_fd1 = (EIF_INTEGER) fd1;
 		}
 	} else {
-		eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+		*a_fd1 = -1;
 	}
 }
 
-void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
+void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
 
-	EIF_INTEGER localport;
 	SOCKETADDRESS* him;
 	int family;
 	EIF_INTEGER fd, fd1=-1;
@@ -415,11 +414,10 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 	EIF_NET_INITIALIZE;
 
 	ipv6_supported = en_ipv6_available();
-	localport = eif_field (eif_access(current), "the_local_port", EIF_INTEGER);
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
+	fd = *a_fd;
 	if (ipv6_supported) {
-		fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
+		fd1 = *a_fd1;
 	}
 
 	him = (SOCKETADDRESS*) sockaddr;
@@ -435,15 +433,15 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 				return;
 			}
 				/* close the v4 socket, and set fd to be the v6 socket */
-			eif_field (eif_access(current), "fd", EIF_INTEGER) = fd1;
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+			*a_fd = fd1;
+			*a_fd1 = -1;
 			net_socket_close(fd); 
 			fd = fd1;
 		}
 	} else {
 		if (fd1 != -1) {
 				/* close the v6 socket */
-			eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+			*a_fd1 = -1;
 			net_socket_close(fd1); 
 		}
 		if (fd == -1) {
@@ -530,12 +528,12 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 		return;
 	}
 
-	eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+	*a_fd = fd;
 
 		/* we need to initialize the local port field if bind was called
 		 * previously to the connect (by the client) then localport field
 		 * will already be initialized. */
-	if (localport == 0) {
+	if (*a_local_port == 0) {
 			/* Now that we're a connected socket, let's extract the port number
 			 * that the system chose for us and store it in the Socket object. */
 		u_short port;
@@ -549,11 +547,11 @@ void en_socket_stream_connect (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INT
 			return;
 		}
 		port = ntohs ((u_short)GET_PORT(him));
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = port;
+		*a_local_port = port;
 	}
 }
 
-void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
+void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
 
 	SOCKETADDRESS* him;
 	int family;
@@ -570,9 +568,9 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 	family = him->him.sa_family; 
 	localport = ntohs ((u_short) GET_PORT (him));
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
+	fd = *a_fd;
 	if (ipv6_supported) {
-		fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
+		fd1 = *a_fd1;
 	}
 
 
@@ -588,20 +586,20 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 				fd = v6bind.ipv4_fd;
 				if (fd == -1) {
 						/* socket is closed. */
-					eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+					*a_fd = -1;
 				} else {
 						/* socket was re-created */
-					eif_field (eif_access(current), "fd", EIF_INTEGER) = fd;
+					*a_fd = fd;
 				}
 			}
 			if (v6bind.ipv6_fd != fd1) {
 				fd1 = v6bind.ipv6_fd;
 				if (fd1 == -1) {
 						/* socket is closed. */
-					eif_field (eif_access(current), "fd1", EIF_INTEGER) = -1;
+					*a_fd1 = -1;
 				} else {
 						/* socket was re-created */
-					eif_field (eif_access(current), "fd1", EIF_INTEGER) = fd1;
+					*a_fd1 = fd1;
 				}
 			}
 		}
@@ -627,13 +625,13 @@ void en_socket_stream_bind (EIF_OBJECT current, EIF_POINTER sockaddr) {
 			return;
 		}
 		port = ntohs ((u_short) GET_PORT (him));
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = port;
+		*a_local_port = port;
 	} else {
-		eif_field (eif_access(current), "the_local_port", EIF_INTEGER) = localport;
+		*a_local_port = localport;
 	}
 }
 
-void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTEGER count) {
+void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER sockaddr, EIF_INTEGER count) {
 	int fd, fd1;
 	SOCKETADDRESS *addr;
 	int ipv6_supported;
@@ -644,7 +642,7 @@ void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTE
 	addr = (SOCKETADDRESS*) sockaddr;
 	ipv6_supported = en_ipv6_available();
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
+	fd = *a_fd;
 
 	if (addr->him.sa_family == AF_INET || IN6ADDR_ISANY(&addr->him6)) {
 			/* listen on v4 */
@@ -653,11 +651,11 @@ void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTE
 		}
 	} else {
 		net_socket_close(fd);
-		eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+		*a_fd = -1;
 	}
 
 	if (ipv6_supported) {
-		fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
+		fd1 = *a_fd1;
 		if (addr->him.sa_family == AF_INET6 || addr->him4.sin_addr.s_addr == INADDR_ANY) {
 				/* listen on v6 */
 			if ((res=listen(fd1, count)) == -1) {
@@ -665,28 +663,21 @@ void en_socket_stream_listen (EIF_OBJECT current, EIF_POINTER sockaddr, EIF_INTE
 			}
 		} else {
 			net_socket_close(fd1);
-			eif_field (eif_access(current), "fd", EIF_INTEGER) = -1;
+			*a_fd = -1;
 		}
 	}
 }
 
-
-
-EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF_INTEGER timeout) {
-
-	int fd=-1, fd1=-1;
+EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, SOCKETADDRESS *him, EIF_INTEGER timeout) {
 	int len;
 	SOCKET accepted;
 
 	EIF_NET_INITIALIZE;
 
-	fd = eif_field (eif_access(current), "fd", EIF_INTEGER);
-	fd1 = eif_field (eif_access(current), "fd1", EIF_INTEGER);
-
 	if (fd != -1 && fd1 != -1) {
 		fd_set rfds;
 		struct timeval t, *tP=&t;
-		int lastfd, res, fd2;
+		int res, fd2;
 		FD_ZERO(&rfds);
 		FD_SET(fd,&rfds);
 		FD_SET(fd1,&rfds);
@@ -704,13 +695,12 @@ EIF_INTEGER en_socket_stream_accept (EIF_OBJECT current, SOCKETADDRESS *him, EIF
 			fd2 = FD_ISSET(fd, &rfds)? fd: fd1;
 		} else if (res == 2) {
 				/* avoid starvation */
-			lastfd = eif_field (eif_access(current), "lastfd", EIF_INTEGER);
-			if (lastfd != -1) {
-				fd2 = lastfd==fd? fd1: fd;
+			if (*a_last_fd != -1) {
+				fd2 = *a_last_fd==fd? fd1: fd;
 			} else {
 				fd2 = fd;
 			}
-			eif_field (eif_access(current), "lastfd", EIF_INTEGER) = fd2;
+			*a_last_fd = fd2;
 		} else {
 			eraise("select failed", EN_PROG);
 			return -1;

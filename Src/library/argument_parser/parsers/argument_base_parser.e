@@ -36,22 +36,8 @@ feature -- Access
 
 	frozen application_base: !STRING
 			-- The base location of application.
-		local
-			l_result: ?STRING
-			l_path: STRING
-			i: INTEGER
-		once
-			l_path := arguments.argument (0)
-			if l_path /= Void and then not l_path.is_empty then
-				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
-				if i > 0 then
-					l_result := l_path.substring (1, i - 1)
-				end
-			end
-			if l_result = Void or else l_result.is_empty then
-				l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
-			end
-			create {STRING} Result.make_from_string (l_result)
+		do
+			Result := argument_source.application_base
 		ensure
 			not_result_is_empty: not Result.is_empty
 			no_trailing_separator: Result.item (Result.count) /= operating_environment.directory_separator
@@ -99,7 +85,7 @@ feature {NONE} -- Access
 			l_path: STRING
 			i: INTEGER
 		do
-			l_path := arguments.argument (0)
+			l_path := argument_source.application_base
 			if l_path /= Void and then not l_path.is_empty then
 				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 				if i > 0 then
@@ -112,10 +98,35 @@ feature {NONE} -- Access
 			end
 		end
 
+	frozen argument_source: !ARGUMENT_SOURCE assign set_argument_source
+			-- Access to the arguments via a source object.
+		do
+			if {l_result: ARGUMENT_SOURCE} internal_argument_source then
+				Result := l_result
+			else
+				Result := new_argument_source
+				internal_argument_source := Result
+			end
+		ensure
+			result_consistent: Result ~ argument_source
+		end
+
 	non_switched_argument_validator: ?ARGUMENT_VALUE_VALIDATOR assign set_non_switched_argument_validator
 			-- Validator used to validate any non-switched arguments.
 
 feature {NONE} -- Element change
+
+	set_argument_source (a_source: !like argument_source)
+			-- Sets an alternative argument source object for fetching the arguments.
+			--
+			-- `a_source': The source object to use to fetch the arguments for the application.
+		require
+			not_has_parsed: not has_parsed
+		do
+			internal_argument_source := a_source
+		ensure
+			argument_source_set: argument_source ~ a_source
+		end
 
 	set_non_switched_argument_validator (a_validator: ?like non_switched_argument_validator)
 			-- Sets the non-switched argument validator.
@@ -532,12 +543,6 @@ feature {NONE} -- Query
 
 feature {NONE} -- Helpers
 
-	frozen arguments: !ARGUMENTS
-			-- Access to raw arguments.
-		once
-			create Result
-		end
-
 	frozen string_formatter: !STRING_FORMATTER
 			-- Access to a shared string formatter.
 		once
@@ -627,7 +632,7 @@ feature {NONE} -- Parsing
 			l_switch: ARGUMENT_SWITCH
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_prefixes: like switch_prefixes
-			l_args: ARRAY [STRING]
+			l_args: !ARRAY [!STRING]
 			l_upper: INTEGER
 			l_cs: like is_case_sensitive
 			l_match: BOOLEAN
@@ -647,7 +652,7 @@ feature {NONE} -- Parsing
 				-- Set parsed so we can access certain functions
 			has_parsed := True
 
-			l_args := arguments.argument_array
+			l_args := argument_source.arguments
 			if l_args.count > 1 then
 				l_switches := available_switches
 				l_prefixes := switch_prefixes
@@ -657,7 +662,7 @@ feature {NONE} -- Parsing
 					-- Iterate arguments
 				from
 					i := 1
-					l_upper := l_args.upper
+					l_upper := l_args.count
 				until i > l_upper loop
 					check
 						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
@@ -1800,6 +1805,14 @@ feature {NONE} -- Formatting
 			-- Maximum number of characters before ellipses (...) are used
 			-- to trim a region of text.
 
+feature {NONE} -- Factory
+
+	new_argument_source: !ARGUMENT_SOURCE
+			-- Creates a new default argument source object for the parser
+		do
+			create {ARGUMENT_TERMINAL_SOURCE} Result
+		end
+
 feature {NONE} -- Constants
 
 	switch_prefixes: !ARRAY [CHARACTER]
@@ -1853,6 +1866,10 @@ feature {NONE} -- Internal Implementation Cache
 
 	internal_values: !ARRAYED_LIST [!STRING]
 			-- Mutable, unprotected version of `values'
+
+	internal_argument_source: ?like argument_source
+			-- Cached version of `arugment_source'.
+			-- Note: Do not use directly!
 
 invariant
 	not_is_non_switch_argument_required: not is_allowing_non_switched_arguments implies not is_non_switch_argument_required

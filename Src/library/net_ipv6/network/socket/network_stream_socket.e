@@ -121,8 +121,14 @@ feature
 
 	listen (queue: INTEGER) is
 			-- Listen on socket for at most `queue' connections.
+		local
+			l_fd, l_fd1: INTEGER
 		do
-			c_listen (Current, address.socket_address.item, queue)
+			l_fd := fd
+			l_fd1 := fd1
+			c_listen ($l_fd, $l_fd1, address.socket_address.item, queue)
+			fd := l_fd;
+			fd1 := l_fd1;
 		end
 
 	accept is
@@ -132,10 +138,11 @@ feature
 			retried: BOOLEAN
 			pass_address: like address
 			return: INTEGER;
+			l_last_fd: like fd
 		do
 			if not retried then
 				pass_address := address.twin
-				return := c_accept (Current, pass_address.socket_address.item, 0);
+				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, 0);
 				if return > 0 then
 					create accepted.make_from_fd (return, address.twin);
 					accepted.set_peer_address (pass_address)
@@ -277,54 +284,76 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	do_connect is
+		local
+			l_fd, l_fd1, l_port: INTEGER
 		do
-			c_connect (Current, peer_address.socket_address.item, 0)
+			l_fd := fd
+			l_fd1 := fd1
+			l_port := the_local_port
+			c_connect ($l_fd, $l_fd1, $l_port, peer_address.socket_address.item, 0)
+			fd := l_fd
+			fd1 := l_fd1
+			the_local_port := l_port
 		end
 
 	do_bind is
+		local
+			l_fd, l_fd1, l_port: INTEGER
 		do
-			c_bind (Current, address.socket_address.item)
+			l_fd := fd
+			l_fd1 := fd1
+			l_port := the_local_port
+			c_bind ($l_fd, $l_fd1, $l_port, address.socket_address.item)
+			fd := l_fd
+			fd1 := l_fd1
+			the_local_port := l_port
 		end
 
 	do_create is
+		local
+			l_fd, l_fd1: like fd
 		do
-			c_create(Current)
+			l_fd := fd
+			l_fd1 := fd1
+			c_create ($l_fd, $l_fd1)
+			fd := l_fd
+			fd1 := l_fd1
 			is_created := True
 		end
 
 feature {NONE} -- Externals
 
-	c_create (obj: NETWORK_STREAM_SOCKET) is
+	c_create (a_fd, a_fd1: TYPED_POINTER [INTEGER]) is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_stream_create"
 		end
 
-	c_connect (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_timeout: INTEGER) is
+	c_connect (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER; a_timeout: INTEGER) is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_stream_connect"
 		end
 
-	c_bind (obj: NETWORK_STREAM_SOCKET; an_address: POINTER) is
+	c_bind (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER) is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_stream_bind"
 		end
 
-	c_listen (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_queue: INTEGER) is
+	c_listen (a_fd, a_fd1: TYPED_POINTER [INTEGER]; an_address: POINTER; a_queue: INTEGER) is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_stream_listen"
 		end
 
-	c_accept (obj: NETWORK_STREAM_SOCKET; an_address: POINTER; a_timeout: INTEGER): INTEGER is
+	c_accept (a_fd, a_fd1: INTEGER; a_last_fd: TYPED_POINTER [INTEGER]; an_address: POINTER; a_timeout: INTEGER): INTEGER is
 		external
-			"C"
+			"C blocking"
 		alias
 			"en_socket_stream_accept"
 		end

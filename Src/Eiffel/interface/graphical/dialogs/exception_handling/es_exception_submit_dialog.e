@@ -28,16 +28,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_comm: like support_login)
-
+	make (a_comm: like support_login; a_last_description: like last_description)
+			-- Set `last_description' with `a_description', `a_last_description' can be void
 		require
 			a_comm_attached: a_comm /= Void
 			a_comm_is_support_accessible: a_comm.is_support_accessible
 		do
 			support_login := a_comm
+			last_description := a_last_description
+
 			make_dialog
 		ensure
 			support_login_set: support_login = a_comm
+			set: last_description = a_last_description
 		end
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
@@ -257,6 +260,14 @@ feature -- Query
 	is_submit_successed: BOOLEAN
 			-- If bug report submitted successfully
 
+	user_description: STRING
+			-- Text in `description_text'
+		do
+			if description_text /= Void then
+				Result := description_text.text
+			end
+		end
+
 feature -- Access
 
 	icon: EV_PIXEL_BUFFER
@@ -341,8 +352,18 @@ feature {NONE} -- Implementation: access
 	default_synopsis: STRING = "Enter synopsis"
 			-- Default text for the bug report synopsis
 
-	default_description: STRING = "Enter supplementary bug information"
+	default_description: !STRING
 			-- Default text for the bug report description
+		do
+			if last_description /= Void then
+				create Result.make_from_string (last_description)
+			else
+				Result := "Enter supplementary bug information"
+			end
+		end
+
+	last_description: STRING
+			-- Last description
 
 feature {NONE} -- Status report
 
@@ -374,7 +395,8 @@ feature {NONE} -- Status report
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
-			Result := description_text.text /= Void and then not description_text.text.is_empty and then not description_text.text.is_equal (default_description)
+			Result := description_text.text /= Void and then not description_text.text.is_empty and then
+				 not (description_text.text.is_equal (default_description) and last_description = Void)
 		end
 
 	can_submit: BOOLEAN
@@ -553,7 +575,9 @@ feature {NONE} -- Action handlers
 			l_text := a_text_widget.text
 			if l_text = Void or else l_text.as_string_8.is_equal (default_description) then
 				a_text_widget.set_foreground_color (colors.grid_item_text_color)
-				a_text_widget.set_text ("")
+				if a_text_widget /= description_text or else last_description = Void then
+					a_text_widget.set_text ("")
+				end
 			end
 		end
 

@@ -139,6 +139,10 @@ feature -- Access
 	trace: STRING_32
 			-- Exception trace message
 
+	last_description: STRING
+			-- Last description for submitting bug report
+			-- Maybe void if not recorded
+
 	support_login: COMM_SUPPORT_BUG_REPORTER
 			-- Support site login proxy communicator
 
@@ -290,11 +294,13 @@ feature {NONE} -- Action handlers
 		local
 			l_dialog: ES_EXCEPTION_SUBMIT_DIALOG
 		do
-			create l_dialog.make (support_login)
+			create l_dialog.make (support_login, last_description)
 			l_dialog.show (dialog)
 			if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
 				if l_dialog.is_submit_successed then
 					submit_bug_button.disable_sensitive
+				else
+					last_description := l_dialog.user_description
 				end
 			end
 		end

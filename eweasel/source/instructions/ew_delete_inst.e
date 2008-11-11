@@ -40,6 +40,9 @@ feature
 			dir, file: RAW_FILE;
 		do
 			execute_ok := False;
+
+			del_directory := test.environment.substitute (del_directory)
+
 			del_name := os.full_file_name (del_directory,
 				del_file);
 			create dir.make (del_directory);
@@ -64,24 +67,24 @@ feature
 			elseif not file.is_plain then
 				failure_explanation := "delete file not a plain file";
 			end
-			
+
 		end;
 
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
-	
+
 	execute_ok: BOOLEAN;
 			-- Was last call to `execute' successful?
 
 feature {NONE}
-	
+
 	del_file: STRING;
 			-- Name of file to be deleted
-	
+
 	del_directory: STRING;
 			-- Name of directory in which file to be deleted
 			-- resides
-	
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

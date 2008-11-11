@@ -415,7 +415,16 @@ feature {NONE} -- Implementation
 				if l_list.count = 2 then
 					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
 				else
-					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+					from
+						l_array := ""
+						l_list.go_i_th (3)
+					until
+						l_list.after
+					loop
+						l_array := l_array + l_list.item + " "
+						l_list.forth
+					end
+					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.is_equal (execute_result_keyword) then
 				l_arg := a_instruction.orig_arguments
@@ -429,7 +438,17 @@ feature {NONE} -- Implementation
 				if l_list.count = 2 then
 					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
 				else
-					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+					from
+						l_array := ""
+						l_list.go_i_th (3)
+					until
+						l_list.after
+					loop
+						l_array := l_array + l_list.item + " "
+						l_list.forth
+					end
+
+					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.is_equal (exit_compile_keyword) then
 				Result := "exit_compile"

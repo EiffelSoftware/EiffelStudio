@@ -167,18 +167,13 @@ feature -- Util
 --			is_dir_exists: is_dir_exists (a_dir)
 			not_void: a_test_name /= Void
 		local
---			l_temp_file: STRING
 			l_file_name: FILE_NAME
 			l_file: RAW_FILE
 		do
---			l_temp_file := "ew_eqa_temp_testing_control_file.e"
-
 			create l_file_name.make_from_string (a_dir)
 			l_file_name.set_file_name ("tcf")
 			create l_file.make (l_file_name)
 			if l_file.exists then
-
-
 				converter.append_one_test_routine (l_file_name, a_test_name)
 			else
 				print ("%NError: tcf file not exists in dir: " + a_dir)
@@ -252,9 +247,53 @@ feature -- Command
 			-- Copy from $EWEASEL\control\standard
 			l_eweasel_63.define_file ("PRECOMPILED_BASE", <<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM", "base.ecf">>)
 			l_eweasel_63.define_file ("PRECOMPILED_BASE_MT", <<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM", "base-mt.ecf">>)
+			l_eweasel_63.define_file ("PRECOMPILED_STORE", <<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM", "store">>)
 
+			-- Copy from $EWEASEL/control/windows_platform
+			l_eweasel_63.define ("KERNEL_CLASSIC", "<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>")
+			l_eweasel_63.define ("KERNEL_DOTNET", "")
+			l_eweasel_63.define ("SUPPORT_DOTNET", "")
+			l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
+			l_eweasel_63.define ("KERNEL_DOTNET_NO_EXCEPTION", "")
 
---			l_eweasel_63.define_file ("PRECOMPILED_BASE", <<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM", "base.ecf">>)
+			-- Copy from $EWEASEL/control/standard
+			l_eweasel_63.define_file ("BASE", <<"$ISE_LIBRARY", "library", "base", "elks">>)
+			l_eweasel_63.define_file ("BASE_ISE", <<"$ISE_LIBRARY", "library", "base", "ise">>)
+			l_eweasel_63.define_file ("KERNEL",	<<"$BASE", "kernel">>)
+			l_eweasel_63.define_file ("EXCEPTIONS",	<<"$BASE", "kernel", "exceptions">>)
+			l_eweasel_63.define_file ("EXCEPTIONS_ISE",	<<"$BASE_ISE", "kernel", "exceptions">>)
+			l_eweasel_63.define_file ("EXCEPTIONS_ELKS", <<"$BASE", "kernel", "exceptions">>)
+			l_eweasel_63.define_file ("REFACTORING", <<"$BASE", "refactoring">>)
+			l_eweasel_63.define_file ("SERIALIZATION", <<"$BASE_ISE", "serialization">>)
+			l_eweasel_63.define_file ("SUPPORT", <<"$BASE", "support">>)
+			l_eweasel_63.define_file ("ACCESS", <<"$BASE", "structures", "access">>)
+			l_eweasel_63.define_file ("CURSORS", <<"$BASE", "structures", "cursors">>)
+			l_eweasel_63.define_file ("CURSOR_TREE", <<"$BASE", "structures", "cursor_tree">>)
+			l_eweasel_63.define_file ("DISPENSER", <<"$BASE", "structures", "dispenser">>)
+			l_eweasel_63.define_file ("ITERATION",	<<"$BASE", "structures", "iteration">>)
+			l_eweasel_63.define_file ("LIST", <<"$BASE", "structures", "list">>)
+			l_eweasel_63.define_file ("OBSOLETE", <<"$BASE", "structures", "obsolete">>)
+			l_eweasel_63.define_file ("SET", <<"$BASE", "structures", "set">>)
+			l_eweasel_63.define_file ("STRATEGY", <<"$BASE", "structures", "set", "strategies">>)
+			l_eweasel_63.define_file ("SORT", <<"$BASE", "structures", "sort">>)
+			l_eweasel_63.define_file ("STORAGE", <<"$BASE", "structures", "storage">>)
+			l_eweasel_63.define_file ("TABLE", <<"$BASE", "structures", "table">>)
+			l_eweasel_63.define_file ("TRAVERSING", <<"$BASE", "structures", "traversing">>)
+			l_eweasel_63.define_file ("TREE", <<"$BASE", "structures", "tree">>)
+			l_eweasel_63.define_file ("THREAD", <<"$ISE_LIBRARY", "library", "thread">>)
+			-- EiffelTime directories
+			l_eweasel_63.define_file ("TIME", <<"$ISE_LIBRARY", "library", "time">>)
+			l_eweasel_63.define_file ("TIME_FORMAT", <<"$TIME", "format">>)
+			l_eweasel_63.define_file ("TIME_ENGLISH", <<"$TIME", "format", "english">>)
+			l_eweasel_63.define_file ("TIME_GERMAN", <<"$TIME", "format", "german">>)
+			-- EiffelStore directories
+			l_eweasel_63.define_file ("STORE", <<"$ISE_LIBRARY", "library", "store">>)
+			l_eweasel_63.define_file ("DATE_TIME", <<"$STORE", "date_and_time">>)
+			l_eweasel_63.define_file ("RDBMS_ORACLE", <<"$STORE", "dbms", "rdbms", "oracle">>)
+			l_eweasel_63.define_file ("RDBMS_SUPPORT", <<"$STORE", "dbms", "rdbms", "support">>)
+			l_eweasel_63.define_file ("DBMS_SUPPORT", <<"$STORE", "dbms", "support">>)
+			l_eweasel_63.define_file ("STORE_INTERFACE", <<"$STORE", "interface">>)
+			l_eweasel_63.define_file ("STORE_SUPPORT", <<"$STORE", "support">>)
 
 			prepare
 			source_path (source_directory)

@@ -382,9 +382,14 @@ feature -- Command
 			not_void: a_source_file /= Void
 			not_void: a_dest_directory /= Void
 			not_void: a_dest_file /= Void
+		local
+			l_factory: EW_EQA_TEST_FACTORY
+			l_dest_directory: STRING
 		do
 			if {l_inst: EW_COPY_INST} test_command_table.item (Copy_raw_keyword) then
-				l_inst.inst_initialize_with (a_source_file, a_dest_directory, a_dest_file)
+				create l_factory
+				l_dest_directory := l_factory.environment.substitute (a_dest_directory)
+				l_inst.inst_initialize_with (a_source_file, l_dest_directory, a_dest_file)
 				init_command (l_inst, "copy_raw", "")
 				execute_inst (l_inst)
 			else
@@ -561,12 +566,17 @@ feature -- Command
 		local
 			l_inst: EW_TEST_INSTRUCTION
 			l_temp: STRING
+			l_factory: EW_EQA_TEST_FACTORY
 		do
 			l_inst := test_command_table.item (Execute_final_keyword)
 			l_temp := a_input_file + " " + a_output_file
 			if a_args /= Void then
 				l_temp := l_temp + " " + a_args
 			end
+
+			create l_factory
+			l_temp := l_factory.environment.substitute (l_temp)
+
 			init_command (l_inst, "execute_final", l_temp)
 			execute_inst (l_inst)
 		end
@@ -626,12 +636,17 @@ feature -- Command
 		local
 			l_inst: EW_TEST_INSTRUCTION
 			l_temp: STRING
+			l_factory: EW_EQA_TEST_FACTORY
 		do
 			l_inst := test_command_table.item (Execute_work_keyword)
 			l_temp := a_input_file + " " + a_output_file
 			if args /= Void then
 				l_temp := l_temp + " " + args
 			end
+
+			create l_factory
+			l_temp := l_factory.environment.substitute (l_temp)
+
 			init_command (l_inst, "execute_work", l_temp)
 			execute_inst (l_inst)
 		end
@@ -662,9 +677,15 @@ feature -- Command
 			not_void: a_controlled_instruction /= Void
 		local
 			l_inst: EW_TEST_INSTRUCTION
+			l_factory: EW_EQA_TEST_FACTORY
+			l_instruction: STRING
 		do
 			l_inst := test_command_table.item (If_keyword)
-			init_command (l_inst, "if", a_name + " " + a_controlled_instruction)
+
+			create l_factory
+			l_instruction := l_factory.environment.substitute (a_controlled_instruction)
+
+			init_command (l_inst, "if", a_name + " " + l_instruction)
 			execute_inst (l_inst)
 		end
 
@@ -676,9 +697,15 @@ feature -- Command
 			not_void: a_controlled_instruction /= Void
 		local
 			l_inst: EW_TEST_INSTRUCTION
+			l_factory: EW_EQA_TEST_FACTORY
+			l_instruction: STRING
 		do
 			l_inst := test_command_table.item (If_keyword)
-			init_command (l_inst, "if", "not " + a_name + " " + a_controlled_instruction)
+
+			create l_factory
+			l_instruction := l_factory.environment.substitute (a_controlled_instruction)
+
+			init_command (l_inst, "if", "not " + a_name + " " + l_instruction)
 			execute_inst (l_inst)
 		end
 
@@ -744,9 +771,15 @@ feature -- Command
 			not_void: a_system_name /= Void
 		local
 			l_inst: EW_TEST_INSTRUCTION
+			l_factory: EW_EQA_TEST_FACTORY
+			l_system_name: STRING
 		do
 			l_inst := test_command_table.item (System_keyword)
-			init_command (l_inst, "system", a_system_name)
+
+			create l_factory
+			l_system_name := l_factory.environment.substitute (a_system_name)
+
+			init_command (l_inst, "system", l_system_name)
 			execute_inst (l_inst)
 		end
 

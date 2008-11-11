@@ -108,8 +108,6 @@ feature -- Output
 
 	send (a_packet: DATAGRAM_PACKET; flags: INTEGER) is
 			-- Send `a_packet' to address in `peer_address'.
-		local
-			return_val: INTEGER
 		do
 			send_to (a_packet, peer_address, flags)
 		end

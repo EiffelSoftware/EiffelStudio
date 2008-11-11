@@ -318,7 +318,9 @@ feature -- Execution
 						log_line ("-- Proxy has terminated interpreter.")
 					end
 				end
-				cleanup_socket
+				if socket /= Void then
+					cleanup_socket
+				end
 			end
 		ensure
 			last_request_not_void: last_request /= Void
@@ -645,7 +647,7 @@ feature{NONE} -- Process scheduling
 					log (log_stream.string)
 					request_count := request_count + 1
 					process.reset_timer
-					if socket.is_open_write then
+					if socket /= Void and then socket.is_open_write then
 						socket.independent_store (socket_data_printer.last_request)
 					end
 				else

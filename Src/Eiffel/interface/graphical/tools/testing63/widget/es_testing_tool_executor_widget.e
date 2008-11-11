@@ -135,7 +135,7 @@ feature {NONE} -- Events: widgets
 			-- Called when `run_button' is selected
 		local
 			l_test_suite: !TEST_SUITE_S
---			l_conf: !TEST_EXECUTOR_CONF
+			l_conf: !TEST_EXECUTOR_CONF
 			l_list: !DS_LINEAR [!TEST_I]
 		do
 			if executor.is_interface_usable and test_suite.is_service_available then
@@ -146,14 +146,14 @@ feature {NONE} -- Events: widgets
 					else
 						l_list := executor.active_tests
 					end
---					if l_list.count = l_test_suite.tests.count then
---						create l_conf.make
---					else
---						create l_conf.make_with_tests (l_list)
---					end
---					if executor.is_ready and executor.is_valid_configuration (l_conf) then
---						l_test_suite.launch_processor (executor, l_conf, False)
---					end
+					if l_list.count = l_test_suite.tests.count then
+						create l_conf.make
+					else
+						create l_conf.make_with_tests (l_list)
+					end
+					if executor.is_ready and executor.is_valid_configuration (l_conf) then
+						l_test_suite.launch_processor (executor, l_conf, False)
+					end
 				end
 			end
 		end

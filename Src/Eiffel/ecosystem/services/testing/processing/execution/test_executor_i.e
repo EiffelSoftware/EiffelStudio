@@ -20,12 +20,16 @@ deferred class
 inherit
 	TEST_PROCESSOR_I
 		rename
-			tests as active_tests,
-			argument as active_tests,
-			is_valid_typed_argument as is_valid_test_list
+			tests as active_tests
 		redefine
-			is_valid_test_list
+			conf_type
 		end
+
+feature
+	argument: !DS_LINEAR [!TEST_I]
+		do
+		end
+
 
 feature -- Access
 
@@ -36,15 +40,19 @@ feature -- Access
 		deferred
 		end
 
-feature -- Query
+feature {NONE} -- Query
 
-	is_valid_test_list (a_list: !DS_LINEAR [!TEST_I]): BOOLEAN
+	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
 			-- <Precursor>
-		do
-			Result := test_suite.is_subset (a_list) and a_list.for_all (agent is_test_executable)
+		deferred
+		ensure then
+			tests_executable: not a_conf.is_specific implies test_suite.tests.for_all (agent is_test_executable)
+			subset_executable: a_conf.is_specific implies (test_suite.is_subset (a_conf.tests) and
+				a_conf.tests.for_all (agent is_test_executable))
+
 		end
 
-	is_test_executable (a_test: !TEST_I): BOOLEAN is
+	frozen is_test_executable (a_test: !TEST_I): BOOLEAN is
 			-- Can test instance be executed by `Current'?
 			--
 			-- `a_test': Test to be executed.
@@ -71,6 +79,13 @@ feature -- Status setting
 		deferred
 		ensure
 			a_test_not_active: (a_test.is_queued or a_test.is_running) implies a_test.executor /= Current
+		end
+
+feature {NONE} -- Typing
+
+	conf_type: !TEST_EXECUTOR_CONF_I
+			-- <Precursor>
+		do
 		end
 
 end

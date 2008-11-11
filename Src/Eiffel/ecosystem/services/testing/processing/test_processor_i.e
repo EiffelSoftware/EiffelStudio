@@ -3,7 +3,7 @@ indexing
 		Interface of a processor performing tasks for a test suite. For example, this includes executing
 		a number of tests or creating new tests.
 		
-		A processor is launched with generic arguments defining the task. Implementers should split
+		A processor is launched with a configuriation defining the task. Implementers should split
 		any task into small stages. The test suite is than able to tell the processor when to execute the
 		next stage. After executing a single stage, the processor should return and go into an idle
 		state.
@@ -35,14 +35,6 @@ feature -- Access
 		ensure
 			result_usable: Result.is_interface_usable
 			result_available: Result.is_project_initialized
-		end
-
-	argument: !ANY
-			-- Argument with which `Current' has been launched
-		require
-			usable: is_interface_usable
-			running: is_running
-		deferred
 		end
 
 	tests: !DS_LINEAR [!TEST_I]
@@ -120,17 +112,17 @@ feature -- Status report
 
 feature -- Query
 
-	frozen is_valid_argument (a_arg: like argument): BOOLEAN
-			-- Is `an_arg' a valid argument to start a task for `a_test_suite'?
+	frozen is_valid_configuration (a_arg: !TEST_PROCESSOR_CONF_I): BOOLEAN
+			-- Is `an_arg' a valid configuration to start a task for `a_test_suite'?
 		require
 			usable: is_interface_usable
 		do
-			if {l_type: like argument} a_arg then
-				Result := is_valid_typed_argument (l_type)
+			if {l_type: like conf_type} a_arg then
+				Result := is_valid_typed_configuration (l_type)
 			end
 		ensure
-			result_implies_valid_typed: Result implies ({l_type2: like argument} a_arg and then
-				is_valid_typed_argument (l_type2))
+			result_implies_valid_typed: Result implies ({l_type2: like conf_type} a_arg and then
+				is_valid_typed_configuration (l_type2))
 		end
 
 	is_stop_requested: BOOLEAN
@@ -143,8 +135,8 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	is_valid_typed_argument (a_arg: like argument): BOOLEAN
-			-- Is `an_arg' a valid argument to start a task for `a_test_suite'?
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
+			-- Is `an_arg' a valid configuration to start a task for `a_test_suite'?
 		require
 			usable: is_interface_usable
 		deferred
@@ -164,17 +156,17 @@ feature -- Status setting
 
 feature {TEST_SUITE_S} -- Status setting
 
-	frozen start (a_arg: !ANY)
-			-- Start performing a task for given arguments.
+	frozen start (a_arg: !TEST_PROCESSOR_CONF_I)
+			-- Start performing a task for given configuration.
 			--
 			-- `a_arg': Arguments defining the task.
 			-- `a_test_suite': Test suite for which task will be processed.
 		require
 			usable: is_interface_usable
 			ready: is_ready
-			a_arg_valid: is_valid_argument (a_arg)
+			a_arg_valid: is_valid_configuration (a_arg)
 		do
-			if {l_arg: like argument} a_arg then
+			if {l_arg: like conf_type} a_arg then
 				start_process (l_arg)
 			end
 		ensure
@@ -210,16 +202,26 @@ feature {TEST_SUITE_S} -- Status setting
 
 feature {NONE} -- Status setting
 
-	start_process (a_arg: like argument)
+	start_process (a_arg: like conf_type)
 			-- Start performing a task for given arguments.
 			--
 			-- `a_arg': Arguments defining the task.
 		require
 			usable: is_interface_usable
 			ready: is_ready
-			a_arg_valid: is_valid_argument (a_arg)
+			a_arg_valid: is_valid_configuration (a_arg)
 		deferred
 		ensure
 			idle: is_idle
 		end
+
+feature {NONE} -- Typing
+
+	conf_type: !TEST_PROCESSOR_CONF_I
+			-- Type anchor for configuration used by `Current'.
+		do
+		ensure
+			not_to_be_called: False
+		end
+
 end

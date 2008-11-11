@@ -13,14 +13,7 @@ deferred class
 inherit
 	TEST_CREATOR_I
 		redefine
-			configuration
-		end
-
-feature -- Access
-
-	configuration: !TEST_EXTRACTOR_CONF_I
-			-- <Precursor>
-		deferred
+			conf_type
 		end
 
 feature -- Query
@@ -35,12 +28,19 @@ feature -- Query
 		deferred
 		end
 
-	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
 			-- <Precursor>
 		deferred
 		ensure then
 			result_implies_valid_elements: Result implies
 				a_arg.call_stack_elements.for_all (agent is_valid_call_stack_element)
+		end
+
+feature {NONE} -- Typing
+
+	conf_type: !TEST_EXTRACTOR_CONF_I
+			-- <Precursor>
+		do
 		end
 
 end

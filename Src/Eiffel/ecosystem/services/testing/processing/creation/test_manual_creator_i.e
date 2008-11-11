@@ -11,12 +11,15 @@ deferred class
 
 inherit
 	TEST_CREATOR_I
+		redefine
+			conf_type
+		end
 
-feature -- Access
+feature {NONE} -- Typing
 
-	configuration: !TEST_MANUAL_CREATOR_CONF_I
+	conf_type: !TEST_MANUAL_CREATOR_CONF_I
 			-- <Precursor>
-		deferred
+		do
 		end
 
 end

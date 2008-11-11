@@ -12,11 +12,8 @@ deferred class
 
 inherit
 	TEST_CREATOR_I
-
-feature -- Access
-
-	configuration: !TEST_GENERATOR_CONF_I
-		deferred
+		redefine
+			conf_type
 		end
 
 feature -- Status report
@@ -54,6 +51,13 @@ feature -- Status report
 		require
 			running: is_running
 		deferred
+		end
+
+feature -- Access
+
+	conf_type: !TEST_GENERATOR_CONF_I
+			-- <Precursor>
+		do
 		end
 
 end

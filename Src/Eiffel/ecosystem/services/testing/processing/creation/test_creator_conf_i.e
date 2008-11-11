@@ -15,7 +15,7 @@ deferred class
 	TEST_CREATOR_CONF_I
 
 inherit
-	USABLE_I
+	TEST_PROCESSOR_CONF_I
 
 feature -- Access: tags
 

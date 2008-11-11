@@ -11,15 +11,17 @@ deferred class
 
 inherit
 	TEST_CREATOR_I
+		undefine
+			conf_type
+		end
 
 	TEST_PROCESSOR
 		rename
 			make as make_processor,
-			tests as created_tests,
-			argument as configuration,
-			is_valid_argument as is_valid_configuration
+			tests as created_tests
+		undefine
+			conf_type
 		redefine
-			configuration,
 			on_test_added,
 			on_test_removed
 		end
@@ -41,17 +43,9 @@ feature -- Access
 			Result := internal_created_tests
 		end
 
-	configuration: !like internal_configuration
-			-- <Precursor>
-		do
-			if {l_conf: like configuration} internal_configuration then
-				Result := l_conf
-			end
-		end
-
 feature {NONE} -- Access
 
-	internal_configuration: ?TEST_CREATOR_CONF_I
+	configuration: ?like conf_type
 			-- Internal storage for `configuration'
 
 	internal_created_tests: !DS_HASH_SET [!TEST_I]
@@ -62,7 +56,7 @@ feature -- Status report
 	is_running: BOOLEAN
 			-- <Precursor>
 		do
-			Result := internal_configuration /= Void
+			Result := configuration /= Void
 		end
 
 	is_finished: BOOLEAN
@@ -75,22 +69,22 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	start_process_internal (a_arg: like configuration)
+	start_process_internal (a_arg: like conf_type)
 			-- <Precursor>
 		do
 			is_finished := False
-			internal_configuration := a_arg
+			configuration := a_arg
 		end
 
 	stop_process
 			-- <Precursor>
 		do
-			internal_configuration := Void
+			configuration := Void
 		end
 
 feature {NONE} -- Query	
 
-	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_arg.is_interface_usable
@@ -134,6 +128,13 @@ feature {NONE} -- Events
 				internal_created_tests.remove_found_item
 				test_removed_event.publish ([Current, a_item])
 			end
+		end
+
+feature {NONE} -- Typing
+
+	conf_type: !TEST_CREATOR_CONF_I
+			-- <Precursor>
+		deferred
 		end
 
 end

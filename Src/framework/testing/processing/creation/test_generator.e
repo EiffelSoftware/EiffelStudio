@@ -13,9 +13,8 @@ inherit
 	TEST_CREATOR
 		redefine
 			make,
-			is_valid_typed_argument,
-			stop_process,
-			internal_configuration
+			is_valid_typed_configuration,
+			stop_process
 		end
 
 -- Following ancestors copied from {AUTO_TEST}
@@ -84,9 +83,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	internal_configuration: ?TEST_GENERATOR_CONF_I
-			-- <Precursor>
-
 	status: NATURAL
 			-- Current status
 
@@ -129,7 +125,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_arg) and then a_arg.is_multiple_new_classes
@@ -229,7 +225,6 @@ feature {NONE} -- Implementation
 			error_handler.set_start_time (system_clock.date_time_now)
 
 			process_configuration
-			--process_arguments (configuration.arguments)
 
 			if should_display_help_message then
 				error_handler.report_info_message (help_message)

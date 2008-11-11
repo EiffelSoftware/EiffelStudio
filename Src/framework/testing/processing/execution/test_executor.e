@@ -21,11 +21,10 @@ inherit
 	TEST_PROCESSOR
 		rename
 			make as make_processor,
-			tests as active_tests,
-			argument as active_tests,
-			is_valid_typed_argument as is_valid_test_list
+			tests as active_tests
 		undefine
-			is_ready
+			is_ready,
+			conf_type
 		redefine
 			on_test_removed
 		end
@@ -140,24 +139,47 @@ feature -- Status setting
 			abort_test (a_test, False)
 		end
 
-feature {NONE} -- Status setting
+feature {NONE} -- Query
 
-	start_process_internal (a_list: like active_tests)
+	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
+			-- <Precursor>
+		local
+			l_list: !DS_LINEAR [!TEST_I]
+		do
+			if a_conf.is_specific then
+				Result := test_suite.is_subset (a_conf.tests) and
+					a_conf.tests.for_all (agent is_test_executable)
+			else
+				Result := test_suite.tests.for_all (agent is_test_executable)
+			end
+		end
+
+feature {NONE} -- Basic functionality
+
+	start_process_internal (a_conf: like conf_type)
 			-- <Precursor>
 		local
 			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
 			l_old_map: like test_map
 			l_count: NATURAL
+			l_list: !DS_LINEAR [!TEST_I]
 		do
 			l_old_map := test_map
-			create test_map.make (a_list.count)
+
+			if a_conf.is_specific then
+				l_list := a_conf.tests
+			else
+				l_list := test_suite.tests
+			end
+
+			create test_map.make (l_list.count)
 			if l_old_map /= Void then
 				tests_reset_event.publish ([Current])
 				l_old_map := Void
 			end
 
 			from
-				l_cursor := a_list.new_cursor
+				l_cursor := l_list.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
@@ -219,6 +241,9 @@ feature {NONE} -- Status setting
 			l_file_name.set_file_name (source_writer.class_name.as_lower)
 			l_file_name.add_extension ("e")
 			create l_file.make (l_file_name)
+			if not l_file.exists then
+				test_suite.eiffel_project.system.system.force_rebuild
+			end
 			l_file.recursive_open_write
 			if l_file.is_open_write then
 				source_writer.write_source (l_file, a_list)

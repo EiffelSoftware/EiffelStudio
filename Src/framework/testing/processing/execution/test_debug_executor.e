@@ -118,10 +118,10 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Implementation
 
-	start_process_internal (a_list: like active_tests)
+	start_process_internal (a_conf: like conf_type)
 			-- <Precursor>
 		do
-			Precursor (a_list)
+			Precursor (a_conf)
 			set_breakpoints
 		end
 

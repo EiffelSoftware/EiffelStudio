@@ -14,8 +14,7 @@ inherit
 
 	TEST_CREATOR
 		redefine
-			internal_configuration,
-			is_valid_typed_argument
+			is_valid_typed_configuration
 		end
 
 	SHARED_DEBUGGER_MANAGER
@@ -24,9 +23,6 @@ create
 	make
 
 feature {NONE} -- Access
-
-	internal_configuration: ?TEST_EXTRACTOR_CONF_I
-			-- <Precursor>
 
 	source_writer: !TEST_EXTRACTED_SOURCE_WRITER
 			-- Source writer for creating extracted test set classes
@@ -87,7 +83,7 @@ feature {NONE} -- Status setting
 
 feature -- Query
 
-	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
 			-- <Precursor>
 		do
 			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then

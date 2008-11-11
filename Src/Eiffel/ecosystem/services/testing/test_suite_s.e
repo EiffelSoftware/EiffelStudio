@@ -106,55 +106,13 @@ feature -- Status setting
 		deferred
 		end
 
-	run_all (a_executor: !TEST_EXECUTOR_I; a_blocking: BOOLEAN)
-			-- Run all tests in `tests' with executor of type `a_executor'
-			-- and notify observers that executor has been launched.
-		require
-			usable: is_interface_usable
-			project_initialized: is_project_initialized
-			executor_ready: a_executor.is_ready
-			executor_suitable: a_executor.is_valid_test_list (tests)
-		do
-			run_list (a_executor, tests, a_blocking)
-		ensure
-			not_blocking_equals_preparing_tests: not a_blocking = a_executor.is_idle
-		end
-
-	run_list (a_executor: !TEST_EXECUTOR_I; a_list: !DS_LINEAR [!TEST_I]; a_blocking: BOOLEAN)
-			-- Run all tests in `a_list' with executor of type `a_executor'
-			-- and notify observers that executor has been launched.
-		require
-			usable: is_interface_usable
-			project_initialized: is_project_initialized
-			executor_ready: a_executor.is_ready
-			executor_suitable: a_executor.is_valid_test_list (tests)
-		do
-			launch_processor (a_executor, a_list, a_blocking)
-		ensure
-			not_blocking_equals_preparing_a_list: not a_blocking = a_executor.is_idle
-		end
-
-	create_tests (a_factory: !TEST_CREATOR_I; a_conf: !TEST_CREATOR_CONF_I; a_blocking: BOOLEAN)
-			-- Launch test creation and notify all observers
-		require
-			usable: is_interface_usable
-			project_initialized: is_project_initialized
-			factory_ready: a_factory.is_ready
-			factory_suitable: a_factory.is_valid_configuration (a_conf)
-		do
-			launch_processor (a_factory, a_conf, a_blocking)
-		ensure
-			not_blocking_equals_running: not a_blocking = a_factory.is_idle
-			not_blocking_equals_running_conf: not a_blocking implies (a_factory.configuration = a_conf)
-		end
-
-	launch_processor (a_processor: !TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
+	launch_processor (a_processor: !TEST_PROCESSOR_I; a_arg: !TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
 			-- Launch test processor and notify all observers
 		require
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			processor_ready: a_processor.is_ready
-			processor_suitable: a_processor.is_valid_argument (a_arg)
+			processor_suitable: a_processor.is_valid_configuration (a_arg)
 		deferred
 		ensure
 			not_blocking_equals_running: not a_blocking = a_processor.is_idle

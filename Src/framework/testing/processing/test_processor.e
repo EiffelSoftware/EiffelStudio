@@ -90,7 +90,7 @@ feature {TEST_SUITE_S} -- Status setting
 
 feature {NONE} -- Status setting
 
-	frozen start_process (a_arg: like argument)
+	frozen start_process (a_arg: like conf_type)
 			-- <Precursor>
 		do
 			start_process_internal (a_arg)
@@ -98,16 +98,16 @@ feature {NONE} -- Status setting
 			is_idle := True
 		end
 
-	start_process_internal (a_arg: like argument)
+	start_process_internal (a_arg: like conf_type)
 			-- Start performing a task for given arguments.
 			--
 			-- Note: `start_process' does not need to care about the idle status.
 			--
-			-- `a_arg': Arguments defining the task.
+			-- `a_arg': Configuration defining the task.
 		require
 			test_suite_valid: are_tests_available
 			ready: is_ready
-			a_arg_valid: is_valid_argument (a_arg)
+			a_arg_valid: is_valid_configuration (a_arg)
 		deferred
 		end
 

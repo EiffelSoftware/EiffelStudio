@@ -540,23 +540,23 @@ feature {NONE} -- Events: test execution
 		local
 			l_executor: TEST_EXECUTOR_I
 			l_test_suite: TEST_SUITE_S
---			l_conf: TEST_EXECUTOR_CONF
+			l_conf: TEST_EXECUTOR_CONF
 		do
 			l_test_suite := test_suite.service
 			if test_suite.is_service_available then
 				if l_test_suite.processor_registrar.is_valid_type (a_type, l_test_suite) then
 					l_executor := l_test_suite.executor (a_type)
 					if l_executor.is_ready then
---						if a_list /= Void then
---							create l_conf.make_with_tests (a_list)
---						else
---							create l_conf.make
---						end
---						if l_executor.is_valid_configuration (l_conf) then
---							l_test_suite.launch_processor (l_executor, l_conf, False)
---						else
+						if a_list /= Void then
+							create l_conf.make_with_tests (a_list)
+						else
+							create l_conf.make
+						end
+						if l_executor.is_valid_configuration (l_conf) then
+							l_test_suite.launch_processor (l_executor, l_conf, False)
+						else
 							show_error_prompt (e_invalid_test_list, [])
---						end
+						end
 					else
 						show_error_prompt (e_executor_already_running, [])
 

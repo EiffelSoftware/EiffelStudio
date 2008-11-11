@@ -199,52 +199,51 @@ feature -- Basic routines
 				end
 			end
 			create dirname.make_from_string (a_source_directory_name)
-			create source_directory.make_open_read (dirname)
-			if source_directory.is_closed then
-					check
-						todo_proper_error_handling: False
-					end
-			else
-				from
-					source_directory.start
-					source_directory.readentry
-				until
-					source_directory.lastentry = Void
-				loop
-					entry_name := source_directory.lastentry
-					if
-						not equal (entry_name, ".") and
-							not equal (entry_name, "..")
-					then
-						full_entry_name := file_system.pathname (a_source_directory_name, entry_name)
-						target_full_entry_name := file_system.pathname (a_target_directory_name, entry_name)
-						create sub_directory.make (full_entry_name)
-						if sub_directory.exists then
-							-- We have a directory entry
-							if not (equal (entry_name, "CVS") or equal (entry_name, ".svn")) then
-								create sub_directory.make (target_full_entry_name)
-								if not sub_directory.exists then
-									sub_directory.create_dir
+			create source_directory.make (dirname)
+			if source_directory.exists then
+				source_directory.open_read
+				if not source_directory.is_closed then
+					from
+						source_directory.start
+						source_directory.readentry
+					until
+						source_directory.lastentry = Void
+					loop
+						entry_name := source_directory.lastentry
+						if
+							not equal (entry_name, ".") and
+								not equal (entry_name, "..")
+						then
+							full_entry_name := file_system.pathname (a_source_directory_name, entry_name)
+							target_full_entry_name := file_system.pathname (a_target_directory_name, entry_name)
+							create sub_directory.make (full_entry_name)
+							if sub_directory.exists then
+								-- We have a directory entry
+								if not (equal (entry_name, "CVS") or equal (entry_name, ".svn")) then
+									create sub_directory.make (target_full_entry_name)
+									if not sub_directory.exists then
+										sub_directory.create_dir
+									end
+									if not sub_directory.is_closed then
+										sub_directory.close
+									end
+									copy_recursive (create {DIRECTORY_NAME}.make_from_string (full_entry_name),
+														 create {DIRECTORY_NAME}.make_from_string (target_full_entry_name))
 								end
-								if not sub_directory.is_closed then
-									sub_directory.close
+							else
+								-- We have a file entry
+								create file.make_open_read (full_entry_name)
+								if not file.is_closed then
+									file.close
+									file_system.copy_file (full_entry_name,
+																  target_full_entry_name)
 								end
-								copy_recursive (create {DIRECTORY_NAME}.make_from_string (full_entry_name),
-													 create {DIRECTORY_NAME}.make_from_string (target_full_entry_name))
-							end
-						else
-							-- We have a file entry
-							create file.make_open_read (full_entry_name)
-							if not file.is_closed then
-								file.close
-								file_system.copy_file (full_entry_name,
-															  target_full_entry_name)
 							end
 						end
+						source_directory.readentry
 					end
-					source_directory.readentry
+					source_directory.close
 				end
-				source_directory.close
 			end
 		end
 

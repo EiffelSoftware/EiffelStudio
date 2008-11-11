@@ -15,6 +15,9 @@ deferred class
 inherit
 
 	SOCKET_RESOURCES
+		redefine
+			socket_ok, error
+		end
 
 	IO_MEDIUM
 		rename
@@ -53,6 +56,25 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	was_error: BOOLEAN
+			-- Indicates that there was an error during the last operation
+
+	socket_ok: BOOLEAN is
+			-- No error
+		do
+			Result := Precursor and then not was_error
+		end
+
+	error: STRING is
+			-- Output a related error message.
+		do
+			if was_error then
+				Result := socket_error
+			else
+				Result := Precursor
+			end
+		end
 
 	support_storable: BOOLEAN is
 			-- Can medium be used to store an Eiffel structure?
@@ -412,7 +434,12 @@ feature -- Input
 			-- Make result available in `last_real'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, real_32_bytes)
-			last_real := socket_buffer.read_real_32_be (0)
+			if bytes_read /= real_32_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_real := socket_buffer.read_real_32_be (0)
+			end
 		end
 
 	read_double, readdouble is
@@ -420,7 +447,12 @@ feature -- Input
 			-- Make result available in `last_double'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, real_64_bytes)
-			last_double := socket_buffer.read_real_64_be (0)
+			if bytes_read /= real_64_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_double := socket_buffer.read_real_64_be (0)
+			end
 		end
 
 	read_character, readchar is
@@ -428,7 +460,12 @@ feature -- Input
 			-- Make result available in `last_character'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
-			last_character := socket_buffer.read_character (0)
+			if bytes_read /= character_8_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_character := socket_buffer.read_character (0)
+			end
 		end
 
 	read_boolean, readbool is
@@ -436,10 +473,12 @@ feature -- Input
 			-- Maker result available in `last_boolean'.
 		do
 			read_character;
-			if last_character = 'T' then
-				last_boolean := True
-			else
-				last_boolean := False
+			if not was_error then
+				if last_character = 'T' then
+					last_boolean := True
+				else
+					last_boolean := False
+				end
 			end
 		end
 
@@ -451,7 +490,12 @@ feature -- Input
 			-- Make result available in `last_integer'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, integer_32_bytes)
-			last_integer := socket_buffer.read_integer_32_be (0)
+			if bytes_read /= integer_32_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_integer := socket_buffer.read_integer_32_be (0)
+			end
 		end
 
 	read_integer_8 is
@@ -459,7 +503,12 @@ feature -- Input
 			-- Make result available in `last_integer_8'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, integer_8_bytes)
-			last_integer_8 := socket_buffer.read_integer_8_be (0)
+			if bytes_read /= integer_8_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_integer_8 := socket_buffer.read_integer_8_be (0)
+			end
 		end
 
 	read_integer_16 is
@@ -467,7 +516,12 @@ feature -- Input
 			-- Make result available in `last_integer_16'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, integer_16_bytes)
-			last_integer_16 := socket_buffer.read_integer_16_be (0)
+			if bytes_read /= integer_16_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_integer_16 := socket_buffer.read_integer_16_be (0)
+			end
 		end
 
 	read_integer_64 is
@@ -475,7 +529,12 @@ feature -- Input
 			-- Make result available in `last_integer_64'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, integer_64_bytes)
-			last_integer_64 := socket_buffer.read_integer_64_be (0)
+			if bytes_read /= integer_64_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_integer_64 := socket_buffer.read_integer_64_be (0)
+			end
 		end
 
 	read_natural_8 is
@@ -483,7 +542,12 @@ feature -- Input
 			-- Make result available in `last_natural_8'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, natural_8_bytes)
-			last_natural_8 := socket_buffer.read_natural_8_be (0)
+			if bytes_read /= natural_8_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_natural_8 := socket_buffer.read_natural_8_be (0)
+			end
 		end
 
 	read_natural_16 is
@@ -491,7 +555,12 @@ feature -- Input
 			-- Make result available in `last_natural_16'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, natural_16_bytes)
-			last_natural_16 := socket_buffer.read_natural_16_be (0)
+			if bytes_read /= natural_16_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_natural_16 := socket_buffer.read_natural_16_be (0)
+			end
 		end
 
 	read_natural, read_natural_32 is
@@ -499,7 +568,12 @@ feature -- Input
 			-- Make result available in `last_natural'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, natural_32_bytes)
-			last_natural := socket_buffer.read_natural_32_be (0)
+			if bytes_read /= natural_32_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_natural := socket_buffer.read_natural_32_be (0)
+			end
 		end
 
 	read_natural_64 is
@@ -507,7 +581,12 @@ feature -- Input
 			-- Make result available in `last_natural_64'.
 		do
 			read_to_managed_pointer (socket_buffer, 0, natural_64_bytes)
-			last_natural_64 := socket_buffer.read_natural_64_be (0)
+			if bytes_read /= natural_64_bytes then
+				socket_error := "Peer closed connection"
+				was_error := true
+			else
+				last_natural_64 := socket_buffer.read_natural_64_be (0)
+			end
 		end
 
 	read_stream, readstream (nb_char: INTEGER) is
@@ -819,6 +898,8 @@ feature -- socket options
 		end
 
 feature {NONE} -- Implementation
+
+	socket_error: STRING
 
 	shutdown is
 		deferred

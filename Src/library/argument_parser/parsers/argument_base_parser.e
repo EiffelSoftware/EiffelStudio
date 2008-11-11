@@ -98,6 +98,98 @@ feature {NONE} -- Access
 			end
 		end
 
+	frozen arguments: !ARRAY [!STRING]
+			-- The list of actual arguments, which takes into account compounded arguments when using
+			-- unix-style switches.
+			-- Compunded switches are those single character switches, when `is_using_unix_switch_style' is True,
+			-- that are joined, such as -abcde, where a, b, c, d and e are switches.
+		local
+			l_args: !ARRAY [!STRING]
+			l_result: ARRAYED_LIST [!STRING]
+			l_arg: !STRING
+			l_next_arg: ?STRING
+			l_prefixes: !like switch_prefixes
+			l_use_separated_switched: BOOLEAN
+			i, l_count: INTEGER
+			j, nb: INTEGER
+		do
+			if is_using_unix_switch_style then
+					-- When using the Unix style switch we can uss
+				l_args := argument_source.arguments
+				create l_result.make (l_args.count)
+
+				l_prefixes := switch_prefixes
+				l_use_separated_switched := is_using_separated_switch_values
+				from
+					i := 1
+					l_count := l_args.count
+				until
+					i > l_count
+				loop
+					l_arg := l_args[i]
+					if l_arg.count > 2 then
+						if l_prefixes.has (l_arg.item (1)) and not l_prefixes.has (l_arg.item (2)) then
+								-- This means the argument is a single prefix switched (unix style uses two (--) for full
+								-- words and one (-) for shortcuts, which can be compounded.)
+							if l_use_separated_switched then
+								nb := l_arg.count
+							else
+								nb := l_arg.index_of (switch_value_qualifer, 2)
+								if nb = 0 then
+									nb := l_arg.count
+								else
+									nb := nb.min (l_arg.count)
+								end
+							end
+
+							from j := 2 until j > nb loop
+								l_next_arg := Void
+
+								if not l_use_separated_switched then
+										-- We have to peek to ensure if switch value qualified that the last switch is associated
+										-- with the value.
+									if j < nb then
+											-- Peek, because there is space.
+										if l_arg.item (j + 1) = switch_value_qualifer then
+											create l_next_arg.make (1 + (nb - j))
+											l_next_arg.append_character (l_prefixes[1])
+											l_next_arg.append (l_arg.substring (j, l_arg.count).as_attached)
+
+												-- Exit loop
+											j := nb
+										end
+									end
+								end
+
+								if l_next_arg = Void then
+										-- There was no added argument.
+									if l_use_separated_switched or else l_arg.item (j) /= switch_value_qualifer then
+										create l_next_arg.make (2)
+										l_next_arg.append_character (l_prefixes[1])
+										l_next_arg.append_character (l_arg.item (j))
+									end
+								end
+
+								if l_next_arg /= Void then
+									l_result.extend (l_next_arg)
+								end
+
+								j := j + 1
+							end
+						else
+							l_result.extend (l_arg)
+						end
+					else
+						l_result.extend (l_arg)
+					end
+					i := i + 1
+				end
+				Result := l_result
+			else
+				Result := argument_source.arguments
+			end
+		end
+
 	frozen argument_source: !ARGUMENT_SOURCE assign set_argument_source
 			-- Access to the arguments via a source object.
 		do
@@ -632,7 +724,7 @@ feature {NONE} -- Parsing
 			l_switch: ARGUMENT_SWITCH
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_prefixes: like switch_prefixes
-			l_args: !ARRAY [!STRING]
+			l_args: !like arguments
 			l_upper: INTEGER
 			l_cs: like is_case_sensitive
 			l_match: BOOLEAN
@@ -652,7 +744,7 @@ feature {NONE} -- Parsing
 				-- Set parsed so we can access certain functions
 			has_parsed := True
 
-			l_args := argument_source.arguments
+			l_args := arguments
 			if l_args.count > 1 then
 				l_switches := available_switches
 				l_prefixes := switch_prefixes

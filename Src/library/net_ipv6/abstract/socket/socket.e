@@ -443,6 +443,7 @@ feature -- Input
 				was_error := True
 			else
 				last_real := socket_buffer.read_real_32_be (0)
+				was_error := False
 			end
 		end
 
@@ -456,6 +457,7 @@ feature -- Input
 				was_error := True
 			else
 				last_double := socket_buffer.read_real_64_be (0)
+				was_error := False
 			end
 		end
 
@@ -469,6 +471,7 @@ feature -- Input
 				was_error := True
 			else
 				last_character := socket_buffer.read_character (0)
+				was_error := False
 			end
 		end
 
@@ -499,6 +502,7 @@ feature -- Input
 				was_error := True
 			else
 				last_integer := socket_buffer.read_integer_32_be (0)
+				was_error := False
 			end
 		end
 
@@ -512,6 +516,7 @@ feature -- Input
 				was_error := True
 			else
 				last_integer_8 := socket_buffer.read_integer_8_be (0)
+				was_error := False
 			end
 		end
 
@@ -525,6 +530,7 @@ feature -- Input
 				was_error := True
 			else
 				last_integer_16 := socket_buffer.read_integer_16_be (0)
+				was_error := False
 			end
 		end
 
@@ -538,6 +544,7 @@ feature -- Input
 				was_error := True
 			else
 				last_integer_64 := socket_buffer.read_integer_64_be (0)
+				was_error := False
 			end
 		end
 
@@ -551,6 +558,7 @@ feature -- Input
 				was_error := True
 			else
 				last_natural_8 := socket_buffer.read_natural_8_be (0)
+				was_error := False
 			end
 		end
 
@@ -564,6 +572,7 @@ feature -- Input
 				was_error := True
 			else
 				last_natural_16 := socket_buffer.read_natural_16_be (0)
+				was_error := False
 			end
 		end
 
@@ -577,6 +586,7 @@ feature -- Input
 				was_error := True
 			else
 				last_natural := socket_buffer.read_natural_32_be (0)
+				was_error := False
 			end
 		end
 
@@ -590,6 +600,7 @@ feature -- Input
 				was_error := True
 			else
 				last_natural_64 := socket_buffer.read_natural_64_be (0)
+				was_error := False
 			end
 		end
 

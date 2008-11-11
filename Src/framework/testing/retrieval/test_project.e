@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_EIFFEL_PARSER
-		export
-			{NONE} all
-		end
-
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
@@ -118,6 +113,12 @@ feature {NONE} -- Access
 
 	test_root_cluster: ?CONF_CLUSTER
 			-- Internal cluster containing testing root classes
+
+	eiffel_parser: !EIFFEL_PARSER
+			-- Simple parser used to parse test classes
+		once
+			create Result.make
+		end
 
 feature -- Status report
 
@@ -470,6 +471,9 @@ feature {NONE} -- Status setting
 				l_name.extend (root_writer.class_name.as_lower)
 				l_name.add_extension ("e")
 				create l_file.make (l_name)
+				if not l_file.exists then
+					eiffel_project.system.system.force_rebuild
+				end
 				l_file.recursive_open_write
 				if l_file.is_open_write then
 					root_writer.write_source (l_file, test_class_map.keys.as_attached)
@@ -702,8 +706,9 @@ feature {TEST_CLASS_LOCATOR_I} -- Implementation
 							error_handler_empty: error_handler.error_list.is_empty and
 								error_handler.warning_list.is_empty
 						end
-						eiffel_parser.parse (l_file)
-						l_ast := eiffel_parser.root_node
+						l_parser := eiffel_parser
+						l_parser.parse (l_file)
+						l_ast := l_parser.root_node
 						error_handler.wipe_out
 						l_file.close
 					end

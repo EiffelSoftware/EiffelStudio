@@ -13,9 +13,6 @@ inherit
 	TEST_MANUAL_CREATOR_I
 
 	TEST_CREATOR
-		redefine
-			internal_configuration
-		end
 
 	EIFFEL_LAYOUT
 		export
@@ -24,11 +21,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Access
-
-	internal_configuration: ?TEST_MANUAL_CREATOR_CONF_I
-			-- <Precursor>
 
 feature {NONE} -- Status report
 

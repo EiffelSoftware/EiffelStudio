@@ -21,28 +21,25 @@ deferred class
 inherit
 	TEST_PROCESSOR_I
 		rename
-			tests as created_tests,
-			argument as configuration,
-			is_valid_argument as is_valid_configuration
-		end
-
-feature -- Access
-
-	configuration: !TEST_CREATOR_CONF_I
-			-- Configuration used in current test creation run
-		require else
-			usable: is_interface_usable
-			running: is_running
-		deferred
+			tests as created_tests
+		redefine
+			conf_type
 		end
 
 feature {NONE} -- Query		
 
-	is_valid_typed_argument (a_arg: like configuration): BOOLEAN
+	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
 			-- <Precursor>
 		deferred
 		ensure then
 			result_implies_usable: Result implies a_arg.is_interface_usable
+		end
+
+feature {NONE} -- Typing
+
+	conf_type: !TEST_CREATOR_CONF_I
+			-- <Precursor>
+		do
 		end
 
 end

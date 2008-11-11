@@ -125,7 +125,7 @@ feature -- Status setting
 			end
 		end
 
-	launch_processor (a_processor: !TEST_PROCESSOR_I; a_arg: !ANY; a_blocking: BOOLEAN)
+	launch_processor (a_processor: !TEST_PROCESSOR_I; a_arg: !TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
 			-- <Precursor>
 		do
 			a_processor.start (a_arg)

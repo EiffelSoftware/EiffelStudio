@@ -710,6 +710,7 @@ feature {NONE} -- User interface elements
         local
             l_cell: like internal_mini_tool_bar_widget
             l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
+            l_item: SD_TOOL_BAR_ITEM
             l_help_button: ?SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
@@ -732,7 +733,23 @@ feature {NONE} -- User interface elements
 
 	                if l_items /= Void then
 	                        -- Add tool buttons
-	                    l_items.do_all (agent Result.extend)
+						from l_items.start until l_items.after loop
+							l_item := l_items.item_for_iteration
+							if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_item then
+									-- The tool bar is a widget item, so register resize actions to recompute the minimum width
+									-- when the widget changes size.
+								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+									do
+										if is_interface_usable then
+											print ("Resizing,,,%N")
+											ia_tool_bar.update_size
+										end
+									end (Result, ?, ?, ?, ?))
+							end
+							Result.extend (l_item)
+
+							l_items.forth
+						end
 	                end
 	                if l_multi then
 	                        -- Add new edition button
@@ -1024,35 +1041,35 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;indexing
-    copyright:    "Copyright (c) 1984-2008, Eiffel Software"
-    license:    "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-    licensing_options:    "http://www.eiffel.com/licensing"
-    copying: "[
-            This file is part of Eiffel Software's Eiffel Development Environment.
-            
-            Eiffel Software's Eiffel Development Environment is free
-            software; you can redistribute it and/or modify it under
-            the terms of the GNU General Public License as published
-            by the Free Software Foundation, version 2 of the License
-            (available at the URL listed under "license" above).
-            
-            Eiffel Software's Eiffel Development Environment is
-            distributed in the hope that it will be useful,    but
-            WITHOUT ANY WARRANTY; without even the implied warranty
-            of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-            See the    GNU General Public License for more details.
-            
-            You should have received a copy of the GNU General Public
-            License along with Eiffel Software's Eiffel Development
-            Environment; if not, write to the Free Software Foundation,
-            Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-        ]"
-    source: "[
-             Eiffel Software
-             356 Storke Road, Goleta, CA 93117 USA
-             Telephone 805-685-1006, Fax 805-685-6869
-             Website http://www.eiffel.com
-             Customer support http://support.eiffel.com
-        ]"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

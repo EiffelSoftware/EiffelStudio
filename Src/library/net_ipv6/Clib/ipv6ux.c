@@ -256,6 +256,7 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 	SOCKETADDRESS h;
 	SOCKETADDRESS* him;
 	int localport;
+	int fd;
 	int rv;
 
 	if (convert_v4_to_v6_sockaddr((struct sockaddr*)&h, (struct sockaddr*)sockaddr)) {

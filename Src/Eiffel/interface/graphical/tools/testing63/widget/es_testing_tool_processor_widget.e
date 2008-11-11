@@ -11,7 +11,7 @@ deferred class
 	ES_TESTING_TOOL_PROCESSOR_WIDGET
 
 inherit
-	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
+	ES_TESTING_TOOL_NOTEBOOK_WIDGET
 		rename
 			make as make_widget
 		redefine
@@ -33,11 +33,6 @@ inherit
 			on_processor_proceeded_frozen
 		end
 
-	ES_SHARED_TEST_SERVICE
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	make (a_processor: like processor; a_window: like development_window)
@@ -52,8 +47,7 @@ feature {NONE} -- Initialization
 				test_suite.service.connect_events (Current)
 			end
 			processor := a_processor
-			development_window := a_window
-			make_widget
+			make_widget (a_window)
 		ensure
 			is_initialized: is_initialized
 			is_initializing_unchanged: old is_initializing = is_initializing
@@ -96,7 +90,7 @@ feature {NONE} -- Initialization
 			-- Create `grid'.
 		do
 			create grid.make (development_window)
-			grid.set_layout (create {ES_TEST_LIST_GRID_LAYOUT})
+			grid.set_layout (create {ES_TEST_LIST_GRID_LAYOUT}.make (icon_provider))
 			grid.connect (processor)
 			a_widget.extend (grid.widget)
 		end
@@ -139,9 +133,6 @@ feature -- Access: widgets
 			-- Button for closing/removing `Current' from widget
 
 feature {NONE} -- Access
-
-	development_window: !EB_DEVELOPMENT_WINDOW
-			-- Window in which `Current' is shown
 
 	stop_button: !SD_TOOL_BAR_BUTTON
 			-- Button for stopping test execution
@@ -286,12 +277,6 @@ feature {NONE} -- Factory
 			stop_button.set_tooltip (tt_stop)
 			register_action (stop_button.select_actions, agent on_stop)
 			Result.force_last (stop_button)
-		end
-
-	create_notebook_widget: !EV_VERTICAL_BOX
-			-- <Precursor>
-		do
-			create Result
 		end
 
 feature {NONE} -- Constants

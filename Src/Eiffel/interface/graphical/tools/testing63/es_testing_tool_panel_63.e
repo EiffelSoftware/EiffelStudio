@@ -17,6 +17,13 @@ inherit
 			create_right_tool_bar_items
 		end
 
+	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+		rename
+			tool as tool_descriptor
+		export
+			{NONE} all
+		end
+
 	ES_SHARED_TEST_SERVICE
 		export
 			{NONE} all
@@ -133,7 +140,7 @@ feature {NONE} -- Initialization: widgets
 			-- Create `notebook' and add permament tabs.
 		do
 			create notebook
-			create outcome_tab.make (develop_window)
+			create outcome_tab.make (develop_window.as_attached)
 			notebook.extend (outcome_tab.widget)
 			notebook.set_item_text (outcome_tab.widget, outcome_tab.title)
 			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon_pixmap)
@@ -152,7 +159,7 @@ feature {NONE} -- Initialization: widget status
 				l_service := test_suite.service
 				l_service.connect_events (Current)
 			end
-			tree_view.set_layout (create {ES_TEST_TREE_GRID_LAYOUT})
+			tree_view.set_layout (create {ES_TEST_TREE_GRID_LAYOUT}.make (Current))
 			propagate_drop_actions (Void)
 
 			initialize_tool_bar
@@ -481,7 +488,7 @@ feature {NONE} -- Events: test execution
 	on_run_all (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run all" item of `run_button'.
 		do
-			execute_list (test_suite.service.tests, a_type)
+			launch_executor (Void, a_type)
 		end
 
 	on_run_failing (a_type: !TYPE [TEST_EXECUTOR_I]) is
@@ -507,39 +514,49 @@ feature {NONE} -- Events: test execution
 					end
 					l_cursor.forth
 				end
-				execute_list (l_list, a_type)
+				launch_executor (l_list, a_type)
 			end
 		end
 
 	on_run_filtered (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
-			execute_list (filter.items, a_type)
+			if filter.has_expression then
+				launch_executor (filter.items, a_type)
+			else
+				launch_executor (Void, a_type)
+			end
 		end
 
 	on_run_selected (a_type: !TYPE [TEST_EXECUTOR_I]) is
 			-- Called when user selects "run selected" item of `run_button'.
 		do
-			execute_list (tree_view.selected_items, a_type)
+			launch_executor (tree_view.selected_items, a_type)
 		end
 
-	execute_list (a_list: !DS_LINEAR [!TEST_I]; a_type: !TYPE [TEST_EXECUTOR_I])
+	launch_executor (a_list: ?DS_LINEAR [!TEST_I]; a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		local
 			l_executor: TEST_EXECUTOR_I
 			l_test_suite: TEST_SUITE_S
+--			l_conf: TEST_EXECUTOR_CONF
 		do
 			l_test_suite := test_suite.service
 			if test_suite.is_service_available then
 				if l_test_suite.processor_registrar.is_valid_type (a_type, l_test_suite) then
 					l_executor := l_test_suite.executor (a_type)
 					if l_executor.is_ready then
-						if l_executor.is_valid_test_list (a_list) then
-							l_test_suite.run_list (l_executor, a_list, False)
-						else
+--						if a_list /= Void then
+--							create l_conf.make_with_tests (a_list)
+--						else
+--							create l_conf.make
+--						end
+--						if l_executor.is_valid_configuration (l_conf) then
+--							l_test_suite.launch_processor (l_executor, l_conf, False)
+--						else
 							show_error_prompt (e_invalid_test_list, [])
-						end
+--						end
 					else
 						show_error_prompt (e_executor_already_running, [])
 
@@ -754,7 +771,7 @@ feature {NONE} -- Factory
 			create Result.make (5)
 
 			create wizard_button.make
-			wizard_button.set_text ("New test")
+			wizard_button.set_pixmap (pixmaps.icon_pixmaps.icon_with_overlay (icons.general_test_icon, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0))
 			register_action (wizard_button.select_actions, agent
 				local
 					l_wizard: ES_TEST_WIZARD_MANAGER

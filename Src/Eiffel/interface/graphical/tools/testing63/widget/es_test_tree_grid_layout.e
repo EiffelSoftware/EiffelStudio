@@ -21,6 +21,9 @@ inherit
 			append_class_name
 		end
 
+create
+	make
+
 feature -- Status report
 
 	column_count: INTEGER

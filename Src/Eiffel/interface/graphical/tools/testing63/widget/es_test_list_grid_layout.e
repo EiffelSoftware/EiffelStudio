@@ -33,6 +33,26 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_icon_provider: like icon_provider)
+			-- Initialize `Current'.
+		require
+			a_icon_provider_usable: a_icon_provider.is_interface_usable
+		do
+			icon_provider := a_icon_provider
+		ensure
+			icon_provider_set: icon_provider = a_icon_provider
+		end
+
 feature {NONE} -- Access
 
 	project: !E_PROJECT
@@ -167,7 +187,12 @@ feature {NONE} -- Query
 			end
 		end
 
-feature -- Basic functionality
+feature {NONE} -- Helpers
+
+	icon_provider: !ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+			-- Access to the icons provided by the testing tool.
+
+feature -- Basic operations
 
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- <Precursor>
@@ -215,7 +240,7 @@ feature {NONE} -- Implementation
 
 			create l_eitem
 			l_eitem.set_text_with_tokens (token_writer.last_line.content)
-			l_eitem.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
+			l_eitem.set_pixmap (icon_provider.icons.test_routine_icon)
 
 			create l_tooltip.make (20)
 			l_tooltip.append_character ('{')

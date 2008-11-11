@@ -138,6 +138,8 @@ feature -- Status report
 	ready_for_reading: BOOLEAN is
 			-- Is data available for reading from the socket within
 			-- `timeout' seconds?
+		require
+			socket_exists: exists
 		local
 			retval: INTEGER
 		do
@@ -147,6 +149,8 @@ feature -- Status report
 
 	ready_for_writing: BOOLEAN is
 			-- Can data be written to the socket within `timeout' seconds?
+		require
+			socket_exists: exists
 		local
 			retval: INTEGER
 		do
@@ -156,6 +160,8 @@ feature -- Status report
 
 	has_exception_state: BOOLEAN is
 			-- Is socket in exception state within `timeout' seconds?
+		require
+			socket_exists: exists
 		local
 			retval: INTEGER
 		do

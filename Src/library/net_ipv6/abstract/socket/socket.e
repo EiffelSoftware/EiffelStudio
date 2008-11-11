@@ -184,7 +184,6 @@ feature -- Basic commands
 	descriptor_available: BOOLEAN;
 			-- Is descriptor available?
 
-
 	family: INTEGER;
 			-- Socket family eg. af_inet, af_unix
 
@@ -340,6 +339,9 @@ feature -- Output
 
 	write (a_packet: PACKET) is
 			-- Write packet `a_packet' to socket.
+		require
+			a_packet_not_void: a_packet /= Void
+			socket_exists: exists
 		local
 			amount_sent: INTEGER;
 			ext_data: POINTER;
@@ -389,7 +391,9 @@ feature -- Output
 	exists: BOOLEAN is
 			-- Does socket exist?
 		do
-			Result := descriptor >= 0
+			Result := descriptor_available and then descriptor >= 0
+		ensure then
+			definition: Result implies descriptor_available
 		end
 
 	is_open_write: BOOLEAN;
@@ -436,7 +440,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, real_32_bytes)
 			if bytes_read /= real_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_real := socket_buffer.read_real_32_be (0)
 			end
@@ -449,7 +453,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, real_64_bytes)
 			if bytes_read /= real_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_double := socket_buffer.read_real_64_be (0)
 			end
@@ -462,7 +466,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
 			if bytes_read /= character_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_character := socket_buffer.read_character (0)
 			end
@@ -492,7 +496,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_32_bytes)
 			if bytes_read /= integer_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_integer := socket_buffer.read_integer_32_be (0)
 			end
@@ -505,7 +509,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_8_bytes)
 			if bytes_read /= integer_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_integer_8 := socket_buffer.read_integer_8_be (0)
 			end
@@ -518,7 +522,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_16_bytes)
 			if bytes_read /= integer_16_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_integer_16 := socket_buffer.read_integer_16_be (0)
 			end
@@ -531,7 +535,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_64_bytes)
 			if bytes_read /= integer_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_integer_64 := socket_buffer.read_integer_64_be (0)
 			end
@@ -544,7 +548,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_8_bytes)
 			if bytes_read /= natural_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_natural_8 := socket_buffer.read_natural_8_be (0)
 			end
@@ -557,7 +561,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_16_bytes)
 			if bytes_read /= natural_16_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_natural_16 := socket_buffer.read_natural_16_be (0)
 			end
@@ -570,7 +574,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_32_bytes)
 			if bytes_read /= natural_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_natural := socket_buffer.read_natural_32_be (0)
 			end
@@ -583,7 +587,7 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_64_bytes)
 			if bytes_read /= natural_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := true
+				was_error := True
 			else
 				last_natural_64 := socket_buffer.read_natural_64_be (0)
 			end

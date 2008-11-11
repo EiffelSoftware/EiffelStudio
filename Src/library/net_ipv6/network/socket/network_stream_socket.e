@@ -18,7 +18,7 @@ inherit
 		export {NONE}
 			All
 		undefine
-			socket_ok,error, copy, is_equal
+			socket_ok, error, copy, is_equal
 		end
 
 	NETWORK_SOCKET

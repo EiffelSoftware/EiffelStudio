@@ -21,7 +21,6 @@ inherit
 			copy, is_equal, get_sock_family
 		end
 
-
 	SOCKET_RESOURCES
 		undefine
 			copy, is_equal

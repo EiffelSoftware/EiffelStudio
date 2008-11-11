@@ -77,8 +77,8 @@ feature -- Access
 
 	application: !STRING
 			-- <Precursor>
-		do
-			Result := "String"
+		once
+			create Result.make_from_other_string ((create {ARGUMENTS}).argument (0))
 		end
 
 	application_base: !STRING

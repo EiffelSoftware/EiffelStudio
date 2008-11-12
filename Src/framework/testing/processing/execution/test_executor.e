@@ -430,8 +430,8 @@ feature {NONE} -- Basic functionality
 	abort_test (a_test: !TEST_I; a_remove: BOOLEAN)
 			-- Flag test as aborted if queued or running. Remove it from `test_map' if `a_remove' is True.
 		require
-			tests_available: are_tests_available
-			active_tests_has_a_test: active_tests.has (a_test)
+			test_map_attached: test_map /= Void
+			test_map_has_a_test: test_map.has_item (a_test)
 		do
 			from
 				test_map.start
@@ -472,7 +472,7 @@ feature {EIFFEL_TEST_SUITE_S} -- Events
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [!TEST_I, NATURAL]
 		do
-			if are_tests_available and then active_tests.has (a_test) then
+			if test_map /= Void and then test_map.has_item (a_test) then
 				abort_test (a_test, True)
 			end
 			Precursor (a_collection, a_test)

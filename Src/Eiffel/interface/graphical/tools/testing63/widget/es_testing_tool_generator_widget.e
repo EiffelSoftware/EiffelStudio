@@ -25,11 +25,13 @@ feature {NONE} -- Initialization
 	build_notebook_widget_interface (a_widget: like widget)
 			-- <Precursor>
 		do
+			Precursor (a_widget)
+
 			create status_label
 			status_label.align_text_right
-			a_widget.extend (status_label)
-			a_widget.disable_item_expand (status_label)
-			Precursor (a_widget)
+
+			progress_widget.extend (status_label)
+			progress_widget.disable_item_expand (status_label)
 		end
 
 feature -- Access

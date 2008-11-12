@@ -65,22 +65,26 @@ feature {NONE} -- Initialization
 			-- Create `progress_bar' widget.
 		local
 			l_toolbar: SD_WIDGET_TOOL_BAR
-			l_box: EV_HORIZONTAL_BOX
+			l_hbox, l_pbox: EV_HORIZONTAL_BOX
 		do
 
-			create progress_widget
+			create l_pbox
 
-			create l_box
-			l_box.set_border_width ({ES_UI_CONSTANTS}.horizontal_padding)
+			create l_hbox
+			l_hbox.set_border_width ({ES_UI_CONSTANTS}.horizontal_padding)
 			create progress_bar
-			l_box.extend (progress_bar)
-			progress_widget.extend (l_box)
+			l_hbox.extend (progress_bar)
+			l_pbox.extend (l_hbox)
 
 			create l_toolbar.make (create {SD_TOOL_BAR}.make)
 			create_progress_bar_items.do_all (agent l_toolbar.extend)
 			l_toolbar.compute_minimum_size
-			progress_widget.extend (l_toolbar)
-			progress_widget.disable_item_expand (l_toolbar)
+			l_pbox.extend (l_toolbar)
+			l_pbox.disable_item_expand (l_toolbar)
+
+			create progress_widget
+			progress_widget.extend (l_pbox)
+			progress_widget.disable_item_expand (l_pbox)
 
 			a_widget.extend (progress_widget)
 			a_widget.disable_item_expand (progress_widget)
@@ -140,7 +144,7 @@ feature {NONE} -- Access
 	progress_bar: !EV_HORIZONTAL_PROGRESS_BAR
 			-- Bar showing `processor' progress
 
-	progress_widget: !EV_HORIZONTAL_BOX
+	progress_widget: !EV_VERTICAL_BOX
 			-- Widget containing `progress_bar'
 
 feature {NONE} -- Events: test suite

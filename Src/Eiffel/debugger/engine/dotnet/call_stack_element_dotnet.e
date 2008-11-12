@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 
 					private_dotnet_class_token := l_class.token
 					private_dotnet_module_name := l_module.module_name
-					private_dotnet_module_filename := l_module.get_name
+					private_dotnet_module_filename := l_module.name
 				end
 				dotnet_initialized := True
 			else

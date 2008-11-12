@@ -191,7 +191,7 @@ feature -- Current CallStack
 							l_il_code := l_func.get_il_code
 
 							l_curr_stk_info.set_current_stack_pseudo_depth (l_frames.get_count)
-							l_curr_stk_info.set_current_module_name        (l_module.get_name)
+							l_curr_stk_info.set_current_module_name        (l_module.name)
 							l_curr_stk_info.set_current_class_token        (l_class.token)
 							l_curr_stk_info.set_current_feature_token      (l_func.token)
 							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size_as_integer_32)
@@ -944,10 +944,10 @@ feature -- JIT Module
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
 			debug ("debugger_trace_callback_data")
-				io.error.put_string ("Registering new module : %N  [" + a_module.get_name + "]%N")
+				io.error.put_string ("Registering new module : %N  [" + a_module.name + "]%N")
 			end
 
-			l_module_key_name := resolved_module_key (a_module.get_name)
+			l_module_key_name := resolved_module_key (a_module.name)
 			loaded_modules.put (a_module, l_module_key_name)
 
 			if not loaded_modules.inserted then

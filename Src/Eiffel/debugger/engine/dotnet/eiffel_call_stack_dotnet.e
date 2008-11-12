@@ -188,7 +188,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 										l_class         := l_func.get_class
 										l_module        := l_func.get_module
 										l_class_token   := l_class.token
-										l_module_name   := l_module.get_name
+										l_module_name   := l_module.name
 
 										l_il_offset := l_frame_il.get_ip_as_integer_32
 										l_stack_object := l_frame_il.get_argument (0)

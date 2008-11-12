@@ -13,22 +13,10 @@ inherit
 	ICOR_OBJECT
 		export
 			{ICOR_OBJECTS_MANAGER} clean_on_dispose
-		redefine
-			init_icor
 		end
 
 create {ICOR_OBJECTS_MANAGER}
 	make_by_pointer
-
-feature {ICOR_EXPORTER} -- Access
-
-	init_icor is
-		do
-			Precursor
-			token := get_token
-		ensure then
-			token_set: token /= 0
-		end
 
 feature -- Addons
 
@@ -54,13 +42,17 @@ feature -- Addons
 				Result.append (" Class= not IL ")
 			end
 			l_module := get_module
-			Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.get_name + " .")
+			Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.name + " .")
 		end
 
 feature {ICOR_EXPORTER} -- Access
 
 	token: NATURAL_32
 			-- Feature's token
+		do
+			--| FIXME jfiat [2008/11/12] : maybe try to cache the value ...
+			Result := get_token
+		end
 
 feature {ICOR_EXPORTER} -- Access
 
@@ -151,7 +143,6 @@ feature {NONE} -- Access
 	get_token: like token is
 		do
 			last_call_success := cpp_get_token (item, $Result)
-			token := Result
 		ensure
 			success: last_call_success = 0
 		end

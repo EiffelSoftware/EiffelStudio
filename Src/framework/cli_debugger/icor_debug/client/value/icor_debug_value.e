@@ -14,8 +14,7 @@ class
 inherit
 	ICOR_OBJECT
 		redefine
-			clean_on_dispose,
-			init_icor
+			clean_on_dispose
 		end
 
 create
@@ -33,16 +32,6 @@ feature {NONE} -- Initialization
 
 feature {ICOR_EXPORTER} -- Pseudo twin
 
-	init_icor is
-		do
-			Precursor
-			type := get_type
-		ensure then
-			type_set: type /= 0
-		end
-
-feature {ICOR_EXPORTER} -- Pseudo twin
-
 	duplicated_object: like Current is
 		do
 			Result := twin
@@ -52,10 +41,14 @@ feature {ICOR_EXPORTER} -- Pseudo twin
 			end
 		end
 
-feature {ICOR_EXPORTER} -- Properties
+feature {ICOR_EXPORTER} -- Access
 
 	type: INTEGER
 			-- Type of Current value
+		do
+			--| FIXME jfiat [2008/11/12] : maybe try to cache the value ...
+			Result := get_type
+		end
 
 	strong_reference_value: ICOR_DEBUG_HANDLE_VALUE
 			-- Strong reference value

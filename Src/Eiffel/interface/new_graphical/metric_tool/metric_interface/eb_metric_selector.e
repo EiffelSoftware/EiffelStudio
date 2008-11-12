@@ -49,6 +49,13 @@ inherit
 			copy
 		end
 
+	EB_RECYCLABLE
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -125,8 +132,6 @@ feature {NONE} -- Initialization
 			metric_grid_wrapper.set_sort_action (agent sort_agent)
 			metric_grid.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, True))
 			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed_for_metric_navigation (?, True))
-			metric_grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
-			metric_grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 
 			create move_unit_up_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_8), True, False, False)
 			create move_unit_down_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_2), True, False, False)
@@ -720,6 +725,7 @@ feature -- Metric management
 						metric_grid.insert_new_row (metric_grid.row_count + 1)
 						l_row := metric_grid.row (metric_grid.row_count)
 						create l_item.make_with_text (unit_name_table.item (l_unit))
+						l_item.set_foreground_color (preferences.editor_data.normal_text_color)
 						l_item.set_pixmap (l_unit_list.item.pixmap)
 						l_row.set_item (1, l_item)
 						l_row.set_data (l_unit)
@@ -770,6 +776,7 @@ feature -- Metric management
 		do
 			metric_name_list.extend (a_metric.name)
 			create l_grid_item.make_with_text (a_metric.name)
+			l_grid_item.set_foreground_color (preferences.editor_data.normal_text_color)
 			create l_font
 			l_red := (create {EV_STOCK_COLORS}).red
 			l_grid_item.set_font (l_font)
@@ -865,7 +872,7 @@ feature{NONE} -- Implementation/Sorting
 
 feature {NONE} -- Implementation
 
-	metric_grid: ES_GRID
+	metric_grid: ES_EDITOR_TOKEN_GRID
 			-- Grid to display metrics
 
 	metric_grid_wrapper: EVS_SEARCHABLE_COMPONENT [ANY]
@@ -1206,6 +1213,14 @@ feature {NONE} -- Implementation
 			-- Expansion status for every unit lised in Current selector.
 			-- Indexed by metric unit. If value is True, means that the grid row for that unit is expaned
 			-- when last time expansion status is checked.
+
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+			metric_grid.recycle
+		end
 
 feature{NONE} -- Key shortcuts
 

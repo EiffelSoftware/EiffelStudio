@@ -51,6 +51,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -475,7 +482,7 @@ feature {NONE} -- Implementation/Sorting
 
 feature {NONE} -- Implementation
 
-	result_grid: ES_GRID
+	result_grid: ES_EDITOR_TOKEN_GRID
 			-- Grid to display archive comparison result
 
 	grid_wrapper: EVS_SEARCHABLE_COMPONENT [EB_METRIC_ARCHIVE_RESULT_ROW]
@@ -512,6 +519,14 @@ feature {NONE} -- Implementation
 			-- Is `Current' in its default state.
 		do
 			Result := True
+		end
+
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+			result_grid.recycle
 		end
 
 invariant

@@ -60,7 +60,6 @@ feature {NONE} -- Initialization
 			grid.column (2).set_title (metric_names.l_base_value)
 			grid.enable_single_row_selection
 			grid.column (2).set_width (60)
-			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
 			grid.enable_selection_on_single_button_click
 			l_grid_support.enable_grid_item_pnd_support
 			l_grid_support.set_context_menu_factory_function (agent context_menu_factory)
@@ -293,7 +292,7 @@ feature{NONE} -- Actions
 
 feature {NONE} -- Implementation
 
-	grid: ES_GRID
+	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid used to display criteria
 
 	bind_row (a_cri: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_operator_type: INTEGER]) is

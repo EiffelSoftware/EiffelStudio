@@ -329,12 +329,12 @@ feature{NONE} -- Formats
 			l_keyword_font: EV_FONT
 			l_preferences: EB_EDITOR_DATA
 		do
-			l_background_color := (create {EV_STOCK_COLORS}).white
+			l_preferences := preferences.editor_data
+			l_background_color := l_preferences.normal_background_color
 
 			create l_normal_font
 			create l_keyword_font
 			l_keyword_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			l_preferences := preferences.editor_data
 
 			create normal_format.make_with_font_and_color   (l_normal_font,  l_preferences.normal_text_color,   l_background_color)
 			create string_format.make_with_font_and_color   (l_normal_font,  l_preferences.string_text_color,   l_background_color)

@@ -33,6 +33,8 @@ inherit
 
 	EVS_UTILITY
 
+	EB_RECYCLABLE
+
 create
 	make_with_grid
 
@@ -317,6 +319,22 @@ feature{NONE} -- Implementation
 			if context_menu_factory_function /= Void then
 				l_factory := context_menu_factory_function.item (Void)
 				l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
+		end
+
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+			if on_color_or_font_change_agent_internal /= Void then
+				desynchronize_color_or_font_change_with_editor
+			end
+			if on_scroll_behavior_change_agent_internal /= Void then
+				desynchronize_scroll_behavior_with_editor
+			end
+			if on_pointer_right_click_agent_internal /= Void then
+				disable_ctrl_right_click_to_open_new_window
 			end
 		end
 

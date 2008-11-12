@@ -16,6 +16,8 @@ inherit
 
 	EB_METRIC_COMPONENT
 
+	EB_RECYCLABLE
+
 feature{NONE} -- Initialization
 
 	setup_editor is

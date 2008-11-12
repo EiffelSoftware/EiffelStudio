@@ -126,9 +126,9 @@ feature {NONE} -- Access
 
 	background_color: EV_COLOR
 			-- Pop up window background color, as well as the token background color
-		once
+		do
 			--Result := colors.tooltip_color
-			create Result.make_with_8_bit_rgb (255, 255, 255)
+			Result := normal_text_token.background_color
 		ensure
 			result_attached: Result /= Void
 		end
@@ -143,6 +143,12 @@ feature {NONE} -- Access
 			-- <Precursor>
 		once
 			create Result.make_with_8_bit_rgb (58, 123, 252)
+		end
+
+	normal_text_token: EDITOR_TOKEN_TEXT
+			-- Token used for getting foreground and background colors.
+		once
+			create Result.make ("")
 		end
 
 feature -- Element change

@@ -644,6 +644,7 @@ feature {NONE} -- Recyclable
 			preferences.editor_data.show_completion_obsolete_items_preference.change_actions.prune (show_completion_obsolete_items_agent)
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.prune_all (remember_window_size_agent)
 			unregister_accelerator_preference_change_actions
+			choice_list.recycle
 		end
 
 	unregister_accelerator_preference_change_actions is

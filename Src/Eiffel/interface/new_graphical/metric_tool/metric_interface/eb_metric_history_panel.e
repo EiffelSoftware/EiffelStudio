@@ -27,11 +27,14 @@ feature {NONE} -- Initialization
 	make (a_tool: like metric_tool) is
 			-- Initialize `metric_tool' with `a_tool'.
 		local
-			l_grid: ES_GRID
+			l_grid: ES_EDITOR_TOKEN_GRID
 		do
 			create l_grid
+			auto_recycle (l_grid)
 			create tree_grid.make (Current)
 			create flat_grid.make (Current)
+			auto_recycle (tree_grid)
+			auto_recycle (flat_grid)
 			create archive_change_actions
 			create calculator
 			create keep_result_btn.make (preferences.metric_tool_data.keep_archive_detailed_result_preference)

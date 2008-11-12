@@ -10,7 +10,7 @@ class
 	EB_METRIC_CRITERION_GRID
 
 inherit
-	ES_GRID
+	ES_EDITOR_TOKEN_GRID
 		redefine
 			on_key_pressed
 		end
@@ -74,7 +74,6 @@ feature{NONE} -- Initialization
 			set_selected_rows_function (agent selected_rows_internal)
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			key_press_string_actions.extend (agent on_key_string_pressed)
-			set_focused_selection_color (preferences.editor_data.selection_background_color)
 			enable_selection_on_single_button_click
 			l_grid_supprot := new_grid_support (Current)
 			l_grid_supprot.enable_grid_item_pnd_support

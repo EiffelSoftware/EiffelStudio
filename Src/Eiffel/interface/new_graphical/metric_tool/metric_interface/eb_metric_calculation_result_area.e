@@ -139,7 +139,6 @@ feature {NONE} -- Initialization
 			input_grid.set_column_count_to (1)
 			input_grid.set_row_count_to (1)
 			input_grid.set_minimum_height (40)
-			input_grid.set_focused_selection_color (editor_preferences.selection_background_color)
 			input_grid_area.extend (input_grid)
 			input_grid.enable_selection_on_single_button_click
 			grid_support := new_grid_support (input_grid)
@@ -281,7 +280,7 @@ feature{NONE} -- Implementation/Access
 	grid_support: like new_grid_support
 			-- Grid support.
 
-	input_grid: ES_GRID
+	input_grid: ES_EDITOR_TOKEN_GRID
 			-- Grid to display input
 
 	result_grid: EB_CLASS_BROWSER_DOMAIN_VIEW
@@ -418,6 +417,7 @@ feature {NONE} -- Recycle
 			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.prune_all (maximize_result_preference_change_agent)
 			show_percentage_btn.recycle
 			result_grid.recycle
+			input_grid.recycle
 			grid_support.desynchronize_color_or_font_change_with_editor
 			grid_support.desynchronize_scroll_behavior_with_editor
 		end

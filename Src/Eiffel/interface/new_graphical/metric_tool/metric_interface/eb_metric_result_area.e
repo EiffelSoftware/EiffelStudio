@@ -268,6 +268,7 @@ feature {NONE} -- Recycle
 			-- To be called when the button has became useless.
 		do
 			metric_result.recycle
+			archive_result.recycle
 			uninstall_agents (metric_tool)
 			metric_tool.send_metric_value_in_history_actions.prune_all (on_metric_sent_to_history_agent)
 			uninstall_metric_history_agent

@@ -54,6 +54,8 @@ inherit
 			default_create,
 			is_equal,
 			copy
+		redefine
+			internal_recycle
 		end
 
 	EV_UTILITIES
@@ -443,6 +445,15 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Actions
 			end
 		end
 
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+			Precursor {EB_HISTORY_OWNER}
+			grid.recycle
+		end
+
 feature{NONE} -- Actions
 
 	on_remove_selected_scopes is
@@ -565,7 +576,7 @@ feature{NONE} -- Implementation/Data
 	scope_grid: EVS_SEARCHABLE_COMPONENT [EB_METRIC_DOMAIN_ITEM]
 			-- Scope grid
 
-	grid: ES_GRID
+	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid in `scope_grid'
 
 	rows: DS_LIST [EB_METRIC_DOMAIN_ITEM] is

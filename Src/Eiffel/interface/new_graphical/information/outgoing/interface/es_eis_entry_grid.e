@@ -9,7 +9,7 @@ class
 	ES_EIS_ENTRY_GRID
 
 inherit
-	ES_GRID
+	ES_EDITOR_TOKEN_GRID
 
 	EB_CONSTANTS
 		undefine

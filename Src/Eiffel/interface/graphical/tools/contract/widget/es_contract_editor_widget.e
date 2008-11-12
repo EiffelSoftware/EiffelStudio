@@ -51,12 +51,6 @@ feature {NONE} -- Initialization
 			edit_contract_grid.disable_row_height_fixed
 			edit_contract_grid.enable_always_selected
 
-				-- Colors
-			edit_contract_grid.set_focused_selection_color (colors.grid_focus_selection_color)
-			edit_contract_grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
-			edit_contract_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
-			edit_contract_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
-
 			register_action (edit_contract_grid.row_select_actions, agent (a_row: EV_GRID_ROW)
 					-- Call the source select actions
 				local
@@ -1105,7 +1099,7 @@ feature {NONE} -- Factory
 	create_widget: !ES_GRID
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		do
-			create Result
+			create {ES_EDITOR_TOKEN_GRID}Result
 		end
 
 feature {NONE} -- Columns

@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	required_tooltip_width: INTEGER is
@@ -262,18 +267,33 @@ feature{NONE} -- Implementation
 
 	redraw_tooltip_portion (x, y, a_width, a_height: INTEGER) is
 			-- Redraw tooltip portion in region defined by `x', `y', `a_width' and `a_height'.
+		local
+			l_editor_bg_color, l_editor_fg_color: EV_COLOR
 		do
+			l_editor_bg_color := preferences.editor_data.normal_background_color
+			l_editor_fg_color := preferences.editor_data.normal_text_color
 				-- Clear area that needs redraw.
-			drawing_area.set_background_color (actual_tooltip_background_color)
+			if l_editor_bg_color.is_equal (white) then
+				drawing_area.set_background_color (actual_tooltip_background_color)
+			else
+				drawing_area.set_background_color (l_editor_bg_color)
+			end
+
 			drawing_area.clear_rectangle (x, y, a_width, a_height)
 
 				-- Redraw tooltip border
-			drawing_area.set_foreground_color (actual_border_line_color)
+			drawing_area.set_foreground_color (l_editor_fg_color)
 			drawing_area.set_line_width (border_line_width)
 			drawing_area.draw_rectangle (0, 0, drawing_area.width, drawing_area.height)
 
 				-- Redraw tooltip text
 			display_within_region (x, y, a_width, a_height, drawing_area, last_picked_item_index, True)
+		end
+
+	white: EV_COLOR
+			-- White
+		once
+			Result := (create {EV_STOCK_COLORS}).white
 		end
 
 indexing

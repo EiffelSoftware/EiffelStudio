@@ -775,6 +775,8 @@ feature {NONE} -- Recycle
 		do
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
 			uninstall_agents (metric_tool)
+			domain_selector.recycle
+			metric_selector.recycle
 		end
 
 feature{NONE} -- Actions

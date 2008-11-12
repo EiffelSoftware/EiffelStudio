@@ -40,6 +40,8 @@ inherit
 	EB_EDITOR_TOKEN_GRID_SUPPORT
 		undefine
 			grid
+		redefine
+			internal_recycle
 		end
 
 	EVS_GENERAL_TOOLTIP_UTILITY
@@ -65,8 +67,6 @@ feature{NONE} -- Initialization
 			grid.resizing_behavior.header_resize_end_actions.extend (agent on_column_resize_by_user_end (?, True))
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 			set_item_text_function (agent text_of_grid_item)
-			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
-			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 			enable_copy
 		ensure
 			drop_actions_set: drop_actions = a_drop_actions
@@ -461,7 +461,7 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	grid: ES_GRID
+	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid used to display information
 
 	text_of_grid_item (a_item: EV_GRID_ITEM): STRING is
@@ -702,12 +702,14 @@ feature {NONE} -- Recycle
 	internal_recycle is
 			-- Recyclable
 		do
+			Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}
 			development_window := Void
 			if quick_search_bar /= Void then
 				quick_search_bar.recycle
 			end
 			quick_search_bar := Void
 			recycle_agents
+			grid.recycle
 		end
 
 	recycle_agents is

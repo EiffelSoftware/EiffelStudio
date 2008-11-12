@@ -14,6 +14,7 @@ inherit
 
 	TEST_CREATOR
 		redefine
+			make,
 			is_valid_typed_configuration
 		end
 
@@ -22,22 +23,67 @@ inherit
 create
 	make
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
-	source_writer: !TEST_EXTRACTED_SOURCE_WRITER
-			-- Source writer for creating extracted test set classes
-		once
-			create Result.make
+	make (a_test_suite: like test_suite)
+			-- <Precursor>
+		do
+			create capturer.make
+			Precursor (a_test_suite)
 		end
+
+feature {NONE} -- Access
 
 	capturer: !TEST_CAPTURER
 			-- Capturer retrieving objects from running application.
-		once
-			create Result.make
-			Result.observers.force_last (source_writer)
+
+feature {NONE} -- Status report
+
+	is_creating_new_class: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
 		end
 
 feature {NONE} -- Status setting
+
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
+			-- <Precursor>
+		local
+			l_source_writer: !TEST_EXTRACTED_SOURCE_WRITER
+		do
+			create l_source_writer.make
+			capturer.observers.force_last (l_source_writer)
+
+			l_source_writer.prepare (a_file, configuration.new_class_name)
+			if {l_stat: APPLICATION_STATUS} debugger_manager.application_status then
+				if {l_cs: EIFFEL_CALL_STACK} l_stat.current_call_stack then
+					from
+						capturer.prepare
+						l_cs.start
+					until
+						l_cs.after
+					loop
+						if {l_cse: !EIFFEL_CALL_STACK_ELEMENT} l_cs.item and then
+						   configuration.call_stack_elements.has (l_cse.level_in_stack)
+						then
+							capturer.capture_call_stack_element (l_cse)
+						end
+						l_cs.forth
+					end
+					capturer.capture_objects
+				end
+			else
+				test_suite.propagate_error (e_no_application_status, [], Current)
+			end
+
+			capturer.observers.start
+			capturer.observers.search_forth (l_source_writer)
+			check
+				observer_found: not capturer.observers.off
+			end
+			capturer.observers.remove_at
+		end
 
 	proceed_process
 			-- <Precursor>
@@ -45,39 +91,9 @@ feature {NONE} -- Status setting
 			l_filename: !STRING
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_name: STRING
+			l_source_writer: !TEST_EXTRACTED_SOURCE_WRITER
 		do
-			l_filename := configuration.new_class_name.as_lower
-			l_filename.append (".e")
-			l_name := configuration.cluster.location.build_path (configuration.path, l_filename)
-			create l_file.make (l_name)
-			l_file.open_write
-			if l_file.is_open_write then
-				source_writer.prepare (l_file, configuration.new_class_name)
-				if {l_stat: APPLICATION_STATUS} debugger_manager.application_status then
-					if {l_cs: EIFFEL_CALL_STACK} l_stat.current_call_stack then
-						from
-							capturer.prepare
-							l_cs.start
-						until
-							l_cs.after
-						loop
-							if {l_cse: !EIFFEL_CALL_STACK_ELEMENT} l_cs.item and then
-							   configuration.call_stack_elements.has (l_cse.level_in_stack)
-							then
-								capturer.capture_call_stack_element (l_cse)
-							end
-							l_cs.forth
-						end
-						capturer.capture_objects
-					end
-				else
-					test_suite.propagate_error (e_no_application_status, [], Current)
-				end
-				l_file.close
-				add_class (configuration.cluster, configuration.path, l_filename)
-			else
-				test_suite.propagate_error (e_file_not_writable, [l_file.name], Current)
-			end
+			create_new_class
 			is_finished := True
 		end
 
@@ -115,7 +131,6 @@ feature -- Query
 
 feature {NONE} -- Constants
 
-	e_file_not_writable: STRING = "Could not create new class file $1"
 	e_no_application_status: STRING = "Could not retrieve application status"
 
 end

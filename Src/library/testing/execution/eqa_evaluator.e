@@ -165,24 +165,11 @@ feature {NONE} -- Execution
 			stream_initialized: stream.is_open_write
 			a_index_valid: is_valid_index (a_index)
 		do
-			--io.output.put_string ("trying to run " + a_index.out + "...%N")
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index))
-			--io.output.put_string ("done with " + a_index.out + "%N")
-			--io.output.new_line
 			if stream.extendible then
-				--io.output.put_string ("stream IS extendible (open write: "); io.output.flush
-				--io.output.put_boolean (stream.is_open_write)
-				--io.output.put_boolean (stream.is_writable)
-				--io.output.put_string ("%Nsending id%N");io.output.flush
 				stream.put_natural (a_index)
-				--io.output.put_string ("sending outcome%N"); io.output.flush
 				stream.independent_store (evaluator.last_outcome)
-				--io.output.put_string ("done%N"); io.output.flush
 			else
-			--	io.output.put_string ("stream NOT extendible (open write: "); io.output.flush
-				--io.output.put_boolean (stream.is_open_write)
-				--io.output.put_boolean (stream.is_writable)
-				--io.output.put_string ("%N")
 				is_stream_invalid := True
 			end
 		end

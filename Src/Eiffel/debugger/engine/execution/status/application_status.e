@@ -335,7 +335,7 @@ feature -- Call Stack element related
 			i: INTEGER
 		do
 			i := application.current_execution_stack_number
-			if {ccs: like current_call_stack} current_call_stack and ccs.valid_index (i) then
+			if {ccs: like current_call_stack} current_call_stack and then ccs.valid_index (i) then
 				Result := ccs.i_th (i)
 			end
 		end

@@ -534,8 +534,6 @@ feature{NONE} -- Byte code
 
 	main_loop is
 			-- Main loop
-		local
-			l_exc: EXCEPTION
 		do
 			from
 			until

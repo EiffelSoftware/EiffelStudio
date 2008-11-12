@@ -455,15 +455,25 @@ feature {NONE} -- Status setting
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_CLASS_I]
 			l_file_system: KL_SHARED_FILE_SYSTEM
+			l_class: EIFFEL_CLASS_I
 		do
 			if not is_test_class_map_modified then
-				test_class_map.keys.do_all (
-					agent (a_class: !EIFFEL_CLASS_I)
-						do
-							if not file_system.file_exists (a_class.file_name) then
-								synchronize_with_class (a_class)
-							end
-						end)
+				l_cursor := test_class_map.keys.new_cursor
+				from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_class := l_cursor.item
+					if not file_system.file_exists (l_class.file_name) then
+						synchronize_with_class (l_class)
+					end
+					if not l_cursor.off then
+						if l_cursor.item = l_class then
+							l_cursor.forth
+						end
+					end
+				end
 			end
 			if is_project_initialized and is_test_class_map_modified then
 				is_test_class_map_modified := False

@@ -18,7 +18,9 @@ inherit
 	AST_ROUNDTRIP_ITERATOR
 		redefine
 			process_access_feat_as,
-			process_access_id_as
+			process_access_id_as,
+			process_feature_clause_as,
+			process_string_as
 		end
 
 	CHARACTER_ROUTINES
@@ -33,6 +35,9 @@ feature -- Access
 
 	translate_plural_feature: STRING
 		-- Name of plural_translate feature in i18n
+
+	feature_clause_name: STRING
+		-- Feature clause name to extract translations from
 
 	source_file_name: STRING
 		-- Source file name.
@@ -60,6 +65,16 @@ feature -- Element change
 			translate_plural_feature := a
 		ensure
 			a_set: a.is_equal (translate_plural_feature)
+		end
+
+	set_feature_clause_name (a: like feature_clause_name) is
+			-- Set translator feature clause name to `a'.
+		require
+			a_not_void: a /= Void
+		do
+			feature_clause_name := a
+		ensure
+			a_set: a.is_equal (feature_clause_name)
 		end
 
 	set_po_file (po: PO_FILE) is
@@ -91,6 +106,11 @@ feature -- Element change
 		ensure
 			source_text_set: source_text = a_file
 		end
+
+feature {NONE} -- Status report
+
+	is_extracting_strings: BOOLEAN
+			-- Indicates if strings are extracted for internationalization
 
 feature {NONE} -- Implementation
 
@@ -140,6 +160,46 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	analyse_feature_clause (node: FEATURE_CLAUSE_AS) is
+			-- Analyze iif a feature clause is an internationalized feature clause.
+			--
+			-- `node': AST node of a feature clause which is analyzed
+		local
+			l_comment: EIFFEL_COMMENTS
+			l_line: EIFFEL_COMMENT_LINE
+			l_string: STRING
+			i, l_count: INTEGER
+		do
+			l_comment := node.comment (match_list)
+			if l_comment /= Void then
+				l_line := l_comment.first
+				if l_line /= Void then
+					l_string := l_line.content
+					if l_string /= Void then
+						l_string.left_adjust
+						l_string.right_adjust
+						if not l_string.is_empty then
+							from
+								i := 1
+								l_count := l_string.count
+							until
+								i > l_count or else not l_string.item (i).is_alpha_numeric
+							loop
+								i := i + 1
+							end
+							if i <= l_count then
+								l_string.keep_head (i - 1)
+							end
+								-- Check if the feature clause name matches the set feature clause name.
+							if l_string.is_case_insensitive_equal (feature_clause_name) then
+								is_extracting_strings := True
+							end
+						end
+					end
+				end
+			end
+		end
+
 	process_access_id_as (l_as: ACCESS_ID_AS) is
 			-- Process `l_as'.
 			--
@@ -158,6 +218,34 @@ feature {NONE} -- Implementation
 			analyse_call(l_as)
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
+		end
+
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
+			-- <Precursor>
+		do
+			analyse_feature_clause (l_as)
+			Precursor (l_as)
+			is_extracting_strings := False
+		ensure then
+			not_is_extracting_strings: not is_extracting_strings
+		end
+
+	process_string_as (l_as: STRING_AS)
+			-- <Precursor>
+		local
+			singular_entry: PO_FILE_ENTRY_SINGULAR
+			temp: STRING_32
+		do
+			if is_extracting_strings then
+				temp := l_as.value
+				handle_special_chars (temp)
+				if (not po_file.has_entry (temp)) then
+					create singular_entry.make (utf8_string (temp))
+					append_comments (l_as, singular_entry)
+					po_file.add_entry (singular_entry)
+				end
+			end
+			Precursor (l_as)
 		end
 
 feature {NONE} -- Implementation

@@ -71,7 +71,7 @@ feature -- Generation
 		do
 			l_string := text.as_string_8
 			l_string_low := l_string.as_lower
-			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) then
+			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
 				eiffel_parser.parse_from_string (l_string)
 				if eiffel_parser.error_count > 0 then
@@ -84,6 +84,7 @@ feature -- Generation
 					l_iterator.set_source_file_name (source_file_name)
 					l_iterator.set_source_text (l_string)
 					l_iterator.set_translate_feature (name_of_translate)
+					l_iterator.set_feature_clause_name (name_of_feature_clause)
 					l_iterator.set_translate_plural_feature (name_of_translate_plural)
 					l_iterator.process_class_as (eiffel_parser.root_node)
 				end
@@ -108,6 +109,8 @@ feature {NONE} -- Constants
 	name_of_translate_plural: STRING is "plural_translation"
 			-- Name of translate feature for plurals
 			-- Arguments from this feature are taken as translateable plural messages.
+
+	name_of_feature_clause: STRING = "Internationalization"
 
 invariant
 	text_not_void: text /= Void

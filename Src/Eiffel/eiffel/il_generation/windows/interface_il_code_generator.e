@@ -269,6 +269,8 @@ feature -- IL Generation
 						local_feature_processor.call ([feat, Void, class_type, False])
 					elseif feat.is_replicated and feat.is_unselected then
 						local_feature_processor.call ([feat, Void, class_type, True])
+					elseif feat.is_replicated_directly then
+						local_feature_processor.call ([feat, Void, class_type, True])
 					else
 							-- Case of local renaming or implicit covariant redefinition.
 						inherited_feature_processor.call ([feat, Void, class_type])
@@ -399,7 +401,7 @@ feature -- IL Generation
 				end
 				if not is_single_class then
 						-- Generate static definition of a routine `feat' if the class type is not expanded.
-					if not is_replicated or else feat.is_once then
+					if not is_replicated or else feat.is_once or else feat.is_replicated_directly then
 						if not is_expanded or else feat.is_attribute or else feat.is_external then
 							generate_feature (feat, False, True, False)
 							if is_replicated then
@@ -421,16 +423,16 @@ feature -- IL Generation
 					end
 
 					if is_expanded and then not feat.is_attribute and then not feat.is_external then
-						if is_replicated then
+						if is_replicated and then not feat.is_replicated_directly then
 							byte_context.change_class_type_context (current_class_type,
 								current_class_type.type,
 								written_class_type, written_class_type.type)
 						end
 						generate_feature_code (feat, False)
-						if is_replicated then
+						if is_replicated and then not feat.is_replicated_directly then
 							byte_context.restore_class_type_context
 						end
-					elseif not is_replicated or else feat.is_once then
+					elseif not is_replicated or else feat.is_once or else feat.is_replicated_directly then
 							-- We call locally above generated static feature
 						generate_feature_il (feat,
 							current_class_type.implementation_id,
@@ -526,7 +528,7 @@ feature -- IL Generation
 					end
 					generate_feature_code (feat, False)
 				else
-					if feat.is_once then
+					if feat.is_once or feat.is_replicated then
 						implementation_class_id := feat.access_in
 						implementation_feature_id := system.class_of_id (
 							implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id

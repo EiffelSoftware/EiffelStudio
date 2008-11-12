@@ -302,7 +302,7 @@ feature {NONE} -- Children implementation
 					--| Let's try using meta data and field name/
 				icdm := a_icd_class.get_module
 				if icdm /= Void then
-					l_att_token := icdm.md_field_token (a_icd_class.get_token, f.feature_name)
+					l_att_token := icdm.md_field_token (a_icd_class.token, f.feature_name)
 					if l_att_token /= 0 then
 						l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 					end

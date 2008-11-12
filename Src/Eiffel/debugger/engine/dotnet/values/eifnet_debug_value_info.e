@@ -121,7 +121,7 @@ feature {NONE} -- Internal Initialisation
 --         the address value is 0
 --				end
 
-				l_type := icd_prepared_value.get_type
+				l_type := icd_prepared_value.type
 				if icd_prepared_value.error_code_is_object_neutered (icd_prepared_value.last_call_success) then
 					is_object := True
 				end
@@ -356,7 +356,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		do
 			lcl := value_icd_class
 			if lcl /= Void then
-				Result := lcl.get_token
+				Result := lcl.token
 			end
 		end
 

@@ -11,27 +11,11 @@ class
 
 inherit
 	ICOR_DEBUG_VALUE
-		redefine
-			init_icor
-		end
 
 create 
 	make_by_pointer, 
 	make_value_by_pointer	
 	
-feature {NONE} -- Access
-	
-	init_icor is
-			-- 
-		do
-			Precursor
-			is_value_class_prop := is_value_class
-		end
-
-feature {ICOR_EXPORTER} -- Properties
-
-	is_value_class_prop: BOOLEAN
-
 feature {ICOR_EXPORTER} -- Access
 
 	get_class: ICOR_DEBUG_CLASS is

@@ -1024,9 +1024,9 @@ feature {NONE} -- Debug purpose only
 			debug ("debugger_trace_eval_data")
 				if icd_f /= Void then
 					mdi := icd_f.get_class.get_module.interface_md_import
-					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
+					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.token) + "%N")
 					l_class := icd_f.get_class
-					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.get_token) + "%N")
+					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.token) + "%N")
 				end
 			end
 		end

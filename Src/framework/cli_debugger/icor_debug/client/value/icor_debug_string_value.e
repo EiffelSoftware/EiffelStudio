@@ -12,29 +12,10 @@ class
 
 inherit
 	ICOR_DEBUG_HEAP_VALUE
-		redefine
-			init_icor
-		end
 
 create
 	make_by_pointer,
 	make_value_by_pointer
-
-feature {NONE} -- Initialization
-
-	init_icor is
-			--
-		do
-			Precursor
-			length := get_length
-			string := get_string (10)
-		end
-
-feature {ICOR_EXPORTER} -- Properties
-
-	length: like get_length
-
-	string: STRING_32
 
 feature {ICOR_EXPORTER} -- Access
 

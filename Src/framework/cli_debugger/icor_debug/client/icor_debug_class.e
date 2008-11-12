@@ -23,15 +23,17 @@ create {ICOR_OBJECTS_MANAGER}
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			--
 		do
 			Precursor
 			token := get_token
+		ensure then
+			token_set: token /= 0
 		end
 
 feature {ICOR_EXPORTER} -- Properties
 
-	token: like get_token
+	token: NATURAL_32
+			-- Class's token
 
 feature {ICOR_EXPORTER} -- Access
 
@@ -43,13 +45,6 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				Result := Icor_objects_manager.icd_module (p)
 			end
-		ensure
-			success: last_call_success = 0
-		end
-
-	get_token: NATURAL_32 is
-		do
-			last_call_success := cpp_get_token (item, $Result)
 		ensure
 			success: last_call_success = 0
 		end
@@ -70,6 +65,15 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_value_by_pointer (p)
 			end
+		end
+
+feature {NONE} -- Access
+
+	get_token: like token is
+		do
+			last_call_success := cpp_get_token (item, $Result)
+		ensure
+			success: last_call_success = 0
 		end
 
 feature {NONE} -- Implementation

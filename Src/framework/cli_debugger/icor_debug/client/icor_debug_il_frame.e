@@ -21,9 +21,6 @@ class
 
 inherit
 	ICOR_DEBUG_FRAME
-		redefine
-			init_icor
-		end
 
 	COR_DEBUG_MAPPING_RESULT_ENUM
 		undefine
@@ -33,18 +30,7 @@ inherit
 create
 	make_by_pointer
 
-feature {ICOR_EXPORTER} -- Access
-
-	init_icor is
-			--
-		do
-			Precursor
-			ip := get_ip
-		end
-
 feature {ICOR_EXPORTER} -- Properties
-
-	ip: like get_ip
 
 	last_cordebugmapping_result: INTEGER
 

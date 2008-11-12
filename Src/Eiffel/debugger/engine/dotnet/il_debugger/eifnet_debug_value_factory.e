@@ -40,7 +40,7 @@ feature -- Access
 		do
 			l_icd_prepared := a_prepared_icd
 			if l_icd_prepared /= Void then -- and then l_icd_prepared.last_call_succeed then
-				l_type := l_icd_prepared.get_type
+				l_type := l_icd_prepared.type
 				inspect l_type
 				when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
 					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool,

@@ -364,11 +364,11 @@ feature {NONE} -- Implementation
 				end
 
 				if l_function /= Void then
-					private_dotnet_feature_token := l_function.get_token
+					private_dotnet_feature_token := l_function.token
 					l_class := l_function.get_class
 					l_module := l_function.get_module
 
-					private_dotnet_class_token := l_class.get_token
+					private_dotnet_class_token := l_class.token
 					private_dotnet_module_name := l_module.module_name
 					private_dotnet_module_filename := l_module.get_name
 				end

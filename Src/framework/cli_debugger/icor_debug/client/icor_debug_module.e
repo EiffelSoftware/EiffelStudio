@@ -29,11 +29,11 @@ create {ICOR_OBJECTS_MANAGER, ICOR_DEBUG_ENUM_WITH_NEXT}
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			--
 		do
 			Precursor
 			name := get_name
-			token := get_token
+		ensure then
+			name_attached: name /= Void
 		end
 
 	interface_md_import: like internal_md_import is
@@ -112,16 +112,17 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 feature {ICOR_EXPORTER} -- Access
 
 	name: STRING
-
-	token: like get_token
+			-- Module's name
 
 	module_name: STRING is
 			-- Only the module name
 			-- remove the path
+		require
+			name_attached: name /= Void
 		local
 			l_pos: INTEGER
 		do
-			Result := get_name
+			Result := name
 			l_pos := Result.last_index_of (Directory_separator, Result.count)
 			if l_pos > 0 then
 				Result := Result.substring (l_pos + 1, Result.count)

@@ -11,26 +11,12 @@ class
 
 inherit
 	ICOR_OBJECT
-		redefine
-			init_icor
-		end
 
 create 
 	make_by_pointer
 	
-feature {ICOR_EXPORTER} -- Access
-
-	init_icor is
-			-- 
-		do
-			Precursor
-			count := get_count
-		end	
-		
 feature {ICOR_EXPORTER} -- Access Property
 
-	count: INTEGER
-	
 	is_empty: BOOLEAN is
 		do
 			Result := get_count = 0

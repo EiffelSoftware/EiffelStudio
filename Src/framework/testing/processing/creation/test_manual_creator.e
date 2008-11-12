@@ -24,8 +24,11 @@ create
 
 feature {NONE} -- Status report
 
-	is_test_created: BOOLEAN
-			-- Has test been created during last call to `create_new_class'?
+	is_creating_new_class: BOOLEAN
+			-- <Precursor>
+		do
+			Result := configuration.is_new_class
+		end
 
 feature {NONE} -- Basic operations
 
@@ -38,37 +41,15 @@ feature {NONE} -- Basic operations
 			is_finished := True
 		end
 
-	create_new_class
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
 			-- Create test routine in new class
-		require
-			new_class_requested: configuration.is_new_class
 		local
 			l_group: CONF_CLUSTER
 			l_name, l_fname, l_path: !STRING
 			l_file: RAW_FILE
 		do
-			l_group := configuration.cluster
-			l_name := configuration.new_class_name
-			l_fname := l_name.as_lower
-			l_fname.append (".e")
-			l_path := configuration.path
-			if l_path = Void then
-				create l_path.make_empty
-			end
-			create l_file.make (l_group.location.build_path (l_path, l_fname))
-			if not l_file.exists then
-				if l_file.is_creatable then
-					render_class_text (l_file.name)
-					if is_test_created then
-						add_class (l_group, l_path, l_fname)
-						is_test_created := False
-					end
-				else
-					test_suite.propagate_error (w_write_permissions, [l_file.name], Current)
-				end
-			else
-				test_suite.propagate_error (w_already_exists, [l_file.name], Current)
-			end
+			a_file.close
+			render_class_text (a_file.name)
 		end
 
 	render_class_text (a_file_name: STRING)
@@ -95,7 +76,6 @@ feature {NONE} -- Basic operations
 					create l_wizard
 					if l_wizard.is_service_available then
 						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
-						is_test_created := True
 					else
 						test_suite.propagate_error (w_wizard_service_not_available, [], Current)
 					end
@@ -205,8 +185,6 @@ feature {NONE} -- Constants
 
 	w_wizard_service_not_available: STRING = "Could not generate class text because wizard service not available."
 	w_template_file: STRING = "Template file $1 does not exists."
-	w_write_permissions: STRING = "Can not create new test class file $1"
-	w_already_exists: STRING = "Test class file $1 already exists"
 
 	v_note_keyword: !STRING = "NOTE_KEYWORD"
 	v_class_name: !STRING = "CLASS_NAME"

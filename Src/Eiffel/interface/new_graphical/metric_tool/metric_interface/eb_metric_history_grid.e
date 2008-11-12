@@ -21,6 +21,8 @@ inherit
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
 
+	EB_RECYCLABLE
+
 feature{NONE} -- Initialization
 
 	make (a_panel: like metric_history_panel) is
@@ -30,7 +32,7 @@ feature{NONE} -- Initialization
 		do
 			metric_history_panel := a_panel
 			create row_archive_table.make (20)
-			old_make (create {ES_GRID})
+			old_make (create {ES_EDITOR_TOKEN_GRID})
 			initialize_grid
 		end
 
@@ -53,7 +55,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid: ES_GRID
+	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid for display			
 
 	selected_archives: DS_HASH_SET [EB_METRIC_ARCHIVE_NODE] is
@@ -871,7 +873,6 @@ feature{NONE} -- Implementation
 			l_grid_support: like new_grid_support
 		do
 			grid.enable_selection_on_single_button_click
-			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
 			enable_auto_sort_order_change
 			set_sort_action (agent sort_agent (?, ?))
 			post_sort_actions.extend (agent on_post_sort)
@@ -886,6 +887,12 @@ feature{NONE} -- Implementation
 			grid.enable_column_separators
 			grid.enable_single_row_selection
 			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
+		end
+
+	internal_recycle
+			-- <precursor>
+		do
+			grid.recycle
 		end
 
 	set_value_criterion (a_grid_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is

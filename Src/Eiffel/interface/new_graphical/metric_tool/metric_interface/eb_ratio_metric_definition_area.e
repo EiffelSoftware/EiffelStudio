@@ -213,6 +213,13 @@ feature {NONE} -- Actions
 			denominator_coefficient_delayed_timer.request_call
 		end
 
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+		end
+
 feature{NONE} -- Implementation
 
 	numerator_coefficient_delayed_timer: ES_DELAYED_ACTION

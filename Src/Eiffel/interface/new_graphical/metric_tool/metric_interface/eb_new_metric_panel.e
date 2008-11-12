@@ -528,6 +528,10 @@ feature {NONE} -- Recycle
 		do
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
 			uninstall_agents (metric_tool)
+			metric_selector.recycle
+			basic_metric_definition_area.recycle
+			linear_metric_definition_area.recycle
+			ratio_metric_definition_area.recycle
 		end
 
 feature{NONE} -- Actions

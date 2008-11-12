@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			if l_preference /= Void then
 				create l_auto_show_check.make_with_text (local_formatter.translation (l_do_not_auto_show))
 				l_auto_show_check.set_tooltip (local_formatter.translation (f_do_not_auto_show))
+				l_auto_show_check.set_foreground_color (preferences.editor_data.normal_text_color)
 
 				create auto_show_check.make (l_auto_show_check, l_preference)
 				l_hbox.extend (auto_show_check)

@@ -376,6 +376,7 @@ feature {NONE} -- Implementation
 			-- <precursor>
 		do
 			grid_support.desynchronize_scroll_behavior_with_editor
+			entry_list.recycle
 			tree.recycle
 		end
 

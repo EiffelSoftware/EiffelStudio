@@ -97,8 +97,6 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_text: EV_TEXT
 		do
 				-- Setup criterion combination grid.
 			create combination_grid.make
@@ -129,8 +127,7 @@ feature {NONE} -- Initialization
 			indent_and_btn.select_actions.extend (agent on_indent (True))
 			indent_or_btn.select_actions.extend (agent on_indent (False))
 			expression_lbl.set_text (metric_names.t_expression)
-			create l_text
-			expression_text.set_background_color (l_text.background_color)
+			expression_text.set_background_color (preferences.editor_data.normal_background_color)
 
 				-- Register key shortcuts.
 			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
@@ -419,6 +416,14 @@ feature{NONE} -- Implementation
 				up_btn.disable_sensitive
 				down_btn.disable_sensitive
 			end
+		end
+
+feature {NONE} -- Memory Management
+
+	internal_recycle
+			-- <precursor>
+		do
+			combination_grid.recycle
 		end
 
 feature -- Key shortcuts

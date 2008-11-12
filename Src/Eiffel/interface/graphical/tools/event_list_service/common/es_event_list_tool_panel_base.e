@@ -1077,7 +1077,7 @@ feature {NONE} -- Factory
 	create_widget: ES_GRID is
 			-- Create a new container widget upon request
 		do
-			create Result
+			create {ES_EDITOR_TOKEN_GRID}Result
 			Result.enable_single_row_selection
 			Result.enable_column_separators
 			Result.enable_row_separators
@@ -1085,8 +1085,6 @@ feature {NONE} -- Factory
 			Result.enable_default_tree_navigation_behavior (True, True, True, True)
 			Result.enable_row_height_fixed
 			Result.disable_vertical_scrolling_per_item
-			Result.set_focused_selection_color (colors.grid_focus_selection_color)
-			Result.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			Result.pointer_double_press_item_actions.extend (agent on_grid_events_item_pointer_double_press)
 		end
 

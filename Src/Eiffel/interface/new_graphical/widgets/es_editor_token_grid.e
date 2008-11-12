@@ -1,89 +1,75 @@
 indexing
-	description: "Grid support editor token rendering, and internal item text pick and drop"
-	legal: "See notice at end of class."
+	description: "ES grid that enables basic preferenced editor colors."
 	status: "See notice at end of class."
-	author: ""
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_COMPLETION_LIST_GRID
+	ES_EDITOR_TOKEN_GRID
 
 inherit
-	ES_EDITOR_TOKEN_GRID
+	ES_GRID
 		redefine
 			initialize
 		end
 
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
 		undefine
-			default_create,
-			is_equal,
-			copy
+			default_create, copy
 		end
+
+	EB_RECYCLABLE
+		undefine
+			default_create, copy
+		end
+
+create
+	default_create
 
 feature {NONE} -- Initialization
 
-	initialize is
-			-- Initialization
+	initialize
+			-- Initialize editor colors and sync with the editor preference.
 		do
-			Precursor
-			pick_ended_actions.force_extend (agent on_pick_ended)
-			set_item_pebble_function (agent on_pick)
-			set_focused_selection_color (preferences.editor_data.selection_background_color)
-			set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
+			Precursor {ES_GRID};
+			set_colors_and_redraw_agent := agent set_colors_and_redraw
+			preferences.editor_data.post_update_actions.extend (set_colors_and_redraw_agent)
+			set_editor_colors
+		end
+
+feature {NONE} -- Memory management
+
+	internal_recycle
+			-- <precursor>
+		do
+			if set_colors_and_redraw_agent /= Void then
+				preferences.editor_data.post_update_actions.prune_all (set_colors_and_redraw_agent)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
-			-- Action performed when pick ends
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+	set_editor_colors
+			-- Set editor colors.
 		do
-			l_item ?= last_picked_item
-			if l_item /= Void then
-				l_item.set_last_picked_item (0)
-				if l_item.is_parented then
-					l_item.redraw
-				end
-			end
-			last_picked_item := Void
-		ensure
-			last_picked_item_not_attached: last_picked_item = Void
+			set_background_color (preferences.editor_data.normal_background_color)
+			set_focused_selection_color (preferences.editor_data.selection_background_color)
+			set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
+			set_foreground_color (preferences.editor_data.normal_text_color)
 		end
 
-	on_pick (a_item: EV_GRID_ITEM): ANY is
-			-- Action performed when pick on `a_item'.
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_stone: STONE
-			l_index: INTEGER
+	set_colors_and_redraw
+			-- Set new editor colors and redraw the grid.
 		do
-			last_picked_item := Void
-			l_item ?= a_item
-			if l_item /= Void then
-				l_index := l_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_item.editor_token_pebble (l_index)
-					l_stone ?= Result
-					if l_stone /= Void then
-						remove_selection
-						set_accept_cursor (l_stone.stone_cursor)
-						set_deny_cursor (l_stone.x_stone_cursor)
-						l_item.set_last_picked_item (l_index)
-						l_item.redraw
-						last_picked_item := l_item
-					end
-				end
-			end
+			set_editor_colors
+			redraw
 		end
 
-	last_picked_item: EV_GRID_ITEM
-			-- Last picked item
-
-invariant
-	invariant_clause: True -- Your invariant here
+	set_colors_and_redraw_agent: ?PROCEDURE [ANY, TUPLE];
+			-- Saved agent to be recycled.
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

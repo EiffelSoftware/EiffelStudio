@@ -259,6 +259,7 @@ feature -- Access
 		do
 			if criterion_item_internal = Void then
 				create criterion_item_internal
+				criterion_item_internal.set_foreground_color (preferences.editor_data.normal_text_color)
 				create l_provider.make (criterion_list)
 				criterion_item_internal.set_completion_possibilities_provider (l_provider)
 				criterion_item_internal.pointer_double_press_actions.force_extend (agent activate_criterion_item)

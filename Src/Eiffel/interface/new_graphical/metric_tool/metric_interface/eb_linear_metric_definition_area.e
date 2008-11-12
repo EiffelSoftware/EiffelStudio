@@ -237,7 +237,7 @@ feature -- Access
 			Result := Current
 		end
 
-	metric_grid: ES_GRID
+	metric_grid: ES_EDITOR_TOKEN_GRID
 			-- Grid to display current metric
 
 feature{NONE} -- Implementation/Actions
@@ -626,6 +626,12 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	internal_recycle
+			-- <precursor>
+		do
+			metric_grid.recycle
 		end
 
 feature -- Key shortcuts

@@ -51,6 +51,7 @@ feature {EB_PREFERENCES} -- Initialization
 			-- Create
 		do
 			Precursor {EDITOR_DATA} (a_preferences)
+			create post_update_actions
 		end
 
 feature -- Value
@@ -585,7 +586,12 @@ feature -- Update
 			init_colors
 			window_manager.quick_refresh_all_editors
 			Precursor {EB_SHORTCUTS_DATA}
+			post_update_actions.call (Void)
 		end
+
+	post_update_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions called after preferences has been called.
+			-- NOTE: Actions registered should be removed when they become useless, otherwise memory leaks.
 
 feature {NONE} -- Initialization
 
@@ -666,6 +672,7 @@ feature {NONE} -- Initialization
 			normal_background_color_preference.change_actions.extend (agent update)
 			selection_text_color_preference.change_actions.extend (agent update)
 			selection_background_color_preference.change_actions.extend (agent update)
+			focus_out_selection_background_color_preference.change_actions.extend (agent update)
 			string_text_color_preference.change_actions.extend (agent update)
 			string_background_color_preference.change_actions.extend (agent update)
 			keyword_text_color_preference.change_actions.extend (agent update)
@@ -1141,6 +1148,7 @@ feature -- Keybord shortcuts Customization
 
 invariant
 	preferences_not_void: preferences /= Void
+	post_update_actions_not_void: post_update_actions /= Void
 	keyword_font_preference_not_void: keyword_font_preference /= Void
 	editor_font_zoom_factor_preference: font_zoom_factor_preference /= Void
 	smart_indentation_preference_not_void: smart_indentation_preference /= Void

@@ -729,6 +729,9 @@ feature {NONE} -- Recycle
 			show_percent_btn.recycle
 			uninstall_agents (metric_tool)
 			uninstall_metric_history_agent
+			metric_selector.recycle
+			domain_selector.recycle
+			metric_definer.recycle
 		end
 
 feature{NONE} -- Actions

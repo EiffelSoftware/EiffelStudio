@@ -544,7 +544,6 @@ feature{NONE} -- Initialization
 			level_starting_column_index.extend (1)
 			level_starting_column_index.extend (1)
 			levels_column_table.put ((<<1, 2, 3>>).linear_representation, 1)
-			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
 		end
 
 	build_sortable_and_searchable is

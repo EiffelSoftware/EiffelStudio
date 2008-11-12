@@ -15,7 +15,7 @@ inherit
 		export
 			{ICOR_OBJECTS_MANAGER} clean_on_dispose
 		redefine
-			init_icor, clean_on_dispose
+			clean_on_dispose
 		end
 
 	OPERATING_ENVIRONMENT
@@ -27,14 +27,6 @@ create {ICOR_OBJECTS_MANAGER, ICOR_DEBUG_ENUM_WITH_NEXT}
 	make_by_pointer
 
 feature {ICOR_EXPORTER} -- Access
-
-	init_icor is
-		do
-			Precursor
-			name := get_name
-		ensure then
-			name_attached: name /= Void
-		end
 
 	interface_md_import: like internal_md_import is
 			-- IMetaDataImport Interface current ICorDebugModule.
@@ -113,6 +105,15 @@ feature {ICOR_EXPORTER} -- Access
 
 	name: STRING
 			-- Module's name
+		do
+			Result := private_name
+			if Result = Void then
+				Result := get_name
+				private_name := Result
+			else
+				last_call_success := 0
+			end
+		end
 
 	module_name: STRING is
 			-- Only the module name
@@ -140,7 +141,7 @@ feature {ICOR_EXPORTER} -- Access
 			create en.make_from_string (n)
 			en.append (".dll")
 
-			mn := get_name
+			mn := name
 			from
 				Result := mn.count >= n.count + 4 -- i.e: (n + ".dll").count				
 				i := mn.count - 4
@@ -153,6 +154,11 @@ feature {ICOR_EXPORTER} -- Access
 				j := j - 1
 			end
 		end
+
+feature {NONE} -- Access
+
+	private_name: like name
+			-- Module's name
 
 feature {ICOR_DEBUG_MODULE} -- Restricted Access	
 
@@ -202,25 +208,6 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_assembly (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-			end
-		ensure
-			success: last_call_success = 0
-		end
-
-	get_name: STRING is
-			-- GetName returns the name of the Module
-		local
-			p_cchname: NATURAL_32
-			mp_name: MANAGED_POINTER
-		do
-			last_call_success := 0
-			Result := name
-			if Result = Void then
-				create mp_name.make (256 * 2)
-
-				last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
-				name := Result
 			end
 		ensure
 			success: last_call_success = 0
@@ -343,6 +330,23 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_is_in_memory (item, $r)
 			Result := r /= 0 --| TRUE = 1 , FALSE = 0
+		ensure
+			success: last_call_success = 0
+		end
+
+feature {NONE} -- Access
+
+	get_name: STRING is
+			-- GetName returns the name of the Module
+		local
+			p_cchname: NATURAL_32
+			mp_name: MANAGED_POINTER
+		do
+			last_call_success := 0
+			create mp_name.make (256 * 2)
+
+			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
+			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		ensure
 			success: last_call_success = 0
 		end

@@ -1434,7 +1434,7 @@ feature -- Call stack related
 					l_class := l_func.get_class
 					l_class_token := l_class.token
 					l_module := l_func.get_module
-					l_module_name := l_module.get_name
+					l_module_name := l_module.name
 
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)

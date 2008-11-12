@@ -640,7 +640,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				if p /= Default_pointer then
 					l_module := Icor_objects_manager.icd_module (p)
 					debug ("debugger_trace_callback_data")
-						io.error.put_string ("Module loaded : %"" + l_module.get_name + "%" %N")
+						io.error.put_string ("Module loaded : %"" + l_module.name + "%" %N")
 					end
 					info.register_new_module (l_module)
 					debugger_message ("Module loaded : %"" + l_module.module_name + "%"")
@@ -1978,7 +1978,7 @@ feature -- Specific function evaluation
 				end
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
-					l_module_name := l_icd_module.get_name
+					l_module_name := l_icd_module.name
 
 					print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve ICorDebugFunction %N")
 					print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
@@ -2045,7 +2045,7 @@ feature -- Specific function evaluation
 							debug ("DEBUGGER_TRACE_EVAL")
 								print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
 								print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-								print ("                                :: module_name   = %"" + l_icd_module.get_name + "%"%N")
+								print ("                                :: module_name   = %"" + l_icd_module.name + "%"%N")
 								print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 							end
 						end
@@ -2101,7 +2101,7 @@ feature -- Specific function evaluation
 			l_icd_class := a_icd_obj.get_class
 			if l_icd_class /= Void then
 				l_icd_module := l_icd_class.get_module
-				l_module_name := l_icd_module.get_name
+				l_module_name := l_icd_module.name
 
 				l_feature_token := Edv_external_formatter.token_Exception_ToString
 				l_func := l_icd_module.get_function_from_token (l_feature_token)

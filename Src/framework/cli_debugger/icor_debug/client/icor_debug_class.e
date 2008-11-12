@@ -13,8 +13,6 @@ inherit
 	ICOR_OBJECT
 		export
 			{ICOR_OBJECTS_MANAGER} clean_on_dispose
-		redefine
-			init_icor
 		end
 
 create {ICOR_OBJECTS_MANAGER}
@@ -22,18 +20,12 @@ create {ICOR_OBJECTS_MANAGER}
 
 feature {ICOR_EXPORTER} -- Access
 
-	init_icor is
-		do
-			Precursor
-			token := get_token
-		ensure then
-			token_set: token /= 0
-		end
-
-feature {ICOR_EXPORTER} -- Properties
-
 	token: NATURAL_32
 			-- Class's token
+		do
+			--| FIXME jfiat [2008/11/12] : maybe try to cache the value ...
+			Result := get_token
+		end
 
 feature {ICOR_EXPORTER} -- Access
 

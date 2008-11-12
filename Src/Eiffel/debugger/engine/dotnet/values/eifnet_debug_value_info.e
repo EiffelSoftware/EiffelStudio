@@ -382,7 +382,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		do
-			Result := value_icd_module.get_name
+			Result := value_icd_module.name
 		end
 
 	value_icd_module: ICOR_DEBUG_MODULE is

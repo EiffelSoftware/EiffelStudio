@@ -152,16 +152,8 @@ feature {NONE} -- Implementation
 					sleep (100000000)
 				end
 				if a_socket.readable then
-					--a_socket.read_stream (1)
 					a_socket.read_natural_32
-					--a_socket.read_stream_thread_aware (1)
 					Result := a_socket.last_natural_32
---					if not a_socket.last_natural_32 then
---						Result := a_socket.last_string.item (1)
---						if Result /= '1' then
---							Result := '0'
---						end
---					end
 				end
 			end
 		rescue

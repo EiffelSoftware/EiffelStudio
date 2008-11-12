@@ -37,17 +37,22 @@ feature -- Access
 	wizard_icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
-			Result := Pixmaps.bm_Wizard_blue
-		end
-
-	wizard_pixmap: EV_PIXMAP
-			-- <Precursor>
-		do
 			Result := Pixmaps.bm_Wizard_testing_icon
 
 			-- Make sure satisfy the postcondition if delivery is corrupted (default pixmap created is 16X16)
 			if Result.width /= 60 or Result.height /= 60 then
 				Result.set_size (60, 60)
+			end
+		end
+
+	wizard_pixmap: EV_PIXMAP
+			-- <Precursor>
+		do
+			Result := Pixmaps.bm_Wizard_blue
+
+			-- Make sure satisfy the postcondition if delivery is corrupted (default pixmap created is 16X16)
+			if Result.width < 165 or Result.height < 312 then
+				Result.set_size (165, 312)
 			end
 		end
 

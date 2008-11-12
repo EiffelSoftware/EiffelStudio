@@ -28,7 +28,7 @@ feature -- Access
 	name: !STRING
 			-- <Precursor>
 		do
-			Result := "testing"
+			Result := once "testing"
 		end
 
 	title: STRING_32

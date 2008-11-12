@@ -23,6 +23,13 @@ inherit
 	ERL_CONSTANTS
 		export {NONE} all end
 
+	EXECUTION_ENVIRONMENT
+		rename
+			command_line as command_line_arguments
+		export
+			{NONE} all
+		end
+
 create
 	execute
 
@@ -65,8 +72,7 @@ feature{NONE} -- Initialization
 					-- Create socket and connect to proxy.
 				create socket.make_client_by_port (l_port, l_server_url)
 				socket.connect
-				socket.set_blocking
-
+				--socket.set_blocking
 					-- Wait for test cases and then execute test cases in a loop.
 				log_message ("<session>%N")
 				main_loop
@@ -349,10 +355,23 @@ feature{NONE} -- Socket IPC
 		local
 			l_retried: BOOLEAN
 		do
+			last_request := Void
 			if not l_retried then
 					-- Get request from proxy through `socket'.
 					-- This will block Current process.
-				last_request ?= socket.retrieved
+				from until
+					socket.readable or socket.is_closed
+				loop
+					sleep (100000000)
+				end
+				if socket.readable then
+					socket.read_natural_32
+					if socket.last_natural_32 = 1 then
+						if {l_request: like last_request} socket.retrieved  then
+							last_request := l_request
+						end
+					end
+				end
 			end
 		rescue
 			l_retried := True
@@ -515,6 +534,8 @@ feature{NONE} -- Byte code
 
 	main_loop is
 			-- Main loop
+		local
+			l_exc: EXCEPTION
 		do
 			from
 			until

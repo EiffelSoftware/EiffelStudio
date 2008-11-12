@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			append_option (l_vbox, b_timeout, timeout_field)
 			append_option (l_vbox, b_proxy_timeout, proxy_time_out)
 			append_option (l_vbox, b_seed, create {EV_CELL})
-			append_option (l_vbox, "", seed)
+			append_option (l_vbox, " ", seed)
 			append_option (l_vbox, b_slicing, slicing_checkbox)
 			append_option (l_vbox, b_ddmin, ddmin_checkbox)
 			append_option (l_vbox, b_html_output, html_output)

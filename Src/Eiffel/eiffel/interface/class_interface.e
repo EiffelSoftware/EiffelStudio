@@ -122,7 +122,7 @@ feature -- Control
 			l_class_id := class_c.class_id
 
 				-- Initialize parent feature tables.
-			l_parents := class_c.parents
+			l_parents := class_c.conforming_parents
 			from
 				create l_list.make (l_parents.count)
 				par_feats := (create {ARRAY [SELECT_TABLE]}.make (1, l_parents.count)).area
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if feat.is_origin or else l_is_new_attribute then
+			if feat.is_origin or else l_is_new_attribute or else feat.is_replicated_directly then
 					-- A new introduced feature has to be in the interface.
 					-- An attribute that defines an inherited feature has to be
 					-- in the interface for attribute assignment.
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 					feat.set_written_feature_id (feat.feature_id)
 				end
 
-				if feat.is_replicated and feat.is_unselected then
+				if (feat.is_replicated and feat.is_unselected) or else feat.is_replicated_directly then
 						-- Feature is replicated, we have to
 						-- make it believe that it comes from
 						-- current even though it is written

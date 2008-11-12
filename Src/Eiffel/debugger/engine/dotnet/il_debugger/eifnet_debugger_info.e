@@ -190,10 +190,10 @@ feature -- Current CallStack
 							l_class := l_func.get_class
 							l_il_code := l_func.get_il_code
 
-							l_curr_stk_info.set_current_stack_pseudo_depth (l_frames.count)
+							l_curr_stk_info.set_current_stack_pseudo_depth (l_frames.get_count)
 							l_curr_stk_info.set_current_module_name        (l_module.get_name)
-							l_curr_stk_info.set_current_class_token        (l_class.get_token)
-							l_curr_stk_info.set_current_feature_token      (l_func.get_token)
+							l_curr_stk_info.set_current_class_token        (l_class.token)
+							l_curr_stk_info.set_current_feature_token      (l_func.token)
 							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size_as_integer_32)
 							l_curr_stk_info.set_current_il_offset          (l_il_frame.get_ip_as_integer_32)
 							l_curr_stk_info.set_current_stack_address      (create {DBG_ADDRESS}.make_from_natural_64 (l_code.get_address))

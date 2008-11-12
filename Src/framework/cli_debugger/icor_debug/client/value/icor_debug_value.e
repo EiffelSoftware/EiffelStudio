@@ -14,8 +14,8 @@ class
 inherit
 	ICOR_OBJECT
 		redefine
-			init_icor, make_by_pointer,
-			clean_on_dispose
+			clean_on_dispose,
+			init_icor
 		end
 
 create
@@ -31,25 +31,19 @@ feature {NONE} -- Initialization
 			get_strong_reference_value
 		end
 
-	make_by_pointer (an_item: POINTER) is
-			-- Make Current by pointer.
-		do
-			Precursor (an_item)
-		end
+feature {ICOR_EXPORTER} -- Pseudo twin
 
 	init_icor is
-			-- 	
 		do
 			Precursor
 			type := get_type
-			size := get_size
-			address_as_string := get_address.to_hex_string
+		ensure then
+			type_set: type /= 0
 		end
 
 feature {ICOR_EXPORTER} -- Pseudo twin
 
 	duplicated_object: like Current is
-
 		do
 			Result := twin
 			Result.add_ref
@@ -61,12 +55,10 @@ feature {ICOR_EXPORTER} -- Pseudo twin
 feature {ICOR_EXPORTER} -- Properties
 
 	type: INTEGER
-
-	size: NATURAL_32
-
-	address_as_string: STRING
+			-- Type of Current value
 
 	strong_reference_value: ICOR_DEBUG_HANDLE_VALUE
+			-- Strong reference value
 
 feature {ICOR_EXPORTER} -- Query
 
@@ -273,16 +265,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_type: INTEGER is
-			-- GetType
-		require
-			item_not_null: item_not_null
-		do
-			last_call_success := cpp_get_type (item, $Result)
-		ensure
-			success: last_call_success = 0 or error_code_is_object_neutered (last_call_success)
-		end
-
 	get_size: NATURAL_32 is
 			-- GetSize returns the size in bytes
 		require
@@ -336,6 +318,18 @@ feature {NONE} -- External Implementation
 			]"
 		alias
 			"GetAddress"
+		end
+
+feature {NONE } -- Access
+
+	get_type: like type is
+			-- GetType
+		require
+			item_not_null: item_not_null
+		do
+			last_call_success := cpp_get_type (item, $Result)
+		ensure
+			success: last_call_success = 0 or error_code_is_object_neutered (last_call_success)
 		end
 
 feature {NONE} -- Implementation / Constants

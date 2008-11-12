@@ -287,7 +287,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_result_string: STRING
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
-			l_type := a_data.get_type
+			l_type := a_data.type
 
 			--| Now start getting info
 
@@ -329,7 +329,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					l_result_string.append_string ("<<OBJECT>>")
 					l_icd_class := l_object.get_class
 					if l_icd_class /= Void then
-						l_result_string.append_string (" class token = 0x" + l_icd_class.get_token.to_hex_string)
+						l_result_string.append_string (" class token = 0x" + l_icd_class.token.to_hex_string)
 					else
 						l_result_string.append_string (" neutred (no class info) ")
 					end
@@ -374,61 +374,58 @@ feature -- Dereferenced to Value
 	prepared_icor_debug_value (a_data: ICOR_DEBUG_VALUE): ANY is
 		local
 			l_icd: ICOR_DEBUG_VALUE
-			l_type: INTEGER
 		do
 			l_icd := a_data
-			l_type := l_icd.get_type
-			if l_icd.last_call_succeed then
-				inspect l_type
-				when {MD_SIGNATURE_CONSTANTS}.element_type_end then
-				when {MD_SIGNATURE_CONSTANTS}.element_type_void then
-					Result := "Void" -- FIXME
-				when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
-					Result := prepared_icor_debug_value_as_boolean (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_char then
-					Result := prepared_icor_debug_value_as_character (l_icd)
+			inspect l_icd.type
+			when {MD_SIGNATURE_CONSTANTS}.element_type_end then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_void then
+				Result := "Void" -- FIXME
+			when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
+				Result := prepared_icor_debug_value_as_boolean (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_char then
+				Result := prepared_icor_debug_value_as_character (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_i then
-				when {MD_SIGNATURE_CONSTANTS}.element_type_u then
-					Result := prepared_icor_debug_value_as_pointer (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u then
+				Result := prepared_icor_debug_value_as_pointer (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
-					Result := prepared_icor_debug_value_as_integer_8 (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
-					Result := prepared_icor_debug_value_as_natural_8 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
+				Result := prepared_icor_debug_value_as_integer_8 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+				Result := prepared_icor_debug_value_as_natural_8 (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
-					Result := prepared_icor_debug_value_as_integer_16 (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
-					Result := prepared_icor_debug_value_as_natural_16 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+				Result := prepared_icor_debug_value_as_integer_16 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+				Result := prepared_icor_debug_value_as_natural_16 (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
-					Result := prepared_icor_debug_value_as_integer_32 (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
-					Result := prepared_icor_debug_value_as_natural_32 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
+				Result := prepared_icor_debug_value_as_integer_32 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
+				Result := prepared_icor_debug_value_as_natural_32 (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
-					Result := prepared_icor_debug_value_as_integer_64 (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
-					Result := prepared_icor_debug_value_as_natural_64 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
+				Result := prepared_icor_debug_value_as_integer_64 (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+				Result := prepared_icor_debug_value_as_natural_64 (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
-					Result := prepared_icor_debug_value_as_real (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
-					Result := prepared_icor_debug_value_as_double (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
+				Result := prepared_icor_debug_value_as_real (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
+				Result := prepared_icor_debug_value_as_double (l_icd)
 
-				when {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
-				when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
-				when
-					{MD_SIGNATURE_CONSTANTS}.element_type_class,
-					{MD_SIGNATURE_CONSTANTS}.element_type_object,
-					{MD_SIGNATURE_CONSTANTS}.element_type_szarray,
-					{MD_SIGNATURE_CONSTANTS}.element_type_array,
-					{MD_SIGNATURE_CONSTANTS}.element_type_valuetype
-				then
-					Result := prepared_icor_debug_value_as_reference_to_string (l_icd)
-				when {MD_SIGNATURE_CONSTANTS}.element_type_string then
-					Result := prepared_icor_debug_value_as_string (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
+			when
+				{MD_SIGNATURE_CONSTANTS}.element_type_class,
+				{MD_SIGNATURE_CONSTANTS}.element_type_object,
+				{MD_SIGNATURE_CONSTANTS}.element_type_szarray,
+				{MD_SIGNATURE_CONSTANTS}.element_type_array,
+				{MD_SIGNATURE_CONSTANTS}.element_type_valuetype
+			then
+				Result := prepared_icor_debug_value_as_reference_to_string (l_icd)
+			when {MD_SIGNATURE_CONSTANTS}.element_type_string then
+				Result := prepared_icor_debug_value_as_string (l_icd)
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_fnptr then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_reqd then
@@ -438,8 +435,6 @@ feature -- Dereferenced to Value
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_modifier then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
-				else
-				end
 			else
 				debug ("debugger_icor_data")
 					io.error.put_string ("[!] Error on ICorDebugValue->GetType() %N")

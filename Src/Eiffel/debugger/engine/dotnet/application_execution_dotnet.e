@@ -854,13 +854,13 @@ feature -- Control execution
 			if l_controller /= Void then
 				l_controller.add_ref
 				l_enum_thread := l_controller.enumerate_threads
-				if l_enum_thread /= Void and then l_enum_thread.count > 0 then
+				if l_enum_thread /= Void and then l_enum_thread.get_count > 0 then
 					l_enum_thread.reset
 					l_th := Eifnet_debugger.icor_debug_thread
 					if l_th /= Void then
 						l_last_thread_id := l_th.get_id.to_hex_string
 					end
-					l_threads := l_enum_thread.next (l_enum_thread.count)
+					l_threads := l_enum_thread.next (l_enum_thread.get_count)
 					print ("[info]  => " + l_threads.count.out + " Threads.%N")
 					print ("        => last   :: " + l_last_thread_id + "%N")
 					from
@@ -1430,9 +1430,9 @@ feature -- Call stack related
 				l_frame_il := a_frame.query_interface_icor_debug_il_frame
 				if a_frame.last_call_succeed and then l_frame_il /= Void then
 					l_func := l_frame_il.get_function
-					l_feature_token := l_func.get_token
+					l_feature_token := l_func.token
 					l_class := l_func.get_class
-					l_class_token := l_class.get_token
+					l_class_token := l_class.token
 					l_module := l_func.get_module
 					l_module_name := l_module.get_name
 

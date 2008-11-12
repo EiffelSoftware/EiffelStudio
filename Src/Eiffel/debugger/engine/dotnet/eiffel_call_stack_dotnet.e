@@ -184,10 +184,10 @@ feature {APPLICATION_STATUS} -- Restricted access
 
 										--| FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
 										l_func := l_frame.get_function
-										l_feature_token := l_func.get_token
+										l_feature_token := l_func.token
 										l_class         := l_func.get_class
 										l_module        := l_func.get_module
-										l_class_token   := l_class.get_token
+										l_class_token   := l_class.token
 										l_module_name   := l_module.get_name
 
 										l_il_offset := l_frame_il.get_ip_as_integer_32

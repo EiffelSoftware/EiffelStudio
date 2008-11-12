@@ -23,17 +23,18 @@ create {ICOR_OBJECTS_MANAGER}
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			--
 		do
 			Precursor
 			token := get_token
+		ensure then
+			token_set: token /= 0
 		end
 
 feature -- Addons
 
 	to_function_name: STRING is
 		do
-			Result := get_module.md_member_name (get_token)
+			Result := get_module.md_member_name (token)
 		end
 
 	to_string: STRING is
@@ -44,10 +45,10 @@ feature -- Addons
 			l_module: ICOR_DEBUG_MODULE
 		do
 			Result := "Function [" + item.out + "] "
-					+ " Token="+ get_token.out + "~0x" + get_token.to_hex_string
+					+ " Token="+ token.out + "~0x" + token.to_hex_string
 			l_cl := get_class
 			if l_cl /= Void then
-				Result.append (" ClassToken=" + l_cl.get_token.out + "~0x" + l_cl.get_token.to_hex_string)
+				Result.append (" ClassToken=" + l_cl.token.out + "~0x" + l_cl.token.to_hex_string)
 --				l_cl.clean_on_dispose
 			else
 				Result.append (" Class= not IL ")
@@ -58,7 +59,8 @@ feature -- Addons
 
 feature {ICOR_EXPORTER} -- Access
 
-	token: like get_token
+	token: NATURAL_32
+			-- Feature's token
 
 feature {ICOR_EXPORTER} -- Access
 
@@ -82,14 +84,6 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				Result := Icor_objects_manager.icd_class (p)
 			end
-		ensure
-			success: last_call_success = 0
-		end
-
-	get_token: NATURAL_32 is
-		do
-			last_call_success := cpp_get_token (item, $Result)
-			token := Result
 		ensure
 			success: last_call_success = 0
 		end
@@ -148,6 +142,16 @@ feature {ICOR_EXPORTER} -- Access
 			-- Returns version number of code
 		do
 			last_call_success := cpp_get_current_version_number (item, $Result)
+		ensure
+			success: last_call_success = 0
+		end
+
+feature {NONE} -- Access
+
+	get_token: like token is
+		do
+			last_call_success := cpp_get_token (item, $Result)
+			token := Result
 		ensure
 			success: last_call_success = 0
 		end

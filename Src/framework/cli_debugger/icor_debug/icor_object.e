@@ -38,9 +38,7 @@ feature {ICOR_EXPORTER} -- Initialisation
 			-- Make Current by pointer.
 		do
 			Precursor (an_item)
-			debug ("debugger_icor_data")
-				init_icor
-			end
+			init_icor
 		end
 
 	init_icor is

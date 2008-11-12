@@ -629,7 +629,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					p := dbg_cb_info_pointer_item (2) -- p_app_class
 					if p /= Default_pointer then
-						debugger_message ("Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).get_token) + "%"")
+						debugger_message ("Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).token) + "%"")
 					end
 				end
 			when Cst_managed_cb_load_module then
@@ -1952,7 +1952,7 @@ feature -- Specific function evaluation
 			l_icd_class := a_icd_obj.get_class
 			if l_icd_class /= Void then
 				l_icd_module := l_icd_class.get_module
-				l_feature_token := l_icd_module.md_feature_token (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
+				l_feature_token := l_icd_module.md_feature_token (l_icd_class.token, a_feat.feature_name) -- resolved {ANY}.generating_type
 				l_func := l_icd_module.get_function_from_token (l_feature_token)
 			end
 

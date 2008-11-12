@@ -138,7 +138,7 @@ feature {NONE} -- Special childrens
 					check
 						l_icd_frame /= Void
 					end
-					l_class_token := l_icd_class.get_token
+					l_class_token := l_icd_class.token
 					l_icd_module := l_icd_class.get_module
 
 					l_values := field_values_for (l_class_token, l_icd_class, l_object_value, l_icd_frame, l_icd_module)

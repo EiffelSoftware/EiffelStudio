@@ -133,7 +133,7 @@ feature {ICOR_EXPORTER} -- Access
 			debug ("DEBUGGER_EIFNET_DATA")
 				l_app_domain := get_app_domain
 				l_enum := l_app_domain.enumerate_steppers
-				io.error.put_string ("=== CreateStepper ===%N  --> EnumSteppers count=" + l_enum.count.out + "%N")
+				io.error.put_string ("=== CreateStepper ===%N  --> EnumSteppers count=" + l_enum.get_count.out + "%N")
 				l_enum.clean_on_dispose
 				l_app_domain.clean_on_dispose
 			end

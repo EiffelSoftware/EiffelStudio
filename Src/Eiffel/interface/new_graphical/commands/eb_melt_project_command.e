@@ -340,8 +340,14 @@ feature {NONE} -- Execution
 
 	compile_no_save is
 			-- Launch compilation.
+		local
+			l_last_window: EV_WINDOW
 		do
-			window_manager.last_focused_development_window.window.set_focus
+			l_last_window := window_manager.last_focused_development_window.window
+			if l_last_window.is_displayed and l_last_window.is_sensitive then
+				l_last_window.set_focus
+			end
+			--window_manager.last_focused_development_window.window.set_focus
 			confirm_and_compile
 		end
 

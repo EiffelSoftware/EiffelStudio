@@ -259,8 +259,7 @@ feature -- Execution
 --					(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
 --					socket := l_socket.accepted
 
-						-- Arno: no idea how long this time out is (probably platform dependent)...
-					if {l_socket: like socket} l_listener.wait_for_connection (5) then
+					if {l_socket: like socket} l_listener.wait_for_connection (5000) then
 						socket := l_socket
 						process.set_timeout (timeout)
 						log_stream.string.wipe_out
@@ -647,7 +646,8 @@ feature{NONE} -- Process scheduling
 					log (log_stream.string)
 					request_count := request_count + 1
 					process.reset_timer
-					if socket /= Void and then socket.is_open_write then
+					if socket /= Void and then socket.is_open_write and socket.extendible then
+						socket.put_natural (1)
 						socket.independent_store (socket_data_printer.last_request)
 					end
 				else

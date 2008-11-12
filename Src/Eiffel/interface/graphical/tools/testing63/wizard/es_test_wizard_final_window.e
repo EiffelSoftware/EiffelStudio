@@ -75,7 +75,7 @@ feature {NONE} -- Basic operations
 					launched_factory := l_ts.factory (factory_type)
 					if launched_factory.is_ready then
 						if launched_factory.is_valid_configuration (wizard_information.as_attached) then
-							first_window.disable_sensitive
+							--first_window.disable_sensitive
 							l_ts.connect_events (Current)
 							l_ts.launch_processor (launched_factory.as_attached, wizard_information.as_attached, False)
 						else

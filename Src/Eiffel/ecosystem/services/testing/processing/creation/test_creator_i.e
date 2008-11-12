@@ -28,11 +28,11 @@ inherit
 
 feature {NONE} -- Query		
 
-	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
+	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
 			-- <Precursor>
 		deferred
 		ensure then
-			result_implies_usable: Result implies a_arg.is_interface_usable
+			result_implies_usable: Result implies a_conf.is_interface_usable
 		end
 
 feature {NONE} -- Typing

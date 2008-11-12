@@ -95,7 +95,10 @@ feature {NONE} -- Implementation
 					par := par + 8
 				end
 
-				if orig_class.is_expanded and then orig_class.is_basic then
+				if
+					(a_addr = Void or (dmp /= Void and then dmp.is_basic)) and then
+					orig_class.is_expanded and then orig_class.is_basic
+				then
 						--| Take care of "2 > 3"
 					if ctype.associated_class.conform_to (fi.written_class) then
 						wclt := fi.written_type (ctype)
@@ -105,6 +108,7 @@ feature {NONE} -- Implementation
 				else
 					wclt := ctype
 				end
+
 				if fi.written_class.is_precompiled then
 					par := par + 2
 					rout_info := System.rout_info_table.item (fi.rout_id_set.first)

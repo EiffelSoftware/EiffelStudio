@@ -331,14 +331,12 @@ feature -- Call Stack element related
 
 	current_call_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed.
-		require
-			current_call_stack /= Void
 		local
 			i: INTEGER
 		do
 			i := application.current_execution_stack_number
-			if current_call_stack.valid_index (i) then
-				Result := current_call_stack.i_th (i)
+			if {ccs: like current_call_stack} current_call_stack and ccs.valid_index (i) then
+				Result := ccs.i_th (i)
 			end
 		end
 

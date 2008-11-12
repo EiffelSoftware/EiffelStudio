@@ -125,7 +125,7 @@ feature {NONE} -- Basic operations
 					loop
 						create l_path.make_from_string (l_location)
 						if configuration.is_multiple_new_classes then
-							create l_filename.make (configuration.new_class_name.count + 4)
+							create l_filename.make (configuration.new_class_name.count + 6)
 							l_filename.append (configuration.new_class_name.as_lower)
 							l_filename.append_character ('_')
 							if class_name_counter < 10 then
@@ -137,8 +137,8 @@ feature {NONE} -- Basic operations
 						else
 							l_filename := configuration.new_class_name.as_lower
 						end
+						l_filename.append (".e")
 						l_path.set_file_name (l_filename)
-						l_path.add_extension ("e")
 						create l_file.make (l_path)
 						if configuration.is_multiple_new_classes then
 							if l_file.exists then

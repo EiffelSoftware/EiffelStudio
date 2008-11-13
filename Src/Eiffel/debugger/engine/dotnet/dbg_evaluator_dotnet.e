@@ -60,8 +60,6 @@ feature {NONE} -- Implementation
 			l_icd_function: ICOR_DEBUG_FUNCTION
 			l_ctype: CLASS_TYPE
 			exc_dv: EXCEPTION_DEBUG_VALUE
-			nat_ct: NATIVE_ARRAY_CLASS_TYPE
-			nat_edv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function : ")
@@ -87,12 +85,11 @@ feature {NONE} -- Implementation
 			if l_icdv_obj = Void then
 				dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_unable_to_get_target_object)
 			else
-				nat_ct ?= l_ctype
-				if nat_ct /= Void then
-					if a_target /= Void then
-						nat_edv ?= a_target.as_dump_value_dotnet.eifnet_debug_value
-					end
-					if nat_edv /= Void then
+				if {nat_ct: NATIVE_ARRAY_CLASS_TYPE} l_ctype then
+					if 
+						a_target /= Void and then
+						{nat_edv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE} a_target.as_dump_value_dotnet.eifnet_debug_value
+					then
 						internal_evaluate_function_on_native_array (nat_edv, realf, l_params)
 					else
 						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_native_array_partially_supported (realf.feature_name))

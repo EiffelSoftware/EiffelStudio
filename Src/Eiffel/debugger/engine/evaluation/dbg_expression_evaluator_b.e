@@ -2247,6 +2247,7 @@ feature {NONE} -- Implementation
 				l_ta := cl.actual_type
 			end
 			Ast_context.initialize (cl, l_ta, cl.feature_table)
+			byte_context.init (ct)
 			Inst_context.set_group (cl.group)
 		end
 

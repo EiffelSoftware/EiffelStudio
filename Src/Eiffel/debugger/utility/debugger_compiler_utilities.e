@@ -84,35 +84,35 @@ feature -- Type adaptation
 
 	frozen adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is
 			-- Adapted class_type receiving the call of `f'
+			--| Note: Only used by dotnet debugger so far.
 		local
 			l_f_class_c: CLASS_C
 			l_cl_type_a: CL_TYPE_A
+			tl: TYPE_LIST
 		do
-			if ctype.associated_class.is_basic then
-				Result := associated_reference_basic_class_type (ctype.associated_class)
+				--| Get the real class_type
+			l_f_class_c := f.written_class
+			if ctype.associated_class.is_equal (l_f_class_c) then
+					--| The feature is not inherited
+				Result := ctype
 			else
-					--| Get the real class_type
-				l_f_class_c := f.written_class
-				if ctype.associated_class.is_equal (l_f_class_c) then
-						--| The feature is not inherited
-					Result := ctype
+				tl := l_f_class_c.types
+				check tl_attached: tl /= Void end
+				if tl.count = 1 then
+					Result := tl.first
+				elseif l_f_class_c.is_basic then
+					Result := tl.first
 				else
-					if l_f_class_c.types.count = 1 then
-						Result := l_f_class_c.types.first
-					elseif l_f_class_c.is_basic then
-						Result := l_f_class_c.types.first
-					else
-							--| The feature is inherited
+						--| The feature is inherited
 
-							--| let's search and find the correct CLASS_TYPE among the parents
-							--| this will solve the problem of inherited once and generic class
-							--| the level on inheritance is represented by the CLASS_C
-							--| then the derivation of the GENERIC by the CLASS_TYPE
-							--| among the parent we know the right CLASS_TYPE
-							--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
-						l_cl_type_a := ctype.type
-						Result := l_cl_type_a.find_class_type (l_f_class_c).associated_class_type (ctype.type)
-					end
+						--| let's search and find the correct CLASS_TYPE among the parents
+						--| this will solve the problem of inherited once and generic class
+						--| the level on inheritance is represented by the CLASS_C
+						--| then the derivation of the GENERIC by the CLASS_TYPE
+						--| among the parent we know the right CLASS_TYPE
+						--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
+					l_cl_type_a := ctype.type
+					Result := l_cl_type_a.find_class_type (l_f_class_c).associated_class_type (ctype.type)
 				end
 			end
 		end

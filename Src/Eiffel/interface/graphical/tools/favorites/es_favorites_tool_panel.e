@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		require
 			a_manager_exists: a_manager /= Void
 			a_favorites_manager_exists: a_favorites_manager /= Void
-			a_tool_attached: a_tool /= Void
 			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
 			favorites_manager := a_favorites_manager

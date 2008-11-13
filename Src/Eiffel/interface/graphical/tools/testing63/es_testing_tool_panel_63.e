@@ -552,6 +552,7 @@ feature {NONE} -- Events: test execution
 						else
 							create l_conf.make
 						end
+						l_conf.set_sorter_prefix (tree_view.tag_prefix)
 						if l_executor.is_valid_configuration (l_conf) then
 							l_test_suite.launch_processor (l_executor, l_conf, False)
 						else

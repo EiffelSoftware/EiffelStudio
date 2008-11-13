@@ -8,10 +8,10 @@ indexing
 
 deferred class
 	TEST_EXECUTOR_CONF_I
-	
+
 inherit
 	TEST_PROCESSOR_CONF_I
-	
+
 feature -- Access
 
 	tests: !DS_LINEAR [!TEST_I]
@@ -20,6 +20,15 @@ feature -- Access
 			usable: is_interface_usable
 			specific: is_specific
 		deferred
+		end
+
+	sorter_prefix: !STRING
+			-- Prefix used to sort tests for execution
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			valid: (create {TAG_UTILITIES}).is_valid_tag (Result)
 		end
 
 feature -- Status report

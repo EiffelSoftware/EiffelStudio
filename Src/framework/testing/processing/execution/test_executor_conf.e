@@ -21,12 +21,14 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			internal_tests := Void
+			create sorter_prefix.make_empty
 		end
 
-	make_with_tests (a_list: !DS_LINEAR [!TEST_I])
+	make_with_tests (a_list: like tests)
 			-- Initialize `Current' with specific tests.
 		do
 			create internal_tests.make_from_linear (a_list)
+			create sorter_prefix.make_empty
 		end
 
 feature -- Access
@@ -36,6 +38,9 @@ feature -- Access
 		do
 			Result := internal_tests.as_attached
 		end
+
+	sorter_prefix: !STRING
+			-- <Precursor>
 
 feature {NONE} -- Access
 
@@ -54,6 +59,16 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := internal_tests /= Void
+		end
+
+feature -- Status setting
+
+	set_sorter_prefix (a_prefix: like sorter_prefix)
+			--  Set `sorter_prefix' to `a_prefix'.
+		require
+			a_prefix_valid: (create {TAG_UTILITIES}).is_valid_tag (a_prefix)
+		do
+			create sorter_prefix.make_from_string (a_prefix)
 		end
 
 end

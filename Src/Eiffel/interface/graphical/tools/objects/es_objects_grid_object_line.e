@@ -698,13 +698,11 @@ feature {NONE} -- Filling
 	on_slice_double_click is
 			-- Action triggered by double clicking on the slice limit row
 		local
-			os: OBJECT_STONE
 			cmd: ES_OBJECTS_GRID_SLICES_CMD
 		do
 			cmd := parent_grid.slices_cmd
 			if cmd /= Void then
-				os ?= item_stone (col_value_index)
-				if os /= Void then
+				if {os: OBJECT_STONE} item_stone (col_value_index) then
 					cmd.drop_object_stone (os)
 				end
 			end

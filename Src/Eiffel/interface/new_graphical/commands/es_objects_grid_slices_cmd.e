@@ -101,16 +101,19 @@ feature -- Execution
 
 	execute is
 			-- Change the default slice limits through a dialog box.
+		local
+			dm: like debugger_manager
 		do
+			dm := debugger_manager
 			get_slice_limits_on_global
 
-			debugger_manager.set_slices (slice_min, slice_max)
-			debugger_manager.set_displayed_string_size (displayed_string_size)
+			dm.set_slices (slice_min, slice_max)
+			dm.set_displayed_string_size (displayed_string_size)
 			if set_as_default_requested then
 				set_as_default_requested := False
-				preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
-				preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
-				preferences.debugger_data.default_displayed_string_size_preference.set_value (debugger_manager.displayed_string_size)
+				preferences.debugger_data.min_slice_preference.set_value (dm.min_slice)
+				preferences.debugger_data.max_slice_preference.set_value (dm.max_slice)
+				preferences.debugger_data.default_displayed_string_size_preference.set_value (dm.displayed_string_size)
 			end
 
 			debug ("debugger_interface")
@@ -154,12 +157,10 @@ feature -- Basic operations
 	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_OBJECT_LINE is
 			-- Object grid line related to `ost if any.
 		local
-			l_item: EV_ANY
 			l_addr: DBG_ADDRESS
 		do
 			if ost /= Void then
-				l_item := ost.ev_item
-				if l_item /= Void then
+				if {l_item: EV_ANY} ost.ev_item then
 					Result ?= l_item.data
 				end
 				if Result = Void then
@@ -170,10 +171,6 @@ feature -- Basic operations
 				end
 			end
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Properties
 

@@ -90,10 +90,10 @@ feature -- Basic operations
 
 							if not l_buffer.is_empty then
 									-- Create the new id token
-								l_id ?= l_buffer.as_lower
+								l_id := l_buffer.as_lower
 								if l_id_table.has (l_id) then
 										-- Create a reference token, because only the first id token should be editable.
-									l_token_id ?= l_id_table.item (l_id)
+									l_token_id := l_id_table.item (l_id)
 									Result.force_last (a_factory.create_id_ref_token (l_token_id))
 								else
 										-- Creates an editable id token

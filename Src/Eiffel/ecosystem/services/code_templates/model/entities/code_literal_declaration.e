@@ -45,7 +45,7 @@ feature -- Element change
 			--
 			-- `a_value': A literal default value to show for in-place UI editions.
 		do
-			default_value ?= a_value.twin
+			default_value := a_value.twin
 		ensure
 			default_value_set: default_value.is_equal (a_value)
 		end

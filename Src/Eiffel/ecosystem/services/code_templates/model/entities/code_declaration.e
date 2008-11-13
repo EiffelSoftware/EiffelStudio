@@ -58,7 +58,7 @@ feature -- Element change
 		require
 			not_a_id_is_empty: not a_id.is_empty
 		do
-			id ?= a_id.twin
+			id := a_id.twin
 		ensure
 			id_set: id.is_equal (a_id)
 		end
@@ -68,7 +68,7 @@ feature -- Element change
 			--
 			-- `a_description': A description of the identifier for UI replacement cues.
 		do
-			description ?= a_description.twin
+			description := a_description.twin
 		ensure
 			description_set: description.is_equal (a_description)
 		end

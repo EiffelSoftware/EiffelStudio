@@ -741,7 +741,6 @@ feature {NONE} -- User interface elements
 								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 									do
 										if is_interface_usable then
-											print ("Resizing,,,%N")
 											ia_tool_bar.update_size
 										end
 									end (Result, ?, ?, ?, ?))

@@ -258,6 +258,17 @@ feature -- Directories
 			result_attached: Result /= Void
 		end
 
+	testing_results_path: DIRECTORY_NAME
+			-- Path to testing result directory in EIFGENs directory
+		do
+			Result := internal_testing_results_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (testing_results_directory)
+				internal_testing_results_path := Result
+			end
+		end
+
 feature -- Files
 
 	project_file_name: FILE_NAME is
@@ -565,6 +576,7 @@ feature {NONE} -- Implementation: Access
 	internal_workbench_path: like workbench_path
 	internal_data_path: like data_path
 	internal_eifgens_cluster_path: like eifgens_cluster_path
+	internal_testing_results_path: like testing_results_path
 			-- Placeholders for storing path.
 
 	internal_precompilation_file_name: like precompilation_file_name

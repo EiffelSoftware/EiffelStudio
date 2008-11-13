@@ -169,6 +169,10 @@ feature {NONE}
 			-- Directory name `Data'
 
 	eifgens_cluster_directory: STRING is "Cluster"
+			-- Directory EIFGENs/[target]/Cluster
+
+	testing_results_directory: STRING is "Testing"
+			-- Directory EIFGENs/[target]/Testing
 
 feature-- Versioning
 

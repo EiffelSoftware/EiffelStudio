@@ -136,6 +136,7 @@ typedef struct eif_gen_der {
 	EIF_TYPE_INDEX      id;         /* Run-time generated id */
 	EIF_TYPE_INDEX      base_id;    /* Compiler generated (base) id */
 	EIF_TYPE_INDEX      first_id;   /* First matching compiler gen. id */
+	EIF_TYPE_INDEX		annotation;	/* Annotation flag for that type. */
 	char                *name;      /* Full type name */
 	char                is_expanded;/* Is it an expanded type? */
 	char                is_bit;     /* Is it a BIT type? */
@@ -159,6 +160,13 @@ typedef struct {
 	unsigned char   *high_tab;      /* Bit table for high ids */
 	unsigned char   *low_comp;      /* Bit table for computed lower conf. */
 	unsigned char   *high_comp;     /* Bit table for computed high conf. */
+#ifdef EIF_ASSERTIONS
+		/* End of all the above arrays for efficient bound checks. */
+	unsigned char *low_tab_end;
+	unsigned char *high_tab_end;
+	unsigned char *low_comp_end;
+	unsigned char *high_comp_end;
+#endif
 } EIF_CONF_TAB;
 /*
 doc:	<attribute name="first_gen_id" return_type="EIF_TYPE_INDEX" export="private">
@@ -264,9 +272,9 @@ rt_public int eifthd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 #endif
 /*------------------------------------------------------------------*/
 
-rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype);
-rt_private void eif_create_typename (EIF_TYPE_INDEX, char*);
-rt_private EIF_GEN_DER *eif_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX);
+rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level);
+rt_private void eif_create_typename (EIF_TYPE_INDEX, char*, int level);
+rt_private EIF_GEN_DER *eif_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void eif_expand_tables(int);
 rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX);
 rt_private void eif_compute_ctab (EIF_TYPE_INDEX);
@@ -663,12 +671,10 @@ rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX 
 
 	result = base_id;
 
-	if ((types != NULL) && (*(types+1) != TERMINATOR))
-	{
+	if ((types != NULL) && (*(types+1) != TERMINATOR)) {
 		/* Check if it's cached - if yes return immediately */
 
-		if ((cache) && (*cache != TERMINATOR))
-		{
+		if ((cache) && (*cache != TERMINATOR)) {
 			return *cache;
 		}
 
@@ -721,7 +727,7 @@ rt_public uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype)
 {
 	EIF_GEN_DER *gdp;
 
-	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
+	REQUIRE("Valid type", dftype < next_gen_id);
 
 	gdp = eif_derivations [dftype];
 
@@ -794,9 +800,8 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 	EIF_GEN_DER *gdp;
 
 		/* Check type validity */
-	REQUIRE ("dftype is non-negative", dftype >= 0);
 	REQUIRE ("dftype is less than maximum computed id", dftype < next_gen_id);
-	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type >= 0);
+	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type < MAX_DTYPE);
 
 	gdp = eif_derivations [dftype];
 
@@ -835,7 +840,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	dftype = Dftype(obj);
 
-	REQUIRE ("Non negative dftype", dftype >= 0);
 	REQUIRE ("Valid dftype", dftype < next_gen_id);
 
 	gdp = eif_derivations [dftype];
@@ -850,9 +854,8 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 		/* Now treat the arguments.  This is necessarily a TUPLE */
 	dftype = gdp->typearr [1];
 
-	CHECK ("Non negative dftype", dftype >= 0);
 	CHECK ("Valid dftype", dftype < next_gen_id);
-	CHECK ("Routines implies we have tuples", tuple_static_type >= 0);
+	CHECK ("Routines implies we have tuples", tuple_static_type < MAX_DTYPE);
 
 	gdp = eif_derivations [dftype];
 
@@ -902,7 +905,7 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 {
 	EIF_GEN_DER *gdp;
 
-	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
+	REQUIRE("Valid type", dftype < next_gen_id);
 	REQUIRE("pos positive", pos > 0);
 
 	gdp = eif_derivations [dftype];
@@ -927,21 +930,17 @@ rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
 	gdp    = eif_derivations [dftype];
 	prev   = NULL;
 
-	while (gdp != NULL)
-	{
-		if (size == gdp->size)
-		{
+	while (gdp != NULL) {
+		if (size == gdp->size) {
 			break; /* Found */
 		}
 		prev = gdp;
 		gdp  = gdp->next;
 	}
 
-	if (gdp == (EIF_GEN_DER *)0)
-	{
-		/* Not found: we need a new id */
-
-			gdp = eif_new_gen_der(size, NULL, dftype, '1', (char) 0, 0);
+	if (!gdp) {
+			/* Not found: we need a new id */
+		gdp = eif_new_gen_der(size, NULL, dftype, '1', (char) 0, 0, 0);
 
 		if (prev == (EIF_GEN_DER *)0) {
 			eif_derivations [dftype] = gdp;
@@ -961,16 +960,14 @@ rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
 
 rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 {
-	EIF_TYPE_INDEX   *typearr, result;
+	EIF_TYPE_INDEX   typearr [4], result;
 
-	typearr = (EIF_TYPE_INDEX *) cmalloc (4 * sizeof(EIF_TYPE_INDEX));
 	typearr [0] = INVALID_DTYPE;	/* No static call context */
 	typearr [1] = egc_arr_dtype;	/* Base type of ARRAY     */
 	typearr [2] = dtype;			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
 	result = eif_compound_id (NULL, 0, typearr[1], typearr);
-	eif_rt_xfree (typearr);
 	return result;
 }
 /*------------------------------------------------------------------*/
@@ -1057,6 +1054,12 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 		for (i = 1; i <= count; i++) {
 			dtype = a_cidarr [i];
 
+				/* Read annotation if any. */
+			while (RT_HAS_ANNOTATION_TYPE(dtype)) {
+				i++;
+				dtype = a_cidarr [i];
+			}
+
 			if (dtype <= MAX_DTYPE) {
 				a_cidarr [i] = dtype_map[dtype];
 			} else if (dtype == TUPLE_TYPE) {
@@ -1078,6 +1081,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 
 	return dftype;
 }
+
 /*------------------------------------------------------------------*/
 /* Conformance test. Does `source_type' conform to `target_type'?   */
 /* This only applies to instantiated type.                          */
@@ -1110,31 +1114,25 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 
 	stab = eif_conf_tab[stype];
 
-	if (stab == NULL)
-	{
+	if (stab == NULL) {
 		eif_compute_ctab (stype);
 		stab = eif_conf_tab[stype];
 	}
 
-	if (ttype < first_gen_id)
-	{
+	if (ttype < first_gen_id) {
 		/* Lower id */
 
-		if ((ttype >= stab->min_low_id) && (ttype <= stab->max_low_id))
-		{
+		if ((ttype >= stab->min_low_id) && (ttype <= stab->max_low_id)) {
 			idx = ttype-stab->min_low_id;
 			mask = (unsigned char) (1 << (idx % 8));
 
 			return (mask == ((stab->low_tab)[idx/8] & mask)) ? 1 : 0;
 		}
-	}
-	else
-	{
+	} else {
 		/* High id */
 
-		if ((ttype < stab->min_high_id) || (ttype > stab->max_high_id))
-		{
-			/* We need to enlarge the table */
+		if ((ttype < stab->min_high_id) || (ttype > stab->max_high_id)) {
+				/* We need to enlarge the table */
 			eif_enlarge_conf_tab (stab, ttype);
 		}
 
@@ -1159,21 +1157,26 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 
 		sgdp = eif_derivations [stype];
 		tgdp = eif_derivations [ttype];
+		result = 0;
 
-		if (stype >= first_gen_id)
-		{
-			/* Both ids generated here */
-		
-			if (sgdp->first_id == tgdp->first_id)
-			{
+		if
+			(RT_IS_ATTACHED_TYPE(tgdp->annotation) &&
+			(!RT_IS_ATTACHED_TYPE(sgdp->annotation) && !(sgdp->is_expanded))
+		) {
+				/* If target is attached but source is not, we can clearly dismiss this. */
+			goto done;
+		}
+
+		if (stype >= first_gen_id) {
+				/* Both ids generated here */
+			if (sgdp->first_id == tgdp->first_id) {
 				/* Both have the same base class */
 
 				/* Check BIT types. BIT n conforms to BIT m
 				   iff n <= m. 
 				*/
 
-				if (sgdp->is_bit)
-				{
+				if (sgdp->is_bit) {
 					result = ((sgdp->size <= tgdp->size) ? 1 : 0);
 					goto done;
 				}
@@ -1182,25 +1185,20 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 				   differs, both are TUPLEs.
 				*/
 
-				if (tgdp->size > sgdp->size)
-				{
+				if (tgdp->size > sgdp->size) {
 					/* Source and target are TUPLES but
 					   source has fewer parameters */
-					result = 0;
 					goto done;
 				}
 
-				for (i = 0; i < tgdp->size; ++i)
-				{
+				for (i = 0; i < tgdp->size; ++i) {
 					stype = (sgdp->typearr) [i];
 					ttype = (tgdp->typearr) [i];
 
 					if (stype == ttype)
 						continue; /* Same types - avoid recursion */
 
-					if (!eif_gen_conf (stype, ttype))
-					{
-						result = 0;
+					if (!eif_gen_conf (stype, ttype)) {
 						goto done;
 					}
 				}
@@ -1247,38 +1245,64 @@ done:
 /* outtab     : List of computed ids for generics.                  */
 /* obj_type   : Full type of object; Used to replace a              */
 /*              formal generic by an actual generic of the object.  */
+/* annotation : Annotation of type if any (see ANNOTATION_TYPE_MASK)*/
 /*------------------------------------------------------------------*/
 
 rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **outtab, EIF_TYPE_INDEX obj_type)
 {
 	EIF_TYPE_INDEX   dftype, gcount = 0, i, hcode;
-	EIF_TYPE_INDEX   *save_otab;
-	int     pos, mcmp;
+	EIF_TYPE_INDEX   *save_otab, type_annotation;
+	int     pos, mcmp, require_detachable = 0;
 	char    is_expanded, is_tuple;
 	EIF_GEN_DER *gdp, *prev;
 
-	/* Get full type */
-
+		/* Get full type */
 	dftype = **intab;
 
+	CHECK("Not terminator", dftype != TERMINATOR);
+
+		/* Read possible annotations. */
+	if (RT_HAS_ANNOTATION_TYPE(dftype)) {
+		if (RT_IS_DETACHABLE_TYPE(dftype)) {
+				/* We compute the type normally, but then we make sure the type is detachable at the end. */
+			require_detachable = 1;
+			type_annotation = 0;
+		} else {
+			type_annotation = dftype;
+		}
+		while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+			(*intab)++;
+			dftype = **intab;
+		}
+	} else {
+		type_annotation = 0;
+	}
+
 	if (dftype <= MAX_DTYPE) {
-		is_expanded = (char) EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]));
+		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]))) {
+			is_expanded = '1';
+			type_annotation = 0;
+		} else {
+			is_expanded = (char) 0;
+		}
 	} else {
 		is_expanded = (char) 0;
 	}
 
-	/* Check whether it's a TUPLE Type */
-
+		/* Check whether it's a TUPLE Type */
 	if (dftype == TUPLE_TYPE) {
 		(*intab)++;
 		gcount = **intab;       /* Number of generic params */
 		(*intab)++;
 		dftype = **intab;       /* Base id for TUPLE */
 
-		if (dftype <= MAX_DTYPE) {
-			is_expanded = (char) EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]));
+			/* Can we really have a TUPLE that is expanded? I guess so for now. */
+		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]))) {
+			is_expanded = '1';
+			type_annotation = 0;
+		} else {
+			is_expanded = (char) 0;
 		}
-
 		is_tuple = '1';
 	} else {
 		is_tuple = (char) 0;
@@ -1293,6 +1317,11 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 		dftype = gdp->typearr [pos-1];
 
 		(*intab)++;
+		if (RT_IS_ATTACHED_TYPE(type_annotation)) {
+			dftype = eif_attached_type (dftype);
+		} else if (require_detachable) {
+			dftype = eif_non_attached_type (dftype);
+		}
 		**outtab = dftype;
 		(*outtab)++;
 
@@ -1311,6 +1340,11 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 	if (dftype >= first_gen_id) {
 		/* It's an already created gen. type */
 		(*intab)++;
+		if (RT_IS_ATTACHED_TYPE(type_annotation)) {
+			dftype = eif_attached_type (dftype);
+		} else if (require_detachable) {
+			dftype = eif_non_attached_type (dftype);
+		}
 		**outtab = dftype;
 		(*outtab)++;
 		return dftype;
@@ -1321,10 +1355,11 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 	if (!is_tuple)
 		gcount = par_info(dftype)->nb_generics;
 
-	if (!is_tuple && (gcount == 0)) {
-		/* Neither a generic type nor a TUPLE type */
+	if (!is_tuple && (gcount == 0) && !type_annotation) {
+		/* Neither a generic type nor a TUPLE type without annotation.*/
 		(*intab)++;
 
+		dftype = (require_detachable ? eif_non_attached_type (dftype) : dftype);
 		**outtab = dftype;
 		(*outtab)++;
 
@@ -1338,23 +1373,20 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 		hcode = hcode + eif_id_of (intab, outtab, obj_type);
 	}
 
-	/* Search */
-
+		/* Search all the generic derivations associated to the base class `dftype' */
 	gdp  = eif_derivations [dftype];
 	prev = NULL;
 
 	while (gdp != NULL) {
-		if ((hcode == gdp->hcode) && 
-			(is_expanded == gdp->is_expanded) &&
-			(gcount == gdp->size))
+		if (
+			(hcode == gdp->hcode) && (is_expanded == gdp->is_expanded) &&
+			(gcount == gdp->size) && (type_annotation == gdp->annotation))
 		{
 			mcmp = 0;
-
-			if (gcount > 0)
+			if (gcount > 0) {
 				mcmp = memcmp((char*)save_otab, (char*)(gdp->typearr),gcount*sizeof(EIF_TYPE_INDEX));
-
-			if (mcmp == 0)
-			{
+			}
+			if (mcmp == 0) {
 				break; /* Found */
 			}
 		}
@@ -1363,24 +1395,43 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 	}
 
 	if (gdp == (EIF_GEN_DER *)0) {
-		/* Not found: we need a new id */
-
-		gdp = eif_new_gen_der(gcount, save_otab, dftype, is_expanded, is_tuple, hcode);
-
-		if (prev == (EIF_GEN_DER *)0)
-			eif_derivations [dftype] = gdp;
-		else
+			/* Not found: we need a new id */
+		if ((gcount == 0) && (!is_tuple)) {
+				/* This is a non-generic type which is used with some annotation.
+				   First we generate the ID without annotation and then compute the
+				   type with the annotation. */
+			CHECK ("has annotation", type_annotation);
+			CHECK ("is not tuple", is_tuple == (char) 0);
+			if (prev == NULL) {
+				prev = eif_new_gen_der (0, NULL, dftype, is_expanded, (char) 0, 0, 0);
+				eif_derivations[dftype] = prev;
+				if (is_expanded) {
+					gdp = prev;
+				}
+			}
+			if (!gdp) {
+				gdp = eif_new_gen_der(gcount, save_otab, dftype, is_expanded, (char) 0, hcode, type_annotation);
+			}
+		} else {
+			gdp = eif_new_gen_der(gcount, save_otab, dftype, is_expanded, is_tuple, hcode, type_annotation);
+			if (prev == NULL) {
+				eif_derivations [dftype] = gdp;
+			}
+		}
+		if (prev) {
 			prev->next = gdp;
-
+		}
 		eif_derivations[gdp->id] = gdp; /* Self-reference */
 	}
 
 	/* Put full id */
 	*outtab = save_otab;
-	**outtab = gdp->id;
+	dftype = gdp->id;
+	dftype = (require_detachable ? eif_non_attached_type (dftype) : dftype);
+	**outtab = dftype;
 	(*outtab)++;
 
-	return gdp->id;
+	return dftype;
 }
 /*------------------------------------------------------------------*/
 /* Create a new generic derivation. Actually we create one for every*/
@@ -1396,7 +1447,7 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 /* hcode    : Hash code for faster search                           */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EIF_TYPE_INDEX base_id, char is_exp, char is_tuple, EIF_TYPE_INDEX hcode)
+rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EIF_TYPE_INDEX base_id, char is_exp, char is_tuple, EIF_TYPE_INDEX hcode, EIF_TYPE_INDEX annotation)
 {
 	EIF_GEN_DER *result;
 	EIF_TYPE_INDEX *tp, dt;
@@ -1419,6 +1470,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 		result->id          = ((size > 0) ? next_gen_id++ : base_id);
 		result->base_id     = base_id;
 		result->first_id    = INVALID_DTYPE;
+		result->annotation  = annotation;
 		result->is_expanded = is_exp;
 		result->is_bit      = ((size > 0) ? '1' : (char) 0);
 		result->is_tuple    = is_tuple;
@@ -1453,6 +1505,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 	result->id          = next_gen_id++;
 	result->base_id     = base_id;
 	result->first_id    = INVALID_DTYPE;
+	result->annotation  = annotation;
 	result->is_expanded = is_exp;
 	result->is_bit      = (char) 0;
 	result->is_tuple    = is_tuple;
@@ -1475,7 +1528,7 @@ finish_simple:
 	   which has the same class name as `base_id'.
 	*/
 
-	cname = System((par_info(base_id))->dtype).cn_generator;
+	cname = System ((par_info(base_id))->dtype).cn_generator;
 
 	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt) {
 		if (*pt == (struct eif_par_types *)0)
@@ -1521,26 +1574,42 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 		if (!tab)
 			enomem ();
 		result->low_comp = tab;
+#ifdef EIF_ASSERTIONS
+		result->low_tab_end = result->low_tab + size;
+		result->low_comp_end = result->low_comp + size;
+#endif
 	} else {
 		result->low_tab = NULL;
 		result->low_comp = NULL;
+#ifdef EIF_ASSERTIONS
+		result->low_tab_end = NULL;
+		result->low_comp_end = NULL;
+#endif
 	}
 
 
 	if (min_high <= max_high) {
 		size = (max_high - min_high + 8)/8;
-
 		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
 		if (!tab)
 			enomem ();
 		result->high_tab = tab;
+
 		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
 		if (!tab)
 			enomem ();
 		result->high_comp = tab;
+#ifdef EIF_ASSERTIONS
+		result->high_tab_end = result->high_tab + size;
+		result->high_comp_end = result->high_comp + size;
+#endif
 	} else {
 		result->high_tab = NULL;
 		result->high_comp = NULL;
+#ifdef EIF_ASSERTIONS
+		result->high_tab_end = NULL;
+		result->high_comp_end = NULL;
+#endif
 	}
 	
 	return result;
@@ -1628,13 +1697,21 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 	if (is_low) {
 		table->min_low_id = min_new;
 		table->max_low_id = max_new;
-		table->low_tab  = tab;
+		table->low_tab = tab;
 		table->low_comp = comp;
+#ifdef EIF_ASSERTIONS
+		table->low_tab_end = tab + size;
+		table->low_comp_end = comp + size;
+#endif
 	} else {
 		table->min_high_id = min_new;
 		table->max_high_id = max_new;
-		table->high_tab  = tab;
+		table->high_tab = tab;
 		table->high_comp = comp;
+#ifdef EIF_ASSERTIONS
+		table->high_tab_end = tab + size;
+		table->high_comp_end = comp + size;
+#endif
 	}
 }
 
@@ -1688,81 +1765,52 @@ rt_private void eif_expand_tables(int new_size)
 /* Full type name for type `dftype' as C string.                    */
 /*                                                                  */
 /* dftype : full type id                                            */
-/* Attention! This routine is not threaded safe (because of the    */
-/* static buffer "result"). It must be protected by a lock.         */
-/* ATTENTION: kill the previous 'attention' comment.                */
 /*------------------------------------------------------------------*/
 
 rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 {
-	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;
-	size_t len;
 	char    *result;
 			
-	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
+	REQUIRE("Valid type", dftype < next_gen_id);
 
 	if (dftype < first_gen_id) {
 		RT_GET_CONTEXT
-		char *l_name;
-
-		l_name = non_generic_type_names [dftype];
-		if (l_name == NULL) {
+		result = non_generic_type_names [dftype];
+		if (result == NULL) {
 			char *l_class_name = System(par_info(dftype)->dtype).cn_generator;
 
 			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
-				l_name = cmalloc (10 + strlen (l_class_name));
-				l_name [0] = '\0';
-				strcat (l_name, "expanded ");
+				result = cmalloc (10 + strlen (l_class_name));
+				result [0] = '\0';
+				strcat (result, "expanded ");
 			} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dftype))) {
-				l_name = cmalloc (11 + strlen (l_class_name));
-				l_name [0] = '\0';
-				strcat (l_name, "reference ");
+				result = cmalloc (11 + strlen (l_class_name));
+				result [0] = '\0';
+				strcat (result, "reference ");
 			} else {
-				l_name = cmalloc (strlen (l_class_name) + 1);
-				l_name [0] = '\0';
+				result = cmalloc (strlen (l_class_name) + 1);
+				result [0] = '\0';
 			}
-			strcat (l_name, l_class_name);
-			non_generic_type_names[dftype] = l_name;
+			strcat (result, l_class_name);
+			non_generic_type_names[dftype] = result;
 		}
-		return l_name;
-	}
-
-	gdp = eif_derivations [dftype];
-
-	if (gdp->name != NULL)    /* Already computed */
-	{
-		return gdp->name;	/* Allocated dynamically! */
-	}
-
-	len = eif_typename_len (dftype);
-
-	/* Create dynamic buffer for string */
-
-	result = cmalloc (len + 1);
-
-	if (result == NULL)
-		enomem();
-
-	*result = '\0';
-
-	eif_create_typename (dftype, result);
-
-	/* It may happen that gdp->name is now not NULL (BIT types).
-	   In this case we have to free 'result' and use
-	   gdp->name instead. */
-
-	if (gdp->name != NULL)
-	{
-		eif_rt_xfree (result);
-		result = gdp->name;
-	}
-	else
-	{
-		/* Remember the string in gdp->name. Otherwise
-		   we get a memory leak. */
-
-		gdp->name = result;
+	} else {
+		gdp = eif_derivations [dftype];
+		if (gdp->name != NULL) {    /* Already computed */
+			result = gdp->name;	/* Allocated dynamically! */
+		} else {
+				/* Create dynamic buffer for string */
+			result = cmalloc (eif_typename_len (dftype, 0) + 1);
+			if (result == NULL) {
+				enomem(); 
+			} else {
+				*result = '\0';
+				eif_create_typename (dftype, result, 0);
+				CHECK ("Not computed", !(gdp->name))
+				gdp->name = result;
+			}
+		}
 	}
 
 	return result;
@@ -1773,109 +1821,86 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
+rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int level)
 {
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX       *gp, dtype, i;
+	size_t n;
 	int         size;
-	char        *bits;
 	int	needs_expanded = 0, needs_reference = 0;
 
 	if (dftype > MAX_DTYPE) {
 		CHECK("NONE type", dftype == NONE_TYPE);
 		strcat(result, "NONE");
-		return;
-	}
+	} else {
+		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
+		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-	needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
-	needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
+		if (dftype < first_gen_id) {
+			if (needs_expanded) {
+				strcat (result, "expanded ");
+			} else if (needs_reference) {
+				strcat (result, "reference ");
+			}
+				/* Compiler generated id */
+			strcat (result, System(par_info(dftype)->dtype).cn_generator);
+		} else {
+				/* We have created this id */
+			gdp = eif_derivations [dftype];
+			if (gdp->name != NULL) {    /* Already computed */
+				strcat (result, gdp->name);
+			} else {
+				if (level > 0) {
+/*					if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
+						strcat (result, "variant ");
+					} */
+					if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
+						strcat (result, "!");
+					}
+				}
+				if (gdp->is_bit) {
+					size = gdp->size;
+					strcat (result, "BIT ");
+					n = strlen(result);
+					while (size) {
+						size /= 10;
+						++n;
+					}
 
-	if (dftype < first_gen_id) {
-		if (needs_expanded) {
-			strcat (result, "expanded ");
-		} else if (needs_reference) {
-			strcat (result, "reference ");
+					size = gdp->size;
+					result [n] = '\0';
+					for (--n; size; --n) {
+						result [n] = (char) (size % 10) + '0';
+						size /= 10;
+					}
+				} else {
+						/* Generic case */
+					i = (EIF_TYPE_INDEX) gdp->size;
+
+					if (needs_expanded) {
+						strcat (result, "expanded ");
+					} else if (needs_reference) {
+						strcat (result, "reference ");
+					}
+
+					strcat (result, System(par_info(gdp->base_id)->dtype).cn_generator);
+
+					if (i > 0) {
+						strcat (result, " [");
+						gp = gdp->typearr;
+						while (i--) {
+							dtype = *gp;
+							eif_create_typename (dtype, result, level + 1);
+							++gp;
+							if (i) {
+								strcat (result, ", ");
+							}
+						}
+						strcat(result, "]");
+					}
+				}
+			}
 		}
-		/* Compiler generated id */
-		strcat (result, System(par_info(dftype)->dtype).cn_generator);
-		return;
-	}
-
-	/* We have created this id */
-
-	gdp = eif_derivations [dftype];
-
-	if (gdp->name != NULL)    /* Already computed */
-	{
-		strcat (result, gdp->name);
-		return;
-	}
-
-	if (gdp->is_bit)
-	{
-		size = gdp->size;
-		i = 4;
-
-		while (size)
-		{
-			size /= 10;
-			++i;
-		}
-
-		bits = cmalloc (i+1);
-
-		if (bits == NULL)
-			enomem ();
-
-		strcpy (bits, "BIT ");
-
-		size = gdp->size;
-		bits [i] = '\0';
-
-		for (--i; size; --i)
-		{
-			bits [i] = (char) (size % 10) + '0';
-			size /= 10;
-		}
-
-		strcat (result, bits);
-
-		gdp->name = bits;
-				/* `name' must be allocated dynamically. */
-
-		return;
-	}
-	
-	/* Generic case */
-
-	i = (EIF_TYPE_INDEX) gdp->size;
-
-	if (needs_expanded) {
-		strcat (result, "expanded ");
-	} else if (needs_reference) {
-		strcat (result, "reference ");
-	}
-
-	strcat (result, System(par_info(gdp->base_id)->dtype).cn_generator);
-
-	if (i > 0)
-	{
-		strcat (result, " [");
-
-		gp = gdp->typearr;
-
-		while (i--)
-		{
-			dtype = *gp;
-
-			eif_create_typename (dtype, result);
-			++gp;
-
-			if (i)
-				strcat (result, ", ");
-		}
-
-		strcat(result, "]");
 	}
 }
 /*------------------------------------------------------------------*/
@@ -1884,78 +1909,74 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_shared size_t eif_typename_len (EIF_TYPE_INDEX dftype)
+rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level)
 {
 	EIF_GEN_DER *gdp;
-	EIF_TYPE_INDEX *gp, dtype;
+	EIF_TYPE_INDEX *gp, l_dftype;
 	uint32 i;
 	size_t len = 0;
-	int         size;
-	int	needs_expanded = 0, needs_reference = 0;
+	int	size, needs_expanded, needs_reference;
 
 	if (dftype > MAX_DTYPE) {
 		CHECK ("NONE type", dftype == NONE_TYPE);
-		return 4;
-	}
-
-	needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
-	needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
-
-	if (dftype < first_gen_id) {
-		if (needs_expanded) {
-			len = 9;
-		} else if (needs_reference) {
-			len = 10;
-		}
-		/* Compiler generated id */
-		return len + strlen (System(par_info(dftype)->dtype).cn_generator);
-	}
-
-	/* We have created this id */
-
-	gdp = eif_derivations [dftype];
-
-	if (gdp->name != NULL)    /* Already computed */
-	{
-		return strlen (gdp->name);
-	}
-
-	if (gdp->is_bit)
-	{
-		size = gdp->size;
 		len += 4;
+	} else {
+		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
+		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-		while (size)
-		{
-			size /= 10;
-			++len;
+		if (dftype < first_gen_id) {
+			if (needs_expanded) {
+				len += 9; /* for expanded followed by space */
+			} else if (needs_reference) {
+				len += 10; /* for reference followed by space */
+			}
+				/* Compiler generated id */
+			len += strlen (System(par_info(dftype)->dtype).cn_generator);
+		} else {
+				/* We have created this id */
+			gdp = eif_derivations [dftype];
+			if (gdp->name != NULL) {    /* Already computed */
+				len += strlen (gdp->name);
+			} else {
+				if (level > 0) {
+/*					if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
+						len += 7 + 1; *//* for variant followed by a space */
+/*					} */
+					if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
+						len += 1;	/* for ! */
+					}
+				}
+				if (gdp->is_bit) {
+					size = gdp->size;
+					len += 4; /* for BIT followed by a space */
+					while (size) {
+						size /= 10;
+						len++;
+					}
+				} else {
+						/* Generic case */
+					i = gdp->size;
+					len += strlen (System(par_info(gdp->base_id)->dtype).cn_generator);
+
+					if (needs_expanded) {
+						len += 9; /* for expanded followed by space */
+					} else if (needs_reference) {
+						len += 10; /* for reference followed by space */
+					}
+
+					if (i > 0) {
+							/* Numbers of `[', `]' and `, ' needed in the type specification. */
+						len += 3 + (i-1)*2;
+						gp = gdp->typearr;
+						while (i--) {
+							l_dftype = *gp;
+							len += eif_typename_len (l_dftype, level + 1);
+							++gp;
+						}
+					}
+				}
+			}
 		}
-		return len;   /* "BIT n" */
-	}
-
-	/* Generic case */
-
-	i = gdp->size;
-
-	len += (uint32) strlen (System(par_info(gdp->base_id)->dtype).cn_generator);
-
-	if (needs_expanded) {
-		len += 9;
-	} else if (needs_reference) {
-		len += 10;
-	}
-
-	if (i == 0)         /* TUPLE without generics */
-		return len;
-
-	len += 3 + (i-1)*2;
-
-	gp = gdp->typearr;
-
-	while (i--) {
-		dtype = *gp;
-		len += eif_typename_len (dtype);
-		++gp;
 	}
 
 	return len;
@@ -1972,40 +1993,48 @@ rt_private uint16 eif_gen_seq_len (EIF_TYPE_INDEX dftype)
 	uint32 i;
 	uint16 len;
 
+	REQUIRE ("dftype is not an annotation", !RT_HAS_ANNOTATION_TYPE(dftype));
 	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
 	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
 	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
 
 		/* Simple id */
 	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
-		return 1;
+		len = 1;
+	} else {
+			/* It's a generic type or a BIT type */
+		gdp = eif_derivations[dftype];
+
+			/* If there is an annotation, then we should increase by one. */
+		if (gdp->annotation) {
+			len = 1;
+		} else {
+			len = 0;
+		}
+
+			/* Is it a BIT type? */
+		if (gdp->is_bit) {
+			len += 2;
+		} else {
+				/* Is it a TUPLE? */
+			if (gdp->is_tuple) {
+					/* Size is TUPLE_OFFSET because we need to take into account
+					 * TUPLE_TYPE constant, number of generic parameters
+					 * in seqence for tuple type */
+				len += TUPLE_OFFSET;
+			}
+
+			i = gdp->size;
+				/* Add 1 for the base ID. */
+			len = len + 1; 
+			while (i) {
+				i--;
+				len = len + eif_gen_seq_len (gdp->typearr [i]);
+			}
+		}
 	}
 
-		/* It's a generic type or a BIT type */
-	gdp = eif_derivations[dftype];
-
-		/* Is it a BIT type? */
-	if (gdp->is_bit) {
-		return 2;
-	}
-
-	len = 0;
-
-		/* Is it a TUPLE? */
-	if (gdp->is_tuple) {
-			/* Size is TUPLE_OFFSET because we need to take into account
-			 * TUPLE_TYPE constant, number of generic parameters
-			 * in seqence for tuple type */
-		len += TUPLE_OFFSET;
-	}
-
-	i = gdp->size;
-	while (i) {
-		i--;
-		len = len + eif_gen_seq_len (gdp->typearr [i]);
-	}
-
-	return len + 1; /* Base id plus generics */
+	return len;
 }
 /*------------------------------------------------------------------*/
 /* Produce generating id sequence for `dftype' in `typearr'.        */
@@ -2020,6 +2049,7 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *typearr,
 	EIF_GEN_DER *gdp;
 	uint32 i, len;
 
+	REQUIRE ("dftype is not an annotation", !RT_HAS_ANNOTATION_TYPE(dftype));
 	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
 	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
 	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
@@ -2027,46 +2057,161 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *typearr,
 	/* Simple id */
 
 	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
-		if (dftype > MAX_DTYPE) {
-			typearr [*idx] = dftype;
-		} else {
-			typearr [*idx] = dftype;
+		typearr [*idx] = dftype;
+		(*idx)++;
+	} else {
+
+			/* It's a generic type or a BIT type */
+		gdp = eif_derivations[dftype];
+
+		if (gdp->annotation) {
+			typearr [*idx] = gdp->annotation;
+			(*idx)++;
 		}
-		(*idx)++;
-		return;
-	}
 
-		/* It's a generic type or a BIT type */
-	gdp = eif_derivations[dftype];
+			/* Is it a BIT type? */
+		if (gdp->is_bit) {
+			typearr [*idx] = egc_bit_dtype;    /* Bit type */
+			(*idx)++;
+			CHECK("Valid number of bits", rt_valid_type_index(gdp->size));
+			typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size); /* Nr of bits */
+			(*idx)++;
+		} else {
+				/* Is it a TUPLE type? */
+			if (gdp->is_tuple) {
+				typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
+				(*idx)++;
+				CHECK("Valid number of generics", rt_valid_type_index(gdp->size));
+				typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size);   /* Nr of generics */
+				(*idx)++;
+			}
 
-		/* Is it a BIT type? */
-	if (gdp->is_bit) {
-		typearr [*idx] = egc_bit_dtype;    /* Bit type */
-		(*idx)++;
-		CHECK("Valid number of bits", rt_valid_type_index(gdp->size));
-		typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size); /* Nr of bits */
-		(*idx)++;
-		return;
-	}
+			typearr [*idx] = gdp->base_id;
+			(*idx)++;
 
-		/* Is it a TUPLE type? */
-	if (gdp->is_tuple) {
-		typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
-		(*idx)++;
-		CHECK("Valid number of generics", rt_valid_type_index(gdp->size));
-		typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size);   /* Nr of generics */
-		(*idx)++;
-	}
+			len = gdp->size;
 
-	typearr [*idx] = gdp->base_id;
-	(*idx)++;
-
-	len = gdp->size;
-
-	for (i = 0; i < len; ++i) {
-		eif_put_gen_seq (gdp->typearr [i], typearr, idx);
+			for (i = 0; i < len; ++i) {
+				eif_put_gen_seq (gdp->typearr [i], typearr, idx);
+			}
+		}
 	}
 }
+
+/*------------------------------------------------------------------*/
+/* Compute if `dftype' is attached or not.                          */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_BOOLEAN eif_is_attached_type (EIF_TYPE_INDEX dftype)
+{
+	EIF_GEN_DER *gdp = eif_derivations [dftype];
+
+	return EIF_TEST(gdp && RT_IS_ATTACHED_TYPE(gdp->annotation)); 
+}
+
+/*------------------------------------------------------------------*/
+/* Compute the associated detachable type of `dftype' if any,       */
+/* otherwise `dftype'.                                              */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype)
+{
+	EIF_GEN_DER *gdp;
+	EIF_TYPE_INDEX l_result;
+	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
+	uint32 nb, tuple_added_size;
+	gdp = eif_derivations [dftype];
+
+	if (gdp && (RT_IS_ATTACHED_TYPE(gdp->annotation))) {
+		nb = gdp->size;
+		if (nb) {
+			if (gdp->is_tuple) {
+				tuple_added_size = 2;
+			} else {
+				tuple_added_size = 0;
+			} 
+				/* Case of a generic class. */
+			outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + 2 + tuple_added_size));
+			if (!outtable) {
+				enomem();
+			}
+			intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + 2 + tuple_added_size));
+			if (!intable) {
+				eif_rt_xfree(outtable);
+				enomem();
+			}
+			saved_out = outtable;
+			saved_in = intable;
+			if (tuple_added_size) {
+				intable[0] = TUPLE_TYPE;
+				CHECK("valid cound", nb < 0xFFFF);
+				intable[1] = (EIF_TYPE_INDEX) nb;
+			}
+			intable[tuple_added_size] = To_dtype(dftype);
+			memcpy (intable + (tuple_added_size + 1), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
+			intable[nb + tuple_added_size + 1] = TERMINATOR;
+			l_result = eif_id_of (&intable, &outtable, dftype);
+
+			eif_rt_xfree(saved_out);
+			eif_rt_xfree(saved_in);
+		} else {
+				/* Case of a non-generic class, simply takes the Dtype. */
+			l_result = To_dtype(dftype);
+		}
+	} else {
+		l_result = dftype;
+	}
+	return l_result;
+}
+
+/*------------------------------------------------------------------*/
+/* Compute the associated attached type of `dftype' if any,         */
+/* otherwise `dftype'.                                              */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
+{
+	EIF_GEN_DER *gdp;
+	EIF_TYPE_INDEX l_result;
+	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
+	size_t l_size;
+	gdp = eif_derivations [dftype];
+
+	if (!gdp || (!RT_IS_ATTACHED_TYPE(gdp->annotation))) {
+		if (gdp) {
+			l_size = gdp->size;
+		} else {
+			l_size = 1;
+		}
+		outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (l_size + 3));
+		if (!outtable) {
+			enomem();
+		}
+		intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (l_size + 3));
+		if (!intable) {
+			eif_rt_xfree(outtable);
+			enomem();
+		}
+		saved_out = outtable;
+		saved_in = intable;
+		intable[0] = ATTACHED_TYPE;
+		intable[1] = To_dtype(dftype);
+		if (gdp) {
+			memcpy (intable + 2, gdp->typearr, sizeof(EIF_TYPE_INDEX) * l_size);
+		} else {
+			intable [2] = dftype;
+		}
+		intable[l_size + 2] = TERMINATOR;
+		l_result = eif_id_of (&intable, &outtable, dftype);
+
+		eif_rt_xfree(saved_out);
+		eif_rt_xfree(saved_in);
+	} else {
+		l_result = dftype;
+	}
+	return l_result;
+}
+
 /*------------------------------------------------------------------*/
 /* Compute conformance table for `dftype'                           */
 /*                                                                  */
@@ -2077,77 +2222,162 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 
 {
 	EIF_TYPE_INDEX outtab [256], *outtable, *intable;
-	EIF_TYPE_INDEX min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
+	EIF_TYPE_INDEX min_low, max_low, min_high, max_high, pftype, dtype, *ptypes, type_annotation;
 	int i, count, offset, pcount;
+	int repeat_parent_iteration, add_non_attached_parent;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
 	char is_expanded;
 	struct eif_par_types *pt;
 	EIF_CONF_TAB *ctab, *pctab;
 	EIF_GEN_DER *gdp;
 
-	/* Get parent table */
-
+		/* Get parent table */
 	dtype = To_dtype(dftype);
+	gdp = eif_derivations [dftype];
+		/* `gdp' might be NULL in the case of non-generic classes, thus we build a very simple entry. */
+	if (gdp == NULL) {
+		CHECK("same type", dftype == dtype);
+		if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
+			gdp = eif_new_gen_der (0, NULL, dtype, '1', (char) 0, 0, 0);
+		} else {
+			gdp = eif_new_gen_der (0, NULL, dtype, (char) 0, (char) 0, 0, 0);
+		}
+		eif_derivations [dftype] = gdp;
+	}
+
+	CHECK ("gdp not null", gdp);
 
 		/* Compiler generated id */
 	pt = par_info (dtype);
-
+	CHECK ("Parents never NULL", pt->parents);
 	is_expanded = pt->is_expanded;
 
-	/* Compute the ranges of the bit tables */
-
-	outtable = outtab;
+		/* Let's compute the number of parent types. */
+	pcount = 0;
 	intable = pt->parents;
+		/* Skip annotation entry. */
+	intable++;
+	pftype = *intable++;
+	while (pftype != TERMINATOR) {
+		while ((pftype != PARENT_TYPE_SEPARATOR) && (pftype != TERMINATOR)) {
+			pftype = *intable++;
+		}
+		if (pftype == PARENT_TYPE_SEPARATOR) {
+			pftype = *intable++;
+		}
+		pcount++;
+	}
 
-	CHECK ("Parents never NULL", intable);
+	if (gdp->annotation) {
+			/* We propagate the annotation to the parent, that is to say if class A inherit B, when
+			 * building the parents of !A, we actually want !B. */
+		type_annotation = gdp->annotation;
+		pcount++;
+		repeat_parent_iteration = 0;
+		add_non_attached_parent = 1;
+	} else if (gdp->is_expanded) {
+			/* An expanded type conforms to all the attached version of its parents
+			 * and the non-attached ones. */
+		type_annotation = ATTACHED_TYPE;
+		pcount *= 2; /* We double the number of parents for the non-attached ones. */
+		repeat_parent_iteration = 1;
+		add_non_attached_parent = 0;
+	} else {
+		type_annotation = 0;
+		repeat_parent_iteration = 0;
+		add_non_attached_parent = 0;
+	}
 
+				/* Compute the ranges of the bit tables */
 	min_low = next_gen_id;
 	max_low = 0;
 	min_high = next_gen_id;
 	max_high = 0;
 
-	/* Type conforms to itself */
-
-	if (dftype < first_gen_id)
-	{
+		/* Type conforms to itself */
+	if (dftype < first_gen_id) {
 		min_low = max_low = dftype;
-	}
-	else
-	{
+	} else {
 		min_high = max_high = dftype;
 	}
 
-	pcount = 1; /* Parent count + 1 */
+		/* Create table of parent types (+1 for TERMINATOR) */
+	ptypes = (EIF_TYPE_INDEX *) cmalloc (sizeof (EIF_TYPE_INDEX) * (pcount + 1));
+	if (ptypes == NULL)
+		enomem ();
 
-	while (*intable != TERMINATOR)
-	{
-		pftype = eif_id_of (&intable, &outtable, dftype);
-		if (*intable == PARENT_TYPE_SEPARATOR) {
+	gdp->ptypes = ptypes;
+	if (pcount) {
+		if (add_non_attached_parent) {
+				/* We are processing an attached type, which naturally conforms to its
+				 * detachable version. */
+			pftype = eif_non_attached_type (dftype);
+			CHECK ("Cannot be the same type", dftype != pftype);
+			*(ptypes++) = pftype;
+		}
+
+non_attached_parents:
+		intable = pt->parents;
+			/* If there is an annotation and if it is not ANY (ANY being
+			 * the only class for which the parent description is made of
+			 * {0, 0xFFFF}), we put the annotation for all parents. */
+		if (type_annotation && (intable[1] != TERMINATOR)) {
+			intable[0] = type_annotation;
+		} else {
+				/* annotation slot is useless, so skip it. */
 			intable++;
 		}
-		++pcount;
 
-		ctab = eif_conf_tab [pftype];
+		outtable = outtab;
+		while (*intable != TERMINATOR) {
+			pftype = eif_id_of (&intable, &outtable, dftype);
+			if (*intable == PARENT_TYPE_SEPARATOR) {
+				intable++;
+				if (type_annotation) {
+					*intable = type_annotation;
+				} else {
+						/* annotation slot is useless, so skip it. */
+					intable++;
+				}
+			}
 
-		if (ctab == NULL)
-		{
-			eif_compute_ctab (pftype);
-			ctab = eif_conf_tab [pftype];
+				/* Register parent type */
+			*(ptypes++) = pftype;
 		}
+		if (repeat_parent_iteration) {
+				/* We are processing an expanded type, and we need to conform to all the detachable
+				 * parents. */
+			repeat_parent_iteration = 0;
+			type_annotation = 0;
+			goto non_attached_parents;
+		}
+		*ptypes = TERMINATOR;
 
-		if (ctab->min_low_id < min_low)
-			min_low = ctab->min_low_id;
-		if (ctab->max_low_id > max_low)
-			max_low = ctab->max_low_id;
-		if (ctab->min_high_id < min_high)
-			min_high = ctab->min_high_id;
-		if (ctab->max_high_id > max_high)
-			max_high = ctab->max_high_id;
+		ptypes = gdp->ptypes;
+		while (*ptypes != TERMINATOR) {
+			pftype = *ptypes++;
+			ctab = eif_conf_tab [pftype];
+
+			if (ctab == NULL) {
+				eif_compute_ctab (pftype);
+				ctab = eif_conf_tab [pftype];
+			}
+
+			if (ctab->min_low_id < min_low)
+				min_low = ctab->min_low_id;
+			if (ctab->max_low_id > max_low)
+				max_low = ctab->max_low_id;
+			if (ctab->min_high_id < min_high)
+				min_high = ctab->min_high_id;
+			if (ctab->max_high_id > max_high)
+				max_high = ctab->max_high_id;
+		}
+	} else {
+		*ptypes = TERMINATOR;
 	}
 
-	/* Create a new table */
-	/* Make sure that the min values are == 0 mod 8 */
-
+		/* Create a new table */
+		/* Make sure that the min values are == 0 mod 8 */
 	min_low  -= (min_low % 8);
 	min_high -= (min_high % 8);
 
@@ -2155,119 +2385,95 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 
 	eif_conf_tab [dftype] = ctab;
 
-	/* Create table of parent types */
+		/* Fill bit tables */
+	if (pcount) {
+		ptypes = gdp->ptypes;
 
-	gdp = eif_derivations [dftype];
+		while (*ptypes != TERMINATOR) {
+			pftype = *ptypes++;
+			pctab = eif_conf_tab [pftype];
 
-	if (gdp == NULL)
-	{
-		gdp = eif_new_gen_der (0, NULL, dtype, (char) 0, (char) 0, 0);
+			if ((min_low <= max_low) && (pctab->min_low_id <= pctab->max_low_id)) {
+				count  = (pctab->max_low_id-pctab->min_low_id+8)/8;
+				offset = (pctab->min_low_id - min_low)/8;
+				src  = pctab->low_tab;
+				dest = ctab->low_tab + offset;
+				src_comp = pctab->low_comp;
+				dest_comp = ctab->low_comp + offset;
 
-		eif_derivations [dftype] = gdp;
-	}
+				for (i = count; i; --i) {
+					/* We conform to everything our parent
+					   conforms to */
 
-	ptypes = (EIF_TYPE_INDEX *) cmalloc (sizeof (EIF_TYPE_INDEX)*pcount);
-	if (ptypes == NULL)
-		enomem ();
+					*dest |= *src;
 
-	gdp->ptypes = ptypes;
-
-	/* Fill bit tables */
-
-	outtable = outtab;
-	intable = pt->parents;
-
-	CHECK ("Parents never NULL", intable);
-
-	while (*intable != TERMINATOR)
-	{
-		pftype = eif_id_of (&intable, &outtable, dftype);
-		if (*intable == PARENT_TYPE_SEPARATOR) {
-			intable++;
-		}
-		pctab = eif_conf_tab [pftype];
-
-		/* Register parent type */
-
-		*(ptypes++) = pftype;
-
-		if ((min_low <= max_low) && (pctab->min_low_id <= pctab->max_low_id))
-		{
-			count  = (pctab->max_low_id-pctab->min_low_id+8)/8;
-			offset = (pctab->min_low_id - min_low)/8;
-			src  = pctab->low_tab;
-			dest = ctab->low_tab + offset;
-			src_comp = pctab->low_comp;
-			dest_comp = ctab->low_comp + offset;
-
-			for (i = count; i; --i)
-			{
-				/* We conform to everything our parent
-				   conforms to */
-
-				*dest |= *src;
-
-				/* Consider only those bits as already
-				   computed for which conformance holds
-				   because we may conform to something
-				   to which the parent does not! */
-				   
-				*(dest_comp) |= ((*src) & (*src_comp));
-				++dest;
-				++src;
-				++src_comp;
-				++dest_comp;
+					/* Consider only those bits as already
+					   computed for which conformance holds
+					   because we may conform to something
+					   to which the parent does not! */
+					   
+					*(dest_comp) |= ((*src) & (*src_comp));
+					++dest;
+					++src;
+					++src_comp;
+					++dest_comp;
+				}
+				CHECK ("valid_src", src <= pctab->low_tab_end);
+				CHECK ("valid_src_comp", src_comp <= pctab->low_comp_end);
+				CHECK ("valid_dest", dest <= ctab->low_tab_end);
+				CHECK ("valid_dest_comp", dest_comp <= ctab->low_comp_end);
 			}
-		}
 
-		if ((min_high <= max_high) && (pctab->min_high_id <= pctab->max_high_id))
-		{
-			count  = (pctab->max_high_id-pctab->min_high_id+8)/8;
-			offset = (pctab->min_high_id - min_high)/8;
-			src  = pctab->high_tab;
-			dest = ctab->high_tab + offset;
-			src_comp = pctab->high_comp;
-			dest_comp = ctab->high_comp + offset;
+			if ((min_high <= max_high) && (pctab->min_high_id <= pctab->max_high_id)) {
+				count  = (pctab->max_high_id-pctab->min_high_id+8)/8;
+				offset = (pctab->min_high_id - min_high)/8;
+				src  = pctab->high_tab;
+				dest = ctab->high_tab + offset;
+				src_comp = pctab->high_comp;
+				dest_comp = ctab->high_comp + offset;
 
-			for (i = count; i; --i)
-			{
-				/* We conform to everything our parent
-				   conforms to */
-				*dest |= *src;
+				for (i = count; i; --i) {
+					/* We conform to everything our parent
+					   conforms to */
+					*dest |= *src;
 
-				/* Consider only those bits as already
-				   computed for which conformance holds
-				   because we may conform to something
-				   to which the parent does not! */
-				   
-				*(dest_comp) |= ((*src) & (*src_comp));
-				++dest;
-				++src;
-				++src_comp;
-				++dest_comp;
+					/* Consider only those bits as already
+					   computed for which conformance holds
+					   because we may conform to something
+					   to which the parent does not! */
+					   
+					*(dest_comp) |= ((*src) & (*src_comp));
+					++dest;
+					++src;
+					++src_comp;
+					++dest_comp;
+				}
+				CHECK ("valid_src", src <= pctab->high_tab_end);
+				CHECK ("valid_src_comp", src_comp <= pctab->high_comp_end);
+				CHECK ("valid_dest", dest <= ctab->high_tab_end);
+				CHECK ("valid_dest_comp", dest_comp <= ctab->high_comp_end);
 			}
 		}
 	}
-
-	*ptypes = TERMINATOR;
 
 	/* Put own type in table if it's not expanded */
 
 	if (is_expanded)
 		return;
 
-	if (dftype < first_gen_id)
-	{
+	if (dftype < first_gen_id) {
 		offset = (dftype - min_low);
 		mask   = (char) (1 << (offset % 8));
+		CHECK("valid low_tab index", (ctab->low_tab + (offset / 8)) < ctab->low_tab_end);
 		(ctab->low_tab)[offset/8] |= mask;
+		CHECK("valid low_comp index", (ctab->low_comp + (offset / 8)) < ctab->low_comp_end);
 		(ctab->low_comp)[offset/8] |= mask;
-	}
-	else
-	{
+	} else {
 		offset = (dftype - min_high);
 		mask   = (char) (1 << (offset % 8));
+		CHECK("valid high_tab index", (ctab->high_tab + (offset / 8)) < ctab->high_tab_end);
 		(ctab->high_tab)[offset/8] |= mask;
+		CHECK("valid high_comp index", (ctab->high_comp + (offset / 8)) < ctab->high_comp_end);
 		(ctab->high_comp)[offset/8] |= mask;
 	}
 }

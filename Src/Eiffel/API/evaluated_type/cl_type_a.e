@@ -889,7 +889,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			create Result.make (Current)
+			create Result.make (as_attachment_mark_free)
 		end
 
 feature -- Debugging

@@ -50,16 +50,29 @@ extern "C" {
 /* Also see INVALID_DTYPE in eif_gen_conf.h                         */
 /*------------------------------------------------------------------*/
 
-#define TERMINATOR			0xFFFF
-#define NONE_TYPE			0xFFFE
-#define LIKE_ARG_TYPE		0xFFFD
-#define LIKE_CURRENT_TYPE	0xFFFC
-#define LIKE_PFEATURE_TYPE	0xFFFB
-#define LIKE_FEATURE_TYPE	0xFFFA
-#define TUPLE_TYPE			0xFFF9
-#define FORMAL_TYPE			0xFFF8
+#define TERMINATOR				0xFFFF
+#define NONE_TYPE				0xFFFE
+#define LIKE_ARG_TYPE			0xFFFD
+#define LIKE_CURRENT_TYPE		0xFFFC
+#define LIKE_PFEATURE_TYPE		0xFFFB
+#define LIKE_FEATURE_TYPE		0xFFFA
+#define TUPLE_TYPE				0xFFF9
+#define FORMAL_TYPE				0xFFF8
 #define PARENT_TYPE_SEPARATOR	0xFFF7
-#define MAX_DTYPE			0xFF00
+
+/* Currently we only support up to 4 annotations which can be read at once. */
+#define ATTACHED_TYPE			0xFF11
+#define DETACHABLE_TYPE			0xFF12
+#define FROZEN_TYPE				0xFF14
+
+/* Maximum valid type value one can have. */
+#define MAX_DTYPE				0xFF00
+
+/* conveniences */
+#define RT_HAS_ANNOTATION_TYPE(g)	(((g) & 0xFFF0) == 0xFF10)
+#define RT_IS_ATTACHED_TYPE(g)		(((g) & ATTACHED_TYPE) == ATTACHED_TYPE)
+#define RT_IS_DETACHABLE_TYPE(g)	(((g) & DETACHABLE_TYPE) == DETACHABLE_TYPE)
+#define RT_IS_FROZEN_TYPE(g)		(((g) & FROZEN_TYPE) == FROZEN_TYPE)
 
 /* Offset that needs to be skipped when finding TUPLE_TYPE. It corresponds
  * to TUPLE_TYPE and nb generic parameters in current tuple type definition. */

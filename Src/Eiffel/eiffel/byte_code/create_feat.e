@@ -11,7 +11,8 @@ inherit
 	CREATE_INFO
 		redefine
 			created_in, generate_cid, make_type_byte_code,
-			generate_cid_array, generate_cid_init, is_explicit
+			generate_cid_array, generate_cid_init, is_explicit,
+			generate
 		end
 
 	SHARED_TABLE
@@ -72,6 +73,17 @@ feature -- Access
 			-- Routine ID of feature.
 
 feature -- C code generation
+
+	generate is
+			-- Generate creation type
+		local
+			buffer: GENERATION_BUFFER
+		do
+			buffer := context.buffer
+			buffer.put_string ("RTLNSMART(eif_non_attached_type(")
+			generate_type_id (buffer, context.final_mode, 0)
+			buffer.put_two_character (')', ')')
+		end
 
 	analyze is
 			-- We need Dftype(Current).

@@ -1000,6 +1000,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		case RECOVERABLE_STORE_5_3:
 		case INDEPENDENT_STORE_5_5:
 		case INDEPENDENT_STORE_6_0:
+		case INDEPENDENT_STORE_6_3:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = RECOVERABLE_STORE;
 			rt_kind_version = rt_type;
@@ -1067,6 +1068,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		case RECOVERABLE_STORE_5_3:
 		case INDEPENDENT_STORE_5_5:
 		case INDEPENDENT_STORE_6_0:
+		case INDEPENDENT_STORE_6_3:
 			independent_retrieve_reset ();
 			break;
 	}
@@ -2695,7 +2697,7 @@ static char *type2name (long type)
 		case SK_CHAR:    name = "CHARACTER";      break;
 		case SK_UINT8:   name = "NATURAL_8";      break;
 		case SK_UINT16:  name = "NATURAL_16";     break;
-		case SK_UINT:    name = "NATURAL_32";     break;
+		case SK_UINT32:  name = "NATURAL_32";     break;
 		case SK_UINT64:  name = "NATURAL_64";     break;
 		case SK_INT8:    name = "INTEGER_8";      break;
 		case SK_INT16:   name = "INTEGER_16";     break;
@@ -2715,10 +2717,18 @@ static char *type2name (long type)
 rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 {
 	static char buffer [512 + 9];
-	char *result;
 	EIF_TYPE_INDEX dftype = **type;
 
 	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
+
+	buffer[0] = (char) 0;
+
+		/* Skip all the annotations. */
+	while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+		*type += 1;
+		dftype = **type;
+		sprintf (buffer, "%x ", dftype);
+	}
 
 	if (dftype == TUPLE_TYPE) {
 		*type += TUPLE_OFFSET;
@@ -2726,42 +2736,56 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 	}
 
 	if (dftype <= MAX_DTYPE) {
-		if (EIF_IS_EXPANDED_TYPE(System (dftype).flags)) {
-			result = System (dftype).cn_generator;
+		if (EIF_IS_EXPANDED_TYPE(System (dftype))) {
+			sprintf (buffer, "%s", System (dftype).cn_generator);
 		} else {
 			sprintf (buffer, "expanded %s", System (dftype).cn_generator);
-			result = buffer;
 		}
-	} else if (dftype <= FORMAL_TYPE) {
-		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
-		result = buffer;
+	} else if (dftype == FORMAL_TYPE) {
+		*type += 1;
+		dftype = **type;
+		sprintf (buffer, "G#%d", dftype);
+	} else {
+		CHECK ("Not an anchor", (dftype != LIKE_CURRENT_TYPE) && (dftype != LIKE_PFEATURE_TYPE) &&
+			(dftype != LIKE_FEATURE_TYPE) && (dftype != LIKE_ARG_TYPE));
 	}
-	return result;
+	return buffer;
 }
 
 rt_private char *name_of_old_attribute_type (EIF_TYPE_INDEX **type)
 {
 	EIF_TYPE_INDEX dftype = **type;
 	static char buffer [512 + 9];
-	char *result;
 
 	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
+
+	buffer[0] = (char) 0;
+
+		/* Skip all the annotations. */
+	while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+		*type += 1;
+		dftype = **type;
+		sprintf (buffer, "%x ", dftype);
+	}
 
 	if (dftype <= MAX_DTYPE) {
 		if (type_conversions->type_index[dftype] == TYPE_UNDEFINED) {
 			sprintf (buffer, "NOT_YET_KNOWN (%d)", dftype);
-			result = buffer;
+		} else {
+			sprintf (buffer, "%s", type_description (dftype)->name);
 		}
-		else
-			result = type_description (dftype)->name;
 	} else if (dftype == TUPLE_TYPE) {
 		(*type) += TUPLE_OFFSET;
-		result = "TUPLE";
-	} else if (dftype <= FORMAL_TYPE) {
-		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
-		result = buffer;
+		sprintf (buffer, "TUPLE");
+	} else if (dftype == FORMAL_TYPE) {
+		*type += 1;
+		dftype = **type;
+		sprintf (buffer, "G#%d", dftype);
+	} else {
+		CHECK ("Not an anchor", (dftype != LIKE_CURRENT_TYPE) && (dftype != LIKE_PFEATURE_TYPE) &&
+			(dftype != LIKE_FEATURE_TYPE) && (dftype != LIKE_ARG_TYPE));
 	}
-	return result;
+	return buffer;
 }
 
 rt_private void print_old_attribute_type (EIF_TYPE_INDEX *atypes)
@@ -2807,13 +2831,13 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 				result = buffer;
 			}
 			else
-				result = type_description (gtype & SK_DTYPE)->name;
+				result = type_description ((EIF_TYPE_INDEX) (gtype & SK_DTYPE))->name;
 			break;
 		case SK_BOOL:    result = "BOOLEAN";        break;
 		case SK_CHAR:    result = "CHARACTER";      break;
 		case SK_UINT8:   result = "NATURAL_8";      break;
 		case SK_UINT16:  result = "NATURAL_16";     break;
-		case SK_UINT:    result = "NATURAL_32";     break;
+		case SK_UINT32:  result = "NATURAL_32";     break;
 		case SK_UINT64:  result = "NATURAL_64";     break;
 		case SK_INT8:    result = "INTEGER_8";      break;
 		case SK_INT16:   result = "INTEGER_16";     break;
@@ -2853,7 +2877,7 @@ rt_shared void print_generic_names (struct cecil_info *info, int type)
 		if (info->dynamic_types[i] == type) {
 			found = 1;
 			printf ("[");
-			*patterns = info->patterns + i * info->nb_param;
+			patterns = info->patterns + i * info->nb_param;
 			for (j = 0; j < info->nb_param; ++j) {
 				printf ("%s%s", j > 0 ? ", " : "", generic_name (patterns[j], 0));
 			}
@@ -2985,34 +3009,41 @@ rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **
 	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
 		result = old_attribute_type_matched (gtype, atype);
 	} else {
-		if (dftype == TUPLE_TYPE) {
-			if (aftype == TUPLE_TYPE) {
-				(*gtype) += TUPLE_OFFSET;
-				(*atype) += TUPLE_OFFSET;
-				dftype = **gtype;
-				aftype = **atype;
-			} else {
-				result = 0;
-			}
+		while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+			result = (aftype == dftype);
+			*gtype +=1;
+			*atype +=1;
 		}
-
-		if (dftype == FORMAL_TYPE) {
-			if (aftype == FORMAL_TYPE) {
-				(*gtype)++;
-				(*atype)++;
-				result = (**gtype == **atype ? 1 : 0);
-			} else {
-				result = 0;
-			}
-		} else if (result) {
-			if (dftype <= MAX_DTYPE  &&  aftype <= MAX_DTYPE) {
-				if (type_defined (aftype)) {
-					result = (dftype == type_description (aftype)->new_type);
+		if (result) {
+			if (dftype == TUPLE_TYPE) {
+				if (aftype == TUPLE_TYPE) {
+					(*gtype) += TUPLE_OFFSET;
+					(*atype) += TUPLE_OFFSET;
+					dftype = **gtype;
+					aftype = **atype;
 				} else {
 					result = 0;
 				}
-			} else {
-				result = (dftype == aftype ? 1 : 0);
+			}
+
+			if (dftype == FORMAL_TYPE) {
+				if (aftype == FORMAL_TYPE) {
+					(*gtype)++;
+					(*atype)++;
+					result = (**gtype == **atype ? 1 : 0);
+				} else {
+					result = 0;
+				}
+			} else if (result) {
+				if (dftype <= MAX_DTYPE  &&  aftype <= MAX_DTYPE) {
+					if (type_defined (aftype)) {
+						result = (dftype == type_description (aftype)->new_type);
+					} else {
+						result = 0;
+					}
+				} else {
+					result = (dftype == aftype ? 1 : 0);
+				}
 			}
 		}
 	}
@@ -3275,7 +3306,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 
 #ifdef RECOVERABLE_DEBUG
 				printf ("Type %d {%s ", dtype, vis_name);
-				print_old_generic_names ((int32 *) gtypes, nb_gen);
+				print_old_generic_names (gtypes, nb_gen);
 				printf ("}\n");
 #endif
 				for (t = info->patterns; ; ) {

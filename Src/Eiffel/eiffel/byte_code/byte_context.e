@@ -1975,14 +1975,22 @@ feature -- Access
 			buf: like buffer
 			l_info: CREATE_INFO
 			l_optimized: BOOLEAN
+			l_if_required: BOOLEAN
 		do
 			if a_type.c_type.is_pointer and not a_type.is_none then
 				buf := buffer
-				buf.put_new_line
-				buf.put_four_character ('i', 'f', ' ', '(')
-				a_register.print_register
-				buf.put_three_character (')', ' ', '{')
-				buf.indent
+					-- If the type is not attached, we have an optimization to not compute the dynamic
+					-- type of the expected type. However when the expected type is a formal, or an anchor
+					-- then we cannot do this optimization as the type of the formal or the anchor depends on
+					-- the actual object's type.
+				if not a_type.is_attached and then not a_type.is_formal and then not {l_anchor: LIKE_TYPE_A} a_type then
+					l_if_required := True
+					buf.put_new_line
+					buf.put_four_character ('i', 'f', ' ', '(')
+					a_register.print_register
+					buf.put_three_character (')', ' ', '{')
+					buf.indent
+				end
 
 					-- Special handling of routines taking `like Current' in non-generic classes as long
 					-- as `a_like_current_optimization_ok' is enabled.
@@ -2008,17 +2016,47 @@ feature -- Access
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
 				if l_optimized then
-					byte_code.feature_origin (buf)
+					if {l_type_1: ATTACHABLE_TYPE_A} a_type then
+						if l_type_1.has_attached_mark then
+							buf.put_string ("eif_attached_type(")
+							byte_code.feature_origin (buf)
+							buf.put_character (')')
+						elseif l_type_1.has_detachable_mark then
+							buf.put_string ("eif_non_attached_type(")
+							byte_code.feature_origin (buf)
+							buf.put_character (')')
+						else
+							byte_code.feature_origin (buf)
+						end
+					else
+						byte_code.feature_origin (buf)
+					end
 					buf.put_two_character (')', ';')
 				else
-					l_info.generate_type_id (buf, final_mode, 0)
+					if {l_type_2: ATTACHABLE_TYPE_A} a_type then
+						if l_type_2.has_attached_mark then
+							buf.put_string ("eif_attached_type(")
+							l_info.generate_type_id (buf, final_mode, 0)
+							buf.put_character (')')
+						elseif l_type_2.has_detachable_mark then
+							buf.put_string ("eif_non_attached_type(")
+							l_info.generate_type_id (buf, final_mode, 0)
+							buf.put_character (')')
+						else
+							l_info.generate_type_id (buf, final_mode, 0)
+						end
+					else
+						l_info.generate_type_id (buf, final_mode, 0)
+					end
 					buf.put_two_character (')', ';')
 					l_info.generate_end (buf)
 				end
 
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
+				if l_if_required then
+					buf.exdent
+					buf.put_new_line
+					buf.put_character ('}')
+				end
 			end
 		end
 
@@ -2046,6 +2084,24 @@ feature -- Access
 				else
 					a_type.create_info.make_byte_code (ba)
 				end
+
+					-- We sometime need to convert a type to either it associated attached/non-attached
+					-- version. First boolean is to figure out if there is an action to be taken, the
+					-- second which action.
+				if {l_type_1: ATTACHABLE_TYPE_A} a_type then
+					if l_type_1.has_attached_mark then
+						ba.append_boolean (True)
+						ba.append_boolean (True)
+					elseif l_type_1.has_detachable_mark then
+						ba.append_boolean (True)
+						ba.append_boolean (False)
+					else
+						ba.append_boolean (False)
+					end
+				else
+					ba.append_boolean (False)
+				end
+
 				ba.append_type_id (class_type.static_type_id)
 				l_name := current_feature.feature_name
 				ba.append_integer (l_name.count)

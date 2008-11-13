@@ -230,7 +230,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 
 /* Getting constants */
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj, EIF_TYPE_INDEX dtype);			/* Get a compound type id */
-rt_private EIF_TYPE_INDEX get_creation_type(void);		/* Get a creation type id */
+rt_private EIF_TYPE_INDEX get_creation_type(int for_creation);		/* Get a creation type id */
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
@@ -251,7 +251,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* 
 rt_private void address(int32 aid);													/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
-rt_private void reverse_local(EIF_TYPED_VALUE * it, uint32 type);						/* Reverse assignment to local or result*/
+rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type);						/* Reverse assignment to local or result*/
 
 /* Calling protocol */
 rt_private void put_once_result (EIF_TYPED_VALUE * ptr, long int rtype, MTOT OResult); /* Save local result to permanent once storage */
@@ -934,18 +934,23 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_TYPE_INDEX l_expected_dftype;
 			EIF_TYPE_INDEX l_written_dtype;
-			EIF_REFERENCE l_obj;
 			int l_pos;
 
-			l_expected_dftype = get_creation_type();
+			l_expected_dftype = get_creation_type(0);
+				/* Possibly adapt type to match the actual argument signature since the
+				 * above `get_creation_type' has been generated and discard the attachment mark. */
+			if (*IC++) {
+				if (*IC++) {
+					l_expected_dftype = eif_attached_type (l_expected_dftype);
+				} else {
+					l_expected_dftype = eif_non_attached_type (l_expected_dftype);
+				}
+			}
 			l_written_dtype = get_int16(&IC);
 			string = get_string8(&IC, get_int32(&IC));
 			l_pos = get_int32(&IC);
 
-			l_obj = otop()->it_ref;
-			if (l_obj) {
-				RTCC(l_obj, l_written_dtype, (char *) string, l_pos, l_expected_dftype);
-			}
+			RTCC(otop()->it_ref, l_written_dtype, (char *) string, l_pos, l_expected_dftype);
 		}
 		break;
 
@@ -1577,7 +1582,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RREVERSE\n");
 #endif
-		type = get_creation_type();			/* Get the reverse type */
+		type = get_creation_type(1);			/* Get the reverse type */
 		last = otop();
 
 		if (!RTRA(type, last->it_ref))
@@ -1601,7 +1606,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LREVERSE\n");
 #endif
 		code = get_int16(&IC);			/* Get local number */
-		type = get_creation_type ();
+		type = get_creation_type (1);
 		last = otop();
 
 		if (!RTRA(type, last->it_ref))
@@ -1622,7 +1627,7 @@ rt_private void interpret(int flag, int where)
 			offset = get_int32(&IC);		/* Get the feature id */
 			code = get_int16(&IC);			/* Get the static type */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
-			type = get_creation_type ();
+			type = get_creation_type (1);
 			last = otop();
 
 			if (!RTRA(type, last->it_ref))
@@ -1645,7 +1650,7 @@ rt_private void interpret(int flag, int where)
 			origin = get_int32(&IC);		/* Get the origin class id */
 			ooffset = get_int32(&IC);		/* Get the offset in origin */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
-			type = get_creation_type ();
+			type = get_creation_type (1);
 			last = otop();
 
 			if (!RTRA(type, last->it_ref))
@@ -1662,7 +1667,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_OBJECT_TEST\n");
 #endif
 		code = get_int16(&IC);			/* Get local number */
-		type = get_creation_type ();
+		type = get_creation_type (1);
 		last = otop();
 
 		if (RTRA(type, last->it_ref)) {
@@ -1687,7 +1692,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_IS_ATTACHED\n");
 #endif
-		type = get_creation_type ();
+		type = get_creation_type (1);
 		last = iget();
 		last->type = SK_BOOL;
 
@@ -2068,7 +2073,7 @@ rt_private void interpret(int flag, int where)
 		need_push = *IC++;		/* If there is a creation routine to call
 								   we need to push twice the created object */
 
-		type = get_creation_type ();
+		type = get_creation_type (1);
 
 		/* Creation of a new object. We know there will be no call to a
 		 * creation routine, so it's useless to resynchronize registers--RAM.
@@ -2111,7 +2116,7 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *nb_item;
 			uint32 nb = 0;
 
-			type = get_creation_type ();
+			type = get_creation_type (1);
 
 			is_ref = EIF_TEST(*IC++);
 			is_basic = EIF_TEST(*IC++);
@@ -2119,7 +2124,6 @@ rt_private void interpret(int flag, int where)
 			is_expanded = EIF_TEST(*IC++);
 
 			if (is_expanded) {
-					/* Need local since RTUD evaluates twice its argument. */
 				elem_size = OVERHEAD + EIF_Size(get_int16(&IC));
 			} else {
 				switch (get_uint32(&IC) & SK_HEAD) {
@@ -3826,6 +3830,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 		/* The list of parent dynamic types is always terminated by TERMINATOR,
 		 * and between parents by PARENT_TYPE_SEPARATOR.
 		 */
+	cn_parents++;	/* We skip the annotation mark. */
 	p_type = *cn_parents++;
 	while (p_type != TERMINATOR) {
 			/* Call to potential parent invariant */
@@ -3835,6 +3840,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 			p_type = *cn_parents++;
 		}
 		if (p_type == PARENT_TYPE_SEPARATOR) {
+			cn_parents++;	/* We skip the annotation mark. */
 			p_type = *cn_parents++;
 		}
 	}
@@ -5098,7 +5104,7 @@ rt_private void reverse_attribute(long offset, uint32 type)
 	}
 }
 
-rt_private void reverse_local(EIF_TYPED_VALUE * it, uint32 type) {
+rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type) {
 			/* pointer to local to assign to
 			 * type of object
 			 */
@@ -5129,10 +5135,12 @@ rt_private void reverse_local(EIF_TYPED_VALUE * it, uint32 type) {
 			default:
 				eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
 			}
+		} else {
+			/* Do nothing, we keep the previous value. */
 		}
-	}
-	else
+	} else {
 		it->it_ref = last->it_ref;
+	}
 }
 
 rt_shared void call_disp(EIF_TYPE_INDEX dtype, EIF_REFERENCE object)
@@ -5176,7 +5184,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 	{
 		case LIKE_ARG_TYPE: /* like argument */
 			pos = (int) get_int16(&IC);
-			result = get_creation_type ();
+			result = get_creation_type (0);
 			result = RTCA(arg(pos)->it_ref, result);
 			break;
 		case LIKE_CURRENT_TYPE: /* like Current */
@@ -5234,7 +5242,7 @@ rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX d
 	return eif_compound_id (NULL, Dftype (Current), dtype, gen_types);
 }
 
-rt_private EIF_TYPE_INDEX get_creation_type (void)
+rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 {
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
@@ -5249,7 +5257,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (void)
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
 		break;
 	case BC_CARG:				/* Like argument creation type */
-		type = get_creation_type ();
+		type = get_creation_type (1);
 		code = get_int16(&IC);		/* Argument position */
 		type = RTCA(arg(code)->it_ref, type);
 		break;
@@ -5280,7 +5288,11 @@ rt_private EIF_TYPE_INDEX get_creation_type (void)
 		/* NOTREACHED */
 	}
 
-	return type;
+	if (for_creation) {
+		return eif_non_attached_type(type);
+	} else {
+		return type;
+	}
 }
 
 /*

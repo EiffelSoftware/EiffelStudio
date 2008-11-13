@@ -33,7 +33,8 @@ inherit
 			generate_cid, generate_cid_array, generate_cid_init,
 			make_type_byte_code,
 			generate_gen_type_il,
-			generic_il_type_name
+			generic_il_type_name,
+			annotation_flags
 		end
 
 	REFACTORING_HELPER
@@ -117,6 +118,23 @@ feature -- Property
 			if not is_expanded and then not has_detachable_mark then
 				Result := True
 			end
+		end
+
+	annotation_flags: NATURAL_16
+			-- <Precursor>
+		do
+				-- Unlike {TYPE_A}, we actually need to know if the formal is declared with
+				-- an attachment mark and if it is which one. When there are no attachment mark
+				-- at runtime, we will use the attachment mark of the actual generic parameter.
+			if has_attached_mark then
+				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+			elseif has_detachable_mark then
+				Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+			end
+-- To uncomment when variant/frozen proposal for generics is supported.
+--			if is_frozen then
+--				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+--			end
 		end
 
 feature -- IL code generation
@@ -274,11 +292,11 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
+			generate_cid_prefix (buffer, Void)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid (buffer, final_mode)
 			else
-				generate_cid_prefix (buffer, Void)
 				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 				buffer.put_character (',')
 				buffer.put_integer (position)
@@ -290,11 +308,11 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
+			generate_cid_prefix (buffer, idx_cnt)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				generate_cid_prefix (buffer, idx_cnt)
 				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 				buffer.put_character (',')
 				buffer.put_integer (position)
@@ -308,11 +326,11 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
+			generate_cid_prefix (Void, idx_cnt)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 			else
-				generate_cid_prefix (Void, idx_cnt)
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
 			end
@@ -323,11 +341,11 @@ feature -- Generic conformance
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
+			make_type_prefix_byte_code (ba)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.make_type_byte_code (ba)
 			else
-				make_type_prefix_byte_code (ba)
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 				ba.append_short_integer (position)
 			end
@@ -535,7 +553,7 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_FORMAL_TYPE is
 			-- Create formal type info.
 		do
-			create Result.make (Current)
+			create Result.make (as_attachment_mark_free)
 		end
 
 	shared_create_info: CREATE_FORMAL_TYPE is

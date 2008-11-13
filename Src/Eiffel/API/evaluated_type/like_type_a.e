@@ -13,7 +13,7 @@ inherit
 		undefine
 			same_as
 		redefine
-			actual_type,
+			actual_type, annotation_flags,
 			deep_actual_type, context_free_type,
 			conformance_type,
 			convert_to,
@@ -374,6 +374,26 @@ feature -- IL code generation
 
 feature -- Generic conformance
 
+	annotation_flags: NATURAL_16 is
+			-- Flags for annotations of Current.
+			-- Currently only `!' and `frozen' are supported
+		do
+				-- Unlike {TYPE_A}, we actually need to know if the formal is declared with
+				-- an attachment mark and if it is which one. When there are no attachment mark
+				-- at runtime, we will use the attachment mark of the actual generic parameter.
+			if not is_expanded then
+				if is_attached then
+					Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+				elseif has_detachable_mark then
+					Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+				end
+			end
+-- To uncomment when variant/frozen proposal for generics is supported.
+--			if is_frozen then
+--				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+--			end
+		end
+
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
 			-- Id of a `like xxx'.
 		do
@@ -382,6 +402,7 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
+			generate_cid_prefix (buffer, Void)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid (buffer, final_mode)
@@ -392,6 +413,7 @@ feature -- Generic conformance
 
 	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
 		do
+			generate_cid_prefix (buffer, idx_cnt)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid_array (buffer, final_mode, idx_cnt)
@@ -402,6 +424,7 @@ feature -- Generic conformance
 
 	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
 		do
+			generate_cid_prefix (Void, idx_cnt)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
@@ -412,6 +435,7 @@ feature -- Generic conformance
 
 	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
 		do
+			make_type_prefix_byte_code (ba)
 			if use_info then
 				initialize_info (shared_create_info)
 				shared_create_info.make_type_byte_code (ba)

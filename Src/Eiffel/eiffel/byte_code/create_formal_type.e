@@ -35,13 +35,8 @@ feature -- C code generation
 
 	generate is
 			-- Generate creation type
-		local
-			buffer: GENERATION_BUFFER
 		do
-			buffer := context.buffer
-			buffer.put_string ("RTLNSMART(")
-			generate_type_id (buffer, context.final_mode, 0)
-			buffer.put_character (')')
+			associated_create_feat.generate
 		end
 
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL) is

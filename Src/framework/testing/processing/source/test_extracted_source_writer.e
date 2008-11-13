@@ -255,7 +255,7 @@ feature {EIFFEL_TEST_CAPTURER} -- Events
 			stream.put_string ("run_extracted_test (agent ")
 			if a_stack_element.is_creation_procedure or a_stack_element.is_xfix then
 				if l_feat.argument_count > 0 or a_stack_element.is_xfix then
-					stream.put_string (" (")
+					stream.put_string ("(")
 					from
 						l_cursor := a_stack_element.types.new_cursor
 						l_cursor.start

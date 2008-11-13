@@ -29,7 +29,7 @@ feature {NONE} -- Access
 
 	tagable1, tagable2: ?TAG_DUMMY_TAGABLE
 
-	comparator: ?TAG_COMPARATOR
+	comparator: ?TAG_COMPARATOR [TAG_DUMMY_TAGABLE]
 
 feature -- Status report
 
@@ -51,7 +51,7 @@ feature -- Tests
 		require
 			initialized: is_initialized
 		do
-			assert ("all_empty", comparator.less_than (tagable1.as_attached, tagable2.as_attached))
+			assert ("all_empty", comparator.less_than (tagable1, tagable2))
 		end
 
 	test_tagables_empty
@@ -59,7 +59,7 @@ feature -- Tests
 			initialized: is_initialized
 		do
 			comparator.set_prefix ("prefix")
-			assert ("tagables_empty", comparator.less_than (tagable1.as_attached, tagable2.as_attached))
+			assert ("tagables_empty", comparator.less_than (tagable1, tagable2))
 		end
 
 	test_tagable1_empty
@@ -67,14 +67,14 @@ feature -- Tests
 			initialized: is_initialized
 		do
 			tagable2.tags.force ("token1/token2/token3")
-			assert ("tagable1_empty1", comparator.less_equal (tagable2.as_attached, tagable1.as_attached))
+			assert ("tagable1_empty1", comparator.less_equal (tagable2, tagable1))
 
 				-- In this case tagable1 is less because they both don't contain tags for "prefix"
 			comparator.set_prefix ("prefix")
-			assert ("tagable1_empty2", comparator.less_equal (tagable1.as_attached, tagable2.as_attached))
+			assert ("tagable1_empty2", comparator.less_equal (tagable1, tagable2))
 
 			comparator.set_prefix ("token1")
-			assert ("tagable1_empty3", comparator.less_equal (tagable2.as_attached, tagable1.as_attached))
+			assert ("tagable1_empty3", comparator.less_equal (tagable2, tagable1))
 		end
 
 	test_tagable2_empty
@@ -82,13 +82,13 @@ feature -- Tests
 			initialized: is_initialized
 		do
 			tagable1.tags.force ("token1/token2/token3")
-			assert ("tagable2_empty1", comparator.less_equal (tagable1.as_attached, tagable2.as_attached))
+			assert ("tagable2_empty1", comparator.less_equal (tagable1, tagable2))
 
 			comparator.set_prefix ("prefix")
-			assert ("tagable2_empty2", comparator.less_equal (tagable1.as_attached, tagable2.as_attached))
+			assert ("tagable2_empty2", comparator.less_equal (tagable1, tagable2))
 
 			comparator.set_prefix ("token1")
-			assert ("tagable2_empty3", comparator.less_equal (tagable1.as_attached, tagable2.as_attached))
+			assert ("tagable2_empty3", comparator.less_equal (tagable1, tagable2))
 		end
 
 	test_suffix_comparison
@@ -105,7 +105,7 @@ feature -- Tests
 
 			comparator.set_prefix ("token3")
 
-			assert ("suffix_comparison", comparator.less_equal (tagable2.as_attached, tagable1.as_attached))
+			assert ("suffix_comparison", comparator.less_equal (tagable2, tagable1))
 		end
 
 end

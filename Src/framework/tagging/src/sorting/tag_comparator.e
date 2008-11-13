@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	TAG_COMPARATOR
+	TAG_COMPARATOR [G -> TAGABLE_I]
 
 inherit
-	KL_COMPARATOR [!TAGABLE_I]
+	KL_COMPARATOR [G]
 
 	TAG_UTILITIES
 		export
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	less_than (u, v: !TAGABLE_I): BOOLEAN
+	less_than (u, v: G): BOOLEAN
 			-- <Precursor>
 			--
 			-- Note: This will collect the all the tags beginning with `tag' of both itmes and compare,

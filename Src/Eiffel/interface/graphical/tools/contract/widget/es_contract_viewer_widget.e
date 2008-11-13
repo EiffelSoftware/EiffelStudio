@@ -304,9 +304,9 @@ feature {NONE} -- Basic operation
 
 				-- Set contract button's edit state.
 			if context_class.group.is_readonly then
-				edit_contract_label.set_text (l_view_contracts)
+				edit_contract_label.set_text (local_formatter.translation (l_view_contracts))
 			else
-				edit_contract_label.set_text (l_edit_contracts)
+				edit_contract_label.set_text (local_formatter.translation (l_edit_contracts))
 			end
 		end
 

@@ -20,12 +20,6 @@ inherit
 			wizard_information
 		end
 
-	TEST_SUITE_OBSERVER
-		redefine
-			on_processor_error,
-			on_processor_finished
-		end
-
 	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all
@@ -41,9 +35,6 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	launched_factory: ?TEST_CREATOR_I
-			-- Factory last launched by `proceed_with_current_info'
-
 feature -- Status report
 
 	is_interface_usable: BOOLEAN = True
@@ -57,33 +48,26 @@ feature {NONE} -- Status report
 			Result := True
 		end
 
-	error_occurred: BOOLEAN
-			-- Did an error occur during test creation?
-
 feature {NONE} -- Basic operations
 
 	proceed_with_current_info
 			-- <Precursor>
 		local
 			l_ts: TEST_SUITE_S
+			l_creator: !TEST_CREATOR_I
 		do
-			error_occurred := False
-			launched_factory := Void
 			if test_suite.is_service_available then
 				l_ts := test_suite.service
 				if l_ts.processor_registrar.is_valid_type (factory_type, l_ts) then
-					launched_factory := l_ts.factory (factory_type)
-					if launched_factory.is_ready then
-						if launched_factory.is_valid_configuration (wizard_information.as_attached) then
-							--first_window.disable_sensitive
-							l_ts.connect_events (Current)
-							l_ts.launch_processor (launched_factory.as_attached, wizard_information.as_attached, False)
+					l_creator := l_ts.factory (factory_type)
+					if l_creator.is_ready then
+						if l_creator.is_valid_configuration (wizard_information.as_attached) then
+							l_ts.launch_processor (l_creator, wizard_information.as_attached, False)
+							cancel_actions
 						else
-							launched_factory := Void
 							show_error_prompt (e_configuration_not_valid, [])
 						end
 					else
-						launched_factory := Void
 						show_error_prompt (e_factory_not_ready, [])
 					end
 				else
@@ -98,30 +82,6 @@ feature {NONE} -- Basic operations
 			-- Show error prompt with `a_message'.
 		do
 			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
-		end
-
-feature {TEST_SUITE_S} -- Events
-
-	on_processor_finished (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
-			-- <Precursor>
-		do
-			if launched_factory /= Void and then a_processor = launched_factory.as_attached then
-				if not error_occurred then
-					a_test_suite.disconnect_events (Current)
-					first_window.enable_sensitive
-					if not error_occurred then
-						cancel_actions
-					end
-				end
-			end
-		end
-
-	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
-			-- <Precursor>
-		do
-			if launched_factory /= Void and then a_processor = launched_factory.as_attached then
-				error_occurred := True
-			end
 		end
 
 feature {NONE} -- Constants

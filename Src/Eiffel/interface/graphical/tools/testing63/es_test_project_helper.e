@@ -124,7 +124,7 @@ feature -- Element change
 				create l_stone.make (internal_added_class)
 				window_manager.last_focused_development_window.advanced_set_stone (l_stone)
 			else
-				internal_error := local_formatter.translation ("unknown error occurred")
+				internal_error := locale_formatter.translation ("unknown error occurred")
 			end
 		end
 
@@ -136,7 +136,7 @@ feature -- Element change
 			if {l_cluster: like last_added_cluster} manager.last_added_cluster then
 				internal_added_cluster := l_cluster
 			else
-				internal_error := local_formatter.translation ("unknown error occurred")
+				internal_error := locale_formatter.translation ("unknown error occurred")
 			end
 		end
 

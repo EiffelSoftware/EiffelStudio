@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_translation (w_could_not_load_matrix, [a_name]),
+						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_name]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_translation (w_could_not_load_matrix, [a_path]),
+						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_path]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)

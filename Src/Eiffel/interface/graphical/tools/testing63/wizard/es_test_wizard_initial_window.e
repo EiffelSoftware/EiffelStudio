@@ -34,26 +34,26 @@ feature {NONE} -- Initialization
 			l_parent := choice_box
 
 			create new_class_button
-			new_class_button.set_text (local_formatter.translation (b_new_class))
+			new_class_button.set_text (locale_formatter.translation (b_new_class))
 			new_class_button.enable_select
 			new_class_button.select_actions.extend (agent wizard_information.set_new_manual_test_class)
 			new_class_button.set_background_color (white_color)
 			l_parent.extend (new_class_button)
 
 			create existing_class_button
-			existing_class_button.set_text (local_formatter.translation (b_existing_class))
+			existing_class_button.set_text (locale_formatter.translation (b_existing_class))
 			existing_class_button.select_actions.extend (agent wizard_information.set_manual_test_class)
 			existing_class_button.set_background_color (white_color)
 			l_parent.extend (existing_class_button)
 
 			create extraction_button
-			extraction_button.set_text (local_formatter.translation (b_extraction))
+			extraction_button.set_text (locale_formatter.translation (b_extraction))
 			extraction_button.select_actions.extend (agent wizard_information.set_extracted_test_class)
 			extraction_button.set_background_color (white_color)
 			l_parent.extend (extraction_button)
 
 			create generate_button
-			generate_button.set_text (local_formatter.translation (b_generation))
+			generate_button.set_text (locale_formatter.translation (b_generation))
 			generate_button.select_actions.extend (agent wizard_information.set_generated_test_class)
 			generate_button.set_background_color (white_color)
 			l_parent.extend (generate_button)

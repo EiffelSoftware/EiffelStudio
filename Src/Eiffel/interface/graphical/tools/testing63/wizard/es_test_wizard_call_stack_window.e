@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 			--grid.enable_resize_column (position_column_index)
 
 			grid.set_column_count_to (4)
-			grid.column (Feature_column_index).set_title (local_formatter.translation (h_feature))
+			grid.column (Feature_column_index).set_title (locale_formatter.translation (h_feature))
 			grid.column (Feature_column_index).set_width (120)
 			grid.column (Position_column_index).set_title (" @") --Interface_names.t_Position)
 			grid.column (Position_column_index).set_width (40)
-			grid.column (Dtype_column_index).set_title (local_formatter.translation (h_dtype))
+			grid.column (Dtype_column_index).set_title (locale_formatter.translation (h_dtype))
 			grid.column (Dtype_column_index).set_width (130)
-			grid.column (Stype_column_index).set_title (local_formatter.translation (h_stype))
+			grid.column (Stype_column_index).set_title (locale_formatter.translation (h_stype))
 			grid.column (Stype_column_index).set_width (130)
 
 			grid.enable_auto_size_best_fit_column (feature_column_index)

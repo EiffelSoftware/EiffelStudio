@@ -59,7 +59,7 @@ feature -- Basic functionality
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- <Precursor>
 		do
-			a_header.i_th (last_tested_column).set_text (local_formatter.translation (t_last_executed))
+			a_header.i_th (last_tested_column).set_text (locale_formatter.translation (t_last_executed))
 			Precursor (a_header)
 		end
 

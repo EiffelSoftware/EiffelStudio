@@ -81,7 +81,7 @@ feature {NONE} -- Basic operations
 	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
 			-- Show error prompt with `a_message'.
 		do
-			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
+			prompts.show_error_prompt (locale_formatter.formatted_translation (a_message, a_tokens), first_window, Void)
 		end
 
 feature {NONE} -- Constants

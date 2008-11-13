@@ -264,8 +264,8 @@ feature {NONE} -- Factory
 			create Result.make (1)
 
 			create close_button.make
-			close_button.set_text (local_formatter.translation (b_close))
-			close_button.set_tooltip (local_formatter.translation (tt_close))
+			close_button.set_text (locale_formatter.translation (b_close))
+			close_button.set_tooltip (locale_formatter.translation (tt_close))
 
 			Result.force_last (close_button)
 		end

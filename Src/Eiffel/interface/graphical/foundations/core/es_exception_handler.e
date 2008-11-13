@@ -44,9 +44,9 @@ feature -- Basic operations
 
 				-- Translate
 			if {l_formatter: ES_SHARED_LOCALE_FORMATTER} Current then
-				l_locale_formatter := l_formatter.local_formatter
+				l_locale_formatter := l_formatter.locale_formatter
 			else
-				l_locale_formatter := (create {ES_SHARED_LOCALE_FORMATTER}).local_formatter
+				l_locale_formatter := (create {ES_SHARED_LOCALE_FORMATTER}).locale_formatter
 			end
 			if l_exception_meaning /= Void then
 				l_meaning := l_locale_formatter.translation (l_exception_meaning)

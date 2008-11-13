@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			create l_label.make_with_text (local_formatter.translation (b_new_type))
+			create l_label.make_with_text (locale_formatter.translation (b_new_type))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 
@@ -136,13 +136,13 @@ feature {NONE} -- Initialization
 			l_hbox.extend (create {EV_CELL})
 
 			create add_type_button
-			add_type_button.set_text (local_formatter.translation (b_add_type))
+			add_type_button.set_text (locale_formatter.translation (b_add_type))
 			add_type_button.select_actions.extend (agent on_add_type)
 			l_hbox.extend (add_type_button)
 			l_hbox.disable_item_expand (add_type_button)
 
 			create remove_type_button
-			remove_type_button.set_text (local_formatter.translation (b_remove_type))
+			remove_type_button.set_text (locale_formatter.translation (b_remove_type))
 			remove_type_button.select_actions.extend (agent on_remove_type)
 			l_hbox.extend (remove_type_button)
 			l_hbox.disable_item_expand (remove_type_button)
@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 		do
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			create l_label.make_with_text (local_formatter.translation (a_name))
+			create l_label.make_with_text (locale_formatter.translation (a_name))
 			l_label.align_text_right
 			l_label.align_text_left
 			l_hbox.extend (l_label)
@@ -284,7 +284,7 @@ feature {NONE} -- Events
 				if is_valid_class_type_name (a_input.to_string_8) then
 					Result := [True, Void]
 				else
-					Result := [False, local_formatter.translation (e_no_valid_type_name)]
+					Result := [False, locale_formatter.translation (e_no_valid_type_name)]
 				end
 			end
 			if not a_input.is_empty and Result.valid then

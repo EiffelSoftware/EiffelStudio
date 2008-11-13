@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			l_parent: EV_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
 		do
-			first_window.set_final_state (local_formatter.translation (b_create))
+			first_window.set_final_state (locale_formatter.translation (b_create))
 
 			l_parent := initialize_container (choice_box)
 
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			l_text_field: EV_TEXT_FIELD
 		do
 			create l_hb
-			create l_label.make_with_text (local_formatter.translation (l_test_name))
+			create l_label.make_with_text (locale_formatter.translation (l_test_name))
 			l_hb.extend (l_label)
 			l_hb.disable_item_expand (l_label)
 
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			l_label: EV_LABEL
 			l_hb: EV_HORIZONTAL_BOX
 		do
-			create l_label.make_with_text (local_formatter.translation (l_cover))
+			create l_label.make_with_text (locale_formatter.translation (l_cover))
 			l_label.align_text_left
 			a_parent.extend (l_label)
 			a_parent.disable_item_expand (l_label)
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 		do
 			create l_vb
 
-			create l_label.make_with_text (local_formatter.translation (l_tag_list))
+			create l_label.make_with_text (locale_formatter.translation (l_tag_list))
 			l_label.align_text_left
 			l_vb.extend (l_label)
 			l_vb.disable_item_expand (l_label)
@@ -280,7 +280,7 @@ feature {NONE} -- Events
 				if l_valid then
 					if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
 						l_valid := False
-						l_msg := local_formatter.translation (e_bad_test_name)
+						l_msg := locale_formatter.translation (e_bad_test_name)
 					end
 				end
 			end
@@ -351,14 +351,14 @@ feature {NONE} -- Events
 			if not l_valid then
 				create l_error.make (100)
 				l_error.append (l_invalid)
-				l_error.append (local_formatter.translation (e_invalid_tag1))
-				l_error.append (local_formatter.translation (e_invalid_tag2))
+				l_error.append (locale_formatter.translation (e_invalid_tag1))
+				l_error.append (locale_formatter.translation (e_invalid_tag2))
 				l_error.append ("token1")
 				l_error.append_character (tag_utilities.split_char)
 				l_error.append ("token2")
 				l_error.append_character (tag_utilities.split_char)
 				l_error.append ("token3")
-				l_error.append (local_formatter.translation (e_invalid_tag3))
+				l_error.append (locale_formatter.translation (e_invalid_tag3))
 				l_error.append (tag_utilities.valid_token_chars)
 				Result := [False, l_error]
 			else

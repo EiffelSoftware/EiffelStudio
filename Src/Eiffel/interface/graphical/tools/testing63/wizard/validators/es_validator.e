@@ -34,7 +34,7 @@ feature {NONE} -- Status setting
 			--
 			-- `a_message': Error message
 		do
-			last_error_message := local_formatter.translation (a_message)
+			last_error_message := locale_formatter.translation (a_message)
 		ensure
 			not_valid: not is_valid
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Status setting
 			-- `a_message': Error message with tokens
 			-- `token_values': Values with which tokens should be replaced.
 		do
-			last_error_message := local_formatter.formatted_translation (a_message, a_tokens)
+			last_error_message := locale_formatter.formatted_translation (a_message, a_tokens)
 		ensure
 			not_valid: not is_valid
 		end

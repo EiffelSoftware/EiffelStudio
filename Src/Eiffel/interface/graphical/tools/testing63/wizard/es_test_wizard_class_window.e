@@ -263,7 +263,7 @@ feature {NONE} -- Events
 			l_name ?= a_name.to_string_8
 			wizard_information.feature_clause_name_cache := l_name
 			if new_feature_clause_name.text_field.is_sensitive and l_name.is_empty then
-				Result := [False, local_formatter.translation (e_new_feature_clause_name_empty)]
+				Result := [False, locale_formatter.translation (e_new_feature_clause_name_empty)]
 			else
 				Result := [True, Void]
 			end
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 								create l_fcname.make (20)
 							end
 							if l_fcname.is_empty then
-								l_fcname.append (local_formatter.translation (l_no_feature_clause_name))
+								l_fcname.append (locale_formatter.translation (l_no_feature_clause_name))
 							end
 							create l_item.make_with_text (l_fcname)
 							l_item.set_data (l_fc)

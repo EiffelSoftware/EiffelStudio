@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			if {l_text: STRING_32} a_text.as_string_32 then
 				set_text (l_text)
 			else
-				set_text (create {STRING_32}.make_from_string (local_formatter.translation (l_please_wait)))
+				set_text (create {STRING_32}.make_from_string (locale_formatter.translation (l_please_wait)))
 			end
 		ensure
 			text_set: a_text.is_equal (text)

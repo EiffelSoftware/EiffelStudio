@@ -43,12 +43,12 @@ feature -- Access
 			-- <Precursor>
 		do
 			create Result.make (25)
-			Result.append (local_formatter.translation (t_title))
+			Result.append (locale_formatter.translation (t_title))
 			Result.append (" (")
 			if debug_executor_type.attempt (executor) /= Void then
-				Result.append (local_formatter.translation (t_title_debugger))
+				Result.append (locale_formatter.translation (t_title_debugger))
 			else
-				Result.append (local_formatter.translation (t_title_background))
+				Result.append (locale_formatter.translation (t_title_background))
 			end
 			Result.append_character (')')
 		end

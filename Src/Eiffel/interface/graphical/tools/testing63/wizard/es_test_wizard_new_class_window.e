@@ -61,9 +61,9 @@ feature {NONE} -- Initialization
 			create l_hb
 			create l_label
 			if wizard_information.is_generated_test_class then
-				l_label.set_text (local_formatter.translation (l_class_name_prefix))
+				l_label.set_text (locale_formatter.translation (l_class_name_prefix))
 			else
-				l_label.set_text (local_formatter.translation (l_class_name))
+				l_label.set_text (locale_formatter.translation (l_class_name))
 			end
 			l_hb.extend (l_label)
 			l_hb.disable_item_expand (l_label)
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			l_cmd: EB_NEW_CLUSTER_COMMAND
 		do
 			create l_hbox
-			create l_label.make_with_text (local_formatter.translation (l_select_cluster))
+			create l_label.make_with_text (locale_formatter.translation (l_select_cluster))
 			l_label.align_text_left
 			l_hbox.extend (l_label)
 
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			l_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
 			create l_cmd.make (development_window, True)
 			l_button.select_actions.extend (agent l_cmd.execute)
-			l_button.set_tooltip (local_formatter.translation (tt_new_cluster))
+			l_button.set_tooltip (locale_formatter.translation (tt_new_cluster))
 			l_tb.extend (l_button)
 			l_tb.compute_minimum_size
 			l_hbox.extend (l_tb)
@@ -133,19 +133,19 @@ feature {NONE} -- Initialization
 			create l_vb
 
 			create setup_checkbox
-			setup_checkbox.set_text (local_formatter.formatted_translation (b_setup_routine, [{TEST_CONSTANTS}.prepare_routine_name]))
+			setup_checkbox.set_text (locale_formatter.formatted_translation (b_setup_routine, [{TEST_CONSTANTS}.prepare_routine_name]))
 			setup_checkbox.select_actions.extend (agent on_setup_change)
 			l_vb.extend (setup_checkbox)
 			l_vb.disable_item_expand (setup_checkbox)
 
 			create tear_down_checkbox
-			tear_down_checkbox.set_text (local_formatter.formatted_translation (b_tear_down_routine, [{TEST_CONSTANTS}.clean_routine_name]))
+			tear_down_checkbox.set_text (locale_formatter.formatted_translation (b_tear_down_routine, [{TEST_CONSTANTS}.clean_routine_name]))
 			tear_down_checkbox.select_actions.extend (agent on_tear_down_change)
 			l_vb.extend (tear_down_checkbox)
 			l_vb.disable_item_expand (tear_down_checkbox)
 
 			create system_level_test_checkbox
-			system_level_test_checkbox.set_text (local_formatter.translation (b_system_level_test))
+			system_level_test_checkbox.set_text (locale_formatter.translation (b_system_level_test))
 			system_level_test_checkbox.select_actions.extend (agent on_system_level_test_change)
 			l_vb.extend (system_level_test_checkbox)
 			l_vb.disable_item_expand (system_level_test_checkbox)
@@ -272,14 +272,14 @@ feature {NONE} -- Events
 								l_path := wizard_information.cluster.location.build_path (wizard_information.path, l_name.as_lower)
 								l_path.append (".e")
 								if (create {RAW_FILE}.make (l_path)).exists then
-									l_error := local_formatter.formatted_translation (e_file_exists, [l_path])
+									l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
 								end
 							end
 						else
 							l_error := class_name_validator.last_error_message
 						end
 					else
-						l_error := local_formatter.translation (e_project_not_available)
+						l_error := locale_formatter.translation (e_project_not_available)
 					end
 				end
 				if l_error /= Void then
@@ -353,10 +353,10 @@ feature {NONE} -- Basic operations
 				create l_directory.make (l_path)
 				if l_directory.exists then
 					if not l_directory.is_writable then
-						l_error := local_formatter.formatted_translation (e_directory_not_writable, [l_path])
+						l_error := locale_formatter.formatted_translation (e_directory_not_writable, [l_path])
 					end
 				else
-					l_error := local_formatter.formatted_translation (e_directory_non_existent, [l_path])
+					l_error := locale_formatter.formatted_translation (e_directory_non_existent, [l_path])
 				end
 			else
 				is_cluster_valid := False

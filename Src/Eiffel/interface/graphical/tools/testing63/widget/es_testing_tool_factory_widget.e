@@ -39,7 +39,13 @@ feature {NONE} -- Access
 
 	title: !STRING_32
 		do
-			Result := locale_formatter.translation ("Test creation")
+			if generator_factory_type.attempt (factory) /= Void then
+				Result := locale_formatter.translation (t_generator_title)
+			elseif extractor_factory_type.attempt (factory) /= Void then
+				Result := locale_formatter.translation (t_extractor_title)
+			else
+				Result := locale_formatter.translation (t_creator_title)
+			end
 		end
 
 	icon: !EV_PIXEL_BUFFER
@@ -53,5 +59,11 @@ feature {NONE} -- Access
 		do
 			Result := stock_pixmaps.overlay_new_icon
 		end
+
+feature {NONE} -- Constants
+
+	t_generator_title: !STRING = "Generation"
+	t_extractor_title: !STRING = "Extraction"
+	t_creator_title: !STRING = "New manual tests"
 
 end

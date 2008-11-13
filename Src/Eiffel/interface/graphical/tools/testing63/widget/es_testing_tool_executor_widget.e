@@ -42,22 +42,18 @@ feature -- Access
 	title: !STRING_32
 			-- <Precursor>
 		do
-			create Result.make (25)
-			Result.append (locale_formatter.translation (t_title))
-			Result.append (" (")
 			if debug_executor_type.attempt (executor) /= Void then
-				Result.append (locale_formatter.translation (t_title_debugger))
+				Result := locale_formatter.translation (t_title_debugger)
 			else
-				Result.append (locale_formatter.translation (t_title_background))
+				Result := locale_formatter.translation (t_title_background)
 			end
-			Result.append_character (')')
 		end
 
 	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			if debug_executor_type.attempt (executor) /= Void then
-				Result := stock_pixmaps.debug_run_icon_buffer
+				Result := icon_provider.icons.general_bug_icon_buffer
 			else
 				Result := stock_pixmaps.debug_run_icon_buffer
 			end
@@ -67,7 +63,7 @@ feature -- Access
 			-- <Precursor>
 		do
 			if debug_executor_type.attempt (executor) /= Void then
-				Result := stock_pixmaps.debug_run_icon
+				Result := icon_provider.icons.general_bug_icon
 			else
 				Result := stock_pixmaps.debug_run_icon
 			end
@@ -212,9 +208,8 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	t_title: !STRING = "Execution"
-	t_title_background: !STRING = "background"
-	t_title_debugger: !STRING = "debugger"
+	t_title_background: !STRING = "Execution"
+	t_title_debugger: !STRING = "Debugging"
 
 	tt_run: STRING = "Relaunch previous execution"
 	b_skip: STRING = "Skip"

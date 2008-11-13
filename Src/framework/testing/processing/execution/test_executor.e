@@ -29,7 +29,7 @@ inherit
 			on_test_removed
 		end
 
-	KL_SHARED_OPERATING_SYSTEM
+	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
 		end
@@ -93,6 +93,11 @@ feature {NONE} -- Access
 
 	completed_tests_count: NATURAL
 			-- Number of tests that have been either aborted or executed in current run
+
+	log_file: ?KL_TEXT_OUTPUT_FILE
+			-- Log file for test results
+
+	result_cursor: ?DS_LINEAR_CURSOR [!TEST_I]
 
 feature -- Status report
 
@@ -198,6 +203,7 @@ feature {NONE} -- Basic functionality
 			create assigner.make (l_count)
 			is_compiled := False
 			initialize_evaluators
+			initialize_result_log
 			completed_tests_count := 0
 		ensure then
 			not_compiled: not is_compiled
@@ -227,6 +233,12 @@ feature {NONE} -- Basic functionality
 			-- <Precursor>
 		do
 			assigner := Void
+			if log_file.is_open_write then
+				log_file.close
+			end
+			log_file := Void
+			result_cursor.go_after
+			result_cursor := Void
 		end
 
 	write_root_class (a_list: ?DS_LINEAR [!TEST_I])
@@ -283,7 +295,7 @@ feature {NONE} -- Basic functionality
 		end
 
 	initialize_evaluators is
-			-- Create new evaluators and launch
+			-- Create new evaluators
 		require
 			running: is_running
 			evaluators_empty: evaluators.is_empty
@@ -303,6 +315,25 @@ feature {NONE} -- Basic functionality
 				l_new := create_evaluator
 				evaluators.force_last (l_new)
 			end
+		end
+
+	initialize_result_log
+			-- Initialize `log_file' and `result_cursor'.
+		local
+			l_filename: FILE_NAME
+			l_path: STRING
+			l_format: DATE_TIME_CODE_STRING
+		do
+			create l_filename.make_from_string (test_suite.eiffel_project.project_directory.testing_results_path)
+			create l_format.make ("yyyy-mm-dd [0]hh:[0]mi:[0]ss")
+			l_filename.set_file_name (l_format.create_string (create {DATE_TIME}.make_now))
+			create log_file.make (l_filename)
+			log_file.recursive_open_write
+			result_cursor := test_map.new_cursor
+			result_cursor.start
+		ensure
+			log_file_attached: log_file /= Void
+			result_cursor_attached: result_cursor /= Void
 		end
 
 	syncronize_evaluators is
@@ -395,6 +426,34 @@ feature {NONE} -- Basic functionality
 						if {l_outcome: !EQA_TEST_OUTCOME} l_tuple.outcome then
 							completed_tests_count := completed_tests_count + 1
 							test_suite.add_outcome_to_test (l_test, l_outcome)
+
+								-- Update log file
+							from
+							until
+								result_cursor.after or else (
+									(result_cursor.item.is_queued or result_cursor.item.is_running) and then
+									result_cursor.item.executor = Current)
+							loop
+								if log_file.is_open_write then
+									l_test := result_cursor.item
+									log_file.put_character ('{')
+									log_file.put_string (l_test.class_name)
+									log_file.put_string ("}.")
+									log_file.put_string (l_test.name)
+									log_file.put_string (": ")
+									if not l_test.is_outcome_available or else not l_test.last_outcome.has_response then
+										log_file.put_string ("aborted")
+									elseif l_test.last_outcome.is_pass then
+										log_file.put_string ("passed")
+									elseif l_test.last_outcome.is_fail then
+										log_file.put_string ("failed")
+									else
+										log_file.put_string ("unresolved")
+									end
+									log_file.put_new_line
+								end
+								result_cursor.forth
+							end
 						end
 					else
 							-- If map does not contain test, we could terminate here. However if the evaluator has
@@ -499,5 +558,9 @@ feature {NONE} -- Constants
 	progress_compile_fraction: like progress = {REAL} 0.2
 
 	e_compile_error: !STRING = "Tests can not be executed because last compilation failed"
+
+invariant
+	running_implies_log_file_attached: is_running implies log_file /= Void
+	running_implies_result_cursor_attached: is_running implies result_cursor /= Void
 
 end

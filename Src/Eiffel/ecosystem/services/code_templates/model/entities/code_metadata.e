@@ -52,7 +52,7 @@ feature -- Element change
 	set_title (a_title: like title)
 			-- Set `title' with `a_title'.
 		do
-			title ?= a_title.twin
+			title := a_title.twin
 		ensure
 			title_assigned: title.is_equal (a_title)
 		end
@@ -68,7 +68,7 @@ feature -- Element change
 	set_author (a_author: like author)
 			-- Set `author' with `a_author'.
 		do
-			author ?= a_author.twin
+			author := a_author.twin
 		ensure
 			author_assigned: author.is_equal (a_author)
 		end
@@ -76,7 +76,7 @@ feature -- Element change
 	set_shortcut (a_shortcut: like shortcut)
 			-- Set `shortcut' with `a_shortcut'.
 		do
-			shortcut ?= a_shortcut.twin
+			shortcut := a_shortcut.twin
 		ensure
 			shortcut_assigned: shortcut.is_equal (a_shortcut)
 		end

@@ -46,7 +46,7 @@ feature -- Element change
 		require
 			not_a_type_is_empty: not a_type.is_empty
 		do
-			must_conform_to ?= a_type.twin
+			must_conform_to := a_type.twin
 		ensure
 			must_conform_to_set: must_conform_to.is_equal (a_type)
 		end

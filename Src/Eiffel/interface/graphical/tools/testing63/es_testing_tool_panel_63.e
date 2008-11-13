@@ -95,7 +95,7 @@ feature {NONE} -- Initialization: widgets
 			l_hbox.set_border_width (5)
 
 				-- Create and add `view_box' with label
-			create l_label.make_with_text (local_formatter.translation (l_view))
+			create l_label.make_with_text (locale_formatter.translation (l_view))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 			create view_box
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization: widgets
 			register_action (view_box.return_actions, agent on_return_view)
 
 				-- Create and add `filter_box' with label
-			create l_label.make_with_text (local_formatter.translation (l_filter))
+			create l_label.make_with_text (locale_formatter.translation (l_filter))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 			create filter_box
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization: widgets
 			create clear_filter_button.make
 			clear_filter_button.set_pixel_buffer (stock_pixmaps.general_reset_icon_buffer)
 			clear_filter_button.set_pixmap (stock_pixmaps.general_reset_icon)
-			clear_filter_button.set_tooltip (local_formatter.translation (tt_clear_filter))
+			clear_filter_button.set_tooltip (locale_formatter.translation (tt_clear_filter))
 			register_action (clear_filter_button.select_actions, agent on_clear_filter)
 			create l_tool_bar.make
 			l_tool_bar.extend (clear_filter_button)
@@ -694,7 +694,7 @@ feature {TEST_SUITE_S} -- Events: test suite
  			-- <Precursor>
  		do
  			if window_manager.last_focused_window = develop_window then
- 				prompts.show_error_prompt (local_formatter.formatted_translation (a_error, a_token_values), develop_window.window, Void)
+ 				prompts.show_error_prompt (locale_formatter.formatted_translation (a_error, a_token_values), develop_window.window, Void)
  			end
  		end
 
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
 			-- Show error prompt with `a_message'.
 		do
-			prompts.show_error_prompt (local_formatter.formatted_translation (a_message, a_tokens), develop_window.window, Void)
+			prompts.show_error_prompt (locale_formatter.formatted_translation (a_message, a_tokens), develop_window.window, Void)
 		end
 
 feature {NONE} -- Factory
@@ -784,22 +784,22 @@ feature {NONE} -- Factory
 
 				-- Create run button
 			create run_button.make
-			run_button.set_tooltip (local_formatter.translation (f_run_button))
+			run_button.set_tooltip (locale_formatter.translation (f_run_button))
 			run_button.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
 			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
 			register_action (run_button.select_actions, agent on_run_current (background_executor_type))
 
 			create l_menu
-			create run_all_menu.make_with_text (local_formatter.translation (m_run_all))
+			create run_all_menu.make_with_text (locale_formatter.translation (m_run_all))
 			register_action (run_all_menu.select_actions, agent on_run_all (background_executor_type))
 			l_menu.extend (run_all_menu)
-			create run_failing_menu.make_with_text (local_formatter.translation (m_run_failing))
+			create run_failing_menu.make_with_text (locale_formatter.translation (m_run_failing))
 			register_action (run_failing_menu.select_actions, agent on_run_failing (background_executor_type))
 			l_menu.extend (run_failing_menu)
-			create run_filtered_menu.make_with_text (local_formatter.translation (m_run_filtered))
+			create run_filtered_menu.make_with_text (locale_formatter.translation (m_run_filtered))
 			register_action (run_filtered_menu.select_actions, agent on_run_filtered (background_executor_type))
 			l_menu.extend (run_filtered_menu)
-			create run_selected_menu.make_with_text (local_formatter.translation (m_run_selected))
+			create run_selected_menu.make_with_text (locale_formatter.translation (m_run_selected))
 			register_action (run_selected_menu.select_actions, agent on_run_selected (background_executor_type))
 			l_menu.extend (run_selected_menu)
 			run_button.set_menu (l_menu)
@@ -808,22 +808,22 @@ feature {NONE} -- Factory
 
 				-- Create debug button
 			create debug_button.make
-			debug_button.set_tooltip (local_formatter.translation (f_debug_button))
+			debug_button.set_tooltip (locale_formatter.translation (f_debug_button))
 			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_debug_mode_icon_buffer)
 			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_debug_mode_icon)
 			register_action (debug_button.select_actions, agent on_run_current (debug_executor_type))
 
 			create l_menu
-			create debug_all_menu.make_with_text (local_formatter.translation (m_debug_all))
+			create debug_all_menu.make_with_text (locale_formatter.translation (m_debug_all))
 			register_action (debug_all_menu.select_actions, agent on_run_all (debug_executor_type))
 			l_menu.extend (debug_all_menu)
-			create debug_failing_menu.make_with_text (local_formatter.translation (m_debug_failing))
+			create debug_failing_menu.make_with_text (locale_formatter.translation (m_debug_failing))
 			register_action (debug_failing_menu.select_actions, agent on_run_failing (debug_executor_type))
 			l_menu.extend (debug_failing_menu)
-			create debug_filtered_menu.make_with_text (local_formatter.translation (m_debug_filtered))
+			create debug_filtered_menu.make_with_text (locale_formatter.translation (m_debug_filtered))
 			register_action (debug_filtered_menu.select_actions, agent on_run_filtered (debug_executor_type))
 			l_menu.extend (debug_filtered_menu)
-			create debug_selected_menu.make_with_text (local_formatter.translation (m_debug_selected))
+			create debug_selected_menu.make_with_text (locale_formatter.translation (m_debug_selected))
 			register_action (debug_selected_menu.select_actions, agent on_run_selected (debug_executor_type))
 			l_menu.extend (debug_selected_menu)
 			debug_button.set_menu (l_menu)
@@ -832,7 +832,7 @@ feature {NONE} -- Factory
 
 				-- Create stop button
 			create stop_button.make
-			stop_button.set_tooltip (local_formatter.translation (f_stop_button))
+			stop_button.set_tooltip (locale_formatter.translation (f_stop_button))
 			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
 			register_action (stop_button.select_actions, agent on_stop)

@@ -855,7 +855,7 @@ feature {NONE} -- Factory
 			create delete_items_button.make
 			delete_items_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
 			delete_items_button.set_pixmap (stock_pixmaps.general_delete_icon)
-			delete_items_button.set_tooltip (local_formatter.translation (tt_delete_items))
+			delete_items_button.set_tooltip (locale_formatter.translation (tt_delete_items))
 			register_action (delete_items_button.select_actions, agent on_remove_selected_rows)
 			Result.put_last (delete_items_button)
 

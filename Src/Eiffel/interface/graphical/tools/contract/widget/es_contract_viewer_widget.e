@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 				-- `auto_show_check'
 			l_preference := preferences.editor_data.auto_show_feature_contract_tooltips_preference
 			if l_preference /= Void then
-				create l_auto_show_check.make_with_text (local_formatter.translation (l_do_not_auto_show))
-				l_auto_show_check.set_tooltip (local_formatter.translation (f_do_not_auto_show))
+				create l_auto_show_check.make_with_text (locale_formatter.translation (l_do_not_auto_show))
+				l_auto_show_check.set_tooltip (locale_formatter.translation (f_do_not_auto_show))
 				l_auto_show_check.set_foreground_color (preferences.editor_data.normal_text_color)
 
 				create auto_show_check.make (l_auto_show_check, l_preference)
@@ -64,8 +64,8 @@ feature {NONE} -- Initialization
 				-- Padding between the check box and edit
 			l_hbox.extend (create {EV_CELL})
 
-			create edit_contract_label.make_with_text (local_formatter.translation (l_edit_contracts))
-			edit_contract_label.set_tooltip (local_formatter.translation (f_edit_contracts))
+			create edit_contract_label.make_with_text (locale_formatter.translation (l_edit_contracts))
+			edit_contract_label.set_tooltip (locale_formatter.translation (f_edit_contracts))
 			edit_contract_label.align_text_right
 			register_action (edit_contract_label.select_actions, agent on_edit_contracts)
 			l_hbox.extend (edit_contract_label)
@@ -304,9 +304,9 @@ feature {NONE} -- Basic operation
 
 				-- Set contract button's edit state.
 			if context_class.group.is_readonly then
-				edit_contract_label.set_text (local_formatter.translation (l_view_contracts))
+				edit_contract_label.set_text (locale_formatter.translation (l_view_contracts))
 			else
-				edit_contract_label.set_text (local_formatter.translation (l_edit_contracts))
+				edit_contract_label.set_text (locale_formatter.translation (l_edit_contracts))
 			end
 		end
 

@@ -107,11 +107,11 @@ feature {NONE} -- Status setting
 	display_state_text
 			-- <Precursor>
 		do
-			title.set_text (local_formatter.translation (t_title))
+			title.set_text (locale_formatter.translation (t_title))
 			if {l_init: !ES_TEST_WIZARD_INITIAL_WINDOW} Current then
-				message.set_text (local_formatter.translation (t_subtitle))
+				message.set_text (locale_formatter.translation (t_subtitle))
 			else
-				subtitle.set_text (local_formatter.translation (t_subtitle))
+				subtitle.set_text (locale_formatter.translation (t_subtitle))
 			end
 		end
 

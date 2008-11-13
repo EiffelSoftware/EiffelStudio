@@ -61,7 +61,7 @@ feature -- Access
 	title: !STRING_32
 			-- Caption for tab
 		do
-			Result := local_formatter.translation (t_title)
+			Result := locale_formatter.translation (t_title)
 		end
 
 	icon: EV_PIXEL_BUFFER

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			else
 				if logger.is_service_available then
 					logger.service.put_message_with_severity (
-						local_formatter.formatted_translation (w_could_not_load_tool_icons, [a_tool.title]),
+						locale_formatter.formatted_translation (w_could_not_load_tool_icons, [a_tool.title]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
 					)

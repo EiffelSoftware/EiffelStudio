@@ -110,9 +110,9 @@ feature {NONE} -- Query
 			l_outcome: EQA_TEST_OUTCOME
 		do
 			if a_test.is_queued then
-				Result := local_formatter.translation (l_queued)
+				Result := locale_formatter.translation (l_queued)
 			elseif a_test.is_running then
-				Result := local_formatter.translation (l_running)
+				Result := locale_formatter.translation (l_running)
 			else
 				if a_test.is_outcome_available then
 					l_outcome := a_test.last_outcome
@@ -125,16 +125,16 @@ feature {NONE} -- Query
 							end
 						else
 							if l_outcome.is_user_abort then
-								Result := local_formatter.translation (l_user_aborted)
+								Result := locale_formatter.translation (l_user_aborted)
 							else
-								Result := local_formatter.translation (l_aborted)
+								Result := locale_formatter.translation (l_aborted)
 							end
 						end
 					else
 						create Result.make_empty
 					end
 				else
-					Result := local_formatter.translation (l_not_tested)
+					Result := locale_formatter.translation (l_not_tested)
 				end
 			end
 		end
@@ -155,9 +155,9 @@ feature {NONE} -- Query
 			l_outcome: EQA_TEST_OUTCOME
 		do
 			if a_test.is_queued then
-				Result := local_formatter.translation (tt_queued)
+				Result := locale_formatter.translation (tt_queued)
 			elseif a_test.is_running then
-				Result := local_formatter.translation (tt_running)
+				Result := locale_formatter.translation (tt_running)
 			else
 				if a_test.is_outcome_available then
 					l_outcome := a_test.last_outcome
@@ -165,24 +165,24 @@ feature {NONE} -- Query
 						create Result.make (20)
 						if l_outcome.has_response then
 							if l_outcome.is_setup_clean then
-								Result.append (local_formatter.translation (tt_fails))
+								Result.append (locale_formatter.translation (tt_fails))
 								Result.append (exception_text (l_outcome.test_response.exception))
 							else
-								Result.append (local_formatter.translation (tt_unresolved))
+								Result.append (locale_formatter.translation (tt_unresolved))
 								Result.append (exception_text (l_outcome.setup_response.exception))
 							end
 						else
 							if l_outcome.is_user_abort then
-								Result.append (local_formatter.translation (tt_user_aborted))
+								Result.append (locale_formatter.translation (tt_user_aborted))
 							else
-								Result.append (local_formatter.translation (tt_aborted))
+								Result.append (locale_formatter.translation (tt_aborted))
 							end
 						end
 					else
-						Result := local_formatter.translation (tt_passes)
+						Result := locale_formatter.translation (tt_passes)
 					end
 				else
-					Result := local_formatter.translation (tt_not_tested)
+					Result := locale_formatter.translation (tt_not_tested)
 				end
 			end
 		end
@@ -197,8 +197,8 @@ feature -- Basic operations
 	populate_header (a_header: !EV_GRID_HEADER) is
 			-- <Precursor>
 		do
-			a_header.i_th (tests_column).set_text (local_formatter.translation (t_tests))
-			a_header.i_th (status_column).set_text (local_formatter.translation (t_status))
+			a_header.i_th (tests_column).set_text (locale_formatter.translation (t_tests))
+			a_header.i_th (status_column).set_text (locale_formatter.translation (t_status))
 		end
 
 	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I) is

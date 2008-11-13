@@ -39,7 +39,7 @@ feature {NONE} -- Access
 
 	title: !STRING_32
 		do
-			Result := local_formatter.translation ("Test creation")
+			Result := locale_formatter.translation ("Test creation")
 		end
 
 	icon: !EV_PIXEL_BUFFER

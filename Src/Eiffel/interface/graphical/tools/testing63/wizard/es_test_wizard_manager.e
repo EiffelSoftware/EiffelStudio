@@ -31,7 +31,7 @@ feature -- Access
 	wizard_title: STRING_32 is
 			-- <Precursor>
 		do
-			Result := local_formatter.translation ("New eiffel test")
+			Result := locale_formatter.translation ("New eiffel test")
 		end
 
 	wizard_icon_pixmap: EV_PIXMAP

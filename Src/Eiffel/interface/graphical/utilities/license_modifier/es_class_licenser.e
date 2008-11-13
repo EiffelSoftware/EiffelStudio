@@ -135,7 +135,7 @@ feature -- Basic operatons
 					if not l_license.is_empty then
 						if not l_mod.is_valid_license (l_license) then
 								-- Render the invalid license template.
-							l_license := local_formatter.translation (invalid_license_license)
+							l_license := locale_formatter.translation (invalid_license_license)
 							if wizard_enginer.is_service_available then
 								create l_parameters.make_default
 								if l_use_old_syntax then

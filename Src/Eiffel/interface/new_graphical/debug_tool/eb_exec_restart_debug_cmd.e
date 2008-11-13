@@ -60,8 +60,10 @@ feature -- Initialization
 					eb_debugger_manager.application_quit_actions.prune_all (ag)
 				end
 			else
-				delayed_run_action.cancel_request
-				delayed_run_action := Void
+				if delayed_run_action /= Void then
+					delayed_run_action.cancel_request
+					delayed_run_action := Void
+				end
 				params := last_parameters
 				last_parameters := Void
 				if params = Void then

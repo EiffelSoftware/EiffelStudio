@@ -97,7 +97,7 @@ feature {NONE} -- Access
 	log_file: ?KL_TEXT_OUTPUT_FILE
 			-- Log file for test results
 
-	result_cursor: ?DS_LINEAR_CURSOR [!TEST_I]
+	result_cursor: ?DS_HASH_TABLE_CURSOR [!TEST_I, NATURAL]
 
 feature -- Status report
 
@@ -441,7 +441,11 @@ feature {NONE} -- Basic functionality
 									log_file.put_string ("}.")
 									log_file.put_string (l_test.name)
 									log_file.put_string (": ")
-									if not l_test.is_outcome_available or else not l_test.last_outcome.has_response then
+									if
+										assigner.is_aborted (result_cursor.key) or else
+										not l_test.is_outcome_available or else
+										not l_test.last_outcome.has_response
+									then
 										log_file.put_string ("aborted")
 									elseif l_test.last_outcome.is_pass then
 										log_file.put_string ("passed")

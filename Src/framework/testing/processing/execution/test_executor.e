@@ -162,15 +162,20 @@ feature {NONE} -- Basic functionality
 			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
 			l_old_map: like test_map
 			l_count: NATURAL
-			l_list: !DS_LINEAR [!TEST_I]
+			l_list: !DS_ARRAYED_LIST [!TEST_I]
+			l_sorter: DS_QUICK_SORTER [!TEST_I]
+			l_comparator: TAG_COMPARATOR [!TEST_I]
 		do
 			l_old_map := test_map
 
 			if a_conf.is_specific then
-				l_list := a_conf.tests
+				create l_list.make_from_linear (a_conf.tests)
 			else
-				l_list := test_suite.tests
+				create l_list.make_from_linear (test_suite.tests)
 			end
+			create l_comparator.make (a_conf.sorter_prefix)
+			create l_sorter.make (l_comparator)
+			l_list.sort (l_sorter)
 
 			create test_map.make (l_list.count)
 			if l_old_map /= Void then

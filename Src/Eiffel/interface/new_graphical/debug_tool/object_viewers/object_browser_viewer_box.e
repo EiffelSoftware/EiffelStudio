@@ -10,8 +10,10 @@ class
 	OBJECT_BROWSER_VIEWER_BOX
 
 inherit
-
 	EB_OBJECT_VIEWER
+		redefine
+			build_mini_tool_bar
+		end
 
 	ES_OBJECTS_GRID_MANAGER
 
@@ -67,10 +69,31 @@ feature {NONE} -- Implementation
 			viewer.set_configurable_target_menu_mode
 			viewer.set_configurable_target_menu_handler (agent context_menu_handler)
 
+			build_slices_cmd
+			viewer.set_slices_cmd (slices_cmd)
+
 			viewerborder.extend (viewer)
 			vb.extend (viewerborder)
 
  			set_title (name)
+		end
+
+	build_slices_cmd is
+		do
+			if slices_cmd = Void then
+				create slices_cmd.make (Current)
+				slices_cmd.enable_sensitive
+			end
+		end
+
+	build_mini_tool_bar is
+		do
+			if mini_tool_bar = Void then
+				create mini_tool_bar.make
+			end
+			build_slices_cmd
+			mini_tool_bar.extend (slices_cmd.new_mini_sd_toolbar_item)
+			mini_tool_bar.compute_minimum_size
 		end
 
 feature -- Access

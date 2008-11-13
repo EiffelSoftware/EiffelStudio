@@ -90,7 +90,7 @@ feature -- Status report
 			Result := called_feature.is_infix or called_feature.is_prefix
 		end
 
-feature -- Element change
+feature {TEST_CAPTURER} -- Element change
 
 	add_operand (a_operand: !STRING; a_type: !STRING)
 			-- Add `a_operand' to `operands'.

@@ -21,16 +21,16 @@ create
 
 feature -- Access
 
-	icon_width: NATURAL_8 = 16 
+	icon_width: NATURAL_8 = 16
 			-- <Precursor>
 
-	icon_height: NATURAL_8 = 16 
+	icon_height: NATURAL_8 = 16
 			-- <Precursor>
 
-	width: NATURAL_8 = 2
+	width: NATURAL_8 = 3
 			-- <Precursor>
 
-	height: NATURAL_8 = 1 
+	height: NATURAL_8 = 1
 			-- <Precursor>
 
 feature {NONE} -- Access
@@ -39,7 +39,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen test_routine_icon: !EV_PIXMAP
 			-- Access to 'routine' pixmap.
 		require
@@ -72,14 +72,31 @@ feature -- Icons
 			Result := named_icon_buffer (general_test_name)
 		end
 
+	frozen general_bug_icon: !EV_PIXMAP
+			-- Access to `bug' pixmap.
+		require
+			has_named_icon: has_named_icon (general_bug_name)
+		once
+			Result := named_icon (general_bug_name)
+		end
+
+	frozen general_bug_icon_buffer: !EV_PIXEL_BUFFER
+			-- Access to `bug' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (general_bug_name)
+		once
+			Result := named_icon_buffer (general_bug_name)
+		end
+
 feature -- Icons: Animations
-	
+
 
 
 feature -- Constants: Icon names
 
 	test_routine_name: !STRING = "test_routine"
 	general_test_name: !STRING = "general_test"
+	general_bug_name: !STRING = "general_bug"
 
 feature {NONE} -- Basic operations
 
@@ -88,6 +105,7 @@ feature {NONE} -- Basic operations
 		do
 			a_table.force_last ([{NATURAL_8}1, {NATURAL_8}1], test_routine_name)
 			a_table.force_last ([{NATURAL_8}2, {NATURAL_8}1], general_test_name)
+			a_table.force_last ([{NATURAL_8}3, {NATURAL_8}1], general_bug_name)
 		end
 
 ;indexing

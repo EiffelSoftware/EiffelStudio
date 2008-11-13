@@ -27,7 +27,7 @@ feature -- Access
 			if {l_icons: G} internal_icons then
 				Result := l_icons
 			else
-				Result ?= new_icons
+				Result := new_icons
 				internal_icons := Result
 			end
 		ensure

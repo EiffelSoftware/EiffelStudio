@@ -237,7 +237,7 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Basic functionality
 			l_child: ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 		do
 			if a_tag.is_empty then
-				show_subrow_with_item (a_item, row)
+				show_subrow_with_item (a_item)
 			else
 				l_token := first_token (a_tag)
 				l_child := child_for_token (l_token)
@@ -248,8 +248,11 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Basic functionality
 			end
 		end
 
-	show_subrow_with_item (a_item: !G; a_row: !EV_GRID_ROW)
+	show_subrow_with_item (a_item: !G)
 			-- Select row containing `a_item'.
+		require
+			evaluated: is_evaluated
+			a_item_added: items.has (a_item)
 		local
 			l_data: like row_data_for_item
 		do

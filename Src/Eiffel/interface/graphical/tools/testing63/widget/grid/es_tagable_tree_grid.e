@@ -238,6 +238,7 @@ feature -- Basic functionality
 			a_item_in_collection: collection.items.has (a_item)
 		local
 			l_tags: !DS_HASH_SET [!STRING]
+			i: INTEGER
 		do
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)
 			if not l_tags.is_empty then
@@ -247,8 +248,22 @@ feature -- Basic functionality
 						-- `untagged_subrow' must be attached since item is in collection and does not have any
 						-- matching tags.
 					untagged_subrow_attached: untagged_subrow /= Void
+					is_untagged_item: untagged_items.has (a_item)
 				end
-				show_subrow_with_item (a_item, untagged_subrow.as_attached)
+				if not untagged_subrow.is_expanded and untagged_subrow.is_expandable then
+					untagged_subrow.expand
+				end
+				if untagged_subrow.is_expanded then
+					from
+						i := first_untagged_index
+					until
+						{l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data and then
+							l_data.item = a_item
+					loop
+						i := i + grid.row (i).subrow_count_recursive + 1
+					end
+					grid.set_first_visible_row (untagged_subrow.index)
+				end
 			end
 		end
 

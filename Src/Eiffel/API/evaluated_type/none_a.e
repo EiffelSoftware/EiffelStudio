@@ -90,7 +90,7 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			create Result.make (Current)
+			create Result.make (as_attachment_mark_free)
 		end
 
 	c_type: REFERENCE_I is

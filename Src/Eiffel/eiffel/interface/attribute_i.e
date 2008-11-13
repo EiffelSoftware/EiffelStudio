@@ -46,7 +46,7 @@ feature
 		do
 			create Result
 			Result.set_body_index (body_index)
-			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type)
 
 			if generate_in = 0 then
 				if has_replicated_ast then

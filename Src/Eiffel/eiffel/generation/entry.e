@@ -163,13 +163,13 @@ feature -- from ENTRY
 
 	needs_extended_info: BOOLEAN is
 			-- Is `type' a type which needs more data to be resolved at run-time?
-			--| Currently it is only generic types, formal generic type and like Current.
-		local
-			gtype : GEN_TYPE_A
+			--| Currently it is only generics, formals, anchors and types which are attached.
+			--| We exclude expanded types since they are by default attached and thus only have
+			--| one type at runtime.
 		do
-			gtype ?= type;
-			Result := (gtype /= Void) or type.is_formal or type.is_like_current
-		end;
+			Result := {l_gtype: GEN_TYPE_A} type or else not type.is_explicit or else
+				({l_attached_type: ATTACHABLE_TYPE_A} type and then not type.is_expanded and then l_attached_type.is_attached)
+		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate list of type id's of generic type

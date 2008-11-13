@@ -150,7 +150,7 @@ feature -- Polymorphism
 		do
 			create Result
 			Result.set_body_index (body_index)
-			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type)
 			if has_replicated_ast then
 				Result.set_access_in (access_in)
 				Result.set_written_in (written_in)

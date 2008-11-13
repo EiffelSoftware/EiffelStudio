@@ -786,8 +786,8 @@ rt_shared void internal_store(char *object)
 			printf ("Storing in new recoverable format\n");
 #endif
 			if (eif_is_new_recoverable_format) {
-				c = INDEPENDENT_STORE_6_0;
-				rt_kind_version = INDEPENDENT_STORE_6_0;
+				c = INDEPENDENT_STORE_6_3;
+				rt_kind_version = INDEPENDENT_STORE_6_3;
 			}
 		}
 		else {
@@ -1894,6 +1894,12 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
 		typearr++;
 #endif
+		while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+				/* Write annotation mark. */
+			widr_multi_uint16 (&gtype, 1);
+			i += 1;
+			gtype = gtypes [i];
+		}
 		if (gtype == TUPLE_TYPE) {
 				/* Write TUPLE_TYPE, nb generic parames */
 			widr_multi_uint16 (gtypes + i, TUPLE_OFFSET);

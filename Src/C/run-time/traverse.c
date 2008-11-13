@@ -163,6 +163,13 @@ rt_private void account_attributes (EIF_TYPE_INDEX dtype)
 		EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[i] + 1;
 		for (k=0; gtypes[k] != TERMINATOR; k++) {
 			EIF_TYPE_INDEX gtype = gtypes[k];
+
+				/* Skip all annotations. */
+			while (RT_HAS_ANNOTATION_TYPE(gtype)) {
+				k++;
+				gtype = gtypes[k];
+			}
+
 			if (gtype == TUPLE_TYPE) {
 				k = k + TUPLE_OFFSET;
 				gtype = gtypes[k];
@@ -223,6 +230,11 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 		while (i--)
 		{
 			dtype = *(l_cidarr++);
+
+				/* There is an annotation, we can simply discard all of them. */
+			while (RT_HAS_ANNOTATION_TYPE(dtype)) {
+				dtype = *(l_cidarr++);
+			}
 
 			if (dtype == TUPLE_TYPE) {
 				i = i - TUPLE_OFFSET;

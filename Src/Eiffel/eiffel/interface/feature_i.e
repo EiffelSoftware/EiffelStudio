@@ -1681,7 +1681,7 @@ feature -- Polymorphism
  		do
  			create Result
  			Result.set_body_index (body_index)
-			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type)
 
  			if has_replicated_ast then
  					-- If AST has been replicated, then we must use `access_in'
@@ -1704,7 +1704,7 @@ feature -- Polymorphism
  			is_attribute: is_attribute
  		do
  			create Result
-			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type)
  			Result.set_feature_id (feature_id)
  		end
 

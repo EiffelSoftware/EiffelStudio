@@ -61,12 +61,11 @@ feature -- Generic conformance
 			-- Flags for annotations of Current.
 			-- Currently only `!' and `frozen' are supported
 		do
--- To uncomment when attachment marks are supported at runtime.
---				-- Only if a type is not expanded do we need to generate the
---				-- attached annotation since by default expanded implies attached.
---			if is_attached and not is_expanded then
---				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
---			end
+ 				-- Only if a type is not expanded do we need to generate the
+				-- attached annotation since by default expanded implies attached.
+			if is_attached and not is_expanded then
+				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+			end
 -- To uncomment when variant/frozen proposal for generics is supported.
 --			if is_frozen then
 --				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
@@ -142,17 +141,11 @@ feature -- Generic conformance
 			ba_attached: ba /= Void
 			a_context_type_not_void: a_context_type /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
-		local
-			l_annotation: like annotation_flags
 		do
 			if has_associated_class_type (a_context_type) then
 				ba.append_short_integer (type_id (a_context_type) - 1)
 			else
 				ba.append_short_integer (0)
-			end
-			l_annotation := annotation_flags
-			if l_annotation /= 0 then
-				ba.append_short_integer (l_annotation)
 			end
 				-- We can provide `Void' for `generated_id' since it is the one
 				-- from `a_context_type' that we are retrieving.
@@ -832,6 +825,14 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
+	as_attachment_mark_free: like Current
+			-- Same as Current but without any attachment mark
+		do
+			Result := Current
+		ensure
+			as_attachment_mark_free_not_void: Result /= Void
+		end
+
 	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		require
@@ -1272,6 +1273,8 @@ feature -- Access
 		require
 			is_valid: is_valid
 		deferred
+		ensure
+			create_info_not_void: Result /= Void
 		end
 
 	check_for_obsolete_class (current_class: CLASS_C; current_feature: FEATURE_I) is

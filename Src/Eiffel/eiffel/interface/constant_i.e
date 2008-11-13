@@ -137,7 +137,7 @@ feature -- Settings
 		do
 			create Result
 			Result.set_body_index (body_index)
-			Result.set_type_a (type.actual_type)
+			Result.set_type_a (type)
 
 			if
 				not byte_context.workbench_mode and then generate_in /= 0

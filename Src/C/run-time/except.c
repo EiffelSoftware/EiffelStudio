@@ -1095,7 +1095,6 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 {
 	EIF_TYPE_INDEX dftype;
 	
-	REQUIRE("arg_not_null", arg);
 	REQUIRE("a_location_not_null", a_feature_name);
 	REQUIRE("a_pos positive", a_pos > 0);
 
@@ -1104,32 +1103,47 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 		 * to say that a change in one mode needs to be done in the other mode if applicable. */
 #ifdef WORKBENCH
 	if (catcall_detection_enabled) {
-		dftype = Dftype(arg);
-		if (!RTRC(expected_dftype, dftype)) {
-				/* Type do not conform. Let's check the particular case of BIT XX types for which we do not
-				 * actually record the full type information. */
-			if (!((dftype == egc_bit_dtype) && (eif_register_bit_type (LENGTH(arg)) == expected_dftype))) {
-				if (catcall_detection_console_enabled) {
+#endif
+		if (arg) {
+			dftype = Dftype(arg);
+			expected_dftype = eif_non_attached_type(expected_dftype);
+			if (!RTRC(expected_dftype, dftype)) {
+					/* Type do not conform. Let's check the particular case of BIT XX types for which
+					 * we do not actually record the full type information. */
+				if (!((dftype == egc_bit_dtype) && (eif_register_bit_type(LENGTH(arg)) == expected_dftype))) {
+#ifdef WORKBENCH
+					if (catcall_detection_console_enabled) {
+						print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
+							System(dtype).cn_generator,
+							a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+					}
+					if (catcall_detection_debugger_enabled) {
+						dcatcall(a_pos, expected_dftype, dftype);
+					}
+#else
 					print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
 						System(dtype).cn_generator,
 						a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
-				}
-				if (catcall_detection_debugger_enabled) {
-					dcatcall(a_pos, expected_dftype, dftype);
+#endif
 				}
 			}
-		}
-	}
+		} else if (eif_is_attached_type(expected_dftype)) {
+				/* Case of where we get a Void object where a non-Void object was expected. */
+			expected_dftype = eif_non_attached_type(expected_dftype);
+#ifdef WORKBENCH
+			if (catcall_detection_console_enabled) {
+				print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",
+					System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
+			}
+			if (catcall_detection_debugger_enabled) {
+				dcatcall(a_pos, expected_dftype, 0xFFFF);
+			}
 #else
-	dftype = Dftype(arg);
-	if (!RTRC(expected_dftype, dftype)) {
-			/* Type do not conform. Let's check the particular case of BIT XX types for which we do not
-			 * actually record the full type information. */
-		if (!((dftype == egc_bit_dtype) && (eif_register_bit_type (LENGTH(arg)) == expected_dftype))) {
-			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-				System(dtype).cn_generator,
-				a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",
+				System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
+#endif
 		}
+#ifdef WORKBENCH
 	}
 #endif
 }

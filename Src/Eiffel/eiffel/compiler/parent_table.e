@@ -87,6 +87,9 @@ feature
 			buffer.put_string ("static EIF_TYPE_INDEX ptf");
 			buffer.put_integer (l_type_id);
 			buffer.put_string ("[] = {");
+					-- Prefix each description with a place holder that can be used to hold
+					-- an attachment mark.
+			buffer.put_two_character ('0', ',')
 
 			from
 				i := 1;
@@ -95,6 +98,8 @@ feature
 			until
 				i >= n
 			loop
+					-- Prefix each description with a place holder that can be used to hold
+					-- an attachment mark.
 				item (i).generate_cid (buffer, final_mode, False, a_class_type.type);
 
 				i := i + 1;
@@ -103,7 +108,9 @@ feature
 				if i < n then
 						-- Add a separator between parents.
 					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
-					buffer.put_character (',')
+						-- Prefix each description with a place holder that can be used to hold
+						-- an attachment mark.
+					buffer.put_three_character (',', '0', ',')
 				end
 
 				if (j \\ 16) = 0 then
@@ -153,6 +160,10 @@ feature
 				ba.append ('%U')
 			end
 
+				-- Prefix each description with a place holder that can be used to hold
+				-- an attachment mark.
+			ba.append_short_integer (0)
+
 			from
 				i := 1
 				n := crnt_pos;
@@ -164,6 +175,9 @@ feature
 				if i < n then
 						-- Add a separator between parents.
 					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
+						-- Prefix each description with a place holder that can be used to hold
+						-- an attachment mark.
+					ba.append_short_integer (0)
 				end
 			end;
 

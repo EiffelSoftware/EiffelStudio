@@ -13,6 +13,7 @@ inherit
 			as_attached_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
+			as_attachment_mark_free,
 			is_attached,
 			is_implicitly_attached,
 			to_other_attachment
@@ -147,6 +148,21 @@ feature -- Duplication
 			end
 		end
 
+	as_attachment_mark_free: like Current
+			-- Same as Current but without any attachment mark
+		local
+			l_bits: like attachment_bits
+		do
+			l_bits := attachment_bits
+			if l_bits = 0 then
+				Result := Current
+			else
+				attachment_bits := 0
+				Result := duplicate
+				attachment_bits := l_bits
+			end
+		end
+
 	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		do
@@ -176,7 +192,7 @@ feature {NONE} -- Attachment properties
 			-- Associated attachment flags
 
 	has_detachable_mark_mask: NATURAL_8 is 1
-			-- Mask in `attachment_bits' that tells whether the type has an explicit detachanble mark
+			-- Mask in `attachment_bits' that tells whether the type has an explicit detachable mark
 
 	has_attached_mark_mask: NATURAL_8 is 2
 			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark

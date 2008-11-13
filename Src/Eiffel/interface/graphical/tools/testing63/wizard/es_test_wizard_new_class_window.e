@@ -57,20 +57,28 @@ feature {NONE} -- Initialization
 		local
 			l_label: EV_LABEL
 			l_hb: EV_HORIZONTAL_BOX
-			l_text_field: EV_TEXT_FIELD
 		do
 			create l_hb
-			create l_label.make_with_text (local_formatter.translation (l_class_name))
+			create l_label
+			if wizard_information.is_generated_test_class then
+				l_label.set_text (local_formatter.translation (l_class_name_prefix))
+			else
+				l_label.set_text (local_formatter.translation (l_class_name))
+			end
 			l_hb.extend (l_label)
 			l_hb.disable_item_expand (l_label)
 
-			create l_text_field
-			create class_name.make (l_text_field, agent on_validate_class_name)
-			class_name.valid_state_changed_event.subscribe (agent on_valid_state_changed)
+			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name, agent {!STRING_32}.as_upper)
 			l_hb.extend (class_name)
 
 			a_parent.extend (l_hb)
 			a_parent.disable_item_expand (l_hb)
+
+			create class_name_error_label
+			class_name_error_label.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+			class_name_error_label.align_text_right
+			a_parent.extend (class_name_error_label)
+			a_parent.disable_item_expand (class_name_error_label)
 		end
 
 	build_class_tree (a_parent: EV_BOX) is
@@ -109,6 +117,12 @@ feature {NONE} -- Initialization
 			class_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
 			class_tree.refresh
 			a_parent.extend (class_tree)
+
+			create cluster_error_label
+			cluster_error_label.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+			cluster_error_label.align_text_right
+			a_parent.extend (cluster_error_label)
+			a_parent.disable_item_expand (cluster_error_label)
 		end
 
 	build_checkboxes (a_parent: EV_BOX)
@@ -145,10 +159,11 @@ feature {NONE} -- Initialization
 		do
 			if {l_name: !STRING} wizard_information.new_class_name_cache then
 				if {l_name32: !STRING_32} l_name.to_string_32 then
-					class_name.set_text (l_name32)
+					class_name.widget.set_text (l_name32)
 				end
 			end
-			class_name.validate
+			if {l_res: BOOLEAN} validate_class_name (class_name.widget.text.as_attached) then
+			end
 
 			if {l_cluster: !CONF_CLUSTER} wizard_information.cluster_cache then
 				if {l_path: !STRING} wizard_information.path_cache then
@@ -176,6 +191,8 @@ feature {NONE} -- Initialization
 	--			end
 				system_level_test_checkbox.disable_sensitive
 			end
+
+			validate_cluster
 			update_next_button_status
 		end
 
@@ -192,13 +209,19 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: widgets
 
-	class_name: ES_VALIDATION_TEXT_FIELD
+	class_name: ES_RESTRICTED_TEXTABLE_WIDGET [EV_TEXT_FIELD]
 			-- Text field for new test class name
+
+	class_name_error_label: EV_LABEL
+			-- Label showing invalid class name
 
 	class_tree: ?ES_TEST_WIZARD_CLASS_TREE
 			-- Tree displaying clusters and existing test classes
 			--
 			-- Note: must be detachable for recycling
+
+	cluster_error_label: EV_LABEL
+			-- Label showing invalid cluster selection
 
 	setup_checkbox: EV_CHECK_BUTTON
 			-- Checkbox for creating setup routine
@@ -214,30 +237,71 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := class_name.is_valid and then wizard_information.cluster_cache /= Void
+			Result := is_class_name_valid and is_cluster_valid
 		end
+
+	is_class_name_valid: BOOLEAN
+			-- Is entered class name valid?
+
+	is_cluster_valid: BOOLEAN
+			-- Is choosen cluster valid?
+
+	is_validating_class_name: BOOLEAN
+			-- Is `on_validate_class_name' already called?
 
 feature {NONE} -- Events
 
-	on_validate_class_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32] is
+	validate_class_name (a_name: !STRING_32): BOOLEAN
 			-- Called when `class_name' contents need to be validated
 		local
 			l_name: !STRING
+			l_path: STRING
+			l_error: ?STRING_32
 		do
 			l_name ?= a_name.to_string_8
-			wizard_information.set_new_class_name (l_name)
-			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-				class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
-				Result := [class_name_validator.is_valid, class_name_validator.last_error_message]
+			Result := True
+			class_name_validator.validate_class_name (l_name)
+			if l_name.is_empty or class_name_validator.is_valid then
+				Result := True
+				wizard_information.new_class_name_cache := l_name
+				if not l_name.is_empty then
+					if test_suite.is_service_available and then test_suite.service.is_project_initialized then
+						class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
+						if class_name_validator.is_valid then
+							if is_cluster_valid and not wizard_information.is_generated_test_class then
+								l_path := wizard_information.cluster.location.build_path (wizard_information.path, l_name.as_lower)
+								l_path.append (".e")
+								if (create {RAW_FILE}.make (l_path)).exists then
+									l_error := local_formatter.formatted_translation (e_file_exists, [l_path])
+								end
+							end
+						else
+							l_error := class_name_validator.last_error_message
+						end
+					else
+						l_error := local_formatter.translation (e_project_not_available)
+					end
+				end
+				if l_error /= Void then
+					class_name_error_label.set_text (l_error)
+					class_name_error_label.show
+					is_class_name_valid := False
+				else
+					is_class_name_valid := not l_name.is_empty
+					class_name_error_label.hide
+				end
+				update_next_button_status
 			else
-				Result := [False, local_formatter.translation (e_project_not_available)]
+					-- This means text in box will remain the same, so we also should not update anything
+				Result := False
 			end
-			update_next_button_status
 		end
 
 	on_select_tree_item
 			-- Called when item in `class_tree' is selected.
 		do
+			wizard_information.cluster_cache := Void
+			wizard_information.path_cache := Void
 			if {l_item: ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
 				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
 					if {l_parent: !CONF_CLUSTER} l_eb_cluster.actual_cluster then
@@ -249,6 +313,9 @@ feature {NONE} -- Events
 						end
 					end
 				end
+			end
+			validate_cluster
+			if {l_res: BOOLEAN} validate_class_name (class_name.widget.text.as_attached) then
 			end
 			update_next_button_status
 		end
@@ -272,6 +339,36 @@ feature {NONE} -- Events
 		end
 
 feature {NONE} -- Basic operations
+
+	validate_cluster
+			-- Validate cluster information
+		local
+			l_error: ?STRING_32
+			l_path: FILE_NAME
+			l_directory: DIRECTORY
+		do
+			if wizard_information.cluster_cache /= Void and wizard_information.path_cache /= Void then
+				is_cluster_valid := True
+				create l_path.make_from_string (wizard_information.cluster.location.build_path (wizard_information.path, ""))
+				create l_directory.make (l_path)
+				if l_directory.exists then
+					if not l_directory.is_writable then
+						l_error := local_formatter.formatted_translation (e_directory_not_writable, [l_path])
+					end
+				else
+					l_error := local_formatter.formatted_translation (e_directory_non_existent, [l_path])
+				end
+			else
+				is_cluster_valid := False
+			end
+			if l_error /= Void then
+				is_cluster_valid := False
+				cluster_error_label.show
+				cluster_error_label.set_text (l_error)
+			else
+				cluster_error_label.hide
+			end
+		end
 
 	proceed_with_current_info
 			-- <Precursor>
@@ -307,6 +404,7 @@ feature {NONE} -- Constants
 	t_subtitle: STRING = "Define properties of new test class"
 
 	l_class_name: STRING = "Class name: "
+	l_class_name_prefix: STRING = "Prefix for new class names"
 	l_select_cluster: STRING = "Select parent cluster for new class"
 
 	tt_new_cluster: STRING = "Create new cluster"
@@ -316,5 +414,11 @@ feature {NONE} -- Constants
 	b_system_level_test: STRING = "Create system level test class"
 
 	e_project_not_available: STRING = "Project is currently not available"
+	e_file_exists: STRING = "Class file $1 already exists"
+	e_directory_not_writable: STRING = "Directory $1 is not writable"
+	e_directory_non_existent: STRING = "Directory $1 does not exists"
 
+invariant
+	cluster_valid_implies_attached: is_cluster_valid implies (wizard_information.cluster_cache /= Void and
+		wizard_information.path_cache /= Void)
 end

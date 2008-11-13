@@ -1,0 +1,28 @@
+test_name 	 attribute-init-code-generation-correct
+test_description Ensures detection of non initialized (for code generation) inherited attached attributes are caught during a compilation
+
+copy_sub	Ace $TEST Ace
+copy_raw	test_a.e $CLUSTER test.e
+copy_raw	base.e $CLUSTER base.e
+copy_raw	attributes.e $CLUSTER attributes.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_test
+execute_result	ok
+
+copy_raw	test_b.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_melted
+execute_result	ok
+compare		exec_output_melted output
+
+compile_frozen
+compile_result	ok
+execute_work	NONE exec_output_frozen
+execute_result	ok
+compare		exec_output_frozen output
+
+test_end

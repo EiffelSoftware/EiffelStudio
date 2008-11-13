@@ -1959,6 +1959,8 @@ test	attached-formal-constraint						attach025 tcf fail attached_types generic
 test	attached-attribute-init							attach026 tcf fail attached_types self_init
 test	redefine-attached-attribute-init				attach027 tcf fail attached_types self_init
 test	generic-attached-attribute-init					attach028 tcf fail attached_types self_init generic
+test	full-void-safe-compilation						attach029 tcf fail void_safe
+test	attribute-init-code-generation-correct			attach030 tcf fail self_init incrementality melting
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

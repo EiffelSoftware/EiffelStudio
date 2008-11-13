@@ -65,7 +65,7 @@ feature -- Execution
 			check_environment_variable
 			set_precompile (False)
 			Arguments.set_program_name ("auto_test")
-			output_dirname := file_system.pathname (system.eiffel_project.project_directory.eifgens_cluster_path, "auto_test_gen")
+			output_dirname := file_system.pathname (system.eiffel_project.project_directory.testing_results_path, "auto_test")
 			create time_out.make (0, 0, 0, 0, 15, 0)
 			create error_handler.make (system)
 			error_handler.set_start_time (system_clock.date_time_now)

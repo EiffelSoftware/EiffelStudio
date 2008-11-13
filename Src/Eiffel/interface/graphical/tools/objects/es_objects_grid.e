@@ -638,12 +638,9 @@ feature {NONE} -- Actions implementation
 		end
 
 	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
-		local
-			ei: ES_OBJECTS_GRID_CELL
 		do
 			if ab = 1 then
-				ei ?= a_item
-				if ei /= Void then
+				if {ei: ES_OBJECTS_GRID_CELL} a_item then
 					activate_grid_item (ei)
 				end
 			end
@@ -653,8 +650,11 @@ feature {NONE} -- Actions implementation
 			-- Action to be performed when pointer right click on grid
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
-			if ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed then
-				if {l_stone: STONE} grid_pebble_from_cell (a_item) and then l_stone.is_valid then
+			if
+				{i: EV_GRID_ITEM} a_item and then
+				(ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed)
+			then
+				if {l_stone: STONE} grid_pebble_from_cell (i) and then l_stone.is_valid then
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end

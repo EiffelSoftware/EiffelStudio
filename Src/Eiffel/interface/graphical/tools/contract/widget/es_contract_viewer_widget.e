@@ -304,9 +304,9 @@ feature {NONE} -- Basic operation
 
 				-- Set contract button's edit state.
 			if context_class.group.is_readonly then
-				edit_contract_label.set_text ("View Contracts...")
+				edit_contract_label.set_text (l_view_contracts)
 			else
-				edit_contract_label.set_text ("Edit Contracts...")
+				edit_contract_label.set_text (l_edit_contracts)
 			end
 		end
 
@@ -423,6 +423,7 @@ feature {NONE} -- Internationalization
 	l_do_not_auto_show: !STRING = "Pop-up automatically"
 	f_do_not_auto_show: !STRING = "Uncheck to prevent the contract viewer from being displayed automatically. Use CTRL to force the show of this information in the future."
 	l_edit_contracts: !STRING = "Edit Contracts..."
+	l_view_contracts: !STRING = "View Contracts..."
 	f_edit_contracts: !STRING = "Places the current feature in the contract editor for edition"
 
 ;indexing

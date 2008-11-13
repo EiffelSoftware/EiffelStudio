@@ -68,7 +68,6 @@ feature {NONE} -- Initialization
 		require
 			a_window_attached: a_window /= Void
 			not_a_window_is_recycled: not a_window.is_recycled
-			a_tool_attached: a_tool /= Void
 			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
 			develop_window := a_window

@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			cmd_attached: cmd /= Void
 			a_manager_attached: a_manager /= Void
 			not_a_manager_is_recycled: not a_manager.is_recycled
-			a_tool_attached: a_tool /= Void
 			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
 			command := cmd

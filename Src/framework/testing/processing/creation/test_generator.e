@@ -89,7 +89,11 @@ feature {NONE} -- Access
 	current_task: ?AUT_TASK
 			-- Task `Current' works on every time `proceed' is called.
 
+	current_class: ?CLASS_C
+			-- Class for which test routines are currently created
+
 	source_writer: !TEST_GENERATED_SOURCE_WRITER
+			-- Source writer used for creating test classes
 
 feature -- Status report
 
@@ -127,6 +131,11 @@ feature {NONE} -- Status report
 
 	is_creating_new_class: BOOLEAN
 			-- <Precursor>
+		do
+			Result := current_class /= Void
+		ensure then
+			definition: Result = (current_class /= Void)
+		end
 
 feature {NONE} -- Query
 
@@ -595,63 +604,70 @@ feature{NONE} -- Test result analyizing
 
 	generate_test_class
 			-- Generate resulting {EQA_TEST_SET} class
-		do
-			is_creating_new_class := True
-			create_new_class
-			is_creating_new_class := False
-		end
-
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
-			-- <Precursor>
 		local
 			l_class_cursor: DS_LINEAR_CURSOR [CLASS_C]
-			l_res_cursor: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]
-			l_feat_table: FEATURE_TABLE
-			l_set: AUT_TEST_CASE_RESULT_SET
-			l_feat: FEATURE_I
 		do
-			source_writer.prepare (a_file, configuration.new_class_name, test_suite.eiffel_project.system.system.as_attached)
-
 			from
 				l_class_cursor := result_repository.classes.new_cursor
 				l_class_cursor.start
 			until
 				l_class_cursor.after
 			loop
-				from
-					l_feat_table := l_class_cursor.item.feature_table
-					l_feat_table.start
-				until
-					l_feat_table.after
-				loop
-					l_feat := l_feat_table.item_for_iteration
-					if l_feat /= Void and then
-					   --not (l_feat.is_attribute or l_feat.is_function) and
-					   not l_feat.is_prefix and
-					   not l_feat.is_infix and
-					   not l_feat.written_class.name.is_equal ("ANY")
-					then
-						l_set := result_repository.results_by_feature_and_class (l_feat, l_class_cursor.item)
-						if not (l_set.is_pass or l_set.is_untested) then
-							from
-								l_res_cursor := l_set.list.new_cursor
-								l_res_cursor.start
-							until
-								l_res_cursor.after
-							loop
-								if l_res_cursor.item.is_fail then
-									source_writer.print_test_routine (l_res_cursor.item.witness.request_list, l_res_cursor.item.witness.used_vars)
-								end
-								l_res_cursor.forth
-							end
-						end
-					end
-					l_feat_table.forth
-				end
+				current_class := l_class_cursor.item
+				create_new_class
+				current_class := Void
 				l_class_cursor.forth
 			end
+		end
 
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
+			-- <Precursor>
+		local
+			l_res_cursor: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]
+			l_feat_table: FEATURE_TABLE
+			l_set: AUT_TEST_CASE_RESULT_SET
+			l_feat: FEATURE_I
+			l_contains_test: BOOLEAN
+		do
+			source_writer.prepare (a_file, a_class_name, test_suite.eiffel_project.system.system.as_attached, current_class.name.as_attached)
+			from
+				l_feat_table := current_class.feature_table
+				l_feat_table.start
+			until
+				l_feat_table.after
+			loop
+				l_feat := l_feat_table.item_for_iteration
+				if l_feat /= Void and then
+				   --not (l_feat.is_attribute or l_feat.is_function) and
+				   not l_feat.is_prefix and
+				   not l_feat.is_infix and
+				   not l_feat.written_class.name.is_equal ("ANY")
+				then
+					l_set := result_repository.results_by_feature_and_class (l_feat, current_class)
+					if not (l_set.is_pass or l_set.is_untested) then
+						from
+							l_res_cursor := l_set.list.new_cursor
+							l_res_cursor.start
+						until
+							l_res_cursor.after
+						loop
+							if l_res_cursor.item.is_fail then
+								l_contains_test := True
+								source_writer.print_test_routine (l_res_cursor.item.witness.request_list, l_res_cursor.item.witness.used_vars)
+							end
+							l_res_cursor.forth
+						end
+					end
+				end
+				l_feat_table.forth
+			end
 			source_writer.finish
+			if not l_contains_test then
+				if a_file.is_closable then
+					a_file.close
+				end
+				a_file.delete
+			end
 		end
 
 feature {NONE} -- Implementation

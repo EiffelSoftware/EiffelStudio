@@ -112,7 +112,6 @@ feature -- Basic operations
 				output_stream.put_line ("-- TODO: add variable declarations for not failing and not minimized TCs.")
 			end
 			dedent
-			dedent
 			print_indentation
 			output_stream.put_line ("do")
 			indent
@@ -128,6 +127,7 @@ feature -- Basic operations
 			dedent
 			print_indentation
 			output_stream.put_line ("end")
+			dedent
 			dedent
 			output_stream.put_new_line
 		end

@@ -33,9 +33,11 @@ feature {NONE} -- Access
 	test_writer: ?TEST_GENERATED_TEST_WRITER
 			-- Writer printing AutoTest  results
 
+	class_under_test: ?STRING
+
 feature -- Status setting
 
-	prepare (a_file: !KI_TEXT_OUTPUT_STREAM; a_class_name: !STRING; a_system: !SYSTEM_I)
+	prepare (a_file: !KI_TEXT_OUTPUT_STREAM; a_class_name: !STRING; a_system: !SYSTEM_I; a_class_under_test: !like class_under_test)
 			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
@@ -44,6 +46,8 @@ feature -- Status setting
 			create stream.make (a_file)
 			create test_writer.make (a_system, a_file)
 			class_name := a_class_name
+			class_under_test := a_class_under_test
+			put_indexing
 			put_class_header
 		end
 
@@ -68,6 +72,7 @@ feature -- Status setting
 			put_class_footer
 			test_writer := Void
 			stream := Void
+			class_under_test := Void
 		end
 
 feature {NONE} -- Output
@@ -79,6 +84,9 @@ feature {NONE} -- Output
 			stream.indent
 			stream.put_line ("description: %"Automatically generated tests.%"")
 			stream.put_line ("author: %"Testing tool%"")
+			stream.put_string ("testing: %"covers/{")
+			stream.put_string (class_under_test)
+			stream.put_line ("}%"")
 			stream.dedent
 			stream.put_line ("")
 		end

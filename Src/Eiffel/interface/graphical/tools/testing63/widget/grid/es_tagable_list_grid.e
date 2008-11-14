@@ -28,8 +28,12 @@ feature -- Access
 
 	collection: !ACTIVE_COLLECTION_I [G]
 			-- <Precursor>
+		local
+			l_collection: like internal_collection
 		do
-			Result ?= internal_collection
+			l_collection := internal_collection
+			check l_collection /= Void end
+			Result := l_collection
 		end
 
 feature {NONE} -- Access
@@ -173,11 +177,12 @@ feature {NONE} -- Implementation
 			a_item_valid: collection.items.has (a_item)
 			a_pos_valid: a_pos > 0 and a_pos <= grid.row_count + 1
 		local
-			l_row: !EV_GRID_ROW
+			l_row: EV_GRID_ROW
 			l_new: ES_TAGABLE_GRID_ITEM_DATA [G]
 		do
 			grid.insert_new_row (a_pos)
-			l_row ?= grid.row (a_pos)
+			l_row := grid.row (a_pos)
+			check l_row /= Void end
 			create l_new.make (l_row, a_item)
 		end
 

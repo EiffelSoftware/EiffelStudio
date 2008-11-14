@@ -325,27 +325,30 @@ feature {NONE} -- Events
 			-- Called when `tag_list' content needs to be validated
 		local
 			l_list: STRING
-			l_tags: DS_LINEAR [!STRING]
+			l_tags: DS_LINEAR [STRING]
 			l_valid: BOOLEAN
 			l_invalid: STRING
 			l_error: STRING_32
+			l_tag: STRING
 		do
 			wizard_information.tag_list.wipe_out
 			l_list := a_list.to_string_8
-			l_tags ?= splitter.split (l_list)
+			l_tags := splitter.split (l_list)
 			from
 				l_tags.start
 				l_valid := True
 			until
 				l_tags.after
 			loop
-				if not tag_utilities.is_valid_tag (l_tags.item_for_iteration) then
+				l_tag := l_tags.item_for_iteration
+				check l_tag /= Void end
+				if not tag_utilities.is_valid_tag (l_tag) then
 					l_valid := False
 					if l_invalid = Void then
-						create l_invalid.make_from_string (l_tags.item_for_iteration)
+						create l_invalid.make_from_string (l_tag)
 					end
 				end
-				wizard_information.tag_list.force_last (l_tags.item_for_iteration)
+				wizard_information.tag_list.force_last (l_tag)
 				l_tags.forth
 			end
 			if not l_valid then

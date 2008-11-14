@@ -216,7 +216,6 @@ feature {NONE} -- Events
 		do
 			selected_class := Void
 			if class_tree.selected_item /= Void then
-				selected_class ?= class_tree.selected_item.data
 				if {l_eclass: !like selected_class} class_tree.selected_item.data then
 					selected_class := l_eclass
 					wizard_information.set_test_class (l_eclass)
@@ -258,9 +257,10 @@ feature {NONE} -- Events
 	on_validate_feature_clause_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
 			-- Called when `new_feature_clause_name' contents need to be validated.
 		local
-			l_name: !STRING
+			l_name: STRING
 		do
-			l_name ?= a_name.to_string_8
+			l_name := a_name.to_string_8
+			check l_name /= Void end
 			wizard_information.feature_clause_name_cache := l_name
 			if new_feature_clause_name.text_field.is_sensitive and l_name.is_empty then
 				Result := [False, locale_formatter.translation (e_new_feature_clause_name_empty)]

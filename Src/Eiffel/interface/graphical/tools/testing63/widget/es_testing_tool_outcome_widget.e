@@ -54,8 +54,12 @@ feature -- Access
 
 	test: !TEST_I
 			-- Test being displayed by `Current'
+		local
+			l_test: like internal_test
 		do
-			Result ?= internal_test
+			l_test := internal_test
+			check l_test /= Void end
+			Result := l_test
 		end
 
 	title: !STRING_32
@@ -237,14 +241,14 @@ feature {NONE} -- Implementation
 			grid.insert_new_row_parented (l_pos, a_parent)
 			l_row := grid.row (l_pos)
 			create l_label.make_with_text (a_name)
-			register_action (l_label.pointer_double_press_actions, agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_label.pointer_double_press_actions.force_extend (agent show_text (a_text))
 			l_row.set_item (1, l_label)
 			create l_label
 			create l_font
 			l_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			l_label.set_font (l_font)
 			l_label.set_text ("double click to view")
-			register_action (l_label.pointer_double_press_actions, agent show_text (a_text, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_label.pointer_double_press_actions.force_extend (agent show_text (a_text))
 			l_row.set_item (2, l_label)
 		end
 
@@ -274,14 +278,17 @@ feature {NONE} -- Implementation
 			grid.row (l_pos + 2).set_item (2, l_label)
 		end
 
-	show_text (a_text: !STRING; i1, i2, i3: INTEGER; r1, r2, r3: REAL_64; i4, i5: INTEGER) is
+	show_text (a_text: !STRING) is
 			-- Display text in a separate window.
 		local
 			l_dialog: ES_BASIC_EDITOR_DIALOG
+			l_text: STRING_32
 		do
 			create l_dialog.make (stock_pixmaps.tool_output_icon_buffer, "Testing output")
 			l_dialog.is_modal := False
-			l_dialog.set_text (a_text.to_string_32.as_attached)
+			l_text := a_text.to_string_32
+			check l_text /= Void end
+			l_dialog.set_text (l_text)
 			l_dialog.show (development_window.window)
 		end
 

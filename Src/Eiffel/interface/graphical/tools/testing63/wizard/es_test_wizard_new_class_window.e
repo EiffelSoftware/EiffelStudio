@@ -156,13 +156,18 @@ feature {NONE} -- Initialization
 
 	on_after_initialize
 			-- Called after all widgets have been initialized.
+		local
+			l_text: STRING_32
 		do
 			if {l_name: !STRING} wizard_information.new_class_name_cache then
 				if {l_name32: !STRING_32} l_name.to_string_32 then
 					class_name.widget.set_text (l_name32)
 				end
 			end
-			if {l_res: BOOLEAN} validate_class_name (class_name.widget.text.as_attached) then
+			l_text := class_name.widget.text
+			check l_text /= Void end
+			if {l_res: BOOLEAN} validate_class_name (l_text) then
+				-- Nothing to do
 			end
 
 			if {l_cluster: !CONF_CLUSTER} wizard_information.cluster_cache then
@@ -254,11 +259,12 @@ feature {NONE} -- Events
 	validate_class_name (a_name: !STRING_32): BOOLEAN
 			-- Called when `class_name' contents need to be validated
 		local
-			l_name: !STRING
+			l_name: STRING
 			l_path: STRING
 			l_error: ?STRING_32
 		do
-			l_name ?= a_name.to_string_8
+			l_name := a_name.to_string_8
+			check l_name /= Void end
 			Result := True
 			class_name_validator.validate_class_name (l_name)
 			if l_name.is_empty or class_name_validator.is_valid then
@@ -299,6 +305,8 @@ feature {NONE} -- Events
 
 	on_select_tree_item
 			-- Called when item in `class_tree' is selected.
+		local
+			l_text: STRING_32
 		do
 			wizard_information.cluster_cache := Void
 			wizard_information.path_cache := Void
@@ -315,7 +323,10 @@ feature {NONE} -- Events
 				end
 			end
 			validate_cluster
-			if {l_res: BOOLEAN} validate_class_name (class_name.widget.text.as_attached) then
+			l_text := class_name.widget.text
+			check l_text /= Void end
+			if {l_res: BOOLEAN} validate_class_name (l_text) then
+					-- Nothing to do
 			end
 			update_next_button_status
 		end

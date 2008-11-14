@@ -138,9 +138,13 @@ feature {NONE} -- Initialization: widgets
 
 	build_notebook
 			-- Create `notebook' and add permament tabs.
+		local
+			l_window: like develop_window
 		do
 			create notebook
-			create outcome_tab.make (develop_window.as_attached)
+			l_window := develop_window
+			check l_window /= Void end
+			create outcome_tab.make (l_window)
 			notebook.extend (outcome_tab.widget)
 			notebook.set_item_text (outcome_tab.widget, outcome_tab.title)
 			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon_pixmap)
@@ -279,9 +283,11 @@ feature {NONE} -- Status setting: view
 	on_return_view is
 			-- Called when the user enters a new view definition
 		local
-			l_orig_tag, l_tag: !STRING
+			l_orig_tag: STRING
+			l_tag: !STRING
 		do
-			l_orig_tag ?= view_box.text.to_string_8
+			l_orig_tag := view_box.text.to_string_8
+			check l_orig_tag /= Void end
 			l_tag := l_orig_tag
 			if not l_tag.is_empty then
 				if l_tag.starts_with (split_char.out) then
@@ -315,15 +321,11 @@ feature {NONE} -- Status setting: view
 
 	on_select_view is
 			-- Called when a view new view is selected
-		local
-			l_tag: STRING
 		do
-			l_tag ?= view_box.selected_item.data
-			check
-				tag_attached: l_tag /= Void
+			if {l_tag: STRING} view_box.selected_item.data then
+				view_box.set_text (l_tag)
+				execute_with_busy_cursor (agent update_view)
 			end
-			view_box.set_text (l_tag)
-			execute_with_busy_cursor (agent update_view)
 		end
 
 	on_return_filter
@@ -342,13 +344,13 @@ feature {NONE} -- Status setting: view
 	update_view_box is
 			-- Update proposal list for `view_box'
 		local
-			l_cursor: !DS_LINEAR_CURSOR [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			i: INTEGER
 			l_item: EV_LIST_ITEM
 		do
 			view_box.wipe_out
 			from
-				l_cursor ?= view_history.new_cursor
+				l_cursor := view_history.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
@@ -373,11 +375,12 @@ feature {NONE} -- Status setting: view
 	update_view is
 			-- Refresh `tree_view' according to current view definition.
 		local
-			l_tag: !STRING
+			l_tag: STRING
 		do
 			develop_window.lock_update
 			if test_suite.is_service_available then
-				l_tag ?= view_box.text.to_string_8
+				l_tag := view_box.text.to_string_8
+				check l_tag /= Void end
 				if tree_view.is_connected then
 					if not tree_view.tag_prefix.is_equal (l_tag) then
 						tree_view.disconnect
@@ -639,6 +642,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 		local
 			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
 			l_found: BOOLEAN
+			l_window: like develop_window
 		do
 			from
 				notebook.start
@@ -655,12 +659,14 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
 
 			if not l_found then
+				l_window := develop_window
+				check l_window /= Void end
 				if {l_executor: !TEST_EXECUTOR_I} a_processor then
-					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, develop_window.as_attached)
+					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, l_window)
 				elseif {l_generator: !TEST_GENERATOR_I} a_processor then
-					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, develop_window.as_attached)
+					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, l_window)
 				elseif {l_factory: !TEST_CREATOR_I} a_processor then
-					create {ES_TESTING_TOOL_FACTORY_WIDGET} l_new_tab.make (l_factory, develop_window.as_attached)
+					create {ES_TESTING_TOOL_FACTORY_WIDGET} l_new_tab.make (l_factory, l_window)
 				end
 				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)

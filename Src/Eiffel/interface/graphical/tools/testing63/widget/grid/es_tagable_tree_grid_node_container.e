@@ -104,12 +104,15 @@ feature {NONE} -- Query
 			until
 				l_data /= Void
 			loop
-				l_data ?= tree.grid.row (i).data
+				if {l_row_data: like row_data_for_item} tree.grid.row (i).data then
+					l_data := l_row_data
+				end
+				check l_data /= Void end
 				if l_data.item /= a_item then
 					l_data := Void
 					i := i + tree.grid.row (i).subrow_count_recursive + 1
 				else
-					Result ?= l_data
+					Result := l_data
 				end
 			end
 		ensure
@@ -148,7 +151,7 @@ feature {NONE} -- Element change
 		local
 			i: INTEGER
 			l_new: ES_TAGABLE_GRID_TAG_DATA [G]
-			l_row: !EV_GRID_ROW
+			l_row: EV_GRID_ROW
 		do
 			from
 				i := first_child_index
@@ -163,7 +166,8 @@ feature {NONE} -- Element change
 			else
 				tree.grid.insert_new_row_parented (i, row)
 			end
-			l_row ?= tree.grid.row (i)
+			l_row := tree.grid.row (i)
+			check l_row /= Void end
 			l_row.ensure_expandable
 			create l_new.make (l_row, Current, a_token)
 			cached_children.force (l_new, a_token)
@@ -173,7 +177,7 @@ feature {NONE} -- Element change
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_row: !EV_GRID_ROW
+			l_row: EV_GRID_ROW
 			l_new: ES_TAGABLE_GRID_ITEM_DATA [G]
 		do
 			from
@@ -189,7 +193,8 @@ feature {NONE} -- Element change
 			else
 				tree.grid.insert_new_row_parented (i, row)
 			end
-			l_row ?= tree.grid.row (i)
+			l_row := tree.grid.row (i)
+			check l_row /= Void end
 			if first_item_subrow = Void or else first_item_subrow.index > l_row.index then
 				first_item_subrow := l_row
 			end

@@ -35,8 +35,12 @@ feature -- Access
 			-- Project used to find classes and features
 		require
 			available: is_project_available
+		local
+			l_project: like internal_project
 		do
-			Result ?= internal_project
+			l_project := internal_project
+			check l_project /= Void end
+			Result := l_project
 		ensure
 			project_usable: Result.initialized and Result.workbench.universe_defined and
 			                Result.system_defined and then Result.universe.target /= Void
@@ -203,18 +207,22 @@ feature {NONE} -- Factory
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_pixmap: EV_PIXMAP
-			l_pnode: TAG_BASED_TREE_NODE [G]
-			l_cluster: CONF_CLUSTER
+			l_pnode: ?TAG_BASED_TREE_NODE [G]
+			l_cluster: ?CONF_CLUSTER
 			l_library: CONF_LIBRARY
 		do
 			l_token := a_node.token
 			token_writer.new_line
-			l_pnode ?= a_node.parent
+			if {l_pnode2: TAG_BASED_TREE_NODE [G]} a_node.parent then
+				l_pnode := l_pnode2
+				if {l_data: CONF_CLUSTER} l_pnode.data then
+					l_cluster := l_data
+				elseif {l_lib_data: CONF_LIBRARY} l_pnode.data then
+					l_library := l_lib_data
+				end
+			end
 			if l_token.starts_with (class_prefix) then
 				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
-				if l_pnode /= Void then
-					l_cluster ?= l_pnode.data
-				end
 				if {l_class: !CLASS_I} class_from_name (l_name, l_cluster) then
 					a_node.set_data (l_class)
 					token_writer.add_class (l_class)
@@ -239,14 +247,10 @@ feature {NONE} -- Factory
 				l_name := l_token.substring (cluster_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
 				if l_pnode /= Void then
-					l_cluster ?= l_pnode.data
 					if l_cluster /= Void then
 						l_cluster := l_cluster.target.clusters.item (l_name)
-					else
-						l_library ?= l_pnode.data
-						if l_library /= Void then
-							l_cluster := l_library.library_target.clusters.item (l_name)
-						end
+					elseif l_library /= Void then
+						l_cluster := l_library.library_target.clusters.item (l_name)
 					end
 				end
 				if l_cluster = Void and l_library = Void then
@@ -259,10 +263,9 @@ feature {NONE} -- Factory
 			elseif l_token.starts_with (library_prefix) then
 				l_name := l_token.substring (library_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
-				l_library ?= project.universe.group_of_name (l_name)
-				if l_library /= Void then
-					token_writer.add_group (l_library, l_name)
-					a_node.set_data (l_library)
+				if {l_lib: CONF_LIBRARY} project.universe.group_of_name (l_name) then
+					token_writer.add_group (l_lib, l_name)
+					a_node.set_data (l_lib)
 				end
 			elseif False then
 				-- More tokens to come

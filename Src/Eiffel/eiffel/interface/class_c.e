@@ -2525,6 +2525,17 @@ feature -- Validity class
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a function `twin' with no arguments", Current))
 				end
+				l_feature := feature_table.item_id (names_heap.copy_name_id)
+				if
+					l_feature = Void or else
+					l_feature.argument_count /= 1 or else
+					not l_feature.arguments.i_th (1).is_like_current or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.type.is_void
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `copy' with 1 argument of the type `like Current' or of a reference type", Current))
+				end
 			end
 		end
 

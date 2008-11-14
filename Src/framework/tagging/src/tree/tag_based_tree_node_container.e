@@ -20,11 +20,15 @@ feature -- Access
 			-- Child nodes of `Current'
 		require
 			usable: is_interface_usable
+		local
+			l_cached: like cached_children
 		do
 			if not is_evaluated then
 				compute_descendants
 			end
-			Result ?= cached_children
+			l_cached := cached_children
+			check l_cached /= Void end
+			Result := l_cached
 		ensure
 			results_valid: ({!DS_LINEAR [like child_for_token]} #? Result).for_all (
 				agent (a_child: like child_for_token): BOOLEAN
@@ -38,11 +42,15 @@ feature -- Access
 			-- Items tagged with `tag'
 		require
 			usable: is_interface_usable
+		local
+			l_items: like cached_items
 		do
 			if not is_evaluated then
 				compute_descendants
 			end
-			Result ?= cached_items
+			l_items := cached_items
+			check l_items /= Void end
+			Result := l_items
 		ensure
 			results_valid: ({!DS_LINEAR [!G]} #? Result).for_all (
 				agent (a_item: !G): BOOLEAN
@@ -351,12 +359,12 @@ feature {TAG_BASED_TREE} -- Implementation
 			usable: is_interface_usable
 			not_evaluated: not is_evaluated
 		local
-			l_cursor: !DS_HASH_TABLE_CURSOR [NATURAL, !STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [NATURAL, !STRING]
 			l_tag, l_token: !STRING
 			i: INTEGER
 			l_child: like child_for_token
 		do
-			l_cursor ?= descending_tags.new_cursor
+			l_cursor := descending_tags.new_cursor
 			descending_tags := Void
 			create cached_children.make_default
 			create cached_items.make (item_count.as_integer_32)

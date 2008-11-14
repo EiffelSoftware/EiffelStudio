@@ -40,7 +40,8 @@ feature -- Tests
 			asserter.disassert ("empty_token_invalid",
 			                    utilities.is_valid_token (""))
 
-			l_string ?= utilities.split_char.out
+			create l_string.make (1)
+			l_string.append_character (utilities.split_char)
 			asserter.disassert ("split_char_not_valid",
 			                    utilities.is_valid_token (l_string))
 

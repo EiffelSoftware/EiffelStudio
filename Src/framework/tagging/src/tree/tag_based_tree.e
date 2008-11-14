@@ -65,8 +65,17 @@ feature -- Access
 
 	tag_prefix: !STRING
 			-- Tag defining which tag are used to build tree
+		local
+			l_result: like internal_prefix
 		do
-			Result ?= internal_prefix
+			l_result := internal_prefix
+			if l_result = Void then
+				Result := once ""
+			else
+				Result := l_result
+			end
+		ensure then
+			not_connected_implies_empty: not is_connected implies Result.is_empty
 		end
 
 	frozen untagged_items: like items
@@ -88,8 +97,12 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 		require
 			usable: is_interface_usable
 			connected: is_connected
+		local
+			l_collection: like internal_collection
 		do
-			Result ?= internal_collection
+			l_collection := internal_collection
+			check l_collection /= Void end
+			Result := l_collection
 		end
 
 	tree: !TAG_BASED_TREE [G]

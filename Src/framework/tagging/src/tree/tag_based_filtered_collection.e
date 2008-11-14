@@ -66,16 +66,20 @@ feature -- Access
 
 	items: !DS_LINEAR [!G]
 			-- <Precursor>
+		local
+			l_empty: like empty_items
 		do
 			if has_expression then
-				Result ?= internal_items
+				Result := internal_items
 			elseif collection.are_items_available then
 				Result := collection.items
 			else
-				if empty_items = Void then
-					create empty_items.make (0)
+				l_empty := empty_items
+				if l_empty = Void then
+					create l_empty.make (0)
+					empty_items := l_empty
 				end
-				Result ?= empty_items
+				Result := l_empty
 			end
 		ensure then
 			results_match_expression: has_expression implies Result.for_all (agent (a_item: !G): BOOLEAN do Result := matches (a_item) end)
@@ -85,8 +89,12 @@ feature -- Access
 			-- Collection being filtered
 		require
 			connected: is_connected
+		local
+			l_collection: like internal_collection
 		do
-			Result ?= internal_collection
+			l_collection := internal_collection
+			check l_collection /= Void end
+			Result := l_collection
 		ensure
 			observing: Result.is_connected (Current)
 		end
@@ -95,13 +103,17 @@ feature -- Access
 			-- Last expression set through `set_expression'.
 		require
 			has_expression: has_expression
+		local
+			l_expr: like internal_expression
 		do
-			Result ?= internal_expression
+			l_expr := internal_expression
+			check l_expr /= Void end
+			Result := l_expr
 		end
 
 feature {NONE} -- Access
 
-	internal_items: !DS_HASH_SET [G]
+	internal_items: !DS_HASH_SET [!G]
 			-- Cache holding items currently matching expression
 
 	internal_collection: ?ACTIVE_COLLECTION_I [G]
@@ -116,7 +128,7 @@ feature {NONE} -- Access
 	negative_matchers: !DS_ARRAYED_LIST [!RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must not match to be in `items'
 
-	empty_items: ?DS_ARRAYED_LIST [G]
+	empty_items: ?DS_ARRAYED_LIST [!G]
 			-- Empty list of items
 
 feature -- Status report
@@ -343,7 +355,7 @@ feature {NONE} -- Implementation
 		require
 			connected: is_connected
 		local
-			l_cursor: DS_LINEAR_CURSOR [G]
+			l_cursor: DS_LINEAR_CURSOR [!G]
 			l_removed, l_added: ?like internal_items
 			l_expr, l_int: BOOLEAN
 		do

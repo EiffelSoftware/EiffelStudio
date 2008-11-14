@@ -153,11 +153,11 @@ feature -- Query
 			a_list_valid: a_list.for_all (agent is_valid_tag)
 			a_prefix_is_valid_tag: a_prefix.is_empty or else is_valid_tag (a_prefix)
 		local
-			l_cursor: !DS_LINEAR_CURSOR [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_tag: !STRING
 			l_result: !DS_HASH_SET [!STRING]
 		do
-			l_cursor ?= a_list.new_cursor
+			l_cursor := a_list.new_cursor
 			create l_result.make_default
 			from
 				l_cursor.start

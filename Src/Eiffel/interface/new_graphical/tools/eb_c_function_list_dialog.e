@@ -311,10 +311,12 @@ feature{NONE} -- Implementation/Sorting
 		do
 			l_name_a ?= a_mapper.a_target_item.data
 			l_name_b ?= b_mapper.a_target_item.data
-			if a_sorting_order = ascending_order then
-				Result := l_name_a <= l_name_b
-			elseif a_sorting_order = descending_order then
-				Result := l_name_a > l_name_b
+			if l_name_a /= Void and then l_name_b /= Void then
+				if a_sorting_order = ascending_order then
+					Result := l_name_a <= l_name_b
+				elseif a_sorting_order = descending_order then
+					Result := l_name_a > l_name_b
+				end
 			end
 		end
 

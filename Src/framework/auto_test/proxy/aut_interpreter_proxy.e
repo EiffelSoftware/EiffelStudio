@@ -272,11 +272,12 @@ feature -- Execution
 						if last_response.is_bad then
 							log_bad_response
 						end
-						is_ready := is_running
+						is_ready := True
 					else
 						log_line ("-- Error: Interpreter was not able to connect.")
 					end
 				else
+					is_ready := False
 					log_line ("-- Error: Could not start and connect to interpreter.")
 				end
 			else
@@ -312,6 +313,7 @@ feature -- Execution
 							-- Set flag to indicate that the interpreter should be terminated.
 							-- When `time_out_checker_thread' sees this flag, it will terminate the interpreter.
 						process.terminate
+						is_ready := False
 						log_line ("-- Warning: proxy forced termination of interpreter.")
 					else
 						log_line ("-- Proxy has terminated interpreter.")
@@ -360,7 +362,7 @@ feature -- Execution
 			parse_invoke_response
 			last_request.set_response (last_response)
 			if not last_response.is_bad then
-				is_ready := True
+--				is_ready := True
 				if not last_response.is_error then
 					normal_response ?= last_response
 					check
@@ -370,6 +372,8 @@ feature -- Execution
 						variable_table.define_variable (a_receiver, a_type)
 					end
 				end
+			else
+				is_ready := False
 			end
 			stop_process_on_problems (last_response)
 		ensure
@@ -411,7 +415,9 @@ feature -- Execution
 			parse_invoke_response
 			last_request.set_response (last_response)
 			if not last_response.is_bad or last_response.is_error then
-				is_ready := True
+--				is_ready := True
+			else
+				is_ready := False
 			end
 			stop_process_on_problems (last_response)
 		ensure
@@ -446,13 +452,15 @@ feature -- Execution
 			parse_invoke_response
 			last_request.set_response (last_response)
 			if not last_response.is_bad then
-				is_ready := True
+--				is_ready := True
 				if not last_response.is_error then
 					normal_response ?= last_response
 					check
 						normal_response_not_void: normal_response /= Void
 					end
 				end
+			else
+				is_ready := False
 			end
 			stop_process_on_problems (last_response)
 			if is_ready and normal_response /= Void and then normal_response.exception = Void then
@@ -482,7 +490,9 @@ feature -- Execution
 			parse_invoke_response
 			last_request.set_response (last_response)
 			if not last_response.is_bad or last_response.is_error  then
-				is_ready := True
+--				is_ready := True
+			else
+				is_ready := False
 			end
 			stop_process_on_problems (last_response)
 			if is_ready and then not is_in_replay_mode then
@@ -514,7 +524,7 @@ feature -- Execution
 			is_waiting_for_type := False
 			last_request.set_response (last_response)
 			if not last_response.is_bad then
-				is_ready := True
+--				is_ready := True
 				if not last_response.is_error then
 					normal_response ?= last_response
 					check
@@ -524,6 +534,8 @@ feature -- Execution
 					end
 					variable_table.define_variable (a_variable, base_type (normal_response.text, interpreter_root_class))
 				end
+			else
+				is_ready  := False
 			end
 			stop_process_on_problems (last_response)
 		ensure
@@ -641,7 +653,7 @@ feature{NONE} -- Process scheduling
 			failed: BOOLEAN
 		do
 			if not failed then
-				is_ready := False
+--				is_ready := False
 				if process.input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 					log (log_stream.string)
 					request_count := request_count + 1
@@ -656,6 +668,7 @@ feature{NONE} -- Process scheduling
 				log_stream.string.wipe_out
 			end
 		rescue
+			is_ready := False
 			failed := True
 			retry
 		end
@@ -775,6 +788,7 @@ feature -- Socket IPC
 				end
 			end
 		rescue
+			is_ready := False
 			l_retried := True
 			last_raw_response := Void
 			retry
@@ -894,8 +908,8 @@ invariant
 	request_printer_not_void: request_printer /= Void
 	executable_file_name_not_void: executable_file_name /= Void
 	melt_path_not_void: melt_path /= Void
-	not_running_implies_not_ready: not is_running implies not is_ready
-	is_ready_implies_is_running: is_ready implies is_running
+--	not_running_implies_not_ready: not is_running implies not is_ready
+--	is_ready_implies_is_running: is_ready implies is_running
 	proxy_log_file_not_void: proxy_log_file /= Void
 	interpreter_log_file_name_not_void: interpreter_log_filename /= Void
 	error_handler_not_void: error_handler /= Void

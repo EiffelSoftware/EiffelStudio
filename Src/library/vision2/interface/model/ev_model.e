@@ -916,7 +916,7 @@ feature {NONE} -- Implementation
 	counter: CELL [INTEGER] is
 			-- Id counter.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			counter_not_void: Result /= Void
 		end
@@ -995,7 +995,7 @@ invariant
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -1005,8 +1005,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_MODEL
-

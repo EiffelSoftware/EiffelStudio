@@ -174,19 +174,19 @@ feature {NONE} -- misc
 	internal_main_window: CELL [MA_WINDOW] is
 			-- MAIN_WINDOW instance's cell.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	internal_filter: CELL [MA_FILTER_SINGLETON] is
 			-- MA_FILTER_SINGLETON instance's cell.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	internal_filter_window: CELL [MA_FILTER_WINDOW] is
 			-- MA_FILTER_WINDOW instance'e cell.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	state_file_suffix: TUPLE [filter: STRING; text: STRING] is
@@ -205,7 +205,7 @@ invariant
 	internal_main_window_not_void: internal_main_window /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -214,8 +214,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

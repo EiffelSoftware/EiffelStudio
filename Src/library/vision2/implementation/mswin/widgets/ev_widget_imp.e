@@ -1385,7 +1385,7 @@ feature -- Deferred features
 			-- case where there is no next item as if we return to the
 			-- original widget with the same search position, then we know we have exhausted all other possibilities.
 		once
-			create Result
+			create Result.put (0)
 		end
 
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
@@ -1559,7 +1559,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

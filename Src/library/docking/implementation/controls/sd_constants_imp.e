@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 	initialized_cell: CELL [BOOLEAN] is
 			-- A cell to hold whether the constants have been loaded.
 		once
-			create Result
+			create Result.put (False)
 		end
 
 	all_constants: HASH_TABLE [STRING, STRING] is
@@ -180,7 +180,7 @@ invariant
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -189,10 +189,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end -- class SD_CONSTANTS_IMP

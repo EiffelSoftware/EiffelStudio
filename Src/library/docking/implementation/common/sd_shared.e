@@ -66,7 +66,7 @@ feature -- Access
 	tool_bar_docker_mediator_cell: CELL [SD_TOOL_BAR_DOCKER_MEDIATOR] is
 			-- Tool bar docker mediator when user dragging a SD_TOOL_BAR_ZONE.
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -604,7 +604,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 	is_set_show_all_feedback_indicator_called: CELL [BOOLEAN] is
 			-- If `set_show_all_feedback_indicator' has been called?
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			not_void: Result /= Void
 		end
@@ -612,7 +612,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 	is_set_show_tab_stub_text_called: CELL [BOOLEAN] is
 			-- If `set_show_tab_stub_text' has been called?
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			not_void: Result /= Void
 		end
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 	internal_icons_cell: CELL [SD_ICONS_SINGLETON]
 			-- Singleton cell for icons.
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 	internal_interface_names_cell: CELL [SD_INTERFACE_NAMES]
 			-- Singleton cell for interface names.
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 	Show_all_feedback_indicator_cell: CELL [BOOLEAN] is
 			-- Singleton cell for show_all_feedback_indicator.
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			not_void: Result /= Void
 		end
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 	Auto_hide_tab_slide_timer_interval_cell: CELL [INTEGER] is
 			-- Singleton cell for `Auto_hide_tab_slide_timer_interval'.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY] is
 			-- Hot zone factory cell.
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 	allow_window_to_back_cell: CELL [BOOLEAN] is
 			-- Cell hold `allow_window_to_back'.
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			not_void: Result /= Void
 		end
@@ -690,7 +690,7 @@ feature {NONE} -- Implementation
 	show_tab_stub_text_cell: CELL [BOOLEAN] is
 			-- Cell hold `show_tab_stub_text'.
 		once
-			create Result
+			create Result.put (False)
 		ensure
 			not_void: Result /= Void
 		end
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 	default_screen_x_cell: CELL [INTEGER] is
 			-- Singleton cell for `default_screen_x'
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 	default_screen_y_cell: CELL [INTEGER] is
 			-- Singleton cell for `default_screen_y'
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -738,18 +738,18 @@ feature {NONE} -- Implementation
 	title_bar_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
 			-- Singleton cell for `title_bar_area_menu_items_agent'
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	notebook_tab_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
 			-- Singleton cell for `notebook_tab_area_menu_items_agent'
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

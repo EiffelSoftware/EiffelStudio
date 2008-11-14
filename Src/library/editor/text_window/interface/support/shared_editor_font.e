@@ -60,25 +60,25 @@ feature {EDITOR_DATA} -- Implementation
 	font_cell: CELL [FONT_PREFERENCE] is
 			-- Cached version of `font'.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	keyword_font_cell: CELL [FONT_PREFERENCE] is
 			-- Cached version of `font' for keywords.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	font_zoom_factor_cell: CELL [INTEGER_PREFERENCE] is
 			-- Cached version of font factory for `font' and `keyword_font'
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	header_font_cell: CELL [FONT_PREFERENCE] is
 			-- Cached version of `font' for header panel.
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	font_width_cell: CELL [INTEGER] is
@@ -177,7 +177,7 @@ feature {EDITOR_DATA} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

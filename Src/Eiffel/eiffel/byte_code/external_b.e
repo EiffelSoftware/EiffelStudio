@@ -12,7 +12,7 @@ inherit
 			set_precursor_type as set_static_class_type
 		redefine
 			same, is_external, set_parameters, parameters, enlarged, enlarged_on,
-			is_unsafe, optimized_byte_node,
+			is_feature_special, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
 			need_target, is_constant_expression
@@ -187,6 +187,15 @@ feature {STATIC_ACCESS_AS} -- Settings
 		end
 
 feature -- Status report
+
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
+			-- Search for feature_name in `special_routines'.
+			-- This is used for simple types only.
+			-- If found return True (and keep reference position).
+			-- Otherwize, return false
+		do
+			Result := special_routines.has (feature_name_id, compilation_type, target_type)
+		end
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

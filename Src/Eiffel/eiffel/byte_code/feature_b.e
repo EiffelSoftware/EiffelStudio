@@ -141,12 +141,6 @@ feature -- Access
 			type := t
 		end
 
-	special_routines: SPECIAL_FEATURES is
-			-- Array containing special routines.
-		once
-			create Result
-		end
-
 	is_any_feature: BOOLEAN is
 			-- Is Current an instance of ANY_FEATURE_B?
 		do

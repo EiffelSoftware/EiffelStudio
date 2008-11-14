@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes a End-Of-Line code token.
 		do
-			make_token (create {!STRING_32}.make_from_string ("%N"))
+			make_token (create {STRING_32}.make_from_string ("%N"))
 		end
 
 feature -- Visitor

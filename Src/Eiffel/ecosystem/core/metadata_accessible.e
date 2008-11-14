@@ -22,26 +22,26 @@ feature {NONE} -- Initialization
 			-- `a_table': Source table to extract metadata from.
 		local
 			l_table: like internal_metadata_table
+			l_cursor: DS_HASH_TABLE_CURSOR [?STRING_GENERAL, !STRING_8]
 		do
 			l_table := internal_metadata_table
 			if l_table = Void or else l_table.is_empty then
 					-- No table created yet
-				internal_metadata_table ?= a_table.twin
+				internal_metadata_table := a_table.twin
 			else
 					-- Merge entries
-				if {l_cursor: !DS_HASH_TABLE_CURSOR [?STRING_GENERAL, !STRING_8]} a_table.new_cursor then
-					from l_cursor.start until l_cursor.after loop
-						if {l_key: !STRING_8} l_cursor.key and then is_valid_metadata_id (l_key) then
-							if {l_value: !STRING_GENERAL} l_cursor.item then
-								if is_valid_metadata_value (l_value, l_key) then
-									l_table.force (l_value, l_key)
-								end
-							else
-								l_table.remove (l_key)
+				l_cursor := a_table.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if is_valid_metadata_id (l_cursor.key) then
+						if {l_value: STRING_GENERAL} l_cursor.item then
+							if is_valid_metadata_value (l_value, l_key) then
+								l_table.force (l_value, l_key)
 							end
+						else
+							l_table.remove (l_key)
 						end
-						l_cursor.forth
 					end
+					l_cursor.forth
 				end
 			end
 		end
@@ -62,12 +62,14 @@ feature -- Access
 feature {NONE} -- Access
 
 	frozen metadata_table: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8]
-			-- Table of stored properties
+			-- Table of stored properties.
 		do
-			Result ?= internal_metadata_table
-			if {l_result: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8]} Result then
+			l_result := internal_metadata_table
+			if l_result = Void then
 				create Result.make_default
 				internal_metadata_table := Result
+			else
+				Result := l_result
 			end
 		ensure
 			result_consistent: Result = metadata_table
@@ -85,7 +87,7 @@ feature -- Element change
 		do
 			l_old_value := metadata (a_id)
 			if not equal (l_old_value, a_value) then
-				if {l_value: !STRING_GENERAL} a_value then
+				if {l_value: STRING_GENERAL} a_value then
 					metadata_table.force (l_value, a_id)
 				else
 					l_table := internal_metadata_table
@@ -103,11 +105,15 @@ feature -- Events
 
 	changed_events: !EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]
 			-- Events fired when a piece of metadata changes.
+		local
+			l_result: like internal_change_events
 		do
-			Result ?= internal_changed_events
-			if {l_result: !EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]} Result then
+			l_result := internal_change_events
+			if l_result = Void then
 				create Result
 				internal_changed_events := Result
+			else
+				Result := l_result
 			end
 		end
 

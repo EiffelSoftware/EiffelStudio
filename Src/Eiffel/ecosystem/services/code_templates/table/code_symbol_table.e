@@ -20,12 +20,12 @@ feature {NONE} -- Initialization
 		do
 			create content_table.make_default
 				-- We currently use `attemp' from {TYPE} to get around the fact the Gobo does not yet use attachment marks.
-			content_table.set_key_equality_tester (({KL_EQUALITY_TESTER [!STRING]}) #? create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
+			content_table.set_key_equality_tester (create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
 		end
 
 feature -- Access
 
-	item (a_id: !STRING_8): !CODE_SYMBOL_VALUE
+	item (a_id: !STRING): !CODE_SYMBOL_VALUE
 			-- Retrieve the current value for a given symbol identifier.
 			--
 			-- `a_id': A symbol identifier to retrieve a value for.
@@ -45,12 +45,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	content_table: !DS_HASH_TABLE [!CODE_SYMBOL_VALUE, !STRING_8]
+	content_table: !DS_HASH_TABLE [!CODE_SYMBOL_VALUE, STRING]
 			-- Table of indentiers and mapped values
 
 feature -- Element change
 
-	put (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING_8)
+	put (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING)
 			-- Extends the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -68,7 +68,7 @@ feature -- Element change
 			a_value_symbol_table_set: a_value.symbol_table = Current
 		end
 
-	force (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING_8)
+	force (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING)
 			-- Forces extending of the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -120,20 +120,23 @@ feature {CODE_SYMBOL_VALUE} -- Query
 
 feature -- Events
 
-	value_changed_events: !EVENT_TYPE [TUPLE [id: !STRING_8]]
+	value_changed_events: !EVENT_TYPE [TUPLE [id: !STRING]]
 			-- Actions called when a value in the symbol table is changed
+		local
+			l_result: like internal_value_changed_events
 		do
-			if internal_value_changed_events = Void then
+			l_result := internal_value_changed_events
+			if l_result /= Void then
+				Result := l_result
+			else
 				create Result
 				internal_value_changed_events := Result
-			else
-				Result ?= internal_value_changed_events
 			end
 		end
 
 feature {NONE} -- Internal implementation cache
 
-	internal_value_changed_events: EVENT_TYPE [TUPLE [id: !STRING_8]]
+	internal_value_changed_events: EVENT_TYPE [TUPLE [id: !STRING]]
 			-- Cached version of `value_changed_events'
 			-- Note: Do not use directly!
 

@@ -60,7 +60,7 @@ feature -- Visitor
 		end
 
 invariant
-	not_must_conform_to_is_empty: not must_conform_to.is_empty
+	not_must_conform_to_is_empty: is_initialized implies not must_conform_to.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

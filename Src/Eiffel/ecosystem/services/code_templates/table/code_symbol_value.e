@@ -36,11 +36,14 @@ feature -- Access
 
 	value: !STRING_32 assign set_value
 			-- The actual value, having been processed
+		local
+			l_result: like internal_value
 		do
-			if internal_value /= Void then
-				Result ?= internal_value.twin
-			else
+			l_result := internal_value
+			if l_result = Void then
 				Result := default_value.twin
+			else
+				Result := l_result.twin.as_attached
 			end
 		end
 
@@ -62,7 +65,7 @@ feature -- Element change
 			if internal_value = Void or else not internal_value.is_equal (a_value) then
 				internal_value := a_value
 				l_table := symbol_table
-				if l_table /= Void and then {l_id: !STRING} l_table.id_of_value (Current)  then
+				if l_table /= Void and then {l_id: !STRING} l_table.id_of_value (Current) then
 					l_table.value_changed_events.publish ([l_id])
 				end
 			end

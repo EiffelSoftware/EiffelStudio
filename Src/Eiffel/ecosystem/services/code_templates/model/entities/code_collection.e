@@ -29,7 +29,7 @@ feature -- Access
 	items: !DS_BILINEAR [G]
 			-- List of current code templates
 		do
-			Result ?= internal_items
+			Result := internal_items
 		end
 
 feature {NONE} -- Access

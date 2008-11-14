@@ -83,7 +83,7 @@ feature -- Status report
 		end
 
 invariant
-	not_id_is_empty: not id.is_empty
+	not_id_is_empty: is_initialized implies not id.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

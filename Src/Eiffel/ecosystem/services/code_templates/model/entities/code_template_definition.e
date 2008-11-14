@@ -47,7 +47,7 @@ feature -- Access
 	frozen definition: !CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		do
-			Result ?= Current
+			Result := Current
 		end
 
 	metadata: !CODE_METADATA assign set_metadata
@@ -150,9 +150,9 @@ feature -- Visitor
 		end
 
 invariant
-	metadata_parent_set: metadata.parent = Current
-	declarations_parent_set: declarations.parent = Current
-	templates_parent_set: templates.parent = Current
+	metadata_parent_set: is_initialized implies metadata.parent = Current
+	declarations_parent_set: is_initialized implies declarations.parent = Current
+	templates_parent_set: is_initialized implies templates.parent = Current
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

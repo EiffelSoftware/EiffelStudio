@@ -1,0 +1,11 @@
+test_name 	 like-current-is-detached
+test_description Ensures like Current is considered attached by default.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_melted
+compile_result validity_error APPLICATION VJAR
+
+test_end

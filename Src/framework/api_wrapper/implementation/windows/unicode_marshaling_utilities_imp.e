@@ -32,7 +32,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 	string (a_obj: !WEL_STRING): !STRING_32
 			-- <Precursor>
 		do
-			Result ?= a_obj.string
+			Result := a_obj.string.as_attached
 		end
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Factory

@@ -282,7 +282,7 @@ feature -- Directory operations
 
 feature -- Formatting
 
-	frozen absolute_path (a_path: STRING_GENERAL; a_compact: BOOLEAN): !STRING
+	frozen absolute_path (a_path: STRING_GENERAL; a_compact: BOOLEAN): STRING
 			-- Creates an absolute compacted path (provided the path could be compacted).
 			--
 			-- `a_path': The source path to convert to an absolute path.
@@ -295,14 +295,15 @@ feature -- Formatting
 		local
 			l_path: STRING
 		do
-			Result ?= file_system.absolute_pathname (a_path.as_string_8)
+			Result := file_system.absolute_pathname (a_path.as_string_8)
 			if a_compact then
 				l_path := compact_path (Result)
 				if l_path /= Void then
-					Result ?= l_path
+					Result := l_path
 				end
 			end
 		ensure
+			absolute_path_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_exists: file_system.file_exists (Result) or file_system.directory_exists (Result)
 			reuslt_is_absolute: file_system.is_absolute_pathname (Result)

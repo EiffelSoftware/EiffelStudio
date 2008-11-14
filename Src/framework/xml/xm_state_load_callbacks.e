@@ -111,7 +111,7 @@ feature {NONE} -- Access
 			if not is_perserving_whitespace then
 				Result := prune_whitespace (current_content_stack.item)
 			else
-				Result ?= current_content_stack.item.twin
+				Result := current_content_stack.item.twin.as_attached
 			end
 		end
 
@@ -235,8 +235,8 @@ feature -- Actions
 			-- 'index': Offending one-base character index, on the line, of the error.
 			--          Will be zero if the line is empty.
 		do
-			if internal_error_reported_actions /= Void then
-				Result ?= internal_error_reported_actions
+			if {l_actions: like error_reported_actions} internal_error_reported_actions then
+				Result := l_actions
 			else
 				create Result
 				internal_error_reported_actions := Result
@@ -253,8 +253,8 @@ feature -- Actions
 			-- 'index': Offending one-base character index, on the line, of the warning.
 			--          Will be zero if the line is empty.		
 		do
-			if internal_warning_reported_actions /= Void then
-				Result ?= internal_warning_reported_actions
+			if {l_actions: like warning_reported_actions} internal_warning_reported_actions then
+				Result := l_actions
 			else
 				create Result
 				internal_warning_reported_actions := Result
@@ -658,7 +658,7 @@ feature {NONE} -- Formatting
 		local
 			l_count, i: INTEGER
 		do
-			Result ?= a_value.twin
+			Result := a_value.twin
 
 				-- Find leading non-whitespace.
 			from

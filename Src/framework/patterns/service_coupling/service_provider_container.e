@@ -74,7 +74,7 @@ feature {NONE} -- Query
 			if {l_hashable: HASHABLE} a_type then
 				Result := l_hashable
 			else
-				Result ?= a_type.generating_type
+				Result := a_type.generating_type.as_attached
 			end
 		end
 

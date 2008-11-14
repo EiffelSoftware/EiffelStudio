@@ -276,14 +276,11 @@ feature {NONE} -- Implementation
 			-- Duplicate `old_area' to accomodate `n' element.
 		require
 			a_count_positive: a_count > 0
-		local
-			l_ar: ARRAY [INTEGER]
 		do
 			if a_old_area /= Void then
 				Result := a_old_area.aliased_resized_area (a_count)
 			else
-				create l_ar.make (1, a_count)
-				Result := l_ar.area
+				create Result.make (a_count)
 			end
 		ensure
 			new_area_not_void: Result /= Void

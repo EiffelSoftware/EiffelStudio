@@ -40,6 +40,7 @@
 			</option>
 		</library>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" readonly="false"/>
+		<library name="gobo_attached" location="$ISE_LIBRARY\library\gobo_attached\gobo_attached.ecf" readonly="false"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>

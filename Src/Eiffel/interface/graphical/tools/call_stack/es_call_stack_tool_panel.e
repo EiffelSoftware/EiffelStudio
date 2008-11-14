@@ -906,7 +906,9 @@ feature {NONE} -- Catcall warning access
 					ct := Void
 
 					l_fdtype := rtcc.expected
-					if l_fdtype <= l_max_type_id then
+					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then --| -1: to convert to runtime type id
+						argtypename := "NONE"
+					elseif l_fdtype <= l_max_type_id then
 							--| Try with compiler data						
 						ct := System.class_type_of_id (l_fdtype)
 						if ct /= Void and then ct.associated_class /= Void then

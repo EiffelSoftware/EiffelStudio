@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -279,6 +279,7 @@ typedef struct tag_EIF_DEBUG_VALUE {
 extern void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile stop); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
 extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */ 
+extern void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call copy routines */
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
 extern void xinitint(void);										/* Initialize the interpreter */
 extern EIF_TYPED_VALUE *otop(void);									/* Top of the stack */

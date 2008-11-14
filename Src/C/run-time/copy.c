@@ -2,7 +2,7 @@
 	description: "Implementation of copying/cloning routines of ANY."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -58,6 +58,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "eif_size.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"
+#include "rt_interp.h"		/* For routine call_copy */
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
@@ -106,6 +107,68 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 	} else {
 		return emalloc(dftype);
 	}
+}
+
+/*
+doc:	<routine name="eif_twin" export="public">
+doc:		<summary>Default implementation of feature {ANY}.twin.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_twin (EIF_REFERENCE Current)
+{
+	EIF_BOOLEAN a;
+	EIF_REFERENCE Result = NULL;
+
+	EIF_GET_CONTEXT
+
+	REQUIRE ("current_attached", Current);
+
+	RT_GC_PROTECT (Current);	/* Protect against GC */
+	RT_GC_PROTECT (Result);
+
+	a = c_check_assert (EIF_FALSE);
+	Result = eclone (Current);
+#ifdef WORKBENCH
+	call_copy (Dtype (Result), Result, Current);
+#else
+	egc_copy [Dtype (Result)] (Result, Current);
+#endif
+	c_check_assert (a);
+
+	RT_GC_WEAN_N(2);		/* Remove protection */
+
+	return Result;
+}
+
+/*
+doc:	<routine name="eif_standard_twin" export="public">
+doc:		<summary>Default implementation of feature {ANY}.standard_twin.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_standard_twin (EIF_REFERENCE Current)
+{
+	EIF_BOOLEAN a;
+	EIF_REFERENCE Result = NULL;
+
+	EIF_GET_CONTEXT
+
+	REQUIRE ("current_attached", object);
+
+	RT_GC_PROTECT (Current);	/* Protect against GC */
+	RT_GC_PROTECT (Result);
+
+	a = c_check_assert (EIF_FALSE);
+	Result = eclone (Current);
+	ecopy (Result, Current);
+	c_check_assert (a);
+
+	RT_GC_WEAN_N(2);		/* Remove protection */
+
+	return Result;
 }
 
 rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target)

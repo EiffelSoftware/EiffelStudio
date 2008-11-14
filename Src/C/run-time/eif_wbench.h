@@ -2,7 +2,7 @@
 	description: "Definitions for workbench calls."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -52,6 +52,7 @@ RT_LNK EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name,
 RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
 RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object);			/* Creation call for precomp expanded types */
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
+RT_LNK EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type); /* Feature call for copy routine */ 
 RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
 RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
 RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object);				/* Nested attribute access */

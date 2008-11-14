@@ -398,6 +398,7 @@ feature -- Plug and Makefile file
 			once_raise_name: STRING
 			correct_mismatch_name: STRING
 			equal_name: STRING
+			copy_name: STRING
 			twin_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
@@ -650,6 +651,11 @@ feature -- Plug and Makefile file
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (dispose_name)
 				buffer.put_string ("[])();%N%N")
+
+				copy_name := Encoder.routine_table_name (system.routine_id_counter.copy_rout_id).twin
+				buffer.put_string ("extern char *(*")
+				buffer.put_string (copy_name)
+				buffer.put_string ("[])();%N%N")
 			end
 
 				-- Declaration and definition of the egc_init_plug function.
@@ -825,6 +831,15 @@ feature -- Plug and Makefile file
 			end
 			buffer.put_string (";%N")
 
+				-- Copy routine id from class ANY (if compiled)
+			buffer.put_string ("%Tegc_copy_rout_id = ")
+			if System.any_class /= Void and System.any_class.is_compiled then
+				buffer.put_integer (System.any_copy_id)
+			else
+				buffer.put_string ("-1")
+			end
+			buffer.put_string (";%N")
+
 				-- Dynamic type of class BIT_REF
 			bit_cl := System.class_of_id (System.bit_id)
 			type_id := bit_cl.types.first.type_id
@@ -883,6 +898,12 @@ feature -- Plug and Makefile file
 				buffer.put_string ("%Tegc_edispose = ")
 				buffer.put_string ("(void (**)(void)) ")
 				buffer.put_string (dispose_name)
+				buffer.put_string (";%N")
+
+					-- Copy routines
+				buffer.put_string ("%Tegc_copy = ")
+				buffer.put_string ("(void (**)(EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.put_string (copy_name)
 				buffer.put_string (";%N")
 
 				buffer.put_string ("%Tegc_ce_rname = egc_ce_rname_init;%N")
@@ -1217,7 +1238,7 @@ feature -- Plug and Makefile file
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

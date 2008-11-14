@@ -2,7 +2,7 @@
 	description: "Include file for source file `copy.c'."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -56,6 +56,9 @@ RT_LNK void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFEREN
 RT_LNK EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b);
 RT_LNK void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_INTEGER source_index, EIF_INTEGER destination_index, EIF_INTEGER n);
 RT_LNK void spclearall(EIF_REFERENCE spobj);		/* Reset special object's items to default */
+
+RT_LNK EIF_REFERENCE eif_twin (EIF_REFERENCE object); /* Default implementation of {ANY}.twin */
+RT_LNK EIF_REFERENCE eif_standard_twin (EIF_REFERENCE object); /* Default implementation of {ANY}.standard_twin */
 
 #ifdef __cplusplus
 }

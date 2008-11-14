@@ -334,7 +334,7 @@ end;
 					-- Take a new one
 				new_rout_id := a_feature.new_rout_id;
 			end;
-			rout_id_set.put (new_rout_id);
+			rout_id_set.extend (new_rout_id);
 
 			from
 				nb := r_id_set.count;
@@ -344,7 +344,7 @@ end;
 			loop
 				rid := r_id_set.item (i);
 				if not selected_rout_id_set.has (rid) then
-					rout_id_set.force (rid);
+					rout_id_set.extend (rid);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.put_string ("%T");
 	io.error.put_string (System.current_class.class_signature);

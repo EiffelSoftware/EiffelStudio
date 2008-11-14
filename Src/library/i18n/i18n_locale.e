@@ -38,24 +38,26 @@ feature -- Access
 	info: I18N_LOCALE_INFO
 			-- Specific information about locale
 
-	translation (original: STRING_GENERAL): STRING_32 is
+	translation (original: STRING_GENERAL): !STRING_32 is
 			-- Translation of `original' in locale
 			--
 			-- `original': String to translate
 			-- `Result': Translated string, or the original string if no translation is available
 		require
 			original_not_void: original /= Void
+		local
+			l_result: STRING_32
 		do
 			if dictionary.has (original) then
-				Result := dictionary.singular (original)
+				l_result := dictionary.singular (original)
 			else
-				Result := original
+				l_result := original
 			end
-		ensure
-			result_not_void: Result /= Void
+			check l_result /= Void end
+			Result := l_result
 		end
 
-	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): !STRING_32 is
 			-- Translation of `original_singular' or `original_plural' in locale depending on `plural_number'
 			--
 			-- `original_singular': String to translate if singular is used
@@ -65,21 +67,23 @@ feature -- Access
 		require
 			original_singular_not_void: original_singular /= Void
 			original_plural_not_void: original_plural /= Void
+		local
+			l_result: STRING_32
 		do
 			if dictionary.has_plural (original_singular, original_plural, plural_number) then
-				Result := dictionary.plural (original_singular, original_plural, plural_number)
+				l_result := dictionary.plural (original_singular, original_plural, plural_number)
 			else
 				if plural_number = 1 then
-					Result := original_singular
+					l_result := original_singular
 				else
-					Result := original_plural
+					l_result := original_plural
 				end
 			end
-		ensure
-			result_not_void: Result /= Void
+			check l_result /= Void end
+			Result := l_result
 		end
 
-	formatted_string (original: STRING_GENERAL; token_values: TUPLE): STRING_32 is
+	formatted_string (original: STRING_GENERAL; token_values: TUPLE): !STRING_32 is
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -98,9 +102,7 @@ feature -- Access
 			token_values_valid: string_formatter.valid_arguments (token_values)
 			enough_number_of_tokens: string_formatter.required_arguments (original) <= token_values.count
 		do
-			Result := string_formatter.formatted_string (original, token_values)
-		ensure
-			result_not_void: Result /= Void
+			Result := string_formatter.formatted_string (original, token_values).as_attached
 		end
 
 feature -- Formatters

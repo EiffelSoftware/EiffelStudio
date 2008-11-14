@@ -87,9 +87,9 @@ feature {NONE} -- Access
 			if l_path /= Void and then not l_path.is_empty then
 				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 				if i > 0 then
-					Result ?= l_path.substring (i + 1, l_path.count)
+					Result := l_path.substring (i + 1, l_path.count).as_attached
 				else
-					Result ?= l_path
+					Result := l_path
 				end
 			else
 				Result := default_system_name
@@ -743,7 +743,7 @@ feature {NONE} -- Parsing
 			has_parsed := True
 
 			l_args := arguments
-			if l_args.count > 1 then
+			if l_args.count >= 1 then
 				l_switches := available_switches
 				l_prefixes := switch_prefixes
 				l_cs := is_case_sensitive
@@ -757,7 +757,8 @@ feature {NONE} -- Parsing
 					check
 						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
 					end
-					l_arg ?= l_args[i]
+					l_arg := l_args[i]
+					check l_arg_attached: l_arg /= Void end
 					if not l_arg.is_empty and then l_arg.count > 1 and then l_prefixes.has (l_arg.item (1)) then
 						l_last_switch := Void
 
@@ -1174,19 +1175,23 @@ feature {NONE} -- Validation
 			has_parsed: has_parsed
 			switch_groups_attached: switch_groups /= Void
 		local
-			l_groups: !like switch_groups
+			l_groups: ?like switch_groups
 			l_cursor: CURSOR
 		do
 				-- Create extend switch groups
-			l_groups ?= switch_groups
-			create Result.make (l_groups.count)
-			l_cursor := l_groups.cursor
-			from l_groups.start until l_groups.after loop
-				Result.extend (expand_switch_group (l_groups.item))
-				l_groups.forth
+			l_groups := switch_groups
+			if l_groups /= Void then
+				create Result.make (l_groups.count)
+				l_cursor := l_groups.cursor
+				from l_groups.start until l_groups.after loop
+					Result.extend (expand_switch_group (l_groups.item))
+					l_groups.forth
+				end
+				l_groups.go_to (l_cursor)
+				check matching_counts: Result.count = l_groups.count end
+			else
+				create Result.make (0)
 			end
-			l_groups.go_to (l_cursor)
-			check matching_counts: Result.count = l_groups.count end
 		ensure
 			result_count_equal: Result.count = switch_groups.count
 			switch_groups_unmoved: switch_groups.cursor.is_equal (old switch_groups.cursor)

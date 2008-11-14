@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional) is
+	make (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			max_set: max = {INTEGER_64}.max_value
 		end
 
-	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional) is
+	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"			
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			max_set: max = {INTEGER_64}.max_value
 		end
 
-	make_with_range (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional a_min: like min; a_max: like max) is
+	make_with_range (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional a_min: like min; a_max: like max)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden_with_range (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_min: like min; a_max: like max) is
+	make_hidden_with_range (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_min: like min; a_max: like max)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"

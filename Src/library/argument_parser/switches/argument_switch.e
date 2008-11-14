@@ -37,17 +37,17 @@ feature {NONE} -- Initialization
 			description := a_desc
 			optional := a_optional
 			allow_multiple := a_allow_mutliple
-			lower_case_id ?= a_id.as_lower
+			lower_case_id := a_id.as_lower
 		ensure
 			id_set: id = a_id
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
+			lower_case_id_set: lower_case_id.same_string (a_id.as_lower)
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+	make_hidden (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple)
 			-- Initialize a new basic option.
 		require
 			a_id_attached: a_id /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
+			lower_case_id_set: lower_case_id.same_string (a_id.as_lower)
 			is_hidden: is_hidden
 		end
 
@@ -79,7 +79,7 @@ feature -- Access
 			-- Priority option name
 		do
 			if has_short_name then
-				Result ?= short_name.out
+				Result := short_name.out.as_attached
 			else
 				Result := long_name
 			end
@@ -126,7 +126,7 @@ feature -- Status Report
 
 feature {ARGUMENT_BASE_PARSER} -- Status Setting
 
-	set_is_special is
+	set_is_special
 			-- Set switch to be treated with "special" care by the argument validator.
 		do
 			is_special := True
@@ -173,7 +173,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	split_canonical_id (a_id: !STRING): !TUPLE [long_name: !STRING; short_name: CHARACTER] is
+	split_canonical_id (a_id: !STRING): !TUPLE [long_name: !STRING; short_name: CHARACTER]
 			-- Splits canonical switch identifier in a long and short name.
 			-- Note: When no short name is found `Result.short_name' will be a null character ('%U').
 			--
@@ -185,7 +185,7 @@ feature {NONE} -- Query
 		do
 			i := a_id.index_of (canocial_name_separator, 1)
 			if i > 0 and i + 1 <= a_id.count then
-				l_long_name ?= a_id.substring (i + 1, a_id.count).out
+				l_long_name := a_id.substring (i + 1, a_id.count).as_attached
 				Result := [l_long_name, a_id.item (1)]
 			else
 				Result := [a_id, '%U']

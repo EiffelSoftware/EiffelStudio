@@ -301,10 +301,11 @@ feature {NONE} -- Events
 	on_add_type
 			-- Called when user presses `add_type' button or hits enter.
 		local
-			l_new: !STRING
+			l_new: STRING
 		do
 			if not type_field.text.is_empty and type_field.is_valid then
-				l_new := type_field.text.to_string_8.as_attached
+				l_new := type_field.text.to_string_8
+				check l_new /= Void end
 				wizard_information.types.search (l_new)
 				if not wizard_information.types.found then
 					wizard_information.types.force_last (l_new)
@@ -318,10 +319,11 @@ feature {NONE} -- Events
 	on_remove_type
 			-- Called when user presses `remove_type' button
 		local
-			l_type: !STRING
+			l_type: STRING
 		do
 			if type_list.selected_item /= Void then
-				l_type := type_list.selected_item.text.to_string_8.as_attached
+				l_type := type_list.selected_item.text.to_string_8
+				check l_type /= Void end
 				wizard_information.types.remove (l_type)
 				type_list.prune (type_list.selected_item)
 				update_next_button_status

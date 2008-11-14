@@ -55,14 +55,17 @@ feature {NONE} -- Basic operations
 		local
 			l_ts: TEST_SUITE_S
 			l_creator: !TEST_CREATOR_I
+			l_info: like wizard_information
 		do
 			if test_suite.is_service_available then
 				l_ts := test_suite.service
 				if l_ts.processor_registrar.is_valid_type (factory_type, l_ts) then
 					l_creator := l_ts.factory (factory_type)
 					if l_creator.is_ready then
-						if l_creator.is_valid_configuration (wizard_information.as_attached) then
-							l_ts.launch_processor (l_creator, wizard_information.as_attached, False)
+						l_info := wizard_information
+						check l_info /= Void end
+						if l_creator.is_valid_configuration (l_info) then
+							l_ts.launch_processor (l_creator, l_info, False)
 							cancel_actions
 						else
 							show_error_prompt (e_configuration_not_valid, [])

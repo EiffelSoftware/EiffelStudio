@@ -173,8 +173,7 @@ feature {NONE} -- Element change
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_row: !EV_GRID_ROW
-			l_ut_row: EV_GRID_ROW
+			l_row, l_ut_row: EV_GRID_ROW
 			l_new: ES_TAGABLE_GRID_ITEM_DATA [G]
 			l_new_ut: ES_TAGABLE_GRID_TEXT_DATA [G]
 		do
@@ -191,7 +190,7 @@ feature {NONE} -- Element change
 					-- Insert a "untagged" row
 				i := last_untagged_index
 				grid.insert_new_row (i)
-				l_ut_row ?= grid.row (i)
+				l_ut_row := grid.row (i)
 				check
 					attached: l_ut_row /= Void
 				end
@@ -202,7 +201,8 @@ feature {NONE} -- Element change
 			end
 			Precursor (a_item)
 			grid.insert_new_row_parented (i, untagged_subrow)
-			l_row ?= grid.row (i)
+			l_row := grid.row (i)
+			check l_row /= Void end
 			create l_new.make (l_row, a_item)
 		end
 

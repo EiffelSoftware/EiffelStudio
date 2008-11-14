@@ -93,11 +93,15 @@ feature {NONE} -- Access
 
 	layout: !ES_TAGABLE_GRID_LAYOUT [G]
 			-- Layout responsible for drawing grid items and header
+		local
+			l_layout: like internal_layout
 		do
-			if internal_layout = Void then
-				create internal_layout
+			l_layout := internal_layout
+			if l_layout = Void then
+				create l_layout
+				internal_layout := l_layout
 			end
-			Result ?= internal_layout
+			Result := l_layout
 		end
 
 	internal_layout: ?like layout
@@ -121,14 +125,18 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Query
 			-- `Result': Newly computed grid item for column and row index.
 		local
 			l_row: EV_GRID_ROW
-			l_data: ES_TAGABLE_GRID_DATA [G]
 			l_selected: BOOLEAN
 		do
 			propagate_selection_events := False
 			l_row := grid.row (a_row_index)
 			l_selected := l_row.is_selected
-			l_data ?= l_row.data
-			l_data.populate_row (layout)
+			if {l_data: ES_TAGABLE_GRID_DATA [G]} l_row.data then
+				l_data.populate_row (layout)
+			else
+				check
+					dead_end: False
+				end
+			end
 			Result := l_row.item (a_col_index)
 			if l_selected then
 				l_row.enable_select
@@ -176,11 +184,14 @@ feature {NONE} -- Implementation
 
 	change_focus is
 			-- Make sure all selected rows have correct background color.
-		local
-			l_selected: LIST [!EV_GRID_ROW]
 		do
-			l_selected ?= grid.selected_rows
-			l_selected.do_all (agent highlight_row)
+			grid.selected_rows.do_all (
+				agent (a_row: EV_GRID_ROW)
+					require
+						a_row /= Void
+					do
+						highlight_row (a_row)
+					end)
 		end
 
 	redraw_items

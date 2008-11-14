@@ -1924,10 +1924,11 @@ test	agent-optimization-failure		agent001 tcf pass agents
 test	agent-with-like					agent002 tcf pass agents
 test	agent-with-basic				agent003 tcf fail agents finalizing
 test	agent-crash						agent004 tcf fail agents
-test	agent-too-many-arguments		agent005 tcf fail agents
+test	agent-too-many-arguments		agent005 tcf pass agents
 test	incorrect-agent-type			agent006 tcf fail agents
-test	agent-dotnet-failure			agent007 tcf fail agents dotnet
-test	agent-on-tuple-label			agent008 tcf fail agents tuple
+test	agent-dotnet-failure			agent007 tcf pass agents dotnet
+test	agent-on-tuple-label			agent008 tcf pass agents tuple
+test	agent-on-with-attached-operands	agent009 tcf fail agents tuple
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

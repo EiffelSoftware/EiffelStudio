@@ -457,21 +457,19 @@ feature {NONE} -- Status setting
 			l_file_system: KL_SHARED_FILE_SYSTEM
 			l_class: EIFFEL_CLASS_I
 		do
-			if not is_test_class_map_modified then
-				l_cursor := test_class_map.keys.new_cursor
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					l_class := l_cursor.item
-					if not file_system.file_exists (l_class.file_name) then
-						synchronize_with_class (l_class)
-					end
-					if not l_cursor.off then
-						if l_cursor.item = l_class then
-							l_cursor.forth
-						end
+			l_cursor := test_class_map.keys.new_cursor
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_class := l_cursor.item
+				if not file_system.file_exists (l_class.file_name) then
+					synchronize_with_class (l_class)
+				end
+				if not l_cursor.off then
+					if l_cursor.item = l_class then
+						l_cursor.forth
 					end
 				end
 			end

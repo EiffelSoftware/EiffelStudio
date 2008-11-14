@@ -47,7 +47,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
 			-- <Precursor>
 		local
 			l_source_writer: !TEST_EXTRACTED_SOURCE_WRITER
@@ -55,7 +55,7 @@ feature {NONE} -- Status setting
 			create l_source_writer.make
 			capturer.observers.force_last (l_source_writer)
 
-			l_source_writer.prepare (a_file, configuration.new_class_name)
+			l_source_writer.prepare (a_file, a_class_name)
 			if {l_stat: APPLICATION_STATUS} debugger_manager.application_status then
 				if {l_cs: EIFFEL_CALL_STACK} l_stat.current_call_stack then
 					from

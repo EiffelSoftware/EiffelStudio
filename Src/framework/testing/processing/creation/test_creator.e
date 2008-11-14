@@ -114,7 +114,7 @@ feature {NONE} -- Basic operations
 			l_directory: DIRECTORY
 			l_path: ?FILE_NAME
 			l_file: !KL_TEXT_OUTPUT_FILE
-			l_filename: STRING
+			l_filename, l_class_name: STRING
 		do
 			if not configuration.cluster.is_readonly then
 				create l_location.make_from_string (configuration.cluster.location.build_path (configuration.path, ""))
@@ -153,7 +153,9 @@ feature {NONE} -- Basic operations
 					if not l_file.exists then
 						l_file.open_write
 						if l_file.is_open_write then
-							print_new_class (l_file)
+							l_class_name := l_filename.substring (1, l_filename.count - 2)
+							l_class_name.to_upper
+							print_new_class (l_file, l_class_name.as_attached)
 							if l_file.is_open_write then
 								l_file.close
 							end
@@ -178,7 +180,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
 			-- Print new class text to `a_file'.
 		require
 			running: is_running

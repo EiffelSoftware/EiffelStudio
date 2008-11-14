@@ -41,7 +41,7 @@ feature {NONE} -- Basic operations
 			is_finished := True
 		end
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE)
+	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
 			-- Create test routine in new class
 		local
 			l_group: CONF_CLUSTER

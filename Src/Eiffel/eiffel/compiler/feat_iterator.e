@@ -183,7 +183,7 @@ feature
 				create tmp.make
 				marked_table.put (tmp, body_index)
 			end
-			tmp.force (rout_id)
+			tmp.extend (rout_id)
 		end
 
 	is_alive (body_index: INTEGER): BOOLEAN is

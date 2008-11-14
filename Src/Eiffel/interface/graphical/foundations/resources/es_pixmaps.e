@@ -139,21 +139,17 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	frozen icon_coordinates_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], !STRING]
+	frozen icon_coordinates_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
 			-- Table of icon coordinates.
 			--
 			-- Key: An icon name.
 			-- Value: Icon matrix coordinates.
 		do
-			if {l_result: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], !STRING]} internal_icon_coordinates_table then
+			if {l_result: like icon_coordinates_table} internal_icon_coordinates_table then
 				Result := l_result
 			else
 				create Result.make_default
-				if {l_detached_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]} Result then
-					l_detached_table.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER})
-				else
-					check False end
-				end
+				Result.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER})
 				populate_coordinates_table (Result)
 				internal_icon_coordinates_table := Result
 			end
@@ -337,7 +333,7 @@ feature {NONE} -- Basic operation
 			result_height_big_enough: Result.height.to_natural_32 >= matrix_pixel_height
 		end
 
-	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], !STRING])
+	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
 			-- Populates a coordinates table with the coordinates for the implemented icons
 		deferred
 		end

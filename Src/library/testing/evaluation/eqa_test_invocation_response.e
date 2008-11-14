@@ -48,7 +48,7 @@ feature -- Access
 		require
 			exceptional: is_exceptional
 		do
-			Result ?= internal_exception
+			Result := internal_exception.as_attached
 		end
 
 	output: !STRING
@@ -58,6 +58,5 @@ feature {NONE} -- Access
 
 	internal_exception: ?like exception
 			-- Internal storage for `exception'
-
 
 end

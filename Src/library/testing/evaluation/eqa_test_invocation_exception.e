@@ -77,10 +77,10 @@ feature {NONE} -- Status setting
 	parse_trace
 			-- Parse `exception_trace' and update `trace_depth' and `exception_break_point_slot' accordingly.
 		local
-			l_list: !LIST [!STRING]
+			l_list: LIST [!STRING]
 			l_found: BOOLEAN
 		do
-			l_list ?= trace.split ('%N')
+			l_list := trace.split ('%N')
 			if l_list.count >= 5 then
 				l_list.start
 				go_after_next_dash_line (l_list)
@@ -105,8 +105,9 @@ feature {NONE} -- Status setting
 
 		end
 
-	go_after_next_dash_line (a_list: !LIST [!STRING]) is
+	go_after_next_dash_line (a_list: LIST [!STRING]) is
 		require
+			a_list_not_void: a_list /= Void
 			a_list_not_off: not a_list.off
 		local
 			l_found: BOOLEAN
@@ -132,10 +133,10 @@ feature {NONE} -- Status setting
 	is_routine_fast_line (v: !STRING): BOOLEAN is
 			-- Is `v' a stack line describing a frame in an `ROUTINE.fast_*' class?
 		local
-			l_list: !LIST [!STRING]
+			l_list: LIST [!STRING]
 			l_string: !STRING
 		do
-			l_list ?= v.split (' ')
+			l_list := v.split (' ')
 			if l_list.count = 2 then
 				l_list.start
 				l_string := l_list.item_for_iteration

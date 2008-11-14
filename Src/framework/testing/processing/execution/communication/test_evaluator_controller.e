@@ -33,8 +33,12 @@ feature -- Access
 			-- Date and time evaluator was last launched
 		require
 			running: is_running
+		local
+			l_launch_time: like internal_launch_time
 		do
-			Result ?= internal_launch_time
+			l_launch_time := internal_launch_time
+			check l_launch_time /= Void end
+			Result := l_launch_time
 		end
 
 	assigner: !TEST_EXECUTION_ASSIGNER
@@ -118,7 +122,8 @@ feature {NONE} -- Query
 			create Result.make (5)
 
 			Result.force ("-p")
-			l_port ?= last_port.out
+			create l_port.make (6)
+			l_port.append_integer (last_port)
 			Result.force (l_port)
 			Result.force ("-o")
 			Result.force ("-eif_root")

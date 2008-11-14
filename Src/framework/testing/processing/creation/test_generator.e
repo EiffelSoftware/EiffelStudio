@@ -360,14 +360,12 @@ feature{NONE} -- Test case generation and execution
 		require
 			system_attached: system /= Void
 		local
-			l_class_type: CL_TYPE_A
 			tester: AUT_CLASS_EQUALITY_TESTER
 			l_class_set: DS_HASH_SET [CLASS_I]
 			l_class_cur: DS_HASH_SET_CURSOR [CLASS_I]
 			l_type: TYPE_A
 			l_class_name_set: DS_HASH_SET [STRING]
 			l_name_cur: DS_HASH_SET_CURSOR [STRING]
-			l_gen_type: GEN_TYPE_A
 		do
 			create types_under_test.make (class_names.count)
 			create classes_under_test.make (class_names.count)
@@ -413,21 +411,26 @@ feature{NONE} -- Test case generation and execution
 					l_type := base_type (l_name_cur.item, interpreter_root_class)
 					if l_type /= Void then
 						if l_type.associated_class.is_generic then
-							l_gen_type ?= l_type
-							if l_gen_type = Void then
-								l_gen_type ?= l_type.associated_class.actual_type
-								check l_gen_type /= Void end
-								l_gen_type ?= generic_derivation_of_type (l_gen_type, l_gen_type.associated_class)
+							if not {l_gen_type: GEN_TYPE_A} l_type then
+								if {l_gen_type2: GEN_TYPE_A} l_type.associated_class.actual_type then
+									l_type := generic_derivation_of_type (l_gen_type2, l_gen_type2.associated_class)
+								else
+									check
+										dead_end: False
+									end
+								end
 							end
-							l_class_type := l_gen_type
-						else
-							l_class_type ?= l_type
 						end
-
-							-- Only compiled classes are taken into consideration.
-						if l_class_type.associated_class /= Void then
-							if not interpreter_related_classes.has (l_class_type.name) then
-								types_under_test.force_last (l_class_type)
+						if {l_class_type: CL_TYPE_A} l_type then
+								-- Only compiled classes are taken into consideration.
+							if l_class_type.associated_class /= Void then
+								if not interpreter_related_classes.has (l_class_type.name) then
+									types_under_test.force_last (l_class_type)
+								end
+							end
+						else
+							check
+								dead_end: False
 							end
 						end
 					end
@@ -628,8 +631,13 @@ feature{NONE} -- Test result analyizing
 			l_set: AUT_TEST_CASE_RESULT_SET
 			l_feat: FEATURE_I
 			l_contains_test: BOOLEAN
+			l_system: SYSTEM_I
+			l_class_name: STRING
 		do
-			source_writer.prepare (a_file, a_class_name, test_suite.eiffel_project.system.system.as_attached, current_class.name.as_attached)
+			l_system := test_suite.eiffel_project.system.system
+			l_class_name := current_class.name
+			check l_system /= Void and l_class_name /= Void end
+			source_writer.prepare (a_file, a_class_name, l_system, l_class_name)
 			from
 				l_feat_table := current_class.feature_table
 				l_feat_table.start

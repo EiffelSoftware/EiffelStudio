@@ -44,12 +44,15 @@ feature -- Access
 
 	printable_text: like text
 			-- <Precursor>
+		local
+			l_result: like internal_printable_text
 		do
-			if internal_printable_text = Void then
+			l_result := internal_printable_text
+			if l_result /= Void then
+				Result := l_result
+			else
 				create Result.make_empty
 				internal_printable_text := Result
-			else
-				Result ?= internal_printable_text
 			end
 		end
 
@@ -78,10 +81,12 @@ feature -- Basic operations
 			-- `a_table': A code symbol table to take evaluated values from.
 		local
 			l_value: !CODE_SYMBOL_VALUE
+			l_id: !STRING
 		do
-			if {l_text: !STRING_8} text.as_string_8 and then a_table.has_id (l_text) then
+			l_id := text.as_string_8.as_attached
+			if a_table.has_id (l_id) then
 					-- Fetch value from the symbol table
-				l_value := a_table.item (l_text)
+				l_value := a_table.item (l_id)
 				internal_printable_text := l_value.value
 			else
 					-- Use the ID
@@ -99,7 +104,7 @@ feature -- Visitor
 
 feature -- Output
 
-	out: STRING_8
+	out: STRING
 			-- <Precursor>
 		do
 			create Result.make (10)

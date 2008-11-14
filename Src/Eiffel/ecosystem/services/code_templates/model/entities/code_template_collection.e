@@ -25,7 +25,7 @@ feature -- Query
 		local
 			l_version: !STRING_32
 		do
-			l_version ?= (create {SYSTEM_CONSTANTS}).compiler_version_number.version.as_string_32
+			create l_version.make_from_string ((create {SYSTEM_CONSTANTS}).compiler_version_number.version)
 			Result := applicable_item_with_version (l_version)
 			if Result = Void then
 				Result := applicable_default_item
@@ -55,7 +55,7 @@ feature -- Query
 				check gobo_cursor_cleaned_up: l_templates.off end
 			end
 		ensure
-			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
+			result_is_unversioned: not {e1: CODE_VERSIONED_TEMPLATE} Result
 		end
 
 	applicable_item_with_version (a_version: !STRING_32): ?CODE_TEMPLATE
@@ -68,7 +68,7 @@ feature -- Query
 		local
 			l_version: !CODE_VERSION
 		do
-			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, create {!CODE_FACTORY})
+			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, create {CODE_FACTORY})
 			Result := applicable_item_with_code_version (l_version)
 		end
 
@@ -78,30 +78,32 @@ feature -- Query
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			not_a_version_is_default: not a_version.is_equal (create {!CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
+			not_a_version_is_default: not a_version.is_equal (create {CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		local
 			l_templates: like items
 			l_template: !CODE_TEMPLATE
 			l_versioned_templates: !DS_ARRAYED_LIST [!CODE_VERSIONED_TEMPLATE]
 			l_ver_template: CODE_VERSIONED_TEMPLATE
 			l_next_ver_template: !CODE_VERSIONED_TEMPLATE
+			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE]
 		do
 			l_templates := items
 			if not l_templates.is_empty then
 				if l_templates.count = 1 then
 						-- There's only one template
 					Result := l_templates.first
-					if {l_vt1: !CODE_VERSIONED_TEMPLATE} Result and then not l_vt1.is_compatible_with (a_version) then
+					if {l_vt1: CODE_VERSIONED_TEMPLATE} Result and then not l_vt1.is_compatible_with (a_version) then
 							-- The template is not usable, so unset it.
 						Result := Void
 					end
 				else
 						-- Find most applicable templates
 					create l_versioned_templates.make_default
-					if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE]} l_templates.new_cursor then
+					l_cursor := l_templates.new_cursor
+					if l_cursor /= Void then
 							-- Compile a list of versioned templates
 						from l_cursor.start until l_cursor.after loop
-							if {l_vt2: !CODE_VERSIONED_TEMPLATE} l_cursor.item then
+							if {l_vt2: CODE_VERSIONED_TEMPLATE} l_cursor.item then
 								l_versioned_templates.force_last (l_vt2)
 							else
 									-- Keep the unversioned template, incase there are no versioned ones

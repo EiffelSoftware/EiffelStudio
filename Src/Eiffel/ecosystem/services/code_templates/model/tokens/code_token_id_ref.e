@@ -75,7 +75,7 @@ feature -- Visitor
 
 feature -- Output
 
-	out: STRING_8
+	out: STRING
 			-- <Precursor>
 		do
 			Result := code_token_id.out

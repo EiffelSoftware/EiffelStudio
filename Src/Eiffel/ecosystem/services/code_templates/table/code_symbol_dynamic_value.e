@@ -22,8 +22,7 @@ feature -- Access
 			if has_value_been_evaluated then
 				perform_value_evaluation
 			end
-			create Result.make (internal_value.count)
-			Result.append (internal_value)
+			create Result.make_from_string (internal_value)
 		ensure then
 			has_value_been_evaluated: has_value_been_evaluated
 		end

@@ -59,13 +59,13 @@ feature -- Visitor
 
 feature -- Output
 
-	out: STRING_8
+	out: STRING
 			-- <Precursor>
 		do
-			Result := text.as_string_8
+			Result := text
 		end
 
-	debug_output: STRING_8
+	debug_output: STRING
 			-- <Precursor>
 		do
 			Result := out

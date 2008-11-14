@@ -78,7 +78,7 @@ feature -- Parsing
 				Result.append_character ('.')
 				Result.append_natural_16 (l_nv.qfe)
 			else
-				Result ?= a_version.version.twin
+				Result := a_version.version.twin
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

@@ -72,10 +72,11 @@ feature -- Basic operations
 					-- Add
 				local
 					l_internal: !INTERNAL
-					l_provider: !HELP_PROVIDER_I
+					l_provider: ?HELP_PROVIDER_I
 				do
 					create l_internal
 					l_provider ?= l_internal.new_instance_of (l_internal.generic_dynamic_type (a_ia_type, 1))
+					check l_provider_attached: l_provider /= Void end
 					if {l_site: !SITE [HELP_PROVIDERS_S]} l_provider then
 							-- Set site, if applicable
 						l_site.site := a_ia_service

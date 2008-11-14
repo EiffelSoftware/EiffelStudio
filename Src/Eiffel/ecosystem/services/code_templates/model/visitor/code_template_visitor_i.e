@@ -96,15 +96,15 @@ feature {NONE} -- Processing
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_items: !DS_BILINEAR [ANY]
+			l_items: DS_BILINEAR_CURSOR [ANY]
 		do
-			l_items := a_collection.items
-			l_items.do_all (agent (a_node: ANY)
-				do
-					if {l_node: CODE_NODE} a_node and then is_applicable_visitation_entity (l_node) then
-						l_node.process (Current)
-					end
-				end)
+			l_items := a_collection.items.new_cursor
+			from l_items.start until l_items.after loop
+				if {l_node: CODE_NODE} l_items.item and then is_applicable_visitation_entity (l_node) then
+					l_node.process (Current)
+				end
+				l_items.forth
+			end
 		end
 
 feature {CODE_NODE} -- Query

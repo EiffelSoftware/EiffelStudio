@@ -169,7 +169,7 @@ feature {NONE} -- Query
 		do
 			l_action ?= a_object
 			if l_action /= Void then
-				Result := l_action.item ([])
+				Result := l_action.item (Void)
 			else
 				Result := a_object
 			end

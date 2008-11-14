@@ -31,34 +31,39 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: !STRING_32
-			-- Raw text of the code template
+			-- Raw text of the code template.
+		local
+			l_tokens: DS_BILINEAR_CURSOR [!CODE_TOKEN]
+			l_token: CODE_TOKEN
+			l_is_id: BOOLEAN
 		do
 			if internal_tokens.is_empty then
 				create Result.make_empty
 			else
 				create Result.make (100)
-				tokens.do_all (agent (a_item: !CODE_TOKEN; a_buffer: !STRING_32)
-					local
-						l_id: CODE_TOKEN_ID
-					do
-						l_id ?= a_item
-						if l_id /= Void then
-							a_buffer.append ("${")
-						end
+				
+				l_tokens := tokens.new_cursor
+				from l_tokens.start until l_tokens.after loop
+					l_token := l_tokens.item
+					l_is_id := {l_id: CODE_TOKEN_ID} l_token
+					if l_is_id then
+						Result.append ("${")
+					end
 
-						a_buffer.append (a_item.text)
+					Result.append (l_token.text)
 
-						if l_id /= Void then
-							a_buffer.append_character ('}')
-						end
-					end (?, Result))
+					if l_is_id then
+						Result.append_character ('}')
+					end
+					l_tokens.forth
+				end
 			end
 		end
 
 	tokens: !DS_BILINEAR [!CODE_TOKEN] assign set_tokens
 			-- List of code tokens that make up the template
 		do
-			Result ?= internal_tokens
+			Result := internal_tokens
 		end
 
 feature {NONE} -- Access
@@ -112,8 +117,14 @@ feature -- Basic operations
 			-- Processes all tokens.
 			--
 			-- `a_visitor': Visitor to process all tokens with
+		local
+			l_tokens: DS_ARRAYED_LIST_CURSOR [!CODE_TOKEN]
 		do
-			internal_tokens.do_all (agent {!CODE_TOKEN}.process (a_visitor))
+			l_tokens := internal_tokens.new_cursor
+			from l_tokens.start until l_tokens.after loop
+				l_tokens.item.process (a_visitor)
+				l_tokens.forth
+			end
 		end
 
 feature {NONE} -- Internal implementation cache

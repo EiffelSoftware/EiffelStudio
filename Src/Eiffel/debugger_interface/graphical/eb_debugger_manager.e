@@ -1225,24 +1225,32 @@ feature -- Status setting
 			-- Activate or Deactivate execution replay mode
 		local
 			levlim: INTEGER
+			status_changed: BOOLEAN
 		do
 			if safe_application_is_stopped then
-				application.activate_execution_replay_mode (b)
+				if application_status.replay_activated /= b then
+					status_changed := True
+					application.activate_execution_replay_mode (b)
+				end
 				levlim := application.status.replay_level_limit
-			end
-			toggle_exec_replay_mode_cmd.set_select (b)
-			if b then
-				disable_debugging_commands (False)
-				toggle_exec_replay_recording_mode_cmd.disable_sensitive
-				toggle_exec_replay_mode_cmd.enable_sensitive
 			else
-				enable_debugging_commands
-
-				toggle_exec_replay_recording_mode_cmd.enable_sensitive
-				toggle_exec_replay_mode_cmd.enable_sensitive
+				status_changed := True
 			end
-			call_stack_tool.activate_execution_replay_mode (b, levlim)
-			update_execution_replay
+			if status_changed then
+				toggle_exec_replay_mode_cmd.set_select (b)
+				if b then
+					disable_debugging_commands (False)
+					toggle_exec_replay_recording_mode_cmd.disable_sensitive
+					toggle_exec_replay_mode_cmd.enable_sensitive
+				else
+					enable_debugging_commands
+
+					toggle_exec_replay_recording_mode_cmd.enable_sensitive
+					toggle_exec_replay_mode_cmd.enable_sensitive
+				end
+				call_stack_tool.activate_execution_replay_mode (b, levlim)
+				update_execution_replay
+			end
 		end
 
 	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is

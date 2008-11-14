@@ -1,0 +1,2 @@
+Error: type of assignment target is attached
+What to do: make sure to use an object test before assigning the target.

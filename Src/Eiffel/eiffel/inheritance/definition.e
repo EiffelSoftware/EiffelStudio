@@ -127,7 +127,7 @@ feature -- Checking
 							end
 								-- Insertion into the routine info table.
 							System.rout_info_table.put (new_rout_id, System.current_class)
-							rout_id_set.force (new_rout_id)
+							rout_id_set.extend (new_rout_id)
 						end
 					else
 						l_attribute.set_has_function_origin (False)

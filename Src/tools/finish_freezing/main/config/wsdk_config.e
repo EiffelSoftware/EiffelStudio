@@ -54,7 +54,7 @@ feature {NONE} -- Access
 		do
 			create Result.make (10)
 			l_layout ?= eiffel_layout
-			if eiffel_layout /= Void then
+			if l_layout /= Void then
 					-- Need to do the same check as in `batch_file_name' to ensure we do
 					-- not pass the install path as an argument when we are using the config library
 					-- in an environment that has no install-base (like an installation program)

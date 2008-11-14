@@ -645,7 +645,7 @@ feature{NONE} -- Process scheduling
 				if process.input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 					log (log_stream.string)
 					request_count := request_count + 1
-					process.reset_timer
+					process.set_timeout (timeout)
 					if socket /= Void and then socket.is_open_write and socket.extendible then
 						socket.put_natural (1)
 						socket.independent_store (socket_data_printer.last_request)

@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			l_factory: PROCESS_FACTORY
 		do
 			create mutex.make
+			create condition_variable.make
 			create l_factory
 			process := l_factory.process_launcher (a_executable, a_args, a_directory)
 		end
@@ -63,15 +64,16 @@ feature {NONE} -- Initialization
 feature {NONE} -- Access
 
 	mutex: MUTEX
-			-- Mutex for controlling access to `process'
+			-- Mutex for controlling access to `process', `timeout' and `condition_variable'.
+
+	condition_variable: CONDITION_VARIABLE
+			-- Condition variable for timout thread
 
 	process: PROCESS
 			-- Actual process object
 
 	timeout: INTEGER
 			-- Number of seconds being spent until process is terminated
-
-	start_time: ?DT_TIME
 
 feature -- Status report
 
@@ -120,7 +122,7 @@ feature -- Status setting
 			mutex.lock
 			timeout := a_timeout
 			if is_launched then
-				reset_timer
+				condition_variable.signal
 			end
 			mutex.unlock
 		end
@@ -130,9 +132,9 @@ feature -- Status setting
 		require
 			launched: is_launched
 		do
-			if start_time /= Void then
-				start_time := system_clock.time_now
-			end
+			mutex.lock
+			condition_variable.signal
+			mutex.unlock
 		end
 
 	wait_for_exit_with_timeout (a_timeout: INTEGER)
@@ -140,6 +142,7 @@ feature -- Status setting
 		do
 			mutex.lock
 			process.wait_for_exit_with_timeout (a_timeout)
+			condition_variable.signal
 			mutex.unlock
 		end
 
@@ -148,6 +151,7 @@ feature -- Status setting
 		do
 			mutex.lock
 			terminate_directly
+			condition_variable.signal
 			mutex.unlock
 		end
 
@@ -185,37 +189,36 @@ feature {NONE} -- Basic operations
 	execute
 			-- <Precursor>
 		local
-			l_delta: DT_TIME_DURATION
-			l_done: BOOLEAN
+			l_done, l_exp: BOOLEAN
 		do
 			from
-				start_time := system_clock.time_now
+				mutex.lock
 			until
 				l_done
 			loop
-				mutex.lock
 				if timeout > 0 then
-					l_delta := system_clock.time_now.duration (start_time)
-					l_delta.set_canonical
-					if l_delta.second_count > timeout then
+					l_exp := condition_variable.wait_with_timeout (mutex, timeout * 1000)
+					if not l_exp then
 						terminate_directly
-						l_done := True
 					end
 				end
-				if not l_done then
-					l_done := process.has_exited
-				end
-				mutex.unlock
-				if not l_done then
-					sleep (nap_time)
+				if process.has_exited then
+					l_done := True
+				else
+					if timeout = 0 then
+						condition_variable.wait (mutex)
+					end
 				end
 			end
+			mutex.unlock
 		end
 
 feature {NONE} -- Implementation
 
 	terminate_directly
 			-- Terminate process without using mutex
+			--
+			-- Note: not thread safe
 		do
 			if process.is_running then
 				if not process.force_terminated then
@@ -229,9 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Constants
-
-	nap_time: INTEGER_64 = 100000000
-			-- Nanoseconds between each timeout check
+invariant
+	timeout_not_negative: timeout >= 0
 
 end

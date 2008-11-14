@@ -19,7 +19,7 @@ create {ARGUMENT_FLAG_SWITCH}
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value; a_flags: LIST [CHARACTER]; a_cs: BOOLEAN; a_switch: like switch) is
+	make (a_value: like value; a_flags: LIST [CHARACTER]; a_cs: BOOLEAN; a_switch: like switch)
 			-- Initializes option with a name, an associated value and a list of available flags.
 		require
 			a_value_attached: a_value /= Void
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Query
 
-	has_flag (a_flag: CHARACTER): BOOLEAN is
+	has_flag (a_flag: CHARACTER): BOOLEAN
 			-- Determines if `a_flag' was set
 		local
 			c: CHARACTER

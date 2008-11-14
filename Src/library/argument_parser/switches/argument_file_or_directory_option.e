@@ -17,7 +17,7 @@ create {ARGUMENT_SWITCH}
 
 feature -- Status report
 
-	is_file: BOOLEAN is
+	is_file: BOOLEAN
 			-- Indicates if `value' is a file
 		require
 			has_value: has_value
@@ -32,7 +32,7 @@ feature -- Status report
 			result_antipodal: not is_directory
 		end
 
-	is_directory: BOOLEAN is
+	is_directory: BOOLEAN
 			-- Indicates if `value' is a file
 		require
 			has_value: has_value

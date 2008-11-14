@@ -25,7 +25,7 @@ feature -- Access
 		require
 			has_property_name: has_property_name
 		do
-			Result ?= internal_property_value
+			Result := internal_property_value.as_attached
 		end
 
 	property_value: !STRING

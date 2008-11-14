@@ -45,7 +45,7 @@ feature -- Access
 
 feature {NONE} -- Usage
 
-	command_option_group_configuration (a_group: !LIST [!ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: !LIST [!ARGUMENT_SWITCH]): STRING is
+	command_option_group_configuration (a_group: !LIST [!ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: !LIST [!ARGUMENT_SWITCH]): STRING
 			-- Command line option configuration string (to display in usage)
 		local
 			l_suffix: STRING

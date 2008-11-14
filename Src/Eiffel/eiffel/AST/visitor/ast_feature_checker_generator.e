@@ -2784,9 +2784,11 @@ feature -- Implementation
 			l_precursor_id: ID_AS
 			l_instatiation_type: LIKE_CURRENT
 			l_has_error: BOOLEAN
+			l_current_class: CLASS_C
+			l_rout_id_set: ROUT_ID_SET
 		do
 			if not is_inherited then
-				if current_feature.is_invariant or else current_feature.is_inline_agent  then
+				if current_feature.is_invariant or else current_feature.is_inline_agent then
 					create l_vupr1
 					context.init_error (l_vupr1)
 					error_handler.insert_error (l_vupr1)
@@ -2794,8 +2796,26 @@ feature -- Implementation
 				else
 					l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
 
+					if current_feature.written_in /= context.current_class.class_id then
+						-- We are trying to evaluate a precursor in a inherited replicated feature so the context should be its written class.
+						l_current_class := current_feature.written_class
+					else
+						l_current_class := context.current_class
+					end
+
+					if not current_feature.is_selected then
+							-- We are trying to evaluate a precursor where the routine id is different from its parent precursor routine
+							-- Retrieve rout id set from from parent routine, merging if necessary with current routine id set.
+
+							--| FIXME IEK: We need to retrieve the routine id of the selected routine.
+						l_rout_id_set := current_feature.rout_id_set
+					else
+						l_rout_id_set := current_feature.rout_id_set
+					end
+
 						-- Check that feature has a unique name (vupr1)
 						-- Check that we're in the body of a routine (l_vupr1).
+
 					if
 						l_feat_ast.feature_names.count > 1 or
 						is_checking_precondition or is_checking_postcondition or is_checking_invariant
@@ -2807,7 +2827,7 @@ feature -- Implementation
 					else
 							-- Create table of routine ids of all parents which have
 							-- an effective precursor of the current feature.
-						l_pre_table := precursor_table (l_as)
+						l_pre_table := precursor_table (l_as, l_current_class, l_rout_id_set)
 
 							-- Check that current feature is a redefinition.
 						if l_pre_table.count = 0 then
@@ -8649,14 +8669,13 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 
 feature {NONE} -- Precursor handling
 
-	precursor_table (l_as: PRECURSOR_AS): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
+	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
 				-- Table of parent types which have an effective
 				-- precursor of current feature. Indexed by
 				-- routine ids.
 		require
 			l_as_not_void: l_as /= Void
 		local
-			rout_id_set: ROUT_ID_SET
 			rout_id: INTEGER
 			parents: FIXED_LIST [CL_TYPE_A]
 			a_parent: CLASS_C
@@ -8670,12 +8689,11 @@ feature {NONE} -- Precursor handling
 			check_written_in: LINKED_LIST [PAIR [INTEGER, INTEGER]]
 			r_class_i: CLASS_I
 		do
-			rout_id_set := current_feature.rout_id_set
-			rc := rout_id_set.count
+			rc := a_rout_id_set.count
 
 			if l_as.parent_base_class /= Void then
 				-- Take class renaming into account
-				r_class_i := Universe.class_named (l_as.parent_base_class.class_name.name, context.current_class.group)
+				r_class_i := Universe.class_named (l_as.parent_base_class.class_name.name, a_current_class.group)
 
 				if r_class_i /= Void then
 					spec_p_name := r_class_i.name
@@ -8688,7 +8706,7 @@ feature {NONE} -- Precursor handling
 			end
 
 			from
-				parents := context.current_class.parents
+				parents := a_current_class.parents
 				create Result.make
 				create check_written_in.make
 				check_written_in.compare_objects
@@ -8714,7 +8732,7 @@ feature {NONE} -- Precursor handling
 					until
 						i > rc
 					loop
-						rout_id   := rout_id_set.item (i)
+						rout_id   := a_rout_id_set.item (i)
 						a_feature := a_parent.feature_of_rout_id (rout_id)
 
 						if a_feature /= Void and then not a_feature.is_deferred  then

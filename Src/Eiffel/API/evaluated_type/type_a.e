@@ -149,7 +149,7 @@ feature -- Generic conformance
 			end
 				-- We can provide `Void' for `generated_id' since it is the one
 				-- from `a_context_type' that we are retrieving.
-			ba.append_short_integer (a_context_type.generated_id (False, Void))
+			ba.append_natural_16 (a_context_type.generated_id (False, Void))
 			make_type_byte_code (ba, True, a_context_type)
 			ba.append_short_integer (-1)
 		end
@@ -163,7 +163,7 @@ feature -- Generic conformance
 			context_type_valid: is_valid_context_type (a_context_type)
 		do
 			make_type_prefix_byte_code (ba)
-			ba.append_short_integer (generated_id (False, a_context_type))
+			ba.append_natural_16 (generated_id (False, a_context_type))
 		end
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is

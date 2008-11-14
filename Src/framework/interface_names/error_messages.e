@@ -15,26 +15,26 @@ inherit
 
 feature -- General purpose
 
-	e_unknown_error: !STRING_32 do Result ?= locale.translation ("Unknown error.") end
+	e_unknown_error: !STRING_32 do Result := locale.translation ("Unknown error.") end
 
 feature -- Code template
 
-	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
-	e_code_template_read (a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to read the code template file '$1'.", [a_file_name]) end
-	e_code_template_unable_to_find_template: !STRING_32 do Result ?= locale.translation ("Unable to find an applicable template for the current version of EiffelStudio.") end
+	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result := locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
+	e_code_template_read (a_file_name: STRING_GENERAL): !STRING_32 do Result := locale.formatted_string ("Unable to read the code template file '$1'.", [a_file_name]) end
+	e_code_template_unable_to_find_template: !STRING_32 do Result := locale.translation ("Unable to find an applicable template for the current version of EiffelStudio.") end
 
 feature -- Contract tool
 
-	e_contract_tool_save_failed: !STRING_32 do Result ?= locale.translation ("There was a problem saving the contracts. Please check you have access to the class file.") end
-	e_contract_tool_expression_error: !STRING_32 do Result ?= locale.translation ("The entered contract expression is not a valid expression or contains syntax errors.%NPlease fix the error before continuing.") end
+	e_contract_tool_save_failed: !STRING_32 do Result := locale.translation ("There was a problem saving the contracts. Please check you have access to the class file.") end
+	e_contract_tool_expression_error: !STRING_32 do Result := locale.translation ("The entered contract expression is not a valid expression or contains syntax errors.%NPlease fix the error before continuing.") end
 
 feature -- Help system
 
-	e_help_unable_to_launch: !STRING_32 do Result ?= locale.translation ("Unable to launch the help documentation.") end
+	e_help_unable_to_launch: !STRING_32 do Result := locale.translation ("Unable to launch the help documentation.") end
 
 feature -- Prompts
 
-	e_save_session_data_failed: !STRING_32 do Result ?= locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
+	e_save_session_data_failed: !STRING_32 do Result := locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

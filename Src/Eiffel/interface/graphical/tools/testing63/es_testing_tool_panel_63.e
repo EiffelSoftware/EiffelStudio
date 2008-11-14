@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- <Precursor>
 		local
-			l_et: KL_EQUALITY_TESTER [!STRING]
+			l_et: KL_STRING_EQUALITY_TESTER_A [!STRING]
 		do
 			Precursor
-			l_et ?= create {KL_STRING_EQUALITY_TESTER}
+			create l_et
 			create view_templates.make (5)
 			view_templates.set_equality_tester (l_et)
 			create view_template_descriptions.make (5)

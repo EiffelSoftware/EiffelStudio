@@ -67,7 +67,7 @@ feature {NONE} --Initialization
 
 				-- Create expansion cache
 			create expansion_cache.make
-			expansion_cache.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+			expansion_cache.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 
 				-- Initialize tree
 			make_tree

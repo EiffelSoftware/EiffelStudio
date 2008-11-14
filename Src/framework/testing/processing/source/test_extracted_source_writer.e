@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			create class_name.make_empty
 			create used_routine_names.make_default
-			used_routine_names.set_key_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+			used_routine_names.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 		end
 
 feature -- Access

@@ -573,7 +573,7 @@ feature {NONE} -- Element change
 			l_features := valid_features (a_class_as)
 
 			create l_ctags.make_default
-			l_ctags.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? create {KL_STRING_EQUALITY_TESTER})
+			l_ctags.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 			if {l_ticlause: !INDEXING_CLAUSE_AS} a_class_as.top_indexes then
 				add_note_tags (l_ticlause, l_ctags)
 			end

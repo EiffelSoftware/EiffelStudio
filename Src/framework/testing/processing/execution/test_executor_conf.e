@@ -35,8 +35,12 @@ feature -- Access
 
 	tests: !DS_LINEAR [!TEST_I]
 			-- <Precursor>
+		local
+			l_tests: like internal_tests
 		do
-			Result := internal_tests.as_attached
+			l_tests := internal_tests
+			check l_tests /= Void end
+			Result := l_tests
 		end
 
 	sorter_prefix: !STRING

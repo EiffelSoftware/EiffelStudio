@@ -47,9 +47,12 @@ feature -- Access
 
 	active_tests: !DS_LINEAR [!TEST_I]
 			-- <Precursor>
+		local
+			l_test_map: like test_map
 		do
-			if test_map /= Void then
-				Result := test_map.as_attached
+			l_test_map := test_map
+			if l_test_map /= Void then
+				Result := l_test_map
 			else
 				Result := empty_test_list
 			end

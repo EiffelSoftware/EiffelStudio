@@ -76,14 +76,6 @@ feature -- Access
 
 	last_created_class: ?EIFFEL_CLASS_I
 
-feature {TEST_CLASS_LOCATOR_I} -- Access
-
-	common_ancestor: !EIFFEL_CLASS_I
-			-- Ancestor all test classes must inherit from
-		do
-			Result ?= internal_ancestor
-		end
-
 feature {NONE} -- Access
 
 	internal_project: like eiffel_project
@@ -104,9 +96,6 @@ feature {NONE} -- Access
 
 	locators: !DS_LINKED_LIST [!TEST_CLASS_LOCATOR_I]
 			-- Locators for retrieving test classes
-
-	internal_ancestor: ?EIFFEL_CLASS_I
-			-- Class from which all test classes must inherit from.
 
 	old_class_map: ?like test_class_map
 			-- Temporary storage for old instance of `test_class_map'
@@ -243,7 +232,8 @@ feature {NONE} -- Query
 	class_name (a_class: !CLASS_I): !STRING is
 			-- Name of `a_class' in upper case.
 		do
-			Result ?= a_class.name.as_upper
+			create Result.make_from_string (a_class.name)
+			Result.to_upper
 		ensure
 			result_not_empty: not Result.is_empty
 		end
@@ -262,7 +252,8 @@ feature {NONE} -- Query
 			until
 				l_names.after or Result /= Void
 			loop
-				l_name ?= l_names.item.internal_name.name.as_lower
+				create l_name.make_from_string (l_names.item_for_iteration.internal_name.name)
+				l_name.to_lower
 				if is_valid_routine_name (l_name) then
 					Result := l_name
 				else
@@ -292,7 +283,7 @@ feature {NONE} -- Query
 				until
 					l_fcl.after
 				loop
-					if is_valid_feature_clause (l_fcl.item.as_attached) then
+					if {l_fc_as: !FEATURE_CLAUSE_AS} l_fcl.item and then is_valid_feature_clause (l_fc_as) then
 						from
 							l_fl := l_fcl.item.features
 							l_old_fl := l_fl.cursor
@@ -364,7 +355,9 @@ feature {NONE} -- Query
 			l_system := eiffel_project.system.system
 			if not l_system.root_creators.is_empty then
 				l_group := l_system.root_creators.first.cluster
-				Result ?= eiffel_project.universe.safe_class_named (a_name, l_group)
+				if {l_class: like class_for_name} eiffel_project.universe.safe_class_named (a_name, l_group) then
+					Result := l_class
+				end
 			end
 			if Result = Void then
 				l_list := eiffel_project.universe.classes_with_name (a_name)
@@ -373,7 +366,9 @@ feature {NONE} -- Query
 				until
 					l_list.after or Result /= Void
 				loop
-					Result ?= l_list.item_for_iteration
+					if {l_class2: like class_for_name} l_list.item_for_iteration then
+						Result := l_class2
+					end
 					l_list.forth
 				end
 			end
@@ -456,6 +451,7 @@ feature {NONE} -- Status setting
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_CLASS_I]
 			l_file_system: KL_SHARED_FILE_SYSTEM
 			l_class: EIFFEL_CLASS_I
+			l_keys: DS_LINEAR [!EIFFEL_CLASS_I]
 		do
 			l_cursor := test_class_map.keys.new_cursor
 			from
@@ -484,7 +480,9 @@ feature {NONE} -- Status setting
 				end
 				l_file.recursive_open_write
 				if l_file.is_open_write then
-					root_writer.write_source (l_file, test_class_map.keys.as_attached)
+					l_keys := test_class_map.keys
+					check l_keys /= Void end
+					root_writer.write_source (l_file, l_keys)
 					l_file.close
 					l_system := eiffel_project.system.system
 					if not l_system.is_explicit_root (root_writer.class_name, root_writer.root_feature_name) then
@@ -569,6 +567,7 @@ feature {NONE} -- Element change
 			l_et: !TEST_I
 			l_ctags, l_ftags: !DS_HASH_SET [!STRING]
 			l_tag: !STRING
+			l_name: STRING
 		do
 			l_names := a_test_class.internal_names
 			l_features := valid_features (a_class_as)
@@ -584,7 +583,9 @@ feature {NONE} -- Element change
 			create l_tag.make (20)
 			l_tag.append ("class")
 			l_tag.append_character (tag_utilities.split_char)
-			add_class_path (l_tag, a_test_class.eiffel_class.name.as_attached, Void)
+			l_name := a_test_class.eiffel_class.name
+			check l_name /= Void end
+			add_class_path (l_tag, l_name, Void)
 			l_ctags.force_last (l_tag)
 
 
@@ -705,7 +706,7 @@ feature {TEST_CLASS_LOCATOR_I} -- Implementation
 		do
 			if not test_class_map.has (a_class) and file_system.file_exists (a_class.file_name) then
 				if a_class.is_compiled then
-					l_ast ?= a_class.compiled_class.ast
+					l_ast := a_class.compiled_class.ast
 				else
 					create l_file.make (a_class.file_name)
 					l_file.open_read
@@ -811,7 +812,6 @@ feature {NONE} -- Implementation: tag retrieval
 			project_initialized: is_project_initialized
 		local
 			l_current: CONF_GROUP
-			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_uni: UNIVERSE_I
 			l_list: LIST [!CONF_LIBRARY]
@@ -824,9 +824,8 @@ feature {NONE} -- Implementation: tag retrieval
 					l_current = Void
 				loop
 					cluster_stack.force_last (l_current)
-					l_cluster ?= l_current
-					l_current := Void
-					if l_cluster /= Void then
+					if {l_cluster: CONF_CLUSTER} l_current then
+						l_current := Void
 						if l_cluster.parent /= Void then
 							l_current := l_cluster.parent
 						elseif l_cluster.is_used_in_library then
@@ -837,6 +836,8 @@ feature {NONE} -- Implementation: tag retrieval
 								end
 							end
 						end
+					else
+						l_current := Void
 					end
 				end
 				from until
@@ -888,7 +889,7 @@ feature {NONE} -- Implementation: tag retrieval
 						until
 							l_value_list.after
 						loop
-							l_tags ?= l_value_list.item.string_value.twin
+							create l_tags.make_from_string (l_value_list.item.string_value)
 							tag_utilities.find_tags_in_string (l_tags, agent add_tag (?, a_set))
 							l_value_list.forth
 						end

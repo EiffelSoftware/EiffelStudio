@@ -59,8 +59,12 @@ feature -- Access
 
 	executor: !TEST_EXECUTOR_I
 			-- <Precursor>
+		local
+			l_executor: like internal_executor
 		do
-			Result ?= internal_executor
+			l_executor := internal_executor
+			check l_executor /= Void end
+			Result := l_executor
 		end
 
 	hash_code: INTEGER
@@ -80,8 +84,8 @@ feature -- Access: Memento
 	added_tags: like tags
 			-- Tags added by last call to `set_explicit_tags'
 		do
-			if internal_added_tags /= Void then
-				Result ?= internal_added_tags
+			if {l_tags: like tags} internal_added_tags then
+				Result := l_tags
 			else
 				Result := empty_tags
 			end
@@ -90,8 +94,8 @@ feature -- Access: Memento
 	removed_tags: like tags
 			-- Tags removed by last call to `set_explicit_tags'
 		do
-			if internal_removed_tags /= Void then
-				Result ?= internal_removed_tags
+			if {l_tags: like tags} internal_removed_tags then
+				Result := l_tags
 			else
 				Result := empty_tags
 			end

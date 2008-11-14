@@ -54,7 +54,7 @@ feature {NONE} -- Factory
 			l_exec: !STRING
 		do
 				-- TODO: use temporary executable
-			l_exec ?= test_suite.eiffel_project.system.application_name (True)
+			create l_exec.make_from_string (test_suite.eiffel_project.system.application_name (True))
 			if {l_assigner: !like assigner} assigner then
 				create {TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (l_assigner, l_exec)
 			end

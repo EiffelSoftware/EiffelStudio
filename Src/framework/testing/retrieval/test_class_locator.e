@@ -20,8 +20,12 @@ feature -- Access
 
 	project: !TEST_PROJECT is
 			-- <Precursor>
+		local
+			l_project: like internal_project
 		do
-			Result ?= internal_project
+			l_project := internal_project
+			check l_project /= Void end
+			Result := l_project
 		end
 
 feature {NONE} -- Access

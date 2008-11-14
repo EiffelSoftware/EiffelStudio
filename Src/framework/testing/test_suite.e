@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 	make (a_project_helper: like eiffel_project_helper)
 			-- Initialize `Current'.
 		local
+			l_project: E_PROJECT
 			l_project_factory: SHARED_EIFFEL_PROJECT
-			l_project: !E_PROJECT
 		do
 				-- Create registrar
 			create internal_processors.make
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 			create processor_stopped_event
 			create processor_error_event
 
-			create l_project_factory
-			l_project ?= l_project_factory.eiffel_project
+			l_project := l_project_factory.eiffel_project
+			check l_project /= Void end
 			make_with_project (l_project, a_project_helper)
 
 			register_locator (create {TEST_COMPILED_LOCATOR})
@@ -256,7 +256,8 @@ feature -- Query
 					end
 				end
 			end
-			Result := l_result.as_attached
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Element change

@@ -60,11 +60,11 @@ feature -- Status setting
 				create l_socket.make_server_by_port (last_port)
 				l_tries := l_tries + 1
 			end
-			if l_socket.is_open_read then
+			if l_socket /= Void and then l_socket.is_open_read then
 				a_status.set_listening
 				l_socket.set_blocking
 				l_socket.listen (1)
-				create l_thread.make (agent listen (l_socket.as_attached, a_status))
+				create l_thread.make (agent listen (l_socket, a_status))
 				l_thread.launch
 			else
 				-- TODO: error handling

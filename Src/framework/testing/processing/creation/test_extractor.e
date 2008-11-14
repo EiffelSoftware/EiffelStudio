@@ -116,13 +116,11 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_cs: EIFFEL_CALL_STACK
-			l_cse: EIFFEL_CALL_STACK_ELEMENT
 		do
 			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
 				l_cs := debugger_manager.application_status.current_call_stack
 				if l_cs /= Void and then l_cs.count >= a_index then
-					l_cse ?= l_cs.i_th(a_index)
-					if l_cse /= Void then
+					if {l_cse: EIFFEL_CALL_STACK_ELEMENT} l_cs.i_th(a_index) then
 						Result := capturer.is_valid_call_stack_element (l_cse)
 					end
 				end

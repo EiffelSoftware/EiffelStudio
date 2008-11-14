@@ -39,7 +39,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen toolbar_close_icon: !EV_PIXMAP
 			-- Access to 'close' pixmap.
 		require
@@ -1033,7 +1033,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	-- No animation frames detected.
 
 feature -- Constants: Icon names
@@ -1103,7 +1103,7 @@ feature -- Constants: Icon names
 
 feature {NONE} -- Basic operations
 
-	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], !STRING])
+	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
 			-- <Precursor>
 		do
 			a_table.force_last ([{NATURAL_8}1, {NATURAL_8}1], toolbar_close_name)

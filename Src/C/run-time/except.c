@@ -1136,7 +1136,7 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 					System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
 			}
 			if (catcall_detection_debugger_enabled) {
-				dcatcall(a_pos, expected_dftype, 0xFFFF);
+				dcatcall(a_pos, expected_dftype, NONE_TYPE);
 			}
 #else
 			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",

@@ -1766,15 +1766,18 @@ rt_private void eif_expand_tables(int new_size)
 /*                                                                  */
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
+rt_private char *rt_none_name_type = "NONE";
 
 rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 {
 	EIF_GEN_DER *gdp;
 	char    *result;
 			
-	REQUIRE("Valid type", dftype < next_gen_id);
+	REQUIRE("Valid type", (dftype < next_gen_id) || (dftype == NONE_TYPE));
 
-	if (dftype < first_gen_id) {
+	if (dftype == NONE_TYPE) {
+		result = rt_none_name_type;
+	} else if (dftype < first_gen_id) {
 		RT_GET_CONTEXT
 		result = non_generic_type_names [dftype];
 		if (result == NULL) {
@@ -1797,6 +1800,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 		}
 	} else {
 		gdp = eif_derivations [dftype];
+		CHECK("gdp_computed", gdp);
 		if (gdp->name != NULL) {    /* Already computed */
 			result = gdp->name;	/* Allocated dynamically! */
 		} else {
@@ -1831,7 +1835,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int le
 
 	if (dftype > MAX_DTYPE) {
 		CHECK("NONE type", dftype == NONE_TYPE);
-		strcat(result, "NONE");
+		strcat(result, rt_none_name_type);
 	} else {
 		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
 		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));

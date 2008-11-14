@@ -156,7 +156,7 @@ rt_public EIF_REFERENCE eif_standard_twin (EIF_REFERENCE Current)
 
 	EIF_GET_CONTEXT
 
-	REQUIRE ("current_attached", object);
+	REQUIRE ("current_attached", Current);
 
 	RT_GC_PROTECT (Current);	/* Protect against GC */
 	RT_GC_PROTECT (Result);

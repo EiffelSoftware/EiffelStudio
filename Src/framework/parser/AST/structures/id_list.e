@@ -57,12 +57,10 @@ feature -- Status report
 
 	count: INTEGER is
 			-- Number of routine IDs.
-		local
-			l_area: like area
 		do
-			l_area := area
-			if l_area /= Void then
-				Result := l_area.count + 1
+			if area /= Void then
+				Result := 1 + area.count
+					-- `first' plus items in 'area'
 			else
 				if first /= Dead_value then
 					Result := 1
@@ -75,7 +73,7 @@ feature -- Status report
 	valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' within bounds of current set?
 		do
-			Result := (1 <= i) and (i <= count)
+			Result := (1 <= i) and then (i <= count)
 		end
 
 	has (a_id: like first): BOOLEAN is
@@ -108,7 +106,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := first = other.first and equal (area, other.area)
+			Result := other = Current or else (first = other.first and then equal (area, other.area))
 		end
 
 	same_as (other: like Current): BOOLEAN is
@@ -119,22 +117,28 @@ feature -- Comparison
 			i, nb: INTEGER
 			l_area: like area
 		do
-			nb := count
-			if nb = other.count and nb > 0 then
-				Result := other.has (first)
-				l_area := area
-				if l_area /= Void then
-					check
-						nb_valid: nb > 1
-					end
-					from
-						nb := nb - 2
-						Result := True
-					until
-						i > nb or else not Result
-					loop
-						Result := other.has (l_area.item (i))
-						i := i + 1
+			Result := other = Current
+			if not Result then
+				nb := count
+				if nb = 1 then
+						-- We only have one item so we just need to compare 'first' and make sure that count is 1.
+					Result := first = other.first and then other.area = Void
+				elseif nb > 1 and then nb = other.count then
+						-- We have more than one item and equal counts so we need to compare all items.
+					Result := other.has (first)
+					if Result then
+						l_area := area
+						if l_area /= Void then
+							from
+								nb := nb - 2
+									-- Account for 'first' and zero-indexing. ' - 1 - 1 '
+							until
+								i > nb or else not Result
+							loop
+								Result := other.has (l_area.item (i))
+								i := i + 1
+							end
+						end
 					end
 				end
 			end
@@ -197,19 +201,18 @@ feature -- Change
 			a_id_positive: a_id >= 0
 		local
 			l_pos: INTEGER
-			l_area: like area
 		do
 				-- id `a_id' is not present in set.
 			if first = Dead_value then
 				first := a_id
 			else
-				l_area := area
-				if l_area /= Void then
-					l_pos := l_area.count
+				if area /= Void then
+					l_pos := area.count
+					area := area.aliased_resized_area (l_pos + 1)
+				else
+					create area.make (1)
 				end
-				l_area := new_area (l_area, l_pos + 1)
-				area := l_area
-				l_area.put (a_id, l_pos)
+				area.put (a_id, l_pos)
 			end
 		ensure
 			inserted: has (a_id)
@@ -269,24 +272,8 @@ feature {ID_LIST} -- Implementation: access
 
 feature {NONE} -- Implementation
 
-	dead_value: INTEGER is -1
+	dead_value: INTEGER is -1;
 			-- Special value to show that `first' is not yet set.
-
-	new_area (a_old_area: like area; a_count: INTEGER): like area is
-			-- Duplicate `old_area' to accomodate `n' element.
-		require
-			a_count_positive: a_count > 0
-		do
-			if a_old_area /= Void then
-				Result := a_old_area.aliased_resized_area (a_count)
-			else
-				create Result.make (a_count)
-			end
-		ensure
-			new_area_not_void: Result /= Void
-			new_area_correct_count: Result.count = a_count
-			new_area_correct_values: a_old_area = Void implies Result.all_default (0, Result.upper)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

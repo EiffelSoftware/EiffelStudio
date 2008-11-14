@@ -1138,17 +1138,13 @@ feature -- Basic operations
 														-- node of `parent_row_i' is contained, then vertical lines must be drawn
 														-- to connect the lines.
 
-													if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
-															-- In this case, there are more subrows of `parent_row_i' to be drawn,
-															-- so the vertical line is drawn to span the complete height of the current row.
-														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
-
-													else
-															-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
-															-- from the start of the current row to the center only.
+													if current_row = parent_row_i.subrows [parent_row_i.subrow_count] then
+															-- We are drawing the last subrow of `parent_row_i' so we only draw the vertical line to the center of the line.
 														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
+													else
+															-- Draw a vertical line down to the next item
+														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
 													end
-
 												end
 											end
 										end

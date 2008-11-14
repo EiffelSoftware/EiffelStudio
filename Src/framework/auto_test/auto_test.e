@@ -68,7 +68,6 @@ feature -- Execution
 			output_dirname := file_system.pathname (system.eiffel_project.project_directory.testing_results_path, "auto_test")
 			create time_out.make (0, 0, 0, 0, 15, 0)
 			create error_handler.make (system)
-			error_handler.set_start_time (system_clock.date_time_now)
 
 				-- Argument processing
 			process_arguments (a_arguments)
@@ -81,12 +80,9 @@ feature -- Execution
 				generate_interpreter
 
 				if interpreter /= Void then
-					update_remaining_time
-					if time_out.second_count > 0 and then error_handler.remaining_time.second <= 0 then
-							error_handler.report_no_time_for_testing (time_out)
-					else
 							-- Generate and run test cases.
 						build_types_and_classes_under_test
+						error_handler.set_start_time (system_clock.date_time_now)
 						execute_tests
 
 							-- Analyze test results.
@@ -99,7 +95,6 @@ feature -- Execution
 						end
 						interpreter.cleanup
 						generate_statistics
-					end
 				end
 			end
 		end

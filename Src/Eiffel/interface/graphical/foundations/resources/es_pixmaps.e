@@ -145,7 +145,8 @@ feature {NONE} -- Access
 			-- Key: An icon name.
 			-- Value: Icon matrix coordinates.
 		do
-			if {l_result: like icon_coordinates_table} internal_icon_coordinates_table then
+			--| FIXME jfiat [2008/11/14] : bug when using `like icon_coordinates_table'
+			if {l_result: like internal_icon_coordinates_table} internal_icon_coordinates_table then
 				Result := l_result
 			else
 				create Result.make_default

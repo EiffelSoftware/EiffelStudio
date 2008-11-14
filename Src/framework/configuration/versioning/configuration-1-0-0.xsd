@@ -292,7 +292,7 @@
 	<xs:simpleType name="version_number">
 		<xs:restriction base="xs:string">
 			<xs:pattern
-				value="\d*(\.\d*){0,2}"/>
+				value="\d*(\.\d*){0,3}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	

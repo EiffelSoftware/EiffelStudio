@@ -14,7 +14,7 @@ inherit
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze, generate_special_feature,
+			generate_on, analyze_on, analyze,
 			allocates_memory, generate_end, set_need_invariant, need_invariant
 		end
 
@@ -173,12 +173,6 @@ io.error.put_string ("Out feature_bl [analyze_on]: ")
 io.error.put_string (feature_name)
 io.error.put_new_line
 end
-		end
-
-	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_A) is
-			-- Generate code for special routines (is_equal, copy ...).
-		do
-			special_routines.generate (buffer, basic_type, reg, parameters)
 		end
 
 	generate_access is

@@ -77,7 +77,10 @@ feature
 		local
 			tmp_register: REGISTER;
 		do
-			if context_type.is_basic then
+			if context_type.is_basic and then
+				{basic_i: BASIC_A} context_type and then
+				(not is_feature_special (True, basic_i) or else basic_i.is_bit)
+			then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make

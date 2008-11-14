@@ -50,7 +50,10 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			a_duplicate: like Current
 			l_default: G
 			a_count: INTEGER
+			l_original_index: INTEGER
 		do
+				-- Save index for restoring later.
+			l_original_index := index
 			a_count := count
 			index := i
 			a_duplicate := duplicate (n)
@@ -62,15 +65,14 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			a_count := a_count - n
 			area.fill_with (l_default, a_count, upper - 1)
 
-			if j > (i + n - 1) then
-				index := j - n
-			else
-				index := j - 1
-			end
+			index := j - 1
 			if index < a_count then
 				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
 			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
+
+				-- Restore index
+			index := l_original_index
 		end
 
 	move_items (i, j, n: INTEGER) is
@@ -83,7 +85,10 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			a_duplicate: like Current
 			l_default: G
 			a_count: INTEGER
+			l_original_index: INTEGER
 		do
+				-- Save index for restoring later.
+			l_original_index := index
 			a_count := count
 			index := i
 			a_duplicate := duplicate (n)
@@ -106,6 +111,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
 			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
+
+				-- Restore index.
+			index := l_original_index
 		end
 
 	resize (new_capacity: INTEGER) is

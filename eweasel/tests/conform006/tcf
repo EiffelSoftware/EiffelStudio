@@ -1,0 +1,26 @@
+test_name 	 manifest-tuple-type-conformance
+test_description If you have a manifest tuple using manifest expressions, the type of the actual parameter should be attached at run-time.
+
+define	VOID_SAFE true
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+cleanup_compile
+define	VOID_SAFE false
+copy_sub	Ace	$TEST Ace
+
+compile_melted
+compile_result	ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

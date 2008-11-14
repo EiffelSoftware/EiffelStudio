@@ -15,6 +15,10 @@ feature -- Basic operations
 		do
 		end
 
+	copy (other: like Current) is
+		do
+		end
+
 	default_rescue is
 			-- Process exception for routines with no Rescue clause.
 			-- (Default: do nothing.)

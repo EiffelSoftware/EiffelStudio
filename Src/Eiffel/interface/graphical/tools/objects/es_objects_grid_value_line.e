@@ -151,11 +151,8 @@ feature -- Query
 		end
 
 	reset_special_attributes_values is
-		local
-			spec_items: ABSTRACT_SPECIAL_VALUE
 		do
-			spec_items ?= object
-			if spec_items /= Void then
+			if {spec_items: ABSTRACT_SPECIAL_VALUE} object then
 				spec_items.reset_items
 				spec_items.set_sp_bounds (object_spec_lower, object_spec_upper)
 			end

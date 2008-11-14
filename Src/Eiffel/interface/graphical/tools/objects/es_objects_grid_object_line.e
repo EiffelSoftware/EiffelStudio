@@ -369,11 +369,17 @@ feature -- Properties change
 				row_attributes_filled := False
 				reset_special_attributes_values
 				if row /= Void and display_attributes then
+						-- We remove the dummy item.
+					if onces_row /= Void then
+						grid_remove_and_clear_subrows_from_until (row, onces_row)
+					else
+						grid_remove_and_clear_subrows_from (row)
+					end
 					fill_attributes (row)
+					if old_r <= g.row_count then
+						g.set_first_visible_row (old_r)
+					end
 				end
-			end
-			if old_r <= g.row_count then
-				g.set_first_visible_row (old_r)
 			end
 		end
 
@@ -669,6 +675,8 @@ feature {NONE} -- Filling
 				display := True
 				if not row_items_filled then
 					fill_items (row)
+				elseif not row_attributes_filled then
+					fill_attributes (row)
 				end
 			elseif a_row = onces_row then
 				display_onces := True
@@ -721,10 +729,12 @@ feature {NONE} -- Filling
 			grid_remove_and_clear_subrows_from (a_row)
 			grid := a_row.parent
 
+				--| Attributes
 			if display_attributes then
 				fill_attributes (a_row)
 			end
 
+				--| Onces
 			if has_once_routine then
 				glab := folder_label_item (Interface_names.l_Once_routines)
 				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_once_icon)
@@ -739,6 +749,7 @@ feature {NONE} -- Filling
 				onces_row.collapse_actions.extend (agent on_row_collapse (onces_row))
 				onces_row.ensure_expandable
 			end
+				--| Constants			
 			if has_constant then
 				glab := folder_label_item (Interface_names.l_Constant_features)
 				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_once_icon)
@@ -753,6 +764,7 @@ feature {NONE} -- Filling
 				constants_row.collapse_actions.extend (agent on_row_collapse (constants_row))
 				constants_row.ensure_expandable
 			end
+			
 			if a_row.is_expandable and then not a_row.is_expanded then
 				a_row.expand
 			end
@@ -786,12 +798,6 @@ feature {NONE} -- Filling
 			dcl: like object_dynamic_class
 		do
 			row_attributes_filled := True
-				-- We remove the dummy item.
-			if onces_row /= Void then
-				grid_remove_and_clear_subrows_from_until (a_row, onces_row)
-			else
-				grid_remove_and_clear_subrows_from (a_row)
-			end
 			vlist := sorted_attributes_values
 			if vlist /= Void and then not vlist.is_empty then
 					--| better being sure it won't happen |--

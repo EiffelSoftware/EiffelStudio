@@ -2,7 +2,7 @@
 	description: "Declarations for `built_in' externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -53,6 +53,8 @@ extern "C" {
 #define eif_builtin_ANY_tagged_out(object)				c_tagged_out ((object))
 #define eif_builtin_ANY_copy(source, target)			ecopy ((target), (source))
 #define eif_builtin_ANY_standard_copy(source, target)	ecopy ((target), (source))
+#define eif_builtin_ANY_twin(object)			eif_twin (object)
+#define eif_builtin_ANY_standard_twin(object)			eif_standard_twin (object)
 #define eif_builtin_ANY_is_deep_equal(some, other)		ediso ((some), (other))
 #define eif_builtin_ANY_standard_is_equal(some, other)	eequal ((some), (other))
 #define eif_builtin_ANY_deep_twin(object)				edclone ((object))

@@ -26,31 +26,43 @@ feature
 			create marked_table.make (1, System.body_index_counter.count)
 		end;
 
-	mark_dispose is
-			-- mark all the dispose functions of the system
+feature -- Modification
+
+	mark_dispose
+			-- Mark all the dispose procedures of the system
+		do
+			if System.disposable_class /= Void and then System.disposable_class.is_compiled then
+				mark_routine (System.disposable_dispose_id)
+			end
+		end
+
+	mark_copy
+			-- Mark all the copy procedures of the system
+		do
+			if System.any_class /= Void and then System.any_class.is_compiled then
+				mark_routine (System.any_copy_id)
+			end
+		end
+
+feature {NONE} -- Modification
+
+	mark_routine (rout_id: INTEGER)
+			-- Mark all the routines of `rout_id' in the system
 		local
-			dispose_rout_id: INTEGER
-			table: ROUT_TABLE
 			unit: ROUT_ENTRY
 			old_position: INTEGER
 		do
-			if System.disposable_class /= Void and then System.disposable_class.is_compiled then
-				dispose_rout_id := System.disposable_dispose_id
-				table ?= Tmp_poly_server.item (dispose_rout_id);
-				if table /= Void then
-						-- There might be no `dispose' routine in the system if
-						-- DISPOSABLE is not used at all.
-					from
-						table.start
-					until
-						table.after
-					loop
-						unit := table.item;
-						old_position := table.position
-						mark (unit.body_index, unit.class_id, unit.access_in, dispose_rout_id);
-						table.go_to (old_position)
-						table.forth
-					end
+			if {table: ROUT_TABLE} Tmp_poly_server.item (rout_id) then
+				from
+					table.start
+				until
+					table.after
+				loop
+					unit := table.item
+					old_position := table.position
+					mark (unit.body_index, unit.class_id, unit.access_in, rout_id)
+					table.go_to (old_position)
+					table.forth
 				end
 			end
 		end
@@ -188,7 +200,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

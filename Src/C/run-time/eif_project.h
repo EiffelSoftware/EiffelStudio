@@ -5,7 +5,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,6 +101,7 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK EIF_TYPE_INDEX egc_tup_dtype;				/* Dynamic type for TUPLE */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
+	RT_LNK int32 egc_copy_rout_id;			/* Copy routine id */ 
 	RT_LNK EIF_TYPE_INDEX egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
 	RT_LNK EIF_TYPE_INDEX egc_any_dtype;			/* Dynamic type of ANY */
 
@@ -176,6 +177,7 @@ extern "C" {
 	RT_LNK struct rout_info *egc_forg_table;/* Routine origin/offset table */
 #else
 	RT_LNK void (**egc_edispose)(void);
+	RT_LNK void (**egc_copy)(EIF_REFERENCE, EIF_REFERENCE);
 	RT_LNK char *(**egc_ecreate)(void);
 	RT_LNK char *(**egc_exp_create)(void);
 	RT_LNK struct ctable *egc_ce_rname;

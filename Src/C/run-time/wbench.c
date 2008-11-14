@@ -2,7 +2,7 @@
 	description: "Workbench primitives."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -395,6 +395,26 @@ rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)
 
 	nstcall = 0;								/* No invariant check */
 	CBodyId(body_id,egc_disp_rout_id,dyn_type);	/* Get the body index */
+
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];		 /* Frozen feature */
+	else {
+		IC = melt[body_id];	 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	}
+}
+
+rt_public EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type)
+{
+	/* Function pointer associated to Eiffel feature of routine id
+	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+	EIF_GET_CONTEXT
+	BODY_INDEX body_id;
+
+	nstcall = 0;								/* No invariant check */
+	CBodyId(body_id,egc_copy_rout_id,dyn_type);	/* Get the body index */
 
 	if (egc_frozen [body_id])
 		return egc_frozen[body_id];		 /* Frozen feature */

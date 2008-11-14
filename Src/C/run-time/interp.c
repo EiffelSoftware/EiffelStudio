@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -5152,6 +5152,21 @@ rt_shared void call_disp(EIF_TYPE_INDEX dtype, EIF_REFERENCE object)
 	unsigned char *OLD_IC;
 	OLD_IC = IC;
 	(wdisp (dtype))(object);
+	IC = OLD_IC;
+}
+
+rt_shared void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other)
+{
+	/* Save the interpreter counter and restore it after the copy
+	 * routine for `Current' with dynamic type `dtype' and argument `other'.
+	 */
+	EIF_GET_CONTEXT
+	unsigned char *OLD_IC;
+	EIF_TYPED_VALUE o;
+	OLD_IC = IC;
+	o.type = SK_REF;
+	o.it_r = other;
+	(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) wcopy (dtype))(Current, o);
 	IC = OLD_IC;
 }
 

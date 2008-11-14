@@ -29,6 +29,7 @@ feature -- Initialization
 			invariant_rout_id := next_rout_id
 			initialization_rout_id := next_rout_id
 			dispose_rout_id := next_rout_id
+			copy_rout_id := next_rout_id
 			creation_rout_id := next_rout_id
 		end
 
@@ -55,6 +56,7 @@ feature -- Access
 	invariant_rout_id: INTEGER
 	initialization_rout_id: INTEGER
 	dispose_rout_id: INTEGER
+	copy_rout_id: INTEGER
 	creation_rout_id: INTEGER
             -- Predefined routine ids
 
@@ -67,6 +69,7 @@ feature -- Status report
 			Result := not (rout_id = invariant_rout_id or
 				rout_id = initialization_rout_id or
 				rout_id = dispose_rout_id or
+				rout_id = copy_rout_id or
 				rout_id = creation_rout_id)
 		end
 
@@ -79,7 +82,7 @@ feature {NONE} -- Implementation
 			-- Size of an array chunk at beginning.
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

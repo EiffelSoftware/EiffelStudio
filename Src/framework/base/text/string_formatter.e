@@ -40,7 +40,7 @@ feature -- Formatting
 			a_args_not_void: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		do
-			Result ?= format_unicode (a_str, a_args).as_string_8
+			Result := format_unicode (a_str, a_args).as_string_8.as_attached
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -198,7 +198,7 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		do
-			Result ?= tabbify_unicode (a_str, a_tab_chars).as_string_8
+			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8.as_attached
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

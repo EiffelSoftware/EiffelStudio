@@ -222,14 +222,14 @@ feature {NONE} -- Access
 			l_dirs: !like lookup_directories
 			l_libraries: !DS_HASH_SET [!STRING]
 			l_dir: !KL_DIRECTORY
-			l_path: !STRING
+			l_path: STRING
 			l_location: !CONF_DIRECTORY_LOCATION
 		do
 			create Result.make_default
 			l_dirs := lookup_directories
 			from l_dirs.start until l_dirs.after loop
 				create l_location.make (l_dirs.item_for_iteration.path, target)
-				l_path ?= l_location.evaluated_path.as_string_8
+				l_path := l_location.evaluated_path.as_string_8
 				create l_dir.make (l_path)
 				if l_dir.is_readable then
 					create l_libraries.make_default
@@ -429,7 +429,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_configs_in_directory (a_dir: !KL_DIRECTORY; a_depth: INTEGER; a_libraries: !DS_HASH_SET [!STRING])
+	add_configs_in_directory (a_dir: !KL_DIRECTORY; a_depth: INTEGER; a_libraries: !DS_HASH_SET [STRING])
 			-- Add config files in `a_path' to `a_libraries'.
 		require
 			a_dir_is_readable: a_dir.is_readable
@@ -440,7 +440,7 @@ feature {NONE} -- Basic operation
 			l_count, i: INTEGER
 			l_lib_file: STRING
 			l_file_name: !FILE_NAME
-			l_file_string: !STRING
+			l_file_string: STRING
 		do
 			l_items := a_dir.filenames
 			if l_items /= Void then
@@ -455,9 +455,9 @@ feature {NONE} -- Basic operation
 						create l_file_name.make_from_string (a_dir.name)
 						l_file_name.extend (l_lib_file)
 						if {PLATFORM_CONSTANTS}.is_windows then
-							l_file_string ?= l_file_name.string.as_lower
+							l_file_string := l_file_name.string.as_lower
 						else
-							l_file_string ?= l_file_name.string
+							l_file_string := l_file_name.string
 						end
 						if not a_libraries.has (l_file_string) then
 							a_libraries.force_last (l_file_string)
@@ -495,7 +495,7 @@ feature {NONE} -- Basic operation
 			l_file: KI_TEXT_INPUT_FILE
 			l_line: STRING
 			l_pos: INTEGER
-			l_location: !STRING
+			l_location: STRING
 			l_depth_string: STRING
 			l_depth: INTEGER
 		do
@@ -509,21 +509,21 @@ feature {NONE} -- Basic operation
 						l_line.right_adjust
 						l_pos := l_line.last_index_of ('%T', l_line.count)
 						if l_pos > 1 then
-							l_location ?= l_line.substring (1, l_pos - 1)
+							l_location := l_line.substring (1, l_pos - 1)
 							l_location.right_adjust
 							if l_pos < l_line.count then
 								l_depth_string := l_line.substring (l_pos + 1, l_line.count)
 								l_depth_string.left_adjust
 							end
 						else
-							l_location ?= l_line
+							l_location := l_line
 						end
 						if l_depth_string /= Void and then l_depth_string.is_integer then
 							l_depth := l_depth_string.to_integer
 						else
 							l_depth := 1
 						end
-						a_list.force_last ([l_location, l_depth])
+						a_list.force_last ([l_location.as_attached, l_depth])
 					end
 				end
 			end

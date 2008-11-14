@@ -60,14 +60,6 @@ feature -- Access
 			-- Access to sited object instance (Void if unsited)
 			--| Note: Use `set_site' instead of assigning directly!
 
-	attached_site: !G
-			-- Access to an attached sited object instance.
-		require
-			is_sited: is_sited
-		do
-			Result ?= site
-		end
-
 feature {NONE} -- Access
 
 	siteable_entities: !ARRAYED_LIST [!SITE [G]]

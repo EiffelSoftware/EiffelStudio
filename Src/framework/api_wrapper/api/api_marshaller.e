@@ -121,10 +121,10 @@ feature -- Conversion: From pointer
 			l_str: !WEL_STRING
 		do
 			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
-				Result ?= l_result.as_string_32
+				Result := l_result.as_string_32.as_attached
 			else
 				create l_str.make_by_pointer (a_ptr)
-				Result ?= l_str.string
+				Result := l_str.string.as_attached
 			end
 		end
 
@@ -141,10 +141,10 @@ feature -- Conversion: From pointer
 			l_str: !C_STRING
 		do
 			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
-				Result ?= l_result.as_string_8
+				Result := l_result.as_string_8.as_attached
 			else
 				create l_str.make_by_pointer (a_ptr)
-				Result ?= l_str.string
+				Result := l_str.string.as_attached
 			end
 		end
 
@@ -159,7 +159,7 @@ feature -- Conversion: From pointer
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
 			if is_unicode then
-				Result ?= unicode_to_string (a_ptr).as_string_8
+				Result := unicode_to_string (a_ptr).as_string_8.as_attached
 			else
 				Result := ansi_to_string (a_ptr)
 			end
@@ -178,7 +178,7 @@ feature -- Conversion: From pointer
 			if is_unicode then
 				Result := unicode_to_string (a_ptr)
 			else
-				Result ?= ansi_to_string (a_ptr).as_string_32
+				Result := ansi_to_string (a_ptr).as_string_32.as_attached
 			end
 		end
 

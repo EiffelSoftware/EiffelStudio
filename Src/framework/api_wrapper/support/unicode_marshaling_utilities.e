@@ -73,7 +73,7 @@ feature {API_MARSHALLER} -- Factory
 			-- `a_str': The string to initialize the string handler object with.
 			-- `Result': A string handler to use with `pointer' and `string'.
 		do
-			Result ?= bridge.new_string_handler (a_str)
+			Result := bridge.new_string_handler (a_str)
 		ensure
 			result_is_valid_string_handler: is_valid_string_handler (Result)
 			string_set: a_str.as_string_32.is_equal (string (Result))
@@ -86,7 +86,7 @@ feature {API_MARSHALLER} -- Factory
 			-- `a_count': The character count of the string.
 			-- `Result': A string handler to use with `pointer' and `string'.
 		do
-			Result ?= bridge.new_string_handler_from_count (a_count)
+			Result := bridge.new_string_handler_from_count (a_count)
 		ensure
 			result_is_valid_string_handler: is_valid_string_handler (Result)
 			string_count_set: string (Result).count = a_count
@@ -104,7 +104,7 @@ feature {API_MARSHALLER} -- Factory
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
-			Result ?= bridge.new_string_handler_from_pointer (a_ptr, a_shared)
+			Result := bridge.new_string_handler_from_pointer (a_ptr, a_shared)
 		ensure
 			result_is_valid_string_handler: is_valid_string_handler (Result)
 			pointer_set: a_ptr = pointer (Result)
@@ -121,7 +121,7 @@ feature {API_MARSHALLER} -- Factory
 			--             resource management.
 			-- `Result': A string handler to use with `pointer' and `string'.
 		do
-			Result ?= bridge.new_string_handler_from_pointer_and_count (a_ptr, a_count, a_shared)
+			Result := bridge.new_string_handler_from_pointer_and_count (a_ptr, a_count, a_shared)
 		ensure
 			result_is_valid_string_handler: is_valid_string_handler (Result)
 			pointer_set: a_ptr = pointer (Result)

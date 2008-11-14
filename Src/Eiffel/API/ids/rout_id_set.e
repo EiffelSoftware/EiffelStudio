@@ -7,7 +7,7 @@ indexing
 
 class
 	ROUT_ID_SET
-	
+
 inherit
 
 	ID_SET
@@ -21,53 +21,46 @@ inherit
 		undefine
 			is_equal, copy
 		end
-	
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy
 		end
-	
+
 create
 	make
-	
+
 feature {COMPILER_EXPORTER}
 
 	extend (a_rout_id: like first) is
 			-- Insert routine id `a_rout_id' in set if not already
 			-- present.
 		local
-			l_rout_id: INTEGER
 			l_pos: INTEGER
-			l_area: like area
 		do
-			if not has (a_rout_id) then
-					-- Routine id `a_rout_id' is not present in set.
-				if first = Dead_value then
-					first := a_rout_id
+			if first = Dead_value then
+					-- This is the first routine id to be added as `first' is unset.
+				first := a_rout_id
+			elseif first /= a_rout_id and then not has (a_rout_id) then
+				if area /= Void then
+					l_pos := area.count
+					area := area.aliased_resized_area (l_pos + 1)
 				else
-					l_area := area
-					if l_area /= Void then
-						l_pos := l_area.count
-					end
-					l_area := new_area (l_area, l_pos + 1)
-					area := l_area
-					l_area.put (a_rout_id, l_pos)
+					create area.make (1)
 				end
-
 					-- Processing for attribute table:
-					-- Since the byte code inspect the first value of this	
-					-- routine id set, if there are thw ids one for a routine
+					-- Since the byte code inspects the first value of this	
+					-- routine id set, if there are two ids, one for a routine
 					-- table and another one for an attribute table, the one
-					-- for the attribute table must be in first position
+					-- for the attribute table must be in first position.
 				if
 					Routine_id_counter.is_attribute (a_rout_id) and then
 					not Routine_id_counter.is_attribute (first)
 				then
-					if l_area /= Void then
-						l_rout_id := first
-						first := a_rout_id
-						l_area.put (l_rout_id, l_pos)
-					end
+					area.put (first, l_pos)
+					first := a_rout_id
+				else
+					area.put (a_rout_id, l_pos)
 				end
 			end
 		end
@@ -79,7 +72,7 @@ feature {COMPILER_EXPORTER}
 		do
 			Result := Routine_id_counter.is_attribute (first)
 		end
-			
+
 	update (l: LINKED_LIST [INHERIT_INFO]) is
 			-- Update through inherited features in `l'.
 		require

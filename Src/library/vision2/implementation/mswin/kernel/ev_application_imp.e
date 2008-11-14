@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			-- System wide once, in order to always get the
 			-- same value.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			internal_capture_type_not_void: Result /= Void
 		end
@@ -743,7 +743,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -753,8 +753,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_APPLICATION_IMP
-

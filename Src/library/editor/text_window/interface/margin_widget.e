@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	default_line_number_area_width_cell: CELL [INTEGER] is
 			-- Value of line number area width for files with less than 100,000 lines).
 		once
-			create Result
+			create Result.put (0)
 		end
 
 	update_width_cell is

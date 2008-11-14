@@ -16,7 +16,7 @@ feature -- Element Change
 	   	require
 	   	do
 	   	 	registered_document_types.put (a_class, a_type_name)
-	   	end	
+	   	end
 
 feature -- Query
 
@@ -31,9 +31,9 @@ feature -- Query
 			if not Result then
 				debug ("editor")
 					print ("unknown document type")
-				end				
+				end
 			end
-	   	end		
+	   	end
 
 	get_class_from_type (a_type: STRING): DOCUMENT_CLASS is
 			-- Get the document class from the type
@@ -55,7 +55,7 @@ feature -- Status Setting
 	        -- Update the current document class to reflect type of text loaded in text panel
 	    do
 	      	current_class_cell.replace (doc_class)
-	    end	
+	    end
 
 feature -- Access
 
@@ -63,7 +63,7 @@ feature -- Access
 			-- Current document class
 		do
 			Result := current_class_cell.item
-		end	
+		end
 
 	default_document_class: DOCUMENT_CLASS is
 	        -- Default text class
@@ -80,16 +80,16 @@ feature {NONE} -- Implementation
 	  	once
 	  	    create Result.make (2)
 	  	    Result.compare_objects
-	  	end	
+	  	end
 
 	current_class_cell: CELL [DOCUMENT_CLASS] is
 	        -- Cell containing active document class
 		once
-		    create Result
+		    create Result.put (Void)
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

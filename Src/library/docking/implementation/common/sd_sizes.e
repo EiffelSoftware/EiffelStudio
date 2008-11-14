@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -168,7 +168,7 @@ feature -- Singleton slots realted with tool bar font.
 	Tool_bar_font_cell: CELL [EV_FONT] is
 			-- Tool bar font singleton cell.
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -176,7 +176,7 @@ feature -- Singleton slots realted with tool bar font.
 	Notebook_tab_height_cell: CELL [INTEGER] is
 			-- Notebook tab height singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -184,7 +184,7 @@ feature -- Singleton slots realted with tool bar font.
 	Notebook_tab_maximum_size_cell: CELL [INTEGER] is
 			-- Notebook tab maximum size singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -192,7 +192,7 @@ feature -- Singleton slots realted with tool bar font.
 	Title_bar_height_cell: CELL [INTEGER] is
 			-- Title bar height singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -200,7 +200,7 @@ feature -- Singleton slots realted with tool bar font.
 	Title_bar_text_start_y_cell: CELL [INTEGER] is
 			-- Title bar text start y singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -208,7 +208,7 @@ feature -- Singleton slots realted with tool bar font.
 	Tool_bar_border_width_cell: CELL [INTEGER] is
 			-- Tool bar border width singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -216,7 +216,7 @@ feature -- Singleton slots realted with tool bar font.
 	Tool_bar_size_cell: CELL [INTEGER] is
 			-- Title bar size singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -226,7 +226,7 @@ feature -- Additional singleton slots.
 	Auto_hide_panel_size_cell: CELL [INTEGER] is
 			-- Auto hide panel size singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -234,7 +234,7 @@ feature -- Additional singleton slots.
 	Zone_minimum_width_cell: CELL [INTEGER] is
 			-- Zone minimum width singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -242,7 +242,7 @@ feature -- Additional singleton slots.
 	Zone_minimum_height_cell: CELL [INTEGER] is
 			-- Zone minimum height singleton cell.
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -253,7 +253,7 @@ invariant
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

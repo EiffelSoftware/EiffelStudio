@@ -1862,7 +1862,7 @@ feature {NONE} -- Color depth implementation
 		indexing
 			once_status: global
 		once
-			create Result
+			create Result.put (0)
 		ensure
 			not_void: Result /= Void
 		end
@@ -1964,7 +1964,7 @@ invariant
 			private_cursor.reference_tracked
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -1974,8 +1974,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PIXMAP_IMP
-

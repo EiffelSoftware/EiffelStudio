@@ -37,13 +37,13 @@ feature {NONE} -- Implementation
 	editor_preferences_cell: CELL [EDITOR_DATA] is
 			--
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	initialized_cell: CELL [BOOLEAN] is
 			--
 		once
-			create Result
+			create Result.put (False)
 		end
 
 	preference_codes: SHARED_PREFERENCE_CODES is
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 	    end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -62,8 +62,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class SHARED_EDITOR_DATA

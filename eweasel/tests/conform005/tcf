@@ -5,6 +5,11 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
+compile_result	validity_error TEST VJRV(3)
+
+copy_raw	test_rev1.e $CLUSTER test.e
+
+resume_compile
 compile_result	ok
 
 execute_work NONE exec_output_m

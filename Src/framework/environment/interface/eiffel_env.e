@@ -379,23 +379,26 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_name: !STRING
+			l_name: STRING
 			l_name_wb: STRING
 		once
 			if is_unix_layout then
 				l_name := shared_path
 			else
-				l_name ?= eiffel_install
+				l_name := eiffel_install
 			end
 			if is_workbench then
 				l_name_wb := l_name.twin
 				l_name_wb.append (wkbench_suffix)
 				if (create {DIRECTORY}.make (l_name_wb)).exists then
 						-- The workbench version exists, so use that directory instead.
-					l_name ?= l_name_wb
+					l_name := l_name_wb
 				end
 			end
-			check not_l_name_is_empty: not l_name.is_empty end
+			check
+				l_name_not_void: l_name /= Void
+				not_l_name_is_empty: not l_name.is_empty
+			end
 			create Result.make_from_string (l_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -407,10 +410,10 @@ feature -- Directories (top-level)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend_from_array (<<"share", docs_name, product_version_name>>)
 			else
-				Result ?= install_path.twin
+				Result := install_path.twin
 				Result.extend (docs_name)
 			end
 		ensure
@@ -422,7 +425,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= install_path.twin
+			Result := install_path.twin
 			Result.extend (dotnet_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -444,7 +447,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= lib_path.twin
+			Result := lib_path.twin
 			Result.extend (precomp_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -460,7 +463,7 @@ feature -- Directories (top-level)
 		do
 			l_value := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_precomp_env)
 			if l_value = Void or else l_value.is_empty then
-				Result ?= precomp_path.twin
+				Result := precomp_path.twin
 				Result.extend (spec_name)
 				if a_is_dotnet then
 						-- Append '-dotnet' to platform name
@@ -487,7 +490,7 @@ feature -- Directories (top-level)
 			not_unix_layout: not is_unix_layout
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= install_path.twin
+			Result := install_path.twin
 			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -500,7 +503,7 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= dotnet_path.twin
+			Result := dotnet_path.twin
 			Result.extend (assemblies_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -513,7 +516,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (bitmaps_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -525,7 +528,7 @@ feature -- Directories (distribution)
 			has_borland: has_borland
 			not_unix_layout: not is_unix_layout
 		once
-			Result ?= install_path.twin
+			Result := install_path.twin
 			Result.extend (borland_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -536,7 +539,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (built_ins_name)
 			if a_is_platform_neutral then
 				Result.extend (neutral_name)
@@ -556,7 +559,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("config")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -578,7 +581,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("eifinit")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -589,7 +592,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (filters_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -600,7 +603,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (help_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -637,7 +640,7 @@ feature -- Directories (distribution)
 				Result := unix_layout_share_path.twin
 				Result.extend_from_array (<<unix_layout_locale_dir, product_version_name >>)
 			else
-				Result ?= shared_application_path.twin
+				Result := shared_application_path.twin
 				Result.extend_from_array (<<lang_name, mo_files_name>>)
 			end
 		ensure
@@ -649,7 +652,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (metrics_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -660,7 +663,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (profiler_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -671,7 +674,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -694,10 +697,10 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend (bin_name)
 			else
-				Result ?= shared_application_path.twin
+				Result := shared_application_path.twin
 				Result.extend_from_array (<<spec_name, eiffel_platform, bin_name>>)
 			end
 		ensure
@@ -710,10 +713,10 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend_from_array (<<include_name, product_version_name>>)
 			else
-				Result ?= shared_application_path.twin
+				Result := shared_application_path.twin
 				Result.extend_from_array (<<spec_name, eiffel_platform, include_name>>)
 			end
 		ensure
@@ -726,10 +729,10 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend (unix_layout_lib_dir)
 			else
-				Result ?= shared_application_path.twin
+				Result := shared_application_path.twin
 				Result.extend_from_array (<<spec_name, eiffel_platform, lib_name>>)
 			end
 		ensure
@@ -741,7 +744,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= lib_application_path.twin
+			Result := lib_application_path.twin
 			Result.extend (wizards_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -752,7 +755,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= wizards_path.twin
+			Result := wizards_path.twin
 			Result.extend ("new_projects")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -763,7 +766,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= wizards_path.twin
+			Result := wizards_path.twin
 			Result.extend_from_array (<<"others", "precompile">>)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -774,7 +777,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_application_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("tools")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -831,7 +834,7 @@ feature -- Directories (top-level user)
 
 			if l_dir_name = Void then
 					-- No user set variable or the home directory is not supported
-				l_dir_name ?= user_files_path.twin
+				l_dir_name := user_files_path.twin
 				safe_create_dir (l_dir_name.string)
 				l_dir_name.extend (settings_name)
 			else
@@ -851,7 +854,8 @@ feature -- Directories (top-level user)
 				l_dir_name.extend (l_dir)
 			end
 
-			Result ?= l_dir_name
+			check l_dir_name /= Void end
+			Result := l_dir_name
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -874,7 +878,7 @@ feature -- Directories (top-level user)
 				safe_create_dir (l_user_files)
 				create l_directory.make (l_user_files)
 				if not l_directory.exists or else not l_directory.is_writable then
-					Result ?= eiffel_home.twin
+					Result := eiffel_home.twin.as_attached
 				end
 
 				create Result.make_from_string (l_user_files)
@@ -924,7 +928,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result ?= user_application_files_path.twin
+			Result := user_application_files_path.twin
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -935,7 +939,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result ?= user_settings_path.twin
+			Result := user_settings_path.twin
 			Result.extend (projects_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -947,7 +951,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result ?= user_settings_path.twin
+			Result := user_settings_path.twin
 			Result.extend (docking_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -959,7 +963,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result ?= user_settings_path.twin
+			Result := user_settings_path.twin
 			Result.extend (session_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -992,7 +996,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result ?= user_files_path.twin
+			Result := user_files_path.twin
 			Result.extend (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1006,7 +1010,7 @@ feature -- Directories (user)
 			l_var := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_projects_env)
 			if l_var = Void or else l_var.is_empty then
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
-					Result ?= user_files_path.twin
+					Result := user_files_path.twin
 					Result.extend (projects_name)
 				else
 					create Result.make_from_string (environment.home_directory_name)
@@ -1045,7 +1049,7 @@ feature -- Files
 			if is_user_files_supported then
 					-- Check user override file.
 				if l_user /= Void and then (create {RAW_FILE}.make (l_user)).exists then
-					Result ?= l_user
+					Result := l_user
 				end
 			end
 		ensure
@@ -1065,7 +1069,7 @@ feature -- Files
 			if is_user_files_supported then
 					-- Check user override file.
 				if l_user /= Void and then (create {RAW_FILE}.make (l_user)).exists then
-					Result ?= l_user
+					Result := l_user
 				end
 			end
 		ensure
@@ -1187,7 +1191,7 @@ feature -- Obsolete
 			l_dir: STRING
 		once
 			if is_valid_environment and then is_user_files_supported then
-				Result ?= user_settings_path
+				Result := user_settings_path
 			else
 					-- Fall back incase no HOME variable is defined.
 				check False end
@@ -1213,7 +1217,7 @@ feature -- Directories (platform independent)
 			l_name_wb: STRING_8
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend_from_array (<<"share", product_version_name>>)
 				l_name := Result
 			else
@@ -1224,7 +1228,7 @@ feature -- Directories (platform independent)
 				l_name_wb.append (wkbench_suffix)
 				if (create {DIRECTORY}.make (l_name_wb)).exists then
 						-- The workbench version exists, so use that directory instead.
-					l_name ?= l_name_wb
+					l_name := l_name_wb
 				end
 			end
 			check
@@ -1240,7 +1244,7 @@ feature -- Directories (platform independent)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= shared_path.twin
+			Result := shared_path.twin
 			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1252,10 +1256,10 @@ feature -- Directories (platform independent)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path.twin
+				Result := unix_layout_base_path.twin
 				Result.extend_from_array (<<unix_layout_lib_dir, product_version_name>>)
 			else
-				Result ?= install_path
+				Result := install_path
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1266,7 +1270,7 @@ feature -- Directories (platform independent)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result ?= lib_path.twin
+			Result := lib_path.twin
 			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1452,7 +1456,7 @@ feature -- Executable names
 		once
 			l_var := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ec_name_env)
 			if l_var /= Void then
-				Result ?= l_var
+				Result := l_var
 			else
 				create Result.make (6)
 				Result.append ("ec")
@@ -1492,7 +1496,7 @@ feature -- Executable names
 
 feature {NONE} -- Configuration of layout
 
-	unix_layout_base_path: DIRECTORY_NAME
+	unix_layout_base_path: !DIRECTORY_NAME
 			-- Base for the unix layout. e.g. "/usr" or "/usr/local"
 		once
 			create Result.make
@@ -1501,7 +1505,7 @@ feature {NONE} -- Configuration of layout
 			not_result_is_empty: not Result.is_empty
 		end
 
-	unix_layout_share_path: DIRECTORY_NAME
+	unix_layout_share_path: !DIRECTORY_NAME
 			-- share for the unix layout. e.g. "/usr/share"
 		once
 			create Result.make_from_string ("/usr/share") -- Comment to finde line for replacement UNIX_BASE_PATH
@@ -1917,7 +1921,7 @@ feature -- Preferences
 			else
 				create fname.make_from_string (user_settings_path)
 				fname.set_file_name (application_name + "rc" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
-				Result ?= fname.string
+				Result := fname.string
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

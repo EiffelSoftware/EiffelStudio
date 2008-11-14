@@ -65,11 +65,12 @@ feature -- Access
 		require
 			is_successful: is_successful
 			has_max_processors: has_max_processors
-		local
-			l_value: ARGUMENT_NATURAL_OPTION
 		once
-			l_value ?= option_of_name (nproc_switch)
-			Result := l_value.natural_8_value
+			if {l_value: ARGUMENT_NATURAL_OPTION} option_of_name (nproc_switch) then
+				Result := l_value.natural_8_value
+			else
+				check False end
+			end
 		ensure
 			result_positive: Result > 0
 		end
@@ -137,15 +138,15 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
-	location_switch: STRING is "location"
-	generate_only_switch: STRING is "generate_only"
-	library_switch: STRING is "library"
-	nproc_switch: STRING is "nproc"
-	x86_switch: STRING is "x86"
-	low_priority_switch: STRING is "low"
+	location_switch: STRING = "location"
+	generate_only_switch: STRING = "generate_only"
+	library_switch: STRING = "library"
+	nproc_switch: STRING = "nproc"
+	x86_switch: STRING = "x86"
+	low_priority_switch: STRING = "low"
 			-- Argument switches
 
-	silent_switch: STRING is "silent";
+	silent_switch: STRING = "silent";
 			-- Obsolete switch be kept for backward compatibility
 
 indexing

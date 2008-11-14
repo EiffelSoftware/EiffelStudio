@@ -29,7 +29,7 @@ feature -- Access
 			has_checked: has_checked
 			has_valid_configuration: has_valid_configuration
 		do
-			Result ?= internal_c_configuration
+			Result := internal_c_configuration.as_attached
 		end
 
 	c_configuration_error: !STRING
@@ -38,7 +38,7 @@ feature -- Access
 			has_checked: has_checked
 			not_has_valid_configuration: not has_valid_configuration
 		do
-			Result ?= internal_c_configuration_error
+			Result := internal_c_configuration_error.as_attached
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -151,7 +151,7 @@ feature -- Basic operations
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_x86_manager: C_CONFIG_MANAGER
-			l_config: !C_CONFIG
+			l_config: ?C_CONFIG
 			l_no_compatible: BOOLEAN
 			l_compilers: !STRING
 		do
@@ -190,7 +190,8 @@ feature -- Basic operations
 				end
 			else
 					-- A configuration was located, lets make sure the required components are locatable and are the right assembly type.
-				l_config ?= l_manager.best_configuration
+				l_config := l_manager.best_configuration
+				check l_config_attached: l_config /= Void end
 				if l_config.is_deprecated then
 						-- The configuration is deprecated.
 					set_error (e_compiler_deprecated_1, [l_config.description])
@@ -225,7 +226,7 @@ feature {NONE} -- Basic operations
 			l_var_path: STRING
 			l_var: STRING
 			l_paths: LIST [STRING]
-			l_path: !STRING
+			l_path: STRING
 			l_file_name: STRING
 			l_sep: CHARACTER
 			l_has_file: BOOLEAN
@@ -249,8 +250,8 @@ feature {NONE} -- Basic operations
 
 				-- Scan each path to find the first compiler file name match
 			from l_paths.start until l_paths.after or l_stop or l_has_file loop
-				l_path ?= l_paths.item
-				if not l_path.is_empty then
+				l_path := l_paths.item
+				if l_path /= Void and then not l_path.is_empty then
 					if l_path.item (l_path.count) /= l_sep  then
 						l_path.append_character (l_sep)
 					end

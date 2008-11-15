@@ -167,7 +167,9 @@ feature -- Query
 			tests_has_a_test: tests.has (a_test)
 		do
 			if {l_class: !EIFFEL_CLASS_I} class_for_test (a_test) and then l_class.is_compiled then
-				Result ?= l_class.compiled_class
+				if {l_class_c: like compiled_class_for_test} l_class.compiled_class then
+					Result := l_class_c
+				end
 			end
 		end
 

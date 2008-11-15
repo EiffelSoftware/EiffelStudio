@@ -710,7 +710,6 @@ feature {NONE} -- User interface elements
         local
             l_cell: like internal_mini_tool_bar_widget
             l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
-            l_item: SD_TOOL_BAR_ITEM
             l_help_button: ?SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
@@ -732,10 +731,17 @@ feature {NONE} -- User interface elements
                     create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
 
 	                if l_items /= Void then
-	                        -- Add tool buttons
+	                        -- Add tool bar items
 						from l_items.start until l_items.after loop
-							l_item := l_items.item_for_iteration
-							if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_item then
+							Result.extend (l_items.item_for_iteration)
+							l_items.forth
+						end
+
+							-- Register the resize actions.
+							-- Note: This is done after all of the tool bar items have been added because extending the tool bar
+							--       causes a resize, which in turn causes a post-condition violation in a deeper call.
+						from l_items.start until l_items.after loop
+							if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
 									-- The tool bar is a widget item, so register resize actions to recompute the minimum width
 									-- when the widget changes size.
 								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
@@ -745,8 +751,6 @@ feature {NONE} -- User interface elements
 										end
 									end (Result, ?, ?, ?, ?))
 							end
-							Result.extend (l_item)
-
 							l_items.forth
 						end
 	                end
@@ -788,7 +792,29 @@ feature {NONE} -- User interface elements
                 l_items := create_tool_bar_items
                 if l_items /= Void then
                     create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
-                    l_items.do_all (agent Result.extend)
+
+                        -- Add tool bar items
+					from l_items.start until l_items.after loop
+						Result.extend (l_items.item_for_iteration)
+						l_items.forth
+					end
+
+						-- Register the resize actions.
+						-- Note: This is done after all of the tool bar items have been added because extending the tool bar
+						--       causes a resize, which in turn causes a post-condition violation in a deeper call.
+					from l_items.start until l_items.after loop
+						if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
+								-- The tool bar is a widget item, so register resize actions to recompute the minimum width
+								-- when the widget changes size.
+							register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+								do
+									if is_interface_usable then
+										ia_tool_bar.update_size
+									end
+								end (Result, ?, ?, ?, ?))
+						end
+						l_items.forth
+					end
                     l_cell.put (Result)
                     Result.compute_minimum_size
                 end

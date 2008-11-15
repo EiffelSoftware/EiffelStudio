@@ -1,3 +1,12 @@
+Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
+
+6.3
+===
+
+6.3.7.5639 non-RTEA, non-multithreaded (classes: 2554; exe size: 14387136 bytes):
+117.480u 6.000s 2:06.97 97.2%   0+0k 48+882696io 0pf+0w
+
+
 Fedora Core 2 (2 x AMD Opteron 244 at 1.8GHz and 1024KB of cache)
 
 6.2

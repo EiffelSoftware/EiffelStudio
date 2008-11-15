@@ -51,21 +51,19 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	help_providers: !DS_BILINEAR [!HELP_PROVIDER_I]
+	help_providers: !DS_ARRAYED_LIST [!HELP_PROVIDER_I]
 			-- List of registered help providers.
 		local
-			l_result: !DS_ARRAYED_LIST [!HELP_PROVIDER_I]
 			l_providers: like providers
 		do
 			l_providers := providers
-			create l_result.make (l_providers.count)
-			Result ?= l_result
+			create Result.make (l_providers.count)
 			if {l_keys: !DS_BILINEAR_CURSOR [!UUID]} l_providers.keys.new_cursor then
 				from l_keys.start until l_keys.after loop
 					check
 						is_provider_available: is_provider_available (l_keys.item)
 					end
-					l_result.put_last (help_provider (l_keys.item))
+					Result.put_last (help_provider (l_keys.item))
 					l_keys.forth
 				end
 			end
@@ -95,7 +93,7 @@ feature -- Query
 			if activate_providers.has (a_kind) then
 				Result := activate_providers.item (a_kind)
 			else
-				l_service ?= Current
+				l_service := Current
 				Result := providers.item (a_kind).item ([l_service])
 				Result.set_kind (a_kind)
 				activate_providers.force_last (Result, a_kind)

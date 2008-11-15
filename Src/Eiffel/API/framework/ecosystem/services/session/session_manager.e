@@ -91,11 +91,11 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if internal_sessions = Void then
+			if {l_sessions: like sessions} internal_sessions then
+				Result := l_sessions
+			else
 				create Result.make_default
 				internal_sessions := Result
-			else
-				Result ?= internal_sessions
 			end
 		ensure
 			result_consistent: Result = sessions
@@ -128,7 +128,7 @@ feature {NONE} -- Query
 			create l_kinds
 
 			if {l_session: !CUSTOM_SESSION_I} a_session then
-				Result ?= l_session.file_name
+				Result := l_session.file_name
 			else
 					-- Determine session type		
 				l_kind := a_session.kind
@@ -185,7 +185,7 @@ feature {NONE} -- Query
 					-- Create full path
 				create l_path.make_from_string (eiffel_layout.user_session_path.string)
 				l_path.set_file_name (l_fn)
-				Result ?= l_path.out
+				Result := l_path.out.as_attached
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

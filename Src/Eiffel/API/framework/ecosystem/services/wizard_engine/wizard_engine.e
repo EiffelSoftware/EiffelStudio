@@ -36,16 +36,15 @@ feature -- Basic operations
 			if {l_default_template: CODE_TEMPLATE} l_templates.template.applicable_default_item then
 				create l_renderer
 				l_renderer.render_template (l_default_template, l_templates.symbol_table)
-				Result ?= l_renderer.code
-
+				l_result := l_renderer.code
+				check l_result /= Void end
 					-- Remove carriage return characters
-				l_result := Result
-					-- Trickery to get around bug in conversion
 				l_result.replace_substring_all ("%R", "")
 				if preferences.misc_data.text_mode_is_windows then
 						-- Add carriage returns when requested.
 					l_result.replace_substring_all ("%N", "%N%R")
 				end
+				Result := l_result
 			else
 				create Result.make_empty
 			end

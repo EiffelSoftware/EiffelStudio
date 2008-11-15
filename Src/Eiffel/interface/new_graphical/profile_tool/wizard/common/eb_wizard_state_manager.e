@@ -53,7 +53,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 			history.item.update_state_information
 			history.item.proceed_with_current_info
 		ensure
-			moved_forth: not history.item.is_final_state implies history.index = old history.index + 1
+			moved_forth: (not history.off and then not history.item.is_final_state) implies history.index = old history.index + 1
 		end
 
 	cancel_actions is

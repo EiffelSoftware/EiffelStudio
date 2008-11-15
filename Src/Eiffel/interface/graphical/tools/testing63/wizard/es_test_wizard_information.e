@@ -67,28 +67,35 @@ feature -- Access
 		local
 			l_list: DS_ARRAYED_LIST [!STRING]
 			l_cover: !STRING
+			l_cache: like cached_tags
 		do
-			create l_list.make_from_linear (tag_list)
-			if class_covered /= Void then
-				create l_cover.make (30)
-				l_cover.append ("covers/{")
-				l_cover.append (class_covered.name)
-				l_cover.append_character ('}')
-				if feature_covered /= Void then
-					l_cover.append_character ('.')
-					if feature_covered.is_prefix then
-						l_cover.append ("prefix_")
-						l_cover.append (feature_covered.prefix_symbol)
-					elseif feature_covered.is_infix then
-						l_cover.append ("infix_")
-						l_cover.append (feature_covered.infix_symbol)
-					else
-						l_cover.append (feature_covered.name)
+			l_cache := cached_tags
+			if l_cache = Void then
+				create l_list.make_from_linear (tag_list)
+				if class_covered /= Void then
+					create l_cover.make (30)
+					l_cover.append ("covers/{")
+					l_cover.append (class_covered.name)
+					l_cover.append_character ('}')
+					if feature_covered /= Void then
+						l_cover.append_character ('.')
+						if feature_covered.is_prefix then
+							l_cover.append ("prefix_")
+							l_cover.append (feature_covered.prefix_symbol)
+						elseif feature_covered.is_infix then
+							l_cover.append ("infix_")
+							l_cover.append (feature_covered.infix_symbol)
+						else
+							l_cover.append (feature_covered.name)
+						end
 					end
+					l_list.force_last (l_cover)
 				end
-				l_list.force_last (l_cover)
+				Result := l_list
+				cached_tags := Result
+			else
+				Result := l_cache
 			end
-			Result := l_list
 		end
 
 	new_class_name: !STRING
@@ -199,6 +206,11 @@ feature {ES_TEST_WIZARD_WINDOW} -- Access
 
 	has_clean_cache: BOOLEAN assign set_has_clean
 			-- Cache for `has_clean'
+
+feature {NONE} -- Access
+
+	cached_tags: ?like tags
+			-- Cache for `tags'
 
 feature -- Status report
 
@@ -400,6 +412,7 @@ feature -- Status setting
 			-- Set `class_covered' to `a_class_covered'.
 		do
 			class_covered := a_class_covered
+			cached_tags := Void
 		ensure
 			class_covered_set: class_covered = a_class_covered
 		end
@@ -408,6 +421,7 @@ feature -- Status setting
 			-- Set `feature_covered' to `a_feature_covered'.
 		do
 			feature_covered := a_feature_covered
+			cached_tags := Void
 		ensure
 			feature_covered_set: feature_covered = a_feature_covered
 		end

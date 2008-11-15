@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- `a_text': Actual class text to modify.
 		do
 			associated_class := a_class
-			text ?= a_text.twin
+			text := a_text.twin
 			create position_adjustments.make_default
 			original_count := text.count
 		ensure

@@ -82,7 +82,7 @@ feature -- Access
 	context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE] assign set_context
 			-- Contract editor context information
 
-	context_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
+	context_contracts: !DS_ARRAYED_LIST [!ES_CONTRACT_LINE]
 			-- Retrieves just the context's contracts.
 			-- Note: Only the top contracts are returned because we only support edition of the context contracts,
 			--       in the future this may change.
@@ -91,14 +91,15 @@ feature -- Access
 			is_initialized: is_initialized
 			has_context: has_context
 		local
-			l_result: DS_ARRAYED_LIST [!ES_CONTRACT_LINE]
 			l_grid: !like edit_contract_grid
 			l_row: EV_GRID_ROW
 			l_sub_row: EV_GRID_ROW
 			l_count, i: INTEGER
 		do
-			if internal_context_contracts = Void then
-				create l_result.make_default
+			if {l_contract: like context_contracts} internal_context_contracts then
+				Result := l_contract
+			else
+				create Result.make_default
 				l_grid := edit_contract_grid
 				if l_grid.row_count > 0 then
 					l_row := l_grid.row (1)
@@ -106,16 +107,12 @@ feature -- Access
 					from i := 1 until i > l_count loop
 						l_sub_row := l_row.subrow (i)
 						if {l_line: !ES_CONTRACT_LINE} l_sub_row.data then
-							l_result.force_last (l_line)
+							Result.force_last (l_line)
 						end
 						i := i + l_sub_row.subrow_count_recursive + 1
 					end
 				end
-
-				Result ?= l_result
 				internal_context_contracts := Result
-			else
-				Result ?= internal_context_contracts
 			end
 		ensure
 			result_consistent: Result = context_contracts
@@ -240,8 +237,8 @@ feature -- Basic operations
 			l_selected_index: INTEGER
 			l_visible_index: INTEGER
 			l_parents: !DS_LIST [CLASS_C]
-			l_parent: !CLASS_I
-			l_row: !EV_GRID_ROW
+			l_parent: CLASS_I
+			l_row: EV_GRID_ROW
 			l_col: EV_GRID_COLUMN
 			i: INTEGER
 		do
@@ -275,17 +272,22 @@ feature -- Basic operations
 			if {l_context: !like context} context then
 					-- Extract contracts for current class
 				l_grid.set_row_count_to (l_grid.row_count + 1)
-				l_row ?= l_grid.row (1)
+				l_row := l_grid.row (1)
+				check l_row_not_void: l_row /= Void end
 				populate_contracts_row (l_context.context_class, l_row, l_context)
 
 					-- Traverse through parents
 				l_parents := l_context.context_parents
 				if not l_parents.is_empty then
 					from l_parents.start until l_parents.after loop
-						l_parent ?= l_parents.item_for_iteration.lace_class
+						l_parent := l_parents.item_for_iteration.lace_class
 						i := l_grid.row_count + 1
 						l_grid.set_row_count_to (i)
-						l_row ?= l_grid.row (i)
+						l_row := l_grid.row (i)
+						check
+							l_parent_not_void: l_parent /= Void
+							l_row_not_void: l_row /= Void
+						end
 						populate_contracts_row (l_parent, l_row, l_context)
 						l_parents.forth
 					end
@@ -406,7 +408,7 @@ feature -- Modification
 			not_a_contract_is_empty: not a_contract.is_empty
 			a_source_is_editable: a_source.source.is_editable
 		local
-			l_new_row: !EV_GRID_ROW
+			l_new_row: EV_GRID_ROW
 			l_selected: BOOLEAN
 			i: INTEGER
 		do
@@ -418,10 +420,10 @@ feature -- Modification
 				if l_row.parent_row = Void then
 					if l_row.subrow_count = 0 or else not context_contracts.is_empty then
 						l_row.insert_subrow (1)
-						l_new_row ?= l_row.subrow (1)
+						l_new_row := l_row.subrow (1)
 					else
 							-- There is a place holder, just reuse it.
-						l_new_row ?= l_row.subrow (1)
+						l_new_row := l_row.subrow (1)
 						if not l_selected then
 							l_selected := l_new_row.is_selected
 						end
@@ -429,9 +431,10 @@ feature -- Modification
 				else
 					i := l_row.index - l_row.parent_row.index + 1
 					l_row.parent_row.insert_subrow (i)
-					l_new_row ?= l_row.parent_row.subrow (i)
+					l_new_row := l_row.parent_row.subrow (i)
 				end
 				edit_contract_grid.row_select_actions.block
+				check l_new_row_not_void: l_new_row /= Void end
 				populate_editable_contract_row (a_contract, a_source.source, l_new_row)
 				edit_contract_grid.row_select_actions.resume
 
@@ -455,8 +458,8 @@ feature -- Modification
 			context_contracts_has_a_line: context_contracts.has (a_line)
 		local
 			l_grid: !like edit_contract_grid
-			l_row: !EV_GRID_ROW
-			l_sub_row: !EV_GRID_ROW
+			l_row: EV_GRID_ROW
+			l_sub_row: EV_GRID_ROW
 			l_source: !ES_CONTRACT_SOURCE_I
 			l_count, i: INTEGER
 			l_sub_count, j: INTEGER
@@ -467,12 +470,12 @@ feature -- Modification
 			l_grid := edit_contract_grid
 			l_count := l_grid.row_count
 			from i := 1 until i > l_count or l_removed loop
-				l_row ?= l_grid.row (i)
+				l_row := l_grid.row (i)
 				if l_row.data = l_source then
 						-- Matching source
 					l_sub_count := l_row.subrow_count_recursive
 					from j := 1 until j > l_sub_count or l_removed loop
-						l_sub_row ?= l_row.subrow (j)
+						l_sub_row := l_row.subrow (j)
 						if l_sub_row.data = a_line then
 							l_selected := l_sub_row.is_selected
 							if l_selected then
@@ -485,6 +488,7 @@ feature -- Modification
 							end
 							if l_sub_count = 1 then
 									-- Only one item left so replace with the no contract message
+								check l_sub_row_not_void: l_sub_row /= Void end
 								populate_no_contract_row (l_sub_row)
 							else
 									-- Remove extra row
@@ -633,7 +637,7 @@ feature {NONE} -- User interface elements
 	edit_contract_grid: !ES_GRID
 			-- The grid used to display and edit the contracts for the current context
 		do
-			Result ?= widget
+			Result := widget
 		end
 
 feature -- Actions
@@ -673,7 +677,7 @@ feature {NONE} -- Population
 			l_feat_decorator: FEAT_TEXT_FORMATTER_DECORATOR
 			l_token_generator: EB_EDITOR_TOKEN_GENERATOR
 			l_feature_i: FEATURE_I
-			l_row: !EV_GRID_ROW
+			l_row: EV_GRID_ROW
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_scanner: ?like token_scanner
 			l_tagged_text: STRING
@@ -723,7 +727,7 @@ feature {NONE} -- Population
 					l_tagged := l_contracts.item_for_iteration
 					check l_tagged_attached: l_tagged /= Void end
 					if l_tagged /= Void then
-						l_row ?= a_row.subrow (i)
+						l_row := a_row.subrow (i)
 
 						if l_editable then
 							check
@@ -739,6 +743,7 @@ feature {NONE} -- Population
 								l_tagged_text.prepend ("%T%T%T")
 							end
 								-- Call will set row data!
+							check l_row_not_void: l_row /= Void end
 							populate_editable_contract_row (l_tagged_text.as_string_32.as_attached, l_contract_source, l_row)
 						else
 								-- Perform formatting with decorator, enabling clickable text.
@@ -793,7 +798,8 @@ feature {NONE} -- Population
 					-- Add "No contracts found" sub row for first item, as first items represent the context
 					-- class and should always be seen.
 				a_row.insert_subrows (1, 1)
-				l_row ?= a_row.subrow (a_row.subrow_count)
+				l_row := a_row.subrow (a_row.subrow_count)
+				check l_row_not_void: l_row /= Void end
 
 				if not l_editable or else a_context.text_modifier.is_ast_available then
 					populate_no_contract_row (l_row)

@@ -77,7 +77,7 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result ?= development_window.docking_manager
+			Result := development_window.docking_manager.as_attached
 		end
 
 	editors_configuration_file: !FILE_NAME

@@ -15,17 +15,17 @@ inherit
 
 feature -- Access
 
-	scavenged_contexts: !DS_BILINEAR [!HELP_CONTEXT_I]
+	scavenged_contexts: !DS_ARRAYED_LIST [!HELP_CONTEXT_I]
 			-- List of contexts scavenged when probing the last object using `probe'
 		require
 			is_interface_usable: is_interface_usable
 			has_probed: has_probed
 		do
-			if {l_results: !DS_BILINEAR [!HELP_CONTEXT_I]} internal_scavenged_contexts then
+			if {l_results: like scavenged_contexts} internal_scavenged_contexts then
 				Result := l_results
 			else
-				create internal_scavenged_contexts.make_default
-				Result ?= internal_scavenged_contexts
+				create Result.make_default
+				internal_scavenged_contexts := Result
 			end
 		ensure
 			result_consistent: Result = scavenged_contexts
@@ -83,7 +83,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Internal implementation cache
 
-	frozen internal_scavenged_contexts: ?DS_ARRAYED_LIST [!HELP_CONTEXT_I]
+	frozen internal_scavenged_contexts: ?like scavenged_contexts
 			-- Cached version of `scavenged_contexts'
 
 ;indexing

@@ -97,10 +97,10 @@ feature {NONE} -- Initialize
 
 feature -- Access
 
-	buttons: !DS_SET [INTEGER]
+	buttons: DS_SET [INTEGER]
 			-- <Precursor>
 		do
-			Result ?= dialog_buttons.ok_buttons
+			Result := dialog_buttons.ok_buttons
 		end
 
 	default_button: INTEGER

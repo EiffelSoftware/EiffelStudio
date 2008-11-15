@@ -134,14 +134,17 @@ feature -- Query
 			not_a_id_is_empty: not a_id.is_empty
 		local
 			l_count, i: INTEGER
+			l_result: STRING
 		do
 			l_count := a_id.count
 			i := a_id.last_index_of ('.', l_count)
 			if i > 1 and i < l_count then
-				Result ?= a_id.substring (1, i - 1) + "." + generating_type.as_lower + "." + a_id.substring (i + 1, l_count)
+				l_result := a_id.substring (1, i - 1) + "." + generating_type.as_lower + "." + a_id.substring (i + 1, l_count)
 			else
-				Result ?= a_id + "." + generating_type.as_lower
+				l_result := a_id + "." + generating_type.as_lower
 			end
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -157,15 +160,12 @@ feature {NONE} -- Helpers
 
 	frozen persistance_utilities: !ES_PERSISTABLE_STONE_UTILITIES
 			-- Access to persistance utilties for stone persistance
-		local
-			l_utils: like internal_persistance_utilities
 		do
-			l_utils := internal_persistance_utilities
-			if l_utils = Void then
+			if {l_utils: like persistance_utilities} internal_persistance_utilities then
+				Result := l_utils
+			else
 				Result := create_persistance_utilities
 				internal_persistance_utilities := Result
-			else
-				Result ?= l_utils
 			end
 		end
 

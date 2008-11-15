@@ -26,7 +26,7 @@ feature -- Access
 	frozen tool: !ES_TOOL [EB_TOOL]
 			-- <Precursor>
 		do
-			Result ?= window.shell_tools.tool ({G})
+			Result := window.shell_tools.tool ({G})
 		end
 
 feature {NONE} -- Access

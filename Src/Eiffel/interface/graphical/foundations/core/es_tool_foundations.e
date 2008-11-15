@@ -177,13 +177,13 @@ feature {NONE} -- Helpers
 	frozen stock_pixmaps: !ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
-			Result ?= (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.as_attached
 		end
 
 	frozen mini_stock_pixmaps: !ES_PIXMAPS_10X10
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
-			Result ?= (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.as_attached
 		end
 
 	frozen helpers: !EVS_HELPERS
@@ -197,7 +197,7 @@ feature {NONE} -- Helpers
 		require
 			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences /= Void
 		once
-			Result ?= (create {EB_SHARED_PREFERENCES}).preferences
+			Result := (create {EB_SHARED_PREFERENCES}).preferences.as_attached
 		end
 
 	frozen session_manager: !SERVICE_CONSUMER [SESSION_MANAGER_S]

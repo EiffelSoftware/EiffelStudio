@@ -212,7 +212,7 @@ feature {NONE} -- Access
 			has_stone: has_stone
 		do
 			check contract_editor_has_context: contract_editor.has_context end
-			Result ?= contract_editor.context
+			Result := contract_editor.context.as_attached
 		end
 
 	contract_code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
@@ -228,7 +228,7 @@ feature {NONE} -- Access
 			create l_categories.make (2)
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
 			l_categories.put_last (context.template_category)
-			Result ?= code_template_catalog.service.templates_by_category (l_categories, True)
+			Result := code_template_catalog.service.templates_by_category (l_categories, True)
 		end
 
 feature -- Access: Help
@@ -681,10 +681,10 @@ feature {NONE} -- User interface manipulation
 			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
 			l_definition: !CODE_TEMPLATE_DEFINITION
 			l_title: !STRING_32
-			l_menu: !EV_MENU
+			l_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 		do
-			l_menu ?= add_from_template_menu
+			l_menu := add_from_template_menu
 			l_menu.wipe_out
 
 			if has_stone and then contract_editor.has_context then
@@ -1021,18 +1021,18 @@ feature {NONE} -- Action handlers
 			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
 			l_dialog: ES_ADD_CONTRACT_DIALOG
-			l_source: !ES_CONTRACT_SOURCE_I
 		do
-			l_source ?= contract_editor.selected_source
-			create l_dialog.make
-			l_dialog.show_on_active_window
-			if l_dialog.dialog_result = l_dialog.default_confirm_button then
-				contract_editor.add_contract (l_dialog.contract.tag, l_dialog.contract.contract, l_source)
-				set_is_dirty (True)
-			end
+			if {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
+				create l_dialog.make
+				l_dialog.show_on_active_window
+				if l_dialog.dialog_result = l_dialog.default_confirm_button then
+					contract_editor.add_contract (l_dialog.contract.tag, l_dialog.contract.contract, l_source)
+					set_is_dirty (True)
+				end
 
-				-- Set focus back to editor.
-			contract_editor.widget.set_focus
+					-- Set focus back to editor.
+				contract_editor.widget.set_focus
+			end
 		end
 
 	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION) is
@@ -1092,7 +1092,7 @@ feature {NONE} -- Action handlers
 				l_dialog.show_on_active_window
 				if l_dialog.dialog_result = l_dialog.default_confirm_button then
 						-- User committed changes
-					l_contract ?= l_dialog.code_result
+					l_contract := l_dialog.code_result
 					if not l_contract.is_empty then
 						contract_editor.add_contract_string (l_contract, l_source)
 						set_is_dirty (True)
@@ -1145,25 +1145,25 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_line: contract_editor.selected_line /= Void
 			contract_editor_line_is_editable: contract_editor.selected_line.is_editable
 		local
-			l_line: !ES_CONTRACT_LINE
-			l_contract: ?TUPLE [tag: !STRING_32; contract: !STRING_32]
+			l_contract: TUPLE [tag: !STRING_32; contract: !STRING_32]
 			l_dialog: ES_EDIT_CONTRACT_DIALOG
 		do
-			l_line ?= contract_editor.selected_line
-			create l_dialog.make
-			l_dialog.set_contract (l_line.tag, l_line.contract)
-			l_dialog.show_on_active_window
-			if l_dialog.dialog_result = l_dialog.default_confirm_button and then l_dialog.is_dirty then
-				l_contract := l_dialog.contract
-				if not (l_line.tag.is_equal (l_contract.tag) and then l_line.contract.is_equal (l_contract.contract)) then
-						-- Contract actually changed
-					contract_editor.replace_contract (l_contract.tag, l_contract.contract, l_line)
-					set_is_dirty (True)
+			if {l_line: ES_CONTRACT_LINE} contract_editor.selected_line then
+				create l_dialog.make
+				l_dialog.set_contract (l_line.tag, l_line.contract)
+				l_dialog.show_on_active_window
+				if l_dialog.dialog_result = l_dialog.default_confirm_button and then l_dialog.is_dirty then
+					l_contract := l_dialog.contract
+					if not (l_line.tag.is_equal (l_contract.tag) and then l_line.contract.is_equal (l_contract.contract)) then
+							-- Contract actually changed
+						contract_editor.replace_contract (l_contract.tag, l_contract.contract, l_line)
+						set_is_dirty (True)
+					end
 				end
-			end
 
-				-- Set focus back to editor.
-			contract_editor.widget.set_focus
+					-- Set focus back to editor.
+				contract_editor.widget.set_focus
+			end
 		end
 
 	on_move_contract_up
@@ -1186,7 +1186,7 @@ feature {NONE} -- Action handlers
 				if not l_contracts.after then
 					if l_contracts.first /= l_contracts.item_for_iteration then
 						l_contracts.back
-						l_other_line ?= l_contracts.item_for_iteration
+						l_other_line := l_contracts.item_for_iteration
 						contract_editor.swap_contracts (l_line, l_other_line)
 						set_is_dirty (True)
 					else
@@ -1225,7 +1225,7 @@ feature {NONE} -- Action handlers
 				if not l_contracts.after then
 					if l_contracts.last /= l_contracts.item_for_iteration then
 						l_contracts.forth
-						l_other_line ?= l_contracts.item_for_iteration
+						l_other_line := l_contracts.item_for_iteration
 						contract_editor.swap_contracts (l_line, l_other_line)
 						set_is_dirty (True)
 					else

@@ -59,9 +59,10 @@ feature {NONE} -- Factory
 	create_parent_text_modifier (a_parent: !CLASS_C): !ES_POSTCONDITION_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		local
-			l_class_i: !CLASS_I
+			l_class_i: CLASS_I
 		do
-			l_class_i ?= a_parent.lace_class
+			l_class_i := a_parent.lace_class
+			check l_class_i_not_void: l_class_i /= Void end
 			create Result.make (context_feature, l_class_i)
 		end
 

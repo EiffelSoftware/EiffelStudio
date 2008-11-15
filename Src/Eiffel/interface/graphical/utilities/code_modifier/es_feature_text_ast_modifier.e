@@ -77,7 +77,7 @@ feature {NONE} -- Query
 			l_result: ?like context_feature
 		do
 			if a_class.is_compiled then
-				l_class_c ?= a_class.compiled_class
+				l_class_c := a_class.compiled_class
 				if l_class_c /= Void then
 					if a_feature.written_in = l_class_c.class_id then
 						l_result := a_feature
@@ -85,7 +85,7 @@ feature {NONE} -- Query
 						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (a_feature.rout_id_set)
 						check l_feature_i_attached: l_feature_i /= Void end
 						if l_feature_i /= Void and then l_feature_i.written_class = l_class_c then
-							l_result ?= l_feature_i.api_feature (l_class_c.class_id)
+							l_result := l_feature_i.api_feature (l_class_c.class_id)
 						end
 					end
 				end
@@ -93,10 +93,9 @@ feature {NONE} -- Query
 
 			if l_result = Void then
 					-- Should never end up here!
-				check False end
 				Result := a_feature
 			else
-				Result ?= l_result
+				Result := l_result
 			end
 		end
 

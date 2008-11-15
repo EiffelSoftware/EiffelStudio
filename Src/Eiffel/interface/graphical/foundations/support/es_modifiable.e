@@ -54,11 +54,11 @@ feature -- Events
 	dirty_state_change_event: !EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
 			-- <Precursor>
 		do
-			if internal_dirty_state_change_event = Void then
+			if {l_event: like dirty_state_change_event} internal_dirty_state_change_event then
+				Result := l_event
+			else
 				create Result
 				internal_dirty_state_change_event := Result
-			else
-				Result ?= internal_dirty_state_change_event
 			end
 		end
 

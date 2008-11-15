@@ -331,7 +331,7 @@ feature -- Query
 			end
 		end
 
-	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): ES_TOOL [EB_TOOL]
+	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): !ES_TOOL [EB_TOOL]
 			-- Retrieves an activate tool associated with a particular type.
 			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
@@ -341,10 +341,13 @@ feature -- Query
 		require
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
+		local
+			l_tool: ?like tool
 		do
-			Result := tool_edition (a_type, 1)
+			l_tool := tool_edition (a_type, 1)
+			check l_tool_not_void: l_tool /= Void end
+			Result := l_tool
 		ensure
-			result_attached: Result /= Void
 			not_result_is_recycled: not Result.is_recycled
 			requested_tools_has_a_type: requested_tools.has (tool_id (a_type))
 			result_sited: Result.window = window
@@ -597,7 +600,7 @@ feature -- Basic operation
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
-			l_tool: like tool
+			l_tool: ?like tool
 		do
 			l_tool := tool_edition (a_type, a_edition)
 			l_tool.show (a_activate)
@@ -616,7 +619,7 @@ feature -- Basic operation
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
-			l_tool: like tool
+			l_tool: ?like tool
 		do
 			l_tool := tool_next_available_edition (a_type, a_reuse)
 			l_tool.show (a_activate)

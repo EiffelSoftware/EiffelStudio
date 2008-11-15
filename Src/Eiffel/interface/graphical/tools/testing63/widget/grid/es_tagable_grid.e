@@ -93,15 +93,13 @@ feature {NONE} -- Access
 
 	layout: !ES_TAGABLE_GRID_LAYOUT [G]
 			-- Layout responsible for drawing grid items and header
-		local
-			l_layout: like internal_layout
 		do
-			l_layout := internal_layout
-			if l_layout = Void then
-				create l_layout
-				internal_layout := l_layout
+			if {l_layout: like layout} internal_layout then
+				Result := l_layout
+			else
+				create Result
+				internal_layout := Result
 			end
-			Result := l_layout
 		end
 
 	internal_layout: ?like layout

@@ -72,7 +72,7 @@ feature {NONE} -- Access
 			is_interface_usable: is_interface_usable
 			is_initializing_or_initialized: is_initializing or is_initialized
 		do
-			Result ?= colors.stock_colors.color_3d_shadow
+			Result := colors.stock_colors.color_3d_shadow.as_attached
 		end
 
 feature -- User interface elements

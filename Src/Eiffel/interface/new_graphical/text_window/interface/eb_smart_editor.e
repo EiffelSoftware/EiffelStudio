@@ -106,7 +106,7 @@ feature {NONE} -- Access
 			if {l_cookie: UUID} internal_editor_context_cookie then
 				Result := l_cookie
 			else
-				Result ?= (create {UUID_GENERATOR}).generate_uuid
+				Result := (create {UUID_GENERATOR}).generate_uuid.as_attached
 				internal_editor_context_cookie := Result
 			end
 		end
@@ -122,7 +122,7 @@ feature {NONE} -- Access
 		require
 			help_providers_is_service_available: help_providers.is_service_available
 		once
-			Result ?= create {!ES_EDITOR_HELP_CONTEXT_SCAVENGER}
+			create {ES_EDITOR_HELP_CONTEXT_SCAVENGER} Result
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
 		end

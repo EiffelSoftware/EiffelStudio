@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			create processor_stopped_event
 			create processor_error_event
 
+			create l_project_factory
 			l_project := l_project_factory.eiffel_project
 			check l_project /= Void end
 			make_with_project (l_project, a_project_helper)

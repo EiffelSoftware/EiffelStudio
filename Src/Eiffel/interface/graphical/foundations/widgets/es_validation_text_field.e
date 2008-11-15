@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			not_a_text_field_is_destroyed: not a_text_field.is_destroyed
 			not_a_text_field_is_parented: not a_text_field.has_parent
 		do
-			original_foreground_color ?= a_text_field.foreground_color
+			original_foreground_color := a_text_field.foreground_color.as_attached
 			text_field := a_text_field
 			validation_function := a_function
 			make_widget
@@ -56,7 +56,7 @@ feature {NONE} -- User interface initialization
 			a_widget.extend (text_field)
 			register_action (text_field.change_actions, agent on_text_field_changed)
 
-			validation_pixmap ?= stock_pixmaps.general_error_icon.twin
+			validation_pixmap := stock_pixmaps.general_error_icon.twin.as_attached
 			validation_pixmap.set_minimum_size (16, 16)
 			a_widget.extend (validation_pixmap)
 			a_widget.disable_item_expand (validation_pixmap)
@@ -77,12 +77,9 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_text: STRING_32
 		do
-			l_text := text_field.text
-			if l_text /= Void then
-				Result ?= l_text
+			if {l_text: STRING_32} text_field.text then
+				Result := l_text
 			else
 				create Result.make_empty
 			end

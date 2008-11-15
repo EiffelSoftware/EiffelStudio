@@ -84,7 +84,7 @@ feature {NONE} -- Basic operation
 			l_token: !EDITOR_TOKEN
 			l_line: !EDITOR_LINE
 			l_stop: BOOLEAN
-			l_parser: !like entity_declaration_parser
+			l_parser: like entity_declaration_parser
 			l_declarations: ?EIFFEL_LIST [TYPE_DEC_AS]
 			l_type_dec: ?TYPE_DEC_AS
 			l_current_frame: !ES_EDITOR_ANALYZER_FRAME

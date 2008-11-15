@@ -13,6 +13,11 @@ class
 inherit
 	ANY
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 	SHARED_EIFFEL_PARSER
 		export
 			{NONE} all
@@ -63,7 +68,7 @@ feature -- Access
 
 feature {ES_EDITOR_ANALYZER_FRAME} -- Access
 
-	parent: ?ES_EDITOR_ANALYZER_FRAME
+	parent: ES_EDITOR_ANALYZER_FRAME
 			-- A parent context frame.
 
 feature {NONE} -- Access
@@ -161,7 +166,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+	locals: !HASH_TABLE [TYPE_A, !STRING_32]
 			-- Type evaluated local entities of the Current frame.
 			--
 			-- value: Class type description.
@@ -174,10 +179,10 @@ feature -- Query
 			l_string_locals: ?like internal_string_local_declarations
 			l_parsed_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
 			l_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
-			l_generator: !like type_generator
-			l_checker: !like type_checker
+			l_generator: like type_a_generator
+			l_checker: like type_a_checker
 			l_name: !STRING_32
-			l_type: ?TYPE_A
+			l_type: TYPE_A
 		do
 			create Result.make (7)
 
@@ -198,8 +203,8 @@ feature -- Query
 
 				l_feature := context_feature
 				l_class := context_class
-				l_generator := type_generator
-				l_checker := type_checker
+				l_generator := type_a_generator
+				l_checker := type_a_checker
 				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void, Void)
 				from l_locals.start until l_locals.after loop
 					l_name := l_locals.key_for_iteration.as_attached
@@ -223,7 +228,7 @@ feature -- Query
 			result_is_consitent: Result = locals
 		end
 
-	all_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+	all_locals: !HASH_TABLE [TYPE_A, !STRING_32]
 			-- Complete list of entities, including parent frames.
 			--
 			-- value: Class type description.
@@ -253,15 +258,15 @@ feature {NONE} -- Query
 		local
 			l_string_locals: !like string_local_declarations
 			l_local_string: !STRING_32
-			l_parser: !EIFFEL_PARSER
-			l_entities: ?EIFFEL_LIST [?TYPE_DEC_AS]
-			l_declarations: !ARRAYED_LIST [?TYPE_DEC_AS]
+			l_parser: EIFFEL_PARSER
+			l_entities: EIFFEL_LIST [TYPE_DEC_AS]
+			l_declarations: ARRAYED_LIST [TYPE_DEC_AS]
 			l_entity_name_map: !HASH_TABLE [!STRING_32, !STRING_32]
 			l_entity_name: !STRING_32
 			l_prefix: !STRING_32
-			l_type_dec: ?TYPE_DEC_AS
-			l_type: ?TYPE_AS
-			l_ids: ?IDENTIFIER_LIST
+			l_type_dec: TYPE_DEC_AS
+			l_type: TYPE_AS
+			l_ids: IDENTIFIER_LIST
 			l_name: STRING_32
 		do
 			l_string_locals := string_local_declarations
@@ -289,7 +294,7 @@ feature {NONE} -- Query
 			end
 
 				-- Parse local string declaration
-			l_parser ?= entity_declaration_parser
+			l_parser := entity_declaration_parser
 			l_parser.parse_from_string (l_local_string)
 			l_entities := l_parser.entity_declaration_node
 			if l_entities = Void then
@@ -319,7 +324,7 @@ feature {NONE} -- Query
 					l_string_locals.forth
 				end
 			else
-				l_declarations ?= l_entities
+				l_declarations := l_entities
 			end
 
 				-- Build result, assigning the type declartation to an index local entity name.
@@ -352,20 +357,6 @@ feature {NONE} -- Query
 			end
 		end
 
-feature {NONE} -- Helpers
-
-	type_generator: !AST_TYPE_A_GENERATOR
-			-- Used to evaluate types from an AST, without type checking.
-		once
-			Result ?= (create {SHARED_STATELESS_VISITOR}).type_a_generator
-		end
-
-	type_checker: !TYPE_A_CHECKER
-			-- Used to populate unevaluated types, from `type_generator'
-		once
-			Result ?= (create {SHARED_STATELESS_VISITOR}).type_a_checker
-		end
-
 feature -- Extension
 
 	add_local (a_type: !TYPE_DEC_AS)
@@ -373,9 +364,9 @@ feature -- Extension
 			--
 			-- `a_type': The local type declaration.
 		local
-			l_ids: ?IDENTIFIER_LIST
+			l_ids: IDENTIFIER_LIST
 			l_name: STRING_32
-			l_type: ?TYPE_AS
+			l_type: TYPE_AS
 		do
 			l_ids := a_type.id_list
 			if l_ids /= Void then

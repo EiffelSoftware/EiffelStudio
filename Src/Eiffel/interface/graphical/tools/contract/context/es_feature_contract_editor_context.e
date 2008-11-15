@@ -18,13 +18,13 @@ inherit
 
 feature -- Access
 
-	context_feature: !E_ROUTINE
+	context_feature: !E_FEATURE
 			-- Context class for contract modifications
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			Result ?= context_stone.e_feature
+			Result := context_stone.e_feature.as_attached
 		end
 
 feature -- Contracts
@@ -32,7 +32,7 @@ feature -- Contracts
 	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
-			l_modifier: ?like create_text_modifier
+			l_modifier: like create_text_modifier
 			l_e_feature: ?like context_feature
 			l_class_c: CLASS_C
 			l_feature_as: ?FEATURE_AS
@@ -56,8 +56,6 @@ feature -- Contracts
 					end
 				end
 			end
-
-			check l_modifier_attached: l_modifier /= Void end
 
 			if a_live then
 					-- We have a text modifier now, extract the contracts
@@ -154,7 +152,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	create_text_modifier: ?ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	create_text_modifier: !ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
 			-- Creates a text modifier
 		deferred
 		end

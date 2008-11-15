@@ -69,7 +69,7 @@ feature {NONE} -- Code template cataloging
 			l_contracts: !DIRECTORY_NAME
 		do
 				-- Top level catalog
-			l_contracts ?= eiffel_layout.templates_path.twin
+			l_contracts := eiffel_layout.templates_path.twin
 			a_service.extend_catalog (l_contracts.string)
 
 				-- User templates catalog

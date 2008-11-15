@@ -160,7 +160,7 @@ feature -- Access
 				Result.append (title)
 				Result.append (" #" + edition.out)
 			else
-				Result ?= title
+				Result := title.as_attached
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

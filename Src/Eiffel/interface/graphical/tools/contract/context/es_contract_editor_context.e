@@ -32,13 +32,15 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	context_stone: !G
+	context_stone: G
 			-- Context stone
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
 			Result ?= stone
+		ensure
+			context_stone_not_void: {l_g: G} Result
 		end
 
 	context_class: !CLASS_I
@@ -47,46 +49,38 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			Result ?= context_stone.class_i
+			Result := context_stone.class_i.as_attached
 		end
 
-	context_parents: !DS_LIST [CLASS_C]
+	context_parents: !DS_LINKED_LIST [CLASS_C]
 			-- Context parent classes containing contracts
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
-		local
-			l_list: !DS_LIST [CLASS_C]
-			l_result: !DS_LINKED_LIST [CLASS_C]
 		do
-			if internal_context_parents = Void then
-				create l_result.make_default
-				l_list ?= l_result
-				calculate_parents (context_class, l_list)
-				internal_context_parents := l_result
-				Result ?= l_result
+			if {l_result: like context_parents} internal_context_parents then
+				Result := l_result
 			else
-				Result ?= internal_context_parents
+				create Result.make_default
+				calculate_parents (context_class, Result)
+				internal_context_parents := Result
 			end
 		ensure
 			result_contains_attached_item: not Result.has (Void)
 			result_consistent: Result = context_parents
 		end
 
-	text_modifier: !like create_text_modifier
+	text_modifier: like create_text_modifier
 			-- Access to text modifier used to modify the contracts
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
-		local
-			l_result: like internal_text_modifier
 		do
-			l_result := internal_text_modifier
-			if l_result = Void then
-				Result ?= create_text_modifier
-				internal_text_modifier := Result
+			if {l_result: like text_modifier} internal_text_modifier then
+				Result := l_result
 			else
-				Result ?= l_result
+				Result := create_text_modifier
+				internal_text_modifier := Result
 			end
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
@@ -223,17 +217,15 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_text_modifier: ?ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	create_text_modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
 			-- Creates a text modifier
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		deferred
-		ensure
-			result_attached: Result /= Void
 		end
 
-	create_parent_text_modifier (a_parent: CLASS_C): ?like create_text_modifier
+	create_parent_text_modifier (a_parent: CLASS_C): like create_text_modifier
 			-- Creates a text modifier for a given parent class.
 			--
 			-- `a_parent': A parent class to generate a modifier for.
@@ -244,8 +236,6 @@ feature {NONE} -- Factory
 			a_parent_not_void: a_parent /= Void
 			context_parents_has_a_parent: context_parents.has (a_parent)
 		deferred
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Internal implementation cache

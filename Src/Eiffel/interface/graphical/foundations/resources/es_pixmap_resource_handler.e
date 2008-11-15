@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	matrices: !DS_HASH_TABLE [!EV_PIXEL_BUFFER, !STRING]
+	matrices: !DS_HASH_TABLE [!EV_PIXEL_BUFFER, STRING]
 			-- Table of loaded matrices.
 			--
 			-- Key: Matrix file name, sans extension.
@@ -66,7 +66,7 @@ feature -- Query
 			l_file_name.extend (pixmap_file_extension)
 			l_file_name.set_file_name (a_name)
 			l_file_name.add_extension (pixmap_file_extension)
-			Result ?= l_file_name.string
+			Result := l_file_name.string.as_attached
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

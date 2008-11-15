@@ -28,7 +28,7 @@ feature -- Query
 		do
 			create l_file_name.make_from_string (a_name)
 			l_file_name.add_extension (pixmap_file_extension)
-			Result ?= l_file_name.string
+			Result := l_file_name.string.as_attached
 		end
 
 ;indexing

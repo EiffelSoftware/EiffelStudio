@@ -1323,7 +1323,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			if l_menu_item = Void then
 				create l_menu_item.make_with_text (a_cmd.menu_name)
 			end
-			Result ?= l_menu_item
+			Result := l_menu_item
 			a_cmd.set_stone (l_old_stone)
 
 				-- Extend the menu.

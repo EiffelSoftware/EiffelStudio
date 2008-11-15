@@ -18,9 +18,9 @@ feature -- Contracts
 	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
-			l_modifier: !like text_modifier
+			l_modifier: like text_modifier
 			l_class_i: !CLASS_I
-			l_class_c: !CLASS_C
+			l_class_c: CLASS_C
 			l_class_as: ?CLASS_AS
 			l_invariant_as: ?INVARIANT_AS
 			l_invariants: ?EIFFEL_LIST [TAGGED_AS]
@@ -61,7 +61,7 @@ feature -- Contracts
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
 				l_class_i := l_modifier.context_class
 				if l_class_i.is_compiled then
-					l_class_c ?= l_class_i.compiled_class
+					l_class_c := l_class_i.compiled_class
 					if l_class_c.has_invariant then
 							-- Use compiled AST
 						l_invariant_as := l_class_c.invariant_ast
@@ -80,7 +80,7 @@ feature -- Contracts
 				end
 			end
 
-			Result ?= [l_result, l_modifier]
+			Result := [l_result, l_modifier]
 		end
 
 	template_category: !STRING = "invariant"
@@ -106,9 +106,10 @@ feature {NONE} -- Factory
 	create_parent_text_modifier (a_parent: !CLASS_C): !ES_INVARIANT_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		local
-			l_class_i: !CLASS_I
+			l_class_i: CLASS_I
 		do
-			l_class_i ?= a_parent.lace_class
+			l_class_i := a_parent.lace_class
+			check l_class_i_not_void: l_class_i /= Void end
 			create Result.make (l_class_i)
 		end
 

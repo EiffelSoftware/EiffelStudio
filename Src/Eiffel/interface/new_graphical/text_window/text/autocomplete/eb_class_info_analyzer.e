@@ -1583,10 +1583,10 @@ feature {NONE}-- Implementation
 		local
 			l_token: EDITOR_TOKEN
 			l_line: EDITOR_LINE
-			l_name: !STRING_32
+			l_name: STRING_32
 			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
 			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
-			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+			l_locals: !HASH_TABLE [?TYPE_A, STRING_32]
 			l_feature: like current_feature_i
 			l_class: like current_class_c
 			retried: BOOLEAN
@@ -1603,7 +1603,7 @@ feature {NONE}-- Implementation
 						if l_result /= Void and then l_result.has_current_frame then
 							if not l_result.current_frame.is_empty then
 								l_locals := l_result.current_frame.all_locals
-								l_name ?= a_name.as_string_32
+								l_name := a_name.as_string_32
 								if l_locals.has (l_name) then
 									Result := l_locals.item (l_name)
 								end

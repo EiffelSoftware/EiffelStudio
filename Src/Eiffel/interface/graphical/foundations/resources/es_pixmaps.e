@@ -145,8 +145,7 @@ feature {NONE} -- Access
 			-- Key: An icon name.
 			-- Value: Icon matrix coordinates.
 		do
-			--| FIXME jfiat [2008/11/14] : bug when using `like icon_coordinates_table'
-			if {l_result: like internal_icon_coordinates_table} internal_icon_coordinates_table then
+			if {l_result: like icon_coordinates_table} internal_icon_coordinates_table then
 				Result := l_result
 			else
 				create Result.make_default
@@ -202,9 +201,12 @@ feature -- Query
 			has_named_icon_a_name: has_named_icon (a_name)
 		local
 			l_coords: !TUPLE [x: NATURAL_8; y: NATURAL_8]
+			l_result: EV_PIXEL_BUFFER
 		do
 			l_coords := icon_coordinates_table.item (a_name)
-			Result ?= matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
+			l_result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_result_is_destroyed: not Result.is_destroyed
 		end
@@ -219,9 +221,12 @@ feature -- Query
 			has_named_icon_a_name: has_named_icon (a_name)
 		local
 			l_coords: !TUPLE [x: NATURAL_8; y: NATURAL_8]
+			l_result: EV_PIXMAP
 		do
 			l_coords := icon_coordinates_table.item (a_name)
-			Result ?= matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+			l_result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_result_is_destroyed: not Result.is_destroyed
 		end

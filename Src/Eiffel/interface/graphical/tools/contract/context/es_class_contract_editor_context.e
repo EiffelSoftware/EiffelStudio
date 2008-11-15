@@ -18,8 +18,8 @@ feature {NONE} -- Query
 	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
 			-- <Precursor>
 		local
-			l_class_i: !CLASS_I
-			l_class_C: !CLASS_C
+			l_class_i: CLASS_I
+			l_class_c: CLASS_C
 			l_list: LIST [CLASS_C]
 			l_cursor: CURSOR
 		do
@@ -28,10 +28,11 @@ feature {NONE} -- Query
 				if l_list /= Void and then not l_list.is_empty then
 					l_cursor := l_list.cursor
 					from l_list.start until l_list.after loop
-						l_class_c ?=  l_list.item
+						l_class_c :=  l_list.item
 						if not a_list.has (l_class_c) then
 							a_list.force_last (l_class_c)
-							l_class_i ?= l_class_c.lace_class
+							l_class_i := l_class_c.lace_class
+							check l_class_i_not_void: l_class_i /= Void end
 							calculate_parents (l_class_i, a_list)
 						end
 						l_list.forth

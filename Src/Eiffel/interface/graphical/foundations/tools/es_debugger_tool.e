@@ -33,13 +33,15 @@ feature -- Access
 
 feature -- Access
 
-	frozen debugger_manager: !EB_DEBUGGER_MANAGER
+	frozen debugger_manager: EB_DEBUGGER_MANAGER
 			-- Debugger manager to use for tool creation
 		require
 			is_interface_usable: is_interface_usable
 			window_is_interface_usable: window.is_interface_usable
 		do
 			Result ?= window.debugger_manager
+		ensure
+			debugger_manager_not_void: Result /= Void
 		end
 
 ;indexing

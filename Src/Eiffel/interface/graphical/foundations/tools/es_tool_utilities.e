@@ -116,7 +116,7 @@ feature -- Query
 		require
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
-			Result ?= a_tool.generating_type.as_lower
+			Result := a_tool.generating_type.as_lower.as_attached
 			if Result.substring (1, (3).min (Result.count)).is_equal (once "es_") then
 					-- Remove ES_ prefix
 				Result.keep_tail (Result.count - 3)
@@ -142,7 +142,7 @@ feature -- Query
 		require
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
-			Result ?= eiffel_layout.tools_path.twin
+			Result := eiffel_layout.tools_path.twin
 			file_utils.create_directory (Result)
 
 				-- Build folder and create it

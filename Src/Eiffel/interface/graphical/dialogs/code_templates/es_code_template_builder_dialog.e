@@ -210,11 +210,11 @@ feature -- Access
 	frozen code_symbol_table: !CODE_SYMBOL_TABLE
 			-- Symbol table used to evaluate the code template.
 		do
-			if internal_code_symbol_table = Void then
+			if {l_table: like code_symbol_table} internal_code_symbol_table then
+				Result := l_table
+			else
 				Result := create_code_symbol_table (code_template.definition)
 				internal_code_symbol_table := Result
-			else
-				Result ?= internal_code_symbol_table
 			end
 		ensure
 			result_consistent: Result = code_symbol_table
@@ -251,10 +251,10 @@ feature -- Dialog access
 			Result.append (l_title_extension)
 		end
 
-	buttons: !DS_SET [INTEGER]
+	buttons: DS_SET [INTEGER]
 			-- <Precursor>
 		once
-			Result ?= dialog_buttons.ok_cancel_buttons
+			Result := dialog_buttons.ok_cancel_buttons
 		end
 
 	default_button: INTEGER
@@ -290,12 +290,12 @@ feature {NONE} -- Helpers
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if internal_template_renderer = Void then
+			if {l_renderer: like template_renderer} internal_template_renderer then
+				Result := l_renderer
+			else
 				Result := create_template_renderer
 				auto_recycle (Result)
 				internal_template_renderer := Result
-			else
-				Result ?= internal_template_renderer
 			end
 		ensure
 			result_consistent: Result = template_renderer

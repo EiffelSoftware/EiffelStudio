@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			l_editor: like active_editor_for_class
 			l_text: ?STRING_32
-			l_encoding: ?ENCODING
+			l_encoding: ENCODING
 		do
 			context_class := a_class
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 				l_encoding ?= a_class.encoding
 			else
 				l_text := l_editor.wide_text
-				l_encoding ?= l_editor.encoding
+				l_encoding := l_editor.encoding
 			end
 
 				-- Set detected encoding
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			if l_text = Void then
 				create l_text.make_empty
 			end
-			original_text ?= l_text
+			original_text := l_text
 			original_file_date := a_class.file_date
 
 			modified_data := new_modified_data
@@ -79,12 +79,9 @@ feature -- Access
 			-- Note: For preformance reasons, the result is not twined.
 		require
 			is_interface_usable: is_interface_usable
-		local
-			l_text: ?STRING_32
 		do
-			l_text := modified_data.text
-			if l_text /= Void then
-				Result ?= l_text
+			if {l_text: STRING_32} modified_data.text then
+				Result := l_text
 			else
 				create Result.make_empty
 			end
@@ -282,7 +279,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			not_is_dirty: not is_dirty
 		do
-			original_text ?= modified_data.text.twin
+			original_text := modified_data.text.twin
 			modified_data.prepare
 		ensure
 			not_is_dirty: not is_dirty
@@ -388,7 +385,7 @@ feature -- Basic operations
 			if not l_set_in_editor then
 				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
-					l_new_text ?= context_class.text
+					l_new_text := context_class.text.as_attached
 					l_new_text.prune_all ('%R')
 					l_new_text := merge_text (l_new_text)
 				else
@@ -444,7 +441,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	merge_text (a_current_text: STRING_32): !like text
+	merge_text (a_current_text: STRING_32): like text
 			-- Retrieves the merged text, using a modified source as the base.
 			--
 			-- `a_current_text': The text currently found on disk or in an editor.
@@ -463,9 +460,9 @@ feature {NONE} -- Basic operations
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if l_patch /= Void and then not l_patch.is_empty then
-				Result ?= l_diff.patch (a_current_text, l_patch, False).as_string_32
+				Result := l_diff.patch (a_current_text, l_patch, False).as_string_32.as_attached
 			else
-				Result ?= text
+				Result := text
 			end
 
 			if logger.is_service_available then

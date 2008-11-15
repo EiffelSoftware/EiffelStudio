@@ -117,14 +117,15 @@ feature -- Formatting
 						l_end := l_end - 1
 					end
 					if l_start < l_end then
-						l_result ?= a_template.substring (l_start, l_end)
+						l_result := a_template.substring (l_start, l_end)
 					end
 				end
 			end
-			if l_result = Void then
-				l_result := a_template
+			if l_result /= Void then
+				Result := l_result
+			else
+				Result := a_template
 			end
-			Result ?= l_result
 		end
 
 feature {NONE} -- Process

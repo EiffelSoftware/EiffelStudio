@@ -175,7 +175,7 @@ feature {NONE} -- Formatting
 		require
 			not_a_context_id_is_empty: not a_context.is_empty
 		do
-			Result ?= a_context.as_string_8
+			Result := a_context.as_string_8.as_attached
 			if Result = a_context then
 				Result := Result.twin
 			end
@@ -185,16 +185,12 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Regular expressions
 
-	title_extract_regex: !RX_PATTERN_MATCHER
+	title_extract_regex: !RX_PCRE_MATCHER
 			-- Regular expression to extract an HTML title
-		local
-			l_regex: !RX_PCRE_MATCHER
 		once
-			create l_regex.make
-			l_regex.set_caseless (True)
-			l_regex.compile ("\<TITLE\>([^<]*)\<\/TITLE\>")
-
-			Result ?= l_regex
+			create Result.make
+			Result.set_caseless (True)
+			Result.compile ("\<TITLE\>([^<]*)\<\/TITLE\>")
 		ensure
 			result_is_compiled: Result.is_compiled
 		end

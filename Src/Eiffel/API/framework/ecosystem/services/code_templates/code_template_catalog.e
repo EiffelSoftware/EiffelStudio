@@ -41,39 +41,36 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
+	code_templates: !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
-			l_result: !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 		do
-			if {l_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]} internal_code_templates then
+			if {l_templates: like code_templates} internal_code_templates then
 				Result := l_templates
 			else
-				create l_result.make_default
+				create Result.make_default
 				if {l_cursor: !DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING_8]} cataloged_template_definitions.new_cursor then
 					from l_cursor.start until l_cursor.after loop
 						l_item := l_cursor.item
 						if l_item /= Void and then {l_definition: !CODE_TEMPLATE_DEFINITION} l_item.definition then
-							l_result.force_last (l_definition)
+							Result.force_last (l_definition)
 						end
 						l_cursor.forth
 					end
 				end
-
-				Result ?= l_result
 				internal_code_templates := Result
 			end
 		end
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!STRING], !STRING_8]
+	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!STRING], STRING_8]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: !DS_HASH_TABLE [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING]
+	cataloged_template_definitions: !DS_HASH_TABLE [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
@@ -95,9 +92,9 @@ feature -- Query
 		local
 			l_templates: like cataloged_template_definitions
 			l_file: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_fn: !STRING_8
+			l_fn: STRING_8
 		do
-			l_fn ?= a_file_name.as_string_8
+			l_fn := a_file_name.as_string_8
 			l_templates := cataloged_template_definitions
 			if l_templates.has (l_fn) then
 				l_file := l_templates.item (l_fn)
@@ -150,7 +147,6 @@ feature -- Query
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
 			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_indexable: !DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
@@ -185,8 +181,7 @@ feature -- Query
 					end
 				end
 			end
-			l_indexable ?= Result
-			sort_templates_by_title (l_indexable)
+			sort_templates_by_title (Result)
 		end
 
 feature -- Events
@@ -231,7 +226,7 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_ARRAYED_LIST [!STRING_8]
+			l_keys: DS_ARRAYED_LIST [STRING_8]
 			l_empty: BOOLEAN
 		do
 			if not catalog_changed_event.is_suspended then
@@ -315,10 +310,10 @@ feature -- Removal
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_file: !STRING_8
-			l_folder: !STRING_8
+			l_folder: STRING_8
 			l_changed: BOOLEAN
 		do
-			l_folder ?= a_folder.as_string_8
+			l_folder := a_folder.as_string_8
 			l_catalog := cataloged_folder_files
 			l_files := l_catalog.item (l_folder)
 			if not l_files.is_empty then

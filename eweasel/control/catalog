@@ -1238,6 +1238,7 @@ test	wrong-expanded-generic-type	exec284 tcf fail execution expanded
 test	wrong-polymorphic-call-with-select	exec285 tcf pass execution
 test	wrong-formal-type-specification	exec286 tcf pass execution
 test	conversion-for-tuple-assignment-crash exec287 tcf pass execution
+test	wrong-formal-type-local-initialization	exec288 tcf pass execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

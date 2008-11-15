@@ -110,7 +110,7 @@ feature {NONE} -- Query
 		do
 			Result := a_id.substring (2, a_id.count).to_natural
 		ensure
-			result_valid: a_id.is_equal (("#" + Result.out).as_attached)
+			result_valid: ("#" + Result.out).is_equal (a_id)
 		end
 
 	object_for_id (a_id: !STRING): !ANY
@@ -123,6 +123,64 @@ feature {NONE} -- Query
 			object_cache_loaded: is_cache_loaded
 		do
 			Result := object_cache.item (index_of_id (a_id).to_integer_32)
+		end
+
+	is_valid_item_tuple (a_special: !SPECIAL [ANY]; a_tuple: !TUPLE): BOOLEAN
+			-- Does `a_tuple' contain valid elements for `a_special'?
+		do
+			if {l_b_special: SPECIAL [BOOLEAN]} a_special then
+				Result := a_tuple.is_uniform_boolean
+			elseif {l_c8_special: SPECIAL [CHARACTER_8]} a_special then
+				Result := a_tuple.is_uniform_character_8
+			elseif {l_c32_special: SPECIAL [CHARACTER_32]} a_special then
+				Result := a_tuple.is_uniforme_character_32
+			elseif {l_i8_special: SPECIAL [INTEGER_8]} a_special then
+				Result := a_tuple.is_uniform_integer_8
+			elseif {l_i16_special: SPECIAL [INTEGER_16]} a_special then
+				Result := a_tuple.is_uniform_integer_16
+			elseif {l_i32_special: SPECIAL [INTEGER_32]} a_special then
+				Result := a_tuple.is_uniform_integer_32
+			elseif {l_i64_special: SPECIAL [INTEGER_64]} a_special then
+				Result := a_tuple.is_uniform_integer_64
+			elseif {l_n8_special: SPECIAL [NATURAL_8]} a_special then
+				Result := a_tuple.is_uniform_natural_8
+			elseif {l_n16_special: SPECIAL [NATURAL_16]} a_special then
+				Result := a_tuple.is_uniform_natural_16
+			elseif {l_n32_special: SPECIAL [NATURAL_32]} a_special then
+				Result := a_tuple.is_uniform_natural_32
+			elseif {l_n64_special: SPECIAL [NATURAL_64]} a_special then
+				Result := a_tuple.is_uniform_natural_64
+			elseif {l_r_special: SPECIAL [REAL]} a_special then
+				Result := a_tuple.is_uniform_real
+			elseif {l_d_special: SPECIAL [DOUBLE]} a_special then
+				Result := a_tuple.is_uniform_double
+			elseif {l_p_special: SPECIAL [POINTER]} a_special then
+				Result := a_tuple.is_uniform_pointer
+			else
+				Result := a_tuple.is_uniform_reference
+			end
+		ensure
+			tuple_uniform_boolean: (Result and {l_b: SPECIAL [BOOLEAN]} a_special) implies a_tuple.is_uniform_boolean
+			tuple_uniform_character_8: (Result and {l_c8: SPECIAL [CHARACTER_8]} a_special) implies a_tuple.is_uniform_character_8
+			tuple_uniform_character_32: (Result and {l_c32: SPECIAL [CHARACTER_32]} a_special) implies a_tuple.is_uniforme_character_32
+			tuple_uniform_integer_8: (Result and {l_i8: SPECIAL [INTEGER_8]} a_special) implies a_tuple.is_uniform_integer_8
+			tuple_uniform_integer_16: (Result and {l_i16: SPECIAL [INTEGER_16]} a_special) implies a_tuple.is_uniform_integer_16
+			tuple_uniform_integer_32: (Result and {l_i32: SPECIAL [INTEGER_32]} a_special) implies a_tuple.is_uniform_integer_32
+			tuple_uniform_integer_64: (Result and {l_i64: SPECIAL [INTEGER_64]} a_special) implies a_tuple.is_uniform_integer_64
+			tuple_uniform_natural_8: (Result and {l_n8: SPECIAL [NATURAL_8]} a_special) implies a_tuple.is_uniform_natural_8
+			tuple_uniform_natural_16: (Result and {l_n16: SPECIAL [NATURAL_16]} a_special) implies a_tuple.is_uniform_natural_16
+			tuple_uniform_natural_32: (Result and {l_n32: SPECIAL [NATURAL_32]} a_special) implies a_tuple.is_uniform_natural_32
+			tuple_uniform_natural_64: (Result and {l_n64: SPECIAL [NATURAL_64]} a_special) implies a_tuple.is_uniform_natural_64
+			tuple_uniform_real: (Result and {l_r: SPECIAL [REAL]} a_special) implies a_tuple.is_uniform_real
+			tuple_uniform_double: (Result and {l_d: SPECIAL [DOUBLE]} a_special) implies a_tuple.is_uniform_double
+			tuple_uniform_pointer: (Result and {l_p: SPECIAL [POINTER]} a_special) implies a_tuple.is_uniform_pointer
+			tuple_uniform_reference: (Result and not {l_nb: SPECIAL [BOOLEAN]} a_special and not {l_nc8: SPECIAL [CHARACTER_8]} a_special and not
+				{l_nc32: SPECIAL [CHARACTER_32]} a_special and not {l_ni8: SPECIAL [INTEGER_8]} a_special and not {l_ni16: SPECIAL [INTEGER_16]} a_special and not
+				{l_ni32: SPECIAL [INTEGER_32]} a_special and not {l_ni64: SPECIAL [INTEGER_64]} a_special and not {l_nn8: SPECIAL [NATURAL_8]} a_special and not
+				{l_nn16: SPECIAL [NATURAL_16]} a_special and not {l_nn32: SPECIAL [NATURAL_32]} a_special and not {l_nn64: SPECIAL [NATURAL_64]} a_special and not
+				{l_nr: SPECIAL [REAL]} a_special and not {l_nd: SPECIAL [DOUBLE]} a_special and not {l_np: SPECIAL [POINTER]} a_special) implies a_tuple.is_uniform_reference
+
+
 		end
 
 feature {NONE} -- Events
@@ -173,11 +231,12 @@ feature {NONE} -- Basic operations
 			--       replaced with the corresponding object instance. If any item in `a_operands' does not
 			--       conform to the operand needed to call `a_routine', an exception will be triggered.
 		local
-			l_new: !TUPLE
+			l_new: TUPLE
 			l_attrs: !ARRAY [!STRING]
 			i: INTEGER
 		do
-			l_new ?= a_routine.empty_operands
+			l_new := a_routine.empty_operands
+			check l_new /= Void end
 			if a_operands.count < l_new.count then
 				assert ("size of operands not correct", False)
 			end
@@ -190,10 +249,10 @@ feature {NONE} -- Object initialization
 	fill_object_cache is
 			-- Set up `object_under_test' and `routine_arguments' with content from `context'.
 		local
-			i: INTEGER
-			l_type: INTEGER
+			i, l_gtype: INTEGER
 			l_object: !ANY
 			l_routine_attr_adj_success: BOOLEAN
+			l_type: TYPE [ANY]
 		do
 			create object_cache.make (context.lower, context.upper)
 				-- Create instance for each object in `context'
@@ -202,26 +261,29 @@ feature {NONE} -- Object initialization
 			until
 				i > context.upper
 			loop
-				l_type := generic_dynamic_type (context.item (i).type, 1)
-				if l_type = dynamic_string_8_type then
-					if {l_string8_object: !STRING} context.item (i).attributes.item (1) then
-						l_object := l_string8_object
-					else
-						assert ("first attribute of a STRING_8 object must be a string", False)
-					end
-				elseif l_type = dynamic_string_32_type then
-					if {l_string32_object: !STRING} context.item (i).attributes.item (1) then
-						l_object := l_string32_object
-					else
-						assert ("first attribute of a STRING_32 object must be a string", False)
-					end
-				elseif is_special_type (l_type) then
-					l_object := create_special_object (l_type, context.item (i).attributes.count)
+				l_type := context.item (i).type
+				if {l_stype: TYPE [SPECIAL [ANY]]} l_type then
+					l_object := create_special_object (l_stype, context.item (i).attributes.count)
 				else
-					if {l_any: !ANY} new_instance_of (l_type) then
-						l_object := l_any
+					if {l_s8type: TYPE [STRING]} l_type then
+						if {l_string8_object: !STRING} context.item (i).attributes.item (1) then
+							l_object := l_string8_object
+						else
+							assert ("first attribute of a STRING_8 object must be a string", False)
+						end
+					elseif {l_s32type: TYPE [STRING_32]} l_type then
+						if {l_string32_object: !STRING_32} context.item (i).attributes.item (1) then
+							l_object := l_string32_object
+						else
+							assert ("first attribute of a STRING_32 object must be a string", False)
+						end
 					else
-						assert ("objects of type " + type_name_of_type (l_type) + " are not supported", False)
+						l_gtype := generic_dynamic_type (context.item (i).type, 1)
+						if {l_any: !ANY} new_instance_of (l_gtype) then
+							l_object := l_any
+						else
+							assert ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
+						end
 					end
 				end
 				object_cache.put (l_object, i)
@@ -237,7 +299,11 @@ feature {NONE} -- Object initialization
 				l_object := object_cache.item (i)
 				if not ({l_s8: !STRING_8} l_object or {l_s32: !STRING_32} l_object) then
 					if {l_special_object: !SPECIAL [ANY]} l_object then
-						set_special_attributes (l_special_object, context.item (i).attributes)
+						if is_valid_item_tuple (l_special_object, context.item (i).attributes) then
+							set_special_attributes (l_special_object, context.item (i).attributes)
+						else
+							assert ("all items of a special object must be of the same type", False)
+						end
 					elseif {l_tuple_object: !TUPLE} l_object then
 							-- First item of `an_attribute_list' describes whether
 							-- `a_tuple' shall compare objects and not references
@@ -273,46 +339,57 @@ feature {NONE} -- Object initialization
 			object_cache_loaded: is_cache_loaded
 		end
 
-	create_special_object (a_type, a_count: INTEGER): !SPECIAL [ANY] is
+	create_special_object (a_special: !TYPE [SPECIAL [ANY]]; a_count: INTEGER): !SPECIAL [ANY] is
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
-			a_type_valid: is_special_type (a_type)
+			a_count_not_negative: a_count >= 0
 		local
-			l_gtype: INTEGER
+			l_type: INTEGER
+			l_result: like create_special_object
 		do
-			l_gtype := generic_dynamic_type_of_type (a_type, 1)
-			if is_special_any_type (a_type) then
-				Result ?= new_special_any_instance (a_type, a_count)
-			elseif l_gtype = dynamic_boolean_type then
+			if {l_b_special: TYPE [SPECIAL [BOOLEAN]]} a_special then
 				Result := create {SPECIAL [BOOLEAN]}.make (a_count)
-			elseif l_gtype = dynamic_character_8_type then
+			elseif {l_c8_special: TYPE [SPECIAL [CHARACTER_8]]} a_special then
 				Result := create {SPECIAL [CHARACTER_8]}.make (a_count)
-			elseif l_gtype = dynamic_character_32_type then
+			elseif {l_c32_special: TYPE [SPECIAL [CHARACTER_32]]} a_special then
 				Result := create {SPECIAL [CHARACTER_32]}.make (a_count)
-			elseif l_gtype = dynamic_integer_8_type then
+			elseif {l_i8_special: TYPE [SPECIAL [INTEGER_8]]} a_special then
 				Result := create {SPECIAL [INTEGER_8]}.make (a_count)
-			elseif l_gtype = dynamic_integer_16_type then
+			elseif {l_i16_special: TYPE [SPECIAL [INTEGER_16]]} a_special then
 				Result := create {SPECIAL [INTEGER_16]}.make (a_count)
-			elseif l_gtype = dynamic_integer_32_type then
+			elseif {l_i32_special: TYPE [SPECIAL [INTEGER_32]]} a_special then
 				Result := create {SPECIAL [INTEGER_32]}.make (a_count)
-			elseif l_gtype = dynamic_integer_64_type then
+			elseif {l_i64_special: TYPE [SPECIAL [INTEGER_64]]} a_special then
 				Result := create {SPECIAL [INTEGER_64]}.make (a_count)
-			elseif l_gtype = dynamic_natural_8_type then
+			elseif {l_n8_special: TYPE [SPECIAL [NATURAL_8]]} a_special then
 				Result := create {SPECIAL [NATURAL_8]}.make (a_count)
-			elseif l_gtype = dynamic_natural_16_type then
+			elseif {l_n16_special: TYPE [SPECIAL [NATURAL_16]]} a_special then
 				Result := create {SPECIAL [NATURAL_16]}.make (a_count)
-			elseif l_gtype = dynamic_natural_32_type then
+			elseif {l_n32_special: TYPE [SPECIAL [NATURAL_32]]} a_special then
 				Result := create {SPECIAL [NATURAL_32]}.make (a_count)
-			elseif l_gtype = dynamic_natural_64_type then
+			elseif {l_n64_special: TYPE [SPECIAL [NATURAL_64]]} a_special then
 				Result := create {SPECIAL [NATURAL_64]}.make (a_count)
-			elseif l_gtype = dynamic_real_32_type then
+			elseif {l_r_special: TYPE [SPECIAL [REAL]]} a_special then
 				Result := create {SPECIAL [REAL]}.make (a_count)
-			elseif l_gtype = dynamic_real_64_type then
+			elseif {l_d_special: TYPE [SPECIAL [DOUBLE]]} a_special then
 				Result := create {SPECIAL [DOUBLE]}.make (a_count)
-			elseif l_gtype = dynamic_pointer_type then
+			elseif {l_p_special: TYPE [SPECIAL [POINTER]]} a_special then
 				Result := create {SPECIAL [POINTER]}.make (a_count)
 			else
-				assert ("special type not supported", False)
+
+					-- TYPE [SPECIAL [ANY]]
+					--       ^
+				l_type := generic_dynamic_type (a_special, 1)
+
+				if l_type >= 0 and then is_special_any_type (l_type) then
+					if {l_special: like create_special_object} new_special_any_instance (l_type, a_count) then
+						l_result := l_special
+					end
+				else
+					assert ("special type not supported", False)
+				end
+				check l_result /= Void end
+				Result := l_result
 			end
 		end
 
@@ -513,6 +590,8 @@ feature {NONE} -- Object initialization
 
 	set_special_attributes (a_special: !SPECIAL [ANY]; an_attributes: !TUPLE) is
 			-- Assign items of `an_attributes' to items of `a_special'.
+		require
+			attributes_uniform: is_valid_item_tuple (a_special, an_attributes)
 		local
 			i, l_type, l_gtype: INTEGER
 			l_obj: !ANY
@@ -529,66 +608,53 @@ feature {NONE} -- Object initialization
 			l_n64_special: SPECIAL [NATURAL_64]
 			l_r_special: SPECIAL [REAL]
 			l_d_special: SPECIAL [DOUBLE]
+			l_p_special: SPECIAL [POINTER]
 		do
-			l_gtype := generic_dynamic_type (a_special, 1)
-			if is_special_any_type (dynamic_type (a_special)) then
-				l_type := reference_type
+			if {l_s_b: SPECIAL [BOOLEAN]} a_special then
+				l_b_special := l_s_b
+				l_type := boolean_type
+			elseif {l_s_c8: SPECIAL [CHARACTER_8]} a_special then
+				l_c8_special := l_s_c8
+				l_type := character_8_type
+			elseif {l_s_c32: SPECIAL [CHARACTER_32]} a_special then
+				l_c32_special := l_s_c32
+				l_type := character_32_type
+			elseif {l_s_i8: SPECIAL [INTEGER_8]} a_special then
+				l_i8_special := l_s_i8
+				l_type := integer_8_type
+			elseif {l_s_i16: SPECIAL [INTEGER_16]} a_special then
+				l_i16_special := l_s_i16
+				l_type := integer_16_type
+			elseif {l_s_i32: SPECIAL [INTEGER_32]} a_special then
+				l_i32_special := l_s_i32
+				l_type := integer_32_type
+			elseif {l_s_i64: SPECIAL [INTEGER_64]} a_special then
+				l_i64_special := l_s_i64
+				l_type := integer_64_type
+			elseif {l_s_n8: SPECIAL [NATURAL_8]} a_special then
+				l_n8_special := l_s_n8
+				l_type := natural_8_type
+			elseif {l_s_n16: SPECIAL [NATURAL_16]} a_special then
+				l_n16_special := l_s_n16
+				l_type := natural_16_type
+			elseif {l_s_n32: SPECIAL [NATURAL_32]} a_special then
+				l_n32_special := l_s_n32
+				l_type := natural_32_type
+			elseif {l_s_n64: SPECIAL [NATURAL_64]} a_special then
+				l_n64_special := l_s_n64
+				l_type := natural_64_type
+			elseif {l_s_r: SPECIAL [REAL]} a_special then
+				l_r_special := l_s_r
+				l_type := real_type
+			elseif {l_s_d: SPECIAL [DOUBLE]} a_special then
+				l_d_special := l_s_d
+				l_type := double_type
+			elseif {l_s_p: SPECIAL [POINTER]} a_special then
+				l_p_special := l_s_p
+				l_type := pointer_type
 			else
-				if l_gtype = dynamic_boolean_type then
-					l_b_special ?= a_special
-					check not_void: l_b_special /= Void end
-					l_type := boolean_type
-				elseif l_gtype = dynamic_character_8_type then
-					l_c8_special ?= a_special
-					check not_void: l_c8_special /= Void end
-					l_type := character_8_type
-				elseif l_gtype = dynamic_character_32_type then
-					l_c32_special ?= a_special
-					check not_void: l_c32_special /= Void end
-					l_type := character_32_type
-				elseif l_gtype = dynamic_integer_8_type then
-					l_i8_special ?= a_special
-					check not_void: l_i8_special /= Void end
-					l_type := integer_8_type
-				elseif l_gtype = dynamic_integer_16_type then
-					l_i16_special ?= a_special
-					check not_void: l_i16_special /= Void end
-					l_type := integer_16_type
-				elseif l_gtype = dynamic_integer_32_type then
-					l_i32_special ?= a_special
-					check not_void: l_i32_special /= Void end
-					l_type := integer_32_type
-				elseif l_gtype = dynamic_integer_64_type then
-					l_i64_special ?= a_special
-					check not_void: l_i64_special /= Void end
-					l_type := integer_64_type
-				elseif l_gtype = dynamic_natural_8_type then
-					l_n8_special ?= a_special
-					check not_void: l_n8_special /= Void end
-					l_type := natural_8_type
-				elseif l_gtype = dynamic_natural_16_type then
-					l_n16_special ?= a_special
-					check not_void: l_n16_special /= Void end
-					l_type := natural_16_type
-				elseif l_gtype = dynamic_natural_32_type then
-					l_n32_special ?= a_special
-					check not_void: l_n32_special /= Void end
-					l_type := natural_32_type
-				elseif l_gtype = dynamic_natural_64_type then
-					l_n64_special ?= a_special
-					check not_void: l_n64_special /= Void end
-					l_type := natural_64_type
-				elseif l_gtype = dynamic_real_32_type then
-					l_r_special ?= a_special
-					check not_void: l_r_special /= Void end
-					l_type := real_type
-				elseif l_gtype = dynamic_real_64_type then
-					l_d_special ?= a_special
-					check not_void: l_d_special /= Void end
-					l_type := double_type
-				elseif l_gtype = dynamic_pointer_type then
-					l_type := pointer_type
-				end
+				l_type := reference_type
+				l_gtype := generic_dynamic_type (a_special, 1)
 			end
 
 			from
@@ -599,7 +665,7 @@ feature {NONE} -- Object initialization
 				inspect
 					l_type
 				when reference_type then
-					if an_attributes.is_reference_item (i) and then {l_id: !STRING} an_attributes.reference_item (i) then
+					if {l_id: !STRING} an_attributes.reference_item (i) then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if type_conforms_to (dynamic_type (l_obj), l_gtype) then
@@ -608,59 +674,47 @@ feature {NONE} -- Object initialization
 						end
 					end
 				when boolean_type then
-					if an_attributes.is_boolean_item (i) then
-						l_b_special.put (an_attributes.boolean_item (i), i-1)
-					end
+					check l_b_special /= Void end
+					l_b_special.put (an_attributes.boolean_item (i), i-1)
 				when character_8_type then
-					if an_attributes.is_character_8_item (i) then
-						l_c8_special.put (an_attributes.character_8_item (i), i-1)
-					end
+					check l_c8_special /= Void end
+					l_c8_special.put (an_attributes.character_8_item (i), i-1)
 				when character_32_type then
-					if an_attributes.is_character_32_item (i) then
-						l_c32_special.put (an_attributes.character_32_item (i), i-1)
-					end
+					check l_c32_special /= Void end
+					l_c32_special.put (an_attributes.character_32_item (i), i-1)
 				when integer_8_type then
-					if an_attributes.is_integer_8_item (i) then
-						l_i8_special.put (an_attributes.integer_8_item (i), i-1)
-					end
+					check l_i8_special /= Void end
+					l_i8_special.put (an_attributes.integer_8_item (i), i-1)
 				when integer_16_type then
-					if an_attributes.is_integer_16_item (i) then
-						l_i16_special.put (an_attributes.integer_16_item (i), i-1)
-					end
+					check l_i16_special /= Void end
+					l_i16_special.put (an_attributes.integer_16_item (i), i-1)
 				when integer_32_type then
-					if an_attributes.is_integer_32_item (i) then
-						l_i32_special.put (an_attributes.integer_32_item (i), i-1)
-					end
+					check l_i32_special /= Void end
+					l_i32_special.put (an_attributes.integer_32_item (i), i-1)
 				when integer_64_type then
-					if an_attributes.is_integer_64_item (i) then
-						l_i64_special.put (an_attributes.integer_64_item (i), i-1)
-					end
+					check l_i64_special /= Void end
+					l_i64_special.put (an_attributes.integer_64_item (i), i-1)
 				when natural_8_type then
-					if an_attributes.is_natural_8_item (i) then
-						l_n8_special.put (an_attributes.natural_8_item (i), i-1)
-					end
+					check l_n8_special /= Void end
+					l_n8_special.put (an_attributes.natural_8_item (i), i-1)
 				when natural_16_type then
-					if an_attributes.is_natural_16_item (i) then
-						l_n16_special.put (an_attributes.natural_16_item (i), i-1)
-					end
+					check l_n16_special /= Void end
+					l_n16_special.put (an_attributes.natural_16_item (i), i-1)
 				when natural_32_type then
-					if an_attributes.is_natural_32_item (i) then
-						l_n32_special.put (an_attributes.natural_32_item (i), i-1)
-					end
+					check l_n32_special /= Void end
+					l_n32_special.put (an_attributes.natural_32_item (i), i-1)
 				when natural_64_type then
-					if an_attributes.is_natural_64_item (i) then
-						l_n64_special.put (an_attributes.natural_64_item (i), i-1)
-					end
-				when real_32_type then
-					if an_attributes.is_real_item (i) then
-						l_r_special.put (an_attributes.real_32_item (i), i-1)
-					end
-				when real_64_type then
-					if an_attributes.is_double_item (i) then
-						l_d_special.put (an_attributes.real_64_item (i), i-1)
-					end
+					check l_n64_special /= Void end
+					l_n64_special.put (an_attributes.natural_64_item (i), i-1)
+				when real_type then
+					check l_r_special /= Void end
+					l_r_special.put (an_attributes.real_32_item (i), i-1)
+				when double_type then
+					check l_d_special /= Void end
+					l_d_special.put (an_attributes.real_64_item (i), i-1)
 				when pointer_type then
-						-- Do nothing. I.e. leave the tuple item at the default value.
+					check l_p_special /= Void end
+					l_p_special.put (an_attributes.pointer_item (i), i-1)
 				end
 				i := i + 1
 			end

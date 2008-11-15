@@ -44,12 +44,9 @@ feature -- Status report
 			-- which is defined in this store.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			variable: ITP_VARIABLE
 		do
-			variable ?= an_expression
-			if variable /= Void then
-				Result := is_variable_defined (variable.index)
+			if {l_variable: ITP_VARIABLE} an_expression then
+				Result := is_variable_defined (l_variable.index)
 			else
 				Result := True
 			end
@@ -73,19 +70,15 @@ feature -- Access
 		require
 			an_expression_not_void: an_expression /= Void
 			an_expression_defined: is_expression_defined (an_expression)
-		local
-			variable: ITP_VARIABLE
-			constant: ITP_CONSTANT
 		do
-			variable ?= an_expression
-			if variable /= Void then
-				Result := variable_value (variable.index)
+			if {l_variable: ITP_VARIABLE} an_expression then
+				Result := variable_value (l_variable.index)
+			elseif {l_constant: ITP_CONSTANT} an_expression then
+				Result := l_constant.value
 			else
-				constant ?= an_expression
-					check
-						constant_not_void: constant /= Void
-					end
-				Result := constant.value
+				check
+					type_not_supported: False
+				end
 			end
 		end
 

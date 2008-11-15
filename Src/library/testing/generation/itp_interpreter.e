@@ -124,7 +124,7 @@ feature {NONE} -- Handlers
 			l_store: like store
 			l_type: STRING
 		do
-			l_obj_index ?= last_request.data
+			l_obj_index := last_request.data
 			if l_obj_index /= Void then
 				log_message ("report_type_request start%N")
 				l_index := l_obj_index.to_integer
@@ -175,7 +175,7 @@ feature {NONE} -- Handlers
 		local
 			l_byte_code: STRING
 		do
-			l_byte_code ?= last_request.data
+			l_byte_code := last_request.data
 			if l_byte_code /= Void then
 				if l_byte_code.count = 0 then
 					report_error (byte_code_length_error)

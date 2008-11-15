@@ -1,6 +1,6 @@
 class TEST
 
-creation
+create
 	make
 
 feature

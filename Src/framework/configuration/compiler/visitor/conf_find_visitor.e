@@ -80,17 +80,11 @@ feature -- Visiting
 
 	process_group (a_group: CONF_GROUP)
 			-- <Precursor>
-		local
-			l_group: G
 		do
-				-- TODO: use object test after bug #14696 has been fixed
-			l_group ?= a_group
-			if l_group /= Void then
-				if is_matching (l_group) then
-					found_groups.force (l_group)
-				end
+			if {l_group: G} a_group and then is_matching (l_group) then
+				found_groups.force (l_group)
 			end
-	end
+		end
 
 	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>

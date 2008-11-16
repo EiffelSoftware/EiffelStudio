@@ -11,11 +11,6 @@ class
 inherit
 	ANY
 
-	KL_SHARED_STRING_EQUALITY_TESTER
-		export
-			{NONE} all
-		end
-
 create {TEST_PROJECT_I}
 	make
 
@@ -33,7 +28,7 @@ feature {NONE} -- Initialization
 			identifier.append (l_classname)
 			identifier.append (l_filename)
 			create internal_names.make_default
-			internal_names.set_equality_tester ({!KL_EQUALITY_TESTER [!STRING]} #? string_equality_tester)
+			internal_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 		end
 
 feature -- Access
@@ -50,7 +45,7 @@ feature -- Access
 			Result := internal_names
 		ensure
 			results_not_empty: not Result.there_exists (agent {!STRING}.is_empty)
-			correct_equality_tester: Result.equality_tester = string_equality_tester
+			correct_equality_tester: {l_tester: KL_STRING_EQUALITY_TESTER_A [!STRING]} Result.equality_tester /= Void
 		end
 
 feature {TEST_PROJECT_I} -- Access

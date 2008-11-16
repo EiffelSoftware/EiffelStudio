@@ -14,8 +14,6 @@ inherit
 
 	TEST_MEMENTO_I
 
-	KL_SHARED_STRING_EQUALITY_TESTER
-
 create {TEST_PROJECT_I}
 	make
 
@@ -264,7 +262,7 @@ feature {EIFFEL_TEST_MEMENTO} -- Factory
 			-- Create new {DS_HASH_SET [!STRING]} with capacity `n' using a string equality tester.
 		do
 			create Result.make (a_count.to_integer_32)
-			Result.set_equality_tester ({KL_EQUALITY_TESTER [!STRING]} #? string_equality_tester)
+			Result.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 		end
 
 feature {NONE} -- Implementation

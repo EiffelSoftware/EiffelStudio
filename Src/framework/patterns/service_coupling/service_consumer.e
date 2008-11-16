@@ -49,18 +49,15 @@ feature -- Access
 		require
 			is_service_available: is_service_available
 		local
-			l_service: ?G
+			l_service: G
 		do
-				-- Object-test not used for performance reasons
-			l_service := internal_service
-			if l_service = Void then
+			if {l_internal_service: G} internal_service then
+				Result := l_internal_service
+			else
 				l_service ?= service_provider.service ({G})
 				check l_service_attached: l_service /= Void end
-
-				Result ?= l_service
+				Result := l_service
 				internal_service := Result
-			else
-				Result ?= l_service
 			end
 		end
 

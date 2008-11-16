@@ -24,7 +24,7 @@ feature -- Directories
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		once
-			Result ?= config_path.twin
+			Result := config_path.twin
 			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
 		ensure
 			not_result_is_empty: not Result.is_empty

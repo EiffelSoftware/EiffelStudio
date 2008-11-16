@@ -10,7 +10,7 @@
 rm -rf PorterPackage
 
 # Let's create all packages
-echo "\n" | /bin/sh make_delivery $1
+echo "\n" | /bin/sh make_delivery $1 no_doc
 
 # Let's keep an archive of this package
 if [ ! -f PorterPackage_all.tar ]; then

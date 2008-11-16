@@ -581,7 +581,7 @@ feature {NONE} -- Visitors
 			else
 				l_call := a_node.call
 				if l_call /= Void and then l_call.routine_id = system.special_make_rout_id then
-					l_special_type := context.creation_type (a_node.type)
+					l_special_type := context.real_type (a_node.type)
 					check
 						is_special_call_valid: a_node.is_special_call_valid
 						is_special_type: l_special_type /= Void and then
@@ -1314,7 +1314,7 @@ feature {NONE} -- Visitors
 		do
 				-- Generate expression byte code
 			l_source_type := context.real_type (a_node.expression.type)
-			l_target_type := context.creation_type (a_node.target.type)
+			l_target_type := context.real_type (a_node.target.type)
 
 			make_expression_byte_code_for_type (a_node.expression, l_target_type)
 
@@ -1641,14 +1641,14 @@ feature {NONE} -- Visitors
 	process_type_expr_b (a_node: TYPE_EXPR_B) is
 			-- Process `a_node'.
 		local
-			l_type_creator: CREATE_TYPE
+			l_type_creator: CREATE_INFO
 		do
 			fixme ("Instance should be unique.")
 			ba.append (Bc_create)
 				-- There is no feature call:
 			ba.append_boolean (False)
 
-			create l_type_creator.make (context.real_type (a_node.type_data))
+			l_type_creator := context.real_type (a_node.type_data).create_info
 			l_type_creator.make_byte_code (ba)
 
 				-- Runtime is in charge to make sure that newly created object

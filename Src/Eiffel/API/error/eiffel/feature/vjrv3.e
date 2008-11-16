@@ -1,35 +1,22 @@
 indexing
-	description: "Error for invalid reverse assignment attempt."
+	description: "Error for invalid reverse assignment attempt on attached entities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VJRV1
+	VJRV3
 
 inherit
-	COMPILER_WARNING
-		undefine
-			has_associated_file,
-			is_defined,
-			trace,
-			trace_primary_context,
-			process
-		redefine
-			subcode
-		end
-
 	VJRV
-		undefine
-			error_string
 		redefine
 			subcode
 		end
 
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER is 3;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -63,4 +50,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VJRV1
+end

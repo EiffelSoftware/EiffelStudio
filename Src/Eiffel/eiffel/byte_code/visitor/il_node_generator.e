@@ -2452,19 +2452,12 @@ feature {NONE} -- Visitors
 		do
 				-- Get types
 			l_target_type := a_node.target.type
-			if l_target_type.is_formal then
-				l_target_type := context.creation_type (l_target_type)
-			end
+			l_target_type := context.real_type (l_target_type)
 			l_source_type := context.real_type (a_node.expression.type)
 			check
 				target_type_not_void: l_target_type /= Void
 				source_type_not_void: l_source_type /= Void
 			end
-
-				-- FIXME: At the moment we don't know how to
-				-- find out the real type of the generic
-				-- parameter, so we cheat.
-			l_target_type := context.real_type (l_target_type)
 
 				-- Generate expression byte code
 			is_object_load_required := True
@@ -2656,19 +2649,12 @@ feature {NONE} -- Visitors
 
 				-- Get types
 			l_target_type := a_node.target.type
-			if l_target_type.is_formal then
-				l_target_type := context.creation_type (l_target_type)
-			end
+			l_target_type := context.real_type (l_target_type)
 			l_source_type := context.real_type (a_node.source.type)
 			check
 				target_type_not_void: l_target_type /= Void
 				source_type_not_void: l_source_type /= Void
 			end
-
-				-- FIXME: At the moment we don't know how to
-				-- find out the real type of the generic
-				-- parameter, so we cheat.
-			l_target_type := context.real_type (l_target_type)
 
 				-- Generate expression byte code
 			is_object_load_required := True
@@ -2943,14 +2929,14 @@ feature {NONE} -- Visitors
 	process_type_expr_b (a_node: TYPE_EXPR_B) is
 			-- Process `a_node'.
 		local
-			l_type_creator: CREATE_TYPE
+			l_type_creator: CREATE_INFO
 		do
 			if a_node.is_dotnet_type then
 				il_generator.put_type_instance (
 					context.real_type (a_node.type_data.generics.item (1)))
 			else
 				fixme ("Instance should be unique.")
-				create l_type_creator.make (context.real_type (a_node.type_data))
+				l_type_creator := context.real_type (a_node.type_data).create_info
 				l_type_creator.generate_il
 			end
 

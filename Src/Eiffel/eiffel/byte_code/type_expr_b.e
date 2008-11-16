@@ -131,11 +131,11 @@ feature -- C code generation
 			-- Generate the type
 		local
 			buf: GENERATION_BUFFER
-			l_type_creator: CREATE_TYPE
+			l_type_creator: CREATE_INFO
 		do
 			fixme ("Instance should be unique.")
 			buf := buffer
-			create l_type_creator.make (context.real_type (type_data))
+			l_type_creator := context.real_type (type_data).create_info
 			l_type_creator.generate_start (buf)
 			l_type_creator.generate_gen_type_conversion (0)
 			buf.put_new_line

@@ -691,8 +691,8 @@ feature -- Byte code generation
 				local_list.after
 			loop
 				l_type := local_list.item
-				Temp_byte_code_array.append_integer (l_type.sk_value (context.context_class_type.type))
 				l_adapted_type := context.real_type (l_type)
+				Temp_byte_code_array.append_integer (l_adapted_type.sk_value (context.context_class_type.type))
 				if l_adapted_type.is_true_expanded and then not l_adapted_type.is_bit then
 						-- Generate full type info.
 					l_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)

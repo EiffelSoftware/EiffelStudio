@@ -2191,7 +2191,7 @@ feature -- Access
 				until
 					i > l.upper
 				loop
-					add_local (real_type (l [i]))
+					add_local (l [i])
 					i := i + 1
 				end
 			end

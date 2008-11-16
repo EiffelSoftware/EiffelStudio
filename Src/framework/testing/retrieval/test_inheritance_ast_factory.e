@@ -17,8 +17,6 @@ inherit
 			new_parent_as
 		end
 
-	KL_SHARED_STRING_EQUALITY_TESTER
-
 create
 	make
 

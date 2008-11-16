@@ -254,9 +254,9 @@ feature
 					end
 				end
 			else
-				buf.put_string ("RTRV(")
+				buf.put_string ("RTRV(eif_non_attached_type(")
 				info.generate_type_id (buf, l_context.final_mode, 0)
-
+				buf.put_character (')')
 				buf.put_string (gc_comma)
 				source_print_register
 				buf.put_character (')')

@@ -8,18 +8,7 @@ indexing
 deferred class VJRV
 
 inherit
-	COMPILER_WARNING
-		undefine
-			has_associated_file,
-			is_defined,
-			trace,
-			trace_primary_context,
-			process
-		end
-
 	FEATURE_ERROR
-		undefine
-			error_string
 		redefine
 			build_explain
 		end

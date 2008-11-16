@@ -52,7 +52,7 @@ feature -- C code generation
 			target.analyze
 			info.analyze
 			source_type := context.real_type (expression.type)
-			target_type := context.creation_type (target.type)
+			target_type := context.real_type (target.type)
 			if not target_type.is_expanded or else target_type.is_basic and then source_type.is_basic then
 				register := target
 			elseif source_type.is_reference then
@@ -257,9 +257,9 @@ feature -- C code generation
 							info.generate_start (buf)
 							info.generate_gen_type_conversion (0)
 							target.print_register
-							buf.put_string (" = RTRV(")
+							buf.put_string (" = RTRV(eif_non_attached_type(")
 							info.generate_type_id (buf, context.final_mode, 0)
-							buf.put_string (gc_comma)
+							buf.put_two_character (')', ',')
 							if source_type.is_expanded then
 								register.print_register
 							else

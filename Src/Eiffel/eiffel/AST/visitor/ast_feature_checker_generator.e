@@ -5257,6 +5257,7 @@ feature -- Implementation
 			l_formal: FORMAL_A
 			l_vjrv1: VJRV1
 			l_vjrv2: VJRV2
+			l_vjrv3: VJRV3
 			l_attribute: ATTRIBUTE_B
 			l_create_info: CREATE_INFO
 			l_reinitialized_local: like last_reinitialized_local
@@ -5313,6 +5314,15 @@ feature -- Implementation
 							l_vjrv1.set_location (l_as.target.end_location)
 							error_handler.insert_warning (l_vjrv1)
 						end
+					elseif l_target_type.is_attached then
+							-- Allowing assignment attempts on attached entities does not make sense
+							-- since we cannot guarantee that the entity will not be Void after.
+						create l_vjrv3
+						context.init_error (l_vjrv3)
+						l_vjrv3.set_target_name (l_as.target.access_name)
+						l_vjrv3.set_target_type (l_target_type)
+						l_vjrv3.set_location (l_as.target.end_location)
+						error_handler.insert_error (l_vjrv3)
 					elseif l_target_type.actual_type.is_formal then
 						l_formal ?= l_target_type.actual_type
 						check

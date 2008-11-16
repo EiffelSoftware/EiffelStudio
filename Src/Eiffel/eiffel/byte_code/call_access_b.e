@@ -86,6 +86,7 @@ feature -- Byte code generation
 	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
 			-- Make byte code for special calls.
 		do
+			special_routines.make_byte_code (ba, basic_type)
 		end
 
 	real_feature_id (a_context_type: CL_TYPE_A): INTEGER is

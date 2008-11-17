@@ -178,20 +178,21 @@ feature -- Util
 			else
 				print ("%NError: tcf file not exists in dir: " + a_dir)
 			end
-
 		end
 
-	convert_all_tcf_in (a_dir: STRING; a_output_file: STRING) is
+	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING) is
 			-- Convert all tcf files in `a_dir'
 			-- This feature will place all tests under a dir to one Eiffel testing class
 		require
 			not_void: a_dir /= Void
 			is_dir_exists: is_dir_exists (a_dir)
-			not_void: a_output_file /= Void
+			not_void: a_output_file_path /= Void
+			not_void: a_output_file_prefix /= Void
 		local
 			l_dir: DIRECTORY
 			l_list: ARRAYED_LIST [STRING_8]
 			l_dir_name: DIRECTORY_NAME
+			l_current_test_prefix: STRING
 		do
 			create l_dir.make (a_dir)
 			l_dir.open_read
@@ -202,19 +203,30 @@ feature -- Util
 				l_list := l_dir.linear_representation
 
 				l_list.start
+				last_test_prefix := test_case_prefix (l_list.item)
 			until
 				l_list.after
 			loop
 				create l_dir_name.make_from_string (a_dir)
 				l_dir_name.extend (l_list.item)
 
+				l_current_test_prefix := test_case_prefix (l_list.item)
+				if not last_test_prefix.is_equal (l_current_test_prefix) and converter.is_flush_needed then
+					check first_time_must_pass: l_list.index /= 1 end
+					converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), a_output_file_prefix + "_" + last_test_prefix)
+					last_test_prefix := l_current_test_prefix
+				end
+				last_test_prefix := l_current_test_prefix
+
 				convert_tcf_in_folder (l_dir_name, l_list.item)
 
 				l_list.forth
 			end
 
-			converter.flush_to_output_file (a_output_file)
-
+			if converter.is_flush_needed then
+				-- We flush last one
+				converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), a_output_file_prefix + "_" + last_test_prefix)
+			end
 		end
 
 feature -- Command
@@ -347,6 +359,51 @@ feature {NONE} -- Implementation
 
 	converter: EW_EQA_TEST_EWEASEL_TCF_CONVERTER
 			-- For convert all tests under a folder
+
+	file_name (a_output_file_path: STRING; a_output_file_prefix: STRING; a_test_prefix: STRING): FILE_NAME
+			-- Join `a_output_file_path', `a_output_file_prefix' and `a_test_prefix' as a file name
+		require
+			not_void: a_output_file_path /= Void
+			not_void: a_output_file_prefix /= Void
+			not_void: a_test_prefix /= Void
+		do
+			create Result.make_from_string (a_output_file_path)
+			Result.set_file_name (a_output_file_prefix + "_" + a_test_prefix + ".e")
+		ensure
+			not_void: Result /= Void
+		end
+
+	test_case_prefix (a_full_test_case_name: STRING): STRING
+			-- Find test case prefix in `a_full_test_case_name'
+		require
+			not_void: a_full_test_case_name /= Void
+		local
+			l_integer: STRING
+			l_count: INTEGER
+			l_char: CHARACTER
+		do
+			-- We find digit here
+			from
+				l_count := 1
+				create Result.make_empty
+			until
+				l_count > a_full_test_case_name.count
+			loop
+				l_char := a_full_test_case_name.item (l_count)
+				if not l_char.is_digit then
+					Result.append_character (l_char)
+				end
+
+				l_count := l_count + 1
+			end
+
+		ensure
+			not_void: Result /= Void
+		end
+
+	last_test_prefix: STRING
+			-- Last test case prefix
+			-- Maybe void if not set
 
 ;indexing
 	copyright: "[

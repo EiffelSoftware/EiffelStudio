@@ -3009,10 +3009,12 @@ rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **
 	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
 		result = old_attribute_type_matched (gtype, atype);
 	} else {
-		while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+		while ((result) && (RT_HAS_ANNOTATION_TYPE(dftype))) {
 			result = (aftype == dftype);
 			*gtype +=1;
 			*atype +=1;
+			dftype = **gtype;
+			aftype = **atype;
 		}
 		if (result) {
 			if (dftype == TUPLE_TYPE) {

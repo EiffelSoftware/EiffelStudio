@@ -49,6 +49,16 @@ inherit
 			{NONE} all
 		end
 
+	CONF_ACCESS
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_GRAPHICAL_COMMANDS
+		export
+			{NONE} all
+		end
+
 create {ES_TESTING_TOOL_63}
 	make
 
@@ -213,6 +223,12 @@ feature {NONE} -- Access
 
 	outcome_tab: !ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
+
+	library_prompt_cell: !CELL [BOOLEAN]
+			-- Cell containing status of library prompt
+		once
+			create Result
+		end
 
 feature {NONE} -- Access: widgets
 
@@ -472,6 +488,74 @@ feature {NONE} -- Status settings: widgets
 
 				if {l_tb: like right_tool_bar_widget} right_tool_bar_widget then
 					l_tb.compute_minimum_size
+				end
+			end
+		end
+
+feature {NONE} -- Events: wizard
+
+	on_launch_wizard
+			-- Called when user_widget click on `wizard_button'.
+		local
+			l_project: E_PROJECT
+			l_uuid: UUID
+			l_wizard: ES_TEST_WIZARD_MANAGER
+		do
+			if test_suite.is_service_available then
+				l_project := test_suite.service.eiffel_project
+				if test_suite.service.is_project_initialized then
+					create l_uuid.make_from_string (testing_library_uuid)
+					if l_project.universe.library_of_uuid (l_uuid, False).is_empty and not library_prompt_cell.item then
+						library_prompt_cell.put (True)
+						prompts.show_question_prompt_with_cancel (locale_formatter.translation (q_add_library), develop_window.window,
+								-- Yes action
+							agent (a_project: E_PROJECT)
+								local
+									l_location: CONF_FILE_LOCATION
+									l_factory: CONF_PARSE_FACTORY
+									l_library: CONF_LIBRARY
+									l_w: ES_TEST_WIZARD_MANAGER
+									l_system: CONF_SYSTEM
+									l_target: CONF_TARGET
+								do
+									l_target := a_project.universe.target
+									create l_factory
+									l_location := l_factory.new_location_from_full_path (testing_library_path, l_target)
+									l_library := l_factory.new_library ("testing", l_location, l_target)
+									l_library.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+									l_system := l_factory.new_system_generate_uuid ("temp")
+									l_system.set_application_target (l_target)
+									l_library.set_library_target (l_factory.new_target ("temp", l_system))
+									l_target.add_library (l_library)
+									l_target.system.store
+
+										-- Find added classes & compile
+									if discover_melt_cmd.executable then
+										discover_melt_cmd.execute
+									end
+
+										-- Launch wizard if compilation was successful
+									if a_project.successful then
+										create l_w.make (develop_window)
+									end
+								end (l_project),
+								-- No action
+							agent
+								local
+									l_w: ES_TEST_WIZARD_MANAGER
+								do
+									create l_w.make (develop_window)
+								end,
+								-- Cancel action
+							agent
+								do
+									library_prompt_cell.put (False)
+								end)
+					else
+						create l_wizard.make (develop_window)
+					end
+				else
+					prompts.show_error_prompt (locale_formatter.translation (e_project_not_compiled), develop_window.window, Void)
 				end
 			end
 		end
@@ -778,14 +862,14 @@ feature {NONE} -- Factory
 			create Result.make (5)
 
 			create wizard_button.make
-			wizard_button.set_pixmap (pixmaps.icon_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
-			wizard_button.set_pixel_buffer (pixmaps.icon_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0))
-			register_action (wizard_button.select_actions, agent
-				local
-					l_wizard: ES_TEST_WIZARD_MANAGER
-				do
-					create l_wizard.make (develop_window)
-				end)
+			wizard_button.set_pixmap (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
+			wizard_button.set_pixel_buffer (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0))
+			register_action (wizard_button.select_actions, agent on_launch_wizard)
+--				local
+--					l_wizard: ES_TEST_WIZARD_MANAGER
+--				do
+--					create l_wizard.make (develop_window)
+--				end)
 			Result.force_last (wizard_button)
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
@@ -906,31 +990,37 @@ feature {NONE} -- Factory
 			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 		end
 
-feature {NONE} -- Internationalization
+feature {NONE} -- Constants
 
-	f_run_button: STRING = "Run all tests in background"
-	f_debug_button: STRING = "Debug all tests in EiffelStudio"
-	f_stop_button: STRING = "Stop all execution"
-	tt_clear_filter: STRING = "Clear filter"
+	f_run_button: !STRING = "Run all tests in background"
+	f_debug_button: !STRING = "Debug all tests in EiffelStudio"
+	f_stop_button: !STRING = "Stop all execution"
+	tt_clear_filter: !STRING = "Clear filter"
 
-	m_run_all: STRING = "Run all"
-	m_run_failing: STRING = "Run failing"
-	m_run_filtered: STRING = "Run filtered"
-	m_run_selected: STRING = "Run selected"
-	m_debug_all: STRING = "Debug all"
-	m_debug_failing: STRING = "Debug failing"
-	m_debug_filtered: STRING = "Debug filtered"
-	m_debug_selected: STRING = "Debug selected"
+	m_run_all: !STRING = "Run all"
+	m_run_failing: !STRING = "Run failing"
+	m_run_filtered: !STRING = "Run filtered"
+	m_run_selected: !STRING = "Run selected"
+	m_debug_all: !STRING = "Debug all"
+	m_debug_failing: !STRING = "Debug failing"
+	m_debug_filtered: !STRING = "Debug filtered"
+	m_debug_selected: !STRING = "Debug selected"
 
-	l_view: STRING = "View"
-	l_filter: STRING = "Filter"
-	l_outcome_view: STRING = "outcome"
-	l_filter_not_passing: STRING = "-outcome/passes"
+	l_view: !STRING = "View"
+	l_filter: !STRING = "Filter"
+	l_outcome_view: !STRING = "outcome"
+	l_filter_not_passing: !STRING = "-outcome/passes"
 
-	e_invalid_test_list: STRING = "Selected tests can not be executed. Make sure none of the selected tests are currently being tested."
-	e_executor_already_running: STRING = "Executor is already running tests."
-	e_executor_unavailable: STRING = "Executor is not available"
-	e_test_suite_unavailable: STRING = "Test suite service is not available"
+	q_add_library: !STRING = "The testing library has not been added yet. Would you like EiffelStudio to add the library and reccompile before launching the test wizard?"
+
+	e_invalid_test_list: !STRING = "Selected tests can not be executed. Make sure none of the selected tests are currently being tested."
+	e_executor_already_running: !STRING = "Executor is already running tests."
+	e_executor_unavailable: !STRING = "Executor is not available"
+	e_test_suite_unavailable: !STRING = "Test suite service is not available"
+	e_project_not_compiled: !STRING = "Please compile the project first"
+
+	testing_library_uuid: !STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
+	testing_library_path: !STRING = "$ISE_LIBRARY/library/testing/testing.ecf"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

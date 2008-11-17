@@ -1971,6 +1971,7 @@ test	full-void-safe-compilation						attach029 tcf fail void_safe
 test	attribute-init-code-generation-correct			attach030 tcf fail self_init incrementality melting
 test	parent-attribute-init							attach031 tcf fail self_init
 test	like-current-is-detached						attach032 tcf fail attached_types anchored_types system-validity
+test	attached-type-creation-internal					attach033 tcf pass attached_types
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

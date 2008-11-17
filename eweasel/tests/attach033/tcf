@@ -1,0 +1,15 @@
+test_name attached-type-creation-internal		
+test_description Using attachment mark to create types via INTERNAL should work.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+test_end

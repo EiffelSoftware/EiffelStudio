@@ -19,7 +19,8 @@ deferred class NETWORK_SOCKET inherit
 			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
-			make_socket, address, peer_address, is_valid_peer_address, connect
+			make_socket, address, peer_address, is_valid_peer_address, connect,
+			set_address, set_peer_address
 		end
 
 feature
@@ -203,6 +204,40 @@ feature -- Status setting
 		ensure
 			timeout_set: timeout = n or timeout = default_timeout
 		end
+feature
+
+	valid_family (addr: like address): BOOLEAN is
+			--
+		require
+			address_exists: addr /= Void
+		do
+			Result := (addr.family = af_inet or else addr.family = af_inet6)
+		end
+
+	set_peer_address (addr: like address) is
+			-- Set peer address to `addr'.
+		require else
+			address_exists: addr /= Void
+			valid_family: valid_family (addr)
+		do
+			-- This feature was redefined just to redefine the require clause
+			-- We can not compare addr.family because of the possibility
+			-- to use either ipv6 or ipv4 on the socket
+			peer_address := addr
+		end
+
+	set_address (addr: like address) is
+			-- Set local address to `addr'.
+		require else
+			address_exists: addr /= Void
+			valid_family: valid_family (addr)
+		do
+			-- This feature was redefined just to redefine the require clause
+			-- We can not compare addr.family because of the possibility
+			-- to use either ipv6 or ipv4 on the socket
+			address := addr
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -218,12 +253,14 @@ feature {NONE} -- Implementation
 
 	shutdown is
 		do
-			-- TODO
+			c_shutdown (fd, fd1)
 		end
 
 	fd: INTEGER
 
 	fd1: INTEGER
+
+	last_fd: INTEGER
 
 	the_port: INTEGER
 
@@ -265,6 +302,13 @@ feature {NONE} -- Externals
 								timeout_secs: INTEGER): INTEGER is
 		external
 			"C blocking"
+		end
+
+	c_shutdown (an_fd: INTEGER; an_fd1: INTEGER) is
+		external
+			"C blocking"
+		alias
+			"en_socket_shutdown"
 		end
 
 invariant

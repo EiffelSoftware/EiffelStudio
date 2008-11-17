@@ -18,13 +18,6 @@ inherit
 		rename
 			bind as socket_bind,
 			close as socket_close
-		undefine
-			put_character, putchar, put_string, putstring,
-			put_integer, putint, put_integer_32,
-			put_integer_8, put_integer_16, put_integer_64,
-			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
-			put_boolean, putbool,
-			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
 			send
 		end
@@ -49,7 +42,7 @@ feature -- Creation
 			-- Create a socket targeted to `peer_address'.
 		do
 			make
-			set_peer_address (a_peer_address)
+			connect_to_peer (a_peer_address)
 		end
 
 feature -- Basic operations
@@ -83,7 +76,7 @@ feature -- Status report
 
 feature -- Input
 
-	received (size: INTEGER; flags: INTEGER): DATAGRAM_PACKET is
+	received (size: INTEGER; flags: INTEGER): PACKET is
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		require
@@ -96,7 +89,7 @@ feature -- Input
 
 feature -- Output
 
-	send_to (a_packet: DATAGRAM_PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
+	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
 			-- Send `a_packet' to address `to_address'
 		require
 			socket_exists: exists;
@@ -106,7 +99,7 @@ feature -- Output
 		deferred
 		end
 
-	send (a_packet: DATAGRAM_PACKET; flags: INTEGER) is
+	send (a_packet: PACKET; flags: INTEGER) is
 			-- Send `a_packet' to address in `peer_address'.
 		do
 			send_to (a_packet, peer_address, flags)

@@ -330,3 +330,8 @@ void en_socket_close(int fd, int fd1) {
 	}
 
 }
+void en_socket_shutdown(int fd, int fd1) {
+	if (fd != -1) {
+		shutdown(fd, SHUT_RDWR);
+	}
+}

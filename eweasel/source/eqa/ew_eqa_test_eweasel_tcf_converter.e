@@ -24,20 +24,9 @@ inherit
 		end
 
 create
-	make,
 	make_default
 
 feature {NONE} -- Initialization
-
-	make (a_input_file, a_output_file: STRING) is
-			-- Creation method
-		require
-			not_void: a_input_file /= Void
-			not_void: a_output_file /= Void
-		do
-			convert_class_file (a_input_file, a_output_file)
-			prepare_catalog
-		end
 
 	make_default is
 			-- Creation method which do nothing
@@ -98,13 +87,15 @@ feature -- Command
 			end
 		end
 
-	flush_to_output_file (a_output_file: STRING) is
+	flush_to_output_file (a_output_file_name: STRING; a_class_name: STRING) is
 			-- Write `temp_converted' to `a_output_file'
 		require
-			not_void: a_output_file /= Void
+			not_void: a_output_file_name /= Void
+			not_void: a_class_name /= Void
+			needed: is_flush_needed
 		do
-			temp_converted := test_control_file_template_content (temp_converted)
-			write_content_to_template (temp_converted, a_output_file)
+			temp_converted := test_control_file_template_content (temp_converted, a_class_name.as_upper)
+			write_content_to_template (temp_converted, a_output_file_name)
 			temp_converted := Void
 		end
 
@@ -113,25 +104,31 @@ feature -- Query
 	is_ignore_non_exist_test_cases: BOOLEAN
 			-- If test case not found in catalog file, should we ignore it?
 
+	is_flush_needed: BOOLEAN
+			-- If `flush_to_output_file' needed?
+		do
+			Result := temp_converted /= Void and then not temp_converted.is_empty
+		end
+
 feature {NONE} -- Implementation
 
 	temp_converted: STRING
 			-- Temppoary converted testing instructions
 			-- Used by `append_one_test_routine' and `flush_to_output_file' only!
 
-	convert_class_file (a_input_file, a_output_file: STRING) is
+	convert_class_file (a_input_file, a_output_class_name: STRING) is
 				-- Convert an old eweasel testing instruction plain text file (`a_input_file') to
 				-- new style Eiffel class testing class file (`a_output_file')
 		require
 			not_void: a_input_file /= Void
-			not_void: a_output_file /= Void
+			not_void: a_output_class_name /= Void
 		local
 
 			l_converted: STRING
 		do
 			l_converted := convert_one_tcf (a_input_file, "start")
-			l_converted := test_control_file_template_content (l_converted)
-			write_content_to_template (l_converted, a_output_file)
+			l_converted := test_control_file_template_content (l_converted, a_output_class_name)
+			write_content_to_template (l_converted, a_output_class_name + ".e")
 		end
 
 	convert_one_tcf (a_input_file: STRING; a_routine_name: STRING): STRING is
@@ -218,10 +215,11 @@ feature {NONE} -- Implementation
 	control_file: EW_EQA_TEST_CONTROL_FILE
 			--
 
-	test_control_file_template_content (a_tcf_content: STRING): STRING is
+	test_control_file_template_content (a_tcf_content: STRING; a_class_name: STRING): STRING is
 			-- Default control file template content
 		require
 			not_void: a_tcf_content /= Void
+			not_void: a_class_name /= Void
 		local
 			l_file: RAW_FILE
 		do
@@ -232,6 +230,7 @@ feature {NONE} -- Implementation
 				l_file.read_stream (l_file.count)
 				Result.append (l_file.last_string)
 				Result.replace_substring_all ("$TCF_CONTENT", a_tcf_content)
+				Result.replace_substring_all ("$TEST_CLASS_NAME", a_class_name)
 			else
 				Result := "Warning: template file not found"
 				print ("%NWarning: can't read file " + tcf_content_file_name)

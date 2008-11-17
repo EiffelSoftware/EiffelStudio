@@ -236,7 +236,6 @@ feature {NONE} -- Implementation
 			output_dirname := file_system.pathname (system.eiffel_project.project_directory.testing_results_path, "auto_test")
 			create time_out.make (0, 0, 0, 0, 15, 0)
 			create error_handler.make (system)
-			error_handler.set_start_time (system_clock.date_time_now)
 
 			process_configuration
 
@@ -248,14 +247,9 @@ feature {NONE} -- Implementation
 				generate_interpreter
 
 				if not is_finished and interpreter /= Void then
-					update_remaining_time
-					if time_out.second_count > 0 and then error_handler.remaining_time.second <= 0 then
-						error_handler.report_no_time_for_testing (time_out)
-						is_finished := True
-					else
 							-- Generate and run test cases.
-						build_types_and_classes_under_test
-					end
+					build_types_and_classes_under_test
+					error_handler.set_start_time (system_clock.date_time_now)
 				else
 					is_finished := True
 				end

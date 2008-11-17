@@ -778,7 +778,8 @@ feature {NONE} -- Factory
 			create Result.make (5)
 
 			create wizard_button.make
-			wizard_button.set_pixmap (pixmaps.icon_pixmaps.icon_with_overlay (icons.general_test_icon, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0))
+			wizard_button.set_pixmap (pixmaps.icon_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
+			wizard_button.set_pixel_buffer (pixmaps.icon_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, pixmaps.icon_pixmaps.overlay_new_icon_buffer, 0, 0))
 			register_action (wizard_button.select_actions, agent
 				local
 					l_wizard: ES_TEST_WIZARD_MANAGER

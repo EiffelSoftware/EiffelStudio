@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			-- `a_recycle': True to recycle the window and widget auotmaticaly when the window is closed.
 			-- `a_use_drop_shadow': True to set a drop shadow on the popup window, False otherwise.
 		require
-			not_a_widget_is_destroyed: not a_widget.is_destroyed
-			not_a_widget_has_parent: not a_widget.has_parent
+			a_widget_is_interface_usable: a_widget.is_interface_usable
+			not_a_widget_has_parent: not a_widget.widget.has_parent
 		do
 			widget := a_widget
 			auto_recycle (a_widget)
@@ -55,12 +55,13 @@ feature {NONE} -- Initialization
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		do
+			a_container.set_border_width ({ES_UI_CONSTANTS}.dialog_border)
 			a_container.extend (widget)
 		end
 
 feature -- Access
 
-	widget: !EV_WIDGET
+	widget: !ES_WIDGET [EV_WIDGET]
 			-- Inner popup window widget, set during creation
 
 feature -- Status report
@@ -121,8 +122,9 @@ feature {NONE} -- Internal implementation cache
 			-- Mutable version of `is_pointer_sensitive'
 
 invariant
-	widget_has_parent: is_interface_usable and is_initialized implies widget.has_parent
-
+	widget_is_interface_usable: is_interface_usable and is_initialized implies widget.is_interface_usable
+	widget_has_parent: is_interface_usable and is_initialized implies widget.widget.has_parent
+	
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

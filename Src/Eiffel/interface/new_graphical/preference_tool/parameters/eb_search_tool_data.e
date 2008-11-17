@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature -- Value
 
 	init_incremental: BOOLEAN is
 			-- Incremental search is disabled or not when opening a window.

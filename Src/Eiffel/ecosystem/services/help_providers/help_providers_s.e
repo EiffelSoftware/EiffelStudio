@@ -23,6 +23,8 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_consistent: Result ~ help_providers
 		end
 
 feature -- Query

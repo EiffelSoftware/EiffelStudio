@@ -26,15 +26,13 @@ feature -- Access
 	document_protocol: !STRING_32
 			-- <Precursor>
 		once
-			create Result.make_empty
-			Result.append ("eiffeldoc")
+			create Result.make_from_string ("eiffeldoc")
 		end
 
 	document_description: !STRING_32
 			-- <Precursor>
 		once
-			create Result.make_empty
-			Result.append ("Eiffel Documentation")
+			create Result.make_from_string ("Eiffel Documentation")
 		end
 
 feature {NONE} -- Access

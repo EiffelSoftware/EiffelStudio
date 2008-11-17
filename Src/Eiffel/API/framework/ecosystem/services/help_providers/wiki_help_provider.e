@@ -23,34 +23,29 @@ create
 feature -- Access
 
 	document_protocol: !STRING_32
-			-- Document protocol used by a URI to navigate to the help accessible from the provider.
+			-- <Precursor>
 		once
-			create Result.make_empty
-			Result.append ("wiki")
+			create Result.make_from_string ("wiki")
 		end
 
 	document_description: !STRING_32
-			-- Document short description
+			-- <Precursor>
 		once
-			create Result.make_empty
-			Result.append ("Wiki")
+			create Result.make_from_string ("Wiki")
 		end
 
 feature {NONE} -- Access
 
-	base_url: !STRING_8
-			-- Base URL used to locate help documentation.
+	base_url: !STRING
+			-- <Precursor>
 		once
 			create Result.make_from_string ("http://dev.eiffel.com/")
 		end
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: !STRING_GENERAL): !STRING_8
-			-- Formats the context so it may be used in a URL.
-			--
-			-- `a_context': A help content context of session context identifier to format
-			-- `Result': A formatted help context for a URL
+	format_context (a_context: !STRING_GENERAL): !STRING
+			-- <Precursor>
 		local
 			l_count, i: INTEGER
 		do

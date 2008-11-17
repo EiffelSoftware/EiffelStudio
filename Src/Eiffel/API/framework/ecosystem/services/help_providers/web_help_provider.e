@@ -28,10 +28,7 @@ inherit
 feature -- Access
 
 	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
-			-- A human readable title for a help document, given a context id and section.
-			--
-			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
-			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
+			-- <Precursor>
 		do
 			if is_accessible and then {l_title: !STRING_32} document_title (full_url (a_context_id, a_section), False) then
 					-- `is_accessible' requires calling {CURL_ACCESS}.make
@@ -43,7 +40,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: !STRING_8
+	base_url: !STRING
 			-- Base URL used to locate help documentation.
 		deferred
 		ensure
@@ -69,7 +66,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	full_url (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_8
+	full_url (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING
 			-- Full URL to navigate to, base on the help content context.
 		require
 			not_a_context_id_is_empty: not a_context_id.is_empty
@@ -131,17 +128,14 @@ feature {NONE} -- Query
 feature -- Basic operations
 
 	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
-			-- Attempts to show help for a specific context using the current help provider.
-			--
-			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
-			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
+			-- <Precursor>
 		do
 			Precursor (full_url (a_context_id, a_section), a_section)
 		end
 
 feature {NONE} -- Formatting
 
-	format_context_id (a_context_id: !STRING_GENERAL): !STRING_8
+	format_context_id (a_context_id: !STRING_GENERAL): !STRING
 			-- Formats the context id so it may be used in a URL.
 			--
 			-- `a_context_id': A help content context identifier to format
@@ -154,7 +148,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context_section (a_section: !STRING_GENERAL): !STRING_8
+	format_context_section (a_section: !STRING_GENERAL): !STRING
 			-- Formats the context section so it may be used in a URL.
 			--
 			-- `a_section': A help content context section to format
@@ -167,7 +161,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context (a_context: !STRING_GENERAL): !STRING_8
+	format_context (a_context: !STRING_GENERAL): !STRING
 			-- Formats the context so it may be used in a URL.
 			--
 			-- `a_context': A help content context of session context identifier to format

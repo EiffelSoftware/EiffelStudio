@@ -418,7 +418,7 @@ feature -- Status setting
 					old_class_map := Void
 					if test_class_map.found then
 						create old_class_map.make (1)
-						old_class_map.put (test_class_map.found_item, test_class_map.found_key)
+						old_class_map.force (test_class_map.found_item, test_class_map.found_key)
 						test_class_map.remove_found_item
 					end
 					if l_is_test_class then
@@ -497,7 +497,7 @@ feature -- Element change
 	register_locator (a_locator: !TEST_CLASS_LOCATOR_I)
 			-- <Precursor>
 		do
-			locators.put_last (a_locator)
+			locators.force_last (a_locator)
 		end
 
 	unregister_locator (a_locator: !TEST_CLASS_LOCATOR_I)

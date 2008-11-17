@@ -268,7 +268,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 					if descending_tags.found_item = 1 then
 						descending_tags.remove_found_item
 					else
-						descending_tags.put (descending_tags.found_item - 1, a_tag)
+						descending_tags.force (descending_tags.found_item - 1, a_tag)
 					end
 				end
 			end

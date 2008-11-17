@@ -41,10 +41,10 @@ feature {NONE} -- Query
 			-- <Precursor>
 		do
 			create Result.make (4)
-			Result.put_last ([item_added_event, agent a_observer.on_item_added])
-			Result.put_last ([item_removed_event, agent a_observer.on_item_removed])
-			Result.put_last ([item_changed_event, agent a_observer.on_item_changed])
-			Result.put_last ([items_reset_event, agent a_observer.on_items_reset])
+			Result.force_last ([item_added_event, agent a_observer.on_item_added])
+			Result.force_last ([item_removed_event, agent a_observer.on_item_removed])
+			Result.force_last ([item_changed_event, agent a_observer.on_item_changed])
+			Result.force_last ([items_reset_event, agent a_observer.on_items_reset])
 		end
 
 feature -- Events

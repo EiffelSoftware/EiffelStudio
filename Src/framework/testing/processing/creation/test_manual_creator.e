@@ -99,10 +99,10 @@ feature {NONE} -- Basic operations
 			create Result.make_default
 			if configuration.cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
 					-- Use old syntax
-				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
+				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
 			else
 					-- Use new syntax
-				Result.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
+				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
 			end
 			if {l_class_name: !STRING} configuration.new_class_name then
 				Result.force_last (l_class_name, v_class_name)

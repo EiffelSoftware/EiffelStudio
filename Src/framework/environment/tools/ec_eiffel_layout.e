@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	application_name: STRING is "ec";
+	application_name: STRING = "ec";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

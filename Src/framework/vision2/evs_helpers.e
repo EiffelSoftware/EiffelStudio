@@ -157,6 +157,77 @@ feature -- Screen
 			result_height_small_enough: Result.height <= (create {EV_SCREEN}).height
 		end
 
+feature -- Widget
+
+	maximum_string_width (a_strings: !ARRAY [?READABLE_STRING_GENERAL]; a_font: ?EV_FONT): INTEGER
+			-- Maximum width of a collection of strings
+			--
+			-- `a_strings': An array of string to determine the maximum width for.
+			-- `a_font': The font to use to determine the space requirements.
+			-- `Result': The width in pixels the largest string will require.
+		require
+			not_a_string_is_empty: not a_strings.is_empty
+			a_strings_contains_attached_items: not a_strings.has (Void)
+			a_font_attached: a_font /= Void
+		local
+			l_str: ?READABLE_STRING_GENERAL
+			l_upper, i: INTEGER
+		do
+			from
+				i := a_strings.lower
+				l_upper := a_strings.upper
+			until
+				i > l_upper
+			loop
+				l_str := a_strings [i]
+				if l_str /= Void then
+					if {l_sg: STRING_GENERAL} l_str then
+						Result := Result.max (a_font.string_width (l_sg))
+					else
+						Result := Result.max (a_font.string_width (l_str.as_string_32))
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	maximum_string_size (a_strings: !ARRAY [?READABLE_STRING_GENERAL]; a_font: ?EV_FONT): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+			-- Maximum width of a collection of strings
+			--
+			-- `a_strings': An array of string to determine the maximum width for.
+			-- `a_font': The font to use to determine the space requirements.
+			-- `Result': The size in pixels the largest string will require. See {EV_FONT}.string_size for more information.
+		require
+			not_a_string_is_empty: not a_strings.is_empty
+			a_strings_contains_attached_items: not a_strings.has (Void)
+			a_font_attached: a_font /= Void
+		local
+			l_str: ?READABLE_STRING_GENERAL
+			l_size: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+			l_upper, i: INTEGER
+		do
+			from
+				i := a_strings.lower
+				l_upper := a_strings.upper
+			until
+				i > l_upper
+			loop
+				l_str := a_strings [i]
+				if l_str /= Void then
+					if {l_sg: STRING_GENERAL} l_str then
+						l_size := a_font.string_size (l_sg)
+					else
+						l_size := a_font.string_size (l_str.as_string_32)
+					end
+					Result.width := Result.width.max (l_size.width)
+					Result.height := Result.height.max (l_size.height)
+					Result.right_offset := Result.right_offset.max (l_size.right_offset)
+					Result.left_offset := Result.left_offset.min (l_size.left_offset)
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Placement
 
 	suggest_pop_up_widget_location_with_size (a_widget: EV_WIDGET; a_screen_x, a_screen_y, a_width, a_height: INTEGER): TUPLE [x, y: INTEGER] is

@@ -54,7 +54,7 @@ feature -- Status
 
 	has_next_step: BOOLEAN is
 		do
-			Result := not request_list_cursor.off and (interpreter.is_running implies interpreter.is_ready)
+			Result := not has_error and then not request_list_cursor.off and then (interpreter.is_running implies interpreter.is_ready)
 		end
 
 	has_error: BOOLEAN
@@ -105,7 +105,7 @@ feature -- Execution
 				interpreter.start
 			end
 			request_list_cursor.start
-			has_error := False
+			has_error := interpreter.is_ready
 		end
 
 	step is
@@ -114,8 +114,11 @@ feature -- Execution
 --				interpreter.start
 ----				assign_void
 --			end
-			request_list_cursor.item.process (Current)
-			request_list_cursor.forth
+			has_error := not interpreter.is_ready
+			if not has_error then
+				request_list_cursor.item.process (Current)
+				request_list_cursor.forth
+			end
 		end
 
 feature {AUT_REQUEST} -- Processing

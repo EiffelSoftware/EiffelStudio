@@ -412,6 +412,15 @@ feature {NONE} -- Status setting: view
 				elseif filter.has_expression then
 					filter.remove_expression
 				end
+
+				if filter.has_expression and then
+				   filter.items.count = 0 and
+				   test_suite.service.tests.count > 0 then
+					filter_box.set_background_color (preferences.search_tool_data.none_result_keyword_field_background_color)
+				else
+					filter_box.set_background_color (view_box.background_color)
+				end
+
 				if not tree_view.is_connected then
 					tree_view.connect (filter, l_tag)
 				end

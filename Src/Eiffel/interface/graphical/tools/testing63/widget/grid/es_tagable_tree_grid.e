@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 				if expansion_cache.count = max_expansion_cache_count then
 					expansion_cache.remove_first
 				end
-				expansion_cache.put_last (l_node.tag)
+				expansion_cache.force_last (l_node.tag)
 			elseif a_row = untagged_subrow then
 				is_untagged_subrow_expanded := True
 			end

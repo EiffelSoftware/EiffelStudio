@@ -138,7 +138,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				Result := True
 			elseif not (traversed_helpers.has (a_class) or a_class = project.eiffel_project.system.any_class) then
 				if a_cache then
-					traversed_helpers.put (a_class)
+					traversed_helpers.force (a_class)
 				end
 					--| Note: we only check compiled parents of potential test classes, hence `a_cache' must be
 					--|       true in the following statement.
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				end
 				if Result and a_cache then
 					traversed_helpers.remove (a_class)
-					traversed_descendants.put (a_class)
+					traversed_descendants.force (a_class)
 				end
 			end
 		ensure

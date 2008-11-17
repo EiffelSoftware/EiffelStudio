@@ -387,6 +387,7 @@ feature -- Directories (top-level)
 			else
 				l_name := eiffel_install
 			end
+			check l_name_attached: l_name /= Void end
 			if is_workbench then
 				l_name_wb := l_name.twin
 				l_name_wb.append (wkbench_suffix)
@@ -853,8 +854,6 @@ feature -- Directories (top-level user)
 				end
 				l_dir_name.extend (l_dir)
 			end
-
-			check l_dir_name /= Void end
 			Result := l_dir_name
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -878,7 +877,7 @@ feature -- Directories (top-level user)
 				safe_create_dir (l_user_files)
 				create l_directory.make (l_user_files)
 				if not l_directory.exists or else not l_directory.is_writable then
-					Result := eiffel_home.twin.as_attached
+					Result := eiffel_home.twin
 				end
 
 				create Result.make_from_string (l_user_files)

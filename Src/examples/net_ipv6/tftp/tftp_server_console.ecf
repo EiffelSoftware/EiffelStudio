@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="tftp_server_console" uuid="5E11F610-2835-4A71-A362-352A595C7FFC">
+	<target name="tftp_server_console">
+		<root feature="make" class="TFTP_SERVER_CONSOLE"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="multithreaded" value="true"/>
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+
+		<library name="net_ipv6" location="$ISE_LIBRARY/library/net_ipv6/net.ecf"/>
+		<cluster name="tftp_sample" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

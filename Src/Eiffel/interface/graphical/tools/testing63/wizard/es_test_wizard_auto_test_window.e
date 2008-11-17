@@ -330,10 +330,13 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_selection_change (a_item: EV_LIST_ITEM)
+	on_selection_change
 			-- Called when selection of `type_list' changes.
+		local
+			l_item: EV_LIST_ITEM
 		do
-			if a_item.is_selected then
+			l_item := type_list.selected_item
+			if l_item /= Void and then l_item.is_selected then
 				if not remove_type_button.is_sensitive then
 					remove_type_button.enable_sensitive
 				end

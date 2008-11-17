@@ -12,11 +12,14 @@ class
 
 inherit
 	EV_LABEL
+		rename
+			set_font as set_internal_font
 		export
 			{ANY} all
 		redefine
 			initialize,
-			set_text
+			set_text,
+			set_internal_font
 		end
 
 create
@@ -33,10 +36,14 @@ feature {NONE} -- Initialization
 			-- additional setup tasks.
 		do
 			Precursor {EV_LABEL}
+			internal_font := font.twin.as_attached
+
 			create select_actions
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			set_foreground_color ((create {EV_STOCK_COLORS}).blue)
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor))
+			pointer_enter_actions.force (agent on_pointer_entered)
+			pointer_leave_actions.force (agent on_pointer_left)
 			enable_tabable_to
 			enable_tabable_from
 		end
@@ -46,14 +53,14 @@ feature {NONE} -- Access
 	default_font: EV_FONT is
 			-- Font used to display labels.
 		do
-			Result := font.twin
+			Result := internal_font.twin
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 		end
 
 	highlight_font: EV_FONT
 			-- Highlight font
 		do
-			Result := font.twin
+			Result := internal_font.twin
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
@@ -65,11 +72,36 @@ feature -- Actions
 feature -- Element change
 
 	set_text (a_text: STRING_GENERAL)
-			-- Assign `a_text' to text.
-			-- (from EV_TEXTABLE)
+			-- <Precursor>
 		do
 			set_minimum_size (maximum_label_width (a_text), maximum_label_height (a_text))
 			Precursor {EV_LABEL} (a_text)
+		end
+
+	set_font (a_font: EV_FONT)
+			-- Assign `a_font' to font.
+		require
+			not_destroyed: not is_destroyed
+			a_font_not_void: a_font /= Void
+		local
+			l_font: like internal_font
+		do
+			l_font := internal_font
+			set_internal_font (a_font)
+			internal_font := l_font
+		ensure
+			internal_font_unchanged: internal_font ~ old internal_font
+		end
+
+feature {NONE} -- Element change
+
+	set_internal_font (a_font: EV_FONT)
+			-- <Precursor>
+		do
+			internal_font := a_font.as_attached
+			Precursor (a_font)
+		ensure then
+			internal_font_set: internal_font = a_font
 		end
 
 feature {NONE} -- Query
@@ -109,12 +141,47 @@ feature {NONE} -- Query
 feature {NONE} -- Action handlers
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Called when a pointer action has been performed
+			-- Called when a pointer action has been performed.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			if a_button = 1 then
 				select_actions.call ([])
 			end
 		end
+
+	on_pointer_entered
+			-- Called when the mouse cursor enters the label.
+		require
+			not_is_destroyed: not is_destroyed
+		local
+			l_font: !like internal_font
+		do
+			l_font := internal_font
+			set_font (highlight_font)
+			internal_font := l_font
+		ensure
+			internal_font_unchanged: internal_font ~ old internal_font
+		end
+
+	on_pointer_left
+			-- Called when the mouse cursor enters the label.
+		require
+			not_is_destroyed: not is_destroyed
+		local
+			l_font: !like internal_font
+		do
+			l_font := internal_font
+			set_font (default_font)
+			internal_font := l_font
+		ensure
+			internal_font_unchanged: internal_font ~ old internal_font
+		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_font: !EV_FONT
+			-- Cached internal font
 
 invariant
 	select_actions_attached: select_actions /= Void

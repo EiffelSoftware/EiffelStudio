@@ -18,8 +18,8 @@ inherit
 
 feature -- Access
 
-	creatable_directories: !ARRAYED_LIST [STRING_8]
-			-- List of directories to be created at start up
+	creatable_directories: !ARRAYED_LIST [STRING]
+			-- <Precursor>
 		once
 			Result := Precursor {EC_EIFFEL_LAYOUT}
 			Result.extend (user_templates_path.string)

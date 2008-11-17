@@ -1224,7 +1224,7 @@ test	mixed-basic-type-operations	exec270 tcf pass execution inspect
 test	wrong-agent-creation-type	exec271 tcf pass execution inspect
 test	expanded-derivation-reattachment	exec272 tcf pass execution expanded generic
 test	expanded-creation-semantics	exec273 tcf pass execution expanded creation attachment clone
-test	agent-for-expanded-derivation	exec274 tcf pass execution expanded generic agent
+test	agent-for-expanded-derivation	exec274 tcf pass execution expanded generic agents
 test	merging-feature-with-formal	exec275 tcf pass execution expanded generic merging
 test	entry-point-defined	exec276 tcf pass execution expanded generic merging
 test	derivation-reverse-attachment	exec277 tcf pass execution expanded generic attachment

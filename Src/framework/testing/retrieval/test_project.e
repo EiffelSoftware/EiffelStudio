@@ -832,7 +832,19 @@ feature {NONE} -- Implementation: tag retrieval
 							if {l_uuid: !UUID} l_cluster.target.system.uuid then
 								l_list := l_uni.library_of_uuid (l_uuid, True)
 								if not l_list.is_empty then
-									cluster_stack.force_last (l_list.first)
+									from
+										l_list.start
+									until
+										l_list.after
+									loop
+										if l_list.item_for_iteration.target = l_uni.target or
+										   l_list.item_for_iteration = l_list.last
+										then
+											cluster_stack.force_last (l_list.item_for_iteration)
+											l_list.finish
+										end
+										l_list.forth
+									end
 								end
 							end
 						end
@@ -843,12 +855,17 @@ feature {NONE} -- Implementation: tag retrieval
 				from until
 					cluster_stack.is_empty
 				loop
-					if cluster_stack.last.is_cluster then
-						a_tag.append (tag_utilities.cluster_prefix)
-					elseif cluster_stack.last.is_library then
+					if {l_lib: CONF_LIBRARY} cluster_stack.last then
 						a_tag.append (tag_utilities.library_prefix)
+						a_tag.append (cluster_stack.last.name)
+						a_tag.append_character (':')
+						a_tag.append (l_lib.library_target.system.uuid.out)
+					else
+						if cluster_stack.last.is_cluster then
+							a_tag.append (tag_utilities.cluster_prefix)
+						end
+						a_tag.append (cluster_stack.last.name)
 					end
-					a_tag.append (cluster_stack.last.name)
 					a_tag.append_character (tag_utilities.split_char)
 					cluster_stack.remove_last
 				end

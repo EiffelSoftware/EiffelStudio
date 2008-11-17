@@ -203,13 +203,14 @@ feature {NONE} -- Factory
 			-- `a_node': Node for which token item should be created.
 		local
 			l_token: !STRING
-			l_name: ?STRING
+			l_name, l_uuid: ?STRING
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_pixmap: EV_PIXMAP
 			l_pnode: ?TAG_BASED_TREE_NODE [G]
 			l_cluster: ?CONF_CLUSTER
 			l_library: CONF_LIBRARY
+			l_list: LIST [CONF_LIBRARY]
 		do
 			l_token := a_node.token
 			token_writer.new_line
@@ -221,7 +222,7 @@ feature {NONE} -- Factory
 					l_library := l_lib_data
 				end
 			end
-			if l_token.starts_with (class_prefix) then
+			if l_token.starts_with (class_prefix) and l_token.count > class_prefix.count then
 				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
 				if {l_class: !CLASS_I} class_from_name (l_name, l_cluster) then
 					a_node.set_data (l_class)
@@ -230,7 +231,7 @@ feature {NONE} -- Factory
 				else
 					l_pixmap := pixmaps.icon_pixmaps.class_normal_icon
 				end
-			elseif l_token.starts_with (feature_prefix) then
+			elseif l_token.starts_with (feature_prefix) and l_token.count > feature_prefix.count then
 				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
 				if l_pnode /= Void then
@@ -243,7 +244,7 @@ feature {NONE} -- Factory
 						end
 					end
 				end
-			elseif l_token.starts_with (cluster_prefix) then
+			elseif l_token.starts_with (cluster_prefix) and l_token.count > cluster_prefix.count then
 				l_name := l_token.substring (cluster_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
 				if l_pnode /= Void then
@@ -260,13 +261,34 @@ feature {NONE} -- Factory
 					token_writer.add_group (l_cluster, l_name)
 					a_node.set_data (l_cluster)
 				end
-			elseif l_token.starts_with (library_prefix) then
-				l_name := l_token.substring (library_prefix.count + 1, l_token.count)
-				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
-				if {l_lib: CONF_LIBRARY} project.universe.group_of_name (l_name) then
-					token_writer.add_group (l_lib, l_name)
-					a_node.set_data (l_lib)
+			elseif l_token.starts_with (library_prefix) and l_token.count > library_prefix.count then
+				if l_token.count > 37 + library_prefix.count then
+					l_name := l_token.substring (library_prefix.count + 1, l_token.count - 37)
+					l_uuid := l_token.substring (l_token.count - 35, l_token.count)
+					check l_uuid /= Void end
+					if (create {UUID}.default_create).is_valid_uuid (l_uuid) then
+						l_list := project.universe.library_of_uuid (create {UUID}.make_from_string (l_uuid), True)
+						if not l_list.is_empty then
+							from
+								l_list.start
+							until
+								l_list.after
+							loop
+								if l_list.item_for_iteration.target = project.universe.target or
+								   l_list.item_for_iteration = l_list.last
+								then
+									token_writer.add_group (l_list.item_for_iteration, l_name)
+									a_node.set_data (l_list.item_for_iteration)
+									l_list.finish
+								end
+								l_list.forth
+							end
+						end
+					end
+				else
+					l_name := l_token.substring (library_prefix.count + 1, l_token.count)
 				end
+				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
 			elseif False then
 				-- More tokens to come
 			else

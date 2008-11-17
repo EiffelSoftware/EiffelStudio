@@ -82,12 +82,20 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_peer_address (addr: SOCKET_ADDRESS): BOOLEAN is
+	is_valid_peer_address (addr: like address): BOOLEAN is
 			-- Is `addr' a valid peer address?
 		require
 			address_exists: addr /= Void
 		do
 			Result := True
+		end
+
+	is_valid_family (addr: like address): BOOLEAN is
+			-- Is `addr' the same family as Current?
+		require
+			address_exists: addr /= Void
+		do
+			Result := (addr.family = family)
 		end
 
 feature -- Element change
@@ -161,6 +169,8 @@ feature -- Basic commands
 		do
 			if is_open_read or is_open_write then
 				shutdown
+			end
+			if exists then
 				close_socket
 			end
 		end
@@ -169,11 +179,9 @@ feature -- Basic commands
 			-- Close socket for current context.
 		require
 			socket_exists: exists
-			is_open: is_open_read or is_open_write
 		deferred
 		ensure
 			is_closed: is_closed
-			not_is_open: not is_open_read and not is_open_write
 		end
 
 	is_closed: BOOLEAN is
@@ -195,11 +203,16 @@ feature -- Basic commands
 	type: INTEGER;
 			-- Type of socket. eg stream, datagram
 
-	address: SOCKET_ADDRESS;
+	address: like address_type;
 			-- Local address of socket
 
 	peer_address: like address;
 			-- Peer address of socket
+
+	address_type: SOCKET_ADDRESS is
+			-- Type of `address' and `peer_address'
+		do
+		end
 
 	set_peer_address (addr: like address) is
 			-- Set peer address to `addr'.
@@ -216,7 +229,7 @@ feature -- Basic commands
 			-- Set local address to `addr'.
 		require
 			add_non_void: addr /= Void
-			same_type: addr.family = family
+			same_type: is_valid_family (addr)
 		do
 			address := addr
 		ensure

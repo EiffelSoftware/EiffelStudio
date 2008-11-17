@@ -19,8 +19,7 @@ deferred class NETWORK_SOCKET inherit
 			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
-			make_socket, address, peer_address, is_valid_peer_address, connect,
-			set_address, set_peer_address
+			make_socket, address_type, is_valid_peer_address, connect, is_valid_family
 		end
 
 feature
@@ -85,11 +84,10 @@ feature
 
 feature -- Status report
 
-	address: NETWORK_SOCKET_ADDRESS;
-			-- Local address of socket
-
-	peer_address: NETWORK_SOCKET_ADDRESS;
-			-- Peer address of socket
+	address_type: NETWORK_SOCKET_ADDRESS is
+			-- <Precursor>
+		do
+		end
 
 	is_closed: BOOLEAN
 
@@ -131,9 +129,15 @@ feature -- Status report
 		end
 
 	is_valid_peer_address (addr: like address): BOOLEAN is
-			-- Is `addr' a valid peer address?
+			-- <Precursor>
 		do
 			Result := (addr.family = family) or else (family = af_inet6 and then addr.family = af_inet)
+		end
+
+	is_valid_family (addr: like address): BOOLEAN is
+			-- <Precursor>
+		do
+			Result := (addr.family = family) or else (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
 	ready_for_reading: BOOLEAN is
@@ -204,40 +208,6 @@ feature -- Status setting
 		ensure
 			timeout_set: timeout = n or timeout = default_timeout
 		end
-feature
-
-	valid_family (addr: like address): BOOLEAN is
-			--
-		require
-			address_exists: addr /= Void
-		do
-			Result := (addr.family = af_inet or else addr.family = af_inet6)
-		end
-
-	set_peer_address (addr: like address) is
-			-- Set peer address to `addr'.
-		require else
-			address_exists: addr /= Void
-			valid_family: valid_family (addr)
-		do
-			-- This feature was redefined just to redefine the require clause
-			-- We can not compare addr.family because of the possibility
-			-- to use either ipv6 or ipv4 on the socket
-			peer_address := addr
-		end
-
-	set_address (addr: like address) is
-			-- Set local address to `addr'.
-		require else
-			address_exists: addr /= Void
-			valid_family: valid_family (addr)
-		do
-			-- This feature was redefined just to redefine the require clause
-			-- We can not compare addr.family because of the possibility
-			-- to use either ipv6 or ipv4 on the socket
-			address := addr
-		end
-
 
 feature {NONE} -- Implementation
 

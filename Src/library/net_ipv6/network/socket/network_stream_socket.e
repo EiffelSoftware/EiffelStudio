@@ -24,19 +24,11 @@ inherit
 	NETWORK_SOCKET
 		undefine
 			support_storable
-		select
-			address,
-			peer_address,
-			set_peer_address
 		end
 
 	STREAM_SOCKET
-		rename
-			address as old_socket_address,
-			peer_address as old_socket_peer_address,
-			set_peer_address as old_socket_set_peer_address
 		undefine
-			is_valid_peer_address
+			is_valid_peer_address, is_valid_family, address_type
 		end
 
 create
@@ -142,9 +134,9 @@ feature
 		do
 			if not retried then
 				pass_address := address.twin
-				a_last_fd = last_fd
+				l_last_fd := last_fd
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, 0);
-				last_fd := a_last_fd
+				last_fd := l_last_fd
 				if return > 0 then
 					create accepted.make_from_fd (return, address.twin);
 					accepted.set_peer_address (pass_address)

@@ -25,17 +25,11 @@ inherit
 		rename
 			bind as socket_bind,
 			close as socket_close
-		select
-			address,
-			peer_address
 		end
 
 	DATAGRAM_SOCKET
-		rename
-			address as old_socket_address,
-			peer_address as old_socket_peer_address
 		undefine
-			set_address, set_peer_address, is_valid_peer_address
+			is_valid_peer_address, is_valid_family, address_type
 		redefine
 			connect_to_peer
 		end

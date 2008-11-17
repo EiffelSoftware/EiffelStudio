@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 	    		Result := -1
 			else
 				from
-					i := percent
+					i := percent + 1
 					done := False
 				until
 					done or else i > slen
@@ -193,8 +193,7 @@ feature {NONE} -- Implementation
 		    				Result := -1
 						end
 						done := True
-					end
-	    			if not c.is_digit then
+	    			elseif not c.is_digit then
 						Result := -1
 						done := True
 					else
@@ -281,6 +280,24 @@ feature {NONE} -- Implementation
 		    		else
 		    			Result := Void
 					end
+				when 4 then
+			    	from
+			    		i := 1
+			    	until
+			    		i > 4 or else Result = Void
+			    	loop
+			    		if splitted.item(i).is_integer_32 then
+			    			val := splitted.item(i).to_integer_32
+		    				if val >= 0 and then val <= 0xff then
+		    					Result.put ((val & 0xff).as_natural_8, i)
+		    				else
+								Result := Void
+		    				end
+		    			else
+		    				Result := Void
+		    			end
+		    			i := i + 1
+			    	end
 				end
 			end
     	end
@@ -310,6 +327,8 @@ feature {NONE} -- Implementation
 	    				length := percent_position - 1;
 					end
 					i := 1;
+					j := 1;
+					colon_position := -1
 					if src.item (i) = ':' then
 						i := i + 1
 						if src.item (i) /= ':' then
@@ -348,6 +367,16 @@ feature {NONE} -- Implementation
 		    					elseif i > length then
 									Result := Void
 									done := True
+		    					else
+	    							if j + INT16SZ > {INET6_ADDRESS}.INADDRSZ + 1 then
+										Result := Void
+										done := True
+									else
+	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
+	    								j := j + 1
+	    								Result.put ((val & 0xff).as_natural_8, j)
+	    								j := j + 1
+	    							end
 		    					end
 		    				elseif ch = '.' and then ((j + {INET4_ADDRESS}.INADDRSZ) <= {INET6_ADDRESS}.INADDRSZ+1) then
 								ia4 := src.substring(curtok, length);
@@ -414,6 +443,7 @@ feature {NONE} -- Implementation
 	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
 										Result.put (Result.item (colon_position + n - i), {INET6_ADDRESS}.INADDRSZ - i)
 										Result.put (0, colon_position + n - i)
+										i := i +1
 									end
 	    							j := {INET6_ADDRESS}.INADDRSZ
 	    						end

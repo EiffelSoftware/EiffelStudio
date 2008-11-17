@@ -29,6 +29,13 @@ inherit
 			name as socket_name,
 			cleanup as socket_cleanup,
 			address as socket_address
+		undefine
+			put_character, putchar, put_string, putstring,
+			put_integer, putint, put_integer_32,
+			put_integer_8, put_integer_16, put_integer_64,
+			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
+			put_boolean, putbool,
+			put_real, putreal, put_double, putdouble, put_managed_pointer
 		end
 
 create
@@ -68,7 +75,7 @@ feature -- Initialization
 
 feature -- Input
 
-	received (size: INTEGER; flags: INTEGER): DATAGRAM_PACKET is
+	received (size: INTEGER; flags: INTEGER): PACKET is
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		local
@@ -85,7 +92,7 @@ feature -- Input
 
 feature -- Output
 
-	send_to (a_packet: DATAGRAM_PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
+	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
 			-- Send `a_packet' to address `to_address'
 		local
 			return_val: INTEGER

@@ -215,6 +215,7 @@ feature -- Basic commands
 	set_address (addr: like address) is
 			-- Set local address to `addr'.
 		require
+			add_non_void: addr /= Void
 			same_type: addr.family = family
 		do
 			address := addr
@@ -257,19 +258,29 @@ feature -- Output
 	put_character, putchar (c: CHARACTER) is
 			-- Write character `c' to socket.
 		do
-			c_put_char (descriptor, c)
+			socket_buffer.put_character (c, 0)
+			put_managed_pointer (socket_buffer, 0, character_8_bytes)
 		end
 
 	put_real, putreal (r: REAL) is
 			-- Write real `r' to socket.
 		do
-			c_put_float (descriptor, r)
+			socket_buffer.put_real_32 (r, 0)
+			put_managed_pointer (socket_buffer, 0, real_32_bytes)
+		end
+
+	put_double, putdouble (d: DOUBLE) is
+			-- Write double `d' to socket.
+		do
+			socket_buffer.put_real_64_be (d, 0)
+			put_managed_pointer (socket_buffer, 0, real_64_bytes)
 		end
 
 	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write integer `i' to socket.
 		do
-			c_put_int (descriptor, i)
+			socket_buffer.put_integer_32_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, integer_32_bytes)
 		end
 
 	put_integer_8 (i: INTEGER_8) is
@@ -329,12 +340,6 @@ feature -- Output
 			else
 				put_character ('F')
 			end
-		end
-
-	put_double, putdouble (d: DOUBLE) is
-			-- Write double `d' to socket.
-		do
-			c_put_double (descriptor, d)
 		end
 
 	write (a_packet: PACKET) is
@@ -934,57 +939,9 @@ feature {NONE} -- Externals
 	internal_socket_buffer: MANAGED_POINTER
 			-- Internal integer buffer
 
-	c_put_char (fd: INTEGER; c: CHARACTER) is
-			-- External routine to write character `c' to socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_put_int (fd: INTEGER; i: INTEGER) is
-			-- External routine to write integer `i' to socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_put_float (fd: INTEGER; r: REAL) is
-			-- External routine to write real `r' to socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_put_double (fd: INTEGER; d: DOUBLE) is
-			-- External routine to write double `d' to socket `fd'
-		external
-			"C blocking"
-		end
-
 	c_put_stream (fd: INTEGER; s: POINTER; length: INTEGER) is
 			-- External routine to write stream pointed by `s' of
 			-- length `length' to socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_read_char (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): CHARACTER is
-			-- External routine to read a character from socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_read_int (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): INTEGER is
-			-- External routine to read an integer from socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_read_float (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): REAL is
-			-- external routine to read a real from socket `fd'
-		external
-			"C blocking"
-		end
-
-	c_read_double (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): DOUBLE is
-			-- External routine to read a double from socket `fd'
 		external
 			"C blocking"
 		end

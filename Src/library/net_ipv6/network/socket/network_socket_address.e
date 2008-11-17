@@ -37,7 +37,6 @@ create
 
 	make_from_hostname_and_port, make_from_address_and_port, make_any_local
 
-
 feature -- Initialization
 
 	make_from_address_and_port (an_address: INET_ADDRESS;  a_port: INTEGER) is

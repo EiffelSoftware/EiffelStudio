@@ -142,7 +142,9 @@ feature
 		do
 			if not retried then
 				pass_address := address.twin
+				a_last_fd = last_fd
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, 0);
+				last_fd := a_last_fd
 				if return > 0 then
 					create accepted.make_from_fd (return, address.twin);
 					accepted.set_peer_address (pass_address)

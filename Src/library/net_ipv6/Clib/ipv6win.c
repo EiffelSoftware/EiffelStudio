@@ -278,8 +278,52 @@ static int net_timeout(int fd, long timeout) {
 	return ret;
 }
 
+/*
+ * differs from net_timeout() as follows:
+ *
+ * If timeout = -1, it blocks forever.
+ *
+ * returns 1 or 2 depending if only one or both sockets
+ * fire at same time. 
+ *
+ * *fdret is (one of) the active fds. If both sockets
+ * fire at same time, *fdret = fd always.
+ */
+static int net_timeout2(int fd, int fd1, long timeout, int *fdret) {
+	int ret; 
+	fd_set tbl; 
+	struct timeval t, *tP = &t; 
+	if (timeout == -1) {
+		tP = 0;
+	} else {
+		t.tv_sec = timeout / 1000; 
+		t.tv_usec = (timeout % 1000) * 1000; 
+	}
+	FD_ZERO(&tbl); 
+	FD_SET(fd, &tbl); 
+	FD_SET(fd1, &tbl); 
+	ret = select (0, &tbl, 0, 0, tP); 
+	switch (ret) {
+	case 0:
+		return 0; /* timeout */
+	case 1:
+		if (FD_ISSET (fd, &tbl)) {
+			*fdret= fd;
+		} else {
+			*fdret= fd1;
+		}
+		return 1;
+	case 2:
+		*fdret= fd;
+		return 2;
+	}
+	return ret;
+}
+
 EIF_BOOLEAN en_ipv6_supported() {
 	static int res = -1;
+	EIF_NET_INITIALIZE;
+
 	if (res == -1) {
 		HMODULE lib;
 		int fd = socket(AF_INET6, SOCK_STREAM, 0);
@@ -385,7 +429,6 @@ void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 		WSAIoctl(fd,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
 		t = TRUE;
 		fd1 = check_socket_bounds(socket (AF_INET6, SOCK_DGRAM, 0));
-
 		if (fd1 == INVALID_SOCKET) {
 			*a_fd = -1;
 			*a_fd1 = -1;
@@ -743,11 +786,149 @@ EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGE
 	}
 }
 
+void en_socket_datagram_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
+	// For now we reuse the stream socket implementation, but it could be changed in the feature
+	en_socket_stream_bind (a_fd, a_fd1, a_local_port, sockaddr);
+}
+
+
+void en_socket_datagram_connect (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_POINTER sockaddr) {
+
+	SOCKETADDRESS* him;
+	int family;
+	EIF_INTEGER fdc = -1;
+	int ipv6_supported;
+	int connect_res;
+
+	EIF_NET_INITIALIZE;
+
+	ipv6_supported = en_ipv6_available();
+
+	him = (SOCKETADDRESS*) sockaddr;
+	family = him->him.sa_family; 
+
+	if (family == AF_INET6 && !ipv6_supported) {
+		eraise ("Protocol family not supported", EN_PROG);
+		return;
+	}
+    	
+	fdc = (family == AF_INET? fd: fd1);
+	connect_res = connect(fdc, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
+	if ( connect_res == -1) {
+    		eraise("Unable to establish connection", EN_PROG);
+	}
+}
+
+/*
+ * check which socket was last serviced when there was data on both sockets.
+ * Only call this if sure that there is data on both sockets.
+ */
+static int check_last_fd (int* lastfd, int fd, int fd1) {
+	int nextfd;
+	if (*lastfd == -1) {
+		/* arbitrary. Choose fd */
+		*lastfd = fd;
+		return fd;
+	} else {
+		if (*lastfd == fd) {
+			nextfd = fd1;
+		} else {
+			nextfd = fd;
+		}
+		*lastfd = nextfd;
+		return nextfd;
+	}
+}
+
+EIF_INTEGER en_socket_datagram_rcv_from (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_INTEGER timeout, SOCKETADDRESS *him) {
+
+	int nsockets = 0;
+	int fduse = 0;
+	int result;
+	int lenn = sizeof(SOCKETADDRESS);
+	int ipv6_supported = en_ipv6_available();
+
+	if (fd > 0) {
+		nsockets++;
+	}
+	if (fd1 > 0) {
+		nsockets++;
+	}
+    	if (nsockets == 2) { /* need to choose one of them */
+		int ret, t = (timeout == 0) ? -1: timeout;
+		ret = net_timeout2 (fd, fd1, t, &fduse);
+		if (ret == 2) {
+			fduse = check_last_fd (a_last_fd, fd, fd1);
+		} else if (ret == 0) {
+			if (ret == 0) {
+				eraise("Receive timed out", EN_PROG);
+			} else {
+				eraise("Receive error", EN_PROG);
+			}
+			return -1;
+		}
+
+	} else if (!ipv6_supported) {
+		fduse = fd;
+	} else if (fd >= 0) {
+		/* ipv6 supported: and this socket bound to an IPV6 only address */
+		fduse = fd1;
+	} else {
+		/* ipv6 supported: and this socket bound to an IPV4 only address */
+		fduse = fd;
+	}
+
+	if (timeout && nsockets == 1) {
+		int ret;
+		ret = net_timeout(fduse, timeout);
+		if (ret <= 0) {
+			if (ret == 0) {
+				eraise("Receive timed out", EN_PROG);
+			} else {
+				eraise("Receive error", EN_PROG);
+			}
+			return -1;
+		}
+	}
+
+	result = recvfrom ((SOCKET) fduse, (char *) buf, (int) len, (int) flags, (struct sockaddr *) him, &lenn);
+	eif_net_check (result);
+	
+	return (EIF_INTEGER) result;
+}
+
+EIF_INTEGER en_socket_datagram_send_to (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, SOCKETADDRESS *him) {
+
+	int result = -1;
+	int fduse = -1;
+
+	if (him->him.sa_family == AF_INET) {
+		fduse = fd;
+	} else if (him->him.sa_family == AF_INET6) {
+		fduse = fd1;
+	}
+	if (fduse != -1) {
+		result = sendto ((SOCKET) fduse, (char *) buf, (int) len, (int) flags, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
+		eif_net_check (result);
+	}
+	
+	return (EIF_INTEGER) result;
+}
+
 void en_socket_close(int fd, int fd1) {
 	if (fd != -1) {
 		net_socket_close(fd);
 	}
 	if (fd1 != -1) {
 		net_socket_close(fd1);
+	}
+}
+
+void en_socket_shutdown(int fd, int fd1) {
+	if (fd != -1) {
+		shutdown(fd, SD_BOTH);
+	}
+	if (fd1 != -1) {
+		shutdown(fd1, SD_BOTH);
 	}
 }

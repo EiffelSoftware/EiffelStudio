@@ -310,19 +310,23 @@ feature -- Feature access
 		require
 			id_valid: ct_id > 0 and fe_id > 0
 		local
+			l_ct: CLASS_TYPE
 			l_cc: CLASS_C
 			l_fi: FEATURE_I
 		do
-			l_cc := eiffel_system.system.class_of_id (ct_id)
-			if l_cc /= Void and then fe_id /= 0 then
-				check is_not_is_precompiled: not l_cc.is_precompiled end
-				if {l_ecc: EIFFEL_CLASS_C} l_cc then
-					Result := l_ecc.feature_with_feature_id (fe_id)
-					if Result = Void then
-						l_fi := l_ecc.inline_agent_of_id (fe_id)
-						if l_fi /= Void then
-								--| Test l_fi.is_fake_inline_agent to deal with agent on attribute
-							Result := l_fi.api_feature (l_ecc.class_id)
+			l_ct := eiffel_system.system.class_type_of_id (ct_id)
+			if l_ct /= Void then
+				l_cc := l_ct.associated_class
+				if l_cc /= Void and then fe_id /= 0 then
+					check is_not_is_precompiled: not l_cc.is_precompiled end
+					if {l_ecc: EIFFEL_CLASS_C} l_cc then
+						Result := l_ecc.feature_with_feature_id (fe_id)
+						if Result = Void then
+							l_fi := l_ecc.inline_agent_of_id (fe_id)
+							if l_fi /= Void then
+									--| Test l_fi.is_fake_inline_agent to deal with agent on attribute
+								Result := l_fi.api_feature (l_ecc.class_id)
+							end
 						end
 					end
 				end
@@ -334,16 +338,20 @@ feature -- Feature access
 		require
 			id_valid: a_orig > 0 and a_offset > 0
 		local
+			l_ct: CLASS_TYPE
 			l_cc: CLASS_C
 			l_fi: FEATURE_I
 		do
-			l_cc := eiffel_system.system.class_of_id (a_orig)
-			if l_cc /= Void then
-				check is_precompiled: l_cc.is_precompiled end
-				if {l_ecc: EIFFEL_CLASS_C} l_cc then
-					l_fi := feature_i_for_class_and_offset (l_cc, a_offset)
-					if l_fi /= Void then
-						Result := l_fi.api_feature (l_ecc.class_id)
+			l_ct := eiffel_system.system.class_type_of_id (a_orig)
+			if l_ct /= Void then
+				l_cc := l_ct.associated_class
+				if l_cc /= Void then
+					check is_precompiled: l_cc.is_precompiled end
+					if {l_ecc: EIFFEL_CLASS_C} l_cc then
+						l_fi := feature_i_for_class_and_offset (l_cc, a_offset)
+						if l_fi /= Void then
+							Result := l_fi.api_feature (l_ecc.class_id)
+						end
 					end
 				end
 			end

@@ -209,9 +209,6 @@ feature {NONE} -- Implementation
 			created: (create {RAW_FILE}.make (a_file_name)).exists
 		end
 
---	template_class_file_name: STRING is "testing_control_file.e"
---			-- Template eiffel testing control file
-
 	control_file: EW_EQA_TEST_CONTROL_FILE
 			--
 
@@ -242,10 +239,13 @@ feature {NONE} -- Implementation
 	tcf_content_file_name: !FILE_NAME
 			-- Tcf content file name
 			-- (export status {NONE})
+		local
+			l_factory: EW_EQA_TEST_FACTORY
 		do
-			create Result.make
-			Result.set_directory ("c:") -- FIXIT: Configurable? Move to singleton factory?
-			Result.set_file_name ("eiffel_eweasel_tcf_template.txt")
+			create l_factory
+			create Result.make_from_string (l_factory.environment.value ("ISE_EIFFEL"))
+			Result.extend_from_array (<<"studio", "help", "defaults">>)
+			Result.set_file_name ("eiffel_eweasel_tcf_template.e")
 		end
 
 	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): STRING is

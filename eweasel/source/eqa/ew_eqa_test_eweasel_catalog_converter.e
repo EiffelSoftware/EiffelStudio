@@ -9,9 +9,6 @@ indexing
 class
 	EW_EQA_TEST_EWEASEL_CATALOG_CONVERTER
 
-feature -- Access
-
-
 feature -- Command
 
 	convert_catalog (a_input_file: STRING) is

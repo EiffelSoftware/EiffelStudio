@@ -542,12 +542,12 @@ feature -- Modification (Add/Remove feature)
 				if x_pos + qcw.width > screen_w then
 					x := screen_w - qcw.width - 150
 				else
-					x := x_pos - 150
+					x := (x_pos - 150).max (0)
 				end
 				if y_pos + qcw.height > screen_h then
 					y := screen_h - qcw.height - 180
 				else
-					y := y_pos - 150
+					y := (y_pos - 150).max (0)
 				end
 				qcw.set_position (x, y)
 				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
@@ -579,12 +579,12 @@ feature -- Modification (Add/Remove feature)
 				if x_pos + qcw.width > screen_w then
 					x := screen_w - qcw.width - 150
 				else
-					x := x_pos - 150
+					x := (x_pos - 150).max (0)
 				end
 				if y_pos + qcw.height > screen_h then
 					y := screen_h - qcw.height - 180
 				else
-					y := y_pos - 150
+					y := (y_pos - 150).max (0)
 				end
 				qcw.set_position (x, y)
 				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)

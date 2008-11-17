@@ -463,8 +463,8 @@ feature {NONE} -- Implementation (adding relations)
 				create screen
 				screen_w := screen.virtual_right
 				screen_h := screen.virtual_bottom
-				x_pos := client.port_x + world.context_editor.widget.screen_x
-				y_pos := client.port_y + world.context_editor.widget.screen_y
+				x_pos := (port_x + client.port_x) // 2 + world.context_editor.widget.screen_x - world.bounding_box.x
+				y_pos := (port_y + client.port_y) // 2 + world.context_editor.widget.screen_y - world.bounding_box.y
 				client_model := client.model
 				cg := client_model.code_generator
 				if not is_aggregated then

@@ -220,6 +220,8 @@ feature -- Basic commands
 		do
 			if is_open_read or is_open_write then
 				c_shutdown (descriptor, 2)
+			end
+			if exists then
 				close_socket
 			end
 		end
@@ -228,7 +230,6 @@ feature -- Basic commands
 			-- Close socket for current context.
 		require
 			socket_exists: exists
-			is_open: is_open_read or is_open_write
 		do
 			c_close_socket (descriptor);
 			descriptor := -2;
@@ -237,7 +238,6 @@ feature -- Basic commands
 			is_open_write := False
 		ensure
 			is_closed: is_closed
-			not_is_open: not is_open_read and not is_open_write
 		end
 
 	is_closed: BOOLEAN is

@@ -23,7 +23,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_consistent: Result = code_templates
+			result_consistent: Result ~ code_templates
 		end
 
 feature -- Status report

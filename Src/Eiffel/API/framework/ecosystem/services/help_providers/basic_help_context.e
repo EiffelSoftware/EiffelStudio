@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_context: like help_context_id; a_section: like help_context_section; a_provider: like help_provider)
+	make (a_context: !like help_context_id; a_section: ?like help_context_section; a_provider: !like help_provider)
 			-- Initialize a help context using a set of help context information.
 		require
 			not_a_context_is_empty: not a_context.is_empty
@@ -39,14 +39,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	help_context_id: !STRING_GENERAL
-			-- A contextual identifer to link an associated help through.
+			-- <Precursor>
 
 	help_context_section: ?HELP_CONTEXT_SECTION_STRING
-			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
+			-- <Precursor>
 
 	help_provider: !UUID
-			-- Help provider kind best used for the help context.
-			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
+			-- <Precursor>
 		do
 			Result := internal_help_provider
 		end
@@ -54,13 +53,13 @@ feature -- Access
 feature -- Status report
 
 	is_help_available: BOOLEAN
-			-- Indicates if any help context is available
+			-- <Precursor>
 		do
 			Result := True
 		end
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- <Precursor>
 		do
 			Result := True
 		end

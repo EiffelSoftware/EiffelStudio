@@ -63,13 +63,13 @@ feature -- Access
 
 feature -- Constants
 
-	chm_uuid_string: !STRING     = "E1FFE14E-B816-4675-B15D-087E948DA79A"
-	eiffel_doc_string: !STRING   = "E1FFE14E-80FB-11DD-AD8B-0800200C9A66"
-	wiki_uuid_string: !STRING    = "E1FFE14E-64D2-4F19-B2E5-BC121E228FE4"
-	raw_uri_uuid_string: !STRING = "742EC425-77EE-4B54-9152-29E845758329"
-	pdf_uuid_string: !STRING     = "BA35A9BB-5B69-4BD3-88B3-FB8DAE5CA08E"
-	doc_uuid_string: !STRING     = "49CA2564-83BB-45AE-95C0-491245F4FB3C"
-	eis_uuid_string: !STRING     = "309C1917-9AB0-44E0-AD42-53C2E5F7FD16"
+	chm_uuid_string: STRING     = "E1FFE14E-B816-4675-B15D-087E948DA79A"
+	eiffel_doc_string: STRING   = "E1FFE14E-80FB-11DD-AD8B-0800200C9A66"
+	wiki_uuid_string: STRING    = "E1FFE14E-64D2-4F19-B2E5-BC121E228FE4"
+	raw_uri_uuid_string: STRING = "742EC425-77EE-4B54-9152-29E845758329"
+	pdf_uuid_string: STRING     = "BA35A9BB-5B69-4BD3-88B3-FB8DAE5CA08E"
+	doc_uuid_string: STRING     = "49CA2564-83BB-45AE-95C0-491245F4FB3C"
+	eis_uuid_string: STRING     = "309C1917-9AB0-44E0-AD42-53C2E5F7FD16"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

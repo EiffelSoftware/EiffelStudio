@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_section: like section)
+	make (a_section: !like section)
 			-- Initialize a help context section (page part).
 			--
 			-- `a_section': The context help page section to set.

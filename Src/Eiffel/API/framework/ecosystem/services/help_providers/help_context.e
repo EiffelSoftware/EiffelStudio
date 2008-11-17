@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	frozen help_context_id: !STRING_GENERAL
-			-- A contextual identifer to link an associated help through.
+			-- <Precursor>
 		do
 			create {!STRING_8} Result.make_empty
 			if {l_result: !STRING_GENERAL} help_context then
@@ -28,7 +28,7 @@ feature -- Access
 		end
 
 	help_context_section: ?STRING_GENERAL
-			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
+			-- <Precursor>
 		do
 			--| Dummy implementation descendents can override to support a sub-section.
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_help_available: BOOLEAN
-			-- Indicates if any help context is available
+			-- <Precursor>
 		do
 			Result := Precursor {HELP_CONTEXT_I} and then help_context /= Void
 		ensure then

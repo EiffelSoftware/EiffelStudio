@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Helpers
 
-	icon_provider: !ES_TOOL_ICONS_PROVIDER [ES_TESTING_TOOL_63_ICONS, ES_TESTING_TOOL_63]
+	icon_provider: !ES_TOOL_ICONS_PROVIDER [ES_TESTING_TOOL_ICONS, ES_TESTING_TOOL]
 			-- Access to the icons provided by the testing tool.
 		once
 			create Result.make (development_window)

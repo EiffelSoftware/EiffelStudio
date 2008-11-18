@@ -6,16 +6,16 @@ indexing
 	revision: "$Revision$"
 
 frozen class
-	ES_TESTING_TOOL_63
+	ES_TESTING_TOOL
 
 inherit
-	ES_STONABLE_TOOL [ES_TESTING_TOOL_PANEL_63]
+	ES_STONABLE_TOOL [ES_TESTING_TOOL_PANEL]
 		redefine
 			name
 		end
 
 inherit {NONE}
-	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 		export
 			{NONE} all
 		end
@@ -59,7 +59,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	create_tool: ES_TESTING_TOOL_PANEL_63
+	create_tool: ES_TESTING_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

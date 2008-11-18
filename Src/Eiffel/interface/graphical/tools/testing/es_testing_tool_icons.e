@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_TOOL_63_ICONS
+	ES_TESTING_TOOL_ICONS
 
 inherit
 	ES_TOOL_PIXMAPS

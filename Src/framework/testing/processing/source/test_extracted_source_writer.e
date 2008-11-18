@@ -442,8 +442,9 @@ feature {NONE} -- Output
 		do
 			stream.put_line ("indexing%N")
 			stream.indent
-			stream.put_line ("description: %"Regression tests for {EQA_EXTRACTED_TEST_SET}.%"")
+			stream.put_line ("description: %"Regression tests reproducing application state of a previous execution.%"")
 			stream.put_line ("author: %"Testing tool%"")
+			stream.put_line ("testing: %"type/extracted%"")
 			stream.dedent
 			stream.put_line ("")
 		end

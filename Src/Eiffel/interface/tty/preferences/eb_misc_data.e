@@ -193,7 +193,7 @@ feature {NONE} -- Preference Strings
 	console_shell_command_string: STRING is "general.console_shell_command"
 	file_browser_command_string: STRING is "general.file_browser_command"
 	locale_id_preference_string: STRING is "general.locale"
-	pnd_preference_string: STRING is "general.pnd_mode"
+	pnd_preference_string: STRING is "general.pick_and_drop_(pnd)_mode"
 	eis_path_preference_string: STRING is "general.eis_path"
 
 feature {NONE} -- Implementation

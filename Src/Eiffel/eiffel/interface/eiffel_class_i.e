@@ -61,16 +61,6 @@ feature -- Access
 			end
 		end
 
-	reset_options is
-			-- <Precursor>
-		do
-				-- Reset any previous cached options.
-			if options_internal /= Void then
-				options_internal := Void
-				options_internal := options
-			end
-		end
-
 	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to
 
@@ -183,6 +173,18 @@ feature -- Setting
 			base_name := s
 		ensure
 			base_name_set: base_name = s
+		end
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	reset_options is
+			-- <Precursor>
+		do
+				-- Reset any previous cached options.
+			if options_internal /= Void then
+				options_internal := Void
+				options_internal := options
+			end
 		end
 
 feature {NONE} -- Implementation

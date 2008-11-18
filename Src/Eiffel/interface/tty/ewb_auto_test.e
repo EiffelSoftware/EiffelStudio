@@ -21,10 +21,6 @@ feature {NONE} -- Initialization
 		require
 			a_arguments_attached: a_arguments /= Void
 		do
-			create {DS_LINKED_LIST [STRING]} auto_test_arguments.make
-			a_arguments.do_all (agent auto_test_arguments.force_last)
-		ensure
-			auto_test_arguments_set: auto_test_arguments /= Void and then auto_test_arguments.count = a_arguments.count
 		end
 
 feature -- Properties

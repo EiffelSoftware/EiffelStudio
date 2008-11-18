@@ -13,6 +13,10 @@ inherit
 
 	ITP_VARIABLE_CONSTANTS
 
+	ERL_G_TYPE_ROUTINES
+
+	AUT_SHARED_INTERPRETER_INFO
+
 feature{NONE} -- Initialization
 	make is
 			-- Create new parser.
@@ -453,6 +457,8 @@ feature {NONE} -- Parsing
 			input: input /= Void
 			not_end_of_input: not end_of_input
 			no_error: not has_error
+		local
+			l_type: TYPE_A
 		do
 			if item /= '{' then
 				report_and_set_error_at_position ("Expected '{' but got '" + item.out + "'.", position)
@@ -461,12 +467,20 @@ feature {NONE} -- Parsing
 				if end_of_input then
 					report_and_set_error_at_position ("Expected type name, not end of input.", position)
 				else
-					parse_type_name
-					if not has_error then
-						if end_of_input then
-							report_and_set_error_at_position ("Expected '}', not end of input.", position)
-						elseif item /= '}' then
-							report_and_set_error_at_position ("Expected '{' but got '" + item.out + "'.", position)
+					last_string.wipe_out
+					from
+					until
+						end_of_input or else item = '}'
+					loop
+						last_string.append_character (item)
+						forth
+					end
+					if end_of_input then
+						report_and_set_error_at_position ("Expected '}', not end of input.", position)
+					else
+						l_type := base_type (last_string.twin, interpreter_root_class)
+						if l_type = Void then
+							report_and_set_error_at_position ("Unknown type {" + last_string + "}.", position)
 						else
 							forth
 						end
@@ -537,109 +551,107 @@ feature {NONE} -- Parsing
 			a_type_name: STRING
 		do
 			if item = '{' then
+				last_string.wipe_out
+
+					-- Get the type part in curly braces.
 				forth
-				skip_whitespace
+				from until
+					end_of_input or else item = '}'
+				loop
+					last_string.append_character (item)
+					forth
+				end
 				if end_of_input then
 					report_and_set_error_at_position ("Expected type name, not end of input.", position)
 				else
-					parse_type_name
-					if not has_error then
-						a_type_name := last_string.twin
-						skip_whitespace
-						if end_of_input then
-							report_and_set_error_at_position ("Expected '}', not end of input.", position)
-						elseif item /= '}' then
-							report_and_set_error_at_position ("Expected '}' but got '" + item.out + "'.", position)
-						else
-							forth
-							skip_whitespace
-							if end_of_input then
-								report_and_set_error_at_position ("Expected constant, not end of input.", position)
-							else
-								parse_constant_or_variable
-								if not has_error then
-									if a_type_name.is_case_insensitive_equal ("INTEGER_8") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_integer_8)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("INTEGER_16") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_integer_16)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("INTEGER_32") or a_type_name.is_case_insensitive_equal ("INTEGER") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_integer)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("INTEGER_64") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_integer_64)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("NATURAL_8") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_natural_8)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("NATURAL_16") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_natural_16)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("NATURAL_32") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_natural_32)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("NATURAL_64") then
-										if last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_natural_64)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("BOOLEAN") then
-										if last_token /= true_token_code and last_token /= false_token_code then
-											report_and_set_error_at_position ("Expected boolean constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_boolean)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("CHARACTER_8") or a_type_name.is_case_insensitive_equal ("CHARACTER") then
-										if last_token /= character_token_code then
-											report_and_set_error_at_position ("Expected character constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.item (1))
-										end
-									elseif a_type_name.is_case_insensitive_equal ("CHARACTER_32") then
-										if last_token /= character_token_code then
-											report_and_set_error_at_position ("Expected character constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.item (1).to_character_32)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("REAL_32") or a_type_name.is_case_insensitive_equal ("REAL") then
-										if last_token /= double_token_code and last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected real constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_real)
-										end
-									elseif a_type_name.is_case_insensitive_equal ("REAL_64") or a_type_name.is_case_insensitive_equal ("DOUBLE") then
-										if last_token /= double_token_code and last_token /= integer_token_code then
-											report_and_set_error_at_position ("Expected double constant but got '" + last_string + "'.", position)
-										else
-											create {ITP_CONSTANT} last_expression.make (last_string.to_double)
-										end
-									else
-										report_and_set_error_at_position ("Expected basic type but got '" + a_type_name + "'.", position)
-									end
+					a_type_name := last_string.twin
+					forth
+					skip_whitespace
+					if end_of_input then
+						report_and_set_error_at_position ("Expected constant, not end of input.", position)
+					else
+						parse_constant_or_variable
+						if not has_error then
+							if a_type_name.is_case_insensitive_equal ("INTEGER_8") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_integer_8)
 								end
+							elseif a_type_name.is_case_insensitive_equal ("INTEGER_16") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_integer_16)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("INTEGER_32") or a_type_name.is_case_insensitive_equal ("INTEGER") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_integer)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("INTEGER_64") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_integer_64)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("NATURAL_8") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_natural_8)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("NATURAL_16") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_natural_16)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("NATURAL_32") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_natural_32)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("NATURAL_64") then
+								if last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected integer constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_natural_64)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("BOOLEAN") then
+								if last_token /= true_token_code and last_token /= false_token_code then
+									report_and_set_error_at_position ("Expected boolean constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_boolean)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("CHARACTER_8") or a_type_name.is_case_insensitive_equal ("CHARACTER") then
+								if last_token /= character_token_code then
+									report_and_set_error_at_position ("Expected character constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.item (1))
+								end
+							elseif a_type_name.is_case_insensitive_equal ("CHARACTER_32") then
+								if last_token /= character_token_code then
+									report_and_set_error_at_position ("Expected character constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.item (1).to_character_32)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("REAL_32") or a_type_name.is_case_insensitive_equal ("REAL") then
+								if last_token /= double_token_code and last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected real constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_real)
+								end
+							elseif a_type_name.is_case_insensitive_equal ("REAL_64") or a_type_name.is_case_insensitive_equal ("DOUBLE") then
+								if last_token /= double_token_code and last_token /= integer_token_code then
+									report_and_set_error_at_position ("Expected double constant but got '" + last_string + "'.", position)
+								else
+									create {ITP_CONSTANT} last_expression.make (last_string.to_double)
+								end
+							else
+								report_and_set_error_at_position ("Expected basic type but got '" + a_type_name + "'.", position)
 							end
 						end
 					end
@@ -671,86 +683,6 @@ feature {NONE} -- Parsing
 			end
 		ensure
 			error_or_type_name: not has_error implies last_expression /= Void
-		end
-
-	parse_type_name is
-			-- Parse type name (e.g: "LINKED_LIST [STRING]") and
-			-- make resulting type name available via `last_string' or call
-			-- any of the `report_and_set_error_*' routines on error.
-			-- TODO: Can be removed because we can use {SHARED_EIFFEL_PARSER}.`Type_parser' to retrieve a type from string.
-		require
-			input: input /= Void
-			not_end_of_input: not end_of_input
-			no_error: not has_error
-		local
-			a_type_name: STRING
-		do
-			parse_identifier
-			if not has_error then
-				a_type_name := last_string.twin
-				skip_whitespace
-				if not end_of_input then
-					parse_optional_type_name_list_in_brackets
-					if not has_error then
-						a_type_name.append_string (last_string)
-					end
-				end
-				last_string := a_type_name
-			end
-		ensure
-			error_or_type_name: not has_error implies is_valid_type_name (last_string)
-		end
-
-	parse_optional_type_name_list_in_brackets is
-			-- Parse an optional type name list in brackets (e.g: "[LINKED_LIST [STRING], ANY]") and
-			-- make resulting type name available via `last_string' or call
-			-- any of the `report_and_set_error_*' routines on error.
-			-- TODO: Can be removed because we can use {SHARED_EIFFEL_PARSER}.`Type_parser' to retrieve a type from string.
-		require
-			input: input /= Void
-			not_end_of_input: not end_of_input
-			no_error: not has_error
-		local
-			open_bracket: BOOLEAN
-			a_string: STRING
-		do
-			create a_string.make (last_string.capacity)
-			if
-				item = '['
-			then
-				from
-					open_bracket := True
-					a_string.append_character (' ')
-					a_string.append_character (item)
-					forth
-					skip_whitespace
-				until
-					not open_bracket or has_error or end_of_input
-				loop
-					parse_type_name
-					if not has_error then
-						a_string.append_string (last_string)
-						skip_whitespace
-						if end_of_input then
-							report_and_set_error_at_position ("Expected ']', or ',', not end of input", position)
-						else
-							if item = ']' then
-								open_bracket := False
-								a_string.append_character (item)
-								forth
-							elseif item = ',' then
-								a_string.append_character (item)
-								a_string.append_character (' ')
-								forth
-								skip_whitespace
-							else
-								report_and_set_error_at_position ("Expected ']', or ',', but got '" + item.out + "'.", position)
-							end
-						end
-					end
-				end
-			end
-			last_string := a_string
 		end
 
 	skip_whitespace is

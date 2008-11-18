@@ -522,9 +522,12 @@ feature {NONE} -- Implementation
 				until
 					i > src.count
 				loop
-					if src.item (i) = delimiter or else i = src.count then
+					if src.item (i) = delimiter then
 						Result.force (token, Result.count+1)
 						create token.make_empty
+					elseif i = src.count then
+						token.extend(src.item (i))
+						Result.force (token, Result.count+1)
 					else
 						token.extend(src.item (i))
 					end

@@ -118,7 +118,7 @@ feature -- Config
 			 setup
 			initial_environment (l_factory.environment, a_test_folder_name)
 
-					test (a_test_name, a_test_folder_name, a_arguments)
+			test (a_test_name, a_test_folder_name, a_arguments)
 		end
 
 feature -- Query
@@ -252,6 +252,7 @@ feature -- Command
 			l_eweasel_63.define ("PLATFORM_TYPE", "$EWEASEL_PLATFORM")
 			l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
 
+			-- Copy from $EWEASEL\control\windows_platform
 			l_eweasel_63.define_file ("EWEASEL_COMPILE", <<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec.exe">>)
 			l_eweasel_63.define_file ("EWEASEL_EXECUTE", <<"$EWEASEL", "bin", "eiffel_execute.bat">>)
 			l_eweasel_63.define_file ("EWEASEL_FREEZE", <<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "finish_freezing.exe">>)

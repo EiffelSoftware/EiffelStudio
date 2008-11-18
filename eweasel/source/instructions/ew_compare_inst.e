@@ -47,7 +47,7 @@ feature
 				expected_output_file);
 			create actual.make (act_name);
 			create expected.make (exp_name);
-			if (actual.exists and then actual.is_plain) and 
+			if (actual.exists and then actual.is_plain) and
 			   (expected.exists and then expected.is_plain) then
 				execute_ok := equal_files (actual, expected);
 				if not execute_ok then
@@ -62,16 +62,16 @@ feature
 			elseif not expected.is_plain then
 				failure_explanation := "file with expected output not a plain file";
 			end
-			
+
 		end;
 
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
-	
+
 	execute_ok: BOOLEAN;
 			-- Was last call to `execute' successful?
 
-	
+
 feature {NONE}  -- Implementation
 
 	equal_files (file1: RAW_FILE; file2: RAW_FILE): BOOLEAN is
@@ -93,9 +93,25 @@ feature {NONE}  -- Implementation
 				eof1 := file1.end_of_file;
 				eof2 := file2.end_of_file;
 				if not eof1 and not eof2 then
+
+					-- We ignore different types of eol marks.
+					-- since the output file maybe prepared on different platforms
+					-- on Windows, text's end line mark is %R%N
+					-- on Unix, text's end line makr is %N
+					if file1.lastchar = '%R' and not eof1 then
+						file1.readchar
+						eof1 := file1.end_of_file;
+					end
+
+					if file2.lastchar = '%R' and not eof2 then
+						file2.readchar
+						eof2 := file2.end_of_file;
+					end
+
 					if file1.lastchar /= file2.lastchar then
 						unequal := True;
 					end
+
 				elseif (eof1 and not eof2) or (eof2 and not eof1) then
 					unequal := True;
 				end
@@ -104,16 +120,16 @@ feature {NONE}  -- Implementation
 			file2.close;
 			Result := not unequal;
 		end;
-	
+
 feature {NONE}
-	
+
 	actual_output_file: STRING;
 			-- Name of file with actual output
-	
+
 	expected_output_file: STRING;
 			-- Name of file with expected output
-	
-	
+
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

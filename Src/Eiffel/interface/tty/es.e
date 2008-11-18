@@ -603,6 +603,7 @@ feature -- Update
 			ewb_senders: EWB_SENDERS
 			ewb_callees: EWB_CALLEES
 			l_arg: STRING
+			auto_test_arguments: LINKED_LIST [STRING]
 		do
 			filter_name := ""
 			option := argument (current_option);
@@ -1207,6 +1208,18 @@ feature -- Update
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-auto_test") then
+					-- When this option is present, all the following arguments are parsed as AutoTest specific arguments.
+				create auto_test_arguments.make
+				from
+					current_option := current_option + 1
+				until
+					current_option > argument_count
+				loop
+					auto_test_arguments.extend (argument (current_option))
+					current_option := current_option + 1
+				end
+				create {EWB_AUTO_TEST} command.make_with_arguments (auto_test_arguments)
 			elseif is_eiffel_class_file_name (option) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then

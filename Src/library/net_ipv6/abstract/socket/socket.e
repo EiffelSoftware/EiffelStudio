@@ -134,7 +134,7 @@ feature -- Basic commands
 	bind is
 			-- Bind socket to local address in `address'.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			valid_local_address: address /= Void
 		deferred
 		end
@@ -142,7 +142,7 @@ feature -- Basic commands
 	connect is
 			-- Connect socket to peer address.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			valid_peer_address: peer_address /= Void
 		deferred
 		end

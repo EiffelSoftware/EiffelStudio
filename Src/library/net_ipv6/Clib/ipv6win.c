@@ -687,7 +687,7 @@ void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER
 
 	fd = *a_fd;
 
-	if (addr->him.sa_family == AF_INET || IN6ADDR_ISANY(&addr->him6)) {
+	if (addr->him.sa_family == AF_INET || IN6ADDR_ISANY(&addr->him6) || IN6ADDR_ISLOOPBACK(&addr->him6)) {
 			/* listen on v4 */
 		if ((res=listen(fd, count)) == -1) {
 			eif_net_check(res);

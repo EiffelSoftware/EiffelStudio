@@ -14,8 +14,7 @@ inherit
 		rename
 			processor as factory
 		redefine
-			build_notebook_widget_interface,
-			on_processor_finished
+			build_notebook_widget_interface
 		end
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -68,26 +67,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	on_processor_finished
-			-- <Precursor>
-		local
-			l_dir: DIRECTORY_NAME
-			l_message: !STRING_32
-		do
-			if generator_factory_type.attempt (factory) /= Void then
-				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)
-				l_dir.extend ("auto_test")
-				l_message := locale_formatter.formatted_translation (i_done_message, [l_dir])
-				prompts.show_info_prompt (l_message, development_window.window, Void)
-			end
-		end
-
 feature {NONE} -- Constants
 
 	t_generator_title: !STRING = "Generation"
 	t_extractor_title: !STRING = "Extraction"
 	t_creator_title: !STRING = "New manual tests"
-
-	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in%N$1"
 
 end

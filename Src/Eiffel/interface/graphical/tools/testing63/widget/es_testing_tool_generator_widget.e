@@ -14,7 +14,10 @@ inherit
 		redefine
 			build_notebook_widget_interface,
 			factory,
-			on_processor_changed
+			on_processor_launched,
+			on_processor_changed,
+			on_processor_error,
+			on_processor_finished
 		end
 
 create
@@ -44,7 +47,17 @@ feature {NONE} -- Access
 	status_label: !EV_LABEL
 			-- Label showing status of generator
 
+feature {NONE} -- Status report
+
+	has_error: BOOLEAN
+
 feature {NONE} -- Events
+
+	on_processor_launched
+			-- <Precursor>
+		do
+			has_error := False
+		end
 
 	on_processor_changed
 			-- <Precursor>
@@ -67,5 +80,29 @@ feature {NONE} -- Events
 				status_label.set_text ("")
 			end
 		end
+
+	on_processor_error (a_error: !STRING_8; a_tokens: !TUPLE)
+			-- <Precursor>
+		do
+			has_error := True
+		end
+
+	on_processor_finished
+			-- <Precursor>
+		local
+			l_dir: DIRECTORY_NAME
+			l_message: !STRING_32
+		do
+			if not has_error then
+				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)
+				l_dir.extend ("auto_test")
+				l_message := locale_formatter.formatted_translation (i_done_message, [l_dir])
+				prompts.show_info_prompt (l_message, development_window.window, Void)
+			end
+		end
+
+feature {NONE} -- Constants
+
+	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in%N$1"
 
 end

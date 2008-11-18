@@ -25,12 +25,14 @@ inherit
 			on_processor_launched as on_processor_launched_frozen,
 			on_processor_finished as on_processor_finished_frozen,
 			on_processor_stopped as on_processor_stopped_frozen,
-			on_processor_proceeded as on_processor_proceeded_frozen
+			on_processor_proceeded as on_processor_proceeded_frozen,
+			on_processor_error as on_processor_error_frozen
 		redefine
 			on_processor_launched_frozen,
 			on_processor_finished_frozen,
 			on_processor_stopped_frozen,
-			on_processor_proceeded_frozen
+			on_processor_proceeded_frozen,
+			on_processor_error_frozen
 		end
 
 feature {NONE} -- Initialization
@@ -185,6 +187,15 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
+	frozen on_processor_error_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_tokens: !TUPLE)
+			-- <Precursor>
+		do
+			if a_processor = processor then
+				on_processor_error (a_error, a_tokens)
+				on_processor_changed_frozen
+			end
+		end
+
 feature {NONE} -- Events: widgets
 
 	on_stop
@@ -237,6 +248,12 @@ feature {NONE} -- Events: processor
 			-- Called when `processor' is stopped.
 		do
 			progress_widget.hide
+		end
+
+	on_processor_error (a_error: !STRING_8; a_tokens: !TUPLE)
+			-- Called when `processor' reports an error
+		do
+
 		end
 
 feature {NONE} -- Implementation

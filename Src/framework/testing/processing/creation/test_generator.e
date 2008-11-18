@@ -251,6 +251,7 @@ feature {NONE} -- Implementation
 					build_types_and_classes_under_test
 					error_handler.set_start_time (system_clock.date_time_now)
 				else
+					test_suite.propagate_error ("Not able to use workbench executable for interpreter", [], Current)
 					is_finished := True
 				end
 			end

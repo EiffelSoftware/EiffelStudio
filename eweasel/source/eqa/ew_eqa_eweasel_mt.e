@@ -51,6 +51,7 @@ feature -- Command to replace parse arguments
 			l_index, l_count: INTEGER
 			l_file_name: FILE_NAME
 			l_factory: EW_EQA_TEST_FACTORY
+			l_subsituted: STRING
 		do
 			from
 				create l_factory
@@ -61,7 +62,9 @@ feature -- Command to replace parse arguments
 			loop
 				l_item := a_path.item (l_index)
 
-				a_path.put (l_factory.replace_environments_in_default (l_item), l_index)
+				l_subsituted := l_factory.environment.substitute_recursive (l_item)
+
+				a_path.put (l_subsituted, l_index)
 
 				l_index := l_index + 1
 			end

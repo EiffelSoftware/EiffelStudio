@@ -19,13 +19,13 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EW_SHARED_OBJECTS
-		
+
 	ANY
 
 create
-	
+
 	make
 
 feature  -- Creation
@@ -100,6 +100,31 @@ feature  -- Modification
 		end
 
 feature  -- Properties
+
+	substitute_recursive (a_line: STRING): STRING is
+			-- Call `substitute' recursively util no '$' found anymore
+		require
+			not_void: a_line /= Void
+		local
+			l_temp: STRING
+			l_stop: BOOLEAN
+		do
+			from
+				Result := a_line
+			until
+				not Result.has ('$') or l_stop
+			loop
+				l_temp := substitute (Result)
+				if l_temp.is_equal (Result) then
+					l_stop := True
+				else
+					l_stop := False
+					Result := l_temp
+				end
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 	substitute (line: STRING): STRING is
 			-- `line' with all environment variables replaced
@@ -205,11 +230,11 @@ feature {NONE} -- Implementation
 	table: HASH_TABLE [STRING, STRING];
 			-- Table which associates environment variable
 			-- names (keys) with their values.
-	
+
 	list: ARRAYED_LIST [STRING];
 			-- List of operating system environment variables
 			-- that have been defined
-	
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

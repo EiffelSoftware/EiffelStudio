@@ -19,10 +19,18 @@ deferred class NETWORK_SOCKET inherit
 			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
-			make_socket, address_type, is_valid_peer_address, connect, is_valid_family
+			exists, make_socket, address_type, is_valid_peer_address, connect, is_valid_family
 		end
 
 feature
+
+	exists: BOOLEAN is
+			-- Does socket exist?
+		do
+			Result := descriptor_available and then (fd > 0 or else fd1 > 0)
+		ensure then
+			definition: Result implies descriptor_available
+		end
 
 	close_socket is
 			--
@@ -129,15 +137,13 @@ feature -- Status report
 		end
 
 	is_valid_peer_address (addr: like address): BOOLEAN is
-			-- <Precursor>
 		do
-			Result := (addr.family = family) or else (family = af_inet6 and then addr.family = af_inet)
+			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
 	is_valid_family (addr: like address): BOOLEAN is
-			-- <Precursor>
 		do
-			Result := (addr.family = family) or else (addr.family = af_inet or else addr.family = af_inet6)
+			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
 	ready_for_reading: BOOLEAN is

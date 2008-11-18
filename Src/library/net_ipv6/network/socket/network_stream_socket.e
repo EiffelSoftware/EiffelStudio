@@ -28,7 +28,7 @@ inherit
 
 	STREAM_SOCKET
 		undefine
-			is_valid_peer_address, is_valid_family, address_type
+			exists, is_valid_peer_address, is_valid_family, address_type
 		end
 
 create

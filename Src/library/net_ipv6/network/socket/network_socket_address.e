@@ -35,7 +35,7 @@ inherit
 
 create
 
-	make_from_hostname_and_port, make_from_address_and_port, make_any_local
+	make_from_hostname_and_port, make_from_address_and_port, make_any_local, make_localhost
 
 feature -- Initialization
 
@@ -71,6 +71,19 @@ feature -- Initialization
 			addr: INET_ADDRESS
 		do
 			addr := create_any_local
+			if addr /= Void then
+				socket_address := addr.sockaddr (a_port)
+			end
+		ensure
+			socket_address /= Void
+		end
+
+	make_localhost (a_port: INTEGER) is
+			--
+		local
+			addr: INET_ADDRESS
+		do
+			addr := create_localhost
 			if addr /= Void then
 				socket_address := addr.sockaddr (a_port)
 			end

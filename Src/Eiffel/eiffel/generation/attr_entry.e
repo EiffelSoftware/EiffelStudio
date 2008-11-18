@@ -28,6 +28,9 @@ feature -- previously in ATTR_UNIT
 			Result.set_type_id (class_type.type_id)
 			Result.set_feature_id (feature_id)
 			Result.set_type (feature_type (class_type))
+			if has_body then
+				Result.set_has_body
+			end
 		end
 
 feature -- from ATTR_ENTRY
@@ -50,8 +53,27 @@ feature -- from ATTR_ENTRY
 			Result := skel.workbench_offset
 		end;
 
+feature -- Status report
+
+	has_body: BOOLEAN
+			-- Does this attribute has an explicit body?
+
+	is_initialization_required: BOOLEAN
+			-- Is initialization of an attribute required?
+		do
+			Result := has_body and then type.is_initialization_required
+		end
+
+feature -- Status setting
+
+	set_has_body
+			-- Set `has_body' to True.
+		do
+			has_body := True
+		end
+
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

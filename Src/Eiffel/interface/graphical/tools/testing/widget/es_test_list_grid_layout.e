@@ -189,7 +189,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Helpers
 
-	icon_provider: !ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+	icon_provider: !ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 			-- Access to the icons provided by the testing tool.
 
 feature -- Basic operations

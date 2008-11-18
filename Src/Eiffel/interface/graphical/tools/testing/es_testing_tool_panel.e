@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_TOOL_PANEL_63
+	ES_TESTING_TOOL_PANEL
 
 inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
@@ -17,7 +17,7 @@ inherit
 			create_right_tool_bar_items
 		end
 
-	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_63_ICONS]
+	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 		rename
 			tool as tool_descriptor
 		export
@@ -59,7 +59,7 @@ inherit
 			{NONE} all
 		end
 
-create {ES_TESTING_TOOL_63}
+create {ES_TESTING_TOOL}
 	make
 
 feature {NONE} -- Initialization

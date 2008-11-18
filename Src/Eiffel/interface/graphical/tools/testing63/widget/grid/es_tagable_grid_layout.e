@@ -261,6 +261,23 @@ feature {NONE} -- Factory
 					token_writer.add_group (l_cluster, l_name)
 					a_node.set_data (l_cluster)
 				end
+			elseif l_token.starts_with (override_prefix) and l_token.count > override_prefix.count  then
+				l_name := l_token.substring (override_prefix.count + 1, l_token.count)
+				l_pixmap := pixmaps.icon_pixmaps.folder_override_cluster_icon
+				if l_pnode /= Void then
+					if l_cluster /= Void then
+						l_cluster := l_cluster.target.overrides.item (l_name)
+					elseif l_library /= Void then
+						l_cluster := l_library.library_target.overrides.item (l_name)
+					end
+				end
+				if l_cluster = Void then
+					l_cluster := project.universe.cluster_of_name (l_name)
+				end
+				if l_cluster /= Void then
+					token_writer.add_group (l_cluster, l_name)
+					a_node.set_data (l_cluster)
+				end
 			elseif l_token.starts_with (library_prefix) and l_token.count > library_prefix.count then
 				if l_token.count > 37 + library_prefix.count then
 					l_name := l_token.substring (library_prefix.count + 1, l_token.count - 37)

@@ -861,7 +861,9 @@ feature {NONE} -- Implementation: tag retrieval
 						a_tag.append_character (':')
 						a_tag.append (l_lib.library_target.system.uuid.out)
 					else
-						if cluster_stack.last.is_cluster then
+						if cluster_stack.last.is_override then
+							a_tag.append (tag_utilities.override_prefix)
+						elseif cluster_stack.last.is_cluster then
 							a_tag.append (tag_utilities.cluster_prefix)
 						end
 						a_tag.append (cluster_stack.last.name)

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Command that only show failed test case rows in {ES_TESTING_TOOL_PANEL}'s grid
+						Command that only show failed test case rows in {ES_EWEASEL_TESTING_TOOL_PANEL}'s grid
 																										]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Command
 			manager.testing_tool.test_case_grid_manager.only_show_failed_test_cases (not is_selected)
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	is_selected: BOOLEAN is
 			-- Redefine

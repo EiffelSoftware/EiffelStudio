@@ -34,7 +34,7 @@ feature -- Command
 			manager.testing_tool.test_case_grid_manager.refresh_time_columns
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER
 			-- eweasel chief manager

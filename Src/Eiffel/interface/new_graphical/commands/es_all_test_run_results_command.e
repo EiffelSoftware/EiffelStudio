@@ -39,9 +39,9 @@ feature -- Command
 			dialog.show_on_active_window
 		end
 
-feature {ES_TESTING_TOOL_PANEL, ES_TESTING_RESULT_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL, ES_EWEASEL_TESTING_RESULT_TOOL_PANEL} -- Implementation
 
-	dialog: ES_ALL_TEST_RUN_RESULTS_DIALOG
+	dialog: ES_RUN_ALL_EWEASEL_TEST_RESULTS_DIALOG
 			-- The dialog will be shown in `execute'.
 
 	menu_name: STRING_GENERAL is

@@ -141,7 +141,7 @@ feature {NONE} -- Validation
 			end
 
 			if l_check_non_switched_arguments then
-				if not has_non_switched_argument and is_non_switch_argument_required then
+				if not has_non_switched_argument and then is_non_switch_argument_required and not is_help_usage_displayed then
 					add_template_error (e_missing_non_switched_argument, [non_switched_argument_type.as_lower])
 				end
 			end

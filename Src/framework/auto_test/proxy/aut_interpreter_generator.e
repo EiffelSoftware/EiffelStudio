@@ -75,6 +75,7 @@ feature -- Generation
 			absolute_pathname: STRING
 			executable_filename: STRING
 		do
+			last_interpreter := Void
 			absolute_pathname := file_system.absolute_pathname (a_pathname)
 			file_system.recursive_create_directory (a_log_dirname)
 			executable_filename := system.project_location.workbench_executable_file_name

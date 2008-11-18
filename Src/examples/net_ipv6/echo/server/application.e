@@ -1,5 +1,5 @@
 indexing
-	description: "Server side for processing echo."
+	description: "Single threaded echo server."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +48,9 @@ feature {NONE} -- Initialization
 				io.put_string ("Unable bind to port "+ port.out)
 				io.put_new_line
 			else
-					-- Listen on Server Socket
+				io.put_string ("Listening on address = " + listen_socket.address.host_address.host_address + " port = " + listen_socket.address.port.out)
+				io.put_new_line
+					-- Listen on Server Socket with queue length = 2
 				listen_socket.listen (2)
 				perform_accept_serve_loop (listen_socket)
 			end
@@ -88,7 +90,9 @@ feature {NONE} -- Implementation
 		local
 			done: BOOLEAN
 		do
-			io.put_string ("accepted client, address = " + socket.peer_address.host_address.host_address)
+			io.put_string ("Accepted client on the listen socket address = "+ socket.address.host_address.host_address + " port = " + socket.address.port.out +".")
+			io.put_new_line
+			io.put_string ("%T Accepted client address = " + socket.peer_address.host_address.host_address + " , port = " + socket.peer_address.port.out)
 			io.put_new_line
 			from
 				done := False
@@ -97,7 +101,7 @@ feature {NONE} -- Implementation
 			loop
 				done := receive_message_and_send_replay (socket)
 			end
-			io.put_string ("finished client, address = " + socket.peer_address.host_address.host_address)
+			io.put_string ("Finished processing the client, address = "+ socket.peer_address.host_address.host_address + " port = " + socket.peer_address.port.out + ".")
 			io.put_new_line
 		end
 

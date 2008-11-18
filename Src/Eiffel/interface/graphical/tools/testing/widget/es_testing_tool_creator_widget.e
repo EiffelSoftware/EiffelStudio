@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_TOOL_FACTORY_WIDGET
+	ES_TESTING_TOOL_CREATOR_WIDGET
 
 inherit
 	ES_TESTING_TOOL_PROCESSOR_WIDGET

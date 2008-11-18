@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_feature, set_parameters,
 			parameters, enlarged, enlarged_on, context_type,
-			is_feature_special, make_special_byte_code,
+			is_feature_special,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			size, pre_inlined_code, inlined_byte_code
@@ -229,14 +229,6 @@ feature -- Context type
 			else
 				Result := Context.real_type (precursor_type)
 			end
-		end
-
-feature -- Byte code generation
-
-	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
-			-- Make byte code for special calls.
-		do
-			special_routines.make_byte_code (ba, basic_type)
 		end
 
 feature -- Array optimization
@@ -615,9 +607,8 @@ feature {NONE} -- Normalization of types
 			end
 		end
 
-
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

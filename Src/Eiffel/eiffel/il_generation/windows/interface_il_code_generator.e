@@ -528,7 +528,12 @@ feature -- IL Generation
 					end
 					generate_feature_code (feat, False)
 				else
-					if feat.is_once or feat.is_replicated then
+					if feat.is_once or else feat.is_replicated_directly then
+						implementation_class_id := feat.access_in
+						implementation_feature_id := system.class_of_id (
+							implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id
+					elseif feat.has_replicated_ast then
+							-- We need to retrieve class where replicated AST is initially generated.
 						implementation_class_id := feat.access_in
 						implementation_feature_id := system.class_of_id (
 							implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id

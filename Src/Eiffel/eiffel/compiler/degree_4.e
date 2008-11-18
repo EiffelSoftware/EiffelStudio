@@ -459,7 +459,9 @@ feature {INHERIT_TABLE} -- Propagation
 						l_descendents_with_replicated_features.after
 					loop
 						l_desc_class := l_descendents_with_replicated_features.item
-						l_desc_class.lace_class.set_changed (True)
+						if not l_desc_class.lace_class.changed then
+							l_desc_class.lace_class.set_changed (True)
+						end
 						degree_4.insert_new_class (l_desc_class)
 						degree_3.insert_new_class (l_desc_class)
 						degree_2.insert_new_class (l_desc_class)

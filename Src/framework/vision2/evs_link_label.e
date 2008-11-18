@@ -12,14 +12,8 @@ class
 
 inherit
 	EV_LABEL
-		rename
-			set_font as set_internal_font
-		export
-			{ANY} all
 		redefine
-			initialize,
-			set_text,
-			set_internal_font
+			initialize
 		end
 
 create
@@ -29,114 +23,22 @@ create
 feature {NONE} -- Initialization
 
 	initialize
-			-- Mark `Current' as initialized.
-			-- This must be called during the creation procedure
-			-- to satisfy the `is_initialized' invariant.
-			-- Descendants may redefine initialize to perform
-			-- additional setup tasks.
+			-- <Precursor>
 		do
-			Precursor {EV_LABEL}
-			internal_font := font.twin.as_attached
+			Precursor
 
 			create select_actions
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			set_foreground_color ((create {EV_STOCK_COLORS}).blue)
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor))
-			pointer_enter_actions.force (agent on_pointer_entered)
-			pointer_leave_actions.force (agent on_pointer_left)
 			enable_tabable_to
 			enable_tabable_from
-		end
-
-feature {NONE} -- Access
-
-	default_font: EV_FONT is
-			-- Font used to display labels.
-		do
-			Result := internal_font.twin
-			Result.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
-		end
-
-	highlight_font: EV_FONT
-			-- Highlight font
-		do
-			Result := internal_font.twin
-			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
 feature -- Actions
 
 	select_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions called when selected
-
-feature -- Element change
-
-	set_text (a_text: STRING_GENERAL)
-			-- <Precursor>
-		do
-			set_minimum_size (maximum_label_width (a_text), maximum_label_height (a_text))
-			Precursor {EV_LABEL} (a_text)
-		end
-
-	set_font (a_font: EV_FONT)
-			-- Assign `a_font' to font.
-		require
-			not_destroyed: not is_destroyed
-			a_font_not_void: a_font /= Void
-		local
-			l_font: like internal_font
-		do
-			l_font := internal_font
-			set_internal_font (a_font)
-			internal_font := l_font
-		ensure
-			internal_font_unchanged: internal_font ~ old internal_font
-		end
-
-feature {NONE} -- Element change
-
-	set_internal_font (a_font: EV_FONT)
-			-- <Precursor>
-		do
-			internal_font := a_font.as_attached
-			Precursor (a_font)
-		ensure then
-			internal_font_set: internal_font = a_font
-		end
-
-feature {NONE} -- Query
-
-	maximum_label_width (a_text: STRING_GENERAL): INTEGER is
-			-- Maximum width of a label when set with text `a_text'
-		require
-			a_text_not_void: a_text /= Void
-		local
-			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
-			l_width: INTEGER
-			l_other: INTEGER
-		do
-			l_size := default_font.string_size (a_text)
-			l_width := l_size.width + l_size.left_offset + l_size.right_offset
-			l_size := highlight_font.string_size (a_text)
-			l_other := l_size.width + l_size.left_offset + l_size.right_offset + 2
-			Result := l_width.max (l_other)
-		end
-
-	maximum_label_height (a_text: STRING_GENERAL): INTEGER is
-			-- Maximum width of a label when set with text `a_text'
-		require
-			a_text_not_void: a_text /= Void
-		local
-			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
-			l_height: INTEGER
-			l_other: INTEGER
-		do
-			l_size := default_font.string_size (a_text)
-			l_height := l_size.height
-			l_size := highlight_font.string_size (a_text)
-			l_other := l_size.height
-			Result := l_height.max (l_other)
-		end
 
 feature {NONE} -- Action handlers
 
@@ -149,39 +51,6 @@ feature {NONE} -- Action handlers
 				select_actions.call ([])
 			end
 		end
-
-	on_pointer_entered
-			-- Called when the mouse cursor enters the label.
-		require
-			not_is_destroyed: not is_destroyed
-		local
-			l_font: !like internal_font
-		do
-			l_font := internal_font
-			set_font (highlight_font)
-			internal_font := l_font
-		ensure
-			internal_font_unchanged: internal_font ~ old internal_font
-		end
-
-	on_pointer_left
-			-- Called when the mouse cursor enters the label.
-		require
-			not_is_destroyed: not is_destroyed
-		local
-			l_font: !like internal_font
-		do
-			l_font := internal_font
-			set_font (default_font)
-			internal_font := l_font
-		ensure
-			internal_font_unchanged: internal_font ~ old internal_font
-		end
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_font: !EV_FONT
-			-- Cached internal font
 
 invariant
 	select_actions_attached: select_actions /= Void

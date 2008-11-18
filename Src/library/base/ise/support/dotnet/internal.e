@@ -1738,7 +1738,7 @@ feature {NONE} -- Implementation
 			-- Key: RT_CLASS_TYPE
 			-- Value: dynamic type
 		once
-			create Result.make (chunk_size)
+			create Result.make (internal_chunk_size)
 		ensure
 			eiffel_type_to_id_not_void: Result /= Void
 		end
@@ -1753,7 +1753,7 @@ feature {NONE} -- Implementation
 			l_basic_type: RT_BASIC_TYPE
 			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 		once
-			create Result.make (chunk_size)
+			create Result.make (internal_chunk_size)
 				-- Add basic type
 			create l_list.make (1)
 			create l_basic_type.make
@@ -1843,7 +1843,7 @@ feature {NONE} -- Implementation
 	interface_to_implementation: HASHTABLE is
 			-- Mapping from interface to associated implementation.
 		once
-			create Result.make (chunk_size)
+			create Result.make (internal_chunk_size)
 		ensure
 			interface_to_implementation_not_void: Result /= Void
 		end
@@ -1851,7 +1851,7 @@ feature {NONE} -- Implementation
 	implementation_to_interface: HASHTABLE is
 			-- Mapping from implementation to associated interface.
 		once
-			create Result.make (chunk_size)
+			create Result.make (internal_chunk_size)
 		ensure
 			implementation_to_interface_not_void: Result /= Void
 		end
@@ -2013,16 +2013,16 @@ feature {NONE} -- Implementation
 	marked_objects: HASHTABLE is
 			-- Contains all objects marked.
 		once
-			create Result.make (chunk_size, Void, create {RT_REFERENCE_COMPARER}.make)
+			create Result.make (internal_chunk_size, Void, create {RT_REFERENCE_COMPARER}.make)
 		end
 
-	chunk_size: INTEGER is 50;
+	internal_chunk_size: INTEGER is 50;
 			-- Default initial size for tables.
 
 	array_upper_cell: CELL [INTEGER] is
 			-- Store upper index for all arrays indexed by type id.
 		once
-			create Result.put (chunk_size)
+			create Result.put (internal_chunk_size)
 		ensure
 			array_upper_cell: Result /= Void
 		end

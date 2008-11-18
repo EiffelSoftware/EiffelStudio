@@ -279,10 +279,8 @@ feature -- Opcode insertion
 			has_opcodes: opcodes.has (opcode)
 		local
 			l_pos, l_incr: INTEGER
-			l_opcodes: like opcodes
 			l_stack_transition: INTEGER
 		do
-			l_opcodes := opcodes
 			l_stack_transition := opcodes.item (opcode).stack_depth_transition
 
 			if l_stack_transition /= 0xFF000000 then

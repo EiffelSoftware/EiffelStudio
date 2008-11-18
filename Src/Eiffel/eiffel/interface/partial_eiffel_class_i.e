@@ -29,7 +29,7 @@ inherit
 			file_name as base_name,
 			group as cluster
 		undefine
-			is_compiled
+			is_compiled, options
 		redefine
 			cluster,
 			class_type

@@ -64,6 +64,12 @@ feature -- Access
 			options_not_void: Result /= Void
 		end
 
+	reset_options is
+			-- Reset cached options of `Current'
+		do
+			-- By default do nothing
+		end
+		
 	target: CONF_TARGET is
 			-- Target in which current class is being defined.
 		do

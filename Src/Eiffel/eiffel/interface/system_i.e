@@ -1196,6 +1196,7 @@ end
 			-- Initialization before a recompilation.
 		local
 			l_vis_modified: CONF_MODIFIED_VISITOR
+			l_vis_all: CONF_ALL_CLASSES_VISITOR
 			l_classes: ARRAYED_LIST [CONF_CLASS]
 			l_class: CLASS_I
 			l_vis_check: CONF_CHECKER_VISITOR
@@ -1227,6 +1228,24 @@ end
 				compilation_straight := True
 			else
 				compilation_straight := False
+
+					-- Reset any existing class info.
+				create l_vis_all.make
+				universe.target.process (l_vis_all)
+				if not l_vis_all.is_error then
+					from
+						l_classes := l_vis_all.classes
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						if {l_class_i: CLASS_I} l_classes.item then
+							l_class_i.reset_options
+						end
+						l_classes.forth
+					end
+				end
+
 				if is_rebuild or is_force_rebuild then
 						-- Full rebuild
 					rebuild_configuration

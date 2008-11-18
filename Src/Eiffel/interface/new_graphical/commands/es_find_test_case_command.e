@@ -46,7 +46,7 @@ feature -- Command
 	execute is
 			-- <Precursor>
 		local
-			l_finder: ES_TEST_CASE_FINDER
+			l_finder: ES_EWEASEL_TEST_CASE_FINDER
 			l_command: EB_SHARED_GRAPHICAL_COMMANDS
 			l_melt_command: EB_DISCOVER_AND_MELT_COMMAND
 		do
@@ -73,7 +73,7 @@ feature -- Query
 			Result := l_shared.eiffel_project.manager.is_project_loaded
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

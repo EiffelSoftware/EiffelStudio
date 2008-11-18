@@ -38,7 +38,7 @@ feature -- Command
 			manager.testing_tool.test_case_grid_manager.update_buttons_sensitivity
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

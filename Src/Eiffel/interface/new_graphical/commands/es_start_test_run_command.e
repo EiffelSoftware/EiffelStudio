@@ -56,7 +56,7 @@ feature -- Query
 			Result := l_factory.manager.testing_tool /= Void
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

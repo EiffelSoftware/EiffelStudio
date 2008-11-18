@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Select previous failed test case row in {ES_TESTING_TOOL_PANEL} grid.
+						Select previous failed test case row in {ES_EWEASEL_TESTING_TOOL_PANEL} grid.
 																							]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Command
 			manager.testing_tool.test_case_grid_manager.select_previous_failed_row
 		end
 
-feature {ES_TESTING_TOOL_PANEL} -- Implementation
+feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol)

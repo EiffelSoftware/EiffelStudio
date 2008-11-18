@@ -440,22 +440,45 @@ feature {NONE} -- Status setting: stones
 	on_stone_changed (a_old_stone: ?like stone)
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_view_text, l_filter_text: STRING
+			l_is_test_class: BOOLEAN
 		do
 			if not is_in_stone_synchronization then
 				if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
-					l_name := l_class_stone.class_name
+					create l_filter_text.make (40)
+					l_filter_text.append ("class:")
+					l_filter_text.append (l_class_stone.class_name)
 					if test_suite.is_service_available then
 						test_suite.service.synchronize_with_class (l_class)
-						if test_suite.service.is_test_class (l_class) then
-							view_box.set_text ("class")
-						else
-							view_box.set_text ("covers")
-						end
-					else
-						view_box.set_text ("covers")
+						l_is_test_class := test_suite.service.is_test_class (l_class)
 					end
-					filter_box.set_text (l_name)
+					if l_is_test_class then
+						l_view_text := "class"
+					else
+						l_view_text := "covers"
+					end
+					if {l_feature_stone: FEATURE_STONE} stone then
+						l_filter_text.append_character (' ')
+						l_filter_text.append (l_feature_stone.feature_name)
+					end
+				elseif {l_cluster: CLUSTER_STONE} stone then
+					create l_filter_text.make (40)
+					if l_cluster.group.is_cluster then
+						l_filter_text.append ("cluster:")
+					elseif l_cluster.group.is_library then
+						l_filter_text.append ("library:")
+					elseif l_cluster.group.is_override then
+						l_filter_text.append ("override:")
+					end
+					l_filter_text.append (l_cluster.group.name)
+				end
+				if l_view_text /= Void or l_filter_text /= Void then
+					if l_view_text /= Void then
+						view_box.set_text (l_view_text)
+					end
+					if l_filter_text /= Void then
+						filter_box.set_text (l_filter_text)
+					end
 					update_view
 				end
 			end

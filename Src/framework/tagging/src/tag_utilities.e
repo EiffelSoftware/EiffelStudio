@@ -233,6 +233,7 @@ feature -- Constants
 	cluster_prefix: STRING = "0cluster:"
 	class_prefix: STRING = "1class:"
 	feature_prefix: STRING = "2feature:"
+	override_prefix: STRING = "3override:"
 	library_prefix: STRING = "4library:"
 			-- Eiffel prefixes used in tags
 

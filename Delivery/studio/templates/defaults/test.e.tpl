@@ -5,6 +5,7 @@ ${NOTE_KEYWORD}
 	author: "EiffelStudio test wizard"
 	date: "$$Date$$"
 	revision: "$$Revision$$"
+	testing: "type/manual"
 
 class
 	${CLASS_NAME}

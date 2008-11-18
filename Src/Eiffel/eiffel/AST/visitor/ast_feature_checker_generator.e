@@ -1738,6 +1738,9 @@ feature -- Implementation
 								last_type := l_result_type.deep_actual_type
 							else
 								last_type := l_result_type
+								if l_access /= Void and then (l_is_in_assignment or else l_is_target_of_creation_instruction) then
+									l_access.set_is_attachment
+								end
 							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
@@ -1746,27 +1749,6 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
---							if last_access_writable then
---								if l_is_in_assignment or else l_is_target_of_creation_instruction then
---									if l_result_type.is_attached then
---											-- Mark that the attribute is initialized.
---										record_initialized_attribute (l_feature.feature_id)
---									end
---								else
---									if
---										l_result_type.is_attached and then not l_result_type.is_expanded and then
---										not context.variables.is_attribute_set (l_feature.feature_id) and then
---										not is_checking_postcondition
---									then
---											-- Attribute is not properly initialized.
---										error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
---										if not is_checking_precondition then
---												-- Mark that the attribute is initialized to avoid repeated errors.
---											context.variables.set_attribute (l_feature.feature_id)
---										end
---									end
---								end
---							end
 						else
 								-- `l_feature' was not valid for current, report
 								-- corresponding error.

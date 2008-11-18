@@ -11,7 +11,7 @@ inherit
 	ENCAPSULATED_I
 		redefine
 			assigner_name_id, transfer_to, unselected, extension,
-			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
+			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			set_type, type, is_attribute,
 			undefinable, check_expanded, transfer_from
 		end
@@ -63,7 +63,21 @@ feature
 			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
 			Result.set_is_attribute
+			if has_body then
+				Result.set_has_body
+			end
 		end
+
+ 	new_attr_entry: ATTR_ENTRY is
+ 			-- New attribute unit
+ 		do
+ 			create Result
+			Result.set_type_a (type)
+ 			Result.set_feature_id (feature_id)
+ 			if has_body then
+ 				Result.set_has_body
+ 			end
+ 		end
 
 	undefinable: BOOLEAN is
 			-- Is an attribute undefinable ?
@@ -534,7 +548,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

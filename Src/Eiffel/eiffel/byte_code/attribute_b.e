@@ -18,7 +18,7 @@ inherit
 			reverse_code, expanded_assign_code, assign_code,
 			enlarged, is_creatable, is_attribute, read_only,
 			assigns_to, pre_inlined_code, size,
-			need_target
+			need_target, set_is_attachment
 		end
 
 feature -- Visitor
@@ -27,6 +27,21 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_attribute_b (Current)
+		end
+
+feature -- Status report
+
+	is_attachment: BOOLEAN
+			-- Is attribute used as target of an attachment?
+
+feature -- Status setting
+
+	set_is_attachment
+			-- Flag that a feature is used as a target of an attachment operation.
+		do
+			is_attachment := True
+		ensure then
+			is_attachment
 		end
 
 feature
@@ -93,12 +108,21 @@ feature
 			-- A wrapper to be called for an attribute that may need to be initialized
 			-- (Void if none)
 		local
+			is_initialization_required: BOOLEAN
 			p: like parent
 		do
-			if False then
-				debug ("to_implement")
-					(create {REFACTORING_HELPER}).to_implement ("Provide check that will ensure the attribute may need to be initialized.")
+				-- No need to wrap a target of an attachment as well as access to an attribute of a basic type that is always initialized
+			if not is_attachment and then not type.is_basic then
+				if context.workbench_mode then
+						-- Attribute may be redeclared to become of an attached type and to have a body.
+					is_initialization_required := True
+				else
+						-- Check if attribute is of an attached type in some descendant
+						-- that declares an explicit body for it.
+					is_initialization_required := Eiffel_table.poly_table (routine_id).is_initialization_required (context_type, context.context_class_type)
 				end
+			end
+			if is_initialization_required then
 					-- Call a wrapper that performs the required initialization.
 				create {FEATURE_B} Result.make (context_type.associated_class.feature_of_rout_id (routine_id), type, Void)
 				p := parent

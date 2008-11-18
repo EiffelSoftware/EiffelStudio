@@ -238,6 +238,11 @@ feature -- Setting
 			-- Do nothing
 		end
 
+	set_is_attachment
+			-- Flag that a feature is used as a target of an attachment operation.
+		do
+		end
+
 feature -- C generation
 
 	print_register is

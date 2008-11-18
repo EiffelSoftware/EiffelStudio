@@ -520,7 +520,7 @@ end;
 				if f.is_attribute then
 						-- We have an attribute so increase the counter
 					l_attribute_counter := l_attribute_counter + 1
-					if f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
+					if f.is_origin and then f.rout_id_set.count = 1 then
 						a ?= f
 						check
 							a_attached: a /= Void

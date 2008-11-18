@@ -188,8 +188,15 @@ feature -- from ENTRY
 			type.make_type_byte_code (ba, False, system.class_type_of_id (type_id).type)
 		end;
 
+feature -- Status report
+
+	is_initialization_required: BOOLEAN
+			-- Is initialization of an attribute required?
+		deferred
+		end
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

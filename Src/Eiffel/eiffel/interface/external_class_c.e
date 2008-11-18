@@ -672,6 +672,7 @@ feature {NONE} -- Initialization
 			l_underlying_enum_type: STRING
 			l_enum_member: CONSUMED_ENTITY
 			l_enum_value: INTEGER_CONSTANT
+			l_changed: BOOLEAN
 		do
 			from
 				a_features.start
@@ -971,9 +972,16 @@ feature {NONE} -- Initialization
 				if l_feat.written_in = class_id then
 						-- Only do it for feature written in current class, inherited
 						-- one have already been processed.
-					set_changed (True)
+					l_changed := changed
+						-- If not marked as changed, then do so to satisfy `update_instantiator2' precondition.
+					if not l_changed then
+						set_changed (True)
+					end
 					l_feat.update_instantiator2 (Current)
-					set_changed (False)
+					if not l_changed then
+							-- Reset changed status.
+						set_changed (False)
+					end
 				end
 
 				l_name := l_member.dotnet_eiffel_name

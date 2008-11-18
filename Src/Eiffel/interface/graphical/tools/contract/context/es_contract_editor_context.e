@@ -38,7 +38,11 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			Result ?= stone
+			if {l_result: G} stone then
+				Result := l_result
+			else
+				check not_possible: False end
+			end
 		ensure
 			context_stone_not_void: {l_g: G} Result
 		end

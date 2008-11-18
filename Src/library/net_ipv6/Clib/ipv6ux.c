@@ -324,6 +324,84 @@ EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGE
 	return fd;
 }
 
+void en_socket_datagram_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
+	// For now we reuse the stream socket implementation, but it could be changed in the feature
+	en_socket_stream_bind (a_fd, a_fd1, a_local_port, sockaddr);
+}
+
+
+void en_socket_datagram_connect (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_POINTER sockaddr) {
+
+	SOCKETADDRESS h;
+	SOCKETADDRESS* him;
+	int family;
+	int ipv6_supported;
+	int connect_res;
+
+	ipv6_supported = en_ipv6_available();
+
+	if (convert_v4_to_v6_sockaddr((struct sockaddr*)&h, (struct sockaddr*)sockaddr)) {
+		him = &h;
+	} else {
+		him = (SOCKETADDRESS*) sockaddr;
+	}
+
+	family = him->him.sa_family; 
+
+	if (family == AF_INET6 && !ipv6_supported) {
+		eraise ("Protocol family not supported", EN_PROG);
+		return;
+	}
+    	
+	connect_res = connect(fd, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
+	if ( connect_res == -1) {
+    		eraise("Unable to establish connection", EN_PROG);
+	}
+}
+
+EIF_INTEGER en_socket_datagram_rcv_from (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_INTEGER timeout, SOCKETADDRESS *him) {
+
+	int result;
+	int lenn = sizeof(SOCKETADDRESS);
+	int ipv6_supported = en_ipv6_available();
+
+	if (timeout) {
+		int ret;
+		ret = net_timeout(fd, timeout);
+		if (ret <= 0) {
+			if (ret == 0) {
+				eraise("Receive timed out", EN_PROG);
+			} else {
+				eraise("Receive error", EN_PROG);
+			}
+			return -1;
+		}
+	}
+
+	result = recvfrom (fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) him, &lenn);
+	eif_net_check (result);
+	
+	return (EIF_INTEGER) result;
+}
+
+EIF_INTEGER en_socket_datagram_send_to (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, SOCKETADDRESS *sockaddr) {
+
+	int result = -1;
+	SOCKETADDRESS h;
+	SOCKETADDRESS* him;
+
+
+	if (convert_v4_to_v6_sockaddr((struct sockaddr*)&h, (struct sockaddr*)sockaddr)) {
+		him = &h;
+	} else {
+		him = (SOCKETADDRESS*) sockaddr;
+	}
+
+	result = sendto (fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
+	eif_net_check (result);
+	return (EIF_INTEGER) result;
+}
+
 void en_socket_close(int fd, int fd1) {
 	if (fd != -1) {
 		net_socket_close(fd);

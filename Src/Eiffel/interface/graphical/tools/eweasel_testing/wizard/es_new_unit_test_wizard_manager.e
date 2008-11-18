@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch (a_parent_window: EV_WINDOW; a_tool_panel: ES_TESTING_TOOL_PANEL) is
+	make_and_launch (a_parent_window: EV_WINDOW; a_tool_panel: ES_EWEASEL_TESTING_TOOL_PANEL) is
 			-- Create and display the profiler wizard.
 			-- The window is shown modal to `a_parent_window'.
 		require

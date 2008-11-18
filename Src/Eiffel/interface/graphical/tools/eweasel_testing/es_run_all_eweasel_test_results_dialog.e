@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_ALL_TEST_RUN_RESULTS_DIALOG
+	ES_RUN_ALL_EWEASEL_TEST_RESULTS_DIALOG
 
 inherit
 	ES_DIALOG
@@ -194,11 +194,11 @@ feature {NONE} -- Initialization
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_data: !ES_EWEASEL_TEST_RUN_SESSION_DATA
-			l_result_tool: ES_TESTING_RESULT_TOOL_PANEL
+			l_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_event_item: EVENT_LIST_TEST_RUN_ITEM
 			l_all_runs: !ARRAYED_LIST [ES_EWEASEL_TEST_RUN_DATA_ITEM]
-			l_context_uuid: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_context_uuid: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			create l_shared
 			l_result_tool := l_shared.manager.testing_result_tool
@@ -477,8 +477,8 @@ feature {NONE} -- UI implementation
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_event_item: EVENT_LIST_TEST_CASE_ITEM
-			l_tool: ES_TESTING_TOOL_PANEL
-			l_context_uuid: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_tool: ES_EWEASEL_TESTING_TOOL_PANEL
+			l_context_uuid: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			create l_shared
 			l_tool := l_shared.manager.testing_tool
@@ -508,7 +508,7 @@ feature {NONE} -- UI implementation
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_event_item: EVENT_LIST_TESTING_RESULT_ITEM
-			l_context_uuid: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_context_uuid: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			create l_shared
 			l_shared.manager.testing_result_tool.test_run_result_grid_manager.reset
@@ -546,7 +546,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	testing_result_panel: ES_TESTING_RESULT_TOOL_PANEL is
+	testing_result_panel: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL is
 			-- Testing result tool panel
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY

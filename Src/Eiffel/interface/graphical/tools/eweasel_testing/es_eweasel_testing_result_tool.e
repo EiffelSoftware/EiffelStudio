@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Testing tool result panel {ES_TESTING_RESULT_TOOL_PANEL} shim class
+						Testing tool result panel {ES_EWEASEL_TESTING_RESULT_TOOL_PANEL} shim class
 
 																							]"
 	status: "See notice at end of class."
@@ -9,10 +9,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_RESULT_TOOL
+	ES_EWEASEL_TESTING_RESULT_TOOL
 
 inherit
-	ES_TOOL [ES_TESTING_RESULT_TOOL_PANEL]
+	ES_TOOL [ES_EWEASEL_TESTING_RESULT_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -42,7 +42,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	create_tool: ES_TESTING_RESULT_TOOL_PANEL
+	create_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

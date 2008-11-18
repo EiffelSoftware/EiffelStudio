@@ -18,7 +18,7 @@ create
 
 feature  {NONE} -- Initialization
 
-	make (a_testing_tool: ES_TESTING_TOOL_PANEL)
+	make (a_testing_tool: ES_EWEASEL_TESTING_TOOL_PANEL)
 			-- Creation method
 		require
 			not_void: a_testing_tool /= Void
@@ -111,7 +111,7 @@ feature -- Query
 			Result := id_solution.group_of_id (a_cluster_id) /= Void
 		end
 
-	testing_tool: ES_TESTING_TOOL_PANEL
+	testing_tool: ES_EWEASEL_TESTING_TOOL_PANEL
 			-- Testing tool.
 
 	helper: ES_NEW_UNIT_TEST_WIZARD_HELPER

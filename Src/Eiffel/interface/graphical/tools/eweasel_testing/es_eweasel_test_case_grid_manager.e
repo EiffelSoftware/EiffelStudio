@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Manager of test case grid in {ES_TESTING_TOOL_PANEL}
+					Manager of test case grid in {ES_EWEASEL_TESTING_TOOL_PANEL}
 					
 					One manager for one test case grid
 																								]"
@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TEST_CASE_GRID_MANAGER
+	ES_EWEASEL_TEST_CASE_GRID_MANAGER
 
 inherit
 	ANY
@@ -45,7 +45,7 @@ feature -- Command
 		local
 			l_grid: like grid
 			l_all_columns: like all_columns_titles
-			l_helper: ES_TEST_GRID_HELPER
+			l_helper: ES_EWEASEL_TEST_GRID_HELPER
 		do
 			from
 				l_grid := grid
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	test_case_finder: !ES_TEST_CASE_FINDER is
+	test_case_finder: !ES_EWEASEL_TEST_CASE_FINDER is
 			-- Test case helper class
 		once
 			create Result
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation queries
 	conf_class_of (a_class_name: !STRING): CONF_CLASS is
 			-- Result void if not found
 		local
-			l_util: ES_TEST_CASE_FINDER
+			l_util: ES_EWEASEL_TEST_CASE_FINDER
 		do
 			create l_util
 			Result := l_util.conf_class_of (a_class_name)
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation queries
 	manager: ES_EWEASEL_EXECUTION_MANAGER is
 			-- Chief eweasel execution manager
 		local
-			l_panel: ES_TESTING_TOOL_PANEL
+			l_panel: ES_EWEASEL_TESTING_TOOL_PANEL
 		do
 			l_panel := testing_tool_panel
 			check not_void: l_panel /= Void end
@@ -576,13 +576,13 @@ feature {NONE} -- Implementation queries
 			not_void: Result /= Void
 		end
 
-	testing_tool_panel: !ES_TESTING_TOOL_PANEL is
+	testing_tool_panel: !ES_EWEASEL_TESTING_TOOL_PANEL is
 			-- Testing tool panel
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 		do
 			create l_shared
-			if {l_test: ES_TESTING_TOOL_PANEL} l_shared.manager.testing_tool then
+			if {l_test: ES_EWEASEL_TESTING_TOOL_PANEL} l_shared.manager.testing_tool then
 				Result := l_test
 			else
 				check not_possible: False end
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation queries
 	context_uuid: !UUID is
 			-- Context uuid
 		local
-			l_enum: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_enum: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			create l_enum
 			Result := l_enum.es_test_case_grid_manager
@@ -619,7 +619,7 @@ feature {NONE} -- Implementation queries
 feature {NONE} -- Implementation commands
 
 	update_failure_and_error_label is
-			-- Update {ES_TESTING_TOOL_PANEL}'s failure and error labels' texts
+			-- Update {ES_EWEASEL_TESTING_TOOL_PANEL}'s failure and error labels' texts
 		do
 			testing_tool_panel.set_failure_label_with (failure_count)
 			testing_tool_panel.set_error_label_with (error_count)
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation commands
 			l_grid_item: EV_GRID_ITEM
 			l_tag_string: STRING_GENERAL
 			l_edit_item: EV_GRID_EDITABLE_ITEM
-			l_grid_helper: ES_TEST_GRID_HELPER
+			l_grid_helper: ES_EWEASEL_TEST_GRID_HELPER
 			l_changed_time: STRING_GENERAL
 			l_last_result_label_item: !EV_GRID_LABEL_ITEM
 			l_changed_date_time, l_last_run_date_time: DT_DATE_TIME

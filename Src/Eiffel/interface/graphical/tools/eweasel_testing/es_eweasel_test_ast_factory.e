@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_AST_TESTING_FACTORY
+	ES_EWEASEL_TEST_AST_FACTORY
 
 inherit
 	AST_NULL_FACTORY

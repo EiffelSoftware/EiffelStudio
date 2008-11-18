@@ -111,7 +111,7 @@ feature -- Query
 			end
 		end
 
-feature {ES_ALL_TEST_RUN_RESULTS_DIALOG} -- Internal setting
+feature {ES_RUN_ALL_EWEASEL_TEST_RESULTS_DIALOG} -- Internal setting
 
 	current_session_data_index: INTEGER
 				-- Index of `internal_total_test_runs'

@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TEST_CASE_FINDER
+	ES_EWEASEL_TEST_CASE_FINDER
 
 feature -- Command
 
@@ -113,7 +113,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	agent_cell: !CELL [PROCEDURE [ES_TEST_CASE_FINDER, TUPLE]] is
+	agent_cell: !CELL [PROCEDURE [ES_EWEASEL_TEST_CASE_FINDER, TUPLE]] is
 			-- Agent cell for `add_all_test_case_classes_to_compile'
 		once
 			create Result.put (Void)
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 		local
 			l_tag: ID_AS
 			l_parser: EIFFEL_PARSER
-			l_testing_factory: ES_AST_TESTING_FACTORY
+			l_testing_factory: ES_EWEASEL_TEST_AST_FACTORY
 			l_file: KL_BINARY_INPUT_FILE
 			l_class_c: CLASS_C
 			l_top_indexes: INDEXING_CLAUSE_AS

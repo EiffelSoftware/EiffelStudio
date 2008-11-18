@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Manager of test result grid in {ES_TESTING_RESULT_TOOL_PANEL}
+					Manager of test result grid in {ES_EWEASEL_TESTING_RESULT_TOOL_PANEL}
 					
 					One manager for one test run result grid
 																					]"
@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TEST_RUN_RESULT_GRID_MANAGER
+	ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER
 
 inherit
 	ANY
@@ -55,7 +55,7 @@ feature -- Command
 		local
 			l_grid: !ES_GRID
 			l_columns: like all_columns_titles
-			l_helper: ES_TEST_GRID_HELPER
+			l_helper: ES_EWEASEL_TEST_GRID_HELPER
 		do
 			from
 				l_columns := all_columns_titles
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation commands
 			not_void: a_row /= Void
 		local
 			l_token_item: !EB_GRID_EDITOR_TOKEN_ITEM
-			l_helper: ES_TEST_GRID_HELPER
+			l_helper: ES_EWEASEL_TEST_GRID_HELPER
 		do
 			if a_item.execution_error_in /= Void then
 				create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_item.execution_error_in)
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation queries
 	grid: !ES_GRID
 			-- Grid managed.
 
-	testing_result_tool: ES_TESTING_RESULT_TOOL_PANEL is
+	testing_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL is
 			-- Testing result tool panel
 		do
 			Result := unit_test_manager.testing_result_tool

@@ -34,18 +34,42 @@ inherit
 			is_compiled
 		redefine
 			cluster,
-			class_type
+			class_type,
+			options
 		end
 
 	CLASS_I
 		rename
 			group as cluster
+		redefine
+			set_changed,
+			reset_options
 		end
 
 create {CONF_COMP_FACTORY}
 	make
 
 feature -- Access
+
+	options: CONF_OPTION is
+			-- <Precursor>
+		do
+			if options_internal /= Void then
+				Result := options_internal
+			else
+				Result := Precursor
+			end
+		end
+
+	reset_options is
+			-- <Precursor>
+		do
+				-- Reset any previous cached options.
+			if options_internal /= Void then
+				options_internal := Void
+				options_internal := options
+			end
+		end
 
 	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to
@@ -133,6 +157,21 @@ feature -- Access
 			end
 		end
 
+feature -- Status setting
+
+	set_changed (b: BOOLEAN) is
+			-- Assign `b' to `changed'.
+		do
+			if b then
+					-- We can store the options of the class temporarily during compilation to prevent repeated creation.
+				options_internal := options
+			else
+					-- This gets reset at the end of a successful compilation.
+				options_internal := Void
+			end
+			changed := b
+		end
+
 feature -- Setting
 
 	set_base_name (s: STRING) is
@@ -145,6 +184,11 @@ feature -- Setting
 		ensure
 			base_name_set: base_name = s
 		end
+
+feature {NONE} -- Implementation
+
+	options_internal: like options
+		-- Temporary store for internal options.
 
 feature {NONE} -- Type anchor
 

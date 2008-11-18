@@ -2,7 +2,7 @@ class
 	TEST1 [G]
 
 create
-	make
+	default_create, make
 
 feature
 

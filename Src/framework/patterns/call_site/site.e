@@ -83,11 +83,8 @@ feature -- Status report
 			--
 			-- `a_site': The site object to determine validity of.
 			-- `Result': True if the site object is valid; False otherwise.
-		local
-			l_ot: G
 		do
-			l_ot ?= a_site
-			Result := l_ot /= Void
+			Result := {l_ot: G} a_site
 		end
 
 indexing

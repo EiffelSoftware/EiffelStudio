@@ -31,7 +31,6 @@ feature -- Initialization
 			frontend := a_frontend
 			port := a_port
 			create server_socket.make_bound (port)
-			-- TODO workerHash = new Hashtable (64);
 		end
 
 feature
@@ -66,9 +65,7 @@ feature
 						end
 						if (opcode = {TFTP_PACKET}.RRQ and then can_read) or (opcode = {TFTP_PACKET}.WRQ and then can_write) then
 							create wt.make (Current, frontend, packet)
-							-- TODO workerHash.put (ct.getID(), ct)
-							-- wt.launch
-							wt.execute
+							wt.launch
 						end
 					end
 				end
@@ -81,7 +78,6 @@ feature
 			id_non_void: id /= Void
 			id_non_epty: not id.is_empty
 		do
-			-- TODO worker_hash.remove (id)
 		end
 
 	dispatch_tftp_event (event: TFTP_EVENT) is

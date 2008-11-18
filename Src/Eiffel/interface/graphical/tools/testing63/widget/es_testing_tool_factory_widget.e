@@ -75,7 +75,7 @@ feature {NONE} -- Events
 			l_message: !STRING_32
 		do
 			if generator_factory_type.attempt (factory) /= Void then
-				l_dir := factory.test_suite.eiffel_project.project_directory.testing_results_path
+				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)
 				l_dir.extend ("auto_test")
 				l_message := locale_formatter.formatted_translation (i_done_message, [l_dir])
 				prompts.show_info_prompt (l_message, development_window.window, Void)

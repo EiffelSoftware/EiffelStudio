@@ -20,6 +20,16 @@ feature
 
 feature
 
+	is_equivalent (other: like Current): BOOLEAN is
+		do
+			if other /= Void then
+				Result :=
+					(family = other.family and then raw_address.is_equal (other.raw_address))
+					or else (is_any_local_address and then other.is_any_local_address)
+					or else (is_loopback_address and then other.is_loopback_address)
+			end
+		end
+
 	is_multicast_address: BOOLEAN is
 		deferred
 		end

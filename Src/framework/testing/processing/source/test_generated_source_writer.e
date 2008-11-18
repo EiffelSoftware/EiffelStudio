@@ -84,7 +84,7 @@ feature {NONE} -- Output
 			stream.indent
 			stream.put_line ("description: %"Automatically generated tests.%"")
 			stream.put_line ("author: %"Testing tool%"")
-			stream.put_string ("testing: %"covers/{")
+			stream.put_string ("testing: %"type/generated%", %"covers/{")
 			stream.put_string (class_under_test)
 			stream.put_line ("}%"")
 			stream.dedent

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TEST_GRID_HELPER
+	ES_EWEASEL_TEST_GRID_HELPER
 
 create
 	make
@@ -29,7 +29,7 @@ feature -- Command
 			-- Create a grid editor token item base on `a_class_name'
 		local
 			l_class_token: EDITOR_TOKEN_CLASS
-			l_util: ES_TEST_CASE_FINDER
+			l_util: ES_EWEASEL_TEST_CASE_FINDER
 			l_tmp_list: ARRAYED_LIST [EDITOR_TOKEN]
 			l_shared_writer: EB_SHARED_WRITER
 			l_class_i: CLASS_I

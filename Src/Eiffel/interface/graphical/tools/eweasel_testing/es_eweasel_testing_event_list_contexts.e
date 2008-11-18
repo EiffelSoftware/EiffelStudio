@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_EVENT_LIST_CONTEXTS
+	ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 
 feature -- Enumeration
 

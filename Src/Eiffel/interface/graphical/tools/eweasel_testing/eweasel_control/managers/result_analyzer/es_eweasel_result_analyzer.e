@@ -22,7 +22,7 @@ feature -- Command
 	reset is
 			-- Clear all last test run caches
 		local
-			l_test_result_tool: ES_TESTING_RESULT_TOOL_PANEL
+			l_test_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 		do
 			all_output_string.wipe_out
 			buffer_string.wipe_out
@@ -140,7 +140,7 @@ feature -- Command
 		local
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_result_item: EVENT_LIST_TESTING_RESULT_ITEM
-			l_contexts: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_contexts: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			all_results.extend (a_item)
 			create l_consumer

@@ -3,7 +3,7 @@ indexing
 						Testing tool main control panel.
 						
 						This tool can create, execute and analyze eweasel tests
-						The detailed test run result avaliable in {ES_TESTING_RESULT_TOOL}						
+						The detailed test run result avaliable in {ES_EWEASEL_TESTING_RESULT_TOOL}						
 						
 						This tool is used for eweasel testing for the moment.
 						In future, maybe CDD and Autotest will be integrated.
@@ -14,7 +14,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_TOOL_PANEL
+	ES_EWEASEL_TESTING_TOOL_PANEL
 
 inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 	on_event_list_item_added (a_service: EVENT_LIST_S; a_event_list_item: EVENT_LIST_ITEM_I) is
 			-- Handle evetn list added actions
 		local
-			l_contexts: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_contexts: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			if a_event_list_item.category = {ENVIRONMENT_CATEGORIES}.testing then
 				if {l_data: ES_EWEASEL_TEST_RESULT_ITEM} a_event_list_item.data then
@@ -173,7 +173,7 @@ feature -- Query
 			Result := l_shared.manager
 		end
 
-	test_case_grid_manager: ES_TEST_CASE_GRID_MANAGER is
+	test_case_grid_manager: ES_EWEASEL_TEST_CASE_GRID_MANAGER is
 			-- Manager of `test_case_grid'
 		do
 			Result := internal_test_case_grid_manager
@@ -240,7 +240,7 @@ feature {ES_EWEASEL_EXECUTION_MANAGER} -- Command
 			end
 		end
 
-feature {ES_TEST_CASE_GRID_MANAGER} -- Command
+feature {ES_EWEASEL_TEST_CASE_GRID_MANAGER} -- Command
 
 	set_error_label_with (a_value: INTEGER) is
 			-- Set `errors_label' text with `a_value'
@@ -271,7 +271,7 @@ feature {NONE}	-- Implementation
 	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN is
 			-- Redefine
 		local
-			l_tester: ES_TEST_CASE_FINDER
+			l_tester: ES_EWEASEL_TEST_CASE_FINDER
 		do
 			Result := a_item /= Void and then a_item.category = {ENVIRONMENT_CATEGORIES}.testing
 			if {l_item: ES_EWEASEL_TEST_CASE_ITEM} a_item.data then
@@ -326,7 +326,7 @@ feature {NONE} -- Factory
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_icons: ES_PIXMAPS_10X10
-			l_shim: ES_TESTING_RESULT_TOOL
+			l_shim: ES_EWEASEL_TESTING_RESULT_TOOL
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 		do
 			l_icons := pixmaps.mini_pixmaps
@@ -354,7 +354,7 @@ feature {NONE} -- Factory
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+			l_shim ?= develop_window.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
 			if l_shim /= Void then
 				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
 				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))

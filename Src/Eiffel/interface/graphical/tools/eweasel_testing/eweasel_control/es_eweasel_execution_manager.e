@@ -91,7 +91,7 @@ feature -- Command
 			l_class_stone: CLASSI_STONE
 			l_dev_window: EB_DEVELOPMENT_WINDOW
 			l_service: SERVICE_CONSUMER [EVENT_LIST_S]
-			l_uuid: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_uuid: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 			l_event_item: EVENT_LIST_TEST_CASE_ITEM
 			l_data_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
@@ -179,19 +179,19 @@ feature -- Query
 			Result := process.is_running
 		end
 
-	testing_tool: ES_TESTING_TOOL_PANEL is
+	testing_tool: ES_EWEASEL_TESTING_TOOL_PANEL is
 			-- Testing tool
 			-- Result maybe void if tool panel not initialized
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
 			l_dev: EB_DEVELOPMENT_WINDOW
 			l_tool: ES_TOOL [EB_TOOL]
-			l_tmp_result: ES_TESTING_TOOL_PANEL
+			l_tmp_result: ES_EWEASEL_TESTING_TOOL_PANEL
 		do
 			create l_shared
 			l_dev := l_shared.window_manager.last_focused_development_window
 			if l_dev /= Void then
-				l_tool := l_dev.shell_tools.tool ({ES_TESTING_TOOL})
+				l_tool := l_dev.shell_tools.tool ({ES_EWEASEL_TESTING_TOOL})
 				if l_tool.is_tool_instantiated then
 					l_tmp_result ?= l_tool.panel
 					if l_tmp_result /= Void then
@@ -203,19 +203,19 @@ feature -- Query
 			end
 		end
 
-	testing_result_tool: ES_TESTING_RESULT_TOOL_PANEL is
+	testing_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL is
 			-- Testing result tool
 			-- Result maybe void if result tool panel not intialized
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
 			l_dev: EB_DEVELOPMENT_WINDOW
 			l_tool: ES_TOOL [EB_TOOL]
-			l_tmp_result: ES_TESTING_RESULT_TOOL_PANEL
+			l_tmp_result: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 		do
 			create l_shared
 			l_dev := l_shared.window_manager.last_focused_development_window
 			if l_dev /= Void then
-				l_tool := l_dev.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+				l_tool := l_dev.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
 				if l_tool.is_tool_instantiated then
 					l_tmp_result ?= l_tool.panel
 					if l_tmp_result /= Void then
@@ -406,14 +406,14 @@ feature {NONE} -- Implementation
 		require
 			ready: testing_tool /= Void
 		local
-			l_shim: ES_TESTING_RESULT_TOOL
+			l_shim: ES_EWEASEL_TESTING_RESULT_TOOL
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 			l_win: EB_DEVELOPMENT_WINDOW
 		do
 			if testing_result_tool = Void or else not testing_result_tool.content.is_visible then
 				l_win := testing_tool.develop_window
 				check not_void: l_win /= Void end
-				l_shim ?= l_win.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
+				l_shim ?= l_win.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
 				if l_shim /= Void then
 					l_show_tool_command := l_win.commands.show_shell_tool_commands.item (l_shim)
 					l_show_tool_command.execute
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_event_list_item: EVENT_LIST_TESTING_RESULT_ITEM
 			l_result: ES_EWEASEL_TEST_RESULT_ITEM
-			l_contexts: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_contexts: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 
 			l_exception_manager: ISE_EXCEPTION_MANAGER
 		do

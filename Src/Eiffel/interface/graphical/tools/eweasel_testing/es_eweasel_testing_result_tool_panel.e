@@ -3,7 +3,7 @@ indexing
 						This tool showing result from eweasel tests.
 						This tool can also manage all test run data, compare test results etc.
 						
-						The eweasel tests is controled by {ES_TESTING_TOOL_PANEL}
+						The eweasel tests is controled by {ES_EWEASEL_TESTING_TOOL_PANEL}
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -11,12 +11,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_TESTING_RESULT_TOOL_PANEL
+	ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 
 inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
 		export
-			{ES_TEST_RUN_RESULT_GRID_MANAGER} create_clickable_grid_item
+			{ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER} create_clickable_grid_item
 		redefine
 			build_tool_interface,
 			on_after_initialized,
@@ -98,10 +98,10 @@ feature {NONE} -- Redefine
 			-- <Precursor>
 		local
 			l_factory: ES_EWEASEL_SINGLETON_FACTORY
-			l_testing_tool: ES_TESTING_TOOL_PANEL
+			l_testing_tool: ES_EWEASEL_TESTING_TOOL_PANEL
 			l_row: EV_GRID_ROW
 			l_conf_class: CONF_CLASS
-			l_util: ES_TEST_CASE_FINDER
+			l_util: ES_EWEASEL_TEST_CASE_FINDER
 		do
 			create l_factory
 			-- If testing tool initialized, we select that row related with `a_row'
@@ -140,7 +140,7 @@ feature {NONE} -- Redefine
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_manager: ES_EWEASEL_EXECUTION_MANAGER
 			l_show_failure_trace_button: SD_TOOL_BAR_BUTTON
-			l_shim: ES_TESTING_TOOL
+			l_shim: ES_EWEASEL_TESTING_TOOL
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 		do
 			create l_shared
@@ -161,7 +161,7 @@ feature {NONE} -- Redefine
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_TOOL})
+			l_shim ?= develop_window.shell_tools.tool ({ES_EWEASEL_TESTING_TOOL})
 			if l_shim /= Void then
 				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
 				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
@@ -195,10 +195,10 @@ feature {NONE} -- Redefine
 
 feature -- Query
 
-	test_run_result_grid_manager: !ES_TEST_RUN_RESULT_GRID_MANAGER is
+	test_run_result_grid_manager: !ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER is
 			-- Manager of `failure_trace_grid'
 		do
-			if not {l_test: ES_TEST_RUN_RESULT_GRID_MANAGER} internal_test_run_result_grid_manager then
+			if not {l_test: ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER} internal_test_run_result_grid_manager then
 				create internal_test_run_result_grid_manager.make (failure_trace_grid)
 			end
 			Result := internal_test_run_result_grid_manager

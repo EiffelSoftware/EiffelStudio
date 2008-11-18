@@ -49,12 +49,16 @@ feature -- Access
 		require
 			is_service_available: is_service_available
 		local
-			l_service: G
+			l_service: ?G
 		do
 			if {l_internal_service: G} internal_service then
 				Result := l_internal_service
 			else
-				l_service ?= service_provider.service ({G})
+				if {l_other_service: G} service_provider.service ({G}) then
+					l_service := l_other_service
+				else
+					check False end
+				end
 				check l_service_attached: l_service /= Void end
 				Result := l_service
 				internal_service := Result

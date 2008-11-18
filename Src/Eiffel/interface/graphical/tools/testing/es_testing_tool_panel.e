@@ -782,7 +782,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 				elseif {l_generator: !TEST_GENERATOR_I} a_processor then
 					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, l_window)
 				elseif {l_factory: !TEST_CREATOR_I} a_processor then
-					create {ES_TESTING_TOOL_FACTORY_WIDGET} l_new_tab.make (l_factory, l_window)
+					create {ES_TESTING_TOOL_CREATOR_WIDGET} l_new_tab.make (l_factory, l_window)
 				end
 				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)

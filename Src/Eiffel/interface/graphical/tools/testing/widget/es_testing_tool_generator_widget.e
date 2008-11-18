@@ -10,7 +10,7 @@ class
 	ES_TESTING_TOOL_GENERATOR_WIDGET
 
 inherit
-	ES_TESTING_TOOL_FACTORY_WIDGET
+	ES_TESTING_TOOL_CREATOR_WIDGET
 		redefine
 			build_notebook_widget_interface,
 			factory,

@@ -314,7 +314,7 @@ feature -- Feature access
 			l_cc: CLASS_C
 			l_fi: FEATURE_I
 		do
-			l_ct := eiffel_system.system.class_type_of_id (ct_id)
+			l_ct := eiffel_system.system.class_type_of_static_type_id (ct_id)
 			if l_ct /= Void then
 				l_cc := l_ct.associated_class
 				if l_cc /= Void and then fe_id /= 0 then
@@ -342,7 +342,7 @@ feature -- Feature access
 			l_cc: CLASS_C
 			l_fi: FEATURE_I
 		do
-			l_ct := eiffel_system.system.class_type_of_id (a_orig)
+			l_ct := eiffel_system.system.class_type_of_static_type_id (a_orig)
 			if l_ct /= Void then
 				l_cc := l_ct.associated_class
 				if l_cc /= Void then

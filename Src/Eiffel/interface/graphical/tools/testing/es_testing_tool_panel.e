@@ -894,6 +894,7 @@ feature {NONE} -- Factory
 			create Result.make (5)
 
 			create wizard_button.make
+			wizard_button.set_tooltip (locale_formatter.translation (tt_wizard))
 			wizard_button.set_pixmap (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
 			wizard_button.set_pixel_buffer (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0))
 			register_action (wizard_button.select_actions, agent on_launch_wizard)
@@ -1024,6 +1025,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
+	tt_wizard: !STRING = "Create new tests"
 	f_run_button: !STRING = "Run all tests in background"
 	f_debug_button: !STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: !STRING = "Stop all execution"
@@ -1058,4 +1060,35 @@ invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
 	details_tab_valid: notebook.has (outcome_tab.widget)
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

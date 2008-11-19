@@ -2626,7 +2626,9 @@ feature -- Removal
 			set_vertical_computation_required ((lower_index - 1).max (1))
 			unlock_update
 			reset_internal_grid_attributes
-			recompute_vertical_scroll_bar
+
+				-- Recompute vertical scroll bar on idle.
+			application_implementation.do_once_on_idle (recompute_vertical_scroll_bar_agent)
 		ensure
 			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
 			lower_row_removed: (old row (lower_index)).parent = Void
@@ -4203,7 +4205,12 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 			create locked_indexes.make (1)
 			set_state_flag (interface_is_initialized_flag, False)
+
+			recompute_vertical_scroll_bar_agent := agent recompute_vertical_scroll_bar
 		end
+
+	recompute_vertical_scroll_bar_agent: PROCEDURE [EV_GRID_I, TUPLE[]]
+		-- Agent used for adding to idle actions whilst removing rows.
 
 	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER) is
 			-- Resize `viewport' within `static_fixed' as the viewable

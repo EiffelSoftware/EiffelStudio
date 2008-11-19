@@ -2628,7 +2628,12 @@ feature -- Removal
 			reset_internal_grid_attributes
 
 				-- Recompute vertical scroll bar on idle.
-			application_implementation.do_once_on_idle (recompute_vertical_scroll_bar_agent)
+			if not vertical_computation_added_to_once_idle_actions then
+					-- Do nothing if `Current' is empty or the agent is already contained
+					-- in the do once on idle actions.
+				ev_application.do_once_on_idle (agent recompute_vertical_scroll_bar_from_once_idle_actions)
+				vertical_computation_added_to_once_idle_actions := True
+			end
 		ensure
 			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
 			lower_row_removed: (old row (lower_index)).parent = Void
@@ -3744,87 +3749,84 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			previous_scroll_bar_value: INTEGER
 			row_index: INTEGER
 		do
-			if not is_destroyed then
-				perform_vertical_computation
-					-- Retrieve the final row offset as this is the virtual height required for all rows.
-				if row_offsets = Void and not is_row_height_fixed then
-					l_total_row_height := 0
-				else
-					l_total_row_height := total_row_height
+			perform_vertical_computation
+				-- Retrieve the final row offset as this is the virtual height required for all rows.
+			if row_offsets = Void and not is_row_height_fixed then
+				l_total_row_height := 0
+			else
+				l_total_row_height := total_row_height
+			end
+			l_client_height := viewable_height
+				-- Note that `height' was not used as we want it to represent only the height of
+				-- the "client area" which is `viewport'.
+
+
+			if l_total_row_height > l_client_height then
+					-- The rows are higher than the visible client area.
+				if not vertical_scroll_bar.is_show_requested and is_vertical_scroll_bar_show_requested then
+						-- Show `vertical_scroll_bar' if not already shown.
+					vertical_scroll_bar.show
+					update_scroll_bar_spacer
 				end
-				l_client_height := viewable_height
-					-- Note that `height' was not used as we want it to represent only the height of
-					-- the "client area" which is `viewport'.
-
-
-				if l_total_row_height > l_client_height then
-						-- The rows are higher than the visible client area.
-					if not vertical_scroll_bar.is_show_requested and is_vertical_scroll_bar_show_requested then
-							-- Show `vertical_scroll_bar' if not already shown.
-						vertical_scroll_bar.show
-						update_scroll_bar_spacer
-					end
-						-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
-						-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
-						-- `is_vertical_scrolling_per_item'.
-					if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
-						previous_scroll_bar_value := vertical_scroll_bar.value
-					end
-					if is_vertical_scrolling_per_item then
-						if is_vertical_overscroll_enabled then
-							vertical_scroll_bar.value_range.resize_exactly (0, visible_row_count - 1)
-						else
-							-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
-							-- at the bottom of the viewable area.
-							if uses_row_offsets then
-								row_index := row_indexes_to_visible_indexes.i_th (last_first_row_in_per_item_scrolling) + 1
-							else
-								row_index := last_first_row_in_per_item_scrolling
-							end
-							vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
-						end
-						average_row_height := (l_total_row_height // visible_row_count)
-						vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per pixel to per item vertical
-								-- scrolling, we must approximate the previous position of the scroll bar.
-							vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
-						end
-						if is_item_height_changing then
-								-- The `value' of the scroll bar should not have changed.
-							check
-								scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
-							end
-								-- We call the change actions explicitly, so that it behaves as if the value had just
-								-- changed, which ensures that the currently scrolled to item is still displayed at the top.
-							vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
-						end
+					-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
+					-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
+					-- `is_vertical_scrolling_per_item'.
+				if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
+					previous_scroll_bar_value := vertical_scroll_bar.value
+				end
+				if is_vertical_scrolling_per_item then
+					if is_vertical_overscroll_enabled then
+						vertical_scroll_bar.value_range.resize_exactly (0, visible_row_count - 1)
 					else
-						vertical_scroll_bar.value_range.resize_exactly (0, maximum_virtual_y_position)
-						vertical_scroll_bar.set_leap (height)
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per item to per pixel vertical
-								-- scrolling, we can set the position of the scroll bar exactly to match it's
-								-- previous position.
-							if uses_row_offsets then
-								vertical_scroll_bar.set_value ((row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
-							else
-									-- Must restrict to the maximum permitted value, as the virtual area
-									-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
-								vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
-							end
+						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
+						-- at the bottom of the viewable area.
+						if uses_row_offsets then
+							row_index := row_indexes_to_visible_indexes.i_th (last_first_row_in_per_item_scrolling) + 1
+						else
+							row_index := last_first_row_in_per_item_scrolling
 						end
+						vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
+					end
+					average_row_height := (l_total_row_height // visible_row_count)
+					vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
+					if has_vertical_scrolling_per_item_just_changed then
+							-- If we are just switching from per pixel to per item vertical
+							-- scrolling, we must approximate the previous position of the scroll bar.
+						vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
+					end
+					if is_item_height_changing then
+							-- The `value' of the scroll bar should not have changed.
+						check
+							scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
+						end
+							-- We call the change actions explicitly, so that it behaves as if the value had just
+							-- changed, which ensures that the currently scrolled to item is still displayed at the top.
+						vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
 					end
 				else
-						-- The rows are not as high as the visible client area.
-					if vertical_scroll_bar.is_show_requested then
-							-- Hide `vertical_scroll_bar' as it is not required.
-						vertical_scroll_bar.hide
-						update_scroll_bar_spacer
+					vertical_scroll_bar.value_range.resize_exactly (0, maximum_virtual_y_position)
+					vertical_scroll_bar.set_leap (height)
+					if has_vertical_scrolling_per_item_just_changed then
+							-- If we are just switching from per item to per pixel vertical
+							-- scrolling, we can set the position of the scroll bar exactly to match it's
+							-- previous position.
+						if uses_row_offsets then
+							vertical_scroll_bar.set_value ((row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
+						else
+								-- Must restrict to the maximum permitted value, as the virtual area
+								-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
+							vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
+						end
 					end
+				end
+			else
+					-- The rows are not as high as the visible client area.
+				if vertical_scroll_bar.is_show_requested then
+						-- Hide `vertical_scroll_bar' as it is not required.
+					vertical_scroll_bar.hide
+					update_scroll_bar_spacer
 				end
 			end
-
 		end
 
 	last_first_row_in_per_item_scrolling: INTEGER is
@@ -4208,12 +4210,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 			create locked_indexes.make (1)
 			set_state_flag (interface_is_initialized_flag, False)
-
-			recompute_vertical_scroll_bar_agent := agent recompute_vertical_scroll_bar
 		end
-
-	recompute_vertical_scroll_bar_agent: PROCEDURE [EV_GRID_I, TUPLE[]]
-		-- Agent used for adding to idle actions whilst removing rows.
 
 	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER) is
 			-- Resize `viewport' within `static_fixed' as the viewable

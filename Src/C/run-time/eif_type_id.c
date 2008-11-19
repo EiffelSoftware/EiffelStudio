@@ -57,9 +57,10 @@ doc:	</struct>
 struct rt_type {
 	char *type_name;
 	struct rt_type **generics;
-	uint32 count; 	/* Should fit into EIF_TYPE_INDEX. */
+	EIF_TYPE_INDEX count;
 	int is_expanded;
 	int is_reference;
+	int is_attached;
 };
 
 /*
@@ -70,7 +71,7 @@ doc:	</struct>
 struct rt_global_data {
 	int has_error;
 	EIF_TYPE_INDEX *typearr;
-	uint32 count; 	/* Should fit into EIF_TYPE_INDEX. */
+	EIF_TYPE_INDEX count;
 	uint32 position;
 };
 
@@ -91,16 +92,16 @@ rt_private int eif_pre_ecma_mapping_status = 1;
 /* Prototypes */
 /* String analysis */
 rt_private struct rt_type * eif_decompose_type (char *type_string);
-rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count);
+rt_private struct rt_type ** eif_decompose_parameters (char *params, EIF_TYPE_INDEX *a_count);
 rt_private void eif_free_type_array (struct rt_type *a_type, int free_a_type);
 rt_private void eif_remove_surrounding_white_spaces (char *str);
-rt_private void set_expanded_or_reference_keyword (struct rt_type *);
+rt_private void update_entry (struct rt_type *);
 
 /* Dynamic type computation. */
 rt_private int is_generic (struct cecil_info *type, struct rt_type *type_entry);
-rt_private EIF_TYPE_ID eifcid(struct rt_type *type_entry);
+rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry);
 rt_private int32 sk_type (int32 cecil_id);
-rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type);
+rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type);
 rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data *data);
 rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type, struct rt_global_data *data);
 
@@ -299,7 +300,7 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 						l_type->count = 0;
 					}
 					if (l_type) {
-						set_expanded_or_reference_keyword (l_type);
+						update_entry (l_type);
 					}
 				}
 			}
@@ -313,13 +314,13 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 doc:	<routine name="eif_decompose_parameters" return_type="struct rt_type **" export="private">
 doc:		<summary>Decompose `params' in `*a_count' logical elements to represent a type. `params' might be modified during this operation.</summary>
 doc:		<param name="params" type="char *">Type we will decompose.</param>
-doc:		<param name="a_count" type="uint32 *">Number of items in returned value.</param>
+doc:		<param name="a_count" type="EIF_TYPE_INDEX *">Number of items in returned value.</param>
 doc:		<return>null if `params' is not valid or if there is not enough memory for internal allocation, otherwise the corresponding data.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count)
+rt_private struct rt_type ** eif_decompose_parameters (char *params, EIF_TYPE_INDEX *a_count)
 {
 	int l_nesting = 0;
 	size_t i, l_count;
@@ -505,14 +506,14 @@ rt_private void eif_remove_surrounding_white_spaces (char * str)
 }
 
 /*
-doc:	<routine name="set_expanded_or_reference_keyword" export="private">
+doc:	<routine name="update_entry" export="private">
 doc:		<summary>Check if `type_entry->type_name' contains `reference' or `expanded'. If it does, then it removes it from `type_entry->type_name' and set `is_reference' or `is_expanded' from `type_entry' accordingly..</summary>
 doc:		<param name="type_entry" type="struct rt_type *">Type being analyzed.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private void set_expanded_or_reference_keyword (struct rt_type *type_entry)
+rt_private void update_entry (struct rt_type *type_entry)
 {
 	char *l_str;
 	size_t l_count;
@@ -520,6 +521,9 @@ rt_private void set_expanded_or_reference_keyword (struct rt_type *type_entry)
 	REQUIRE("Valid type entry", type_entry);
 	REQUIRE("Has type name", type_entry->type_name);
 
+	type_entry->is_reference = 0;
+	type_entry->is_expanded = 0;
+	type_entry->is_attached = 0;
 	l_str = type_entry->type_name;
 	l_count = strlen(l_str);
 
@@ -527,15 +531,17 @@ rt_private void set_expanded_or_reference_keyword (struct rt_type *type_entry)
 		memset(type_entry->type_name, (int) ' ', 8);
 		eif_remove_surrounding_white_spaces (type_entry->type_name);
 		type_entry->is_expanded = 1;
-		type_entry->is_reference = 0;
 	} else if ((l_count >= 9) && (strncmp ("reference", l_str, 9) == 0)) {
 		memset(type_entry->type_name, (int) ' ', 9);
 		eif_remove_surrounding_white_spaces (type_entry->type_name);
 		type_entry->is_reference = 1;
-		type_entry->is_expanded = 0;
-	} else {
-		type_entry->is_reference = 0;
-		type_entry->is_expanded = 0;
+	} else if ((l_count >=2) && (l_str[0] == '!')) {
+		l_str[0] = ' ';
+		eif_remove_surrounding_white_spaces (type_entry->type_name);
+		type_entry->is_attached = 1;
+	} else if ((l_count >=2) && (l_str[0] == '?')) {
+		l_str[0] = ' ';
+		eif_remove_surrounding_white_spaces (type_entry->type_name);
 	}
 }
 
@@ -662,7 +668,7 @@ rt_private int is_generic (struct cecil_info *cecil_type, struct rt_type *type_e
 }
 
 /*
-doc:	<routine name="eifcid" return_type="EIF_TYPE_ID" export="private">
+doc:	<routine name="eifcid" return_type="EIF_TYPE_INDEX" export="private">
 doc:		<summary>Given a `type_entry' find out its cecil ID.</summary>
 doc:		<param name="type_entry" type="struct rt_type *">Type being analyzed.</param>
 doc:		<return>Return class ID of `type_entry'. If the class id is not available or the associated type is generic, then EIF_NO_TYPE is returned.</return>
@@ -670,7 +676,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private EIF_TYPE_ID eifcid(struct rt_type *type_entry)
+rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry)
 {
 	
 	struct cecil_info *value;			/* Pointer to value stored in H table */
@@ -684,11 +690,11 @@ rt_private EIF_TYPE_ID eifcid(struct rt_type *type_entry)
 		if (strcmp(type_entry->type_name, "NONE") == 0) {
 			return NONE_TYPE;
 		} else {
-			return EIF_NO_TYPE;
+			return INVALID_DTYPE;
 		}
 	} else if (value->nb_param > 0) {
 			/* Generic type when we expected a non-generic one. */
-		return EIF_NO_TYPE;
+		return INVALID_DTYPE;
 	} else {
 			/* The associated type ID */
 		return value->dynamic_type;
@@ -696,7 +702,7 @@ rt_private EIF_TYPE_ID eifcid(struct rt_type *type_entry)
 }
 
 /*
-doc:	<routine name="compute_eif_type_id" return_type="EIF_TYPE_ID" export="private">
+doc:	<routine name="compute_eif_type_id" return_type="EIF_TYPE_INDEX" export="private">
 doc:		<summary>Given a `type_entry' find out its associated dynamic type ID.</summary>
 doc:		<param name="type_entry" type="struct rt_type *">Type being analyzed.</param>
 doc:		<return>If `a_type' is valid and exists in universe, returns its dynamic type id, otherwise EIF_NO_TYPE.</return>
@@ -704,10 +710,10 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
+rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 {
 	struct cecil_info l_cecil_type;
-	EIF_TYPE_ID result = 0, l_cecil_id;
+	EIF_TYPE_INDEX result = 0, l_cecil_id;
 	struct rt_global_data sdata, *data;
 
 	REQUIRE("valid type", a_type);
@@ -717,8 +723,14 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 	memset (data, 0, sizeof (struct rt_global_data));
 
 	if (is_generic (&l_cecil_type, a_type) == 1) {
-			/* Initial count for `typearr'. */
-		sdata.count = 2 + l_cecil_type.nb_param + 1;
+			/* Initial count for `typearr':
+			 * 1 for static type id, currently not used
+			 * 1 if base type is attached
+			 * 1 for the base type id
+			 * the number of actual generic parameter
+			 * 1 for the terminator
+			 */
+		sdata.count = 2 + (a_type->is_attached ? 1 : 0) + l_cecil_type.nb_param + 1;
 
 			/* Allocate the typearr structures and do the basic
 			 * initialization, the first element is set to `INVALID_DTYPE' since
@@ -728,20 +740,36 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 		sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 		if (sdata.typearr) {
 			sdata.typearr [0] = INVALID_DTYPE;
+			if (a_type->is_attached) {
+				sdata.typearr [1] = ATTACHED_TYPE;
+				sdata.position = 2;
+			} else {
+				sdata.position = 1;
+			}
 			sdata.typearr [sdata.count - 1] = TERMINATOR;
-			sdata.position = 1;
 
 				/* There is a generic type, so we need to analyze the generic parameter
 				 * before finding out the real type */
 			eif_gen_type_id (&l_cecil_type, a_type, data);
 			if (sdata.has_error == 0) {
-				result = (EIF_TYPE_ID) eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
+				result = eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
 			}
 			eif_free (sdata.typearr);
+		} else {
+				/* Could not allocate memory, let's set an error. */
+			sdata.has_error = 1;
 		}
 	} else if (is_tuple (a_type)) {
-			/* Initial count for `typearr'. */
-		sdata.count = 2 + TUPLE_OFFSET + a_type->count + 1;
+			/* Initial count for `typearr':
+			 * 1 for static type id, currently not used
+			 * 1 if base type is attached
+			 * TUPLE_OFFSET because it is a tuple
+			 * 1 for the base type id
+			 * the number of actual generic parameter
+			 * 1 for the terminator
+			 */
+
+		sdata.count = 2 + (a_type->is_attached ? 1 : 0) + TUPLE_OFFSET + a_type->count + 1;
 
 		l_cecil_id = eifcid(a_type);
 		if (l_cecil_id == EIF_NO_TYPE) {
@@ -756,28 +784,40 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 			sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 			if (sdata.typearr) {
 				sdata.typearr [0] = INVALID_DTYPE;
-				sdata.typearr [1] = TUPLE_TYPE;
-				sdata.typearr [2] = (EIF_TYPE_INDEX) a_type->count;
-				sdata.typearr [3] = (EIF_TYPE_INDEX) l_cecil_id;
+				if (a_type->is_attached) {
+					sdata.typearr [1] = ATTACHED_TYPE;
+					sdata.position = 2;
+				} else {
+					sdata.position = 1;
+				}
+				sdata.typearr [sdata.position] = TUPLE_TYPE;
+				sdata.typearr [sdata.position + 1] = a_type->count;
+				sdata.typearr [sdata.position + 2] = l_cecil_id;
 				sdata.typearr [sdata.count - 1] = TERMINATOR;
-				sdata.position =  1 + TUPLE_OFFSET + 1;
+				sdata.position = sdata.position + TUPLE_OFFSET + 1;
 
 					/* Analyze TUPLE type before finding its real type. */
 				eif_tuple_type_id (a_type, data);
 				if (sdata.has_error == 0) {
-					result = (EIF_TYPE_ID) eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
+					result = eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
 				}
 				eif_free (sdata.typearr);
+			} else {
+					/* Could not allocate memory, let's set an error. */
+				sdata.has_error = 1;
 			}
 		}
 	} else {
 		result = eifcid(a_type);
+		if (a_type->is_attached) {
+			result = eif_attached_type (result);
+		}
 	}
 
 	if (sdata.has_error == 0) {
 		return result;
 	} else {
-		return EIF_NO_TYPE;
+		return INVALID_DTYPE;
 	}
 }
 
@@ -795,13 +835,14 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 	int l_generic_count;
 	struct cecil_info l_cecil_type;
 	struct rt_type *l_type;
-	EIF_TYPE_ID l_cecil_id;
+	EIF_TYPE_INDEX l_cecil_id;
 	int i;
 
 	REQUIRE("valid type entry", a_type);
 	REQUIRE("valid data", data);
 	REQUIRE("is_tuple", is_tuple (a_type));
-	REQUIRE("typearr big enough", data->position + a_type->count < data->count);
+		/* It is `<=' unlike the precondition in `eif_gen_type_id' because a TUPLE may have no argument. */
+	REQUIRE("typearr big enough", data->position + a_type->count <= data->count);
 
 	if (data->has_error == 0) {
 		l_generic_count = a_type->count;
@@ -810,18 +851,22 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 			l_type = a_type->generics [i];
 
 			if (is_generic (&l_cecil_type, l_type) == 1) {
-				data->count += l_type->count;
+				data->count = data->count + l_type->count + (l_type->is_attached ? 1 : 0);
 				data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 				if (data->typearr == NULL) {
 					data->has_error = 1;
 				} else {
 					data->typearr [data->count - 1] = TERMINATOR;
+					if (l_type->is_attached) {
+						data->typearr [data->position] = ATTACHED_TYPE;
+						data->position++;
+					}
 					eif_gen_type_id (&l_cecil_type, l_type, data);
 				}
 			} else if (is_tuple (l_type)) {
-				data->count += TUPLE_OFFSET + l_type->count;
+				data->count += TUPLE_OFFSET + l_type->count + (l_type->is_attached ? 1 : 0);
 				l_cecil_id = eifcid(l_type);
-				if (l_cecil_id == EIF_NO_TYPE) {
+				if (l_cecil_id == INVALID_DTYPE) {
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
@@ -829,9 +874,13 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
+						if (l_type->is_attached) {
+							data->typearr [data->position] = ATTACHED_TYPE;
+							data->position++;
+						}
 						data->typearr [data->position] = TUPLE_TYPE;
-						data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
-						data->typearr [data->position + 2] = (EIF_TYPE_INDEX) l_cecil_id;
+						data->typearr [data->position + 1] = l_type->count;
+						data->typearr [data->position + 2] = l_cecil_id;
 						data->typearr [data->count - 1] = TERMINATOR;
 						data->position = data->position + TUPLE_OFFSET + 1;
 						eif_tuple_type_id (l_type, data);
@@ -839,12 +888,25 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 				}
 			} else {
 				l_cecil_id = eifcid(l_type);
-				if (l_cecil_id == EIF_NO_TYPE) {
+				if (l_cecil_id == INVALID_DTYPE) {
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
-					data->typearr [data->position] = (EIF_TYPE_INDEX) l_cecil_id;
-					data->position++;
+					if (l_type->is_attached) {
+						data->count++;
+						data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
+						if (data->typearr == NULL) {
+							data->has_error = 1;
+						} else {
+							data->typearr [data->position] = ATTACHED_TYPE;
+							data->typearr [data->count - 1] = TERMINATOR;
+							data->position++;
+						}
+					}
+					if (data->has_error == 0) {
+						data->typearr [data->position] = l_cecil_id;
+						data->position++;
+					}
 				}
 			}
 		}
@@ -865,7 +927,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 	uint32 i = 0, l_generic_count;
 	struct cecil_info l_cecil_type;
 	struct rt_type *l_type;
-	int32 l_cecil_id;
+	EIF_TYPE_INDEX l_cecil_id;
 	int32 *gtype;			/* Generic information for current type */
 	int32 *itype;			/* Generic information for inspected type */
 	int32 *t;				/* To walk through the patterns array */
@@ -896,34 +958,42 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 			for (i = 0; (i < l_generic_count) && (data->has_error == 0); i++) {
 				l_type = a_type->generics [i];
 				if ((is_generic (&l_cecil_type, l_type) == 1)) {
-					data->count += l_type->count;
+					data->count = data->count + l_type->count + (l_type->is_attached ? 1 : 0);
 					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
 						data->typearr [data->count - 1] = TERMINATOR;
+						if (l_type->is_attached) {
+							data->typearr [data->position] = ATTACHED_TYPE;
+							data->position++;
+						}
 						l_previous_pos = data->position;
 						eif_gen_type_id (&l_cecil_type, l_type, data);
 							/* Extract from computed type, the associated `SK_xx' value. */
 						gtype [i] = sk_type (data->typearr [l_previous_pos]);
 					}
 				} else if (is_tuple (l_type)) {
-					data->count += TUPLE_OFFSET + l_type->count;
+					data->count += TUPLE_OFFSET + l_type->count + (l_type->is_attached ? 1 : 0);
 					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
 						l_cecil_id = eifcid (l_type);
-						if (l_cecil_id == EIF_NO_TYPE) {
+						if (l_cecil_id == INVALID_DTYPE) {
 								/* Could not find type. This is an error. */
 							data->has_error = 1;
 						} else {
 							gtype [i] = sk_type (l_cecil_id);
 							CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
 
+							if (l_type->is_attached) {
+								data->typearr [data->position] = ATTACHED_TYPE;
+								data->position++;
+							}
 							data->typearr [data->position] = TUPLE_TYPE;
-							data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
-							data->typearr [data->position + 2] = (EIF_TYPE_INDEX) l_cecil_id;
+							data->typearr [data->position + 1] = l_type->count;
+							data->typearr [data->position + 2] = l_cecil_id;
 							data->typearr [data->count - 1] = TERMINATOR;
 							data->position = data->position + TUPLE_OFFSET + 1;
 							eif_tuple_type_id (l_type, data);
@@ -931,14 +1001,27 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					}
 				} else {
 					l_cecil_id = eifcid (l_type);
-					if (l_cecil_id == EIF_NO_TYPE) {
+					if (l_cecil_id == INVALID_DTYPE) {
 							/* Could not find type. This is an error. */
 						data->has_error = 1;
 					} else {
 						gtype [i]  = sk_type (l_cecil_id);
 						CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
-						data->typearr [data->position] = (EIF_TYPE_INDEX) l_cecil_id;
-						data->position++;
+						if (l_type->is_attached) {
+							data->count++;
+							data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
+							if (data->typearr == NULL) {
+								data->has_error = 1;
+							} else {
+								data->typearr [data->position] = ATTACHED_TYPE;
+								data->typearr [data->count - 1] = TERMINATOR;
+								data->position++;
+							}
+						}
+						if (data->has_error == 0) {
+							data->typearr [data->position] = l_cecil_id;
+							data->position++;
+						}
 					}
 				}
 			}

@@ -115,17 +115,13 @@ feature {NONE} -- Query
 	icon_suffix: !STRING
 			-- Retrieves icon name suffix
 		do
-			if suffix = Void then
-				Result := default_icon_suffix
+			if {l_suffix: STRING} suffix then
+				Result := l_suffix
 			else
-				if {s: STRING} suffix then
-					Result := s
-				else
-					check False end
-				end
+				Result := default_icon_suffix
 			end
 		end
-
+		
 feature -- Basic Operations
 
 	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE [ANY, TUPLE]; a_post_process: PROCEDURE [ANY, TUPLE]) is

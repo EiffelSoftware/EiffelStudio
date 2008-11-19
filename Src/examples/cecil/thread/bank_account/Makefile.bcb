@@ -3,8 +3,8 @@ DELDIR = rd /q /s
 LN = copy 
 RM = del
 CP = copy
-CFLAGS = -tWM -DEIF_THREADS -I$(INCLUDE_PATH)
-EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
+CFLAGS = -tWM -DEIF_THREADS -I"$(INCLUDE_PATH)"
+EC = "$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec"
 TARGET = classic
 EIFLIB = EIFGENs\$(TARGET)\W_code\libbank_account.lib 
 LIBS = 
@@ -16,10 +16,10 @@ compile_eiffel:
 	$(EC) -freeze -c_compile
 
 main.obj: main.c
-	$(CC) -I$(INCLUDE_PATH) -c main.c 
+	$(CC) $(CFLAGS) -c main.c 
 
 fext.obj: fext.c
-	$(CC) -I$(INCLUDE_PATH) -c fext.c 
+	$(CC) $(CFLAGS) -c fext.c 
 
 make_cecil:
 	cd EIFGENs\$(TARGET)\W_code

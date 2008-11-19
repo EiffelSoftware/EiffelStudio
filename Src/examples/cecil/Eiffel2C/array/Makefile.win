@@ -3,7 +3,7 @@ DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
+EC = "$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec"
 ECF = cecil.ecf
 TARGET = classic
 WCODE = EIFGENs\$(TARGET)\W_code
@@ -22,7 +22,7 @@ mklink:
 	$(LN) $(WCODE)\cecil.melted .
 
 $(OBJECT): fext.c
-	$(CC) -I$(INCLUDE_PATH) -c fext.c 
+	$(CC) -I"$(INCLUDE_PATH)" -c fext.c 
 
 clean:
 	$(RM) $(OBJECT) 

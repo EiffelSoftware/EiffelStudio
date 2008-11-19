@@ -5,8 +5,8 @@ DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\finish_freezing -silent
-EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
+FINISH_FREEZING = "$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\finish_freezing" -silent
+EC = "$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec"
 ECF = cecil.ecf
 TARGET = classic
 EIFLIB = EIFGENs\$(TARGET)\W_code\libcecil.lib 
@@ -28,7 +28,7 @@ compile_c:
 $(EIFLIB): compile_c
 
 main.obj: main.c
-	$(CC) -I$(INCLUDE_PATH) $(CFLAGS) -c main.c 
+	$(CC) -I"$(INCLUDE_PATH)" $(CFLAGS) -c main.c 
 
 cecil.exe: main.obj $(EIFLIB) 
 	$(LN) EIFGENs\$(TARGET)\W_code\cecil.melted cecil.melted

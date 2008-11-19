@@ -713,7 +713,7 @@
 	<PREF NAME="shortcuts.view.tools.show_favorites_tool" DESCRIPTION="Shortcut to display Favorites tool."><SHORTCUT Ctrl="True" Alt="True">A</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_windows_tool" DESCRIPTION="Shortcut to display Windows tool."><SHORTCUT Ctrl="True" Alt="True">N</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_testing_tool" DESCRIPTION="Shortcut to display Testing tool."><SHORTCUT Ctrl="True" Alt="True">S</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_testing_tool" DESCRIPTION="Shortcut to display Testing tool."><SHORTCUT Ctrl="True" Alt="True">8</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_back" DESCRIPTION="Shortcut to go back in the history."><SHORTCUT Alt="True">Left</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_forth" DESCRIPTION="Shortcut to go forth in the history."><SHORTCUT Alt="True">Right</SHORTCUT></PREF>
 	

@@ -4,12 +4,13 @@ test_description Using attachment mark to create types via INTERNAL should work.
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
 
 compile_melted
 compile_result ok
 
-execute_work 	NONE 	exec_output1
+execute_work 	NONE 	exec_output
 execute_result 	ok
-compare		exec_output1 output1
+compare		exec_output output
 
 test_end

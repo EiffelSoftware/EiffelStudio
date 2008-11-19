@@ -28,54 +28,50 @@ feature -- Access
 
 feature -- Status report
 
-	is_cataloged (a_folder: STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: !READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a folder is currently cataloged
 		require
 			is_interface_usable: is_interface_usable
-			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 		deferred
 		end
 
 feature -- Query
 
-	template_by_file_name (a_file_name: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified file name.
 			--
 			-- `a_file_name': The full path to a code template definition file.
 			-- `Result': A code template definition or Void if there was an error loading the code template.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		deferred
 		end
 
-	template_by_title (a_title: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified title.
 			--
 			-- `a_title': The title to match a code template definition to in the catalog.
 			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
-			a_title_attached: a_title /= Void
 			not_a_title_is_empty: not a_title.is_empty
 		deferred
 		end
 
-	template_by_shortcut (a_shortcut: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified shortcut.
 			--
 			-- `a_shortcut': The shortcut to match a code template definition to in the catalog.
 			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
-			a_shortcut_attached: a_shortcut /= Void
 			not_a_shortcut_is_empty: not a_shortcut.is_empty
 		deferred
 		end
 
-	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: !DS_BILINEAR [!READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			-- Retrieves a list of code template defintions by specifying a list of matching categories.
 			--
 			-- `a_categories': The categories to match code templates for in the catalog.
@@ -84,8 +80,6 @@ feature -- Query
 			-- `Result': A list of matched code template definitions.
 		require
 			is_interface_usable: is_interface_usable
-			a_categories_attached: a_categories /= Void
-			a_categories_contains_attached_items: not a_categories.has (Void)
 			not_a_categories_is_empty: not a_categories.is_empty
 		deferred
 		end
@@ -111,7 +105,7 @@ feature -- Events
 
 feature -- Basic operations
 
-	rescan (a_folder: STRING_GENERAL)
+	rescan (a_folder: !READABLE_STRING_GENERAL)
 			-- Rescans an existing catalog and update the templates associated with the cataloged folder.
 			--
 			-- `a_folder': The cataloged folder to rescan and update the templates
@@ -133,7 +127,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operation
 
-	sort_templates_by_title (a_list: DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION])
+	sort_templates_by_title (a_list: !DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION])
 			-- Sorts a template list by title.
 			--
 			-- `a_list': A template list to sort by title.
@@ -153,7 +147,7 @@ feature {NONE} -- Basic operation
 
 feature -- Extension
 
-	extend_catalog (a_folder: STRING_GENERAL)
+	extend_catalog (a_folder: !READABLE_STRING_GENERAL)
 			-- Extends the code template catalog with a folder full of templates
 		require
 			is_interface_usable: is_interface_usable
@@ -166,7 +160,7 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: STRING_GENERAL)
+	remove_catalog (a_folder: !READABLE_STRING_GENERAL)
 		require
 			is_interface_usable: is_interface_usable
 			not_a_folder_is_empty: not a_folder.is_empty

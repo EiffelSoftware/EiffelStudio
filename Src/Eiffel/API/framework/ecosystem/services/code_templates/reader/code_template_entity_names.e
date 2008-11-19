@@ -15,72 +15,72 @@ inherit
 
 feature -- Access
 
-	author_tag: !STRING_8 = "author"
+	author_tag: STRING = "author"
 
-	category_tag: !STRING_8 = "category"
+	category_tag: STRING = "category"
 
-	categories_tag: !STRING_8 = "categories"
+	categories_tag: STRING = "categories"
 
-	code_template_tag: !STRING_8 = "code_template"
+	code_template_tag: STRING = "code_template"
 
-	code_templates_tag: !STRING_8 = "code_templates"
+	code_templates_tag: STRING = "code_templates"
 
-	declarations_tag: !STRING_8 = "declarations"
+	declarations_tag: STRING = "declarations"
 
-	default_tag: !STRING_8 = "default"
+	default_tag: STRING = "default"
 
-	description_tag: !STRING_8 = "description"
+	description_tag: STRING = "description"
 
-	literal_tag: !STRING_8 = "literal"
+	literal_tag: STRING = "literal"
 
-	metadata_tag: !STRING_8 = "metadata"
+	metadata_tag: STRING = "metadata"
 
-	object_tag: !STRING_8 = "object"
+	object_tag: STRING = "object"
 
-	template_tag: !STRING_8 = "template"
+	template_tag: STRING = "template"
 
-	templates_tag: !STRING_8 = "templates"
+	templates_tag: STRING = "templates"
 
-	title_tag: !STRING_8 = "title"
+	title_tag: STRING = "title"
 
-	shortcut_tag: !STRING_8 = "shortcut"
+	shortcut_tag: STRING = "shortcut"
 
 feature -- Attribute
 
-	conforms_to_attribute: !STRING_8 = "conforms_to"
+	conforms_to_attribute: STRING = "conforms_to"
 
-	editable_attribute: !STRING_8 = "editable"
+	editable_attribute: STRING = "editable"
 
-	format_attribute: !STRING_8 = "format"
+	format_attribute: STRING = "format"
 
-	id_attribute: !STRING_8 = "id"
+	id_attribute: STRING = "id"
 
-	version_attribute: !STRING_8 = "version"
+	version_attribute: STRING = "version"
 
 feature -- Values
 
-	code_category: !STRING_8 = "code"
+	code_category: STRING = "code"
 
-	contract_category: !STRING_8 = "contract"
+	contract_category: STRING = "contract"
 
-	precondition_category: !STRING_8 = "precondition"
+	precondition_category: STRING = "precondition"
 
-	postcondition_category: !STRING_8 = "postcondition"
+	postcondition_category: STRING = "postcondition"
 
-	invariant_category: !STRING_8 = "invariant"
+	invariant_category: STRING = "invariant"
 
-	class_category: !STRING_8 = "class"
+	class_category: STRING = "class"
 
 feature -- Delimiters
 
-	template_start_delimiter: !STRING_8 = "~#"
+	template_start_delimiter: STRING = "~#"
 
-	template_end_delimiter: !STRING_8 = "#~"
+	template_end_delimiter: STRING = "#~"
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -91,19 +91,19 @@ feature -- Delimiters
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

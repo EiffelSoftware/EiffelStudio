@@ -223,7 +223,7 @@ feature {NONE} -- Access
 			has_stone: has_stone
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
-			l_categories: DS_ARRAYED_LIST [STRING_32]
+			l_categories: DS_ARRAYED_LIST [!STRING]
 		do
 			create l_categories.make (2)
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
@@ -678,6 +678,7 @@ feature {NONE} -- User interface manipulation
 			is_initialized: is_initialized
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
+			l_templates: like contract_code_templates
 			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
 			l_definition: !CODE_TEMPLATE_DEFINITION
 			l_title: !STRING_32
@@ -688,23 +689,29 @@ feature {NONE} -- User interface manipulation
 			l_menu.wipe_out
 
 			if has_stone and then contract_editor.has_context then
-				l_cursor := contract_code_templates.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					l_definition := l_cursor.item
-					l_title := l_definition.metadata.title
-					if l_title.is_empty then
-						l_title := l_definition.metadata.shortcut
+				l_templates := contract_code_templates
+				if not l_templates.is_empty then
+					l_cursor := l_templates.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						l_definition := l_cursor.item
+						l_title := l_definition.metadata.title
+						if l_title.is_empty then
+							l_title := l_definition.metadata.shortcut
+						end
+						if not l_title.is_empty then
+							create l_menu_item.make_with_text (l_title)
+							l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
+							l_menu_item.set_data (l_definition)
+							l_menu_item.select_actions.extend (agent on_add_contract_from_template (l_definition))
+							l_menu.extend (l_menu_item)
+						end
+						l_cursor.forth
 					end
-					if not l_title.is_empty then
-						create l_menu_item.make_with_text (l_title)
-						l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
-						l_menu_item.set_data (l_definition)
-						l_menu_item.select_actions.extend (agent on_add_contract_from_template (l_definition))
-						l_menu.extend (l_menu_item)
-					end
-					l_cursor.forth
+					add_from_template_menu.enable_sensitive
+				else
+					add_from_template_menu.disable_sensitive
+					check corrupt_delivery: False end
 				end
-				add_from_template_menu.enable_sensitive
 			else
 				add_from_template_menu.disable_sensitive
 			end
@@ -1588,9 +1595,9 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1601,19 +1608,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	items: !DS_BILINEAR [G]
+	items: !DS_BILINEAR [!G]
 			-- List of current code templates
 		do
 			Result := internal_items
@@ -34,7 +34,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	item_equality_tester: ?KL_EQUALITY_TESTER [!G]
+	item_equality_tester: ?KL_EQUALITY_TESTER_A [!G]
 			-- Optional equality tester for item comparison.
 		do
 		end

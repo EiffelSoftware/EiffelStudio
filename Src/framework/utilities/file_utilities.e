@@ -21,7 +21,7 @@ inherit
 
 feature -- Query
 
-	frozen is_path_applicable (a_path: STRING_GENERAL; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): BOOLEAN
+	frozen is_path_applicable (a_path: !READABLE_STRING_GENERAL; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): BOOLEAN
 			-- Determines if a path is applicable given inclusion/exclusion expressions.
 			--
 			-- `a_path': Path to determine inclusion.
@@ -29,7 +29,6 @@ feature -- Query
 			-- `a_exclude': An exclusion regular expression, or Void if an exclusion expression is not required.
 			-- `Result': True if the path is an applicable inclusive path; False otherwise.
 		require
-			a_path_attached: a_path /= Void
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
 		local
@@ -38,6 +37,7 @@ feature -- Query
 			Result := a_include = Void and a_exclude = Void
 			if not Result then
 				l_path := a_path.as_string_8
+				check removed_when_using_attached_base: l_path /= Void end
 				if a_exclude /= Void then
 					Result := not a_exclude.matches (l_path)
 				end
@@ -49,7 +49,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	frozen scan_for_folders (a_folder: STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
+	frozen scan_for_folders (a_folder: !READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -57,7 +57,6 @@ feature -- Basic operations
 			-- `a_include': Regular expression used to progressively include files/folders.
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
-			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
 			a_levels_is_valid: a_levels >= -1
@@ -72,7 +71,7 @@ feature -- Basic operations
 				end)
 		end
 
-	frozen scan_for_files (a_folder: STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
+	frozen scan_for_files (a_folder: !READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -80,7 +79,6 @@ feature -- Basic operations
 			-- `a_include': Regular expression used to progressively include files/folders.
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
-			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
 			a_levels_is_valid: a_levels >= -1
@@ -97,7 +95,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	frozen scan_for_folders_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
+	frozen scan_for_folders_internal (a_folder: !READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -121,7 +119,7 @@ feature {NONE} -- Basic operations
 			if a_recursive then
 				l_dn := a_folder.as_string_8
 			else
-				l_dn := absolute_path (a_folder.as_string_8, True)
+				l_dn := absolute_path (a_folder, True)
 			end
 
 			create l_dir.make (l_dn)
@@ -168,7 +166,7 @@ feature {NONE} -- Basic operations
 				end)
 		end
 
-	frozen scan_for_files_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
+	frozen scan_for_files_internal (a_folder: !READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -192,7 +190,7 @@ feature {NONE} -- Basic operations
 			if a_recursive then
 				l_dn := a_folder.as_string_8
 			else
-				l_dn := absolute_path (a_folder.as_string_8, True)
+				l_dn := absolute_path (a_folder, True)
 			end
 
 			create l_dir.make (l_dn)
@@ -243,7 +241,7 @@ feature {NONE} -- Basic operations
 
 feature -- Directory operations
 
-	frozen create_directory (a_path: STRING_GENERAL)
+	frozen create_directory (a_path: !READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist.
 			--
 			-- `a_path': The directory to create.
@@ -267,7 +265,7 @@ feature -- Directory operations
 			a_path_exists: file_system.directory_exists (a_path.as_string_8)
 		end
 
-	frozen create_directory_for_file (a_file_name: STRING_GENERAL)
+	frozen create_directory_for_file (a_file_name: !READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist, for a file path
 			--
 			-- `a_file_name': The suggested file name requiring a directory to exist.
@@ -282,7 +280,7 @@ feature -- Directory operations
 
 feature -- Formatting
 
-	frozen absolute_path (a_path: STRING_GENERAL; a_compact: BOOLEAN): STRING
+	frozen absolute_path (a_path: !READABLE_STRING_GENERAL; a_compact: BOOLEAN): !STRING
 			-- Creates an absolute compacted path (provided the path could be compacted).
 			--
 			-- `a_path': The source path to convert to an absolute path.
@@ -295,7 +293,7 @@ feature -- Formatting
 		local
 			l_path: STRING
 		do
-			Result := file_system.absolute_pathname (a_path.as_string_8)
+			Result := file_system.absolute_pathname (a_path.as_string_8).as_attached
 			if a_compact then
 				l_path := compact_path (Result)
 				if l_path /= Void then
@@ -303,13 +301,12 @@ feature -- Formatting
 				end
 			end
 		ensure
-			absolute_path_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_exists: file_system.file_exists (Result) or file_system.directory_exists (Result)
 			reuslt_is_absolute: file_system.is_absolute_pathname (Result)
 		end
 
-	frozen compact_path (a_path: STRING_GENERAL): ?STRING
+	frozen compact_path (a_path: !READABLE_STRING_GENERAL): ?STRING
 			-- Compacts a file path, removing . and ..
 			--
 			-- `a_path': A path to compact.

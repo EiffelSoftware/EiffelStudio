@@ -26,17 +26,22 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initializes the code template catalog
+			-- Initializes the code template catalog.
+		local
+			l_tester: KL_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]
 		do
 			create catalog_changed_event
 			auto_dispose (catalog_changed_event)
 
 			create cataloged_folder_files.make_default
 			create cataloged_template_definitions.make_default
-			if {PLATFORM}.is_windows and then {l_tester: !KL_EQUALITY_TESTER [!STRING]} create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} then
-				cataloged_folder_files.set_key_equality_tester (l_tester)
-				cataloged_template_definitions.set_key_equality_tester (l_tester)
+			if {PLATFORM}.is_windows then
+				create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]} l_tester
+			else
+				create l_tester
 			end
+			cataloged_folder_files.set_key_equality_tester (l_tester)
+			cataloged_template_definitions.set_key_equality_tester (l_tester)
 		end
 
 feature -- Access
@@ -45,20 +50,18 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_result: DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
-			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_cursor: DS_HASH_TABLE_CURSOR [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
 		do
 			if {l_templates: like code_templates} internal_code_templates then
 				Result := l_templates
 			else
 				create l_result.make_default
-				if {l_cursor: !DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING_8]} cataloged_template_definitions.new_cursor then
-					from l_cursor.start until l_cursor.after loop
-						l_item := l_cursor.item
-						if l_item /= Void and then {l_definition: !CODE_TEMPLATE_DEFINITION} l_item.definition then
-							l_result.force_last (l_definition)
-						end
-						l_cursor.forth
+				l_cursor := cataloged_template_definitions.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if {l_definition: !CODE_TEMPLATE_DEFINITION} l_cursor.item.definition then
+						l_result.force_last (l_definition)
 					end
+					l_cursor.forth
 				end
 				Result := l_result
 				internal_code_templates := l_result
@@ -67,19 +70,19 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!STRING], STRING_8]
+	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!READABLE_STRING_GENERAL], !READABLE_STRING_GENERAL]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: !DS_HASH_TABLE [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
+	cataloged_template_definitions: !DS_HASH_TABLE [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
 
 feature -- Status report
 
-	is_cataloged (a_folder: STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: !READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
 			Result := cataloged_folder_files.has (a_folder.as_string_8.as_attached)
@@ -89,99 +92,96 @@ feature -- Status report
 
 feature -- Query
 
-	template_by_file_name (a_file_name: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
+			l_fn: !READABLE_STRING_8
 			l_templates: like cataloged_template_definitions
-			l_file: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_fn: STRING_8
 		do
-			l_fn := a_file_name.as_string_8
+			l_fn := a_file_name.as_string_8.as_attached
 			l_templates := cataloged_template_definitions
 			if l_templates.has (l_fn) then
-				l_file := l_templates.item (l_fn)
-				if l_file /= Void then
-					Result := l_file.definition
-				end
+				Result := l_templates.item (l_fn).definition
 			end
 		end
 
-	template_by_title (a_title: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
 			l_template: !CODE_TEMPLATE_DEFINITION
+			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
 		do
-			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
-				from l_cursor.finish until l_cursor.before loop
-					l_template := l_cursor.item
-					if a_title.as_string_32.is_equal (l_template.metadata.title) then
-						Result := l_template
-						l_cursor.go_before
-					else
-						l_cursor.back
-					end
+			l_cursor := code_templates.new_cursor
+			from l_cursor.finish until l_cursor.before loop
+				l_template := l_cursor.item
+				if a_title.as_string_32.is_equal (l_template.metadata.title) then
+					Result := l_template
+					l_cursor.go_before
+				else
+					l_cursor.back
 				end
-				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
+			check gobo_cursor_cleaned_up: l_cursor.off end
 		end
 
-	template_by_shortcut (a_shortcut: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
 			l_template: !CODE_TEMPLATE_DEFINITION
+			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
 		do
-			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
-				from l_cursor.finish until l_cursor.before loop
-					l_template := l_cursor.item
-					if a_shortcut.as_string_32.is_equal (l_template.metadata.shortcut) then
-						Result := l_template
-						l_cursor.go_before
-					else
-						l_cursor.back
-					end
+			l_cursor := code_templates.new_cursor
+			from l_cursor.finish until l_cursor.before loop
+				l_template := l_cursor.item
+				if a_shortcut.as_string_32.is_equal (l_template.metadata.shortcut) then
+					Result := l_template
+					l_cursor.go_before
+				else
+					l_cursor.back
 				end
-				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
+			check gobo_cursor_cleaned_up: l_cursor.off end
 		end
 
-	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: !DS_BILINEAR [!READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
+			l_cat_cursor: DS_BILINEAR_CURSOR [!READABLE_STRING_GENERAL]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
 			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
-			if {l_cursor: !DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING_8]} cataloged_template_definitions.new_cursor then
-				if {l_cat_cursor: !DS_BILINEAR_CURSOR [!STRING_32]} a_categories.new_cursor then
-						-- Iterate code template definitions for matching categories
-					from l_cursor.start until l_cursor.after loop
-						l_item := l_cursor.item
-						if l_item /= Void and then {l_definition: !CODE_TEMPLATE_DEFINITION} l_item.definition then
-								-- Iterate supplied applicable categories for a matching code template definition category.
-							l_continue := False
-							l_categories := l_definition.metadata.categories
-							if a_conjunctive then
-								from l_cat_cursor.start until l_cat_cursor.after or not l_categories.has (l_cat_cursor.item) loop
-									l_cat_cursor.forth
-								end
-								if l_cat_cursor.after then
-										-- Contains all categories
-									Result.force_last (l_definition)
-								end
-							else
-								from l_cat_cursor.start until l_cat_cursor.after or l_continue loop
-									l_continue := l_categories.has (l_cat_cursor.item)
-									if l_continue then
-										Result.force_last (l_definition)
-									end
-									l_cat_cursor.forth
-								end
-							end
+			l_cat_cursor := a_categories.new_cursor
+			l_cursor := cataloged_template_definitions.new_cursor
+
+				-- Iterate code template definitions for matching categories
+			from l_cursor.start until l_cursor.after loop
+				l_item := l_cursor.item
+				if l_item /= Void and then {l_definition: !CODE_TEMPLATE_DEFINITION} l_item.definition then
+						-- Iterate supplied applicable categories for a matching code template definition category.
+					l_continue := False
+					l_categories := l_definition.metadata.categories
+					if a_conjunctive then
+						from l_cat_cursor.start until l_cat_cursor.after or else not l_categories.has (l_cat_cursor.item) loop
+							l_cat_cursor.forth
 						end
-						l_cursor.forth
+						if l_cat_cursor.after then
+								-- Contains all categories
+							Result.force_last (l_definition)
+						end
+					else
+						from l_cat_cursor.start until l_cat_cursor.after or l_continue loop
+							l_continue := l_categories.has (l_cat_cursor.item)
+							if l_continue then
+								Result.force_last (l_definition)
+							end
+							l_cat_cursor.forth
+						end
 					end
 				end
+				l_cursor.forth
 			end
 			sort_templates_by_title (Result)
 		end
@@ -206,7 +206,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	rescan (a_folder: STRING_GENERAL)
+	rescan (a_folder: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_empty: BOOLEAN
@@ -228,7 +228,7 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_ARRAYED_LIST [STRING_8]
+			l_keys: DS_BILINEAR [!READABLE_STRING_GENERAL]
 			l_empty: BOOLEAN
 		do
 			if not catalog_changed_event.is_suspended then
@@ -238,12 +238,11 @@ feature -- Basic operations
 					catalog_changed_event.publish (Void)
 				end
 			else
-				create l_keys.make_from_linear (cataloged_folder_files.keys)
-
 					-- Remove cataloged data.
 				cataloged_folder_files.wipe_out
 				cataloged_template_definitions.wipe_out
 
+				l_keys := cataloged_folder_files.keys
 				if not l_keys.is_empty then
 						-- Extend catalogs
 					from l_keys.start until l_keys.after loop
@@ -258,13 +257,13 @@ feature -- Basic operations
 
 feature -- Extension
 
-	extend_catalog (a_folder: STRING_GENERAL)
+	extend_catalog (a_folder: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_files: !DS_ARRAYED_LIST [!STRING_8]
-			l_file: !STRING_8
+			l_files: !DS_ARRAYED_LIST [!STRING_GENERAL]
+			l_file: !STRING_GENERAL
 			l_changed: BOOLEAN
 		do
 			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
@@ -295,7 +294,7 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, a_folder.as_string_8.as_attached)
+			cataloged_folder_files.put (l_files, a_folder)
 
 			if l_changed then
 				catalog_changed_event.publish (Void)
@@ -304,20 +303,18 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: STRING_GENERAL)
+	remove_catalog (a_folder: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_catalog: like cataloged_folder_files
-			l_files: !DS_ARRAYED_LIST [!STRING_8]
+			l_files: !DS_ARRAYED_LIST [!READABLE_STRING_GENERAL]
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_file: !STRING_8
-			l_folder: STRING_8
+			l_file: !READABLE_STRING_GENERAL
 			l_changed: BOOLEAN
 		do
-			l_folder := a_folder.as_string_8
 			l_catalog := cataloged_folder_files
-			l_files := l_catalog.item (l_folder)
+			l_files := l_catalog.item (a_folder)
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
@@ -344,7 +341,7 @@ feature -- Removal
 			end
 
 				-- Remove from the folder/file catalog.
-			l_catalog.remove (l_folder)
+			l_catalog.remove (a_folder)
 
 			if l_changed then
 				catalog_changed_event.publish (Void)
@@ -367,23 +364,27 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	build_template (a_file_name: !STRING_8): ?CODE_TEMPLATE_DEFINITION
+	build_template (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- Builds a code template definition model from a file.
 			--
 			-- `a_file_name': Path to the code template file.
 			-- `Result': A code template definition model or Void if the template file could not be parsed.
 		require
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: file_system.file_exists (a_file_name)
+			a_file_name_exists: file_system.file_exists (a_file_name.as_string_8)
 		local
 			l_parser: like xml_parser
+			l_file_name: STRING
 			l_resolver: !XM_FILE_EXTERNAL_RESOLVER
 			l_callbacks: !CODE_TEMPLATE_LOAD_CALLBACK
 			retried: BOOLEAN
 		do
 			if not retried then
+				l_file_name := a_file_name.as_string_8
+				check l_file_name_attached: l_file_name /= Void end
+
 				create l_resolver.make
-				l_resolver.resolve (a_file_name)
+				l_resolver.resolve (l_file_name)
 				if not l_resolver.has_error then
 						-- File is loaded, create the callbacks and parse the XML.
 					l_parser := xml_parser
@@ -400,13 +401,15 @@ feature {NONE} -- Basic operations
 							-- Log parse error
 						if logger_service.is_service_available then
 							logger_service.service.put_message_with_severity (
-								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name),
+								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, l_file_name),
 								{ENVIRONMENT_CATEGORIES}.internal_event,
 								{PRIORITY_LEVELS}.high)
 						end
 					end
 				end
 			else
+				check l_file_name_attached: l_file_name /= Void end
+
 				if l_resolver.last_stream /= Void then
 					l_resolver.last_stream.close
 				end
@@ -414,14 +417,16 @@ feature {NONE} -- Basic operations
 					-- Log failed load error
 				if logger_service.is_service_available then
 					logger_service.service.put_message_with_severity (
-						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name),
+						(create {ERROR_MESSAGES}).e_code_template_read (l_file_name),
 						{ENVIRONMENT_CATEGORIES}.internal_event,
 						{PRIORITY_LEVELS}.high)
 				end
 			end
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature {NONE} -- Regular expressions
@@ -438,12 +443,12 @@ feature {NONE} -- Regular expressions
 
 feature {NONE} -- Internal implementation cache
 
-	internal_code_templates: ?DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
-			-- Cached version of `code_templates'
+	internal_code_templates: ?like code_templates
+			-- Cached version of `code_templates'.
 			-- Note: Do not use directly!
 
-	internal_logger_service: SERVICE_CONSUMER [LOGGER_S]
-			-- Cached version of `logger_service'
+	internal_logger_service: ?like logger_service
+			-- Cached version of `logger_service'.
 			-- Note: Do not use directly!
 
 ;indexing

@@ -11,39 +11,20 @@ class
 	CODE_CATEGORY_COLLECTION
 
 inherit
-	CODE_COLLECTION [STRING_32]
+	CODE_COLLECTION [READABLE_STRING_GENERAL]
 		redefine
 			item_equality_tester
 		end
-
-	KL_EQUALITY_TESTER [!STRING_32]
-		redefine
-			test
-		end
-
+		
 create
 	make
 
 feature {NONE} -- Access
 
-	item_equality_tester: KL_EQUALITY_TESTER [!STRING_32]
+	item_equality_tester: !KL_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]
 			-- Optional equality tester for item comparison.
 		do
-			Result := Current
-		ensure then
-			result_attached: Result /= Void
-		end
-
-feature {NONE} -- Status report
-
-	test (a_s1:!STRING_32; a_s2: !STRING_32): BOOLEAN
-			-- <Precursor>
-		do
-			if a_s1 ~ a_s2 then
-				Result := True
-			else
-				Result := a_s1.is_case_insensitive_equal (a_s2)
-			end
+			create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]} Result
 		end
 
 feature -- Visitor

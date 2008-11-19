@@ -54,8 +54,6 @@ feature
 			real_ty: GEN_TYPE_A
 			target_gen_type: TYPE_A
 		do
-			-- We need 'Current'
-			context.add_dftype_current
 			info.analyze
 
 			real_ty ?= context.real_type (type)
@@ -131,7 +129,7 @@ feature
 			real_ty ?= context.real_type (type)
 			target_gen_type := real_ty.generics.item (1)
 			workbench_mode := context.workbench_mode
-			generate_array_creation (real_ty, workbench_mode)
+			generate_array_creation (workbench_mode)
 			if workbench_mode then
 				generate_wk_array_make (real_ty)
 			else
@@ -142,7 +140,7 @@ feature
 
 feature {NONE} -- C code generation
 
-	generate_array_creation (real_ty: GEN_TYPE_A; workbench_mode: BOOLEAN) is
+	generate_array_creation (workbench_mode: BOOLEAN) is
 			-- Generate the object creation of
 			-- manifest array.
 		local

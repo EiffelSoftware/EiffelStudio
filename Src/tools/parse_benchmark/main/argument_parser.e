@@ -114,7 +114,7 @@ feature -- Access
 			if has_option (location_switch) then
 				Result := option_of_name (location_switch).value
 			else
-				Result ?= (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_attached
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

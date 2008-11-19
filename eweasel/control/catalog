@@ -1586,6 +1586,7 @@ test	tuple-creation-crash			tuple011	tcf pass tuple
 test	wrong-label-in-inheritance		tuple012	tcf pass tuple
 test	wrong-label-in-generics			tuple013	tcf pass tuple
 test	wrong-manifest-tuple-type		tuple014	tcf fail tuple
+test	attached-tuple-element-validity	tuple015	tcf pass tuple
 
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde

@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parser: !like xml_parser)
+	make (a_parser: like xml_parser)
 			-- Initializes callbacks using an existing XML parser.
 			-- Note: Initialization will set the parser's callbacks to Current.
 			--
@@ -710,14 +710,14 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		deferred
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- Mapping of possible attributes of tags.
 		deferred
 		end

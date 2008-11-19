@@ -51,7 +51,7 @@ feature -- Status setting
 			put_class_header
 		end
 
-	print_test_routine (a_request_list: DS_LINEAR [AUT_REQUEST]; a_var_list: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE])
+	print_test_routine (a_request_list: !DS_LINEAR [AUT_REQUEST]; a_var_list: !DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE])
 			-- Print test routine for given request list and variable list.
 		require
 			writing: is_writing
@@ -59,9 +59,7 @@ feature -- Status setting
 			no_request_void: not a_request_list.has (Void)
 		do
 				-- For now we do not print the test if the locals are missing
-			if a_var_list /= Void then
-				test_writer.print_test_case (a_request_list, a_var_list)
-			end
+			test_writer.print_test_case (a_request_list, a_var_list)
 		end
 
 	finish

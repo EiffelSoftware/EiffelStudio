@@ -655,8 +655,12 @@ feature{NONE} -- Test result analyizing
 							l_res_cursor.after
 						loop
 							if l_res_cursor.item.is_fail then
-								l_contains_test := True
-								source_writer.print_test_routine (l_res_cursor.item.witness.request_list, l_res_cursor.item.witness.used_vars)
+								if {l_var_list: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]} l_res_cursor.item.witness.used_vars and
+								   {l_request_list: DS_LINEAR [AUT_REQUEST]} l_res_cursor.item.witness.request_list
+								then
+									l_contains_test := True
+									source_writer.print_test_routine (l_request_list, l_var_list)
+								end
 							end
 							l_res_cursor.forth
 						end

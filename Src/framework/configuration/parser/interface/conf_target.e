@@ -657,12 +657,6 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_multithreaded)
 		end
 
-	setting_old_verbatim_strings: BOOLEAN is
-			-- Value for the old_verbatim_strings setting.
-		do
-			Result := setting_boolean (s_old_verbatim_strings)
-		end
-
 	setting_platform: STRING is
 			-- Value for the platform setting.
 		local

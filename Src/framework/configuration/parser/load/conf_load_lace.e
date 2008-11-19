@@ -134,9 +134,6 @@ feature -- Basic operation
 					-- disable some warnings by default
 				current_options.add_warning (w_vjrv, False)
 				current_options.add_warning (w_export_class_missing, False)
-				if current_options.warnings /= Void and then not current_options.warnings.has (w_old_verbatim_strings) then
-					current_options.add_warning (w_old_verbatim_strings, False)
-				end
 				if current_options.warnings /= Void and then not current_options.warnings.has (w_syntax) then
 					current_options.add_warning (w_syntax, False)
 				end
@@ -736,10 +733,7 @@ feature {NONE} -- Implementation of data retrieval
 							end
 							current_options.add_warning (w_syntax, l_value.is_yes)
 						elseif l_name.is_equal ("old_verbatim_strings_warning") and l_value /= Void then
-							if current_options = Void then
-								create current_options
-							end
-							current_options.add_warning (w_old_verbatim_strings, l_value.is_yes)
+								-- This option has no effect in 6.3 or later, so we accept it but we don't do anything with it.
 						elseif valid_setting (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value)
 						end

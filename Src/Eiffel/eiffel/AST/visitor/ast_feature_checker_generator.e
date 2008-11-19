@@ -6477,15 +6477,6 @@ feature -- Implementation
 					l_list ?= last_byte_node
 				end
 			end
-			if
-				not is_inherited and then
-				context.current_class.is_generic and then context.current_class.is_warning_enabled (w_once_in_generic)
-			then
-					-- Generate a warning only in class declaring the once, not in classes in which the once is being
-					-- rechecked.
-				error_handler.insert_warning (
-					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
-			end
 			if l_needs_byte_node then
 				create l_once_byte_code
 				l_once_byte_code.set_compound (l_list)

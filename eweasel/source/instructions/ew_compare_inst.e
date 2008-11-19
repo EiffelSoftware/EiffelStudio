@@ -93,25 +93,9 @@ feature {NONE}  -- Implementation
 				eof1 := file1.end_of_file;
 				eof2 := file2.end_of_file;
 				if not eof1 and not eof2 then
-
-					-- We ignore different types of eol marks.
-					-- since the output file maybe prepared on different platforms
-					-- on Windows, text's end line mark is %R%N
-					-- on Unix, text's end line makr is %N
-					if file1.lastchar = '%R' and not eof1 then
-						file1.readchar
-						eof1 := file1.end_of_file;
-					end
-
-					if file2.lastchar = '%R' and not eof2 then
-						file2.readchar
-						eof2 := file2.end_of_file;
-					end
-
 					if file1.lastchar /= file2.lastchar then
 						unequal := True;
 					end
-
 				elseif (eof1 and not eof2) or (eof2 and not eof1) then
 					unequal := True;
 				end

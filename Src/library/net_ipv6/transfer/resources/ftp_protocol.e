@@ -381,7 +381,6 @@ feature {NONE} -- Implementation
 		local
 			af: INET_ADDRESS_FACTORY
 			str: STRING
-			h_addr: INET_ADDRESS
 		do
 			create af
 			Result := Ftp_port_command.twin
@@ -407,8 +406,6 @@ feature {NONE} -- Implementation
 				divisor := (256 ^ (num - 1)).rounded
 				create Result.make (20)
 				number := n
-			variant
-				divisor
 			until
 				divisor = 0
 			loop
@@ -428,6 +425,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				divisor := divisor // 256
+			variant
+				divisor
 			end
 		end
 

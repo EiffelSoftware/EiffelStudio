@@ -399,17 +399,20 @@ feature {NONE} -- Implementation
 				valid_warnings.after
 			loop
 				l_warning := valid_warnings.item_for_iteration
-
-				l_bool_prop := new_boolean_property (conf_interface_names.warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
-				l_bool_prop.set_description (conf_interface_names.warning_descriptions.item (l_warning))
-				l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-				properties.add_property (l_bool_prop)
-				if not an_inherited_options.is_warning then
-					l_bool_prop.enable_readonly
+					-- Search if it is a warning that we show in the UI.
+					-- (we hide the obsolete warnings in the UI).
+				conf_interface_names.warning_names.search (l_warning)
+				if conf_interface_names.warning_names.found then
+					l_bool_prop := new_boolean_property (conf_interface_names.warning_names.found_item, an_inherited_options.is_warning_enabled (l_warning))
+					l_bool_prop.set_description (conf_interface_names.warning_descriptions.item (l_warning))
+					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
+					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+					properties.add_property (l_bool_prop)
+					if not an_inherited_options.is_warning then
+						l_bool_prop.enable_readonly
+					end
 				end
-
-					valid_warnings.forth
+				valid_warnings.forth
 			end
 
 			properties.current_section.expand

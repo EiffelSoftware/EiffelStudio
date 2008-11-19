@@ -469,9 +469,6 @@ feature {NONE} -- Implementation
 	has_type: BOOLEAN
 			-- Is expression undoubtly typed?
 
-	initial_has_old_verbatim_strings_warning: BOOLEAN
-			-- Value of `has_old_verbatim_strings_warning' when parser was started
-
 	fclause_pos: KEYWORD_AS
 			-- To memorize the beginning of a feature clause
 

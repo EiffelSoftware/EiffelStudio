@@ -296,12 +296,8 @@ feature -- Action
 				l_options := l_lace_class.options
 				if is_warning_generated then
 					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
-					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
-					parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))
 				else
 					parser.set_has_syntax_warning (False)
-					parser.set_has_old_verbatim_strings (False)
-					parser.set_has_old_verbatim_strings_warning (False)
 				end
 				parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
 				parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)

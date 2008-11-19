@@ -341,7 +341,6 @@ Indexing: -- Empty
 				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end				
-				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	|	TE_INDEXING
 			--- { $$ := Void }
@@ -357,7 +356,6 @@ Indexing: -- Empty
 				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end				
-				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	|	TE_NOTE
 			{
@@ -390,7 +388,6 @@ Dotnet_indexing: -- Empty
 						$$.set_end_keyword ($5)
 					end
 				end				
-				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	;
 
@@ -1361,26 +1358,19 @@ Routine_body: Internal
 			{ $$ := $1 }
 	;
 
-External: TE_EXTERNAL
+External: TE_EXTERNAL External_language External_name
 			{
-					-- To avoid warnings for manifest string used to represent external data.
-				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
-				set_has_old_verbatim_strings_warning (false)
-			}
-		External_language External_name
-			{
-				if $3 /= Void and then $3.is_built_in then
-					if $4 /= Void then 
-						$$ := ast_factory.new_built_in_as ($3, $4.second, $1, $4.first)
+				if $2 /= Void and then $2.is_built_in then
+					if $3 /= Void then 
+						$$ := ast_factory.new_built_in_as ($2, $3.second, $1, $3.first)
 					else
-						$$ := ast_factory.new_built_in_as ($3, Void, $1, Void)
+						$$ := ast_factory.new_built_in_as ($2, Void, $1, Void)
 					end
-				elseif $4 /= Void then
-					$$ := ast_factory.new_external_as ($3, $4.second, $1, $4.first)
+				elseif $3 /= Void then
+					$$ := ast_factory.new_external_as ($2, $3.second, $1, $3.first)
 				else
-					$$ := ast_factory.new_external_as ($3, Void, $1, Void)
+					$$ := ast_factory.new_external_as ($2, Void, $1, Void)
 				end
-				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	;
 
@@ -3095,7 +3085,7 @@ Default_manifest_string: Non_empty_string
 			}
 	|	TE_EMPTY_VERBATIM_STRING
 			{
-				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	;
 
@@ -3119,7 +3109,7 @@ Non_empty_string: TE_STRING
 			}
 	|	TE_VERBATIM_STRING
 			{
-				$$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_STR_LT
 			{
@@ -3311,8 +3301,6 @@ Manifest_tuple: TE_LSQURE TE_RSQURE
 
 Add_indexing_counter:
 			{
-				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
-				set_has_old_verbatim_strings_warning (false)
 				add_counter
 			}
 	;

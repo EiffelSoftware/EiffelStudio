@@ -986,15 +986,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 						token_buffer.clear_all
 					end
 					if verbatim_marker.item (1) = ']' then
-						if not has_old_verbatim_strings then
-							align_left (token_buffer)
-						end
-						if has_old_verbatim_strings_warning then
-							report_one_warning (
-								create {SYNTAX_WARNING}.make (line, column, filename,
-									once "Default verbatim string handling is changed to follow standard semantics %
-									%with alignment instead of previous non-standard one without alignment."))
-						end
+						align_left (token_buffer)
 					end
 					if token_buffer.is_empty then
 							-- Empty string.

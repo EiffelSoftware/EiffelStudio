@@ -2115,7 +2115,7 @@ end
 				until
 					i > arg_count
 				loop
-					old_type ?= old_arguments.i_th (i)
+					old_type := old_arguments.i_th (i)
 					old_type := old_type.actual_argument_type (special_arguments).actual_type
 					new_type := arguments.i_th (i).actual_type
 debug ("ACTIVITY")

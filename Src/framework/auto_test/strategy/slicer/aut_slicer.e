@@ -53,7 +53,7 @@ feature -- Slicing
 				create {DS_ARRAYED_LIST [AUT_REQUEST]} last_slice.make (a_request_list.count)
 				i := a_request_list.count
 				request := a_request_list.item (i)
-				last_slice.force_first (request.fresh_twin)
+				last_slice.force_first (request.twin)
 				request.process (relevancy_updater)
 				i := i - 1
 			until
@@ -63,7 +63,7 @@ feature -- Slicing
 				if request /= Void then
 					request.process (relevancy_tester)
 					if relevancy_tester.is_relevant then
-						last_slice.force_first (request.fresh_twin)
+						last_slice.force_first (request.twin)
 						request.process (relevancy_updater)
 					end
 				end

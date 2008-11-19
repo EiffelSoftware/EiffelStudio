@@ -899,7 +899,7 @@ feature {NONE} -- Execution
 		require
 			looking_for_a_feature: feature_list /= Void
 		do
-			if pos > 0 then
+			if feature_list.valid_index (pos) then
 				current_feature := feature_list.i_th (pos)
 				feature_address.set_text (current_feature.name.as_lower)
 			end

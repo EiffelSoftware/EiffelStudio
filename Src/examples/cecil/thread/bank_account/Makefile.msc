@@ -1,10 +1,10 @@
-INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
 CFLAGS = -MT -DEIF_THREADS -I$(INCLUDE_PATH)
-EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
 ECF = bank_account.ecf
 TARGET = classic
 WCODE = EIFGENs\$(TARGET)\W_code
@@ -16,6 +16,12 @@ all: $(OBJECTS) compile_eiffel make_cecil bank_account.exe
 
 compile_eiffel:
 	$(EC) -config $(ECF) -freeze -c_compile
+
+main.obj: main.c
+	$(CC) -I$(INCLUDE_PATH) $(CFLAGS) -c main.c 
+
+fext.obj: fext.c
+	$(CC) -I$(INCLUDE_PATH) $(CFLAGS) -c fext.c 
 
 make_cecil:
 	cd $(WCODE) 

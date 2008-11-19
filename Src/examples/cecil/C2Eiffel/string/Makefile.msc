@@ -1,12 +1,12 @@
 CC = cl
 MAKE = nmake
-INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
-EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\finish_freezing -silent
+EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
 ECF = cecil.ecf
 TARGET = classic
 EIFLIB = EIFGENs\$(TARGET)\W_code\libcecil.lib 

@@ -1,9 +1,9 @@
-INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
 ECF = cecil.ecf
 TARGET = classic
 WCODE = EIFGENs\$(TARGET)\W_code

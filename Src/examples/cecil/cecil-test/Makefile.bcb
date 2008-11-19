@@ -1,13 +1,14 @@
 CC = bcc32
 MAKE = make
-INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 DELDIR = rd /q /s
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
-EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
-EIFLIB = EIFGEN\W_code\libcecil.lib 
+FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\finish_freezing -silent
+EC = $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\ec
+TARGET = classic
+EIFLIB = EIFGENs\$(TARGET)\\W_code\libcecil.lib 
 LIBS = 
 OBJECT = main.obj
 
@@ -17,18 +18,18 @@ compile_eiffel:
 	$(EC) -freeze
 
 compile_c:
-	cd EIFGEN\W_code
+	cd EIFGENs\$(TARGET)\W_code
 	$(FINISH_FREEZING)
 	$(MAKE) cecil
-	cd ..\..
+	cd ..\..\..
 
 main.obj: main.c
 	$(CC) -I$(INCLUDE_PATH) -c main.c 
 
-cecil.exe: main.obj EIFGEN\W_code\libcecil.lib
-	$(LN) EIFGEN\W_code\cecil.melted cecil.melted
+cecil.exe: main.obj EIFGENs\$(TARGET)\W_code\libcecil.lib
+	$(LN) EIFGENs\$(TARGET)\W_code\cecil.melted cecil.melted
 	ilink32 -ap -c -Tpe main.obj c0w32.obj, $@,,\
-		EIFGEN\W_code\libcecil.lib CW32 IMPORT32 OLE2w32,,
+		EIFGENs\$(TARGET)\W_code\libcecil.lib CW32 IMPORT32 OLE2w32,,
 
 clean:
 	$(RM) main.obj 
@@ -44,5 +45,5 @@ clean:
 	$(RM) cecil.rc
 	$(RM) cecil.tds
 	$(RM) exception_trace.log
-	$(DELDIR) EIFGEN
+	$(DELDIR) EIFGENs
 	

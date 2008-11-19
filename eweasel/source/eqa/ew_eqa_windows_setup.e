@@ -379,7 +379,6 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_full_test_case_name /= Void
 		local
-			l_integer: STRING
 			l_count: INTEGER
 			l_char: CHARACTER
 		do

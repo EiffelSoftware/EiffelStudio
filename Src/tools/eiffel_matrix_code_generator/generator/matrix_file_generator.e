@@ -118,7 +118,11 @@ feature {NONE} -- Query
 			if suffix = Void then
 				Result := default_icon_suffix
 			else
-				Result ?= suffix
+				if {s: STRING} suffix then
+					Result := s
+				else
+					check False end
+				end
 			end
 		end
 

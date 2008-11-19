@@ -1,11 +1,11 @@
 indexing
 	description: "Implementation of data resource factory"
-	legal: "See notice at end of class." 
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATA_RESOURCE_FACTORY_IMPL
 
 create
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 		do
 			default_service := "http"
 		end
-		
+
 feature -- Access
 
 	resource: DATA_RESOURCE
@@ -58,7 +58,7 @@ feature -- Status report
 
 	default_service: STRING
 			-- Name of service assumed if no service is specified in address
-			
+
 feature -- Status setting
 
 	set_address (addr: STRING) is
@@ -84,7 +84,7 @@ feature -- Status setting
 			end
 			service := s.substring (1, pos - 1)
 			address := s.substring (pos + 3, s.count)
-			if is_service_supported then 
+			if is_service_supported then
 				setup_factory
 					check
 						function_set: url_function /= Void
@@ -97,7 +97,7 @@ feature -- Status setting
 				service := Void
 			end
 		ensure
-			address_set_if_supported: is_service_supported implies 
+			address_set_if_supported: is_service_supported implies
 					is_address_set
 		end
 
@@ -109,7 +109,7 @@ feature -- Status setting
 		do
 			default_service := service_name.as_lower
 		end
-	
+
 feature -- Basic operations
 
 	create_resource is
@@ -121,13 +121,13 @@ feature -- Basic operations
 		ensure
 			resource_created: resource /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	url_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
-			
+
 	resource_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
-			
+
 	lookup_service_id: INTEGER is
 			-- Lookup ID for service.
 		local
@@ -135,8 +135,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				i := 1
-			variant
-				supported_services.count + 1 - i
 			until
 				(i = supported_services.count + 1) or (Result /= 0)
 			loop
@@ -144,6 +142,8 @@ feature {NONE} -- Implementation
 					Result := i
 				end
 				i := i + 1
+			variant
+				supported_services.count + 1 - i
 			end
 		end
 

@@ -1836,7 +1836,7 @@ feature -- Implementation
 
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
-					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type)
+					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type, l_tuple_type.create_info)
 				end
 			else
 				reset_types
@@ -8050,7 +8050,7 @@ feature {NONE} -- Agents
 			l_generics: ARRAY [TYPE_A]
 			l_feat_args: FEAT_ARG
 			l_oargtypes, l_cargtypes: ARRAY [TYPE_A]
-			l_tuple: TUPLE_TYPE_A
+			l_tuple_type: TUPLE_TYPE_A
 			l_arg_count, l_open_count, l_closed_count, l_idx, l_cidx, l_oidx: INTEGER
 			l_operand: OPERAND_AS
 			l_is_open, l_target_closed: BOOLEAN
@@ -8236,18 +8236,18 @@ feature {NONE} -- Agents
 			end
 
 				-- Create open argument type tuple
-			create l_tuple.make (System.tuple_id, l_oargtypes)
+			create l_tuple_type.make (System.tuple_id, l_oargtypes)
 			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
-			if l_oargtypes.count > 0 and then not l_tuple.is_attached then
+			if l_oargtypes.count > 0 and then not l_tuple_type.is_attached then
 					-- Type of an argument tuple is always attached.
 				if l_current_class_void_safe then
-					l_tuple := l_tuple.as_attached_type
-				elseif not l_tuple.is_implicitly_attached then
-					l_tuple := l_tuple.as_implicitly_attached
+					l_tuple_type := l_tuple_type.as_attached_type
+				elseif not l_tuple_type.is_implicitly_attached then
+					l_tuple_type := l_tuple_type.as_implicitly_attached
 				end
 			end
 				-- Insert it as second generic parameter of ROUTINE.
-			l_generics.put (l_tuple, 2)
+			l_generics.put (l_tuple_type, 2)
 
 				-- Type of an agent is always attached.
 			if l_current_class_void_safe then
@@ -8296,8 +8296,8 @@ feature {NONE} -- Agents
 
 					-- Create TUPLE_CONST_B instance which holds all closed arguments.
 				l_expressions.start
-				create l_tuple_node.make (l_expressions,
-					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_cargtypes)))
+				create l_tuple_type.make (System.tuple_id, l_cargtypes)
+				create l_tuple_node.make (l_expressions, l_tuple_type, l_tuple_type.create_info)
 
 					-- We need to instantiate the closed TUPLE type of the agent otherwise it
 					-- causes eweasel test#agent007 to fail.
@@ -8476,7 +8476,7 @@ feature {NONE} -- Agents
 				-- causes eweasel test#agent007 to fail.
 			system.instantiator.dispatch (l_tuple_type, context.current_class)
 
-			create l_tuple_node.make (l_closed_args, l_tuple_type)
+			create l_tuple_node.make (l_closed_args, l_tuple_type, l_tuple_type.create_info)
 
 				-- We need to use the conformence type since it could be a like_current type which would
 				-- be a problem with inherited assertions. See eweasel test execX10

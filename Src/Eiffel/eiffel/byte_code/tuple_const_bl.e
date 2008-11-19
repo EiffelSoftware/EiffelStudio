@@ -48,8 +48,7 @@ feature
 			i: INTEGER
 			require_meta: BOOLEAN
 		do
-			-- We need 'Current'
-			context.add_dftype_current
+			info.analyze
 
 			real_ty ?= context.real_type (type)
 
@@ -111,34 +110,27 @@ feature
 		do
 			real_ty ?= context.real_type (type)
 			workbench_mode := context.workbench_mode
-			generate_tuple_creation (real_ty, workbench_mode)
+			generate_tuple_creation (workbench_mode)
 			fill_tuple
 		end
 
 feature {NONE} -- C code generation
 
-	generate_tuple_creation (real_ty: TUPLE_TYPE_A; workbench_mode: BOOLEAN) is
+	generate_tuple_creation (workbench_mode: BOOLEAN) is
 			-- Generate the object creation of
-			-- manifest tuple.
+			-- manifest array.
 		local
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.generate_block_open
-			context.generate_gen_type_conversion (real_ty, 0)
+			info.generate_start (buf)
+			info.generate_gen_type_conversion (0)
 			buf.put_new_line
 			print_register
 			buf.put_string (" = ")
-			buf.put_string ("RTLNTS(typres0, ");
-			buf.put_integer (real_ty.generics.count + 1)
-			buf.put_string (", ")
-			if real_ty.is_basic_uniform then
-				buf.put_integer (1)
-			else
-				buf.put_integer (0)
-			end
-			buf.put_string (");");
-			buf.generate_block_close
+			info.generate
+			buf.put_character (';')
+			info.generate_end (buf)
 		end
 
 	fill_tuple is

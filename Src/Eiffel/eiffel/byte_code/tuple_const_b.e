@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: like expressions; t: like type) is
+	make (e: like expressions; t: like type; i: like info) is
 			-- New instance of TUPLE_CONST_B
 		require
 			e_not_void: e /= Void
@@ -34,9 +34,11 @@ feature {NONE} -- Initialization
 		do
 			expressions := e
 			type := t
+			info := i
 		ensure
 			expressions_set: expressions = e
 			type_set: type = t
+			info_set: info = i
 		end
 
 feature -- Visitor
@@ -49,10 +51,13 @@ feature -- Visitor
 
 feature -- Access
 
-	expressions: BYTE_LIST [BYTE_NODE];
+	expressions: BYTE_LIST [BYTE_NODE]
 			-- Expressions in the tuple
 
-	type: TUPLE_TYPE_A;
+	type: TUPLE_TYPE_A
+
+	info: CREATE_INFO
+			-- Info to create manifest array instance
 
 feature -- Settings
 
@@ -147,7 +152,7 @@ feature -- Code generation
 	enlarged: TUPLE_CONST_BL is
 			-- Enlarge node
 		do
-			create Result.make (expressions, type)
+			create Result.make (expressions, type, info)
 			Result.enlarge_tree
 		end;
 
@@ -191,6 +196,7 @@ feature -- Inlining
 invariant
 	expressions_not_void: expressions /= Void
 	type_not_void: type /= Void
+	info_not_void: info /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

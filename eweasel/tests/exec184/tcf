@@ -15,7 +15,7 @@ copy_raw b.e $CLUSTER b.e
 copy_raw assertion_tester.e $CLUSTER assertion_tester.e
 
 compile_frozen
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 c_compile_work
 c_compile_result ok
@@ -29,7 +29,7 @@ compare exec_output_ws output
 
 cleanup_compile
 compile_final
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 c_compile_final
 c_compile_result ok
@@ -53,7 +53,7 @@ c_compile_result ok
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 execute_work NONE exec_output_ms
 execute_result ok
@@ -67,7 +67,7 @@ copy_sub Ace_mt $TEST Ace
 copy_sub test_mt.e $CLUSTER test_mt.e
 copy_raw test_mt_root.e $CLUSTER test_mt_root.e
 compile_frozen
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 c_compile_work
 c_compile_result ok
@@ -81,7 +81,7 @@ compare exec_output_wm output
 
 cleanup_compile
 compile_final
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 c_compile_final
 c_compile_result ok
@@ -105,7 +105,7 @@ c_compile_result ok
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result validity_warning A Once Once Once Once Once  
+compile_result ok
 
 execute_work NONE exec_output_mm
 execute_result ok

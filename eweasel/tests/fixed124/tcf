@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 compile_frozen
-compile_result 	 validity_warning TEST1 Once
+compile_result 	 ok
 
 c_compile_work
 c_compile_result ok

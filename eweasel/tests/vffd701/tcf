@@ -38,7 +38,7 @@ define		 FEATURE "try: HWEASEL is once end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 copy_raw 	 hweasel.e  $CLUSTER hweasel.e
 resume_compile
-compile_result 	 validity_warning TEST1 Once
+compile_result 	ok
 
 define		 GENERICS "GWEASEL, HWEASEL -> STRING"
 delete		 $CLUSTER hweasel.e

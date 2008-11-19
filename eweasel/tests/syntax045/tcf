@@ -105,8 +105,8 @@ cleanup_compile
 
 -- Verbatim strings with brackets and "<setting name="old_verbatim_strings" value="true"/>"
 
-define INDENT "%T%T%T%T"
-define SPACE " "
+define INDENT ""
+define SPACE ""
 define OPEN "["
 define OPEN_CODE "91"
 define CLOSE "]"
@@ -140,7 +140,7 @@ cleanup_compile
 define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
 copy_sub Ace $TEST Ace
 compile_melted
-compile_result syntax_warning TEST 23; TEST 28; TEST 33; TEST 40; TEST 47; TEST 53; TEST 60; TEST 67; TEST 74; TEST 81; TEST 88; TEST 94; TEST 101; TEST 108; TEST 115; TEST 121; TEST 128; TEST 134; TEST 141; TEST 148; TEST 155; TEST 161; TEST 168; TEST 174; TEST 181; TEST 188; TEST 195; TEST 201; TEST 208; TEST 214; TEST 219
+compile_result ok
 cleanup_compile
 
 -- Verbatim strings with brackets and "old_verbatim_strings (no)"
@@ -174,7 +174,7 @@ cleanup_compile
 define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
 copy_sub Ace $TEST Ace
 compile_melted
-compile_result syntax_warning TEST 23; TEST 28; TEST 33; TEST 40; TEST 47; TEST 53; TEST 60; TEST 67; TEST 74; TEST 81; TEST 88; TEST 94; TEST 101; TEST 108; TEST 115; TEST 121; TEST 128; TEST 134; TEST 141; TEST 148; TEST 155; TEST 161; TEST 168; TEST 174; TEST 181; TEST 188; TEST 195; TEST 201; TEST 208; TEST 214; TEST 219
+compile_result ok
 cleanup_compile
 
 -- Verbatim strings with brackets and no special options
@@ -205,7 +205,7 @@ cleanup_compile
 define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
 copy_sub Ace $TEST Ace
 compile_melted
-compile_result syntax_warning TEST 23; TEST 28; TEST 33; TEST 40; TEST 47; TEST 53; TEST 60; TEST 67; TEST 74; TEST 81; TEST 88; TEST 94; TEST 101; TEST 108; TEST 115; TEST 121; TEST 128; TEST 134; TEST 141; TEST 148; TEST 155; TEST 161; TEST 168; TEST 174; TEST 181; TEST 188; TEST 195; TEST 201; TEST 208; TEST 214; TEST 219
+compile_result ok
 cleanup_compile
 
 -- Test for invalid strings

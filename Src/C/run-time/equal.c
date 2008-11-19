@@ -143,23 +143,15 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				* class. `source' and/or `target' cannot be NULL.
 				* Return a boolean.
 				*/
-			EIF_REFERENCE s_ref;
-			EIF_REFERENCE t_ref;
-			rt_uint_ptr s_size = (HEADER(source)->ov_size) & B_SIZE; /* Size of source special */
-			rt_uint_ptr t_size = (HEADER(target)->ov_size) & B_SIZE; /* Size of target special */
 		
 				/* First condition: same count */
-			s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
-			t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
-			if (*(EIF_INTEGER *) s_ref != *(EIF_INTEGER *) t_ref)
+			rt_uint_ptr s_size = RT_SPECIAL_COUNT(source);
+			if (RT_SPECIAL_COUNT(target) != s_size) {
 				return EIF_FALSE;
-		
-			/* Since dynamic type of `source' conforms to dynamic type of
-			* `target', the element size must be the same. No need to test it.
-			*/
-		
-			/* Second condition: block equality */
-			return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
+			} else {
+					/* Second condition: block equality */
+				return EIF_TEST(!memcmp (source, target, s_size * RT_SPECIAL_ELEM_SIZE(source)));
+			}
 		} else if (Dftype(source) == egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */
 			return b_equal (source, target);

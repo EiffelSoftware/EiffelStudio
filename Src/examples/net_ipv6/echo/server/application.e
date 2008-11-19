@@ -111,11 +111,10 @@ feature {NONE} -- Implementation
 			socket_valid: client_socket.is_open_read and then client_socket.is_open_write
 		local
 			message: STRING
-			eol: BOOLEAN
 		do
 				-- Limit client message size to 10
-				-- It's here just to demonstrate the usage of the read_line_ex
-			eol := client_socket.read_line_ex (10)
+				-- It's here just to demonstrate the usage of the `read_line_until' routine
+			client_socket.read_line_until (10)
 			message := client_socket.last_string
 			if message /= Void then
 				if message.ends_with ("%R") then

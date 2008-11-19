@@ -675,29 +675,34 @@ feature -- Input
 			end
 		end
 
-	read_line_ex (n: INTEGER): BOOLEAN is
-			-- Read a line of at most N characters (ended by a new_line).
-			-- Returns True if new_line was consumed
+	read_line_until (n: INTEGER) is
+			-- Read a line of at most `n' characters (ended by a new_line).
+			-- If new line not read after `n' characters, set an error.
+		require
+			is_readable: readable
 		local
 			i: INTEGER
-			done: BOOLEAN
 		do
-			create last_string.make (512)
 			from
-				i := 0
-				done := False
+				create last_string.make (512)
+				was_error := False
 			until
-				done or else i >= n
+				i = n
 			loop
 				read_character
-				if last_character = '%N' then
-					done := True
+				if was_error or else last_character = '%N' then
+					i := n - 1 -- Jump out of loop
 				else
 					last_string.extend (last_character)
 				end
 				i := i + 1
 			end
-			Result := done
+			if not was_error and last_character /= '%N' then
+				socket_error := "End of line not reached after " + n.out + " read characters"
+				was_error := True
+			end
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 	read (size: INTEGER): PACKET is

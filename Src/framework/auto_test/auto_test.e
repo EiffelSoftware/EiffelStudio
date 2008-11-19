@@ -464,6 +464,7 @@ feature{NONE} -- Test result analyizing
 						ddmin_witness (last_witness, ddmin_name_generator, ddmin_step_name_generator)
 					end
 				end
+				cs.item.set_used_vars (all_used_vars (cs.item.request_list))
 				cs.forth
 			end
 			if interpreter.is_running then

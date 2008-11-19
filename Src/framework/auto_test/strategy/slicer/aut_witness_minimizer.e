@@ -149,6 +149,7 @@ feature -- Basic operations
 						ddmin_witness (last_witness, ddmin_name_generator, ddmin_step_name_generator)
 					end
 				end
+				cursor.item.set_used_vars (all_used_vars (cursor.item.request_list))
 				cursor.forth
 			else
 				if interpreter.is_running then

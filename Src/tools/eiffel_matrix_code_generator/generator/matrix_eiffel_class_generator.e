@@ -56,10 +56,8 @@ feature -- Basic Operations
 			l_buffers: like internal_buffers
 			l_fragment: STRING
 			l_anim_pixmaps: !like animation_pixmaps
-			l_animations: !ARRAYED_LIST [!STRING]
 			l_iname: !STRING
 			l_ibname: !STRING
-			l_name: !STRING
 		do
 			reset
 
@@ -109,42 +107,45 @@ feature -- Basic Operations
 					l_anim_pixmaps := animation_pixmaps
 					if not l_anim_pixmaps.is_empty then
 						from l_anim_pixmaps.start until l_anim_pixmaps.after loop
-							l_animations := l_anim_pixmaps.item_for_iteration
-							if l_animations.count > 1 then
-									-- More than one entry, so it must be an animation
-								l_name := l_anim_pixmaps.key_for_iteration
+							if {l_animations: ARRAYED_LIST [!STRING]} l_anim_pixmaps.item_for_iteration then
+								if l_animations.count > 1 then
+										-- More than one entry, so it must be an animation
+									if {l_name: STRING} l_anim_pixmaps.key_for_iteration then
+											-- Create feature names
+										create l_iname.make_from_string (l_name)
+										l_iname.append (icon_animation_suffix)
+										l_iname := format_eiffel_name (l_iname)
 
-									-- Create feature names
-								create l_iname.make_from_string (l_name)
-								l_iname.append (icon_animation_suffix)
-								l_iname := format_eiffel_name (l_iname)
+										create l_ibname.make_from_string (l_name)
+										l_ibname.append (icon_buffer_suffix)
+										l_ibname.append (icon_animation_suffix)
+										l_ibname := format_eiffel_name (l_ibname)
 
-								create l_ibname.make_from_string (l_name)
-								l_ibname.append (icon_buffer_suffix)
-								l_ibname.append (icon_animation_suffix)
-								l_ibname := format_eiffel_name (l_ibname)
+											-- Pixmap icons animations
+										create l_temp_buffer.make (400)
+										from l_animations.start until l_animations.after loop
+											l_temp_buffer.append (string_formatter.format (icon_animation_registration_template , [l_animations.item, l_animations.index]))
+											l_animations.forth
+										end
+										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+										end
+										buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
 
-									-- Pixmap icons animations
-								create l_temp_buffer.make (400)
-								from l_animations.start until l_animations.after loop
-									l_temp_buffer.append (string_formatter.format (icon_animation_registration_template , [l_animations.item, l_animations.index]))
-									l_animations.forth
+											-- Pixel buffer icon animations
+										l_temp_buffer.wipe_out
+										from l_animations.start until l_animations.after loop
+											l_temp_buffer.append (string_formatter.format (icon_buffer_animation_registration_template , [l_animations.item, l_animations.index]))
+											l_animations.forth
+										end
+										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+										end
+										buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
+									else
+										check False end
+									end
 								end
-								if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-									l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-								end
-								buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
-
-									-- Pixel buffer icon animations
-								l_temp_buffer.wipe_out
-								from l_animations.start until l_animations.after loop
-									l_temp_buffer.append (string_formatter.format (icon_buffer_animation_registration_template , [l_animations.item, l_animations.index]))
-									l_animations.forth
-								end
-								if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-									l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-								end
-								buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
 							end
 							l_anim_pixmaps.forth
 						end
@@ -260,7 +261,6 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
 			-- Processes a literal from an INI matrix file.
 		local
-			l_name: !STRING
 			l_base: !STRING
 			l_prefix: !STRING
 			l_isuffix: !like icon_suffix
@@ -278,69 +278,76 @@ feature {NONE} -- Processing
 		do
 				-- Create feature prefix
 			l_prefix := icon_prefix (a_item)
-			l_name ?= a_item.name
-			l_name.to_lower
+			if {l_name: STRING} a_item.name then
+				l_name.to_lower
 
-				-- Name constants
-			l_csuffix := name_suffix
-			create l_cname.make (l_name.count + l_prefix.count + l_csuffix.count)
-			l_cname.append (l_prefix)
-			l_cname.append (l_name)
-			l_cname.append (l_csuffix)
-			l_cname := format_eiffel_name (l_cname)
-			create l_cvalue.make (25)
-			if {l_section: INI_SECTION} a_item.container then
-				l_cvalue.append (section_label (l_section))
-				l_cvalue.append_character (' ')
-			end
-			l_cvalue.append (l_name)
-			buffer (icon_names_token).append (string_formatter.format (icon_name_constant_template, [l_cname, l_cvalue]))
-
-				-- Coordinates
-			buffer (coordinates_token).append (string_formatter.format (icon_name_registration_template, [a_x, a_y, l_cname]))
-
-			create l_base.make (l_prefix.count + l_name.count)
-			l_base.append (l_prefix)
-			l_base.append (l_name)
-
-				-- Icon
-			l_isuffix := icon_suffix
-			create l_iname.make (l_base.count + l_isuffix.count)
-			l_iname.append (l_base)
-			l_iname.append (l_isuffix)
-			l_iname := format_eiffel_name (l_iname)
-			buffer (icons_token).append (string_formatter.format (icon_template, [l_iname, a_item.name, l_cname]))
-
-				-- Icon buffer
-			l_ibsuffix := icon_buffer_suffix
-			create l_ibname.make (l_iname.count + l_ibsuffix.count)
-			l_ibname.append (l_iname)
-			l_ibname.append (l_ibsuffix)
-			l_ibname := format_eiffel_name (l_ibname)
-			buffer (icons_token).append (string_formatter.format (icon_buffer_template, [l_ibname, a_item.name, l_cname]))
-
-				-- Check animation items
-			l_anim_regex := animation_regex
-			l_anim_regex.match (l_name)
-			if l_anim_regex.has_matched then
-				create l_aname.make (l_prefix.count + l_name.count)
-				l_aname.append (l_prefix)
-				l_aname.append (l_anim_regex.captured_substring (1))
-				l_aname := format_eiffel_name (l_aname)
-
-					-- Add item to the animation list
-				l_anim_pixmaps := animation_pixmaps
-				if l_anim_pixmaps.has (l_aname) then
-						-- An animation list already exists
-					l_animations := l_anim_pixmaps.item (l_aname)
-				else
-						-- Create a new list
-					create l_animations.make (1)
-					l_anim_pixmaps.force (l_animations, l_aname)
+					-- Name constants
+				l_csuffix := name_suffix
+				create l_cname.make (l_name.count + l_prefix.count + l_csuffix.count)
+				l_cname.append (l_prefix)
+				l_cname.append (l_name)
+				l_cname.append (l_csuffix)
+				l_cname := format_eiffel_name (l_cname)
+				create l_cvalue.make (25)
+				if {l_section: INI_SECTION} a_item.container then
+					l_cvalue.append (section_label (l_section))
+					l_cvalue.append_character (' ')
 				end
+				l_cvalue.append (l_name)
+				buffer (icon_names_token).append (string_formatter.format (icon_name_constant_template, [l_cname, l_cvalue]))
 
-				l_index := l_anim_regex.captured_substring (2).to_integer
-				l_animations.extend (l_cname)
+					-- Coordinates
+				buffer (coordinates_token).append (string_formatter.format (icon_name_registration_template, [a_x, a_y, l_cname]))
+
+				create l_base.make (l_prefix.count + l_name.count)
+				l_base.append (l_prefix)
+				l_base.append (l_name)
+
+					-- Icon
+				l_isuffix := icon_suffix
+				create l_iname.make (l_base.count + l_isuffix.count)
+				l_iname.append (l_base)
+				l_iname.append (l_isuffix)
+				l_iname := format_eiffel_name (l_iname)
+				buffer (icons_token).append (string_formatter.format (icon_template, [l_iname, a_item.name, l_cname]))
+
+					-- Icon buffer
+				l_ibsuffix := icon_buffer_suffix
+				create l_ibname.make (l_iname.count + l_ibsuffix.count)
+				l_ibname.append (l_iname)
+				l_ibname.append (l_ibsuffix)
+				l_ibname := format_eiffel_name (l_ibname)
+				buffer (icons_token).append (string_formatter.format (icon_buffer_template, [l_ibname, a_item.name, l_cname]))
+
+					-- Check animation items
+				l_anim_regex := animation_regex
+				l_anim_regex.match (l_name)
+				if l_anim_regex.has_matched then
+					create l_aname.make (l_prefix.count + l_name.count)
+					l_aname.append (l_prefix)
+					l_aname.append (l_anim_regex.captured_substring (1))
+					l_aname := format_eiffel_name (l_aname)
+
+						-- Add item to the animation list
+					l_anim_pixmaps := animation_pixmaps
+					if l_anim_pixmaps.has (l_aname) then
+							-- An animation list already exists
+						if {l_anim_pixmaps_item: ARRAYED_LIST [!STRING]} l_anim_pixmaps.item (l_aname) then
+							l_animations := l_anim_pixmaps_item
+						else
+							check False end
+						end
+					else
+							-- Create a new list
+						create l_animations.make (1)
+						l_anim_pixmaps.force (l_animations, l_aname)
+					end
+
+					l_index := l_anim_regex.captured_substring (2).to_integer
+					l_animations.extend (l_cname)
+				end
+			else
+				check False end
 			end
 		end
 
@@ -375,7 +382,11 @@ feature {NONE} -- Query
 			not_a_name_is_empty: not a_name.is_empty
 		do
 			if internal_buffers.has (a_name) then
-				Result := internal_buffers.item (a_name)
+				if {s: STRING} internal_buffers.item (a_name) then
+					Result := s
+				else
+					check False end
+				end
 			else
 				create Result.make (1024)
 				internal_buffers.put (Result, a_name)

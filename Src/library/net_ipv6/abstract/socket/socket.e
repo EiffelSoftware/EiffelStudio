@@ -150,8 +150,8 @@ feature -- Basic commands
 	make_socket is
 			-- Create socket descriptor.
 		require
-			valid_family: family >= 0;
-			valid_type: type >= 0;
+			valid_family: family >= 0
+			valid_type: type >= 0
 			valid_protocol: protocol >= 0
 		deferred
 		end
@@ -189,24 +189,24 @@ feature -- Basic commands
 		deferred
 		end
 
-	descriptor_available: BOOLEAN;
+	descriptor_available: BOOLEAN
 			-- Is descriptor available?
 
-	family: INTEGER;
+	family: INTEGER
 			-- Socket family eg. af_inet, af_unix
 
-	protocol: INTEGER;
+	protocol: INTEGER
 			-- Protocol of the socket. default 0
 			-- means for the system to chose the default
 			-- protocol for the family chosen. eg. `udp', `tcp'.
 
-	type: INTEGER;
+	type: INTEGER
 			-- Type of socket. eg stream, datagram
 
-	address: like address_type;
+	address: like address_type
 			-- Local address of socket
 
-	peer_address: like address;
+	peer_address: like address
 			-- Peer address of socket
 
 	address_type: SOCKET_ADDRESS is
@@ -361,35 +361,9 @@ feature -- Output
 			a_packet_not_void: a_packet /= Void
 			socket_exists: exists
 		local
-			amount_sent: INTEGER;
-			ext_data: POINTER;
-			return_val: INTEGER;
-			count: INTEGER
-		do
-			from
-				ext_data := a_packet.data.item;
-				count := a_packet.count
-			until
-				count = amount_sent
-			loop
-				return_val := c_write (descriptor, ext_data, count - amount_sent);
-				if return_val > 0 then
-					ext_data := ext_data + return_val
-					amount_sent := amount_sent + return_val;
-				end
-			end
-		end
-
-	send (a_packet: PACKET; flags: INTEGER) is
-			-- Send a packet `a_packet' of data to socket.
-		require
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_packet: a_packet /= Void
-		local
-			amount_sent: INTEGER;
+			amount_sent: INTEGER
 			ext_data: POINTER
-			return_val: INTEGER;
+			return_val: INTEGER
 			count: INTEGER
 		do
 			from
@@ -398,9 +372,35 @@ feature -- Output
 			until
 				count = amount_sent
 			loop
-				return_val := c_send (descriptor, ext_data, count - amount_sent, flags);
+				return_val := c_write (descriptor, ext_data, count - amount_sent)
 				if return_val > 0 then
-					amount_sent := amount_sent + return_val;
+					ext_data := ext_data + return_val
+					amount_sent := amount_sent + return_val
+				end
+			end
+		end
+
+	send (a_packet: PACKET; flags: INTEGER) is
+			-- Send a packet `a_packet' of data to socket.
+		require
+			socket_exists: exists
+			opened_for_write: is_open_write
+			valid_packet: a_packet /= Void
+		local
+			amount_sent: INTEGER
+			ext_data: POINTER
+			return_val: INTEGER
+			count: INTEGER
+		do
+			from
+				ext_data := a_packet.data.item
+				count := a_packet.count
+			until
+				count = amount_sent
+			loop
+				return_val := c_send (descriptor, ext_data, count - amount_sent, flags)
+				if return_val > 0 then
+					amount_sent := amount_sent + return_val
 					ext_data := ext_data + return_val
 				end
 			end
@@ -414,10 +414,10 @@ feature -- Output
 			definition: Result implies descriptor_available
 		end
 
-	is_open_write: BOOLEAN;
+	is_open_write: BOOLEAN
 			-- Is socket opened for writing?
 
-	is_open_read: BOOLEAN;
+	is_open_read: BOOLEAN
 			-- Is socket opened for reading?
 
 	is_executable: BOOLEAN is
@@ -497,7 +497,7 @@ feature -- Input
 			-- Read a new boolean.
 			-- Maker result available in `last_boolean'.
 		do
-			read_character;
+			read_character
 			if not was_error then
 				if last_character = 'T' then
 					last_boolean := True
@@ -507,7 +507,7 @@ feature -- Input
 			end
 		end
 
-	last_boolean: BOOLEAN;
+	last_boolean: BOOLEAN
 			-- Last boolean read by read_boolean
 
 	read_integer, readint, read_integer_32 is
@@ -630,7 +630,7 @@ feature -- Input
 			return_val: INTEGER
 		do
 			create ext.make_empty (nb_char + 1)
-			return_val := c_read_stream (descriptor, nb_char, ext.item);
+			return_val := c_read_stream (descriptor, nb_char, ext.item)
 			bytes_read := return_val
 			if return_val >= 0 then
 				ext.set_count (return_val)
@@ -655,7 +655,7 @@ feature -- Input
 				l_read = nb_bytes or l_last_read = 0
 			loop
 				l_last_read := c_read_stream (descriptor, nb_bytes - l_read,
-					p.item + start_pos + l_read);
+					p.item + start_pos + l_read)
 				l_read := l_read + l_last_read
 			end
 			bytes_read := l_read
@@ -664,27 +664,52 @@ feature -- Input
 	read_line, readline is
 			-- Read a line of characters (ended by a new_line).
 		do
-			create last_string.make (512);
-			read_character;
+			create last_string.make (512)
+			read_character
 			from
 			until
 				last_character = '%N'
 			loop
-				last_string.extend (last_character);
+				last_string.extend (last_character)
 				read_character
 			end
+		end
+
+	read_line_ex (n: INTEGER): BOOLEAN is
+			-- Read a line of at most N characters (ended by a new_line).
+			-- Returns True if new_line was consumed
+		local
+			i: INTEGER
+			done: BOOLEAN
+		do
+			create last_string.make (512)
+			from
+				i := 0
+				done := False
+			until
+				done or else i >= n
+			loop
+				read_character
+				if last_character = '%N' then
+					done := True
+				else
+					last_string.extend (last_character)
+				end
+				i := i + 1
+			end
+			Result := done
 		end
 
 	read (size: INTEGER): PACKET is
 			-- Read a packet of data of maximum size `size'.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			opened_for_read: is_open_read
 		local
-			l_data, recv_packet: MANAGED_POINTER;
-			amount_read: INTEGER;
-			return_val: INTEGER;
-			ext_data: POINTER;
+			l_data, recv_packet: MANAGED_POINTER
+			amount_read: INTEGER
+			return_val: INTEGER
+			ext_data: POINTER
 		do
 			ext_data := ext_data.memory_alloc (size)
 			from
@@ -693,7 +718,7 @@ feature -- Input
 			until
 				amount_read = size or return_val = 0
 			loop
-				return_val := c_read_stream (descriptor, size - amount_read, ext_data);
+				return_val := c_read_stream (descriptor, size - amount_read, ext_data)
 				if return_val > 0 then
 					create recv_packet.make_from_pointer (ext_data, return_val)
 					if l_data = Void then
@@ -713,13 +738,13 @@ feature -- Input
 	receive (size, flags: INTEGER): PACKET is
 			-- Receive a packet of maximum size `size'.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			opened_for_read: is_open_read
 		local
 			l_data, recv_packet: MANAGED_POINTER
-			amount_read: INTEGER;
-			return_val: INTEGER;
-			ext_data: POINTER;
+			amount_read: INTEGER
+			return_val: INTEGER
+			ext_data: POINTER
 		do
 			ext_data := ext_data.memory_alloc (size)
 			from
@@ -727,7 +752,7 @@ feature -- Input
 			until
 				amount_read = size
 			loop
-				return_val := c_receive (descriptor, ext_data, size - amount_read, flags);
+				return_val := c_receive (descriptor, ext_data, size - amount_read, flags)
 				if return_val > 0 then
 					create recv_packet.make_from_pointer (ext_data, return_val)
 					if l_data = Void then
@@ -772,7 +797,7 @@ feature -- socket options
 		local
 			is_set: INTEGER
 		do
-			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, sodebug);
+			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, sodebug)
 			Result := is_set /= 0
 		end
 
@@ -799,7 +824,7 @@ feature -- socket options
 		local
 			is_set: INTEGER
 		do
-			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, so_dont_route);
+			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, so_dont_route)
 			Result := is_set /= 0
 		end
 
@@ -846,7 +871,7 @@ feature -- socket options
 		local
 			is_soc_s: INTEGER
 		do
-			is_soc_s := c_get_sock_opt_int (descriptor, level_sol_socket, sotype);
+			is_soc_s := c_get_sock_opt_int (descriptor, level_sol_socket, sotype)
 			Result := is_soc_s = sock_stream
 		end
 
@@ -855,7 +880,7 @@ feature -- socket options
 		require
 			socket_exists: exists
 		do
-			c_set_non_blocking (descriptor);
+			c_set_non_blocking (descriptor)
 			is_blocking := False
 		ensure
 			not is_blocking
@@ -866,7 +891,7 @@ feature -- socket options
 		require
 			socket_exists: exists
 		do
-			c_set_blocking (descriptor);
+			c_set_blocking (descriptor)
 			is_blocking := True
 		ensure
 			is_blocking
@@ -879,7 +904,7 @@ feature -- socket options
 			-- Negative value sets group process id.
 			-- positive value sets process id.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			valid_owner: own /= 0 and own /= -1
 		local
 			return_val: INTEGER
@@ -897,7 +922,7 @@ feature -- socket options
 		local
 			is_grp: INTEGER
 		do
-			is_grp := c_fcntl (descriptor, c_fgetown, 0);
+			is_grp := c_fcntl (descriptor, c_fgetown, 0)
 			Result := is_grp < -1
 		end
 
@@ -908,14 +933,14 @@ feature -- socket options
 		local
 			is_proc: INTEGER
 		do
-			is_proc := c_fcntl (descriptor, c_fgetown, 0);
+			is_proc := c_fcntl (descriptor, c_fgetown, 0)
 			Result := is_proc > 0
 		end
 
 	group_id: INTEGER is
 			-- Group id of socket
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			group_set: is_group_id
 		do
 			Result := (c_fcntl (descriptor, c_fgetown, 0) * -1)
@@ -924,7 +949,7 @@ feature -- socket options
 	process_id: INTEGER is
 			-- Process id of socket
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			process_set: is_process_id
 		do
 			Result := c_fcntl (descriptor, c_fgetown, 0)

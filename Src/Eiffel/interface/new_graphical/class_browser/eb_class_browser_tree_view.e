@@ -98,6 +98,7 @@ feature -- Access
 			if syntactical_button_internal = Void then
 				create syntactical_button_internal.make (preferences.class_browser_data.syntactical_class_preference)
 				syntactical_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.class_overriden_normal_icon_buffer)
+				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
 				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
 				syntactical_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
@@ -112,6 +113,7 @@ feature -- Access
 			if normal_referenced_button_internal = Void then
 				create normal_referenced_button_internal.make (preferences.class_browser_data.normal_referenced_class_preference)
 				normal_referenced_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.diagram_supplier_link_icon_buffer)
+				normal_referenced_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_supplier_link_icon)
 				normal_referenced_button_internal.set_tooltip (interface_names.h_show_normal_referenced_classes)
 				normal_referenced_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
@@ -639,6 +641,7 @@ feature{NONE} -- Implementation
 			if display_path_button_internal = Void then
 				create display_path_button_internal.make (preferences.class_browser_data.show_item_path_preference)
 				display_path_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.metric_unit_group_icon_buffer)
+				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
 				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
 				display_path_button_internal.select_actions.extend (agent on_show_path_changed)
 			end
@@ -772,35 +775,35 @@ feature{NONE} -- Implementation/Stone
 		end
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

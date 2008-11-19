@@ -124,7 +124,7 @@ feature -- Command
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
-			internal_tabs.item.on_expose
+			internal_tab_box.tab_box.redraw
 			-- The text let tab size changed, so it need resize.
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
@@ -141,7 +141,7 @@ feature -- Command
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_pixmap (a_pixmap)
-			internal_tabs.item.on_expose
+			internal_tab_box.tab_box.redraw
 		ensure
 			set:
 		end

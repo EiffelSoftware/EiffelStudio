@@ -1045,7 +1045,7 @@ feature {NONE} -- Constants
 	l_outcome_view: !STRING = "outcome"
 	l_filter_not_passing: !STRING = "-outcome/passes"
 
-	q_add_library: !STRING = "The testing library has not been added yet. Would you like EiffelStudio to add the library and reccompile before launching the test wizard?"
+	q_add_library: !STRING = "The testing library has not been added yet. Would you like EiffelStudio to add the library and recompile before launching the test wizard?"
 
 	e_invalid_test_list: !STRING = "Selected tests can not be executed. Make sure none of the selected tests are currently being tested."
 	e_executor_already_running: !STRING = "Executor is already running tests."

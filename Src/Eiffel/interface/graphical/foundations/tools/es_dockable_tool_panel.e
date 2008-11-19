@@ -411,12 +411,14 @@ feature -- Element change
             --
             -- `a_buffer': A pixel buffer that presents the tool's icon.
         do
-                -- Set pixmap icon to void to ensure it's updated on next call
-            internal_icon_pixmap := Void
-            internal_icon := a_buffer
+        	if internal_icon /= a_buffer then
+	                 -- Set pixmap icon to void to ensure it's updated on next call
+	            internal_icon_pixmap := Void
+	            internal_icon := a_buffer
 
-            content.set_pixel_buffer (a_buffer)
-            content.set_pixmap (icon_pixmap)
+	            content.set_pixel_buffer (a_buffer)
+	            content.set_pixmap (icon_pixmap)
+        	end
         ensure
             icon_set: icon = a_buffer
         end

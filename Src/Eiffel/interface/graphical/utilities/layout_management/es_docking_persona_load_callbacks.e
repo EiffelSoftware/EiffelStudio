@@ -337,7 +337,7 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_trans: !DS_HASH_TABLE [NATURAL_8, !STRING]
@@ -365,7 +365,7 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_zone)
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_attr: !DS_HASH_TABLE [NATURAL_8, !STRING]

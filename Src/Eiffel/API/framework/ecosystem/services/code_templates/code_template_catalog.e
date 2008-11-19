@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the code template catalog.
 		local
-			l_tester: KL_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]
+			l_tester: KL_EQUALITY_TESTER [STRING]
 		do
 			create catalog_changed_event
 			auto_dispose (catalog_changed_event)
@@ -36,9 +36,9 @@ feature {NONE} -- Initialization
 			create cataloged_folder_files.make_default
 			create cataloged_template_definitions.make_default
 			if {PLATFORM}.is_windows then
-				create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]} l_tester
+				create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} l_tester
 			else
-				create l_tester
+				create {KL_STRING_EQUALITY_TESTER} l_tester
 			end
 			cataloged_folder_files.set_key_equality_tester (l_tester)
 			cataloged_template_definitions.set_key_equality_tester (l_tester)
@@ -50,7 +50,7 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_result: DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
-			l_cursor: DS_HASH_TABLE_CURSOR [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
+			l_cursor: DS_HASH_TABLE_CURSOR [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
 		do
 			if {l_templates: like code_templates} internal_code_templates then
 				Result := l_templates
@@ -70,12 +70,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!READABLE_STRING_GENERAL], !READABLE_STRING_GENERAL]
+	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!READABLE_STRING_GENERAL], STRING]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: !DS_HASH_TABLE [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
+	cataloged_template_definitions: !DS_HASH_TABLE [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
@@ -148,7 +148,7 @@ feature -- Query
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
 			l_cat_cursor: DS_BILINEAR_CURSOR [!READABLE_STRING_GENERAL]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !READABLE_STRING_GENERAL]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], READABLE_STRING_8]
 			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_continue: BOOLEAN
 		do
@@ -228,7 +228,8 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_BILINEAR [!READABLE_STRING_GENERAL]
+			l_keys: DS_BILINEAR [STRING]
+			l_key: STRING
 			l_empty: BOOLEAN
 		do
 			if not catalog_changed_event.is_suspended then
@@ -246,7 +247,9 @@ feature -- Basic operations
 				if not l_keys.is_empty then
 						-- Extend catalogs
 					from l_keys.start until l_keys.after loop
-						extend_catalog (l_keys.item_for_iteration)
+						l_key := l_keys.item_for_iteration
+						check l_key_attached: l_key /= Void end
+						extend_catalog (l_key)
 						l_keys.forth
 					end
 				end
@@ -262,8 +265,8 @@ feature -- Extension
 		local
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_files: !DS_ARRAYED_LIST [!STRING_GENERAL]
-			l_file: !STRING_GENERAL
+			l_files: !DS_ARRAYED_LIST [!STRING]
+			l_file: !STRING
 			l_changed: BOOLEAN
 		do
 			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
@@ -294,7 +297,7 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, a_folder)
+			cataloged_folder_files.put (l_files, a_folder.as_string_8)
 
 			if l_changed then
 				catalog_changed_event.publish (Void)
@@ -307,18 +310,20 @@ feature -- Removal
 			-- <Precursor>
 		local
 			l_catalog: like cataloged_folder_files
+			l_folder: STRING
 			l_files: !DS_ARRAYED_LIST [!READABLE_STRING_GENERAL]
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_file: !READABLE_STRING_GENERAL
+			l_file: STRING
 			l_changed: BOOLEAN
 		do
 			l_catalog := cataloged_folder_files
-			l_files := l_catalog.item (a_folder)
+			l_folder := a_folder.as_string_8
+			l_files := l_catalog.item (l_folder)
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
-					l_file := l_files.item_for_iteration
+					l_file := l_files.item_for_iteration.as_string_8
 					if l_definitions.has (l_file) then
 							-- Decrement reference count
 						l_definition := l_definitions.item (l_file)
@@ -341,7 +346,7 @@ feature -- Removal
 			end
 
 				-- Remove from the folder/file catalog.
-			l_catalog.remove (a_folder)
+			l_catalog.remove (l_folder)
 
 			if l_changed then
 				catalog_changed_event.publish (Void)

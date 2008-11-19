@@ -26,7 +26,7 @@ copy_sub b.e $CLUSTER b.e
 copy_raw c.e $CLUSTER c.e
 
 compile_melted
-compile_result validity_warning A Once Once; B Once Once
+compile_result ok
 
 execute_work NONE exec_output_snm
 execute_result ok
@@ -105,7 +105,7 @@ copy_sub b.e $CLUSTER b.e
 copy_raw c.e $CLUSTER c.e
 
 compile_melted
-compile_result validity_warning A Once Once; B Once Once
+compile_result ok
 
 execute_work NONE exec_output_mnm
 execute_result ok
@@ -189,7 +189,7 @@ copy_sub b.e $CLUSTER b.e
 copy_raw c.e $CLUSTER c.e
 
 compile_melted
-compile_result validity_warning	A Once Once
+compile_result ok
 
 execute_work NONE exec_output_srm
 execute_result ok
@@ -268,7 +268,7 @@ copy_sub b.e $CLUSTER b.e
 copy_raw c.e $CLUSTER c.e
 
 compile_melted
-compile_result validity_warning	A Once Once
+compile_result ok
 
 execute_work NONE exec_output_mrm
 execute_result ok

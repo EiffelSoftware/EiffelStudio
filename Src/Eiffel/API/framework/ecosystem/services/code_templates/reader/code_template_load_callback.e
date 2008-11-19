@@ -28,10 +28,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like code_factory; a_parser: like xml_parser)
+	make (a_factory: like code_factory; a_parser: !like xml_parser)
 			-- Initializes a XML load callback using a code factory.
 			--
-			-- `a_factory'
+			-- `a_factory': A factory for creating code template nodes.
+			-- `a_parser': An XML parser to use to process the callbacks.
 		do
 			code_factory := a_factory
 			make_es_callbacks (a_parser)
@@ -43,12 +44,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_code_template_definition: CODE_TEMPLATE_DEFINITION
+	last_code_template_definition: ?CODE_TEMPLATE_DEFINITION
 			-- The last parsed code template definition.
 
 feature {NONE} -- Access
 
-	last_declaration: CODE_DECLARATION
+	last_declaration: ?CODE_DECLARATION
 			-- Last literal code declaration processed.
 
 	code_factory: !CODE_FACTORY
@@ -74,7 +75,6 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		do
 			Precursor {XM_STATE_LOAD_CALLBACKS}
-
 			last_code_template_definition := Void
 		ensure then
 			last_code_template_definition_detached: last_code_template_definition = Void
@@ -293,11 +293,11 @@ feature {NONE} -- Production processing
 
 				-- Fetch literal ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then {l_id: !STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then {l_id: STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
 					l_literal := code_factory.create_code_literal_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
+					if l_attributes.has (at_editable) and then {l_editable: STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
 						l_literal.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 						-- Set the default value to the declaration name
@@ -332,11 +332,11 @@ feature {NONE} -- Production processing
 
 				-- Fetch object ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then {l_id: !STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then {l_id: STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
 					l_object := code_factory.create_code_object_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
+					if l_attributes.has (at_editable) and then {l_editable: STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
 						l_object.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 
@@ -346,7 +346,7 @@ feature {NONE} -- Production processing
 						l_object.default_value := l_default
 					end
 
-					if l_attributes.has (at_conforms_to) and then {l_type: !STRING_32} l_attributes.item (at_conforms_to) and then not l_type.is_empty then
+					if l_attributes.has (at_conforms_to) and then {l_type: STRING_32} l_attributes.item (at_conforms_to) and then not l_type.is_empty then
 							-- Set the conformance type
 						l_object.must_conform_to := l_type
 					end
@@ -382,7 +382,7 @@ feature {NONE} -- Production processing
 			last_declaration_attached: last_declaration /= Void
 			last_declaration_is_literal: ({CODE_LITERAL_DECLARATION}) #? last_declaration /= Void
 		do
-			if not current_content.is_empty and then {l_literal: !CODE_LITERAL_DECLARATION} last_declaration then
+			if not current_content.is_empty and then {l_literal: CODE_LITERAL_DECLARATION} last_declaration then
 				l_literal.default_value := current_content
 			end
 		end
@@ -400,11 +400,11 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_attributes: !like current_attributes
+			l_attributes: like current_attributes
 			l_templates: !CODE_TEMPLATE_COLLECTION
 			l_version: !CODE_VERSION
 			l_template: !CODE_TEMPLATE
-			l_text: !like current_content
+			l_text: like current_content
 		do
 			l_text := current_content
 			if not l_text.is_empty then
@@ -414,7 +414,7 @@ feature {NONE} -- Production processing
 			l_templates := last_code_template_definition.templates
 			l_attributes := current_attributes
 			if l_attributes.has (at_version) then
-				if {l_value: !STRING_32} l_attributes.item (at_version) and then not l_value.is_empty then
+				if {l_value: STRING_32} l_attributes.item (at_version) and then not l_value.is_empty then
 						-- Create a version template
 					l_version := format_utilities.parse_version (l_value, code_factory)
 					l_template := code_factory.create_code_versioned_template (l_version, l_templates)
@@ -442,10 +442,10 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING_8], NATURAL_8]
+	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: !DS_HASH_TABLE [NATURAL_8, STRING_8]
+			l_trans: !DS_HASH_TABLE [NATURAL_8, !STRING]
 		once
 			create Result.make (8)
 
@@ -515,10 +515,10 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_templates)
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING_8], NATURAL_8]
+	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: !DS_HASH_TABLE [NATURAL_8, STRING_8]
+			l_attr: !DS_HASH_TABLE [NATURAL_8, !STRING]
 		once
 			create Result.make (4)
 
@@ -584,9 +584,9 @@ feature {NONE} -- Attributes states
 	at_version: NATURAL_8            = 0x54
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -597,19 +597,19 @@ feature {NONE} -- Attributes states
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

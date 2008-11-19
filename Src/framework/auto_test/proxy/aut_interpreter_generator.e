@@ -78,7 +78,7 @@ feature -- Generation
 			last_interpreter := Void
 			absolute_pathname := file_system.absolute_pathname (a_pathname)
 			file_system.recursive_create_directory (a_log_dirname)
-			executable_filename := system.project_location.workbench_executable_file_name
+			executable_filename := system.eiffel_system.application_name (True)
 
 			if file_system.file_exists (executable_filename) then
 				create last_interpreter.make (

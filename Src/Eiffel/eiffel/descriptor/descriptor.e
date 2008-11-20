@@ -114,19 +114,19 @@ feature -- Generation
 		local
 			cnt : COUNTER
 		do
-			buffer.put_string ("static struct desc_info desc")
+			buffer.put_string (once "static struct desc_info desc")
 			buffer.put_string (id_string)
-			buffer.put_string ("[] = {%N");
+			buffer.put_string (once "[] = {%N");
 
-			buffer.put_string ("%T{(BODY_INDEX) ")
+			buffer.put_string (once "%T{(BODY_INDEX) ")
 			if invariant_entry = Void then
 				buffer.put_integer (Invalid_index)
 			else
 				buffer.put_real_body_index (invariant_entry.real_body_index)
 			end
-			buffer.put_string (", (BODY_INDEX) ")
+			buffer.put_string (once ", (BODY_INDEX) ")
 			buffer.put_integer (Invalid_index)
-			buffer.put_string (", INVALID_DTYPE, NULL},")
+			buffer.put_string (once ", INVALID_DTYPE, NULL},")
 
 			from
 				create cnt
@@ -138,7 +138,7 @@ feature -- Generation
 				forth
 			end
 
-			buffer.put_string ("%N};%N")
+			buffer.put_string (once "%N};%N")
 		end;
 
 	descriptor_generate_generic (buffer : GENERATION_BUFFER; id_string: STRING) is

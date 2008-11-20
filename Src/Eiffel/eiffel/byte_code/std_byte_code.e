@@ -573,17 +573,17 @@ end
 				if context.workbench_mode then
 						-- Note: in workbench, we always return the result. It may
 						--       have been changed by the user (see class EDIT_ITEM)
-					buf.put_string ("{ EIF_TYPED_VALUE r; r.")
+					buf.put_string (once "{ EIF_TYPED_VALUE r; r.")
 					type_c.generate_typed_tag (buf)
-					buf.put_string ("; r.")
+					buf.put_string (once "; r.")
 					type_c.generate_typed_field (buf)
-					buf.put_string (" = Result; return r; }")
+					buf.put_string (once " = Result; return r; }")
 				else
-					buf.put_string ("return ")
+					buf.put_string (once "return ")
 						-- If Result was used, generate it. Otherwise, its value
 						-- is simply the initial one (i.e. generic 0).
 					if context.result_used then
-						buf.put_string ("Result;")
+						buf.put_string (once "Result;")
 					else
 						type_c.generate_cast (buf)
 						buf.put_two_character ('0', ';')

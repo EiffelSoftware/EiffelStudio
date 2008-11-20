@@ -228,39 +228,40 @@ feature -- Debug mode command
 		do
 			l_debugger_manager := develop_window.eb_debugger_manager
 
-			-- Setup toolbar buttons
-			check one_button: l_debugger_manager.restart_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := l_debugger_manager.restart_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: l_debugger_manager.stop_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := l_debugger_manager.stop_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: l_debugger_manager.quit_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := l_debugger_manager.quit_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
-			check one_button: l_debugger_manager.ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
-			l_sd_button := l_debugger_manager.ignore_breakpoints_cmd.managed_sd_toolbar_items.first
-			if l_sd_button /= Void then
-				l_sd_button.enable_displayed
-			end
-
 			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (develop_window.Interface_names.t_project_toolbar)
 			check not_void: l_tool_bar_content /= Void end
+
+			-- Setup toolbar buttons
+			check at_least_one_button: l_debugger_manager.restart_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.restart_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check at_least_one_button: l_debugger_manager.stop_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.stop_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check at_least_one_button: l_debugger_manager.quit_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.quit_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check at_least_one_button: l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
+			check at_least_one_button: l_debugger_manager.ignore_breakpoints_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.ignore_breakpoints_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
 			l_tool_bar_content.refresh
 
 			-- Setup tools
@@ -400,6 +401,28 @@ feature -- Debug mode command
 
 feature {NONE} -- Implementation
 
+	tool_bar_item_belong_to (a_tool_bar_content: SD_TOOL_BAR_CONTENT; a_all_items: LIST [SD_TOOL_BAR_ITEM]): SD_TOOL_BAR_ITEM
+			-- Find one item in `a_all_items' which belong to `a_tool_bar_content'
+		require
+			not_void: a_tool_bar_content /= Void
+			not_void: a_all_items /= Void
+		local
+			l_tool_bar_items: SET [SD_TOOL_BAR_ITEM]
+		do
+			from
+				l_tool_bar_items := a_tool_bar_content.items
+				a_all_items.start
+			until
+				a_all_items.after or Result /= Void
+			loop
+				if l_tool_bar_items.has (a_all_items.item) then
+					Result := a_all_items.item
+				end
+
+				a_all_items.forth
+			end
+		end
+
 	project_docking_standard_file_name: !FILE_NAME
 			-- Docking config file name.
 		do
@@ -465,9 +488,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -478,19 +501,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

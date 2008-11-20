@@ -5400,7 +5400,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
 				end
-				if a_sel_item /= Void then
+				if a_sel_item /= Void and then not ev_application.alt_pressed then
+						-- 'Alt' should have no effect on selection handling.
 					if
 						a_sel_item.is_selected and then
 						last_selected_item /= Void and then

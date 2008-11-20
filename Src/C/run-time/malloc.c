@@ -3985,7 +3985,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 #endif
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	CHECK ("Cannot be in object ID stack", !has_object (&object_id_stack, object));
+	CHECK ("Cannot be in object ID stack", !st_has (&object_id_stack, object));
 #endif
 
 	return object;
@@ -4036,7 +4036,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #endif
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	CHECK ("Cannot be in object ID stack", !has_object (&object_id_stack, object));
+	CHECK ("Cannot be in object ID stack", !st_has (&object_id_stack, object));
 #endif
 
 	return object;

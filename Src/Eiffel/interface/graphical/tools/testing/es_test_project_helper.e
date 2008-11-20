@@ -123,14 +123,12 @@ feature -- Element change
 				internal_error := Void
 				internal_added_class := Void
 
-				l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
-
 				if manager.universe.conf_system.targets.has_item (a_cluster.target) and then
 				   a_cluster.target.clusters.has_item (a_cluster)
 				then
 					l_cluster := a_cluster
 				else
-
+					l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
 					from
 						l_list.start
 					until
@@ -147,7 +145,7 @@ feature -- Element change
 				end
 
 				if l_cluster /= Void then
-					manager.add_class_to_cluster (a_file_name, a_cluster, a_path)
+					manager.add_class_to_cluster (a_file_name, l_cluster, a_path)
 					if {l_class: like last_added_class} manager.last_added_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)

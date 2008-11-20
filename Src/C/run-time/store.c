@@ -758,11 +758,22 @@ rt_public void allocate_gen_buffer (void)
 
 rt_shared void internal_store(char *object)
 {
+	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	/* Store object hierarchy of root `object' in file `file_ptr' and
 	 * produce header if `accounting'.
 	 */
 	char c;
+	jmp_buf exenv;
+	RTYD;
+
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
+		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
+		rt_reset_store ();				/* Reset data structure */
+		ereturn(MTC_NOARG);				/* Propagate exception */
+	}
 
 	if (accounting) {		/* Prepare character array */
 		account = (char *) eif_rt_xmalloc(scount * sizeof(char), C_T, GC_OFF);
@@ -870,6 +881,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #ifdef RECOVERABLE_DEBUG
 	fflush (stdout);
 #endif
+	expop(&eif_stack);
 }
 
 rt_private void st_store(EIF_REFERENCE object)
@@ -1549,8 +1561,6 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
-		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
-		rt_reset_store ();				/* Reset data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1725,8 +1735,6 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
-		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
-		rt_reset_store ();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1999,16 +2007,6 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	int16 max_types = scount;	/* Here there is a problem if `scount' is more than 2^16.*/
 	int16 type_count;
 	int16 i;
-	jmp_buf exenv;
-	RTYD;
-
-	excatch(&exenv);	/* Record pseudo execution vector */
-	if (setjmp(exenv)) {
-		RTXSC;					/* Restore stack contexts */
-		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
-		rt_reset_store ();				/* Clean data structure */
-		ereturn(MTC_NOARG);				/* Propagate exception */
-	}
 
 	/* count number of types actually present in objects to be stored */
 	for (type_count=0, i=0; i<scount; i++) {

@@ -126,7 +126,7 @@ feature -- Element change
 				l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
 
 				if manager.universe.conf_system.targets.has_item (a_cluster.target) and then
-				   l_cluster.target.clusters.has_item (a_cluster)
+				   a_cluster.target.clusters.has_item (a_cluster)
 				then
 					l_cluster := a_cluster
 				else

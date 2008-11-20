@@ -2002,7 +2002,6 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 	int16 ohead = OVERHEAD;
 	int16 max_types = scount;	/* Here there is a problem if `scount' is more than 2^16.*/
 	int16 type_count;

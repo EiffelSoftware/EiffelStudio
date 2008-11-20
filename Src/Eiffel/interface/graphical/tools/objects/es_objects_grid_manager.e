@@ -240,31 +240,6 @@ feature -- Clipboard related
 			end
 		end
 
-	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
-			-- Sets an expression from text held in clipboard
-		local
-			text_data: STRING_32
-			row: EV_GRID_ROW
-			rows: ARRAYED_LIST [EV_GRID_ROW]
-			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
-		do
-			text_data := ev_application.clipboard.text
-			if text_data /= Void and then not text_data.is_empty then
-				rows := grid_selected_top_rows (grid)
-				if not rows.is_empty then
-					row := rows.first
-					if
-						grid.col_name_index <= row.count
-					then
-						empty_expression_cell ?= row.item (grid.col_name_index)
-						if empty_expression_cell /= Void then
-							empty_expression_cell.activate_with_string (text_data)
-						end
-					end
-				end
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	impl_parent_window (w: EV_WIDGET): EV_WINDOW is
@@ -281,9 +256,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -294,19 +269,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -339,12 +339,13 @@ feature {NONE} -- Query
 							l_name := l_type_dec.item_name (l_ids.index)
 							l_type := l_type_dec.type
 							if l_type /= Void and then l_name /= Void and then not l_name.is_empty then
+								l_name := l_entity_name_map.item (l_name)
 								check
 										-- If this fails then conver the name to local case, the compiler must have changed.
 										-- Or remove the two `l_entity_name.to_lower' called when extending `l_entity_name_map'.
-									l_entity_name_map_has_l_name: l_entity_name_map.has (l_name)
+									l_entity_name_map_has_l_name: l_name /= Void
 								end
-								Result.force (l_type, l_entity_name_map.item (l_name))
+								Result.force (l_type, l_name)
 								internal_locals := Void
 							else
 								check False end

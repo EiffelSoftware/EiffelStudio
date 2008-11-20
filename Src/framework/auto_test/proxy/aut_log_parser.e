@@ -208,12 +208,12 @@ feature {NONE} -- Processsing
 			l_last_response: AUT_RESPONSE
 			l_response_stream: KL_STRING_INPUT_STREAM
 		do
+			if variable_table.is_variable_defined (a_request.target) then
+				a_request.set_target_type (variable_table.variable_type (a_request.target))
+			end
 			if last_response_text.is_empty then
 				create {AUT_NORMAL_RESPONSE} l_last_response.make ("")
 			else
-				if variable_table.is_variable_defined (a_request.target) then
-					a_request.set_target_type (variable_table.variable_type (a_request.target))
-				end
 				create l_response_stream.make (last_response_text)
 				response_parser.set_input_stream (l_response_stream)
 				response_parser.parse_invoke_response

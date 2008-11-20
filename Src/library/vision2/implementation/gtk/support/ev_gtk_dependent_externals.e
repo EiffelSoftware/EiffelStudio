@@ -1480,7 +1480,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"gtk_file_chooser_dialog_new ((gchar*) $a_title, (GtkWindow*) $a_parent, (GtkFileChooserAction) $a_action, NULL)"
+			"gtk_file_chooser_dialog_new ((gchar*) $a_title, (GtkWindow*) $a_parent, (GtkFileChooserAction) $a_action, NULL, NULL)"
 		end
 
 	frozen gtk_file_chooser (a_dialog: POINTER): POINTER is

@@ -2029,7 +2029,6 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 		if (account[i])
 			widr_type (i);
 	}
-	expop(&eif_stack);
 }
 
 rt_public void free_sorted_attributes(void)

@@ -26,11 +26,16 @@ feature -- Access
 	features: QL_FEATURE_DOMAIN is
 			-- Features as result of Current formatter
 		do
-			Result ?= system_target_domain.new_domain (domain_generator)
-			check Result /= Void end
-			if not Result.is_empty then
-				Result := Result.distinct
+			if {lt_result: QL_FEATURE_DOMAIN}system_target_domain.new_domain (domain_generator) then
+				Result := lt_result
+			else
+				check Result /= Void end
 			end
+				-- We don't do `Result.distinct' here. For the reason:
+				-- The distinct filter was to remove duplications
+				-- when the source of the query contains duplications, but it
+				-- is not the case here, because the source is single, which is
+				-- `system_target_domain'.
 		end
 
 feature -- Status report
@@ -213,9 +218,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -226,19 +231,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

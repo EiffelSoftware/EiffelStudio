@@ -22,6 +22,11 @@ inherit
 
 	REFACTORING_HELPER
 
+	AUT_SHARED_INTERPRETER_INFO
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -80,7 +85,7 @@ feature -- Generation
 			file_system.recursive_create_directory (a_log_dirname)
 			executable_filename := system.eiffel_system.application_name (True)
 
-			if file_system.file_exists (executable_filename) then
+			if file_system.file_exists (executable_filename) and interpreter_root_class /= Void then
 				create last_interpreter.make (
 					executable_filename,
 					system,

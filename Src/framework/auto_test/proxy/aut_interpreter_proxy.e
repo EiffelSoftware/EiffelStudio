@@ -76,6 +76,8 @@ feature {NONE} -- Initialization
 			an_interpreter_log_filename_not_void: an_interpreter_log_filename /= Void
 			a_proxy_log_filename_not_void: a_proxy_log_filename /= Void
 			a_error_handler_not_void: a_error_handler /= Void
+		local
+			l_root_class: like interpreter_root_class
 		do
 			create variable_table.make (a_system)
 			create raw_response_analyzer
@@ -530,9 +532,9 @@ feature -- Execution
 					check
 						normal_response_not_void: normal_response /= Void
 						no_exception: normal_response.exception = Void
-						valid_type: base_type (normal_response.text, interpreter_root_class) /= Void
+						valid_type: base_type (normal_response.text) /= Void
 					end
-					variable_table.define_variable (a_variable, base_type (normal_response.text, interpreter_root_class))
+					variable_table.define_variable (a_variable, base_type (normal_response.text))
 				end
 			else
 				is_ready  := False

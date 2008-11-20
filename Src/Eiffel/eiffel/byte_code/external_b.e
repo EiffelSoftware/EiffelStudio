@@ -117,10 +117,20 @@ feature -- Routines for externals
 
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
+		local
+			i: INTEGER
 		do
 			parameters := p
 			if p /= Void then
-				p.do_all (agent {PARAMETER_B}.set_parent (Current))
+					-- Set all parameter parents to `Current'.
+				from
+					i := p.count
+				until
+					i = 0
+				loop
+					p [i].set_parent (Current)
+					i := i - 1
+				end
 			end
 		end
 

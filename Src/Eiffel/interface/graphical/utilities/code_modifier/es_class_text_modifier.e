@@ -19,6 +19,11 @@ inherit
 			{NONE}
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -301,7 +306,8 @@ feature -- Basic operations
 			l_editor: EB_SMART_EDITOR
 			l_recent_editor: EB_SMART_EDITOR
 			l_text: SMART_TEXT
-			l_new_text: !STRING_32
+			l_editor_text: STRING_32
+			l_new_text: ?STRING_32
 			l_first_line: INTEGER
 			l_line: INTEGER
 			l_col: INTEGER
@@ -336,8 +342,6 @@ feature -- Basic operations
 						-- Or `text_displayed.text_being_processed' is possible set with `True' (text loading is pending on idle),
 						-- Hence the second modifier can not applied to current editor.
 					if not l_editor.is_read_only and then l_editor.allow_edition then
-						l_editor.no_save_before_next_load
-
 							-- Fetch position information.
 						l_first_line := l_editor.first_line_displayed
 						l_text := l_editor.text_displayed
@@ -348,34 +352,37 @@ feature -- Basic operations
 
 							-- Set text, always using a merge.
 						l_new_text := merge_text (l_text.wide_text)
+						if l_new_text /= Void then
+							l_editor.no_save_before_next_load
 
-							-- Set text to `modified_data' for use in `prepare'
-						if l_recent_editor = l_editor then
-								-- Set modified data text to the most recent editor
-							modified_data.text := l_new_text
-						elseif l_recent_editor = Void and then l_editors.is_last then
-								-- No recent editor, just use the last editor's text
-							modified_data.text := l_new_text
-						end
+								-- Set text to `modified_data' for use in `prepare'
+							if l_recent_editor = l_editor then
+									-- Set modified data text to the most recent editor
+								modified_data.text := l_new_text
+							elseif l_recent_editor = Void and then l_editors.is_last then
+									-- No recent editor, just use the last editor's text
+								modified_data.text := l_new_text
+							end
 
-						l_editor.select_all
-						l_editor.replace_selection (l_new_text)
-						l_set_in_editor := True
+							l_editor.select_all
+							l_editor.replace_selection (l_new_text)
+							l_set_in_editor := True
 
-						if logger.is_service_available then
-								-- Log change
-							logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
-						end
+							if logger.is_service_available then
+									-- Log change
+								logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+							end
 
-							-- Reset position information.
-						l_line_count := l_editor.number_of_lines
-						l_editor.set_first_line_displayed (l_first_line.min (l_line_count), True)
-						l_cursor := l_editor.text_displayed.cursor
-						if l_line > 0 and then l_line_count > 0 then
-							l_cursor.set_y_in_lines (l_line.min (l_line_count))
-						end
-						if l_col > 0 then
-							l_cursor.set_x_in_characters (l_col)
+								-- Reset position information.
+							l_line_count := l_editor.number_of_lines
+							l_editor.set_first_line_displayed (l_first_line.min (l_line_count), True)
+							l_cursor := l_editor.text_displayed.cursor
+							if l_line > 0 and then l_line_count > 0 then
+								l_cursor.set_y_in_lines (l_line.min (l_line_count))
+							end
+							if l_col > 0 then
+								l_cursor.set_x_in_characters (l_col)
+							end
 						end
 					end
 					l_editors.forth
@@ -391,19 +398,22 @@ feature -- Basic operations
 				else
 					l_new_text := text
 				end
-					-- Set text to `modified_data' for use in `prepare'
-				modified_data.text := l_new_text
 
-					-- No editors, save directly to disk.
-				create l_save
-				l_save.save (context_class.file_name, l_new_text, encoding_converter.detected_encoding)
+				if l_new_text /= Void then
+						-- Set text to `modified_data' for use in `prepare'
+					modified_data.text := l_new_text
 
-					-- Update class file data time stamp
-				original_file_date := context_class.file_date
+						-- No editors, save directly to disk.
+					create l_save
+					l_save.save (context_class.file_name, l_new_text, encoding_converter.detected_encoding)
 
-				if logger.is_service_available then
-						-- Log change
-					logger.service.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+						-- Update class file data time stamp
+					original_file_date := context_class.file_date
+
+					if logger.is_service_available then
+							-- Log change
+						logger.service.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+					end
 				end
 			end
 
@@ -441,34 +451,42 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	merge_text (a_current_text: STRING_32): like text
+	merge_text (a_current_text: STRING_32): ?like text
 			-- Retrieves the merged text, using a modified source as the base.
 			--
 			-- `a_current_text': The text currently found on disk or in an editor.
-			-- `Result': The result of a merge
+			-- `Result': The result of a merge or Void if there was nothing to merge.
 		require
 			is_interface_usable: is_interface_usable
 			is_dirty: is_dirty
 			a_current_text_attached: a_current_text /= Void
+			a_current_text_carriage_return_free: not a_current_text.has ('%R')
 		local
 			l_diff: DIFF_TEXT
 			l_patch: STRING
+			l_text: STRING
 		do
 				-- |FIXME: diff library need to support Unicode.
+			l_text := text
+			if {PLATFORM}.is_windows and then preferences.misc_data.text_mode_is_windows then
+					-- Remove carriage returns, else the diff will think there are modifications.
+				l_text.replace_substring_all ("%R", "")
+			end
+
 			create l_diff
-			l_diff.set_text (original_text, text)
+			l_diff.set_text (original_text, l_text)
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if l_patch /= Void and then not l_patch.is_empty then
 				Result := l_diff.patch (a_current_text, l_patch, False).as_string_32.as_attached
-			else
-				Result := text
 			end
 
 			if logger.is_service_available then
 					-- Log merge
 				logger.service.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
+		ensure
+			result_carriage_return_free: Result /= Void implies not Result.has ('%R')
 		end
 
 feature -- Batch processing
@@ -654,9 +672,9 @@ feature {NONE} -- Factory
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -667,19 +685,19 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

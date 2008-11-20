@@ -161,6 +161,9 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	watch_tools_layout_preference: ARRAY_PREFERENCE
+	move_up_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
+	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
+
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
@@ -241,6 +244,8 @@ feature -- Preference Strings
 	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"
 	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
+	move_up_watch_expression_shortcut_string: STRING is "debugger.shortcuts.move_up_watch_expression"
+	move_down_watch_expression_shortcut_string: STRING is "debugger.shortcuts.move_down_watch_expression"
 
 feature {NONE} -- Implementation
 
@@ -278,6 +283,10 @@ feature {NONE} -- Implementation
 			display_agent_details_preference := l_manager.new_boolean_preference_value (l_manager, display_agent_details_string, False)
 			objects_tool_layout_preference := l_manager.new_array_preference_value (l_manager, objects_tool_layout_string, <<>>)
 			watch_tools_layout_preference := l_manager.new_array_preference_value (l_manager, watch_tools_layout_string, <<>>)
+
+			move_up_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_up_watch_expression_shortcut_string, [True, False, True, "up"])
+			move_down_watch_expression_shortcut_preference  := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])
+
 		end
 
 	preferences: PREFERENCES
@@ -311,9 +320,9 @@ invariant
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -324,19 +333,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

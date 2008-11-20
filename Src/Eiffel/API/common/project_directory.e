@@ -18,6 +18,8 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -352,6 +354,7 @@ feature -- Files
 	executable_file_name: FILE_NAME
 			-- File name of executable.
 		do
+			fixme ("'target' is not always the executable filename, check output or system name.")
 			if platform_constants.is_windows then
 				create Result.make_from_string (target + ".exe")
 			else

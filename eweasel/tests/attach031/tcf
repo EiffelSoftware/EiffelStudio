@@ -3,8 +3,8 @@ test_description Ensures parent attribute initialization is taken into account
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
-copy_raw	base_a.e $CLUSTER base_a.e
-copy_raw	attributes_a.e $CLUSTER attributes_a.e
+copy_raw	base_a.e $CLUSTER base.e
+copy_raw	attributes_a.e $CLUSTER attributes.e
 
 compile_melted
 compile_result ok
@@ -12,13 +12,13 @@ execute_work	NONE exec_output_a
 execute_result	ok
 compare		exec_output_a output
 
-copy_raw	base_b.e $CLUSTER base_b.e
-copy_raw	attributes_b.e $CLUSTER attributes_b.e
+copy_raw	base_b.e $CLUSTER base.e
+copy_raw	attributes_b.e $CLUSTER attributes.e
 
 compile_melted
 compile_result ok
 execute_work	NONE exec_output_b
 execute_result	ok
-compare		exec_output output_b
+compare		exec_output_b output
 
 test_end

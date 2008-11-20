@@ -16,21 +16,26 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	interpreter_root_class: CLASS_C is
+	interpreter_root_class: ?CLASS_C is
 			-- Interpreter class
+		local
+			l_class: CLASS_I
 		do
-			Result := system.universe.classes_with_name (interpreter_root_class_name).first.compiled_representation
-		ensure
-			result_attached: Result /= Void
+			if {l_cluster: CONF_CLUSTER} system.eifgens_cluster then
+				l_class := system.universe.class_named (interpreter_root_class_name, l_cluster)
+				if l_class /= Void and then l_class.is_compiled then
+					Result := l_class.compiled_representation
+				end
+			end
 		end
 
-	interpreter_root_class_name: STRING is "ITP_INTERPRETER"
+	interpreter_root_class_name: STRING = "ITP_INTERPRETER_ROOT"
 			-- Name of root lass for interpreter
 
-	interpreter_root_feature_name: STRING is "execute"
+	interpreter_root_feature_name: STRING = "execute"
 			-- Name of root feature for interpreter
 
-	feature_name_for_byte_code_injection: STRING is "execute_byte_code"
+	feature_name_for_byte_code_injection: STRING = "execute_byte_code"
 			-- Name of feature whose byte code is to be injected.
 
 	feature_for_byte_code_injection: FEATURE_I is

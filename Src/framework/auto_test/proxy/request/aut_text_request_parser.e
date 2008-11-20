@@ -478,7 +478,7 @@ feature {NONE} -- Parsing
 					if end_of_input then
 						report_and_set_error_at_position ("Expected '}', not end of input.", position)
 					else
-						l_type := base_type (last_string.twin, interpreter_root_class)
+						l_type := base_type (last_string.twin)
 						if l_type = Void then
 							report_and_set_error_at_position ("Unknown type {" + last_string + "}.", position)
 						else

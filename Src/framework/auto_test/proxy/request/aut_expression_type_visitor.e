@@ -71,7 +71,7 @@ feature {ITP_EXPRESSION} -- Processing
 	process_constant (a_value: ITP_CONSTANT) is
 			-- Process `a_value', store type of `a_value' into `last_type'.
 		do
-			last_type := base_type (a_value.type_name, interpreter_root_class)
+			last_type := base_type (a_value.type_name)
 		end
 
 	process_variable (a_value: ITP_VARIABLE) is

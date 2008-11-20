@@ -54,7 +54,7 @@ feature {ITP_EXPRESSION} -- Processing
 			if a_value.value = Void then
 				create {VOID_B} last_expression
 			else
-				l_type := base_type (a_value.value.generating_type, interpreter_root_class)
+				l_type := base_type (a_value.value.generating_type)
 				check l_type /= Void end
 				if l_type.is_integer or else l_type.is_natural then
 						-- For integer and natural

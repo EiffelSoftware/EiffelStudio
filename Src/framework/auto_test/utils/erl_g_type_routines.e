@@ -19,6 +19,11 @@ inherit
 
 	SHARED_TYPES
 
+	AUT_SHARED_INTERPRETER_INFO
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	has_feature (a_class: CLASS_C; a_feature: FEATURE_I): BOOLEAN is
@@ -117,13 +122,6 @@ feature -- Access
 				(a_type.has_associated_class implies Result = exported_creators (a_type.associated_class, a_system).count)
 		end
 
-	system: SYSTEM_I is
-			-- System
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature {NONE} -- Parsing class types
 
 	type_a_generator: AST_TYPE_A_GENERATOR is
@@ -134,14 +132,13 @@ feature {NONE} -- Parsing class types
 			result_attached: Result /= Void
 		end
 
-	base_type (a_name: STRING; a_context_class: CLASS_C): TYPE_A is
+	base_type (a_name: STRING): TYPE_A is
 			-- Type parsed from `a_name'
 			-- If `a_name' is "NONE", return {NONE_A}.
 			-- If `a_name' is an unknown type, return Void.
 			-- The result is resolved in `a_context_class'.
 		require
 			a_name_not_void: a_name /= Void
-			a_context_class_attached: a_context_class /= Void
 		local
 			l_type_as: TYPE_AS
 		do
@@ -153,8 +150,8 @@ feature {NONE} -- Parsing class types
 				l_type_as := type_parser.type_node
 
 					-- Generate TYPE_A object from type AST node.
-				if l_type_as /= Void then
-					Result := type_a_generator.evaluate_type_if_possible (l_type_as, a_context_class)
+				if l_type_as /= Void and then {l_context_class: CLASS_C} interpreter_root_class then
+					Result := type_a_generator.evaluate_type_if_possible (l_type_as, l_context_class)
 				end
 			end
 		end

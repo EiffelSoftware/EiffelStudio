@@ -254,7 +254,7 @@ feature {NONE} -- Processsing
 					if not l_last_response.is_exception then
 						variable_table.define_variable (
 							a_request.variable,
-							base_type (l_last_response.text, interpreter_root_class))
+							base_type (l_last_response.text))
 					end
 				end
 				l_last_response := response_parser.last_response

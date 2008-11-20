@@ -189,14 +189,14 @@ feature {NONE} -- Implementation
 		do
 			try_parse_multi_line_value
 			if last_string /= Void then
-				if base_type (last_string, interpreter_root_class) = Void then
+				if base_type (last_string) = Void then
 					last_string := Void
 				end
 			end
 		ensure
 			result_or_error:
 				last_string = Void or else
-				(base_type (last_string, interpreter_root_class) /= Void)
+				(base_type (last_string) /= Void)
 		end
 
 	parse_status is

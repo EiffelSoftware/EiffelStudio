@@ -110,7 +110,7 @@ feature {NONE} -- Handlers
 			argument_list: DS_LINEAR [ITP_EXPRESSION]
 		do
 			create receiver.make (variable_index (a_target_variable_name, variable_name_prefix))
-			type := base_type (a_type_name, interpreter_root_class)
+			type := base_type (a_type_name)
 			if type = Void then
 				report_error ("Unknown type " + a_type_name + ".")
 			elseif type.is_none then

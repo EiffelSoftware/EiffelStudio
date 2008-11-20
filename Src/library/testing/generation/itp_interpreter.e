@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ITP_INTERPRETER
+deferred class ITP_INTERPRETER
 
 inherit
 
@@ -29,9 +29,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-create
-	execute
 
 feature{NONE} -- Initialization
 

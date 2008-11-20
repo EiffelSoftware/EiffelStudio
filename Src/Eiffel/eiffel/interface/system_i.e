@@ -1345,8 +1345,8 @@ end
 			l_path: DIRECTORY_NAME
 			l_dir: DIRECTORY
 			l_vis: CONF_FIND_LOCATION_VISITOR
-			l_cluster: CONF_CLUSTER
 			l_loc: CONF_DIRECTORY_LOCATION
+			l_cluster: CONF_CLUSTER
 		do
 			l_path := project_location.eifgens_cluster_path
 			create l_vis.make
@@ -1361,6 +1361,19 @@ end
 					l_cluster.set_internal (True)
 					a_target.add_cluster (l_cluster)
 				end
+			end
+		end
+
+	eifgens_cluster: ?CONF_CLUSTER
+			-- Cluster added to universe target pointing to "Cluster" directory in "EIFGENs", Void if cluster
+			-- has not been added yet.
+		local
+			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+		do
+			l_clusters := universe.target.clusters
+			l_clusters.search ("internal_eifgen_cluster")
+			if l_clusters.found then
+				Result := l_clusters.found_item
 			end
 		end
 

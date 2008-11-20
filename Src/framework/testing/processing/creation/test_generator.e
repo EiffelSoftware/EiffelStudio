@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 					build_types_and_classes_under_test
 					error_handler.set_start_time (system_clock.date_time_now)
 				else
-					test_suite.propagate_error ("Not able to use workbench executable for interpreter", [], Current)
+					test_suite.propagate_error ("Unable to use workbench executable for interpreter", [], Current)
 					is_finished := True
 				end
 			end
@@ -316,7 +316,7 @@ feature {NONE} -- Interpreter generation
 			end
 
 				-- Melt system with interpreter as its new root.			
-			compile_project (interpreter_root_class_name, interpreter_root_feature_name)
+			compile_project
 			if system.eiffel_project.successful then
 				system.make_update (False)
 
@@ -331,21 +331,38 @@ feature {NONE} -- Interpreter generation
 			end
 		end
 
-	compile_project (a_root_class: STRING; a_root_feature: STRING) is
+	compile_project
 			-- Compile `a_project' with new `a_root_class' and `a_root_feature'.
-		require
-			a_root_class_attached: a_root_class /= Void
-			not_a_root_class_is_empty: not a_root_class.is_empty
-			a_root_feature_attached: a_root_feature /= Void
-			not_a_root_feature_is_empty: not a_root_feature.is_empty
+		local
+			l_dir: PROJECT_DIRECTORY
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_file_name: FILE_NAME
 		do
-			if not system.is_explicit_root (a_root_class, a_root_feature) then
-				system.add_explicit_root (Void, a_root_class, a_root_feature)
+				-- Create actual root class in EIFGENs cluster
+			l_dir := test_suite.eiffel_project.project_directory
+			create l_file_name.make_from_string (l_dir.eifgens_cluster_path)
+			l_file_name.set_file_name (interpreter_root_class_name.as_lower)
+			l_file_name.add_extension ("e")
+			create l_file.make (l_file_name)
+			if not l_file.exists then
+				test_suite.eiffel_project.system.system.force_rebuild
+			end
+			l_file.recursive_open_write
+			if l_file.is_open_write then
+				l_file.put_string ("class " + interpreter_root_class_name + "%N")
+				l_file.put_string ("inherit ITP_INTERPRETER%N")
+				l_file.put_string ("create execute end")
+				l_file.flush
+				l_file.close
+			end
+
+			if not system.is_explicit_root (interpreter_root_class_name, interpreter_root_feature_name) then
+				system.add_explicit_root (Void, interpreter_root_class_name, interpreter_root_feature_name)
 			end
 			if test_suite.eiffel_project_helper.can_compile then
 				test_suite.eiffel_project_helper.compile
 			end
-			system.remove_explicit_root (a_root_class, a_root_feature)
+			system.remove_explicit_root (interpreter_root_class_name, interpreter_root_feature_name)
 		end
 
 feature{NONE} -- Test case generation and execution
@@ -403,7 +420,7 @@ feature{NONE} -- Test case generation and execution
 				until
 					l_name_cur.after
 				loop
-					l_type := base_type (l_name_cur.item, interpreter_root_class)
+					l_type := base_type (l_name_cur.item)
 					if l_type /= Void then
 						if l_type.associated_class.is_generic then
 							if not {l_gen_type: GEN_TYPE_A} l_type then

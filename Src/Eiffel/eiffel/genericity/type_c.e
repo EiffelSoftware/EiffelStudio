@@ -232,7 +232,7 @@ feature -- C code generation
 		require
 			buffer_attached: buffer /= Void
 		do
-			buffer.put_string ("type = ")
+			buffer.put_string (once "type = ")
 			generate_sk_value (buffer)
 		end
 

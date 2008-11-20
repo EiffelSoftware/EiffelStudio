@@ -115,17 +115,52 @@ feature -- Element change
 			-- <Precursor>
 		local
 			l_stone: !CLASSI_STONE
+			l_list: LIST [CONF_CLUSTER]
+			l_cluster: CONF_CLUSTER
+			l_retried: BOOLEAN
 		do
-			internal_error := Void
-			internal_added_class := Void
-			manager.add_class_to_cluster (a_file_name, a_cluster, a_path)
-			if {l_class: like last_added_class} manager.last_added_class then
-				internal_added_class := l_class
-				create l_stone.make (internal_added_class)
-				window_manager.last_focused_development_window.advanced_set_stone (l_stone)
-			else
-				internal_error := locale_formatter.translation ("unknown error occurred")
+			if not l_retried then
+				internal_error := Void
+				internal_added_class := Void
+
+				l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
+
+				if manager.universe.conf_system.targets.has_item (a_cluster.target) and then
+				   l_cluster.target.clusters.has_item (a_cluster)
+				then
+					l_cluster := a_cluster
+				else
+
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						if l_list.item_for_iteration = a_cluster then
+							l_cluster := a_cluster
+						end
+						l_list.forth
+					end
+					if l_cluster = Void and then not l_list.is_empty then
+						l_cluster := l_list.first
+					end
+				end
+
+				if l_cluster /= Void then
+					manager.add_class_to_cluster (a_file_name, a_cluster, a_path)
+					if {l_class: like last_added_class} manager.last_added_class then
+						internal_added_class := l_class
+						create l_stone.make (internal_added_class)
+						window_manager.last_focused_development_window.advanced_set_stone (l_stone)
+					end
+				end
 			end
+			if internal_added_class = Void then
+				internal_error := locale_formatter.translation ("unable to add class to system")
+			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 	add_cluster (a_target: !CONF_TARGET; a_path: !STRING)
@@ -160,4 +195,35 @@ feature -- Basic operations
 			run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, l_params)
 		end
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

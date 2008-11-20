@@ -76,16 +76,20 @@ feature {NONE} -- Initialization
 			an_interpreter_log_filename_not_void: an_interpreter_log_filename /= Void
 			a_proxy_log_filename_not_void: a_proxy_log_filename /= Void
 			a_error_handler_not_void: a_error_handler /= Void
+			interpreter_root_class_attached: interpreter_root_class /= Void
 		local
-			l_root_class: like interpreter_root_class
+			l_itp_class: like interpreter_class
 		do
+			l_itp_class := interpreter_class
+
+
 			create variable_table.make (a_system)
 			create raw_response_analyzer
 			make_response_parser (a_system)
 
 				-- You can only do this after the compilation of the interpreter.
-			injected_feature_body_id := interpreter_root_class.feature_named (feature_name_for_byte_code_injection).real_body_id (interpreter_root_class.types.first)
-			injected_feature_pattern_id := interpreter_root_class.feature_named (feature_name_for_byte_code_injection).real_pattern_id (interpreter_root_class.types.first)
+			injected_feature_body_id := l_itp_class.feature_named (feature_name_for_byte_code_injection).real_body_id (l_itp_class.types.first)
+			injected_feature_pattern_id := l_itp_class.feature_named (feature_name_for_byte_code_injection).real_pattern_id (l_itp_class.types.first)
 
 				-- Setup request printers.
 			create socket_data_printer.make (system, variable_table)

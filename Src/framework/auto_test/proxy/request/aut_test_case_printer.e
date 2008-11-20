@@ -26,6 +26,8 @@ inherit
 
 	ITP_VARIABLE_CONSTANTS
 
+	ERL_G_TYPE_ROUTINES
+
 create
 
 	make,
@@ -64,6 +66,17 @@ feature -- Access
 	output_stream: KI_TEXT_OUTPUT_STREAM
 			-- Stream that printer writes to
 
+feature {NONE} -- Access
+
+	used_vars: ?DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+			-- Set of used variables: keys are variables, items are tuples of static type of variable
+			-- and a boolean flag showing if the static type should be checked against dynamic type
+			-- (is only the case for variables returned as results of function calls and those whose type
+			-- is left Void)
+
+	ot_counter: NATURAL
+			-- Counter vor object test locals
+
 feature -- Status setting
 
 	set_output_stream (an_output_stream: like output_stream) is
@@ -77,17 +90,73 @@ feature -- Status setting
 			output_stream_set: output_stream = an_output_stream
 		end
 
+feature {NONE} -- Query
+
+	variable_name (a_var: ITP_VARIABLE): STRING
+		do
+			Result := a_var.name (variable_name_prefix)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	variable_type_name (a_var: ITP_VARIABLE): STRING
+			-- Type name of `a_var'.
+		local
+			l_result: ?like variable_type_name
+		do
+			if used_vars /= Void then
+				used_vars.search (a_var)
+				if used_vars.found then
+					l_result := used_vars.found_item.name.twin
+				end
+			end
+			if l_result = Void then
+				Result := "ANY"
+			else
+				Result := l_result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	variable_type (a_var: ITP_VARIABLE): TYPE_A
+			-- Type of `a_var'.
+		local
+			l_result: ?like variable_type
+		do
+			if used_vars /= Void then
+				used_vars.search (a_var)
+				if used_vars.found then
+					l_result := used_vars.found_item.type
+					if l_result = Void then
+						l_result := base_type (used_vars.found_item.name)
+						used_vars.found_item.type := l_result
+					end
+				end
+			end
+			if l_result = Void then
+				Result := system.any_type
+			else
+				Result := l_result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Basic operations
 
-	print_test_case (a_request_list: DS_LINEAR [AUT_REQUEST]; a_var_list: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]) is
+	print_test_case (a_request_list: DS_LINEAR [AUT_REQUEST]; a_var_list: like used_vars)
 			-- Print the request list `a_list' as an Eiffel test case.
 		require
 			a_request_list_not_void: a_request_list /= Void
 			no_request_void: not a_request_list.has (Void)
 		local
 			cs: DS_LINEAR_CURSOR [AUT_REQUEST]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+			l_type: TYPE_A
 		do
 			used_vars := a_var_list
+			ot_counter := 1
 			print_header
 			indent
 			print_indentation
@@ -97,15 +166,22 @@ feature -- Basic operations
 			print_indentation
 			output_stream.put_line ("local")
 			indent
-			if a_var_list /= Void then
+			if used_vars /= Void then
+				l_cursor := used_vars.new_cursor
 				from
-					a_var_list.start
+					l_cursor.start
 				until
-					a_var_list.after
+					l_cursor.after
 				loop
+					l_type := variable_type (l_cursor.key)
 					print_indentation
-					output_stream.put_line (a_var_list.key_for_iteration.name (variable_name_prefix) + ": " + a_var_list.item_for_iteration.item (1).out)
-					a_var_list.forth
+					if l_type = none_type then
+						output_stream.put_string ("-- ")
+					end
+					output_stream.put_string (variable_name (l_cursor.key))
+					output_stream.put_string (": ")
+					output_stream.put_line (variable_type_name (l_cursor.key))
+					l_cursor.forth
 				end
 			else
 				print_indentation
@@ -130,6 +206,7 @@ feature -- Basic operations
 			dedent
 			dedent
 			output_stream.put_new_line
+			used_vars := Void
 		end
 
 feature {AUT_REQUEST} -- Processing
@@ -161,30 +238,78 @@ feature {AUT_REQUEST} -- Processing
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
 		do
-			print_indentation
+
 			if a_request.is_feature_query then
-				output_stream.put_string (a_request.receiver.name (variable_name_prefix))
-				output_stream.put_character (' ')
-				output_stream.put_character (':')
-				output_stream.put_character ('=')
-				output_stream.put_character (' ')
+				output_stream.put_new_line
+				print_indentation
+				output_stream.put_string ("if {l_ot")
+				output_stream.put_integer (ot_counter.to_integer_32)
+				output_stream.put_string (": ")
+				output_stream.put_string (variable_type_name (a_request.receiver))
+				output_stream.put_string ("} ")
+			else
+				print_indentation
 			end
-			output_stream.put_string (a_request.target.name (variable_name_prefix))
+			output_stream.put_string (variable_name (a_request.target))
 			output_stream.put_string (".")
 			output_stream.put_string (a_request.feature_name)
 			print_argument_list (a_request.argument_list)
+			if a_request.is_feature_query then
+				output_stream.put_line (" then")
+				indent
+				print_indentation
+				output_stream.put_string (variable_name (a_request.receiver))
+				output_stream.put_string (" := l_ot")
+				output_stream.put_integer (ot_counter.to_integer_32)
+				output_stream.put_new_line
+				dedent
+				print_indentation
+				output_stream.put_line ("end")
+				ot_counter := ot_counter + 1
+			end
 			output_stream.put_new_line
 		end
 
 	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+		local
+			l_use_ot: BOOLEAN
+			l_type: TYPE_A
 		do
-			print_indentation
-			output_stream.put_string (a_request.receiver.name (variable_name_prefix))
-			output_stream.put_character (' ')
-			output_stream.put_character (':')
-			output_stream.put_character ('=')
-			output_stream.put_character (' ')
+			l_type := variable_type (a_request.receiver)
+			if l_type = none_type then
+				print_indentation
+				output_stream.put_string ("-- ")
+			else
+				if {l_var: ITP_VARIABLE} a_request.expression then
+					l_use_ot := not l_type.conform_to (variable_type (l_var))
+					output_stream.put_new_line
+				end
+				print_indentation
+			end
+			if l_use_ot then
+				output_stream.put_string ("if {l_ot")
+				output_stream.put_integer (ot_counter.to_integer_32)
+				output_stream.put_string (": ")
+				output_stream.put_string (variable_type_name (a_request.receiver))
+				output_stream.put_string ("} ")
+			else
+				output_stream.put_string (variable_name (a_request.receiver))
+				output_stream.put_string (" := ")
+			end
 			a_request.expression.process (expression_printer)
+			if l_use_ot then
+				output_stream.put_line (" then")
+				indent
+				print_indentation
+				output_stream.put_string (variable_name (a_request.receiver))
+				output_stream.put_string (" := l_ot")
+				output_stream.put_integer (ot_counter.to_integer_32)
+				output_stream.put_new_line
+				dedent
+				print_indentation
+				output_stream.put_string ("end")
+				ot_counter := ot_counter + 1
+			end
 			output_stream.put_new_line
 		end
 
@@ -220,7 +345,7 @@ feature {NONE} -- Printing
 					cs.off
 				loop
 					l_var ?= cs.item
-					if used_vars /= Void and then l_var /= Void and then used_vars.item (l_var) /= Void and then used_vars.item (l_var).item (1).is_equal (none_type_name) then
+					if variable_type (l_var) = none_type then
 							-- Replace variables whose type is NONE by Void
 						output_stream.put_string ("Void")
 					else
@@ -292,9 +417,6 @@ feature {NONE} -- Implementation
 
 	expression_printer: AUT_EXPRESSION_PRINTER
 			-- Expression printer
-
-	used_vars: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]
-			-- Variables used in the instructions of the test case, with their types names recorded as strings
 
 invariant
 

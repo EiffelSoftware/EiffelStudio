@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	ERL_G_TYPE_ROUTINES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -196,7 +201,7 @@ feature {NONE} -- Implementation
 	finish_slice (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR)
 		local
 			file: KL_TEXT_OUTPUT_FILE
-			last_all_used_vars: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]
+			last_all_used_vars: like all_used_vars
 			sliced_witness: AUT_WITNESS
 			response_printer: AUT_RESPONSE_LOG_PRINTER
 		do
@@ -290,7 +295,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE] is
+	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			-- All variables used in the request list `a_req_list' with the names of their types
 		require
 			a_req_list_not_void: a_req_list /= Void
@@ -299,6 +304,7 @@ feature {NONE} -- Implementation
 			request: AUT_REQUEST
 			i: INTEGER
 			l_type_name: STRING
+			l_type: TYPE_A
 		do
 			from
 				create all_used_vars_updater.make (system)
@@ -316,26 +322,33 @@ feature {NONE} -- Implementation
 			until
 				Result.after
 			loop
-				if Result.item_for_iteration.item (1) = Void or Result.item_for_iteration.item (2).is_equal (True) then
+				if Result.item_for_iteration.name = Void or Result.item_for_iteration.check_dyn_type then
 					if interpreter.variable_table.is_variable_defined (Result.key_for_iteration) then
-						if interpreter.variable_table.variable_type (Result.key_for_iteration) /= Void then
-							l_type_name := type_name_with_context (interpreter.variable_table.variable_type (Result.key_for_iteration), interpreter.interpreter_root_class, Void)
+						l_type := interpreter.variable_table.variable_type (Result.key_for_iteration)
+						if l_type /= Void then
+							l_type_name := type_name_with_context (l_type, interpreter.interpreter_root_class, Void)
 						else
 							interpreter.retrieve_type_of_variable (Result.key_for_iteration)
-							if interpreter.variable_table.variable_type (Result.key_for_iteration) = Void then
+							l_type := interpreter.variable_table.variable_type (Result.key_for_iteration)
+							if l_type = Void then
+								l_type := none_type
 								l_type_name := none_type_name
 							else
-								l_type_name := type_name_with_context (interpreter.variable_table.variable_type (Result.key_for_iteration), interpreter.interpreter_root_class, Void)
+								l_type_name := type_name_with_context (l_type, interpreter.interpreter_root_class, Void)
 							end
 						end
 					else
+						l_type := none_type
 						l_type_name := none_type_name
 					end
-					if Result.item_for_iteration.item (1) /= Void and Result.item_for_iteration.item (2).is_equal (True) and
-						l_type_name.is_equal (none_type_name) then
+					if
+						Result.item_for_iteration.name /= Void and
+						Result.item_for_iteration.check_dyn_type and
+						l_type_name.is_equal (none_type_name)
+					then
 							-- Do nothing.
 					else
-						Result.force ([l_type_name, False], Result.key_for_iteration)
+						Result.force ([l_type, l_type_name, False], Result.key_for_iteration)
 					end
 				end
 				Result.forth

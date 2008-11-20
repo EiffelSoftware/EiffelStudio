@@ -31,13 +31,11 @@ feature {NONE} -- Initialization
 			system := a_system
 			create variables.make_default
 			variables.set_key_equality_tester (create {AUT_VARIABLE_EQUALITY_TESTER}.make)
-		ensure
-			variables_not_void: variables /= Void
 		end
 
 feature -- Access
 
-	variables: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]
+	variables: DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
@@ -59,9 +57,14 @@ feature{AUT_REQUEST} -- Processing
 		end
 
 	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+		local
+			l_type: TYPE_A
+			l_name: STRING
 		do
 			if not variables.has (a_request.target) then
-				variables.force ([type_name_with_context (a_request.target_type, interpreter_root_class, Void), False], a_request.target.deep_twin)
+				l_type := a_request.target_type
+				l_name := type_name_with_context (l_type, interpreter_root_class, Void)
+				variables.force ([l_type, l_name, False], a_request.target.deep_twin)
 			end
 			if a_request.argument_list /= Void then
 				process_argument_list (a_request.argument_list)
@@ -69,16 +72,18 @@ feature{AUT_REQUEST} -- Processing
 		end
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+		local
+			l_type: TYPE_A
+			l_name: STRING
 		do
 			if a_request.receiver /= Void and then not variables.has (a_request.receiver) then
-				variables.force (
-					[type_name_with_context (
-						a_request.feature_to_call.type.actual_type.instantiation_in (a_request.target_type, a_request.feature_to_call.written_in),
-						interpreter_root_class, Void),
-						True],
-					a_request.receiver.deep_twin)
+				l_type := a_request.feature_to_call.type.actual_type.instantiation_in (a_request.target_type, a_request.feature_to_call.written_in)
+				l_name := type_name_with_context (l_type, interpreter_root_class, Void)
+				variables.force ([l_type, l_name, True], a_request.receiver.deep_twin)
 			end
-			variables.force ([type_name_with_context (a_request.target_type, interpreter_root_class, Void), False], a_request.target.deep_twin)
+			l_type := a_request.target_type
+			l_name := type_name_with_context (l_type, interpreter_root_class, Void)
+			variables.force ([l_type, l_name, False], a_request.target.deep_twin)
 			process_argument_list (a_request.argument_list)
 		end
 
@@ -87,23 +92,27 @@ feature{AUT_REQUEST} -- Processing
 			variable: ITP_VARIABLE
 		do
 			if not variables.has (a_request.receiver) then
-				variables.force ([Void, True], a_request.receiver.deep_twin)
+				variables.force ([Void, Void, True], a_request.receiver.deep_twin)
 			end
 			variable ?= a_request.expression
 			if variable /= Void then
-				variables.force ([Void, True], variable.deep_twin)
+				variables.force ([Void, Void, True], variable.deep_twin)
 			end
 		end
 
 	process_type_request (a_request: AUT_TYPE_REQUEST) is
 		local
 			norm_response: AUT_NORMAL_RESPONSE
+			l_name: STRING
 		do
 			-- Do nothing.
 			if variables.has (a_request.variable) then
 				norm_response ?= a_request.response
 				if norm_response /= Void then
-					variables.force ([norm_response.text, False], a_request.variable)
+					l_name := norm_response.text.twin
+					l_name.right_adjust
+					l_name.left_adjust
+					variables.force ([Void, l_name, False], a_request.variable)
 				end
 			end
 		end
@@ -125,7 +134,7 @@ feature{AUT_REQUEST} -- Processing
 			loop
 				variable ?= cs.item
 				if variable /= Void and then not variables.has (variable) then
-					variables.force ([Void, True], variable.deep_twin)
+					variables.force ([Void, Void, True], variable.deep_twin)
 				end
 				cs.forth
 			end

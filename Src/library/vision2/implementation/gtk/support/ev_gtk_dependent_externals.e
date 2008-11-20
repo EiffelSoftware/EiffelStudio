@@ -1970,13 +1970,6 @@ feature -- Externals
 			"gtk_tree_view_column_add_attribute ((GtkTreeViewColumn*) $a_tree_view_column, (GtkCellRenderer*) $a_cell_renderer, (gchar*) $a_attribute, (gint) $a_column)"
 		end
 
-	frozen gtk_tree_view_column_new_with_attributes (a_title, a_cell_renderer: POINTER; a_column: INTEGER): POINTER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gtk_tree_view_column_new_with_attributes ((gchar*) $a_title, (GtkCellRenderer*) $a_cell_renderer, %"text%", (int) $a_column)"
-		end
-
 	frozen gtk_cell_renderer_text_new: POINTER is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -51,7 +51,7 @@ feature -- Status setting
 			put_class_header
 		end
 
-	print_test_routine (a_request_list: !DS_LINEAR [AUT_REQUEST]; a_var_list: !DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE])
+	print_test_routine (a_request_list: !DS_LINEAR [AUT_REQUEST]; a_var_list: !DS_HASH_TABLE [TUPLE [TYPE_A, STRING, BOOLEAN], ITP_VARIABLE])
 			-- Print test routine for given request list and variable list.
 		require
 			writing: is_writing

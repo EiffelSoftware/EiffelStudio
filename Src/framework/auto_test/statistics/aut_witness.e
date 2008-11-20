@@ -101,15 +101,18 @@ feature -- Access
 			end
 		end
 
-	set_used_vars (a_used_vars: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE])
+	set_used_vars (a_used_vars: like used_vars)
 		do
 			used_vars := a_used_vars
 		ensure
 			used_vars_set: used_vars = a_used_vars
 		end
 
-	used_vars: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN], ITP_VARIABLE]
-			-- Variables involved in the requests contained in the witness
+	used_vars: DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+			-- Set of used variables: keys are variables, items are tuples of static type of variable
+			-- and a boolean flag showing if the static type should be checked against dynamic type
+			-- (is only the case for variables returned as results of function calls and those whose type
+			-- is left Void)
 
 feature -- Deltas
 

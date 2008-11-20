@@ -143,7 +143,7 @@ feature {NONE} -- Parsing class types
 			l_type_as: TYPE_AS
 		do
 			if a_name.is_case_insensitive_equal ("NONE") then
-				create {NONE_A} Result
+				Result := none_type
 			else
 					-- Parse `a_name' into a type AST node.
 				type_parser.parse_from_string ("type " + a_name)

@@ -103,9 +103,9 @@ feature -- Execution
 			end
 			if is_interpreter_started_by_default then
 				interpreter.start
+				has_error := interpreter.is_ready
 			end
 			request_list_cursor.start
-			has_error := interpreter.is_ready
 		end
 
 	step is
@@ -114,7 +114,7 @@ feature -- Execution
 --				interpreter.start
 ----				assign_void
 --			end
-			has_error := not interpreter.is_ready
+			has_error := interpreter.is_launched and then not interpreter.is_ready
 			if not has_error then
 				request_list_cursor.item.process (Current)
 				request_list_cursor.forth

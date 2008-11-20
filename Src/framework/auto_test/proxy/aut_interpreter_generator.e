@@ -85,6 +85,7 @@ feature -- Generation
 			file_system.recursive_create_directory (a_log_dirname)
 			executable_filename := system.eiffel_system.application_name (True)
 
+			compute_interpreter_root_class
 			if file_system.file_exists (executable_filename) and interpreter_root_class /= Void then
 				create last_interpreter.make (
 					executable_filename,

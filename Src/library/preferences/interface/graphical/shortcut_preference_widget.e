@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_preference
@@ -107,10 +112,21 @@ feature {NONE} -- Implementation
 		do
 			l_preference ?= preference
 			create change_item_widget
-			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.deactivate_actions.extend (agent refresh)
+			change_item_widget.deactivate_actions.extend (agent on_change_item_widget_deactivated)
 			change_item_widget.set_text (l_preference.display_string)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
+		end
+
+	on_change_item_widget_deactivated is
+			-- Triggered when `change_item_widget' is deactivated
+		do
+			--| We need to use idle action, otherwise the current active grid item
+			--| is destroyed or replaced or invalidated too early
+			--| need to investigate deeper the EV_GRID behavior
+			ev_application.add_idle_action_kamikaze (agent do
+					update_changes
+					refresh
+				end)
 		end
 
 	activate is

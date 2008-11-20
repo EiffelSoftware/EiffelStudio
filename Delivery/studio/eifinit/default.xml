@@ -9,6 +9,8 @@
 	<PREF NAME="debugger.delay_before_cleaning_objects_grid" DESCRIPTION="Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.display_agent_details" DESCRIPTION="Should the info about the agent object be displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
+	<PREF NAME="debugger.shortcuts.move_up_watch_expression" DESCRIPTION="."><SHORTCUT ctrl="False" Alt="True" Shift="True">Up</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.move_down_watch_expression" DESCRIPTION="."><SHORTCUT ctrl="False" Alt="True" Shift="True">Down</SHORTCUT></PREF>
 	<PREF NAME="debugger.colors.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.grid_background_color" DESCRIPTION="Background color for the grids of the debugger's tools (default is white)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.grid_foreground_color" DESCRIPTION="Foreground color (i.e: text color) for the grids of the debugger's tools (default is black)."><COLOR>0;0;0</COLOR></PREF>

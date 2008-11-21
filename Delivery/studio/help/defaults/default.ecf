@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="$system_name" uuid="$uuid">
 	<target name="$system_name">
 		<root feature="$root_class_feature" class="$root_class_name"/>
-		<option warning="true">
+		<option warning="true" syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>

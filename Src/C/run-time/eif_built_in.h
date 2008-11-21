@@ -63,6 +63,9 @@ extern "C" {
 #define eif_builtin_ARGUMENTS_argument(some,i)			arg_option(i)
 #define eif_builtin_ARGUMENTS_argument_count(some)		(arg_number() - 1)
 
+/* TUPLE class */
+#define eif_builtin_TUPLE_count(area)						(sp_count (area) - 1) /* - 1 because first argument is for object_comparison */
+
 /* SPECIAL class */
 #define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
 #define eif_builtin_SPECIAL_count(area)						sp_count (area)

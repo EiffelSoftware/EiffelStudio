@@ -221,22 +221,23 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			-- <Precursor>
 		require else
 			locating: is_locating
-		local
-			l_ht: HASH_TABLE [CONF_CLASS, STRING]
 		do
+				-- TODO: make this a user preference whether to look search in all clusters for tests or only
+				--       test clusters.
 			if has_tests_cluster_parent (a_cluster) then
-				l_ht := a_cluster.classes
-				from
-					l_ht.start
-				until
-					l_ht.after
-				loop
-					if {l_class: !EIFFEL_CLASS_I} l_ht.item_for_iteration then
-						if not l_class.is_compiled then
-							report_potential_test_class (l_class)
+				if {l_ht: HASH_TABLE [CONF_CLASS, STRING]} a_cluster.classes then
+					from
+						l_ht.start
+					until
+						l_ht.after
+					loop
+						if {l_class: !EIFFEL_CLASS_I} l_ht.item_for_iteration then
+							if not l_class.is_compiled then
+								report_potential_test_class (l_class)
+							end
 						end
+						l_ht.forth
 					end
-					l_ht.forth
 				end
 			end
 		end

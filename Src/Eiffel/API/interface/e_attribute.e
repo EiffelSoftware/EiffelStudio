@@ -13,7 +13,7 @@ inherit
 	E_FEATURE
 		redefine
 			assigner_name, is_attribute, type,
-			is_attribute_with_body, locals
+			is_attribute_with_body, locals, object_test_locals
 		end
 
 create
@@ -38,30 +38,42 @@ feature -- Access
 	locals: EIFFEL_LIST [TYPE_DEC_AS] is
 		local
 			routine_as: ROUTINE_AS
-			feature_as: FEATURE_AS
-			built_in_as: BUILT_IN_AS
+		do
+			routine_as := associated_routine_as
+			if routine_as /= Void then
+				Result := routine_as.locals
+			end
+		end
+
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
+			-- Object test locals mentioned in the routine
+		local
+			routine_as: ROUTINE_AS
+		do
+			routine_as := associated_routine_as
+			if routine_as /= Void then
+				Result := routine_as.object_test_locals
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	associated_routine_as: ROUTINE_AS is
+			-- Associated routine as used to find out locals and object test locals
 		do
 			if body_index > 0 then
-				feature_as := Body_server.item (body_index)
-				if feature_as /= Void then
+				if {feat_as: FEATURE_AS} Body_server.item (body_index) then
 						--| feature_as can be Void for invariant routine
-					routine_as ?= feature_as.body.content
+					Result ?= feat_as.body.content
 				end
 			end
-			if routine_as /= Void then
-				if routine_as.is_built_in then
-					built_in_as ?= routine_as.routine_body
-					if built_in_as /= Void then
-						feature_as := built_in_as.body
-						if feature_as /= Void then
-							routine_as ?= feature_as.body.content
-							if routine_as /= Void then
-								Result := routine_as.locals
-							end
+			if Result /= Void then
+				if Result.is_built_in then
+					if {built_in_as: BUILT_IN_AS} Result.routine_body then
+						if {feature_as: FEATURE_AS} built_in_as.body then
+							Result ?= feature_as.body.content
 						end
 					end
-				else
-					Result := routine_as.locals
 				end
 			end
 		end

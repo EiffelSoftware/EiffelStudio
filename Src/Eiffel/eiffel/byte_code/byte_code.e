@@ -597,8 +597,8 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code
+	make_byte_code (ba: BYTE_ARRAY)
+			-- Generate byte code.
 		require else
 			not_external: not is_external
 			valid_class_type: Context.class_type /= Void
@@ -609,6 +609,10 @@ feature -- Byte code generation
 			bit_i: BITS_A
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
+			r_id: INTEGER
+			rout_info: ROUT_INFO
+			current_type: CLASS_TYPE
+			create_info: CREATE_FEAT
 		do
 			local_list := context.local_list
 			local_list.wipe_out
@@ -661,6 +665,44 @@ feature -- Byte code generation
 				ba.append ('%U')
 			end
 
+			if feat.is_attribute then
+					-- Access to attribute:
+					-- if <attribute> /= Void or else not <result type>.is_attached then
+					--    Result := <attribute>
+					-- else
+					--    <attribute body>
+					--    <attribute> := Result
+					-- end
+				ba.append (Bc_current)
+				r_id := feat.rout_id_set.first
+				current_type := context.class_type
+				if current_type.associated_class.is_precompiled then
+					rout_info := System.rout_info_table.item (r_id)
+					ba.append (Bc_pattribute)
+					ba.append_integer (rout_info.origin)
+					ba.append_integer (rout_info.offset)
+				else
+					ba.append (Bc_attribute)
+						-- Feature id
+					ba.append_integer (feat.feature_id)
+						-- Static type
+					ba.append_short_integer (current_type.static_type_id - 1)
+				end
+					-- Attribute meta-type
+				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append (bc_void)
+				ba.append (bc_eq)
+				ba.append (bc_jmp_f)
+				ba.mark_forward3
+				if not l_type.is_attached then
+					ba.append (bc_is_attached)
+					create create_info.make (feat.feature_id, r_id)
+					create_info.make_byte_code (ba)
+					ba.append (bc_jmp_f)
+					ba.mark_forward3
+				end
+			end
+
 				-- Record retry offset
 			ba.mark_retry
 
@@ -682,6 +724,48 @@ feature -- Byte code generation
 
 				-- Generate the hook corresponding to the final end.
 			generate_melted_end_debugger_hook (ba)
+
+			if feat.is_attribute then
+				ba.append (bc_result)
+				if current_type.associated_class.is_precompiled then
+					ba.append (bc_passign)
+					ba.append_integer (rout_info.origin)
+					ba.append_integer (rout_info.offset)
+				else
+					ba.append (bc_assign)
+						-- Feature id
+					ba.append_integer (feat.feature_id)
+						-- Static type
+					ba.append_short_integer (current_type.static_type_id - 1)
+				end
+					-- Attribute meta-type
+				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append (bc_jmp)
+				ba.mark_forward
+				if create_info /= Void then
+					ba.write_forward3
+				end
+				ba.write_forward3
+					-- Access to attribute; Result := <attribute access>
+				ba.append (Bc_current)
+				if rout_info /= Void then
+					ba.append (Bc_pattribute)
+					ba.append_integer (rout_info.origin)
+					ba.append_integer (rout_info.offset)
+				else
+					ba.append (Bc_attribute)
+						-- Feature id
+					ba.append_integer (feat.feature_id)
+						-- Static type
+					ba.append_short_integer (current_type.static_type_id - 1)
+				end
+					-- Attribute meta-type
+				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append (Bc_rassign)
+				ba.write_forward
+			end
+
+				-- End mark
 			ba.append (Bc_null)
 
 			from

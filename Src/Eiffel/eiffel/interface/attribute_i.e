@@ -474,60 +474,73 @@ feature -- Element Change
 			r_id: INTEGER
 			rout_info: ROUT_INFO
 			l_byte_context: like byte_context
+			tmp_body_index: like body_index
+			byte_code: BYTE_CODE
 		do
 			l_byte_context := byte_context
 			ba := Byte_array
 			ba.clear
 
-				-- Once mark
-			ba.append ('%U')
-				-- Start	
-			ba.append (Bc_start)
-				-- Routine id
-			ba.append_integer (rout_id_set.first)
-				-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
-			ba.append_integer (-1)
-				-- Meta-type of Result
-			result_type := l_byte_context.real_type (type)
-			ba.append_integer (result_type.sk_value (l_byte_context.context_class_type.type))
-				-- Argument count
-			ba.append_short_integer (0)
-				-- Local count
-			ba.append_short_integer (0)
-				-- Precise result type (if required)
-			if result_type.is_true_expanded and then not result_type.is_bit then
-					-- Generate full type info.
-				type.make_full_type_byte_code (ba, l_byte_context.context_class_type.type)
-			end
-				-- Feature name
-			ba.append_raw_string (feature_name)
-				-- Type where the feature is written in
 			current_type := l_byte_context.class_type
-			ba.append_short_integer (current_type.type_id - 1)
-
-				-- No rescue
-			ba.append ('%U')
-				-- Access to attribute; Result := <attribute access>
-			ba.append (Bc_current)
-			if current_type.associated_class.is_precompiled then
-				r_id := rout_id_set.first
-				rout_info := System.rout_info_table.item (r_id)
-				ba.append (Bc_pattribute)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
+			result_type := type.adapted_in (exec.class_type)
+			if not result_type.is_expanded and then has_body then
+				tmp_body_index := body_index
+				byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
+				if byte_code = Void then
+					byte_code := byte_server.disk_item (tmp_body_index)
+				end
+				l_byte_context.set_byte_code (byte_code)
+				l_byte_context.set_current_feature (Current)
+				byte_code.make_byte_code (ba)
 			else
-				ba.append (Bc_attribute)
-					-- Feature id
-				ba.append_integer (feature_id)
-					-- Static type
-				ba.append_short_integer (current_type.static_type_id - 1)
-			end
-				-- Attribute meta-type
-			ba.append_uint32_integer (result_type.sk_value (l_byte_context.context_class_type.type))
-			ba.append (Bc_rassign)
+					-- Once mark
+				ba.append ('%U')
+					-- Start	
+				ba.append (Bc_start)
+					-- Routine id
+				ba.append_integer (rout_id_set.first)
+					-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
+				ba.append_integer (-1)
+					-- Meta-type of Result
+				result_type := l_byte_context.real_type (type)
+				ba.append_integer (result_type.sk_value (l_byte_context.context_class_type.type))
+					-- Argument count
+				ba.append_short_integer (0)
+					-- Local count
+				ba.append_short_integer (0)
+					-- Precise result type (if required)
+				if result_type.is_true_expanded and then not result_type.is_bit then
+						-- Generate full type info.
+					type.make_full_type_byte_code (ba, l_byte_context.context_class_type.type)
+				end
+					-- Feature name
+				ba.append_raw_string (feature_name)
+					-- Type where the feature is written in
+				ba.append_short_integer (current_type.type_id - 1)
 
-				-- End mark
-			ba.append (Bc_null)
+					-- No rescue
+				ba.append ('%U')
+					-- Access to attribute; Result := <attribute access>
+				ba.append (Bc_current)
+				if current_type.associated_class.is_precompiled then
+					r_id := rout_id_set.first
+					rout_info := System.rout_info_table.item (r_id)
+					ba.append (Bc_pattribute)
+					ba.append_integer (rout_info.origin)
+					ba.append_integer (rout_info.offset)
+				else
+					ba.append (Bc_attribute)
+						-- Feature id
+					ba.append_integer (feature_id)
+						-- Static type
+					ba.append_short_integer (current_type.static_type_id - 1)
+				end
+					-- Attribute meta-type
+				ba.append_uint32_integer (result_type.sk_value (l_byte_context.context_class_type.type))
+				ba.append (Bc_rassign)
+					-- End mark
+				ba.append (Bc_null)
+			end
 
 			melted_feature := ba.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)

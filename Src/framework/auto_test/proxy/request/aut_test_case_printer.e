@@ -106,7 +106,7 @@ feature {NONE} -- Query
 		do
 			if used_vars /= Void then
 				used_vars.search (a_var)
-				if used_vars.found then
+				if used_vars.found and then used_vars.found_item.type /= none_type then
 					l_result := used_vars.found_item.name.twin
 				end
 			end
@@ -123,13 +123,19 @@ feature {NONE} -- Query
 			-- Type of `a_var'.
 		local
 			l_result: ?like variable_type
+			l_name: STRING
 		do
 			if used_vars /= Void then
 				used_vars.search (a_var)
 				if used_vars.found then
 					l_result := used_vars.found_item.type
 					if l_result = Void then
-						l_result := base_type (used_vars.found_item.name)
+						l_name := used_vars.found_item.name
+						if l_name.is_equal (none_type_name) then
+							l_result := none_type
+						else
+							l_result := base_type (l_name)
+						end
 						used_vars.found_item.type := l_result
 					end
 				end
@@ -175,12 +181,13 @@ feature -- Basic operations
 				loop
 					l_type := variable_type (l_cursor.key)
 					print_indentation
-					if l_type = none_type then
-						output_stream.put_string ("-- ")
-					end
 					output_stream.put_string (variable_name (l_cursor.key))
 					output_stream.put_string (": ")
-					output_stream.put_line (variable_type_name (l_cursor.key))
+					output_stream.put_string (variable_type_name (l_cursor.key))
+					if l_type = none_type then
+						output_stream.put_string (" -- Placeholder for queries returning Void")
+					end
+					output_stream.put_new_line
 					l_cursor.forth
 				end
 			else
@@ -238,17 +245,13 @@ feature {AUT_REQUEST} -- Processing
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
 		do
-
+			print_indentation
 			if a_request.is_feature_query then
-				output_stream.put_new_line
-				print_indentation
 				output_stream.put_string ("if {l_ot")
 				output_stream.put_integer (ot_counter.to_integer_32)
 				output_stream.put_string (": ")
 				output_stream.put_string (variable_type_name (a_request.receiver))
 				output_stream.put_string ("} ")
-			else
-				print_indentation
 			end
 			output_stream.put_string (variable_name (a_request.target))
 			output_stream.put_string (".")
@@ -264,7 +267,7 @@ feature {AUT_REQUEST} -- Processing
 				output_stream.put_new_line
 				dedent
 				print_indentation
-				output_stream.put_line ("end")
+				output_stream.put_string ("end")
 				ot_counter := ot_counter + 1
 			end
 			output_stream.put_new_line
@@ -276,16 +279,12 @@ feature {AUT_REQUEST} -- Processing
 			l_type: TYPE_A
 		do
 			l_type := variable_type (a_request.receiver)
-			if l_type = none_type then
-				print_indentation
-				output_stream.put_string ("-- ")
-			else
+			if l_type /= none_type then
 				if {l_var: ITP_VARIABLE} a_request.expression then
-					l_use_ot := not l_type.conform_to (variable_type (l_var))
-					output_stream.put_new_line
+					l_use_ot := not variable_type (l_var).conform_to (l_type)
 				end
-				print_indentation
 			end
+			print_indentation
 			if l_use_ot then
 				output_stream.put_string ("if {l_ot")
 				output_stream.put_integer (ot_counter.to_integer_32)

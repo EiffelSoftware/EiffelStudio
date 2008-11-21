@@ -1692,7 +1692,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_IS_ATTACHED\n");
 #endif
-		type = get_creation_type (1);
+		type = get_creation_type (0);
 		last = iget();
 		last->type = SK_BOOL;
 

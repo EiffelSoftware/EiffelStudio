@@ -91,7 +91,7 @@ feature {NONE} -- Basic operations
 			l_process.launch
 
 				-- Wait for an exit, but not infinitly because a new process may be blocking.
-			l_process.wait_for_exit_with_timeout (100)
+			l_process.wait_for_exit_with_timeout (1000)
 			Result := l_process.is_running or else l_process.exit_code = 0
 		end
 

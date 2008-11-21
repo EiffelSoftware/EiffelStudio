@@ -269,7 +269,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 /* Macros used for variable initialization:
  * RTAT(x)  true if type 'x' is attached
  */
-#define RTAT(x) (0)
+#define RTAT(x) (eif_is_attached_type(x))
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses

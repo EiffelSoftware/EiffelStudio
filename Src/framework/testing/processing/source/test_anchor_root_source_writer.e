@@ -59,9 +59,12 @@ feature {NONE} -- Implementation
 			stream.put_line ("do")
 			stream.indent
 			stream.indent
-			stream.put_line ("-- First prevents warning message about unused local if no test class exists")
+			stream.put_line ("-- Make sure commonly used classes in testing library which take long to compile are always referenced and compiled ")
 			stream.dedent
-			stream.put_line ("l_type := {ANY}")
+			stream.put_line ("l_type := {"+ ({EQA_EVALUATOR}).generating_type +"}")
+			stream.put_line ("l_type := {"+ ({ITP_INTERPRETER}).generating_type +"}")
+			stream.put_line ("l_type := {"+ ({EQA_EXTRACTED_TEST_SET}).generating_type +"}")
+			stream.put_line ("l_type := {"+ ({EQA_COMMONLY_USED_ASSERTIONS}).generating_type +"}")
 			stream.put_line ("")
 			a_list.do_all (agent (a_class: !EIFFEL_CLASS_I)
 				do

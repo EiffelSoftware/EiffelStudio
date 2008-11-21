@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			l_hb: EV_HORIZONTAL_BOX
 		do
 			create l_hb
+			l_hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label
 			if wizard_information.is_generated_test_class then
 				l_label.set_text (locale_formatter.translation (l_class_name_prefix))
@@ -272,7 +273,11 @@ feature {NONE} -- Events
 				wizard_information.new_class_name_cache := l_name
 				if not l_name.is_empty then
 					if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-						class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
+						if wizard_information.is_generated_test_class then
+							class_name_validator.validate_class_name (l_name)
+						else
+							class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
+						end
 						if class_name_validator.is_valid then
 							if is_cluster_valid and not wizard_information.is_generated_test_class then
 								l_path := wizard_information.cluster.location.build_path (wizard_information.path, l_name.as_lower)
@@ -432,4 +437,35 @@ feature {NONE} -- Constants
 invariant
 	cluster_valid_implies_attached: is_cluster_valid implies (wizard_information.cluster_cache /= Void and
 		wizard_information.path_cache /= Void)
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

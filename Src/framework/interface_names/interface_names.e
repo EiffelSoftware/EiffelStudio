@@ -395,12 +395,12 @@ feature -- Accelerator, focus label and menu name
 	f_Create_new_precompile: STRING_32 is 	do Result := locale.translation("Add a precompile")	end
 	f_Create_new_class: STRING_32 is		do Result := locale.translation("Create a new class")	end
 	f_Create_new_feature: STRING_32 is		do Result := locale.translation("Create a new feature")	end
-	f_create_new_watch: STRING_32 is		do Result := locale.translation ("Create new watch") end
-	f_clear_watch_tool_expressions: STRING_32 is	do Result := locale.translation ("Clear expressions") end
-	f_copy_watch_tool_expressions_to_clipboard: STRING_32 is	do Result := locale.translation ("Copy expressions to clipboard") end
+	f_create_new_watch: STRING_32 is		do Result := locale.translation ("Create New watch") end
+	f_clear_watch_tool_expressions: STRING_32 is	do Result := locale.translation ("Clear Expressions") end
+	f_copy_watch_tool_expressions_to_clipboard: STRING_32 is	do Result := locale.translation ("Copy Expressions To Clipboard") end
 
-	f_save_watch_tool_expressions_to_file: STRING_32 is	do Result := locale.translation ("Save expressions to file") end
-	f_import_watch_tool_expressions_from_file: STRING_32 is	do Result := locale.translation ("Import expressions from file") end
+	f_export_watch_tool_expressions_to_file: STRING_32 is	do Result := locale.translation ("Export Expressions To File") end
+	f_import_watch_tool_expressions_from_file: STRING_32 is	do Result := locale.translation ("Import Expressions From File") end
 
 	m_Dbg_assertion_checking_disable: STRING_32 is	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_32 is	do Result := locale.translation("Restore Assertion Checking")	end

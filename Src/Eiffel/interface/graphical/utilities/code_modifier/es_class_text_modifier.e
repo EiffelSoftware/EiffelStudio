@@ -306,7 +306,6 @@ feature -- Basic operations
 			l_editor: EB_SMART_EDITOR
 			l_recent_editor: EB_SMART_EDITOR
 			l_text: SMART_TEXT
-			l_editor_text: STRING_32
 			l_new_text: ?STRING_32
 			l_first_line: INTEGER
 			l_line: INTEGER

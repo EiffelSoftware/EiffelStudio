@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			failed := False
 			if host.item (1) = '[' then
 				if host.count > 2 and then host.item(host.count) = ']' then
-					host := host.substring (2, host.count)
+					host := host.substring (2, host.count - 1)
 					ipv6_expected := True;
 	    			else
 					-- This was supposed to be a IPv6 address, but it's not!
@@ -313,7 +313,6 @@ feature {NONE} -- Implementation
     		val: INTEGER
     		ch: CHARACTER
     		ia4: STRING
-    		dot_count, index: INTEGER
     		v4addr: ARRAY [NATURAL_8]
     		done: BOOLEAN
     		new_result: ARRAY [NATURAL_8]
@@ -358,7 +357,7 @@ feature {NONE} -- Implementation
 		    				elseif ch = ':' then
 		    					curtok := i
 		    					if not saw_xdigit then
-		    						if colon_position /= 0  then
+		    						if colon_position /= -1  then
 		    							Result := Void
 		    							done := True
 		    						else
@@ -376,22 +375,13 @@ feature {NONE} -- Implementation
 	    								j := j + 1
 	    								Result.put ((val & 0xff).as_natural_8, j)
 	    								j := j + 1
+	    								saw_xdigit := False
+	    								val := 0
 	    							end
 		    					end
 		    				elseif ch = '.' and then ((j + {INET4_ADDRESS}.INADDRSZ) <= {INET6_ADDRESS}.INADDRSZ+1) then
 								ia4 := src.substring(curtok, length);
-								from
-									dot_count := 0
-									index := 1
-								until
-									index = 0
-								loop
-									index := ia4.index_of ('.', index)
-									if index /= 0 then
-										dot_count := dot_count + 1
-									end
-								end
-								if dot_count /= 3 then
+								if dot_count (ia4) /= 3 then
 		    						Result := Void
 		    						done := True
 								else
@@ -407,6 +397,7 @@ feature {NONE} -- Implementation
 										loop
 											Result.put (v4addr.item (k), j)
 											j := j + 1
+											k := k + 1
 										end
 										saw_xdigit := False;
 										done := True
@@ -436,16 +427,15 @@ feature {NONE} -- Implementation
 									Result := Void
 								else
 									from
-										i := 2
+										i := 0
 									until
-										i > n
+										i >= n
 									loop
-	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
-										Result.put (Result.item (colon_position + n - i), {INET6_ADDRESS}.INADDRSZ - i)
-										Result.put (0, colon_position + n - i)
+										Result.put (Result.item (colon_position + n - i - 1), {INET6_ADDRESS}.INADDRSZ - i)
+										Result.put (0, colon_position + n - i - 1 )
 										i := i +1
 									end
-	    							j := {INET6_ADDRESS}.INADDRSZ
+	    							j := {INET6_ADDRESS}.INADDRSZ + 1
 	    						end
 							end
 							if j /= {INET6_ADDRESS}.INADDRSZ+1 then
@@ -501,9 +491,9 @@ feature {NONE} -- Implementation
 			if c >= '0' and then c <= '9' then
 				Result := (c.code - ('0').code).as_natural_8
 			elseif c >= 'a' and then c <= 'f' then
-				Result := (c.code - ('a').code).as_natural_8
+				Result := (c.code - ('a').code).as_natural_8 + 10
 			elseif c >= 'A' and then c <= 'F' then
-				Result := (c.code - ('A').code).as_natural_8
+				Result := (c.code - ('A').code).as_natural_8 + 10
 			end
 		end
 
@@ -532,6 +522,26 @@ feature {NONE} -- Implementation
 						token.extend(src.item (i))
 					end
 					i := i + 1
+				end
+			end
+		end
+
+	dot_count (src: STRING): INTEGER is
+			-- Returns the number of dot ('.') characters found in the given string
+
+		require
+    		valid_src: src /= Void
+    	local
+    		index: INTEGER
+		do
+			from
+				index := src.index_of ('.', 1)
+			until
+				index = 0
+			loop
+				Result := Result + 1
+				if index < src.count then
+					index := src.index_of ('.', index + 1)
 				end
 			end
 		end

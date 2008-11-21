@@ -104,6 +104,7 @@ feature -- Access
 				i > INADDRSZ
 			loop
 				test := test | the_address[i]
+				i := i + 1
 			end
 			Result := (test = 0)
 		end
@@ -120,6 +121,7 @@ feature -- Access
 				i > 15
 			loop
 				test := test | the_address[i]
+				i := i + 1
 			end
 			Result := (test = 0) and (the_address[16] = 1)
 		end

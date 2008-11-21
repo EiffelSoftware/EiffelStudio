@@ -82,6 +82,8 @@ feature {NONE} -- Status setting
 	start_process_internal (a_conf: like conf_type)
 			-- <Precursor>
 		do
+			internal_created_tests.wipe_out
+			tests_reset_event.publish ([Current])
 			is_finished := False
 			configuration := a_conf
 			class_name_counter := 1

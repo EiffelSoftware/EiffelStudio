@@ -22,6 +22,7 @@ feature -- Access
 			a_prefix_attached: a_prefix /= Void
 			not_a_prefix_is_empty: not a_prefix.is_empty
 			a_prefix_valid: a_name.count > a_prefix.count
+			a_name_valid: a_name.substring (a_prefix.count + 1, a_name.count).is_integer
 		do
 			Result := a_name.substring (a_prefix.count + 1, a_name.count).to_integer
 		ensure

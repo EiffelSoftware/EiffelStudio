@@ -548,7 +548,7 @@ feature {NONE} -- Parsing
 			not_end_of_input: not end_of_input
 			no_error: not has_error
 		local
-			a_type_name: STRING
+			a_type_name, l_var_name: STRING
 		do
 			if item = '{' then
 				last_string.wipe_out
@@ -667,7 +667,12 @@ feature {NONE} -- Parsing
 					when false_token_code then
 						create {ITP_CONSTANT} last_expression.make (False)
 					when identifier_token_code then
-						create {ITP_VARIABLE} last_expression.make (variable_index (last_string.twin, variable_name_prefix))
+						l_var_name := last_string.twin
+						if l_var_name.substring (variable_name_prefix.count + 1, l_var_name.count).is_integer then
+							create {ITP_VARIABLE} last_expression.make (variable_index (last_string.twin, variable_name_prefix))
+						else
+							report_and_set_error_at_position ("Invalid variable name.", position)
+						end
 					when integer_token_code then
 						create {ITP_CONSTANT} last_expression.make (last_string.to_integer)
 					when true_token_code then
@@ -842,6 +847,13 @@ feature {NONE} -- Parsing
 					if not has_error then
 						last_token := identifier_token_code
 					end
+				end
+			when 'd', 'D' then
+					-- Possible tokens:
+					--	 default_pointer
+				if matches (default_pointer_keyword) then
+					last_token := default_pointer_token_code
+					parse_string (default_pointer_keyword)
 				end
 			when 'i','I' then
 					-- Possible tokens:
@@ -1194,6 +1206,9 @@ feature {NONE} -- Implementation
 
 	execute_keyword: STRING is "execute"
 		-- 'execute' keyword
+
+	default_pointer_keyword: STRING = "default_pointer"
+			-- 'default_pointer' keyword
 
 	itp_default_pointer_keyword: STRING is "itp_default_pointer"
 			-- 'itp_default_pointer' keyword

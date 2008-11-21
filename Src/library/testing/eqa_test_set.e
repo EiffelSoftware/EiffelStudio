@@ -77,9 +77,4 @@ feature {NONE} -- Implementation
 	internal_asserter: like asserter
 			-- Once per object storage for `asserter'.
 
-invariant
-	evaluator_anchor: {EQA_EVALUATOR} /= Void
-			-- Note: this anchor prevents recompiling classes needed by {EQA_EVALUATOR} every time
-			--       test execution is launched.
-
 end

@@ -28,11 +28,11 @@ feature {NONE} -- Initialization
 			a_dc_not_void: a_dc /= Void
 		do
 				-- default_create not being called as initialization relies on `a_dc'.
-			set_default_colors
 			create_implementation
 			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
 			implementation.set_printer_dc (a_dc)
 			implementation.initialize
+			set_default_colors
 			initialize
 		end
 

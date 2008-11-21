@@ -615,7 +615,7 @@ feature {NONE} -- Event handling
 			if l_has_items then
 				create mi.make_with_text_and_action (interface_names.f_clear_watch_tool_expressions, agent clear_watch_tool)
 				m.extend (mi)
-				create mi.make_with_text_and_action (interface_names.f_copy_watch_tool_expressions_to_clipboard, agent copy_expressions_to_clipboard)
+				create mi.make_with_text_and_action (interface_names.f_copy_watch_tool_selected_expressions_to_clipboard, agent copy_expressions_to_clipboard)
 				m.extend (mi)
 				m.extend (create {EV_MENU_SEPARATOR})
 			end
@@ -1316,7 +1316,7 @@ feature -- Expressions storage management
 			retry
 		end
 
-	expressions_to_text: STRING_32 is
+	expressions_to_text (only_selection: BOOLEAN): STRING_32 is
 			-- Copy expressions to clipboard
 		local
 			line: like watched_item_from
@@ -1331,10 +1331,15 @@ feature -- Expressions storage management
 				loop
 					line := lst.item
 					if line /= Void then
-						exp := line.expression
-						if exp /= Void and then exp.is_reusable then
-							Result.append_string (exp.text)
-							Result.extend ('%N')
+						if
+							not only_selection or else
+							({r: EV_GRID_ROW} line.row and then r.is_selected)
+						then
+							exp := line.expression
+							if exp /= Void and then exp.is_reusable then
+								Result.append_string (exp.text)
+								Result.extend ('%N')
+							end
 						end
 					end
 					lst.forth
@@ -1369,7 +1374,7 @@ feature -- Expressions storage management
 	copy_expressions_to_clipboard is
 			-- Copy expressions to clipboard
 		do
-			ev_application.clipboard.set_text (expressions_to_text)
+			ev_application.clipboard.set_text (expressions_to_text (True))
 		end
 
 	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
@@ -1400,14 +1405,14 @@ feature -- Expressions storage management
 		end
 
 	export_expressions_to_file is
-			-- Export expressions to file
+			-- Export all expressions to file
 		local
 			s: STRING_32
 			f_dlg: EV_FILE_SAVE_DIALOG
 			fn: STRING_32
 			f: PLAIN_TEXT_FILE
 		do
-			s := expressions_to_text
+			s := expressions_to_text (False)
 			if s /= Void and then not s.is_empty then
 				create f_dlg.make_with_title (interface_names.t_select_a_file)
 				if {d: STRING} default_watches_storage_folder then

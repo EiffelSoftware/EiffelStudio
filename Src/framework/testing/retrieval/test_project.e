@@ -811,10 +811,11 @@ feature {NONE} -- Implementation: tag retrieval
 			a_feature_name_not_empty: a_feature_name /= Void implies a_feature_name /= Void
 			project_initialized: is_project_initialized
 		local
-			l_current: CONF_GROUP
+			l_current, l_group: CONF_GROUP
 			l_library: CONF_LIBRARY
 			l_uni: UNIVERSE_I
 			l_list: LIST [!CONF_LIBRARY]
+			l_path: LIST [STRING]
 		do
 			if {l_class: CLASS_I} class_for_name (a_class_name) then
 				l_uni := eiffel_project.universe
@@ -855,23 +856,39 @@ feature {NONE} -- Implementation: tag retrieval
 				from until
 					cluster_stack.is_empty
 				loop
-					if {l_lib: CONF_LIBRARY} cluster_stack.last then
+					l_group := cluster_stack.last
+					if {l_lib: CONF_LIBRARY} l_group then
 						a_tag.append (tag_utilities.library_prefix)
 						a_tag.append (cluster_stack.last.name)
 						a_tag.append_character (':')
 						a_tag.append (l_lib.library_target.system.uuid.out)
 					else
-						if cluster_stack.last.is_override then
+						if l_group.is_override then
 							a_tag.append (tag_utilities.override_prefix)
 						elseif cluster_stack.last.is_cluster then
 							a_tag.append (tag_utilities.cluster_prefix)
 						end
-						a_tag.append (cluster_stack.last.name)
+						a_tag.append (l_group.name)
 					end
 					a_tag.append_character (tag_utilities.split_char)
 					cluster_stack.remove_last
 				end
 				cluster_stack.wipe_out
+				if {l_eclass: EIFFEL_CLASS_I} l_class then
+					l_path := l_eclass.path.split (unix_file_system.directory_separator)
+					from
+						l_path.start
+					until
+						l_path.after
+					loop
+						if {l_dir: STRING} l_path.item_for_iteration and then not l_dir.is_empty then
+							a_tag.append (tag_utilities.directory_prefix)
+							a_tag.append (l_dir)
+							a_tag.append_character (tag_utilities.split_char)
+						end
+						l_path.forth
+					end
+				end
 			end
 			a_tag.append (tag_utilities.class_prefix)
 			a_tag.append (a_class_name)

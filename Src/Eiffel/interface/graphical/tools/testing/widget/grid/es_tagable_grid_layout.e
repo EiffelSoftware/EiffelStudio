@@ -234,27 +234,23 @@ feature {NONE} -- Factory
 			elseif l_token.starts_with (feature_prefix) and l_token.count > feature_prefix.count then
 				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
-				if l_pnode /= Void then
-					if {l_classi: CLASS_I} l_pnode.data then
-						if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
-							if {l_feature: E_FEATURE} l_classi.compiled_class.feature_with_name (l_name) then
-								token_writer.add_feature (l_feature, l_name)
-								a_node.set_data (l_feature)
-							end
+				if l_pnode /= Void and then {l_classi: CLASS_I} l_pnode.data then
+					if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
+						if {l_feature: E_FEATURE} l_classi.compiled_class.feature_with_name (l_name) then
+							token_writer.add_feature (l_feature, l_name)
+							a_node.set_data (l_feature)
 						end
 					end
 				end
 			elseif l_token.starts_with (cluster_prefix) and l_token.count > cluster_prefix.count then
 				l_name := l_token.substring (cluster_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
-				if l_pnode /= Void then
-					if l_cluster /= Void then
-						l_cluster := l_cluster.target.clusters.item (l_name)
-					elseif l_library /= Void then
-						l_cluster := l_library.library_target.clusters.item (l_name)
-					end
+				if l_cluster /= Void then
+					l_cluster := l_cluster.target.clusters.item (l_name)
+				elseif l_library /= Void then
+					l_cluster := l_library.library_target.clusters.item (l_name)
 				end
-				if l_cluster = Void and l_library = Void then
+				if l_cluster = Void then
 					l_cluster := project.universe.cluster_of_name (l_name)
 				end
 				if l_cluster /= Void then
@@ -264,12 +260,10 @@ feature {NONE} -- Factory
 			elseif l_token.starts_with (override_prefix) and l_token.count > override_prefix.count  then
 				l_name := l_token.substring (override_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.folder_override_cluster_icon
-				if l_pnode /= Void then
-					if l_cluster /= Void then
-						l_cluster := l_cluster.target.overrides.item (l_name)
-					elseif l_library /= Void then
-						l_cluster := l_library.library_target.overrides.item (l_name)
-					end
+				if l_cluster /= Void then
+					l_cluster := l_cluster.target.overrides.item (l_name)
+				elseif l_library /= Void then
+					l_cluster := l_library.library_target.overrides.item (l_name)
 				end
 				if l_cluster = Void then
 					l_cluster := project.universe.cluster_of_name (l_name)
@@ -306,6 +300,13 @@ feature {NONE} -- Factory
 					l_name := l_token.substring (library_prefix.count + 1, l_token.count)
 				end
 				l_pixmap := pixmaps.icon_pixmaps.folder_library_icon
+			elseif l_token.starts_with (directory_prefix) and l_token.count > directory_prefix.count then
+				l_name := l_token.substring (directory_prefix.count + 1, l_token.count)
+				l_pixmap := pixmaps.icon_pixmaps.folder_blank_icon
+				if l_cluster /= Void then
+					token_writer.add_group (l_cluster, l_name)
+					a_node.set_data (l_cluster)
+				end
 			elseif False then
 				-- More tokens to come
 			else
@@ -385,4 +386,35 @@ feature {NONE} -- Constants
 
 	name_column: INTEGER = 1
 
+;indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

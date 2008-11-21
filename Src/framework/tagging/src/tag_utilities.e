@@ -235,6 +235,7 @@ feature -- Constants
 	feature_prefix: STRING = "2feature:"
 	override_prefix: STRING = "3override:"
 	library_prefix: STRING = "4library:"
+	directory_prefix: STRING = "5dir:"
 			-- Eiffel prefixes used in tags
 
 end

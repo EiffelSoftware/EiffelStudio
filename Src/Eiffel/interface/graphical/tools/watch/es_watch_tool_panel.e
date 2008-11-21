@@ -818,53 +818,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	move_processing: BOOLEAN
-
-	move_selected (offset: INTEGER) is
-		local
-			sel_rows: LIST [EV_GRID_ROW]
-			sel: EV_GRID_ROW
-			sel_index: INTEGER
-			new_index, to_index: INTEGER
-			witems: like watched_items
-			g: ES_OBJECTS_GRID
-		do
-			if not move_processing then
-				g := watches_grid
-				move_processing := True --| To avoid concurrent move
-				sel_rows := grid_selected_top_rows (g)
-				if not sel_rows.is_empty then
-					sel := sel_rows.first
-					if sel.parent_row = Void then
-						sel_index := sel.index
-						if {line: ES_OBJECTS_GRID_EXPRESSION_LINE} sel.data then
-							witems := watched_items
-							if witems /= Void then
-								witems.start
-								witems.search (line)
-								if not witems.exhausted then
-									check witems.item = line end
-									new_index := witems.index + offset
-									if new_index < 1 then
-										new_index := 1
-									elseif new_index > witems.count then
-										new_index := witems.count
-									end
-									witems.swap (new_index)
-								end
-							end
-						end
-						to_index := g.grid_move_top_row_node_by (g, sel_index, offset)
-						check to_index > 0 end
-						g.remove_selection
-						sel.enable_select
-					end
-				end
-				move_processing := False
-				ensure_last_row_is_new_expression_row
-			end
-		end
-
 	remove_selected is
 			-- Remove the selected expressions from the list.
 		local
@@ -940,18 +893,19 @@ feature {NONE} -- Event handling
 			if lst.count > 0 then
 				delete_expression_cmd.enable_sensitive
 				toggle_state_of_expression_cmd.enable_sensitive
-			else
-				delete_expression_cmd.disable_sensitive
-				toggle_state_of_expression_cmd.disable_sensitive
-			end
-			if watches_grid.selected_rows.count = 1 then
-				edit_expression_cmd.enable_sensitive
 				move_up_cmd.enable_sensitive
 				move_down_cmd.enable_sensitive
 			else
-				edit_expression_cmd.disable_sensitive
+				delete_expression_cmd.disable_sensitive
+				toggle_state_of_expression_cmd.disable_sensitive
 				move_up_cmd.disable_sensitive
 				move_down_cmd.disable_sensitive
+			end
+
+			if lst.count = 1 then
+				edit_expression_cmd.enable_sensitive
+			else
+				edit_expression_cmd.disable_sensitive
 			end
 		end
 
@@ -1165,6 +1119,108 @@ feature {NONE} -- Event handling
 					expr_item.row.enable_select
 				end
 			end
+		end
+
+feature {NONE} -- Element change: expression moving
+
+	move_processing: BOOLEAN
+			-- Are we moving expressions up/down?
+
+	integer_sorter: DS_QUICK_SORTER [INTEGER]
+		once
+			create Result.make (create {KL_COMPARABLE_COMPARATOR [INTEGER]}.make)
+		end
+
+	indexes_from_list_of_rows (a_rows: LIST [EV_GRID_ROW]): DS_ARRAYED_LIST [INTEGER]
+			-- Array build from
+		do
+			from
+				create Result.make (a_rows.count)
+				a_rows.start
+			until
+				a_rows.after
+			loop
+				if {r: EV_GRID_ROW} a_rows.item and then r.parent_row = Void then
+					Result.put_last (r.index)
+				end
+				a_rows.forth
+			end
+			Result.sort (integer_sorter)
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	move_selected (offset: INTEGER) is
+			-- Move selected top rows by `offset'
+		local
+			sel_rows: LIST [EV_GRID_ROW]
+			g: ES_OBJECTS_GRID
+			sel_indexes: like indexes_from_list_of_rows
+			i: INTEGER
+		do
+			if not move_processing then
+				g := watches_grid
+				sel_rows := grid_selected_top_rows (g)
+				if not sel_rows.is_empty then
+					sel_indexes := indexes_from_list_of_rows (sel_rows)
+					move_processing := True --| To avoid concurrent move					
+					if offset < 0 then
+						from
+							sel_indexes.start
+						until
+							sel_indexes.after
+						loop
+							i := internal_moved_selected_row (g, sel_indexes.item_for_iteration, offset)
+							sel_indexes.forth
+						end
+					else
+						from
+							sel_indexes.finish
+						until
+							sel_indexes.before
+						loop
+							i := internal_moved_selected_row (g, sel_indexes.item_for_iteration, offset)
+							sel_indexes.back
+						end
+					end
+					move_processing := False
+				end
+				ensure_last_row_is_new_expression_row
+			end
+		end
+
+	internal_moved_selected_row (g: ES_OBJECTS_GRID; a_index: INTEGER; offset: INTEGER): INTEGER
+		require
+			move_processing: move_processing
+		local
+			sel: EV_GRID_ROW
+			sel_index: INTEGER
+			new_index, to_index: INTEGER
+			witems: like watched_items
+		do
+			sel_index := a_index
+			sel := g.row (a_index)
+			check sel_is_top_row: sel.parent_row = Void end
+			if {line: ES_OBJECTS_GRID_EXPRESSION_LINE} sel.data then
+				witems := watched_items
+				if witems /= Void then
+					witems.start
+					witems.search (line)
+					if not witems.exhausted then
+						check witems.item = line end
+						new_index := witems.index + offset
+						if new_index < 1 then
+							new_index := 1
+						elseif new_index > witems.count then
+							new_index := witems.count
+						end
+						witems.swap (new_index)
+					end
+				end
+			end
+			to_index := g.grid_move_top_row_node_by (g, sel_index, offset)
+			check to_index > 0 end
+			Result := to_index
 		end
 
 feature {NONE} -- Event handling on notebook item

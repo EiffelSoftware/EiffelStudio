@@ -617,8 +617,9 @@ feature {NONE} -- Event handling
 				m.extend (mi)
 				create mi.make_with_text_and_action (interface_names.f_copy_watch_tool_expressions_to_clipboard, agent copy_expressions_to_clipboard)
 				m.extend (mi)
+				m.extend (create {EV_MENU_SEPARATOR})
 			end
-			create mi.make_with_text_and_action (interface_names.f_save_watch_tool_expressions_to_file, agent save_expressions_to_file)
+			create mi.make_with_text_and_action (interface_names.f_export_watch_tool_expressions_to_file, agent export_expressions_to_file)
 			m.extend (mi)
 			if not l_has_items then
 				mi.disable_sensitive
@@ -1398,8 +1399,8 @@ feature -- Expressions storage management
 			end
 		end
 
-	save_expressions_to_file is
-			-- Save expressions to file
+	export_expressions_to_file is
+			-- Export expressions to file
 		local
 			s: STRING_32
 			f_dlg: EV_FILE_SAVE_DIALOG

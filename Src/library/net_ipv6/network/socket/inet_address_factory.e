@@ -113,32 +113,32 @@ feature {NONE} -- Implementation
 				if host.count > 2 and then host.item(host.count) = ']' then
 					host := host.substring (2, host.count - 1)
 					ipv6_expected := True;
-	    			else
+				else
 					-- This was supposed to be a IPv6 address, but it's not!
 					-- TODO report error
 					failed := True
 				end
-	    		end
-	    		if not failed then
+			end
+			if not failed then
 				if host.item(1).is_hexa_digit or else host.item(1) = ':' then
-	    				addr_array := text_to_numeric_format_v4 (host)
-	    				if addr_array = Void then
+					addr_array := text_to_numeric_format_v4 (host)
+					if addr_array = Void then
 						pos :=  host.index_of ('%%', 1)
 						if  pos /= 0 then
-		    					numeric_zone := check_numeric_zone (host)
+							numeric_zone := check_numeric_zone (host)
 							if numeric_zone = -1 then
 								iface_name := host.substring (pos+1, host.count)
 							end
 						end
 						addr_array := text_to_numeric_format_v6 (host);
-	    				elseif  ipv6_expected then
+					elseif  ipv6_expected then
 						-- Means an IPv4 litteral between brackets!
 						-- TODO throw new UnknownHostException("["+host+"]");
 						-- TODO report error
 						failed := True
-	    				end
-	    				if not failed then
-	    					if addr_array /= Void then
+					end
+					if not failed then
+						if addr_array /= Void then
 							create Result.make (1, 1)
 							if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
 								create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
@@ -149,8 +149,8 @@ feature {NONE} -- Implementation
 									create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
 								end
 							end
-		    					Result.put (addr, 1)
-		    				end
+							Result.put (addr, 1)
+						end
 					end
 				elseif ipv6_expected then
 					-- TODO We were expecting an IPv6 Litteral, but got something else
@@ -158,11 +158,11 @@ feature {NONE} -- Implementation
 					-- TODO report error
 					failed := True
 					Result := Void
-	    			end
-	    			if Result = Void and then not failed then
+				end
+				if Result = Void and then not failed then
 					Result := get_all_by_name_0 (host)
-	    			end
-	    		end
+				end
+			end
 		end
 	end
 

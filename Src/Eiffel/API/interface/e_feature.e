@@ -390,7 +390,7 @@ feature -- Access
 		ensure
 			debuggable_if: Result implies
 				(body_index /= 0) and then
-				(not (is_attribute and then is_attribute_with_body)) and then
+				(not (is_attribute and not is_attribute_with_body)) and then
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then

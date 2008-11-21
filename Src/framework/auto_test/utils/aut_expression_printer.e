@@ -93,10 +93,7 @@ feature {ITP_EXPRESSION} -- Processing
 				if {l_char_8: CHARACTER_8} a_value.value then
 					put_quoted_eiffel_character (output_stream, l_char_8)
 				elseif {l_char_32: CHARACTER_32} a_value.value then
-						-- TODO: either convince ISE to have a good common
-						-- ancestor for CHARACTER_*, or implement
-						-- `put_quoted_eiffel_character' for all CHARCACTER_*.
-					put_quoted_eiffel_character (output_stream, 'x')
+					put_quoted_eiffel_character (output_stream, l_char_32.to_character_8)
 				else
 					l_value := a_value.value.out
 					if {l_dbl: DOUBLE} a_value.value or {l_real: REAL} a_value.value then

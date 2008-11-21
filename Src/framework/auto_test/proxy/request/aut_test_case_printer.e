@@ -244,20 +244,30 @@ feature {AUT_REQUEST} -- Processing
 		end
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+		local
+			l_rec_type: TYPE_A
+			l_use_ot: BOOLEAN
 		do
 			print_indentation
 			if a_request.is_feature_query then
-				output_stream.put_string ("if {l_ot")
-				output_stream.put_integer (ot_counter.to_integer_32)
-				output_stream.put_string (": ")
-				output_stream.put_string (variable_type_name (a_request.receiver))
-				output_stream.put_string ("} ")
+				l_rec_type := variable_type (a_request.receiver)
+				l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
+				if l_use_ot then
+					output_stream.put_string ("if {l_ot")
+					output_stream.put_integer (ot_counter.to_integer_32)
+					output_stream.put_string (": ")
+					output_stream.put_string (variable_type_name (a_request.receiver))
+					output_stream.put_string ("} ")
+				else
+					output_stream.put_string (variable_name (a_request.receiver))
+					output_stream.put_string (" := ")
+				end
 			end
 			output_stream.put_string (variable_name (a_request.target))
 			output_stream.put_string (".")
 			output_stream.put_string (a_request.feature_name)
 			print_argument_list (a_request.argument_list)
-			if a_request.is_feature_query then
+			if l_use_ot then
 				output_stream.put_line (" then")
 				indent
 				print_indentation

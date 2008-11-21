@@ -76,42 +76,36 @@ feature {ITP_EXPRESSION} -- Processing
 
 	process_constant (a_value: ITP_CONSTANT) is
 		local
-			char_8: CHARACTER_8
-			char_32: CHARACTER_32
+			l_type, l_value: STRING
 		do
+			l_type := a_value.type_name
 			if a_value.value = Void then
 				output_stream.put_string ("Void")
-			elseif a_value.type_name.is_equal ("POINTER") then
-				output_stream.put_string ("itp_default_pointer")
-			elseif a_value.type_name.is_equal ("CHARACTER_8") then
-				output_stream.put_character ('{')
-				output_stream.put_string (a_value.type_name)
-				output_stream.put_character ('}')
-				output_stream.put_character (' ')
-				if {l_char_8: CHARACTER_8} a_value.value then
-					char_8 := l_char_8
-				end
-				put_quoted_eiffel_character (output_stream, char_8)
-			elseif a_value.type_name.is_equal ("CHARACTER_32") then
-				output_stream.put_character ('{')
-				output_stream.put_string (a_value.type_name)
-				output_stream.put_character ('}')
-				output_stream.put_character (' ')
-				if {l_char_32: CHARACTER_32} a_value.value then
-					char_32 := l_char_32
-				end
-				-- TODO: either convince ISE to have a good common
-				-- ancestor for CHARACTER_*, or implement
-				-- `put_quoted_eiffel_character' for all CHARCACTER_*.
-				put_quoted_eiffel_character (output_stream, 'x')
-			elseif a_value.type_name.is_equal ("BOOLEAN") then
+			elseif l_type.is_equal ("POINTER") then
+				output_stream.put_string ("default_pointer")
+			elseif l_type.is_equal ("BOOLEAN") then
 				output_stream.put_string (a_value.value.out)
 			else
 				output_stream.put_character ('{')
-				output_stream.put_string (a_value.type_name)
+				output_stream.put_string (l_type)
 				output_stream.put_character ('}')
 				output_stream.put_character (' ')
-				output_stream.put_string (a_value.value.out)
+				if {l_char_8: CHARACTER_8} a_value.value then
+					put_quoted_eiffel_character (output_stream, l_char_8)
+				elseif {l_char_32: CHARACTER_32} a_value.value then
+						-- TODO: either convince ISE to have a good common
+						-- ancestor for CHARACTER_*, or implement
+						-- `put_quoted_eiffel_character' for all CHARCACTER_*.
+					put_quoted_eiffel_character (output_stream, 'x')
+				else
+					l_value := a_value.value.out
+					if {l_dbl: DOUBLE} a_value.value or {l_real: REAL} a_value.value then
+						if not l_value.has ('.') then
+							l_value.append (".0")
+						end
+					end
+					output_stream.put_string (l_value)
+				end
 			end
 		end
 

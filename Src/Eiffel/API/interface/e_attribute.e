@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Representation of an eiffel attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,20 +10,22 @@ indexing
 class E_ATTRIBUTE
 
 inherit
-
 	E_FEATURE
 		redefine
-			assigner_name, is_attribute, type
+			assigner_name, is_attribute, type,
+			is_attribute_with_body, locals
 		end
 
 create
-
 	make
 
 feature -- Properties
 
 	is_attribute: BOOLEAN is True
-			-- Is current a function
+			-- Is current an attribute?
+
+	is_attribute_with_body: BOOLEAN
+			-- <Precursor>
 
 	type: TYPE_A
 			-- Return type
@@ -31,7 +33,46 @@ feature -- Properties
 	assigner_name: STRING
 			-- Name of the assigner procedure (if any)
 
+feature -- Access
+
+	locals: EIFFEL_LIST [TYPE_DEC_AS] is
+		local
+			routine_as: ROUTINE_AS
+			feature_as: FEATURE_AS
+			built_in_as: BUILT_IN_AS
+		do
+			if body_index > 0 then
+				feature_as := Body_server.item (body_index)
+				if feature_as /= Void then
+						--| feature_as can be Void for invariant routine
+					routine_as ?= feature_as.body.content
+				end
+			end
+			if routine_as /= Void then
+				if routine_as.is_built_in then
+					built_in_as ?= routine_as.routine_body
+					if built_in_as /= Void then
+						feature_as := built_in_as.body
+						if feature_as /= Void then
+							routine_as ?= feature_as.body.content
+							if routine_as /= Void then
+								Result := routine_as.locals
+							end
+						end
+					end
+				else
+					Result := routine_as.locals
+				end
+			end
+		end
+
 feature -- Setting
+
+	set_is_attribute_with_body (b: like is_attribute_with_body)
+			-- set `is_attribute_with_body' to `b'
+		do
+			is_attribute_with_body := b
+		end
 
 	set_type (t: like type; a: like assigner_name) is
 			-- Set `type' to `t' and `assigner_name' to `a'.

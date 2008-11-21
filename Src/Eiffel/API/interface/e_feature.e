@@ -159,6 +159,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_attribute_with_body: BOOLEAN is
+			-- Is current feature an attribute with body?
+		do
+			-- Do nothing
+		end
+
 	is_constant: BOOLEAN is
 			-- Is current feature a constant ?
 		do
@@ -373,10 +379,10 @@ feature -- Access
 		do
 			if
 				(body_index /= 0) and then
-				(not is_attribute) and then
 				(not is_constant) and then
 				(not is_deferred) and then
-				(not is_unique)
+				(not is_unique) and then
+				(not (is_attribute and not is_attribute_with_body))
 			then
 				cl := written_class
 				Result := cl /= Void and then cl.is_debuggable
@@ -384,7 +390,7 @@ feature -- Access
 		ensure
 			debuggable_if: Result implies
 				(body_index /= 0) and then
-				(not is_attribute) and then
+				(not (is_attribute and then is_attribute_with_body)) and then
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then
@@ -897,7 +903,7 @@ feature -- Output
 			Result := associated_class.has_types
 			if Result then
 				Result := (is_constant and is_once) or
-					(not is_attribute and then
+					(not (is_attribute and then not is_attribute_with_body ) and then
 					not is_constant and then not is_deferred and then not is_unique)
 			end
 		end;

@@ -72,7 +72,7 @@ feature -- Properties
 			r: like routine
 		do
 			r := routine
-			Result := r /= Void and then r.is_function
+			Result := r /= Void and then r.has_return_value
 		end
 
 	has_rescue: BOOLEAN is

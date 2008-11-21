@@ -558,6 +558,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
+			Result.set_is_attribute_with_body (has_body)
 		end
 
 indexing

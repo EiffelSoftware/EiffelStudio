@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<project name="build_net_clib" default="help">
+<project name="build_net_ipv6_clib" default="help">
 
 	<description>
-		description: "EiffelNET Clib library compilation"
+		description: "EiffelNET IPV6 Clib library compilation"
 	</description>
 
 	<target name="help">

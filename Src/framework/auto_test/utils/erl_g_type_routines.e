@@ -99,7 +99,7 @@ feature -- Access
 				end
 			end
 
-			if a_class.allows_default_creation and then a_class.default_create_feature.export_status.is_none then
+			if a_class.allows_default_creation then
 				Result.extend (a_class.default_create_feature.feature_name)
 			end
 		ensure

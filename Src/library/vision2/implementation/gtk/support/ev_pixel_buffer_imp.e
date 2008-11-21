@@ -21,9 +21,32 @@ feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create with size.
+		local
+			l_x, l_y, l_width, l_height: NATURAL_32
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+				l_width := a_width.as_natural_32
+				l_height := a_height.as_natural_32
 				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_new ({EV_GTK_EXTERNALS}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
+					-- Creating managed pointer used for inspecting RGBA data.
+				create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
+				from
+						-- Reset existing data to zero.
+						--| FIXME IEK Optimize
+					l_y := 0
+				until
+					l_y = l_height
+				loop
+					from
+						l_x := 0
+					until
+						l_x = l_width
+					loop
+						set_pixel (l_x, l_y, 0)
+						l_x := l_x + 1
+					end
+					l_y := l_y + 1
+				end
 			else
 				create internal_pixmap.make_with_size (a_width, a_height)
 			end
@@ -50,8 +73,10 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-				-- Creating managed pointer used for inspecting RGBA data.
-			create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
+			if reusable_managed_pointer = Void then
+					-- Creating managed pointer used for inspecting RGBA data.
+				create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
+			end
 			set_is_initialized (True)
 		end
 
@@ -271,7 +296,7 @@ feature -- Command
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_pixel_buffer.width, a_pixel_buffer.height, gdk_pixbuf, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, a_x, a_y, a_pixel_buffer.width, a_pixel_buffer.height, 0, 0, 1, 1, 0, 255)
 		end
 
 feature -- Query
@@ -300,7 +325,7 @@ feature -- Query
 			--Memory acess point to image data.
 			-- This feature is NOT platform independent.
 		do
-			Result :={EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf)
+			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf)
 		end
 
 feature {EV_STOCK_PIXMAPS_IMP} -- Implementation

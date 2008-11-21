@@ -117,7 +117,7 @@ doc:	</routine>
 rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 {
 	struct rt_type *l_type = NULL;
-	EIF_TYPE_ID result;
+	EIF_TYPE_INDEX result;
 
 	if (type_string != NULL) {
 			/* Analyze `type_string' and decompose it in type elements. */
@@ -130,13 +130,13 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 				/* Free allocated memory for `l_type'. */
 			eif_free_type_array (l_type, 1);
 		} else {
-			result = EIF_NO_TYPE;
+			result = INVALID_DTYPE;
 		}
 	} else {
 			/* Cannot process current string */
-		result = EIF_NO_TYPE;
+		result = INVALID_DTYPE;
 	}
-	return result;
+	return (result == INVALID_DTYPE ? EIF_NO_TYPE : result);
 }
 
 /*

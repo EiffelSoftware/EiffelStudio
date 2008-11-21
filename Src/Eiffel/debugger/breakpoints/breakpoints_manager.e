@@ -184,6 +184,24 @@ feature -- Factory
 
 feature -- Breakpoints status
 
+	is_feature_breakable (f: E_FEATURE): BOOLEAN
+			-- Is `f' breakbable?
+			--| i.e: light f.is_debuggable
+		do
+			--| Nota: it used to be
+			--|  not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+			--| we could use is_debuggable, check later
+			if (f.body_index /= 0) and then
+				f.real_body_id /= 0 and then
+				not f.is_constant and then
+				not f.is_deferred and then
+				not f.is_unique and then
+				not (f.is_attribute and not f.is_attribute_with_body)
+			then
+				Result := True
+			end
+		end
+
 	has_breakpoint: BOOLEAN is
 			-- Does the program have breakpoint ?
 		do
@@ -575,7 +593,7 @@ feature -- Breakpoints access with feature,index
 			-- Is the `i'-th breakpoint of `f' set? (enabled or disabled)
 		do
 			error_in_bkpts := False
-			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
+			if is_feature_breakable (f) then
 					-- create a 'fake' breakpoint, in order to get the real one in hash table
 				Result := is_breakpoint_set_at (breakpoint_location (f, i, False), is_hidden)
 			end
@@ -587,7 +605,7 @@ feature -- Breakpoints access with feature,index
 			loc: BREAKPOINT_LOCATION
 		do
 			error_in_bkpts := False
-			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique or else f.real_body_id = 0) then
+			if is_feature_breakable (f) then
 				loc := breakpoint_location (f, i, False)
 				if not loc.is_corrupted then
 					if breakpoints.has_key (new_user_breakpoint_key (loc)) then
@@ -661,7 +679,7 @@ feature -- Breakpoints access with feature,index
 	breakpoints_set_for (f: E_FEATURE; include_hidden: BOOLEAN): LIST [INTEGER] is
 			-- Breakpoints set for feature `f'
 		require
-			f_is_debuggable: f.is_debuggable
+			f_is_breakable: is_feature_breakable (f)
 		local
 			bp: BREAKPOINT
 			loc: BREAKPOINT_LOCATION
@@ -875,8 +893,7 @@ feature -- Breakpoints addition
 			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
 		require
 			positive_i: i > 0
-			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
-			debuggable: f.is_debuggable
+			f_is_breakable: is_feature_breakable (f)
 		local
 			loc: BREAKPOINT_LOCATION
 		do
@@ -905,7 +922,7 @@ feature -- Breakpoints addition
 			-- enable all breakpoints set for feature 'f'
 		require
 			non_void_f: f /= Void
-			debuggable: f.is_debuggable
+			f_is_breakable: is_feature_breakable (f)
 		local
 			f_body_index: INTEGER
 			bp: BREAKPOINT
@@ -946,7 +963,7 @@ feature -- Breakpoints addition
 			-- enable the first breakpoints in feature 'f'
 		require
 			non_void_f: f /= Void
-			debuggable: f.is_debuggable
+			f_is_breakable: is_feature_breakable (f)
 		local
 			loc: BREAKPOINT_LOCATION
 		do
@@ -1028,7 +1045,7 @@ feature -- Breakpoints removal
 			-- if no breakpoint already exists for 'f' at 'i', do nothing
 		require
 			positive_i: i > 0
-			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+			f_is_breakable: is_feature_breakable (f)
 		local
 			loc: BREAKPOINT_LOCATION
 		do
@@ -1158,7 +1175,7 @@ feature -- Breakpoints change
 			-- if no breakpoint already exists for 'f' at 'i', a disabled breakpoint is created
 			-- note: non hidden breakpoint
 		require
-			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
+			is_feature_breakable: is_feature_breakable (f)
 			positive_i: i > 0
 		local
 			loc: BREAKPOINT_LOCATION

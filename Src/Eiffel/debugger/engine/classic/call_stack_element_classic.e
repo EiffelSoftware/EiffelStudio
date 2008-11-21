@@ -455,7 +455,9 @@ feature {NONE} -- Implementation
 								local_decl_grps.forth
 							end
 						end
-						if rout.is_function and l_index <= l_upper then
+						if
+							l_index <= l_upper and rout.has_return_value
+						then
 							private_result := l_locals.item (l_upper)
 							l_upper := l_upper - 1
 							private_result.set_name (once "Result")

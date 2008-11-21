@@ -1211,7 +1211,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 	parent_type (parent: CL_TYPE_A): TYPE_A is
 			-- Parent actual type in the current context
 		do
-			Result := instantiate (parent.duplicate)
+			Result := instantiate (parent)
 		end
 
 	instantiate (type: TYPE_A): TYPE_A is
@@ -1236,7 +1236,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- as otherwise we would break eweasel test exec206, but we
 					-- still need to adapt its actual_type to the current context
 					-- otherwise we would break valid168.
-				l_like_type ?= type
+				l_like_type ?= type.duplicate
 				check
 					l_like_type_not_void: l_like_type /= Void
 				end

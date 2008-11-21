@@ -8,7 +8,6 @@ indexing
 class E_ROUTINE
 
 inherit
-
 	E_FEATURE
 		redefine
 			has_postcondition, has_precondition,
@@ -73,37 +72,10 @@ feature -- Access
 	locals: EIFFEL_LIST [TYPE_DEC_AS] is
 		local
 			routine_as: ROUTINE_AS
-			feature_as: FEATURE_AS
-			built_in_as: BUILT_IN_AS
 		do
-			if is_inline_agent then
-				feature_as := Body_server.item (enclosing_body_id)
-				if feature_as /= Void then
-					routine_as ?= inline_agent_lookup.lookup_inline_agent_of_feature (
-							feature_as, inline_agent_nr).content
-				end
-			elseif body_index > 0 then
-				feature_as := Body_server.item (body_index)
-				if feature_as /= Void then
-						--| feature_as can be Void for invariant routine
-					routine_as ?= feature_as.body.content
-				end
-			end
+			routine_as := associated_routine_as
 			if routine_as /= Void then
-				if routine_as.is_built_in then
-					built_in_as ?= routine_as.routine_body
-					if built_in_as /= Void then
-						feature_as := built_in_as.body
-						if feature_as /= Void then
-							routine_as ?= feature_as.body.content
-							if routine_as /= Void then
-								Result := routine_as.locals
-							end
-						end
-					end
-				else
-					Result := routine_as.locals
-				end
+				Result := routine_as.locals
 			end
 		end
 
@@ -111,37 +83,10 @@ feature -- Access
 			-- Object test locals mentioned in the routine
 		local
 			routine_as: ROUTINE_AS
-			feature_as: FEATURE_AS
-			built_in_as: BUILT_IN_AS
 		do
-			if is_inline_agent then
-				feature_as := Body_server.item (enclosing_body_id)
-				if feature_as /= Void then
-					routine_as ?= inline_agent_lookup.lookup_inline_agent_of_feature (
-							feature_as, inline_agent_nr).content
-				end
-			elseif body_index > 0 then
-				feature_as := Body_server.item (body_index)
-				if feature_as /= Void then
-					--| It can be void for invariant routine
-					routine_as ?= feature_as.body.content
-				end
-			end
+			routine_as := associated_routine_as
 			if routine_as /= Void then
-				if routine_as.is_built_in then
-					built_in_as ?= routine_as.routine_body
-					if built_in_as /= Void then
-						feature_as := built_in_as.body
-						if feature_as /= Void then
-							routine_as ?= feature_as.body.content
-							if routine_as /= Void then
-								Result := routine_as.object_test_locals
-							end
-						end
-					end
-				else
-					Result := routine_as.object_test_locals
-				end
+				Result := routine_as.object_test_locals
 			end
 		end
 
@@ -160,6 +105,33 @@ feature -- Access
 				end
 			else
 				Result := Precursor
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	associated_routine_as: ROUTINE_AS is
+			-- Associated routine as used to find out locals and object test locals
+		do
+			if is_inline_agent then
+				if {inl_agt_feat_as: FEATURE_AS} Body_server.item (enclosing_body_id) then
+					Result ?= inline_agent_lookup.lookup_inline_agent_of_feature (
+							inl_agt_feat_as, inline_agent_nr).content
+				end
+			elseif body_index > 0 then
+				if {feat_as: FEATURE_AS} Body_server.item (body_index) then
+						--| feature_as can be Void for invariant routine
+					Result ?= feat_as.body.content
+				end
+			end
+			if Result /= Void then
+				if Result.is_built_in then
+					if {built_in_as: BUILT_IN_AS} Result.routine_body then
+						if {feature_as: FEATURE_AS} built_in_as.body then
+							Result ?= feature_as.body.content
+						end
+					end
+				end
 			end
 		end
 

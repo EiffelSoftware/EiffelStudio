@@ -363,6 +363,10 @@ feature {NONE} -- Implementation
 			l_orignal_pixmap, l_grey_pixmap: EV_PIXMAP
 
 			l_imp: EV_PIXMAP_IMP
+			l_is_src_bitmap_32bits: BOOLEAN
+			l_blend_function: WEL_BLEND_FUNCTION
+			l_result: BOOLEAN
+			l_source_bitmap_dc: WEL_MEMORY_DC
 		do
 			l_button ?= a_arguments.item
 			if l_button /= Void and then l_button.pixmap /= Void and l_button.tool_bar /= Void then
@@ -392,7 +396,26 @@ feature {NONE} -- Implementation
 				l_coordinate := l_button.pixmap_position
 
 				if a_arguments.item.is_sensitive then
-					theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
+					l_is_src_bitmap_32bits := (l_wel_bitmap.log_bitmap.bits_pixel = 32)
+					if l_is_src_bitmap_32bits and then (l_wel_bitmap.is_made_by_dib or l_wel_bitmap.ppv_bits /= default_pointer) then
+						create l_source_bitmap_dc.make_by_dc (a_dc_to_draw)
+						l_source_bitmap_dc.select_bitmap (l_wel_bitmap)
+
+						create l_blend_function.make
+						l_result := a_dc_to_draw.alpha_blend (l_coordinate.x, l_coordinate.y, l_wel_bitmap.width, l_wel_bitmap.height, l_source_bitmap_dc, 0, 0, l_wel_bitmap.width, l_wel_bitmap.height, l_blend_function)
+						check
+							successed: l_result = True
+						end
+						check
+							not_shared: not l_blend_function.shared
+						end
+						l_blend_function.dispose
+
+						l_source_bitmap_dc.unselect_bitmap
+						l_source_bitmap_dc.delete
+					else
+						theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
+					end
 				end
 
 				l_wel_bitmap.decrement_reference

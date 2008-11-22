@@ -149,10 +149,23 @@ feature {NONE} -- Basic operations
 
 	proceed_process
 			-- <Precursor>
+		local
+			l_total: INTEGER
+			l_progress: REAL
 		do
 			is_finished := is_stop_requested
 			if current_task /= Void and then current_task.has_next_step then
 				update_remaining_time
+
+				if is_executing then
+					l_total := time_out.second_count
+					l_progress := {REAL} 1.0
+					if l_total > 0 then
+						l_progress := l_progress - error_handler.remaining_time.second_count/l_total
+					end
+					internal_progress := {REAL} 0.1 + ({REAL} 0.50)* (l_progress)
+				end
+
 				if is_stop_requested or (is_executing and then error_handler.remaining_time.second_count <= 0) then
 					current_task.cancel
 				else
@@ -162,7 +175,6 @@ feature {NONE} -- Basic operations
 			elseif is_compiling then
 				prepare
 				status := execute_status_code
-				internal_progress := {REAL} 0.25
 			elseif is_executing then
 				if current_task = Void then
 					error_handler.report_random_testing
@@ -175,7 +187,6 @@ feature {NONE} -- Basic operations
 						status := minimize_status_code
 					end
 				end
-				internal_progress := {REAL} 0.5
 			elseif is_replaying_log then
 				if current_task = Void then
 					replay_log (log_to_replay)
@@ -183,7 +194,6 @@ feature {NONE} -- Basic operations
 					current_task := Void
 					status := minimize_status_code
 				end
-				internal_progress := {REAL} 0.6
 			elseif is_minimizing_witnesses then
 				if current_task = Void then
 					if interpreter.is_running then
@@ -200,7 +210,6 @@ feature {NONE} -- Basic operations
 					current_task := Void
 					status := statistic_status_code
 				end
-				internal_progress := {REAL} 0.75
 			elseif is_generating_statistics then
 				generate_statistics
 				generate_test_class
@@ -217,6 +226,12 @@ feature {NONE} -- Basic operations
 				types_under_test := Void
 				classes_under_test := Void
 				result_repository := Void
+			elseif is_replaying_log then
+				internal_progress := {REAL} 0.65
+			elseif is_minimizing_witnesses then
+				internal_progress := {REAL} 0.75
+			elseif is_generating_statistics then
+				internal_progress := {REAL} 0.85
 			end
 		end
 
@@ -230,6 +245,9 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Implementation
 
 	prepare
+		local
+			l_file_name: FILE_NAME
+			l_file: KL_TEXT_OUTPUT_FILE
 		do
 			check_environment_variable
 			set_precompile (False)
@@ -238,6 +256,23 @@ feature {NONE} -- Implementation
 			create error_handler.make (system)
 
 			process_configuration
+
+			create l_file_name.make_from_string (output_dirname)
+			l_file_name.extend ("log")
+			l_file_name.set_file_name ("error")
+			l_file_name.add_extension ("log")
+			create l_file.make (l_file_name)
+			l_file.open_write
+
+			if l_file.is_open_write then
+				error_handler.set_error_file (l_file)
+				error_handler.set_warning_file (l_file)
+				error_handler.set_info_file (l_file)
+			else
+				error_handler.set_error_null
+				error_handler.set_warning_null
+				error_handler.set_info_null
+			end
 
 			if should_display_help_message then
 				error_handler.report_info_message (help_message)
@@ -260,8 +295,6 @@ feature {NONE} -- Implementation
 	process_configuration
 			-- use `configuration' to initialize AutoTest settings
 		do
-			error_handler.enable_verbose
-
 			is_slicing_enabled := configuration.is_slicing_enabled
 			is_ddmin_enabled := configuration.is_ddmin_enabled
 			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled

@@ -93,8 +93,8 @@ feature {NONE} -- Status setting
 	frozen start_process (a_arg: like conf_type)
 			-- <Precursor>
 		do
-			start_process_internal (a_arg)
 			internal_progress := {REAL} 0.0
+			start_process_internal (a_arg)
 			is_idle := True
 		end
 

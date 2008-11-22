@@ -294,9 +294,57 @@ feature -- Command
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_dest_width, l_dest_height: INTEGER
+			l_x, l_y: INTEGER
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, a_x, a_y, a_pixel_buffer.width, a_pixel_buffer.height, 0, 0, 1, 1, 0, 255)
+			-- We must make sure dest rectangle not larger than source rectangle
+			-- http://library.gnome.org/devel/gdk-pixbuf/stable/gdk-pixbuf-scaling.html#gdk-pixbuf-composite
+			-- They say:
+			-- When the destination rectangle contains parts not in the source image, the data at the edges
+			-- of the source image is replicated to infinity.
+			-- We modify `l_dest_width' and `l_dest_height' to avoid it, so it will consistent with Windows implementation
+			l_x := a_x
+			l_y := a_y
+			l_dest_width := l_pixel_buffer_imp.width
+			l_dest_height := l_pixel_buffer_imp.height
+			if l_x < 0 then
+				l_x := 0
+				l_dest_width := l_dest_width + a_x
+				if l_dest_width < 0 then
+					l_dest_width := 0
+				end
+			end
+			if l_y < 0 then
+				l_dest_height := l_dest_height + a_y
+				l_y := 0
+				if l_dest_height < 0 then
+					l_dest_height := 0
+				end
+			end
+
+			-- We also have to make sure, dest rectangle not larger than source image, otherwise the API will not draw the image and this is
+			-- not consitent with Windows implementation
+			if l_x + l_dest_width > width then
+				l_dest_width := width - l_x
+				if l_x > width then
+					l_x := width
+				end
+				if l_dest_width < 0 then
+					l_dest_width := 0
+				end
+			end
+			if l_y + l_dest_height > height then
+				l_dest_height := height - l_y
+				if l_y > height then
+					l_y := height
+				end
+				if l_dest_height < 0 then
+					l_dest_height := 0
+				end
+			end
+
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, l_x, l_y, l_dest_width, l_dest_height, a_x, a_y, 1, 1, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper, 255)
 		end
 
 feature -- Query

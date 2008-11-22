@@ -87,6 +87,7 @@ feature {NONE} -- Status setting
 			is_finished := False
 			configuration := a_conf
 			class_name_counter := 1
+			internal_progress := {REAL} 0.1
 		end
 
 	stop_process

@@ -1224,6 +1224,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
+			l_old_generic, l_new_generic: TYPE_A
 			formal_type: FORMAL_A
 			l_like_type: LIKE_TYPE_A
 		do
@@ -1245,19 +1246,28 @@ feature {COMPILER_EXPORTER} -- Primitives
 			elseif type.has_generics then
 					-- Instantiation of the generic parameter of `type'
 				gen_type ?= type
-				Result := gen_type.duplicate
 				from
 					i := 1
-					gen_type_generics := Result.generics
+					gen_type_generics := gen_type.generics
 					count := gen_type_generics.count
 				until
 					i > count
 				loop
-					gen_type_generics.put
-						(instantiate (gen_type_generics.item (i)), i)
+					l_old_generic := gen_type_generics [i]
+					l_new_generic := instantiate (l_old_generic)
+					if l_old_generic /= l_new_generic then
+							-- If a new object is generated as a result of the generic type instantiation
+							-- then we need to duplicate `gen_type'.
+						if Result = Void then
+							Result := gen_type.duplicate
+							gen_type_generics := Result.generics
+						end
+						gen_type_generics [i] := l_new_generic
+					end
 					i := i + 1
 				end
-			else
+			end
+			if Result = Void then
 				Result := type
 			end
 		end

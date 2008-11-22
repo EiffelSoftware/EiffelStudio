@@ -183,7 +183,7 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define eif_reference_tuple_item(item)		((EIF_TYPED_VALUE *) (item))->it_r
 #define eif_boolean_tuple_item(item)		((EIF_TYPED_VALUE *) (item))->it_b
 #define eif_character_8_tuple_item(item)	((EIF_TYPED_VALUE *) (item))->it_c1
-#define eif_character_32_tuple_item (item)	((EIF_TYPED_VALUE *) (item))->it_c4
+#define eif_character_32_tuple_item(item)	((EIF_TYPED_VALUE *) (item))->it_c4
 #define eif_real_64_tuple_item(item)		((EIF_TYPED_VALUE *) (item))->it_r8
 #define eif_natural_8_tuple_item(item)		((EIF_TYPED_VALUE *) (item))->it_n1
 #define eif_natural_16_tuple_item(item)		((EIF_TYPED_VALUE *) (item))->it_n2

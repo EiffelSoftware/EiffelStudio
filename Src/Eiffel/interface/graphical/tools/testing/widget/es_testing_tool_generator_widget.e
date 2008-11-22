@@ -47,6 +47,9 @@ feature {NONE} -- Access
 	status_label: !EV_LABEL
 			-- Label showing status of generator
 
+	busy_dialog: ?ES_POPUP_TRANSITION_WINDOW
+			-- Dialog telling use to be patient
+
 feature {NONE} -- Status report
 
 	has_error: BOOLEAN
@@ -73,6 +76,10 @@ feature {NONE} -- Events
 					status_label.set_text ("Minimizing witnesses")
 				elseif factory.is_generating_statistics then
 					status_label.set_text ("Generating statistics")
+					if busy_dialog = Void then
+						create busy_dialog.make (locale_formatter.translation (i_please_be_patient))
+						busy_dialog.show_relative_to_window (development_window.window)
+					end
 				else
 					status_label.set_text ("hmmmmm...")
 				end
@@ -93,6 +100,10 @@ feature {NONE} -- Events
 			l_dir: DIRECTORY_NAME
 			l_message: !STRING_32
 		do
+			if busy_dialog /= Void then
+				busy_dialog.hide
+				busy_dialog := Void
+			end
 			if not has_error then
 				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)
 				l_dir.extend ("auto_test")
@@ -103,6 +114,38 @@ feature {NONE} -- Events
 
 feature {NONE} -- Constants
 
-	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in%N$1"
+	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in: $1"
+	i_please_be_patient: !STRING = "Please be patient while AutoTest generates results.%N(The window might become unresponsive during that time)"
 
+;indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

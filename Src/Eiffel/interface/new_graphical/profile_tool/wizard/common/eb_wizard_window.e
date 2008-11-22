@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			build_navigation_bar (v1)
 			extend (v1)
 
-			set_default_push_button (next_b)
-			set_default_cancel_button (cancel_b)
+			reset_default_push_button
+			reset_default_cancel_button
 		end
 
 	build_navigation_bar (a_box: EV_BOX) is
@@ -143,6 +143,18 @@ feature {EB_WIZARD_STATE_WINDOW} -- Basic Operations
 			previous_b.disable_sensitive
 		end
 
+	reset_default_push_button
+			-- Set `next_b' to be default push button
+		do
+			set_default_push_button (next_b)
+		end
+
+	reset_default_cancel_button
+			-- Set `cancel_b' to be default cancel button
+		do
+			set_default_cancel_button (cancel_b)
+		end
+
 feature -- Basic Operations
 
 	previous_page is
@@ -177,9 +189,9 @@ feature -- Basic Operations
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -190,19 +202,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

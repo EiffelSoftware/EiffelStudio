@@ -74,7 +74,8 @@ feature {NONE} -- Initialization
 
 			create l_hbox
 			l_hbox.set_border_width ({ES_UI_CONSTANTS}.horizontal_padding)
-			create progress_bar
+			create progress_bar.make_with_value_range (1 |..| 100)
+			progress_bar.disable_segmentation
 			l_hbox.extend (progress_bar)
 			l_pbox.extend (l_hbox)
 

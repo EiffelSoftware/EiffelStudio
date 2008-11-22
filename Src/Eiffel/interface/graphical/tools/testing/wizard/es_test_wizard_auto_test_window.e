@@ -55,17 +55,17 @@ feature {NONE} -- Initialization
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
 			create timeout_field
-			timeout_field.disable_edit
+			--timeout_field.disable_edit
 			timeout_field.value_range.resize_exactly (1, {INTEGER_32}.max_value)
 			timeout_field.change_actions.extend (agent on_timeout_change)
 
 			create proxy_time_out
-			proxy_time_out.disable_edit
+			--proxy_time_out.disable_edit
 			proxy_time_out.value_range.resize_exactly (1, {INTEGER_32}.max_value)
 			proxy_time_out.change_actions.extend (agent on_proxy_timeout_change)
 
 			create seed
-			seed.disable_edit
+			--seed.disable_edit
 			seed.set_minimum_width (170)
 			seed.change_actions.extend (agent on_seed_change)
 
@@ -95,6 +95,7 @@ feature {NONE} -- Initialization
 			l_vbox.disable_item_expand (l_cell)
 
 			a_parent.extend (l_vbox)
+			a_parent.disable_item_expand (l_vbox)
 		end
 
 	build_types (a_parent: EV_BOX)
@@ -122,8 +123,21 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 
+			create add_type_button
+			create remove_type_button
+
 			create l_textfield
-			l_textfield.return_actions.extend (agent on_add_type)
+			l_textfield.focus_in_actions.extend (
+				agent
+					do
+						first_window.set_default_push_button (add_type_button)
+					end)
+			l_textfield.focus_out_actions.extend (
+				agent
+					do
+						first_window.reset_default_push_button
+					end)
+
 			create type_field.make (l_textfield, agent on_validate_type)
 			l_hbox.extend (type_field)
 
@@ -135,13 +149,11 @@ feature {NONE} -- Initialization
 
 			l_hbox.extend (create {EV_CELL})
 
-			create add_type_button
 			add_type_button.set_text (locale_formatter.translation (b_add_type))
 			add_type_button.select_actions.extend (agent on_add_type)
 			l_hbox.extend (add_type_button)
 			l_hbox.disable_item_expand (add_type_button)
 
-			create remove_type_button
 			remove_type_button.set_text (locale_formatter.translation (b_remove_type))
 			remove_type_button.select_actions.extend (agent on_remove_type)
 			l_hbox.extend (remove_type_button)
@@ -277,14 +289,62 @@ feature {NONE} -- Events
 
 	on_validate_type (a_input: !STRING_32): !TUPLE [valid: BOOLEAN; error: ?STRING_32]
 			-- Called when input of `types' has to be validated.
+		local
+			l_types, l_type: STRING
+			i, j: INTEGER
+			l_system: SYSTEM_I
+			l_universe: UNIVERSE_I
+			l_root: CONF_GROUP
+			l_is_generic_param: BOOLEAN
 		do
-			if a_input.is_empty then
-				Result := [True, Void]
-			else
-				if is_valid_class_type_name (a_input.to_string_8) then
-					Result := [True, Void]
+			Result := [True, Void]
+			if not a_input.is_empty then
+				l_types := a_input.to_string_8
+				l_types.to_upper
+				if not (l_types.has ('!') or l_types.has ('?')) then
+
+					if is_valid_class_type_name (l_types) then
+						if test_suite.is_service_available and then test_suite.service.is_project_initialized then
+							l_system := test_suite.service.eiffel_project.system.system
+							l_universe := l_system.universe
+							if not l_system.root_creators.is_empty then
+								l_root := l_system.root_creators.first.cluster
+							else
+								Result := [False, locale_formatter.translation (e_unable_to_check_compiled_classes)]
+							end
+
+						else
+							Result := [False, locale_formatter.translation (e_test_suite_not_available)]
+						end
+						from
+							i := 1
+							j := 1
+						until
+							j > l_types.count or else not Result.valid
+						loop
+							if i > l_types.count or else not (l_types.item (i).is_alpha_numeric or l_types.item (i) = '_') then
+								if i > j then
+									l_type := l_types.substring (j, i - 1)
+									if {l_class: CLASS_I} l_universe.class_named (l_type, l_root) and then l_class.is_compiled then
+										if l_class.compiled_representation.is_expanded and not l_is_generic_param then
+											Result.valid := False
+											Result.error := locale_formatter.translation (e_no_expanded_types)
+										end
+									else
+										Result.valid := False
+										Result.error := locale_formatter.formatted_translation (e_class_not_compiled, [l_type])
+									end
+									l_is_generic_param := True
+								end
+								j := i + 1
+							end
+							i := i + 1
+						end
+					else
+						Result := [False, locale_formatter.formatted_translation (e_no_valid_type_name, [l_types])]
+					end
 				else
-					Result := [False, locale_formatter.translation (e_no_valid_type_name)]
+					Result := [False, locale_formatter.translation (e_attachment_marks_not_supported)]
 				end
 			end
 			if not a_input.is_empty and Result.valid then
@@ -407,5 +467,40 @@ feature {NONE} -- Constants
 	b_remove_type: !STRING = "-"
 
 	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
+	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again."
+	e_class_not_compiled: !STRING = "$1 is not a compiled type"
+	e_attachment_marks_not_supported: !STRING = "Attachment marks are not supported"
+	e_no_expanded_types: !STRING = "AutoTest is not able to test expanded types"
 
+;indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

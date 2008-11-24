@@ -400,9 +400,11 @@ feature {NONE} -- Implementation
 									l_index := l_index + 1
 								end
 							end
+							check l_index > l_upper end
 						end
 						l_args := Void
 					end
+
 					if l_locals /= Void and then not l_locals.is_empty then
 
 						l_old_group := inst_context.group
@@ -465,6 +467,7 @@ feature {NONE} -- Implementation
 								private_result.set_static_class (rout.type.associated_class)
 							end
 						end
+
 						if l_index <= l_upper then
 								--| Remaining locals, should be OT locals
 							l_ot_locals := object_test_locals_from (rout)
@@ -488,6 +491,23 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
+
+						if l_index <= l_upper then
+								--| For some reason, there are remaining values on the stack
+								--| let's considers them as locals
+							from
+							until
+								l_index > l_upper
+							loop
+								value := l_locals.item (l_index)
+								value.set_item_number (counter)
+								value.set_name ("value #" + counter.out)
+								counter := counter + 1
+								locals_list.extend (value)
+								l_index := l_index + 1
+							end
+						end
+						check all_value_handled: l_index > l_upper end
 
 						if l_old_group /= Void then
 							inst_context.set_group (l_old_group)

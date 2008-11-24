@@ -222,6 +222,14 @@ feature {NONE} -- Basic operations
 					interpreter.cleanup
 					interpreter := Void
 				end
+				if error_handler /= Void then
+					if {l_file: KI_FILE} error_handler.error_file then
+						if l_file.is_open then
+							l_file.close
+						end
+					end
+					error_handler := Void
+				end
 				current_task := Void
 				types_under_test := Void
 				classes_under_test := Void
@@ -262,7 +270,7 @@ feature {NONE} -- Implementation
 			l_file_name.set_file_name ("error")
 			l_file_name.add_extension ("log")
 			create l_file.make (l_file_name)
-			l_file.open_write
+			l_file.recursive_open_write
 
 			if l_file.is_open_write then
 				error_handler.set_error_file (l_file)

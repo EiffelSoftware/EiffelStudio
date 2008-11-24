@@ -169,7 +169,7 @@ feature -- Access
 			-- Useful for introspection and use in like statements.
 		obsolete "Not implemented. To be removed"
 		local
-			r: EVENT_DATA
+			r: ?EVENT_DATA
 		do
 			r := dummy_event_data_internal
 			if r = Void then

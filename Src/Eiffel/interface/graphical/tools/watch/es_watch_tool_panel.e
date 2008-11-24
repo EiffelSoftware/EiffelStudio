@@ -18,6 +18,7 @@ inherit
 		redefine
 			close,
 			on_before_initialize,
+			on_show,
 			create_mini_tool_bar_items,
 			build_docking_content,
 			internal_recycle,
@@ -589,6 +590,14 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 		end
 
 feature {NONE} -- Event handling
+
+	on_show
+			-- <Precursor>
+			--| Be sure the "..." cell is available	
+		do
+			Precursor
+			ensure_last_row_is_new_expression_row
+		end
 
 	open_watch_menu (tbi: SD_TOOL_BAR_ITEM) is
 		require

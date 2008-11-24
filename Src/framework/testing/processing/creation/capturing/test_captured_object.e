@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TEST_CAPTURED_OBJECT
 
 feature {NONE} -- Initialize

@@ -943,6 +943,7 @@ test	gc-expanded-allocating-memory-in-special-2 runtime006	tcf pass runtime expa
 test	gc-tracking-003					runtime007	tcf pass runtime
 test	memory_leak_with_invariant_on	runtime008	tcf pass runtime
 test	missing-marking-with-no-gc		runtime009	tcf pass runtime
+test	zero-sized-objects-slowdown 	runtime010	tcf pass runtime
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded

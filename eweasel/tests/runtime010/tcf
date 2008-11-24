@@ -1,0 +1,19 @@
+test_name	zero-sized-objects-slowdown
+test_description If we create a lot of zero-sized empty space, the GC takes ages during a GC cycle.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	two_ints.e $CLUSTER two_ints.e
+copy_raw 	three_refs.e $CLUSTER three_refs.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

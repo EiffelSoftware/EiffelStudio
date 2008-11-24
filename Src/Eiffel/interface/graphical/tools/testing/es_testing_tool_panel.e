@@ -1023,7 +1023,7 @@ feature {NONE} -- Factory
 			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Internationalization
 
 	tt_wizard: !STRING = "Create new tests"
 	f_run_button: !STRING = "Run all tests in background"
@@ -1052,6 +1052,8 @@ feature {NONE} -- Constants
 	e_executor_unavailable: !STRING = "Executor is not available"
 	e_test_suite_unavailable: !STRING = "Test suite service is not available"
 	e_project_not_compiled: !STRING = "Please compile the project first"
+
+feature {NONE} -- Constants
 
 	testing_library_uuid: !STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
 	testing_library_path: !STRING = "$ISE_LIBRARY/library/testing/testing.ecf"

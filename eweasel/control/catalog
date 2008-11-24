@@ -1974,6 +1974,7 @@ test	attribute-init-code-generation-correct			attach030 tcf fail self_init incre
 test	parent-attribute-init							attach031 tcf fail self_init
 test	like-current-is-detached						attach032 tcf fail attached_types anchored_types system-validity
 test	attached-type-creation-internal					attach033 tcf pass attached_types
+test	anchored-generic-carries-attachment				attach034 tcf fail attacched_types generic
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

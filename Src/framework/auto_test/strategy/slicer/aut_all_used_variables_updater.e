@@ -89,14 +89,22 @@ feature{AUT_REQUEST} -- Processing
 
 	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
 		local
-			variable: ITP_VARIABLE
+			l_rec: TUPLE [type: TYPE_A; name: STRING; a_check: BOOLEAN]
 		do
 			if not variables.has (a_request.receiver) then
-				variables.force ([Void, Void, True], a_request.receiver.deep_twin)
+				l_rec := [Void, Void, True]
+				variables.force (l_rec, a_request.receiver.deep_twin)
+			else
+				l_rec := variables.item (a_request.receiver)
 			end
-			variable ?= a_request.expression
-			if variable /= Void then
-				variables.force ([Void, Void, True], variable.deep_twin)
+			if {l_var: ITP_VARIABLE} a_request.expression then
+				variables.force ([Void, Void, True], l_var.deep_twin)
+
+					-- NOTE: this is a workaround for variables containing `default_create'
+			elseif {l_const: ITP_CONSTANT} a_request.expression and then l_rec.name = Void then
+				if {l_pointer: POINTER} l_const.value and then l_pointer = default_pointer then
+					l_rec.name := "POINTER"
+				end
 			end
 		end
 
@@ -104,15 +112,22 @@ feature{AUT_REQUEST} -- Processing
 		local
 			norm_response: AUT_NORMAL_RESPONSE
 			l_name: STRING
+			l_rec: TUPLE [type: TYPE_A; name: STRING; a_check: BOOLEAN]
 		do
 			-- Do nothing.
 			if variables.has (a_request.variable) then
+				l_rec := variables.item (a_request.variable)
 				norm_response ?= a_request.response
 				if norm_response /= Void then
 					l_name := norm_response.text.twin
 					l_name.right_adjust
 					l_name.left_adjust
-					variables.force ([Void, l_name, False], a_request.variable)
+
+						-- NOTE: following if-statement can be removed once pointer issue is fixed. currently
+						--       interpreter returns NONE for objects representing a pointer
+					if not l_name.is_equal ("NONE") or l_rec.name = Void then
+						variables.force ([Void, l_name, False], a_request.variable)
+					end
 				end
 			end
 		end

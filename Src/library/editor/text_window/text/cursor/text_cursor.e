@@ -467,7 +467,7 @@ feature -- Cursor movement
 			-- Move up one line (to preceding line), if possible.
 		do
 			if line.previous /= Void then
-				check previous_is_valid: line.next.is_valid end
+				check previous_is_valid: line.previous.is_valid end
 				set_line (line.previous)
 			end
 		end

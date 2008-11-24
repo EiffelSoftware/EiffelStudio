@@ -88,10 +88,6 @@ feature -- Icons
 			Result := named_icon_buffer (general_bug_name)
 		end
 
-feature -- Icons: Animations
-
-
-
 feature -- Constants: Icon names
 
 	test_routine_name: !STRING = "test_routine"
@@ -134,7 +130,7 @@ feature {NONE} -- Basic operations
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

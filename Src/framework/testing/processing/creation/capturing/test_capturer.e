@@ -280,6 +280,11 @@ feature {NONE} -- Basic operations
 					last_value.append_character ('}')
 					last_value.append_character (' ')
 					last_value.append (l_manifest)
+					if {l_real: REAL_32} l_value.value or {l_double: REAL_64} l_value.value then
+						if not l_manifest.has ('.') then
+							last_value.append (".0")
+						end
+					end
 				end
 			end
 		end
@@ -324,7 +329,7 @@ feature {NONE} -- Basic operations
 					else
 						create {TEST_CAPTURED_ATTRIBUTE_OBJECT} l_object.make (l_id, l_type, l_adv.children.count)
 					end
-					if {l_children: !DS_LINEAR [!ABSTRACT_DEBUG_VALUE]} l_adv.children then
+					if {l_children: !DS_LINEAR [ABSTRACT_DEBUG_VALUE]} l_adv.children then
 						fill_object (l_object, l_children, l_depth)
 					end
 				end
@@ -332,7 +337,7 @@ feature {NONE} -- Basic operations
 			observers.do_all (agent {!TEST_CAPTURE_OBSERVER}.on_object_capture (l_object))
 		end
 
-	fill_object (a_object: !TEST_CAPTURED_OBJECT; a_list: !DS_LINEAR [!ABSTRACT_DEBUG_VALUE]; a_depth: NATURAL)
+	fill_object (a_object: !TEST_CAPTURED_OBJECT; a_list: !DS_LINEAR [ABSTRACT_DEBUG_VALUE]; a_depth: NATURAL)
 			-- Fill captured object with content retrieved from abstract debug values.
 			--
 			-- `a_object': Object to be filled with content.
@@ -340,28 +345,33 @@ feature {NONE} -- Basic operations
 			-- `a_depth': Current reference depth.
 		require
 			a_object_has_items_or_attributes: a_object.has_attributes or a_object.has_items
+		local
+			l_dbg_value: ABSTRACT_DEBUG_VALUE
 		do
 			from
 				a_list.start
 			until
 				a_list.after
 			loop
-				if
-					{l_type: !STRING} a_list.item_for_iteration.dump_value.generating_type_representation (True) and then
-					not a_object.type.is_equal (l_type)
-				then
-						-- If the content referes to the same type, we do not increase the depth. That prevents
-						-- datastructures like linked list not to be cut off after `max_reference_depth' elements.
-					compute_string_representation (a_list.item_for_iteration, a_depth)
-				else
-					compute_string_representation (a_list.item_for_iteration, a_depth + 1)
-				end
-				if {l_value: !STRING} last_value then
-					if a_object.has_items then
-						a_object.items.force_last (l_value)
+				l_dbg_value := a_list.item_for_iteration
+				if l_dbg_value /= Void then
+					if
+						{l_type: !STRING} l_dbg_value.dump_value.generating_type_representation (True) and then
+						not a_object.type.is_equal (l_type)
+					then
+							-- If the content referes to the same type, we do not increase the depth. That prevents
+							-- datastructures like linked list not to be cut off after `max_reference_depth' elements.
+						compute_string_representation (l_dbg_value, a_depth)
 					else
-						if {l_name: !STRING} a_list.item_for_iteration.name then
-							a_object.attributes.force_last (l_value, l_name)
+						compute_string_representation (l_dbg_value, a_depth + 1)
+					end
+					if {l_value: !STRING} last_value then
+						if a_object.has_items then
+							a_object.items.force_last (l_value)
+						else
+							if {l_name: !STRING} l_dbg_value.name then
+								a_object.attributes.force_last (l_value, l_name)
+							end
 						end
 					end
 				end

@@ -301,7 +301,7 @@ feature {NONE} -- Factory
 			Result.force_last (stop_button)
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Internationalization
 
 	b_close: !STRING = "Close"
 

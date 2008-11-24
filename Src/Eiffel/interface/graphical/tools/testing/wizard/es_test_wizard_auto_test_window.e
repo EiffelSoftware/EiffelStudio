@@ -450,7 +450,7 @@ feature {NONE} -- Events
 			wizard_information.set_html_output (html_output.is_selected)
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Internationalization
 
 	t_title: !STRING = "Generate tests through AutoTest"
 	t_subtitle: !STRING = "Define commands to run auto test"
@@ -463,14 +463,17 @@ feature {NONE} -- Constants
 	b_slicing: !STRING = "Use slicing for minimization"
 	b_html_output: !STRING = "Create HTML output"
 	b_new_type: !STRING = "Typename"
-	b_add_type: !STRING = "+"
-	b_remove_type: !STRING = "-"
 
 	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
 	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again."
 	e_class_not_compiled: !STRING = "$1 is not a compiled type"
 	e_attachment_marks_not_supported: !STRING = "Attachment marks are not supported"
 	e_no_expanded_types: !STRING = "AutoTest is not able to test expanded types"
+
+feature {NONE} -- Constants
+
+	b_add_type: !STRING = "+"
+	b_remove_type: !STRING = "-"
 
 ;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

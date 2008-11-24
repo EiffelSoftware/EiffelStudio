@@ -414,7 +414,7 @@ feature {NONE} -- Basic operations
 			class_tree.recycle
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Internationalization
 
 	t_title: STRING = "New test class"
 	t_subtitle: STRING = "Define properties of new test class"

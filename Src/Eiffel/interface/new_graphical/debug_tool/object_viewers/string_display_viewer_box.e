@@ -37,56 +37,26 @@ feature {NONE} -- Implementation
 	build_widget is
 		local
 			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			lab: EV_LABEL
-			l_tb: SD_TOOL_BAR
-			but: SD_TOOL_BAR_BUTTON
 		do
+			slice_min_ref := 0
+			slice_max_ref := default_slice_max_value
+
 			create vb
 			widget := vb
-			vb.set_border_width (layout_constants.small_border_size)
+			if not is_associated_with_tool then
+				vb.set_border_width (layout_constants.small_border_size)
+			else
+				vb.set_border_width (layout_constants.small_border_size)
+			end
 			vb.set_padding_width (layout_constants.tiny_padding_size)
 
 				--| Top slices box
-			create hb
-			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create lab.make_with_text (Interface_names.l_slice_limits)
-			hb.extend (lab)
-			hb.disable_item_expand (lab)
-
-			create lower_slice_field
-			lower_slice_field.return_actions.extend (agent return_pressed_in_lower_slice_field)
-			lower_slice_field.set_minimum_width_in_characters (7)
-
-			hb.extend (lower_slice_field)
-			hb.disable_item_expand (lower_slice_field)
-
-			create lab.make_with_text (Interface_names.l_to)
-			hb.extend (lab)
-			hb.disable_item_expand (lab)
-
-			create upper_slice_field
-			upper_slice_field.return_actions.extend (agent return_pressed_in_upper_slice_field)
-			upper_slice_field.set_minimum_width_in_characters (7)
-			hb.extend (upper_slice_field)
-			hb.disable_item_expand (upper_slice_field)
-
-			create l_tb.make
-			create but.make
-			but.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
-			but.set_pixel_buffer (pixmaps.icon_pixmaps.general_tick_icon_buffer)
-			but.select_actions.extend (agent set_slice_selected)
-			but.set_tooltip (Interface_names.l_set_slice_values)
-			l_tb.extend (but)
-			l_tb.compute_minimum_size
-			hb.extend (l_tb)
-			hb.disable_item_expand (l_tb)
-
-			build_tool_bar
-			hb.extend (tool_bar)
+			build_slices_box
+			if is_associated_with_tool then
+				build_tool_bar
+				vb.extend (tool_bar)
+				vb.disable_item_expand (tool_bar)
+			end
 
 				--| Editor
 			create editor
@@ -99,11 +69,6 @@ feature {NONE} -- Implementation
 			vb.extend (editor)
 
  			set_title (name)
-
-			slice_min_ref := 0
-			slice_max_ref := default_slice_max_value
-			set_slices_text (slice_min, slice_max)
-
 		end
 
 	default_slice_max_value: INTEGER is
@@ -111,15 +76,74 @@ feature {NONE} -- Implementation
 			Result := preferences.debug_tool_data.default_expanded_view_size
 		end
 
-	build_tool_bar is
+	build_slices_box is
+			-- Build slices box
 		local
-			l_tb: like tool_bar
+			hb: EV_HORIZONTAL_BOX
+			lab: EV_LABEL
+			l_tb: SD_TOOL_BAR
+			but: SD_TOOL_BAR_BUTTON
+		do
+			if slices_box = Void then
+				create hb
+				hb.set_padding_width (layout_constants.tiny_padding_size)
+
+				create lab.make_with_text (Interface_names.l_slice_limits)
+				hb.extend (lab)
+				hb.disable_item_expand (lab)
+
+				create lower_slice_field
+				lower_slice_field.return_actions.extend (agent return_pressed_in_lower_slice_field)
+				lower_slice_field.set_minimum_width_in_characters (7)
+
+				hb.extend (lower_slice_field)
+				hb.disable_item_expand (lower_slice_field)
+
+				create lab.make_with_text (Interface_names.l_to)
+				hb.extend (lab)
+				hb.disable_item_expand (lab)
+
+				create upper_slice_field
+				upper_slice_field.return_actions.extend (agent return_pressed_in_upper_slice_field)
+				upper_slice_field.set_minimum_width_in_characters (7)
+				hb.extend (upper_slice_field)
+				hb.disable_item_expand (upper_slice_field)
+
+				create l_tb.make
+				create but.make
+				but.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
+				but.set_pixel_buffer (pixmaps.icon_pixmaps.general_tick_icon_buffer)
+				but.select_actions.extend (agent set_slice_selected)
+				but.set_tooltip (Interface_names.l_set_slice_values)
+				l_tb.extend (but)
+				l_tb.compute_minimum_size
+				hb.extend (l_tb)
+				hb.disable_item_expand (l_tb)
+
+				slices_box := hb
+				set_slices_text (slice_min, slice_max)
+			end
+		end
+
+	build_tool_bar is
+			-- <Precursor>
+		local
+			l_tb: SD_TOOL_BAR
+			l_tbw: SD_WIDGET_TOOL_BAR
 			tbb: SD_TOOL_BAR_BUTTON
 			tbtgb: SD_TOOL_BAR_TOGGLE_BUTTON
+			tbw: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			if tool_bar = Void then
-				create l_tb.make
+				create l_tbw.make (create {SD_TOOL_BAR}.make)
+				l_tb := l_tbw
 				tool_bar := l_tb
+
+				build_slices_box
+				create tbw.make (slices_box)
+				tbw.set_name ("slices")
+				l_tb.extend (tbw)
+				l_tb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				create tbb.make
 				tbb.set_pixmap (pixmaps.icon_pixmaps.debugger_object_expand_icon)
@@ -137,6 +161,7 @@ feature {NONE} -- Implementation
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
 				tbtgb.set_tooltip (interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
+				register_word_wrap_button (tbtgb)
 
 				create tbb.make
 				tbb.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
@@ -175,6 +200,7 @@ feature {NONE} -- Implementation
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
 				tbtgb.set_tooltip (Interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
+				register_word_wrap_button (tbtgb)
 
 				create tbb.make
 				tbb.set_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
@@ -196,6 +222,9 @@ feature -- Access
 
 	widget: EV_WIDGET
 
+	slices_box: EV_WIDGET
+			-- Slices box
+
 	lower_slice_field,
 	upper_slice_field: EV_TEXT_FIELD
 
@@ -204,12 +233,55 @@ feature -- Access
 feature -- Change
 
 	set_slices_text (a_lower, a_upper: INTEGER) is
+		require
+			slices_box_attached: slices_box /= Void
 		do
 			lower_slice_field.set_text (a_lower.out)
 			upper_slice_field.set_text (a_upper.out)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	word_wrap_buttons: ARRAYED_LIST [SD_TOOL_BAR_TOGGLE_BUTTON]
+			-- list of word wrap button
+			--| to update all of them when needed
+
+
+	update_word_wrap_buttons (a_selected: BOOLEAN)
+			-- Update all word wrap button to `a_selected' state
+		do
+			if {lst: like word_wrap_buttons} word_wrap_buttons and then lst.count > 1 then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					if {bt: SD_TOOL_BAR_TOGGLE_BUTTON} lst.item then
+						bt.select_actions.block
+						if a_selected then
+							bt.enable_select
+						else
+							bt.disable_select
+						end
+						bt.select_actions.resume
+					end
+					lst.forth
+				end
+			end
+		end
+
+	register_word_wrap_button (but: SD_TOOL_BAR_TOGGLE_BUTTON)
+			-- Register word wrap button `but'
+		local
+			lst: like word_wrap_buttons
+		do
+			lst := word_wrap_buttons
+			if lst = Void then
+				create lst.make (2)
+				word_wrap_buttons := lst
+			end
+			lst.extend (but)
+		end
 
 	Text_format: EV_CHARACTER_FORMAT is
 		once
@@ -291,8 +363,7 @@ feature -- Change
 					retrieve_dump_value
 					if current_dump_value /= Void then
 						l_trunc_str := current_dump_value.formatted_truncated_string_representation (slice_min, slice_max)
-						lower_slice_field.set_text (slice_min.out)
-						upper_slice_field.set_text ((slice_min + l_trunc_str.count - 1).out)
+						set_slices_text (slice_min, slice_min + l_trunc_str.count - 1)
 
 						l_endpos := l_trunc_str.count + 1
 						editor.set_text (l_trunc_str)
@@ -361,8 +432,12 @@ feature {NONE} -- Implementation
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			editor.remove_text
-			lower_slice_field.remove_text
-			upper_slice_field.remove_text
+			if lower_slice_field /= Void then
+				lower_slice_field.remove_text
+			end
+			if upper_slice_field /= Void then
+				upper_slice_field.remove_text
+			end
 		end
 
 	text: TEXT_FORMATTER
@@ -436,15 +511,17 @@ feature {NONE} -- Event handling
 
 	word_wrap_toggled (but: SD_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Called by `select_actions' of `but'.
+		local
+			a_word_wrapping_enabled: BOOLEAN
 		do
 			if but.is_selected then
 				editor.enable_word_wrapping
+				a_word_wrapping_enabled := True
 			else
 				editor.disable_word_wrapping
 			end
+			update_word_wrap_buttons (a_word_wrapping_enabled)
 		end
-
---	word_wrap_buttons: LIST [EV_TOOL_BAR_TOGGLE_BUTTON]
 
 	copy_button_selected is
 			-- Called by `select_actions' of `copy_button'.
@@ -465,9 +542,9 @@ feature {NONE} -- Event handling
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -478,19 +555,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

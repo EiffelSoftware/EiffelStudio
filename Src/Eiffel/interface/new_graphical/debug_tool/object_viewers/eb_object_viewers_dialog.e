@@ -76,9 +76,19 @@ feature {NONE} -- Initialization
 			if v /= Void then
 				v.build_tool_bar
 				w := v.tool_bar
-				if w /= Void and then w.parent = Void then
+				if w /= Void then
+					if {wp: EV_WIDGET} w.parent then
+						if wp /= viewer_header_cell then
+							--| wp is already parented somewhere
+							--| then let's wipe out `viewer_header_cell'
+							viewer_header_cell.wipe_out
+						end
+					else
 						--| We don't move `tool_bar' if already parented
-					viewer_header_cell.replace (w)
+						viewer_header_cell.replace (w)
+					end
+				else
+					viewer_header_cell.wipe_out
 				end
 			else
 				viewer_header_cell.wipe_out
@@ -236,9 +246,9 @@ invariant
 	has_command: command /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -249,19 +259,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

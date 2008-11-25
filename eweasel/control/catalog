@@ -439,6 +439,7 @@ test	svalid-conversion-export-error	svalid008 tcf pass system-validity
 test	svalid-inherit-labeled-tuple	svalid009 tcf pass system-validity
 test	svalid-inherit-labeled-tuple-assign	svalid010 tcf pass system-validity
 test	conversion-take-deanchored-form	svalid011 tcf pass system-validity conversion
+test	inherited-conversion-crash		svalid012 tcf pass system-validity conversion
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

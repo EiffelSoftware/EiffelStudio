@@ -94,6 +94,8 @@ feature {NONE} -- Initialization
 			vb2: EV_VERTICAL_BOX
 		do
 			Precursor
+			foreground_color := implementation.foreground_color
+			background_color := implementation.background_color
 
 			create buttons.make (5)
 			create vb
@@ -129,9 +131,6 @@ feature {NONE} -- Initialization
 			extend (vb)
 
 			set_text ("Use `set_text' to modify this message.")
-
-			foreground_color := implementation.foreground_color
-			background_color := implementation.background_color
 
 			key_press_actions.extend (agent on_key_press)
 		end

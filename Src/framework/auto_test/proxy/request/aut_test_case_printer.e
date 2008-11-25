@@ -248,7 +248,8 @@ feature {AUT_REQUEST} -- Processing
 			print_indentation
 			if a_request.is_feature_query then
 				l_rec_type := variable_type (a_request.receiver)
-				l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
+				-- l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
+				l_use_ot := not l_rec_type.name.is_equal (system.any_type.name)
 				if l_use_ot then
 					output_stream.put_string ("if {l_ot")
 					output_stream.put_integer (ot_counter.to_integer_32)

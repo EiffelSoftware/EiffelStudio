@@ -104,6 +104,7 @@ feature {NONE} -- Implementation
     		failed: BOOLEAN
 	do
 		host := a_host
+		numeric_zone := -1
 		if host = Void or else host.is_empty then
 			create Result.make (1, 1)
 			Result.put (impl.loopback_address, 1)

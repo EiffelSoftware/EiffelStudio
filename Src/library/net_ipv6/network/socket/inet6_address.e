@@ -46,8 +46,10 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER) is
 		do
 			make_from_host_and_address (a_hostname, an_address)
-			the_scope_id := a_scope_id
-			is_scope_id_set := True
+			if a_scope_id >= 0 then
+				the_scope_id := a_scope_id
+				is_scope_id_set := True
+			end
 		end
 
 	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER) is

@@ -132,9 +132,9 @@ feature {NONE} -- Status report
 	is_creating_new_class: BOOLEAN
 			-- <Precursor>
 		do
-			Result := current_results /= Void
+			Result := current_results /= Void and then not current_results.is_empty
 		ensure then
-			definition: Result = (current_results /= Void)
+			definition: Result = (current_results /= Void and then not current_Results.is_empty)
 		end
 
 feature {NONE} -- Query
@@ -689,7 +689,9 @@ feature{NONE} -- Test result analyizing
 						end
 						l_all.forth
 					end
-					if not current_results.is_empty then
+					from until
+						current_results.is_empty
+					loop
 						create_new_class
 					end
 				end
@@ -700,7 +702,7 @@ feature{NONE} -- Test result analyizing
 
 	add_result (a_result: !AUT_TEST_CASE_RESULT)
 		require
-			creating_new_class: is_creating_new_class
+			current_results_attached: current_results /= Void
 			a_result_fails: a_result.is_fail
 		local
 			l_item: AUT_TEST_CASE_RESULT
@@ -731,29 +733,24 @@ feature{NONE} -- Test result analyizing
 	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
 			-- <Precursor>
 		local
-			l_res_cursor: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]
 			l_class_name: STRING
 			l_system: like system
+			l_count: NATURAL
 		do
 			l_system := system
 			check l_system /= Void end
 			source_writer.prepare (a_file, a_class_name, l_system)
 			from
-				l_res_cursor := current_results.new_cursor
-				l_res_cursor.start
+				l_count := 1
 			until
-				l_res_cursor.after
+				current_results.is_empty or l_count > max_tests_per_class
 			loop
-				if l_res_cursor.item.is_fail then
-					if {l_var_list: DS_HASH_TABLE [TUPLE [TYPE_A, STRING, BOOLEAN], ITP_VARIABLE]} l_res_cursor.item.witness.used_vars and
-					   {l_request_list: DS_LINEAR [AUT_REQUEST]} l_res_cursor.item.witness.request_list
-					then
-						source_writer.print_test_routine (l_res_cursor.item, l_request_list, l_var_list)
-					end
-				end
-				l_res_cursor.forth
+				source_writer.print_test_routine (current_results.last)
+				current_results.remove_last
 			end
 			source_writer.finish
+		ensure then
+			results_decreased: current_results.count < old current_results.count
 		end
 
 feature {NONE} -- Implementation
@@ -796,6 +793,9 @@ feature {NONE} -- Constants
 	replay_status_code: NATURAL = 2
 	minimize_status_code: NATURAL = 3
 	statistic_status_code: NATURAL = 4
+
+	max_tests_per_class: NATURAL = 9
+			-- Maximal number of test routines in a single class
 
 invariant
 	not_running_implies_status_compiling: not is_running implies (status = compile_status_code)

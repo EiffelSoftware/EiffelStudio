@@ -48,15 +48,13 @@ feature -- Status setting
 			put_class_header
 		end
 
-	print_test_routine (a_result: AUT_TEST_CASE_RESULT; a_request_list: !DS_LINEAR [AUT_REQUEST]; a_var_list: !DS_HASH_TABLE [TUPLE [TYPE_A, STRING, BOOLEAN], ITP_VARIABLE])
+	print_test_routine (a_result: AUT_TEST_CASE_RESULT)
 			-- Print test routine for given request list and variable list.
 		require
 			writing: is_writing
-			a_request_list_not_void: a_request_list /= Void
-			no_request_void: not a_request_list.has (Void)
 		do
 			test_writer.set_current_result (a_result)
-			test_writer.print_test_case (a_request_list, a_var_list)
+			test_writer.print_test_case (a_result.witness.request_list, a_result.witness.used_vars)
 			test_writer.set_current_result (Void)
 		end
 

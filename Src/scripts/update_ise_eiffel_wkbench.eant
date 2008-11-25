@@ -50,14 +50,11 @@
 	<target name="create_config_local_script" >
 		<echo message="Creating local config script [${config_local_path}]" />
 		<set name="compile_dir" value="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" unless="$compile_dir" />
-		<echo to_file="${config_local_path}">
-&lt;project name="LocalConfig" default="init"&gt;
+		<echo to_file="${config_local_path}">&lt;project name="LocalConfig" default="init"&gt;
 	&lt;target name="init" &gt;
-		&lt;set name="compile_dir" value="#compile_dir#" unless="$compile_dir" /&gt;
+		&lt;set name="compile_dir" value="$compile_dir" unless="$$compile_dir" /&gt;
 	&lt;/target&gt;
-&lt;/project&gt;
-		</echo>
-		<replace file="$config_local_path" token="#compile_dir#" replace="$compile_dir" flags="g" />
+&lt;/project&gt;</echo>
 	</target>
 
 	<!-- Targets -->

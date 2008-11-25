@@ -21,8 +21,8 @@
 	</target>
 
 	<target name="compile" >
-		<exec executable="finish_freezing > NUL: 2>&amp;1" dir="#NAME#_EIFGENs/#TARGET#/F_code" if="$is_windows" />
-		<exec executable="finish_freezing > /dev/null" dir="#NAME#_EIFGENs/#TARGET#/F_code" unless="$is_windows" />
+		<exec executable="finish_freezing" dir="#NAME#_EIFGENs/#TARGET#/F_code" if="$is_windows" />
+		<exec executable="finish_freezing" dir="#NAME#_EIFGENs/#TARGET#/F_code" unless="$is_windows" />
 
 		<available dir="#NAME#_EIFGENs/#TARGET#/F_code" resource="#NAME#${exe}" variable="tmp_#NAME#_available" />
 		<geant dir="#NAME#_EIFGENs/#TARGET#/F_code" target="copy_file" arguments="#NAME#${exe},${F_CODE.absdir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />

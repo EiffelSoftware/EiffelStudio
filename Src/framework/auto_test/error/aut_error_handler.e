@@ -15,7 +15,9 @@ inherit
 	UT_ERROR_HANDLER
 		redefine
 			is_verbose,
-			report_error_message
+			report_error_message,
+			report_warning_message,
+			report_info_message
 		end
 
 	AUT_SHARED_TYPE_FORMATTER
@@ -357,9 +359,24 @@ feature -- Reporting errors
 			-- Report `an_error'.
 		do
 			precursor (an_error)
+			error_file.flush
 			has_error := True
 		ensure then
 			has_error: has_error
+		end
+
+	report_warning_message (a_warning: STRING_8)
+			-- <Precursor>
+		do
+			Precursor (a_warning)
+			warning_file.flush
+		end
+
+	report_info_message (an_info: STRING_8)
+			-- <Precursor>
+		do
+			Precursor (an_info)
+			info_file.flush
 		end
 
 	report_invalid_time_out_value (a_value: STRING) is

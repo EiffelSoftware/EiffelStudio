@@ -263,6 +263,9 @@
 		<replace file="$_TARGET_DELIV_DIR/studio/config/$ISE_PLATFORM/$ISE_C_COMPILER/config.eif" token="windows_flags: &quot;-SUBSYSTEM:WINDOWS&quot;" replace="windows_flags: &quot;-SUBSYSTEM:CONSOLE&quot;" flags="g" if="$is_windows" />
 
 		<setenv name="EWEASEL" value="$EIFFEL_SRC${path_separator}..${path_separator}eweasel" />
+		<exec executable="move ec${exe} ecg${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="copy ecb${exe} ec${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
+		<replace file="$EWEASEL/compilation/install_eweasel.bat" token="gvim.exe" replace="gvim.bat" flags="g" if="$is_windows" />
 		<exec executable="install_eweasel.bat" dir="$EWEASEL/compilation" 
 			accept_errors="true" exit_code_variable="no_return_code" />
 		<set name="_TARGET_DELIV_DIR" value="${old_TARGET_DELIV_DIR}" />
@@ -958,6 +961,7 @@
 		<geant target="_log" arguments=" - Copy library.. to ${a_target_dir}${path_separator}library" />
 		<geant target="copy_library_to" arguments="base,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base_original,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="testing,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
 		<geant target="copy_library_to" arguments="Eiffel2Java,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="gobo,${a_target_dir}" />
@@ -966,6 +970,7 @@
 		<geant target="copy_library_to" arguments="lex,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="memory_analyzer,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="net,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="net_ipv6,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="obsolete,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="parse,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
@@ -1137,7 +1142,7 @@
 		<!-- 'etc' must exists to allow shell binaries -->
 		<mkdir directory="${l_platf_dir}\etc"/>
 		<!-- 'compile_library.bat' must exists to allow 'finish_freezing -library' -->
-		<geant target="copy_exec_file" arguments="${_DELIVERY_DIR}\studio\spec\windows,${l_platf_dir}\bin,compile_library.bat" />
+		<geant target="copy_exec_file" arguments="${_DELIVERY_DIR}\studio\spec\${ISE_PLATFORM},${l_platf_dir}\bin,compile_library.bat" />
 		<!-- copy related config file on Windows -->
 		<set name="tmp_config_fn" value="windows-x86-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=windows" />
 		<set name="tmp_config_fn" value="windows-x86-64-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=win64" />
@@ -1145,8 +1150,8 @@
 		<unset name="tmp_config_fn" />
 
 		<!-- wel_hook.dll -->
-		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${a_install_dir}\esbuilder\spec\${ISE_PLATFORM}\bin,wel_hook.dll"  if="$a_only_core=false"/>
-		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${l_bin_dir},wel_hook.dll" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\${ISE_PLATFORM}\dll,${a_install_dir}\esbuilder\spec\${ISE_PLATFORM}\bin,wel_hook.dll"  if="$a_only_core=false"/>
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\${ISE_PLATFORM}\dll,${l_bin_dir},wel_hook.dll" />
 
 		<!-- finish_freezing -->
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${l_bin_dir},finish_freezing${exe}" />

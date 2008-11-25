@@ -89,8 +89,8 @@ feature {NONE} -- Access
 	current_task: ?AUT_TASK
 			-- Task `Current' works on every time `proceed' is called.
 
-	current_class: ?CLASS_C
-			-- Class for which test routines are currently created
+	current_results: ?DS_ARRAYED_LIST [!AUT_TEST_CASE_RESULT]
+			-- Results printed to new test class
 
 	source_writer: !TEST_GENERATED_SOURCE_WRITER
 			-- Source writer used for creating test classes
@@ -132,9 +132,9 @@ feature {NONE} -- Status report
 	is_creating_new_class: BOOLEAN
 			-- <Precursor>
 		do
-			Result := current_class /= Void
+			Result := current_results /= Void
 		ensure then
-			definition: Result = (current_class /= Void)
+			definition: Result = (current_results /= Void)
 		end
 
 feature {NONE} -- Query
@@ -211,6 +211,7 @@ feature {NONE} -- Basic operations
 					status := statistic_status_code
 				end
 			elseif is_generating_statistics then
+				io.put_string ("here!")
 				generate_statistics
 				generate_test_class
 				is_finished := True
@@ -662,6 +663,9 @@ feature{NONE} -- Test result analyizing
 			-- Generate resulting {EQA_TEST_SET} class
 		local
 			l_class_cursor: DS_LINEAR_CURSOR [CLASS_C]
+			l_result: AUT_TEST_CASE_RESULT
+			l_set: AUT_TEST_CASE_RESULT_SET
+			l_all: DS_LIST_CURSOR [AUT_TEST_CASE_RESULT]
 		do
 			from
 				l_class_cursor := result_repository.classes.new_cursor
@@ -669,10 +673,58 @@ feature{NONE} -- Test result analyizing
 			until
 				l_class_cursor.after
 			loop
-				current_class := l_class_cursor.item
-				create_new_class
-				current_class := Void
+				create current_results.make (10)
+				l_set := result_repository.results_by_class (l_class_cursor.item)
+				if not (l_set.is_pass or l_set.is_untested) then
+					l_all := l_set.list.new_cursor
+					from
+						l_all.start
+					until
+						l_all.after
+					loop
+						l_result := l_all.item
+						check l_result /= Void end
+						if l_result.is_fail then
+							add_result (l_result)
+						end
+						l_all.forth
+					end
+					if not current_results.is_empty then
+						create_new_class
+					end
+				end
+				current_results := Void
 				l_class_cursor.forth
+			end
+		end
+
+	add_result (a_result: !AUT_TEST_CASE_RESULT)
+		require
+			creating_new_class: is_creating_new_class
+			a_result_fails: a_result.is_fail
+		local
+			l_item: AUT_TEST_CASE_RESULT
+			l_done: BOOLEAN
+		do
+			from
+				current_results.start
+			until
+				current_results.after
+			loop
+				l_item := current_results.item_for_iteration
+				if l_item.witness.is_same_bug (a_result.witness) then
+					if l_item.witness.count > a_result.witness.count then
+						current_results.replace_at (a_result)
+					end
+					l_done := True
+					current_results.go_after
+				end
+				if not l_done then
+					current_results.forth
+				end
+			end
+			if not l_done then
+				current_results.force_last (a_result)
 			end
 		end
 
@@ -680,59 +732,28 @@ feature{NONE} -- Test result analyizing
 			-- <Precursor>
 		local
 			l_res_cursor: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]
-			l_feat_table: FEATURE_TABLE
-			l_set: AUT_TEST_CASE_RESULT_SET
-			l_feat: FEATURE_I
-			l_contains_test: BOOLEAN
-			l_system: SYSTEM_I
 			l_class_name: STRING
+			l_system: like system
 		do
-			l_system := test_suite.eiffel_project.system.system
-			l_class_name := current_class.name
-			check l_system /= Void and l_class_name /= Void end
-			source_writer.prepare (a_file, a_class_name, l_system, l_class_name)
+			l_system := system
+			check l_system /= Void end
+			source_writer.prepare (a_file, a_class_name, l_system)
 			from
-				l_feat_table := current_class.feature_table
-				l_feat_table.start
+				l_res_cursor := current_results.new_cursor
+				l_res_cursor.start
 			until
-				l_feat_table.after
+				l_res_cursor.after
 			loop
-				l_feat := l_feat_table.item_for_iteration
-				if l_feat /= Void and then
-				   --not (l_feat.is_attribute or l_feat.is_function) and
-				   not l_feat.is_prefix and
-				   not l_feat.is_infix and
-				   not l_feat.written_class.name.is_equal ("ANY")
-				then
-					l_set := result_repository.results_by_feature_and_class (l_feat, current_class)
-					if not (l_set.is_pass or l_set.is_untested) then
-						from
-							l_res_cursor := l_set.list.new_cursor
-							l_res_cursor.start
-						until
-							l_res_cursor.after
-						loop
-							if l_res_cursor.item.is_fail then
-								if {l_var_list: DS_HASH_TABLE [TUPLE [TYPE_A, STRING, BOOLEAN], ITP_VARIABLE]} l_res_cursor.item.witness.used_vars and
-								   {l_request_list: DS_LINEAR [AUT_REQUEST]} l_res_cursor.item.witness.request_list
-								then
-									l_contains_test := True
-									source_writer.print_test_routine (l_request_list, l_var_list)
-								end
-							end
-							l_res_cursor.forth
-						end
+				if l_res_cursor.item.is_fail then
+					if {l_var_list: DS_HASH_TABLE [TUPLE [TYPE_A, STRING, BOOLEAN], ITP_VARIABLE]} l_res_cursor.item.witness.used_vars and
+					   {l_request_list: DS_LINEAR [AUT_REQUEST]} l_res_cursor.item.witness.request_list
+					then
+						source_writer.print_test_routine (l_res_cursor.item, l_request_list, l_var_list)
 					end
 				end
-				l_feat_table.forth
+				l_res_cursor.forth
 			end
 			source_writer.finish
-			if not l_contains_test then
-				if a_file.is_closable then
-					a_file.close
-				end
-				a_file.delete
-			end
 		end
 
 feature {NONE} -- Implementation

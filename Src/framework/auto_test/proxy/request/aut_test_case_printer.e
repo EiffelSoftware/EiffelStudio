@@ -164,10 +164,7 @@ feature -- Basic operations
 			used_vars := a_var_list
 			ot_counter := 1
 			print_header
-			indent
-			print_indentation
-			print_routine_name
-			output_stream.put_line (" is")
+			print_routine_header
 			indent
 			print_indentation
 			output_stream.put_line ("local")
@@ -329,10 +326,12 @@ feature {AUT_REQUEST} -- Processing
 
 feature {NONE} -- Printing
 
-	print_routine_name
+	print_routine_header
 			-- Print new test routine name
 		do
-			output_stream.put_string ("test")
+			indent
+			print_indentation
+			output_stream.put_line ("test")
 		end
 
 	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is

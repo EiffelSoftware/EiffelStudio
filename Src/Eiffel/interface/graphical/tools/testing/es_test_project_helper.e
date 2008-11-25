@@ -129,17 +129,7 @@ feature -- Element change
 					l_cluster := a_cluster
 				else
 					l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
-					from
-						l_list.start
-					until
-						l_list.after
-					loop
-						if l_list.item_for_iteration = a_cluster then
-							l_cluster := a_cluster
-						end
-						l_list.forth
-					end
-					if l_cluster = Void and then not l_list.is_empty then
+					if not l_list.is_empty then
 						l_cluster := l_list.first
 					end
 				end

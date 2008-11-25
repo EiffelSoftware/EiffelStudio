@@ -266,6 +266,8 @@ feature {NONE} -- Events handling
 
 	on_key_down (ev_key: EV_KEY) is
 			-- process user input in `choice_list'	
+		local
+			l_char_string: STRING
 		do
 			if ev_key /= Void then
 				inspect
@@ -292,7 +294,12 @@ feature {NONE} -- Events handling
 					end
 				else
 					if code_completable.is_completing then
-						if code_completable.completion_activator_characters.has (ev_key.out.item (1)) then
+						l_char_string := ev_key.out
+						if
+							not ev_application.shift_pressed and then
+							l_char_string.count = 1 and then
+							code_completable.completion_activator_characters.has (l_char_string.item (1))
+						then
 								-- Continue completing
 							continue_completion := True
 							close_and_complete

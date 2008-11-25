@@ -112,6 +112,10 @@ extern "C" {
 /* ISE_RUNTIME class */
 #define eif_builtin_ISE_RUNTIME_dynamic_type(obj)			Dftype(obj)
 
+/* MEMORY class */
+#define eif_builtin_MEMORY_free(obj)					eif_mem_free(obj)
+#define eif_builtin_MEMORY_find_referers(obj,dftype)	find_referers(obj,dftype)
+
 /* PLATFORM class */
 #define eif_builtin_PLATFORM_is_vms						EIF_IS_VMS
 #ifdef EIF_IL_DLL

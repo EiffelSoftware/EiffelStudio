@@ -233,7 +233,7 @@ feature -- Command
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
-			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
+			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
 			l_managed_pointer.put_natural_32_be (rgba, byte_pos)

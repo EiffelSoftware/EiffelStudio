@@ -231,7 +231,7 @@ feature {AUT_REQUEST} -- Processing
 			create l_byte_node
 			create l_compound.make (2)
 			create l_locals.make (1)
-			l_locals.extend (system.any_class.compiled_representation.actual_type)
+			l_locals.extend (system.any_class.compiled_class.actual_type)
 			setup_byte_code_in_context (l_locals)
 
 			l_compound.extend (new_assign_b (new_local_b (1), expression_b_visitor.expression (a_request.expression)))

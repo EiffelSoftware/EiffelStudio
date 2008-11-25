@@ -129,7 +129,7 @@ feature -- Changing Priority
 			l_feat_table: FEATURE_TABLE
 			l_any_class: CLASS_C
 		do
-			l_any_class := system.any_class.compiled_representation
+			l_any_class := system.any_class.compiled_class
 			class_ := a_type.associated_class
 			l_feat_table := class_.feature_table
 			from

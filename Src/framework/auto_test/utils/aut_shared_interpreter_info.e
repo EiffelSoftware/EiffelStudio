@@ -25,7 +25,7 @@ feature -- Access
 			if {l_cluster: CONF_CLUSTER} system.eifgens_cluster then
 				l_class := system.universe.class_named (interpreter_root_class_name, l_cluster)
 				if l_class /= Void and then l_class.is_compiled then
-					interpreter_root_class_cell.put (l_class.compiled_representation)
+					interpreter_root_class_cell.put (l_class.compiled_class)
 				end
 			end
 		end

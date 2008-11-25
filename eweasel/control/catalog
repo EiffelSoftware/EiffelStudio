@@ -1402,6 +1402,7 @@ test	formal-generic-creation-crash	term160 tcf pass termination
 test	array-with-anchor-crash		term161 tcf pass termination dotnet
 test	crash-when-calling-out-on-a-formal	term162 tcf pass termination dotnet
 test    bad_formal_types                        term163 tcf pass validity
+test    crash-in-convertion-clause 	term164 tcf pass validity
 
 -- Config
 

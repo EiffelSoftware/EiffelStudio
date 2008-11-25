@@ -224,7 +224,7 @@ feature -- Preference Strings
 	local_vs_object_proportion_string: STRING is "debugger.proportion"
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"
 	right_debug_layout_string: STRING is "debugger.right_debug_layout"
-	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
+	expanded_display_bgcolor_string: STRING is "debugger.colors.expanded_display_background_color"
 	grid_background_color_string: STRING is "debugger.colors.grid_background_color"
 	grid_foreground_color_string: STRING is "debugger.colors.grid_foreground_color"
 	row_highlight_background_color_string: STRING is "debugger.colors.row_highlight_background_color"

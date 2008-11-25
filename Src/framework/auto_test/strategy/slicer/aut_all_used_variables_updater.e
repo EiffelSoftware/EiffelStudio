@@ -100,7 +100,8 @@ feature{AUT_REQUEST} -- Processing
 			if {l_var: ITP_VARIABLE} a_request.expression then
 				variables.force ([Void, Void, True], l_var.deep_twin)
 
-					-- NOTE: this is a workaround for variables containing `default_create'
+					-- TODO: this is a workaround for variables containing `default_pointer', where the
+					--       interpreter wrongly reports them to be Void
 			elseif {l_const: ITP_CONSTANT} a_request.expression and then l_rec.name = Void then
 				if {l_pointer: POINTER} l_const.value and then l_pointer = default_pointer then
 					l_rec.name := "POINTER"
@@ -123,8 +124,9 @@ feature{AUT_REQUEST} -- Processing
 					l_name.right_adjust
 					l_name.left_adjust
 
-						-- NOTE: following if-statement can be removed once pointer issue is fixed. currently
-						--       interpreter returns NONE for objects representing a pointer
+						-- TODO: following if-statement can be removed once pointer issue is fixed (see
+						--       `process_assign_expression_request'. Currently interpreter returns NONE for objects
+						--       representing a pointer.
 					if not l_name.is_equal ("NONE") or l_rec.name = Void then
 						variables.force ([Void, l_name, False], a_request.variable)
 					end

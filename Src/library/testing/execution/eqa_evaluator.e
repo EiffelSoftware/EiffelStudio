@@ -13,6 +13,8 @@ deferred class
 	EQA_EVALUATOR
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		export
 			{NONE} all

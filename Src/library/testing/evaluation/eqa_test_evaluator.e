@@ -14,6 +14,8 @@ class
 	EQA_TEST_EVALUATOR
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		rename
 			class_name as exception_class_name

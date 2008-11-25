@@ -211,7 +211,6 @@ feature {NONE} -- Basic operations
 					status := statistic_status_code
 				end
 			elseif is_generating_statistics then
-				io.put_string ("here!")
 				generate_statistics
 				generate_test_class
 				is_finished := True

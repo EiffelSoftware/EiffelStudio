@@ -326,7 +326,7 @@ feature {NONE} -- Events
 								if i > j then
 									l_type := l_types.substring (j, i - 1)
 									if {l_class: CLASS_I} l_universe.class_named (l_type, l_root) and then l_class.is_compiled then
-										if l_class.compiled_representation.is_expanded and not l_is_generic_param then
+										if l_class.compiled_class.is_expanded and not l_is_generic_param then
 											Result.valid := False
 											Result.error := locale_formatter.translation (e_no_expanded_types)
 										end

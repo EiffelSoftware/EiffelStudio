@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 		do
 			if not a_table.has (a_class) then
 				create l_feats.make (1, a_class.feature_table.count)
-				l_any_class := system.any_class.compiled_representation
+				l_any_class := system.any_class.compiled_class
 				from
 					i := 1
 					l_feature_table := a_class.feature_table

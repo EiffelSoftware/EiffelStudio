@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_system_not_void: a_system /= Void
 		do
 			system := a_system
-			test_case_ancestor := a_system.universe.classes_with_name ("AUT_TEST_CASE").first.compiled_representation
+			test_case_ancestor := a_system.universe.classes_with_name ("AUT_TEST_CASE").first.compiled_class
 		ensure
 			system_set: system = a_system
 		end

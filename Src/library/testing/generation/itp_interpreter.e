@@ -10,6 +10,7 @@ indexing
 deferred class ITP_INTERPRETER
 
 inherit
+	ANY
 
 	EXCEPTIONS
 		export {NONE} all end

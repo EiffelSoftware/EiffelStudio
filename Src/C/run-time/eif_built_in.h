@@ -63,37 +63,8 @@ extern "C" {
 #define eif_builtin_ARGUMENTS_argument(some,i)			arg_option(i)
 #define eif_builtin_ARGUMENTS_argument_count(some)		(arg_number() - 1)
 
-/* TUPLE class */
-#define eif_builtin_TUPLE_count(area)						(sp_count (area) - 1) /* - 1 because first argument is for object_comparison */
-
-/* SPECIAL class */
-#define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
-#define eif_builtin_SPECIAL_count(area)						sp_count (area)
-#define eif_builtin_SPECIAL_element_size(area)				sp_elem_size (area)
-#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, sp_count (area))
-
-/* PLATFORM class */
-#define eif_builtin_PLATFORM_is_vms						EIF_IS_VMS
-#ifdef EIF_IL_DLL
-#define eif_builtin_PLATFORM_is_thread_capable 			EIF_TRUE
-#else
-#define eif_builtin_PLATFORM_is_thread_capable 			EIF_THREADS_SUPPORTED
-#endif
-#define eif_builtin_PLATFORM_is_windows 				EIF_IS_WINDOWS
-#define eif_builtin_PLATFORM_is_unix 					EIF_TEST(!(EIF_IS_VMS || EIF_IS_WINDOWS))
-#define eif_builtin_PLATFORM_is_mac						EIF_OS==EIF_OS_DARWIN
-#ifdef EIF_IL_DLL
-#define eif_builtin_PLATFORM_is_dotnet					EIF_TRUE
-#else
-#define eif_builtin_PLATFORM_is_dotnet					EIF_FALSE
-#endif
-#define eif_builtin_PLATFORM_boolean_bytes 				sizeof(EIF_BOOLEAN)
-#define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER)
-#define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_WIDE_CHAR)
-#define eif_builtin_PLATFORM_integer_bytes 				sizeof(EIF_INTEGER_32)
-#define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
-#define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)
-#define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
+/* EXCEPTION_MANAGER */
+#define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise(object, code, meaning, message)			draise(code, meaning, message)
 
 /* INTERNAL class */
 #define eif_builtin_INTERNAL_c_is_instance_of(dftype,obj)	RTRA(dftype,obj)
@@ -141,8 +112,37 @@ extern "C" {
 /* ISE_RUNTIME class */
 #define eif_builtin_ISE_RUNTIME_dynamic_type(obj)			Dftype(obj)
 
-/* EXCEPTION_MANAGER */
-#define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise(object, code, meaning, message)			draise(code, meaning, message)
+/* PLATFORM class */
+#define eif_builtin_PLATFORM_is_vms						EIF_IS_VMS
+#ifdef EIF_IL_DLL
+#define eif_builtin_PLATFORM_is_thread_capable 			EIF_TRUE
+#else
+#define eif_builtin_PLATFORM_is_thread_capable 			EIF_THREADS_SUPPORTED
+#endif
+#define eif_builtin_PLATFORM_is_windows 				EIF_IS_WINDOWS
+#define eif_builtin_PLATFORM_is_unix 					EIF_TEST(!(EIF_IS_VMS || EIF_IS_WINDOWS))
+#define eif_builtin_PLATFORM_is_mac						EIF_OS==EIF_OS_DARWIN
+#ifdef EIF_IL_DLL
+#define eif_builtin_PLATFORM_is_dotnet					EIF_TRUE
+#else
+#define eif_builtin_PLATFORM_is_dotnet					EIF_FALSE
+#endif
+#define eif_builtin_PLATFORM_boolean_bytes 				sizeof(EIF_BOOLEAN)
+#define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER)
+#define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_WIDE_CHAR)
+#define eif_builtin_PLATFORM_integer_bytes 				sizeof(EIF_INTEGER_32)
+#define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
+#define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)
+#define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
+
+/* SPECIAL class */
+#define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
+#define eif_builtin_SPECIAL_count(area)						sp_count (area)
+#define eif_builtin_SPECIAL_element_size(area)				sp_elem_size (area)
+#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, sp_count (area))
+
+/* TUPLE class */
+#define eif_builtin_TUPLE_count(area)						(sp_count (area) - 1) /* - 1 because first argument is for object_comparison */
 
 #ifdef __cplusplus
 }

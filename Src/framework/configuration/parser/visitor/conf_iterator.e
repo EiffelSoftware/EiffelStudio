@@ -89,7 +89,6 @@ feature -- Visit nodes
 	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER) is
 			-- <Precursor>
 		do
-			process_cluster (a_test_cluster)
 		end
 
 	process_override (an_override: CONF_OVERRIDE) is

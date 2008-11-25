@@ -32,6 +32,7 @@ feature -- Visit
 			-- Process `a_visitor'
 		do
 			a_visitor.process_test_cluster (Current)
+			Precursor (a_visitor)
 		end
 
 end

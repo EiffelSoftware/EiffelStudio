@@ -23,7 +23,10 @@ feature {NONE} -- Initialization
 			if {l_info: FEATURE_CONVERSION_INFO} a_feature_conversion then
 				is_from_conversion := l_info.is_from_conversion
 				if is_from_conversion then
-					creation_type := l_info.target_type.actual_type
+						-- Unfortunately we have to duplicate, because otherwise we have
+						-- a crash during incremental compilation (see eweasel test#svalid012)
+						-- as well as a crash during formatting (see bug#15055).
+					creation_type := l_info.target_type.actual_type.duplicate
 				end
 				routine_id := l_info.conversion_feature.rout_id_set.first
 			else

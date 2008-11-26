@@ -16,6 +16,8 @@ inherit
 			make as make_popup_window,
 			show as show_popup_window,
 			show_relative_to_window as show_popup_window_relative_to_window
+		export
+			{NONE} show_popup_window_relative_to_window, show_popup_window
 		redefine
 			on_after_initialized,
 			border_color,
@@ -44,7 +46,7 @@ feature {NONE} -- Initialization
 				set_text (create {STRING_32}.make_from_string (locale_formatter.translation (l_please_wait)))
 			end
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: a_text.same_string (text)
 		end
 
 	make_with_icon (a_text: ?STRING_GENERAL; a_icon: ?like icon)
@@ -61,7 +63,7 @@ feature {NONE} -- Initialization
 			make (a_text)
 			set_icon (a_icon)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: a_text.same_string (text)
 			icon_set: icon = a_icon
 		end
 
@@ -166,7 +168,7 @@ feature -- Element change
 			message_label.set_minimum_size (l_size.width + padding_width, l_size.height + padding_width)
 			message_label.refresh_now
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: text.same_string (a_text)
 		end
 
 	set_action (a_action: ?like action)
@@ -253,6 +255,10 @@ feature -- Basic operation
 			a_mouse_y_big_enough: a_mouse_y >= -1
 		do
 			show_popup_window (a_x, a_y, a_mouse_x, a_mouse_y)
+			if not {PLATFORM}.is_windows then
+					-- Done because of locking performed on entire screen on *nix
+				register_kamikaze_action (show_actions, agent popup_window.disconnect_from_window_manager)
+			end
 			if action /= Void then
 				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
@@ -273,6 +279,10 @@ feature -- Basic operation
 			a_window_is_detroyed: not a_window.is_destroyed
 		do
 			show_popup_window_relative_to_window (a_window)
+			if not {PLATFORM}.is_windows then
+					-- Done because of locking performed on entire screen on *nix
+				register_kamikaze_action (show_actions, agent popup_window.disconnect_from_window_manager)
+			end
 			if action /= Void then
 				ev_application.do_once_on_idle (agent perform_transition_action)
 			end
@@ -306,9 +316,9 @@ feature {NONE} -- Internationalization
 	l_please_wait: STRING = "Please wait..."
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -319,19 +329,19 @@ feature {NONE} -- Internationalization
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

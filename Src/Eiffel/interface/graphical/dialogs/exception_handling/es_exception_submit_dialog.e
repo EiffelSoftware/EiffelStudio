@@ -826,13 +826,12 @@ feature {NONE} -- Reporting
 			l_report: COMM_SUPPORT_BUG_REPORT
 			l_thanks: ES_INFORMATION_PROMPT
 			l_transistion: ES_POPUP_TRANSITION_WINDOW
-			l_message: !STRING_32
+			l_window: EV_WINDOW
 		do
-			create l_message.make_from_string ("Submitting bug report, please wait...")
-			create l_transistion.make_with_icon (l_message, stock_pixmaps.tool_output_failed_icon_buffer)
-			if {l_window: !EV_WINDOW} dialog then
-				l_transistion.show_relative_to_window (l_window)
-			end
+			create l_transistion.make_with_icon ("Submitting bug report, please wait...", stock_pixmaps.tool_output_failed_icon_buffer)
+			l_window := dialog
+			check l_window_attached: l_window /= Void end
+			l_transistion.show_relative_to_window (l_window)
 
 			create l_report.make (synopsis, description, compiler_version_number.version)
 			l_report.environment := workbench_name + " " + version_number
@@ -880,9 +879,9 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -893,19 +892,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

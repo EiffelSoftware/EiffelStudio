@@ -413,7 +413,7 @@ feature {NONE} -- Store to disk
 		local
 			l_dynamic_type: INTEGER
 		do
-			l_dynamic_type := {ISE_RUNTIME}.dynamic_type ($obj)
+			l_dynamic_type := {ISE_RUNTIME}.dynamic_type (obj)
 			Result := l_dynamic_type = feature_as_type or else l_dynamic_type = invariant_as_type
 		end
 

@@ -27,6 +27,8 @@ inherit
 	AUTO_TEST_COMMAND_LINE_PARSER
 		export
 			{NONE} all
+		redefine
+			class_names
 		end
 
 	AUT_SHARED_INTERPRETER_INFO
@@ -94,6 +96,9 @@ feature {NONE} -- Access
 
 	source_writer: !TEST_GENERATED_SOURCE_WRITER
 			-- Source writer used for creating test classes
+
+	class_names: DS_LIST [!STRING_8]
+			-- <Precursor>
 
 feature -- Status report
 
@@ -320,7 +325,7 @@ feature {NONE} -- Implementation
 
 			proxy_time_out := configuration.proxy_time_out.as_integer_32
 
-			create {DS_ARRAYED_LIST [STRING]} class_names.make_from_linear (configuration.types)
+			create {DS_ARRAYED_LIST [!STRING]} class_names.make_from_linear (configuration.types)
 		end
 
 	prepare_witness_minimization
@@ -378,32 +383,45 @@ feature {NONE} -- Interpreter generation
 			l_dir: PROJECT_DIRECTORY
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_file_name: FILE_NAME
+			l_source_writer: TEST_INTERPRETER_SOURCE_WRITER
+			l_types: DS_LINEAR [!STRING]
+			l_system: SYSTEM_I
 		do
+			l_system := system
+			check l_system /= Void end
 				-- Create actual root class in EIFGENs cluster
-			l_dir := test_suite.eiffel_project.project_directory
+			l_dir := l_system.project_location
 			create l_file_name.make_from_string (l_dir.eifgens_cluster_path)
 			l_file_name.set_file_name (interpreter_root_class_name.as_lower)
 			l_file_name.add_extension ("e")
 			create l_file.make (l_file_name)
 			if not l_file.exists then
-				test_suite.eiffel_project.system.system.force_rebuild
+				l_system.force_rebuild
 			end
 			l_file.recursive_open_write
-			if l_file.is_open_write then
-				l_file.put_string ("class " + interpreter_root_class_name + "%N")
-				l_file.put_string ("inherit ITP_INTERPRETER%N")
-				l_file.put_string ("create execute end")
+			l_types := class_names
+			create l_source_writer
+			if l_file.is_open_write and l_types /= Void then
+				l_source_writer.write_class (l_file, l_types, l_system)
 				l_file.flush
 				l_file.close
 			end
 
-			if not system.is_explicit_root (interpreter_root_class_name, interpreter_root_feature_name) then
-				system.add_explicit_root (Void, interpreter_root_class_name, interpreter_root_feature_name)
+			if not l_system.is_explicit_root (interpreter_root_class_name, interpreter_root_feature_name) then
+				l_system.add_explicit_root (Void, interpreter_root_class_name, interpreter_root_feature_name)
 			end
 			if test_suite.eiffel_project_helper.can_compile then
 				test_suite.eiffel_project_helper.compile
 			end
-			system.remove_explicit_root (interpreter_root_class_name, interpreter_root_feature_name)
+			l_system.remove_explicit_root (interpreter_root_class_name, interpreter_root_feature_name)
+
+				-- Print a root class without any references to avoid compiler errors
+--			l_file.recursive_open_write
+--			if l_file.is_open_write then
+--				l_source_writer.write_class (l_file, create {DS_ARRAYED_LIST [!STRING]}.make (0), l_system)
+--				l_file.flush
+--				l_file.close
+--			end
 		end
 
 feature{NONE} -- Test case generation and execution
@@ -417,8 +435,9 @@ feature{NONE} -- Test case generation and execution
 			l_class_set: DS_HASH_SET [CLASS_I]
 			l_class_cur: DS_HASH_SET_CURSOR [CLASS_I]
 			l_type: TYPE_A
-			l_class_name_set: DS_HASH_SET [STRING]
+			l_class_name_set: DS_HASH_SET [!STRING]
 			l_name_cur: DS_HASH_SET_CURSOR [STRING]
+			l_name: STRING
 		do
 			create types_under_test.make (class_names.count)
 			create classes_under_test.make (class_names.count)
@@ -430,12 +449,7 @@ feature{NONE} -- Test case generation and execution
 				-- If actual generic parameter is given, that particular generic derivation is testes,
 				-- otherwise, the default generic parameter constraint is used to get a valid generic derivation.
 			create l_class_name_set.make (50)
-			l_class_name_set.set_equality_tester (
-				create {AGENT_BASED_EQUALITY_TESTER [STRING]}.make (
-					agent (a_str, b_str: STRING): BOOLEAN
-						do
-							Result := a_str.is_equal (b_str)
-						end))
+			l_class_name_set.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
 			if class_names.count > 0 then
 					-- If type names are given explicitly (either from command line or from compiler,
 					-- we only test those classes, of course their supplier classes will also be tested in passing.
@@ -449,7 +463,9 @@ feature{NONE} -- Test case generation and execution
 				until
 					l_class_cur.after
 				loop
-					l_class_name_set.force_last (l_class_cur.item.name)
+					l_name := l_class_cur.item.name
+					check l_name /= Void end
+					l_class_name_set.force_last (l_name)
 					l_class_cur.forth
 				end
 			end

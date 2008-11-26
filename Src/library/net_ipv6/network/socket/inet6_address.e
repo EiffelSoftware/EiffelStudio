@@ -39,6 +39,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING) is
 		do
 			-- TODO Implement scope check
+			the_scope_ifname := an_iface_name
 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
 			is_scope_ifname_set := True
 		end
@@ -80,10 +81,10 @@ feature -- Access
 	host_address: STRING is
 		do
 			Result := numeric_to_text (the_address)
-			if is_scope_ifname_set then -- must check this first
+			if is_scope_ifname_set and then the_scope_ifname /= Void then -- must check this first
 				Result.append_character ('%%')
 				Result.append_string(the_scope_ifname)
-			elseif is_scope_id_set then
+			elseif is_scope_id_set and then the_scope_id > 0 then
 				Result.append_character ('%%')
 				Result.append_integer (the_scope_id)
 			end

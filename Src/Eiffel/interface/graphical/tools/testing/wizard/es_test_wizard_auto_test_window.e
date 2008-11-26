@@ -13,7 +13,12 @@ inherit
 			make_window
 		end
 
-	CLASS_TYPE_NAME_SYNTAX_CHECKER
+	SHARED_EIFFEL_PARSER
+		export
+			{NONE} all
+		end
+
+	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
 		end
@@ -290,55 +295,83 @@ feature {NONE} -- Events
 	on_validate_type (a_input: !STRING_32): !TUPLE [valid: BOOLEAN; error: ?STRING_32]
 			-- Called when input of `types' has to be validated.
 		local
-			l_types, l_type: STRING
-			i, j: INTEGER
+			l_types: STRING
 			l_system: SYSTEM_I
-			l_universe: UNIVERSE_I
-			l_root: CONF_GROUP
-			l_is_generic_param: BOOLEAN
+			l_root: ?SYSTEM_ROOT
+			l_root_group: ?CONF_GROUP
+			l_root_class, l_class: ?CLASS_C
+			l_root_feature: ?FEATURE_I
+			l_type_as: ?TYPE_AS
+			l_type_a: ?TYPE_A
+			i: INTEGER
 		do
 			Result := [True, Void]
 			if not a_input.is_empty then
 				l_types := a_input.to_string_8
 				l_types.to_upper
 				if not (l_types.has ('!') or l_types.has ('?')) then
-
-					if is_valid_class_type_name (l_types) then
+					type_parser.parse_from_string ("type " + l_types)
+					error_handler.wipe_out
+					l_type_as := type_parser.type_node
+					if l_type_as /= Void then
 						if test_suite.is_service_available and then test_suite.service.is_project_initialized then
 							l_system := test_suite.service.eiffel_project.system.system
-							l_universe := l_system.universe
 							if not l_system.root_creators.is_empty then
-								l_root := l_system.root_creators.first.cluster
+								l_root := l_system.root_creators.first
+								l_root_group := l_root.cluster
+								l_root_class := l_root.root_class.compiled_class
+								if l_root_class /= Void then
+									l_root_feature := l_root_class.feature_named (l_root.procedure_name)
+								end
+							end
+							if l_root_class /= Void and l_root_group /= Void and l_root_feature /= Void then
+								if {l_class_type: CLASS_TYPE_AS} l_type_as then
+									l_type_a := type_a_generator.evaluate_type_if_possible (l_type_as, l_root_class)
+									if l_type_a /= Void and l_class_type.generics = Void then
+										l_class := l_type_a.associated_class
+										check l_class /= Void end
+										if l_class.is_expanded then
+											Result.valid := False
+											Result.error := locale_formatter.translation (e_no_expanded_types)
+										elseif l_class.is_generic then
+											from
+												i := 1
+											until
+												not l_class.is_valid_formal_position (i) or not Result.valid
+											loop
+												if l_class.generics [i].is_multi_constrained (l_class.generics) then
+													Result.valid := False
+													Result.error := locale_formatter.formatted_translation (e_multiple_constrains_not_supported, [l_types])
+												elseif l_class.constrained_type (i).has_formal_generic then
+													Result.valid := False
+													Result.error := locale_formatter.formatted_translation (e_recursive_generics_not_supported, [l_types])
+												end
+												i := i + 1
+											end
+										end
+									elseif l_type_a /= Void then
+										type_a_checker.init_for_checking (l_root_feature, l_root_class, Void, error_handler)
+										l_type_a := type_a_checker.check_and_solved (l_type_a, l_type_as)
+										type_a_checker.check_type_validity (l_type_a, l_type_as)
+										if error_handler.has_error then
+											Result.valid := False
+											Result.error := locale_formatter.formatted_translation (e_type_contains_invalid_generic, [l_types])
+											l_type_a := Void
+											error_handler.wipe_out
+										end
+									end
+									if l_type_a = Void and Result.valid then
+										Result.valid := False
+										Result.error := locale_formatter.formatted_translation (e_type_unkown, [l_types])
+									end
+								else
+									Result := [False, locale_formatter.formatted_translation (e_invalid_type_definition, [l_types])]
+								end
 							else
 								Result := [False, locale_formatter.translation (e_unable_to_check_compiled_classes)]
 							end
-
 						else
 							Result := [False, locale_formatter.translation (e_test_suite_not_available)]
-						end
-						from
-							i := 1
-							j := 1
-						until
-							j > l_types.count or else not Result.valid
-						loop
-							if i > l_types.count or else not (l_types.item (i).is_alpha_numeric or l_types.item (i) = '_') then
-								if i > j then
-									l_type := l_types.substring (j, i - 1)
-									if {l_class: CLASS_I} l_universe.class_named (l_type, l_root) and then l_class.is_compiled then
-										if l_class.compiled_class.is_expanded and not l_is_generic_param then
-											Result.valid := False
-											Result.error := locale_formatter.translation (e_no_expanded_types)
-										end
-									else
-										Result.valid := False
-										Result.error := locale_formatter.formatted_translation (e_class_not_compiled, [l_type])
-									end
-									l_is_generic_param := True
-								end
-								j := i + 1
-							end
-							i := i + 1
 						end
 					else
 						Result := [False, locale_formatter.formatted_translation (e_no_valid_type_name, [l_types])]
@@ -465,10 +498,15 @@ feature {NONE} -- Internationalization
 	b_new_type: !STRING = "Typename"
 
 	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
-	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again."
+	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again"
 	e_class_not_compiled: !STRING = "$1 is not a compiled type"
 	e_attachment_marks_not_supported: !STRING = "Attachment marks are not supported"
 	e_no_expanded_types: !STRING = "AutoTest is not able to test expanded types"
+	e_invalid_type_definition: !STRING = "$1 is not a valid type definition AutoTest can use"
+	e_type_unkown: !STRING = "$1 contains uncompiled types"
+	e_type_contains_invalid_generic: !STRING = "$1 contains invalid generic parameters"
+	e_multiple_constrains_not_supported: !STRING = "Type $1 can not be tested since it contains open generic parameters with multiple constraints. Please be more specific."
+	e_recursive_generics_not_supported: !STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 feature {NONE} -- Constants
 

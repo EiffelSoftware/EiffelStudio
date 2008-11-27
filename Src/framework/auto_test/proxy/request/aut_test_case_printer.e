@@ -237,12 +237,6 @@ feature {AUT_REQUEST} -- Processing
 			l_type: STRING
 			i: INTEGER
 		do
-			print (agent: STRING
-				do
-					create {STRING} Result.make_empty
-				end)
-
-
 			l_args := a_request.argument_list
 			l_type := type_name (a_request.target_type, a_request.creation_procedure)
 			print_indentation

@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			listen_socket: NETWORK_STREAM_SOCKET
+			accept_timeout: INTEGER
 		do
 			port := 12111
 
@@ -29,6 +30,9 @@ feature {NONE} -- Initialization
 				port := argument (1).to_integer
 				if argument_count > 1 then
 					prefer_ipv4_stack := argument (2).to_boolean
+				end
+				if argument_count > 2 then
+					accept_timeout := argument (3).to_integer
 				end
 			end
 
@@ -52,6 +56,8 @@ feature {NONE} -- Initialization
 				io.put_new_line
 					-- Listen on Server Socket with queue length = 2
 				listen_socket.listen (2)
+					-- Set the accept timeout
+				listen_socket.set_accept_timeout (accept_timeout)
 				perform_accept_serve_loop (listen_socket)
 			end
 			listen_socket.close
@@ -75,8 +81,10 @@ feature {NONE} -- Implementation
 				socket.accept
 				client_socket := socket.accepted
 				if client_socket = Void then
-						-- Some error occured
+						-- Some error occured, perhaps because of the timeout
 						-- We probably should provide some diagnostics here
+					io.put_string ("accept result = Void")
+					io.put_new_line
 				else
 					perform_client_communication (client_socket)
 				end

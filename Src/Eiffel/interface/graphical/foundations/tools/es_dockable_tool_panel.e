@@ -75,7 +75,11 @@ feature {NONE} -- Initialization
                 else
                     widget.extend (user_widget)
                 end
+
                 build_tool_interface (user_widget)
+
+                print (widget.width)
+                print (widget.height)
 
                 is_initializing := False
                 is_initialized := True
@@ -428,14 +432,19 @@ feature -- Basic operations
     show
             -- Show the tool, if possible
         do
-        	if develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled then
+        	if develop_window /= Void and then not develop_window.is_recycling and not develop_window.is_recycled then
         			-- The check here is to prevent a docking library bug from activating the tool.
-	            if not is_initialized then
+
+		    	if not is_initialized then
 	                    -- Delayed initialization may mean the user interface has not been shown yet.
 	                    -- Call to user_widget should create the widget
-	                initialize
-	            end
-	            Precursor {EB_TOOL}
+		    		initialize
+		    		if not {PLATFORM}.is_windows then
+		    				--| IEK: Hack to make sure that slide out panels are correctly sized upon initialization.
+		    			ev_application.process_events
+		    		end
+		    	end
+		    	Precursor {EB_TOOL}
 	        else
 	        	check False end
         	end

@@ -525,9 +525,13 @@ feature{NONE} -- Byte code
 			a_byte_code_attached: a_byte_code /= Void
 			a_length_positive: a_length > 0
 		external
-			"C macro use %"eif_interp.h%""
+			"C inline use %"eif_interp.h%""
 		alias
-			"eif_override_byte_code_of_body"
+			"[
+#ifdef WORKBENCH
+			eif_override_byte_code_of_body ((int) $a_body_id, (int) $a_pattern_id, (unsigned char *) $a_byte_code, (int) $a_length);
+#endif
+			]"
 		end
 
 	main_loop is

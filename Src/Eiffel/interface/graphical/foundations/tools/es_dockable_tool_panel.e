@@ -436,10 +436,6 @@ feature -- Basic operations
 	                    -- Delayed initialization may mean the user interface has not been shown yet.
 	                    -- Call to user_widget should create the widget
 		    		initialize
-		    		if not {PLATFORM}.is_windows then
-		    				--| IEK: Hack to make sure that slide out panels are correctly sized upon initialization.
-		    			ev_application.process_events
-		    		end
 		    	end
 		    	Precursor {EB_TOOL}
 	        else

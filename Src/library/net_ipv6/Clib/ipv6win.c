@@ -495,6 +495,9 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 
 	if (timeout <= 0) {
 		connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
+		if (connect_res == SOCKET_ERROR) {
+			connect_res = WSAGetLastError();
+		}
 	} else {
 		int optval;
 		int optlen = sizeof(optval);
@@ -567,7 +570,11 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 	}
 
 	if (connect_res) {
-		eif_net_check(connect_res);
+		if (connect_res == WSAEADDRNOTAVAIL) {
+			eraise("Address is invalid on local machine, or port is not valid on remote machine", EN_PROG);
+		} else {
+			eraise("Unable to establish connection", EN_PROG);
+		}
 		return;
 	}
 

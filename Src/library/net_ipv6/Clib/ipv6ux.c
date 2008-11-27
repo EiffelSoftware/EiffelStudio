@@ -190,8 +190,8 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			/* connection not established immediately */
 		if (connect_res != 0) {
 			if (errno != EINPROGRESS) {
-					/* TODO Handle Error */
 				SET_BLOCKING(fd);
+				eraise("Unable to establish connection", EN_PROG);
 				return;
 			}
 			fd_set wr, ex;
@@ -212,16 +212,20 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 				 * we throw exception and shutdown input/output to prevent
 				 * socket from being used.
 				 * The socket should be closed immediately by the caller. */
-			 if (connect_res == 0) {
-					/* TODO Handle Error */
+			if (connect_res == 0) {
 				shutdown( fd, SHUT_RDWR);
-				return;
-			}
-			if (!FD_ISSET(fd, &ex)) {
-				connect_res = 0;
-			} else {
 				eraise("Unable to establish connection", EN_PROG);
 				return;
+			}
+			if (FD_ISSET(fd, &ex)) {
+				eraise("Unable to establish connection", EN_PROG);
+				return;
+			} else {
+				/* has connection been established */
+				int optlen = sizeof(connect_res);
+				if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void*)&connect_res, &optlen) <0) {
+				    connect_res = errno;
+				}
 			}
 		}
 		SET_BLOCKING(fd);

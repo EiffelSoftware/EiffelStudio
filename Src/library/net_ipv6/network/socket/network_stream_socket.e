@@ -111,6 +111,24 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 
 feature
 
+	connect_timeout: INTEGER
+		-- The connect timeout in milliseconds
+
+	set_connect_timeout (a_timeout: INTEGER) is
+			--  Sets the connect timeout in milliseconds
+		do
+			connect_timeout := a_timeout
+		end
+
+	accept_timeout: INTEGER
+		-- The connect timeout in milliseconds
+
+	set_accept_timeout (a_timeout: INTEGER) is
+			--  Sets the accept timeout in milliseconds
+		do
+			accept_timeout := a_timeout
+		end
+
 	listen (queue: INTEGER) is
 			-- Listen on socket for at most `queue' connections.
 		local
@@ -133,15 +151,14 @@ feature
 			l_last_fd: like fd
 		do
 			if not retried then
+				accepted := Void
 				pass_address := address.twin
 				l_last_fd := last_fd
-				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, 0);
+				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
 				last_fd := l_last_fd
 				if return > 0 then
 					create accepted.make_from_fd (return, address.twin);
 					accepted.set_peer_address (pass_address)
-				else
-					accepted := Void
 				end
 			end
 		rescue
@@ -284,7 +301,7 @@ feature {NONE} -- Implementation
 			l_fd := fd
 			l_fd1 := fd1
 			l_port := the_local_port
-			c_connect ($l_fd, $l_fd1, $l_port, peer_address.socket_address.item, 0)
+			c_connect ($l_fd, $l_fd1, $l_port, peer_address.socket_address.item, connect_timeout)
 			fd := l_fd
 			fd1 := l_fd1
 			the_local_port := l_port

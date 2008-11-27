@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			address: INET_ADDRESS
+			timeout: INTEGER
 		do
 			host := "localhost"
 			port := 12111
@@ -36,6 +37,9 @@ feature {NONE} -- Initialization
 				end
 				if argument_count > 2 then
 					prefer_ipv4_stack := argument (3).to_boolean
+				end
+				if argument_count > 3 then
+					timeout := argument (4).to_integer
 				end
 			end
 
@@ -58,6 +62,8 @@ feature {NONE} -- Initialization
 			else
 					-- Create the socket connection to the Echo Server.
 				create nss.make_client_by_address_and_port (address, port)
+					-- Set the connection timeout
+				nss.set_connect_timeout (timeout)
 					-- Connect to the Server
 				nss.connect
 				if not nss.is_connected then

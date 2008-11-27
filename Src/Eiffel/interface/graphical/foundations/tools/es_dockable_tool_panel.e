@@ -78,9 +78,6 @@ feature {NONE} -- Initialization
 
                 build_tool_interface (user_widget)
 
-                print (widget.width)
-                print (widget.height)
-
                 is_initializing := False
                 is_initialized := True
 

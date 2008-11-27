@@ -79,6 +79,7 @@ feature {ITP_EXPRESSION} -- Processing
 						-- For real/double
 					create {REAL_CONST_B} last_expression.make (a_value.value.out, l_type)
 				elseif l_type.is_pointer then
+						-- FIXME: currently pointer values are not supported by AutoTest
 					create {VOID_B} last_expression
 				else
 					check Should_not_be_here: False end

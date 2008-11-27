@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: OPEN_ARGS
+	operands: ?OPEN_ARGS
 			-- Open operands.
 
 	target: ANY is
@@ -139,7 +139,7 @@ feature -- Status report
 					 (rout_disp = other.rout_disp)
 		end
 
-	valid_operands (args: OPEN_ARGS): BOOLEAN is
+	valid_operands (args: ?OPEN_ARGS): BOOLEAN is
 			-- Are `args' valid operands for this routine?
 		local
 			i: INTEGER
@@ -298,11 +298,13 @@ feature -- Basic operations
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
+		local
+			o: ?like operands
 		do
 			operands := args
 			apply
 			if not operands_set_by_user then
-				operands := Void
+				operands := o
 			end
 		end
 
@@ -714,7 +716,7 @@ feature {NONE} -- Externals
 
 feature -- Obsolete
 
-	arguments: OPEN_ARGS is
+	arguments: ?OPEN_ARGS is
 		obsolete
 			"use operands"
 		do

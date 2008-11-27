@@ -232,18 +232,80 @@ feature {AUT_REQUEST} -- Processing
 		end
 
 	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+		local
+			l_args: ?DS_LINEAR [ITP_EXPRESSION]
+			l_type: STRING
+			i: INTEGER
 		do
+			print (agent: STRING
+				do
+					create {STRING} Result.make_empty
+				end)
+
+
+			l_args := a_request.argument_list
+			l_type := type_name (a_request.target_type, a_request.creation_procedure)
+			print_indentation
+			output_stream.put_string ("execute_safe (agent")
+			if l_args /= Void then
+				print_argument_list (l_args, True)
+			end
+			output_stream.put_string (": ")
+			output_stream.put_line (l_type)
+			indent
+			print_indentation
+			output_stream.put_line ("do")
+			indent
 			print_indentation
 			output_stream.put_string ("create {")
-			output_stream.put_string (type_name (a_request.target_type, a_request.creation_procedure))
-			output_stream.put_string ("} ")
-			output_stream.put_string (a_request.target.name (variable_name_prefix))
+			output_stream.put_string (l_type)
+			output_stream.put_string ("} Result")
 			if not a_request.is_default_create_used then
 				output_stream.put_string (".")
 				output_stream.put_string (a_request.creation_procedure.feature_name)
-				print_argument_list (a_request.argument_list)
+				if l_args /= Void and then not l_args.is_empty then
+					output_stream.put_string (" (")
+					from
+						l_args.start
+					until
+						l_args.after
+					loop
+						output_stream.put_string ("a_arg")
+						output_stream.put_integer (i)
+						l_args.forth
+						if not l_args.after then
+							output_stream.put_string (", ")
+						end
+					end
+					output_stream.put_string (")")
+				end
 			end
 			output_stream.put_new_line
+			dedent
+			print_indentation
+			output_stream.put_string ("end")
+			if l_args /= Void then
+				print_argument_list (l_args, False)
+			end
+			output_stream.put_line (")")
+			dedent
+			print_indentation
+			output_stream.put_string ("if {l_ot")
+			output_stream.put_integer (ot_counter.to_integer_32)
+			output_stream.put_string (": ")
+			output_stream.put_string (l_type)
+			--output_stream.put_string (variable_type_name (a_request.target))
+			output_stream.put_line ("} last_object then")
+			indent
+			print_indentation
+			output_stream.put_string (variable_name (a_request.target))
+			output_stream.put_string (" := l_ot")
+			output_stream.put_integer (ot_counter.to_integer_32)
+			output_stream.put_new_line
+			dedent
+			print_indentation
+			output_stream.put_line ("end")
+			ot_counter := ot_counter + 1
 		end
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
@@ -267,7 +329,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_string (variable_name (a_request.target))
 			output_stream.put_character ('.')
 			output_stream.put_string (a_request.feature_name)
-			print_argument_list (a_request.argument_list)
+			print_argument_list (a_request.argument_list, False)
 			output_stream.put_line (")")
 
 			if a_request.is_feature_query then
@@ -380,14 +442,18 @@ feature {NONE} -- Printing
 			output_stream.put_line ("test")
 		end
 
-	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]; a_print_types: BOOLEAN) is
 			-- Print argument list `an_arinstruction' to `output_stream'.
+			--
+			-- If `a_print_types' is true, the argument definition will be printed instead.
 		require
 			an_argument_list_not_void: an_argument_list /= Void
 			no_argument_void: not an_argument_list.has (Void)
 		local
 			cs: DS_LINEAR_CURSOR [ITP_EXPRESSION]
 			l_var: ITP_VARIABLE
+			i: INTEGER
+			l_type: TYPE_A
 		do
 			if an_argument_list.count > 0 then
 				output_stream.put_character (' ')
@@ -395,19 +461,40 @@ feature {NONE} -- Printing
 				from
 					cs := an_argument_list.new_cursor
 					cs.start
+					i := 1
 				until
 					cs.off
 				loop
 					l_var ?= cs.item
-					if variable_type (l_var) = none_type then
-							-- Replace variables whose type is NONE by Void
-						output_stream.put_string ("Void")
+					l_type := variable_type (l_var)
+					if a_print_types then
+						output_stream.put_string ("a_arg")
+						output_stream.put_integer (i)
+						output_stream.put_string (": ")
+						if l_type = none_type then
+							output_stream.put_string ("?ANY")
+						else
+							if not l_type.is_basic then
+								output_stream.put_string ("?")
+							end
+							output_stream.put_string (l_type.name)
+						end
 					else
-						cs.item.process (expression_printer)
+						if l_type = none_type then
+								-- Replace variables whose type is NONE by Void
+							output_stream.put_string ("Void")
+						else
+							cs.item.process (expression_printer)
+						end
 					end
 					cs.forth
+					i := i + 1
 					if not cs.after then
-						output_stream.put_character  (',')
+						if a_print_types then
+							output_stream.put_character  (';')
+						else
+							output_stream.put_character  (',')
+						end
 						output_stream.put_character  (' ')
 					end
 				end

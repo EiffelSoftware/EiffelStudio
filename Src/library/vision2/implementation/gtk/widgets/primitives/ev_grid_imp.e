@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 				-- We need to explicitly show the cell gtk widget as we are not calling the Precursor as the event hookup is not needed.
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			initialize_grid
+				-- Force a resize of all internal items to make sure everything is updated correctly.
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (c_object)
 
 				-- Initialize colors from gtk style.
 			set_focused_selection_color (color_from_state (base_style, {EV_GTK_EXTERNALS}.gtk_state_selected_enum))

@@ -304,6 +304,7 @@ feature {NONE} -- Events
 			l_type_as: ?TYPE_AS
 			l_type_a: ?TYPE_A
 			i: INTEGER
+			l_level: NATURAL
 		do
 			Result := [True, Void]
 			if not a_input.is_empty then
@@ -350,10 +351,11 @@ feature {NONE} -- Events
 											end
 										end
 									elseif l_type_a /= Void then
+										l_level := error_handler.error_level
 										type_a_checker.init_for_checking (l_root_feature, l_root_class, Void, error_handler)
 										l_type_a := type_a_checker.check_and_solved (l_type_a, l_type_as)
 										type_a_checker.check_type_validity (l_type_a, l_type_as)
-										if error_handler.has_error then
+										if error_handler.error_level /= l_level then
 											Result.valid := False
 											Result.error := locale_formatter.formatted_translation (e_type_contains_invalid_generic, [l_types])
 											l_type_a := Void

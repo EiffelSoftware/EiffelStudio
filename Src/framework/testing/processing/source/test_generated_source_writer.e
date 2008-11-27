@@ -22,7 +22,7 @@ feature -- Access
 	ancestor_names: !ARRAY [!STRING]
 			-- <Precursor>
 		do
-			Result := << "EQA_TEST_SET" >>
+			Result := << "EQA_GENERATED_TEST_SET" >>
 		end
 
 	root_feature_name: !STRING = ""

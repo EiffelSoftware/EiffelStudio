@@ -77,6 +77,11 @@ feature {NONE} -- Access
 	ot_counter: NATURAL
 			-- Counter vor object test locals
 
+feature {NONE} -- Status report
+
+	is_last_request: BOOLEAN
+			-- Is current request last in list?
+
 feature -- Status setting
 
 	set_output_stream (an_output_stream: like output_stream) is
@@ -151,13 +156,13 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	print_test_case (a_request_list: DS_LINEAR [AUT_REQUEST]; a_var_list: like used_vars)
+	print_test_case (a_request_list: DS_BILINEAR [AUT_REQUEST]; a_var_list: like used_vars)
 			-- Print the request list `a_list' as an Eiffel test case.
 		require
 			a_request_list_not_void: a_request_list /= Void
 			no_request_void: not a_request_list.has (Void)
 		local
-			cs: DS_LINEAR_CURSOR [AUT_REQUEST]
+			cs: DS_BILINEAR_CURSOR [AUT_REQUEST]
 			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			l_type: TYPE_A
 		do
@@ -201,6 +206,7 @@ feature -- Basic operations
 			until
 				cs.off
 			loop
+				is_last_request := cs.is_last
 				cs.item.process (Current)
 				cs.forth
 			end
@@ -245,11 +251,29 @@ feature {AUT_REQUEST} -- Processing
 			l_rec_type: TYPE_A
 			l_use_ot: BOOLEAN
 		do
+
+			if is_last_request then
+				output_stream.put_new_line
+				indent
+				print_indentation
+				output_stream.put_line ("-- Final routine call")
+				dedent
+				print_indentation
+				output_stream.put_line ("set_is_recovery_enabled (False)")
+			end
+
 			print_indentation
+			output_stream.put_string ("execute_safe (agent ")
+			output_stream.put_string (variable_name (a_request.target))
+			output_stream.put_character ('.')
+			output_stream.put_string (a_request.feature_name)
+			print_argument_list (a_request.argument_list)
+			output_stream.put_line (")")
+
 			if a_request.is_feature_query then
+				print_indentation
 				l_rec_type := variable_type (a_request.receiver)
-				-- l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
-				l_use_ot := not l_rec_type.name.is_equal (system.any_type.name)
+				l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
 				if l_use_ot then
 					output_stream.put_string ("if {l_ot")
 					output_stream.put_integer (ot_counter.to_integer_32)
@@ -260,25 +284,46 @@ feature {AUT_REQUEST} -- Processing
 					output_stream.put_string (variable_name (a_request.receiver))
 					output_stream.put_string (" := ")
 				end
-			end
-			output_stream.put_string (variable_name (a_request.target))
-			output_stream.put_string (".")
-			output_stream.put_string (a_request.feature_name)
-			print_argument_list (a_request.argument_list)
-			if l_use_ot then
-				output_stream.put_line (" then")
-				indent
-				print_indentation
-				output_stream.put_string (variable_name (a_request.receiver))
-				output_stream.put_string (" := l_ot")
-				output_stream.put_integer (ot_counter.to_integer_32)
+				if l_rec_type.is_basic then
+					if l_rec_type.is_boolean then
+						output_stream.put_string ("last_boolean")
+					elseif l_rec_type.is_character then
+						output_stream.put_string ("last_character_8")
+					elseif l_rec_type.is_character_32 then
+						output_stream.put_string ("last_character_32")
+					elseif l_rec_type.is_pointer then
+						output_stream.put_string ("last_pointer")
+					elseif l_rec_type.is_real_32 then
+						output_stream.put_string ("last_real_32")
+					elseif l_rec_type.is_real_64 then
+						output_stream.put_string ("last_real_64")
+					elseif {l_int_type: INTEGER_A} l_rec_type then
+						output_stream.put_string ("last_integer_")
+						output_stream.put_integer (l_int_type.size)
+					elseif {l_nat_type: NATURAL_A} l_rec_type then
+						output_stream.put_string ("last_natural_")
+						output_stream.put_integer (l_nat_type.size)
+					else
+						output_stream.put_string ("Void")
+					end
+				else
+					output_stream.put_string ("last_object")
+				end
+				if l_use_ot then
+					output_stream.put_line (" then")
+					indent
+					print_indentation
+					output_stream.put_string (variable_name (a_request.receiver))
+					output_stream.put_string (" := l_ot")
+					output_stream.put_integer (ot_counter.to_integer_32)
+					output_stream.put_new_line
+					dedent
+					print_indentation
+					output_stream.put_string ("end")
+					ot_counter := ot_counter + 1
+				end
 				output_stream.put_new_line
-				dedent
-				print_indentation
-				output_stream.put_string ("end")
-				ot_counter := ot_counter + 1
 			end
-			output_stream.put_new_line
 		end
 
 	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is

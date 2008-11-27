@@ -7,9 +7,9 @@
 class TEST2 [G]
 
 feature
-	f: G is
+	f (a: G): G is
 		do
-			Result := Void;
+			Result := a
 		end
 end 
 

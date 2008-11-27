@@ -58,6 +58,10 @@ feature -- Access
 				Result := options_internal
 			else
 				Result := Precursor
+				if workbench.is_compiling then
+					options_internal := Result
+						-- We can cache the result as we know that it will be reset after compilation.
+				end
 			end
 		end
 
@@ -152,13 +156,6 @@ feature -- Status setting
 	set_changed (b: BOOLEAN) is
 			-- Assign `b' to `changed'.
 		do
-			if b then
-					-- We can store the options of the class temporarily during compilation to prevent repeated creation.
-				options_internal := options
-			else
-					-- This gets reset at the end of a successful compilation.
-				options_internal := Void
-			end
 			changed := b
 		end
 
@@ -180,11 +177,7 @@ feature {COMPILER_EXPORTER} -- Setting
 	reset_options is
 			-- <Precursor>
 		do
-				-- Reset any previous cached options.
-			if options_internal /= Void then
-				options_internal := Void
-				options_internal := options
-			end
+			options_internal := Void
 		end
 
 feature {NONE} -- Implementation

@@ -12,7 +12,7 @@ feature {NONE} -- Creation
 
 feature
 
-	test_formals (v1: G; v2: G; v3: G) is
+	test_formals (v1: G; v2: ?G; v3: G) is
 		do
 		end
 

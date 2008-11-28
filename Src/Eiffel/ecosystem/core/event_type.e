@@ -236,7 +236,7 @@ feature {NONE} -- Publication
 					else
 							-- Twin the list to prevent issues related to extension during publication
 						l_subscribers.twin.do_if (agent {!PROCEDURE [ANY, EVENT_DATA]}.call (a_args),
-							agent (ia_item: !PROCEDURE [ANY, EVENT_DATA]; ia_args: EVENT_DATA; ia_predicate: ?PREDICATE [ANY, EVENT_DATA]): BOOLEAN
+							agent (ia_item: !PROCEDURE [ANY, EVENT_DATA]; ia_args: ?EVENT_DATA; ia_predicate: ?PREDICATE [ANY, EVENT_DATA]): BOOLEAN
 									-- Agent to call the predicate with the event data arguments.		
 								do
 									if ia_predicate = Void then

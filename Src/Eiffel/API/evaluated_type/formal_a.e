@@ -452,8 +452,24 @@ feature {COMPILER_EXPORTER}
 				-- Use `other.conformance_type' rather than `other' to get deanchored form.
 			t := other.conformance_type
 			Result := same_as (t)
-			if not Result and then {c: like Current} t then
-				Result := is_equivalent (c) and then is_attachable_to (c)
+			if not Result and then {c: like Current} t and then is_equivalent (c) then
+					-- The rules are as follows, but we need to take care about implicit attachment status:
+    				-- 1. !G conforms to G, ?G and !G.
+					-- 2. G conforms to G and ?G.
+    				-- 3. ?G only conforms to ?G.
+				if is_implicitly_attached then
+						-- Case 1.
+						-- An (implicitly) attached type conforms to a type of any attachment status.
+					Result := True
+				elseif c.has_detachable_mark then
+						-- Case 1-3.
+						-- A type of any attachment status conforms to a detachable type.
+					Result := True
+				elseif not has_detachable_mark then
+						-- Case 2.
+						-- A type without the detachable mark conforms to the one without the detachable mark.
+					Result := not c.is_attached
+				end
 			end
 			if not Result then
 					-- We do not treat the case `is_expanded' as if it is an

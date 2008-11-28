@@ -230,6 +230,11 @@ feature -- C code generation
 			when {PREDEFINED_NAMES}.put_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_put (feat, buffer)
+
+			when {PREDEFINED_NAMES}.put_default_name_id then
+					-- Generate built-in feature `put_default' of class SPECIAL
+				generate_put_default (feat, buffer)
+
 			when
 				{PREDEFINED_NAMES}.item_name_id,
 				{PREDEFINED_NAMES}.infix_at_name_id
@@ -366,7 +371,7 @@ feature {NONE} -- C code generation
 					l_exp_class_type := gen_param.associated_class_type (Void)
 					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
-							-- Optimization: size is know at compile time
+							-- Optimization: size is known at compile time
 						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (");
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
@@ -436,6 +441,138 @@ feature {NONE} -- C code generation
 					-- Separation for formatting
 				buffer.put_new_line
 			end
+
+			l_byte_context.clear_feature_data
+		end
+
+	generate_put_default (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+			-- Generates built-in feature `put_default' of class SPECIAL
+		require
+			good_argument: buffer /= Void
+			feat_exists: feat /= Void
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.put_default_name_id
+		local
+			gen_param: TYPE_A
+			l_exp_class_type: CLASS_TYPE
+			l_param_is_expanded: BOOLEAN
+			type_c: TYPE_C
+			final_mode: BOOLEAN
+			encoded_name: STRING
+			index_type_name: STRING
+			index_arg_name: STRING
+			l_byte_context: like byte_context
+		do
+			l_byte_context := byte_context
+			gen_param := first_generic
+			l_param_is_expanded := gen_param.is_true_expanded
+			type_c := gen_param.c_type
+
+			feat.generate_header (Current, buffer)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
+
+			System.used_features_log_file.add (Current, "put_default", encoded_name)
+
+			final_mode := l_byte_context.final_mode
+
+			if final_mode then
+				index_type_name := "EIF_INTEGER"
+				index_arg_name := "arg1"
+			else
+				index_type_name := "EIF_TYPED_VALUE"
+				index_arg_name := "arg1x"
+			end
+
+			buffer.generate_function_signature ("void", encoded_name, True,
+				l_byte_context.header_buffer, <<"Current", index_arg_name>>,
+				<<"EIF_REFERENCE", index_type_name>>)
+
+			buffer.generate_block_open
+
+				-- Generate a local with a default value.
+			if l_param_is_expanded then
+				buffer.put_gtcx
+				l_exp_class_type := gen_param.associated_class_type (Void)
+				l_exp_class_type.generate_expanded_structure_declaration (buffer, "sloc1")
+				buffer.put_new_line
+				type_c.generate (buffer)
+				buffer.put_string ("loc1 = ")
+				type_c.generate_cast (buffer)
+				buffer.put_string ("(sloc1.data")
+				l_exp_class_type.generate_expanded_overhead_size (buffer)
+				buffer.put_two_character (')', ';')
+				buffer.put_new_line
+				buffer.put_string ("RTLD;")
+				buffer.put_new_line
+				buffer.put_string ("RTLI(2);")
+				buffer.put_current_registration (0)
+				buffer.put_local_registration (1, "loc1")
+				buffer.put_new_line
+				buffer.put_string ("memset (sloc1.data, 0, ")
+				if final_mode then
+					l_exp_class_type.skeleton.generate_size (buffer, True)
+				else
+					l_exp_class_type.skeleton.generate_workbench_size (buffer)
+				end
+				l_exp_class_type.generate_expanded_overhead_size (buffer)
+				buffer.put_string (gc_rparan_semi_c)
+					-- Update the type information
+				l_exp_class_type.generate_expanded_type_initialization (buffer, "sloc1", gen_param, Current)
+			elseif final_mode and then associated_class.assertion_level.is_precondition then
+				buffer.put_gtcx
+			end
+
+			if not final_mode then
+				buffer.put_new_line
+				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg1 arg1x.it_i4")
+			end
+
+			generate_precondition (buffer, final_mode, "arg1")
+
+			if l_param_is_expanded then
+				l_exp_class_type.generate_expanded_initialization (buffer, "loc1", "loc1", True)
+				if final_mode then
+					buffer.put_new_line
+					if l_exp_class_type.skeleton.has_references then
+							-- Optimization: size is known at compile time
+						buffer.put_string ("ecopy(loc1, Current + OVERHEAD + arg1 * (");
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (" + OVERHEAD));")
+					else
+							-- No references, do a simple `memcpy'.
+						buffer.put_new_line
+						buffer.put_string ("memcpy(Current + arg1 * ")
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (", loc1, ")
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (");")
+					end
+				else
+					buffer.put_new_line
+					buffer.put_string ("ecopy(loc1, Current + OVERHEAD + arg1 * (%
+						%*(EIF_INTEGER *) (Current + %
+						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
+						%sizeof(EIF_INTEGER))));")
+				end
+				buffer.put_new_line
+				buffer.put_string ("RTLE;")
+			else
+				buffer.put_new_line
+				buffer.put_string ("*(")
+				type_c.generate_access_cast (buffer)
+				buffer.put_string (" Current + arg1) = ")
+				type_c.generate_cast (buffer)
+				buffer.put_two_character ('0', ';')
+			end
+
+			buffer.generate_block_close
+			if not final_mode then
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg1")
+			end
+				-- Separation for formatting
+			buffer.put_new_line
 
 			l_byte_context.clear_feature_data
 		end

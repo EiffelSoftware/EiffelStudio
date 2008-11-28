@@ -20,4 +20,8 @@ feature
 		do
 		end
 
+	frozen put_default (i: INTEGER)
+		do
+		end
+
 end

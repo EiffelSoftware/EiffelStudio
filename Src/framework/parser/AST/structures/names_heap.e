@@ -359,6 +359,7 @@ feature {NONE} -- Implementation: access
 			put ("any") check found_item = any_name_id end
 			put ("System.Void") check found_item = system_void_name_id end
 			put ("call") check found_item = call_name_id end
+			put ("put_default") check found_item = put_default_name_id end
 		end
 
 invariant
@@ -368,7 +369,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -891,15 +891,19 @@ feature {COMPILER_EXPORTER} -- Primitives
 	is_full_named_type: BOOLEAN is
 			-- Is Current a fully named type?
 		local
-			i, count: INTEGER
+			i, nb: INTEGER
 		do
 			from
 				i := 1
-				count := generics.count
+				nb := generics.count + 1
+				Result := True
 			until
-				i > count or else Result
+				i = nb
 			loop
-				Result := generics.item (i).is_full_named_type
+				if not generics.item (i).is_full_named_type then
+					Result := False
+					i := nb - 1
+				end
 				i := i + 1
 			end
 		end

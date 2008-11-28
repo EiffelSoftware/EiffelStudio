@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EB_CLASS_INFO_ANALYZER
+		redefine
+			locals_from_local_entities_finder
+		end
 
 	EB_SHARED_PREFERENCES
 
@@ -648,6 +651,135 @@ feature {NONE} -- Implementation
 								insert_in_completion_possibilities (l_basic)
 							end
 							l_locals.forth
+						end
+					end
+				else
+					add_names_to_completion_list_from_local_entities_finder (l_feature, l_class)
+				end
+			end
+		end
+
+	add_names_to_completion_list_from_local_entities_finder (a_feature: FEATURE_I; a_class: CLASS_C)
+			-- Adds locals and arguments to completion list and adds 'Current' based on `a_current'		
+		require
+			a_feature_attached: a_feature /= Void
+			a_class_attached: a_class /= Void
+		local
+			l_basic: EB_NAME_FOR_COMPLETION
+			l_typed_basic: EB_NAME_WITH_TYPE_FOR_COMPLETION
+			l_name: !STRING_32
+			l_type: ?TYPE_A
+		do
+			if {l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]} locals_from_local_entities_finder then
+				from
+					l_locals.start
+				until
+					l_locals.after
+				loop
+					l_name := l_locals.key_for_iteration.as_attached
+					l_type := l_locals.item_for_iteration
+					if l_type /= Void and then l_type.is_valid_for_class (a_class) then
+							-- The type is valid for the given class
+						create l_typed_basic.make (l_name, l_type, a_feature)
+						insert_in_completion_possibilities (l_typed_basic)
+					else
+							-- The local type is not valid, so use the raw text.
+						create l_basic.make (l_name)
+						insert_in_completion_possibilities (l_basic)
+					end
+					l_locals.forth
+				end
+			end
+		end
+
+	locals_from_local_entities_finder: HASH_TABLE [?TYPE_A, !STRING_32]
+			-- <Precursor>
+			--| The finder is using AST
+			--| FIXME jfiat [2008/11/28] : this is to fix bug#15080
+		local
+			l_name: !STRING_32
+			l_type: ?TYPE_A
+			l_names_heap: NAMES_HEAP
+			l_feature: FEATURE_I
+			l_feature_as: FEATURE_AS
+			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_arguments: EIFFEL_LIST [TYPE_DEC_AS]
+			l_obj_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
+			l_type_dec_as_lists: ARRAY [EIFFEL_LIST [TYPE_DEC_AS]]
+			i: INTEGER
+		do
+			l_feature := current_feature_i
+			if l_feature /= Void and then {l_class: CLASS_C} current_class_c then
+				if current_feature_as /= Void then
+					l_feature_as := current_feature_as.feat_as
+					if l_feature_as /= Void then
+						if {l_body: BODY_AS} l_feature_as.body then
+							l_names_heap := names_heap
+							l_arguments := l_body.arguments
+							if {r_as: ROUTINE_AS} l_body.content then
+								l_locals := r_as.locals
+								l_obj_test_locals := r_as.object_test_locals
+							end
+							l_type_dec_as_lists := <<l_locals, l_arguments>>
+
+							create Result.make (5)
+							if l_body.type /= Void then
+								create l_name.make_from_string ("Result")
+								l_type := type_a_generator.evaluate_type_if_possible (l_body.type, l_class)
+								Result.force (l_type, l_name)
+							end
+
+								--| locals and arguments
+							from
+								i := l_type_dec_as_lists.lower
+							until
+								i > l_type_dec_as_lists.upper
+							loop
+								if {ast_locs: EIFFEL_LIST [TYPE_DEC_AS]} l_type_dec_as_lists[i] then
+									from
+										ast_locs.start
+									until
+										ast_locs.after
+									loop
+										if {tda: TYPE_DEC_AS} ast_locs.item then
+											if
+												{id_list: IDENTIFIER_LIST} tda.id_list and then
+												not id_list.is_empty
+											then
+												from
+													id_list.start
+												until
+													id_list.after
+												loop
+													if {s: STRING} l_names_heap.item (id_list.item) then
+														l_name := s.as_string_32.as_attached
+														l_type := type_a_generator.evaluate_type_if_possible (tda.type, l_class)
+														Result.force (l_type, l_name)
+													end
+													id_list.forth
+												end
+											end
+										end
+										ast_locs.forth
+									end
+								end
+								i := i + 1
+							end
+								--| Object test locals
+							if l_obj_test_locals /= Void then
+								from
+									l_obj_test_locals.start
+								until
+									l_obj_test_locals.after
+								loop
+									if {s2: STRING} l_names_heap.item (l_obj_test_locals.item.name.name_id) then
+										l_name := s2.as_string_32.as_attached
+										l_type := type_a_generator.evaluate_type_if_possible (l_obj_test_locals.item.type, l_class)
+										Result.force (l_type, l_name)
+									end
+									l_obj_test_locals.forth
+								end
+							end
 						end
 					end
 				end
@@ -1424,13 +1556,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-invariant
-	invariant_clause: True -- Your invariant here
-
 indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1441,19 +1570,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

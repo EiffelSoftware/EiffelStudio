@@ -112,7 +112,7 @@ feature -- Traversal
 			tbl_forth
 		end
 
-	item_for_iteration: G is
+	item_for_iteration: ?G is
 			-- Element at current iteration position
 		require
 			not_off: not after
@@ -154,7 +154,7 @@ feature -- Status report
 	found: BOOLEAN
 			-- Did last operation find the item sought?
 
-	found_item: G
+	found_item: ?G
 			-- Item, if any, yielded by last search operation
 
 	count: INTEGER is
@@ -236,7 +236,7 @@ feature {NONE} -- HASH_TABLE like features
 		do
 		end
 
-	tbl_item (key: INTEGER): G is
+	tbl_item (key: INTEGER): ?G is
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- HASH_TABLE like features
 			present: tbl_has (key)
 		end
 
-	tbl_force (new: G; key: INTEGER) is
+	tbl_force (new: ?G; key: INTEGER) is
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set found

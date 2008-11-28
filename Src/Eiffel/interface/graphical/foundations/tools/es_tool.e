@@ -69,6 +69,8 @@ feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- To be called when the button has became useless.
+		local
+			default_internal_panel: ?G
 		do
 			if internal_panel /= Void then
 					-- Clean up tool
@@ -77,7 +79,7 @@ feature {NONE} -- Clean up
 					internal_panel.content.close
 				end
 				internal_panel.recycle
-				internal_panel := Void
+				internal_panel := default_internal_panel
 			end
 			edition_changed.dispose
 			edition_changed := Void
@@ -212,9 +214,11 @@ feature -- Access
 			--          creating the tool UI.
 		require
 			not_is_recycled: not is_recycled
+		local
+			r: like internal_panel
 		do
-			Result := internal_panel
-			if Result = Void then
+			r := internal_panel
+			if r = Void then
 				Result := create_tool
 				internal_panel := Result
 
@@ -222,6 +226,8 @@ feature -- Access
 				build_tool (Result)
 
 				on_tool_instantiated
+			else
+				Result := r
 			end
 		ensure
 			result_attached: Result /= Void

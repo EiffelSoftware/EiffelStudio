@@ -1472,6 +1472,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 								--| Knowing that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
 								--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
 								--| Knowing that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
+							if {a: ATTACHABLE_TYPE_A} l_generic_parameter then
+									-- Use attachment status of an actual generic parameter
+									-- to check conformance to the formal generic parameter.
+								l_constraint_item := l_constraint_item.to_other_attachment (a)
+							end
 							if l_generic_parameter.conformance_type.conform_to (l_constraint_item) then
 								-- Everything is fine, we conform
 							else

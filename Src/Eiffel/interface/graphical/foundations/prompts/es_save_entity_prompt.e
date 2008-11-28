@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_SAVE_ENTITY_PROMPT [G -> ANY]
+	ES_SAVE_ENTITY_PROMPT [reference G -> ANY]
 
 inherit
 	ES_QUESTION_PROMPT

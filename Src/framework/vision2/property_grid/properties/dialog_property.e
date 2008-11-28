@@ -51,6 +51,7 @@ feature {NONE} -- Agents
 			parent_window: parent_window (parent) /= Void
 		local
 			l_parent: EV_WINDOW
+			l_default: G
 		do
 			update_text_on_deactivation
 			l_parent := parent_window (parent)
@@ -62,7 +63,7 @@ feature {NONE} -- Agents
 			if value /= Void then
 				dialog.set_value (value.twin)
 			else
-				dialog.set_value (Void)
+				dialog.set_value (l_default)
 			end
 			dialog.show_modal_to_window (l_parent)
 			if dialog.is_ok and then is_valid_value (dialog.value) then

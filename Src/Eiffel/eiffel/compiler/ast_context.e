@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			create locals.make (10)
 			create supplier_ids.make
-			create {ARRAYED_STACK [INTEGER]} scopes.make (0)
+			create scopes.make (0)
 			create object_test_locals.make (0)
 			create used_object_test_local_names.make (0)
 		end

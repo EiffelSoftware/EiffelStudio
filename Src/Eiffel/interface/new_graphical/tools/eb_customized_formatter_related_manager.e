@@ -115,7 +115,6 @@ feature{NONE} -- Implementation
 			-- `a_error_agent' will be invoked when error occurs.
 		require
 			a_descriptors_attached: a_descriptors /= Void
-			a_descriptors_valid: not a_descriptors.has (Void)
 			a_root_name_attached: a_root_name /= Void
 			a_path_valid: a_path /= Void and then not a_path.is_empty
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty

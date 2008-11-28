@@ -4540,7 +4540,11 @@ feature -- Implementation
 								l_left_expr := l_conv_info.byte_node (l_left_expr)
 							end
 						elseif not is_inherited then
-							if context.current_class.is_warning_enabled (w_vweq) then
+							if
+								context.current_class.is_warning_enabled (w_vweq) and then
+								(l_left_type.is_none implies l_right_type.is_expanded) and then
+								(l_right_type.is_none implies l_left_type.is_expanded)
+							then
 								create l_vweq
 								context.init_error (l_vweq)
 								l_vweq.set_left_type (l_left_type)

@@ -689,9 +689,10 @@ feature {NONE} -- User interface elements
             -- tool bar additions
         local
             l_site: SITE [EB_DEVELOPMENT_WINDOW]
+            r: ?G
         do
-            Result := internal_user_widget
-            if Result = Void then
+            r := internal_user_widget
+            if r = Void then
                 Result := create_widget
                 auto_recycle (Result)
 
@@ -702,6 +703,8 @@ feature {NONE} -- User interface elements
                 if l_site /= Void then
                     l_site.set_site (develop_window)
                 end
+			else
+				Result := r
             end
         ensure then
             result_attached: Result /= Void

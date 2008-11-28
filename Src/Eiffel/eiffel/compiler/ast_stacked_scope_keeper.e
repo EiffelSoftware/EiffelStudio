@@ -77,7 +77,7 @@ feature {AST_CONTEXT} -- Modification: nesting
 		do
 			if has_siblings then
 					-- Promote nested scope information to the outer level.
-				scope := inner_scopes.item
+				scope := inner_scopes.item.as_attached
 			end
 				-- Remove inner scope information.
 			inner_scopes.remove
@@ -124,7 +124,7 @@ feature {NONE} -- Storage
 	outer_scopes: STACK [like scope]
 			-- Outer scopes
 
-	inner_scopes: STACK [like scope]
+	inner_scopes: STACK [?like scope]
 			-- Inner scopes
 
 feature {NONE} -- Initialization

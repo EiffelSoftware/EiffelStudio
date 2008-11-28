@@ -11,14 +11,16 @@ class
 
 feature -- Content
 
-	meaningful_content: G is
+	meaningful_content: ?G is
 			-- Meaningful `content'.
 			-- If `content' is not void and content is not empty,
 			-- `meaningful_content' is attached to `content', otherwise Void.
+		local
+			default_content: ?G
 		do
 			Result := content
 			if Result /= Void and then Result.is_empty then
-				Result := Void
+				Result := default_content
 			end
 		ensure
 			good_result: valid_meaningful_content (Result)

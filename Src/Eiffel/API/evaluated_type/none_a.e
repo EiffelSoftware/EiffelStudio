@@ -108,11 +108,12 @@ feature {COMPILER_EXPORTER}
 				-- But it should not be `VOID_A' since VOID_A is only used as
 				-- return type for procedure
 			l_type := other.conformance_type
-			Result := not l_type.is_expanded and not l_type.is_void and then not l_type.is_attached
+			Result := not l_type.is_expanded and not l_type.is_void and then not l_type.is_attached and then
+				(l_type.is_formal implies l_type.is_reference)
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

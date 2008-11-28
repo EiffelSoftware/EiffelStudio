@@ -430,10 +430,8 @@ feature -- Removal
 		require
 			index_big_enough: i >= 0
 			index_small_enough: i < count
-		local
-			default_value: ?T
 		do
-			put (default_value, i)
+			{SYSTEM_ARRAY}.clear (internal_native_array, i, 1)
 		ensure
 			is_default: is_default (i)
 		end

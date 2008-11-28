@@ -25,6 +25,8 @@ feature -- Generation
 			inspect feature_name_id
 			when {PREDEFINED_NAMES}.put_name_id then
 				generate_put (gen_reg)
+--			when {PREDEFINED_NAMES}.put_default_name_id then
+--				generate_put_default (gen_reg)
 			when {PREDEFINED_NAMES}.item_name_id, {PREDEFINED_NAMES}.infix_at_name_id then
 				generate_item (gen_reg)
 			when {PREDEFINED_NAMES}.base_address_name_id then
@@ -183,7 +185,7 @@ feature {NONE} -- Implementation
 					context.restore_class_type_context
 					inliner.set_inlined_feature (Void)
 					context.set_inlined_current_register (Void)
-					
+
 					buf.put_new_line
 					buf.put_string ("memcpy (")
 					result_reg.print_register
@@ -511,7 +513,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

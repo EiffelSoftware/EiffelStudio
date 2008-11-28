@@ -190,6 +190,13 @@ feature {NONE} -- Implementation
 							{PREDEFINED_NAMES}.count_name_id
 						then
 							-- Even if the routine is big we inline it.
+						when
+							{PREDEFINED_NAMES}.put_default_name_id
+						then
+							debug ("to_implement")
+								(create {REFACTORING_HELPER}).to_implement ("Inline `put_default'.")
+							end
+							Result := False
 						else
 							Result := byte_code.size <= min_inlining_threshold
 						end
@@ -201,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

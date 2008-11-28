@@ -345,7 +345,7 @@ feature {COMPILER_EXPORTER} -- Modification
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `conformance_type'.
 		do
-			conformance_type := a.to_other_attachment (Current)
+			conformance_type := a.to_other_immediate_attachment (Current)
 			actual_type := Current
 		end
 
@@ -353,14 +353,14 @@ feature {COMPILER_EXPORTER} -- Modification
 			-- Mark type declaration as having an explicit attached mark.
 		do
 			Precursor
-			conformance_type := conformance_type.to_other_attachment (Current)
+			conformance_type := conformance_type.to_other_immediate_attachment (Current)
 		end
 
 	set_detachable_mark is
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
-			conformance_type := conformance_type.to_other_attachment (Current)
+			conformance_type := conformance_type.to_other_immediate_attachment (Current)
 		end
 
 	set_is_implicitly_attached
@@ -370,7 +370,7 @@ feature {COMPILER_EXPORTER} -- Modification
 			Precursor
 			a := conformance_type
 			if a /= Void then
-				conformance_type := a.to_other_attachment (Current)
+				conformance_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 
@@ -381,7 +381,7 @@ feature {COMPILER_EXPORTER} -- Modification
 			Precursor
 			a := conformance_type
 			if a /= Void then
-				conformance_type := a.to_other_attachment (Current)
+				conformance_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 

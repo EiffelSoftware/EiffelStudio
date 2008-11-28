@@ -31,6 +31,7 @@ inherit
 			internal_is_valid_for_class,
 			is_type_set,
 			to_other_attachment,
+			to_other_immediate_attachment,
 			to_type_set,
 			is_class_valid
 		end
@@ -1412,6 +1413,38 @@ feature -- Attachment properties
 				r := Result [i]
 				t := r.type
 				a := t.to_other_attachment (other)
+				if a /= t then
+						-- The type is different from what we have in the current one.
+					r := r.duplicate
+					r.set_type (a)
+					if Result = Current then
+							-- Avoid changing current type descriptor.
+						Result := duplicate
+					end
+					Result [i] := r
+				end
+				i := i - 1
+			end
+		end
+
+	to_other_immediate_attachment (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+			-- without taking into consideration attachment status of an anchor (if any)
+		local
+			i: INTEGER
+			r: RENAMED_TYPE_A [TYPE_A]
+			t: TYPE_A
+			a: TYPE_A
+		do
+			Result := Current
+			from
+				i := count
+			until
+				i <= 0
+			loop
+				r := Result [i]
+				t := r.type
+				a := t.to_other_immediate_attachment (other)
 				if a /= t then
 						-- The type is different from what we have in the current one.
 					r := r.duplicate

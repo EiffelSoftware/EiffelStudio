@@ -16,7 +16,8 @@ inherit
 			as_attachment_mark_free,
 			is_attached,
 			is_implicitly_attached,
-			to_other_attachment
+			to_other_attachment,
+			to_other_immediate_attachment
 		end
 
 feature -- Status report
@@ -165,6 +166,30 @@ feature -- Duplication
 
 	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
+		local
+			c: TYPE_A
+			o: ATTACHABLE_TYPE_A
+		do
+			Result := Current
+			if other /= Result then
+				if other.is_like_current then
+					c := other.conformance_type
+				else
+					c := other.actual_type
+				end
+				if c /= Void and then c /= Result and then {t: ATTACHABLE_TYPE_A} c then
+						-- Apply attachment settings of anchor if applicable and current type has none.
+					o := t
+				else
+					o := other
+				end
+				Result := to_other_immediate_attachment (o)
+			end
+		end
+
+	to_other_immediate_attachment (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+			-- without taking into consideration attachment status of an anchor (if any)
 		do
 			Result := Current
 			if other.has_attached_mark then

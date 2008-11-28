@@ -56,7 +56,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		local
-			l_content: like content
+			l_content: ?like content
 		do
 			l_content := meaningful_content
 			if l_content = Void then

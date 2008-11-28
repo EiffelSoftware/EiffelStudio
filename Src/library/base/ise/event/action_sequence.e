@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 	is_aborted_stack_internal: ?like is_aborted_stack
 		-- Internal storage for `is_aborted_stack'.
 
-	call_buffer: LINKED_QUEUE [EVENT_DATA]
+	call_buffer: LINKED_QUEUE [?EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
 		local

@@ -236,7 +236,7 @@ feature -- Primitives
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
 		do
-			actual_type := a.to_other_attachment (Current)
+			actual_type := a.to_other_immediate_attachment (Current)
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
@@ -293,19 +293,19 @@ feature -- Primitives
 
 feature -- Modification
 
-	set_attached_mark is
+	set_attached_mark
 			-- Mark type declaration as having an explicit attached mark.
 		local
 			a: like actual_type
 		do
 			Precursor
 			a := actual_type
-			if a /= Void and then not a.is_attached then
-				actual_type := a.as_attached_type
+			if a /= Void then
+				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 
-	set_detachable_mark is
+	set_detachable_mark
 			-- Set class type declaration as having an explicit detachable mark.
 		local
 			a: like actual_type
@@ -313,7 +313,7 @@ feature -- Modification
 			Precursor
 			a := actual_type
 			if a /= Void then
-				actual_type := a.to_other_attachment (Current)
+				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 
@@ -324,7 +324,7 @@ feature -- Modification
 			Precursor
 			a := actual_type
 			if a /= Void then
-				actual_type := a.to_other_attachment (Current)
+				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 
@@ -335,7 +335,7 @@ feature -- Modification
 			Precursor
 			a := actual_type
 			if a /= Void then
-				actual_type := a.to_other_attachment (Current)
+				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 

@@ -843,6 +843,17 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
+	to_other_immediate_attachment (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+			-- without taking into consideration attachment status of an anchor (if any)
+		require
+			other_attached: other /= Void
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Output
 
 	frozen append_to (a_text_formatter: TEXT_FORMATTER) is

@@ -501,10 +501,12 @@ feature {NONE} -- Implementation
 
 	refresh is
 			-- Refresh Current dialog to display `descriptors'.
+		local
+			l_default: G
 		do
 			load_descriptors
 			set_is_loaded (True)
-			set_last_selected_descriptor (Void)
+			set_last_selected_descriptor (l_default)
 			item_grid_wrapper.disable_auto_sort_order_change
 			item_grid_wrapper.sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
 			item_grid_wrapper.enable_auto_sort_order_change

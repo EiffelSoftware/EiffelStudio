@@ -14,7 +14,7 @@ inherit
 			make as make_parser
 		export
 			{NONE} all
-			{ANY} successful, execute, system_name
+			{ANY} is_successful, execute, system_name
 		redefine
 			switch_groups
 		end
@@ -199,37 +199,37 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: STRING is
+	name: !STRING is
 			-- Full name of application
 		once
 			Result := "Eiffel Compiler Lite Edition"
 		end
 
-	version: STRING is
+	version: !STRING is
 			-- Version number of application
 		once
-			Result := "6.0.0"
+			Result := "6.3.0"
 		end
 
-	loose_argument_name: STRING_8 is
+	non_switched_argument_name: !STRING_8 is
 			-- Name of lose argument, used in usage information
 		do
 			Result := "ecf"
 		end
 
-	loose_argument_description: STRING_8 is
+	non_switched_argument_description: !STRING_8 is
 			-- Description of loose argument, used in usage information
 		do
 			Result := "Eiffel compiler configuration file."
 		end
 
-	loose_argument_type: STRING_8 is
+	non_switched_argument_type: !STRING_8 is
 			-- Type of lose argument, used in usage information.
 		do
 			Result := "configuration file"
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [!ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
 		local
 			l_optimize_flags: HASH_TABLE [STRING_8, CHARACTER]
@@ -251,7 +251,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make_hidden (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
 		end
 
-	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
+	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP] is
 			-- Valid switch grouping
 		do
 			create Result.make (4)
@@ -315,9 +315,9 @@ feature {NONE} -- Option names
 	alias_switch: STRING = "alias"
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -328,19 +328,19 @@ feature {NONE} -- Option names
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
 	<target name="curl">
 		<description>cURL: libcURL wrapper library for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -56,7 +56,25 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="framework" location="$ISE_LIBRARY\framework\framework.ecf"/>
-		<cluster name="curl" location=".\" recursive="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<cluster name="curl" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/spec$</exclude>
+				<exclude>/Clib$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

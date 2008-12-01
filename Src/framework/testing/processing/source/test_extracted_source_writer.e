@@ -440,7 +440,7 @@ feature {NONE} -- Output
 	put_indexing is
 			-- Append indexing clause.
 		do
-			stream.put_line ("indexing%N")
+			stream.put_line ("indexing")
 			stream.indent
 			stream.put_line ("description: %"Regression tests reproducing application state of a previous execution.%"")
 			stream.put_line ("author: %"Testing tool%"")

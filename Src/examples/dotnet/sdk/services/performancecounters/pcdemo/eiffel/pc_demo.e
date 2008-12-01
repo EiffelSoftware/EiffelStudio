@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		do
 			if not retried then
 				if  not{PERFORMANCE_COUNTER_CATEGORY}.exists (object_name) then
-					{SYSTEM_CONSOLE}.write_line ("Installing category - " + object_name)
+					{SYSTEM_CONSOLE}.write_line ("Installing category - " + create {STRING}.make_from_cil (object_name))
 					create ccd.make
 					ccd.counter_name := counter_name
 					ccd.counter_type := {PERFORMANCE_COUNTER_TYPE}.rate_of_counts_per_second_32

@@ -13,6 +13,9 @@ deferred class
 
 inherit
 	CODE_SYMBOL_VALUE
+		redefine
+			value
+		end
 
 feature -- Access
 
@@ -82,7 +85,7 @@ feature {NONE} -- Basic operations
 
 			if l_value /= Void and not l_value.is_empty then
 				create l_result.make (l_value.count)
-				Result.append_string (l_value)
+				l_result.append_string (l_value)
 			else
 				create l_result.make_empty
 			end

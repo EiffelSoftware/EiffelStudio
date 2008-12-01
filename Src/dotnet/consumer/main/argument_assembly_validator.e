@@ -21,7 +21,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: STRING) is
+	validate_value (a_value: !STRING) is
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		do

@@ -10,14 +10,14 @@ frozen class
 
 inherit
 	SYSTEM_OBJECT
-	
+
 	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_parser
 		export
 			{NONE} all
 			{APPLICATION} execute
-			{ANY} successful
+			{ANY} is_successful
 		redefine
 			switch_groups
 		end
@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Initializes argument parser
 		do
-			make_parser (False, False)
-			set_use_separated_switch_values (True)
-			set_show_switch_arguments_inline (True)
+			make_parser (False)
+			set_is_using_separated_switch_values (True)
+			set_is_showing_argument_usage_inline (True)
 		end
 
 feature -- Access
@@ -40,7 +40,7 @@ feature -- Access
 	assemblies: LIST [STRING] is
 			-- List of assemblies to add to cache
 		require
-			successful: successful
+			successful: is_successful
 			add_or_removing_assemblies: add_assemblies or remove_assemblies
 		once
 			if add_assemblies then
@@ -60,7 +60,7 @@ feature -- Access
 	reference_paths: LIST [STRING] is
 			-- List of assembly reference paths used in resolution
 		require
-			successful: successful
+			successful: is_successful
 			add_assemblies: add_assemblies
 		once
 			Result := options_values_of_name (reference_switch)
@@ -75,7 +75,7 @@ feature -- Access
 	cache_path: STRING is
 			-- A location of a cache
 		require
-			successful: successful
+			successful: is_successful
 			use_specified_cache: use_specified_cache
 		do
 			Result := option_of_name (output_switch).value
@@ -89,7 +89,7 @@ feature -- Status report
 	add_assemblies: BOOLEAN is
 			-- Indiciate if assemblies are to be added to the cache (fake or otherwise)
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (add_switch)
 		end
@@ -97,7 +97,7 @@ feature -- Status report
 	add_information_only: BOOLEAN is
 			-- Inidicate if only the assembly information should be consumed
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (info_only_switch)
 		end
@@ -105,7 +105,7 @@ feature -- Status report
 	remove_assemblies: BOOLEAN is
 			-- Indicate if assemblies are to be removed from the cache
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (remove_switch)
 		end
@@ -113,7 +113,7 @@ feature -- Status report
 	list_assemblies: BOOLEAN is
 			-- Inidicates if contents of cache should be listed
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (list_switch)
 		end
@@ -121,7 +121,7 @@ feature -- Status report
 	clean_cache: BOOLEAN is
 			-- Inidicates if contents of cache should compacted
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (clean_switch)
 		end
@@ -129,7 +129,7 @@ feature -- Status report
 	show_verbose_output: BOOLEAN is
 			-- Inidicate if verbose information should be shown
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (verbose_switch)
 		end
@@ -137,7 +137,7 @@ feature -- Status report
 	use_specified_cache: BOOLEAN is
 			-- Indicates if a specified assembly cache should be used
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (output_switch)
 		end
@@ -145,7 +145,7 @@ feature -- Status report
 	wait_for_user_interaction: BOOLEAN is
 			-- Inidicate if user interaction is required before exiting
 		require
-			successful: successful
+			successful: is_successful
 		once
 			Result := has_option (halt_switch)
 		end
@@ -155,13 +155,13 @@ feature {NONE} -- Usage
 	name: STRING = "Eiffel Assembly Metadata %"Consumer%""
 			-- Full name of application
 
-	Version: STRING is
+	Version: !STRING is
 			-- Version number of application
 		once
 			Result := ({EMITTER}).to_cil.assembly.get_name.version.to_string
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+	switches: ?ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		once
@@ -178,7 +178,7 @@ feature {NONE} -- Usage
 
 		end
 
-	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
+	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (4)

@@ -33,7 +33,7 @@ feature -- Extension
 			-- <Precursor>
 		do
 			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
-				l_container.add_service (a_type, a_service, True)
+				l_container.register (a_type, a_service, True)
 			else
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_service, False)
 			end
@@ -43,7 +43,7 @@ feature -- Extension
 			-- <Precursor>
 		do
 			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
-				l_container.add_service_with_creator (a_type, a_activator, True)
+				l_container.register_with_activator (a_type, a_activator, True)
 			else
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_activator, False)
 			end
@@ -54,7 +54,7 @@ feature -- Removal
 	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if proffers_service (a_type, False) then
+			if is_service_proffered (a_type, False) then
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)
 			elseif a_promote and then {l_container: SERVICE_CONTAINER_I} site then
 				l_container.revoke (a_type, True)

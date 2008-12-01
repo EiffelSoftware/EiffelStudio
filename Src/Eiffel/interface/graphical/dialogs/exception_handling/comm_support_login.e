@@ -29,6 +29,9 @@ feature -- Status report
 	is_logged_in: BOOLEAN
 			-- Indicates if a user has been logged in
 
+	is_bad_request: BOOLEAN
+			-- Set by `attempt_logon' to indicate if there was network problem during last login
+
 feature -- Basic operations
 
 	attempt_logon (a_user, a_pass: STRING_GENERAL; a_remember: BOOLEAN)
@@ -47,6 +50,7 @@ feature -- Basic operations
 		do
 			is_logged_in := False
 			if not retried then
+				is_bad_request := False
 				l_curl := curl
 				l_hnd := curl_hnd
 
@@ -82,8 +86,22 @@ feature -- Basic operations
 			last_username_set: (is_logged_in and last_username = a_user) or (not is_logged_in and last_username = Void)
 			last_password_set: (is_logged_in and last_password = a_pass) or (not is_logged_in and last_password = Void)
 		rescue
-			check endlast_result_set: last_result /= {CURL_CODES}.curle_ok end
+			if l_page /= Void and then l_page.string.is_equal ("<h1>Bad Request</h1>") then
+				is_bad_request := True
+			end
+
+			check endlast_result_set: last_result /= {CURL_CODES}.curle_ok or is_bad_request end
+
 			retried := True
+
+			if curl_hnd /= default_pointer then
+				-- See bug#15066, following reset codes can avoid "keeping on failing login" problem
+				curl.cleanup (curl_hnd)
+				curl_hnd := default_pointer
+				init_easy_curl
+
+			end
+
 			retry
 		end
 
@@ -185,9 +203,9 @@ invariant
 	not_last_password_is_empty: is_logged_in implies not last_password.is_empty
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -198,19 +216,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

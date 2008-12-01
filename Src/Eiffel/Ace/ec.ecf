@@ -71,14 +71,20 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
+		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>
 		<cluster name="compiler_api_queries" location="$EIFFEL_SRC\Eiffel\API\queries\" recursive="true"/>
 		<cluster name="debugger_none" location="$EIFFEL_SRC\Eiffel\debugger_interface\none\" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
+		<cluster name="flat_short_ast" location="$EIFFEL_SRC\Eiffel\flat_short\AST\"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\">
-			<cluster name="interface_shared" location="$|shared\" recursive="true"/>
+			<cluster name="interface_shared" location="$|shared\" recursive="true">
+				<file_rule>
+					<exclude>/buffer$</exclude>
+				</file_rule>
+			</cluster>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
 	</target>
@@ -227,6 +233,7 @@
 			<file_rule>
 				<exclude>/eb_diagram_html_generator\.e$</exclude>
 				<exclude>/eb_gui_preferences\.e$</exclude>
+				<exclude>/dbg_preferences\.e$</exclude>
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>

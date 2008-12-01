@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
-			if not l_parser.successful then
+			if not l_parser.is_successful then
 					-- Finish process with an invalid parameter error code.
 				(create {EXCEPTIONS}).die (0x57)
 			end

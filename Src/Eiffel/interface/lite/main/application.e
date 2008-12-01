@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			-- Starts application after all command-line arguments have been validated.
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_command: like command_for_parser_state
 			l_displayer: ECL_ERROR_DISPLAYER
@@ -164,7 +164,7 @@ feature {NONE} -- Query
 			-- Retrieves a command given a parser's `a_parser' state
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		do
 			if a_parser.precompile then
 				if a_parser.optimize then
@@ -191,7 +191,7 @@ feature {NONE} -- Query
 			-- Loads a configuration file from parser `a_parser'
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
@@ -278,7 +278,7 @@ feature {NONE} -- Query
 			-- Retrieve a modified configuration file stream opened for writing.
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.successful
+			a_parser_successful: a_parser.is_successful
 		local
 			l_cfg_file: STRING
 			l_file_name: FILE_NAME

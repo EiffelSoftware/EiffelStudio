@@ -15,14 +15,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize_metadata (a_table: !DS_HASH_TABLE [?STRING_GENERAL, !STRING_8])
+	initialize_metadata (a_table: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8])
 			-- Initializes metadata table on first use.
 			-- Note: No change events are raised during initialization
 			--
 			-- `a_table': Source table to extract metadata from.
 		local
 			l_table: like internal_metadata_table
-			l_cursor: DS_HASH_TABLE_CURSOR [?STRING_GENERAL, !STRING_8]
+			l_key: STRING_8
+			l_cursor: DS_HASH_TABLE_CURSOR [!STRING_GENERAL, !STRING_8]
 		do
 			l_table := internal_metadata_table
 			if l_table = Void or else l_table.is_empty then
@@ -32,7 +33,8 @@ feature {NONE} -- Initialization
 					-- Merge entries
 				l_cursor := a_table.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					if is_valid_metadata_id (l_cursor.key) then
+					l_key := l_cursor.key
+					if is_valid_metadata_id (l_key) then
 						if {l_value: STRING_GENERAL} l_cursor.item then
 							if is_valid_metadata_value (l_value, l_key) then
 								l_table.force (l_value, l_key)
@@ -63,6 +65,8 @@ feature {NONE} -- Access
 
 	frozen metadata_table: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8]
 			-- Table of stored properties.
+		local
+			l_result: ?like metadata_table
 		do
 			l_result := internal_metadata_table
 			if l_result = Void then
@@ -106,9 +110,9 @@ feature -- Events
 	changed_events: !EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]
 			-- Events fired when a piece of metadata changes.
 		local
-			l_result: like internal_change_events
+			l_result: like internal_changed_events
 		do
-			l_result := internal_change_events
+			l_result := internal_changed_events
 			if l_result = Void then
 				create Result
 				internal_changed_events := Result

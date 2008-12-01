@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 						create b.make
 						b.serialize (Result, list)
 					else
-						{SYSTEM_CONSOLE}.write_line ("An exception occurred during serialization: " + {ISE_RUNTIME}.last_exception.to_string)
+						{SYSTEM_CONSOLE}.write_line ("An exception occurred during serialization: " + create {STRING}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string))
 					end
 				rescue
 					retried := True
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 							{SYSTEM_CONSOLE}.write_line (enum.current_)
 						end
 					else
-						{SYSTEM_CONSOLE}.write_line ("An exception occurred during deserialization: " + {ISE_RUNTIME}.last_exception.to_string)
+						{SYSTEM_CONSOLE}.write_line ("An exception occurred during deserialization: " + create {STRING}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string))
 					end
 				rescue
 					retried := True

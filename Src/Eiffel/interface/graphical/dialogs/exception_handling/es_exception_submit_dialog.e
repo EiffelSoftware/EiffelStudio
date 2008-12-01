@@ -420,6 +420,7 @@ feature {NONE} -- Action handlers
 			execute_with_busy_cursor (agent
 				local
 					l_error: ES_ERROR_PROMPT
+					l_error_info: STRING
 				do
 					login_button.disable_sensitive
 					support_login.force_logout
@@ -433,7 +434,13 @@ feature {NONE} -- Action handlers
 						create shrink_timer.make_with_interval (shrink_interval)
 						shrink_timer.actions.extend (agent on_shrink_interval_expired_for_collapse)
 					else
-						create l_error.make_standard ("Unable to login with the specified user name and password. Please check and try again.")
+						if support_login.is_bad_request then
+							l_error_info := "Unable to login due to network problem. Please try again later."
+						else
+							l_error_info := "Unable to login with the specified user name and password. Please check and try again."
+						end
+
+						create l_error.make_standard (l_error_info)
 						l_error.show (dialog)
 
 						logged_in_label.hide
@@ -460,7 +467,9 @@ feature {NONE} -- Action handlers
 			login_button.enable_sensitive
 			enable_login_content_widget (False)
 				-- The user wants to change the login, select the user name field
-			username_text.set_focus
+			if username_text.is_displayed then
+				username_text.set_focus
+			end
 
 			create shrink_timer.make_with_interval (shrink_interval)
 			shrink_timer.actions.extend (agent on_shrink_interval_expired_for_expand)

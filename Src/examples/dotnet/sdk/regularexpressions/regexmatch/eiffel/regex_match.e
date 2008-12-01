@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			m := email_regex.match (s)
 
 			if m.success then
-				{SYSTEM_CONSOLE}.write_line ("User: " + m.groups.item ("user").value)
-				{SYSTEM_CONSOLE}.write_line ("Host: " + m.groups.item ("host").value)
+				{SYSTEM_CONSOLE}.write_line ("User: " + create {STRING}.make_from_cil (m.groups.item ("user").value))
+				{SYSTEM_CONSOLE}.write_line ("Host: " + create {STRING}.make_from_cil (m.groups.item ("host").value))
 			else
 				{SYSTEM_CONSOLE}.write_line (s + " is not a value email address")
 			end

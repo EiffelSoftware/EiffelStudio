@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 				from enum := mc.get_enumerator until not enum.move_next loop
 					m ?= enum.current_
 					check m_attached: m /= Void end
-					{SYSTEM_CONSOLE}.write_line ("   " + m.value)
+					{SYSTEM_CONSOLE}.write_line ("   " + create {STRING}.make_from_cil (m.value))
 				end
 			else
-				{SYSTEM_CONSOLE}.write_line ("[" + s + "] contains no numbers.")
+				{SYSTEM_CONSOLE}.write_line ("[" + create {STRING}.make_from_cil (s) + "] contains no numbers.")
 			end
 
 			{SYSTEM_CONSOLE}.write_line

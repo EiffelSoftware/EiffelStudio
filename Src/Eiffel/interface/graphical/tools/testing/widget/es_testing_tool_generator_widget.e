@@ -81,7 +81,7 @@ feature {NONE} -- Events
 						busy_dialog.show_relative_to_window (development_window.window)
 					end
 				else
-					status_label.set_text ("hmmmmm...")
+					status_label.set_text ("")
 				end
 			else
 				status_label.set_text ("")

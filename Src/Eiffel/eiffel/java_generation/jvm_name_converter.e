@@ -11,10 +11,10 @@ class
 inherit
 	SHARED_JVM_CLASS_REPOSITORY
 	JVM_CONSTANTS
-			
+
 feature {NONE} -- Initialization
 feature {NONE}
-			
+
 	rename_type (a: STRING): STRING is
 			-- Rename type names as they come from Eiffel into jvm type names
 			-- Note: does not embed object types into L;, shorten
@@ -25,7 +25,7 @@ feature {NONE}
 						--	 Result.replace_substring_all (".", "/")
 			Result := java_to_jvm_name (Result)
 		end
-			
+
 	hack_rename (a: STRING) is
 			-- dirty hack to rename occurrences of "System.Object" to "java/lang/Object"
 			-- This is needed because of "System.Object" is hardcoded in
@@ -34,10 +34,10 @@ feature {NONE}
 		do
 			a.replace_substring_all ("System.Object", "java/lang/Object")
 		end
-			
+
 	eiffel_external_parameters_to_jvm_parameters (params: ARRAY [STRING]): ARRAY [STRING] is
-			-- converts the parameter type names as specified in the 
-			-- eiffel external clause to jvm type names (the ones with a 
+			-- converts the parameter type names as specified in the
+			-- eiffel external clause to jvm type names (the ones with a
 			-- starting "L" and a closing ";"
 		local
 			i : INTEGER
@@ -59,11 +59,11 @@ feature {NONE}
 			params_not_void_implies_result_not_void: params /= Void implies Result /= Void
 			same_size: params /= Void implies params.count = Result.count
 		end
-	
+
 	eiffel_external_parameter_names_to_jvm_parameters (params: ARRAY [STRING]): STRING is
-			-- takes an array of parameter type names as specified in 
-			-- eiffel source code in the java external signature clause 
-			-- and converts them to their jvm equivalent in form of a 
+			-- takes an array of parameter type names as specified in
+			-- eiffel source code in the java external signature clause
+			-- and converts them to their jvm equivalent in form of a
 			-- concatenated string
 			-- Note: this feature is about parameters and not return types
 		require
@@ -84,10 +84,10 @@ feature {NONE}
 			result_not_void: Result /= Void
 			result_count: Result.count >= params.count
 		end
-							
+
 	eiffel_external_signature_to_jvm_signature (params: ARRAY [STRING]; return_type: STRING): STRING is
-			-- converts the eiffel external signature type names as 
-			-- found in the eiffel class text in the external signature 
+			-- converts the eiffel external signature type names as
+			-- found in the eiffel class text in the external signature
 			-- clause to a type description as demanded by the JVM
 		do
 			Result := "("
@@ -105,7 +105,7 @@ feature {NONE}
 				Result.append ("V")
 			end
 		end
-			
+
 	java_to_jvm_name (in: STRING): STRING is
 			-- converts a java type name into a name as requested in many
 			-- places in the JVM class file. That is object types start
@@ -124,9 +124,9 @@ feature {NONE}
 			then
 				in.keep_head (in.index_of ('[', 1) - 1)
 			end
-							
+
 			Result := convert_non_array (in)
-							
+
 			from
 				i := 1
 			until
@@ -136,7 +136,7 @@ feature {NONE}
 				i := i + 1
 			end
 		end
-			
+
 	convert_non_array (in: STRING): STRING is
 			-- if `in' is a name for a native java name (like int,
 			-- short, ...) it will return it's JVM short name (I, S, ...)
@@ -204,10 +204,10 @@ feature {NONE}
 									  in.is_equal ("void") or
 									  in.is_equal ("boolean")) implies Result.is_equal ("L" + in + ";")
 		end
-			
-	jvm_type_descriptor_to_jvm_type_names (s: STRING): ARRAY [STRING] is		
-			-- takes a string of concatenated jvm type names (as in "I", 
-			-- "[I" or "Ljava/lang/String;" and gives you back an array of 
+
+	jvm_type_descriptor_to_jvm_type_names (s: STRING): ARRAY [STRING] is
+			-- takes a string of concatenated jvm type names (as in "I",
+			-- "[I" or "Ljava/lang/String;" and gives you back an array of
 			-- strings filled with the type names that make the string `s' up.
 			-- so simply speaking it splits the string `s'
 		require
@@ -222,7 +222,7 @@ feature {NONE}
 			current_type: STRING
 						-- current type
 		do
-			
+
 			from
 				s_pos := 1
 				create Result.make (1,0)
@@ -263,7 +263,7 @@ feature {NONE}
 					current_type := s.substring (s_pos, s.index_of (';', s_pos + 1))
 					s_pos := s_pos + current_type.count
 				else
-					-- type is a native value type 
+					-- type is a native value type
 					-- and thus is only one character wide
 					current_type := c.out
 					s_pos := s_pos + 1
@@ -273,10 +273,10 @@ feature {NONE}
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	jvm_type_descriptors_to_jvm_type_ids (s: STRING): ARRAY [INTEGER] is
 			-- takes a string of concatenated jvm type names (as in "I", "[I" or "Ljava/lang/String;")
-			-- and gives you an array of the corresponding jvm type 
+			-- and gives you an array of the corresponding jvm type
 			-- ids back
 		require
 			s_not_void: s /= Void
@@ -287,8 +287,6 @@ feature {NONE}
 			from
 				i := 1
 				create Result.make (1, 0)
-			variant
-				pos: s.count + 1 - i
 			until
 				i > s.count
 			loop
@@ -355,6 +353,8 @@ feature {NONE}
 						dead_end: False
 					end
 				end
+			variant
+				pos: s.count + 1 - i
 			end
 		end
 
@@ -369,7 +369,7 @@ feature
 		do
 			Result := repository.item (eiffel).jvm_type_id
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

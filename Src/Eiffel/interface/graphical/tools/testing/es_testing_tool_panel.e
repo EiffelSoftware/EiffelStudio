@@ -42,6 +42,8 @@ inherit
 	ES_HELP_CONTEXT
 		export
 			{NONE} all
+		redefine
+			help_provider
 		end
 
 	TAG_UTILITIES
@@ -207,10 +209,16 @@ feature {NONE} -- Initialization: widget status
 
 feature -- Access: help
 
+	help_provider: !UUID
+			-- <Precursor>
+		once
+			Result := (create {HELP_PROVIDER_KINDS}).wiki
+		end
+
 	help_context_id: !STRING_GENERAL
 			-- <Precursor>
 		once
-			Result := "702E5BFA-6EB6-48AA-B7DE-C7CB3E9D0471"
+			Result := "Testing Tool (Specification)"
 		end
 
 feature {NONE} -- Access
@@ -413,10 +421,12 @@ feature {NONE} -- Status setting: view
 					filter.remove_expression
 				end
 
-				if filter.has_expression and then
-				   filter.items.count = 0 and
-				   test_suite.service.tests.count > 0 then
-					filter_box.set_background_color (preferences.search_tool_data.none_result_keyword_field_background_color)
+				if filter.has_expression then
+					if filter.items.is_empty then
+						filter_box.set_background_color (preferences.search_tool_data.none_result_keyword_field_background_color)
+					else
+						filter_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (175, 255, 138))
+					end
 				else
 					filter_box.set_background_color (view_box.background_color)
 				end

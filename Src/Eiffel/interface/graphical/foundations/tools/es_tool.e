@@ -67,10 +67,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
-		local
-			default_internal_panel: ?G
 		do
 			if internal_panel /= Void then
 					-- Clean up tool
@@ -79,7 +77,7 @@ feature {NONE} -- Clean up
 					internal_panel.content.close
 				end
 				internal_panel.recycle
-				internal_panel := default_internal_panel
+				internal_panel := internal_panel.default
 			end
 			edition_changed.dispose
 			edition_changed := Void
@@ -215,10 +213,10 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		local
-			r: like internal_panel
+			l_result: like internal_panel
 		do
-			r := internal_panel
-			if r = Void then
+			l_result := internal_panel
+			if l_result = Void then
 				Result := create_tool
 				internal_panel := Result
 
@@ -227,7 +225,7 @@ feature -- Access
 
 				on_tool_instantiated
 			else
-				Result := r
+				Result := l_result
 			end
 		ensure
 			result_attached: Result /= Void
@@ -477,9 +475,9 @@ invariant
 	edition_small_enough: not is_supporting_multiple_instances implies edition <= 1
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -490,19 +488,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

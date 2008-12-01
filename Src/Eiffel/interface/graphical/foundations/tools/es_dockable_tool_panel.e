@@ -688,23 +688,25 @@ feature {NONE} -- User interface elements
             -- Access to user widget, as `widget' may not be the indicated user widget due to
             -- tool bar additions
         local
-            l_site: SITE [EB_DEVELOPMENT_WINDOW]
-            r: ?G
+            l_result: ?G
         do
-            r := internal_user_widget
-            if r = Void then
+            l_result := internal_user_widget
+            if l_result = Void then
                 Result := create_widget
                 auto_recycle (Result)
 
 				internal_user_widget := Result
 
                     -- If user widget is siteable then site with the development window
-                l_site ?= Result
-                if l_site /= Void then
+                if {l_site: SITE [EB_DEVELOPMENT_WINDOW]} Result then
                     l_site.set_site (develop_window)
                 end
 			else
-				Result := r
+				check
+					correctly_sited: is_recycling or else
+						({l_other_site: SITE [EB_DEVELOPMENT_WINDOW]} l_result implies l_other_site.site ~ develop_window)
+				end
+				Result := l_result
             end
         ensure then
             result_attached: Result /= Void

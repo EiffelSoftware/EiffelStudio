@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DOCUMENT_CMD
+	EB_DOCUMENTATION_WIZARD_COMMAND
 
 inherit
 	EB_MENUABLE_COMMAND

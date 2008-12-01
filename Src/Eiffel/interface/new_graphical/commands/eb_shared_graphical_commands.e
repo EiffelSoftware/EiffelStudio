@@ -108,7 +108,7 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
-	Document_cmd: DOCUMENT_CMD is
+	Document_cmd: EB_DOCUMENTATION_WIZARD_COMMAND is
 			-- Command to generate the HTML documentation
 		once
 			create Result.make

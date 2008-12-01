@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 		do
 			args := {ENVIRONMENT}.get_command_line_args
 			if args.count <= 3 then
-				{SYSTEM_CONSOLE}.write_line ("Usage: " + args.item (0) + " <property> <value>")
+				{SYSTEM_CONSOLE}.write_line ("Usage: " + create {STRING}.make_from_cil (args.item (0)) + " <property> <value>")
 			else
 				create obj_dir_ent.make (args.item (1))
-				{SYSTEM_CONSOLE}.write_line ("Name            = " + obj_dir_ent.name)
-				{SYSTEM_CONSOLE}.write_line ("Path            = " + obj_dir_ent.path)
-				{SYSTEM_CONSOLE}.write_line ("SchemaClassName = " + obj_dir_ent.schema_class_name)
+				{SYSTEM_CONSOLE}.write_line ("Name            = " + create {STRING}.make_from_cil (obj_dir_ent.name))
+				{SYSTEM_CONSOLE}.write_line ("Path            = " + create {STRING}.make_from_cil (obj_dir_ent.path))
+				{SYSTEM_CONSOLE}.write_line ("SchemaClassName = " + create {STRING}.make_from_cil (obj_dir_ent.schema_class_name))
 
 				prop := args.item (2)
 				if obj_dir_ent.properties.contains (prop) then

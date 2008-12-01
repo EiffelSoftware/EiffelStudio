@@ -162,6 +162,7 @@ feature {CHARACTER_TREE} -- character_trees_list
 			distance: INTEGER
 			l_key, r_key: STRING_32
 			l_tree, r_tree: CHARACTER_TREE[G]
+			l_default: G
 		do
 			create character_trees_list.make
 			distance := minimum_distance (a_string)
@@ -174,10 +175,10 @@ feature {CHARACTER_TREE} -- character_trees_list
 			r_tree.insert (a_item, r_key)
 			character_trees_list.put_front (r_tree)
 			key := key.substring (1, distance)
-			item := Void
+			item := default_item
 		ensure
 			two_elements: character_trees_list.count = 2
-			no_item: item = Void
+			no_item: item = default_item
 		end
 
 feature {CHARACTER_TREE} -- Information
@@ -202,6 +203,10 @@ feature {CHARACTER_TREE} -- Information
 		end
 
 	item: G
+
+	default_item: G is
+		do
+		end
 
 feature {CHARACTER_TREE} -- Implementation
 

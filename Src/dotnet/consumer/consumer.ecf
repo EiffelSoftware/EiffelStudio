@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<version major="6" minor="0" release="6" build="5856"/>
 		<file_rule>
@@ -44,7 +44,6 @@
 			<file_rule>
 				<exclude>/interop$</exclude>
 				<exclude>/resources$</exclude>
-				<exclude>/dotnet1x$</exclude>
 				<exclude>main</exclude>
 			</file_rule>
 		</cluster>
@@ -82,41 +81,14 @@
 		<root cluster="main" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
-	</target>
-	<target name="emdc_10" extends="emdc">
-		<setting name="msil_clr_version" value="v1.0.3705"/>
-		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
-		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
-		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
-		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
 	</target>
 	<target name="consumer_20" extends="consumer_library">
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>
 	</target>
-	<target name="consumer_1x" extends="consumer_library">
-		<root class="EMITTER" feature="make"/>
-		<setting name="line_generation" value="false"/>
-		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
-		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
-		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
-		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
-	</target>
-	<target name="consumer_10" extends="consumer_1x">
-		<setting name="msil_clr_version" value="v1.0.3705"/>
-	</target>
-	<target name="consumer_11" extends="consumer_1x">
-		<setting name="msil_clr_version" value="v1.1.4322"/>
-	</target>
 	<target name="debug_20" extends="consumer_20">
-		<setting name="line_generation" value="true"/>
-	</target>
-	<target name="debug_10" extends="consumer_10">
-		<setting name="line_generation" value="true"/>
-	</target>
-	<target name="debug_11" extends="consumer_11">
 		<setting name="line_generation" value="true"/>
 	</target>
 </system>

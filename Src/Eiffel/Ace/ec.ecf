@@ -61,6 +61,7 @@
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
+		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
@@ -71,7 +72,6 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
-		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>
 		<cluster name="compiler_api_queries" location="$EIFFEL_SRC\Eiffel\API\queries\" recursive="true"/>
@@ -97,6 +97,7 @@
 		<description>Lite version of Eiffel compiler, compiles only. This is primarly for tools that need to use the Eiffel compiler rather than developers</description>
 		<root cluster="lite_compiler" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="ecl"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<cluster name="lite_compiler" location="$EIFFEL_SRC\Eiffel\interface\lite\" recursive="true"/>
 	</target>
 	<target name="ecdpc" extends="batch">

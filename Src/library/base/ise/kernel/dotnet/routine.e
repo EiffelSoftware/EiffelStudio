@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: OPEN_ARGS is
+	operands: ?OPEN_ARGS is
 			-- Open operands.
 		local
 			i, nb: INTEGER
@@ -72,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	target: ANY is
+	target: ?ANY is
 			-- Target of call.
 		do
 			Result ?= target_object
@@ -155,11 +155,11 @@ feature -- Status report
 			end
 		end
 
-	valid_operands (args: OPEN_ARGS): BOOLEAN is
+	valid_operands (args: ?OPEN_ARGS): BOOLEAN is
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER
-			arg: ANY
+			arg: ?ANY
 			int: INTERNAL
 		do
 			create int
@@ -207,7 +207,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	frozen set_operands (args: OPEN_ARGS) is
+	frozen set_operands (args: ?OPEN_ARGS) is
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
@@ -272,7 +272,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS) is
+	call (args: ?OPEN_ARGS) is
 			-- Call routine with operands `args'.
 		require
 			valid_operands: valid_operands (args)
@@ -409,7 +409,7 @@ feature {ROUTINE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen open_types: ARRAY [INTEGER]
+	frozen open_types: ?ARRAY [INTEGER]
 			-- Types of open operands
 
 	frozen remove_gc_reference is
@@ -474,36 +474,39 @@ feature {NONE} -- Implementation
 			within_bounds: i <= open_count
 		local
 			l_internal: INTERNAL
+			o: like open_types
 		do
-			if open_types = Void then
-				create open_types.make (1, open_map.count)
+			o := open_types
+			if o = Void then
+				create o.make (1, open_map.count)
+				open_types := o
 			end
-			Result := open_types.item (i)
+			Result := o.item (i)
 			if Result = 0 then
 				create l_internal
 				Result := l_internal.generic_dynamic_type_of_type (
 					l_internal.generic_dynamic_type (Current, 2), i)
-				open_types.force (Result, i)
+				o.force (Result, i)
 			end
 		end
 
 feature -- Obsolete
 
-	arguments: OPEN_ARGS is
+	arguments: ?OPEN_ARGS is
 		obsolete
 			"use operands"
 		do
 			Result := operands
 		end
 
-	set_arguments (args: OPEN_ARGS) is
+	set_arguments (args: ?OPEN_ARGS) is
 		obsolete
 			"use set_operands"
 		do
 			set_operands (args)
 		end
 
-	valid_arguments (args: OPEN_ARGS): BOOLEAN is
+	valid_arguments (args: ?OPEN_ARGS): BOOLEAN is
 		obsolete
 			"use valid_operands"
 		do

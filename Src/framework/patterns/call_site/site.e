@@ -12,7 +12,7 @@ class
 
 feature -- Initialization
 
-	set_site (a_site: ?like site)
+	set_site (a_site: like site)
 			-- Sites, or unsites, Current with a site object.
 			--
 			-- `a_site': The site object to site Current with or Void to unsite.
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [G]]
+	siteable_entities: !ARRAYED_LIST [!SITE [?G]]
 			-- List of siteable entities to automatically site when Current is sited.
 		do
 			create Result.make (0)

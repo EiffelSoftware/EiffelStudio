@@ -6,7 +6,7 @@ indexing
 class
 	WORLD_CALC
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form,
@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	components: SYSTEM_DLL_SYSTEM_CONTAINER	
+	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container.
 
-	btn_equals, btn_clear: WINFORMS_BUTTON			
+	btn_equals, btn_clear: WINFORMS_BUTTON
 			-- System.Windows.Forms.Button.
 
 	btn_numbers, btn_ops: NATIVE_ARRAY [WINFORMS_BUTTON]
@@ -43,7 +43,7 @@ feature -- Access
 
 
 	txt_formula: WINFORMS_TEXT_BOX
-			-- System.Windows.Forms.TextBox 
+			-- System.Windows.Forms.TextBox
 
 	lbl_formula: WINFORMS_LABEL
 			-- System.Windows.Forms.Label
@@ -67,7 +67,7 @@ feature -- Implementation
 
 			set_text ("Math Greeting")
 			-- no need for the keyword `create' as DRAWING_SIZE is an expanded class (.NET value type)
-			l_size.make (5, 13) 
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
 			l_size.make (250, 230)
 			set_client_size (l_size)
@@ -225,7 +225,7 @@ feature -- Implementation
 		do
 			if not retried then
 				if components /= Void then
-					components.dispose	
+					components.dispose
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
@@ -251,7 +251,7 @@ feature -- Implementation
 				non_void_btn: btn /= Void
 			end
 			l_text := txt_formula.text
-			l_text.append (btn.text)
+			l_text.append (create {STRING}.make_from_cil (btn.text))
 			txt_formula.set_text (l_text)
 		end
 
@@ -267,7 +267,7 @@ feature -- Implementation
 			end
 			l_text := txt_formula.text
 			l_text.append (" ")
-			l_text.append (btn.text)
+			l_text.append (create {STRING}.make_from_cil (btn.text))
 			l_text.append (" ")
 			txt_formula.set_text (l_text)
 		end

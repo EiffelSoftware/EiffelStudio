@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			l_text: STRING
 		do
 			l_text := "Windows.Forms File Explorer - "
-			l_text.append (e.node.text)
+			l_text.append (create {STRING}.make_from_cil (e.node.text))
 			set_text (l_text)
 		end
 

@@ -58,7 +58,7 @@ feature {NONE} -- Event handlers
 	on_entry_written (sender: SYSTEM_OBJECT; e: ENTRY_WRITTEN_EVENT_ARGS)
 			-- Called when an entry is added to the monitored log
 		do
-			 {SYSTEM_CONSOLE}.write_line ("Written: " + e.entry.message)
+			 {SYSTEM_CONSOLE}.write_line ("Written: " + create {STRING}.make_from_cil (e.entry.message))
 		end
 
 indexing

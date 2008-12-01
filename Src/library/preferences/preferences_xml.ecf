@@ -39,6 +39,7 @@
 			<file_rule>
 				<exclude>/graphical$</exclude>
 				<exclude>/build_project$</exclude>
+				<exclude>/shortcut_management$$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="preference" location="preference\" recursive="true">

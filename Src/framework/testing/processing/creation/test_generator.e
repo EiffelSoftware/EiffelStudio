@@ -721,7 +721,6 @@ feature{NONE} -- Test result analyizing
 			a_result_fails: a_result.is_fail
 		local
 			l_item: AUT_TEST_CASE_RESULT
-			l_done: BOOLEAN
 		do
 			from
 				current_results.start
@@ -733,15 +732,13 @@ feature{NONE} -- Test result analyizing
 					if l_item.witness.count > a_result.witness.count then
 						current_results.replace_at (a_result)
 					end
-					l_done := True
 					current_results.go_after
-				end
-				if not l_done then
+				else
 					current_results.forth
+					if current_results.after then
+						current_results.force_last (a_result)
+					end
 				end
-			end
-			if not l_done then
-				current_results.force_last (a_result)
 			end
 		end
 

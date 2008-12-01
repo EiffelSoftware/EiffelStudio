@@ -1172,6 +1172,11 @@ feature -- IL Generation
 		do
 		end
 
+	generate_same_type_test is
+			-- Compare the type of two objects.
+		do
+		end
+
 feature -- Addresses
 
 	generate_local_address (n: INTEGER) is

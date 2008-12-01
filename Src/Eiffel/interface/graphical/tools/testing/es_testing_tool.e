@@ -58,7 +58,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "Testing tool"
+	t_title: STRING = "Testing Tool"
 
 ;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

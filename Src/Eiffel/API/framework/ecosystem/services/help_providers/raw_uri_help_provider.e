@@ -14,11 +14,7 @@ inherit
 			help_title
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
+--inherit {NONE}
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -61,12 +57,15 @@ feature -- Basic operations
 
 	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
 			-- <Precursor>
+		local
+			l_id: !STRING
 		do
-			if {l_id: STRING_8} a_context_id.as_string_8.twin then
-				format_uris (l_id)
-				launch_uri (l_id)
+			l_id := a_context_id.as_string_8.as_attached
+			if l_id ~ a_context_id then
+				l_id := l_id.twin
 			end
-
+			format_uris (l_id)
+			launch_uri (l_id)
 		end
 
 feature {NONE} -- Basic operations
@@ -100,7 +99,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Variable expansion
 
-	context_variables: !HASH_TABLE [STRING, STRING] is
+	context_variables: !HASH_TABLE [STRING, STRING]
 			-- A table of context variables, indexed by a variable name
 		do
 			Result := environment_variables
@@ -176,7 +175,7 @@ feature {NONE} -- Variable expansion
 			end
 		end
 
-	uri_variables (a_uri: !STRING; a_scanner: !RX_PCRE_MATCHER; a_var_extractor: !RX_PCRE_MATCHER): ?ARRAYED_LIST [TUPLE [var: !STRING; start_i, end_i: INTEGER]] is
+	uri_variables (a_uri: !STRING; a_scanner: !RX_PCRE_MATCHER; a_var_extractor: !RX_PCRE_MATCHER): ?ARRAYED_LIST [TUPLE [var: !STRING; start_i, end_i: INTEGER]]
 			-- Extracts variables from a URI and returns a list of variables with the start and end location
 			-- in characters.
 			--
@@ -187,18 +186,23 @@ feature {NONE} -- Variable expansion
 			not_a_uri_is_empty: not a_uri.is_empty
 			a_scanner_is_compiled: a_scanner.is_compiled
 			a_var_extractor_is_compiled: a_var_extractor.is_compiled
+		local
+			l_token_var: STRING
+			l_var: STRING
 		do
 			a_scanner.match (a_uri)
 			if a_scanner.has_matched then
 				create Result.make (5)
 				from a_scanner.first_match until not a_scanner.has_matched loop
-					if {l_token_var: !STRING} a_scanner.captured_substring (1) then
+					l_token_var := a_scanner.captured_substring (1)
+					if l_token_var /= Void then
 							-- Token variable located
 						if not l_token_var.is_empty then
 							a_var_extractor.match (l_token_var)
 							if a_var_extractor.has_matched then
 									-- Variable name extracted
-								if {l_var: !STRING} a_var_extractor.captured_substring (1) then
+								l_var := a_var_extractor.captured_substring (1)
+								if l_var /= Void then
 									Result.extend ([l_var, a_scanner.captured_start_position (1), a_scanner.captured_end_position (1)])
 								end
 							end
@@ -236,7 +240,7 @@ feature {NONE} -- Variable expansion
 	environment_variables: !HASH_TABLE [STRING, STRING]
 			-- All environment variables
 		once
-			Result := starting_environment_variables.as_attached
+			Result := (create {EXECUTION_ENVIRONMENT}).starting_environment_variables.as_attached
 		end
 
 	es_built_in_variables: !HASH_TABLE [STRING, STRING]
@@ -248,7 +252,7 @@ feature {NONE} -- Variable expansion
 		end
 
 indexing
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -273,7 +277,7 @@ indexing
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

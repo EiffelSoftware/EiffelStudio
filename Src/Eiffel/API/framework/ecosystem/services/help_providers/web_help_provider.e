@@ -29,9 +29,14 @@ feature -- Access
 
 	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
 			-- <Precursor>
+		local
+			l_title: ?STRING_32
 		do
-			if is_accessible and then {l_title: !STRING_32} document_title (full_url (a_context_id, a_section), False) then
+			if is_accessible then
 					-- `is_accessible' requires calling {CURL_ACCESS}.make
+				l_title := document_title (full_url (a_context_id, a_section), False)
+			end
+			if l_title /= Void then
 				Result := l_title
 			else
 				Result := Precursor {RAW_URI_HELP_PROVIDER} (a_context_id, a_section)
@@ -71,19 +76,19 @@ feature {NONE} -- Query
 		require
 			not_a_context_id_is_empty: not a_context_id.is_empty
 		do
-			create {!STRING_8} Result.make (256)
-			Result.append (base_url.as_string_8)
-			Result.append (format_context_id (a_context_id).as_string_8)
+			create Result.make (256)
+			Result.append (base_url)
+			Result.append (format_context_id (a_context_id))
 			if a_section /= Void then
 				Result.append_character (section_url_separator)
-				Result.append (format_context_section (a_section.section).as_string_8)
+				Result.append (format_context_section (a_section.section))
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
 	document_title (a_url: !STRING_GENERAL; a_trim: BOOLEAN): ?STRING_32
-			-- Attempts to retrieve a document title from a URL
+			-- Attempts to retrieve a document title from a URL.
 			--
 			-- `a_url': URL to fetch a document title from
 			-- `a_trim': True to remove any trailing hiephenated info text from the title " - Info Text".
@@ -170,7 +175,7 @@ feature {NONE} -- Formatting
 			not_a_context_id_is_empty: not a_context.is_empty
 		do
 			Result := a_context.as_string_8.as_attached
-			if Result = a_context then
+			if Result ~ a_context then
 				Result := Result.twin
 			end
 		ensure
@@ -190,9 +195,9 @@ feature {NONE} -- Regular expressions
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -203,19 +208,19 @@ feature {NONE} -- Regular expressions
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

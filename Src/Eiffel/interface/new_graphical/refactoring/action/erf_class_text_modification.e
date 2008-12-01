@@ -410,7 +410,6 @@ feature {NONE} -- Implementation
 			if ast = Void then
 				l_compiled := class_i.compiled_class
 				if is_parsing or else l_compiled = Void then
-					system.error_handler.wipe_out
 					recompute_ast
 				else
 					ast := l_compiled.ast
@@ -428,22 +427,29 @@ feature {NONE} -- Implementation
 		local
 			l_retried: BOOLEAN
 			l_parser: EIFFEL_PARSER
+			l_option: CONF_OPTION
+			l_wrapper: EIFFEL_PARSER_WRAPPER
 		do
 			if not l_retried then
-				l_parser := heavy_eiffel_parser
-				check no_errors: not system.error_handler.has_error end
-				l_parser.parse_from_string (text)
-				if not system.error_handler.has_error then
-					ast := l_parser.root_node
-					match_list := l_parser.match_list
+				l_option := class_i.options
+				l_parser := heavy_eiffel_parser.as_attached
+				check
+					l_parser_attached: l_parser /= Void
+					l_option_attached: l_option /= Void
+				end
+
+				create l_wrapper
+				l_wrapper.parse_with_option (l_parser, text.as_attached, l_option, True)
+				if not l_wrapper.has_error and then {l_class: CLASS_AS} l_wrapper.ast_node and then {l_match_list: LEAF_AS_LIST} l_wrapper.ast_match_list then
+					ast := l_class
+					match_list := l_match_list
 					check is_parsed: is_parsed end
 				else
+					check l_wrapper_has_error: l_wrapper.has_error end
 					is_parse_error := True
-					system.error_handler.wipe_out
 				end
 			else
 				is_parse_error := True
-				system.error_handler.wipe_out
 			end
 		ensure
 			no_error_implies_set: not is_parse_error implies is_parsed
@@ -474,9 +480,9 @@ invariant
 	associated_to_class: class_i /= void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -487,19 +493,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

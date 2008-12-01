@@ -18,92 +18,91 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_container: like container) is
-			-- Initialize service handler using a service container `a_container'
-		require
-			container_attached: container /= Void
+	make (a_container: like container)
+			-- Initialize service handler using an existing service container.
+			--
+			-- `a_container': The service container to use as the implementation container for Current.
 		do
+			create handled_services.make (1)
+			handled_services.compare_objects
 			container := a_container
 		ensure
 			container_set: container = a_container
 		end
 
-feature -- Extension
+feature {NONE} -- Access
 
-	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I; a_promote: BOOLEAN) is
-			-- Add a service `a_service' with a linked association with type `a_type'.
-			-- If service is being promoted it will be registered with a parent service provider.
+	container: !SERVICE_CONTAINER_I
+			-- Source container to add and remove services on.
+
+	handled_services: !ARRAYED_LIST [!TUPLE [service: !TYPE [SERVICE_I]; promote: BOOLEAN]]
+			-- List of services handled by `Current'
+
+feature -- Status report
+
+	is_service_proffered (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+			-- <Precursor>
 		do
-			container.add_service (a_type, a_service, a_promote)
-			handled_services.extend (a_type)
+			Result := container.is_service_proffered (a_type, a_promote)
 		ensure then
-			handled_services_has_a_type: handled_services.has (a_type)
+			handled_services_has_service: Result implies handled_services.has ([a_type, a_promote])
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I]; a_promote: BOOLEAN) is
-			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
-			-- an instance of service when requested.
-			-- If service is being promoted it will be registered with a parent service provider.
+feature -- Extension
+
+	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
+			-- <Precursor>
 		do
-			container.add_service_with_activator (a_type, a_activator, a_promote)
-			handled_services.extend (a_type)
+			container.register (a_type, a_service, a_promote)
+			handled_services.extend ([a_type, a_promote])
 		ensure then
-			handled_services_has_a_type: handled_services.has (a_type)
+			handled_services_has_a_type: handled_services.has ([a_type, a_promote])
+		end
+
+	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
+			-- <Precursor>
+		do
+			container.register_with_activator (a_type, a_activator, a_promote)
+			handled_services.extend ([a_type, a_promote])
+		ensure then
+			handled_services_has_a_type: handled_services.has ([a_type, a_promote])
 		end
 
 feature -- Removal
 
-	revoke_service (a_type: TYPE [ANY]; a_promote: BOOLEAN) is
-			-- Removes service associated with type `a_type'.
-			-- If a client promote the removal services in a parent container will also be removed.
+	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
+			-- <Precursor>
 		local
 			l_services: like handled_services
 		do
+			container.revoke (a_type, a_promote)
 			l_services := handled_services
-			container.revoke_service (a_type, a_promote)
-			if l_services.has (a_type) then
-				l_services.search (a_type)
-				if not l_services.exhausted then
-					l_services.remove
-				end
+			l_services.search ([a_type, a_promote])
+			if not l_services.exhausted then
+				l_services.remove
 			end
 		ensure then
-			not_handled_services_has_a_type: not handled_services.has (a_type)
+			not_handled_services_has_a_type: not handled_services.has ([a_type, a_promote])
 		end
 
-	revoke_all is
+	revoke_all
 			-- Removes all services that were added using an instance of this handler.
+		local
+			l_services: like handled_services
+			l_service: !TUPLE [service: !TYPE [SERVICE_I]; promote: BOOLEAN]
 		do
-			handled_services.do_all (agent (a_item: TYPE [ANY])
-				require
-					a_item_attached: a_item /= Void
-				do
-					revoke_service (a_item, True)
-				end)
-			handled_services.wipe_out
+			l_services := handled_services
+			from l_services.start until l_services.after loop
+				l_service := l_services.item_for_iteration
+				revoke (l_service.service, l_service.promote)
+			end
+			l_services.wipe_out
+		ensure then
+			handled_services_is_empty: handled_services.is_empty
 		end
-
-feature -- Query
-
-	proffers_service (a_type: TYPE [ANY]; a_promote: BOOLEAN): BOOLEAN is
-			-- Determines if service associate with type `a_type' is being proffered.
-			-- If a client prompts query then parent containers will be checked if service
-			-- is not offerred locally.
-		do
-			Result := container.proffers_service (a_type, a_promote)
-		end
-
-feature {NONE} -- Implementation
-
-	container: SERVICE_CONTAINER
-			-- Source container to add and remove services on
-
-	handled_services: ARRAYED_LIST [TYPE [ANY]]
-			-- List of services handled by `Current'
 
 invariant
-	container_attached: container /= Void
-	handled_services_attached: handled_services /= Void
+	handled_services_compares_objects: handled_services.object_comparison
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

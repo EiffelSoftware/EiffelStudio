@@ -128,7 +128,7 @@ feature {NONE} -- Switches
 
 	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
-		do
+		once
 			create Result.make (5)
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (include_switch, "Include a file or directory for generation of a visitor class.%NSpecify no includes takes the current directory.", True, True, "expression", "A RegEx representing files or folders to include.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recurse_switch, "Forces all included directories to be recursively scanned for classes", True, False))

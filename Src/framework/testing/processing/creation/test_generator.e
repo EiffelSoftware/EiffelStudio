@@ -722,21 +722,25 @@ feature{NONE} -- Test result analyizing
 		local
 			l_item: AUT_TEST_CASE_RESULT
 		do
-			from
-				current_results.start
-			until
-				current_results.after
-			loop
-				l_item := current_results.item_for_iteration
-				if l_item.witness.is_same_bug (a_result.witness) then
-					if l_item.witness.count > a_result.witness.count then
-						current_results.replace_at (a_result)
-					end
-					current_results.go_after
-				else
-					current_results.forth
-					if current_results.after then
-						current_results.force_last (a_result)
+			if current_results.is_empty then
+				current_results.force_last (a_result)
+			else
+				from
+					current_results.start
+				until
+					current_results.after
+				loop
+					l_item := current_results.item_for_iteration
+					if l_item.witness.is_same_bug (a_result.witness) then
+						if l_item.witness.count > a_result.witness.count then
+							current_results.replace_at (a_result)
+						end
+						current_results.go_after
+					else
+						current_results.forth
+						if current_results.after then
+							current_results.force_last (a_result)
+						end
 					end
 				end
 			end

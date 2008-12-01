@@ -155,7 +155,7 @@ feature -- Status report
 			end
 		end
 
-	valid_operands (args: ?OPEN_ARGS): BOOLEAN is
+	valid_operands (args: ?TUPLE): BOOLEAN is
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER

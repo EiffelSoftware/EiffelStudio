@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 
 			after := digit_regex.replace (before, "")
 
-			{SYSTEM_CONSOLE}.write_line ("Before: " + before)
-			{SYSTEM_CONSOLE}.write_line ("After : " + after)
+			{SYSTEM_CONSOLE}.write_line ("Before: " + create {STRING}.make_from_cil (before))
+			{SYSTEM_CONSOLE}.write_line ("After : " + create {STRING}.make_from_cil (after))
 
 			{SYSTEM_CONSOLE}.write_line
 			{SYSTEM_CONSOLE}.write_line ("Please press Enter to continue...")

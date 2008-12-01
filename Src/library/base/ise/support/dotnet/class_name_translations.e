@@ -95,11 +95,7 @@ feature {NONE} -- Implementation
 	add_translation (new_name, old_name: ?STRING) is
 			-- Add a translation entry mapping class `old_name' in the
 			-- storing system to class `new_name' in the retrieving system.
-		local
-			n, o: ANY
 		do
-			n := new_name.to_c
-			o := old_name.to_c
 		end
 
 indexing

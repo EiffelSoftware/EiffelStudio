@@ -360,6 +360,7 @@ feature {NONE} -- Implementation: access
 			put ("System.Void") check found_item = system_void_name_id end
 			put ("call") check found_item = call_name_id end
 			put ("put_default") check found_item = put_default_name_id end
+			put ("as_attached") check found_item = as_attached_name_id end
 		end
 
 invariant

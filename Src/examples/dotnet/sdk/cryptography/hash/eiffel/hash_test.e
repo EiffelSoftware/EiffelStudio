@@ -35,12 +35,14 @@ feature {NONE} -- Initialization
 				-- Create hash value from string 1 using MD5 intstance returned by cryto config system
 			hash_value1 := (({HASH_ALGORITHM}) #? {CRYPTO_CONFIG}.create_from_name ("MD5")).compute_hash (data1_to_hash)
 
-			{SYSTEM_CONSOLE}.write_line ("Hsah value of String 1: " + {BIT_CONVERTER}.to_string (hash_value1))
+			{SYSTEM_CONSOLE}.write ("Hsah value of String 1: ")
+			{SYSTEM_CONSOLE}.write_line ({BIT_CONVERTER}.to_string (hash_value1))
 
 				-- Create hash value from string 2 using MD5 intstance returned by cryto config system
 			hash_value2 ?= (create {MD5_CRYPTO_SERVICE_PROVIDER}.make).compute_hash (data2_to_hash)
 
-			{SYSTEM_CONSOLE}.write_line ("Hsah value of String 2: " + {BIT_CONVERTER}.to_string (hash_value2))
+			{SYSTEM_CONSOLE}.write ("Hsah value of String 2: ")
+			{SYSTEM_CONSOLE}.write_line ({BIT_CONVERTER}.to_string (hash_value2))
 
 				-- Memberwise compare of hash value bytes
 			from

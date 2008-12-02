@@ -2,7 +2,6 @@ indexing
 	description: "Root class for Winforms Data Grid demo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Translated from Microsoft .NET Framework SDK documentation"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -116,14 +115,14 @@ feature {NONE} -- Implementation
 				-- create a DATA_SQL_CONNECTION from the given connection string.
 				-- Change the data source value to the name of your computer.
 			connection_string := "server="
-			connection_string.append (tb_server.text)
+			connection_string.append (create {STRING}.make_from_cil (tb_server.text))
 			connection_string.append (";Trusted_Connection=yes;database=")
-			connection_string.append (tb_database.text)
+			connection_string.append (create {STRING}.make_from_cil (tb_database.text))
 			create northwind_connection.make (connection_string)
 
 				-- Create a DATA_SQL_DATA_ADAPTER for the Suppliers table.
 			create suppliers_adapter.make
-			
+
 				-- A table mapping tells the adapter what to call the table.
 			a_mapping := suppliers_adapter.table_mappings.add ("Table", "Suppliers")
 

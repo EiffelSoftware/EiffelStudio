@@ -28,8 +28,7 @@ feature
 				io.error.putstring (argv.item (0))
 				io.error.putstring (" hostname portnumber%N")
 			else
-				create soc.make_targeted_to_hostname (argv.item (1), 
-								 argv.item (2).to_integer)
+				create soc.make_targeted (argv.item (1), argv.item (2).to_integer)
 				create ps.make_write_only
 				create readcomm.make (soc)
 				ps.put_read_command (readcomm)

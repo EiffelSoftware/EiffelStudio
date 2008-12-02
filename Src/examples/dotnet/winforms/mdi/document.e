@@ -6,7 +6,7 @@ indexing
 class
 	DOCUMENT
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 			mi_file.set_merge_order (0)
 
 			l_text := "&Load Document ("
-			l_text.append (doc_name)
+			l_text.append (create {STRING}.make_from_cil (doc_name))
 			l_text.append (")")
 			mi_doc := main_menu.menu_items.add (l_text, create {EVENT_HANDLER}.make (Current, $on_load_document_clicked))
 			mi_doc.set_merge_order (105)
 
 				-- Add Formatting Menu
 			l_text := "F&ormat ("
-			l_text.append (doc_name)
+			l_text.append (create {STRING}.make_from_cil (doc_name))
 			l_text.append (")")
 			mi_format := main_menu.menu_items.add (l_text)
 			mi_format.set_merge_type ({WINFORMS_MENU_MERGE}.add)
@@ -71,17 +71,17 @@ feature {NONE} -- Initialization
 
 				-- Font Face sub-menu
 			l_text := "&1. "
-			l_text.append (sans_serif_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (sans_serif_font_family.name))
 			create mi_sans_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
 			l_text := "&2. "
-			l_text.append (serif_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (serif_font_family.name))
 			create mi_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
 			l_text := "&3. "
-			l_text.append (mono_space_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (mono_space_font_family.name))
 			create mi_mono_space.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
 			mi_sans_serif.set_checked (True)
 			mi_format_font_checked := mi_sans_serif
-			mi_sans_serif.set_default_item (True) 
+			mi_sans_serif.set_default_item (True)
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mi_sans_serif)
@@ -134,7 +134,7 @@ feature -- Access
 	mi_serif,
 	mi_mono_space : WINFORMS_MENU_ITEM
 			-- System.Windows.Forms.MenuItem.
-			
+
 	current_font_family,
 	mono_space_font_family,
 	sans_serif_font_family,
@@ -168,8 +168,8 @@ feature {NONE} -- Implementation
 
 			-- Set default font size to Medium.
 			font_size := font_sizes ("Medium")
-			
-			controls.add (rich_text_box)		
+
+			controls.add (rich_text_box)
 		ensure
 			non_void_components: components /= Void
 			non_void_main_menu: main_menu /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if components /= Void then
-					components.dispose	
+					components.dispose
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)

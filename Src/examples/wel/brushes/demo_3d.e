@@ -226,14 +226,14 @@ feature {NONE} -- Implementation
 			create poly_coord.make (1, 6)
 			from
 				ind := 1
-			variant
-				1 + nx - ind
 			until
 				ind > nx 
 			loop
 				create projected_point
 				coord.force (projected_point, ind)
 				ind := ind + 1
+			variant
+				1 + nx - ind
 			end
 			dx := x_max - x_min
 			dy := y_max - y_min

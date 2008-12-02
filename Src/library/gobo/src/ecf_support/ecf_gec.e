@@ -49,7 +49,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			a_ecf_parser.load (a_file.name)
 			if not a_ecf_parser.is_error then
-				last_system := a_ecf_parser.last_universe
+				last_system := a_ecf_parser.last_system
 			end
 		end
 

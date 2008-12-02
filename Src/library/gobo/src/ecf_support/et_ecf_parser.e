@@ -70,13 +70,13 @@ feature -- Status
 
 feature -- Access
 
-	last_system: CONF_SYSTEM
+	last_conf_system: CONF_SYSTEM
 		-- Last loaded configuration system.
 
-	last_universe: ET_ECF_SYSTEM
+	last_system: ET_ECF_SYSTEM
 		-- Last loaded universe.
 
-	error_handler: ET_ERROR_HANDLER
+	error_handler: ET_ECF_ERROR_HANDLER
 		-- Error handler
 
 	ast_factory: ET_ECF_AST_FACTORY
@@ -143,19 +143,19 @@ feature -- Basic operation
 				create l_ecf_err.make (l_load.last_error.out)
 				error_handler.report_error (l_ecf_err)
 			else
-				last_system := l_load.last_system
+				last_conf_system := l_load.last_system
 					-- If the target is not set, check if we only have one possible target, otherwise it's an error.
 				if target = Void then
-					if last_system.compilable_targets.count = 1 then
-						application_target := last_system.compilable_targets.linear_representation.first
+					if last_conf_system.compilable_targets.count = 1 then
+						application_target := last_conf_system.compilable_targets.linear_representation.first
 					else
 						is_error := True
 						create l_ecf_err.make ("No target specified and multiple targets in configuration.")
 						error_handler.report_error (l_ecf_err)
 					end
 						-- If the target is set, check if the target exists, otherwise it's an error.
-				elseif last_system.compilable_targets.has (target) then
-					application_target := last_system.compilable_targets.item (target)
+				elseif last_conf_system.compilable_targets.has (target) then
+					application_target := last_conf_system.compilable_targets.item (target)
 				else
 					is_error := True
 					create l_ecf_err.make ("Specified target does not exist in configuration.")
@@ -181,14 +181,14 @@ feature -- Basic operation
 					end
 
 						-- Put the targets that make up the system into last_targets
-					last_targets := last_system.all_libraries.linear_representation
+					last_targets := last_conf_system.all_libraries.linear_representation
 
-						-- Generate the gobo universe
-					generate_universe
+						-- Generate the gobo system
+					generate_system
 				end
 			end
 		ensure
-			no_error_implies_universe: not is_error implies (last_universe /= Void and last_system /= Void)
+			no_error_implies_universe: not is_error implies (last_system /= Void and last_conf_system /= Void)
 		end
 
 feature {NONE} -- Implementation
@@ -239,8 +239,8 @@ feature {NONE} -- Implementation
 			create Result.make (l_platform, l_build, application_target.setting_multithreaded, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
 		end
 
-	generate_universe is
-			-- Generate a Gobo universe representing a flat view of the system.
+	generate_system is
+			-- Generate a Gobo system representing a flat view of the system.
 		require
 			last_targets_not_void: last_targets /= Void
 			application_target_not_void: application_target /= Void
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			l_et_clusters: ET_ECF_CLUSTERS
 			l_et_cluster: ET_ECF_CLUSTER
 		do
-			create last_universe.make
+			create last_system.make (last_conf_system.name, last_conf_system.file_name)
 			l_et_clusters := ast_factory.new_clusters
 			l_state := state
 
@@ -296,26 +296,25 @@ feature {NONE} -- Implementation
 			end
 
 				-- Create a universe from the clusters
-			last_universe.set_clusters (l_et_clusters)
-			last_universe.set_error_handler (error_handler)
-			last_universe.set_system_name (application_target.system.name)
-			last_universe.set_root_class_name (application_target.root.class_type_name)
-			last_universe.set_creation_procedure_name (application_target.root.feature_name)
+			last_system.set_clusters (l_et_clusters)
+			last_system.set_system_name (application_target.system.name)
+			last_system.set_root_class_name (application_target.root.class_type_name)
+			last_system.set_creation_procedure_name (application_target.root.feature_name)
 		ensure
-			last_universe_set: last_universe /= Void
+			last_system_set: last_system /= Void
 		end
 
 	gobo_cluster (a_cluster: CONF_CLUSTER): ET_ECF_CLUSTER is
 			-- EiffelStudio cluster converted to a Gobo cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
-			last_universe_not_void: last_universe /= Void
+			last_system_not_void: last_system /= Void
 		local
 			l_file_rule: CONF_FILE_RULE
 		do
-			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory, last_universe)
+			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory, last_system)
 			l_file_rule := a_cluster.active_file_rule (state)
-			Result.set_file_rule (ast_factory.new_file_rule (l_file_rule.exclude, l_file_rule.include))
+			Result.set_file_rules (create {ET_ECF_FILE_RULES}.make (ast_factory.new_file_rule (l_file_rule.exclude, l_file_rule.include)))
 			Result.set_recursive (a_cluster.is_recursive)
 			if a_cluster.is_override then
 				Result.set_override (True)

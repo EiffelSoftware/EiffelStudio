@@ -26,23 +26,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_cases: like test_cases; a_universe: like universe;
+	make (a_test_cases: like test_cases; a_system: like system;
 			an_interpreter: like interpreter; an_error_handler: like error_handler) is
 			-- Create new strategy.
 		require
 			a_test_cases_not_void: a_test_cases /= Void
 			no_test_case_void: not a_test_cases.has (Void)
-			a_universe_not_void: a_universe /= Void
+			a_system_not_void: a_system /= Void
 			a_interpreter_not_void: an_interpreter /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			test_cases := a_test_cases
 			test_case_cursor := test_cases.new_cursor
-			make_strategy (a_universe, an_interpreter)
+			make_strategy (a_system, an_interpreter)
 			error_handler := an_error_handler
 		ensure
 			test_cases_set: test_cases = a_test_cases
-			universe_set: universe = a_universe
+			system_set: system = a_system
 			interpreter_set: interpreter = an_interpreter
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -80,7 +80,7 @@ feature -- Execution
 		do
 			if sub_task = Void then
 				selected_test_case := test_case_cursor.item
-				create caller.make (selected_test_case, universe, interpreter, error_handler)
+				create caller.make (selected_test_case, system, interpreter, error_handler)
 				sub_task := caller
 				sub_task.start
 			else

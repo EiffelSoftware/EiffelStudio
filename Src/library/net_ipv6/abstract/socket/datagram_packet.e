@@ -15,8 +15,7 @@ inherit
 		end
 
 create
-	make,
-	make_from_managed_pointer
+	make
 
 feature -- Initialization
 

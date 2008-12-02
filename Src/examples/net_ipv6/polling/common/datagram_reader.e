@@ -28,14 +28,16 @@ feature
 
 	execute (arg: ANY) is
 		local
-			rec_pack: DATAGRAM_PACKET
+			rec_pack: PACKET
+			datagram: DATAGRAM_PACKET
 			i: INTEGER
 		do
 			rec_pack := active_medium.received (10, 0)
-			io.putint (rec_pack.packet_number)
+			create datagram.make_from_managed_pointer (rec_pack.data)
+			io.putint (datagram.packet_number)
 			io.new_line
 			from i := 0 until i > 9 loop
-				io.putchar (rec_pack.element (i))
+				io.putchar (datagram.element (i))
 				i := i + 1
 			end
 			io.new_line

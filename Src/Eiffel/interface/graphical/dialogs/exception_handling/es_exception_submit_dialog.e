@@ -141,6 +141,7 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_text)
 			l_hbox.disable_item_expand (l_text)
 			l_hbox.extend (l_link)
+			l_hbox.disable_item_expand (l_link)
 
 			l_vbox.extend (l_hbox)
 			l_vbox.disable_item_expand (l_hbox)

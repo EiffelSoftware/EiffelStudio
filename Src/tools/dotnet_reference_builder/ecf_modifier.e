@@ -126,7 +126,7 @@ feature {NONE} -- Modification implementation
 				l_name := a_assemblies.item.assembly.get_name.name.to_lower
 
 					-- Remove existing nodes and retrieve a prefix, if any
-				l_nodes := a_node.select_nodes ("child::assembly[@name=%"" + l_name + "%"]")
+				l_nodes := a_node.select_nodes ("child::assembly[@name=%"" + create {STRING}.make_from_cil (l_name) + "%"]")
 				l_count := l_nodes.count
 				from i := 0 until i = l_count loop
 					l_elm ?= l_nodes.item (i)

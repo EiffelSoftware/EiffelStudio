@@ -54,12 +54,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: ARRAYED_LIST [SITE [PACKAGE]] is
+	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]] is
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}
-			Result.extend (clean_environment_panel)
-			Result.extend (clean_project_panel)
+			Result.extend (clean_environment_panel.as_attached)
+			Result.extend (clean_project_panel.as_attached)
 		end
 
 feature -- Status report

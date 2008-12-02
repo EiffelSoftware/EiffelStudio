@@ -22,7 +22,7 @@ inherit
 			copy,
 			is_equal
 		end
-		
+
 	EC_DIALOG_PROMPT_HELPER
 		export
 			{NONE} all
@@ -48,25 +48,25 @@ feature {NONE} -- Initialization
 			l_version: STRING
 		do
 			set_icon_pixmap (icon_check_compliance)
-			
+
 			vbox_project_settings.set_owner_window (Current)
 			vbox_output.set_owner_window (Current)
-		
+
 			tbtn_new.select_actions.extend (agent on_new_project)
 			tbtn_open.select_actions.extend (agent on_open_project)
 			tbtn_save.select_actions.extend (agent on_save_project)
 			tbtn_check.select_actions.extend (agent on_check_project)
-			
+
 			if is_help_available then
 				tbtn_help.select_actions.extend (agent on_show_help)
-			else	
+			else
 				tbtn_help.remove_pixmap
 				tbtn_help.disable_sensitive
-			end			
-		
+			end
+
 			btn_close.select_actions.extend (agent on_close)
 			close_request_actions.extend (agent on_close)
-			
+
 				-- Ctrl+Tab
 			create l_consts
 			create l_key.make_with_code (l_consts.key_tab)
@@ -78,11 +78,11 @@ feature {NONE} -- Initialization
 			create l_accelerator.make_with_key_combination (l_key, True, False, True)
 			l_accelerator.actions.extend (agent on_navigate_backward)
 			accelerators.extend (l_accelerator)
-			
+
 			l_so ?= Current
 			create l_version.make (20 + lbl_copyright.text.count)
 			l_version.append ("Build v.")
-			l_version.append (l_so.get_type.assembly.get_name.version.to_string)
+			l_version.append (create {STRING}.make_from_cil (l_so.get_type.assembly.get_name.version.to_string))
 			l_version.append_character ('%N')
 			l_version.append (lbl_copyright.text)
 			lbl_copyright.set_text (l_version)
@@ -95,7 +95,7 @@ feature {NONE} -- Agent Handlers
 		local
 			l_close: BOOLEAN
 		do
-			if project.is_dirty then				
+			if project.is_dirty then
 				l_close := ask_question (question_close_project_not_save, button_okay, button_cancel, button_cancel, [], Current)
 			else
 				l_close := True
@@ -103,7 +103,7 @@ feature {NONE} -- Agent Handlers
 			if l_close then
 				vbox_output.reset_report
 				destroy
-				
+
 				if application_exists then
 					(create {EV_ENVIRONMENT}).application.destroy
 				end
@@ -128,7 +128,7 @@ feature {NONE} -- Agent Handlers
 				vbox_output.reset_report
 			end
 		end
-		
+
 	on_open_project is
 			-- Called when user want to open a new project.
 		local
@@ -141,7 +141,7 @@ feature {NONE} -- Agent Handlers
 					create l_ofd
 					l_ofd.set_title (file_dialog_open_project)
 					if sticky_project_file_name /= Void and not sticky_project_file_name.is_empty then
-						l_ofd.set_file_name (sticky_project_file_name)	
+						l_ofd.set_file_name (sticky_project_file_name)
 					end
 					l_ofd.filters.extend ([filter_project, filter_name_project])
 					l_ofd.show_modal_to_window (Current)
@@ -160,7 +160,7 @@ feature {NONE} -- Agent Handlers
 			retried := True
 			retry
 		end
-		
+
 	on_save_project is
 			-- Called when user wants to save an open project.
 		local
@@ -188,7 +188,7 @@ feature {NONE} -- Agent Handlers
 						save_project (l_file_name)
 						project.set_is_dirty (False)
 						sticky_project_file_name := l_file_name
-					end					
+					end
 				else
 					save_project (sticky_project_file_name)
 					project.set_is_dirty (False)
@@ -200,7 +200,7 @@ feature {NONE} -- Agent Handlers
 			retried := True
 			retry
 		end
-		
+
 	on_check_project is
 			-- Called when user selects check toolbar button
 		require
@@ -213,7 +213,7 @@ feature {NONE} -- Agent Handlers
 			l_notebook.select_item (l_notebook.i_th (2))
 			vbox_output.btn_start_checking.select_actions.call ([])
 		end
-		
+
 	on_show_help is
 			-- Called when user selects help toolbar button
 		local
@@ -236,7 +236,7 @@ feature {NONE} -- Agent Handlers
 			retried := True
 			retry
 		end
-		
+
 	on_back_button_selected (a_rotate: BOOLEAN) is
 			-- Called when `back_button' is selected
 		require
@@ -282,15 +282,15 @@ feature {NONE} -- Agent Handlers
 		do
 			on_back_button_selected (True)
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	is_help_available: BOOLEAN is
 			-- Is compiled help available?
 		do
 			Result := (create {RAW_FILE}.make (help_file)).exists
 		end
-		
+
 	query_clean_project: BOOLEAN is
 			-- Queries project state to see if a project can be cleaned?
 		local
@@ -306,10 +306,10 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-			
+
 	sticky_project_file_name: STRING
 			-- Sticky project file name
-			
+
 	project_file_name_extension: STRING is ".ecmp";
 			-- Project file name extension
 

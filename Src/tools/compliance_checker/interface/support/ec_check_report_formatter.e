@@ -48,7 +48,7 @@ feature -- Formatting
 							else
 								l_field ?= a_member
 								if l_field /= Void then
-									Result := format_field (l_field, a_show_full_name)	
+									Result := format_field (l_field, a_show_full_name)
 								end
 							end
 						end
@@ -62,7 +62,7 @@ feature -- Formatting
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
-		
+
 	format_type (a_type: SYSTEM_TYPE; a_show_full_name: BOOLEAN): STRING is
 			-- Format `a_type'
 			-- `a_show_full_name' will cause member fully qualified name to be generated
@@ -85,8 +85,8 @@ feature -- Formatting
 		require
 			a_ctor_not_void: a_ctor /= Void
 		local
-			l_name: SYSTEM_STRING
-			l_type: SYSTEM_STRING
+			l_name: STRING
+			l_type: STRING
 			l_params: NATIVE_ARRAY [PARAMETER_INFO]
 			l_count: INTEGER
 			i: INTEGER
@@ -95,12 +95,12 @@ feature -- Formatting
 			create Result.make (40)
 
 			if a_show_full_name then
-				Result.append (a_ctor.reflected_type.to_string)
+				Result.append (create {STRING}.make_from_cil (a_ctor.reflected_type.to_string))
 				Result.append_character ('.')
 			end
 
 			Result.append (l_name)
-			
+
 			l_params := a_ctor.get_parameters
 			l_count := l_params.count
 			if l_count > 0 then
@@ -113,7 +113,7 @@ feature -- Formatting
 					l_type := simple_type_name (l_params.item (i).parameter_type)
 					Result.append (l_type)
 					if i < l_count - 1 then
-						Result.append (", ")	
+						Result.append (", ")
 					end
 					i := i + 1
 				end
@@ -130,18 +130,18 @@ feature -- Formatting
 		require
 			a_method_not_void: a_method /= Void
 		local
-			l_name: SYSTEM_STRING
+			l_name: STRING
 			l_type: SYSTEM_TYPE
-			l_type_str: SYSTEM_STRING
+			l_type_str: STRING
 			l_params: NATIVE_ARRAY [PARAMETER_INFO]
 			l_count: INTEGER
 			i: INTEGER
 		do
 			l_name := a_method.name
 			create Result.make (40)
-		
+
 			if a_show_full_name then
-				Result.append (a_method.reflected_type.to_string)
+				Result.append (create {STRING}.make_from_cil (a_method.reflected_type.to_string))
 				Result.append_character ('.')
 			else
 				l_type := a_method.return_type
@@ -153,7 +153,7 @@ feature -- Formatting
 			end
 
 			Result.append (l_name)
-			
+
 			l_params := a_method.get_parameters
 			l_count := l_params.count
 			if l_count > 0 then
@@ -166,7 +166,7 @@ feature -- Formatting
 					l_type_str := simple_type_name (l_params.item (i).parameter_type)
 					Result.append (l_type_str)
 					if i < l_count - 1 then
-						Result.append (", ")	
+						Result.append (", ")
 					end
 					i := i + 1
 				end
@@ -183,8 +183,8 @@ feature -- Formatting
 		require
 			a_prop_not_void: a_prop /= Void
 		local
-			l_name: SYSTEM_STRING
-			l_type: SYSTEM_STRING
+			l_name: STRING
+			l_type: STRING
 		do
 			l_name := a_prop.name
 			if a_show_full_name then
@@ -192,8 +192,8 @@ feature -- Formatting
 			else
 				l_type := simple_type_name (a_prop.property_type)
 			end
-			
-			create Result.make (l_name.length + l_type.length + 12)
+
+			create Result.make (l_name.count + l_type.count + 12)
 			if a_show_full_name then
 				Result.append (l_type)
 				Result.append_character ('.')
@@ -203,7 +203,7 @@ feature -- Formatting
 			Result.append_character (' ')
 			end
 
-			Result.append (l_name)			
+			Result.append (l_name)
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -215,8 +215,8 @@ feature -- Formatting
 		require
 			a_event_not_void: a_event /= Void
 		local
-			l_name: SYSTEM_STRING
-			l_type: SYSTEM_STRING
+			l_name: STRING
+			l_type: STRING
 		do
 			l_name := a_event.name
 			if a_show_full_name then
@@ -224,8 +224,8 @@ feature -- Formatting
 			else
 				l_type := simple_type_name (a_event.event_handler_type)
 			end
-			
-			create Result.make (l_name.length + l_type.length + 10)
+
+			create Result.make (l_name.count + l_type.count + 10)
 			if a_show_full_name then
 				Result.append (l_type)
 				Result.append_character ('.')
@@ -240,15 +240,15 @@ feature -- Formatting
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
-		
+
 	format_field (a_field: FIELD_INFO; a_show_full_name: BOOLEAN): STRING is
 			-- Takes `a_field' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
 			a_field_not_void: a_field /= Void
 		local
-			l_name: SYSTEM_STRING
-			l_type: SYSTEM_STRING
+			l_name: STRING
+			l_type: STRING
 		do
 			l_name := a_field.name
 			if a_show_full_name then
@@ -256,8 +256,8 @@ feature -- Formatting
 			else
 				l_type := simple_type_name (a_field.field_type)
 			end
-			
-			create Result.make (l_name.length + l_type.length + 1)
+
+			create Result.make (l_name.count + l_type.count + 1)
 			Result.append (l_type)
 			if a_show_full_name then
 				Result.append_character ('.')
@@ -271,14 +271,14 @@ feature -- Formatting
 		end
 
 feature {NONE} -- Implementation
-		
+
 	simple_type_name (a_type: SYSTEM_TYPE): SYSTEM_STRING is
 			-- Retrieves a simple type name for `a_type'
 		require
 			a_type_not_void: a_type /= Void
 		local
 			l_type: like a_type
-			l_full_name: SYSTEM_STRING			
+			l_full_name: SYSTEM_STRING
 			l_name: SYSTEM_STRING
 			l_tail: SYSTEM_STRING
 			c: CHARACTER
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			else
 				l_type := a_type
 			end
-			
+
 			l_full_name := a_type.full_name
 			if l_full_name /= Void then
 				if a_type.is_array then
@@ -308,13 +308,13 @@ feature {NONE} -- Implementation
 				else
 					l_name := l_full_name
 				end
-	
+
 				Result ?= simple_names.item (l_name)
-			else					
+			else
 				Result := "???"
 			end
 
-			
+
 			if Result = Void then
 				Result := l_full_name
 			elseif l_tail /= Void then
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			not_result_is_empty: Result.length > 0
 		end
-		
+
 	simple_names: HASHTABLE is
 			-- Simple names table
 			-- Key: Full type name
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			Result.add (("System.UInt32").to_cil, ("uint").to_cil)
 			Result.add (("System.UInt64").to_cil, ("ulong").to_cil)
 			Result.add (("System.Boolean").to_cil, ("bool").to_cil)
-			Result.add (("System.Char").to_cil, ("char").to_cil)			
+			Result.add (("System.Char").to_cil, ("char").to_cil)
 			Result.add (("System.Void").to_cil, ("void").to_cil)
 			Result.add (("System.Single").to_cil, ("single").to_cil)
 			Result.add (("System.Double").to_cil, ("double").to_cil)
@@ -350,8 +350,8 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-		
+
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

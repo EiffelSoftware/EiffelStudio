@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_parser (False, False, False)
-			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
+			make_parser (False, False)
+			set_non_switched_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
 		end
 
 feature -- Access
@@ -89,13 +89,13 @@ feature {NONE} -- Usage
 	name: STRING = ".NET Reference Builder"
 			-- Full name of application
 
-	version: STRING is
+	version: !STRING is
 			-- Version number of application
 		once
 			Result := (({SYSTEM_OBJECT})[Current]).get_type.assembly.get_name.version.to_string
 		end
 
-	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		once
@@ -106,13 +106,13 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (target_switch, "Optional target(s) in ecf to add assemblies to.", True, True, "target", "name of ecf file target", False))
 		end
 
-	loose_argument_name: STRING = "assembly"
+	non_switched_argument_name: STRING = "assembly"
 			-- Name of lose argument, used in usage information
 
-	loose_argument_description: STRING = "An assembly to build flat references list for."
+	non_switched_argument_description: STRING = "An assembly to build flat references list for."
 			-- Description of lose argument, used in usage information
 
-	loose_argument_type: STRING = "An Assembly"
+	non_switched_argument_type: STRING = "An Assembly"
 			-- Type of lose argument, used in usage information.
 			-- A type is a short description of the argument. I.E. "Configuration File"
 

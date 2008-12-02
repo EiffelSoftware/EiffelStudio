@@ -19,4 +19,11 @@ feature -- Parsing
 		do
 		end
 
+	set_ise_version (s: UT_VERSION) is
+			--
+		do
+
+		end
+
+
 end

@@ -6,7 +6,7 @@ indexing
 class
 	MENU
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -54,17 +54,17 @@ feature {NONE} -- Initialization
 
 				-- Font Face sub-menu
 			l_text := "&1. "
-			l_text.append (sans_serif_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (sans_serif_font_family.name))
 			create mmi_sans_serif.make (l_text,
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			mmi_sans_serif.set_checked (True)
 			mmi_sans_serif.set_default_item (True)
 			l_text := "&2. "
-			l_text.append (serif_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (serif_font_family.name))
 			create mmi_serif.make (l_text,
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			l_text := "&3. "
-			l_text.append (mono_space_font_family.name)
+			l_text.append (create {STRING}.make_from_cil (mono_space_font_family.name))
 			create mmi_mono_space.make (l_text,
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 
@@ -79,8 +79,8 @@ feature {NONE} -- Initialization
 				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			create mmi_medium.make ("&Medium",
 				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
-			mmi_medium.set_checked (True) 
-			mmi_medium.set_default_item (True) 
+			mmi_medium.set_checked (True)
+			mmi_medium.set_default_item (True)
 			create mmi_large.make ("&Large",
 				create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 
@@ -145,7 +145,7 @@ feature -- Access
 	cmi_medium, cmi_large, mi_main_format_font_checked, mi_main_format_size_checked,
 	mi_context_format_font_checked, mi_context_format_size_checked : WINFORMS_MENU_ITEM
 			-- System.Windows.Forms.MenuItem.
-			
+
 	current_font_family, mono_space_font_family, sans_serif_font_family, serif_font_family: DRAWING_FONT_FAMILY
 			-- System.Windows.Forms.FontFamily.
 

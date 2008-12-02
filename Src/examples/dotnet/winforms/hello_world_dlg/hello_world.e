@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	components: SYSTEM_DLL_SYSTEM_CONTAINER	
+	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container
 
-	my_button: WINFORMS_BUTTON			
+	my_button: WINFORMS_BUTTON
 			-- System.Windows.Forms.Button
 
-	my_text_box: WINFORMS_TEXT_BOX		
-			-- System.Windows.Forms.TextBox 
+	my_text_box: WINFORMS_TEXT_BOX
+			-- System.Windows.Forms.TextBox
 
 feature -- Implementation
 
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			res: WINFORMS_DIALOG_RESULT
 		do
 			msg := "Text is : '"
-			msg.append (my_text_box.text)
+			msg.append (create {STRING}.make_from_cil (my_text_box.text))
 			msg.append ("'")
 			res := {WINFORMS_MESSAGE_BOX}.show (msg)
 		end

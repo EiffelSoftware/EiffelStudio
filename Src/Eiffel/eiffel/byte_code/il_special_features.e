@@ -311,7 +311,7 @@ feature -- IL code generation
 			when upper_type then
 				il_generator.generate_upper_lower (True)
 
-			when twin_type then
+			when twin_type, as_attached_type then
 					-- Nothing to do, top of the stack has correct value
 
 			else
@@ -386,6 +386,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (generator_type, generating_type_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
 			Result.put (twin_type, twin_name_id)
+			Result.put (as_attached_type, as_attached_name_id)
 			Result.put (upper_type, upper_name_id)
 			Result.put (lower_type, lower_name_id)
 			Result.put (is_upper_type, is_upper_name_id)
@@ -454,7 +455,8 @@ feature -- Fast access to feature name
 	set_bit_type: INTEGER is 52
 	set_bit_with_mask_type: INTEGER is 53
 	to_character_32_type: INTEGER is 54
-	max_type_id: INTEGER is 54
+	as_attached_type: INTEGER is 55
+	max_type_id: INTEGER is 55
 
 feature {NONE} -- IL code generation
 

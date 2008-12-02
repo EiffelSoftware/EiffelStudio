@@ -199,6 +199,7 @@ feature -- Constants
 	system_void_name_id: INTEGER is 186
 	call_name_id: INTEGER is 187
 	put_default_name_id: INTEGER is 188
+	as_attached_name_id: INTEGER is 189
 
 feature -- Classification
 

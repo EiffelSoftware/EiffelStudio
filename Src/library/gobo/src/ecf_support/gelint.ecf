@@ -25,7 +25,7 @@
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework/environment/environment.ecf"/>
-		<cluster name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
+		<override name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
 		<cluster name="gelint" location="$ISE_LIBRARY\library\gobo\svn\src\gelint\" recursive="true"/>
 	</target>
 </system>

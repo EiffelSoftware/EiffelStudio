@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			configuration_set: configuration = a_configuration
 			manager_set: manager = a_manager
 		end
-		
+
 	user_initialization is
 			-- called by `initialize'.
 			-- Any custom user initialization that
@@ -86,7 +86,7 @@ feature {NONE} -- Events
 	on_ok is
 			-- Called by `select_actions' of `ok_button'.
 		do
-			destroy			
+			destroy
 		end
 
 feature {NONE} -- Implementation
@@ -96,11 +96,11 @@ feature {NONE} -- Implementation
 		do
 			Result := a_date.to_long_date_string
 			Result.append (", ")
-			Result.append (a_date.to_long_time_string)
+			Result.append (create {STRING}.make_from_cil (a_date.to_long_time_string))
 		ensure
 			non_void_format: Result /= Void
 		end
-		
+
 invariant
 	non_void_configuration: configuration /= Void
 

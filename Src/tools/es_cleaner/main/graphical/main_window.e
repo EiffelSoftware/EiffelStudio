@@ -45,12 +45,12 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	siteable_entities: ARRAYED_LIST [SITE [PACKAGE]] is
+	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]] is
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}
-			Result.extend (page_cleaning)
-			Result.extend (page_restoration)
+			Result.extend (page_cleaning.as_attached)
+			Result.extend (page_restoration.as_attached)
 		end
 
 	release_mode_item: EV_LIST_ITEM

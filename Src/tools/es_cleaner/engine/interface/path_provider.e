@@ -38,7 +38,7 @@ feature -- Access
 			l_ev: EIFFEL_ENV
 		do
 			l_ev := package.eiffel_env
-			Result := l_ev.docking_standard_layout_path
+			Result := l_ev.user_docking_path
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

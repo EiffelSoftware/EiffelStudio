@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	key (a_item: G): H is
+	key (a_item: G): ?H is
 			-- Key associated with `item', if present;
 		do
 			if internal_table_built then
@@ -67,7 +67,7 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	has_item (v: G): BOOLEAN is
+	has_item (v: ?G): BOOLEAN is
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -81,19 +81,19 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	valid_item (a_item: G): BOOLEAN is
+	valid_item (a_item: ?G): BOOLEAN is
 			-- Valid `a_item'
 		do
 			Result := internal_table.valid_key (a_item)
 		end
 
-	found_key: H
+	found_key: ?H
 			-- Key found during a search with `has_item' to reduce the number of
 			-- search for clients
 
 feature -- Element change
 
-	put (new: G; a_key: H) is
+	put (new: ?G; a_key: ?H) is
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Make `inserted' true if and only if an insertion has
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 		end
 
-	replace (new: G; a_key: H) is
+	replace (new: ?G; a_key: ?H) is
 			-- Replace item at `a_key', if present,
 			-- with `new'; do not change associated key.
 			-- Make `replaced' true if and only if a replacement has
@@ -122,7 +122,7 @@ feature -- Element change
 			end
 		end
 
-	force (new: G; a_key: H) is
+	force (new: ?G; a_key: ?H) is
 			-- If `a_key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `a_key'.
 			-- Make `inserted' true.
@@ -136,13 +136,13 @@ feature -- Element change
 			end
 		end
 
-	replace_key (new_key: H; old_key: H) is
+	replace_key (new_key: ?H; old_key: ?H) is
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
 			-- Make `replaced' true if and only if a replacement has
 			-- been made (i.e. `old_key' was present).
 		local
-			l_old_item: G
+			l_old_item: ?G
 		do
 			Precursor {HASH_TABLE} (new_key, old_key)
 			if replaced then
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 		end
 
-	replace_item (new_item: G; old_item: G) is
+	replace_item (new_item: ?G; old_item: ?G) is
 			-- If table contains `old_item',
 			-- replace its key by `new_item'.
 			-- Make `item_replaced' true if and only if a replacement has
@@ -162,7 +162,7 @@ feature -- Element change
 		require
 			valid_items: valid_item (new_item) and valid_item (old_item)
 		local
-			l_old_key: H
+			l_old_key:? H
 		do
 			if not internal_table_built then
 				build_internal_table
@@ -184,7 +184,7 @@ feature -- Removal
 			-- removed (i.e. `key' was not present).
 			-- Reset `found_item' to its default value if `removed'.
 		local
-			l_item: G
+			l_item: ?G
 		do
 			if internal_table_built then
 				l_item := item (a_key)
@@ -263,9 +263,9 @@ invariant
 	internal_table_is_not_void: internal_table /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -276,19 +276,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

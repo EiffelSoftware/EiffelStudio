@@ -5086,6 +5086,11 @@ feature -- Pattern table generation
 				check
 					callers_attached: l_root_callers /= Void
 				end
+				if keep_assertions then
+						-- Always set `nstcall' to 0 to fix eweasel test#exec289.
+					buffer.put_string ("nstcall = 0;")
+					buffer.put_new_line
+				end
 				buffer.put_new_line
 				buffer.put_string ("switch (egc_ridx)")
 				buffer.generate_block_open

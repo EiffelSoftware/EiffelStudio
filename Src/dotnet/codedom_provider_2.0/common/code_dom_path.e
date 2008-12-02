@@ -159,7 +159,7 @@ feature -- Access
 						Result.append_character (Directory_separator)
 						Result.append ("spec")
 						Result.append_character (Directory_separator)
-						Result.append (l_platform)
+						Result.append (create {STRING}.make_from_cil (l_platform))
 						Result.append_character (Directory_separator)
 						Result.append ("bin")
 					end

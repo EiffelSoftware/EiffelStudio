@@ -1245,6 +1245,7 @@ test	wrong-formal-type-specification	exec286 tcf pass execution
 test	conversion-for-tuple-assignment-crash exec287 tcf pass execution
 test	wrong-formal-type-local-initialization	exec288 tcf pass execution
 test	wrong-finalized-invariant-check	exec289 tcf pass execution finalizing
+test	wrong-optimization-of-as-attached	exec290 tcf pass execution finalizing
 
 
 -- Compiler termination (exception trace, panic, etc.)

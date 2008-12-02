@@ -13,58 +13,8 @@ class
 
 inherit
 	EC_EIFFEL_LAYOUT
-		rename
-			is_workbench as external_is_workbench
 		redefine
-			docking_data_name,
-			eiffel_home,
-			eiffel_preferences
-		end
-
-feature -- Access
-
-	docking_data_name: STRING is
-			-- Docking config data folder name
-		do
-			if not is_workbench then
-				Result := "docking"
-			else
-				Result := "docking_wb"
-			end
-		end
-
-	eiffel_home: DIRECTORY_NAME is
-			-- Name of directory containing Eiffel specific data.
-		local
-			l_dir_name: STRING
-		do
-			create Result.make_from_string (Home)
-			if platform.is_windows then
-				l_dir_name := "EiffelSoftware"
-			else
-				l_dir_name := ".es"
-			end
-			if is_workbench then
-				l_dir_name.append ("_wkbench")
-			end
-			Result.extend (l_dir_name)
-		end
-
-	eiffel_preferences: STRING is
-			-- Preferences location
-		local
-			fname: FILE_NAME
-		do
-			if platform.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\" + product_version_name + "\"+application_name+"\Preferences"
-				if is_workbench then
-					Result.append ("_wkbench")
-				end
-			else
-				create fname.make_from_string (eiffel_home)
-				fname.set_file_name (application_name + "rc" + major_version.out + minor_version.out)
-				Result := fname
-			end
+			is_workbench
 		end
 
 feature -- Status report

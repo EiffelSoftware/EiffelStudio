@@ -260,7 +260,7 @@ feature -- Status report
 			end
 		end
 
-	frozen is_workbench: BOOLEAN is
+	is_workbench: BOOLEAN is
 			-- Are we running the workbench version of the compiler?
 		external
 			"C inline use %"eif_eiffel.h%""

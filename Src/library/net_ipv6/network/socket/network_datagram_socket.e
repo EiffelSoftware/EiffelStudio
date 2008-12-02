@@ -138,7 +138,7 @@ feature -- Status setting
 			retry
 		end
 
-	received (size: INTEGER; flags: INTEGER): PACKET is
+	received (size: INTEGER; flags: INTEGER): DATAGRAM_PACKET is
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		local

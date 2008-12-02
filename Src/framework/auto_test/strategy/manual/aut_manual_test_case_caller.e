@@ -27,27 +27,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_case: CLASS_C; a_universe: like universe; an_interpreter: like interpreter;
+	make (a_test_case: CLASS_C; a_system: like system; an_interpreter: like interpreter;
 			an_error_handler: like error_handler) is
 			-- Create new test case caller.
 		require
 			a_test_case_not_void: a_test_case /= Void
 			a_test_case_has_set_up: a_test_case.feature_named (set_up_procedure_name) /= Void
-			a_universe_not_void: a_universe /= Void
+			a_system_not_void: a_system /= Void
 			a_interpreter_not_void: an_interpreter /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			test_case := a_test_case
 			set_up_procedure := a_test_case.feature_named (set_up_procedure_name)
 			tear_down_procedure := a_test_case.feature_named (tear_down_procedure_name)
-			universe := a_universe
+			system := a_system
 			interpreter := an_interpreter
 			procedure_index := 1
 			error_handler := an_error_handler
-			create test_case_locator.make (a_universe)
+			create test_case_locator.make (a_system)
 		ensure
 			test_case_set: test_case = a_test_case
-			universe_set: universe = a_universe
+			system_set: system = a_system
 			interpreter_set: interpreter = an_interpreter
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -65,7 +65,7 @@ feature -- Access
 	test_case: CLASS_C
 			-- Test case to exercise
 
-	universe: SYSTEM_I
+	system: SYSTEM_I
 			-- System
 
 	interpreter: AUT_INTERPRETER_PROXY
@@ -158,12 +158,13 @@ feature {NONE} -- Steps
 		require
 			interpreter_is_ready: interpreter.is_ready
 		do
-			test_case_variable := interpreter.new_variable
-			interpreter.create_object_default (test_case_variable, test_case.actual_type)
-			if not interpreter.is_variable_defined (test_case_variable) then
-				test_case_variable := Void
-				steps_completed := True
-			end
+				-- Code below was commented on 2008/12/1 since it did not compile
+--			test_case_variable := interpreter.new_variable
+--			interpreter.create_object_default (test_case_variable, test_case.actual_type)
+--			if not interpreter.is_variable_defined (test_case_variable) then
+--				test_case_variable := Void
+--				steps_completed := True
+--			end
 		ensure
 			canceled_or_created: steps_completed xor test_case_variable /= Void
 		end
@@ -176,13 +177,14 @@ feature {NONE} -- Steps
 		local
 			arguments: DS_LINKED_LIST [ITP_EXPRESSION]
 		do
+				-- Code below was commented on 2008/12/1 since it did not compile
 			error_handler.report_feature_selection (test_case.actual_type, procedure)
 			create arguments.make
-			interpreter.invoke_feature (set_up_procedure, test_case_variable, arguments)
+--			interpreter.invoke_feature (set_up_procedure, test_case_variable, arguments)
 			if interpreter.is_ready then
-				interpreter.invoke_feature (procedure, test_case_variable, arguments)
+--				interpreter.invoke_feature (procedure, test_case_variable, arguments)
 				if interpreter.is_ready then
-					interpreter.invoke_feature (tear_down_procedure, test_case_variable, arguments)
+--					interpreter.invoke_feature (tear_down_procedure, test_case_variable, arguments)
 				end
 			end
 		end
@@ -226,7 +228,7 @@ invariant
 	test_case_not_void: test_case /= Void
 	set_up_procedure_not_void: set_up_procedure /= Void
 	tear_down_procedure_not_void: tear_down_procedure /= Void
-	universe_not_void: universe /= Void
+	system_not_void: system /= Void
 	interpreter_not_void: interpreter /= Void
 	procedure_index_large_enough: procedure_index >= 1
 	procedure_index_small_enough_1: procedure_index <= test_case.feature_table.count + 1

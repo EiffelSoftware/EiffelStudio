@@ -191,7 +191,8 @@ feature {NONE} -- Implementation
 						then
 							-- Even if the routine is big we inline it.
 						when
-							{PREDEFINED_NAMES}.put_default_name_id
+							{PREDEFINED_NAMES}.put_default_name_id,
+							{PREDEFINED_NAMES}.is_default_name_id
 						then
 							debug ("to_implement")
 								(create {REFACTORING_HELPER}).to_implement ("Inline `put_default'.")

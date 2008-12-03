@@ -12,21 +12,37 @@ compile_result 	ok
 
 execute_work	NONE exec_output_1
 execute_result	ok
+compare		exec_output_1 output
 
 compile_final
 compile_result	ok
 
 c_compile_final
 c_compile_result	ok
+
+execute_final	NONE exec_output_2
+execute_result	ok
+compare		exec_output_2 output
 
 -- Now we redo the test with the same code but a different lace option
 cleanup_compile
 copy_sub Ace_rev1 $TEST Ace
 
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_3
+execute_result	ok
+compare		exec_output_3 output
+
 compile_final
 compile_result	ok
 
 c_compile_final
 c_compile_result	ok
+
+execute_final	NONE exec_output_4
+execute_result	ok
+compare		exec_output_4 output
 
 test_end

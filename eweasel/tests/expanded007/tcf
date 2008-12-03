@@ -14,6 +14,11 @@ copy_raw 	x.e $CLUSTER x.e
 copy_raw 	y.e $CLUSTER y.e
 
 compile_melted
+compile_result validity_error TEST1 VJAR
+
+copy_raw	test1_rev1.e $CLUSTER test1.e
+
+resume_compile
 compile_result ok
 execute_work NONE exec_output_m
 execute_result ok

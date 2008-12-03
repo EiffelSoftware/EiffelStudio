@@ -494,7 +494,7 @@ feature -- Element Change
 				byte_code.make_byte_code (ba)
 			else
 					-- Once mark
-				ba.append ('%U')
+				ba.append ({BYTE_CODE}.once_mark_attribute)
 					-- Start	
 				ba.append (Bc_start)
 					-- Routine id

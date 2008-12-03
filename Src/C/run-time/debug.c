@@ -1721,10 +1721,12 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
 		fatal_error ("Once routines cannot be dynamically plugged-in.");
 		break;
 #endif
+	case ONCE_MARK_NONE:
+	case ONCE_MARK_ATTRIBUTE:
+		break;
 #ifdef MAY_PANIC
 	default:
-		if (*addr)
-			eif_panic("Invalid once mark.");
+		eif_panic("Invalid once mark.");
 #endif
 	}
 }

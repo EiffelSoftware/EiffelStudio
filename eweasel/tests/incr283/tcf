@@ -20,7 +20,7 @@ copy_sub 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
 copy_raw 	comparable_numeric.e $CLUSTER comparable_numeric.e
 compile_melted
-compile_result 	validity_error TEST VTUG(2) VTUG(2); TEST VTCG VTCG;
+compile_result 	validity_error TEST VTUG(2) VTCG VTUG(2)
 --replace with VTGD(1) once all error codes are redone
 
 define VTGD1_1 "--"
@@ -36,13 +36,13 @@ define VTGD2_1 ""
 define VTGD3_1 ""
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VTCG; TEST VTCG
+compile_result 	validity_error TEST VTCG
 
 define VTGD2_1 "--"
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
 -- Crash
-compile_result 	validity_error TEST VTCG
+compile_result 	validity_error TEST VTCG VTCG
 
 test_end
 

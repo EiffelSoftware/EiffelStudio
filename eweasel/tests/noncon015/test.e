@@ -2,7 +2,7 @@ class
 	TEST
 
 inherit {NONE}
-	LINKED_LIST [STRING]
+	TEST1 [STRING]
 		rename
 			make as list_make
 		undefine

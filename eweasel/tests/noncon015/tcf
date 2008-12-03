@@ -1,8 +1,9 @@
-test_name non-conform-linked-list
-test_description A once inherited from a non-conforming inheritance crashes the compiler when code is execute, causes a C compilation error during finalization and possibly generate a precondition violation when you do not expect any to be violated.
+test_name non-conform-generic-class
+test_description Crash of the compiler when simply inheriting from a generic class in a non-conforming way.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
 
 compile_melted
 compile_result 	ok

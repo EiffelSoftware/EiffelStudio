@@ -361,6 +361,7 @@ feature {NONE} -- Implementation: access
 			put ("call") check found_item = call_name_id end
 			put ("put_default") check found_item = put_default_name_id end
 			put ("as_attached") check found_item = as_attached_name_id end
+			put ("is_default") check found_item = is_default_name_id end
 		end
 
 invariant

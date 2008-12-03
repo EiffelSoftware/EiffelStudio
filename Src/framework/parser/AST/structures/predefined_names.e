@@ -200,6 +200,7 @@ feature -- Constants
 	call_name_id: INTEGER is 187
 	put_default_name_id: INTEGER is 188
 	as_attached_name_id: INTEGER is 189
+	is_default_name_id: INTEGER is 190
 
 feature -- Classification
 

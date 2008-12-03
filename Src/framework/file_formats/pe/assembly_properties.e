@@ -128,9 +128,12 @@ feature -- Query
 		do
 			if is_signed then
 				Result := encoded_key (public_key_token)
+			else
+				create Result.make_empty
 			end
 		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+			public_key_token_string_not_void: Result /= Void
+			not_empty_if_signed: is_signed implies not Result.is_empty
 		end
 
 	version_string: STRING is

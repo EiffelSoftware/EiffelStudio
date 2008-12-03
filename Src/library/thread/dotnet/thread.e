@@ -68,9 +68,6 @@ feature {NONE} -- Implementation
 	thread_imp: SYSTEM_THREAD;
 		-- .NET thread object.
 
-	internal_thread_id: INTEGER
-		-- Thread id of `Current'.
-
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 

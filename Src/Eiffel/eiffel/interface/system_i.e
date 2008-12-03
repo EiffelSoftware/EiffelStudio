@@ -5061,10 +5061,7 @@ feature -- Pattern table generation
 						<<"argc", "argv">>, <<"int", "char **">>)
 
 			buffer.generate_block_open
---			buffer.put_string ("#ifndef EIF_THREADS%N%
---											%%Textern char *root_obj;%N%
---											%#endif%N")
-
+			buffer.put_gtcx
 			buffer.put_new_line
 			buffer.put_string ("root_obj = RTLNSMART(")
 			buffer.put_string ("egc_rcdt[egc_ridx]")

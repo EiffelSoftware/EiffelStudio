@@ -44,12 +44,6 @@ feature -- Setting
 
 feature -- Byte code generation
 
-	once_mark_thread_relative: CHARACTER is '%/1/'
-			-- Byte code mark for thread-relative once feature
-
-	once_mark_process_relative: CHARACTER is '%/2/'
-			-- Byte code mark for process-relative once feature
-
 	append_once_mark (ba: BYTE_ARRAY) is
 			-- Append byte code indicating a kind of a once routine
 			-- (thread-relative once, process-relative once, etc.)
@@ -334,7 +328,7 @@ feature {NONE} -- Convenience
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

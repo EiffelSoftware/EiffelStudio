@@ -890,6 +890,18 @@ end
 			end
 		end
 
+	once_mark_none: CHARACTER = '%/0/'
+			-- Byte code mark for non-once feature
+
+	once_mark_thread_relative: CHARACTER = '%/1/'
+			-- Byte code mark for thread-relative once feature
+
+	once_mark_process_relative: CHARACTER = '%/2/'
+			-- Byte code mark for process-relative once feature
+
+	once_mark_attribute: CHARACTER = '%/4/'
+			-- Byte code mark for attribute
+
 	append_once_mark (ba: BYTE_ARRAY) is
 			-- Append byte code indicating a kind of a once routine
 			-- (not once, thread-relative once, process-relative once, etc.)
@@ -897,8 +909,13 @@ end
 		require
 			ba_not_void: ba /= Void
 		do
-				-- Append non-once mark by default
-			ba.append ('%U')
+			if context.current_feature.is_attribute then
+					-- Append attribute mark
+				ba.append (once_mark_attribute)
+			else
+					-- Append non-once mark by default
+				ba.append (once_mark_none)
+			end
 		end
 
 	setup_local_variables (is_old_expression_included: BOOLEAN)

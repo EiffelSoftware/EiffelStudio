@@ -425,8 +425,12 @@ static  void    print_byte_code (void)
 	once_mark = get_uint8(&ip);  /* Once mark */
 	once_key = 0;
 
-	if (once_mark)
+	switch (once_mark)
+	{
+	case ONCE_MARK_THREAD_RELATIVE:
+	case ONCE_MARK_PROCESS_RELATIVE:
 		once_key = get_int32(&ip);     /* Once index. */
+	}
 
 	advance (1);
 
@@ -451,6 +455,9 @@ static  void    print_byte_code (void)
 		break;
 	case ONCE_MARK_PROCESS_RELATIVE:
 		fprintf (ofp,"Once routine : process-relative (%u)\n", once_key);
+		break;
+	case ONCE_MARK_ATTRIBUTE:
+		fprintf (ofp,"Attribute\n");
 		break;
 	}
 

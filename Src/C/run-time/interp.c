@@ -261,7 +261,7 @@ rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
 rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* Resynchronize the register array */
 rt_private void pop_registers(void);						/* Remove local vars and arguments */
-rt_private void create_expanded_locals (struct stochunk * scur, EIF_TYPED_VALUE * stop); /* Initialize expanded locals and result (if required) */
+rt_private void create_expanded_locals (struct stochunk * scur, EIF_TYPED_VALUE * stop, int create_result); /* Initialize expanded locals and result (if required) */
 
 /* Operational stack handling routines */
 rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);	/* Push one value on op stack */
@@ -580,6 +580,7 @@ rt_private void interpret(int flag, int where)
 	long volatile once_key = 0;				/* Index in once table */
 	int  volatile is_once = 0;				/* Is it a once routine? */
 	int  volatile is_process_once = 0;		/* Is once routine process-relative? */
+	int  volatile create_result = 1;			/* Should result be created? */
 	RTSN;							/* Save nested flag */
 	STACK_PRESERVE_FOR_OLD;
  
@@ -601,6 +602,9 @@ rt_private void interpret(int flag, int where)
 		once_key = get_int32(&IC);
 		break;
 #endif
+	case ONCE_MARK_ATTRIBUTE:
+		create_result = 0;
+		break;
 	}
 
 	for (;;) {
@@ -3734,7 +3738,7 @@ rt_private void interpret(int flag, int where)
 #endif
 				MTOE(OResult, RTOC(0));
 
-				create_expanded_locals (scur, stop);
+				create_expanded_locals (scur, stop, create_result);
 					/* Initialize permanent storage */
 				put_once_result (iresult, rtype, OResult);
 					/* Register rescue handler (if any). */
@@ -3762,7 +3766,7 @@ rt_private void interpret(int flag, int where)
 	} else {
 		if (flag == INTERP_CMPD) {
 				/* Initialize expanded locals */
-			create_expanded_locals (scur, stop);
+			create_expanded_locals (scur, stop, create_result);
 		}
 			/* Register rescue handler (if any). */
 		SET_RESCUE;
@@ -5611,7 +5615,8 @@ rt_private void pop_registers(void)
 /* Initialize expanded locals and result (if required) */
 rt_private void create_expanded_locals (
 	struct stochunk * scur,		/* Current chunk (stack context) */
-	EIF_TYPED_VALUE * stop			/* To save stack context */
+	EIF_TYPED_VALUE * stop,			/* To save stack context */
+	int create_result		/* Should result be created? */
 )
 {
 	RT_GET_CONTEXT
@@ -5646,25 +5651,27 @@ rt_private void create_expanded_locals (
 			break;
 		}							
 	}
-	last = iresult;
-	type = last->type;
-	switch (type & SK_HEAD) {
-	case SK_EXP:
-		stagval = tagval;
-		last->type = SK_POINTER;		/* For GC */
-		last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
-		last->type = SK_EXP;
-		if (tagval != stagval)
-			sync_registers(MTC scur, stop);
-		break;
-	case SK_BIT:
-		stagval = tagval;
-		last->type = SK_POINTER;    /* GC: wait for malloc */
-		last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
-		last->type = SK_BIT;
-		if (tagval != stagval)
-			sync_registers(MTC scur, stop);
-		break;
+	if (create_result) {
+		last = iresult;
+		type = last->type;
+		switch (type & SK_HEAD) {
+		case SK_EXP:
+			stagval = tagval;
+			last->type = SK_POINTER;		/* For GC */
+			last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
+			last->type = SK_EXP;
+			if (tagval != stagval)
+				sync_registers(MTC scur, stop);
+			break;
+		case SK_BIT:
+			stagval = tagval;
+			last->type = SK_POINTER;    /* GC: wait for malloc */
+			last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
+			last->type = SK_BIT;
+			if (tagval != stagval)
+				sync_registers(MTC scur, stop);
+			break;
+		}
 	}
 }
 

@@ -54,7 +54,7 @@ feature -- Attributes
 	Packet_number: INTEGER is 33
 			-- Maximum number of files in a single linking phase in Workbench mode.
 
-	Final_packet_number: INTEGER is 100
+	Final_packet_number: INTEGER is 50
 			-- Maximum number of files in a single linking phase in Final mode.
 
 	System_packet_number: INTEGER is 20

@@ -53,7 +53,7 @@ int ipv6_supported_()
 {
 	int fd;
 	SOCKETADDRESS sa;
-	int sa_len = sizeof(sa);
+	int l_sa_len = sizeof(sa);
 
 	fd = socket(AF_INET6, SOCK_STREAM, 0) ;
 	if (fd < 0) {
@@ -64,7 +64,7 @@ int ipv6_supported_()
 		/* If fd 0 is a socket it means we've been launched from inetd or
 		 * xinetd. If it's a socket then check the family - if it's an
 		 * IPv4 socket then we need to disable IPv6. */
-	if (getsockname(0, (struct sockaddr *)&sa, &sa_len) == 0) {
+	if (getsockname(0, (struct sockaddr *)&sa, &l_sa_len) == 0) {
 		struct sockaddr *saP = (struct sockaddr *)&sa;
 		if (saP->sa_family != AF_INET6) {
 			return 0;

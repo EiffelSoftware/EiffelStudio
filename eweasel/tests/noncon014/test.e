@@ -17,9 +17,24 @@ feature -- Initialization
 		do
 			any_once_cell.put ("STRING")
 			create t1
-			create t2
 			t1.f
+
+			check
+				same_once: any_once_cell.item = t1.any_once_cell.item
+			end
+
+			create t2
+			if t2.any_once_cell.item /= Void then
+				io.put_string ("Not OK%N")
+			else
+				t2.any_once_cell.put ("PATH_NAME")
+			end
 			t2.f
+
+			check
+				not_same_once1: not any_once_cell.item.is_equal (t2.any_once_cell.item)
+				not_same_once2: not t1.any_once_cell.item.is_equal (t2.any_once_cell.item)
+			end
 		end
 
 end

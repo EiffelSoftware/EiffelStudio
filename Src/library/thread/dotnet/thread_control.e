@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	THREAD_CONTROL
 
 feature -- Basic operations
@@ -48,7 +48,11 @@ feature -- Basic operations
 			-- The calling thread waits for the current child thread to
 			-- terminate.
 		do
-			thread_imp.join
+				-- If `internal_thread_id' is 0, it means  we haven't started the thread in which case
+				-- there is nothing to do.
+			if internal_thread_id /= 0 then
+				thread_imp.join
+			end
 		end
 
 	native_join (term: POINTER) is
@@ -70,7 +74,7 @@ feature -- Sleep
 		do
 			(create {EXECUTION_ENVIRONMENT}).sleep (nanoseconds)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	terminated: BOOLEAN is
@@ -170,9 +174,12 @@ feature {NONE} -- Threads management
 			childrens_mutex.unlock
 		end
 
+	internal_thread_id: INTEGER
+			-- Thread id of `Current' for a THREAD object, not  initialized in THREAD_CONTROL
+
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

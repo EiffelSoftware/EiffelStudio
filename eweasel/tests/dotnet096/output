@@ -12,7 +12,6 @@ root_cluster.TEST(_set_property): on class and interface attribute
 root_cluster.TEST(_set_property): on interface attribute
 root_cluster.TEST(set_property): on class and interface
 root_cluster.TEST(set_property): on interface
-root_cluster.TEST(property): on property
 
 Implementation
 root_cluster.Impl.TEST(TEST): on class

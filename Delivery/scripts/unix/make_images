@@ -15,7 +15,7 @@ EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC
 ISE_EIFFEL=$FINAL_INSTALL_DIR; export ISE_EIFFEL
 INSTALL_DIR=$FINAL_INSTALL_DIR
 
-echo > $COMPILE_LOG
+echo >> $COMPILE_LOG
 
 if [ -z "$ISE_PLATFORM" ]; then
 	remtrace Couldnt find environment variable ISE_PLATFORM

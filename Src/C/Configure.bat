@@ -57,7 +57,7 @@ if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
 )
 
 if .%3. == .dll. (
-	shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
+	shell\bin\sed -e "s/\-W4/\-DEIF_MAKE_DLL\ \-W4/g" config.sh >> config.sh.modif
 	shell\bin\mv config.sh.modif config.sh
 	shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
 	shell\bin\mv config.sh.modif config.sh

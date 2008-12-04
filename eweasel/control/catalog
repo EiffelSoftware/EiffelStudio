@@ -933,6 +933,7 @@ test	bad-c-inline-agent			final064 tcf pass finalizing agents
 test	inline-expanded-return		final065 tcf pass finalizing inlining
 test	wrong-generic-type-generation	final066 tcf pass finalizing inlining
 test	inline-agent-crash-final	final067 tcf pass finalizing agents
+test	inlined-generic-expanded-type	final068 tcf pass finalizing inlining expanded generic
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

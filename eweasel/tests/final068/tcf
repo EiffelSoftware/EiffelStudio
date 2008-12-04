@@ -1,0 +1,27 @@
+test_name 	 inlined-generic-expanded-type
+test_description Inlined generic expanded type evaluation should not differ from non-inlined one.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

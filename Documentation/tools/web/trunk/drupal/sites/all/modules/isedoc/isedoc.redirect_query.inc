@@ -15,7 +15,14 @@ function isedoc_redirect_query($kind,$d) {
 		}
 	}
 	$dir = drupal_get_path('module','isedoc');
-	$output = t("Redirect Documentation: kind=$kind url=$url ($dir)");
+	$output = "<br/>".t("The Eiffel documentation changed, please update your bookmarks, links, etc... with this new website.")."<br/>";
+	$output .= '<ul>';
+	$output .= '<li>Follow the <a href="/book/guide/guide">guide</a>.</li>';
+	$output .= '<li>you can also <a href="/search/">search the new website</a>.</li>';
+	$output .= '</ul>';
+	$output .= '<p>'.t("Enjoy this new documentation website").'.</p>';
+
+	//$output .= "<p>".t("Redirect Documentation: kind=$kind url=$url ($dir)")."</p>";
 
 	$output .= '<br/>';
 

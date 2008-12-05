@@ -8,7 +8,7 @@ getdrupmod()
   $EDOC_SCRIPTSDIR/get_drupal_module.sh $1
 }
 
-getdrupmod cck-6.x-2.0-rc10.tar.gz
+getdrupmod cck-6.x-2.1.tar.gz
 getdrupmod diff-6.x-2.0.tar.gz
 getdrupmod geshifilter-6.x-1.1.tar.gz
 getdrupmod image-6.x-1.0-alpha3.tar.gz
@@ -16,7 +16,7 @@ getdrupmod imce-6.x-1.1.tar.gz
 getdrupmod img_assist-6.x-1.0.tar.gz
 getdrupmod lightbox2-6.x-1.8.tar.gz
 getdrupmod pathauto-6.x-1.1.tar.gz
-getdrupmod persistent_login-6.x-1.4-beta2.tar.gz
+getdrupmod persistent_login-6.x-1.4-beta4.tar.gz
 #getdrupmod print-6.x-1.0.tar.gz
 getdrupmod print-6.x-1.x-dev.tar.gz
 getdrupmod recent_changes-6.x-1.x-dev.tar.gz

@@ -46,6 +46,9 @@ feature -- Display
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its normal state.
+		require
+			a_device_not_void: a_device /= Void
+			panel_not_void: panel /= Void
 		do
 			display_end_token(d_y, a_device, a_width, False, panel)
 		end
@@ -54,6 +57,9 @@ feature -- Display
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its selected state.
+		require
+			a_device_not_void: a_device /= Void
+			panel_not_void: panel /= Void
 		do
 			display_end_token (d_y, a_device, a_width, True, panel)
 		end
@@ -116,7 +122,7 @@ feature {NONE} -- Private Constants
 
 	eol_symbol: STRING is
 		once
-			Result := "¶"
+			Result := ""
 		end
 
 feature {NONE} -- Implementation
@@ -151,7 +157,7 @@ feature {NONE} -- Implementation
 
 			end
 
- 				-- Display the ¶ only if the option is set.
+ 				-- Display the  only if the option is set.
  			if panel.view_invisible_symbols then
  					-- Backup old drawing style and set the new one.
  				a_device.set_foreground_color(the_text_color)

@@ -123,6 +123,9 @@ feature {NONE} -- Initialization
 
 			editor_drawing_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 
+				-- Create the buffered line.
+			create buffered_line.make_with_size (buffered_drawable_width, line_height)
+
 				-- Viewport Events
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
 			editor_drawing_area.resize_actions.extend (agent on_size)
@@ -136,6 +139,7 @@ feature {NONE} -- Initialization
 			scroll_cell.set_minimum_size (vertical_scrollbar.width, vertical_scrollbar.width)
 			update_scroll_agent := agent update_scrollbars_display
 			last_vertical_scroll_bar_value := 1
+			display_scrollbars := True
 
 				-- Set up the screen.
 			buffered_line.set_background_color (editor_preferences.normal_background_color)
@@ -164,6 +168,7 @@ feature -- Access
 			Result.add_lines_observer (Current)
 			Result.add_edition_observer (Current)
 			Result.set_first_read_block_size (number_of_lines_in_block)
+			Result.set_userset_data (userset_data)
 		ensure
 			new_text_not_void: Result /= Void
 		end
@@ -231,6 +236,9 @@ feature -- Access
 				Result := detected_encoding
 			end
 		end
+
+	display_scrollbars: BOOLEAN assign set_display_scrollbars
+			-- Should scrollbars be display automatically?
 
 feature -- Status Setting
 
@@ -338,6 +346,49 @@ feature -- Status Setting
 			editor_drawing_area.focus_in_actions.resume
 		end
 
+	set_left_margin_width (a_width: like left_margin_width)
+			-- Set `left_margin_width' with `a_width'.
+			-- Set with zero to use preference value.
+		do
+			internal_left_margin_width := a_width
+		end
+
+	set_fonts (a_fonts: like userset_fonts)
+			-- Set `userset_font' with `a_font'.
+		do
+			userset_data.fonts := a_fonts
+			buffered_line.set_size (buffered_line.width, line_height)
+			update_line_and_token_info
+		end
+
+	set_line_height (a_height: like line_height)
+			-- Set `userset_font_height'
+		do
+			userset_data.line_height := a_height
+			buffered_line.set_size (buffered_line.width, line_height)
+		end
+
+	set_font_offset (a_offset: INTEGER)
+			-- Set `font_offset'
+		do
+			userset_data.font_offset := a_offset
+		end
+
+	set_display_scrollbars (a_display: BOOLEAN)
+			-- Set `display_scrollbars' with `a_display'.
+			-- Show or hide the scrollbars accordingly.
+		do
+			display_scrollbars := a_display
+			if a_display then
+				update_horizontal_scrollbar
+				update_vertical_scrollbar
+			else
+				horizontal_scrollbar.hide
+				vertical_scrollbar.hide
+				scroll_cell.hide
+			end
+		end
+
 feature -- Query
 
 	file_loaded: BOOLEAN is
@@ -430,10 +481,15 @@ feature -- Query
 	left_margin_width: INTEGER is
 			-- Width of left margin
 		do
-			Result := editor_preferences.left_margin_width
-			if Result < 1 then
-				Result := default_left_margin_width
+			if internal_left_margin_width = 0 then
+				Result := editor_preferences.left_margin_width
+				if Result < 1 then
+					Result := default_left_margin_width
+				end
+			else
+				Result := internal_left_margin_width
 			end
+
 		end
 
 	changed: BOOLEAN is
@@ -558,6 +614,7 @@ feature -- Basic Operations
 			-- Update display.
 		do
 			in_scroll := True
+			update_line_and_token_info
 			editor_drawing_area.redraw
 			margin.refresh
 		end
@@ -741,14 +798,34 @@ feature -- Graphical interface
 
 	font: EV_FONT is
 			-- Font used to display the text
+		local
+			l_fonts: SPECIAL [EV_FONT]
 		do
-			Result := editor_preferences.font
+			l_fonts := userset_data.fonts
+			if l_fonts /= Void then
+				Result := l_fonts [{EDITOR_TOKEN_TEXT}.editor_font_id]
+			else
+				Result := editor_preferences.font
+			end
 		end
 
-	line_height: INTEGER is
-			-- Height of lines in pixels.
+	userset_fonts: SPECIAL [EV_FONT] is
+			-- Font set via `set_font'
 		do
-			Result := editor_preferences.line_height
+			Result := userset_data.fonts
+		end
+
+	line_height: INTEGER
+			-- Height of lines in pixels
+		local
+			l_user_data: like userset_data
+		do
+			l_user_data := userset_data
+			if l_user_data.line_height > 0 then
+				Result := l_user_data.line_height
+			else
+				Result := editor_preferences.line_height
+			end
 		end
 
 	reference_window: EV_WINDOW is
@@ -780,9 +857,9 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	number_of_lines_in_block: INTEGER is
 			-- Default number of lines read when loading a text in editor.
 		do
-			Result := 4 * number_of_lines_displayed
+			Result := (4 * number_of_lines_displayed).max (1)
 		ensure
-			number_of_lines_computed_non_negative: Result >= 0
+			number_of_lines_computed_non_negative: Result >= 1
 		end
 
 	editor_width: INTEGER
@@ -860,32 +937,37 @@ feature {NONE} -- Scroll bars Management
 		local
 			w: INTEGER
 		do
-			w := editor_viewport.width
-			if editor_width > w and w > 0 and then not is_empty then
-				horizontal_scrollbar.value_range.resize_exactly (0, editor_width - w)
-				horizontal_scrollbar.set_leap (w)
-				if horizontal_scrollbar.is_show_requested then
-					if not platform_is_windows then
-						horizontal_scrollbar_needs_updating := False
+			if display_scrollbars then
+				w := editor_viewport.width
+				if editor_width > w and w > 0 and then not is_empty then
+					horizontal_scrollbar.value_range.resize_exactly (0, editor_width - w)
+					horizontal_scrollbar.set_leap (w)
+					if horizontal_scrollbar.is_show_requested then
+						if not platform_is_windows then
+							horizontal_scrollbar_needs_updating := False
+						end
+					else
+						horizontal_scrollbar.show
+						horizontal_scrollbar_needs_updating := True
+						ev_application.add_idle_action (update_scroll_agent)
 					end
-				else
-					horizontal_scrollbar.show
+				elseif horizontal_scrollbar.is_show_requested then
+					horizontal_scrollbar.value_range.resize_exactly (0, 1)
+					horizontal_scrollbar.set_leap (1)
+					horizontal_scrollbar.hide
 					horizontal_scrollbar_needs_updating := True
+					set_offset (0)
 					ev_application.add_idle_action (update_scroll_agent)
+				elseif horizontal_scrollbar_needs_updating and then not platform_is_windows then
+					horizontal_scrollbar_needs_updating := False
+				else
+					horizontal_scrollbar_needs_updating := True
 				end
-			elseif horizontal_scrollbar.is_show_requested then
-				horizontal_scrollbar.value_range.resize_exactly (0, 1)
-				horizontal_scrollbar.set_leap (1)
-				horizontal_scrollbar.hide
-				horizontal_scrollbar_needs_updating := True
-				set_offset (0)
-				ev_application.add_idle_action (update_scroll_agent)
-			elseif horizontal_scrollbar_needs_updating and then not platform_is_windows then
-				horizontal_scrollbar_needs_updating := False
+				update_scroll_cell
 			else
-				horizontal_scrollbar_needs_updating := True
+				horizontal_scrollbar.hide
+				scroll_cell.hide
 			end
-			update_scroll_cell
 		end
 
 	update_vertical_scrollbar is
@@ -897,34 +979,39 @@ feature {NONE} -- Scroll bars Management
 			if not in_resize then
 				in_resize := True
 
-				if show_vertical_scrollbar then
-					nol := text_displayed.number_of_lines
-					vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
-					if first_line_displayed > maximum_top_line_index then
-						vertical_scrollbar.set_value (maximum_top_line_index)
-					else
-						vertical_scrollbar.set_value (first_line_displayed)
-					end
-					vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
-					if scroll_vbox.is_show_requested then
-						if not platform_is_windows then
-							vertical_scrollbar_needs_updating := False
+				if display_scrollbars then
+					if show_vertical_scrollbar then
+						nol := text_displayed.number_of_lines
+						vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
+						if first_line_displayed > maximum_top_line_index then
+							vertical_scrollbar.set_value (maximum_top_line_index)
+						else
+							vertical_scrollbar.set_value (first_line_displayed)
 						end
-					else
-						scroll_vbox.show
+						vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
+						if scroll_vbox.is_show_requested then
+							if not platform_is_windows then
+								vertical_scrollbar_needs_updating := False
+							end
+						else
+							scroll_vbox.show
+							vertical_scrollbar_needs_updating := True
+							ev_application.add_idle_action (update_scroll_agent)
+						end
+					elseif scroll_vbox.is_show_requested then
+						scroll_vbox.hide
 						vertical_scrollbar_needs_updating := True
 						ev_application.add_idle_action (update_scroll_agent)
+					elseif vertical_scrollbar_needs_updating and then not platform_is_windows then
+						vertical_scrollbar_needs_updating := False
+					else
+						vertical_scrollbar_needs_updating := True
 					end
-				elseif scroll_vbox.is_show_requested then
-					scroll_vbox.hide
-					vertical_scrollbar_needs_updating := True
-					ev_application.add_idle_action (update_scroll_agent)
-				elseif vertical_scrollbar_needs_updating and then not platform_is_windows then
-					vertical_scrollbar_needs_updating := False
+					update_scroll_cell
 				else
-					vertical_scrollbar_needs_updating := True
+					vertical_scrollbar.hide
+					scroll_cell.hide
 				end
-				update_scroll_cell
 				in_resize := False
 			end
 		end
@@ -1475,6 +1562,23 @@ feature {MARGIN} -- Implementation
 
 	right_buffer_width: INTEGER is 50
 
+	internal_left_margin_width: like left_margin_width
+			-- Saved user set left margin width
+
+feature {EDITOR_TOKEN} -- User set data
+
+	userset_data: TEXT_PANEL_BUFFERED_DATA
+			-- Userset editor data
+		do
+			Result := intneral_userset_data
+			if Result = Void then
+				create intneral_userset_data
+				Result := intneral_userset_data
+			end
+		ensure
+			userset_data_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	refresh_line_number_agent: PROCEDURE [ANY, TUPLE]
@@ -1533,11 +1637,8 @@ feature -- Memory management
 
 feature -- Implementation
 
-	buffered_line: EV_PIXMAP is
+	buffered_line: EV_PIXMAP
 			-- Buffer large enough to hold line information.
-		once
-			create Result.make_with_size (1, line_height)
-		end
 
 	buffered_drawable_width: INTEGER is 15000
 
@@ -1621,6 +1722,32 @@ feature -- Implementation
 			text_displayed.set_changed (True, False)
 			date_of_file_when_loaded := file_date_ticks
 			size_of_file_when_loaded := file_size
+		end
+
+	intneral_userset_data: like userset_data
+			-- Buffered userset data
+
+	update_line_and_token_info
+			-- Update all tokens for correct width.
+		local
+			l_text: like text_displayed
+			l_line: EDITOR_LINE
+		do
+			l_text := text_displayed
+			if not l_text.is_empty then
+				from
+					l_text.start
+	 			until
+	 				l_text.after
+	 			loop
+	 				l_line := l_text.current_line
+					if l_line.userset_data /= userset_data then
+						l_line.set_userset_data (userset_data)
+						l_line.update_token_information
+					end
+	 				l_text.forth
+	 			end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -1708,6 +1835,7 @@ feature {NONE} -- Encoding detector
 
 invariant
 	offset_view: is_initialized implies is_offset_valid
+	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

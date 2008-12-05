@@ -325,6 +325,19 @@ feature -- Search
 	successful_search: BOOLEAN
 			-- Was the last call to `search_string' successful?
 
+feature {TEXT_PANEL} -- Userset data
+
+	set_userset_data (a_data: like userset_data)
+			-- Set `userset_data' with `a_data'
+		do
+			userset_data := a_data
+		ensure
+			userset_data_set: userset_data = a_data
+		end
+
+	userset_data: TEXT_PANEL_BUFFERED_DATA assign set_userset_data
+			-- Userset editor data
+
 feature {NONE} -- Text Loading
 
 	start_reading_string is

@@ -116,6 +116,9 @@ feature -- Query
 			Result := l_cursor.token.position + l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
 		end
 
+	auto_scroll: BOOLEAN assign set_auto_scroll
+			-- Auto scroll when selecting texts with mouse?
+
 feature -- Cursor Management
 
 	check_cursor_position is
@@ -353,6 +356,14 @@ feature -- Status Setting
 			-- Redraw the line where the cursor is
 		do
 			invalidate_cursor_rect (False)
+		end
+
+	set_auto_scroll (a_auto_scroll: BOOLEAN)
+			-- Set `auto_scroll' with `a_auto_scroll'.
+		do
+			auto_scroll := a_auto_scroll
+		ensure
+			auto_scroll_set: auto_scroll = a_auto_scroll
 		end
 
 feature -- Observation
@@ -724,7 +735,7 @@ feature {NONE} -- Blink Cursor Management
 	suspend_cursor_blinking is
 			-- Suspends cursor blinking until `resume_cursor_blinking' is called.
 		do
-			if not blink_suspended then
+			if is_initialized and then not blink_suspended then
 				let_blink := False
 				blink_on := True
 				blinking_timeout.actions.call (Void)
@@ -732,7 +743,7 @@ feature {NONE} -- Blink Cursor Management
 				blink_suspended := True
 			end
 		ensure
-			blink_suspended: blink_suspended
+			blink_suspended: is_initialized implies blink_suspended
 		end
 
 	blink_suspended: BOOLEAN
@@ -741,21 +752,23 @@ feature {NONE} -- Blink Cursor Management
 	resume_cursor_blinking is
 			-- Resumes cursor blinking from a call to `suspend_cursor_blinking'
 		do
-			if blink_suspended then
-				let_blink := True
-				blink_on := True
-				blinking_timeout.actions.resume
-				blinking_timeout.actions.call (Void)
-				blink_suspended := False
-			else
-				reset_blinking
-				let_blink := True
-			end
-			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
-				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+			if is_initialized then
+				if blink_suspended then
+					let_blink := True
+					blink_on := True
+					blinking_timeout.actions.resume
+					blinking_timeout.actions.call (Void)
+					blink_suspended := False
+				else
+					reset_blinking
+					let_blink := True
+				end
+				if blinking_timeout /= Void and then text_displayed.cursor /= Void then
+					draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+				end
 			end
 		ensure
-			not_blink_suspended: not blink_suspended
+			not_blink_suspended: is_initialized implies not blink_suspended
 		end
 
 	basic_cursor_move (action: PROCEDURE[like cursor_type, TUPLE]) is
@@ -950,7 +963,7 @@ feature {NONE} -- Implementation
 			l_int := offset + editor_viewport.width - 30
 			if cur_pos < offset then
 				set_offset (cur_pos.max (0))
-			elseif cur_pos >= (l_int) then
+			elseif auto_scroll and then cur_pos >= (l_int) then
 				if editor_width > editor_viewport.width then
 					set_offset (cur_pos - editor_viewport.width + 30)
 				end

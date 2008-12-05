@@ -21,8 +21,6 @@ feature -- String encoding convertion
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			l_count: INTEGER
-			l_code_page: STRING
 			l_from_code_page, l_to_code_page: STRING
 			l_string_32: STRING_32
 			l_from_be, l_to_be: BOOLEAN

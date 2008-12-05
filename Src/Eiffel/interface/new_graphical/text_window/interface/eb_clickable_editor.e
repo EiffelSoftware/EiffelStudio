@@ -58,6 +58,8 @@ feature {NONE}-- Initialization
 
 	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize the editor.
+		local
+			l_dev_win: EB_DEVELOPMENT_WINDOW
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (a_dev_window)
 			if dev_window /= Void then
@@ -72,8 +74,17 @@ feature {NONE}-- Initialization
 			editor_drawing_area.pick_actions.force_extend (agent suspend_cursor_blinking)
 			editor_drawing_area.pick_ended_actions.force_extend (agent resume_cursor_blinking)
 
-			editor_drawing_area.set_configurable_target_menu_mode
-			editor_drawing_area.set_configurable_target_menu_handler (agent (dev_window.menus.context_menu_factory).editor_menu (?, ?, ?, ?, Current))
+				-- Not necessarily use `a_dev_window' to get context menu.
+				-- `a_dev_window' could be void for some uses.
+			l_dev_win := a_dev_window
+			if l_dev_win = Void then
+				l_dev_win := window_manager.last_focused_development_window
+			end
+			if l_dev_win /= Void then
+				editor_drawing_area.set_configurable_target_menu_mode
+				editor_drawing_area.set_configurable_target_menu_handler (agent (l_dev_win.menus.context_menu_factory).editor_menu (?, ?, ?, ?, Current))
+			end
+
 		end
 
 feature -- Access
@@ -507,6 +518,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			old_offset	: INTEGER
 			l_line		: INTEGER
 			l_update_selection: BOOLEAN
+			l_dev_win	: like dev_window
 		do
 			if not (ctrled_key or else mouse_copy_cut) then
 				if not text_displayed.is_empty then
@@ -541,7 +553,11 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								l_number := cur.y_in_lines
 								token_pos := cur.token.position
 									-- Pick and drop mode, we set the selection to the pebble.
-								if not dev_window.menus.context_menu_factory.menu_displayable (Result) then
+								l_dev_win := dev_window
+								if l_dev_win = Void then
+									l_dev_win := window_manager.last_focused_development_window
+								end
+								if l_dev_win /= Void and then not l_dev_win.menus.context_menu_factory.menu_displayable (Result) then
 									if text_displayed.has_selection then
 	  									text_displayed.disable_selection
 	  									invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines, False)
@@ -804,9 +820,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -817,19 +833,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

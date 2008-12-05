@@ -461,6 +461,45 @@ feature -- Display
 			end
 		end
 
+	display_on_editor (a_editor: !EB_CLICKABLE_EDITOR)
+			-- Display text on editor
+		local
+			l_tokens: like adapted_tokens
+			l_pos: like token_position
+			l_cursor: LINKED_LIST_CURSOR [EDITOR_TOKEN]
+			l_pos_cursor: LINKED_LIST_CURSOR [EV_RECTANGLE]
+			l_token: EDITOR_TOKEN
+		do
+			a_editor.handle_before_processing (False)
+			if not is_position_up_to_date then
+				update_position
+			end
+			l_tokens := adapted_tokens
+			if not l_tokens.is_empty then
+				l_pos := token_position
+				l_cursor := l_tokens.cursor
+				l_pos_cursor := l_pos.cursor
+				from
+					l_tokens.start
+					l_pos.start
+				until
+					l_tokens.after
+				loop
+					l_token := l_tokens.item
+					if not l_token.is_new_line then
+						a_editor.text_displayed.append_token (l_token)
+					else
+						a_editor.text_displayed.add_new_line
+					end
+					l_tokens.forth
+					l_pos.forth
+				end
+				l_tokens.go_to (l_cursor)
+				l_pos.go_to (l_pos_cursor)
+			end
+			a_editor.handle_after_processing
+		end
+
 feature -- Position status
 
 	is_position_up_to_date: BOOLEAN
@@ -1054,7 +1093,11 @@ feature{NONE} -- Implementation
 					a_token.font_id < overriden_fonts.count
 					overriden_fonts.item (a_token.font_id) /= Void
 				end
-				Result := overriden_fonts.item (a_token.font_id).string_width (a_image)
+				if a_token.is_tabulation then
+					Result := a_token.editor_preferences.tabulation_spaces * overriden_fonts.item (a_token.font_id).string_width (once " ")
+				else
+					Result := overriden_fonts.item (a_token.font_id).string_width (a_image)
+				end
 			elseif not a_token.is_tabulation then
 				Result := a_token.font.string_width (a_image)
 			else
@@ -1063,35 +1106,35 @@ feature{NONE} -- Implementation
 		end
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

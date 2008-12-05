@@ -208,7 +208,7 @@ feature {NONE} -- Usage
 	version: !STRING is
 			-- Version number of application
 		once
-			Result := "6.3.0"
+			Result := "6.4.0"
 		end
 
 	non_switched_argument_name: !STRING_8 is

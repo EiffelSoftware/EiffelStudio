@@ -11,7 +11,7 @@
 %BODY%
 <br/>%NAV_HTML%</div>
 <div id="doc-footer">
-Documentation exported from <a href="%BOOK_URL%">%BOOK_URL%/a>
+Documentation exported from <a href="%BOOK_URL%">%BOOK_URL%</a>
  -- %DATETIME%
 </div>
 </body></html>

@@ -107,7 +107,7 @@ feature -- Status Setting
 		end
 
 	update_token_information is
-			--
+			-- Update token information
 		local
 			t: like item
 		do
@@ -116,6 +116,7 @@ feature -- Status Setting
 			until
 				t = eol_token
 			loop
+				t.set_userset_data (userset_data)
 				t.update_width
 				t.update_position
 				t := t.next
@@ -377,6 +378,19 @@ feature -- Status Report
 
 	width: INTEGER
 		-- x position of last pixel of the string
+
+feature {TEXT_PANEL} -- Userset data
+
+	set_userset_data (a_data: like userset_data)
+			-- Set `userset_data' with `a_data'
+		do
+			userset_data := a_data
+		ensure
+			userset_data_set: userset_data = a_data
+		end
+
+	userset_data: TEXT_PANEL_BUFFERED_DATA assign set_userset_data
+			-- Userset editor data
 
 feature -- Obsolete
 

@@ -182,6 +182,9 @@ feature -- Display
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
+		require
+			device_not_void: device /= Void
+			panel_not_void: panel /= Void
 		do
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
@@ -192,6 +195,9 @@ feature -- Display
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beginning to `pivot'
+		require
+			device_not_void: device /= Void
+			panel_not_void: panel /= Void
 		do
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
@@ -206,9 +212,16 @@ feature -- Width & height
 		end
 
 	height: INTEGER is
-			--
+			-- Line height
+		local
+			l_userset_data: like userset_data
 		do
-			Result := editor_preferences.line_height
+			l_userset_data := userset_data
+			if l_userset_data /= Void and l_userset_data.line_height > 0 then
+				Result := l_userset_data.line_height
+			else
+				Result := editor_preferences.line_height
+			end
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -297,14 +310,25 @@ feature -- Font
 
 	font: EV_FONT is
 			-- Font of current.
+		local
+			l_userset_fonts: like userset_fonts
 		do
-			Result := editor_preferences.font_of_id (font_id)
+			l_userset_fonts := userset_fonts
+			if l_userset_fonts /= Void then
+				Result := l_userset_fonts [font_id]
+			else
+				Result := editor_preferences.font_of_id (font_id)
+			end
 		end
 
 	font_offset: INTEGER is
 			-- Number of pixels from top of line to beginning of drawing operation
 		do
-			Result := editor_preferences.font_offset
+			if userset_font_offset > 0 then
+				Result := userset_font_offset
+			else
+				Result := editor_preferences.font_offset
+			end
 		end
 
 	font_id: INTEGER is
@@ -317,14 +341,28 @@ feature -- Font
 			-- Width of character in the editor.
 		require
 			is_fixed_width: is_fixed_width
+		local
+			l_width: like userset_font_width
 		do
-			Result := editor_preferences.font_width
+			l_width := userset_font_width
+			if l_width > 0 then
+				Result := l_width
+			else
+				Result := editor_preferences.font_width
+			end
 		end
 
 	is_fixed_width: BOOLEAN is
 			-- Is `font' a fixed-width font?
+		local
+			l_data: like userset_data
 		do
-			Result := editor_preferences.is_fixed_width
+			l_data := userset_data
+			if l_data /= Void and then l_data.is_font_fixed_set then
+				Result := userset_data.is_font_fixed
+			else
+				Result := editor_preferences.is_fixed_width
+			end
 		end
 
 feature -- Implementation of clickable and editable text
@@ -366,6 +404,54 @@ feature -- Implementation of clickable and editable text
 	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING_32; device: EV_DRAWABLE) is
 		do
 			device.draw_text (pos, d_y + font_offset, text_to_be_drawn)
+		end
+
+feature {TEXT_PANEL, VIEWER_LINE}
+
+	set_userset_data (a_data: like userset_data)
+			-- Set `userset_data' with `a_data'
+		do
+			userset_data := a_data
+		ensure
+			userset_data_set: userset_data = a_data
+		end
+
+feature {NONE} -- Userset Implementation
+
+	setup_userset_properties (panel: TEXT_PANEL)
+			-- Setup various userset properties specialized to current token from the editor.
+		do
+			userset_data := panel.userset_data
+		end
+
+	userset_data: TEXT_PANEL_BUFFERED_DATA;
+			-- Userset editor data
+
+	userset_fonts: SPECIAL [EV_FONT]
+			-- Userset fonts
+		do
+			if userset_data /= Void then
+				Result := userset_data.fonts
+			end
+		end
+
+	userset_font_offset: like font_offset
+			-- Userset font offset
+		do
+			if userset_data /= Void then
+				Result := userset_data.font_offset
+			end
+		end
+
+	userset_font_width: INTEGER
+			-- Userset font width
+		local
+			l_userset_data: like userset_data
+		do
+			l_userset_data := userset_data
+			if l_userset_data /= Void then
+				Result := l_userset_data.font_width
+			end
 		end
 
 invariant

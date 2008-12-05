@@ -35,7 +35,7 @@ export ISE_PLATFOR=""
 if [ "x\$DISPLAY" = "x" ]; then
 	echo Please run make_install in /usr/share/$PRODUCT to make precompiles
 else
-	WIZARD=/usr/lib/eiffelstudio-6.3/studio/wizards/others/precompile
+	WIZARD=/usr/lib/eiffelstudio-6.4/studio/wizards/others/precompile
         \$WIZARD/spec/unix/wizard \$WIZARD
 fi
 

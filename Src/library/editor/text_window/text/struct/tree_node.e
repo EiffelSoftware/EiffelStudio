@@ -148,8 +148,6 @@ feature -- Status report
 			from
 				ch := parent.children
 				Result := 1
-			variant
-				parent.arity - Result
 			until
 				ch @ Result = Current
 			loop
@@ -157,6 +155,8 @@ feature -- Status report
 				check
 					no_overflow: Result <= parent.arity
 				end
+			variant
+				parent.arity - Result
 			end
 		end
 --| FIXME
@@ -179,13 +179,13 @@ feature -- Status report
 			else
 				from
 					j:= 1
-				variant
-					i - j
 				until
 					j >= i
 				loop
 					Result := Result + (children @ j).keys_plus_one
 					j := j + 1
+				variant
+					i - j
 				end
 			end
 		end
@@ -216,8 +216,6 @@ feature {TREE_NODE} -- Status setting
 --			key_number_not_to_be_updated := b
 --		end
 
-feature -- Cursor movement
-
 feature -- Element change
 
 	set_parent (par: like Current) is
@@ -235,14 +233,14 @@ feature -- Element change
 				--| moving records located after `pos'
 			from
 				i := arity
-			variant
-				i - pos
 			until
 				i <= pos
 			loop
 				children.put (children @ i, i+1)
 				keys.put (keys @ (i-1), i)
 				i := i - 1
+			variant
+				i - pos
 			end
 			children.put (node, pos +1)
 			keys.put (key, pos)
@@ -272,14 +270,14 @@ feature -- Element change
 				--| moving records located after `pos'
 			from
 				i := arity
-			variant
-				i - pos
 			until
 				i <= pos
 			loop
 				children.put (children @ i, i+1)
 				keys.put (keys @ (i-1), i)
 				i := i - 1
+			variant
+				i - pos
 			end
 			children.put (children @ pos, pos +1)
 			children.put (node, pos)
@@ -335,14 +333,14 @@ feature -- Removal
 					--| We move only the keys located after `pos'.
 				from
 					i := pos
-				variant
-					arity - i
 				until
 					i >= arity
 						--| there are `arity'-1 keys in Current
 				loop
 					keys.put (keys @ (i+1), i)
 					i := i + 1
+				variant
+					arity - i
 				end
 				arity := arity -1
 				keys_plus_one := keys_plus_one - 1
@@ -544,8 +542,6 @@ feature -- Conversion
 				i := 1
 				current_node := child.parent
 				pos := child.pos_in_parent
-			variant
-				other.arity - i
 			until
 				i = other.arity
 			loop
@@ -557,6 +553,8 @@ feature -- Conversion
 				current_node := child.parent
 				pos := child.pos_in_parent
 				i := i + 1
+			variant
+				other.arity - i
 			end
 			dummy.delete
 		end
@@ -578,8 +576,6 @@ feature -- Conversion
 				i := other.arity - 1
 				current_node := child.parent
 				pos := child.pos_in_parent
-			variant
-				i
 			until
 				i = 0
 			loop
@@ -588,19 +584,11 @@ feature -- Conversion
 				current_node := child.parent
 				pos := child.pos_in_parent
 				i := i - 1
+			variant
+				i
 			end
 			dummy.delete
 		end
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {TREE_NODE} -- Implementation
 
@@ -613,8 +601,6 @@ feature {TREE_NODE} -- Implementation
 				--| Relocate children and keys after `pos'
 			from
 				i := pos
-			variant
-				arity - i
 			until
 				i >= arity
 					--| there are `arity'-1 keys in Current
@@ -622,6 +608,8 @@ feature {TREE_NODE} -- Implementation
 				keys.put (keys @ (i+1), i)
 				children.put (children @ (i+2), i+1)
 				i := i + 1
+			variant
+				arity - i
 			end
 			arity := arity -1
 			keys_plus_one := keys_plus_one - 2
@@ -653,13 +641,13 @@ feature {TREE_NODE} -- Implementation
 				from
 					i := 2
 					keys_plus_one := (children @ 1).keys_plus_one
-				variant
-					arity - i + 1
 				until
 					i > arity
 				loop
 					keys_plus_one := keys_plus_one + (children @ i).keys_plus_one
 					i := i + 1
+				variant
+					arity - i + 1
 				end
 			end
 			if (not is_root) then

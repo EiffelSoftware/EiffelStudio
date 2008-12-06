@@ -1514,6 +1514,7 @@ test	expanded-generic-wrong-c-with-multiple-ancestor	ccomp074 tcf fail c_compila
 test	missing-undef-c-compiler-error	ccomp075 tcf pass c_compilation
 test	missing-protection-in-inline-c-code	ccomp076 tcf pass c_compilation
 test	bad-c-code-from-argument-anchor	ccomp077 tcf fail c_compilation
+test	bad-c-code-on-debug-clause		ccomp078 tcf pass c_compilation
 
 -- Storable tests
 

@@ -33,7 +33,7 @@ feature -- Access
 					l.after
 				loop
 					buffer.put_character ('"');
-					buffer.put_string (l.item);
+					buffer.put_escaped_string (l.item)
 					buffer.put_string ("%", ");
 					l.forth;
 				end;

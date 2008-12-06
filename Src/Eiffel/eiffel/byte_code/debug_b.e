@@ -132,7 +132,7 @@ feature -- C Code generation
 							buf.put_string ("WDBG(")
 							buf.put_static_type_id (context.class_type.static_type_id)
 							buf.put_string (",%"")
-							buf.put_string (keys.item)
+							buf.put_escaped_string (keys.item)
 							buf.put_string ("%")")
 							keys.forth
 							if not keys.after then

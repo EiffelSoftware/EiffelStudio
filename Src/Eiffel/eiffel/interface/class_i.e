@@ -514,13 +514,13 @@ feature {COMPILER_EXPORTER} -- Setting
 	reset_class_c_information (cl: CLASS_C) is
 			-- Set Current as `lace_class' of `cl' since file has been moved to override
 			-- cluster
+		require
+			cl_not_void: cl /= Void
 		do
-				-- If `cl' not void, it means that we are handling a class which is
-				-- in the system and therefore we update its info, otherwise we do nothing.
-			if cl /= Void then
-				cl.set_original_class (Current)
-				set_compiled_class (cl)
-			end
+				-- We are handling a class which is in the system and therefore we
+				-- update its info.
+			cl.set_original_class (Current)
+			set_compiled_class (cl)
 		end
 
 feature {NONE} -- Implementation

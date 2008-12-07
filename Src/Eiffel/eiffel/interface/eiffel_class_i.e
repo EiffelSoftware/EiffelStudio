@@ -43,7 +43,8 @@ inherit
 			group as cluster
 		redefine
 			set_changed,
-			reset_options
+			reset_options,
+			reset_class_c_information
 		end
 
 create {CONF_COMP_FACTORY}
@@ -178,6 +179,19 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- <Precursor>
 		do
 			options_internal := Void
+		end
+
+	reset_class_c_information (cl: CLASS_C) is
+			-- <Precursor>
+		do
+			Precursor {CLASS_I} (cl)
+				-- If the class used to be only in an override cluster, then its `overriden_by'
+				-- entry will also hold a compiled version of the class, and we cannot allow that,
+				-- since only the class outside the override cluster has the compiled class information.
+				-- This fixes eweasel test#config009.
+			if overriden_by /= Void then
+				overriden_by.reset_compiled_class
+			end
 		end
 
 feature {NONE} -- Implementation

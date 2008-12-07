@@ -119,6 +119,7 @@ feature -- Command
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_session_data, l_project_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			l_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
+			l_open_classes, l_open_clusters: ?HASH_TABLE [STRING_8, STRING_8]
 		do
 			if a_dev_window = Void then
 				construct
@@ -141,7 +142,18 @@ feature -- Command
 
 			-- For first time, no `l_editors_data' saved before
 			if l_project_session_data /= Void then
-				l_has_editor_restored := develop_window.editors_manager.restore_editors (l_project_session_data.open_classes, l_project_session_data.open_clusters)
+				l_open_classes := l_project_session_data.open_classes
+				l_open_clusters := l_project_session_data.open_clusters
+				if l_open_classes = Void then
+					create l_open_classes.make (0)
+				end
+				if l_open_clusters = Void then
+					create l_open_clusters.make (0)
+				end
+				l_has_editor_restored := develop_window.editors_manager.restore_editors (l_open_classes, l_open_clusters)
+					-- If ever there is a session saved, and we tried to restore it, the window is informed.
+					-- So that the window knows at least root feature has no need to display.
+				develop_window.editor_session_loaded := True
 			end
 			if l_has_editor_restored then
 				develop_window.layout_manager.restore_editors_layout
@@ -296,9 +308,9 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -309,19 +321,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -554,6 +554,7 @@ feature -- Update
 				l_system := eiffel_system.system
 			end
 			if
+				not editor_session_loaded and then
 				stone = Void and then
 				l_system /= Void and then
 				eiffel_project.initialized and then
@@ -1467,7 +1468,8 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 		do
 			if editors_manager.editors.count <= 0 then
 				disable_editors_command
-
+					-- Remove the stone being focused, otherwise the stone was thought being edited.
+				old_set_stone (Void)
 				if shell_tools.is_interface_usable then
 						-- Remove stone from tool.
 					if {l_stonable: !ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
@@ -2351,6 +2353,17 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 		ensure
 			set: is_destroying = a_bool
 		end
+
+	set_editor_session_loaded (a_loaded: BOOLEAN)
+			-- Set `editor_session_loaded' with `a_loaded'.
+		do
+			editor_session_loaded := a_loaded
+		ensure
+			editor_session_loaded_set: editor_session_loaded = a_loaded
+		end
+
+	editor_session_loaded: BOOLEAN assign set_editor_session_loaded
+			-- Has editor session data loaded?
 
 feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_PART}
 

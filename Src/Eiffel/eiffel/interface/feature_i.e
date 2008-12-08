@@ -2289,10 +2289,12 @@ end
 	solve_types (feat_tbl: FEATURE_TABLE) is
 			-- Evaluates signature types in context of `feat_tbl'.
 			-- | Take care of possible anchored types
+		local
+			l_solved_type: TYPE_A
 		do
-
-			set_type
-				(Result_evaluator.evaluated_type (type, feat_tbl, Current), assigner_name_id)
+			l_solved_type := Result_evaluator.evaluated_type (type, feat_tbl, Current)
+			check l_solved_type_not_void: l_solved_type /= Void end
+			set_type (l_solved_type, assigner_name_id)
 			if arguments /= Void then
 				arguments.solve_types (feat_tbl, Current)
 			end

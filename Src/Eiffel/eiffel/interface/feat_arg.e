@@ -154,7 +154,6 @@ feature -- Checking
 		local
 			solved_type: TYPE_A
 			associated_class: CLASS_C
-			argument_name: STRING
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE_A]
 			a_area: like argument_names
@@ -171,7 +170,6 @@ feature -- Checking
 				i = nb
 			loop
 					-- Process anchored type for argument types
-				argument_name := l_names_heap.item (a_area.item (i))
 				solved_type := type_a_checker.check_and_solved (l_area.item (i), Void)
 				if solved_type /= Void then
 					l_area.put (solved_type, i)
@@ -273,6 +271,7 @@ feature -- Checking
 			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 			arg_eval: ARG_EVALUATOR
+			l_solved_type: TYPE_A
 		do
 			from
 				arg_eval := Arg_evaluator
@@ -281,7 +280,9 @@ feature -- Checking
 			until
 				i = nb
 			loop
-				l_area.put (arg_eval.evaluated_type (l_area.item (i), feat_tbl, f), i)
+				l_solved_type := arg_eval.evaluated_type (l_area.item (i), feat_tbl, f)
+				check l_solved_type_not_void: l_solved_type /= Void end
+				l_area.put (l_solved_type, i)
 				i := i + 1
 			end
 		end

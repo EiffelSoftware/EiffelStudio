@@ -16,6 +16,14 @@ feature -- Initialization
 			list.extend (create {A [ANY]}.make (create {ANY}))
 			list.extend (create {A [!ANY]}.make (create {ANY}))
 			list.extend (create {A [?ANY]}.make (create {ANY}))
+			list.extend (create {A [STRING]}.make ("TEST"))
+			list.extend (create {A [!STRING]}.make ("TEST1"))
+			list.extend (create {A [?STRING]}.make ("TEST2"))
+			list.extend (create {A [LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
+			list.extend (create {A [!LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
+			list.extend (create {A [?LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
+			list.extend (create {A [!LINKED_LIST [!ANY]]}.make (create {LINKED_LIST [!ANY]}.make))
+			list.extend (create {A [?LINKED_LIST [?ANY]]}.make (create {LINKED_LIST [?ANY]}.make))
 
 -- Commented out since it is only needed when created the test originally.
 --			save (list)

@@ -143,21 +143,21 @@ feature {NONE} -- Access
 			-- <Precursor>
 		do
 			Result := <<
-				[{EQA_TEST_OBJECT}, [
+				[{!EQA_TEST_OBJECT}, [
 						"a_string",    "#2",
 						"a_current",   "#1",
 						"a_integer",   {INTEGER} 100
 					], True],
-				[{STRING_8}, ["[
+				[{!STRING_8}, ["[
 						This is an extracted string.
 					]"], True],
-				[{TUPLE [REAL_64, EQA_TEST_OBJECT, STRING_8]}, [
+				[{!TUPLE [REAL_64, EQA_TEST_OBJECT, STRING_8]}, [
 						True, {REAL_64} -9534.358, "#1", "#2"
 					], True],
-				[{SPECIAL [NATURAL_8]}, [
+				[{!SPECIAL [NATURAL_8]}, [
 						{NATURAL_8} 0, {NATURAL_8} 1, {NATURAL_8} 255
 					], True],
-				[{SPECIAL [ANY]}, [
+				[{!SPECIAL [!ANY]}, [
 						"#1", "#2", "#3", "#4"
 					], True]
 			>>

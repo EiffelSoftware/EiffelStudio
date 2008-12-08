@@ -145,29 +145,40 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query		
 
-	test_set_instance (a_index: NATURAL): !EQA_TEST_SET is
+	test_set_instance (a_index: NATURAL): !EQA_TEST_SET
 			-- Instance of a test set class.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
-	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [EQA_TEST_SET]] is
+	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
 			-- Agent for a test procedure.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
+	test_name (a_index: NATURAL): !STRING
+			-- Name of the test procedure
+		require
+			a_index_valid: is_valid_index (a_index)
+		do
+				-- Will be deferred!
+			Result := "test001"
+		ensure
+			result_valid: test_set_instance (a_index).is_valid_name (Result)
+		end
+
 feature {NONE} -- Execution
 
 	run_test (a_index: NATURAL)
-
+			-- Run test with `a_index'.
 		require
 			stream_initialized: stream.is_open_write
 			a_index_valid: is_valid_index (a_index)
 		do
-			evaluator.execute (test_set_instance (a_index), test_procedure (a_index))
+			evaluator.execute (test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
 			if stream.extendible then
 				stream.put_natural (a_index)
 				stream.independent_store (evaluator.last_outcome)

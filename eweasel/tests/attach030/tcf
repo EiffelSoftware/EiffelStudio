@@ -21,6 +21,8 @@ compare		exec_output_melted output
 
 compile_frozen
 compile_result	ok
+c_compile_work
+c_compile_result ok
 execute_work	NONE exec_output_frozen
 execute_result	ok
 compare		exec_output_frozen output

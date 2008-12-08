@@ -699,29 +699,6 @@ end
 
 				forth
 			end
-
-			if feat_tbl_id /= 0 then
-					-- Bug fix: moving a class around can create problems:
-					-- class test1 t: TEST2 end; class test2 inherit t1 end
-					-- class test2 moved from one cluster to another
-					-- Iteration on the features removed by `update_table'
-				from
-					removed_feature_ids.start
-				until
-					removed_feature_ids.after
-				loop
-	debug ("ACTIVITY")
-		io.error.put_string ("%Tfeature of id ")
-		io.error.put_integer (removed_feature_ids.item.routine_id)
-		io.error.put_string (" (removed by `update_table' is propagated to clients%N")
-	end
-					create depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item.routine_id)
-					propagators.put (depend_unit)
-					removed_features.put (removed_feature_ids.item.body_id)
-					removed_feature_ids.forth
-				end
-				removed_feature_ids := Void
-			end
 		end
 
 	propagate_assertions (assert_list: LINKED_LIST [INTEGER]) is
@@ -763,48 +740,6 @@ end
 		end
 
 feature -- Check
-
-	update_table (a_class_id: INTEGER) is
-			-- Check if the references to the supplier classes
-			-- are still valid and remove the entry otherwise
-		require
-			a_class_id_positive: a_class_id > 0
-		local
-			f: FEATURE_I
-			l_features: like features
-		do
-			from
-				create removed_feature_ids.make
-				l_features := internal_features
-				l_features.start
-			until
-				l_features.after
-			loop
-				f := l_features.item_for_iteration
-				if not f.is_valid then
-						-- The result type or one of the arguments type is not valid
-debug ("ACTIVITY")
-	io.error.put_string ("Update table: ")
-	io.error.put_string (f.feature_name)
-	io.error.put_string (" removed%N")
-end
-					if f.written_in = a_class_id or else f.is_replicated_directly then
-							-- There is no need for a corresponding "reactivate" here
-							-- since it will be done in by pass2 in `feature_unit' if need be
-						Tmp_ast_server.desactive (f.body_index)
-						removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
-						remove (f.feature_name_id)
-					end
-					l_features.remove
-				else
-					l_features.forth
-				end
-			end
-		end
-
-	removed_feature_ids: LINKED_LIST [TUPLE[routine_id, body_id: INTEGER]]
-			-- Set of routine_id and body_id removed by `update_table'
-			--| It will be used for incrementality (propagation of pass3)
 
 	check_table is
 			-- Check all the features in the table

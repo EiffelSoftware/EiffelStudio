@@ -1,0 +1,25 @@
+test_name consecutive-error-fix-sequence-crash
+test_description When introducing an error in a class and doing several compilation in a row invalidates a class  that uses the former one causes a crash while freezing.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+copy_raw test2_rev1.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST1 VTUG(2)
+
+copy_raw test2.e $CLUSTER test2.e
+
+resume_compile
+compile_result	ok
+
+compile_frozen
+compile_result	ok
+
+test_end

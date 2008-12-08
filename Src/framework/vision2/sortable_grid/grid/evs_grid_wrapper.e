@@ -400,11 +400,11 @@ feature -- Access
 			-- Action to be performed to ensure that `a_item' is visible.
 			-- `a_selected' is True indicates that `a_item' should be selected by default.
 
-	selection_function: FUNCTION [ANY, TUPLE, STRING]
+	selection_function: FUNCTION [ANY, TUPLE, STRING_GENERAL]
 			-- Function to return selected text in grid' (all selected rows or items should be taken into consideration).
 			-- If Void, `selection' will return an empty string.
 
-	selection: STRING is
+	selection: STRING_GENERAL is
 			-- String representation of all selected rows or items in `grid'.
 			-- If `selection_function' is Void, `default_selection_function' will be used to get selected text.
 			-- In this case, make sure `item_text_function' is set.
@@ -415,7 +415,7 @@ feature -- Access
 				Result := default_selection_function
 			end
 			if Result = Void then
-				create Result.make (0)
+				Result := ""
 			end
 		end
 
@@ -582,7 +582,7 @@ feature -- Virtual grid
 			Result ?= grid_item_function.item ([a_column, a_row])
 		end
 
-	item_text_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], STRING]
+	item_text_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], like selection]
 			-- Function to return text of `a_item'
 
 feature{NONE} -- Implementation
@@ -746,7 +746,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	default_selection_function: STRING is
+	default_selection_function: like selection is
 			-- Default implementation for `selection_function'
 			-- This feature only take EV_GRID_LABEL_ITEM and its descendants into consideration.
 			-- If you have other type of grid item, use `selection_function' to define your own selection function.
@@ -756,7 +756,7 @@ feature{NONE} -- Implementation
 			l_last_row_index: INTEGER
 			l_is_grid_tree_enabled: BOOLEAN
 			l_item: EV_GRID_ITEM
-			l_text: STRING
+			l_text: like selection
 			l_item_text_functon: like item_text_function
 
 			l_sorted_rows: DS_LIST [EV_GRID_ROW]
@@ -766,7 +766,7 @@ feature{NONE} -- Implementation
 		do
 			l_item_text_functon := item_text_function
 			if l_item_text_functon /= Void then
-				create Result.make (512)
+				create {STRING_32}Result.make (512)
 				l_is_grid_tree_enabled := grid.is_tree_enabled
 				if not grid.is_single_item_selection_enabled then
 					l_sorted_items := topologically_sorted_items (grid.selected_items)
@@ -781,7 +781,7 @@ feature{NONE} -- Implementation
 						if l_row.height > 0 and then is_row_recursively_expanded (l_row) then
 							if l_item.row.index /= l_last_row_index then
 								if l_last_row_index /= 0 then
-									Result.append_character ('%N')
+									Result.append ("%N")
 								end
 								if l_is_grid_tree_enabled then
 									Result.append (tabs (row_indentation (l_item.row)))
@@ -819,20 +819,20 @@ feature{NONE} -- Implementation
 								l_text := l_item_text_functon.item ([l_row.item (l_column_index)])
 								if l_text /= Void then
 									Result.append (l_text)
-									Result.append_character ('%T')
+									Result.append ("%T")
 								else
 									Result.append (once "%T%T")
 								end
 								l_column_index := l_column_index + 1
 							end
-							Result.append_character ('%N')
+							Result.append ("%N")
 						end
 						l_sorted_rows.forth
 					end
 				end
 			end
 			if Result = Void then
-				create Result.make (0)
+				Result := ""
 			end
 		ensure
 			result_attached: Result /= Void
@@ -972,7 +972,7 @@ feature{NONE} -- Implementation
 	on_ctrl_c_pressed is
 			-- Action to be performed when Ctrl+C is pressed
 		local
-			l_text: STRING
+			l_text: like selection
 		do
 			l_text := selection
 			if l_text /= Void and then not l_text.is_empty then
@@ -1077,35 +1077,35 @@ invariant
 	ensure_visible_action_attached: ensure_visible_action /= Void
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

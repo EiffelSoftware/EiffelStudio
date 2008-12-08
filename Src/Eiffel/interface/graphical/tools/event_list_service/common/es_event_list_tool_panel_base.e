@@ -252,42 +252,93 @@ feature {NONE} -- Basic operations
 		do
 		end
 
-	selected_text: STRING_8
-			-- Retrieves selected row's text
+	selected_text: STRING_32 is
+			-- Retrieves selected item's text
 		local
-			l_grid: like grid_events
-			l_rows: LIST [EV_GRID_ROW]
-			l_items: LIST [EV_GRID_ITEM]
-			l_text: STRING_8
+			i, j, l_column_count, l_row_count, l_column_selected_count: INTEGER
+			l_column: EV_GRID_COLUMN
+			l_row: EV_GRID_ROW
+			l_text: STRING_32
+			l_states: SPECIAL [INTEGER]
+			l_none, l_part, l_full: INTEGER
+			l_has_full: BOOLEAN
+			l_grid: EV_GRID
 		do
-			create Result.make_empty
+				-- Constants for column states.
+			l_none := 1
+			l_part := 2
+			l_full := 3
+
 			l_grid := grid_events
-			if l_grid.is_multiple_row_selection_enabled or l_grid.is_single_row_selection_enabled then
-				l_rows := l_grid.selected_rows
-				if not l_rows.is_empty then
-					from l_rows.start until l_rows.after loop
-						l_text := row_text (l_rows.item)
-						if not l_text.is_empty then
-							Result.append (l_text)
-							Result.append_character ('%N')
-						end
-						l_rows.forth
-					end
-					Result.prune_all_trailing ('%N')
+			l_column_count := l_grid.column_count
+			l_row_count := l_grid.row_count
+			create l_states.make (l_column_count + 1)
+			create l_text.make (100)
+			from
+				i := 1
+			until
+				i > l_column_count
+			loop
+				l_column := l_grid.column (i)
+				l_column_selected_count := l_column.selected_items.count
+				if l_column_selected_count = l_column.count then
+					l_states.put (l_full, i)
+					l_has_full := True
+				elseif l_column_selected_count = 0 then
+					l_states.put (l_none, i)
+				else
+					l_states.put (l_part, i)
 				end
-			else
-				l_items := l_grid.selected_items
-				if not l_items.is_empty then
-					from l_items.start until l_items.after loop
-						l_text := row_item_text (l_items.item)
-						if not l_text.is_empty then
-							Result.append (l_text)
-							Result.append_character ('%T')
-						end
-						l_items.forth
-					end
-				end
+				i := i + 1
 			end
+				-- Put titles, if has full selected column.
+			if l_has_full then
+				from
+					i := 1
+				until
+					i > l_column_count
+				loop
+					if l_states.item (i) /= l_none then
+						l_column := l_grid.column (i)
+						l_text.append (l_column.title)
+						l_text.append ("%T")
+					end
+					i := i + 1
+				end
+				l_text.append ("%N")
+			end
+
+			from
+				i := 1
+			until
+				i > l_row_count
+			loop
+				l_row := l_grid.row (i)
+				if not l_row.selected_items.is_empty then
+					from
+						j := 1
+					until
+						j > l_column_count
+					loop
+						if l_states.item (j) /= l_none then
+							if l_row.item (j).is_selected and then {lt_text: STRING_GENERAL}row_item_text (l_row.item (j)) then
+								if not lt_text.is_empty then
+									l_text.append (lt_text)
+									l_text.append ("%T")
+								else
+									l_text.append ("%T")
+								end
+							else
+								l_text.append ("%T")
+							end
+						end
+						j := j + 1
+					end
+					l_text.append ("%N")
+				end
+				i := i + 1
+			end
+			Result := l_text
 		ensure
 			result_attached: Result /= Void
 		end

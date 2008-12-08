@@ -1538,6 +1538,7 @@ test	storable-formats-2			store014 tcf pass storable
 test	retrieve-mismatch-serialization-failure	store015 tcf pass storable exception
 test	storable-formats-3			store016 tcf pass storable
 test	storable-with-attached-type	store017 tcf pass storable attached_types
+test	storable-with-attached-type-by-62	store018 tcf pass storable attached_types
 
 
 -- Flat, short, flatshort tests

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			make_parser (False)
 			set_is_using_separated_switch_values (True)
 			set_is_showing_argument_usage_inline (True)
+			is_using_builtin_switches := False
 		end
 
 feature -- Access

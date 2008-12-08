@@ -79,8 +79,7 @@ feature {NONE} -- Basic operations
 	execute_safe (a_routine: ROUTINE [ANY, TUPLE])
 			-- Call `a_agent'
 		require
-				--| FIXME: for now commented since recent compiler has trouble with nested object test
-			--no_open_args: ({l_args: TUPLE} a_routine.empty_operands) and then l_args.count = 0
+			no_open_args: ({l_args: TUPLE} a_routine.empty_operands) and then l_args.count = 0
 		local
 			l_rescued: BOOLEAN
 			l_empty: TUPLE
@@ -145,9 +144,12 @@ feature {NONE} -- Events
 		end
 
 	on_prepare
-			-- Called before `prepare' returns.
+			-- Called after `prepare' has performed all initialization.
+		require
+			prepared: is_prepared
 		do
-
+		ensure
+			prepared: is_prepared
 		end
 
 end

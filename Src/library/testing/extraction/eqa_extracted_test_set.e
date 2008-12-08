@@ -17,10 +17,18 @@ inherit
 			on_clean as on_clean_frozen
 		redefine
 			on_prepare_frozen,
-			on_clean_frozen
+			on_clean_frozen,
+			is_prepared
 		end
 
 	INTERNAL
+		export
+			{NONE} all
+		end
+
+	ISE_RUNTIME
+		rename
+			dynamic_type as ise_rt_dynamic_type
 		export
 			{NONE} all
 		end
@@ -48,6 +56,16 @@ feature {NONE} -- Access
 
 	object_cache: ?ARRAY [!ANY]
 			-- Cache containing restored objects from `context'
+
+feature -- Status report
+
+	is_prepared: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor and is_cache_loaded
+		ensure then
+			result_implies_cache_loaded: Result implies is_cache_loaded
+		end
 
 feature {NONE} -- Status report
 
@@ -190,33 +208,34 @@ feature {NONE} -- Events
 		do
 			fill_object_cache
 			on_prepare
-		ensure then
-			object_cache_loaded: is_cache_loaded
 		end
 
 	on_prepare
-			-- Called immediatly before `prepare' returns.
+			-- Called after `prepare' has performed all initialization.
 		require
-			object_cache_loaded: is_cache_loaded
+			prepared: is_prepared
 		do
 		ensure
-			object_cache_loaded: is_cache_loaded
+			prepared: is_prepared
 		end
 
 	frozen on_clean_frozen
 			-- <Precursor>
 		do
-			object_cache := Void
 			on_clean
+			object_cache := Void
 		ensure then
 			object_cache_detached: object_cache = Void
 		end
 
 	on_clean
-			-- Called immediatly before `prepare' returns.
+			-- Called before `clean' performs any cleaning up.
+		require
+			prepared: is_prepared
 		do
 		ensure
-			object_cache_detached: object_cache = Void
+			object_cache_loaded: is_cache_loaded
+			current_test_name_valid: current_test_name /= Void
 		end
 
 feature {NONE} -- Basic operations
@@ -399,7 +418,7 @@ feature {NONE} -- Object initialization
 			an_object_not_void: an_object /= Void
 			an_object_valid: not is_tuple (an_object) and not is_special (an_object)
 		local
-			i, j: INTEGER
+			i, j, l_dtype: INTEGER
 			l_attributes: HASH_TABLE [INTEGER, !STRING]
 			l_obj: !ANY
 		do
@@ -430,7 +449,8 @@ feature {NONE} -- Object initialization
 							if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
 								if is_valid_id (l_id) and then is_existing_id (l_id) then
 									l_obj := object_for_id (l_id)
-									if type_conforms_to (dynamic_type (l_obj), field_static_type_of_type (i, dynamic_type (an_object))) then
+									l_dtype := detachable_type (field_static_type_of_type (i, dynamic_type (an_object)))
+									if type_conforms_to (dynamic_type (l_obj), l_dtype) then
 										set_reference_field (i, an_object, l_obj)
 									end
 								end
@@ -654,7 +674,7 @@ feature {NONE} -- Object initialization
 				l_type := pointer_type
 			else
 				l_type := reference_type
-				l_gtype := generic_dynamic_type (a_special, 1)
+				l_gtype := detachable_type (generic_dynamic_type (a_special, 1))
 			end
 
 			from

@@ -16,6 +16,11 @@ class
 inherit
 	ANY
 
+	EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 	EXCEPTIONS
 		rename
 			class_name as exception_class_name
@@ -65,7 +70,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]) is
+	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !STRING) is
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -80,11 +85,14 @@ feature -- Execution
 			-- `a_p': Procedure taking `a_tc' as an operand and invokes the corresponding test procedure.
 		require
 			valid_test_set: a_test.valid_operands ([a_test_set])
+			a_name_valid: a_test_set.is_valid_name (a_name)
 		local
 			l_tuple: TUPLE [EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like last_invocation_response
+			l_work_dir: STRING
 		do
-			safe_execute (agent a_test_set.prepare)
+			l_work_dir := current_working_directory.twin
+			safe_execute (agent a_test_set.prepare (a_name))
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
 			if not last_invocation_response.is_exceptional then
@@ -103,6 +111,7 @@ feature -- Execution
 			else
 				create last_outcome.make_with_setup (l_prepare, create {DATE_TIME}.make_now)
 			end
+			change_working_directory (l_work_dir)
 		end
 
 feature {NONE} -- Implementation

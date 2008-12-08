@@ -41,8 +41,14 @@ feature -- Output
 			else
 				a_text_formatter.add ("First file: %"")
 				a_text_formatter.add (first.full_file_name)
+				a_text_formatter.add ("%"")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Referenced from: ")
+				a_text_formatter.add (first.group.target.system.file_name)
+				a_text_formatter.add_string (" (")
+				a_text_formatter.add (first.group.name)
+				a_text_formatter.add_char (')')
 			end
-			a_text_formatter.add ("%"")
 			a_text_formatter.add_new_line
 			l_cl ?= second
 			check
@@ -58,8 +64,14 @@ feature -- Output
 			else
 				a_text_formatter.add ("Second file: %"")
 				a_text_formatter.add (second.full_file_name)
+				a_text_formatter.add ("%"")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Referenced from: ")
+				a_text_formatter.add (second.group.target.system.file_name)
+				a_text_formatter.add_string (" (")
+				a_text_formatter.add (second.group.name)
+				a_text_formatter.add_char (')')
 			end
-			a_text_formatter.add ("%"")
 			a_text_formatter.add_new_line
 		end
 

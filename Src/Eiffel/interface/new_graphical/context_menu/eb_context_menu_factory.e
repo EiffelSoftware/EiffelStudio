@@ -656,12 +656,15 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_cmd: EB_STANDARD_CMD
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 			is_editable, l_has_selection: BOOLEAN
+			l_menu_item: EV_MENU_ITEM
+			l_unmanaged_editor: BOOLEAN
 --			l_editor_is_current_editor: BOOLEAN
 		do
 				-- The commented code below is kept so that if one wants to add one of the commented item back to the
 				-- context menu, we know in which order we should do it.
 			is_editable := a_editor.is_editable
 			l_has_selection := a_editor.has_selection
+			l_unmanaged_editor := {lt_editor: EB_GRID_EDITOR}a_editor
 --			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
 --			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
 --			if not is_editable then
@@ -674,27 +677,52 @@ feature {NONE} -- Menu section, Granularity 1.
 --			end
 --			extend_separator (a_menu)
 
-			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item_unmanaged)
+			l_menu_item := dev_window.commands.editor_cut_cmd.new_menu_item_unmanaged
+			a_menu.extend (l_menu_item)
+			if l_unmanaged_editor then
+				l_menu_item.select_actions.wipe_out
+				l_menu_item.select_actions.extend (agent a_editor.cut_selection)
+			end
 			if is_editable and then l_has_selection then
-				a_menu.last.enable_sensitive
+				l_menu_item.enable_sensitive
 			else
-				a_menu.last.disable_sensitive
+				l_menu_item.disable_sensitive
 			end
-			a_menu.extend (dev_window.commands.editor_copy_cmd.new_menu_item_unmanaged)
+
+			l_menu_item := dev_window.commands.editor_copy_cmd.new_menu_item_unmanaged
+			a_menu.extend (l_menu_item)
+			if l_unmanaged_editor then
+				l_menu_item.select_actions.wipe_out
+				l_menu_item.select_actions.extend (agent a_editor.copy_selection)
+			end
 			if l_has_selection then
-				a_menu.last.enable_sensitive
+				l_menu_item.enable_sensitive
 			else
-				a_menu.last.disable_sensitive
+				l_menu_item.disable_sensitive
 			end
-			a_menu.extend (dev_window.commands.editor_paste_cmd.new_menu_item_unmanaged)
+
+			l_menu_item := dev_window.commands.editor_paste_cmd.new_menu_item_unmanaged
+			a_menu.extend (l_menu_item)
+			if l_unmanaged_editor then
+				l_menu_item.select_actions.wipe_out
+				l_menu_item.select_actions.extend (agent a_editor.paste)
+			end
 			if is_editable then
-				a_menu.last.enable_sensitive
+				l_menu_item.enable_sensitive
 			else
-				a_menu.last.disable_sensitive
+				l_menu_item.disable_sensitive
 			end
+
 			extend_separator (a_menu)
-			a_menu.extend (new_menu_item (names.m_select_all))
-			a_menu.last.select_actions.extend (agent dev_window.select_all)
+
+			l_menu_item := new_menu_item (names.m_select_all)
+			a_menu.extend (l_menu_item)
+			if l_unmanaged_editor then
+				l_menu_item.select_actions.extend (agent a_editor.select_all)
+			else
+				l_menu_item.select_actions.extend (agent dev_window.select_all)
+			end
+
 --			extend_separator (a_menu)
 
 
@@ -757,6 +785,11 @@ feature {NONE} -- Menu section, Granularity 1.
 --			extend_separator (a_menu)
 			create l_menu.make_with_text (names.m_advanced)
 			a_menu.extend (l_menu)
+			if l_unmanaged_editor then
+				l_menu.disable_sensitive
+			else
+				l_menu.enable_sensitive
+			end
 
 				-- Indent Selection
 			l_cmd ?= l_commands.item

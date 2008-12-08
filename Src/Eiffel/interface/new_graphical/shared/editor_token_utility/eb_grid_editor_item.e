@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	editor: ?EB_CLICKABLE_EDITOR
+	editor: ?EB_GRID_EDITOR
 		-- Editor used to display `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 

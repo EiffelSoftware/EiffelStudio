@@ -84,11 +84,9 @@ feature -- Status setting
 						output.append (s)
 					end)
 			process.redirect_error_to_same_as_output
-			if is_windows then
-				process.set_separate_console (False)
-				process.set_hidden (True)
-			end
-			
+			process.set_separate_console (False)
+			process.set_hidden (True)
+
 			process.launch
 		end
 

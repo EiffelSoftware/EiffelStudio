@@ -236,7 +236,7 @@ feature -- C code generation
 						result_value := true_constant
 					else
 						buf.put_new_line
-						if not target.type.has_like and then source_type.conform_to (target.type) or else
+						if not target.type.has_like and then source_type.conform_to (context.associated_class, target.type) or else
 							target.type.same_as (expression.type) or else
 							target.type.is_like and then {t: LIKE_FEATURE} target.type and then
 							{c: CALL_ACCESS_B} expression and then c.feature_name_id = t.feature_name_id

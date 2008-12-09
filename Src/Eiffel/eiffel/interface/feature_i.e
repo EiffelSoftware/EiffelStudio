@@ -2091,7 +2091,7 @@ end
 				l_vtug.set_class (current_class)
 				l_vtug.set_feature (Current)
 				error_handler.insert_error (l_vtug)
-			elseif not new_type.conform_to (old_type) then
+			elseif not new_type.conform_to (current_class, old_type) then
 				create vdrd51
 				vdrd51.init (old_feature, Current)
 				Error_handler.insert_error (vdrd51)
@@ -2137,7 +2137,7 @@ end
 						l_vtug.set_class (current_class)
 						l_vtug.set_feature (Current)
 						error_handler.insert_error (l_vtug)
-					elseif not new_type.conform_to (old_type) then
+					elseif not new_type.conform_to (current_class, old_type) then
 						create vdrd53
 						vdrd53.init (old_feature, Current)
 						Error_handler.insert_error (vdrd53)

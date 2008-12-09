@@ -1261,17 +1261,8 @@ feature -- Access
 
 	is_ancestor (other: CLASS_TYPE): BOOLEAN is
 			-- Is `other' an ancestor of `context_class_type'?
-		local
-			l_class: CLASS_C
 		do
-				-- We need to set `system.current_class' since conformance require a context class
-				-- especially when you have a formal. Note that once `conform_to' takes a context
-				-- class as argument we won't need this.
-			l_class := system.current_class
-			system.set_current_class (context_class_type.associated_class)
-				-- We do `twin' because `is_conformant_to' as a side effect of modifying the object.
-			Result := context_class_type.type.is_conformant_to (other.type)
-			system.set_current_class (l_class)
+			Result := context_class_type.type.is_conformant_to (context_class_type.associated_class, other.type)
 		end
 
 	is_written_context: BOOLEAN is

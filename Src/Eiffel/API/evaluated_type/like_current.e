@@ -464,10 +464,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 			create Result
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does `Current' conform to `other'?
 		do
-			Result := other.is_like_current or else conformance_type.conform_to (other.conformance_type)
+			Result := other.is_like_current or else conformance_type.conform_to (a_context_class, other.conformance_type)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is

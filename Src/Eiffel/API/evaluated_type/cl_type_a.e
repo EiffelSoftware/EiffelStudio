@@ -634,7 +634,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			end
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
 			other_class_type: CL_TYPE_A
@@ -645,16 +645,16 @@ feature {COMPILER_EXPORTER} -- Conformance
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
 					if is_expanded and then class_id = other_class_type.class_id then
-						Result := other_class_type.valid_generic (Current)
+						Result := other_class_type.valid_generic (a_context_class, Current)
 						if Result and then is_typed_pointer then
 								-- TYPED_POINTER should be exactly the same type.
-							Result := valid_generic (other_class_type)
+							Result := valid_generic (a_context_class, other_class_type)
 						end
 					end
 				else
 					Result :=
 						associated_class.conform_to (other_class_type.associated_class) and then
-						other_class_type.valid_generic (Current) and then
+						other_class_type.valid_generic (a_context_class, Current) and then
 						is_attachable_to (other_class_type)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
 							-- Any type in .NET conforms to System.Object
@@ -666,11 +666,11 @@ feature {COMPILER_EXPORTER} -- Conformance
 				end
 			elseif other.is_type_set then
 				l_other_type_set ?= other.actual_type
-				Result := to_type_set.conform_to (l_other_type_set.twin)
+				Result := to_type_set.conform_to (a_context_class, l_other_type_set.twin)
 			end
 		end
 
-	is_conformant_to (other: TYPE_A): BOOLEAN is
+	is_conformant_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to other?
 			-- Most of the time, it is equivalent to `conform_to' except
 			-- when current is an expanded type.
@@ -698,7 +698,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 						l_other_class_type.set_reference_mark
 					end
 
-					Result := conform_to (other)
+					Result := conform_to (a_context_class, other)
 
 					if l_is_exp then
 						set_mark (current_mark)
@@ -710,18 +710,21 @@ feature {COMPILER_EXPORTER} -- Conformance
 			end
 		end
 
-	valid_generic (type: CL_TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN is
 			-- Do the generic parameter of `type' conform to those
 			-- of Current (none).
 		do
 			Result := True
 		end
 
-	generic_conform_to (gen_type: GEN_TYPE_A): BOOLEAN is
+	generic_conform_to (a_context_class: CLASS_C; gen_type: GEN_TYPE_A): BOOLEAN is
 			-- Does Current conform to `gen_type' ?
 		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			good_argument: gen_type /= Void
-			associated_class.conform_to (gen_type.associated_class)
+			valid_type: associated_class.conform_to (gen_type.associated_class)
 		local
 			i, count: INTEGER
 			parent_actual_type: TYPE_A
@@ -744,7 +747,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 				elseif l_is_implicitly_attached and then not parent_actual_type.is_implicitly_attached then
 					parent_actual_type := parent_actual_type.as_implicitly_attached
 				end
-				Result := parent_actual_type.conform_to (gen_type)
+				Result := parent_actual_type.conform_to (a_context_class, gen_type)
 				i := i + 1
 			end
 		end

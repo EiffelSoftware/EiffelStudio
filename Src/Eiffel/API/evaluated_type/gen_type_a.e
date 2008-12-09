@@ -1182,7 +1182,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	valid_generic (type: CL_TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN is
 			-- Check generic parameters
 		local
 			i, count: INTEGER
@@ -1201,14 +1201,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 						i > count or else not Result
 					loop
 						Result := gen_type_generics.item (i).
-							conform_to (generics.item (i))
+							conform_to (a_context_class, generics.item (i))
 						i := i + 1
 					end
 				end
 			else
 					-- `type' is a descendant type of Current: so we
 					-- have to check the current generic parameters
-				Result := type.generic_conform_to (Current)
+				Result := type.generic_conform_to (a_context_class, Current)
 			end
 		end
 
@@ -1481,7 +1481,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- to check conformance to the formal generic parameter.
 								l_constraint_item := l_constraint_item.to_other_attachment (a)
 							end
-							if l_generic_parameter.conformance_type.conform_to (l_constraint_item) then
+							if l_generic_parameter.conformance_type.conform_to (a_type_context, l_constraint_item) then
 								-- Everything is fine, we conform
 							else
 									-- We do not conform, insert an error for this type.

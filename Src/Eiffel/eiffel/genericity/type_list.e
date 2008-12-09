@@ -233,7 +233,7 @@ feature -- Sorting
 					until
 						l_done or else l_list.after
 					loop
-						if l_list.item.type_a.conform_to (l_type_a) then
+						if l_list.item.type_a.conform_to (l_item.associated_class, l_type_a) then
 							l_done := True
 						else
 							l_list.forth

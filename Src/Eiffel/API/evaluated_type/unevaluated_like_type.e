@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' in `a_context_class'?
 		do
 		end

@@ -272,10 +272,10 @@ feature -- Primitives
 			Result := t
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does `actual_type' conform to `other'?
 		do
-			Result := actual_type.conform_to (other.conformance_type)
+			Result := actual_type.conform_to (a_context_class, other.conformance_type)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is

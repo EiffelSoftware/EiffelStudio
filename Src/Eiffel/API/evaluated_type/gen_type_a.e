@@ -25,7 +25,7 @@ inherit
 			generate_gen_type_il, adapted_in, internal_generic_derivation,
 			internal_same_generic_derivation_as, is_class_valid,
 			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors,
-			check_labels
+			check_labels, duplicate_for_instantiation
 		end
 
 create
@@ -693,7 +693,7 @@ feature {TYPE_A} -- Helpers
 				loop
 					parameter := generics [i]
 					if parameter.is_expanded then
-						gen_type := duplicate
+						gen_type := duplicate_for_instantiation
 						gen_type.set_reference_mark
 							-- We replace the generics at position `i' by a FORMAL_A which simply
 							-- states that this is the generic derivation with reference in it.
@@ -723,7 +723,7 @@ feature {TYPE_A} -- Helpers
 					-- since it does not matter for a generic derivation.
 				l_attachment_bits := attachment_bits
 				attachment_bits := 0
-				Result := duplicate
+				Result := duplicate_for_instantiation
 				attachment_bits := l_attachment_bits
 
 				l_generics := generics
@@ -960,7 +960,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
 							-- Void modifying original type.
-						Result := Result.duplicate
+						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_type, i)
@@ -988,7 +988,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
 							-- Void modifying original type.
-						Result := Result.duplicate
+						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_type, i)
@@ -1015,7 +1015,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
 							-- Void modifying original type.
-						Result := Result.duplicate
+						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_type, i)
@@ -1046,7 +1046,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- Record a new type of a generic parameter.
 					if new_generics = Void then
 							-- Avoid modifying original type descriptor.
-						Result := Result.duplicate
+						Result := Result.duplicate_for_instantiation
 						new_generics := Result.generics
 					end
 					new_generics.put (new_type, i)
@@ -1072,7 +1072,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_new_generic := l_old_generic.adapted_in (a_class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
-						Result := duplicate
+						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_generic, i)
@@ -1101,7 +1101,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_new_generic := l_old_generic.skeleton_adapted_in (a_class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
-						Result := duplicate
+						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_generic, i)
@@ -1133,7 +1133,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_new_generic := l_old_generic.instantiated_in (class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
-						Result := duplicate
+						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put (l_new_generic, i)
@@ -1164,7 +1164,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						l_new_generic := l_old_generic.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
 						if l_old_generic /= l_new_generic then
 							if Result = Void then
-								Result := duplicate
+								Result := duplicate_for_instantiation
 								l_new_generics := Result.generics
 							end
 							l_new_generics.put (l_new_generic, i)
@@ -1263,7 +1263,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 							-- If a new object is generated as a result of the generic type instantiation
 							-- then we need to duplicate `gen_type'.
 						if Result = Void then
-							Result := gen_type.duplicate
+							Result := gen_type.duplicate_for_instantiation
 							gen_type_generics := Result.generics
 						end
 						gen_type_generics [i] := l_new_generic
@@ -1342,6 +1342,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 			Result := twin
 			Result.set_generics (duplicate_generics)
+		end
+
+	duplicate_for_instantiation: like Current is
+			-- Duplication for instantiation routines.
+		do
+			Result := twin
+				-- We do not need to duplicate types in generics as this is handled
+				-- by the instantiation routines.
+			Result.set_generics (generics.twin)
 		end
 
 	good_generics: BOOLEAN is

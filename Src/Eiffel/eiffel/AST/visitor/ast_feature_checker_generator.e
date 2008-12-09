@@ -882,7 +882,7 @@ feature -- Roundtrip
 				context.set_used_argument_names (l_used_argument_names)
 
 				create l_used_local_names.make (1)
-				if l_cur_feature.is_invariant then
+				if not l_cur_feature.is_invariant then
 					if l_cur_feature.is_inline_agent then
 						l_routine ?= context.current_inline_agent_body.content
 					else

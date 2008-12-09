@@ -16,7 +16,7 @@ inherit
 
 feature -- Formatting
 
-	format (a_str: STRING_GENERAL; a_args: TUPLE): !STRING
+	format (a_str: !READABLE_STRING_GENERAL; a_args: !TUPLE): !STRING
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -33,18 +33,15 @@ feature -- Formatting
 			-- Yields:
 			--     He}llo there {
 		require
-			a_str_not_void: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
-			a_args_not_void: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		do
-			Result := format_unicode (a_str, a_args).as_string_8.as_attached
+			create Result.make_from_string (format_unicode (a_str, a_args))
 		ensure
-			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): !STRING_32
+	format_unicode (a_str: !READABLE_STRING_GENERAL; a_args: !TUPLE): !STRING_32
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -61,23 +58,27 @@ feature -- Formatting
 			-- Yields:
 			--     He}llo there {
 		require
-			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
-			a_args_not_void: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		local
 			l_str: STRING_32
 			l_count: INTEGER
 			l_arg_count: INTEGER
+			l_arg: ANY
 			l_match: BOOLEAN
 			l_skip: BOOLEAN
-			l_digit: STRING_32
+			l_digit: !STRING_32
 			l_index: INTEGER
 			i: INTEGER
 			c, n: CHARACTER_32
 			o, cl: CHARACTER_32
 		do
-			l_str := a_str.as_string_32
+			if {l_str32: READABLE_STRING_32} a_str then
+				l_str := l_str32
+			else
+				create l_str.make (a_str.count)
+				l_str.append_string_general (a_str)
+			end
 			l_count := l_str.count
 			l_arg_count := a_args.count
 			o := open_char
@@ -91,9 +92,9 @@ feature -- Formatting
 			until
 				i > l_count
 			loop
-				c := l_str @ i
+				c := l_str.item (i)
 				if i < l_count then
-					n := l_str @ (i + 1)
+					n := l_str.item (i + 1)
 				end
 				if c = o then
 					if i < l_count then
@@ -117,8 +118,9 @@ feature -- Formatting
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
 							if l_index > 0 and l_index <= l_arg_count then
-								if a_args @ l_index /= Void then
-									Result.append ((a_args @ l_index).out)
+								l_arg := a_args [l_index]
+								if l_arg /= Void then
+									Result.append (l_arg.out)
 								end
 							end
 						end
@@ -135,70 +137,65 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	ellipse (a_str: STRING; a_max_len: INTEGER): !STRING
+	ellipse (a_str: !READABLE_STRING_GENERAL; a_max_len: INTEGER): !STRING
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
-			create Result.make_from_string (a_str.as_string_8)
+			create Result.make (a_str.count)
+			Result.append_string_general (a_str)
 			if Result.count > a_max_len then
 				Result.keep_head (a_max_len - 3)
 				Result.append (once "...")
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_ellipsed: Result.count <= a_max_len
-			result_not_is_a_str: Result /= a_str
 		end
 
-	ellipse_unicode (a_str: STRING_GENERAL; a_max_len: INTEGER): !STRING_32
+	ellipse_unicode (a_str: !READABLE_STRING_GENERAL; a_max_len: INTEGER): !STRING_32
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
-			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
-			create Result.make_from_string (a_str.as_string_32)
+			create Result.make (a_str.count)
+			Result.append_string_general (a_str)
 			if Result.count > a_max_len then
 				Result.keep_head (a_max_len - 3)
 				Result.append (once "...")
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_ellipsed: Result.count <= a_max_len
-			result_not_is_a_str: Result /= a_str
 		end
 
 feature -- Formatting
 
-	tabbify (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING
+	tabbify (a_str: !READABLE_STRING_GENERAL; a_tab_chars: INTEGER): !STRING
 			-- Tabbifies a string by replacing spaces with tabs.
 			--
 			-- `a_str': A string to tabbify.
 			-- `a_tab_chars': Number of space characters in a tab.
 			-- `Result': A tabbified string.
 		require
-			a_line_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		do
-			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8.as_attached
+			create Result.make_from_string (tabbify_unicode (a_str, a_tab_chars))
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	tabbify_unicode (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING_32
+	tabbify_unicode (a_str: !READABLE_STRING_GENERAL; a_tab_chars: INTEGER): !STRING_32
 			-- Tabbifies a string by replacing spaces with tabs.
 			--
 			-- `a_str': A string to tabbify.
 			-- `a_tab_chars': Number of space characters in a tab.
 			-- `Result': A tabbified string.
 		require
-			a_line_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		local
@@ -208,7 +205,12 @@ feature -- Formatting
 			i, l_count: INTEGER
 			c: CHARACTER_32
 		do
-			l_str := a_str.as_string_32
+			if {l_str32: READABLE_STRING_32} a_str then
+				l_str := l_str32
+			else
+				create l_str.make (a_str.count)
+				l_str.append_string_general (a_str)
+			end
 			l_count := l_str.count
 			create Result.make (l_count)
 			from i := 1 until i > l_count loop

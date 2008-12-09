@@ -60,13 +60,13 @@ feature -- Generation
 			invalid_entry: STRING
 		do
 			from
-				body_index_type := "%N%T{(BODY_INDEX) "
-				body_index_type_separator := ", (BODY_INDEX) "
-				type_index := ", (EIF_TYPE_INDEX) "
-				gen_type := ", gen_type"
-				separator := "}, "
-				null_init := ", NULL"
-				Invalid_entry := ", INVALID_DTYPE, NULL},"
+				body_index_type := once "%N%T{(BODY_INDEX) "
+				body_index_type_separator := once ", (BODY_INDEX) "
+				type_index := once ", (EIF_TYPE_INDEX) "
+				gen_type := once ", gen_type"
+				separator := once "}, "
+				null_init := once ", NULL"
+				Invalid_entry := once ", INVALID_DTYPE, NULL},"
 				l_count := count - 1
 				l_area := area
 			until
@@ -256,9 +256,9 @@ feature -- Generation
 			l_area: like area
 		do
 			from
-				static_decl := "static EIF_TYPE_INDEX gen_type"
-				start_decl := " [] = {0,"
-				end_decl := "};%N"
+				static_decl := once "static EIF_TYPE_INDEX gen_type"
+				start_decl := once " [] = {0,"
+				end_decl := once "};%N"
 				l_count := count - 1
 				l_area := area
 			until

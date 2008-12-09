@@ -1185,7 +1185,7 @@ feature -- Implementation
 
 			l_context_current_class := context.current_class
 
-			if not a_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+			if not is_static and then not a_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
 				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
 			end
 

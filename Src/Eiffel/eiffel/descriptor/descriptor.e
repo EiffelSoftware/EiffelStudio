@@ -73,7 +73,7 @@ feature -- Generation
 			buffer.clear_all
 
 			class_id_string := class_type.static_type_id.out
-			class_id_string.prepend ("_")
+			class_id_string.prepend_character ('_')
 
 			is_precompiling := Compilation_modes.is_precompiling
 			buffer.put_string ("/*%N * Class ")

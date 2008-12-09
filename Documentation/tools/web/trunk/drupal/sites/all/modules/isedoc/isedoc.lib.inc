@@ -59,7 +59,7 @@ function isedoc_rm_recursive($filepath) {
 function book_doc_page_exists($a_title) {
 	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type IN ()", $a_title);
 	//$res = db_query("SELECT nid FROM {node} WHERE LOWER(title) = LOWER('%s') AND type = 'doc' ", $a_title);
-	$res = db_query("SELECT nid FROM {node} WHERE type = 'doc' AND LOWER(title) = LOWER('%s') ", mysql_real_escape_string($a_title));
+	$res = db_query("SELECT nid FROM {node} WHERE type = 'doc' AND LOWER(title) = LOWER('%s') ", $a_title);
 	if ($res === FALSE) {
 		return FALSE;
 	} else {
@@ -168,8 +168,15 @@ function isedoc_node_ids_by_uuid($uuid) {
  * Query References
  */
 
+function _isedoc_title_sql_in_regexp($a_title) {
+	$res = strtolower(mysql_real_escape_string($a_title));
+	$res = str_replace('+', '\\\\+', $res);
+	return $res;
+}
+
 function isedoc_pages_referencing_image($a_title) {
-	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]]Image:[:blank:]*'.strtolower(mysql_real_escape_string($a_title)).'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
+	$l_title_sql = _isedoc_title_sql_in_regexp($a_title);
+	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]]Image:[:blank:]*'.$l_title_sql.'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
         $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);
@@ -185,7 +192,8 @@ function isedoc_pages_referencing_image($a_title) {
 }
 
 function isedoc_pages_referencing_template($a_title) {
-	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.strtolower($a_title).'[:blank:]*[[.|.]]\'';
+	$l_title_sql = _isedoc_title_sql_in_regexp($a_title);
+	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.$l_title_sql.'[:blank:]*[[.|.]]\'';
         $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query(db_rewrite_sql($sql));
@@ -201,8 +209,9 @@ function isedoc_pages_referencing_template($a_title) {
 }
 
 function isedoc_pages_referencing($a_title) {
-	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]][:blank:]*'.strtolower(mysql_real_escape_string($a_title)).'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
-        //$l_body_filter = 'LIKE LOWER(\'%[['.mysql_real_escape_string($a_title).'%\')';
+	$l_title_sql = _isedoc_title_sql_in_regexp($a_title);
+	$l_body_filter = 'REGEXP \'[[.[.]][[.[.]][:blank:]*'.$l_title_sql.'[:blank:]*([[.|.]]|[[.].]][[.].]])\'';
+        //$l_body_filter = 'LIKE LOWER(\'%[['.$l_title_sql.'%\')';
         $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);

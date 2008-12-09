@@ -116,7 +116,7 @@ feature {NONE} -- User interface initialization
 			a_widget.enable_tree
 			a_widget.disable_row_height_fixed
 			a_widget.enable_auto_size_best_fit_column (error_column)
-			a_widget.enable_multiple_item_selection
+			a_widget.enable_multiple_row_selection
 			register_action (a_widget.row_deselect_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.

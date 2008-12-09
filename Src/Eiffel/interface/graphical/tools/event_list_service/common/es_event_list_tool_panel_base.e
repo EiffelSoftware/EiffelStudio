@@ -1129,7 +1129,7 @@ feature {NONE} -- Factory
 			-- Create a new container widget upon request
 		do
 			create {ES_EDITOR_TOKEN_GRID}Result
-			Result.enable_single_item_selection
+			Result.enable_single_row_selection
 			Result.enable_column_separators
 			Result.enable_row_separators
 			Result.set_separator_color (colors.grid_line_color)

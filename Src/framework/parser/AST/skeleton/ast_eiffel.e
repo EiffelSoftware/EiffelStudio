@@ -215,7 +215,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.valid_append_region (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result := a_list.valid_append_region (token_region (a_list))
+			end
 		end
 
 	can_prepend_text (a_list: LEAF_AS_LIST): BOOLEAN is
@@ -223,7 +225,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.valid_prepend_region (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result := a_list.valid_prepend_region (token_region (a_list))
+			end
 		end
 
 	can_replace_text (a_list: LEAF_AS_LIST): BOOLEAN is
@@ -231,7 +235,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.valid_replace_region (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result := a_list.valid_replace_region (token_region (a_list))
+			end
 		end
 
 	can_remove_text (a_list: LEAF_AS_LIST): BOOLEAN is
@@ -239,7 +245,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.valid_remove_region (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result := a_list.valid_remove_region (token_region (a_list))
+			end
 		end
 
 	is_text_available (a_list: LEAF_AS_LIST): BOOLEAN is
@@ -247,7 +255,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.valid_text_region (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result := a_list.valid_text_region (token_region (a_list))
+			end
 		end
 
 	is_text_modified (a_list: LEAF_AS_LIST): BOOLEAN is
@@ -255,7 +265,9 @@ feature -- Roundtrip/Text modification
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result :=  a_list.is_text_modified (token_region (a_list))
+			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
+				Result :=  a_list.is_text_modified (token_region (a_list))
+			end
 		end
 
 feature -- Roundtrip/Text modification
@@ -342,6 +354,8 @@ feature -- Roundtrip/Text
 			-- Original text of current AST structure
 		require
 			a_list_not_void: a_list /= Void
+			first_token_exists: first_token (a_list) /= Void
+			last_token_exists: last_token (a_list) /= Void
 		do
 			Result := a_list.original_text (token_region (a_list))
 		ensure
@@ -352,6 +366,8 @@ feature -- Roundtrip/Text
 			-- Count in bytes of original text of current AST structure
 		require
 			a_list_not_void: a_list /= Void
+			first_token_exists: first_token (a_list) /= Void
+			last_token_exists: last_token (a_list) /= Void
 		do
 			Result := a_list.original_text_count (token_region (a_list))
 		end
@@ -371,6 +387,7 @@ feature -- Roundtrip/Text
 			-- Count in bytes of text (with all modification, if any, applied)
 		require
 			a_list_not_void: a_list /= Void
+			valid_text_region: is_text_available (a_list)
 		do
 			Result := a_list.text_count (token_region (a_list))
 		end
@@ -381,6 +398,8 @@ feature -- Roundtrip/Separator
 			-- Does any separator structure (break or semicolon) appear before current AST node?
 		require
 			a_list_not_void: a_list /= Void
+			first_token_exists: first_token (a_list) /= Void
+			last_token_exists: last_token (a_list) /= Void
 			token_region_not_void: token_region (a_list) /= Void
 		do
 			Result := a_list.has_leading_separator (token_region (a_list))
@@ -390,6 +409,8 @@ feature -- Roundtrip/Separator
 			-- Does any separator structure (break or semicolon) appear after current AST node?
 		require
 			a_list_not_void: a_list /= Void
+			first_token_exists: first_token (a_list) /= Void
+			last_token_exists: last_token (a_list) /= Void
 			token_region_not_void: token_region (a_list) /= Void
 		do
 			Result := a_list.has_trailing_separator (token_region (a_list))
@@ -406,9 +427,9 @@ feature {NONE} -- Constants
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -419,19 +440,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

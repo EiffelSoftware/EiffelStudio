@@ -865,6 +865,9 @@ feature -- Third pass: byte code production and type check
 						l_error_level := Error_handler.error_level
 
 						l_ast_context.old_inline_agents.wipe_out
+						l_ast_context.set_written_class (invariant_feature.written_class)
+						l_ast_context.set_current_feature (invariant_feature)
+
 						remove_inline_agents_of_feature (invariant_feature.body_index, l_ast_context.old_inline_agents)
 						feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
@@ -911,6 +914,9 @@ feature -- Third pass: byte code production and type check
 					elseif invariant_feature /= Void and degree_3_needed then
 							-- we have to type check again to get the types into the ast
 						invar_clause := Inv_ast_server.item (class_id)
+						l_ast_context.set_written_class (invariant_feature.written_class)
+						l_ast_context.set_current_feature (invariant_feature)
+
 						feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
 					end
 				end

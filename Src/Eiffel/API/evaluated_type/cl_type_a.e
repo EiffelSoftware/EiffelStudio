@@ -757,7 +757,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 		require
 			parent_not_void: parent /= Void
 		do
-			Result := parent.duplicate
+			Result := parent
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -882,6 +882,12 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			Result := twin
 		end
 
+	duplicate_for_instantiation: like Current is
+			-- Duplication for instantiation routines.
+		do
+			Result := twin
+		end
+		
 	reference_type: CL_TYPE_A is
 			-- Reference counterpart of an expanded type
 		do

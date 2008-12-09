@@ -191,7 +191,7 @@ feature {COMPILER_EXPORTER}
 			Result := Current
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
 			other_bits: BITS_A
@@ -200,7 +200,7 @@ feature {COMPILER_EXPORTER}
 			if other_bits /= Void then
 				Result := other_bits.bit_count >= bit_count
 			else
-				Result := Precursor {BASIC_A} (other)
+				Result := Precursor {BASIC_A} (a_context_class, other)
 			end
 		end
 

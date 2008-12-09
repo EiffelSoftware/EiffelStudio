@@ -1032,7 +1032,7 @@ feature -- Access
 				l_target_type := a_target_type
 			end
 
-			if not conform_to (l_target_type) then
+			if not conform_to (a_class, l_target_type) then
 					-- FIXME: Manu 02/04/2004 We should be checking convertibility here,
 					-- but for the moment it is not yet possible because this check is done
 					-- before we do degree 4. What we need to implement is the ability
@@ -1049,10 +1049,13 @@ feature -- Access
 			end
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
-			-- Does Current conform to `other' ?
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other' in `a_context_class'?
 		require
 			is_valid: is_valid
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			other_not_void: other /= Void
 			other_is_valid: other.is_valid
 		deferred
@@ -1064,16 +1067,19 @@ feature -- Access
 			Result := has_associated_class and then associated_class.conform_to (system.array_class.compiled_class)
 		end
 
-	is_conformant_to (other: TYPE_A): BOOLEAN is
-			-- Does Current inherit from other?
+	is_conformant_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+			-- Does Current inherit from other as seen from `a_context_class'?
 			-- Most of the time, it is equivalent to `conform_to' except
 			-- when current is an expanded type.
 		require
 			is_valid: is_valid
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			other_not_void: other /= Void
 			other_is_valid: other.is_valid
 		do
-			Result := conform_to (other)
+			Result := conform_to (a_context_class, other)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
@@ -1092,10 +1098,13 @@ feature -- Access
 			context_set: Result implies context.last_conversion_info /= Void
 		end
 
-	valid_generic (type: TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: TYPE_A): BOOLEAN is
 			-- Do the generic parameter of `type' conform to those of
 			-- Current ?
 		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			type_not_void: type /= Void
 			type_has_class: type.has_associated_class
 			has_associated_class: has_associated_class
@@ -1395,7 +1404,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (l_vtcg7)
 				elseif
 					not (l_to_check.convert_to (context_class, l_constraint_type) and
-					l_to_check.is_conformant_to (l_constraint_type))
+					l_to_check.is_conformant_to (context_class, l_constraint_type))
 				then
 					generate_constraint_error (gen_type, l_to_check, a_constraint_types, i, Void)
 						-- The feature listed in the creation constraint has

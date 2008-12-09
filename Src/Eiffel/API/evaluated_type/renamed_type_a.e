@@ -71,10 +71,10 @@ feature -- Access
 			Result := type.associated_class
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' ?		
 		do
-			Result := type.conform_to (other)
+			Result := type.conform_to (a_context_class, other)
 		end
 
 	--| Martins 1/23/07: instantiation*

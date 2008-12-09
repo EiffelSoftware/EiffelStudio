@@ -861,11 +861,14 @@ feature -- Conversion
 
 feature -- Comparison
 
-	conform_to (a_other: like Current): BOOLEAN is
-			-- Is `Current' conform to `a_other'?
+	conform_to (a_context_class: CLASS_C; a_other: like Current): BOOLEAN is
+			-- Is `Current' conform to `a_other' in `a_context_class'?
 			-- `a_other' will be modified. Elements will be removed.
 			-- So pass a copy if you still need it after this call.
 		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			a_other_not_void: a_other /= Void
 		do
 			-- Each element in `Current' must be conform to each other element in `a_other'
@@ -879,7 +882,7 @@ feature -- Comparison
 				until
 					a_other.after
 				loop
-					if item.type.conform_to (a_other.item.type) then
+					if item.type.conform_to (a_context_class, a_other.item.type) then
 						a_other.remove
 					elseif not a_other.after then
 						a_other.forth
@@ -895,14 +898,14 @@ feature -- Comparison
 				-- This is not necessary but will hopefully prevent further usage
 		end
 
-	conform_to_type (a_type: TYPE_A): BOOLEAN is
-			-- Is `Current' conform to `a_type'?
+	conform_to_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN is
+			-- Is `Current' conform to `a_type' in `a_context_class'?
 		local
 			l_type_set: TYPE_SET_A
 		do
 			l_type_set ?= a_type
 			if l_type_set /= Void then
-				Result := conform_to (l_type_set.twin)
+				Result := conform_to (a_context_class, l_type_set.twin)
 			else
 					-- If at least one element of `Current' conforms to `a_type' then the type set conforms to the type.
 				Result := False
@@ -911,17 +914,21 @@ feature -- Comparison
 				until
 					after or Result
 				loop
-					Result := item.type.conform_to (a_type.conformance_type)
+					Result := item.type.conform_to (a_context_class, a_type.conformance_type)
 					last_type_checked := item
 					forth
 				end
 			end
 		end
 
-	is_conforming_type (a_type: TYPE_A): BOOLEAN is
-			-- Conforms `a_type' to the type set?
+	is_conforming_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN is
+			-- Conforms `a_type' to the type set in `a_context_class'?
 		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			is_valid: is_valid
+			a_type_not_void: a_type /= Void
 			a_type_is_valid: a_type.is_valid
 		do
 				-- If `a_type' is not conform to at least one element of the type set then `a_type' is not conform to the type set.
@@ -931,7 +938,7 @@ feature -- Comparison
 			until
 				after or not Result
 			loop
-				Result := a_type.conform_to (item.type)
+				Result := a_type.conform_to (a_context_class, item.type)
 				last_type_checked := item
 				forth
 			end

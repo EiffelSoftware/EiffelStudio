@@ -443,7 +443,7 @@ feature {COMPILER_EXPORTER}
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
 			l_constraints: TYPE_SET_A
@@ -477,14 +477,9 @@ feature {COMPILER_EXPORTER}
 					-- so this is automatically taken care by `same_as' above.
 				if not is_expanded then
 						-- Check conformance of constrained generic type to `other'.
-					fixme ("As soon as conform_to takes a context class as an argument, do no longer use System.current_class but the argument.")
-					check
-						has_generics: System.current_class.generics /= Void
-						count_ok: System.current_class.generics.count >= position
-					end
 						-- Get the actual type for the formal generic parameter
-					l_constraints := System.current_class.constraints_if_possible (position)
-					Result := l_constraints.constraining_types (system.current_class).to_other_attachment (Current).conform_to_type (other)
+					l_constraints := a_context_class.constraints_if_possible (position)
+					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other)
 				end
 			end
 		end
@@ -497,13 +492,8 @@ feature {COMPILER_EXPORTER}
 		do
 				-- Check conformance of constained generic type
 				-- to `other'
-			check
-				has_generics: System.current_class.generics /= Void
-				count_ok: System.current_class.generics.count >= position
-			end
-
 			create l_checker
-			l_checker.check_formal_conversion (System.current_class, Current, a_target_type)
+			l_checker.check_formal_conversion (a_context_class, Current, a_target_type)
 			Result := l_checker.last_conversion_check_successful
 			if Result then
 				context.set_last_conversion_info (l_checker.last_conversion_info)

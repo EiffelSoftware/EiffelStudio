@@ -842,7 +842,6 @@ feature -- Roundtrip
 					l_cur_feature := context.current_feature
 
 					if is_byte_node_enabled then
-
 						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
 						l_loc := l_as.start_location
 						l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
@@ -1468,7 +1467,7 @@ feature -- Implementation
 												-- Once this is done, then type checking is done on the real
 												-- type of the routine, not the anchor.
 											if
-												not l_arg_type.conform_to (l_like_arg_type) and then
+												not l_arg_type.conform_to (l_context_current_class, l_like_arg_type) and then
 												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type)
 											then
 												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
@@ -1491,7 +1490,7 @@ feature -- Implementation
 											-- happens in type checking of an agent, we can do it
 											-- at only one place, ie here.
 										l_open_type ?= l_formal_arg_type
-										if l_open_type /= Void or else not l_arg_type.conform_to (l_formal_arg_type) then
+										if l_open_type /= Void or else not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
 											if
 												l_open_type = Void and
 												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type)
@@ -1515,7 +1514,7 @@ feature -- Implementation
 													-- Create a conversion node to keep the data used for conversion
 											elseif
 												l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
-												l_arg_type.is_conformant_to (l_formal_arg_type)
+												l_arg_type.is_conformant_to (l_context_current_class, l_formal_arg_type)
 											then
 													-- No need for conversion, this is currently done at the code
 													-- generation level to properly handle the generic case.
@@ -1936,7 +1935,7 @@ feature -- Implementation
 							i > nb
 						loop
 							l_element_type := l_last_types.item (i)
-							if not l_element_type.conform_to (l_type_a) then
+							if not l_element_type.conform_to (l_current_class, l_type_a) then
 								if l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
 									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
 										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
@@ -2002,12 +2001,12 @@ feature -- Implementation
 									-- Let's try to find the type to which everyone conforms to.
 									-- If not found it will be ANY.
 								if
-									l_element_type.conform_to (l_type_a) or
+									l_element_type.conform_to (l_current_class, l_type_a) or
 									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type)
 								then
 										-- Nothing to be done
 								elseif
-									l_type_a.conform_to (l_element_type) or
+									l_type_a.conform_to (l_current_class, l_element_type) or
 									l_type_a.convert_to (l_current_class, l_element_type.deep_actual_type)
 								then
 										-- Found a lowest type.
@@ -2035,9 +2034,9 @@ feature -- Implementation
 								l_element_type := l_last_types.item (i)
 									-- Let's try to find the type to which everyone conforms to.
 									-- If not found it will be ANY.
-								if l_element_type.conform_to (l_type_a) then
+								if l_element_type.conform_to (l_current_class, l_type_a) then
 										-- Nothing to be done
-								elseif l_type_a.conform_to (l_element_type) then
+								elseif l_type_a.conform_to (l_current_class, l_element_type) then
 										-- Found a lowest type.
 									l_type_a := l_element_type
 								else
@@ -2191,7 +2190,7 @@ feature -- Implementation
 			l_has_error := is_checking_invariant
 			if not l_has_error then
 				l_feat_type := current_feature.type
-				l_has_error := l_feat_type.actual_type.conform_to (Void_type)
+				l_has_error := l_feat_type.actual_type.conform_to (context.current_class, Void_type)
 			end
 
 			if l_has_error then
@@ -4110,7 +4109,7 @@ feature -- Implementation
 						check_for_vaol := False
 					end
 
-					if last_type.conform_to (Void_type) or else check_for_vaol then
+					if last_type.conform_to (context.current_class, Void_type) or else check_for_vaol then
 							-- Not an expression
 						create l_vaol2
 						context.init_error (l_vaol2)
@@ -4511,8 +4510,8 @@ feature -- Implementation
 					l_as.set_class_id (class_id_of (l_left_type))
 				end
 				if
-					not (l_left_type.conform_to (l_right_type.actual_type) or else
-					l_right_type.conform_to (l_left_type.actual_type))
+					not (l_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
+					l_right_type.conform_to (context.current_class, l_left_type.actual_type))
 				then
 					if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
 						l_conv_info := context.last_conversion_info
@@ -5920,7 +5919,7 @@ feature -- Implementation
 						else
 							if
 								l_explicit_type /= Void and then
-								not l_explicit_type.conform_to (l_target_type)
+								not l_explicit_type.conform_to (context.current_class, l_target_type)
 							then
 									-- Specified creation type must conform to
 									-- the entity type
@@ -6256,7 +6255,7 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
 			if last_type /= Void then
-				if not last_type.conform_to (void_type) then
+				if not last_type.conform_to (context.current_class, void_type) then
 					create l_vkcn1
 					context.init_error (l_vkcn1)
 					l_vkcn1.set_location (l_as.call.end_location)
@@ -7307,7 +7306,7 @@ feature {NONE} -- Implementation
 							reset_for_unqualified_call_checking
 							current_target_type := l_feat.type.actual_type
 							l_value.process (Current)
-							l_has_error := last_type = Void or else (not last_type.conform_to (l_feat.type.actual_type) and
+							l_has_error := last_type = Void or else (not last_type.conform_to (context.current_class, l_feat.type.actual_type) and
 								not last_type.convert_to (context.current_class, l_feat.type.deep_actual_type))
 							if l_has_error then
 								create vjar
@@ -7485,7 +7484,7 @@ feature {NONE} -- Implementation
 						l_arg_type := l_arg_type.instantiation_in (a_left_type.as_implicitly_detachable,
 							l_class.class_id).actual_type
 
-						if not a_right_type.conform_to (l_arg_type) then
+						if not a_right_type.conform_to (context.current_class, l_arg_type) then
 							if a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
 								last_infix_argument_conversion_info := context.last_conversion_info
 								last_infix_arg_type := l_arg_type
@@ -7569,7 +7568,7 @@ feature {NONE} -- Implementation
 				--| 1- if target was a basic or an expanded type, we should generate
 				--|    a VNCE error.
 				--| 2- if target was a BIT type, we should generate a VNCB error.
-			if not l_source_type.conform_to (l_target_type) then
+			if not l_source_type.conform_to (context.current_class, l_target_type) then
 				if l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type) then
 					l_conv_info := context.last_conversion_info
 					is_type_compatible.conversion_info := l_conv_info
@@ -7585,7 +7584,7 @@ feature {NONE} -- Implementation
 					end
 				elseif
 					l_source_type.is_expanded and then l_target_type.is_external and then
-					l_source_type.is_conformant_to (l_target_type)
+					l_source_type.is_conformant_to (context.current_class, l_target_type)
 				then
 						-- No need for conversion, this is currently done at the code
 						-- generation level to properly handle the generic case.
@@ -7774,7 +7773,7 @@ feature {NONE} -- Implementation: overloading
 						l_open_type ?= l_formal_arg_type
 						if
 							l_open_type /= Void or else
-							not (l_arg_type.conform_to (l_formal_arg_type) or
+							not (l_arg_type.conform_to (context.current_class, l_formal_arg_type) or
 							l_arg_type.convert_to (context.current_class, l_formal_arg_type.deep_actual_type))
 						then
 								-- Error, we cannot continue. Let's check the next feature.
@@ -7970,12 +7969,12 @@ feature {NONE} -- Implementation: overloading
 				Result := target2
 			else
 					-- First process conformance.
-				conform1 := source_type.conform_to (target1)
-				conform2 := source_type.conform_to (target2)
+				conform1 := source_type.conform_to (context.current_class, target1)
+				conform2 := source_type.conform_to (context.current_class, target2)
 				if conform1 and conform2 then
-					if target1.conform_to (target2) then
+					if target1.conform_to (context.current_class, target2) then
 						Result := target1
-					elseif target2.conform_to (target1) then
+					elseif target2.conform_to (context.current_class, target1) then
 						Result := target2
 					end
 				elseif conform1 then
@@ -9211,10 +9210,10 @@ feature {NONE} -- Implementation: catcall check
 						-- Check if actual parameter conforms to the possible type of the descendant feature
 						-- Todo: look at the convert check again and simplify it
 					if
-						not l_actual_argument.conform_to (l_descendant_argument) and
+						not l_actual_argument.conform_to (context.current_class, l_descendant_argument) and
 						not (
 							l_actual_argument.convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index).deep_actual_type) and then
-							a_feature.arguments.i_th (l_argument_index).conform_to (l_descendant_argument)
+							a_feature.arguments.i_th (l_argument_index).conform_to (context.current_class, l_descendant_argument)
 						)
 					then
 							-- Conformance is violated. Add notice to warning.
@@ -9295,7 +9294,7 @@ feature {NONE} -- Implementation: catcall check
 				else
 					l_type := l_descendants.item.actual_type
 				end
-				if l_type.conform_to (a_type) then
+				if l_type.conform_to (context.current_class, a_type) then
 					Result.extend (l_type)
 				end
 				l_descendants.forth

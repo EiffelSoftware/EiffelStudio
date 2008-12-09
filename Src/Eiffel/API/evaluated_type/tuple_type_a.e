@@ -138,7 +138,7 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	valid_generic (type: CL_TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN is
 			-- Check generic parameters
 		local
 			i, nb: INTEGER
@@ -155,15 +155,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					i > nb or else not Result
 				loop
-					Result := l_tuple_generics.item (i).conform_to (generics.item (i))
+					Result := l_tuple_generics.item (i).conform_to (a_context_class, generics.item (i))
 					i := i + 1
 				end
 			else
-				Result := Precursor {GEN_TYPE_A} (type)
+				Result := Precursor {GEN_TYPE_A} (a_context_class, type)
 			end
 		end
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
 			tuple_type: TUPLE_TYPE_A
@@ -183,13 +183,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					(i > other_count) or else (not Result)
 				loop
-					Result := generics.item (i).conform_to (
+					Result := generics.item (i).conform_to (a_context_class,
 						other_generics.item (i))
 					i := i + 1
 				end
 			else
 					-- Conformance TUPLE -> other classtypes
-				Result := Precursor {GEN_TYPE_A} (other)
+				Result := Precursor {GEN_TYPE_A} (a_context_class, other)
 			end
 		end
 

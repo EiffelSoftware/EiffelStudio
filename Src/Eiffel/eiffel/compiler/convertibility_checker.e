@@ -152,7 +152,7 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
-													elseif l_named_type.conform_to (a_class.constraint_actual_type) then
+													elseif l_named_type.conform_to (a_class, a_class.constraint_actual_type) then
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCP}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -172,7 +172,7 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
-													elseif a_class.constraint_actual_type.conform_to (l_named_type) then
+													elseif a_class.constraint_actual_type.conform_to (a_class, l_named_type) then
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCQ}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -403,11 +403,11 @@ feature -- Initialization/Checking
 				if not a_formal.is_single_constraint_without_renaming (a_context_class) then
 						-- Multi constraint case, use TYPE_SET_A.
 					l_constraints := a_context_class.constraints (a_formal.position)
-					l_convert_ok := l_constraints.conform_to_type (a_target_type)
+					l_convert_ok := l_constraints.conform_to_type (a_context_class, a_target_type)
 				else
 						-- Single constraint, common case.
 					l_constraint := a_context_class.constraint (a_formal.position)
-					l_convert_ok := l_constraint.conform_to (a_target_type)
+					l_convert_ok := l_constraint.conform_to (a_context_class, a_target_type)
 				end
 
 				if l_convert_ok then
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation: checking
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
 			if l_feat.has_return_value then
-				if not l_feat.type.conform_to (a_type) then
+				if not l_feat.type.conform_to (a_class, a_type) then
 					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation: checking
 					has_error := True
 				end
 			else
-				if not a_type.conform_to (l_feat.arguments.i_th (1)) then
+				if not a_type.conform_to (a_class, l_feat.arguments.i_th (1)) then
 					create l_vncp.make ("SOURCE does not conform to argument type.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)

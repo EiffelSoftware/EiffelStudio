@@ -1525,7 +1525,7 @@ feature -- Supplier checking
 						when 1 then
 							l_arg_type ?= l_creation_proc.arguments.first
 							l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
-							l_error := not array_of_string.conform_to (l_arg_type)
+							l_error := not array_of_string.conform_to (Current, l_arg_type)
 						else
 							l_error := True
 						end

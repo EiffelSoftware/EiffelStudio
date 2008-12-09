@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Not applicable
 
-	conform_to (other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
 		do
 		end
 

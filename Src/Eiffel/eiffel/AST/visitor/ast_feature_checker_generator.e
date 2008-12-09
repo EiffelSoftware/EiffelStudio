@@ -850,8 +850,8 @@ feature -- Roundtrip
 					end
 				else
 					l_cur_feature := context.current_feature
-					if l_cur_feature = Void then
-						l_enclosing_feature := l_cur_class.invariant_feature
+					if l_cur_feature.is_invariant then
+						l_enclosing_feature := l_cur_feature
 					else
 						l_enclosing_feature := l_cur_feature.enclosing_feature
 					end
@@ -864,7 +864,7 @@ feature -- Roundtrip
 
 			if not is_inherited then
 				create l_used_argument_names.make (1)
-				if l_cur_feature /= Void and then l_cur_feature.argument_count > 0  then
+				if l_cur_feature.argument_count > 0  then
 					from
 						l_arg_names := context.current_feature.arguments.argument_names
 						i := l_arg_names.lower
@@ -882,7 +882,7 @@ feature -- Roundtrip
 				context.set_used_argument_names (l_used_argument_names)
 
 				create l_used_local_names.make (1)
-				if l_cur_feature /= Void then
+				if l_cur_feature.is_invariant then
 					if l_cur_feature.is_inline_agent then
 						l_routine ?= context.current_inline_agent_body.content
 					else
@@ -3460,7 +3460,7 @@ feature -- Implementation
 				create l_vkcn3
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
-				l_list := match_list_of_class (context.current_class.class_id)
+				l_list := match_list_of_class (context.written_class.class_id)
 				if l_list /= Void and then l_as.call.is_text_available (l_list) then
 					l_vkcn3.set_called_feature (l_as.call.text (l_list))
 				end
@@ -6260,7 +6260,7 @@ feature -- Implementation
 					create l_vkcn1
 					context.init_error (l_vkcn1)
 					l_vkcn1.set_location (l_as.call.end_location)
-					l_list := match_list_of_class (context.current_class.class_id)
+					l_list := match_list_of_class (context.written_class.class_id)
 					if l_list /= Void and l_as.call.is_text_available (l_list) then
 						l_vkcn1.set_called_feature (l_as.call.text (l_list))
 					end

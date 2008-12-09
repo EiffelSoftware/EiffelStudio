@@ -70,7 +70,7 @@ function book_doc_page_exists($a_title) {
 
 function isedoc_book_parent_of($nid) {
 	$parent_sql = "SELECT b.nid FROM {book} b INNER JOIN {menu_links} m ON m.mlid = b.mlid INNER JOIN {menu_links} m2 ON m.mlid = m2.plid INNER JOIN {book} b2 ON b2.nid = '%d' AND m2.mlid = b2.mlid ";
-	$parent = db_result(db_query(db_rewrite_sql($parent_sql), $nid));
+	$parent = db_result(db_query($parent_sql, $nid));
 	if ($parent) {
 		return $parent;
 	} else {
@@ -89,7 +89,7 @@ function isedoc_book_get_books() {
       $nids[] = $book['bid'];
     }
     if ($nids) {
-      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (". implode(',', $nids) .") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
+      $result2 = db_query("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (". implode(',', $nids) .") AND n.status = 1 ORDER BY ml.weight, ml.link_title");
       while ($link = db_fetch_array($result2)) {
         $link['href'] = $link['link_path'];
         $link['options'] = unserialize($link['options']);
@@ -196,7 +196,7 @@ function isedoc_pages_referencing_template($a_title) {
 	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.$l_title_sql.'[:blank:]*[[.|.]]\'';
         $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
-        $res = db_query(db_rewrite_sql($sql));
+        $res = db_query($sql);
 	$result = array();
 	if ($res === FALSE) {
 		return FALSE;

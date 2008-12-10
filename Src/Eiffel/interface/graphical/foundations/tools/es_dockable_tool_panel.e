@@ -29,7 +29,8 @@ inherit
             icon_pixmap,
             title,
             show,
-            build_docking_content
+            build_docking_content,
+            on_edition_changed
 		end
 
 	ES_HELP_REQUEST_BINDER
@@ -610,63 +611,14 @@ feature {NONE} -- Status report
 			Result := False
 		end
 
-feature {NONE} -- Action handlers
+feature {ES_TOOL} -- Event handlers
 
-	frozen on_shown
-			-- Perform update actions when the tool is displayed.
-			-- Note: This implementation takes into account that auto-hide tools may receive a show action
-			--       yet the user widget is not shown. In this case a timer is used to poll the user widget's
-			--       shown state.
+	on_edition_changed
+			-- Called when a tool's edition number changes due to purging recycled tools
 		do
-			check
-				is_initialized: is_initialized
-			end
-
-			if shown then
-				on_show
-			else
-					-- May be auto-hidden or some other state that does not indicate being shown.
-					-- Use a polling timer to determine when `shown' returns true and `on_show' can be called.
-				if show_polling_timer = Void then
-					create show_polling_timer
-					register_action (show_polling_timer.actions, agent
-						do
-							if is_interface_usable and is_initialized and then shown then
-								show_polling_timer.destroy
-								show_polling_timer := Void
-								on_show
-							end
-						end)
-				end
-				show_polling_timer.set_interval (100)
-			end
-		end
-
-	on_show is
-			-- Performs actions when the user widget is displayed.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			shown: shown
-			user_widget_is_displayed: user_widget.is_displayed
-		do
-		end
-
-	on_focus_in
-			-- Called when the panel receives focus.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			shown: shown
-		do
-		end
-
-	on_focus_out
-			-- Called when the panel loses focus.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		do
+				-- Reset the cached title, which is updated in the parent implementation.
+			internal_title := Void
+			Precursor
 		end
 
 feature {NONE} -- User interface elements
@@ -859,7 +811,64 @@ feature {NONE} -- User interface elements
             result_consistent: Result = right_tool_bar_widget
         end
 
-feature {NONE} -- Action Handlers
+feature {NONE} -- Action handlers
+
+	frozen on_shown
+			-- Perform update actions when the tool is displayed.
+			-- Note: This implementation takes into account that auto-hide tools may receive a show action
+			--       yet the user widget is not shown. In this case a timer is used to poll the user widget's
+			--       shown state.
+		do
+			check
+				is_initialized: is_initialized
+			end
+
+			if shown then
+				on_show
+			else
+					-- May be auto-hidden or some other state that does not indicate being shown.
+					-- Use a polling timer to determine when `shown' returns true and `on_show' can be called.
+				if show_polling_timer = Void then
+					create show_polling_timer
+					register_action (show_polling_timer.actions, agent
+						do
+							if is_interface_usable and is_initialized and then shown then
+								show_polling_timer.destroy
+								show_polling_timer := Void
+								on_show
+							end
+						end)
+				end
+				show_polling_timer.set_interval (100)
+			end
+		end
+
+	on_show is
+			-- Performs actions when the user widget is displayed.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			shown: shown
+			user_widget_is_displayed: user_widget.is_displayed
+		do
+		end
+
+	on_focus_in
+			-- Called when the panel receives focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			shown: shown
+		do
+		end
+
+	on_focus_out
+			-- Called when the panel loses focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+		end
 
 	frozen on_key_pressed (a_key: EV_KEY)
 			-- Called when the tool recieves a key press

@@ -56,7 +56,6 @@ feature {NONE} -- Initialization
 			l_link: EVS_LINK_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
 			l_shrinkable: EV_FIXED
-			l_severity_label: EV_LABEL
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
@@ -94,6 +93,7 @@ feature {NONE} -- Initialization
 			l_hbox.disable_item_expand (l_pass_label)
 			create password_text
 			register_action (password_text.change_actions, agent enable_login)
+			register_action (password_text.key_press_actions, agent on_password_key_pressed)
 			suppress_confirmation_key_close (password_text)
 			password_text.set_minimum_width (190)
 			l_hbox.extend (password_text)
@@ -212,9 +212,9 @@ feature {NONE} -- Initialization
 
 				-- Severity
 			create l_hbox
-			create l_severity_label.make_with_text ("Severity: ")
-			l_hbox.extend (l_severity_label)
-			l_hbox.disable_item_expand (l_severity_label)
+			create severity_label.make_with_text ("Severity: ")
+			l_hbox.extend (severity_label)
+			l_hbox.disable_item_expand (severity_label)
 			create severity_critical_radio.make_with_text ("Critical")
 			l_hbox.extend (severity_critical_radio)
 			l_hbox.disable_item_expand (severity_critical_radio)
@@ -640,6 +640,14 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_password_key_pressed (a_key: EV_KEY)
+			-- When user pressed a key in `password_text'
+		do
+			if a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_enter and then login_button.is_sensitive then
+				on_login
+			end
+		end
+
 feature {NONE} -- User interface manipulation
 
 	enable_login
@@ -668,7 +676,8 @@ feature {NONE} -- User interface manipulation
 		do
 			if a_enable then
 				login_frame.disable_sensitive
-				report_frame.enable_sensitive
+				enable_report_frame_widgets
+
 				if can_submit then
 					dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.ok_button).enable_sensitive
 				else
@@ -676,9 +685,51 @@ feature {NONE} -- User interface manipulation
 				end
 			else
 				login_frame.enable_sensitive
-				report_frame.disable_sensitive
+				disable_report_frame_widgets
+
 				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.ok_button).disable_sensitive
 			end
+		end
+
+	disable_report_frame_widgets is
+			-- We want all widgets looks like disabled, so users can copy the title in the `synopsis_text' without login
+			-- See bug#15066
+		do
+			-- FIXIT: We should fix {ES_COLORS}.disabled_foreground_color to REAL theme color
+			report_frame.set_foreground_color (colors.disabled_foreground_color)
+
+			synopsis_text.enable_sensitive
+			synopsis_text.disable_edit
+			synopsis_text.set_foreground_color (colors.disabled_foreground_color)
+
+			description_text.disable_sensitive
+			make_public_check.disable_sensitive
+			severity_label.disable_sensitive
+			severity_critical_radio.disable_sensitive
+			severity_serious_radio.disable_sensitive
+			severity_non_critical_radio.disable_sensitive
+		end
+
+	enable_report_frame_widgets is
+			-- Correspond to `disable_report_frame_widgets'
+			-- We retore widgets' "sensitive" here
+		local
+			l_color: EV_STOCK_COLORS
+		do
+			create l_color
+
+			report_frame.set_foreground_color (l_color.default_foreground_color)
+
+			synopsis_text.enable_sensitive
+			synopsis_text.enable_edit
+			synopsis_text.set_foreground_color (l_color.default_foreground_color)
+
+			description_text.enable_sensitive
+			make_public_check.enable_sensitive
+			severity_label.enable_sensitive
+			severity_critical_radio.enable_sensitive
+			severity_serious_radio.enable_sensitive
+			severity_non_critical_radio.enable_sensitive
 		end
 
 feature {NONE} -- User interface elements
@@ -688,6 +739,9 @@ feature {NONE} -- User interface elements
 
 	logged_in_label: EV_LABEL
 			-- Logged in message label
+
+	severity_label: EV_LABEL
+				-- Severity label
 
 	log_out_link: EVS_LINK_LABEL
 			-- Logged in message lable link to log ou

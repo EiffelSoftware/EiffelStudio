@@ -1250,6 +1250,7 @@ test	wrong-formal-type-local-initialization	exec288 tcf pass execution
 test	wrong-finalized-invariant-check	exec289 tcf pass execution finalizing
 test	wrong-optimization-of-as-attached	exec290 tcf pass execution finalizing
 test	crash-on-divisible			exec291 tcf pass execution finalizing
+test	wrong-inherited-formal-type	exec292 tcf pass execution finalizing attached_types
 
 
 -- Compiler termination (exception trace, panic, etc.)

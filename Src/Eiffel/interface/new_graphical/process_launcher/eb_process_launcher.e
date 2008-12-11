@@ -397,6 +397,7 @@ feature -- Unmanaged process launch
 			l_cmd: STRING
 			l_platform: PLATFORM
 			l_path: STRING
+			l_index: INTEGER
 		do
 			l_cmd := preferences.misc_data.file_browser_command.twin
 			if l_cmd /= Void then
@@ -406,6 +407,11 @@ feature -- Unmanaged process launch
 				if l_platform.is_windows then
 					-- We add argument to select file
 					l_path	:= "/select,%"" + l_path + "%""
+				elseif l_platform.is_unix then
+					-- "nautilus" don't accept last file name, we removed it here
+					-- We should find a way to select file in "nautilus" file browser like Windows explorer does
+					l_index := l_path.last_index_of ('/', l_path.count)
+					l_path.remove_substring (l_index, l_path.count)
 				end
 
 				l_cmd.replace_substring_all ("$target", l_path)

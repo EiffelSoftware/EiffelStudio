@@ -27,8 +27,8 @@ compile_result	ok
 c_compile_final
 c_compile_result	ok
 
-execute_final	NONE exec_output2
+execute_final	NONE exec_output3
 execute_result	ok
-compare		exec_output2 output
+compare		exec_output3 output
 
 test_end

@@ -1378,21 +1378,27 @@ feature -- Docking library menu items
 			create l_window_manager
 			l_last_development_window := l_window_manager.window_manager.last_focused_development_window
 
-			if l_last_development_window.menus.docking_menu_items_cell.item = Void then
-				create Result.make (5)
+			create Result.make (5)
 
-				l_new_menu_item := l_last_development_window.commands.lock_tool_bar_command.new_menu_item
-				Result.extend (l_new_menu_item)
-				auto_recycle (l_new_menu_item)
+			if a_with_separtor then
+				Result.extend (create {EV_MENU_SEPARATOR})
+			end
 
-				l_new_menu_item := l_last_development_window.commands.lock_docking_command.new_menu_item
-				Result.extend (l_new_menu_item)
-				auto_recycle (l_new_menu_item)
+			append_file_location_menu (a_content, Result, l_last_development_window)
 
-				l_new_menu_item := l_last_development_window.commands.lock_editor_docking_command.new_menu_item
-				Result.extend (l_new_menu_item)
-				auto_recycle (l_new_menu_item)
+			l_new_menu_item := l_last_development_window.commands.lock_tool_bar_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
+			l_new_menu_item := l_last_development_window.commands.lock_docking_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			l_new_menu_item := l_last_development_window.commands.lock_editor_docking_command.new_menu_item
+			Result.extend (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
+
+			if a_content.type = {SD_ENUMERATION}.editor then
 					-- Separator --------------------------------------
 				Result.extend (create {EV_MENU_SEPARATOR})
 
@@ -1418,27 +1424,88 @@ feature -- Docking library menu items
 				l_new_menu_item := l_last_development_window.commands.restore_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
-
-				l_last_development_window.menus.docking_menu_items_cell.put (Result)
-			else
-				Result := l_last_development_window.menus.docking_menu_items_cell.item
-				Result.do_all (agent (a_item: EV_MENU_ITEM)
-										do
-											if a_item.parent /= Void then
-												a_item.parent.prune (a_item)
-											end
-										end)
 			end
-			if a_with_separtor then
-				Result := Result.twin
-				Result.put_i_th (create {EV_MENU_SEPARATOR}, 1)
+		end
+
+	append_file_location_menu (a_content: SD_CONTENT; a_list: LIST [EV_MENU_ITEM]; a_dev_window: EB_DEVELOPMENT_WINDOW) is
+			-- Depend on `a_content', add two file path menu entries to `a_list' if possible
+		require
+			not_void: a_content /= Void
+			not_void: a_list /= Void
+			not_void: a_dev_window /= Void
+		local
+			l_editor: EB_SMART_EDITOR
+			l_all_editors: LIST [EB_SMART_EDITOR]
+			l_file_name: FILE_NAME
+			l_menu_item: EV_MENU_ITEM
+		do
+			if a_content.type = {SD_ENUMERATION}.editor then
+				if {lt_box: EV_HORIZONTAL_BOX} a_content.user_widget then
+
+					from
+						l_all_editors := a_dev_window.editors_manager.editors
+						l_all_editors.start
+					until
+						l_all_editors.after or l_editor /= Void
+					loop
+						if a_content = l_all_editors.item.docking_content then
+							l_editor := l_all_editors.item
+						end
+						l_all_editors.forth
+					end
+					if l_editor /= Void then
+						if {lt_class_stone: CLASSI_STONE} l_editor.stone then
+							l_file_name := lt_class_stone.file_name
+							if l_file_name /= Void and then not l_file_name.is_empty then
+								create l_menu_item.make_with_text (a_dev_window.interface_names.m_Copy_full_path)
+								l_menu_item.select_actions.extend (agent (a_path: FILE_NAME)
+										require
+											not_void: a_path /= Void and then not a_path.is_empty
+										local
+											l_env: EV_ENVIRONMENT
+										 do
+											create l_env
+											l_env.application.clipboard.set_text (a_path)
+										end (l_file_name))
+								a_list.extend (l_menu_item)
+								auto_recycle (l_menu_item)
+								create l_menu_item.make_with_text (a_dev_window.interface_names.m_open_containing_folder)
+								l_menu_item.select_actions.extend (agent (a_path: FILE_NAME)
+									require
+										not_void: a_path /= Void and then not a_path.is_empty
+									local
+										l_launcher: EB_PROCESS_LAUNCHER
+										l_platform: PLATFORM
+										l_path: STRING
+									do
+										l_path := a_path.twin
+
+										create l_platform
+										if l_platform.is_windows then
+											l_path	:= "/select,%"" + l_path + "%""
+										end
+
+										l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
+										l_launcher.open_dir_in_file_browser (l_path)
+									end (l_file_name))
+								a_list.extend (l_menu_item)
+								auto_recycle (l_menu_item)
+
+								-- Separator --------------------------------------
+								a_list.extend (create {EV_MENU_SEPARATOR})
+							end
+						end
+					end
+
+				end
+
 			end
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1449,19 +1516,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

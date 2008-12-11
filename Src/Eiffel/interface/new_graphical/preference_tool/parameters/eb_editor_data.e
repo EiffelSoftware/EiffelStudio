@@ -1081,6 +1081,8 @@ feature -- Keybord shortcuts Customization
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 
 	editor_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]] is
+			-- Array for shortcut defaults
+			-- in tuple, the four elements are: (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]
 		once
@@ -1111,6 +1113,9 @@ feature -- Keybord shortcuts Customization
 			l_hash.put ([False,  True, False, key_strings.item (key_open_bracket).twin.as_string_8], "find_matching_brace")
 
 			l_hash.put ([False, True, False, key_strings.item (Key_g).twin.as_string_8], "show_goto_dialog")
+
+			l_hash.put ([False,  True, False, key_strings.item (Key_m).twin.as_string_8], "maximize_editor_area")
+			l_hash.put ([False,  True, True, key_strings.item (Key_m).twin.as_string_8], "minimize_editor_area")
 
 			l_hash.put ([False,  True, False, key_strings.item (Key_equal).twin.as_string_8], "zoom_in")
 			l_hash.put ([False,  True, False, key_strings.item (Key_dash).twin.as_string_8], "zoom_out")
@@ -1215,9 +1220,9 @@ invariant
 
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1228,19 +1233,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

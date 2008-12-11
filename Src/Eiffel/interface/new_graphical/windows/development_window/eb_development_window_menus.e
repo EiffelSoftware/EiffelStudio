@@ -165,19 +165,6 @@ feature -- Query
 			end
 		end
 
-	docking_menu_items_cell: CELL [ARRAYED_LIST [EV_MENU_ITEM]]
-			-- Docking library menu items for current development window
-			-- We can't make a global list for all development windows,
-			-- otherwise there will be recycling problem if other development window closed
-		do
-			if docking_menu_items_cell_cache = Void then
-				create docking_menu_items_cell_cache.put (Void)
-			end
-			Result := docking_menu_items_cell_cache
-		ensure
-			not_void: Result /= Void
-		end
-
 feature -- Item querys
 
 	melt_menu_item: EV_MENU_ITEM
@@ -416,10 +403,6 @@ feature {NONE} -- Implementation
 	context_menu_factory_internal: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
 
-	docking_menu_items_cell_cache: like docking_menu_items_cell
-			-- Cache for docking_menu_items_cell
-			-- Note: used by `docking_menu_items_cell' only!
-
 feature -- Recycle
 
 	internal_recycle is
@@ -477,17 +460,13 @@ feature -- Recycle
 			tools_layout_menu := Void
 			docking_lock_menu := Void
 
-			if docking_menu_items_cell.item /= Void then
-				docking_menu_items_cell.item.wipe_out
-			end
-
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -498,19 +477,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -1475,18 +1475,15 @@ feature -- Docking library menu items
 										not_void: a_path /= Void and then not a_path.is_empty
 									local
 										l_launcher: EB_PROCESS_LAUNCHER
-										l_platform: PLATFORM
-										l_path: STRING
-									do
-										l_path := a_path.twin
 
-										create l_platform
-										if l_platform.is_windows then
-											l_path	:= "/select,%"" + l_path + "%""
-										end
+
+									do
+
+
+
 
 										l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
-										l_launcher.open_dir_in_file_browser (l_path)
+										l_launcher.open_file_in_file_browser (a_path)
 									end (l_file_name))
 								a_list.extend (l_menu_item)
 								auto_recycle (l_menu_item)

@@ -970,7 +970,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	nb_recorded = 0;
 
 	/* Read the kind of stored hierachy */
-	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char)) {
+	if (char_read_function(&rt_type, sizeof (char)) < (int) sizeof (char)) {
 		eise_io("Retrieve: unable to read type of storable.");
 	}
 
@@ -3871,7 +3871,7 @@ rt_public size_t retrieve_read (void)
 	int read_size;
 	int part_read = 0;
 
-	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
+	if ((char_read_func ((char *)&read_size, sizeof (short))) < (int) sizeof (short))
 		eise_io("Retrieve: unable to read buffer size.");
 	CHECK("read_size_positive", read_size > 0);
 
@@ -3901,7 +3901,7 @@ rt_public size_t retrieve_read_with_compression (void)
 	int read_size = 0;
 	int part_read = 0;
 	
-	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < (int) EIF_CMPS_HEAD_SIZE)
 		eise_io("Retrieve: compression header mismatch.");
 	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
 	eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);

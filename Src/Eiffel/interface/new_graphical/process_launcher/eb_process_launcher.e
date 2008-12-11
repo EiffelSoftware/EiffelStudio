@@ -389,6 +389,30 @@ feature -- Unmanaged process launch
 			execution_environment.change_working_directory (str)
 		end
 
+	open_file_in_file_browser (a_full_path: STRING) is
+			-- Open directory `a_full_path' in file browser and select the file
+		require
+			dir_attached: a_full_path /= Void
+		local
+			l_cmd: STRING
+			l_platform: PLATFORM
+			l_path: STRING
+		do
+			l_cmd := preferences.misc_data.file_browser_command.twin
+			if l_cmd /= Void then
+				l_path := a_full_path.twin
+
+				create l_platform
+				if l_platform.is_windows then
+					-- We add argument to select file
+					l_path	:= "/select,%"" + l_path + "%""
+				end
+
+				l_cmd.replace_substring_all ("$target", l_path)
+				execution_environment.launch (l_cmd)
+			end
+		end
+
 	open_dir_in_file_browser (dir: STRING) is
 			-- Open directory `dir' in file browser.
 		require
@@ -399,6 +423,20 @@ feature -- Unmanaged process launch
 			l_cmd := preferences.misc_data.file_browser_command.twin
 			if l_cmd /= Void then
 				l_cmd.replace_substring_all ("$target", dir)
+				execution_environment.launch (l_cmd)
+			end
+		end
+
+	open_url_in_web_browser (a_url: STRING) is
+			-- Open directory `a_url' in web browser.
+		require
+			not_void: a_url /= Void
+		local
+			l_cmd: STRING
+		do
+			l_cmd := preferences.misc_data.web_browser_command.twin
+			if l_cmd /= Void then
+				l_cmd.replace_substring_all ("$url", a_url)
 				execution_environment.launch (l_cmd)
 			end
 		end
@@ -525,9 +563,9 @@ invariant
 	data_storage_not_void: data_storage /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -538,19 +576,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

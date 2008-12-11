@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 					l_launcher: EB_PROCESS_LAUNCHER
 				do
 					l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
-					l_launcher.open_dir_in_file_browser ("https://www2.eiffel.com/login/secure/register.aspx")
+					l_launcher.open_url_in_web_browser ("https://www2.eiffel.com/login/secure/register.aspx")
 				end)
 			l_link.align_text_left
 			l_hbox.extend (l_text)

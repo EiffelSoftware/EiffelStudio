@@ -165,29 +165,36 @@ feature -- Redefine
 		local
 			l_rect, l_rect_2: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
-			l_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_popup_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_item: SD_TOOL_BAR_ITEM
 		do
 		 	if internal_buffered_dc /= Void then
 				l_vision_rect := a_arguments.item.rectangle
 
 				create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-				l_button ?= a_arguments.item
-				if l_button = Void then
-					draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
-				else
-					-- Specail handling for SD_TOOL_BAR_DUAL_POPUP_BUTTON background
-					if l_button.is_dropdown_area then
-						-- Draw the background as a whole without separator
-						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
-					else
-						-- Draw dropdown area which cover the whole background
-						create l_rect_2.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
-						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+				l_item := a_arguments.item
+				check not_vod: l_item /= Void end
 
-						-- Draw front area, overwrite the front
-						create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right - l_button.dropdrown_width - l_button.gap // 2, l_vision_rect.bottom)
-						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_splitbutton)
+				-- See bug#12580, we only draw background for sensitive buttons
+				if l_item.is_sensitive then
+					l_popup_button ?= l_item
+					if l_popup_button = Void then
+						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
+					else
+						-- Special handling for SD_TOOL_BAR_DUAL_POPUP_BUTTON background
+						if l_popup_button.is_dropdown_area then
+							-- Draw the background as a whole without separator
+							draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+						else
+							-- Draw dropdown area which cover the whole background
+							create l_rect_2.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
+							draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+
+							-- Draw front area, overwrite the front
+							create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right - l_popup_button.dropdrown_width - l_popup_button.gap // 2, l_vision_rect.bottom)
+							draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_splitbutton)
+						end
 					end
 				end
 

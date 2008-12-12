@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor (a_text_formatter)
 			a_text_formatter.add ("Feature name: ")
-			a_text_formatter.add_class_syntax (Current, class_c, name)
+			a_text_formatter.add_feature_name (name, class_c)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Conversion type: ")
 			type.append_to (a_text_formatter)

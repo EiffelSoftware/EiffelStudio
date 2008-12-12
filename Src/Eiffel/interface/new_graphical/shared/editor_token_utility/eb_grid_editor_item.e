@@ -26,6 +26,9 @@ feature -- Access
 		-- Editor used to display `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
+	viewport: ?EV_VIEWPORT
+		-- Viewport to hold the editor.
+
 feature -- Action
 
 	deactivate is
@@ -35,6 +38,10 @@ feature -- Action
 			if editor /= Void then
 				editor.recycle
 				editor := Void
+			end
+			if viewport /= Void then
+				viewport.destroy
+				viewport := Void
 			end
 		end
 
@@ -64,6 +71,7 @@ feature {NONE} -- Implementation
 			l_width, l_height: INTEGER
 			l_widget_y_offset: INTEGER
 			l_widget: EV_WIDGET
+			l_hidden_upper, l_hidden_lower: INTEGER
 		do
 			l_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
@@ -79,10 +87,15 @@ feature {NONE} -- Implementation
 
 			l_widget.set_minimum_width (0)
 
+			l_hidden_upper := (parent.virtual_y_position - virtual_y_position).max (0)
+			l_hidden_lower := (virtual_y_position + height - (parent.virtual_y_position + parent.viewable_height)).max (0)
+
 			a_popup.set_x_position (a_popup.x_position + l_x_offset)
 			a_popup.set_width (l_width)
-			a_popup.set_y_position (a_popup.y_position + l_widget_y_offset)
-			a_popup.set_height (l_height)
+			a_popup.set_y_position (a_popup.y_position + l_widget_y_offset + l_hidden_upper)
+			a_popup.set_height (l_height - l_hidden_upper - l_hidden_lower)
+
+			viewport.set_y_offset (l_hidden_upper)
 		end
 
 	handle_key (a_key: EV_KEY) is
@@ -111,7 +124,11 @@ feature {NONE} -- Implementation
 			editor_token_text.display_on_editor (editor.as_attached)
 			editor.set_read_only (True)
 
-			popup_window.extend (editor.widget)
+			create viewport
+			popup_window.extend (viewport)
+			viewport.extend (editor.widget)
+			viewport.set_item_size (popup_window.client_width, popup_window.client_height)
+
 				-- Change `popup_window' to suit `Current'.
 			update_popup_dimensions (popup_window.as_attached)
 

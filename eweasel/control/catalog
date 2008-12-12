@@ -1921,11 +1921,7 @@ test	multi-constraint-constrained-twice				multicon046 tcf pass multiconstraint
 test	multi-constraint-renaming-to-existing-feature	multicon047 tcf pass multiconstraint
 test	multi-constraint-any-numeric-crash				multicon048 tcf pass multiconstraint
 test	multi-constraint-parallel-renaming				multicon049 tcf pass multiconstraint
---test					multicon050 tcf pass multiconstraint
---test					multicon051 tcf pass multiconstraint
---test					multicon052 tcf pass multiconstraint
-
-
+test	multi-constraint-alias-renamed					multicon050 tcf pass multiconstraint
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

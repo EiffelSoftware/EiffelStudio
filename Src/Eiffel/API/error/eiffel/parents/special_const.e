@@ -68,7 +68,7 @@ feature -- Access: NATIVE_ARRAY
 
 	native_array_case_3: STRING is "Class NATIVE_ARRAY must have a feature `item (INTEGER): G#1'"
 
-	native_array_case_4: STRING is "Class NATIVE_ARRAY must have a feature `infix %"@%" (INTEGER): G#1'"
+	native_array_case_4: STRING is "Class NATIVE_ARRAY must have a feature `at alias %"@%" (INTEGER): G#1'"
 
 	native_array_case_5: STRING is "Class NATIVE_ARRAY must have a feature `put (INTEGER, G#1)'"
 

@@ -62,7 +62,7 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Third, check if class has a feature item and infix "@" (INTEGER): G#1
+				-- Third, check if class has a feature item and at alias "@" (INTEGER): G#1
 			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if
 				l_feat = Void
@@ -73,14 +73,21 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
+			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.at_name_id)
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (infix_at_signature)
+				or else not l_feat.same_signature (at_signature)
 			then
-				create special_error.make (native_array_case_4, Current)
-				Error_handler.insert_error (special_error)
+				l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
+				if
+					l_feat = Void
+					or else not (l_feat.written_in = class_id)
+					or else not l_feat.same_signature (infix_at_signature)
+				then
+					create special_error.make (native_array_case_4, Current)
+					Error_handler.insert_error (special_error)
+				end
 			end
 
 				-- Fourth, check if class has a feature put (G#1, INTEGER)
@@ -254,6 +261,23 @@ feature {NONE}
 			create f.make (False, False, 1)
 			Result.set_type (f, 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, 0)
+		ensure
+			item_signature_not_void: Result /= Void
+		end
+
+	at_signature: DYN_FUNC_I is
+			-- Required signature for feature `infix "@"' of class NATIVE_ARRAY.
+		local
+			args: FEAT_ARG
+			f: FORMAL_A
+		do
+			create args.make (1)
+			args.put_i_th (Integer_type, 1)
+			create Result
+			Result.set_arguments (args)
+			create f.make (False, False, 1)
+			Result.set_type (f, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.at_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
 		end

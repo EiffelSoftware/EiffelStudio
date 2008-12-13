@@ -176,6 +176,7 @@ feature {NONE} -- Implementation: access
 			put ("item") check found_item = item_name_id end
 			put ("invariant") check found_item = invariant_name_id end
 			put ("make_area") check found_item = make_area_name_id end
+			put ("at") check found_item = at_name_id end
 			put ("infix %"@%"") check found_item = infix_at_name_id end
 			put ("set_area") check found_item = set_area_name_id end
 			put ("area") check found_item = area_name_id end
@@ -230,12 +231,13 @@ feature {NONE} -- Implementation: access
 			put ("to_integer_16") check found_item = to_integer_16_name_id end
 			put ("to_integer_32") check found_item = to_integer_32_name_id end
 			put ("to_integer_64") check found_item = to_integer_64_name_id end
+			put ("plus") check found_item = plus_name_id end
 			put ("infix %"+%"") check found_item = infix_plus_name_id end
 			put ("default") check found_item = default_name_id end
 			put ("bit_and") check found_item = bit_and_name_id end
-			put ("infix %"&%"") check found_item = infix_and_name_id end
+			put ("infix %"&%"") check found_item = infix_bit_and_name_id end
 			put ("bit_or") check found_item = bit_or_name_id end
-			put ("infix %"|%"") check found_item = infix_or_name_id end
+			put ("infix %"|%"") check found_item = infix_bit_or_name_id end
 			put ("bit_xor") check found_item = bit_xor_name_id end
 			put ("bit_not") check found_item = bit_not_name_id end
 			put ("bit_shift_left") check found_item = bit_shift_left_name_id end
@@ -304,8 +306,11 @@ feature {NONE} -- Implementation: access
 			put ("is_lower") check found_item = is_lower_name_id end
 			put ("is_upper") check found_item = is_upper_name_id end
 			put ("set_bit") check found_item = set_bit_name_id end
+			put ("conjuncted_semistrict") check found_item = conjuncted_semistrict_name_id end
 			put ("infix %"and then%"") check found_item = infix_and_then_name_id end
+			put ("disjuncted_semistrict") check found_item = disjuncted_semistrict_name_id end
 			put ("infix %"or else%"") check found_item = infix_or_else_name_id end
+			put ("implication") check found_item = implication_name_id end
 			put ("infix %"implies%"") check found_item = infix_implies_name_id end
 			put ("as_lower") check found_item = as_lower_name_id end
 			put ("as_upper") check found_item = as_upper_name_id end

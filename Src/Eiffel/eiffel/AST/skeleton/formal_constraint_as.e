@@ -681,73 +681,32 @@ feature {NONE} -- Implementation
 		local
 			l_renaming_cache: ARRAY [RENAMING_A]
 			l_renaming: RENAMING_A
+			l_renamings: EIFFEL_LIST [RENAME_AS]
 			l_vtgc2: VTGC2
 		do
 			l_renaming_cache := a_context_class.constraint_renaming (Current)
 			l_renaming := l_renaming_cache.item (a_constraint_position)
 			if l_renaming = Void then
-				l_renaming := new_renaming_a (a_rename_clause)
-				if l_renaming /= Void then
-					l_renaming.check_against_feature_table (a_constraint.feature_table)
-					if l_renaming.has_error_report then
-						create l_vtgc2
-						l_vtgc2.set_class (system.current_class)
-						l_vtgc2.set_formal_constraint (Current)
-						l_vtgc2.set_constraint (a_constraint, a_constraint_position)
-						l_vtgc2.set_renaming (a_rename_clause)
-						l_vtgc2.set_features_renamed_multiple_times (l_renaming.error_report.renamed_multiple_times)
-						l_vtgc2.set_features_renamed_to_the_same_name (l_renaming.error_report.renamed_to_same_name)
-						l_vtgc2.set_non_existent_features (l_renaming.error_report.non_existent)
-						error_handler.insert_error (l_vtgc2)
-					else
-						l_renaming_cache.put (l_renaming, a_constraint_position)
+				if a_rename_clause /= Void then
+					l_renamings := a_rename_clause.content
+					if l_renamings /= Void then
+						create l_renaming.make (l_renamings, a_constraint)
+						if l_renaming.has_error then
+							create l_vtgc2
+							l_vtgc2.set_class (system.current_class)
+							l_vtgc2.set_formal_constraint (Current)
+							l_vtgc2.set_constraint (a_constraint, a_constraint_position)
+							l_vtgc2.set_renaming (a_rename_clause)
+							l_vtgc2.set_features_renamed_multiple_times (l_renaming.error_report.renamed_multiple_times)
+							l_vtgc2.set_features_renamed_to_the_same_name (l_renaming.error_report.renamed_to_same_name)
+							l_vtgc2.set_non_existent_features (l_renaming.error_report.non_existent)
+							error_handler.insert_error (l_vtgc2)
+						else
+							l_renaming_cache.put (l_renaming, a_constraint_position)
+						end
 					end
 				end
 			end
-		end
-
-	new_renaming_a (a_rename_clause: RENAME_CLAUSE_AS): RENAMING_A is
-			-- Renaming lookup datastructure from `a_renaming_clause'.
-			--
-			-- `a_rename_clause': AST for which the RENAMING_A instance is built.
-		local
-			l_renamings: EIFFEL_LIST [RENAME_AS]
-			l_rename: RENAME_AS
-			l_new_name: FEATURE_NAME
-			l_old_name_id, l_alias_name_id: INTEGER
-			l_feature_name_id: FEAT_NAME_ID_AS
-		do
-			if a_rename_clause /= Void then
-				l_renamings := a_rename_clause.content
-				if l_renamings /= Void then
-					create Result.make (l_renamings.count)
-					from
-						l_renamings.start
-					until
-						l_renamings.after
-					loop
-						l_rename := l_renamings.item
-						l_old_name_id := l_rename.old_name.internal_name.name_id
-						l_new_name := l_rename.new_name
-						l_feature_name_id ?= l_new_name
-						if l_feature_name_id /= Void then
-								-- We have a "normal" name (but in case of an object of type `FEATURE_NAME_ALIAS_AS' we can still have an alias.)
-							Result.put (l_old_name_id,
-										l_new_name.internal_name.name_id)
-						end
-							-- Now check in any case for an alias
-							-- This includes the case where we have an object of type `INFIX_PREFIX_AS'
-						l_alias_name_id := l_new_name.internal_alias_name_id
-						if l_alias_name_id /= 0 then
-							Result.put_delayed_alias (l_old_name_id, l_new_name)
-						end
-						l_renamings.forth
-					end
-				end
-			end
-		ensure
-			new_rename_a_not_void:
-				(a_rename_clause /= Void and then a_rename_clause.content /= Void) implies Result /= Void
 		end
 
 indexing

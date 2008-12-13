@@ -52,6 +52,7 @@ feature
 			array_class: CLASS_C
 			ftable: FEATURE_TABLE
 			l_names_heap: like Names_heap
+			l_feat: FEATURE_I
 		do
 			array_class := System.array_class.compiled_class
 
@@ -59,13 +60,19 @@ feature
 			l_names_heap := Names_heap
 
 				-- get the rout_ids of the special/unsafe features
-			put_rout_id := ftable.item_id (l_names_heap.put_name_id).rout_id_set.first
-			item_rout_id := ftable.item_id (l_names_heap.item_name_id).rout_id_set.first
-			infix_at_rout_id := ftable.item_id (l_names_heap.infix_at_name_id).rout_id_set.first
-			make_area_rout_id := ftable.item_id (l_names_heap.make_area_name_id).rout_id_set.first
-			set_area_rout_id := ftable.item_id (l_names_heap.set_area_name_id).rout_id_set.first
-			lower_rout_id := ftable.item_id (l_names_heap.lower_name_id).rout_id_set.first
-			area_rout_id := ftable.item_id (l_names_heap.area_name_id).rout_id_set.first
+			put_rout_id := ftable.item_id ({PREDEFINED_NAMES}.put_name_id).rout_id_set.first
+			item_rout_id := ftable.item_id ({PREDEFINED_NAMES}.item_name_id).rout_id_set.first
+			make_area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.make_area_name_id).rout_id_set.first
+			set_area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.set_area_name_id).rout_id_set.first
+			lower_rout_id := ftable.item_id ({PREDEFINED_NAMES}.lower_name_id).rout_id_set.first
+			area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.area_name_id).rout_id_set.first
+			l_feat := ftable.item_id ({PREDEFINED_NAMES}.at_name_id)
+			if l_feat = Void then
+					-- We must be compiling an old version of the ARRAY class, so look for `infix "@"' instead.
+				l_feat := ftable.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
+			end
+			check l_feat_not_void: l_feat /= Void end
+			infix_at_rout_id := l_feat.rout_id_set.first
 
 			create array_descendants.make (10)
 

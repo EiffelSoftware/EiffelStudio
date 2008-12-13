@@ -1834,6 +1834,7 @@ feature {NONE} -- Visitors
 					when
 						{PREDEFINED_NAMES}.Item_name_id,
 						{PREDEFINED_NAMES}.Infix_at_name_id,
+						{PREDEFINED_NAMES}.at_name_id,
 						{PREDEFINED_NAMES}.Put_name_id
 					then
 						l_special_array_class_type.prepare_generate_il (a_node.feature_name_id, l_cl_type)

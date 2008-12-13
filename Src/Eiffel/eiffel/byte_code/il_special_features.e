@@ -71,14 +71,14 @@ feature -- Access
 						Result := True
 						inspect
 							feat.feature_name_id
-						when Infix_and_name_id then
-							function_type := basic_type_table.item (Infix_and_name_id)
-						when Infix_or_name_id then
-							function_type := basic_type_table.item (Infix_or_name_id)
-						when To_integer_name_id then
-							function_type := From_enum_to_integer_type
-						when From_integer_name_id then
-							function_type := From_integer_to_enum_type
+						when infix_bit_and_name_id, bit_and_name_id then
+							function_type := basic_type_table.item (infix_bit_and_name_id)
+						when infix_bit_or_name_id, bit_or_name_id then
+							function_type := basic_type_table.item (infix_bit_or_name_id)
+						when to_integer_name_id then
+							function_type := from_enum_to_integer_type
+						when from_integer_name_id then
+							function_type := from_integer_to_enum_type
 						else
 							Result := False
 						end
@@ -348,9 +348,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_32_type, to_natural_32_name_id)
 			Result.put (to_natural_64_type, to_natural_64_name_id)
 			Result.put (bit_and_type, bit_and_name_id)
-			Result.put (bit_and_type, infix_and_name_id)
+			Result.put (bit_and_type, infix_bit_and_name_id)
 			Result.put (bit_or_type, bit_or_name_id)
-			Result.put (bit_or_type, infix_or_name_id)
+			Result.put (bit_or_type, infix_bit_or_name_id)
 			Result.put (bit_xor_type, bit_xor_name_id)
 			Result.put (bit_not_type, bit_not_name_id)
 			Result.put (bit_shift_left_type, bit_shift_left_name_id)
@@ -362,6 +362,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (set_bit_with_mask_type, set_bit_with_mask_name_id)
  			Result.put (max_type, max_name_id)
  			Result.put (min_type, min_name_id)
+ 			Result.put (offset_type, plus_name_id)
  			Result.put (offset_type, infix_plus_name_id)
 			Result.put (to_real_64_type, to_real_64_name_id)
 			Result.put (to_real_32_type, to_real_32_name_id)

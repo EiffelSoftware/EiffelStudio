@@ -237,7 +237,8 @@ feature -- C code generation
 
 			when
 				{PREDEFINED_NAMES}.item_name_id,
-				{PREDEFINED_NAMES}.infix_at_name_id
+				{PREDEFINED_NAMES}.infix_at_name_id,
+				{PREDEFINED_NAMES}.at_name_id
 			then
 					-- Generate built-in feature `item' of class SPECIAL
 				generate_item (feat, buffer)
@@ -583,7 +584,8 @@ feature {NONE} -- C code generation
 			good_argument: buffer /= Void
 			feat_exists: feat /= Void
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.item_name_id or
-				feat.feature_name_id = {PREDEFINED_NAMES}.infix_at_name_id
+				feat.feature_name_id = {PREDEFINED_NAMES}.infix_at_name_id or
+				feat.feature_name_id = {PREDEFINED_NAMES}.at_name_id
 		local
 			gen_param: TYPE_A
 			l_exp_class_type: CLASS_TYPE
@@ -1014,6 +1016,7 @@ feature -- IL code generation
 			valid_name_id:
 				name_id = {PREDEFINED_NAMES}.Item_name_id or
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = {PREDEFINED_NAMES}.at_name_id or
 				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
 			has_generics: type.generics /= Void
@@ -1039,6 +1042,7 @@ feature -- IL code generation
 			valid_name_id:
 				name_id = {PREDEFINED_NAMES}.Item_name_id or
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = {PREDEFINED_NAMES}.at_name_id or
 				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
 			special_is_indeed_special: special_type.associated_class.is_special

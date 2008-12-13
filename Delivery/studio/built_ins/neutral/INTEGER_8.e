@@ -2,6 +2,12 @@ class INTEGER_8
 
 feature -- Comparison
 
+	is_less alias "<" (other: INTEGER_8): BOOLEAN is
+			-- Is current integer less than `other'?
+		do
+			Result := Precursor (other)
+		end
+
 	infix "<" (other: INTEGER_8): BOOLEAN is
 			-- Is current integer less than `other'?
 		do
@@ -9,6 +15,60 @@ feature -- Comparison
 		end
 
 feature -- Basic operations
+
+	plus alias "+" (other: INTEGER_8): INTEGER_8 is
+			-- Sum with `other'
+		do
+			Result := Precursor (other)
+		end
+
+	minus alias "-" (other: INTEGER_8): INTEGER_8 is
+			-- Result of subtracting `other'
+		do
+			Result := Precursor (other)
+		end
+
+	product alias "*" (other: INTEGER_8): INTEGER_8 is
+			-- Product by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	quotient alias "/" (other: INTEGER_8): REAL_64 is
+			-- Division by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	identity alias "+": INTEGER_8 is
+			-- Unary plus
+		do
+			Result := Precursor
+		end
+
+	opposite alias "-": INTEGER_8 is
+			-- Unary minus
+		do
+			Result := Precursor
+		end
+
+	integer_quotient alias "//" (other: INTEGER_8): INTEGER_8 is
+			-- Integer division of Current by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	integer_remainder alias "\\" (other: INTEGER_8): INTEGER_8 is
+			-- Remainder of the integer division of Current by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	power alias "^" (other: REAL_64): REAL_64 is
+			-- Integer power of Current by `other'
+		do
+			Result := Precursor (other)
+		end
 
 	infix "+" (other: INTEGER_8): INTEGER_8 is
 			-- Sum with `other'

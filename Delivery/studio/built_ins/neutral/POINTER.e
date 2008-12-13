@@ -10,6 +10,12 @@ feature -- Access
 
 feature -- Operations
 
+	plus alias "+" (offset: INTEGER): POINTER is
+			-- Pointer moved by an offset of `offset' bytes.
+		do
+			Result := Precursor (offset)
+		end
+
 	infix "+" (offset: INTEGER): POINTER is
 			-- Pointer moved by an offset of `offset' bytes.
 		do

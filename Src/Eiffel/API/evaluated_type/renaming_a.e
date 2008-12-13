@@ -15,9 +15,10 @@ inherit
 
 	HASH_TABLE[INTEGER,INTEGER]
 		rename
-			put as hashtable_put
+			put as ht_put,
+			make as ht_make
 		export
-			{NONE} force, hashtable_put
+			{NONE} force, ht_put
 		end
 
 	COMPILER_EXPORTER
@@ -44,35 +45,75 @@ inherit
 create
 	make
 
-feature -- Operation
+feature {NONE} -- Initialization
 
-	check_against_feature_table (a_feature_table: FEATURE_TABLE)
-			-- Checks wheter current renaming is valid against `a_feature_table'.
-			-- Checks wheter each feature being renamed is an actual feature of the feature table.
+	make (a_renamings: EIFFEL_LIST [RENAME_AS]; a_constraint: CLASS_C) is
+			-- Create current
 		require
-			a_feature_table_not_void: a_feature_table /= Void
+			a_renamings_not_void: a_renamings /= Void
+			a_constraint_not_void: a_constraint /= Void
 		local
-			l_check_non_existent: BOOLEAN
+			l_rename: RENAME_AS
+			l_new_name: FEATURE_NAME
+			l_old_name_id: INTEGER
+			l_feature_table: FEATURE_TABLE
+			l_old_feature: FEATURE_I
 		do
-				-- First add alias features to the table.
-			adapt_alias_feature_name_properties (a_feature_table)
-				-- If there were already errors we do not check this because it is not complete.
-			l_check_non_existent := not has_error_report
+				-- Create table.
+			ht_make (a_renamings.count)
+
+				-- Initialize table.
+			from
+				l_feature_table := a_constraint.feature_table
+				a_renamings.start
+			until
+				a_renamings.after
+			loop
+				l_rename := a_renamings.item
+				l_old_name_id := l_rename.old_name.internal_name.name_id
+				l_old_feature := l_feature_table.item_id (l_old_name_id)
+				if l_old_feature = Void then
+						-- Old name does not even exist, don't bother checking the new name.
+					if error_report = Void then
+						error_report := new_error_report
+					end
+					error_report.non_existent.put(names_heap.item (l_old_name_id))
+				else
+					l_new_name := l_rename.new_name
+						-- Add new name to the list.
+					put (l_old_name_id, l_new_name.internal_name.name_id)
+
+					if {l_infix_prefix_name: INFIX_PREFIX_AS} l_new_name then
+							-- Check validity of infix/prefix for that particular routine.
+						process_alias (l_rename.new_name, l_old_feature)
+							-- No need to add it, because infix have the same internal name as their alias.
+					elseif {l_alias_name: FEATURE_NAME_ALIAS_AS} l_new_name then
+							-- Check validity of alias for that particular routine.
+						process_alias (l_rename.new_name, l_old_feature)
+							-- Because `l_old_name_id' is already there, we do not want to generate an error
+							-- and thus we call `internal_put'.
+						internal_put (l_old_name_id, l_new_name.internal_alias_name_id)
+					end
+
+						-- If previously it was an alias routine, we removed the alias from the original class.
+					if l_old_feature.alias_name_id /= 0 and not l_old_feature.is_infix and not l_old_feature.is_prefix then
+						if removed_alias = Void then
+							create removed_alias.make (10)
+						end
+						removed_alias.extend (l_old_feature.alias_name_id)
+					end
+				end
+				a_renamings.forth
+			end
+
+				-- Check that we do not end up with twice or more feature with the same name.
 			from
 				start
 			until
 				after
 			loop
-				if l_check_non_existent then
-					if a_feature_table.item_id (item_for_iteration) = Void then
-						if error_report = Void then
-							error_report := new_error_report
-						end
-						error_report.non_existent.put(names_heap.item (item_for_iteration))
-					end
-				end
 				if
-					a_feature_table.item_id (key_for_iteration) /= Void and then
+					l_feature_table.has_id (key_for_iteration) and then
 					not is_feature_renamed_by_name_id (key_for_iteration)
 				then
 					if error_report = Void then
@@ -92,55 +133,38 @@ feature -- Element change
 			--| `a_newm_name' is the key for the hashtable.
 		do
 			if has_item (a_original_name) then
-				if not has_error_report then
+				if not has_error then
 					error_report := new_error_report
 				end
 				error_report.renamed_multiple_times.put (names_heap.item (a_original_name))
 			end
-			hashtable_put (a_original_name, a_new_name)
+			internal_put (a_original_name, a_new_name)
+		end
+
+feature {NONE} -- Element change
+
+	internal_put (a_original_name: INTEGER_32; a_new_name: INTEGER_32)
+			-- Add pair to renaming and check for errors.
+		do
+			ht_put (a_original_name, a_new_name)
 			if conflict then
-				if not has_error_report then
+				if not has_error then
 					error_report := new_error_report
 				end
 				error_report.renamed_to_same_name.put (names_heap.item (a_new_name))
 			end
 		end
 
-	put_alias (a_original_name: INTEGER; a_new_name: INTEGER)
-			-- Add pair to renaming and check for errors.
-			--| `a_original_name' used to be the new item to add to the hashtable.
-			--| `a_newm_name' is the key for the hashtable.
-		do
-			hashtable_put (a_original_name, a_new_name)
-			if conflict then
-				if not has_error_report then
-					error_report := new_error_report
-				end
-				error_report.renamed_to_same_name.put(names_heap.item (a_original_name))
-			end
-		end
-
-	put_delayed_alias (a_old_name: INTEGER; a_name_with_alias: FEATURE_NAME)
-			-- Add pair to renaming and check for errors.
-			--| `a_original_name' used to be the new item to add to the hashtable.
-			--| `a_newm_name' is the key for the hashtable.
-		require
-			a_name_with_alias_attached: a_name_with_alias /= Void
-		do
-			alias_mapping.extend ([a_old_name, a_name_with_alias])
-		end
-
 feature -- Access
 
-	error_report: TUPLE [	renamed_multiple_times: SEARCH_TABLE[STRING];
-							renamed_to_same_name: SEARCH_TABLE[STRING];
-							non_existent: SEARCH_TABLE[STRING]]
-		-- Error report for renaming clause. Contains all problematic cases.
-		--| Is Void if no error occured.
+	error_report: TUPLE [renamed_multiple_times: SEARCH_TABLE[STRING];
+						renamed_to_same_name: SEARCH_TABLE[STRING];
+						non_existent: SEARCH_TABLE[STRING]]
+			-- Error report for renaming clause. Contains all problematic cases.
+			--| Is Void if no error occured.
 
 	renamed (a_name_id: INTEGER): INTEGER
 			-- Renames `a_name_id' into it's old name or leaves it unchanged if it is not renamed.
-			--| This feature calls `search' and is therefore not sideeffect free.
 			--| This feature can return -1 if it finds out that this `a_name_id' has been
 			--| renamed into another name.
 		do
@@ -151,7 +175,9 @@ feature -- Access
 					-- Result is now x
 				Result := found_item
 			else
-				if not has_item (a_name_id) then
+				if removed_alias /= Void and removed_alias.has (a_name_id) then
+					Result := -1
+				elseif not has_item (a_name_id) then
 						-- Nobody touched our feature:
 						-- Result is therefore f (unchanged)
 					Result := a_name_id
@@ -162,8 +188,7 @@ feature -- Access
 				end
 			end
 		ensure
-			if_not_available_result_is_negative:
-				(Result = -1) implies (has_item (a_name_id) and not has (a_name_id))
+			renamed_result_valid: Result > 0 or Result = -1
 		end
 
 	new_name (a_feature_name_id: INTEGER): INTEGER
@@ -200,7 +225,7 @@ feature -- Status
 			Result := is_feature_renamed_by_name_id (a_feature.name_id)
 		end
 
-	has_error_report: BOOLEAN
+	has_error: BOOLEAN
 			-- Is the renaming clause in-valid?
 			--| Are there any features which are renamed multiple times?
 			--| Are there any features which are renamed to the same name?
@@ -217,7 +242,8 @@ feature -- Output
 			-- Append `Current' renaming.
 			--
 			-- `a_text_formatter' is the object where the current renaming is appended to.			
-			-- `a_type_set' is a list of types to which the renaming is actually applied. It is used to link features.
+			-- `a_type_set' is a list of types to which the renaming is actually applied. It is used
+			-- to link features.
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 			a_class_c_not_void: a_class_c /= Void
@@ -262,123 +288,81 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	predefined_names: PREDEFINED_NAMES
-			-- Predefines names.
-		once
-			create Result
-		end
+	removed_alias: ARRAYED_LIST [INTEGER]
+			-- List of removed aliases from the original class.
 
-	adapt_alias_feature_name_properties (a_feature_table: FEATURE_TABLE) is
-			-- Checks wheter current renaming is valid against `a_feature_table'.
-			-- Checks wheter each feature being renamed is an actual feature of the feature table.
+	process_alias (a_name: FEATURE_NAME; a_old_feature: FEATURE_I) is
+			-- Check if `a_rename' is a valid infix/prefix/alias.
 		require
-			a_feature_table_not_void: a_feature_table /= Void
+			a_name_not_void: a_name /= Void
+			a_old_feature_not_void: a_old_feature /= Void
 		local
-			l_alias_mapping: like alias_mapping
 			l_old_name: INTEGER
-			l_new_name: FEATURE_NAME
 			l_infix_prefix: INFIX_PREFIX_AS
-			l_feature: FEATURE_I
 			l_argument_count: INTEGER
 			l_operator: STRING
-			vfav: VFAV_SYNTAX
+			l_vfav: VFAV_SYNTAX
 		do
-			from
-				l_alias_mapping	:= alias_mapping
-				l_alias_mapping.start
-			until
-				l_alias_mapping.after
-			loop
-				l_old_name := l_alias_mapping.item.old_name
-				l_new_name := l_alias_mapping.item.feature_name
-				l_feature := a_feature_table.item_id (l_old_name)
-				if l_feature /= Void then
-						-- TODO: This code should be refactored as it occurs almost the same way in `{AST_COMPILER_FACTORY}.new_feature_as'
-					vfav := Void
-					l_operator := l_new_name.alias_name.value
-					l_argument_count := l_feature.argument_count
+				-- TODO: This code should be refactored as it occurs almost the same way in
+				-- `{AST_COMPILER_FACTORY}.new_feature_as'
+			l_operator := a_name.alias_name.value
+			l_argument_count := a_old_feature.argument_count
 
-					if l_new_name.is_bracket then
-						if not l_feature.has_return_value or else l_argument_count < 1 then
-								-- Invalid bracket alias
-							create {VFAV2_SYNTAX} vfav.make (l_new_name)
-						elseif l_new_name.has_convert_mark then
-								-- Invalid convert mark
-							create {VFAV3_SYNTAX} vfav.make (l_new_name)
-						end
-					elseif l_feature.has_return_value and then (
-							(l_argument_count = 0 and then l_new_name.is_valid_unary_operator (l_operator)) or else
-							(l_argument_count = 1 and then l_new_name.is_valid_binary_operator (l_operator))
-						)
-					then
-						if l_argument_count = 1 then
-							l_infix_prefix ?= l_new_name
-							if l_infix_prefix /= Void then
-								if l_infix_prefix.is_prefix then
-										-- Ok, the feature renamed is not capable to be a prefix, throw an error.
-										-- Invalid operator alias
-										create {VFAV1_SYNTAX} vfav.make (l_new_name)
-								end
-							else
-								l_new_name.set_is_binary
-							end
-						elseif l_new_name.has_convert_mark then
-								-- Invalid convert mark
-							create {VFAV3_SYNTAX} vfav.make (l_new_name)
-						else
-							l_infix_prefix ?= l_new_name
-							if l_infix_prefix /= Void then
-								if l_infix_prefix.is_infix then
-										-- Ok, the feature renamed is not capable to be an infix, throw an error.
-										-- Invalid operator alias
-										create {VFAV1_SYNTAX} vfav.make (l_new_name)
-								end
-							else
-								l_new_name.set_is_unary
-							end
-
+			if a_name.is_bracket then
+				if not a_old_feature.has_return_value or else l_argument_count < 1 then
+						-- Invalid bracket alias
+					create {VFAV2_SYNTAX} l_vfav.make (a_name)
+				elseif a_name.has_convert_mark then
+						-- Invalid convert mark
+					create {VFAV3_SYNTAX} l_vfav.make (a_name)
+				end
+			elseif
+				a_old_feature.has_return_value and then
+				((l_argument_count = 0 and then a_name.is_valid_unary_operator (l_operator)) or else
+				(l_argument_count = 1 and then a_name.is_valid_binary_operator (l_operator)))
+			then
+				if l_argument_count = 1 then
+					l_infix_prefix ?= a_name
+					if l_infix_prefix /= Void then
+						if l_infix_prefix.is_prefix then
+								-- Ok, the feature renamed is not capable to be a prefix, throw an error.
+								-- Invalid operator alias
+								create {VFAV1_SYNTAX} l_vfav.make (a_name)
 						end
 					else
-							-- Invalid operator alias
-						create {VFAV1_SYNTAX} vfav.make (l_new_name)
+						a_name.set_is_binary
 					end
-					if vfav /= Void then
-						error_handler.insert_error (vfav)
-						error_handler.checksum
-					end
-
-					put_alias (l_old_name, l_new_name.internal_alias_name.name_id)
+				elseif a_name.has_convert_mark then
+						-- Invalid convert mark
+					create {VFAV3_SYNTAX} l_vfav.make (a_name)
 				else
-					if error_report = Void then
-						error_report := new_error_report
+					l_infix_prefix ?= a_name
+					if l_infix_prefix /= Void then
+						if l_infix_prefix.is_infix then
+								-- Ok, the feature renamed is not capable to be an infix, throw an error.
+								-- Invalid operator alias
+								create {VFAV1_SYNTAX} l_vfav.make (a_name)
+						end
+					else
+						a_name.set_is_unary
 					end
-					error_report.non_existent.put (names_heap.item (l_old_name))
+
 				end
-
-				l_alias_mapping.forth
+			else
+					-- Invalid operator alias
+				create {VFAV1_SYNTAX} l_vfav.make (a_name)
+			end
+			if l_vfav /= Void then
+				error_handler.insert_error (l_vfav)
 			end
 		end
-
-	alias_mapping: ARRAYED_LIST [TUPLE [old_name: INTEGER; feature_name: FEATURE_NAME]]
-			-- Alias mapping. Maps alias names to feature names.
-			-- It maps it to the new name of the feature. To find the original name apply the ordinary renaming.
-		do
-			if alias_mapping_attribute = Void then
-				create alias_mapping_attribute.make (3)
-			end
-			Result := alias_mapping_attribute
-		ensure
-			result_attached: Result /= Void
-		end
-
-	alias_mapping_attribute: like alias_mapping
-			-- Reference to alias mapping.
 
 	append_to_impl (a_text_formatter: TEXT_FORMATTER; a_class_c: CLASS_C) is
 			-- Append `Current' renaming.
 			--
 			-- `a_text_formatter' is the object where the current renaming is appended to.			
-			-- `a_type_set' is a list of types to which the renaming is actually applied. It is used to link features.
+			-- `a_type_set' is a list of types to which the renaming is actually applied. It is used to
+			-- link features.
 		require
 			a_text_formatter_attached: a_text_formatter /= Void
 			a_class_c_attached: a_class_c /= Void
@@ -404,7 +388,7 @@ feature {NONE} -- Implementation
 						l_feature := a_class_c.feature_with_name_id (item_for_iteration)
 					end
 					if l_feature /= Void then
-						a_text_formatter.process_feature_text (names_heap.item (item_for_iteration), l_feature, false)
+						a_text_formatter.process_feature_text (names_heap.item (item_for_iteration), l_feature, False)
 					else
 						a_text_formatter.add (names_heap.item (item_for_iteration))
 					end

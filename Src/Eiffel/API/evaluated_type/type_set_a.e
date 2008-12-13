@@ -387,7 +387,11 @@ feature -- Access
 					else
 						l_name_id := l_renaming.renamed (an_alias_name_id)
 						if l_name_id > 0 then
-							l_feature :=  l_class_c.feature_table.item_id (l_name_id)
+							if l_name_id = an_alias_name_id then
+								l_feature := l_class_c.feature_table.item_alias_id (l_name_id)
+							else
+								l_feature :=  l_class_c.feature_table.item_id (l_name_id)
+							end
 						end
 					end
 

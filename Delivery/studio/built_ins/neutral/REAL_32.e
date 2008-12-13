@@ -2,6 +2,11 @@ class REAL_32
 
 feature -- Comparison
 
+	is_less alias "<" (other: REAL_32): BOOLEAN is
+			-- Is `other' greater than current real?
+		do
+			Result := Precursor (other)
+		end
 	infix "<" (other: REAL_32): BOOLEAN is
 			-- Is `other' greater than current real?
 		do
@@ -43,6 +48,48 @@ feature -- Conversion
 		end
 
 feature -- Basic operations
+
+	plus alias "+" (other: REAL_32): REAL_32 is
+			-- Sum with `other'
+		do
+			Result := Precursor (other)
+		end
+
+	minus alias "-" (other: REAL_32): REAL_32 is
+			-- Result of subtracting `other'
+		do
+			Result := Precursor (other)
+		end
+
+	product alias "*" (other: REAL_32): REAL_32 is
+			-- Product by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	quotient alias "/" (other: REAL_32): REAL_32 is
+			-- Division by `other'
+		do
+			Result := Precursor (other)
+		end
+
+	power alias "^" (other: REAL_64): REAL_64 is
+			-- Current real to the power `other'
+		do
+			Result := Precursor (other)
+		end
+
+	identity alias "+": REAL_32 is
+			-- Unary plus
+		do
+			Result := Precursor
+		end
+
+	opposite alias "-": REAL_32 is
+			-- Unary minus
+		do
+			Result := Precursor
+		end
 
 	infix "+" (other: REAL_32): REAL_32 is
 			-- Sum with `other'

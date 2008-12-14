@@ -297,7 +297,6 @@ feature {NONE} -- Implementation
 			a_name_not_void: a_name /= Void
 			a_old_feature_not_void: a_old_feature /= Void
 		local
-			l_old_name: INTEGER
 			l_infix_prefix: INFIX_PREFIX_AS
 			l_argument_count: INTEGER
 			l_operator: STRING

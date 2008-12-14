@@ -10,7 +10,7 @@ class
 	TAG_UTILITIES_TESTS
 
 inherit
-	TEST_SET
+	EQA_TEST_SET
 		redefine
 			setup
 		end

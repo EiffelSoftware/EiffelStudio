@@ -65,7 +65,7 @@ feature -- Comparison
 				line_number = other.line_number
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 		do
 			Result := class_name < other.class_name or else
 				(equal (class_name, other.class_name) and line_number < other.line_number)

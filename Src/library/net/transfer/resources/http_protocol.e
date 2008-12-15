@@ -275,7 +275,7 @@ feature {NONE} -- Encoder Implementation
 			f: SPECIAL [BOOLEAN]
 			base64chars: STRING_8
 		do
-			base64chars := once "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+			base64chars := once "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 			from
 				n := s.count
 				i := (8 * n) \\ 6

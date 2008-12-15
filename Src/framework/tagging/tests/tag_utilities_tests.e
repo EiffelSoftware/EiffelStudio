@@ -12,12 +12,12 @@ class
 inherit
 	EQA_TEST_SET
 		redefine
-			setup
+			on_prepare
 		end
 
 feature -- Initialization
 
-	setup
+	on_prepare
 			-- <Precursor>
 		do
 			create utilities

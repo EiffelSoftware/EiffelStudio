@@ -87,7 +87,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	infix "<" (other: INHERIT_INFO): BOOLEAN is
+	is_less alias "<" (other: INHERIT_INFO): BOOLEAN is
 			-- Is `other' greater than Current ?
 		do
 			Result := a_feature.body_index < other.a_feature.body_index

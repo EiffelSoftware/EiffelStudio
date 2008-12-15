@@ -3605,7 +3605,7 @@ feature -- Server Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Order relation on classes
 		do
 			Result := topological_id < other.topological_id

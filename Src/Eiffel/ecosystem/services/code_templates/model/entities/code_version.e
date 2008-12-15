@@ -106,7 +106,7 @@ feature {NONE} -- Actions handlers
 
 feature -- Comparison
 
-	infix "<" (other: CODE_VERSION): BOOLEAN is
+	is_less alias "<" (other: CODE_VERSION): BOOLEAN is
 			-- <Precursor>
 		do
 			Result := False

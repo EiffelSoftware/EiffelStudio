@@ -62,7 +62,7 @@ feature -- Comparison
 			Result := written_in = other.written_in
 		end
 
-	infix "<" (other: CLIENT_I): BOOLEAN is
+	is_less alias "<" (other: CLIENT_I): BOOLEAN is
 			-- is `other greater than Current ?
 		do
 			Result := written_in < other.written_in

@@ -146,7 +146,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: DEPEND_UNIT): BOOLEAN is
+	is_less alias "<" (other: DEPEND_UNIT): BOOLEAN is
 			-- Is `other' greater than Current ?
 		local
 			l_id, l_oid: INTEGER

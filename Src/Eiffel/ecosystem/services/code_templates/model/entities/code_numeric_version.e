@@ -20,7 +20,7 @@ inherit
 			is_compatible_with,
 			is_equal,
 			on_version_changed,
-			infix "<"
+			is_less
 		end
 
 create
@@ -193,7 +193,7 @@ feature {NONE} -- Actions handlers
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- <Precursor>
 		do
 			if {l_other: !CODE_NUMERIC_VERSION} other then

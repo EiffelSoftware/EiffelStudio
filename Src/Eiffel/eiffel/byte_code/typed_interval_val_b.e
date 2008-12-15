@@ -10,7 +10,7 @@ deferred class TYPED_INTERVAL_VAL_B [H -> COMPARABLE]
 inherit
 	INTERVAL_VAL_B
 		redefine
-			infix "<",
+			is_less,
 			is_equal
 		end
 
@@ -38,7 +38,7 @@ feature -- Comparison
 			Result := other.value = next_value (value)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
 			Result := value < other.value

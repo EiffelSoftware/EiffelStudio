@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN is
 			-- is Current less restrictive than other
 		local
 			other_set: EXPORT_SET_I

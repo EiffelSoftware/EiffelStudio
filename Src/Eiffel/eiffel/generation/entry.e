@@ -23,7 +23,7 @@ inherit
 
 feature -- comparison
 
-	infix "<" (other: ENTRY): BOOLEAN is
+	is_less alias "<" (other: ENTRY): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
 			Result := type_id < other.type_id

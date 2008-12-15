@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"A category is a list of feature_clauses with the%
 		%same comments but with different export policy.%
 		%Feature clauses are sorted from less retrictive%
@@ -11,10 +11,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class CATEGORY 
+class CATEGORY
 
 inherit
-	
+
 	PART_COMPARABLE;
 	SHARED_FORMAT_INFO
 		undefine
@@ -86,12 +86,12 @@ feature -- Setting
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is Current less than `other' comment?
 		do
 			Result := (order < other.order);
 			if not Result and then order = other.order then
-				Result := 
+				Result :=
 					((comments = Void and then other.comments /= Void)
 					or else (other.comments /= Void
 						and then comments < other.comments))
@@ -199,22 +199,22 @@ feature -- Context output
 		end;
 
 feature -- Removal
-			
+
 	wipe_out is
 			-- Wipe out Current structures.
 		do
-			clauses.wipe_out;	
+			clauses.wipe_out;
 			comments := Void
-		end;	
+		end;
 
 invariant
 
 	non_void_clauses: clauses /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -225,19 +225,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

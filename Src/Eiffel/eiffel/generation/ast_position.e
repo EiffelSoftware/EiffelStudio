@@ -20,7 +20,7 @@ create
 
 feature -- Debugger
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current element less than `other'?
 		do
 			Result := position < other.position;

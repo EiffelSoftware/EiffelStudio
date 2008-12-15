@@ -90,7 +90,7 @@ feature  -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
 			Result :=

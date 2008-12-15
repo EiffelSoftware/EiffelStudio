@@ -401,7 +401,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: FEATURE_I): BOOLEAN is
+	is_less alias "<" (other: FEATURE_I): BOOLEAN is
 			-- Comparison of FEATURE_I based on their name.
 		local
 			l_name, l_other_name: like feature_name

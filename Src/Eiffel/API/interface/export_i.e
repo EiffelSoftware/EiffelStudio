@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN is
 		deferred
 		end;
 

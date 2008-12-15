@@ -122,7 +122,7 @@ feature -- Change
 
 feature -- Comparison
 
-	infix "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is
+	is_less alias "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is
 			-- Is `Current''s name lexicographically lower than `other''s?
 		do
 			Result := name < other.name

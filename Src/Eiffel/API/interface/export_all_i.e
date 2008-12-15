@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN is
 			-- is Current less restrictive than other
 		do
 			Result := not other.is_all

@@ -98,12 +98,12 @@ feature -- Access
 
 	dual: BOOLEAN
 			-- Can function be accessed through IDispatch and Vtable?
-		
+
 	invoke_kind: INTEGER
 			-- Invocation kind
 			-- See class ECOM_INVOKE_KIND for return values
 
-	call_conv: INTEGER 
+	call_conv: INTEGER
 			-- Function's calling convention
 
 	return_type: WIZARD_DATA_TYPE_DESCRIPTOR
@@ -153,14 +153,14 @@ feature -- Status report
 			non_void_other: other /= Void
 		do
 			Result := (name.is_equal (other.name) and then
-					(argument_count = other.argument_count) and 
+					(argument_count = other.argument_count) and
 					return_type.is_equal_data_type (other.return_type))
 			if Result then
 				from
 					arguments.start
 					other.arguments.start
 				until
-					arguments.after or 
+					arguments.after or
 					not Result
 				loop
 					Result := Result and equal (arguments.item, other.arguments.item)
@@ -269,19 +269,19 @@ feature -- Basic operations
 		ensure
 			valid_dual: dual = a_boolean
 		end
-		
+
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			Result := vtbl_offset < other.vtbl_offset
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -292,19 +292,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

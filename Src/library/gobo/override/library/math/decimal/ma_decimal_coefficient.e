@@ -23,7 +23,7 @@ inherit
 			is_equal,
 			copy
 		redefine
-			is_less
+			is_greater
 		end
 
 feature {NONE} -- Initialization
@@ -173,6 +173,12 @@ feature -- Comparison
 			-- Is `Current' less than `other'?
 		do
 			Result := (three_way_comparison (other) = -1)
+		end
+
+	is_greater alias "<" (other: like Current): BOOLEAN is
+			-- Is `Current' greater than `other'?
+		do
+			Result := (three_way_comparison (other) = 1)
 		end
 
 feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element change

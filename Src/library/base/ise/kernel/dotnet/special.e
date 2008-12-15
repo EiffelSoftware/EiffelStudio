@@ -60,7 +60,7 @@ feature -- Access
 			Result := internal_native_array.item (i)
 		end
 
-	infix "@" (i: INTEGER): T
+	at alias "@" (i: INTEGER): T
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require

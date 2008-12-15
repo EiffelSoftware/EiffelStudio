@@ -364,7 +364,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			Result := (y_in_lines < other.y_in_lines) or else

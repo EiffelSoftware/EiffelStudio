@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current duration smaller than `other'?
 			-- False if either is not definite
 		do

@@ -12,7 +12,7 @@ class TIME inherit
 		undefine
 			out
 		redefine
-			infix "<"
+			is_less
 		end
 
 	TIME_VALUE
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current time before `other'?
 		local
 			l_current, l_other: like compact_time

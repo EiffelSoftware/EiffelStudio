@@ -12,7 +12,7 @@ class DATE inherit
 		undefine
 			out
 		redefine
-			infix "<"
+			is_less
 		end
 
 	DATE_VALUE
@@ -223,7 +223,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current date before `other'?
 		local
 			l_current, l_other: INTEGER

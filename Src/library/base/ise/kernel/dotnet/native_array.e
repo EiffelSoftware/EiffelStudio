@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item, at alias "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval
 		do
 			-- Built-in

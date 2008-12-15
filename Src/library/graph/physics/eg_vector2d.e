@@ -8,14 +8,14 @@ indexing
 
 class
 	EG_VECTOR2D [G -> NUMERIC]
-	
+
 inherit
 	EG_VECTOR [G]
-	
+
 create
 	make,
 	default_create
-	
+
 feature -- Initialization
 
 	make, set (ax, ay: G) is
@@ -26,12 +26,12 @@ feature -- Initialization
 		ensure
 			set: x = ax and y = ay
 		end
-		
+
 feature -- Access
 
 	x: G
 			-- X position of `Current'.
-			
+
 	y: G
 			-- Y position of `Current'.
 
@@ -63,19 +63,19 @@ feature -- Status report
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum with `other' (commutative).
 		do
 			create Result.make (x + other.x, y + other.y)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			create Result.make (x - other.x, y - other.y)
 		end
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			check
@@ -83,24 +83,24 @@ feature -- Basic operations
 			end
 		end
 
-	infix "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current is
 			-- Division by `other'
 		do
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			create Result.make (x, y)
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			create Result.make (-x, -y)
 		end
-		
-	infix "|*" (other: G): like Current is
+
+	scalar_product alias "|*" (other: G): like Current is
 			-- Scalar product between `Current' and other.
 		do
 			create Result.make (x * other, y * other)

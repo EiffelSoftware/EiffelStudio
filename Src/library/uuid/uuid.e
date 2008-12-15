@@ -199,7 +199,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current integer less than `other'?
 		do
 			Result := data_1 < other.data_1

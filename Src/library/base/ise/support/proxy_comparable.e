@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Implementation
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := less_than_comparator.item ([item, other.item])

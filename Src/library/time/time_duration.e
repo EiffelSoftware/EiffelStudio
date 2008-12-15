@@ -131,7 +131,7 @@ feature -- Attributes
 
 feature -- Comparaison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current duration smaller than `other'?
 		do
 			Result := fine_seconds_count < other.fine_seconds_count

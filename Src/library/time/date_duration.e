@@ -84,7 +84,7 @@ feature -- Attribute
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current object smaller than `other'?
 			-- It is impossible to compare not definite duration.
 		do

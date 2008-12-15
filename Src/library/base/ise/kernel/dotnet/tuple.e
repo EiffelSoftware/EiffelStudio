@@ -40,7 +40,7 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", infix "@" (index: INTEGER): SYSTEM_OBJECT assign put is
+	item alias "[]", at alias "@" (index: INTEGER): SYSTEM_OBJECT assign put is
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)

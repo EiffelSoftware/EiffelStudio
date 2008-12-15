@@ -90,6 +90,7 @@ feature -- Status setting
 							(address.port, address.host)
 				end
 				main_socket.set_timeout (timeout)
+				main_socket.set_connect_timeout (connect_timeout)
 				main_socket.connect
 			end
 			if not is_open then
@@ -275,7 +276,7 @@ feature {NONE} -- Encoder Implementation
 			f: SPECIAL [BOOLEAN]
 			base64chars: STRING_8
 		do
-			base64chars := once "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+			base64chars := once "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 			from
 				n := s.count
 				i := (8 * n) \\ 6

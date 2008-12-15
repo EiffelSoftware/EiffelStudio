@@ -18,7 +18,7 @@ deferred class DATA_RESOURCE inherit
 		redefine
 			is_equal, is_hashable
 		end
-	
+
 feature {NONE} -- Initialization
 
 	make (addr: like address) is
@@ -31,20 +31,20 @@ feature {NONE} -- Initialization
 		ensure
 			address_set: address = addr
 		end
-		
+
 	initialize is
 			-- Initialize protocol.
 		deferred
 		end
-		
+
 feature -- Access
-	
+
 	last_packet: STRING
 			-- Last packet read
 
 	address: URL
 			-- Associated address
-			
+
 	service: STRING is
 			-- Name of service
 		do
@@ -104,17 +104,17 @@ feature -- Measurement
 			-- Size of data resource
 		deferred
 		end
-		 
+
 	last_packet_size: INTEGER is
 			-- Size of last packet
 		deferred
 		end
-	 
+
 	 read_buffer_size: INTEGER is
 	 		-- Size of read buffer
 	 	deferred
 	 	end
-	 
+
 	 bytes_transferred: INTEGER is
 	 		-- Number of transferred bytes
 		deferred
@@ -127,64 +127,64 @@ feature -- Comparison
 		do
 			Result := equal (address, other.address) and mode = other.mode
 		end
-	 
+
 feature -- Status report
 
 	is_open: BOOLEAN is
 			-- Is resource open?
 		deferred
 		end
-	 
+
 	is_readable: BOOLEAN is
 			-- Is it possible to open in read mode currently?
 		deferred
 		ensure
 			mode_unchanged: mode = old mode
 		end
-	
+
 	is_writable: BOOLEAN is
 			-- Is it possible to open in write mode currently?
 		deferred
 		ensure
 			mode_unchanged: mode = old mode
 		end
-	
+
 	address_exists: BOOLEAN is
 			-- Does address exists?
 		deferred
 		end
-	 
+
 	valid_mode (n: INTEGER): BOOLEAN is
 			-- Is mode `n' valid?
 		deferred
 		end
-	 
+
 	is_packet_pending: BOOLEAN is
 			-- Can another packet currently be read out?
 		deferred
 		end
-	
+
 	has_packet: BOOLEAN is
 			-- Is there a packet available in `last_packet'?
 		do
 			Result := last_packet /= Void
 		end
-	
+
 	transfer_initiated: BOOLEAN
 			-- Has transfer being initiated.
-			
+
 	is_mode_set: BOOLEAN is
 			-- Has resource mode been set?
 		do
 			Result := mode /= 0 and then valid_mode (mode)
 		end
-	
+
 	is_proxy_supported: BOOLEAN is
 			-- Is proxy supported by resource?
 		do
 			Result := address.is_proxy_supported
 		end
-		
+
 	is_proxy_used: BOOLEAN is
 			-- Does resource use a proxy?
 		deferred
@@ -194,7 +194,7 @@ feature -- Status report
 			-- Is value in `count' valid?
 		deferred
 		end
-	 
+
 	is_hashable: BOOLEAN is
 			-- Are objects of current type hashable?
 		do
@@ -209,25 +209,28 @@ feature -- Status report
 
 	error_code: INTEGER
 			-- Code of error
-	
+
 	supports_multiple_transactions: BOOLEAN is
 			-- Does resource support multiple tranactions per connection?
 		deferred
 		end
-	 
+
 	read_mode: BOOLEAN is
 	 		-- Is read mode set?
 		deferred
 		end
-	
+
 	write_mode: BOOLEAN is
 			-- Is write mode set?
 		deferred
 		end
-	 
-	 timeout: INTEGER
-	 		-- Connection timeout
-			
+
+	timeout: INTEGER
+			-- Duration of timeout in seconds
+
+	connect_timeout: INTEGER
+			-- The connect timeout in milliseconds
+
 feature -- Status setting
 
 	open is
@@ -252,7 +255,7 @@ feature -- Status setting
 			mode_unchanged: mode = old mode
 			no_packet_available: not (has_packet and is_packet_pending)
 		end
-	
+
 	initiate_transfer is
 			-- Initiate transfer.
 		require
@@ -264,7 +267,7 @@ feature -- Status setting
 		ensure
 			failure_means_error: not transfer_initiated implies error
 		end
-	
+
 	set_read_buffer_size (n: INTEGER) is
 			-- Set size of read buffer.
 		require
@@ -273,21 +276,21 @@ feature -- Status setting
 		ensure
 			buffer_size_set: read_buffer_size = n
 		end
-		
+
 	set_read_mode is
 			-- Set read mode.
 		deferred
 		ensure
 			read_mode_set: read_mode
 		end
-	 
+
 	set_write_mode is
 	 		-- Set write mode.
 		deferred
 		ensure
 			write_mode_set: write_mode
 		end
-	
+
 	set_port (port_no: INTEGER) is
 			-- Set port number to `port_no'.
 		require
@@ -340,9 +343,8 @@ feature -- Status setting
 		do
 			address.set_password (pw)
 		end
-		
-		
-	set_timeout (n: INTEGER) is
+
+	set_timeout (n: like timeout) is
 			-- Set connection timeout to `n'.
 		require
 			non_negative: n >= 0
@@ -352,6 +354,16 @@ feature -- Status setting
 			timeout_set: timeout = n
 		end
 
+	set_connect_timeout (n: like connect_timeout) is
+			-- Set connection timeout to `n'.
+		require
+			non_negative: n >= 0
+		do
+			connect_timeout := n
+		ensure
+			connect_timeout_set: connect_timeout = n
+		end
+
 	reset_proxy is
 			-- Reset proxy information.
 		do
@@ -359,7 +371,7 @@ feature -- Status setting
 		ensure
 			proxy_reset: not address.is_proxy_used
 		end
-		
+
 	reset_error is
 			-- Reset error.
 		do
@@ -378,7 +390,7 @@ feature -- Status setting
 			other_opened: other.is_open
 		deferred
 		end
-	 
+
 feature -- Removal
 
 	dispose is
@@ -386,7 +398,7 @@ feature -- Removal
 		do
 			if is_open then close end
 		end
-		
+
 feature -- Output
 
 	put (other: DATA_RESOURCE) is
@@ -410,7 +422,7 @@ feature -- Input
 			open: is_open
 			transfer_initated: transfer_initiated
 			readable: is_readable
-			positive_read_buffer_size: read_buffer_size > 0	
+			positive_read_buffer_size: read_buffer_size > 0
 			packet_pending: is_packet_pending
 		deferred
 		ensure
@@ -429,12 +441,12 @@ invariant
 	address_assigned: address /= Void
 	timeout_non_negative: timeout >= 0
 	packet_constraint: not (has_packet xor last_packet /= Void)
-	pending_constraint: is_packet_pending implies 
+	pending_constraint: is_packet_pending implies
 						(is_open and is_readable and transfer_initiated)
 	error_definition: error = (error_code /= 0)
 	valid_count_constraint: count > 0 implies is_count_valid
 	mode_constraint: is_mode_set = read_mode xor write_mode
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	MULTI [G -> {ARRAY [H] rename infix "@" as infix "|*|" end, LIST [H] rename item as item_of_list  end}, H -> NUMERIC]
+	MULTI [G -> {ARRAY [H] rename at as at alias "|*|" end, LIST [H] rename item as item_of_list  end}, H -> NUMERIC]
 
 create
 	make
@@ -44,7 +44,7 @@ feature
 			l_h := g.item (1)
 			print (l_h.out + "%N")		-- prints 43
 
-			l_h := l_h.infix "+" (l_h)
+			l_h := l_h.plus (l_h)
 			l_h := l_h + l_h
 			print ("-%N")
 			print (l_h.out + "%N")		-- prints 172

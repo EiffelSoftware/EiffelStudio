@@ -328,7 +328,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	implicated alias "implies" (other: BIT_REF): BIT_REF is
+	implication alias "implies" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit boolean implication of `other'
 		require
 			other_exists: other /= Void
@@ -400,7 +400,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	exclusive_disjuncted alias "xor" (other: BIT_REF): BIT_REF is
+	disjuncted_exclusive alias "xor" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit exclusive or with `other'
 		require
 			other_exists: other /= Void

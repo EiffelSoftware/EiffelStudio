@@ -173,7 +173,7 @@ feature -- Element Settings
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			if arguments.count = other.arguments.count then

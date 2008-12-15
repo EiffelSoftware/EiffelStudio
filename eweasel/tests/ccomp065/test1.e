@@ -1,5 +1,5 @@
 
-class TEST1 [G -> {NUMERIC rename prefix "+" as weasel end, ANY rename out as prefix"+" end }]
+class TEST1 [G -> {NUMERIC rename identity as weasel end, ANY rename out as out alias "+" end }]
 create
 	make
 

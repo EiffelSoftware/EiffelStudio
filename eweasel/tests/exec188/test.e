@@ -74,7 +74,7 @@ feature {NONE} -- Tests
 			i := -i_min
 			i := i |>> 4
 			test (negation, i = (-i_min) |>> 4)
-			test (negation, i = i_min.prefix "-" |>> 4)
+			test (negation, i = i_min.opposite |>> 4)
 				-- Absolute value
 			i := i_min.abs
 			i := i |>> 4
@@ -83,27 +83,26 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Division
 			i := i_min // i_m1
 			i := i |>> 4
 			test (division, i = (i_min // i_m1) |>> 4)
-			test (division, i = i_min.infix "//" (i_m1) |>> 4)
+			test (division, i = i_min.integer_quotient (i_m1) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -112,9 +111,9 @@ feature {NONE} -- Tests
 				-- Logical right shift (N/A)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_integer_16 is
@@ -137,7 +136,7 @@ feature {NONE} -- Tests
 			i := -i_min
 			i := i |>> 4
 			test (negation, i = (-i_min) |>> 4)
-			test (negation, i = i_min.prefix "-" |>> 4)
+			test (negation, i = i_min.opposite |>> 4)
 				-- Absolute value
 			i := i_min.abs
 			i := i |>> 4
@@ -146,27 +145,26 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Division
 			i := i_min // i_m1
 			i := i |>> 4
 			test (division, i = (i_min // i_m1) |>> 4)
-			test (division, i = i_min.infix "//" (i_m1) |>> 4)
+			test (division, i = i_min.integer_quotient (i_m1) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -175,9 +173,9 @@ feature {NONE} -- Tests
 				-- Logical right shift (N/A)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_integer_32 is
@@ -200,7 +198,7 @@ feature {NONE} -- Tests
 			i := -i_min
 			i := i |>> 4
 			test (negation, i = (-i_min) |>> 4)
-			test (negation, i = i_min.prefix "-" |>> 4)
+			test (negation, i = i_min.opposite |>> 4)
 				-- Absolute value
 			i := i_min.abs
 			i := i |>> 4
@@ -209,24 +207,23 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Division
 			test_integer_32_division
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -235,9 +232,9 @@ feature {NONE} -- Tests
 				-- Logical right shift (N/A)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_integer_64 is
@@ -260,7 +257,7 @@ feature {NONE} -- Tests
 			i := -i_min
 			i := i |>> 4
 			test (negation, i = (-i_min) |>> 4)
-			test (negation, i = i_min.prefix "-" |>> 4)
+			test (negation, i = i_min.opposite |>> 4)
 				-- Absolute value
 			i := i_min.abs
 			i := i |>> 4
@@ -269,24 +266,23 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Division
 			test_integer_64_division
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -295,9 +291,9 @@ feature {NONE} -- Tests
 				-- Logical right shift (N/A)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_natural_8 is
@@ -320,22 +316,21 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -348,9 +343,9 @@ feature {NONE} -- Tests
 			test (bit_shift_right, i = i_m1.bit_shift_right (1) |>> 4)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_natural_16 is
@@ -373,22 +368,21 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -401,9 +395,9 @@ feature {NONE} -- Tests
 			test (bit_shift_right, i = i_m1.bit_shift_right (1) |>> 4)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_natural_32 is
@@ -426,22 +420,21 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -454,9 +447,9 @@ feature {NONE} -- Tests
 			test (bit_shift_right, i = i_m1.bit_shift_right (1) |>> 4)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test_natural_64 is
@@ -479,22 +472,21 @@ feature {NONE} -- Tests
 			i := i_min + i_min
 			i := i |>> 4
 			test (addition, i = (i_min + i_min) |>> 4)
-			test (addition, i = i_min.infix "+" (i_min) |>> 4)
+			test (addition, i = i_min.plus (i_min) |>> 4)
 				-- Subtraction
 			i := i_0 - i_min
 			i := i |>> 4
 			test (subtraction, i = (i_0 - i_min) |>> 4)
-			test (subtraction, i = i_0.infix "-" (i_min) |>> 4)
+			test (subtraction, i = i_0.minus (i_min) |>> 4)
 				-- Multiplication
 			i := i_min * i_4
 			i := i |>> 4
 			test (multiplication, i = (i_min * i_4) |>> 4)
-			test (multiplication, i = i_min.infix "*" (i_4) |>> 4)
+			test (multiplication, i = i_min.product (i_4) |>> 4)
 				-- Left shift
 			i := i_min |<< 4
 			i := i |>> 4
 			test (bit_shift_left, i = (i_min |<< 4) |>> 4)
-			test (bit_shift_left, i = i_min.infix "|<<" (4) |>> 4)
 			test (bit_shift_left, i = i_min.bit_shift_left (4) |>> 4)
 				-- Shift
 			i := i_min.bit_shift (-4)
@@ -507,9 +499,9 @@ feature {NONE} -- Tests
 			test (bit_shift_right, i = i_m1.bit_shift_right (1) |>> 4)
 				-- Rotate (N/A)
 				-- Set bit
-			i := i_m1.set_bit (false, integer_size - 1)
+			i := i_m1.set_bit (False, integer_size - 1)
 			i := i |>> 4
-			test (bit_set, i = (i_m1.set_bit (false, integer_size - 1)) |>> 4)
+			test (bit_set, i = (i_m1.set_bit (False, integer_size - 1)) |>> 4)
 		end
 
 	test (operation: STRING; succeeded: BOOLEAN) is
@@ -572,16 +564,16 @@ feature {NONE} -- Tests
 			if step = 6 then
 					-- No exception
 				step := 7
-				i := i_min.infix "//" (i_m1)
+				i := i_min.integer_quotient (i_m1)
 				step := 8
 				i := i |>> 4
 				step := 9
-				b := i = i_min.infix "//" (i_m1) |>> 4
+				b := i = i_min.integer_quotient (i_m1) |>> 4
 				step := 10
 			elseif step = 7 then
 					-- Exception should be raised in complex expression as well
 				step := 10
-				b := i = i_min.infix "//" (i_m1) |>> 4
+				b := i = i_min.integer_quotient (i_m1) |>> 4
 				step := 11
 			end
 			test (division, step = 10)
@@ -624,16 +616,16 @@ feature {NONE} -- Tests
 			if step = 6 then
 					-- No exception
 				step := 7
-				i := i_min.infix "//" (i_m1)
+				i := i_min.integer_quotient (i_m1)
 				step := 8
 				i := i |>> 4
 				step := 9
-				b := i = i_min.infix "//" (i_m1) |>> 4
+				b := i = i_min.integer_quotient (i_m1) |>> 4
 				step := 10
 			elseif step = 7 then
 					-- Exception should be raised in complex expression as well
 				step := 10
-				b := i = i_min.infix "//" (i_m1) |>> 4
+				b := i = i_min.integer_quotient (i_m1) |>> 4
 				step := 11
 			end
 			test (division, step = 10)
@@ -643,15 +635,15 @@ feature {NONE} -- Tests
 
 feature {NONE} -- Output
 
-	negation: STRING is "prefix %"-%""
+	negation: STRING is "alias %"-%""
 	abs: STRING is "abs"
-	addition: STRING is "infix %"+%""
-	subtraction: STRING is "infix %"-%""
-	multiplication: STRING is "infix %"*%""
-	division: STRING is "infix %"//%""
+	addition: STRING is "alias %"+%""
+	subtraction: STRING is "alias %"-%""
+	multiplication: STRING is "alias %"*%""
+	division: STRING is "alias %"//%""
 
-	bit_shift_left: STRING is "infix %"|<<%""
-	bit_shift_right: STRING is "infix %"|>>%""
+	bit_shift_left: STRING is "alias %"|<<%""
+	bit_shift_right: STRING is "alias %"|>>%""
 	bit_shift: STRING is "bit_shift"
 	bit_set: STRING is "set_bit"
 

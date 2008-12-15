@@ -107,7 +107,7 @@ feature -- Access
 			go_to (pos)
 		end;
 
-	i_th, infix "@" (i: INTEGER): like item is
+	i_th, at alias "@" (i: INTEGER): like item is
 			-- Item at `i'-th position
 		local
 			pos: CURSOR

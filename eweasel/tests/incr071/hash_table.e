@@ -188,7 +188,7 @@ feature -- Access
 	found_item: G
 			-- Item, if any, yielded by last search operation
 
-	item alias "[]", infix "@" (key: H): G assign put is
+	item alias "[]", at alias "@" (key: H): G assign put is
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local

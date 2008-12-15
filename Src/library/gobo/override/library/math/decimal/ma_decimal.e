@@ -15,6 +15,9 @@ class MA_DECIMAL
 inherit
 
 	KL_NUMERIC
+		rename
+			plus as binary_plus alias "+",
+			minus as binary_minus alias "-"
 		redefine
 			out,
 			is_equal,
@@ -621,12 +624,12 @@ feature -- Basic operations
 	identity alias "+": like Current is
 			-- Unary plus
 		do
-			Result := prefix_plus (shared_decimal_context)
+			Result := plus (shared_decimal_context)
 		ensure then
 			unary_plus_not_void: Result /= Void
 		end
 
-	plus alias "+" (other: like Current): like Current is
+	binary_plus alias "+" (other: like Current): like Current is
 			-- Sum with `other' (commutative)
 		do
 			Result := add (other, shared_decimal_context)
@@ -637,12 +640,12 @@ feature -- Basic operations
 	opposite alias "-": like Current is
 			-- Unary minus
 		do
-			Result := prefix_minus (shared_decimal_context)
+			Result := minus (shared_decimal_context)
 		ensure then
 			unary_minus_not_void: Result /= Void
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	binary_minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			Result := subtract (other, shared_decimal_context)
@@ -1223,7 +1226,7 @@ feature -- Basic operations
 			definition: not Result.is_special implies Result.exponent = 0
 		end
 
-	prefix_plus (ctx: MA_DECIMAL_CONTEXT): like Current is
+	plus (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Prefix "+" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
@@ -1234,7 +1237,7 @@ feature -- Basic operations
 			l_zero.set_exponent (exponent)
 			Result := l_zero.add (Current, ctx)
 		ensure
-			prefix_plus_not_void: Result /= Void
+			plus_not_void: Result /= Void
 		end
 
 	normalize: like Current is
@@ -1242,7 +1245,7 @@ feature -- Basic operations
 		local
 			l_count, trailing_zeroes: INTEGER
 		do
-			Result := prefix_plus (shared_decimal_context)
+			Result := plus (shared_decimal_context)
 			if Result.is_zero then
 				Result.coefficient.keep_head (1)
 				Result.set_exponent (0)
@@ -1269,7 +1272,7 @@ feature -- Basic operations
 			normalize_not_void: Result /= Void
 		end
 
-	prefix_minus (ctx: MA_DECIMAL_CONTEXT): like Current is
+	minus (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Prefix "-" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
@@ -1280,7 +1283,7 @@ feature -- Basic operations
 			l_zero.set_exponent (exponent)
 			Result := l_zero.subtract (Current, ctx)
 		ensure
-			prefix_minus_not_void: Result /= Void
+			minus_not_void: Result /= Void
 		end
 
 	abs: like Current is
@@ -1297,9 +1300,9 @@ feature -- Basic operations
 			ctx_not_void: ctx /= Void
 		do
 			if is_negative then
-				Result := prefix_minus (ctx)
+				Result := minus (ctx)
 			else
-				Result := prefix_plus (ctx)
+				Result := plus (ctx)
 			end
 		ensure
 			abs_ctx_not_void: Result /= Void

@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Compare argument count.
 		do
 			Result := arguments.count < other.arguments.count

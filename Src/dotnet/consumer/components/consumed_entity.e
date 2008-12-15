@@ -36,7 +36,7 @@ feature -- Access
 		do
 			Result := e
 		end
-		
+
 	dotnet_eiffel_name: STRING is
 			-- Eiffel entity name without overloading resolved.
 		do
@@ -44,7 +44,7 @@ feature -- Access
 		ensure
 			dotnet_eiffel_name_not_void: Result /= Void
 		end
-		
+
 	dotnet_name: STRING is
 			-- Dotnet name of entity
 		do
@@ -58,14 +58,14 @@ feature -- Access
 		do
 			Result := d
 		end
-		
+
 	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Arguments if any.
 		do
 		ensure
 			arguments_not_void: has_arguments implies Result /= Void
 		end
-		
+
 	return_type: CONSUMED_REFERENCED_TYPE is
 			-- Return type if any.
 		do
@@ -80,17 +80,17 @@ feature -- Access
 			-- Is .NET entity public?
 		do
 		end
-		
+
 	is_literal: BOOLEAN is
 			-- Is .NET entity a static literal?
 		do
 		end
-	
+
 	is_init_only: BOOLEAN is
 			-- Is .NET field a constant?
 		do
 		end
-		
+
 	is_artificially_added: BOOLEAN is
 			-- Is Current artificially added?
 		do
@@ -100,12 +100,12 @@ feature -- Access
 			-- Is entity an event or property related feature?
 		do
 		end
-		
+
 	is_new_slot: BOOLEAN is
 			-- Is entity marked with `newslot' flag in metadata?
 		do
 		end
-		
+
 	is_virtual: BOOLEAN is
 			-- Is entity marked with `virtual' flag in metadata?
 		do
@@ -115,12 +115,12 @@ feature -- Access
 			-- Is function an infix feature?
 		do
 		end
-			
+
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do
 		end
-		
+
 	is_constructor: BOOLEAN is
 			-- Is constructor feature?
 		do
@@ -128,12 +128,12 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			Result := eiffel_name < other.eiffel_name
 		end
-		
+
 feature -- ConsumerWrapper functions
 
 	is_method: BOOLEAN is
@@ -141,7 +141,7 @@ feature -- ConsumerWrapper functions
 		do
 			Result := not is_property and then not is_field and then not is_event and then not is_constant
 		end
-		
+
 	is_field: BOOLEAN is
 			-- Is entity a .Net field?
 		do
@@ -151,18 +151,18 @@ feature -- ConsumerWrapper functions
 			-- Is entity a .Net property?
 		do
 		end
-		
+
 	is_event: BOOLEAN is
 			-- Is entity a .Net event?
 		do
 		end
-		
+
 	is_constant: BOOLEAN is
 			-- Is entity a .Net method?
 		do
 			Result := is_literal or is_init_only
 		end
-	
+
 	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- List of Eiffel mapped Consumed Entities relative to `Current'.
 			-- For CONSUMED_PROPERTY this would be `setter' and `getter'
@@ -171,7 +171,7 @@ feature -- ConsumerWrapper functions
 			create Result.make (0)
 			Result.extend (Current)
 		end
-		
+
 feature -- Status report
 
 	has_arguments: BOOLEAN is
@@ -183,12 +183,12 @@ feature -- Status report
 			-- Does current entity returns a value?
 		do
 		end
-		
+
 	is_static: BOOLEAN is
 			-- Is current entity static?
 		do
 		end
-	
+
 	is_attribute: BOOLEAN is
 			-- Is current entity an attribute?
 		do
@@ -202,25 +202,25 @@ feature -- Status report
 	is_access_type: BOOLEAN is
 			-- Is current entity an 'Access' type?
 		do
-			if 
-				is_field or 
+			if
+				is_field or
 				(eiffel_name.substring (1, 4).is_equal ("get_") and not has_arguments)
 			then
 				Result := True
 			end
-		end	
-		
+		end
+
 	is_status_setting_type: BOOLEAN is
 			-- Is current entity a 'Status Setting' type?
 		do
 			if
-				eiffel_name.substring (1, 4).is_equal ("set_") and 
+				eiffel_name.substring (1, 4).is_equal ("set_") and
 					(has_arguments and then arguments.count = 1)
 			then
 				Result := True
 			end
 		end
-		
+
 	is_query_type: BOOLEAN is
 			-- Is current entity a 'Status Setting' type?
 		do
@@ -228,19 +228,19 @@ feature -- Status report
 				Result := True
 			end
 		end
-		
+
 	is_command_type: BOOLEAN is
 			-- Is current entity a 'Status Setting' type?
 		do
 			Result := not has_return_value and then not is_status_setting_type
 		end
-		
+
 	is_event_type: BOOLEAN is
 			-- Is current entity a 'Status Setting' type?
 		do
 			Result := is_event
 		end
-		
+
 	is_hidden_type: BOOLEAN is
 			-- Is current entity a 'Status Setting' type?
 		do
@@ -255,21 +255,21 @@ feature -- Settings
 		ensure
 			is_public_set: is_public = pub
 		end
-		
+
 feature {NONE} -- Access
 
 	n: like dotnet_name
 			-- Internal data for `dotnet_name'.
-			
+
 	q: like dotnet_eiffel_name is
 			-- Internal data for `dotnet_eiffel_name'.
 		do
 			Result := e
 		end
-	
+
 	e: like eiffel_name
 			-- Internal data for `eiffel_name'.
-			
+
 	d: like declared_type
 			-- Internal data for `declared_type'.
 

@@ -6,6 +6,6 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
 
 compile_melted
-compile_result 	validity_error MULTI VTMC(1)
+compile_result 	validity_error MULTI VWOE
 
 test_end

@@ -69,7 +69,7 @@ feature -- Comparison
 			Result := class_name.is_equal (other.class_name) and validity_code.is_equal (other.validity_code)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 		do
 			Result := class_name < other.class_name or else
 				(equal (class_name, other.class_name) and validity_code < other.validity_code)

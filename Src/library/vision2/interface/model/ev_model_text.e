@@ -155,7 +155,7 @@ feature -- Status report
 	is_default_font_used: BOOLEAN
 			-- Is `Current' using a default font?
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			Result := text < other.text

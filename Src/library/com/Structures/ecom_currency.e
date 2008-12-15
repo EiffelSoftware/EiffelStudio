@@ -178,28 +178,28 @@ feature -- Element Change
 
 feature -- Basic operations
 	
-	prefix "-": ECOM_CURRENCY is
+	opposite alias "-": ECOM_CURRENCY is
 			-- Negative value of currency
 		do
 			create Result.make
 			ccom_currency_negative (item, Result.item)
 		end 
 	
-	infix "-" (other: ECOM_CURRENCY): ECOM_CURRENCY is
+	minus alias "-" (other: ECOM_CURRENCY): ECOM_CURRENCY is
 			-- Subtract with `other'
 		do
 			create Result.make
 			ccom_currency_subtract (item, other.item, Result.item)
 		end
 
-	infix "+" (other: ECOM_CURRENCY): ECOM_CURRENCY is
+	plus alias "+" (other: ECOM_CURRENCY): ECOM_CURRENCY is
 			-- Add with `other'
 		do
 			create Result.make
 			ccom_currency_add (item, other.item, Result.item)
 		end 
 
-	infix "*" (other: ECOM_CURRENCY): ECOM_CURRENCY is
+	product alias "*" (other: ECOM_CURRENCY): ECOM_CURRENCY is
 			-- Multiply by `other'
 		do
 			create Result.make
@@ -215,17 +215,17 @@ feature -- Basic operations
 			valid_result: Result /= Void
 		end
 	
-	infix "/" (other: ECOM_CURRENCY): ECOM_CURRENCY is
+	quotient alias "/" (other: ECOM_CURRENCY): ECOM_CURRENCY is
 		-- Division by 'other'
 		do
 		end
 
-	prefix "+": ECOM_CURRENCY is
+	identity alias "+": ECOM_CURRENCY is
 		-- Unary plus
 		do
 		end
 
-	infix "^" (other: NUMERIC):NUMERIC is
+	power alias "^" (other: NUMERIC):NUMERIC is
 		-- Current objects to the power 'other'
 		do
 		end

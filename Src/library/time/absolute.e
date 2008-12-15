@@ -12,7 +12,7 @@ deferred class
 inherit
 	COMPARABLE
 		redefine
-			infix "<"
+			is_less
 		end
 
 feature -- Access
@@ -23,26 +23,26 @@ feature -- Access
 		ensure
 			result_exists: Result /= Void
 		end
-	
+
 feature -- Measurement
 
 	duration: DURATION is
 			-- Length of the interval of time since `origin'
 		deferred
 		end
-	
+
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current object before `other'?
 		do
 			Result := duration < other.duration
 		end
-	
+
 feature -- Basic operations
-	
+
 	infix "-" (other: like Current): INTERVAL [like Current] is
-			-- Interval between current object and `other' 
+			-- Interval between current object and `other'
 		require
 			other_exists: other /= Void
 			other_smaller_than_current: other <= Current
@@ -50,7 +50,7 @@ feature -- Basic operations
 			create Result.make (other, Current)
 		ensure
 			result_exists: Result /= Void
-			result_set: Result.start_bound.is_equal (other) and then 
+			result_set: Result.start_bound.is_equal (other) and then
 					Result.end_bound.is_equal (Current)
 		end
 

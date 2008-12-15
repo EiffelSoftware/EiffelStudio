@@ -12,7 +12,7 @@ class DATE_TIME inherit
 		undefine
 			out
 		redefine
-			infix "<", copy, is_equal
+			is_less, copy, is_equal
 		end
 
 	DATE_TIME_VALUE
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is the current object before `other'?
 		do
 			Result := date < other.date or else

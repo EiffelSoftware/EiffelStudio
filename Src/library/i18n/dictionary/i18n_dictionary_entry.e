@@ -59,7 +59,7 @@ feature	-- Contents
 
 feature -- Order definition
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
 			Result := original_singular < other.original_singular

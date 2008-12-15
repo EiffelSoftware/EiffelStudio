@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is
+	item alias "[]", at alias "@" (i: INTEGER): BOOLEAN assign put is
 			-- `i'-th bit
 		require
 			index_large_enough: i >= 1
@@ -119,7 +119,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "^" (s: INTEGER): like Current is
+	shift alias "^" (s: INTEGER): like Current is
 			-- Result of shifting bit sequence by `s' positions
 			-- (Positive `s' shifts right, negative `s' shifts left;
 			-- bits falling off the sequence's bounds are lost.)
@@ -231,7 +231,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, count)
 		end
 
-	infix "#" (s: INTEGER): like Current is
+	rotate alias "#" (s: INTEGER): like Current is
 			-- Result of rotating bit sequence by `s' positions
 			-- (Positive `s' rotates right, negative `s' rotates left.)
 		local
@@ -297,7 +297,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "and" (other: BIT_REF): BIT_REF is
+	conjuncted alias "and" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -328,7 +328,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	infix "implies" (other: BIT_REF): BIT_REF is
+	implicated alias "implies" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit boolean implication of `other'
 		require
 			other_exists: other /= Void
@@ -368,7 +368,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	infix "or", infix "|" (other: BIT_REF): BIT_REF is
+	disjuncted alias "or", bit_or alias "|" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -400,7 +400,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	infix "xor" (other: BIT_REF): BIT_REF is
+	exclusive_disjuncted alias "xor" (other: BIT_REF): BIT_REF is
 			-- Bit-by-bit exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -432,7 +432,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	prefix "not": like Current is
+	negated alias "not": like Current is
 			-- Bit-by-bit negation
 		local
 			i, n: INTEGER

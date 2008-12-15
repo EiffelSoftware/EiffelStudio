@@ -17,7 +17,7 @@ inherit
 		export
 			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
 		redefine
-			item, infix "@", area
+			item, at, area
 		end
 
 	STRING_GENERAL
@@ -31,8 +31,6 @@ inherit
 		end
 
 	INDEXABLE [CHARACTER_8, INTEGER]
-		rename
-			item as item
 		undefine
 			copy, is_equal, out
 		redefine
@@ -48,10 +46,8 @@ inherit
 		end
 
 	TO_SPECIAL [CHARACTER_8]
-		rename
-			item as item
 		undefine
-			copy, is_equal, out, item, infix "@", put, valid_index
+			copy, is_equal, out, item, at, put, valid_index
 		redefine
 			area
 		end
@@ -165,7 +161,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER_8 assign put
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_8 assign put
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
@@ -667,7 +663,7 @@ feature -- Element change
 			appended: elks_checking implies is_equal (old twin + old s.twin)
 		end
 
-	infix "+" (s: READABLE_STRING_8): like Current
+	plus alias "+" (s: READABLE_STRING_8): like Current
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		do

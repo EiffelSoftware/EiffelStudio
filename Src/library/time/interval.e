@@ -9,34 +9,34 @@ class INTERVAL [G -> ABSOLUTE] inherit
 
 	PART_COMPARABLE
 		redefine
-			is_equal, 
-			infix "<=",
-			infix ">=",
-			infix "<",
-			infix ">",
+			is_equal,
+			is_less_equal,
+			is_greater_equal,
+			is_less,
+			is_greater,
 			out
 		select
-			infix ">", 
-			infix "<", 
-			infix ">=", 
-			infix "<="
+			is_less_equal,
+			is_greater_equal,
+			is_less,
+			is_greater
 		end
-		
+
 	PART_COMPARABLE
 		rename
-			infix "<" as is_strict_included_by,
-			infix ">" as strict_includes,
-			infix "<=" as is_included_by,
-			infix ">=" as includes
+			is_less as is_strict_included_by,
+			is_greater as strict_includes,
+			is_less_equal as is_included_by,
+			is_greater_equal as includes
 		redefine
-			strict_includes, 
-			is_included_by, 
-			includes, 
+			strict_includes,
+			is_included_by,
+			includes,
 			is_equal,
 			out
 		end
 
-create 
+create
 	make
 
 feature -- Initialization
@@ -51,9 +51,9 @@ feature -- Initialization
 			start_bound := s.deep_twin
 			end_bound := e.deep_twin
 		ensure
-			start_bound_set: start_bound /= Void and then 
+			start_bound_set: start_bound /= Void and then
 				deep_equal (start_bound, s)
-			end_bound_set: end_bound /= Void and then 
+			end_bound_set: end_bound /= Void and then
 				deep_equal (end_bound, e)
 		end
 
@@ -61,16 +61,16 @@ feature -- Access
 
 	start_bound: G
 			-- Start bound of the current interval
-			
+
 	end_bound: G
 			-- End bound of the current interval
-			
+
 feature -- Measurement
 
-	duration: DURATION is 
-		-- Length of the interval 
+	duration: DURATION is
+		-- Length of the interval
 	do
-		Result := end_bound.duration - start_bound.duration 
+		Result := end_bound.duration - start_bound.duration
 	end
 
 feature -- Comparison
@@ -78,85 +78,85 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current interval equal to `other'?
 		do
-			Result := start_bound.is_equal (other.start_bound) and then 
+			Result := start_bound.is_equal (other.start_bound) and then
 				end_bound.is_equal (other.end_bound)
 		end
-	
+
 	intersects (other: like Current): BOOLEAN is
 			-- Does current interval intersect `other'?
 		require
 			other_exists: other /= Void
 		do
-			Result := (start_bound.max (other.start_bound)) <= 
+			Result := (start_bound.max (other.start_bound)) <=
 				(end_bound.min (other.end_bound))
 		end
-	
-	infix "<" (other: like Current): BOOLEAN is
+
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current interval strictly before `other'?
 		do
-			Result := (start_bound < other.start_bound) and then 
+			Result := (start_bound < other.start_bound) and then
 				(end_bound < other.end_bound)
 		end
-	
-	infix "<=" (other: like Current): BOOLEAN is
+
+	is_less_equal alias "<=" (other: like Current): BOOLEAN is
 			-- Is current interval before `other'?
 		do
 			Result := (Current < other) or else (is_equal (other))
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is current interval after `other'?
 		do
 			Result := (other < Current)
 		end
-	
-	
-	infix ">=" (other: like Current): BOOLEAN is
+
+
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN is
 			-- Is current interval after `other'?
 		do
 			Result := (other <= Current)
 		end
-	
+
 	is_strict_included_by (other: like Current): BOOLEAN is
 			-- Is current interval strictly included by `other'?
 		do
-			Result := (start_bound > other.start_bound) and then 
+			Result := (start_bound > other.start_bound) and then
 				(end_bound < other.end_bound)
 		end
-	
+
 	strict_includes (other: like Current): BOOLEAN is
 			-- Does current interval strictly include `other'?
 		do
 			Result := other.is_strict_included_by (Current)
 		end
-	
+
 	is_included_by (other: like Current): BOOLEAN is
 			-- Is current interval included by `other'?
 		do
-			Result := (start_bound >= other.start_bound) and then 
+			Result := (start_bound >= other.start_bound) and then
 				(end_bound <= other.end_bound)
 		end
-	
+
 	includes (other: like Current): BOOLEAN is
 			-- Does current interval include `other'?
 		do
 			Result := other.is_included_by (Current)
 		end
-	
+
 	overlaps (other: like Current): BOOLEAN is
 			-- Does current interval overlap `other'?
 		require
 			other_exists: other /= Void
 		do
-			Result := (end_bound >= other.start_bound) 
+			Result := (end_bound >= other.start_bound)
 				and then (start_bound <= other.start_bound)
 				and then (end_bound < other.end_bound)
 		ensure
-			result_defition: Result = (strict_before (other.end_bound) and 
+			result_defition: Result = (strict_before (other.end_bound) and
 				has (other.start_bound))
 			symmetry: Result = other.is_overlapped_by (Current)
 		end
-	
+
 	is_overlapped_by (other: like Current): BOOLEAN is
 			-- Is current interval overlapped by `other'?
 		require
@@ -166,7 +166,7 @@ feature -- Comparison
 		ensure
 			symmetry: Result = other.overlaps (Current)
 		end
-	
+
 	meets (other: like Current): BOOLEAN is
 			-- Does current interval meet `other'?
 		require
@@ -175,10 +175,10 @@ feature -- Comparison
 			Result := end_bound.is_equal (other.start_bound)
 		ensure
 			symmetry: Result = other.is_met_by (Current)
-			result_definition: Result = (Current <= other and 
-					intersects (other)) 
+			result_definition: Result = (Current <= other and
+					intersects (other))
 		end
-	
+
 	is_met_by (other: like Current): BOOLEAN is
 			-- Is current interval met by `other'?
 		require
@@ -188,7 +188,7 @@ feature -- Comparison
 		ensure
 			symmetry: Result = other.meets (Current)
 		end
-	
+
 feature -- Status report
 
 	empty: BOOLEAN is
@@ -198,7 +198,7 @@ feature -- Status report
 		ensure
 			result_definition: Result = duration.is_equal (duration.zero)
 		end
-	
+
 	has (v: G): BOOLEAN is
 			-- Does current interval have `v' between its bounds?
 		require
@@ -206,10 +206,10 @@ feature -- Status report
 		do
 			Result := (start_bound <= v) and then (end_bound >= v)
 		ensure
-			result_definition: Result xor not ((start_bound <= v) and then 
+			result_definition: Result xor not ((start_bound <= v) and then
 				(end_bound >= v))
 		end
-	
+
 	strict_before (v: G): BOOLEAN is
 			-- Is the current interval strictly before `v'?
 		require
@@ -219,7 +219,7 @@ feature -- Status report
 		ensure
 			result_definition: Result xor (not (end_bound < v))
 		end
-	
+
 	strict_after (v: G): BOOLEAN is
 			-- Is the current interval strictly after `v'?
 		require
@@ -229,7 +229,7 @@ feature -- Status report
 		ensure
 			result_definition: Result = (start_bound > v)
 		end
-	
+
 	before (v: G): BOOLEAN is
 			-- Is the current interval before `v'?
 		require
@@ -239,7 +239,7 @@ feature -- Status report
 		ensure
 			result_definition: Result = (end_bound <= v)
 		end
-	
+
 	after (v: G): BOOLEAN is
 			-- Is the current interval after `v'?
 		require
@@ -249,7 +249,7 @@ feature -- Status report
 		ensure
 			result_definition: Result = (start_bound >= v)
 		end
-	
+
 feature -- Element change
 
 	set_start_bound (s: G) is
@@ -261,7 +261,7 @@ feature -- Element change
 			start_bound := s.deep_twin
 		ensure
 			start_bound_set: equal (start_bound, s)
-		end	
+		end
 
 	set_end_bound (e: G) is
 				-- Set `end_bound' to `e'.
@@ -272,7 +272,7 @@ feature -- Element change
 			end_bound := e.deep_twin
 		ensure
 			end_bound_set: equal (end_bound, e)
-		end	
+		end
 
 feature -- Basic operations
 
@@ -282,14 +282,14 @@ feature -- Basic operations
 			other_exists: other /= Void
 			intersects: intersects (other)
 		do
-			create Result.make (start_bound.min (other.start_bound), 
+			create Result.make (start_bound.min (other.start_bound),
 				end_bound.max (other.end_bound))
 		ensure
 			result_exists: Result /= Void
 			result_includes_current: Result.includes (Current)
 			result_includes_other: Result.includes (other)
 		end
-	
+
 	intersection (other: like Current): like Current is
 			-- Intersection with `other'
 		require
@@ -305,14 +305,14 @@ feature -- Basic operations
 			end
 		ensure
 			intersects_validity: intersects (other) implies Result /= Void
-			result_is_included_by_current: intersects (other) implies 
+			result_is_included_by_current: intersects (other) implies
 				includes (Result)
-			result_is_included_by_other: intersects (other) implies 
+			result_is_included_by_other: intersects (other) implies
 				other.includes (Result)
 		end
 
 	gather (other: like Current): like Current is
-			-- Union of `other' and current interval if `other' meets 
+			-- Union of `other' and current interval if `other' meets
 			-- current interval
 		require
 			other_exist: other /= Void
@@ -323,19 +323,19 @@ feature -- Basic operations
 			result_exist: Result /= Void
 			result_same_as_union: Result.is_equal (union (other))
 		end
-	
+
 feature -- Output
- 
-	out: STRING is 
-			-- Printable representation of the current interval 
-		do 
-			Result := ("[");	
-			Result.append (start_bound.out); 
-			Result.append (" - "); 
-			Result.append (end_bound.out); 
-			Result.extend (']'); 
-		end 
-			
+
+	out: STRING is
+			-- Printable representation of the current interval
+		do
+			Result := ("[");
+			Result.append (start_bound.out);
+			Result.append (" - ");
+			Result.append (end_bound.out);
+			Result.extend (']');
+		end
+
 invariant
 
 	start_bound_exists: start_bound /= Void
@@ -345,7 +345,7 @@ invariant
 	current_union: union (Current).is_equal (Current)
 	has_bounds: has (start_bound) and has (end_bound)
 	between_bound: after (start_bound) and before (end_bound)
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

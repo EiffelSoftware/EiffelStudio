@@ -160,7 +160,7 @@ feature -- Conversion
 
 feature -- Basic operations
 	
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Negative value of decimal
 		require else
 			valid_item: item /= default_pointer
@@ -169,7 +169,7 @@ feature -- Basic operations
 			ccom_decimal_negative (item, Result.item)
 		end 
 	
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Subtract with `other'
 		require else
 			valid_item: item /= default_pointer
@@ -178,7 +178,7 @@ feature -- Basic operations
 			ccom_decimal_subtract (item, other.item, Result.item)
 		end
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Add with `other'
 		require else
 			valid_item: item /= default_pointer
@@ -187,7 +187,7 @@ feature -- Basic operations
 			ccom_decimal_add (item, other.item, Result.item)
 		end 
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -196,7 +196,7 @@ feature -- Basic operations
 			ccom_decimal_multiply (item, other.item, Result.item)
 		end
 
-	infix "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current is
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -205,14 +205,14 @@ feature -- Basic operations
 			ccom_decimal_divide (item, other.item, Result.item)
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		require else
 			valid_item: item /= default_pointer
 		do
 		end
 
-	infix "^" (other: like Current): like Current is
+	power alias "^" (other: like Current): like Current is
 			-- Current objects to the power 'other'
 		require else
 			valid_item: item /= default_pointer

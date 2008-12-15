@@ -216,8 +216,9 @@ feature -- Query
 			l_parent, l_last_parent: EV_CONTAINER
 			l_list, l_all_editors: ARRAYED_LIST [SD_ZONE]
 		do
-			Result := editor_place_holder_parent
-			if Result = Void then
+			if has_place_holder_zone then
+				Result := editor_place_holder
+			else
 				l_all_editors := all_editors
 				if l_all_editors.count > 0 then
 					from
@@ -330,26 +331,35 @@ feature {NONE} -- Implementation
 	 	end
 
 	editor_place_holder_parent: EV_CONTAINER is
-			-- Editor place holder parent, if exits.
+			-- Editor place holder parent, if exists.
+		local
+			l_place_holder: SD_PLACE_HOLDER_ZONE
+		do
+			l_place_holder := editor_place_holder
+			if l_place_holder /= Void then
+				Result := l_place_holder.parent
+			end
+		end
+
+	editor_place_holder: SD_PLACE_HOLDER_ZONE is
+			-- Find editor place holder zone in `zones'
 		local
 			l_zones: like zones
-			l_place_holder: SD_PLACE_HOLDER_ZONE
 		do
 			from
 				l_zones := zones
 				l_zones.start
 			until
-				l_zones.after or l_place_holder /= Void
+				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.content.type = {SD_ENUMERATION}.place_holder then
-					l_place_holder ?= l_zones.item
-					check not_void: l_place_holder /= Void end
+					Result ?= l_zones.item
+					check not_void: Result /= Void end
 				end
 				l_zones.forth
 			end
-			if l_place_holder /= Void then
-				Result := l_place_holder.parent
-			end
+		ensure
+			not_void_if_exists: has_place_holder_zone implies Result /= Void
 		end
 
 	set_all_title_bar (a_widget: EV_WIDGET) is

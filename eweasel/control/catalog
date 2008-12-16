@@ -115,6 +115,7 @@ test non-conform-generic-class					noncon015 tcf pass non-conforming
 test non-conform-arguments						noncon016 tcf pass non-conforming
 test non-conform-infinite-loop					noncon017 tcf pass non-conforming
 test non-conform-precondition-inheritance			noncon019 tcf pass non-conforming
+test incorrect-vrle-error						noncon020 tcf pass non-conforming
 
 -- Replication
 test replicate-precursor				replication001 tcf pass replication

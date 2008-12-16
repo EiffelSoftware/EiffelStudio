@@ -298,6 +298,10 @@ feature {NONE} -- Implementation
 		local
 			splitter_bitmap: WEL_BITMAP
 		do
+			-- We have to call pointer actions here
+			-- See bug#14692
+			on_button_down (x_pos, y_pos, {EV_POINTER_CONSTANTS}.left)
+
 				-- Pressing the left button on the splitter to move it, was
 				-- not bringing the window it was contained in to the front.
 				-- This fixes this.
@@ -351,6 +355,10 @@ feature {NONE} -- Implementation
 				splitter_brush.delete
 				splitter_brush := Void
 			end
+
+			-- We have to call pointer actions here
+			-- See bug#14692
+			on_button_up (x_pos, y_pos, {EV_POINTER_CONSTANTS}.left)
 		end
 
 	draw_vertical_line (paint_dc: WEL_PAINT_DC; a_pen: WEL_PEN; a_x: INTEGER) is

@@ -43,6 +43,9 @@ feature {NONE} -- Implementation
 			if l_platform.is_windows then
 				pointer_double_press_actions.force_extend (agent set_half)
 			end
+
+			pointer_button_release_actions.force_extend (agent update_proportion)
+			resize_actions.force_extend (agent set_proportion_with_remembered)
 		end
 
 	set_half is

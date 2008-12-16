@@ -805,8 +805,8 @@ feature {NONE} -- Implementation
 					 a_split.full then
 					-- a_split may be not full, because when restore client programer may not
 					-- supply SD_CONTENT which existed when last saving config.
-					if a_split.minimum_split_position <= a_config_data.split_position and a_config_data.split_position <= a_split.maximum_split_position then
-						a_split.set_split_position (a_config_data.split_position)
+					if 0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1 then
+						a_split.set_proportion (a_config_data.split_proportion)
 					end
 				end
 

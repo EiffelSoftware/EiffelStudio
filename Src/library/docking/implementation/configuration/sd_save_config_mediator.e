@@ -324,7 +324,13 @@ feature {NONE} -- Implementation
 			l_temp.set_parent (a_config_data)
 			save_inner_container_data (a_split_area.second, l_temp)
 			if a_split_area.full then
-				a_config_data.set_split_position (a_split_area.split_position)
+				if {lt_split: EV_SPLIT_AREA} a_split_area then
+					lt_split.update_proportion
+					a_config_data.set_split_proportion (lt_split.proportion)
+				else
+					a_config_data.set_split_proportion (-1)
+				end
+
 			else
 				check all_split_area_must_full: False end
 			end

@@ -3814,7 +3814,10 @@ feature -- Genericity
 				l_formals.after or Result /= Void
 			loop
 				l_formal ?= l_formals.item_for_iteration.type
-				if l_formal /= Void and then l_formal.position = n then
+				if
+					l_formal /= Void and then l_formal.position = n and then
+					(not l_formal.has_detachable_mark and not l_formal.has_attached_mark)
+				then
 					Result := l_formals.item_for_iteration
 				end
 				l_formals.forth
@@ -3933,7 +3936,9 @@ feature -- Genericity
 						l_formal := l_generic_features.item_for_iteration
 						if l_formal.is_formal then
 							l_formal_type ?= l_formal.type
-							l_inherited_formals.put (l_formal_type.position)
+							if not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark then
+								l_inherited_formals.put (l_formal_type.position)
+							end
 						end
 						l_generic_features.forth
 					end

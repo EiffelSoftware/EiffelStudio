@@ -111,6 +111,10 @@ feature -- Status report
 			bridge_ok: Result = implementation.split_position
 		end
 
+	proportion: REAL
+			-- Last spliter position REMEMBERED
+			-- This is NOT current split bar proportion displayed if `update_proportion' have not been called
+
 	minimum_split_position: INTEGER is
 			-- Minimum position splitter can have.
 		require
@@ -283,7 +287,35 @@ feature -- Status setting
 			a_proportion_in_valid_range:
 				(a_proportion >= 0 and a_proportion <= 1)
 		do
+			proportion := a_proportion
 			implementation.set_proportion (a_proportion)
+		ensure
+			set: proportion = a_proportion
+		end
+
+	set_proportion_with_remembered
+			-- Set current proportion with `proportion'
+		do
+			if 0 <= proportion and proportion <= 1 then
+				if not is_destroyed and then full then
+					set_proportion (proportion)
+				end
+			end
+		end
+
+	update_proportion
+			-- Update `proportion' base on current `split_position'
+		local
+			l_proportion: REAL_32
+			l_avail: INTEGER_32
+		do
+			l_avail := maximum_split_position - minimum_split_position
+			if l_avail >= 0 then
+				l_proportion := (split_position - minimum_split_position) / l_avail
+			else
+				l_proportion := -1
+			end
+			proportion := l_proportion
 		end
 
 feature -- Removal

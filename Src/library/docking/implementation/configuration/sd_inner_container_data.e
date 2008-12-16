@@ -46,15 +46,15 @@ feature -- Tab and Docking data.
 			set: selected_tab_index = a_int
 		end
 
-	split_position: INTEGER
-			-- If current is a split area, this is spliter position. -1 if current spliter not full.
+	split_proportion: REAL
+			-- If current is a split area, this is spliter position's proportion. -1 if current spliter not full.
 
-	set_split_position (a_value: like split_position) is
+	set_split_proportion (a_value: like split_proportion) is
 			-- Set `split_position'.
 		do
-			split_position := a_value
+			split_proportion := a_value
 		ensure
-			set: split_position = a_value
+			set: split_proportion = a_value
 		end
 
 	children_left: SD_INNER_CONTAINER_DATA

@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 					resize_text
 					resize_actions.resume
 				end)
+			maximum_height := -1
+			maximum_width := -1
 		end
 
 feature -- Access
@@ -193,12 +195,12 @@ feature {EV_BUILDER} -- Status report
 	is_maximum_height_set_by_user: BOOLEAN
 			-- Indicates if the ellipsed miniumu width has been set
 		do
-			Result := maximum_height > 0
+			Result := maximum_height >= 0
 		end
 
 	is_maximum_width_set_by_user: BOOLEAN
 		do
-			Result := maximum_width > 0
+			Result := maximum_width >= 0
 		end
 
 	is_size_calculated: BOOLEAN

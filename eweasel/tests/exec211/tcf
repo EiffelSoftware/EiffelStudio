@@ -15,25 +15,25 @@ copy_sub	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	ok
-execute_work	NONE exec_output_m
+execute_work	NONE exec_output_m_1
 execute_result	ok
-compare		exec_output_m output1
+compare		exec_output_m_1 output1
 
 compile_frozen
 compile_result	ok
 c_compile_work
 c_compile_result ok
-execute_work	NONE exec_output_w
+execute_work	NONE exec_output_w_1
 execute_result	ok
-compare		exec_output_w output1
+compare		exec_output_w_1 output1
 
 compile_final
 compile_result	ok
 c_compile_final
 c_compile_result ok
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f_1
 execute_result	ok
-compare		exec_output_f output1
+compare		exec_output_f_1 output1
 
 cleanup_compile
 
@@ -45,24 +45,24 @@ copy_sub	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	ok
-execute_work	NONE exec_output_m
+execute_work	NONE exec_output_m_2
 execute_result	ok
-compare		exec_output_m output2
+compare		exec_output_m_2 output2
 
 compile_frozen
 compile_result	ok
 c_compile_work
 c_compile_result ok
-execute_work	NONE exec_output_w
+execute_work	NONE exec_output_w_2
 execute_result	ok
-compare		exec_output_w output2
+compare		exec_output_w_2 output2
 
 compile_final
 compile_result	ok
 c_compile_final
 c_compile_result ok
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f_2
 execute_result	ok
-compare		exec_output_f output2
+compare		exec_output_f_2 output2
 
 test_end

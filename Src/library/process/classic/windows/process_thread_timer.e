@@ -12,6 +12,16 @@ inherit
 	PROCESS_TIMER
 
 	THREAD
+		rename
+			sleep as obsolete_thread_sleep
+		end
+
+	EXECUTION_ENVIRONMENT
+		rename
+			launch as execution_environment_launch
+		export
+			{NONE} all
+		end
 
 	WEL_PROCESS_LAUNCHER
 		rename

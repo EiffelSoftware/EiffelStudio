@@ -18,6 +18,13 @@ class
 inherit
 	PROCESS_IO_LISTENER_THREAD
 
+	EXECUTION_ENVIRONMENT
+		rename
+			launch as execution_environment_launch
+		export
+			{NONE} all
+		end
+
 create
 	make
 

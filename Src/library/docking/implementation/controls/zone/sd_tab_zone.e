@@ -210,7 +210,7 @@ feature -- Command
 		do
 			if a_selection then
 				internal_title_bar.enable_focus_color
-				internal_notebook.set_active_color (True)
+				internal_notebook.set_tab_active_color (True)
 			else
 				internal_title_bar.disable_focus_color
 			end
@@ -220,7 +220,7 @@ feature -- Command
 			-- Redefine
 		do
 			internal_title_bar.enable_non_focus_active_color
-			internal_notebook.set_active_color (False)
+			internal_notebook.set_tab_active_color (False)
 		end
 
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER) is

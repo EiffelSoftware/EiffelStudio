@@ -74,7 +74,7 @@ feature -- Initlization
 feature -- Redefine
 
 	on_focus_in (a_content: SD_CONTENT) is
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
 			internal_docking_manager.command.remove_auto_hide_zones (True)
@@ -82,83 +82,85 @@ feature -- Redefine
 		end
 
 	on_focus_out is
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE}
 			notebook.set_focus_color (False)
 		end
 
 	set_title (a_title: STRING_GENERAL) is
-			-- Redefine
+			-- <Precursor>
 		do
 			notebook.set_item_text (internal_content, a_title)
 		end
 
 	set_show_normal_max (a_show: BOOLEAN) is
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	set_max (a_max: BOOLEAN) is
-			-- Redefine
+			-- <Precursor>
 		do
 			notebook.set_show_maximized (a_max)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Redefine
+			-- <Precursor>
 		do
 			notebook.set_item_pixmap (content, a_pixmap)
 		end
 
 	update_user_widget is
-			-- Redefine
+			-- <Precursor>
 		do
 			notebook.replace (content)
 		end
 
 	is_maximized: BOOLEAN is
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := notebook.is_maximized
 		end
 
 	title: STRING_32 is
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := notebook.item_text (internal_content)
 		end
 
 	title_area: EV_RECTANGLE is
-			-- Refedine
+			-- <Precursor>
 		do
 			Result := notebook.tab_area
 		end
 
 	set_focus_color (a_selection: BOOLEAN) is
-			-- Redefine.
+			-- <Precursor>
 		do
 			if a_selection then
-				notebook.set_active_color (a_selection)
-			else
-				notebook.set_focus_color (False)
+				notebook.set_tab_active_color (True)
 			end
+
+			-- Although `set_focus_color' only used for setting notebook tab's color, we have to ensure
+			-- notebook border color correct, see bug#15159
+			notebook.set_focus_color (a_selection)
 		end
 
 	set_non_focus_selection_color is
-			-- Set title bar non-focuse color.
+			-- <Precursor>
 		do
-			notebook.set_focus_color (False)
+			notebook.set_tab_active_color (False)
 		end
 
 	show_notebook_contents (a_is_show: BOOLEAN) is
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_UPPER_ZONE}(a_is_show)
 			if a_is_show then

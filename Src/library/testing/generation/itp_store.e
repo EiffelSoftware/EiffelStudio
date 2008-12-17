@@ -88,8 +88,6 @@ feature -- Basic routines
 			-- Assign the value `a_value' to variable named `a_name'.
 		require
 			a_index_large_enough: a_index > 0
-		local
-			cell: TUPLE [STRING, ANY]
 		do
 			storage.force_put (a_value, a_index)
 			storage_flag.force_put (True, a_index)

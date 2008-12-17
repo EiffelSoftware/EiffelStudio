@@ -33,8 +33,6 @@ feature {NONE} -- Initialization
 			-- `a_size': Buffer size limiting amount of text which will be buffered
 		require
 			a_size_greater_one: a_size > 3
-		local
-			l_split: INTEGER
 		do
 			buffer_size := a_size
 			create buffer.make (buffer_size)

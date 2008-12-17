@@ -34,8 +34,7 @@ feature {NONE} -- Initialization
 		require
 			arguments_valid: arguments.is_successful
 		local
-			l_quit, l_done, l_bad_argument: BOOLEAN
-			l_index: STRING
+			l_quit, l_done: BOOLEAN
 			n: NATURAL
 		do
 			if not l_quit then

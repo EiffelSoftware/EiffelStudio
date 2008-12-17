@@ -108,9 +108,6 @@ feature {NONE} -- Query
 
 	is_valid_id (a_id: !STRING): BOOLEAN
 			-- Is `a_id' a possible identifier for an object in `context'?
-		local
-			l_nat: STRING
-			n: NATURAL
 		do
 			if a_id.count > 1 and then a_id.item (1) = '#' then
 				Result := a_id.substring (2, a_id.count).is_natural
@@ -251,8 +248,6 @@ feature {NONE} -- Basic operations
 			--       conform to the operand needed to call `a_routine', an exception will be triggered.
 		local
 			l_new: TUPLE
-			l_attrs: !ARRAY [!STRING]
-			i: INTEGER
 		do
 			l_new := a_routine.empty_operands
 			check l_new /= Void end
@@ -270,7 +265,6 @@ feature {NONE} -- Object initialization
 		local
 			i, l_gtype: INTEGER
 			l_object: !ANY
-			l_routine_attr_adj_success: BOOLEAN
 			l_type: TYPE [ANY]
 		do
 			create object_cache.make (context.lower, context.upper)
@@ -527,7 +521,6 @@ feature {NONE} -- Object initialization
 			-- Set items of `a_tuple' with values from `an_attribute_list'.
 		local
 			i, j: INTEGER
-			l_value: !STRING
 			l_obj: !ANY
 		do
 			from

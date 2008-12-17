@@ -1,0 +1,15 @@
+test_name void-items-set-crash
+test_description Trying to add void items to a set crashes instead of working.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

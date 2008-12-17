@@ -127,14 +127,13 @@ feature {NONE} -- Implementation
 			l_type, l_rec, l_tag, l_trace: !STRING
 			l_dtype: INTEGER
 			l_texcpt: !EQA_TEST_INVOCATION_EXCEPTION
-			l_operands: TUPLE
 		do
 			if not l_retry then
 				l_old := io.default_output
 				if record_output then
 					io.set_file_default (buffer)
 				end
-				a_procedure.apply
+				a_procedure.call (Void)
 				create last_invocation_response.make_normal (buffered_output)
 				buffer.wipe_out
 			end

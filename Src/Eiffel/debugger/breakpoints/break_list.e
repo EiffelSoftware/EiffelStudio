@@ -17,6 +17,8 @@ inherit
 	HASH_TABLE [BREAKPOINT, BREAKPOINT_KEY]
 		rename
 			make as ht_make
+		redefine
+			same_keys
 		end
 
 	DEBUGGER_STORABLE_DATA_I
@@ -181,6 +183,15 @@ feature -- Access
 			if not Result then
 				Result := has_key (create {BREAKPOINT_KEY}.make_hidden (loc))
 			end
+		end
+
+feature -- Comparison
+
+	same_keys (a_search_key, a_key: BREAKPOINT_KEY): BOOLEAN is
+			-- Does `a_search_key' equal to `a_key'?
+			--| Default implementation is using `is_equal'.
+		do
+			Result := a_search_key.same_breakpoint_key (a_key)
 		end
 
 indexing

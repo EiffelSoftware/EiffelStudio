@@ -20,14 +20,8 @@ inherit
 		end
 
 	DEBUG_OUTPUT
-		undefine
-			is_equal
-		end
 
 	COMPILER_EXPORTER
-		undefine
-			is_equal
-		end
 
 create {BREAKPOINTS_MANAGER}
 	make

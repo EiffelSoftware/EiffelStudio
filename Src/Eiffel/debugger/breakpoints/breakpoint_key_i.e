@@ -9,15 +9,11 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-deferred
-class
+deferred class
 	BREAKPOINT_KEY_I
 
 inherit
 	HASHABLE
-		undefine
-			is_equal
-		end
 
 feature -- Access
 

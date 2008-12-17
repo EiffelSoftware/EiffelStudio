@@ -19,8 +19,10 @@ deferred class
 
 inherit
 	THREAD
+		rename
+			sleep as obsolete_thread_sleep
 		export
-			{ANY}terminated
+			{ANY} terminated
 		end
 
 feature -- Status setting

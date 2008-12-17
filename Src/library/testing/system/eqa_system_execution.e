@@ -166,7 +166,7 @@ feature {NONE} -- Query
 			-- Name of executable to run system
 		local
 			l_exec_env: EXECUTION_ENVIRONMENT
-			l_env, l_cmd: STRING
+			l_cmd: STRING
 		do
 			l_cmd := environment.get (executable_env)
 			if l_cmd = Void then

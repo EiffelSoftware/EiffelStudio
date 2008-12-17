@@ -408,8 +408,6 @@ feature {NONE} -- Implementation
 				divisor := (256 ^ (num - 1)).rounded
 				create Result.make (20)
 				number := n
-			variant
-				divisor
 			until
 				divisor = 0
 			loop
@@ -429,6 +427,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				divisor := divisor // 256
+			variant
+				divisor
 			end
 		end
 

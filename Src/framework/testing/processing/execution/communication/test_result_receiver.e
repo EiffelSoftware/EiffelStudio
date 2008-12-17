@@ -108,12 +108,12 @@ feature {NONE} -- Implementation
 		do
 			if not l_rescued then
 				from until
-					not a_socket.is_open_read or a_status.is_finished or l_stop
+					not a_socket.is_open_read or l_stop
 				loop
 					l_stop := True
 					l_next := a_status.next
+					a_socket.put_natural (l_next)
 					if l_next > 0 then
-						a_socket.put_natural (l_next)
 						l_flag := evaluator_status (a_socket)
 						if l_flag = l_next then
 							if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then

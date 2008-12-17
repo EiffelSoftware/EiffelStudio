@@ -93,7 +93,7 @@ feature -- Status report
 			definition: Result = not is_static
 		end
 
-feature {TYPE_CONSUMER} -- Element Change
+feature -- Element Change
 
 	set_setter (a_setter: like setter) is
 			-- Sets `setter' with `a_setter'.

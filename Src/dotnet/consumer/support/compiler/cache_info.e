@@ -8,9 +8,6 @@ indexing
 class
 	CACHE_INFO
 
-create {CACHE_INFO_FACTORY}
-	default_create
-
 feature -- Access
 
 	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
@@ -44,7 +41,7 @@ feature -- Status report
 			end
 		end
 
-feature {CACHE_WRITER, CONSUMER_CACHE_INFO} -- Element Settings
+feature -- Element Settings
 
 	add_assembly (ass: CONSUMED_ASSEMBLY) is
 			-- Add `ass' to `assemblies'.

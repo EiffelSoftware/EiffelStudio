@@ -123,7 +123,7 @@ feature -- Access
 			Result.append (location)
 		end
 
-feature {CACHE_WRITER} -- Status Setting
+feature -- Status Setting
 
 	set_is_consumed (a_consumed: BOOLEAN; a_only_info: BOOLEAN) is
 			-- Sets `is_consumed' to `a_consumed'

@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 		do
 			make_controller (a_assigner)
 			executable := a_executable
-			create output.make (1024)
 		ensure
 			executable_set: executable = a_executable
 		end
@@ -46,11 +45,6 @@ feature {NONE} -- Access
 
 	process: ?PROCESS
 			-- Process
-
-	output: !STRING
-			-- Output of `process'
-			--
-			-- Note: used for debugging purposes
 
 feature {NONE} -- Status report
 
@@ -74,16 +68,8 @@ feature -- Status setting
 	launch_evaluator (a_args: !LIST [!STRING]) is
 			-- <Precursor>
 		do
-			output.wipe_out
-
 			process := process_factory.process_launcher (executable, a_args, Void)
 			process.enable_launch_in_new_process_group
-			process.redirect_output_to_agent (
-				agent (s: STRING)
-					do
-						output.append (s)
-					end)
-			process.redirect_error_to_same_as_output
 			process.set_separate_console (False)
 			process.set_hidden (True)
 

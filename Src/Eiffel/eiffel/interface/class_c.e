@@ -1536,8 +1536,7 @@ feature -- Supplier checking
 							l_vsrp2.set_root_type (a_type)
 								-- Need duplication otherwise we would change the original FEATURE_I
 								-- object while displaying the error.
-							l_creation_proc := l_creation_proc.duplicate
-							l_creation_proc.instantiation_in (a_type)
+							l_creation_proc := l_creation_proc.instantiation_in (a_type)
 							l_vsrp2.set_creation_feature (l_creation_proc)
 							Error_handler.insert_error (l_vsrp2)
 						end
@@ -4618,6 +4617,8 @@ indexing
 		]"
 
 end -- class CLASS_C
+
+
 
 
 

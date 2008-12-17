@@ -585,9 +585,8 @@ feature {NONE} -- Initialization
 			until
 				l_any_tbl.after
 			loop
-				l_feat := l_any_tbl.item_for_iteration.duplicate
 					-- Update `l_feat' in context of current class.
-				l_feat.instantiate (any_parent_type)
+				l_feat := l_any_tbl.item_for_iteration.instantiated (any_parent_type)
 				l_feat.check_types (a_feat_tbl)
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)

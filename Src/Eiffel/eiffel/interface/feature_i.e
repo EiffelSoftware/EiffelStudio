@@ -1778,7 +1778,7 @@ feature -- Signature instantiation
 			end
 				-- If no changes have been made then we can return `Current'
 			if Result = Void then
-				Result := duplicate
+				Result := Current
 			end
 		end
 
@@ -1828,9 +1828,8 @@ feature -- Signature instantiation
 			end
 				-- If no changes have been made then we can return `Current'
 			if Result = Void then
-					-- For now return duplicate to match existing behavior
-					-- but change to current after more testing
-				Result := duplicate
+					-- Return `Current' if no changes have been made.
+				Result := Current
 			end
 		end
 

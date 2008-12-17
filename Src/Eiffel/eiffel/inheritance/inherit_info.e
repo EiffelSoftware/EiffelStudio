@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_feature_set: a_feature = f
 		end
 
-	make_with_feature_and_parent (f: like a_feature; p: like parent) is
+	make_with_feature_and_parent (f: like a_feature; p: like parent; shared: BOOLEAN) is
 			-- Make inheritance information object for feature `f' in parent `p'.
 		require
 			f_not_void: f /= Void
@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 		do
 			a_feature := f
 			parent := p
+			if shared then
+				set_a_feature_shared
+			end
 		ensure
 			a_feature_set: a_feature = f
 			parent_set: parent = p
@@ -54,15 +57,32 @@ feature -- Access
 
 	renaming_processed: BOOLEAN
 			-- Has Current already been processed for renaming?
+		do
+			Result := status_flags & renaming_processed_mask = renaming_processed_mask
+		end
+
+	a_feature_shared: BOOLEAN
+			-- Is `a_feature' shared with other objects?
+		do
+			Result := status_flags & a_feature_shared_mask = a_feature_shared_mask
+		end
 
 feature -- Settings
 
 	set_renaming_processed is
 			-- Set True to `renaming_processed'.			
 		do
-			renaming_processed := True
+			status_flags := status_flags.set_bit_with_mask (True, renaming_processed_mask)
 		ensure
 			renaming_processed: renaming_processed
+		end
+
+	set_a_feature_shared is
+			-- Set True to `a_feature_shared'.			
+		do
+			status_flags := status_flags.set_bit_with_mask (True, a_feature_shared_mask)
+		ensure
+			a_feature_shared: a_feature_shared
 		end
 
 	set_a_feature (f: like a_feature) is
@@ -133,6 +153,14 @@ feature -- Status
 		ensure
 			definition: Result = a_feature.has_property_setter
 		end
+
+feature {NONE} -- Implementation
+
+	status_flags: NATURAL_8
+		-- Flags used for signifying status of `Current'
+
+	renaming_processed_mask: NATURAL_8 = 0x1
+	a_feature_shared_mask: NATURAL_8 = 0x2
 
 feature -- Debug
 

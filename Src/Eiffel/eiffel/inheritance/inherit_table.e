@@ -579,6 +579,7 @@ end;
 			parent_type: LIKE_CURRENT
 				-- "like Current" type of `parent_c'
 			actual_parent_type: CL_TYPE_A
+			l_shared_with_parent_table: BOOLEAN
 			i: INTEGER
 		do
 			from
@@ -615,7 +616,13 @@ end;
 			until
 				i < 0
 			loop
+					-- Instantiate feature for `parent_type', this is so that generics may
+					-- be processed correctly.
 				feature_i := parent_table [i].instantiated (parent_type)
+
+					-- Did `instantiate' create a new object, if so then it doesn't need to be duplicated during initialization
+					-- of the inherited feature.
+				l_shared_with_parent_table := parent_table [i] = feature_i
 
 					-- Add inherited feature information to the concerned instance of INHERIT_FEAT
 				search (feature_i.feature_name_id)
@@ -624,9 +631,8 @@ end;
 							-- Add new feature to the inheritance table.
 					put (create {INHERIT_FEAT}.make, feature_i.feature_name_id)
 				end
-					-- Instantiate feature for `parent_type', this is so that generics may
-					-- be processed correctly.
-				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (feature_i, parent_c))
+
+				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (feature_i, parent_c, l_shared_with_parent_table))
 				i := i - 1
 			end
 
@@ -762,7 +768,7 @@ end;
 						-- parent.
 
 						-- initialization of an inherited feature
-					feature_i := init_inherited_feature (feature_name_id, inherited_info.a_feature, inherit_feat);
+					feature_i := init_inherited_feature (feature_name_id, inherited_info, inherit_feat);
 						-- Insertion in the origin table
 					inherited_info.set_a_feature (feature_i);
 					if
@@ -1398,12 +1404,9 @@ end;
 							-- New inherited feature
 
 							-- Initialization of an inherited feature
-						inherited_feature := init_inherited_feature (feature_name_id, deferred_info.a_feature, inherit_feat);
+						inherited_feature := init_inherited_feature (feature_name_id, deferred_info, inherit_feat);
 							-- Insertion in the origin table
-
-							-- Reuse deferred info and set with new inherited_feature object.
 						deferred_info.set_a_feature (inherited_feature);
-
 						Origin_table.insert (deferred_info);
 						if inherit_feat.deferred_features.count > 1 then
 								-- Keep track of the feature adaptation.
@@ -1444,25 +1447,29 @@ end;
 			end;
 		end;
 
-	init_inherited_feature (a_feature_name_id: INTEGER_32; a_f: FEATURE_I; inherit_feat: INHERIT_FEAT): FEATURE_I is
+	init_inherited_feature (a_feature_name_id: INTEGER_32; inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT): FEATURE_I is
 			-- Initialization of an inherited feature
 		require
-			a_f_not_void: a_f /= Void
+			a_feature_valid: inherit_info /= Void and then inherit_info.a_feature /= Void
 			inherit_feat_not_void: inherit_feat /= Void
 		local
-			inherit_info: INHERIT_INFO
+			l_inherit_info: INHERIT_INFO
 			old_feature: FEATURE_I
 			feature_name_id: INTEGER
 		do
-			Result := a_f.twin
+			if inherit_info.a_feature_shared then
+				Result := inherit_info.a_feature.twin
+			else
+				Result := inherit_info.a_feature
+			end
 			Result.set_feature_name_id (a_feature_name_id, Result.alias_name_id)
 				-- It is no more an origin
 			Result.set_is_origin (False)
 			Result.set_has_property (False)
 			if a_class.is_single then
 					-- Feature getters and setters may have been generated.
-				inherit_info := inherit_feat.inherited_info
-				if inherit_info /= Void and then inherit_info.parent.parent.is_single then
+				l_inherit_info := inherit_feat.inherited_info
+				if l_inherit_info /= Void and then l_inherit_info.parent.parent.is_single then
 					Result.set_has_property_getter (False)
 					Result.set_has_property_setter (False)
 				end

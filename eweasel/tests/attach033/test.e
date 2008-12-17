@@ -17,7 +17,9 @@ feature {NONE} -- Creation
 			create t_test
 			create t_tuple
 			create l_int
+			
 			check_dtype (l_int.dynamic_type_from_string ("XXXX"), -1)
+			check_dtype (l_int.dynamic_type_from_string ("A_T"), l_int.dynamic_type (create {A_T}))
 			check_dtype (l_int.dynamic_type_from_string ("TEST"), l_int.dynamic_type (create {TEST}))
 
 			check_dtype (l_int.dynamic_type_from_string ("!TEST"), l_int.generic_dynamic_type (t_test, 1))

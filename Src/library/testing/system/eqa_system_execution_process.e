@@ -55,13 +55,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: threading
 
-	mutex: MUTEX
+	mutex: !MUTEX
 			-- Mutex for controlling access to `Current'
 
-	client_condition: CONDITION_VARIABLE
+	client_condition: !CONDITION_VARIABLE
 			-- Condition variable for signalling that new output is available
 
-	provider_condition: CONDITION_VARIABLE
+	provider_condition: !CONDITION_VARIABLE
 			-- Condition valiablefor signalling that `Current' is waiting for new output
 
 	next_output: ?READABLE_STRING_8
@@ -122,6 +122,8 @@ feature {EQA_SYSTEM_EXECUTION} -- Status setting
 			l_process.set_hidden (True)
 			check l_process /= Void end
 			prepare_redirection (l_process)
+			l_process.set_on_terminate_handler (agent set_finished)
+			l_process.set_on_exit_handler (agent set_finished)
 			l_process.launch
 			process := l_process
 		end

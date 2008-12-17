@@ -106,9 +106,10 @@ feature -- Basic operations
 			create_directory_from_partial_path (a_path, 0)
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_valid: {l_dir: !like last_created_directory} last_created_directory and then
-				l_dir.name ~ build_target_path (a_path).string and then
-				l_dir.exists
+			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+				and then l_dir.name.same_string (build_target_path (a_path))
+			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+				and then l_dir2.exists
 		end
 
 	create_file_from_path (a_path: !EQA_SYSTEM_PATH)
@@ -135,9 +136,10 @@ feature -- Basic operations
 			last_created_file_open_write: {l_last_file: like last_created_file} last_created_file and then
 				l_last_file.is_open_write
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_valid: {l_dir: !like last_created_directory} last_created_directory and then
-				l_dir.name ~ build_partial_path (a_path, target_directory, 1).string and then
-				l_dir.exists
+			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+				and then l_dir.name.same_string (build_partial_path (a_path, target_directory, 1))
+			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+				and then l_dir2.exists
 		end
 
 feature {NONE} -- Implementation
@@ -184,9 +186,10 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_valid: {l_dir: !like last_created_directory} last_created_directory and then
-				l_dir.name ~ build_partial_path (a_path, target_directory, a_strip).string and then
-				l_dir.exists
+			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+				and then l_dir.name.same_string (build_partial_path (a_path, target_directory, a_strip))
+			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+				and then l_dir2.exists
 		end
 
 	check_target_directory_existence
@@ -202,8 +205,10 @@ feature {NONE} -- Implementation
 			assert ("testing_directory_exists", l_directory.exists)
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_valid: {l_dir: !like last_created_directory} last_created_directory and then
-				l_dir.name ~ target_directory.as_string_8 and then l_dir.exists
+			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+				and then l_dir.name.same_string (target_directory)
+			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+				and then l_dir2.exists
 		end
 
 	frozen assert (a_tag: !STRING; a_condition: BOOLEAN)

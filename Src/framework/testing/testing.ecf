@@ -19,8 +19,8 @@
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="service_coupling" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf"/>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

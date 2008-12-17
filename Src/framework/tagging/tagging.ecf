@@ -9,16 +9,17 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<cluster name="framework" location=".\src" recursive="true">
+		<cluster name="framework" location=".\src\" recursive="true">
 			<option namespace="Tagging">
 			</option>
 			<file_rule>
 				<exclude>/spec$</exclude>
 			</file_rule>
 		</cluster>
-		<tests name="tests" location=".\tests" recursive="true"/>
+		<tests name="tests" location=".\tests\" recursive="true"/>
 	</target>
 </system>

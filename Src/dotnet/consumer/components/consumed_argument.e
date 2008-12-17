@@ -70,7 +70,7 @@ feature {NONE} -- Access
 	t: like type
 			-- Internal data storage for `type'.
 
-feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER} -- Comparison
+feature {CONSUMED_ARGUMENT} -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered

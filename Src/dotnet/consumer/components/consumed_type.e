@@ -234,7 +234,7 @@ feature -- Status Setting
 			Result := internal_flags & Is_expanded_mask = Is_expanded_mask
 		end
 
-feature {TYPE_CONSUMER} -- Element settings
+feature -- Element settings
 
 	set_fields (fi: like fields) is
 			-- set `fields' with `fi'.
@@ -285,8 +285,6 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			events_set: events = ev
 		end
-
-feature {TYPE_CONSUMER, ASSEMBLY_CONSUMER} -- Element settings
 
 	set_constructors (cons: like constructors) is
 			-- set `constructors' with `cons'.

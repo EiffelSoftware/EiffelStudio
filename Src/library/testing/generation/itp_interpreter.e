@@ -494,7 +494,7 @@ feature{NONE} -- Byte code
 			end
 			Result := l_managed_ptr.item
 		ensure
-			result_attached: Result /= Void
+			result_attached: Result /= default_pointer
 		end
 
 	execute_byte_code is
@@ -522,7 +522,7 @@ feature{NONE} -- Byte code
 			-- Store `a_byte_code' of `a_length' byte long for feature with `a_body_id'.
 		require
 			a_body_id_not_negative: a_body_id >= 0
-			a_byte_code_attached: a_byte_code /= Void
+			a_byte_code_attached: a_byte_code /= default_pointer
 			a_length_positive: a_length > 0
 		external
 			"C inline use %"eif_interp.h%""

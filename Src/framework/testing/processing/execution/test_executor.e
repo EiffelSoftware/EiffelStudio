@@ -151,8 +151,6 @@ feature {NONE} -- Query
 
 	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
 			-- <Precursor>
-		local
-			l_list: !DS_LINEAR [!TEST_I]
 		do
 			if a_conf.is_specific then
 				Result := test_suite.is_subset (a_conf.tests) and
@@ -324,7 +322,6 @@ feature {NONE} -- Basic functionality
 			-- Initialize `log_file' and `result_cursor'.
 		local
 			l_filename: FILE_NAME
-			l_path: STRING
 			l_format: DATE_TIME_CODE_STRING
 		do
 			create l_filename.make_from_string (test_suite.eiffel_project.project_directory.testing_results_path)
@@ -346,7 +343,6 @@ feature {NONE} -- Basic functionality
 			l_cursor: DS_LINKED_LIST_CURSOR [like create_evaluator]
 			l_evaluator: like create_evaluator
 			l_status: TEST_EVALUATOR_STATUS
-			l_test: ?TEST_I
 			l_stop, l_remove: BOOLEAN
 		do
 			l_stop := is_stop_requested
@@ -534,14 +530,12 @@ feature {NONE} -- Basic functionality
 			end
 		end
 
-feature {EIFFEL_TEST_SUITE_S} -- Events
+feature {TEST_SUITE_S} -- Events
 
 	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I) is
 			-- <Precursor>
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [!TEST_I, NATURAL]
 		do
 			if test_map /= Void and then test_map.has_item (a_test) then
 				abort_test (a_test, True)
@@ -570,4 +564,35 @@ invariant
 	running_implies_log_file_attached: is_running implies log_file /= Void
 	running_implies_result_cursor_attached: is_running implies result_cursor /= Void
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

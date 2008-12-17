@@ -74,7 +74,7 @@ feature {NONE} -- Access
 	object_counter: NATURAL
 			-- Number of objects that have been captured
 
-feature {EIFFEL_TEST_CAPTURER} -- Status report
+feature {TEST_CAPTURER} -- Status report
 
 	is_ready: BOOLEAN
 			-- <Precursor>
@@ -209,7 +209,7 @@ feature {NONE} -- Query
 			result_not_empty: not Result.is_empty
 		end
 
-feature {EIFFEL_TEST_CAPTURER} -- Events
+feature {TEST_CAPTURER} -- Events
 
 	on_invocation_capture (a_stack_element: !TEST_CAPTURED_STACK_ELEMENT)
 			-- <Precursor>
@@ -218,7 +218,6 @@ feature {EIFFEL_TEST_CAPTURER} -- Events
 			l_name: STRING
 			l_count: NATURAL
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
-			l_types: !DS_ARRAYED_LIST [!STRING]
 			i: INTEGER
 		do
 			l_feat := a_stack_element.called_feature
@@ -526,4 +525,35 @@ feature {NONE} -- Constants
 
 	max_string_length: INTEGER = 80
 
+;indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

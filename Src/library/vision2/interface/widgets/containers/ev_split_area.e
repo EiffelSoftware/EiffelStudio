@@ -270,8 +270,8 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			split_area_full: full
 			a_split_position_within_bounds:
-				is_displayed implies ((a_split_position >= minimum_split_position
-				and a_split_position <= maximum_split_position))
+				(a_split_position >= minimum_split_position
+				and a_split_position <= maximum_split_position)
 		do
 			implementation.set_split_position (a_split_position)
 		ensure

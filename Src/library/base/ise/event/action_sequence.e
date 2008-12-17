@@ -139,7 +139,7 @@ feature -- Basic operations
 			end
 		ensure
 			is_aborted_stack_unchanged:
-				old is_aborted_stack.is_equal (is_aborted_stack)
+				(old is_aborted_stack) ~ is_aborted_stack
 		end
 
 	extend_kamikaze (an_item: like item) is
@@ -161,7 +161,7 @@ feature -- Access
 				Result := i.twin
 			end
 		ensure
-			equal_to_name_internal: equal (Result, name_internal)
+			equal_to_name_internal: Result ~ name_internal
 		end
 
 	dummy_event_data: EVENT_DATA is

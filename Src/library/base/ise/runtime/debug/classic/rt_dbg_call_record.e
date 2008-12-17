@@ -1146,7 +1146,7 @@ feature -- debug
 		do
 			tn := type_name_of_type (class_type_id)
 			if {o: like object} object and then {otn: STRING} o.generating_type then
-				if tn = Void or else not otn.is_equal (tn) then
+				if tn = Void or else otn /~ tn then
 					if tn /= Void then
 						tn := otn + " from " + tn
 					else

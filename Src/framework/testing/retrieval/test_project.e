@@ -378,9 +378,6 @@ feature -- Status setting
 
 	synchronize
 			-- <Precursor>
-		local
-			l_old_class_map: like test_class_map
-			l_ancestor: EIFFEL_CLASS_C
 		do
 			if not is_updating_tests then
 				is_updating_tests := True
@@ -449,7 +446,6 @@ feature {NONE} -- Status setting
 			l_name: FILE_NAME
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_cursor: DS_LINEAR_CURSOR [!EIFFEL_CLASS_I]
-			l_file_system: KL_SHARED_FILE_SYSTEM
 			l_class: EIFFEL_CLASS_I
 			l_keys: DS_LINEAR [!EIFFEL_CLASS_I]
 		do
@@ -658,7 +654,6 @@ feature {NONE} -- Element change
 		local
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_name: !STRING
-			l_et: !TEST_I
 		do
 			from
 				old_class_map.start
@@ -812,7 +807,6 @@ feature {NONE} -- Implementation: tag retrieval
 			project_initialized: is_project_initialized
 		local
 			l_current, l_group: CONF_GROUP
-			l_library: CONF_LIBRARY
 			l_uni: UNIVERSE_I
 			l_list: LIST [!CONF_LIBRARY]
 			l_path: LIST [STRING]
@@ -980,4 +974,35 @@ feature {NONE} -- Implementation
 invariant
 	cluster_stack_empty: cluster_stack.is_empty
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

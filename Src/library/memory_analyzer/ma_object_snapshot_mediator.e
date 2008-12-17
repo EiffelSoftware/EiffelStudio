@@ -432,9 +432,8 @@ feature {NONE} -- Implementation
 			l_name, l_field_name: STRING
 			l_int: INTERNAL
 			l_objects_of_type: ARRAYED_LIST [ANY]
-			l_data: SPECIAL [ANY]
-			l_index, l_referrer_index: NATURAL
-			l_item, l_referrer, l_referee: ANY
+			l_index: NATURAL
+			l_item, l_referee: ANY
 			l_field_count: INTEGER
 			i: INTEGER
 			l_special: SPECIAL [ANY]

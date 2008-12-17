@@ -175,7 +175,7 @@ feature -- Comparison
 			Result := (three_way_comparison (other) = -1)
 		end
 
-	is_greater alias "<" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is `Current' greater than `other'?
 		do
 			Result := (three_way_comparison (other) = 1)

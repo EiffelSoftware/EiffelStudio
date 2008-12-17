@@ -228,7 +228,7 @@ feature -- Debug mode command
 		do
 			l_debugger_manager := develop_window.eb_debugger_manager
 
-			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (develop_window.Interface_names.t_project_toolbar)
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (develop_window.Interface_names.to_Project_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 
 			-- Setup toolbar buttons

@@ -275,7 +275,6 @@ feature -- event
 			if category_mode then
 				grp_chk_chg_action := agent (achk: EV_GRID_CHECKABLE_LABEL_ITEM)
 						local
-							t: like text
 							row: EV_GRID_ROW
 							sn: INTEGER
 						do

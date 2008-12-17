@@ -210,7 +210,8 @@ feature {NONE} -- Events
 	on_prepare
 			-- Called after `prepare' has performed all initialization.
 		require
-			prepared: is_prepared
+			object_cache_loaded: is_cache_loaded
+			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared
@@ -232,7 +233,7 @@ feature {NONE} -- Events
 		do
 		ensure
 			object_cache_loaded: is_cache_loaded
-			current_test_name_valid: current_test_name /= Void
+			has_valid_name: has_valid_name
 		end
 
 feature {NONE} -- Basic operations

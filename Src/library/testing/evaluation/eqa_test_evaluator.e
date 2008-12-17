@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !STRING) is
+	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !READABLE_STRING_8) is
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -104,7 +104,7 @@ feature -- Execution
 				l_tuple.put (a_test_set, 1)
 				safe_execute (agent a_test.call (l_tuple))
 				l_test := last_invocation_response
-				safe_execute (agent a_test_set.clean)
+				safe_execute (agent a_test_set.clean (l_test.is_exceptional))
 				l_clean := last_invocation_response
 				check l_test /= Void and l_clean /= Void end
 				create last_outcome.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)

@@ -3588,9 +3588,10 @@ feature -- Server Access
 	file_name: STRING is
 			-- File name of the class
 		do
-			Result := lace_class.file_name
+			Result := lace_class.file_name.string
 		ensure
 			file_name_not_void: Result /= Void
+			file_name_is_string: Result.same_type ("")
 		end
 
 	file_is_readable: BOOLEAN is

@@ -44,7 +44,7 @@ feature -- Access
 			valid_name: not name.is_empty and then name.item (1) /= '.'
 			used_names_not_void: used_names /= Void
 		local
-			i, index, pos, count: INTEGER
+			count: INTEGER
 		do
 			Result := full_formatted_type_name (name, used_names)
 			if used_names.has (Result) then

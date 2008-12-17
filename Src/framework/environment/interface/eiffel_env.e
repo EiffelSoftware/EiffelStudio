@@ -88,7 +88,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	required_environment_variables: !ARRAYED_LIST [TUPLE [var: !STRING_8; is_directory: BOOLEAN]]
+	required_environment_variables: !ARRAYED_LIST [TUPLE [var: STRING_8; is_directory: BOOLEAN]]
 			-- List of required environment variables.
 		once
 			create Result.make (4)
@@ -135,7 +135,7 @@ feature -- Status update
 			l_dir: DIRECTORY
 			l_value: STRING_8
 			l_variables: like required_environment_variables
-			l_variable: TUPLE [var: !STRING_8; is_directory: BOOLEAN]
+			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
 		do
 			l_is_valid := True
@@ -318,9 +318,9 @@ feature -- Query
 			l_extension: STRING
 			l_actual_file: RAW_FILE
 		do
-			l_install := install_path
+			l_install := install_path.string
 			if l_install.count < a_file_name.count then
-				l_file := a_file_name.as_string_8
+				l_file := a_file_name.as_string_8.string
 				if l_file.substring (1, l_install.count).is_equal (l_install) then
 					l_extension := l_file.substring (l_install.count + 1, l_file.count)
 					l_extension.prune_all_leading (operating_environment.directory_separator)
@@ -349,9 +349,9 @@ feature -- Query
 			l_extension: STRING
 			l_dir: STRING_8
 		do
-			l_install := install_path
+			l_install := install_path.string
 			if l_install.count < a_dir.count then
-				l_dir := a_dir.as_string_8
+				l_dir := a_dir.as_string_8.string
 				if l_dir.substring (1, l_install.count).is_equal (l_install) then
 					l_extension := l_dir.substring (l_install.count + 1, l_dir.count)
 					l_extension.prune_all_leading (operating_environment.directory_separator)

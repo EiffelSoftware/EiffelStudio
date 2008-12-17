@@ -190,6 +190,7 @@ test	loop-variant-syntax		syntax049 tcf pass syntax loop variant
 test	assigner-on-creation-expression	syntax050 tcf fail assigner
 test	external-dll-name		syntax051 tcf pass external
 test	attached_tuple_element		syntax052 tcf fail tuple attached
+test	obsolete-inline-agent		syntax053 tcf fail syntax
 
 
 -- Validity tests

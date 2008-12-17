@@ -26,11 +26,6 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<assembly name="mscorlib_dll" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_dll" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
-		<cluster name="classic_neutral" location="classic">
-			<condition>
-				<dotnet value="false"/>
-			</condition>
-		</cluster>
 		<cluster name="classic_mswin" location="classic\windows" recursive="true">
 			<condition>
 				<platform value="windows"/>

@@ -210,8 +210,17 @@ feature -- Access
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := class_type_id = other.class_type_id
-						and then body_index = other.body_index
+			Result := same_as (other)
+		end
+
+	same_as (other: EXECUTION_UNIT): BOOLEAN is
+			-- Is `other' similar to Current for EXECUTION_TABLE searches?
+		require
+			other_not_void: other /= Void
+		do
+			Result := class_type_id = other.class_type_id and then body_index = other.body_index
+		ensure
+			symmetric: Result implies other.same_as (Current)
 		end
 
 feature -- Setting

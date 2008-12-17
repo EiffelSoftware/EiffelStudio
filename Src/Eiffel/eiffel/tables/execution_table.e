@@ -10,6 +10,8 @@ inherit
 		rename
 			make as search_table_make,
 			search as table_search
+		redefine
+			same_keys
 		end
 
 	SHARED_WORKBENCH
@@ -176,6 +178,14 @@ feature -- Removal
 
 	dead_attributes: SEARCH_TABLE [INTEGER]
 			-- Record dead functions transformed into attributes.
+
+feature -- Comparison
+
+	same_keys (a_search_key, a_key: EXECUTION_UNIT): BOOLEAN is
+			-- <Precursor>
+		do
+			Result := a_search_key.same_as (a_key)
+		end
 
 feature -- Update
 

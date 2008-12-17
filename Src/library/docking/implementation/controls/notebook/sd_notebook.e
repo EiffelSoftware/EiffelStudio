@@ -106,8 +106,8 @@ feature -- Command
 			end
 		end
 
-	set_active_color (a_focus: BOOLEAN) is
-			-- Set tab selection color to focus color or non-focus color.
+	set_tab_active_color (a_focus: BOOLEAN) is
+			-- Set tab active selection color to focus color or non-focus color.
 		do
 			if selected_item /= Void then
 				tab_by_content (selected_item).set_selection_color (a_focus)

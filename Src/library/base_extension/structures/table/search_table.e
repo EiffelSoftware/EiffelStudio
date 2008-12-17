@@ -132,7 +132,7 @@ feature -- Comparison
 			valid_search_key: valid_key (a_search_key)
 			valid_key: valid_key (a_key)
 		do
-			Result := a_search_key.is_equal (a_key)
+			Result := a_search_key ~ a_key
 		end
 
 feature -- Insertion, deletion

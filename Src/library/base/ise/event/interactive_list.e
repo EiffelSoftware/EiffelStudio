@@ -251,9 +251,9 @@ feature -- Element Change
 					end
 					l_item := l_area.item (i)
 					if obj_cmp then
-						res := equal (v, l_item)
+						res := v ~ l_item
 					else
-						res := (v = l_item)
+						res := v = l_item
 					end
 					if res then
 						removed_item (l_item, i + lower)

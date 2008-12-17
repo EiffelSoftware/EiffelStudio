@@ -64,7 +64,7 @@ feature -- Element change
 			traversable := breadth_first_traversable
 		ensure
 			traversing_mode_set: is_traversing_mode_set
-			breadth_first_mode: internal.class_name (traversable).is_equal ("OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE")
+			breadth_first_mode: internal.class_name (traversable) ~ "OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE"
 		end
 
 	set_depth_first_traversing_mode is
@@ -73,7 +73,7 @@ feature -- Element change
 			traversable := depth_first_traversable
 		ensure
 			traversing_mode_set: is_traversing_mode_set
-			depth_first_mode: internal.class_name (traversable).is_equal ("OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE")
+			depth_first_mode: internal.class_name (traversable) ~ "OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE"
 		end
 
 	set_root_object (an_object: like root_object) is

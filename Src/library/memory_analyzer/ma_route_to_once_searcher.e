@@ -312,7 +312,6 @@ feature {NONE} -- Implementation
 		local
 			l_all_referrers, l_visited_referrers: HASH_TABLE [TUPLE [like start_index, ANY], like start_index]
 			l_referrer: like start_index
-			l_backable: BOOLEAN
 			l_all_referrers_count: INTEGER
 			l_visited_references: like visited_references
 		do

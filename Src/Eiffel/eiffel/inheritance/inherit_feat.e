@@ -173,6 +173,7 @@ feature
 								-- We only need a twin so as to not unnecessarily duplicate
 								-- arguments and type for some feature_i descendents.
 								--| Aliasing products unexpected results so a twin is needed.
+								
 							replication := next.a_feature.twin
 								-- Mark it as processed
 							next.set_renaming_processed

@@ -146,7 +146,7 @@ feature {NONE} -- Events
 	on_prepare
 			-- Called after `prepare' has performed all initialization.
 		require
-			prepared: is_prepared
+			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared

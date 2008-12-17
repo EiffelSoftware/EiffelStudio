@@ -39,21 +39,19 @@ feature {NONE} -- Initialization
 		do
 			if not l_quit then
 				initialize_stream
-				from
-
-				until
+				from until
 					l_done
 				loop
+					l_done := True
 					stream.read_natural_32
-					n := stream.last_natural_32
-					if n > 0 then
-						if is_valid_index (n) then
-							run_test (n)
-						else
-							die (1)
+					if stream.bytes_read = {PLATFORM}.natural_32_bytes then
+						n := stream.last_natural_32
+						if n > 0 then
+							if is_valid_index (n) then
+								run_test (n)
+								l_done := False
+							end
 						end
-					else
-						l_done := True
 					end
 				end
 				stream.put_natural (0)
@@ -158,13 +156,11 @@ feature {NONE} -- Query
 		deferred
 		end
 
-	test_name (a_index: NATURAL): !STRING
+	test_name (a_index: NATURAL): !READABLE_STRING_8
 			-- Name of the test procedure
 		require
 			a_index_valid: is_valid_index (a_index)
-		do
-				-- Will be deferred!
-			Result := "test001"
+		deferred
 		ensure
 			result_valid: test_set_instance (a_index).is_valid_name (Result)
 		end

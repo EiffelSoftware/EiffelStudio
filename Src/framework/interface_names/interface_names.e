@@ -1309,8 +1309,8 @@ feature -- Label texts
 
 	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_32 is
 		require
-			a_count_not_void: a_count /= Void
-			a_total_count_not_void: a_total_count /= Void
+			a_count_non_negative: a_count >= 0
+			a_total_count_non_negative: a_total_count >= 0
 		do
 				-- Actually it should have two plural forms, one for the number of matches and the other for the number of preferences
 				-- But since the number of preferences is always greater than one anyway we just go for the number of matches

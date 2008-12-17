@@ -76,8 +76,6 @@ feature {NONE} -- Events
 
 	frozen on_clean_frozen
 			-- <Precursor>
-		local
-			l_dir: DIRECTORY
 		do
 			on_clean
 

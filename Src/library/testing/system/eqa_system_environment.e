@@ -97,8 +97,6 @@ feature -- Status setting
 			-- Set `target_directory' to `a_testing_directory'.
 			--
 			-- Note: use this to manually specify where `test_set' is executed.
-		local
-			l_exec, l_output: DIRECTORY_NAME
 		do
 			create {STRING} target_directory.make_from_string (a_target_directory)
 		ensure
@@ -113,8 +111,6 @@ feature {NONE} -- Constants
 
 	default_source_directory: !READABLE_STRING_8
 			-- Default value for `source_directory'
-		local
-			l_dir: ?like default_source_directory
 		once
 			if is_windows then
 				Result := "C:\Temp\Source"

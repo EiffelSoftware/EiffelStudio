@@ -66,9 +66,6 @@ feature -- Query
 
 	is_valid_name (a_name: ?READABLE_STRING_8): BOOLEAN
 			-- Is `a_name' a valid path component?
-		local
-			i: INTEGER
-			c: CHARACTER
 		do
 			Result := a_name /= Void and then not a_name.is_empty and then
 			          (create {DIRECTORY_NAME}.make).is_directory_name_valid (a_name)

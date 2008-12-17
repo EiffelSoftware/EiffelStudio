@@ -88,8 +88,6 @@ feature {EQA_SYSTEM_EXECUTION, EQA_SYSTEM_EXECUTION_PROCESS} -- Implementation
 
 	flush_buffer
 			-- Process any remaining output in `buffer'.
-		local
-			i, l_count: INTEGER
 		do
 			if not buffer.is_empty and is_line_wise then
 				on_new_line

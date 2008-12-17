@@ -585,11 +585,16 @@ end;
 				create parent_type
 				actual_parent_type := parent_c.parent_type
 				if not actual_parent_type.is_attached then
-					actual_parent_type := actual_parent_type.twin
 					if a_class.lace_class.is_attached_by_default then
-						actual_parent_type.set_is_attached
+						if not actual_parent_type.is_attached then
+							actual_parent_type := actual_parent_type.twin
+							actual_parent_type.set_is_attached
+						end
 					else
-						actual_parent_type.set_is_implicitly_attached
+						if not actual_parent_type.is_implicitly_attached then
+							actual_parent_type := actual_parent_type.twin
+							actual_parent_type.set_is_implicitly_attached
+						end
 					end
 				end
 				parent_type.set_actual_type (actual_parent_type)
@@ -610,8 +615,7 @@ end;
 			until
 				i < 0
 			loop
-					-- Duplicate feature to prevent aliasing
-				feature_i := parent_table [i].duplicate
+				feature_i := parent_table [i].instantiated (parent_type)
 
 					-- Add inherited feature information to the concerned instance of INHERIT_FEAT
 				search (feature_i.feature_name_id)
@@ -622,7 +626,6 @@ end;
 				end
 					-- Instantiate feature for `parent_type', this is so that generics may
 					-- be processed correctly.
-				feature_i.instantiate (parent_type)
 				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (feature_i, parent_c))
 				i := i - 1
 			end
@@ -757,11 +760,9 @@ end;
 				if inherited_info /= Void then
 						-- Class inherit from a feature coming from one
 						-- parent.
-					feature_i := inherited_info.a_feature;
-						-- Feature name
-					feature_i.set_feature_name_id (feature_name_id, feature_i.alias_name_id)
+
 						-- initialization of an inherited feature
-					init_inherited_feature (feature_i, inherit_feat);
+					feature_i := init_inherited_feature (feature_name_id, inherited_info.a_feature, inherit_feat);
 						-- Insertion in the origin table
 					inherited_info.set_a_feature (feature_i);
 					if
@@ -1396,18 +1397,12 @@ end;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
 
---| FIXME IEK The assignment is aliased, investigate if this is harmless or if
---| it should be replaced with a `duplicate', or perhaps both the FEATURE_I
---| and INHERIT_INFO objects can be reused.
-						inherited_feature := deferred_info.a_feature
-						inherited_feature.set_feature_name_id (feature_name_id, inherited_feature.alias_name_id)
 							-- Initialization of an inherited feature
-						init_inherited_feature (inherited_feature, inherit_feat);
+						inherited_feature := init_inherited_feature (feature_name_id, deferred_info.a_feature, inherit_feat);
 							-- Insertion in the origin table
 
---| FIXME IEK: This code is pointless as is due to the feature_i aliasing above.
---						deferred_info := deferred_info.twin
---						deferred_info.set_a_feature (inherited_feature);
+							-- Reuse deferred info and set with new inherited_feature object.
+						deferred_info.set_a_feature (inherited_feature);
 
 						Origin_table.insert (deferred_info);
 						if inherit_feat.deferred_features.count > 1 then
@@ -1449,37 +1444,39 @@ end;
 			end;
 		end;
 
-	init_inherited_feature (f: FEATURE_I; inherit_feat: INHERIT_FEAT) is
+	init_inherited_feature (a_feature_name_id: INTEGER_32; a_f: FEATURE_I; inherit_feat: INHERIT_FEAT): FEATURE_I is
 			-- Initialization of an inherited feature
 		require
-			f_not_void: f /= Void
+			a_f_not_void: a_f /= Void
 			inherit_feat_not_void: inherit_feat /= Void
 		local
 			inherit_info: INHERIT_INFO
 			old_feature: FEATURE_I
 			feature_name_id: INTEGER
 		do
+			Result := a_f.twin
+			Result.set_feature_name_id (a_feature_name_id, Result.alias_name_id)
 				-- It is no more an origin
-			f.set_is_origin (False)
-			f.set_has_property (False)
+			Result.set_is_origin (False)
+			Result.set_has_property (False)
 			if a_class.is_single then
 					-- Feature getters and setters may have been generated.
 				inherit_info := inherit_feat.inherited_info
 				if inherit_info /= Void and then inherit_info.parent.parent.is_single then
-					f.set_has_property_getter (False)
-					f.set_has_property_setter (False)
+					Result.set_has_property_getter (False)
+					Result.set_has_property_setter (False)
 				end
 			end
 
 				--  Check the routine table ids
-			f.set_rout_id_set (inherit_feat.rout_id_set.twin)
+			Result.set_rout_id_set (inherit_feat.rout_id_set.twin)
 				-- Process feature id
-			feature_name_id := f.feature_name_id
+			feature_name_id := Result.feature_name_id
 			old_feature := feature_table.item_id (feature_name_id)
 			if old_feature = Void then
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
-				give_new_feature_id (f)
+				give_new_feature_id (Result)
 
 					-- We reactivate `body_index' in case `old_feature' is Void because
 					-- it was removed in `assign_feature_table' as it was not valid
@@ -1490,10 +1487,10 @@ end;
 					--| The only issue when performing this call is that in a compilation
 					--| from scratch it is useless, but we do not have much choice in
 					--| case of incremental compilation.
-				Tmp_ast_server.reactivate (f.body_index)
+				Tmp_ast_server.reactivate (Result.body_index)
 			else
 					-- Take the old feature id
-				f.set_feature_id (old_feature.feature_id)
+				Result.set_feature_id (old_feature.feature_id)
 				if
 					old_feature.can_be_encapsulated and then
 					old_feature.to_generate_in (a_class)
@@ -1508,13 +1505,13 @@ end;
 				-- Concatenation of the export statuses of all the
 				-- precursors of the inherited feature: take care of new
 				-- adapted export status specified in inheritance clause
-			f.set_export_status (inherit_feat.exports (feature_name_id))
+			Result.set_export_status (inherit_feat.exports (feature_name_id))
 				-- Insert it in the table `inherited_features'.
-			inherited_features.put (f, feature_name_id)
+			inherited_features.put (Result, feature_name_id)
 
-			if f.alias_name_id > 0 then
+			if Result.alias_name_id > 0 then
 					-- If there is an alias id then check to make sure there is no conflict.
-				check_alias_name_conflict (f)
+				check_alias_name_conflict (Result)
 			end
 		end
 
@@ -1742,6 +1739,9 @@ indexing
 		]"
 
 end
+
+
+
 
 
 

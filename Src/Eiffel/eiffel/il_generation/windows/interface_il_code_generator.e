@@ -452,8 +452,7 @@ feature -- IL Generation
 							impl_type := current_class_type.type.reference_type
 							impl_class_type := impl_type.associated_class_type (Void)
 								-- Update `feat' in the context of the reference type and use it as `impl_feat'.
-							impl_feat := feat.duplicate
-							impl_feat.instantiation_in (impl_type)
+							impl_feat := feat.instantiation_in (impl_type)
 						else
 								-- Generate implementation for parent class type.
 							impl_feat := inh_feat

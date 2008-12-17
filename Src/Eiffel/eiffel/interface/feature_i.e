@@ -1664,7 +1664,7 @@ feature -- Polymorphism
 			r: like new_rout_entry
  		do
  			if is_attribute and then Routine_id_counter.is_attribute (rout_id) then
- 				if has_formal or else byte_context.workbench_mode then
+ 				if byte_context.workbench_mode or else has_formal  then
 	 				r := new_rout_entry
 	 				r.set_is_attribute
 	 				Result := r
@@ -1733,23 +1733,32 @@ feature -- Polymorphism
 
 feature -- Signature instantiation
 
-	instantiate (parent_type: TYPE_A) is
+	instantiated (parent_type: TYPE_A): FEATURE_I is
 			-- Instantiated signature in context of `parent_type'.
 		require
 			good_argument: parent_type /= Void
 			is_solved: type.is_solved
 		local
 			i, nb: INTEGER
-			old_type: TYPE_A
+			old_type, new_type: TYPE_A
 			l_arguments: like arguments
 		do
 				-- Instantiation of the type
 			old_type := type
-			set_type (old_type.instantiated_in (parent_type), assigner_name_id)
+			new_type := old_type.instantiated_in (parent_type)
+			if new_type /= old_type then
+				Result := duplicate
+				Result.set_type (new_type, assigner_name_id)
+
+					-- Set arguments to that of `Result'
+				l_arguments := Result.arguments
+			else
+					-- Use `Current' arguments.
+				l_arguments := arguments
+			end
 				-- Instantiation of the arguments
 			from
 				i := 1
-				l_arguments := arguments
 				if l_arguments /= Void then
 					nb := l_arguments.count
 				end
@@ -1757,26 +1766,45 @@ feature -- Signature instantiation
 				i > nb
 			loop
 				old_type := l_arguments.i_th (i)
-				l_arguments.put_i_th (old_type.instantiated_in (parent_type), i)
+				new_type := old_type.instantiated_in (parent_type)
+				if old_type /= new_type then
+					if Result = Void then
+						Result := duplicate
+						l_arguments := Result.arguments
+					end
+					l_arguments.put_i_th (new_type, i)
+				end
 				i := i + 1
+			end
+				-- If no changes have been made then we can return `Current'
+			if Result = Void then
+				Result := duplicate
 			end
 		end
 
-	instantiation_in (descendant_type: TYPE_A) is
+	instantiation_in (descendant_type: TYPE_A): FEATURE_I is
 			-- Instantiated signature in context of `descendant_type'.
 		require
 			good_argument: descendant_type /= Void
 			is_solved: type.is_solved
 		local
 			i, nb: INTEGER
-			old_type: TYPE_A
+			old_type, new_type: TYPE_A
 			l_arguments: like arguments
 			l_written_in: like written_in
 		do
 			l_written_in := written_in
 				-- Instantiation of the type
 			old_type := type
-			set_type (old_type.instantiation_in (descendant_type, l_written_in), assigner_name_id)
+			new_type := old_type.instantiation_in (descendant_type, l_written_in)
+			if new_type /= old_type then
+				Result := duplicate
+				Result.set_type (new_type, assigner_name_id)
+				l_arguments := Result.arguments
+			else
+				l_arguments := arguments
+			end
+
 				-- Instantiation of the arguments
 			from
 				i := 1
@@ -1788,8 +1816,21 @@ feature -- Signature instantiation
 				i > nb
 			loop
 				old_type := l_arguments.i_th (i)
-				l_arguments.put_i_th (old_type.instantiation_in (descendant_type, l_written_in), i)
+				new_type := old_type.instantiation_in (descendant_type, l_written_in)
+				if new_type /= old_type then
+					if Result = Void then
+						Result := duplicate
+						l_arguments := Result.arguments
+					end
+					l_arguments.put_i_th (new_type, i)
+				end
 				i := i + 1
+			end
+				-- If no changes have been made then we can return `Current'
+			if Result = Void then
+					-- For now return duplicate to match existing behavior
+					-- but change to current after more testing
+				Result := duplicate
 			end
 		end
 

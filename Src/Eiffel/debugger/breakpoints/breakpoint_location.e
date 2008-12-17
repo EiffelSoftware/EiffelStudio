@@ -14,14 +14,17 @@ class
 
 inherit
 	BREAKPOINT_KEY_I
+		redefine
+			is_equal
+		end
 
 	E_FEATURE_COMPARER
-		undefine
+		redefine
 			is_equal
 		end
 
 	DEBUG_OUTPUT
-		undefine
+		redefine
 			is_equal
 		end
 

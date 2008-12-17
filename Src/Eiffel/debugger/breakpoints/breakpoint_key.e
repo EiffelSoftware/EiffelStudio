@@ -27,8 +27,7 @@ feature {NONE} -- Creation
 	make (a_location: BREAKPOINT_LOCATION) is
 			-- Create a breakpoint at location `a_location'
 		require
-			valid_location: 	a_location /= Void and then
-								not a_location.is_corrupted
+			valid_location: a_location /= Void and then not a_location.is_corrupted
 		do
 			location := a_location
 		end
@@ -42,15 +41,19 @@ feature {NONE} -- Creation
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	same_breakpoint_key (other: like Current): BOOLEAN is
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
 			-- have the same `body_index' and `offset'.
 			-- We use 'body_index' because it does not change after
 			-- a recompilation
+		require
+			other_not_void: other /= Void
 		do
 			Result := location.is_equal (other.location) and (is_hidden = other.is_hidden)
+		ensure
+			symmetric: Result implies other.same_breakpoint_key (Current)
 		end
 
 feature -- Properties

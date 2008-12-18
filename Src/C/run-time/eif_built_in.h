@@ -56,6 +56,7 @@ extern "C" {
 #define eif_builtin_ANY_twin(object)			eif_twin (object)
 #define eif_builtin_ANY_standard_twin(object)			eif_standard_twin (object)
 #define eif_builtin_ANY_is_deep_equal(some, other)		ediso ((some), (other))
+#define eif_builtin_ANY_is_equal(some, other)			eequal ((some), (other))
 #define eif_builtin_ANY_standard_is_equal(some, other)	eequal ((some), (other))
 #define eif_builtin_ANY_deep_twin(object)				edclone ((object))
 

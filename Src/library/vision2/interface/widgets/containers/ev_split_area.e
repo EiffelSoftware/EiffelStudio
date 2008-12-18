@@ -308,6 +308,8 @@ feature -- Status setting
 
 	update_proportion
 			-- Update `proportion' base on current `split_position'
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_proportion: REAL_32
 			l_avail: INTEGER_32

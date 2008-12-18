@@ -51,7 +51,7 @@ feature -- Initialization
 		do
 			if is_dotnet_installed then
 				create l_exec
-				l_exec.put (dotnet_framework_path, "ISE_DOTNET_FRAMEWORK")
+				l_exec.put (dotnet_framework_path.string, "ISE_DOTNET_FRAMEWORK")
 			end
 		end
 

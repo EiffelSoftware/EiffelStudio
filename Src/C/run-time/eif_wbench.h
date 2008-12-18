@@ -53,6 +53,7 @@ RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE 
 RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object);			/* Creation call for precomp expanded types */
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
 RT_LNK EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type); /* Feature call for copy routine */ 
+RT_LNK EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type); /* Feature call for is_equal routine */ 
 RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
 RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
 RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object);				/* Nested attribute access */

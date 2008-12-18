@@ -297,6 +297,7 @@ rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;
 rt_public int32 egc_copy_rout_id;
+rt_public int32 egc_is_equal_rout_id;
 rt_public EIF_TYPE_INDEX egc_bit_dtype;
 
 rt_public EIF_TYPE_INDEX egc_sp_bool;
@@ -373,6 +374,7 @@ rt_public struct rout_info *egc_forg_table;
 #else
 rt_public void (**egc_edispose)(void);
 rt_public void (**egc_copy)(EIF_REFERENCE, EIF_REFERENCE);
+rt_public EIF_BOOLEAN (**egc_is_equal)(EIF_REFERENCE, EIF_REFERENCE);
 rt_public char *(**egc_ecreate)(void);
 rt_public char *(**egc_exp_create)(void);
 rt_public struct ctable *egc_ce_rname;
@@ -381,10 +383,8 @@ rt_public long *egc_fsize;
 #endif
 
 #ifdef WORKBENCH
-	rt_public EIF_TYPED_VALUE (*egc_equal)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* {ANY}.equal */
 	rt_public EIF_TYPED_VALUE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #else
-	rt_public EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
 	rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #endif
 

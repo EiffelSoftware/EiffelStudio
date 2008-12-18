@@ -424,6 +424,26 @@ rt_public EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type)
 	}
 }
 
+rt_public EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type)
+{
+	/* Function pointer associated to Eiffel feature of routine id
+	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+	EIF_GET_CONTEXT
+	BODY_INDEX body_id;
+
+	nstcall = 0;								/* No invariant check */
+	CBodyId(body_id,egc_is_equal_rout_id,dyn_type);	/* Get the body index */
+
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];		 /* Frozen feature */
+	else {
+		IC = melt[body_id];	 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	}
+}
+
 /*
 doc:	<attribute name="desc_tab" return_type="struct desc_info ***" export="shared">
 doc:		<summary>Global descriptor table. Initialization of the run-time feature call structures. The central call structure is called `desc_tab'. It contains one entry per class (NOT class type) and it is indexed by class id (not the toplogical id). The entry for a given class is a table of descriptor pointers, and is indexed by "dynamic" class type ids.</summary>

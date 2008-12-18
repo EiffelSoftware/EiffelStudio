@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			end
 
 			pointer_button_release_actions.force_extend (agent update_proportion)
-			resize_actions.force_extend (agent set_proportion_with_remembered)
+			resize_actions.force_extend (agent remember_top_resize_split_area (Current))
 		end
 
 	set_half is

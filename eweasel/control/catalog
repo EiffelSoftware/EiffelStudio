@@ -422,6 +422,7 @@ test	invalid-redefinition			valid222 tcf pass validity
 test	void-safe-static-call			valid223 tcf pass validity attached_types
 test	vrft-in-nested-tuple-type		valid224 tcf fail validity tuple
 test	extra-vtcg-with-full-checking		valid225 tcf pass validity
+test	reference-generic-expanded-actual	valid226 tcf fail validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

@@ -683,7 +683,7 @@ feature -- Stone process
 			cv_cst: CLASSI_STONE
 			ef_stone: EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_filename: FILE_NAME
+			l_filename: STRING
 		do
 			cv_cst ?= a_stone
 			if cv_cst /= Void then

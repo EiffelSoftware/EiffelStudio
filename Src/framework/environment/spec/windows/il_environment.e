@@ -9,7 +9,7 @@ class
 	IL_ENVIRONMENT
 
 inherit
-	ANY
+	OPERATING_ENVIRONMENT
 		redefine
 			default_create
 		end
@@ -261,14 +261,14 @@ feature {NONE} -- Implementation
 				key := reg.key_value (p, runtime_root_key)
 				if key /= Void then
 					Result := key.string_value
-					if Result.item (Result.count) = Operating_environment.Directory_separator then
+					if Result.item (Result.count) = Directory_separator then
 						Result.remove (Result.count)
 					end
 				end
 				reg.close_key (p)
 			end
 		ensure
-			no_ending_separator: Result /= Void implies Result.item (Result.count) /= Operating_environment.Directory_separator
+			no_ending_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 feature -- Constants

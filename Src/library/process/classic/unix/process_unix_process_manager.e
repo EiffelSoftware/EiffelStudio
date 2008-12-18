@@ -445,12 +445,7 @@ feature {NONE} -- Implementation
 			end
 			create a.make (1, count);
 
-			pname := program_file_name.mirrored
-			pos := pname.index_of (Directory_separator, 1)
-			if pos /= 0 then
-				pname := pname.substring (1, pos - 1)
-			end
-			pname.mirror
+			pname := program_file_name
 			a.put (pname, 1)
 			from
 				k := 2

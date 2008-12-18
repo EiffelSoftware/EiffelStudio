@@ -24,8 +24,8 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status report
 
-	is_line_wise: BOOLEAN
-			-- Should output notification be per line?
+	is_per_character: BOOLEAN
+			-- Should output be processed on a character basis?
 			--
 			-- Note: this can be changed while output is processed.
 
@@ -37,7 +37,7 @@ feature {NONE} -- Events
 			-- Note: if `a_character' is a new line character, buffer will be wiped out after
 			--       `on_new_character' has returned.
 		require
-			not_line_wise: not is_line_wise
+			per_character: is_per_character
 			buffer_not_empty: not buffer.is_empty
 			a_character_is_last: buffer.item (buffer.count) = a_character
 		do
@@ -50,7 +50,7 @@ feature {NONE} -- Events
 			--
 			-- Note: `on_new_line' is also called when process exits and `buffer' contains a partial line.
 		require
-			line_wise: is_line_wise
+			not_is_per_character: not is_per_character
 		do
 		end
 
@@ -69,12 +69,12 @@ feature {EQA_SYSTEM_EXECUTION, EQA_SYSTEM_EXECUTION_PROCESS} -- Implementation
 			loop
 				c := a_output.item (i)
 				if c /= '%R' then
-					if c = '%N' and is_line_wise then
+					if c = '%N' and not is_per_character then
 						on_new_line
 						buffer.wipe_out
 					else
 						buffer.append_character (c)
-						if not is_line_wise then
+						if is_per_character then
 							on_new_character (c)
 							if c = '%N' then
 								buffer.wipe_out
@@ -89,7 +89,7 @@ feature {EQA_SYSTEM_EXECUTION, EQA_SYSTEM_EXECUTION_PROCESS} -- Implementation
 	flush_buffer
 			-- Process any remaining output in `buffer'.
 		do
-			if not buffer.is_empty and is_line_wise then
+			if not buffer.is_empty and not is_per_character then
 				on_new_line
 				buffer.wipe_out
 			end

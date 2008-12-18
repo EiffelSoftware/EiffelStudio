@@ -4080,6 +4080,7 @@ feature -- Generation
 			generate_expanded_creation_table
 			generate_dispose_table
 			generate_copy_table
+			generate_is_equal_table
 
 			Attr_generator.finish
 			Rout_generator.finish
@@ -4152,6 +4153,7 @@ feature -- Generation
 				create l_rout_ids.make (4)
 				l_rout_ids.extend (routine_id_counter.dispose_rout_id)
 				l_rout_ids.extend (routine_id_counter.copy_rout_id)
+				l_rout_ids.extend (routine_id_counter.is_equal_rout_id)
 				l_rout_ids.extend (routine_id_counter.initialization_rout_id)
 				l_rout_ids.extend (routine_id_counter.creation_rout_id)
 				l_rout_ids.start
@@ -4947,6 +4949,21 @@ feature -- Copy routine
 			end
 		end
 
+	any_is_equal_id: INTEGER
+			-- Copy routine id from class ANY.
+			-- Return 0 if the ANY class has not been compiled
+			-- or has no is_equal routine.
+		local
+			feature_i: FEATURE_I
+		once
+			if any_class /= Void and any_class.is_compiled then
+				feature_i := any_class.compiled_class.feature_table.item_id (names.is_equal_name_id)
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first
+				end
+			end
+		end
+
 	generate_copy_table
 			-- Generate copy table.
 		local
@@ -4970,6 +4987,32 @@ feature -- Copy routine
 				-- one which could have been generated if there was any polymorphic
 				-- call on `copy'.
 			entry.generate_full (routine_id_counter.copy_rout_id,
+											header_generation_buffer)
+		end
+
+	generate_is_equal_table
+			-- Generate is_equal table.
+		local
+			entry: ROUT_TABLE
+		do
+			if any_class /= Void and then any_class.is_compiled then
+					-- Get the polymorphic table corresponding to the `is_equal' routine from ANY.
+				entry ?= Eiffel_table.poly_table (any_is_equal_id)
+			end
+			if entry = Void then
+					-- Create an empty table needed as runtime expect this table
+					-- to exist.
+				create entry.make (routine_id_counter.is_equal_rout_id)
+			end
+				-- We are using `header_generation_buffer' for the generation
+				-- because this is used for routine tables (look at
+				-- `generate_routine_table').
+				-- We are using `routine_id_counter.is_equal_rout_id' and not
+				-- `any_is_equal_id' to generate the table, because we are not
+				-- generating a standard polymorphic table and so, we cannot reuse the
+				-- one which could have been generated if there was any polymorphic
+				-- call on `is_equal'.
+			entry.generate_full (routine_id_counter.is_equal_rout_id,
 											header_generation_buffer)
 		end
 

@@ -49,6 +49,7 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "rt_wbench.h"
+#include "rt_interp.h"
 #include "rt_gen_types.h"
 #include "eif_memory.h"
 #include "rt_macros.h"
@@ -91,15 +92,9 @@ rt_public EIF_BOOLEAN eif_xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 
 	if ((ref1 && ref2) && (Dftype(ref1) == Dftype(ref2))) {
 #ifdef WORKBENCH
-		EIF_TYPED_VALUE r1;
-		EIF_TYPED_VALUE r2;
-		r1.type = SK_REF;
-		r2.type = SK_REF;
-		r1.it_r = ref1;
-		r2.it_r = ref2;
-		return egc_equal(ref1, r1, r2).it_b;
+		return call_is_equal (Dtype(ref1), ref1, ref2);
 #else
-		return egc_equal(ref1, ref1, ref2);
+		return egc_is_equal [Dtype(ref1)] (ref1, ref2);
 #endif
 	}
 

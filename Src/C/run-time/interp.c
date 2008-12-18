@@ -5174,6 +5174,22 @@ rt_shared void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFER
 	IC = OLD_IC;
 }
 
+rt_shared EIF_BOOLEAN call_is_equal (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other)
+{
+	/* Save the interpreter counter and restore it after the copy
+	 * routine for `Current' with dynamic type `dtype' and argument `other'.
+	 */
+	EIF_GET_CONTEXT
+	EIF_BOOLEAN result;
+	unsigned char *OLD_IC;
+	EIF_TYPED_VALUE o;
+	OLD_IC = IC;
+	o.type = SK_REF;
+	o.it_r = other;
+	result = (FUNCTION_CAST(EIF_TYPED_VALUE, (EIF_REFERENCE, EIF_TYPED_VALUE)) wis_equal (dtype))(Current, o).it_b;
+	IC = OLD_IC;
+	return result;
+}
 rt_private void address(int32 aid)
 						/* Id of the routine in the dispath table */
 {

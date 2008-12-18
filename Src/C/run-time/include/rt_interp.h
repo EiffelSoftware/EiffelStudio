@@ -282,6 +282,7 @@ extern void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile 
 
 extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */ 
 extern void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call copy routines */
+extern EIF_BOOLEAN call_is_equal (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call is_equal routines */
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
 extern void xinitint(void);										/* Initialize the interpreter */
 extern EIF_TYPED_VALUE *otop(void);									/* Top of the stack */

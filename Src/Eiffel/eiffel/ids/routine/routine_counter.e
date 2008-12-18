@@ -30,6 +30,7 @@ feature -- Initialization
 			initialization_rout_id := next_rout_id
 			dispose_rout_id := next_rout_id
 			copy_rout_id := next_rout_id
+			is_equal_rout_id := next_rout_id
 			creation_rout_id := next_rout_id
 		end
 
@@ -57,6 +58,7 @@ feature -- Access
 	initialization_rout_id: INTEGER
 	dispose_rout_id: INTEGER
 	copy_rout_id: INTEGER
+	is_equal_rout_id: INTEGER
 	creation_rout_id: INTEGER
             -- Predefined routine ids
 
@@ -70,6 +72,7 @@ feature -- Status report
 				rout_id = initialization_rout_id or
 				rout_id = dispose_rout_id or
 				rout_id = copy_rout_id or
+				rout_id = is_equal_rout_id or
 				rout_id = creation_rout_id)
 		end
 

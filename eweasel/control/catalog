@@ -757,6 +757,7 @@ test	consecutive-error-fix-sequence-crash	incr296	tcf pass incrementality
 test	add-empty-create-clause			incr297	tcf fail incrementality
 test	change-expanded-class-name		incr298	tcf pass incrementality
 test	add-feature-invalidate-generic-rename	incr299	tcf fail incrementality
+test	generic-call-renamed-default-create	incr300	tcf fail incrementality
 
 
 -- Melting

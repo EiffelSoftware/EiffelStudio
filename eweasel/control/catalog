@@ -950,6 +950,7 @@ test	inlined-generic-expanded-type	final068 tcf pass finalizing inlining expande
 test	change-actual-generic-to-expanded final069 tcf fail finalizing expanded generic incrementality
 test	finalize-expanded-unref-local	final070 tcf fail finalizing expanded
 test	finalize-all-classes-true	final071 tcf fail finalizing
+test	finalize-self-init-attribute	final072 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

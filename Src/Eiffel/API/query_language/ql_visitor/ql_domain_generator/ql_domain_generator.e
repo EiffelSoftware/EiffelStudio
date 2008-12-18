@@ -269,7 +269,7 @@ feature -- Domain visit
 				is_temp_domain_used := True
 				temp_domain.wipe_out
 				if not a_item.is_empty then
-					a_item.content.do_all (agent process_item ({like item_type} ?))
+					a_item.content.do_all (agent process_item ({QL_ITEM} ?))
 				end
 					-- There are maybe some candidate items from `actual_criterion' stored in `temp_domain',
 					-- so we process it now.

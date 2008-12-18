@@ -27,7 +27,7 @@ feature -- Access
 	stone: STONE
 			-- Stone for current.
 
-	file_name: FILE_NAME
+	file_name: STRING
 			-- Name of the file being displayed.
 			-- This attribute is useful when `stone'
 			-- is Void (this case occurs after loading
@@ -66,9 +66,11 @@ feature -- Access
 
 feature -- Status Settings
 
-	set_file_name (a_filename: FILE_NAME) is
+	set_file_name (a_filename: like file_name) is
 			-- Make `f' the name of the file associated with tool.
 			-- If `f' is Void, the tool is associated with no file.
+		require
+			a_file_name_valid_type: a_filename /= Void implies a_filename.same_type ("")
 		do
 			file_name := a_filename
 		ensure
@@ -265,9 +267,9 @@ feature {NONE} -- Implementation
 			-- Date of last save
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -278,19 +280,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

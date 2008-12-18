@@ -113,7 +113,11 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_output_path_not_empty: not a_output_path.is_empty
 		do
-			output_path := a_output_path.twin
+			if a_output_path /= Void then
+				create output_path.make_from_path (a_output_path)
+			else
+				output_path := Void
+			end
 		ensure
 			output_path_set: output_path ~ a_output_path
 		end
@@ -124,7 +128,11 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_error_path_not_empty: not a_error_path.is_empty
 		do
-			error_path := a_error_path.twin
+			if a_error_path /= Void then
+				create error_path.make_from_path (a_error_path)
+			else
+				error_path := Void
+			end
 		ensure
 			error_path_set: error_path ~ a_error_path
 		end
@@ -135,7 +143,11 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_input_path_not_empty: not a_input_path.is_empty
 		do
-			input_path := a_input_path.twin
+			if a_input_path /= Void then
+				create input_path.make_from_path (a_input_path)
+			else
+				input_path := Void
+			end
 		ensure
 			input_path_set: input_path ~ a_input_path
 		end

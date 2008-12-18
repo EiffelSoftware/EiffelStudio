@@ -55,13 +55,99 @@ feature {EQA_SYSTEM_EXECUTION} -- Access
 			Result := l_env
 		end
 
-feature {NONE} -- Access
+feature {NONE} -- Access: execution
+
+	current_execution: ?EQA_SYSTEM_EXECUTION
+
+feature {NONE} -- Access: caching
 
 	file_system_cache: ?like file_system
 			-- Cache for `file_system'
 
 	environment_cache: ?like environment
 			-- Cache for `environment'
+
+feature {NONE} -- Query
+
+	compare_output (a_output: !READABLE_STRING_8)
+		require
+			current_execution_attached: current_execution /= Void
+			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
+			current_execution_stored_output: {l_exec_out: !like current_execution} current_execution and then
+				l_exec_out.output_path /= Void
+		local
+			l_path: ?EQA_SYSTEM_PATH
+		do
+			l_path := current_execution.output_path
+			check l_path /= Void end
+			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
+		end
+
+	compare_output_with_file (a_output_path: !EQA_SYSTEM_PATH)
+		require
+			current_execution_attached: current_execution /= Void
+			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
+			current_execution_stored_output: {l_exec_out: !like current_execution} current_execution and then
+				l_exec_out.output_path /= Void
+			a_output_path_not_empty: not a_output_path.is_empty
+		local
+			l_path: ?EQA_SYSTEM_PATH
+		do
+			l_path := current_execution.output_path
+			check l_path /= Void end
+			assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
+		end
+
+feature {NONE} -- Basic operations
+
+	prepare_system (a_output_path: !EQA_SYSTEM_PATH)
+			-- Create new `current_execution' using provided path to store output.
+			--
+			-- `a_output_path': Path where output retrieved from system will be stored.
+		local
+			l_exec: like current_execution
+		do
+			create l_exec.make (environment)
+			l_exec.set_output_path (a_output_path)
+			current_execution := l_exec
+		ensure
+			current_execution_attached: current_execution /= Void
+			current_execution_uses_environment: {l_exec_e: !like current_execution} current_execution and then
+				l_exec_e.environment = environment
+			current_execution_not_launched: {l_exec_nl: !like current_execution} current_execution and then
+				not l_exec_nl.is_launched
+			current_execution_uses_valid_output: {l_exec_o: !like current_execution} current_execution and then
+				l_exec_o.output_path ~ old a_output_path
+		end
+
+	run_system (a_args: !ARRAY [STRING])
+			-- Launch `current_execution' and process output until it exits.
+		require
+			current_execution_attached: current_execution /= Void
+			current_execution_not_launched: {l_exec_nl: !like current_execution} current_execution and then
+				not l_exec_nl.is_launched
+		local
+			l_exec: like current_execution
+		do
+			l_exec := current_execution
+			check l_exec /= Void end
+			a_args.do_all (agent (a_arg: STRING; a_exec: !like current_execution)
+				require
+					a_arg_attached: a_arg /= Void
+				do
+					a_exec.add_argument (a_arg)
+				end (?, l_exec))
+			l_exec.launch
+			l_exec.process_output_until_exit
+				-- Safety assignments to satisfy postcondition
+			current_execution := l_exec
+		ensure
+			current_execution_unchanged: current_execution = old current_execution
+			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
+		end
 
 feature {NONE} -- Events
 
@@ -83,9 +169,11 @@ feature {NONE} -- Events
 
 			file_system_cache := Void
 			environment_cache := Void
+			current_execution := Void
 		ensure then
-			internal_environment_detached: environment_cache = Void
-			internal_file_system_detached: file_system_cache = Void
+			environment_cache_detached: environment_cache = Void
+			file_system_cache_detached: file_system_cache = Void
+			current_execution_detached: current_execution = Void
 		end
 
 	on_prepare

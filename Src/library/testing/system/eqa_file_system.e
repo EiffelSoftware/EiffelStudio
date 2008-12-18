@@ -55,6 +55,88 @@ feature -- Query
 			Result := build_partial_path (a_path, target_directory, 0)
 		end
 
+	has_same_content_as_string (a_path: !EQA_SYSTEM_PATH; a_string: !READABLE_STRING_8): BOOLEAN
+			-- Does target file for path have same content as given string?
+			--
+			-- `a_path': Path relative to `target_directory' of file
+			-- `a_string': String to be compared with content of file
+			-- `Result': True if file has same content as `a_string', False otherwise
+			--
+			-- Note: if file does not exists or is not readable an exception is raised.
+		require
+			a_path_not_empty: not a_path.is_empty
+		local
+			l_filename: like build_target_path
+			l_file: FILE
+			i, l_count: INTEGER
+		do
+			l_filename := build_target_path (a_path)
+			create {PLAIN_TEXT_FILE} l_file.make (l_filename)
+			assert ("file_exists", l_file.exists)
+			assert ("file_readable", l_file.is_readable)
+			l_file.open_read
+			from
+				i := 1
+				l_count := a_string.count
+				Result := True
+				l_file.read_character
+			until
+				i > l_count or l_file.end_of_file or not Result
+			loop
+				Result := a_string.item (i) = l_file.last_character
+				l_file.read_character
+				i := i + 1
+			end
+			if Result then
+				Result := i > l_count and l_file.end_of_file
+			end
+			l_file.close
+		end
+
+	has_same_content_as_path (a_first_path, a_second_path: !EQA_SYSTEM_PATH): BOOLEAN
+			-- Do target files for given paths have the same content?
+			--
+			-- `a_first': Relative path of first file.
+			-- `a_second': Relative path of second file.
+			-- `Result': True if both files existed and are readable and have identical content, False
+			--           otherwise
+			--
+			-- Note: if files do not exist or are not readable an exception is raised.
+		require
+			a_first_path_not_empty: not a_first_path.is_empty
+			a_second_path_not_empty: not a_second_path.is_empty
+		local
+			l_filename1, l_filename2: like build_target_path
+			l_file1, l_file2: FILE
+		do
+			l_filename1 := build_target_path (a_first_path)
+			l_filename2 := build_target_path (a_second_path)
+			create {PLAIN_TEXT_FILE} l_file1.make (l_filename1)
+			create {PLAIN_TEXT_FILE} l_file2.make (l_filename2)
+			assert ("file1_exists", l_file1.exists)
+			assert ("file2_exists", l_file2.exists)
+			assert ("file1_readable", l_file1.readable)
+			assert ("file2_readable", l_file2.readable)
+			l_file1.open_read
+			l_file2.open_read
+			from
+				l_file1.read_character
+				l_file2.read_character
+				Result := True
+			until
+				l_file1.end_of_file or l_file2.end_of_file or not Result
+			loop
+				Result := l_file1.last_character = l_file2.last_character
+				l_file1.read_character
+				l_file2.read_character
+			end
+			if Result then
+				Result := l_file1.end_of_file and l_file2.end_of_file
+			end
+			l_file1.close
+			l_file2.close
+		end
+
 feature {NONE} -- Query
 
 	source_directory: !READABLE_STRING_8

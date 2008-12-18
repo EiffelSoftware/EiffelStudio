@@ -9,8 +9,14 @@ indexing
 class
 	EQA_SYSTEM_PATH
 
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 create
-	make_empty, make
+	make_empty, make, make_from_path
 
 feature {NONE} -- Initialization
 
@@ -33,6 +39,16 @@ feature {NONE} -- Initialization
 			a_items.linear_representation.do_all (agent items.force)
 		end
 
+	make_from_path (a_path: !EQA_SYSTEM_PATH)
+			-- Initialize `Current' from given path.
+			--
+			-- `a_path': Path from which `Current' will create a duplication
+		do
+			items := a_path.items.twin
+		ensure
+			equal: Current ~ a_path
+		end
+
 feature -- Access
 
 	count: INTEGER
@@ -49,7 +65,7 @@ feature -- Access
 			Result := items.i_th (i)
 		end
 
-feature {NONE} -- Access
+feature {EQA_SYSTEM_PATH} -- Access
 
 	items: !ARRAYED_LIST [like item]
 			-- Items representing path
@@ -63,6 +79,12 @@ feature -- Status report
 		end
 
 feature -- Query
+
+	is_equal (a_other: like Current): BOOLEAN
+			-- <Precursor>
+		do
+			Result := items ~ a_other.items
+		end
 
 	is_valid_name (a_name: ?READABLE_STRING_8): BOOLEAN
 			-- Is `a_name' a valid path component?

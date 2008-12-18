@@ -261,6 +261,7 @@ feature {AUT_REQUEST} -- Processing
 					output_stream.put_string (" (")
 					from
 						l_args.start
+						i := 1
 					until
 						l_args.after
 					loop

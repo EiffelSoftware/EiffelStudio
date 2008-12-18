@@ -1540,6 +1540,7 @@ test	missing-protection-in-inline-c-code	ccomp076 tcf pass c_compilation
 test	bad-c-code-from-argument-anchor	ccomp077 tcf fail c_compilation
 test	bad-c-code-on-debug-clause		ccomp078 tcf pass c_compilation
 test	missing-makefile-for-precompile		ccomp079 tcf fail c_compilation
+test	bad-c-code-from-argument-anchor-2	ccomp080 tcf fail c_compilation
 
 -- Storable tests
 

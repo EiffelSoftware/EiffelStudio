@@ -295,6 +295,9 @@ feature -- Status setting
 
 	set_proportion_with_remembered
 			-- Set current proportion with `proportion'
+		require
+			not_destroyed: not is_destroyed
+			split_area_full: full
 		do
 			if 0 <= proportion and proportion <= 1 then
 				if not is_destroyed and then full then

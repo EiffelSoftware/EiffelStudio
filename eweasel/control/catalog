@@ -1266,6 +1266,7 @@ test	wrong-optimization-of-as-attached	exec290 tcf pass execution finalizing
 test	crash-on-divisible			exec291 tcf pass execution finalizing
 test	wrong-inherited-formal-type	exec292 tcf pass execution finalizing attached_types
 test	access-by-label-on-void-tuple	exec293 tcf fail execution
+test	self-init-attribute-non-void-safe	exec294 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

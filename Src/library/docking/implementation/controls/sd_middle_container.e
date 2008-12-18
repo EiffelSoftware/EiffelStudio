@@ -133,6 +133,75 @@ feature -- Setting
 		do
 		end
 
+feature -- Split area resizing
+
+	set_proportion_recursive
+			-- Set proportion recursive in idle actions
+		require
+			not_void: top_resize_split_area.item /= Void
+		do
+			set_proportion_recursive_imp (top_resize_split_area.item)
+			top_resize_split_area.put (Void)
+		ensure
+			cleaned: top_resize_split_area.item = Void
+		end
+
+	set_proportion_recursive_imp (a_container: SD_MIDDLE_CONTAINER)
+			-- Set proportion recursively
+			-- from outside to inside to avoid generating resize events during resizing
+		require
+			not_void: a_container /= Void
+		local
+			l_first, l_second: SD_MIDDLE_CONTAINER
+			l_ev_split: EV_SPLIT_AREA
+		do
+			l_ev_split ?= a_container
+			if l_ev_split /= Void and then not l_ev_split.is_destroyed and then l_ev_split.full then
+				l_ev_split.set_proportion_with_remembered
+			end
+
+			l_first ?= a_container.first
+			if l_first /= Void then
+				set_proportion_recursive_imp (l_first)
+			end
+
+			l_second ?= a_container.second
+			if l_second /= Void then
+				set_proportion_recursive_imp (l_second)
+			end
+		end
+
+	remember_top_resize_split_area (a_split_area: SD_MIDDLE_CONTAINER)
+			-- Record `a_split_area' to `top_resize_split_area' if `a_split_area' is outmost split area
+			-- If `top_resize_split_area' is void, one idle action will be generated
+		local
+			l_item: SD_MIDDLE_CONTAINER
+			l_env: EV_ENVIRONMENT
+		do
+			l_item := top_resize_split_area.item
+			if l_item /= Void then
+				if l_item /= a_split_area and then a_split_area.has_recursive (l_item) then
+					top_resize_split_area.put (a_split_area)
+				end
+			else
+				create l_env
+				l_env.application.do_once_on_idle (agent set_proportion_recursive)
+				top_resize_split_area.put (a_split_area)
+			end
+		ensure
+			set: top_resize_split_area.item /= Void
+		end
+
+	top_resize_split_area: CELL [SD_MIDDLE_CONTAINER]
+			-- Top resize split area recorded
+			-- Set by `remember_top_resize_split_area'
+			-- Cleaned by `set_proportion_recursive'
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

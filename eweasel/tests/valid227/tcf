@@ -1,0 +1,12 @@
+
+test_name expanded-generic-reference-actual
+test_description A system has a generic class whose formal generic parameter is declared "expanded".  If a client of this class passes a reference type, the compiler should report a VTCG error but does not.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result validity_error TEST VTCG
+
+test_end

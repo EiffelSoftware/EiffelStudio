@@ -71,6 +71,7 @@ feature {NONE} -- Status setting
 			l_test: TEST_I
 			l_feat: ?E_FEATURE
 			i: INTEGER
+			l_bp: BREAKPOINT
 		do
 			create breakpoints.make (test_map.count)
 			l_manager := debugger_manager.breakpoints_manager
@@ -86,7 +87,9 @@ feature {NONE} -- Status setting
 					i := l_feat.first_breakpoint_slot_index
 					if not l_manager.is_breakpoint_enabled (l_feat, i) then
 						l_manager.set_user_breakpoint (l_feat, i)
-						if {l_bp: !BREAKPOINT} l_manager.user_breakpoint (l_feat, i) then
+						if l_manager.is_breakpoint_set (l_feat, i, False) then
+							l_bp := l_manager.user_breakpoint (l_feat, i)
+							check l_bp /= Void end
 							breakpoints.force_last (l_bp)
 						end
 					end

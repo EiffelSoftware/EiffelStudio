@@ -1429,6 +1429,7 @@ test    bad_formal_types                        term163 tcf pass validity
 test    crash-in-convertion-clause 	term164 tcf pass validity
 test    crash-in-checking-inherited-code	term165 tcf pass validity
 test    catcall-and-full-class-checking	term166 tcf fail termination
+test	single-constraint-with-renaming-crash	term167	tcf fail termination
 
 -- Config
 

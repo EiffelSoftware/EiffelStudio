@@ -1,0 +1,12 @@
+
+test_name single-constraint-with-renaming-crash
+test_description Compiling A set of classes causes the compiler to crash with a call on Void target in {FORMAL_A}.is_single_constraint_without_renaming.  One of the classes is a generic class with a generic creation procedure and a self-initializing attribute with an alias and a body that does "create {G}".  The other has invalid calls to the attribute and its alias, with too many arguments.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

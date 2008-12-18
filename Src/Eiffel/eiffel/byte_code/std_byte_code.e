@@ -718,7 +718,13 @@ end
 						buf.put_new_line
 						buf.put_string ("((union overhead *) sarg")
 						buf.put_integer (i)
-						buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
+						buffer.put_string (".data)->ov_flags = EO_EXP | EO_C")
+						if l_class_type.has_creation_routine then
+								-- Class has an expanded attribute we need to give it the EO_COMP flag.							
+							buffer.put_string (" | EO_COMP;")
+						else
+							buffer.put_character (';')
+						end
 						buf.put_new_line
 						buf.put_string ("((union overhead *) sarg")
 						buf.put_integer (i)

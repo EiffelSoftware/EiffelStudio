@@ -1558,7 +1558,13 @@ feature -- Structure generation
 				buffer.put_new_line
 				buffer.put_string ("((union overhead *) ")
 				buffer.put_string (a_name)
-				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
+				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C")
+				if has_creation_routine then
+						-- Class has an expanded attribute we need to give it the EO_COMP flag.
+					buffer.put_string (" | EO_COMP;")
+				else
+					buffer.put_character (';')
+				end
 
 				l_create_info.generate_start (buffer)
 				l_create_info.generate_gen_type_conversion (0)

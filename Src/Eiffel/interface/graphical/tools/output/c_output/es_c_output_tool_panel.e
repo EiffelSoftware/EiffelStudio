@@ -721,10 +721,10 @@ feature{NONE} -- Implementation
 	directory_separator: CHARACTER is
 			-- Directory separator
 		local
-			l_obj: ANY
+			l_op: OPERATING_ENVIRONMENT
 		once
-			create l_obj
-			Result := l_obj.operating_environment.directory_separator
+			create l_op
+			Result := l_op.directory_separator
 		end
 
 	path_end_with_dir_separator (path: STRING): BOOLEAN is

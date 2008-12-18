@@ -567,7 +567,7 @@ feature {NONE} -- Initialization
 			any_has_feature_table: system.any_class.compiled_class.has_feature_table
 		local
 			l_any_tbl: like feature_table
-			l_feat: FEATURE_I
+			l_feat, l_table_feat: FEATURE_I
 			any_parent_type: LIKE_CURRENT
 		do
 			l_any_tbl := system.any_class.compiled_class.feature_table
@@ -586,7 +586,12 @@ feature {NONE} -- Initialization
 				l_any_tbl.after
 			loop
 					-- Update `l_feat' in context of current class.
-				l_feat := l_any_tbl.item_for_iteration.instantiated (any_parent_type)
+				l_table_feat := l_any_tbl.item_for_iteration
+				l_feat := l_table_feat.instantiated (any_parent_type)
+				if l_feat = l_table_feat then
+						-- If the instantiation didn't return a new object then we duplicate.
+					l_feat := l_feat.duplicate
+				end
 				l_feat.check_types (a_feat_tbl)
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)

@@ -21,7 +21,8 @@ inherit
 
 	EV_HORIZONTAL_SPLIT_AREA
 		redefine
-			initialize
+			initialize,
+			set_split_position
 		select
 			implementation,
 			may_contain
@@ -58,6 +59,15 @@ feature {NONE} -- Implementation
 			if l_half >= minimum_split_position and l_half <= maximum_split_position then
 				set_split_position (l_half)
 			end
+		end
+
+feature -- Command
+
+	set_split_position (a_split_position: INTEGER_32)
+			-- <Precursor>
+		do
+			Precursor {EV_HORIZONTAL_SPLIT_AREA} (a_split_position)
+			update_proportion
 		end
 
 indexing

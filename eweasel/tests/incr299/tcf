@@ -1,0 +1,19 @@
+
+test_name add-feature-invalidate-generic-rename
+test_description After initial compilation, a feature is added to a class that serves as the constraint for the formal generic in another class.  This introduces a VTGC(2) error but the compiler does not detect it.
+
+copy_sub Ace $TEST Ace
+define ADDED_FEATURE ""
+copy_sub test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+define ADDED_FEATURE "stoat do end"
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST1 VTGC(2)
+
+test_end

@@ -1,6 +1,7 @@
 
 test_name bogus-vevi-on-invalid-inspect
 test_description A routine has a VOMB(1) error because the type of the expression in a "when" clause does not match the inspect expression type. When compiled in void-safe mode, the compiler correctly detects the VOMB(1) but also reports what appears to be a spurious VEVI error
+-- FIXME: Change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

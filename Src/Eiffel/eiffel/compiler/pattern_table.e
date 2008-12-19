@@ -80,8 +80,8 @@ feature -- Access
 		require
 			a_c_pattern_not_void: a_c_pattern /= Void
 		do
-			marker.set_pattern (a_c_pattern)
-			c_patterns.search (marker)
+			c_pattern_marker.set_pattern (a_c_pattern)
+			c_patterns.search (c_pattern_marker)
 			if c_patterns.found then
 				Result := c_patterns.found_item.c_pattern_id
 			else
@@ -111,8 +111,8 @@ feature -- Status report
 		require
 			a_c_pattern_not_void: a_c_pattern /= Void
 		do
-			marker.set_pattern (a_c_pattern)
-			Result := c_patterns.has (marker)
+			c_pattern_marker.set_pattern (a_c_pattern)
+			Result := c_patterns.has (c_pattern_marker)
 		end
 
 	has_pattern_of_id (a_pattern_id: INTEGER): BOOLEAN is
@@ -169,9 +169,13 @@ feature -- Element change
 			other_pattern: PATTERN
 			info, other_info: PATTERN_INFO
 		do
-			create info.make (written_in, pattern)
+				-- Set pattern marker for search.
+			info := pattern_marker
+			info.set_pattern (pattern)
+			info.set_written_in (written_in)
 			other_info := item (info)
 			if other_info = Void then
+				create info.make (written_in, pattern)
 				other_pattern := patterns.item (pattern)
 				if other_pattern = Void then
 					patterns.put (pattern)
@@ -289,7 +293,13 @@ feature {NONE} -- Impementation: Access
 	Chunk: INTEGER is 100
 			-- Table chunk
 
-	Marker: C_PATTERN_INFO is
+	pattern_marker: PATTERN_INFO
+			-- Marker for search in `Current'.
+		once
+			create Result.make (0, Void)
+		end
+
+	c_pattern_marker: C_PATTERN_INFO is
 			-- Marker for search in `c_patterns'
 		local
 			l_pattern: C_PATTERN

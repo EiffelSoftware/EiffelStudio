@@ -426,6 +426,7 @@ test	reference-generic-expanded-actual	valid226 tcf fail validity
 test	expanded-generic-reference-actual	valid227 tcf fail validity
 test	bogus-vevi-on-invalid-inspect		valid228 tcf fail validity
 test	bogus-vevi-on-inspect-empty-interval	valid229 tcf fail validity
+test	inline-c-external-without-alias		valid230 tcf fail validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

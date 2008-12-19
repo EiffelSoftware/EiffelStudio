@@ -1,0 +1,11 @@
+
+test_name 	inline-c-external-without-alias
+test_description A external routine that is "C inline" without an alias should be a VZCC(2) error but the compiler does not detect it
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VZCC(2)
+
+test_end

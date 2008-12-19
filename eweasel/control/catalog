@@ -1436,6 +1436,7 @@ test    crash-in-checking-inherited-code	term165 tcf pass validity
 test    catcall-and-full-class-checking	term166 tcf fail termination
 test	single-constraint-with-renaming-crash	term167	tcf fail termination
 test	inline-agent-with-attribute-body	term168	tcf fail termination
+test	self-init-attribute-returning-current	term169	tcf fail termination manual
 
 -- Config
 

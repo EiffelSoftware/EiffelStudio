@@ -374,50 +374,78 @@ feature {NONE} -- Basic operation
 	populate_libraries
 			-- Populates the list of libraries in the UI
 		local
-			l_libraries: !like configuration_libraries
-			l_list: !DS_ARRAYED_LIST [!STRING]
-			l_system: !CONF_SYSTEM
+			l_libraries: like configuration_libraries
+			l_sorted_keys: DS_HASH_TABLE [STRING, STRING]
+			l_list: DS_ARRAYED_LIST [STRING]
+			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
 			l_col: EV_GRID_COLUMN
 			l_name_width: INTEGER
+			l_path: STRING
+			l_key: STRING
 			l_description: STRING
 		do
 			libraries_grid.remove_and_clear_all_rows
 			l_libraries := configuration_libraries
 
-			create l_list.make_from_linear (l_libraries.keys)
-			l_list.sort (create {DS_QUICK_SORTER [!STRING]}.make (create {KL_COMPARABLE_COMPARATOR [!STRING]}.make))
+				-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
+			create l_sorted_keys.make (l_libraries.count)
+			from l_libraries.start until l_libraries.after loop
+				l_path := l_libraries.key_for_iteration
+				l_target := l_libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					create l_key.make (256)
+					l_key.append_string (l_target.name)
+					l_key.append_string (once " # ")
+					l_key.append_string (l_path)
+					l_sorted_keys.force_last (l_path, l_key)
+				end
+				l_libraries.forth
+			end
+
+				-- Sort keys
+			create l_list.make_from_linear (l_sorted_keys.keys)
+			l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+
+				-- Build libraries list
 			libraries_grid.set_row_count_to (l_list.count)
 			from l_list.start until l_list.after loop
 				l_row := libraries_grid.row (l_list.index)
 
-				l_system := l_libraries.item (l_list.item_for_iteration)
-				l_target := l_system.library_target
-				if l_target /= Void then
-						-- Extract description
-					l_description := l_system.description
-					if l_description = Void or else l_description.is_empty then
-						l_description := l_target.description
-						if l_description = Void or else l_description.is_empty then
-							l_description := once "No description available"
-						end
-					end
-
-						-- Library name
-					create l_item.make_with_text (l_system.name)
-					l_item.set_tooltip (l_description)
-					l_row.set_item (name_column, l_item)
-					l_name_width := l_name_width.max (l_item.required_width + 10)
-
-						-- Location
-					create l_item.make_with_text (l_list.item_for_iteration)
-					l_item.set_tooltip (l_list.item_for_iteration)
-					l_row.set_item (location_column, l_item)
-
-					l_row.select_actions.extend (agent on_library_selected (l_system, l_list.item_for_iteration))
+					-- Fetch path from sortable key name
+				l_path :=  l_sorted_keys.item (l_list.item_for_iteration)
+				check
+					l_path_attached: l_path /= Void
+					l_libraries_has_l_path: l_libraries.has (l_path)
 				end
+
+				l_system := l_libraries.item (l_path)
+				l_target := l_system.library_target
+				check l_target_attached: l_target /= Void end
+
+					-- Extract description
+				l_description := l_system.description
+				if l_description = Void or else l_description.is_empty then
+					l_description := l_target.description
+					if l_description = Void or else l_description.is_empty then
+						l_description := once "No description available for library"
+					end
+				end
+
+					-- Library name
+				create l_item.make_with_text (l_system.name)
+				l_item.set_tooltip (l_description)
+				l_row.set_item (name_column, l_item)
+				l_name_width := l_name_width.max (l_item.required_width + 10)
+
+					-- Location
+				create l_item.make_with_text (l_path)
+				l_item.set_tooltip (l_path)
+				l_row.set_item (location_column, l_item)
+
+				l_row.select_actions.extend (agent on_library_selected (l_system, l_path))
 
 				l_list.forth
 			end

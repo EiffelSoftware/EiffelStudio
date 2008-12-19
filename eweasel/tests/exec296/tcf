@@ -1,0 +1,30 @@
+
+test_name 	 self-init-attribute-void-safe
+test_description A call to a self-initializing INTEGER attribute does not work in void safe mode.
+-- FIXME: Change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
+-- FIXME: Could add test of melted version when using a precompile
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+test_end

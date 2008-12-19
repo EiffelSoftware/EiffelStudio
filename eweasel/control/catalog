@@ -764,6 +764,7 @@ test	add-feature-invalidate-generic-rename	incr299	tcf fail incrementality
 test	generic-call-renamed-default-create	incr300	tcf fail incrementality
 test	ececil-undefined-symbol			incr301	tcf fail incrementality
 test	pattern-of-id-crash			incr302	tcf fail incrementality
+test	add-default-create-invalid-vtec		incr303	tcf fail incrementality
 
 
 -- Melting

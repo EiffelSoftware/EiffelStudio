@@ -414,7 +414,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * and relaunch the remembering process. */
 
 	CHECK ("Must be special", HEADER (new_area)->ov_flags & EO_SPEC);
-	REQUIRE ("Must not be TUPLE", !(HEADER (new_area)->ov_flags & EO_TUPLE));
+	CHECK ("Must not be TUPLE", !(HEADER (new_area)->ov_flags & EO_TUPLE));
+	CHECK ("Proper size", i == RT_SPECIAL_COUNT(new_area));
 
 	if (!(HEADER(new_area)->ov_flags & EO_COMP))
 		return new_area;				/* No expanded objects */

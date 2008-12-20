@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	frozen is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object of the same type
 			-- as current object, and field-by-field identical to it?
 		do

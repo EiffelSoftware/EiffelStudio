@@ -99,6 +99,7 @@ extern "C" {
  * RT_SPECIAL_ELEM_SIZE, RT_SPECIAL_ELEM_SIZE_WITH_ZONE, RT_SPECIAL_ELEM_SIZE_WITH_INFO returns
  *    `element_size' of items in special objects.
  */
+#define RT_IS_SPECIAL(obj) ((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC)
 #define RT_SPECIAL_INFO(spec) \
 	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - LNGPAD_2)
 #define RT_SPECIAL_INFO_WITH_ZONE(spec,zone) \

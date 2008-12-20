@@ -218,6 +218,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	EIF_INTEGER elem_size;			/* Common element size */
 	EIF_REFERENCE s_field, t_field;
 
+	REQUIRE("special objects", (HEADER(target)->ov_flags & EO_SPEC) && (HEADER(source)->ov_flags & EO_SPEC));
+
 	if (source == target)
 		return EIF_TRUE;
 

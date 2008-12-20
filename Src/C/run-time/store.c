@@ -989,16 +989,14 @@ rt_public void st_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
-		/* We have to save the size of the special object */
-		size = (uint32) zone->ov_size;
+			/* We have to send the complete specila information. */
+		size = RT_SPECIAL_COUNT(object);
+		nb_char = size;
 		buffer_write((char *)(&size), sizeof(uint32));
-
-#if DEBUG & 2
-		printf (" %lx", zone->ov_size);
-#endif
-
-		/* Evaluation of the size of a special object */
-		nb_char = (zone->ov_size & B_SIZE) * sizeof(char);
+		size = RT_SPECIAL_ELEM_SIZE(object);
+		buffer_write((char *)(&size), sizeof(uint32));
+			/* Compute actual number of bytes we need to store. */
+		nb_char = nb_char * size;
 	} else {
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size(dtype);

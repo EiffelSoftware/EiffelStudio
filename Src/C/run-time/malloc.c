@@ -1268,16 +1268,18 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 		zone = HEADER (object);
 		new_size = zone->ov_size & B_SIZE;	/* `xrealloc' can change the `new_size' value for padding */
 
+		CHECK("Valid_size", new_size >= new_real_size);
+
 		CHECK ("Not forwarded", !(HEADER(ptr)->ov_size & B_FWD));
 
 			/* Reset extra-items with zeros or default expanded value if any */
 		if (new_real_size > old_real_size) {
-			CHECK ("New size bigger than old one", new_size >= old_size);
+				/* When the actual memory actually increased, we need to reset
+				 * the various new element to their default value. */
 			memset (object + old_real_size, 0, new_size - old_real_size);
 			if (zone->ov_flags & EO_COMP)
 				need_expanded_initialization = EIF_TRUE;
 		} else { 	/* Smaller object requested. */
-			CHECK ("New size smaller than old one", new_size <= old_size);
 				/* We need to remove existing elements between `new_real_size'
 				 * and `new_size'. Above `new_size' it has been taken care
 				 * by `xrealloc' when moving the memory area above `new_size'
@@ -1809,7 +1811,6 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 		/* Look in free list to find a suitable block. */
 
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
-	SIGBLOCK;				/* Critical section */
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 	check_free_list (nbytes, hlist);
@@ -1835,28 +1836,35 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 			}
 #endif
 		} else {
-				/* We search in `i + 2' because if we find something in
-				 * `i + 1' then it will cause a 0-sized block to be inserted
-				 * in the free list, and as we know 0-sized block are expensive
-				 * when we want to remove them from the free-list. */
-			selected = allocate_free_list_helper (i + 2, nbytes, hlist);
-			if ((!selected) && (hlist[i + 1])) {
-					/* We could not find a free space in `i + 2' or above and there
-					 * is some space in `i + 1'. We take that space and too bad that
-					 * we will have a 0-sized block. */
-				selected = allocate_free_list_helper (i + 1, nbytes, hlist);
-				CHECK("found block", selected);
+			selected = hlist[i + 1];
+			if (selected) {
+					/* We could find a free space in `i + 1' so we take that
+					 * space and we make `set_up'believe we were asking
+					 * for `nbytes + ALIGNAMX' to avoid creation of a 0-sized block. */
+				nbytes +=ALIGNMAX;
+				CHECK("Correct size", nbytes == (selected->ov_size & B_SIZE));
+#ifdef EIF_SORTED_FREE_LIST
+				disconnect_free_list (selected, i + 1);
+#else
+					/* Remove `selected' from `hlist'. */
+				n = NEXT(selected);
+				hlist[i + 1] = n;
+				if (n) {
+					PREVIOUS(n) = NULL;
+				}
+#endif
+			} else {
+					/* Could not find in `i + 1', let's search above. Here no risk
+					 * of creating a 0-sized block.*/
+				selected = allocate_free_list_helper (i + 2, nbytes, hlist);
 			}
 		}
 	}
 
-	SIGRESUME;				/* End of critical section */
-
-	/* Now, either 'i' is NBLOCKS and 'selected' still holds a null
-	 * pointer or 'selected' holds the wanted address and 'i' is the
-	 * index in the hlist array.
-	 */
-	
+		/* Now, either 'i' is NBLOCKS and 'selected' still holds a null
+		 * pointer or 'selected' holds the wanted address and 'i' is the
+		 * index in the hlist array.
+		 */
 	if (!selected) {		/* We did not find it */
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return NULL;	/* Failed */
@@ -1867,9 +1875,9 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 	flush;
 #endif
 
-	/* Block is ready to be set up for use of 'nbytes' (eventually after
-	 * having been split). Memory accounting is done in set_up().
-	 */
+		/* Block is ready to be set up for use of 'nbytes' (eventually after
+		 * having been split). Memory accounting is done in set_up().
+		 */
 	result = set_up(selected, nbytes);
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 	return result;
@@ -2020,7 +2028,7 @@ rt_shared EIF_REFERENCE get_to_from_core (void)
 		 */
 	Result = allocate_from_core (eif_chunk_size - OVERHEAD - sizeof(struct chunk), e_hlist, 1);
 
-	ENSURE("block is indeed of the right size", (eif_chunk_size - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE));
+	ENSURE("block is indeed of the right size", !Result || ((eif_chunk_size - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE)));
 
 	return Result;
 }
@@ -2717,8 +2725,9 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	if (i != 0)
 		nbytes += ALIGNMAX - i;		/* Pad nbytes */
 
-	if (r == nbytes) 			/* Same size, lucky us... */
+	if ((r == nbytes) || (r == nbytes + OVERHEAD)) { 			/* Same size, lucky us... */
 		return ptr;				/* That's all I wrote */
+	}
 
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	SIGBLOCK;					/* Beginning of critical section */
@@ -2885,6 +2894,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	 */
 
 	if (zone != (union overhead *) 0) {
+		CHECK("Correct size", (r & B_SIZE) <= (HEADER(zone)->ov_size & B_SIZE)); 
 		memcpy (zone, ptr, r & B_SIZE);	/* Move to new location */
 		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
 		HEADER(zone)->ov_dftype = HEADER(ptr)->ov_dftype;

@@ -4046,12 +4046,23 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			zone->ov_dtype = dtype;
 			zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 
+			CHECK("Valid size", size <= (zone->ov_size & B_SIZE));
+
 				/* If it was not exactly the same size, we would be in trouble
 				 * in the case of EO_SPEC objects for which there is some important
 				 * information about the special at the end of the allocated memory,
 				 * the size being changed, the information will not be copied at
-				 * its right location with the `memcpy' call above. */
-			CHECK("Same size", size == (zone->ov_size & B_SIZE));
+				 * its right location with the `memcpy' call above, so we do it now. */
+			if ((flags & EO_SPEC) && (size < (zone->ov_size & B_SIZE))) {
+					/* We cannot really increase the count, because otherwise it would
+					 * cause some strange behavior in the Eiffel code where a SPECIAL of
+					 * capacity 5 would magically end up with capacity 6 after a GC collection. */
+				/* This code is commented because not necessary. I'm leaving it there
+				 * to show that there is indeed no need to clean the extra memory because
+				 * in theory it should never be accessed. */
+				memset (new + size - LNGPAD_2, 0xFFFFFFFF , (zone->ov_size & B_SIZE) - size);
+				memcpy (new + (zone->ov_size & B_SIZE) - LNGPAD_2, root + size - LNGPAD_2, LNGPAD_2);
+			}
 
 #ifdef DEBUG
 			dprintf(4)("gscavenge: tenured 0x%lx to 0x%lx at age %d (%d bytes)\n",

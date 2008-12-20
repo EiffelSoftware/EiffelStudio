@@ -84,7 +84,6 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_uint_ptr offset);			/* Duplication with aging tests */
 rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for special object */
 rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);
-rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 
 rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
@@ -185,11 +184,7 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	REQUIRE ("Same type", Dftype(source) == Dftype(target));
 
 	if (flags & EO_SPEC) {
-		if (flags & EO_TUPLE) {
-			tuple_copy(source, target);
-		} else {
-			spcopy(source, target);
-		}
+		spcopy(source, target);
 	} else if (Dftype(source) == egc_bit_dtype) {
 		b_copy(source, target);
 	} else {
@@ -386,18 +381,16 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	zone = HEADER(source);			/* Where eif_malloc stores its information */
 	flags = zone->ov_flags;			/* Eiffel flags */
 
-	/* If the object is an expanded one, then its size field is in fact an
-	 * offset within the enclosing object, and we have to get its size through
-	 * its dynamic type.
-	 */
-	if (eif_is_nested_expanded(flags))						/* Object is expanded */
-		size = EIF_Size(zone->ov_dtype);		/* Get its size though skeleton */
-	else
-		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
+	if (flags & EO_SPEC) {
+		size = RT_SPECIAL_COUNT(source) * RT_SPECIAL_ELEM_SIZE(source);
+	} else {
+		size = EIF_Size(zone->ov_dtype);
+	}
 
 	clone = eif_access(map_next());				/* Get next stacked object */
 	*(EIF_REFERENCE *)  (enclosing + offset) = clone;	/* Attach new object */
 	hash_zone = hash_search(&hclone, source);	/* Get an hash table entry */
+	CHECK("Enough space", HEADER(clone)->ov_size >= size);
 	memcpy (clone, source, size);				/* Block copy */
 	*hash_zone = clone;					/* Fill it in with the clone address */
 
@@ -619,10 +612,10 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 			eif_std_field_copy (source, target);
 		} else {
 			/* Copy of source object into target object with same dynamic type. Block copy here. */
-			if (eif_is_expanded(flags)) {
-				size = EIF_Size(s_zone->ov_dtype);
+			if (flags & EO_SPEC) {
+				size = RT_SPECIAL_COUNT(source) * RT_SPECIAL_ELEM_SIZE(source);
 			} else {
-				size = s_zone->ov_size & B_SIZE;
+				size = EIF_Size(s_zone->ov_dtype);
 			}
 			memmove(target, source, size);
 		}
@@ -667,52 +660,12 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	REQUIRE ("source is special", HEADER(source)->ov_flags & EO_SPEC);
 	REQUIRE ("target is special", HEADER(source)->ov_flags & EO_SPEC);
 	REQUIRE ("target_count_greater", RT_SPECIAL_COUNT(target) >= RT_SPECIAL_COUNT(source));
+	REQUIRE ("target size is large enough", (HEADER(target)->ov_size & B_SIZE) >= (HEADER(source)->ov_size & B_SIZE));
 
-	/* Evaluation of the size field to copy */
-	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
-
-	memmove(target, source, field_size);			/* Block copy */
-
-#ifdef ISE_GC
-	/* Ok, normally we would have to perform age tests, by scanning the special
-	 * object, looking for new objects. But a special object can be really big,
-	 * and can also contain some expanded objects, which should be traversed
-	 * to see if they contain any new objects. Ok, that's enough! This is a
-	 * GC problem and is normally performed by the GC. So, if the special object
-	 * is old and contains some references, I am automatically inserting it
-	 * in the remembered set. The GC will remove it from there at the next
-	 * cycle, if necessary--RAM.
-	 */
-
-	flags = HEADER(target)->ov_flags;
-	CHECK ("Not forwarded", !(HEADER (target)->ov_flags & B_FWD));
-	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
-			/* May it hold new references? */
-			eremb(target);	/* Remember it, even if not needed, to fasten
-								copying process. */
-#endif /* ISE_GC */
-}
-
-rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target)
-{
-	/* Copy a tuple Eiffel object into another one. It assumes that
-	 * `source' and `target' are not NULL and that count of `target' is the same
-	 * as count of `source'.
-	 */
-
-	rt_uint_ptr field_size;
-#ifdef ISE_GC
-	uint16 flags;
-#endif
-
-	REQUIRE ("source not null", source);
-	REQUIRE ("target not null", target);
-	REQUIRE ("source is tuple", HEADER(source)->ov_flags & EO_SPEC);
-	REQUIRE ("target is tuple", HEADER(source)->ov_flags & EO_SPEC);
-	REQUIRE ("same count", RT_SPECIAL_COUNT(target) == RT_SPECIAL_COUNT(source));
-
-	/* Evaluation of the size field to copy */
-	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
+		/* Evaluation of the size field to copy. It is important to use the `source' for the
+		   size as `target' can be larger than `source'. This happens when the runtime prevented
+		   creation of a 0-sized object if it had created exactly the same size as `source'.*/
+	field_size = (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
 
 	memmove(target, source, field_size);			/* Block copy */
 

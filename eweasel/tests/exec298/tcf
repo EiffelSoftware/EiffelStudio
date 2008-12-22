@@ -1,0 +1,14 @@
+
+test_name 	 out-wrong-for-natural-attribute
+test_description The value of a NATURAL attribute is displayed incorrectly when printed
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

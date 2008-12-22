@@ -1280,6 +1280,7 @@ test	self-init-attribute-void-safe		exec296 tcf fail execution
 test	check-invariant-void-safe		exec297 tcf fail execution
 test	out-wrong-for-natural-attribute		exec298 tcf fail execution
 test	invariant-crash-with-attached-parent	exec299 tcf pass execution
+test	deep-twin-expanded-type			exec300 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

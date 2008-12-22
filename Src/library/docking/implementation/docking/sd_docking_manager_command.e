@@ -338,7 +338,7 @@ feature -- Commands
 				end
 
 				internal_docking_manager.command.resize (True)
-				l_main_area.restore_spliter_position (l_parent)
+				l_main_area.restore_spliter_position (l_parent, generating_type + ".minimized")
 
 				orignal_whole_item_for_minimized := Void
 				minimized_editor_area := Void
@@ -378,7 +378,7 @@ feature -- Commands
 
 						orignal_whole_item_for_minimized := l_editor_parent
 
-						l_editor_area.save_spliter_position (l_parent_parent)
+						l_editor_area.save_spliter_position (l_parent_parent, generating_type + ".minimized")
 
 						if {lt_parent_parent: EV_BOX} l_parent_parent then
 							is_minimize_orignally := True
@@ -393,6 +393,8 @@ feature -- Commands
 						l_parent_parent.extend (minimized_editor_area)
 						if {lt_upper_zone: SD_PLACE_HOLDER_ZONE} minimized_editor_area  then
 							lt_upper_zone.prepare_for_minimized_editor_area (internal_docking_manager)
+
+							-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar
 							lt_upper_zone.minimize
 						end
 
@@ -428,7 +430,7 @@ feature -- Commands
 					orignal_editor_parent := l_editor_parent.parent
 
 					orignal_whole_item := l_editor_area.item
-					l_editor_area.save_spliter_position (orignal_whole_item)
+					l_editor_area.save_spliter_position (orignal_whole_item, generating_type + ".maximize_editor_area")
 
 					orignal_editor_parent.prune (l_editor_parent)
 
@@ -441,7 +443,7 @@ feature -- Commands
 		end
 
 	restore_editor_area is
-			-- Restore editors area to normal.
+			-- Restore editors area from maximium to normal.
 		local
 			l_editor_area: EV_WIDGET
 			l_main_area: SD_MULTI_DOCK_AREA
@@ -456,7 +458,7 @@ feature -- Commands
 				l_main_area.extend (orignal_whole_item)
 
 				internal_docking_manager.command.resize (True)
-				l_main_area.restore_spliter_position (orignal_whole_item)
+				l_main_area.restore_spliter_position (orignal_whole_item, generating_type + ".maximize_editor_area")
 
 				orignal_editor_parent := Void
 				orignal_whole_item := Void

@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -235,7 +235,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			if a_multi_dock_area.full then
 
 				l_old_stuff := a_multi_dock_area.item
-				a_multi_dock_area.save_spliter_position (l_old_stuff)
+				a_multi_dock_area.save_spliter_position (l_old_stuff, generating_type)
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
@@ -262,7 +262,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				l_new_container.set_split_position (state.top_split_position (state.direction, l_new_container))
 			end
 			if l_old_stuff /= Void then
-				a_multi_dock_area.restore_spliter_position (l_old_stuff)
+				a_multi_dock_area.restore_spliter_position (l_old_stuff, generating_type)
 			end
 		ensure
 			docked: is_top_has_zone (a_multi_dock_area)

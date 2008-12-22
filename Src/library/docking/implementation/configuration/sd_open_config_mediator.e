@@ -151,7 +151,7 @@ feature -- Open inner container data.
 					end
 				end
 				if top_container /= Void then
-					internal_docking_manager.query.inner_container_main.save_spliter_position (top_container)
+					internal_docking_manager.query.inner_container_main.save_spliter_position (top_container, generating_type)
 				else
 					check not_possible: False end
 				end
@@ -194,7 +194,7 @@ feature -- Open inner container data.
 
 				end
 				if top_container /= Void then
-					internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
+					internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container, generating_type)
 				else
 					check not_possible: False end
 				end

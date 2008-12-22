@@ -1277,6 +1277,7 @@ test	access-by-label-on-void-tuple	exec293 tcf fail execution
 test	self-init-attribute-non-void-safe	exec294 tcf fail execution
 test	check-invariant-attached-by-default	exec295 tcf fail execution
 test	self-init-attribute-void-safe		exec296 tcf fail execution
+test	check-invariant-void-safe		exec297 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

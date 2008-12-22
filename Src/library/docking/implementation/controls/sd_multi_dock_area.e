@@ -31,6 +31,7 @@ feature {NONE} -- Initlization
 			default_create
 			internal_docking_manager := a_docking_manager
 			create internal_shared
+			create all_spliters_data.make (5)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -81,35 +82,49 @@ feature -- Command
 			not_has_empty_split_area:
 		end
 
-
-	save_spliter_position (a_widget: EV_WIDGET) is
+	save_spliter_position (a_widget: EV_WIDGET; a_data_name: STRING) is
 			-- Save a_widget split position recursively if a_widget is SD_MIDDLE_CONTAINER.
 			-- Pre order
 			-- Post order is not possible. Because set parent split are split positin will take ecffect to its child.
 		require
 			a_widget_not_void: a_widget /= Void
+			not_empty: a_data_name /= Void and then not a_data_name.is_empty
 		local
 			l_split: SD_MIDDLE_CONTAINER
+			l_data: like spliters_data
 		do
 			l_split ?= a_widget
 			if l_split /= Void then
-				create spliters.make (1)
-				save_spliter_position_imp (l_split)
+				create l_data.make (1)
+				all_spliters_data.put (l_data, a_data_name)
+				save_spliter_position_imp (l_split, l_data)
 			end
+		ensure
+			data_saved: ({lt_widget: SD_MIDDLE_CONTAINER} a_widget) implies has_spliter_data (a_data_name)
 		end
 
-	restore_spliter_position (a_widget: EV_WIDGET) is
-			-- Restore a_widget split postion which just saved by save_spliter_position.
+	restore_spliter_position (a_widget: EV_WIDGET; a_data_name: STRING) is
+			-- Restore a_widget split postion which saved by save_spliter_position.
+			-- `a_data_name' is the name when calling `save_spliter_position'
 		require
 			a_widget_not_void: a_widget /= Void
+			not_empty: a_data_name /= Void and then not a_data_name.is_empty
+			data_saved: ({lt_widget: SD_MIDDLE_CONTAINER} a_widget) implies has_spliter_data (a_data_name)
 		local
 			l_split: SD_MIDDLE_CONTAINER
+			l_data: like spliters_data
 		do
 			l_split ?= a_widget
 			if l_split /= Void then
-				spliters.start
-				restore_spliter_position_imp (l_split)
+				l_data := all_spliters_data.item (a_data_name)
+				l_data.start
+				restore_spliter_position_imp (l_split, l_data)
+
+				-- Remove data with `a_name'
+				all_spliters_data.remove (a_data_name)
 			end
+		ensure
+			data_cleared: not has_spliter_data (a_data_name)
 		end
 
 	update_middle_container is
@@ -270,6 +285,14 @@ feature -- Query
 		ensure
 			not_void: Result /= Void
 			is_all_editors: is_all_editors (Result)
+		end
+
+	has_spliter_data (a_name: STRING): BOOLEAN
+			-- Does `all_spliters_data' has data which key is `a_name' ?
+		require
+			not_empty: a_name /= Void and then not a_name.is_empty
+		do
+			Result := all_spliters_data.has (a_name)
 		end
 
 feature {NONE} -- Implementation
@@ -505,7 +528,7 @@ feature {NONE} -- Implementation
 
 			l_parent ?= a_middle_container
 			if l_left_all_minimized or l_right_all_minimized then
-				-- Current should be a minized container
+				-- Current should be a minimized container
 
 				if l_parent /= Void then
 					l_is_in_first := l_parent.first = a_middle_container
@@ -513,10 +536,10 @@ feature {NONE} -- Implementation
 					if not l_parent.is_minimized then
 						-- If one child is hidden, then the splitter bar is hidden by EV_VERTICAL_SPLIT_AREA/EV_HORIZONTAL_SPLIT_AREA automatically, we don't need to change it.	
 						if l_parent.first.is_displayed and l_parent.second.is_displayed then
-							disable_item_expand (change_parent_to_minized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
+							disable_item_expand (change_parent_to_minimized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
 						end
 					else
-						-- When `l_parent' is minized container already and a child tool container just hidden, we should update splitter bar visible.
+						-- When `l_parent' is minimized container already and a child tool container just hidden, we should update splitter bar visible.
 						if l_parent.first.is_displayed and l_parent.second.is_displayed then
 							l_parent.set_splitter_visible (True)
 						else
@@ -606,7 +629,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container)
+			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_normal_container")
 
 			l_v_box ?= a_middle_container
 			l_h_box ?= a_middle_container
@@ -628,7 +651,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result)
+			restore_spliter_position (Result, generating_type + ".change_parent_to_normal_container")
 
 			if l_split_position >= Result.minimum_split_position and l_split_position <= Result.maximum_split_position then
 				Result.set_split_position (l_split_position)
@@ -638,7 +661,7 @@ feature {NONE} -- Implementation
 			not_minimized: not Result.is_minimized
 		end
 
-	change_parent_to_minized_container (a_middle_container: SD_MIDDLE_CONTAINER): SD_MIDDLE_CONTAINER is
+	change_parent_to_minimized_container (a_middle_container: SD_MIDDLE_CONTAINER): SD_MIDDLE_CONTAINER is
 			-- Change `a_middle_container' to minimized container.
 		require
 			not_void: a_middle_container /= Void
@@ -662,7 +685,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container)
+			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_minimized_container")
 
 			l_v_split ?= a_middle_container
 			l_h_split ?= a_middle_container
@@ -683,7 +706,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result)
+			restore_spliter_position (Result, generating_type + ".change_parent_to_minimized_container")
 
 			Result.set_split_position (l_split_position)
 
@@ -759,7 +782,7 @@ feature {NONE} -- Implementation
 
 			l_widget_split ?= l_widget
 			if l_widget_split /= Void then
-				save_spliter_position (l_widget_split)
+				save_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
 			end
 
 			l_parent.prune (a_split_area)
@@ -781,24 +804,25 @@ feature {NONE} -- Implementation
 			end
 
 			if l_widget_split /= Void then
-				restore_spliter_position (l_widget_split)
+				restore_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
 			end
 		ensure
 			a_split_area_child_pruned: a_split_area.count = 0
 			spliter_level_up_done:
 		end
 
-	save_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER) is
+	save_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER; a_data: like spliters_data) is
 			-- Save spliter position before prune it.
 			-- Post order
 		require
 			a_spliter_not_void: a_spliter /= Void
+			not_void: a_data /= Void
 		local
 			l_left, l_right: SD_MIDDLE_CONTAINER
 			l_left_zone, l_right_zone: SD_ZONE
 		do
 			if a_spliter.full then
-				spliters.extend ([a_spliter, a_spliter.split_position])
+				a_data.extend (a_spliter.split_position)
 				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: save " + a_spliter.split_position.out)
 				end
@@ -807,20 +831,21 @@ feature {NONE} -- Implementation
 			l_left ?= a_spliter.first
 			l_left_zone ?= l_left
 			if l_left /= Void and then l_left_zone = Void then
-				save_spliter_position_imp (l_left)
+				save_spliter_position_imp (l_left, a_data)
 			end
 
 			l_right ?= a_spliter.second
 			l_right_zone ?= l_right
 			if l_right /= Void and then l_right_zone = Void then
-				save_spliter_position_imp (l_right)
+				save_spliter_position_imp (l_right, a_data)
 			end
 		end
 
-	restore_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER) is
+	restore_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER; a_data: like spliters_data) is
 			-- Restore spliter position. Pre order
 		require
 			a_spliter_not_void: a_spliter /= Void
+			not_void: a_data /= Void
 		local
 			l_left, l_right: SD_MIDDLE_CONTAINER
 			l_left_zone, l_right_zone: SD_ZONE
@@ -828,7 +853,7 @@ feature {NONE} -- Implementation
 --			l_old_spliter: SD_MIDDLE_CONTAINER -- For check only
 		do
 			if a_spliter.full then
-				l_spliter_position := spliters.item.position
+				l_spliter_position := a_data.item
 				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: open " + l_spliter_position.out)
 				end
@@ -847,26 +872,34 @@ feature {NONE} -- Implementation
 					a_spliter.set_split_position (a_spliter.maximum_split_position)
 				end -- No need to set min_split_position, because default is min_split_position.
 
-				spliters.forth
+				a_data.forth
 			end
 
 			l_left ?= a_spliter.first
 			l_left_zone ?= l_left
 			if l_left /= Void and then l_left_zone = Void then
-				restore_spliter_position_imp (l_left)
+				restore_spliter_position_imp (l_left, a_data)
 			end
 
 			l_right ?= a_spliter.second
 			l_right_zone ?= l_right
 			if l_right /= Void and then l_right_zone = Void then
-				restore_spliter_position_imp (l_right)
+				restore_spliter_position_imp (l_right, a_data)
 			end
 		end
 
 feature {NONE} -- Implementation attributes
 
-	spliters: ARRAYED_LIST [TUPLE [middle: SD_MIDDLE_CONTAINER; position: INTEGER]]
-			-- Split areas used for save/restore spliter positions.
+	all_spliters_data: HASH_TABLE [ARRAYED_LIST [INTEGER], STRING]
+			-- All spliters data
+			-- First argument is real type
+			-- Second argument is data name which is used for finding data when `restore_spliter_data'
+
+	spliters_data: ARRAYED_LIST [INTEGER]
+			-- Split bars' positions saved which used for save/restore spliter positions.
+		do
+			-- Anchor type
+		end
 
 	internal_shared: SD_SHARED
 			-- All singletons.

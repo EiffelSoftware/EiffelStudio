@@ -170,7 +170,7 @@ feature -- Redefine.
 					l_old_stuff := a_multi_dock_area.item
 					l_old_spliter ?= l_old_stuff
 					if l_old_spliter /= Void then
-						a_multi_dock_area.save_spliter_position (l_old_spliter)
+						a_multi_dock_area.save_spliter_position (l_old_spliter, generating_type)
 					end
 					a_multi_dock_area.prune (l_old_stuff)
 				end
@@ -198,7 +198,7 @@ feature -- Redefine.
 					l_new_container.set_split_position (top_split_position (direction, l_new_container))
 				end
 				if l_old_spliter /= Void then
-					a_multi_dock_area.restore_spliter_position (l_old_spliter)
+					a_multi_dock_area.restore_spliter_position (l_old_spliter, generating_type)
 				end
 				internal_docking_manager.command.remove_empty_split_area
 				internal_docking_manager.command.update_title_bar

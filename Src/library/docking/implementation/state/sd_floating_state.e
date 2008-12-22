@@ -67,7 +67,7 @@ feature -- Redefine.
 				l_split_area := create {SD_VERTICAL_SPLIT_AREA}
 			end
 			l_main_container_widget := internal_docking_manager.query.inner_container_main.item
-			internal_docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget)
+			internal_docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
 			internal_docking_manager.query.inner_container_main.wipe_out
 			internal_docking_manager.query.inner_container_main.extend (l_split_area)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.top then
@@ -80,7 +80,7 @@ feature -- Redefine.
 			if l_split_area.full then
 				l_split_area.set_split_position (top_split_position (direction, l_split_area))
 			end
-			internal_docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget)
+			internal_docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
 			internal_docking_manager.command.unlock_update
 			internal_docking_manager.command.update_title_bar
 		end
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		do
 			l_current_item ?= inner_container.item
 			check l_current_item /= Void end
-			inner_container.save_spliter_position (l_current_item)
+			inner_container.save_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
 			l_widget ?= a_target_zone
 			check l_widget /= Void end
 			l_container ?= l_widget.parent
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 				l_target_split.set_split_position (l_target_split_position)
 			end
 			l_spliter.set_proportion (0.5)
-			inner_container.restore_spliter_position (l_current_item)
+			inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
 		end
 
 indexing

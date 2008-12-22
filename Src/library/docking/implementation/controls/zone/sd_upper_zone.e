@@ -69,7 +69,7 @@ feature -- Command
 								l_other := l_parent.second
 								l_first := True
 							end
-							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
 
 							l_parent_parent.prune (l_parent)
 							l_parent.wipe_out
@@ -90,7 +90,7 @@ feature -- Command
 							end
 
 							if l_other /= Void then
-								internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
+								internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
 							end
 						end
 					end
@@ -206,7 +206,7 @@ feature -- Command
 					if l_parent.first = Current then
 
 						l_other := l_parent.second
-						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".minimize")
 						l_parent.wipe_out
 						l_box := minimized_container (l_parent)
 
@@ -216,7 +216,7 @@ feature -- Command
 						l_box.disable_item_expand (Current)
 					else
 						l_other := l_parent.first
-						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".minimize")
 						l_parent.wipe_out
 						l_box := minimized_container (l_parent)
 						l_parent_parent.extend (l_box)
@@ -244,7 +244,7 @@ feature -- Command
 			end
 			internal_docking_manager.command.resize (True)
 			if l_other /= Void then
-				internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
+				internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other, generating_type + ".minimize")
 			end
 			internal_docking_manager.command.unlock_update
 		end

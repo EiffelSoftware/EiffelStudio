@@ -1457,6 +1457,7 @@ test	config-debugs					config006 tcf pass config
 test	config-rename-change			config007 tcf pass config
 test	config-missing-name-attribute	config008 tcf pass config
 test	config-override-crash			config009 tcf pass config
+test	config-system-name-with-space		config010 tcf pass config
 
 -- Lace
 

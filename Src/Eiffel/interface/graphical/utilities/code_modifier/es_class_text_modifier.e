@@ -313,6 +313,7 @@ feature -- Basic operations
 			l_line_count: INTEGER
 			l_cursor: EIFFEL_EDITOR_CURSOR
 			l_set_in_editor: BOOLEAN
+			l_was_modified: BOOLEAN
 			l_save: EB_SAVE_FILE
 		do
 			check
@@ -322,15 +323,32 @@ feature -- Basic operations
 
 			l_editors := active_editors_for_class (context_class)
 			if not l_editors.is_empty then
-					-- There are editors available, attempt to set to the active editor(s).
-				from l_editors.start until l_editors.after or l_recent_editor /= Void loop
+				from l_editors.start until l_editors.after loop
 					l_editor := l_editors.item_for_iteration
-					if l_editor.is_editable and then l_editor.text_is_fully_loaded and then l_editor.text_displayed.is_modified then
-							-- There is an editor that has been modified, make this the most recent.
-						l_recent_editor := l_editor
-					else
-						l_editors.forth
+						-- We don't use `l_editor.is_editable', because we simply load text in the editor later
+						-- `text_displayed.text_being_processed' is not a matter.
+						-- Doing this make it possible to use more than one modifiers in one procedure.
+						-- Or `text_displayed.text_being_processed' is possible set with `True' (text loading is pending on idle),
+						-- Hence the second modifier can not applied to current editor.
+					if not l_editor.is_read_only and then l_editor.allow_edition then
+							-- Fetch position information.
+						l_text := l_editor.text_displayed
+						if l_text /= Void then
+							l_was_modified := l_was_modified or else l_text.is_modified
+							if l_was_modified and then l_editor.is_editable then
+									-- This editor was modified so make it the most recent editor
+								if l_recent_editor /= Void then
+									if l_recent_editor.dev_window.window.has_focus then
+											-- There was another modified editor but this one has focus, use it.
+										l_recent_editor := l_editor
+									end
+								else
+									l_recent_editor := l_editor
+								end
+							end
+						end
 					end
+					l_editors.forth
 				end
 
 				from l_editors.start until l_editors.after loop
@@ -352,10 +370,8 @@ feature -- Basic operations
 							-- Set text, always using a merge.
 						l_new_text := merge_text (l_text.wide_text)
 						if l_new_text /= Void then
-							l_editor.no_save_before_next_load
-
 								-- Set text to `modified_data' for use in `prepare'
-							if l_recent_editor = l_editor then
+							if l_recent_editor ~ l_editor then
 									-- Set modified data text to the most recent editor
 								modified_data.text := l_new_text
 							elseif l_recent_editor = Void and then l_editors.is_last then
@@ -388,7 +404,8 @@ feature -- Basic operations
 				end
 			end
 
-			if not l_set_in_editor then
+			if not l_set_in_editor or not l_was_modified then
+					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
 				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
 					l_new_text := context_class.text.as_attached
@@ -413,6 +430,22 @@ feature -- Basic operations
 							-- Log change
 						logger.service.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
 					end
+				end
+			end
+
+			if not l_was_modified and then not l_editors.is_empty then
+					-- There were no pre-modifications made in the editors and there are open editors for the class.
+					-- Because there was a save operation we need to update the time stamps.
+				from l_editors.start until l_editors.after loop
+					l_editor := l_editors.item_for_iteration
+					l_text := l_editor.text_displayed
+					if l_text /= Void then
+							-- Reset the changed status to prevent automatic reloads.
+						l_text.set_changed (False, False)
+					else
+						check False end
+					end
+					l_editors.forth
 				end
 			end
 
@@ -661,7 +694,7 @@ feature {NONE} -- Factory
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)
-			if l_editor = Void then
+			if l_editor = Void or else not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := original_text
 			else

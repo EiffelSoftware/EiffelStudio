@@ -21,7 +21,10 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [FILE_NOTIFIER_EVENT_OBSERVER]
+	EVENT_CONNECTION_POINT_I [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]
+		rename
+			connection as file_notifier_connection
+		end
 
 feature -- Query
 
@@ -139,6 +142,24 @@ feature -- Events
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		end
+
+feature -- Events: Connection point
+
+	file_notifier_connection: !EVENT_CONNECTION_I [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]
+			-- <Precursor>
+		local
+			l_observer: FILE_NOTIFIER_EVENT_OBSERVER
+		attribute
+			create l_observer
+			create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make_from_array (<<
+				[file_modified_events, agent l_observer.on_file_modified]
+			>>)
+			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
+				l_disposable.auto_dispose (Result)
+			else
+				check False end
+			end
 		end
 
 ;indexing

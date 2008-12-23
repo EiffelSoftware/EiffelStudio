@@ -65,7 +65,7 @@ feature {NONE} -- Iniitalization
 
 				-- Hook up events for session data
 			if session_manager.is_service_available then
-				session_data.connect_events (Current)
+				session_data.session_connection.connect_events (Current)
 				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
 					expand_errors := l_expand.item
 					if expand_errors then
@@ -142,8 +142,8 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					if session_data.is_connected (Current) then
-						session_data.disconnect_events (Current)
+					if session_data.session_connection.is_connected (Current) then
+						session_data.session_connection.disconnect_events (Current)
 					end
 				end
 			end
@@ -1066,7 +1066,7 @@ feature {NONE} -- User interface manipulation
 				tracer.trace (l_gen, l_error, {ERROR_TRACER}.single_line)
 
 				if l_gen.last_line /= Void and then l_gen.last_line.count > 0 then
-					l_editor_item := create_clickable_grid_item (l_gen.last_line)
+					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
 				else
 					create l_editor_item.make_with_text ("No error message found!")
 				end
@@ -1100,7 +1100,7 @@ feature {NONE} -- User interface manipulation
 					l_item.disable_full_select
 					l_row.set_item (category_column, l_item)
 
-					l_editor_item := create_multiline_clickable_grid_item (l_lines, False)
+					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
 					l_row.set_height (l_tip.required_tooltip_height)
 					l_row.set_item (error_column, l_editor_item)
 				end
@@ -1108,7 +1108,7 @@ feature {NONE} -- User interface manipulation
 					-- Context
 				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
 				if l_gen.last_line /= Void then
-					l_editor_item := create_clickable_grid_item (l_gen.last_line)
+					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
 					a_row.set_item (context_column, l_editor_item)
 					l_content := l_gen.last_line.content
 					if not l_content.is_empty then
@@ -1141,7 +1141,7 @@ feature {NONE} -- User interface manipulation
 						-- Create editor item					
 					create l_line.make_empty_line
 					l_line.append_token (l_pos_token)
-					l_editor_item := create_clickable_grid_item (l_line)
+					l_editor_item := create_clickable_grid_item (l_line, False)
 				end
 				a_row.set_item (position_column, l_editor_item)
 			end

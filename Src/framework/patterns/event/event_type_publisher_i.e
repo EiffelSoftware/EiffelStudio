@@ -1,25 +1,58 @@
 note
 	description: "[
-		Base interface for an observer obeserving events on a interface implementing {EVENT_CONNECTION_I}.
+		Supports system event publication for a {EVENT_TYPE_I} implementation.
 		
-		Some observers will inherit {USABLE_I} so be sure to perform pre-condition checks on the event handler
-		routines in the form of:
-		
-			on_event
-				require
-					is_interface_usable: {rl_usable: USABLE_I} Current implues rl_usable.is_interface_usable
-				do
-				end
+		The default implementation for this interface is {EVENT_TYPE}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
-	EVENT_OBSERVER_I
+	EVENT_TYPE_PUBLISHER_I [EVENT_DATA -> TUPLE]
 
-note
+inherit
+	USABLE_I
+
+feature -- Status report
+
+	is_publishing: BOOLEAN
+			-- Is a publication currently being run?
+		deferred
+		ensure
+			not_is_publishing: not is_interface_usable implies not Result
+		end
+
+feature -- Publication
+
+	publish (a_args: ?EVENT_DATA)
+			-- Publish all not suspended actions from the subscription list.
+			--
+			-- `a_args': Public context arguments to forward to all subscribers.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_publishing: not is_publishing
+		deferred
+		ensure
+			is_publishing_unchanged: is_publishing = old is_publishing
+		end
+
+	publish_if (a_args: ?EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
+			-- Publishes the event, if the subscriptions have not been suspended.
+			--
+			-- `a_args': Public context arguments to forward to all subscribers.
+			-- `a_predicate': The predicate to use to determine if a subscriber should recieve a published event.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_publishing: not is_publishing
+			a_args_is_valid: a_predicate /= Void implies a_predicate.valid_operands (a_args)
+		deferred
+		ensure
+			is_publishing_unchanged: is_publishing = old is_publishing
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

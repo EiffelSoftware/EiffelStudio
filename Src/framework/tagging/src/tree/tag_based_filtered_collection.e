@@ -19,7 +19,6 @@ class
 inherit
 	ACTIVE_COLLECTION_I [G]
 		rename
-			is_connected as is_observer_connected,
 			are_items_available as is_connected
 		end
 
@@ -29,13 +28,6 @@ inherit
 			on_item_changed,
 			on_item_removed,
 			on_items_reset
-		end
-
-	EVENT_OBSERVER_CONNECTION [!ACTIVE_COLLECTION_OBSERVER [G]]
-		rename
-			is_connected as is_observer_connected
-		redefine
-			is_interface_usable
 		end
 
 	TAG_UTILITIES
@@ -96,7 +88,7 @@ feature -- Access
 			check l_collection /= Void end
 			Result := l_collection
 		ensure
-			observing: Result.is_connected (Current)
+			observing: Result.active_collection_connection.is_connected (Current)
 		end
 
 	expression: !STRING
@@ -142,10 +134,10 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {EVENT_OBSERVER_CONNECTION}
-			if Result and is_connected then
-				Result := collection.is_interface_usable
-			end
+			Result := is_connected and then collection.is_interface_usable
+		ensure then
+			is_connected: Result implies is_connected
+			collection_is_interface_usable: Result implies collection.is_interface_usable
 		end
 
 	has_expression: BOOLEAN
@@ -193,7 +185,7 @@ feature -- Status setting
 			not_connected: not is_connected
 		do
 			internal_collection := a_collection
-			internal_collection.connect_events (Current)
+			internal_collection.active_collection_connection.connect_events (Current)
 			update (False)
 		end
 
@@ -202,7 +194,7 @@ feature -- Status setting
 		require
 			connected: is_connected
 		do
-			collection.disconnect_events (Current)
+			collection.active_collection_connection.disconnect_events (Current)
 			internal_collection := Void
 			items_reset_event.publish ([Current])
 		end
@@ -496,4 +488,35 @@ invariant
 	positive_matchers_compiled: positive_matchers.for_all (agent {like create_matcher}.is_compiled)
 	negative_matchers_compiled: negative_matchers.for_all (agent {like create_matcher}.is_compiled)
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

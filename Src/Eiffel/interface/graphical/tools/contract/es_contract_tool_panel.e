@@ -133,12 +133,12 @@ feature {NONE} -- Initialization
 
 			if session_manager.is_service_available then
 					-- Connect session observer.
-				project_window_session_data.connect_events (Current)
+				project_window_session_data.session_connection.connect_events (Current)
 			end
 
 			if code_template_catalog.is_service_available then
 					-- Connect code template catalog observer, to recieve change notifications.
-				code_template_catalog.service.connect_events (Current)
+				code_template_catalog.service.code_template_catalog_connection.connect_events (Current)
 			end
 
 			if code_template_catalog.is_service_available then
@@ -168,19 +168,24 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- To be called when the button has became useless.
 			-- Note: It's recommended that you do not detach objects here.
+		local
+			l_session: SESSION_I
+			l_catalog: CODE_TEMPLATE_CATALOG_S
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					if project_window_session_data.is_connected (Current) then
+					l_session := project_window_session_data
+					if l_session.session_connection.is_connected (Current) then
 							-- Disconnect session value change observer.
-						project_window_session_data.disconnect_events (Current)
+						l_session.session_connection.disconnect_events (Current)
 					end
 				end
 
 				if code_template_catalog.is_service_available then
-					if code_template_catalog.service.is_connected (Current) then
+					l_catalog := code_template_catalog.service
+					if l_catalog.code_template_catalog_connection.is_connected (Current) then
 							-- Disconnect catalog change observer.
-						code_template_catalog.service.disconnect_events (Current)
+						l_catalog.code_template_catalog_connection.disconnect_events (Current)
 					end
 				end
 			end

@@ -13,7 +13,10 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER]
+	EVENT_CONNECTION_POINT_I [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]
+		rename
+			connection as code_template_catalog_connection
+		end
 
 feature -- Access
 
@@ -84,15 +87,6 @@ feature -- Query
 		deferred
 		end
 
-feature {NONE} -- Query
-
-	events (a_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			-- <Precursor>
-		do
-			create Result.make (1)
-			Result.put_last ([catalog_changed_event, agent a_observer.on_catalog_changed])
-		end
-
 feature -- Events
 
 	catalog_changed_event: !EVENT_TYPE [TUPLE]
@@ -101,6 +95,24 @@ feature -- Events
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		end
+
+feature -- Events: Connection point
+
+	code_template_catalog_connection: !EVENT_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]
+			-- <Precursor>
+		local
+			l_observer: CODE_TEMPLATE_CATALOG_OBSERVER
+		attribute
+			create l_observer
+			create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make_from_array (<<
+				[catalog_changed_event, agent l_observer.on_catalog_changed]
+			>>)
+			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
+				l_disposable.auto_dispose (Result)
+			else
+				check False end
+			end
 		end
 
 feature -- Basic operations

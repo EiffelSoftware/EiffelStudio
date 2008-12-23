@@ -17,7 +17,10 @@ deferred class
 inherit
 	USABLE_I
 
-	EVENT_OBSERVER_CONNECTION_I [SESSION_EVENT_OBSERVER]
+	EVENT_CONNECTION_POINT_I [SESSION_EVENT_OBSERVER, SESSION_I]
+		rename
+			connection as session_connection
+		end
 
 feature -- Access
 
@@ -141,18 +144,6 @@ feature -- Query
 		deferred
 		end
 
-feature {NONE} -- Query
-
-	events (a_observer: !SESSION_EVENT_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			-- List of events and associated action.
-			--
-			-- `a_observer': Event observer interface to bind agent actions to.
-			-- `Result': A list of event types paired with a associated action on the passed observer
-		do
-			create Result.make (1)
-			Result.put_last ([value_changed_event, agent a_observer.on_session_value_changed])
-		end
-
 feature -- Status report
 
 	is_dirty: BOOLEAN
@@ -212,6 +203,24 @@ feature -- Events
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		end
+
+feature -- Events: Connection point
+
+	session_connection: !EVENT_CONNECTION_I [SESSION_EVENT_OBSERVER, SESSION_I]
+			-- <Precursor>
+		local
+			l_observer: SESSION_EVENT_OBSERVER
+		attribute
+			create l_observer
+			create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make_from_array (<<
+				[value_changed_event, agent l_observer.on_session_value_changed]
+			>>)
+			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
+				l_disposable.auto_dispose (Result)
+			else
+				check False end
+			end
 		end
 
 feature {SESSION_MANAGER_S} -- Action Handlers

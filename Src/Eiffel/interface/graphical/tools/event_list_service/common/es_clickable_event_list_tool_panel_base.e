@@ -98,10 +98,11 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	create_clickable_grid_item (a_line: EIFFEL_EDITOR_LINE): EB_GRID_EDITOR_TOKEN_ITEM
+	create_clickable_grid_item (a_line: EIFFEL_EDITOR_LINE; a_allow_selection: BOOLEAN): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a new grid item to host the context of `a_lines'.
 			--
 			-- `a_line': The editor line containing tokens to render on the resulting grid item.
+			-- `a_allow_selection': True to allow the contents to be selected; False otherwise.
 			-- `Result': A grid item with the tokens set.
 		require
 			a_line_attached: a_line /= Void
@@ -110,23 +111,31 @@ feature {NONE} -- Factory
 		do
 			create l_lines.make (1)
 			l_lines.extend (a_line)
-			Result := create_multiline_clickable_grid_item (l_lines, False)
+			Result := create_multiline_clickable_grid_item (l_lines, False, a_allow_selection)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	create_multiline_clickable_grid_item (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_use_text_wrapping: BOOLEAN): EB_GRID_EDITOR_TOKEN_ITEM
+	create_multiline_clickable_grid_item (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_allow_selection: BOOLEAN; a_use_text_wrapping: BOOLEAN): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a new grid item to host the context of `a_lines'.
 			--
 			-- `a_lines': The editor lines containing tokens to render on the resulting grid item.
+			-- `a_allow_selection': True to allow the contents to be selected; False otherwise.
+			-- `a_use_text_wrapping': True to perform automatic text-wrapping; False otherwise.
 			-- `Result': A grid item with the tokens set.
 		require
 			a_lines_attached: a_lines /= Void
 		local
 			l_tokens: like tokens_list_from_lines
+			l_selectable_item: EB_GRID_EDITOR_ITEM
 			l_shared_writer: EB_SHARED_WRITER
 		do
-			create {EB_GRID_EDITOR_ITEM}Result
+			if a_allow_selection then
+				create l_selectable_item
+				Result := l_selectable_item
+			else
+				create Result
+			end
 			Result.set_text_wrap (a_use_text_wrapping)
 			l_tokens := tokens_list_from_lines (a_lines)
 			if not l_tokens.is_empty then

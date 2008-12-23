@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 				-- Retrieve event list service
 			if event_list.is_service_available then
-				event_list.service.connect_events (Current)
+				event_list.service.event_list_connection.connect_events (Current)
 			end
 		end
 
@@ -108,10 +108,13 @@ feature {NONE} -- Clean up
 
 	internal_recycle
 			-- Recycle tool.
+		local
+			l_event_list: EVENT_LIST_S
 		do
 			if event_list.is_service_available then
-				if event_list.service.is_connected (Current) then
-					event_list.service.disconnect_events (Current)
+				l_event_list := event_list.service
+				if l_event_list.event_list_connection.is_connected (Current) then
+					l_event_list.event_list_connection.disconnect_events (Current)
 				end
 			end
 			Precursor

@@ -132,7 +132,7 @@ feature -- Status report
 		ensure then
 			result_implies_collection_attached: Result implies internal_collection /= Void
 			result_implies_prefix_attached: Result implies internal_prefix /= Void
-			result_implies_connected: Result implies collection.is_connected (Current)
+			result_implies_connected: Result implies collection.active_collection_connection.is_connected (Current)
 		end
 
 	is_interface_usable: BOOLEAN
@@ -165,7 +165,7 @@ feature -- Status setting
 		do
 			internal_collection := a_collection
 			internal_prefix := a_prefix
-			collection.connect_events (Current)
+			collection.active_collection_connection.connect_events (Current)
 			fill
 		ensure
 			connected: is_connected
@@ -178,7 +178,7 @@ feature -- Status setting
 			connected: is_connected
 		do
 			wipe_out
-			collection.disconnect_events (Current)
+			collection.active_collection_connection.disconnect_events (Current)
 			internal_collection := Void
 			internal_prefix := Void
 		ensure
@@ -307,4 +307,35 @@ feature {NONE} -- Events
 			untagged_items_empty: untagged_items.is_empty
 		end
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

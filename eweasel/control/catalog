@@ -1464,6 +1464,7 @@ test	config-system-name-with-space	config010 tcf pass config
 test	config-class-file-name-mismatch	config011 tcf pass config
 test	config-root-class-file-name-mismatch	config012 tcf pass config
 test	config-class-file-name-mismatch-2		config013 tcf pass config
+test	config-class-file-name-update	config014 tcf pass config
 
 -- Lace
 

@@ -10,6 +10,8 @@ remtrace base2
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/base_original base_original
 remtrace com
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/com com
+remtrace docking
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/docking docking
 remtrace Eiffel2Java
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
 remtrace gobo

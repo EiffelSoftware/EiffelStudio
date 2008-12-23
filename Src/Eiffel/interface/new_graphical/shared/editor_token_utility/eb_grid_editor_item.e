@@ -120,6 +120,7 @@ feature {NONE} -- Implementation
 			editor.set_font_offset (editor.font.height - 1)
 			editor.set_display_scrollbars (False)
 			editor.set_auto_scroll (False)
+			editor.disable_line_numbers
 
 			editor_token_text.display_on_editor (editor.as_attached)
 			editor.set_read_only (True)

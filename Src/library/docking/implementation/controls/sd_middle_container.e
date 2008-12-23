@@ -143,7 +143,7 @@ feature -- Split area resizing
 			set_proportion_recursive_imp (top_resize_split_area.item)
 			top_resize_split_area.put (Void)
 		ensure
-			cleaned: top_resize_split_area.item = Void
+			cleared: top_resize_split_area.item = Void
 		end
 
 	set_proportion_recursive_imp (a_container: SD_MIDDLE_CONTAINER)
@@ -180,16 +180,19 @@ feature -- Split area resizing
 		do
 			l_item := top_resize_split_area.item
 			if l_item /= Void then
-				if l_item /= a_split_area and then a_split_area.has_recursive (l_item) then
+				if l_item /= a_split_area and then a_split_area.full and then a_split_area.has_recursive (l_item) then
 					top_resize_split_area.put (a_split_area)
 				end
 			else
-				create l_env
-				l_env.application.do_once_on_idle (agent set_proportion_recursive)
-				top_resize_split_area.put (a_split_area)
+				if a_split_area.full then
+					top_resize_split_area.put (a_split_area)
+
+					create l_env
+					l_env.application.do_once_on_idle (agent set_proportion_recursive)
+				end
 			end
 		ensure
-			set: top_resize_split_area.item /= Void
+			set: a_split_area.full implies top_resize_split_area.item /= Void
 		end
 
 	top_resize_split_area: CELL [SD_MIDDLE_CONTAINER]

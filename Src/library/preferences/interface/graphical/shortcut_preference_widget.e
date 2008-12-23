@@ -246,7 +246,12 @@ feature {NONE} -- Implementation
 				elseif l_string.is_equal (Shift_text) then
 					is_shift := True
 				else
-					l_key := l_string.twin.as_lower
+						-- Handle the case the key is '+'
+					if not a_string.is_empty and then a_string.item (a_string.count) = '+' then
+						l_key := a_string.substring (a_string.last_index_of ('+', a_string.count - 1) + 1, a_string.count)
+					else
+						l_key := l_string.twin.as_lower
+					end
 				end
 				l_cnt := l_cnt + 1
 			end

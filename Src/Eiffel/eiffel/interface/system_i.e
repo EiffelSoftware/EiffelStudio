@@ -223,6 +223,10 @@ feature -- Properties
 	is_config_changed: BOOLEAN
 			-- Has configuration file changed?
 
+	has_potential_class_name_mismatch: BOOLEAN
+			-- Did we find a file in which there is a class name whose name is different
+			-- than its file name?
+
 	has_been_changed: BOOLEAN
 			-- Did last recompilation changed data of compiler?
 
@@ -946,6 +950,13 @@ end
 			else
 				create l_vis_build.make_build (l_state, l_target, l_factory)
 			end
+			if has_potential_class_name_mismatch then
+				has_potential_class_name_mismatch := False
+				l_vis_build.set_is_full_class_name_analyzis (True)
+			else
+				has_potential_class_name_mismatch := True
+				l_vis_build.set_is_full_class_name_analyzis (False)
+			end
 			if il_generation then
 				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
 				l_vis_build.set_il_version (clr_runtime_version)
@@ -1222,7 +1233,7 @@ end
 				-- Mark classes to be recompiled.
 			if any_class = Void or else not any_class.is_compiled then
 					-- First compilation.
-				is_rebuild := True
+				set_rebuild (True)
 				init
 				compilation_straight := True
 			else
@@ -1260,7 +1271,7 @@ end
 						update_root_class
 					else
 						rebuild_configuration
-						is_rebuild := True
+						set_rebuild (True)
 					end
 				end
 
@@ -1476,6 +1487,8 @@ feature -- Recompilation
 			-- Set `is_rebuild'.
 		do
 			is_rebuild := b
+		ensure
+			is_rebuild_set: is_rebuild = b
 		end
 
 	force_rebuild is
@@ -1494,6 +1507,14 @@ feature -- Recompilation
 			-- Reset `has_compilation_started'.
 		do
 			has_compilation_started := False
+		end
+
+	reset_has_potential_class_name_mismatch is
+			-- Reset `has_potential_class_name_mismatch'
+		do
+			has_potential_class_name_mismatch := False
+		ensure
+			has_potential_class_name_mismatch_set: not has_potential_class_name_mismatch
 		end
 
 	recompile is

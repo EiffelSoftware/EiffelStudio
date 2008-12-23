@@ -74,6 +74,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_full_class_name_analysis: BOOLEAN
+			-- Will we check for the class name?
+
 	modified_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of modified classes.
 
@@ -116,6 +119,14 @@ feature -- Update
 			a_location_not_void: a_location /= Void
 		do
 			partial_location := a_location
+		end
+
+	set_is_full_class_name_analyzis (v: like is_full_class_name_analysis) is
+			-- Set `is_full_class_name_analysis' with `v'.
+		do
+			is_full_class_name_analysis := v
+		ensure
+			is_full_class_name_analysis_set: is_full_class_name_analysis = v
 		end
 
 	reset_classes is
@@ -649,7 +660,6 @@ feature {NONE} -- Implementation
 			if l_old_group /= Void then
 				l_old_group_classes_by_filename := l_old_group.classes_by_filename
 			end
-			l_classname_finder := classname_finder
 			check
 				current_classes_not_void: l_current_classes /= Void
 				old_group_classes_set: l_old_group /= Void implies l_old_group.classes_set
@@ -683,53 +693,98 @@ feature {NONE} -- Implementation
 							current_classes_by_filename.force (l_class, l_file_name)
 						end
 						l_done := True
+					elseif l_class.last_class_name /= Void then
+							-- Class was renamed. This fixes eweasel test#incr051.
+						l_name := l_class.last_class_name
+						if l_name.is_case_insensitive_equal ("NONE") then
+							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
+						else
+							l_class := factory.new_class (a_file, a_cluster, a_path, l_name)
+							if l_class.is_error then
+								add_and_raise_error (l_class.last_error)
+							end
+							added_classes.force (l_class)
+							if l_current_classes.has_key (l_name) then
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
+									l_class.full_file_name, a_cluster.target.system.file_name))
+							else
+								l_current_classes.force (l_class, l_name)
+								current_classes_by_filename.force (l_class, l_file_name)
+							end
+						end
+						l_done := True
 					end
 				end
 				if not l_done then
-					l_full_file := a_cluster.location.evaluated_directory
-					l_full_file.append (l_file_name)
-					create l_file.make (l_full_file)
-					l_file.open_read
-					if not l_file.is_open_read then
-						add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))
+						-- Because override processing is done during analyzis of the ECF file, we
+						-- need to make sure that the class name we read from a class in an override
+						-- cluster is really the one intended. Fixes eweasel test#incr263.
+					if is_full_class_name_analysis or a_cluster.is_override then
+						l_full_file := a_cluster.location.evaluated_directory
+						l_full_file.append (l_file_name)
+						create l_file.make (l_full_file)
+						l_file.open_read
+						if not l_file.is_open_read then
+							add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))
+						else
+								-- get class name
+							l_classname_finder := classname_finder
+							l_classname_finder.parse (l_file)
+							l_file.close
+							l_name := l_classname_finder.classname
+							if l_name = Void then
+								add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
+							elseif l_name.is_case_insensitive_equal ("NONE") then
+								add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
+							else
+								l_name.to_upper
+
+								if l_classname_finder.is_partial_class then
+										-- partial classes					
+									if partial_classes = Void then
+										create partial_classes.make (1)
+									end
+									l_pc := partial_classes.item (l_name)
+									if l_pc = Void then
+										create l_pc.make (1)
+									end
+									l_pc.extend (l_full_file)
+									partial_classes.force (l_pc, l_name)
+								else
+										-- normal classes
+									l_class := factory.new_class (a_file, a_cluster, a_path, l_name)
+									if l_class.is_error then
+										add_and_raise_error (l_class.last_error)
+									end
+									added_classes.force (l_class)
+									if l_current_classes.has_key (l_name) then
+										add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
+											l_class.full_file_name, a_cluster.target.system.file_name))
+									else
+										l_current_classes.force (l_class, l_name)
+										current_classes_by_filename.force (l_class, l_file_name)
+									end
+								end
+							end
+						end
 					else
-							-- get class name
-						l_classname_finder := classname_finder
-						l_classname_finder.parse (l_file)
-						l_file.close
-						l_name := l_classname_finder.classname
-						if l_name = Void then
-							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
-						elseif l_name.is_case_insensitive_equal ("NONE") then
+						l_name := a_file.as_upper
+							-- Removes the .e extension
+						l_name.keep_head (a_file.count - 2)
+						if l_name.is_case_insensitive_equal ("NONE") then
 							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
 						else
-							l_name.to_upper
-
-								-- partial classes					
-							if l_classname_finder.is_partial_class then
-								if partial_classes = Void then
-									create partial_classes.make (1)
-								end
-								l_pc := partial_classes.item (l_name)
-								if l_pc = Void then
-									create l_pc.make (1)
-								end
-								l_pc.extend (l_full_file)
-								partial_classes.force (l_pc, l_name)
-								-- normal classes
+							l_class := factory.new_class (a_file, a_cluster, a_path, l_name)
+							if l_class.is_error then
+								add_and_raise_error (l_class.last_error)
+							end
+							added_classes.force (l_class)
+							if l_current_classes.has_key (l_name) then
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
+									l_class.full_file_name, a_cluster.target.system.file_name))
 							else
-									-- not found => new class
-								l_class := factory.new_class (a_file, a_cluster, a_path)
-								if l_class.is_error then
-									add_and_raise_error (l_class.last_error)
-								end
-								added_classes.force (l_class)
-								if l_current_classes.has_key (l_name) then
-									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
-								else
-									l_current_classes.force (l_class, l_name)
-									current_classes_by_filename.force (l_class, l_file_name)
-								end
+								l_current_classes.force (l_class, l_name)
+								current_classes_by_filename.force (l_class, l_file_name)
 							end
 						end
 					end
@@ -745,14 +800,12 @@ feature {NONE} -- Implementation
 					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal (l_name) then
 							-- We propose the correct file name. The file name construction follows the same schema as above
 						l_suggested_filename := a_path + "/" + l_name.as_lower + "." + eiffel_file_extension
-						if l_full_file /= Void then
-							l_suggested_filename := a_cluster.location.evaluated_directory + l_suggested_filename
-							add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file, l_name, l_suggested_filename))
-						elseif a_path /= Void then
-							add_warning (create {CONF_ERROR_FILENAME}.make (l_file_name, l_name, l_suggested_filename))
-						else
-							add_warning (create {CONF_ERROR_FILENAME}.make (a_file, l_name, l_name.as_lower + "." + eiffel_file_extension))
+						l_suggested_filename := a_cluster.location.evaluated_directory + l_suggested_filename
+						if l_full_file = Void then
+							l_full_file := a_cluster.location.evaluated_directory
+							l_full_file.append (l_file_name)
 						end
+						add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file, l_name, l_suggested_filename))
 					end
 				end
 			end
@@ -1047,9 +1100,9 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1060,19 +1113,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

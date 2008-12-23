@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING)
+	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING; a_class_name: !STRING)
 			-- <Precursor>
 		local
 			l_stone: !CLASSI_STONE
@@ -135,7 +135,7 @@ feature -- Element change
 				end
 
 				if l_cluster /= Void then
-					manager.add_class_to_cluster (a_file_name, l_cluster, a_path)
+					manager.add_class_to_cluster (a_file_name, l_cluster, a_path, a_class_name)
 					if {l_class: like last_added_class} manager.last_added_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)

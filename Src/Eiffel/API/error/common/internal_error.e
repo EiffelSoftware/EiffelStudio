@@ -12,7 +12,8 @@ inherit
 	COMPILER_ERROR
 
 create
-	make
+	make,
+	make_class_name_mismatch
 
 feature {NONE} -- Initialization
 
@@ -27,10 +28,22 @@ feature {NONE} -- Initialization
 			message_set: message = m
 		end
 
+	make_class_name_mismatch is
+			-- New internal error for a class name mismatch.
+		do
+			message := "Class mismatch found"
+			is_class_name_mismatch := True
+		ensure
+			is_class_name_mismatch_set: is_class_name_mismatch
+		end
+
 feature -- Access
 
 	code: STRING is "INTERNAL_ERROR"
 			-- Name of error.
+
+	is_class_name_mismatch: BOOLEAN
+			-- Is internal error due to a class name mismatch found at degree 5?
 
 	file_name: STRING is
 		do

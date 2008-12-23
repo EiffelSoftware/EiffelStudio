@@ -394,6 +394,7 @@ feature -- Commands
 
 				if successful then
 					unset_changed
+					system.reset_has_potential_class_name_mismatch
 					system.set_rebuild (False)
 					system.reset_has_compilation_started
 					compilation_counter := compilation_counter + 1
@@ -425,7 +426,7 @@ feature -- Commands
 		rescue
 			if Rescue_status.is_error_exception then
 				Error_handler.force_display
-				if error_handler.error_list.item.code.is_equal ("VIGE") then
+				if {l_vige: VIGE} error_handler.error_list.item then
 						-- An error occurs during IL generation, we need to
 						-- save current project otherwise EIFGEN is corrupted
 						-- due to a bad project file. We also increment
@@ -437,15 +438,17 @@ feature -- Commands
 				Rescue_status.set_is_error_exception (False)
 				retried := retried + 1
 				if not missing_class_error then
-					degree_6_done := system /= Void and then system.is_rebuild
+					degree_6_done := system_defined and then system.is_rebuild and then not system.has_potential_class_name_mismatch
 					Error_handler.error_list.start
 					if
 						not degree_6_done and then
-						(error_handler.error_list.item.code.is_equal ("VTCT") or else
-						error_handler.error_list.item.code.is_equal ("VD21") or else
-						error_handler.error_list.item.code.is_equal ("VD20") or else
-						error_handler.error_list.item.code.is_equal ("VSCN") or else
-						error_handler.error_list.item.code.is_equal ("VD01"))
+						({l_vtct: VTCT} error_handler.error_list.item or else
+						{l_vd71: VD71} error_handler.error_list.item or else
+						{l_vd29: VD29} error_handler.error_list.item or else
+						{l_vd21: VD21} error_handler.error_list.item or else
+						{l_vd20: VD20} error_handler.error_list.item or else
+						{l_vscn: VSCN} error_handler.error_list.item or else
+						({l_int: INTERNAL_ERROR} error_handler.error_list.item and then l_int.is_class_name_mismatch))
 					then
 						missing_class_error := True
 						lace.reset_date_stamp

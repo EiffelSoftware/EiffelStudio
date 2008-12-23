@@ -11,7 +11,7 @@ class
 inherit
 	CONF_CLASS
 		redefine
-			set_name,
+			name_from_associated_file,
 			group,
 			is_read_only,
 			is_class_assembly
@@ -55,29 +55,29 @@ feature -- Access
 
 feature {CONF_ACCESS} -- Update
 
-		set_group (a_group: like group) is
-				-- Set `group' to `a_group'.
-			require
-				a_group_ok: a_group /= Void and then a_group.is_valid
-			do
-				group := a_group
-			ensure
-				group_set: group = a_group
-			end
+	set_group (a_group: like group) is
+			-- Set `group' to `a_group'.
+		require
+			a_group_ok: a_group /= Void and then a_group.is_valid
+		do
+			group := a_group
+		ensure
+			group_set: group = a_group
+		end
 
-		set_name is
-				-- Compute `renamed_name' from `name'.
-			do
-				-- do nothing
-			end
+	name_from_associated_file: STRING is
+			-- Compute `renamed_name' from `name'.
+		do
+			Result := name
+		end
 
-		set_type_position (a_position: INTEGER) is
-				-- Set class type description position.
-			require
-				a_position_ok: a_position >= 0
-			do
-				type_position := a_position
-			end
+	set_type_position (a_position: INTEGER) is
+			-- Set class type description position.
+		require
+			a_position_ok: a_position >= 0
+		do
+			type_position := a_position
+		end
 
 feature -- Access
 
@@ -128,9 +128,9 @@ invariant
 	dotnet_name_ok: dotnet_name /= Void and then not dotnet_name.is_empty
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -141,19 +141,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

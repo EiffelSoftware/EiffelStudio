@@ -165,25 +165,32 @@ feature -- Status Setting
 			l_key_code: INTEGER
 			l_key: EV_KEY
 			l_alt, l_ctrl, l_shift: BOOLEAN
+			l_start_index, l_end_index: INTEGER
 		do
 			if internal_value = Void then
 				internal_value := [False, False, False, ""]
 			end
-			values := a_value.split ('+')
 			l_value := [False, False, False, ""]
 
 			from
 				l_cnt := 1
+				l_start_index := 1
 			until
-				l_cnt > values.count
+				l_cnt > 4
 			loop
-				l_string ?= values.i_th (l_cnt).as_lower
-				if l_string.is_equal (str_lower_true) then
+				l_end_index := a_value.index_of ('+', l_start_index)
+				if l_cnt /= 4 and l_end_index /= 0 then
+					l_string := a_value.substring (l_start_index, l_end_index - 1)
+				else
+					l_string := a_value.substring (l_start_index, a_value.count)
+				end
+				if l_string.is_case_insensitive_equal (str_true) then
 					l_value.put_boolean (True, l_cnt)
-				elseif l_cnt = values.count then
+				elseif l_cnt = 4 then
 						-- Last one is assumed to be key
 					l_value.key_string := l_string
 				end
+				l_start_index := l_end_index + 1
 				l_cnt := l_cnt + 1
 			end
 
@@ -228,7 +235,7 @@ feature -- Query
 	valid_value_string (a_string: STRING): BOOLEAN is
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
-			Result := a_string /= Void and then a_string.split ('+').count = 4
+			Result := a_string /= Void and then a_string.split ('+').count >= 4
 		end
 
 	is_default_value: BOOLEAN is
@@ -256,8 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 	str_true: STRING is "True"
-	str_false: STRING is "False"
-	str_lower_true: STRING is "true";
+	str_false: STRING is "False";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

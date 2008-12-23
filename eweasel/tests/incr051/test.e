@@ -12,6 +12,8 @@ feature
 		do
 		end;
 	
-	x: INTEGER_REF;
+	x: COMPARABLE;
+
+	t: TEST1
 
 end 

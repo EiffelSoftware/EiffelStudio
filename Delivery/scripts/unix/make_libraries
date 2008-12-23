@@ -10,6 +10,8 @@ remtrace base
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/base base 
 remtrace diff
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/diff diff
+remtrace docking
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/docking docking 
 remtrace Eiffel2Java
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java 
 remtrace event

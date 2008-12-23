@@ -12,4 +12,7 @@ feature
 	make is
 		do
 		end
+
+	t: TEST_REV1
+
 end

@@ -13,6 +13,6 @@ feature
 		do
 		end
 
-	t1: TEST1
+	t1: TEST_REV1
 
 end

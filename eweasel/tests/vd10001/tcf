@@ -15,7 +15,7 @@ define		 CLASS "class"
 copy_raw	 test.e $CLUSTER test.e
 copy_sub	 test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error NONE VD71
+compile_result 	 syntax_error TEST1 8
 
 define		 CLASS "class TEST1 end"
 copy_sub	 test1.e $CLUSTER test1.e
@@ -31,6 +31,7 @@ compile_result 	 validity_error NONE VD71
 
 define		 EXCLUDE "<exclude>test1.e</exclude>"
 copy_sub 	 Ace $TEST Ace
+copy_raw	 test_rev1.e $CLUSTER test.e
 resume_compile
 compile_result 	 ok
 
@@ -38,8 +39,9 @@ define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 define		 CLASS "class"
 copy_sub	 test1.e $CLUSTER test1.e
+copy_raw	 test.e $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error NONE VD71
+compile_result 	 syntax_error TEST1 8
 
 define		 CLASS "class TEST1 end"
 copy_sub	 test1.e $CLUSTER test1.e
@@ -52,7 +54,7 @@ define		 CLASS "class"
 copy_raw	 test.e $CLUSTER test.e
 copy_sub	 test1.e $CLUSTER test1.e
 compile_quick_melted
-compile_result 	 validity_error NONE VD71
+compile_result 	 syntax_error TEST1 8
 
 define		 CLASS "class TEST1 end"
 copy_sub	 test1.e $CLUSTER test1.e
@@ -64,10 +66,11 @@ copy_sub 	 Ace $TEST Ace
 define		 CLASS "class"
 copy_sub	 test1.e $CLUSTER test1.e
 compile_quick_melted
-compile_result 	 validity_error NONE VD71
+compile_result 	 syntax_error TEST1 8
 
 define		 EXCLUDE "<exclude>test1.e</exclude>"
 copy_sub 	 Ace $TEST Ace
+copy_raw	 test_rev1.e $CLUSTER test.e
 resume_compile
 compile_result 	 ok
 
@@ -75,8 +78,9 @@ define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 define		 CLASS "class"
 copy_sub	 test1.e $CLUSTER test1.e
+copy_raw	 test.e $CLUSTER test.e
 compile_quick_melted
-compile_result 	 validity_error NONE VD71
+compile_result 	 syntax_error TEST1 8
 
 define		 CLASS "class TEST1 end"
 copy_sub	 test1.e $CLUSTER test1.e

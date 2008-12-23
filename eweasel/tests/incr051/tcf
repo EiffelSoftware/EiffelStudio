@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	add-vscn-violation
-test_description A VD24 violation is introduced after initial compilation
+test_description A VSCN violation is introduced after initial compilation
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
@@ -16,8 +16,9 @@ copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
 compile_result 	ok
 
-define		CLASS "class INTEGER_32_REF end"
+define		CLASS "class COMPARABLE end"
 copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test_rev1.e $CLUSTER test.e
 compile_melted
 compile_result 	validity_error NONE VSCN 
 

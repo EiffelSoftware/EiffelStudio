@@ -1,0 +1,21 @@
+test_name	config-class-file-name-update
+test_description Compiling a system where a class content has a different class name than the expected one should trigger a VTCT error but does not under certain circumstances.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result  ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning TEST2 VD80
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+
+compile_melted
+compile_result  validity_error TEST VTCT; TEST2 VD80
+
+test_end

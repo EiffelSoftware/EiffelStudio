@@ -767,6 +767,7 @@ test	ececil-undefined-symbol			incr301	tcf fail incrementality
 test	pattern-of-id-crash			incr302	tcf fail incrementality
 test	add-default-create-invalid-vtec		incr303	tcf fail incrementality
 test	change-base-library-to-base-safe	incr304	tcf fail incrementality
+test	add-then-remove-vlec-via-generic	incr305	tcf fail incrementality
 
 
 -- Melting

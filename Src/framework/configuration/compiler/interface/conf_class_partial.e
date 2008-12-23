@@ -157,6 +157,7 @@ feature {NONE} -- Implementation
 			l_lst: ARRAYED_LIST [STRING]
 			l_dir: KL_DIRECTORY
 			l_file: PLAIN_TEXT_FILE
+			l_name: STRING
 		do
 			if not is_error then
 				create l_lst.make_from_array (partial_classes.current_keys)
@@ -179,11 +180,11 @@ feature {NONE} -- Implementation
 					l_file.put_string (epc_merger.class_text)
 					l_file.close
 
-					set_name
-
+					l_name := name_from_associated_file
 					check
-						name_set: name /= Void
+						l_name_set: l_name /= Void
 					end
+					set_name (l_name)
 
 						-- rename file to class name
 					file_name := name.as_lower + ".e"
@@ -208,9 +209,9 @@ feature {NONE} -- Shared instances
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -221,19 +222,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

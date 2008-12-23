@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING)
+	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING; a_class_name: !STRING)
 			-- Try to create a new {EIFFEL_TEST_I} instance and add it to cluster.
 			--
 			-- Note: if successful, new class instance will be available through `last_added_class',
@@ -91,6 +91,7 @@ feature -- Element change
 		require
 			usable: is_interface_usable
 			a_file_name_not_empty: not a_file_name.is_empty
+			a_class_name_not_empty: not a_class_name.is_empty
 			a_path_valid: (create {RAW_FILE}.make (a_cluster.location.build_path (a_path, a_file_name))).exists
 		deferred
 		ensure

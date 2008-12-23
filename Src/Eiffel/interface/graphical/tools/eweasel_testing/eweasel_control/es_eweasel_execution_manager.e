@@ -73,19 +73,22 @@ feature -- Command
 				-- Add test case folder name to end of cluster path, we do it here since this directory maybe renamed automatically
 				create l_path_helper
 				l_cluster_path := l_wizard_information.cluster_path + l_path_helper.cluster_separator + l_new.folder_name
-				compile_and_open_new_unit_test_class (l_wizard_information.new_class_file_name, l_wizard_information.cluster, l_cluster_path)
+				compile_and_open_new_unit_test_class (l_wizard_information.new_class_file_name, l_wizard_information.cluster, l_cluster_path,
+					l_wizard_information.new_class_name)
 			else
 				-- Inforation is not valid, we do noting. Just quit.
 			end
 		end
 
-	compile_and_open_new_unit_test_class (a_new_class_file_name: STRING; a_cluster: CLUSTER_I; a_cluster_sub_path: STRING) is
+	compile_and_open_new_unit_test_class (a_new_class_file_name: STRING; a_cluster: CLUSTER_I; a_cluster_sub_path: STRING; a_class_name: STRING) is
 			-- Force compile `a_new_class_file_name' which is just created.
 			-- `a_new_class_file_name' file located in `a_cluster', sub path is `a_cluster_sub_path'
 		require
 			not_void: a_cluster /= Void
 			not_void: a_cluster /= Void
 			not_void: a_cluster_sub_path /= Void
+			a_class_name_not_void: a_class_name /= Void
+			a_class_name_not_empty: not a_class_name.is_empty
 		local
 			l_window: EB_SHARED_WINDOW_MANAGER
 			l_class_stone: CLASSI_STONE
@@ -95,7 +98,7 @@ feature -- Command
 			l_event_item: EVENT_LIST_TEST_CASE_ITEM
 			l_data_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
-			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path)
+			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path, a_class_name)
 
 			create l_class_stone.make (manager.last_added_class)
 			create l_window
@@ -580,7 +583,7 @@ indexing
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

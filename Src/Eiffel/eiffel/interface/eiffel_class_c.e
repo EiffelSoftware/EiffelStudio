@@ -308,6 +308,15 @@ feature -- Action
 				if Result /= Void then
 						-- Update `date' attribute.
 					Result.set_date (l_lace_class.file_date)
+					if not Result.class_name.name.is_case_insensitive_equal (l_lace_class.name) then
+							-- There is a mismatch, we force a full degree 6 rebuild.
+						error_handler.insert_error (create {INTERNAL_ERROR}.make_class_name_mismatch)
+							-- Simply discard result.
+						Result := Void
+					else
+							-- Name matches, we can confirm the class.
+						l_lace_class.confirm_class_name
+					end
 				end
 
 					-- We need to readd the type information to the ast

@@ -34,12 +34,14 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_group: like group; a_path: STRING; a_factory: like factory) is
+	make (a_file_name: STRING; a_group: like group; a_path, a_classname: STRING; a_factory: like factory) is
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
+			a_classname_not_void: a_classname /= Void
+			a_classname_not_empty: not a_classname.is_empty
 			a_factory_not_void: a_factory /= Void
 		local
 			l_cluster: CONF_CLUSTER
@@ -47,17 +49,10 @@ feature {NONE} -- Initialization
 			file_name := a_file_name
 			group := a_group
 			path := a_path
+			name := a_classname
 			is_valid := True
 			check_changed
-				--| FIXME IEK Optimize `name' retrieval by estimating class name based on file name
-				-- instead of parsing EVERY single class in the universe.
-			--name := a_file_name.split ('.').first.as_upper
-
 			if not is_error then
-				check
-					name_set: name /= Void and then not name.is_empty
-				end
-
 				l_cluster ?= a_group
 			end
 			is_renamed := False
@@ -177,6 +172,12 @@ feature -- Access, in compiled only, not stored to configuration file
 	overrides: ARRAYED_LIST [CONF_CLASS]
 			-- The classes that this class overrides.
 
+	is_class_name_confirmed: BOOLEAN
+			-- Has the class name of current class been confirmed?
+
+	last_class_name: STRING
+			-- Last found class name set by `rebuild'.
+
 feature -- Status report
 
 	has_modification_date_changed: BOOLEAN is
@@ -242,6 +243,14 @@ feature -- Status update
 			not_modified: not is_modified
 			not_renamed: not is_renamed
 			not_removed: not is_removed
+		end
+
+	confirm_class_name is
+			-- Class name of Current was confirmed.
+		do
+			is_class_name_confirmed := True
+		ensure
+			is_class_name_confirmed_set: is_class_name_confirmed
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
@@ -340,7 +349,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			is_valid := True
 		end
 
-	rebuild(a_file_name: STRING; a_group: like group; a_path: STRING) is
+	rebuild (a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Update the informations during a rebuild.
 			-- More or less the same thing as we during `make'.
 		require
@@ -349,22 +358,20 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_path_not_void: a_path /= Void
 		local
 			l_cluster: CONF_CLUSTER
-			l_old_name: STRING
 		do
-			is_rebuilding := True
-
-			l_old_name := name.twin
 			group := a_group
-			if not equal (l_old_name, name)	then
-				is_renamed := True
-				date := 0
-			end
 			file_name := a_file_name
 			path := a_path
 			check_changed
+			if is_modified and not is_class_name_confirmed then
+				last_class_name := name_from_associated_file
+				is_renamed := last_class_name = Void or else not last_class_name.is_equal (name)
+			else
+				last_class_name := name
+			end
 
-				-- do not lose information if we were renamed as we build a new class if we are renamed and we want the old information
-				-- to deal with removed overrides
+				-- do not lose information if we were renamed as we build a new class if we
+				-- are renamed and we want the old information to deal with removed overrides.
 			if not is_renamed then
 				if not is_error then
 					l_cluster ?= a_group
@@ -377,8 +384,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				old_overriden_by := overriden_by
 				overriden_by := Void
 			end
-
-			is_rebuilding := False
+		ensure
+			last_class_name_set: (last_class_name = Void and not is_class_name_confirmed) or else (last_class_name /= Void and then not last_class_name.is_empty)
 		end
 
 	check_changed is
@@ -394,17 +401,26 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			elseif date /= l_date then
 				date := l_date
 				is_modified := True
-
-					-- check for a changed class name
-				set_name
+					-- File was changed, its name cannot be confirmed anymore
+				is_class_name_confirmed := False
 			end
 		end
 
-	set_name is
+	set_name (a_name: STRING) is
 			-- Compute and set (if we are not rebuilding) `name' and `renamed_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			name := a_name.as_upper
+		ensure
+			name_set: name ~ a_name.as_upper
+		end
+
+	name_from_associated_file: STRING is
+			-- Read associated file and extract the name from it if possible.
 		local
 			l_file: KL_BINARY_INPUT_FILE
-			l_name: like name
 			l_classname_finder: like classname_finder
 		do
 			reset_error
@@ -414,20 +430,16 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				l_file.open_read
 				l_classname_finder.parse (l_file)
 				l_file.close
-				l_name := l_classname_finder.classname
-				if l_name = Void then
+				Result := l_classname_finder.classname
+				if Result = Void then
 					date := -1
 					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name, group.target.system.file_name))
 				else
-					l_name.to_upper
-					if name = Void or else not name.is_equal (l_name) then
-						is_renamed := True
-						if not is_rebuilding then
-							name := l_name
-						end
-					end
+					Result.to_upper
 				end
 			end
+		ensure
+			valid_name_in_upper: Result = Void or else Result.as_upper.is_equal (Result)
 		end
 
 	set_overriden_by (a_class: like class_type) is
@@ -474,9 +486,6 @@ feature {NONE} -- Implementation
 
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create new config objects.
-
-	is_rebuilding: BOOLEAN
-			-- Are we currently rebuilding an old class?
 
 	internal_hash_code: like hash_code
 			-- Computed `hash_code'.

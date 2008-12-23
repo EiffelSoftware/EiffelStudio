@@ -200,7 +200,7 @@ feature {NONE} -- Basic operations
 			running: is_running
 			configuration_valid: configuration.is_new_class
 		do
-			test_suite.eiffel_project_helper.add_class (configuration.cluster, configuration.path, a_filename)
+			test_suite.eiffel_project_helper.add_class (configuration.cluster, configuration.path, a_filename, configuration.new_class_name)
 			if test_suite.eiffel_project_helper.is_class_added then
 				synchronize_class (test_suite.eiffel_project_helper.last_added_class)
 			end

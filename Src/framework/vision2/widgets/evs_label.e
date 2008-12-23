@@ -30,6 +30,14 @@ inherit
 			copy
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -251,6 +259,7 @@ feature -- Basic operations
 			-- Calculates the size of the label.
 			-- Note: You must call this prior to a show to get the correct size information
 		do
+			fixme ("Paul: Why isn't is_size_calculated calculated?")
 			resize_text
 		ensure
 			is_size_calculated: is_size_calculated

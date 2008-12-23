@@ -765,43 +765,6 @@ feature -- Third pass: byte code production and type check
 							feature_i.check_local_names (feature_i.real_body)
 						end
 					elseif not feature_i.is_routine then
-						if feature_i.body_index /= 0 then
-							if
-								feature_changed or else
-								not (f_suppliers = Void
-									or else (propagators.empty_intersection (f_suppliers)
-									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
-							then
-								l_error_level := error_handler.error_level
-								l_ast_context.old_inline_agents.wipe_out
-								remove_inline_agents_of_feature (feature_i.body_index, l_ast_context.old_inline_agents)
-								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor, False)
-								type_checked := True
-								type_check_error := error_handler.error_level /= l_error_level
-								if
-									not type_check_error and then
-									(feature_checker.byte_code.property_name /= Void or else
-									feature_checker.byte_code.property_custom_attributes /= Void)
-								then
-										-- Save byte code
-									tmp_byte_server.put (feature_checker.byte_code)
-									inline_agent_byte_code := feature_checker.inline_agent_byte_codes
-									if inline_agent_byte_code /= Void then
-										from
-											inline_agent_byte_code.start
-										until
-											inline_agent_byte_code.after
-										loop
-											tmp_byte_server.put (inline_agent_byte_code.item)
-											inline_agent_byte_code.forth
-										end
-									end
-									byte_code_generated := True
-								end
-							elseif (class_id = feature_i.written_in) or else is_safe_to_check_ancestor then
-								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, class_id /= feature_i.written_in, feature_i.is_replicated_directly)
-							end
-						end
 						record_suppliers (feature_i, dependances)
 					elseif is_safe_to_check_ancestor and then (is_full_class_checking or else (need_type_check and then replicated_features_list /= Void and then replicated_features_list.count > 0)) then
 							-- We check inherited routines in the context of current class only

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	TEST_SUITE_OBSERVER
 
 inherit
@@ -25,7 +25,7 @@ feature {TEST_SUITE_S} -- Events
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_factory': Factory which was launched by test suite.
 		require
-			usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_running: a_processor.is_running
 			a_test_suite_launched_a_processor: a_processor.test_suite = a_test_suite
@@ -38,7 +38,7 @@ feature {TEST_SUITE_S} -- Events
 			-- `a_test_suite': Test suite managing processor.
 			-- `a_processor': Processor that has proceeded with its task.
 		require
-			usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_usable: a_processor.is_interface_usable
 			a_processor_not_finished: a_processor.is_running and not a_processor.is_finished
@@ -52,7 +52,7 @@ feature {TEST_SUITE_S} -- Events
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_processor': Processor that finished its task.
 		require
-			usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_usable: a_processor.is_interface_usable
 			a_processor_finished: a_processor.is_finished
@@ -69,7 +69,7 @@ feature {TEST_SUITE_S} -- Events
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_processor': Processor that has just stopped.
 		require
-			usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_usable: a_processor.is_interface_usable
 			a_processor_stopped: not a_processor.is_running
@@ -84,7 +84,7 @@ feature {TEST_SUITE_S} -- Events
 			-- `a_error' : Readable error message containing tokens
 			-- `a_token_values': Values for each token in `a_error'
 		require
-			usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_usable: a_processor.is_interface_usable
 			a_processor_stopped: a_processor.is_running

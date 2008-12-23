@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			a_window_is_interface_usable: a_window.is_interface_usable
 		do
 			if test_suite.is_service_available then
-				test_suite.service.connect_events (Current)
+				test_suite.service.test_suite_connection.connect_events (Current)
 			end
 			processor := a_processor
 			make_widget (a_window)
@@ -261,10 +261,15 @@ feature {NONE} -- Implementation
 
 	internal_recycle
 			-- <Precursor>
+		local
+			l_test_suite: TEST_SUITE_S
 		do
 			Precursor
 			if test_suite.is_service_available then
-				test_suite.service.disconnect_events (Current)
+				l_test_suite := test_suite.service
+				if l_test_suite.test_suite_connection.is_connected (Current) then
+					l_test_suite.test_suite_connection.disconnect_events (Current)
+				end
 			end
 		end
 

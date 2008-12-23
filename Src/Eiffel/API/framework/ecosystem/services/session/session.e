@@ -15,7 +15,7 @@ class
 inherit
 	SESSION_I
 
-	EVENT_OBSERVER_CONNECTION [SESSION_EVENT_OBSERVER]
+	SAFE_AUTO_DISPOSABLE
 		redefine
 			safe_dispose
 		end
@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			create data.make_default
 			create value_changed_event
+			auto_dispose (value_changed_event)
 			is_per_project := a_per_project
 			manager := a_manager
 		ensure
@@ -77,9 +78,8 @@ feature {NONE} -- Clean up
 					manager.store (Current)
 				end
 				data.wipe_out
-				value_changed_event.dispose
 			end
-			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+			Precursor (a_disposing)
 			manager := Void
 		ensure then
 			not_is_dirty: a_disposing implies not is_dirty
@@ -151,7 +151,7 @@ feature -- Element change
 		do
 			l_old_value := value (a_id)
 			if l_old_value /= a_value then
-				if {l_old_data: !SESSION_DATA_I} l_old_value then
+				if {l_old_data: SESSION_DATA_I} l_old_value then
 						-- Remove current session as the owner of the data
 					l_old_data.set_session (Void)
 				end
@@ -159,7 +159,7 @@ feature -- Element change
 				if a_value /= Void then
 					data.force (box_value (a_value), a_id)
 
-					if {l_data: !SESSION_DATA_I} a_value and then l_data.session /= Current then
+					if {l_data: SESSION_DATA_I} a_value and then l_data.session /= Current then
 							-- Set current session as owner of the data
 						l_data.set_session (Current)
 					end
@@ -214,7 +214,7 @@ feature {SESSION_MANAGER_S} -- Element change
 				l_data.do_all (agent (a_ia_value: ANY)
 						-- Set session as owner on new, loaded data.
 					do
-						if {l_session_data: !SESSION_DATA_I} a_ia_value then
+						if {l_session_data: SESSION_DATA_I} a_ia_value then
 							l_session_data.set_session (Current)
 						end
 					end)
@@ -251,7 +251,7 @@ feature {SESSION_MANAGER_S} -- Element change
 						-- Publish events for removed data
 					l_cursor := l_old_data.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						if {l_session_data: !SESSION_DATA_I} l_cursor.item then
+						if {l_session_data: SESSION_DATA_I} l_cursor.item then
 								-- Remove session as owner of the data
 							l_session_data.set_session (Void)
 						end
@@ -308,8 +308,8 @@ feature -- Query
 				l_id := l_internal.dynamic_type (a_value)
 					-- Supporting basic types; {STRING_GENERAL}, reference types inheriting {SESSION_DATA_I} or other type wrapped in a {CELL} (for expanded)
 				Result := l_codes.has (l_id) or else
-					{l_string: !STRING_GENERAL} a_value or else
-					{l_session_data: !SESSION_DATA_I} a_value or else
+					{l_string: STRING_GENERAL} a_value or else
+					{l_session_data: SESSION_DATA_I} a_value or else
 					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
 					{l_cell: !CELL [ANY]} a_value or else
 					{l_array: !ARRAY [ANY]} a_value
@@ -523,9 +523,9 @@ invariant
 	data_attached: data /= Void
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -536,19 +536,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

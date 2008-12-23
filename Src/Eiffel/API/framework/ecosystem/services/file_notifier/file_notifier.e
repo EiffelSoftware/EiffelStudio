@@ -17,12 +17,10 @@ class
 inherit
 	FILE_NOTIFIER_S
 
-	EVENT_OBSERVER_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER]
+	SAFE_AUTO_DISPOSABLE
 		redefine
 			safe_dispose
 		end
-
-	SAFE_DISPOSABLE
 
 create
 	make
@@ -35,6 +33,7 @@ feature {NONE} -- Initialization
 			create file_records.make_default
 			create file_modified_callbacks.make_default
 			create file_modified_events
+			auto_dispose (file_modified_events)
 
 			file_modified_events.subscribe (agent on_file_modified)
 		end
@@ -43,19 +42,21 @@ feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
+		local
+			l_callbacks: like file_modified_callbacks
 		do
 			if a_disposing then
-				file_modified_callbacks.do_all (agent (a_events: !EVENT_TYPE [TUPLE [modification_type: NATURAL_8]])
+				l_callbacks := file_modified_callbacks
+				from l_callbacks.start until l_callbacks.after loop
 						-- Clean up all events created
-					do
-						a_events.dispose
-					end)
+					l_callbacks.item_for_iteration.dispose
+					l_callbacks.forth
+				end
 				file_modified_callbacks.wipe_out
 				file_records.wipe_out
-				file_modified_events.dispose
 			end
 
-			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+			Precursor (a_disposing)
 		end
 
 feature {NONE} -- Access
@@ -85,18 +86,6 @@ feature -- Query
 			Result := file_records.has (file_name_key (a_file_name))
 		ensure then
 			file_records_has_a_file_name: Result implies file_records.has (file_name_key (a_file_name))
-		end
-
-feature {NONE} -- Query
-
-	events (a_observer: !FILE_NOTIFIER_EVENT_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			-- List of events and associated action.
-			--
-			-- `a_observer': Event observer interface to bind agent actions to.
-			-- `Result': A list of event types paired with a associated action on the passed observer.
-		do
-			create Result.make (1)
-			Result.put_last ([file_modified_events, agent a_observer.on_file_modified])
 		end
 
 feature -- Basic operation

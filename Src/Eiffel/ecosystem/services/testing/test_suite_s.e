@@ -17,8 +17,13 @@ inherit
 	SERVICE_I
 
 	TEST_PROJECT_I
-		redefine
-			events
+		select
+			active_collection_connection
+		end
+
+	EVENT_CONNECTION_POINT_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
+		rename
+			connection as test_suite_connection
 		end
 
 feature -- Access
@@ -191,21 +196,6 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
 		end
 
-feature {NONE} -- Query
-
-	events (a_observer: !ACTIVE_COLLECTION_OBSERVER [!TEST_I]): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			-- <Precursor>
-		do
-			Result := Precursor (a_observer)
-			if {l_observer: TEST_SUITE_OBSERVER} a_observer then
-				Result.force_last ([processor_launched_event, agent l_observer.on_processor_launched])
-				Result.force_last ([processor_proceeded_event, agent l_observer.on_processor_proceeded])
-				Result.force_last ([processor_finished_event, agent l_observer.on_processor_finished])
-				Result.force_last ([processor_stopped_event, agent l_observer.on_processor_stopped])
-				Result.force_last ([processor_error_event, agent l_observer.on_processor_error])
-			end
-		end
-
 feature -- Events
 
 	processor_launched_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
@@ -261,6 +251,29 @@ feature -- Events
 		require
 			usable: is_interface_usable
 		deferred
+		end
+
+feature -- Event: Connection point
+
+	test_suite_connection: !EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
+			-- <Precursor>
+		local
+			l_observer: TEST_SUITE_OBSERVER
+		attribute
+			create l_observer
+			create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [!TEST_I], ACTIVE_COLLECTION_I [!TEST_I]]}
+				Result.make_from_array (<<
+					[processor_launched_event, agent l_observer.on_processor_launched],
+					[processor_proceeded_event, agent l_observer.on_processor_proceeded],
+					[processor_finished_event, agent l_observer.on_processor_finished],
+					[processor_stopped_event, agent l_observer.on_processor_stopped],
+					[processor_error_event, agent l_observer.on_processor_error]
+				>>, active_collection_connection)
+			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
+				l_disposable.auto_dispose (Result)
+			else
+				check False end
+			end
 		end
 
 end

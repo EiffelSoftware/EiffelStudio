@@ -13,7 +13,7 @@ class
 inherit
 	CODE_TEMPLATE_CATALOG_S
 
-	EVENT_OBSERVER_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER]
+	SAFE_AUTO_DISPOSABLE
 
 	KL_SHARED_FILE_SYSTEM
 		export
@@ -222,7 +222,9 @@ feature -- Basic operations
 				extend_catalog (a_folder)
 			end
 		ensure then
-			cataloged_folder_files_count_unchanged: cataloged_folder_files.count = old cataloged_folder_files.count
+			cataloged_folder_files_count_unchanged:
+				old not cataloged_folder_files.is_empty implies
+				(cataloged_folder_files.count = old cataloged_folder_files.count)
 		end
 
 	rescan_catalog
@@ -255,7 +257,9 @@ feature -- Basic operations
 				end
 			end
 		ensure then
-			cataloged_folder_files_count_unchanged: cataloged_folder_files.count = old cataloged_folder_files.count
+			cataloged_folder_files_count_unchanged:
+				old not cataloged_folder_files.is_empty implies
+				(cataloged_folder_files.count = old cataloged_folder_files.count)
 		end
 
 feature -- Extension

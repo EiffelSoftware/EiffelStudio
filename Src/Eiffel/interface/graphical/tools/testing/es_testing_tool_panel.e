@@ -167,13 +167,10 @@ feature {NONE} -- Initialization: widget status
 
 	on_after_initialized
 			-- <Precursor>
-		local
-			l_service: TEST_SUITE_S
 		do
 			Precursor
 			if test_suite.is_service_available then
-				l_service := test_suite.service
-				l_service.connect_events (Current)
+				test_suite.service.test_suite_connection.connect_events (Current)
 			end
 			tree_view.set_layout (create {ES_TEST_TREE_GRID_LAYOUT}.make (Current))
 			propagate_drop_actions (Void)

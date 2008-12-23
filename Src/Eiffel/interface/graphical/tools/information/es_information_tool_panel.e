@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
 			if session_manager.is_service_available then
-				session_data.connect_events (Current)
+				session_data.session_connection.connect_events (Current)
 			end
 
 				-- Request EIS background visiting post project load.
@@ -96,8 +96,8 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					if session_data.is_connected (Current) then
-						session_data.disconnect_events (Current)
+					if session_data.session_connection.is_connected (Current) then
+						session_data.session_connection.disconnect_events (Current)
 					end
 				end
 			end
@@ -267,7 +267,7 @@ feature {NONE} -- Constants
 			-- Session IDs
 
 indexing
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -292,7 +292,7 @@ indexing
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

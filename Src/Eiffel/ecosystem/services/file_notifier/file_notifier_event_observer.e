@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
+class
 	FILE_NOTIFIER_EVENT_OBSERVER
 
 inherit
@@ -21,7 +21,7 @@ feature {FILE_NOTIFIER_S} -- Event handlers
 			-- `a_file_name': The name of the file modified.
 			-- `a_modification_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
 		require
-			is_interface_usable: is_interface_usable
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 		end

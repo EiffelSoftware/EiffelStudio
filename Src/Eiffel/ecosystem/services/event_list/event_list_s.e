@@ -19,7 +19,10 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [EVENT_LIST_OBSERVER]
+	EVENT_CONNECTION_POINT_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
+		rename
+			connection as event_list_connection
+		end
 
 feature -- Access
 
@@ -117,18 +120,6 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Query
-
-	events (a_observer: !EVENT_LIST_OBSERVER): !DS_ARRAYED_LIST [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			-- <Precursor>
-		do
-			create Result.make (4)
-			Result.put_last ([item_added_event, agent a_observer.on_event_item_added])
-			Result.put_last ([item_removed_event, agent a_observer.on_event_item_removed])
-			Result.put_last ([item_changed_event, agent a_observer.on_event_item_changed])
-			Result.put_last ([item_adopted_event, agent a_observer.on_event_item_adopted])
-		end
-
 feature -- Events
 
 	item_added_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
@@ -157,6 +148,27 @@ feature -- Events
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		end
+
+feature -- Events: Connection point
+
+	event_list_connection: !EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
+			-- <Precursor>
+		local
+			l_observer: EVENT_LIST_OBSERVER
+		attribute
+			create l_observer
+			create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make_from_array (<<
+				[item_added_event, agent l_observer.on_event_item_added],
+				[item_adopted_event, agent l_observer.on_event_item_adopted],
+				[item_changed_event, agent l_observer.on_event_item_changed],
+				[item_removed_event, agent l_observer.on_event_item_removed]
+			>>)
+			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
+				l_disposable.auto_dispose (Result)
+			else
+				check False end
+			end
 		end
 
 feature -- Basic operations

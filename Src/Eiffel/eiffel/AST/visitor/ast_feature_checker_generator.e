@@ -1144,6 +1144,8 @@ feature -- Implementation
 			l_vtmc1: VTMC1
 			l_error_level: NATURAL_32
 			l_is_in_assignment: BOOLEAN
+			l_warning_count: INTEGER
+			l_tcat: CAT_CALL_WARNING
 		do
 				-- Reset
 			l_error_level := error_level
@@ -1466,12 +1468,38 @@ feature -- Implementation
 												-- Check that `l_arg_type' is compatible to its `like argument'.
 												-- Once this is done, then type checking is done on the real
 												-- type of the routine, not the anchor.
+											l_warning_count := error_handler.warning_list.count
 											if
 												not l_arg_type.conform_to (l_context_current_class, l_like_arg_type) and then
 												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type)
 											then
 												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
 													l_like_arg_type)
+											end
+											if l_warning_count /= error_handler.warning_list.count then
+												error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
+											end
+										end
+
+											-- Check if `l_formal_arg_type' involves some generics whose actuals
+											-- are marked `variant'. Only do this when `is_inherited' is True, since
+											-- all descendants are checked in `check_cat_call'.
+										if
+											not is_inherited and then is_qualified and then
+											not l_last_type.is_like_current and then
+											context.current_class.is_cat_call_detection and then
+											(not l_formal_arg_type.is_valid_for_class (l_last_constrained.associated_class) or else
+											l_formal_arg_type.has_variant_formal (l_last_type.actual_type))
+										then
+											if l_tcat = Void then
+												create l_tcat.make (l_feature_name)
+												context.init_error (l_tcat)
+												l_tcat.set_called_feature (l_feature)
+												l_tcat.add_covariant_generic_violation
+												system.update_statistics (l_tcat)
+												error_handler.insert_warning (l_tcat)
+											else
+												l_tcat.add_covariant_generic_violation
 											end
 										end
 
@@ -1490,6 +1518,7 @@ feature -- Implementation
 											-- happens in type checking of an agent, we can do it
 											-- at only one place, ie here.
 										l_open_type ?= l_formal_arg_type
+										l_warning_count := error_handler.warning_list.count
 										if l_open_type /= Void or else not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
 											if
 												l_open_type = Void and
@@ -1527,6 +1556,8 @@ feature -- Implementation
 												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
 													l_formal_arg_type)
 											end
+										elseif l_warning_count /= error_handler.warning_list.count then
+											error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
 										end
 										if l_needs_byte_node then
 											create l_parameter
@@ -1719,14 +1750,20 @@ feature -- Implementation
 								last_byte_node := l_access
 							end
 
-								-- Check if cat-call detection is enabled for current context class
-							if l_context_current_class.is_cat_call_detection then
+								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
+								-- if no error occurred during the normal checking and only for non-inherited feature, since the
+								-- type checking has already been done in the class where it was written.
+							if
+								error_level = l_error_level and then l_tcat = Void and then not is_inherited and then
+								is_qualified and then context.current_class.is_cat_call_detection
+							then
+									-- Feature without arguments don't need to be checked.
 									-- Inline agents have no descendants, so they don't need to be checked anyway
 									-- Static calls don't need to be checked since they can't have a descendant either
-								if not l_feature.is_inline_agent and not is_static then
+								if l_feature.argument_count > 0 and then not l_feature.is_inline_agent and not is_static then
 										-- Cat call detection is enabled: Test if this feature call is valid
 										-- in all subtypes of the current class.
-									check_cat_call (l_last_type, l_feature, is_qualified, l_arg_types, l_feature_name)
+									check_cat_call (l_last_type, l_feature, l_arg_types, l_feature_name, l_parameters)
 								end
 							end
 
@@ -4161,6 +4198,8 @@ feature -- Implementation
 			l_context_current_class: CLASS_C
 			s: INTEGER
 			l_error_level: NATURAL_32
+			l_arg_types: ARRAY [TYPE_A]
+			l_parameters: EIFFEL_LIST [EXPR_AS]
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_context_current_class := context.current_class
@@ -4288,6 +4327,13 @@ feature -- Implementation
 									-- Set type informations
 								l_as.set_routine_ids (last_infix_feature.rout_id_set)
 								l_as.set_class_id (l_left_id)
+								if context.current_class.is_cat_call_detection then
+									create l_arg_types.make (1, 1)
+									l_arg_types.put (l_right_type, 1)
+									create l_parameters.make (1)
+									l_parameters.extend (l_as.right)
+									check_cat_call (l_target_type, last_infix_feature, l_arg_types, l_as.left.start_location, l_parameters)
+								end
 							end
 
 							if last_infix_argument_conversion_info /= Void then
@@ -4938,6 +4984,7 @@ feature -- Implementation
 			l_source_type, l_target_type: TYPE_A
 			l_vjar: VJAR
 			l_vncb: VNCB
+			l_warning_count: INTEGER
 			l_initialized_variable: like last_initialized_variable
 			l_reinitialized_local: like last_reinitialized_local
 		do
@@ -4979,7 +5026,17 @@ feature -- Implementation
 
 				if l_source_type /= Void then
 						-- Type checking
+					l_warning_count := error_handler.warning_list.count
 					process_type_compatibility (l_target_type)
+					if not is_inherited then
+						if l_target_type.is_like then
+							system.conformance_checks.like_target := system.conformance_checks.like_target + 1
+						end
+						if l_target_type.same_as (l_source_type) then
+							system.conformance_checks.same := system.conformance_checks.same + 1
+						end
+						system.conformance_checks.nb := system.conformance_checks.nb + 1
+					end
 					if not is_type_compatible.is_compatible then
 						if l_source_type.is_bit then
 							create l_vncb
@@ -4999,6 +5056,9 @@ feature -- Implementation
 							error_handler.insert_error (l_vjar)
 						end
 					else
+						if l_warning_count /= error_handler.warning_list.count then
+							error_handler.warning_list.last.set_location (l_as.start_location)
+						end
 						if
 							not is_inherited and then
 							is_type_compatible.conversion_info /= Void and then
@@ -5069,6 +5129,7 @@ feature -- Implementation
 			l_tuple_access_b: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
 			l_multi_constraint_static: TYPE_A
+			l_warning_count: INTEGER
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5086,6 +5147,7 @@ feature -- Implementation
 			if target_type /= Void then
 				l_as.source.process (Current)
 				if last_type /= Void then
+					l_warning_count := error_handler.warning_list.count
 					process_type_compatibility (target_type)
 					source_type := last_type
 					if not is_type_compatible.is_compatible then
@@ -5095,7 +5157,11 @@ feature -- Implementation
 						vbac1.set_target_type (target_type)
 						vbac1.set_location (l_as.start_location)
 						error_handler.insert_error (vbac1)
-					elseif target_assigner = Void and then not l_is_tuple_access then
+					elseif l_warning_count /= error_handler.warning_list.count then
+						error_handler.warning_list.last.set_location (l_as.start_location)
+					end
+
+					if is_type_compatible.is_compatible and then target_assigner = Void and then not l_is_tuple_access then
 							-- If we have no `target_assigner' and the last access is not a tuple access
 							-- then we have an error.
 						create vbac2
@@ -5846,6 +5912,7 @@ feature -- Implementation
 			l_vgcc7: VGCC7
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
+			l_warning_count: INTEGER
 			l_initialized_variable: like last_initialized_variable
 			l_reinitialized_local: like last_reinitialized_local
 			l_current_class_void_safe: BOOLEAN
@@ -5917,6 +5984,7 @@ feature -- Implementation
 							l_vgcc3.set_location (l_as.target.start_location)
 							error_handler.insert_error (l_vgcc3)
 						else
+							l_warning_count := error_handler.warning_list.count
 							if
 								l_explicit_type /= Void and then
 								not l_explicit_type.conform_to (context.current_class, l_target_type)
@@ -5929,6 +5997,8 @@ feature -- Implementation
 								l_vgcc31.set_type (l_explicit_type)
 								l_vgcc31.set_location (l_as.type.start_location)
 								error_handler.insert_error (l_vgcc31)
+							elseif l_warning_count /= error_handler.warning_list.count then
+								error_handler.warning_list.last.set_location (l_as.type.start_location)
 							end
 
 							if l_explicit_type /= Void then
@@ -9158,12 +9228,11 @@ feature {NONE} -- Implementation: Error handling
 
 feature {NONE} -- Implementation: catcall check
 
-	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_qualified: BOOLEAN; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS) is
+	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS]) is
 			-- Check if a call can potentially be a cat call.
 			--
 			-- `a_callee_type': Type on which the call happens
 			-- `a_feature': Feature which is called on callee
-			-- `a_qualified': Flag to indicate if feature call is qualified or not
 			-- `a_params': Parameters of call, already evaluated to their types
 			-- `a_location': Location where warning will be linked to
 		require
@@ -9176,150 +9245,360 @@ feature {NONE} -- Implementation: catcall check
 			l_descendant_type: TYPE_A
 			l_descendant_class: CLASS_C
 			l_descendant_feature: FEATURE_I
-			l_cat_call_warning: CAT_CALL_WARNING
-			l_descendant_index, l_argument_index: INTEGER
-			l_descendant_argument: TYPE_A
-			l_descendant_formal: FORMAL_A
-			l_actual_argument: TYPE_A
+			l_tcat, l_acat: CAT_CALL_WARNING
+			i: INTEGER
+			l_formal_arg_type: TYPE_A
+			l_arg_type: TYPE_A
+			l_open_type: OPEN_TYPE_A
+			l_desc_class_id: INTEGER
+			l_like_arg_type: TYPE_A
 		do
-			l_descendants := conforming_descendants (a_callee_type)
-				-- Loop through all descendants
-			from
-				l_descendant_index := 1
-			until
-				l_descendant_index > l_descendants.count
-			loop
-					-- Get descendant class and the feature in the context of the descendant\
-				l_descendant_type := l_descendants.i_th (l_descendant_index)
-				l_descendant_class := l_descendant_type.associated_class
-				l_descendant_feature := l_descendant_class.feature_of_rout_id (a_feature.rout_id_set.first)
+			l_descendants := conforming_descendants (a_feature, a_callee_type)
 
-					-- Check argument validity
+			if l_descendants = Void then
+				create l_tcat.make (a_location)
+				context.init_error (l_tcat)
+				l_tcat.set_called_feature (a_feature)
+				l_tcat.add_compiler_limitation (a_callee_type)
+				error_handler.insert_warning (l_tcat)
+			else
+					-- Loop through all descendants
 				from
-					l_argument_index := 1
+					l_descendants.start
 				until
-					l_argument_index > a_feature.argument_count
+					l_descendants.after
 				loop
-					l_actual_argument := a_params.item (l_argument_index)
-					l_descendant_argument := l_descendant_feature.arguments.i_th (l_argument_index).actual_type
-						-- If argument is a formal, replace with instantiation of callee type
-					if l_descendant_argument.is_formal then
-						l_descendant_formal ?= l_descendant_argument
-						l_descendant_argument := l_descendant_type.generics.item (l_descendant_formal.position)
-					end
-						-- Check if actual parameter conforms to the possible type of the descendant feature
-						-- Todo: look at the convert check again and simplify it
-					if
-						not l_actual_argument.conform_to (context.current_class, l_descendant_argument) and
-						not (
-							l_actual_argument.convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index).deep_actual_type) and then
-							a_feature.arguments.i_th (l_argument_index).conform_to (context.current_class, l_descendant_argument)
-						)
-					then
-							-- Conformance is violated. Add notice to warning.
-						if l_cat_call_warning = Void then
-							create l_cat_call_warning.make (context.current_class, context.current_feature, a_location)
-							l_cat_call_warning.set_called_feature (a_feature)
-							error_handler.insert_warning (l_cat_call_warning)
+						-- Get descendant class and the feature in the context of the descendant\
+					l_descendant_type := l_descendants.item
+					l_descendant_class := l_descendant_type.associated_class
+					l_desc_class_id := l_descendant_class.class_id
+					l_descendant_feature := l_descendant_class.feature_of_rout_id (a_feature.rout_id_set.first)
+
+						-- Check argument validity
+					from
+						i := 1
+					until
+						i > a_feature.argument_count
+					loop
+						l_arg_type := a_params.item (i)
+						l_formal_arg_type := l_descendant_feature.arguments.i_th (i)
+							-- Take care of anchoring to argument
+						if l_formal_arg_type.is_like_argument then
+							l_like_arg_type := l_formal_arg_type.actual_argument_type (a_params)
+							l_like_arg_type :=
+								l_like_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
+								-- Check that `l_arg_type' is compatible to its `like argument'.
+								-- Once this is done, then type checking is done on the real
+								-- type of the routine, not the anchor.
+							if
+								not l_arg_type.conform_to (context.current_class, l_like_arg_type) and then
+								not l_arg_type.convert_to (context.current_class, l_like_arg_type)
+							then
+								insert_vuar2_error (l_descendant_feature, a_parameters, l_desc_class_id, i, l_arg_type,
+									l_like_arg_type)
+							end
 						end
-						l_cat_call_warning.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.item (l_argument_index), l_argument_index)
-					end
-					l_argument_index := l_argument_index + 1
-				end
 
-					-- Check export status validity for descendant feature
-				if
-					not context.is_ignoring_export and a_qualified and
-					not l_descendant_feature.is_exported_for (context.current_class)
-				then
-						-- Export status violated. Add notice to warning.
-					if l_cat_call_warning = Void then
-						create l_cat_call_warning.make (context.current_class, context.current_feature, a_location)
-						l_cat_call_warning.set_called_feature (a_feature)
-						error_handler.insert_warning (l_cat_call_warning)
-					end
-					l_cat_call_warning.add_export_status_violation (l_descendant_class, l_descendant_feature)
-				end
+							-- Check if `l_formal_arg_type' involves some generics. If it does then we need to trigger
+							-- an error if target's actual generic are covariant.
+						if
+							not l_formal_arg_type.is_valid_for_class (l_descendant_type.associated_class) or else
+							l_formal_arg_type.has_variant_formal (l_descendant_type.actual_type)
+						then
+							if l_tcat = Void then
+								create l_tcat.make (a_location)
+								context.init_error (l_tcat)
+								l_tcat.set_called_feature (a_feature)
+								error_handler.insert_warning (l_tcat)
+							end
+							l_tcat.add_covariant_generic_violation
+						end
 
-				l_descendant_index := l_descendant_index + 1
+							-- Adapted type in case it is a formal generic parameter or a like.
+						l_formal_arg_type := adapted_type (l_formal_arg_type, l_descendant_type, l_descendant_type)
+							-- Actual type of feature argument
+						l_formal_arg_type := l_formal_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
+
+						l_open_type ?= l_formal_arg_type
+							-- Check if actual parameter conforms to the possible type of the descendant feature if conformance
+							-- was involved in the original call, otherwise nothing to be done.
+							-- We have a workaround for conversion, but it is not perfect.
+						if l_open_type /= Void or else not l_arg_type.conform_to (context.current_class, l_formal_arg_type) then
+							if
+								not (l_open_type = Void and
+								l_arg_type.convert_to (context.current_class, a_feature.arguments.i_th (i).actual_type) and then
+								a_feature.arguments.i_th (i).actual_type.conform_to (context.current_class, l_formal_arg_type))
+							then
+									-- Conformance is violated. Add notice to warning.
+								if l_tcat = Void then
+									create l_tcat.make (a_location)
+									context.init_error (l_tcat)
+									l_tcat.set_called_feature (a_feature)
+									error_handler.insert_warning (l_tcat)
+								end
+								l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.item (i), i)
+							end
+						end
+						i := i + 1
+					end
+
+						-- Check export status validity for descendant feature
+					if
+						not context.is_ignoring_export and
+						not l_descendant_feature.is_exported_for (context.current_class)
+					then
+							-- Export status violated. Add notice to warning.
+						if l_acat = Void then
+							create l_acat.make (a_location)
+							context.init_error (l_acat)
+							l_acat.set_called_feature (a_feature)
+							error_handler.insert_warning (l_acat)
+						end
+						l_acat.add_export_status_violation (l_descendant_class, l_descendant_feature)
+					end
+					l_descendants.forth
+				end
+			end
+			if l_tcat /= Void then
+				system.update_statistics (l_tcat)
+			end
+			if l_acat /= Void then
+				system.update_statistics (l_acat)
 			end
 		end
 
-	conforming_descendants (a_type: TYPE_A): ARRAYED_LIST [TYPE_A] is
-			-- List of all descendants of the type `a_type'.
+	conforming_descendants (a_feature: FEATURE_I; a_type: TYPE_A): ARRAYED_LIST [TYPE_A] is
+			-- List of all descendants of the type `a_type' that are covariantly redefining
+			-- `a_feature'.
 		require
+			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 		local
-			l_descendants: ARRAYED_LIST [CLASS_C]
-			l_type: TYPE_A
+			l_parent_type, l_descendant_type, l_constraint_type: TYPE_A
 			l_formal: FORMAL_A
---			l_generics: ARRAY [TYPE_A]
+			l_parent_class: CLASS_C
+			l_descendant_class: CLASS_C
+			l_generics: ARRAY [TYPE_A]
+			l_target_types: ARRAYED_LIST [TYPE_A]
+			i, nb: INTEGER
+			l_type_feat: TYPE_FEATURE_I
+			l_needs_formal_check, l_compiler_limitation, l_fail_if_constraint_not_met: BOOLEAN
+			l_covariant_features: HASH_TABLE [FEATURE_I, CLASS_C]
+			l_formal_dec: FORMAL_CONSTRAINT_AS
+			l_cl_type: CL_TYPE_A
 		do
-			if a_type.is_formal then
-				l_formal ?= a_type
-				if l_formal.is_multi_constrained (context.current_class) then
-						-- Type is a multi constrained formal. Loop through all associated classes of
-						-- constraints and collect their descendants
-					create l_descendants.make (10)
-					l_formal.to_type_set.constraining_types (context.current_class).associated_classes.do_all (
-						agent (a_class: CLASS_C; a_list: LIST [CLASS_C])
-								-- Append descendants of `a_class' to `a_list'.
-							require
-								a_class_not_void: a_class /= Void
-								a_list_not_void: a_list /= Void
-							do
-								a_list.append (a_class.direct_descendants)
-							end
-						(?, l_descendants)
-					)
-				else
-						-- Type is formal. Take descendants from associated class of constraint
-					l_descendants := l_formal.constrained_type (context.current_class).associated_class.direct_descendants
-				end
+			if a_type.has_frozen_mark or a_type.is_like_current then
+					-- When it is monomorphic then nothing to be done.
+					-- When type is `like Current' then it was shown that doing a flat checking would catch
+					-- the potential catcalls so no need to check it.
+				create Result.make (0)
 			else
-					-- Normal type. Take descenants from associated class
-				l_descendants := a_type.associated_class.direct_descendants
-			end
-				-- Go through descendants and remove the ones which don't conform
-				-- This can happen with non-conforming inheritance or restrict types
-			from
-				l_descendants.start
-				create Result.make (l_descendants.count)
-			until
-				l_descendants.after
-			loop
-					-- If type is generic, instantiate subtype with same generics
-				if a_type.has_generics then
-					l_type := l_descendants.item.partial_actual_type (a_type.generics, a_type.is_expanded, a_type.is_separate)
+					-- Proper instance of `a_type' with the anchors removed.
+				l_parent_type := a_type.instantiated_in (context.current_class_type.conformance_type)
+					-- First take all classes for `l_parent_type'
+				create l_target_types.make (1)
+				if l_parent_type.is_formal then
+					l_formal ?= l_parent_type
+					if l_formal.is_multi_constrained (context.current_class) then
+							-- Type is a multi constrained formal. Get all associated classes of
+							-- constraints.
+						l_target_types.append (l_formal.to_type_set.constraining_types (context.current_class))
+					else
+							-- Type is formal. Take associated class of constraint
+						l_target_types.extend (l_formal.constrained_type (context.current_class))
+					end
 				else
-					l_type := l_descendants.item.actual_type
+						-- Normal type. Take associated class
+					l_target_types.extend (l_parent_type)
 				end
-				if l_type.conform_to (context.current_class, a_type) then
-					Result.extend (l_type)
+
+				from
+					l_target_types.start
+				until
+					l_target_types.after or l_compiler_limitation
+				loop
+						-- Check that `a_feature' is indeed part of one of the constraint in case `l_parent_type' is a multiconstraint.
+					l_parent_type := l_target_types.item
+					l_parent_class := l_parent_type.associated_class
+					if l_parent_class /= Void and then l_parent_class.feature_of_rout_id_set (a_feature.rout_id_set) /= Void then
+						l_covariant_features := a_feature.covariantly_redefined_features (l_parent_class)
+
+						if l_covariant_features /= Void then
+								-- Go through descendants which have covariant redefinition and
+								-- build the proper type.
+							from
+								l_covariant_features.start
+								if Result = Void then
+									create Result.make (l_covariant_features.count)
+								end
+							until
+								l_covariant_features.after or l_compiler_limitation
+							loop
+									-- If descendant is generic, instantiate it with same
+									-- generics as `l_parent_type.generics'
+								l_descendant_class := l_covariant_features.key_for_iteration
+								l_descendant_type := l_descendant_class.actual_type
+								if l_descendant_type.generics /= Void then
+									from
+										l_descendant_type := l_descendant_type.duplicate
+										l_generics := l_descendant_type.generics
+										i := l_generics.lower
+										nb := l_generics.upper
+										l_needs_formal_check := False
+										l_fail_if_constraint_not_met := False
+									until
+										i > nb or l_compiler_limitation
+									loop
+										l_type_feat := l_descendant_class.formal_at_position (i)
+										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_type_feat.rout_id_set)
+										if l_type_feat /= Void then
+											l_constraint_type := l_parent_type.generics.item (l_type_feat.position)
+											if l_constraint_type.has_variant_mark then
+												l_fail_if_constraint_not_met := True
+											end
+											l_generics.put (l_constraint_type, i)
+										else
+												-- We cannot find a definition for the new formal, we simply use its
+												-- constraint, at least if it is not a multiconstraint.
+											l_formal_dec ?= l_descendant_class.generics.i_th (i)
+											if l_formal_dec /= Void and then not l_formal_dec.has_multi_constraints then
+												l_constraint_type := l_formal_dec.constraint_type (l_descendant_class).type
+												l_cl_type ?= l_constraint_type
+												if l_cl_type /= Void then
+													-- l_cl_type.set_variant_mark
+													l_needs_formal_check := l_needs_formal_check or l_cl_type.has_formal_generic
+												else
+													l_needs_formal_check := True
+												end
+												l_generics.put (l_constraint_type, i)
+											else
+												l_compiler_limitation := True
+											end
+										end
+										i := i + 1
+									end
+									if not l_compiler_limitation then
+										if l_needs_formal_check then
+												-- This line will properly instantiate the type with its formals.
+												-- For example, if you have A [G -> FOO, H-> ARRAY [G]], then with the above
+												-- where a type A [FOO, ARRAY [G]] will appear, we need to replace the G with
+												-- the constraint type. We need to repeat this operation at least `nb ^ 2' times
+												-- in case you have the following A [H -> A [K], K -> B [L], L -> C [G], G]
+											from
+												i := 1
+											until
+												i > nb or not l_descendant_type.has_formal_generic
+											loop
+												l_descendant_type := l_descendant_type.instantiated_in (l_descendant_type)
+												i := i + 1
+											end
+
+												-- If we still have some formal generics, it means that one constraint is
+												-- constraint to another formal generic parameter that is also constraint
+												-- to a formal generic and there is a cycle. Simply replace all the formals with
+												-- ANY.
+											if l_descendant_type.has_formal_generic then
+												from
+													i := 1
+												until
+													i > nb
+												loop
+													if l_descendant_type.generics.item (i).is_formal then
+														l_descendant_type.generics.put (create {CL_TYPE_A}.make (system.any_id), i)
+													end
+													i := i + 1
+												end
+											end
+										end
+											-- Check that the instantiated type `l_descendant_type' makes sense before
+											-- checking its conformance against the parent type. This is
+											-- useful when the constrait is more precise in a descendant:
+											-- `A [G]' and descendant is `B [G -> STRING]', and if parent
+											-- type is `A [INTEGER]' then `B [INTEGER]' would not make sense.
+										l_descendant_type.reset_constraint_error_list
+										safe_check_constraints (l_parent_type, l_descendant_type)
+										if
+											not l_descendant_type.constraint_error_list.is_empty and then
+											(l_fail_if_constraint_not_met or l_descendant_type.is_expanded)
+										then
+												-- We could not validate but since it is an expanded, we are in the case of
+												-- a compiler limitation. If we have substitued a parent formal generic from
+												-- the parent to the descendant, but the subsituted formal generic parameter
+												-- does not meet the constraint and the actual generic parameter is marked variant
+												-- we cannot invent a type that would work, so this is a compiler limitation.
+											l_compiler_limitation := True
+										end
+										if
+											not l_compiler_limitation and then l_descendant_type.constraint_error_list.is_empty and then
+											l_descendant_type.conform_to (context.current_class, l_parent_type)
+										then
+												-- Only add descendants, if it makes sense.
+												-- For example, if you have `l_parent_type' be `ARRAYED_LIST [INTEGER]'
+												-- then it does not make sense to have `l_descendant_type' be
+												-- `ACTION_SEQUENCE [G]' since the later inherits from
+												-- `ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]'
+												-- which does not conform to `ARRAYED_LIST [INTEGER]'.
+											Result.extend (l_descendant_type)
+										end
+									end
+								elseif l_descendant_type.conform_to (context.current_class, l_parent_type) then
+										-- Even if `l_descendant_type' is not generic, it does not mean it conforms to `l_parent_type'.
+										-- For example `l_parent_type' is `ARRAY [STRING]' and a descendant of `ARRAY' is
+										-- `MY_ARRAY' which inherits from `ARRAY [INTEGER]'.
+									Result.extend (l_descendant_type)
+								end
+								l_covariant_features.forth
+							end
+						end
+					end
+					l_target_types.forth
 				end
-				l_descendants.forth
+				if l_compiler_limitation then
+					Result := Void
+				elseif Result = Void then
+					create Result.make (0)
+				end
 			end
--- generic check is not working correctly at the moment
--- juliant, 15.05.07
---			if a_type.has_generics and then not a_type.generics.is_empty then
---					-- Try to construct a new subtype by substituting the generic arguments
---				if not a_type.generics.item (1).has_generics then
---						-- Only use subclasses of normal class types, generics can have infinite subclasses otherwise
---					l_type := a_type.generics.item (1).actual_type
---					if not l_type.is_formal then
---						l_descendants := l_type.associated_class.descendants
---						if l_descendants.count > 0 then
---								-- Copy generics
---							l_generics := a_type.generics.twin
---							l_generics.item (1) := l_descendants.first.actual_type
---								-- Replace generic with a subclass
---							Result.extend (a_type.associated_class.partial_actual_type (l_generics, a_type.is_expanded, a_type.is_separate))
---						end
---					end
---				end
---			end
-		ensure
-			possible_descendants_not_void: Result /= Void
+		end
+
+	safe_check_constraints (a_parent_type, a_type: TYPE_A) is
+			--
+		require
+			a_parent_type_not_void: a_parent_type /= Void
+			a_type_not_void: a_type /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_type.check_constraints (context.current_class, context.current_feature, a_type.is_expanded)
+			else
+				print ("Failure is with parent " + a_parent_type.dump + "%N")
+				print (" and with type " + a_type.dump + "%N")
+				a_type.constraint_error_list.extend (Void)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	safe_conform_to (a_context: CLASS_C; a_descendant, a_parent: TYPE_A): BOOLEAN is
+			--
+		require
+			a_context_not_void: a_context /= Void
+			a_descendant_not_void: a_descendant /= Void
+			a_parent_not_void: a_parent /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := a_descendant.conform_to (a_context, a_parent)
+			else
+					-- We could not check conformance properly, we simply say it conforms
+				Result := True
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 indexing

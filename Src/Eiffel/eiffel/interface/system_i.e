@@ -1420,6 +1420,28 @@ feature -- ANY.default_create routine id
 			end
 		end
 
+feature -- ANY.is_equal_rout_id routine id
+
+	is_equal_rout_id: INTEGER is
+			-- Routine id of is_equal create from ANY.
+			-- Return 0 if ANY has not been compiled or
+			-- does not have a feature named `default_create'.
+		local
+			feature_i: FEATURE_I
+		do
+			Result := internal_is_equal_rout_id
+			if Result < 0 then
+				Result := 0
+				if any_class /= Void and then any_class.compiled_class /= Void then
+					feature_i := any_class.compiled_class.feature_table.item_id (names.is_equal_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					end
+				end
+				internal_is_equal_rout_id := Result
+			end
+		end
+
 feature -- SPECIAL.make routine id
 
 	special_make_rout_id: INTEGER is
@@ -1455,6 +1477,7 @@ feature -- Routine IDS update
 		do
 			internal_default_rescue_rout_id := -1
 			internal_default_create_rout_id := -1
+			internal_is_equal_rout_id := -1
 			internal_special_make_rout_id := - 1
 		end
 
@@ -1464,6 +1487,9 @@ feature {NONE} -- Implementation: predefined routine IDs
 			-- Once per compilation value of routine id of `default_rescue_id' from ANY.
 
 	internal_default_create_rout_id: INTEGER
+			-- Once per compilation value of routine id of `default_create' from ANY.
+
+	internal_is_equal_rout_id: INTEGER
 			-- Once per compilation value of routine id of `default_create' from ANY.
 
 	internal_special_make_rout_id: INTEGER
@@ -5923,7 +5949,100 @@ feature -- Debug purpose
 			end
 		end
 
-feature {NONE} -- Conveniences.
+feature -- Statistics
+
+	statistics: TUPLE [
+		total: INTEGER;
+		conformance_violation: INTEGER;
+		export_violation: INTEGER;
+		covariant_violation: INTEGER;
+		compiler_limitation: INTEGER;
+		covariant_generic: INTEGER;
+		is_equal_feat: INTEGER;
+		any_features: INTEGER;
+		like_current_feature: INTEGER;
+		other: INTEGER] is
+			-- Statistics of catcalls in system
+		once
+			Result := [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		end
+
+	update_statistics (a_cat_call: CAT_CALL_WARNING) is
+			-- Update statistics with catcall of current warning
+		local
+			l_feature_name: INTEGER
+		do
+			statistics.total := statistics.total + 1
+			if a_cat_call.target_type /= Void and a_cat_call.source_type /= Void then
+				statistics.conformance_violation := statistics.conformance_violation + 1
+			elseif not a_cat_call.export_status_violations.is_empty then
+				statistics.export_violation := statistics.export_violation + 1
+			else
+				check
+					has_error: a_cat_call.compiler_limitation_type /= Void or
+						not a_cat_call.covariant_argument_violations.is_empty or
+						a_cat_call.has_covariant_generic
+				end
+				statistics.covariant_violation := statistics.covariant_violation + 1
+				if a_cat_call.compiler_limitation_type /= Void then
+					statistics.compiler_limitation := statistics.compiler_limitation + 1
+				elseif a_cat_call.has_covariant_generic then
+					statistics.covariant_generic := statistics.covariant_generic + 1
+				else
+					l_feature_name := a_cat_call.called_feature.name_id
+					if a_cat_call.called_feature.rout_id_set.has (system.is_equal_rout_id) then
+						statistics.is_equal_feat := statistics.is_equal_feat + 1
+					elseif
+						a_cat_call.called_feature.written_in = system.any_id and then
+						(l_feature_name = names.equal_name_id or
+						l_feature_name = names.standard_equal_name_id or
+						l_feature_name = names.deep_equal_name_id or
+						l_feature_name = names.standard_is_equal_name_id or
+						l_feature_name = names.is_deep_equal_name_id or
+						l_feature_name = names.copy_name_id or
+						l_feature_name = names.standard_copy_name_id or
+						l_feature_name = names.deep_copy_name_id)
+					then
+						statistics.any_features := statistics.any_features + 1
+
+					elseif
+						a_cat_call.called_feature.arguments /= Void and then
+						a_cat_call.called_feature.arguments.there_exists (
+							agent (a_type: TYPE_A): BOOLEAN
+								do
+									Result := a_type.is_like_current
+								end)
+					then
+						statistics.like_current_feature := statistics.like_current_feature + 1
+					else
+						statistics.other := statistics.other + 1
+					end
+				end
+			end
+		end
+
+	print_catcall_statistics is
+		do
+			if statistics.total > 0 then
+				print ("Catcall statistics: " + statistics.total.out)
+				print (" (export: " + statistics.export_violation.out)
+				print ("; conformance: " + statistics.conformance_violation.out)
+				print ("; covariant: " + statistics.covariant_violation.out + ")%N")
+				print ("%Tcompiler-limitation: " + statistics.compiler_limitation.out + "%N")
+				print ("%Tcovariant-generic: " + statistics.covariant_generic.out + "%N")
+				print ("%Tis_equal: " + statistics.is_equal_feat.out + "%N")
+				print ("%Tany-features: " + statistics.any_features.out + "%N")
+				print ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
+				print ("%Tother: " + statistics.other.out)
+				print ("%N")
+			end
+		end
+
+	conformance_checks: TUPLE [nb, like_target, same: INTEGER] is
+			--
+		once
+			create Result
+		end
 
 	print_memory_statistics is
 			-- Print memory statistics on standard output.

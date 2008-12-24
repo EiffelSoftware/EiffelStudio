@@ -3383,6 +3383,25 @@ feature -- Access
 			end
 		end
 
+	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I is
+			-- Feature with routine ID `rout_id'.
+		require
+			rout_id_set_not_void: rout_id_set /= Void
+			has_feature_table: has_feature_table
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := rout_id_set.count
+			until
+				i > nb or Result /= Void
+			loop
+				Result := feature_of_rout_id (rout_id_set.item (i))
+				i := i + 1
+			end
+		end
+
 	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
 			-- Feature whose feature_id is `a_feature_id'.
 			-- Look into `feature_table', `generic_features' and

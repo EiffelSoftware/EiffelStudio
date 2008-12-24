@@ -341,6 +341,33 @@ feature -- Properties
 			-- Void
 		end
 
+ 	has_frozen_mark: BOOLEAN is
+			-- Is type marked frozen?
+		do
+				-- For the time being, all entities are never frozen.
+			Result := False
+		end
+
+ 	has_variant_mark: BOOLEAN is
+			-- Is type marked `variant'.
+		do
+				-- For the time being, actual generic parameter are considered variant.
+			Result := True
+		end
+
+	has_variant_formal (a_context_type: TYPE_A): BOOLEAN is
+			-- Does `Current' have some formal generics that are marked variant in `a_context_type'?
+		require
+			a_context_type_not_void: a_context_type /= Void
+			a_context_type_valid: a_context_type.is_valid
+			is_valid: is_valid
+			is_valid_context: has_formal_generic implies
+				(a_context_type.has_associated_class and then is_valid_for_class (a_context_type.associated_class))
+		do
+				-- For the time being, actual generic parameter are considered variant.
+			Result := has_formal_generic
+ 		end
+
 	is_type_set: BOOLEAN is
 			-- Is current type a type_set?
 			-- | example: {A, B}

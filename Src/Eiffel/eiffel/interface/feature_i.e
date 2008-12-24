@@ -256,6 +256,69 @@ feature -- Access
 			Result := feature_flags & has_convert_mark_mask = has_convert_mark_mask
 		end
 
+	frozen covariantly_redefined_features (a_base_class: CLASS_C): HASH_TABLE [FEATURE_I, CLASS_C] is
+			-- Return all the covariantly redefined routines of Current
+		require
+			a_base_class_not_void: a_base_class /= Void
+			conforming_class: a_base_class.conform_to (written_class)
+		local
+			l_descendants: ARRAYED_LIST [CLASS_C]
+			l_feat: FEATURE_I
+			l_covariant_features: like covariantly_redefined_features
+		do
+			if argument_count > 0 then
+					-- If all arguments are expanded or if they are a frozen class
+					-- then it cannot be covariantly redefined
+				if
+					not arguments.for_all (agent (v: TYPE_A): BOOLEAN
+						do
+							Result := v.is_expanded or (v.has_associated_class implies v.associated_class.is_frozen)
+						end)
+				then
+					from
+						l_descendants := a_base_class.direct_descendants
+						create Result.make (l_descendants.count)
+						l_descendants.start
+					until
+						l_descendants.after
+					loop
+						if l_descendants.item.conform_to (a_base_class) then
+							l_feat := l_descendants.item.feature_of_rout_id (rout_id_set.first)
+								-- It could be Void in case of a non-conforming descendants.
+							if is_covariant_to (l_feat) then
+								Result.put (l_feat, l_descendants.item)
+							end
+							l_covariant_features := l_feat.covariantly_redefined_features (l_descendants.item)
+							if l_covariant_features /= Void and then not l_covariant_features.is_empty then
+								Result.merge (l_covariant_features)
+							end
+						end
+						l_descendants.forth
+					end
+				end
+			end
+		end
+
+	frozen is_covariant_to (other: FEATURE_I): BOOLEAN is
+			-- Is `other' a covariant redefinition of Current?
+		require
+			other_not_void: other /= Void
+			subset: other.rout_id_set.has (rout_id_set.first)
+		do
+			from
+				arguments.start
+				other.arguments.start
+			until
+				arguments.after or Result
+			loop
+					-- This is not the best way to check for covariance since `is_equivalent' will
+					-- return False on thing that are not covariantly redefined.
+				Result := not arguments.item.conformance_type.is_safe_equivalent (other.arguments.item.conformance_type)
+				arguments.forth
+				other.arguments.forth
+			end
+		end
+
 	has_formal: BOOLEAN is
 			-- Is formal type present in the feature signature at the top level?
 			-- (Formals used as parameters of generic class types do not count.)

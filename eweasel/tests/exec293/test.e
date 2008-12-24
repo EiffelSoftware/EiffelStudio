@@ -7,18 +7,24 @@ create
 	make
 
 feature
-        make is
+
+	make is
 		local
 			x: TUPLE [a: INTEGER]
-			tried: BOOLEAN
+			tried: INTEGER
 		do
-			if not tried then
-				print (x.a); io.new_line
+			inspect tried
+			when 0 then
+				if x.a = 1 then
+				end
+			when 1 then
+				x.a := 1;
+			else
 			end
 		rescue
 			print (meaning (original_exception)); io.new_line
-			tried := True
+			tried := tried + 1
 			retry
-                end
+		end
 
 end

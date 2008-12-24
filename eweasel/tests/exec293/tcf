@@ -1,6 +1,6 @@
-
 test_name 	 access-by-label-on-void-tuple
 test_description A call to x.a, where `x' is of type TUPLE [a: INTEGER} and `x' is Void at run-time should result in a "call on Void target" exception but instead results in an "operating system signal" exception.
+
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
@@ -10,5 +10,12 @@ compile_result	ok
 execute_work	NONE exec_output1
 execute_result	ok
 compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
 
 test_end

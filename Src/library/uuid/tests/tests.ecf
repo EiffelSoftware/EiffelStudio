@@ -12,9 +12,9 @@
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid-safe.ecf"/>
-		<cluster name="tests" location=".\" recursive="true">
+		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>
-		</cluster>
+		<tests>
 	</target>
 </system>

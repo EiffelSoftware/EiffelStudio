@@ -4848,6 +4848,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case SK_REAL64:  CHECK("Same type", l_type == EIF_REAL_64_CODE); break;
 				case SK_REF:     CHECK("Same type", l_type == EIF_REFERENCE_CODE); break;
 				case SK_POINTER: CHECK("Same type", l_type == EIF_POINTER_CODE); break;
+				default:
+					eise_io ("Recoverable retrieve: unsupported tuple element type.");
 			}
 #endif
 			switch (l_type) {

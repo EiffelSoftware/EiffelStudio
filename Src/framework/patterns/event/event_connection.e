@@ -11,12 +11,9 @@ class
 	EVENT_CONNECTION [G -> EVENT_OBSERVER_I, I -> USABLE_I]
 
 inherit
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			safe_dispose
-		end
-
 	EVENT_CONNECTION_I [G, I]
+
+	DISPOSABLE_SAFE
 
 create
 	make,
@@ -85,7 +82,6 @@ feature {NONE} -- Clean up
 					internal_connections.wipe_out
 				end
 			end
-			Precursor (a_explicit)
 		ensure then
 			internal_connections_is_empty: {connections_e1: like internal_connections} old internal_connections implies connections_e1.is_empty
 		end

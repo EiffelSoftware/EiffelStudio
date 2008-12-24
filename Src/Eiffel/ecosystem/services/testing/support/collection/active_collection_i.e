@@ -12,6 +12,8 @@ deferred class
 inherit
 	USABLE_I
 
+	DISPOSABLE_I
+
 	EVENT_CONNECTION_POINT_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
 		rename
 			connection as active_collection_connection
@@ -87,28 +89,27 @@ feature -- Events: Connection point
 			-- <Precursor>
 		local
 			l_observer: ACTIVE_COLLECTION_OBSERVER [G]
+			l_result: like internal_active_collection_connection
 		do
-			if {l_result: like internal_active_collection_connection} internal_active_collection_connection then
-				Result := l_result
-			else
-				check Result_attached: Result /= Void end
+			l_result := internal_active_collection_connection
+			if l_result = Void then
 				create {EVENT_CONNECTION [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]} Result.make_from_array (<<
 					[item_added_event, agent l_observer.on_item_added],
 					[item_removed_event, agent l_observer.on_item_removed],
 					[item_changed_event, agent l_observer.on_item_changed],
 					[items_reset_event, agent l_observer.on_items_reset]
 				>>)
-				if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-					l_disposable.auto_dispose (Result)
-				else
-					check False end
-				end
+				automation.auto_dispose (Result)
 				internal_active_collection_connection := Result
+			else
+				Result := l_result
 			end
 		end
 
-feature -- Temporary
+feature {NONE} -- Implementation: Internal cache
 
 	internal_active_collection_connection: !EVENT_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
+			-- Cached version of `active_collection_connection'.
+			-- Note: Do not use directly!
 
 end

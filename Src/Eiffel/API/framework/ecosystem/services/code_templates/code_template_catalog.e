@@ -13,8 +13,9 @@ class
 inherit
 	CODE_TEMPLATE_CATALOG_S
 
-	SAFE_AUTO_DISPOSABLE
+	DISPOSABLE_SAFE
 
+--inherit {NONE}
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
@@ -42,6 +43,20 @@ feature {NONE} -- Initialization
 			end
 			cataloged_folder_files.set_key_equality_tester (l_tester)
 			cataloged_template_definitions.set_key_equality_tester (l_tester)
+		end
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				if internal_code_templates /= Void then
+					internal_code_templates.wipe_out
+				end
+			end
+		ensure then
+			internal_code_templates_is_empty: internal_code_templates /= Void implies internal_code_templates.is_empty
 		end
 
 feature -- Access

@@ -15,6 +15,11 @@ inherit
 
 	SERVICE_PROVIDER_I
 
+	DISPOSABLE_SAFE
+		redefine
+			is_interface_usable
+		end
+
 create
 	make
 
@@ -30,6 +35,13 @@ feature {NONE} -- Initialization
 			provider_set: provider = a_provider
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+		end
+
 feature {NONE} -- Access
 
 	provider: !SERVICE_PROVIDER_I
@@ -40,7 +52,10 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_usable: USABLE_I} provider implies l_usable.is_interface_usable
+			Result := Precursor and then
+				{l_usable: USABLE_I} provider implies l_usable.is_interface_usable
+		ensure then
+			provider_is_interface_usable: {el_usable: USABLE_I} provider implies el_usable.is_interface_usable
 		end
 
 feature -- Query

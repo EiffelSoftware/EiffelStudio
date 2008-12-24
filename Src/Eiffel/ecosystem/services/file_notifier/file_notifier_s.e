@@ -150,17 +150,26 @@ feature -- Events: Connection point
 			-- <Precursor>
 		local
 			l_observer: FILE_NOTIFIER_EVENT_OBSERVER
-		attribute
-			create l_observer
-			create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make_from_array (<<
-				[file_modified_events, agent l_observer.on_file_modified]
-			>>)
-			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-				l_disposable.auto_dispose (Result)
+			l_result: like internal_file_notifier_connection
+		do
+			l_result := file_notifier_connection
+			if l_result = Void then
+				create l_observer
+				create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make_from_array (<<
+					[file_modified_events, agent l_observer.on_file_modified]
+				>>)
+				automation.auto_dispose (Result)
+				internal_file_notifier_connection := Result
 			else
-				check False end
+				Result := l_result
 			end
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_file_notifier_connection: ?like file_notifier_connection
+			-- Cached version of `file_notifier_connection'.
+			-- Note: Do not use directly!
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -13,11 +13,9 @@ class
 inherit
 	SESSION_MANAGER_S
 
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			safe_dispose
-		end
+	DISPOSABLE_SAFE
 
+--inherit {NONE}
 	EIFFEL_LAYOUT
 
 create
@@ -42,7 +40,7 @@ feature -- Clean up
 					l_sessions.remove_at
 
 						-- Cleans up the session object.
-					if a_session.is_interface_usable and then {l_disposable: DISPOSABLE} a_session then
+					if a_session.is_interface_usable and then {l_disposable: DISPOSABLE_I} a_session then
 						l_disposable.dispose
 					end
 				end
@@ -72,8 +70,6 @@ feature {NONE} -- Clean up
 					end
 				end
 			end
-
-			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 
 feature -- Access
@@ -529,14 +525,15 @@ feature {NONE} -- Factory
 							l_existing_load_agents.forth
 						end
 
-						if {l_safe_disposable: SAFE_AUTO_DISPOSABLE} Result then
+						if {l_disposable: DISPOSABLE_I} Result then
 								-- We have to be sure to remove the load agent on dispose. When a new window is opened
 								-- with no project loaded, then the window is closed and then project is opened, the agent
 								-- will still be called. We cannot have this.
-							l_safe_disposable.perform_auto_dispose (agent (ia_load_agents: ACTION_SEQUENCE [TUPLE]; ia_agent: PROCEDURE [ANY, TUPLE])
-								do
-									ia_load_agents.prune (ia_agent)
-								end (l_load_agents,l_load_agent))
+							l_disposable.automation.notify_on_disposing (
+								agent (ia_load_agents: ACTION_SEQUENCE [TUPLE]; ia_agent: PROCEDURE [ANY, TUPLE])
+									do
+										ia_load_agents.prune (ia_agent)
+									end (l_load_agents,l_load_agent))
 						else
 								-- Sanity check. This should only happen if there is alternative implementation (possibly external)
 								-- for {SESSSION_I}.
@@ -610,9 +607,9 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -623,19 +620,19 @@ feature {NONE} -- Internal implementation cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

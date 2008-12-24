@@ -11,18 +11,17 @@ frozen class
 	EVENT_TYPE [EVENT_DATA -> TUPLE]
 
 inherit
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			default_create,
-			safe_dispose
-		end
-
 	EVENT_TYPE_I [EVENT_DATA]
 		redefine
 			default_create
 		end
 
 	EVENT_TYPE_PUBLISHER_I [EVENT_DATA]
+		redefine
+			default_create
+		end
+
+	DISPOSABLE_SAFE
 		redefine
 			default_create
 		end
@@ -49,7 +48,6 @@ feature {NONE} -- Clean up
 				subscribers.wipe_out
 				suicide_actions.wipe_out
 			end
-			Precursor (a_explicit)
 		ensure then
 			subscribers_is_empty: a_explicit implies subscribers.is_empty
 			suicide_actions_is_empty: a_explicit implies suicide_actions.is_empty

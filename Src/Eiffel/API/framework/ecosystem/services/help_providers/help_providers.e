@@ -11,12 +11,12 @@ class
 	HELP_PROVIDERS
 
 inherit
-	SAFE_AUTO_DISPOSABLE
+	HELP_PROVIDERS_S
+
+	DISPOSABLE_SAFE
 		redefine
 			safe_dispose
 		end
-
-	HELP_PROVIDERS_S
 
 create
 	make
@@ -49,10 +49,10 @@ feature {NONE} -- Clean up
 					activate_providers_is_empty: activate_providers.is_empty
 				end
 			end
-			internal_help_providers := Void
-			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		ensure then
-			internal_help_providers_detached: internal_help_providers = Void
+			internal_help_providers_is_empty:
+				a_disposing and then
+				(internal_help_providers /= Void implies internal_help_providers.is_empty)
 		end
 
 feature -- Access

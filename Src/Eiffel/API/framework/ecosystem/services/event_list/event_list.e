@@ -14,7 +14,7 @@ class
 inherit
 	EVENT_LIST_S
 
-	SAFE_AUTO_DISPOSABLE
+	DISPOSABLE_SAFE
 
 create
 	make
@@ -36,6 +36,24 @@ feature {NONE} -- Initialization
 			auto_dispose (item_changed_event)
 			create item_adopted_event
 			auto_dispose (item_adopted_event)
+		end
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				if internal_event_items /= Void then
+					internal_event_items.wipe_out
+				end
+				if internal_event_items_index /= Void then
+					internal_event_items_index.wipe_out
+				end
+			end
+		ensure then
+			internal_event_items_is_empty: internal_event_items /= Void implies internal_event_items.is_empty
+			internal_event_items_index_is_empty: internal_event_items_index /= Void implies internal_event_items_index.is_empty
 		end
 
 feature -- Access

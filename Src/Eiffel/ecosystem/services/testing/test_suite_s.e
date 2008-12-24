@@ -259,21 +259,30 @@ feature -- Event: Connection point
 			-- <Precursor>
 		local
 			l_observer: TEST_SUITE_OBSERVER
-		attribute
-			create l_observer
-			create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [!TEST_I], ACTIVE_COLLECTION_I [!TEST_I]]}
-				Result.make_from_array (<<
-					[processor_launched_event, agent l_observer.on_processor_launched],
-					[processor_proceeded_event, agent l_observer.on_processor_proceeded],
-					[processor_finished_event, agent l_observer.on_processor_finished],
-					[processor_stopped_event, agent l_observer.on_processor_stopped],
-					[processor_error_event, agent l_observer.on_processor_error]
-				>>, active_collection_connection)
-			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-				l_disposable.auto_dispose (Result)
+			l_result: like internal_test_suite_connection
+		do
+			l_result := internal_test_suite_connection
+			if l_result = Void then
+				create l_observer
+				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [!TEST_I], ACTIVE_COLLECTION_I [!TEST_I]]}
+					Result.make_from_array (<<
+						[processor_launched_event, agent l_observer.on_processor_launched],
+						[processor_proceeded_event, agent l_observer.on_processor_proceeded],
+						[processor_finished_event, agent l_observer.on_processor_finished],
+						[processor_stopped_event, agent l_observer.on_processor_stopped],
+						[processor_error_event, agent l_observer.on_processor_error]
+					>>, active_collection_connection)
+				automation.auto_dispose (Result)
+				internal_test_suite_connection := Result
 			else
-				check False end
+				Result := l_result
 			end
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_test_suite_connection: ?like test_suite_connection
+			-- Cached version of `test_suite_connection'.
+			-- Note: Do not use directly!
 
 end

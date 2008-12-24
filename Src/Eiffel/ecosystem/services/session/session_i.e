@@ -15,7 +15,9 @@ deferred class
 	SESSION_I
 
 inherit
-	USABLE_I
+	INTERFACE_I
+
+	DISPOSABLE_I
 
 	EVENT_CONNECTION_POINT_I [SESSION_EVENT_OBSERVER, SESSION_I]
 		rename
@@ -211,15 +213,18 @@ feature -- Events: Connection point
 			-- <Precursor>
 		local
 			l_observer: SESSION_EVENT_OBSERVER
-		attribute
-			create l_observer
-			create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make_from_array (<<
-				[value_changed_event, agent l_observer.on_session_value_changed]
-			>>)
-			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-				l_disposable.auto_dispose (Result)
+			l_result: like internal_session_connection
+		do
+			l_result := internal_session_connection
+			if l_result = Void then
+				create l_observer
+				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make_from_array (<<
+					[value_changed_event, agent l_observer.on_session_value_changed]
+				>>)
+				automation.auto_dispose (Result)
+				internal_session_connection := Result
 			else
-				check False end
+				Result := l_result
 			end
 		end
 
@@ -238,6 +243,12 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 			is_interface_usable: is_interface_usable
 		deferred
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_session_connection: ?like session_connection
+			-- Cached version of `session_connection'
+			-- Note: Do not use directly!
 
 invariant
 	window_id_positive: is_per_window implies window_id > 0

@@ -15,10 +15,7 @@ class
 inherit
 	SESSION_I
 
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			safe_dispose
-		end
+	DISPOSABLE_SAFE
 
 create {SESSION_MANAGER_S}
 	make,
@@ -79,7 +76,6 @@ feature {NONE} -- Clean up
 				end
 				data.wipe_out
 			end
-			Precursor (a_disposing)
 			manager := Void
 		ensure then
 			not_is_dirty: a_disposing implies not is_dirty
@@ -518,8 +514,8 @@ feature {NONE} -- Conversion type tables
 		end
 
 invariant
-	manager_attached: not is_zombie implies manager /= Void
-	manager_is_zombie: not is_zombie implies manager.is_interface_usable
+	manager_attached: not is_disposed implies manager /= Void
+	manager_is_zombie: not is_disposed implies manager.is_interface_usable
 	data_attached: data /= Void
 
 ;indexing

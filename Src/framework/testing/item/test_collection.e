@@ -12,23 +12,21 @@ deferred class
 inherit
 	TEST_COLLECTION_I
 
+	DISPOSABLE_SAFE
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Initialize `Current'
 		do
 			create test_added_event
+			automation.auto_dispose (test_added_event)
 			create test_removed_event
+			automation.auto_dispose (test_removed_event)
 			create test_changed_event
+			automation.auto_dispose (test_changed_event)
 			create tests_reset_event
-		end
-
-feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
+			automation.auto_dispose (tests_reset_event)
 		end
 
 feature -- Events

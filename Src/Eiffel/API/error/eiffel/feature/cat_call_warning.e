@@ -10,47 +10,52 @@ indexing
 class CAT_CALL_WARNING
 
 inherit
-	EIFFEL_WARNING
+	FEATURE_ERROR
 		redefine
 			build_explain, help_file_name, trace_primary_context
 		end
 
 	SHARED_NAMES_HEAP
 
+	SHARED_WORKBENCH
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_C; a_feature: FEATURE_I; a_location: LOCATION_AS) is
+	make (a_location: LOCATION_AS) is
 			-- Initialize warning
-		require
-			a_class_not_void: a_class /= Void
-			a_location_not_void: a_location /= Void
 		do
-			set_class (a_class)
-			set_feature (a_feature)
-			set_location (a_location)
+			if a_location /= Void then
+				set_location (a_location)
+			end
 			create covariant_argument_violations.make
 			create export_status_violations.make
 		ensure
-			associated_class_set: associated_class = a_class
-			line_set: line = a_location.line
-			column_set: column = a_location.column
+			line_set: a_location /= Void implies line = a_location.line
+			column_set: a_location /= Void implies column = a_location.column
 		end
 
 feature -- Access
 
-	associated_feature: E_FEATURE
-			-- Feature where cat-call happens
-
 	called_feature: E_FEATURE
 			-- Feature which is called and produces the cat-call
+
+	target_type: TYPE_A;
+			-- Target type of the assignment (left part)
+
+	source_type: TYPE_A;
+			-- Source type of the assignment (right part)
 
 	code: STRING is
 			-- Error code
 		do
-			Result := "Catcall";
+			if export_status_violations /= Void and then not export_status_violations.is_empty then
+				Result := "Catcall Export"
+			else
+				Result := "Catcall"
+			end
 		end
 
 	help_file_name: STRING is
@@ -61,23 +66,17 @@ feature -- Access
 
 feature -- Element change
 
-	set_class (a_class: CLASS_C) is
-			-- Set `associated_class' to `a_class'.
-		require
-			a_class_not_void: a_class /= Void
+	set_source_type (s: TYPE_A) is
+			-- Assign `s' to `source_type'.
 		do
-			associated_class := a_class
-		ensure
-			associated_class_set: associated_class = a_class
-		end
+			source_type := s;
+		end;
 
-	set_feature (a_feature: FEATURE_I) is
-			-- Set `associated_feature' to `a_feature'.
+	set_target_type (t: TYPE_A) is
+			-- Assign `t' to `target_type'.
 		do
-			if a_feature /= Void then
-				associated_feature := a_feature.api_feature (a_feature.written_in)
-			end
-		end
+			target_type := t;
+		end;
 
 	set_called_feature (a_feature: FEATURE_I) is
 			-- Set `called_feature' to `a_feature'.
@@ -110,113 +109,165 @@ feature -- Element change
 			covariant_argument_violations.extend ([a_descendant_type, a_descendant_feature.api_feature (a_descendant_feature.written_in), a_type, a_index])
 		end
 
+	add_covariant_generic_violation is
+			-- Add a covariant call through presence of formals.
+		do
+			has_covariant_generic := True
+		end
+
+	add_compiler_limitation (a_parent_type: TYPE_A) is
+		require
+			a_parent_type_not_void: a_parent_type /= Void
+		do
+			compiler_limitation_type := a_parent_type
+		ensure
+			compiler_limitation_type_set: compiler_limitation_type = a_parent_type
+		end
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			item: TUPLE [descendant_type: TYPE_A; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]
+			l_target_type: CL_TYPE_A
+			l_source_type: CL_TYPE_A
+			l_same_class_name: BOOLEAN
 		do
-				-- Print context
-			a_text_formatter.add ("Class: ")
-			associated_class.append_name (a_text_formatter)
-			a_text_formatter.add_new_line
-			if associated_feature = Void then
-				a_text_formatter.add ("Invariant")
-			else
-				a_text_formatter.add ("Feature: ")
-				associated_feature.append_name (a_text_formatter)
-			end
-			a_text_formatter.add_new_line
-			a_text_formatter.add_new_line
+			if target_type /= Void and source_type /= Void then
+					-- Find out if we should also show the group corresponding to the type
+					-- involved when they have the same name (which would be confusion to the user).
+					--| Note: The same code is present in VUAR2.
+				l_target_type ?= target_type
+				l_source_type ?= source_type
+				if l_target_type /= Void and then l_source_type /= Void then
+					l_same_class_name := l_target_type.associated_class.name.is_equal (l_source_type.associated_class.name)
+				end
 
-				-- Actual called feature
-			a_text_formatter.add ("Called feature: {")
-			called_feature.written_class.append_name (a_text_formatter)
-			a_text_formatter.add ("}.")
-			called_feature.append_signature (a_text_formatter)
-			a_text_formatter.add_new_line
-			a_text_formatter.add_new_line
-
-				-- Check if covariant feature redefinition problems were reported
-			if not covariant_argument_violations.is_empty then
-				a_text_formatter.add ("Covariant argument redefinition violation:")
-				a_text_formatter.add_new_line
-				a_text_formatter.add_new_line
-				from
-					covariant_argument_violations.start
-				until
-						-- Show only first 2 entries
-					covariant_argument_violations.after or covariant_argument_violations.index > 2
-				loop
-					item := covariant_argument_violations.item
-						-- Argument type warning
-					a_text_formatter.add ("Call has argument of type ")
-					covariant_argument_violations.item.actual_type.append_to (a_text_formatter)
-					a_text_formatter.add (", but if call is made on a descendant of type ")
-					item.descendant_type.append_to (a_text_formatter)
-					a_text_formatter.add (" then the argument should be of type ")
-					item.descendant_feature.arguments.i_th (item.argument_index).append_to (a_text_formatter)
-					a_text_formatter.add (" (feature {")
-					item.descendant_type.append_to (a_text_formatter)
-					a_text_formatter.add ("}.")
-					item.descendant_feature.append_signature (a_text_formatter)
+				a_text_formatter.add ("Target type: ");
+				target_type.append_to (a_text_formatter);
+				if l_same_class_name then
+					a_text_formatter.add (" (from ")
+					a_text_formatter.add_group (l_target_type.associated_class.lace_class.group,
+						l_target_type.associated_class.lace_class.target.name)
 					a_text_formatter.add (")")
+				end
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("Source type: ");
+				source_type.append_to (a_text_formatter);
+				if l_same_class_name then
+					a_text_formatter.add (" (from ")
+					a_text_formatter.add_group (l_source_type.associated_class.lace_class.group,
+						l_source_type.associated_class.lace_class.target.name)
+					a_text_formatter.add (")")
+				end
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
+			else
+					-- Actual called feature
+				a_text_formatter.add ("Called feature: {")
+				called_feature.written_class.append_name (a_text_formatter)
+				a_text_formatter.add ("}.")
+				called_feature.append_signature (a_text_formatter)
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
+
+					-- Check if covariant generic problems were reported
+				if has_covariant_generic then
+					a_text_formatter.add ("Covariant generic violation:")
 					a_text_formatter.add_new_line
-					covariant_argument_violations.forth
+					a_text_formatter.add ("Feature has a formal argument but target of call is not monomorphic.")
+					a_text_formatter.add_new_line
+					a_text_formatter.add_new_line
 				end
 
-					-- Display how many violations were found				
-				if not covariant_argument_violations.after then
-					a_text_formatter.add ("...")
+					-- Check if covariant feature redefinition problems were reported
+				if not covariant_argument_violations.is_empty then
+					a_text_formatter.add ("Covariant argument redefinition violation:")
 					a_text_formatter.add_new_line
-					a_text_formatter.add ("Total count of possible descendants: " + covariant_argument_violations.count.out)
+					a_text_formatter.add_new_line
+					from
+						covariant_argument_violations.start
+					until
+							-- Show only first 2 entries
+						covariant_argument_violations.after or covariant_argument_violations.index > 2
+					loop
+						item := covariant_argument_violations.item
+							-- Argument type warning
+						a_text_formatter.add ("Call has argument of type ")
+						covariant_argument_violations.item.actual_type.append_to (a_text_formatter)
+						a_text_formatter.add (", but if call is made on a descendant of type ")
+						item.descendant_type.append_to (a_text_formatter)
+						a_text_formatter.add (" then the argument should be of type ")
+						item.descendant_feature.arguments.i_th (item.argument_index).append_to (a_text_formatter)
+						a_text_formatter.add (" (feature {")
+						item.descendant_type.append_to (a_text_formatter)
+						a_text_formatter.add ("}.")
+						item.descendant_feature.append_signature (a_text_formatter)
+						a_text_formatter.add (")")
+						a_text_formatter.add_new_line
+						covariant_argument_violations.forth
+					end
+
+						-- Display how many violations were found				
+					if not covariant_argument_violations.after then
+						a_text_formatter.add ("...")
+						a_text_formatter.add_new_line
+						a_text_formatter.add ("Total count of possible descendants: " + covariant_argument_violations.count.out)
+						a_text_formatter.add_new_line
+						a_text_formatter.add_new_line
+					end
+				end
+
+				if not export_status_violations.is_empty then
+					a_text_formatter.add ("Export status violation:")
+					a_text_formatter.add_new_line
+					a_text_formatter.add_new_line
+					from
+						export_status_violations.start
+					until
+							-- Show only first 2 entries
+						export_status_violations.after or export_status_violations.index > 2
+					loop
+						a_text_formatter.add ("If descendant is of type ")
+						export_status_violations.item.descendant_class.append_name (a_text_formatter)
+						a_text_formatter.add (" the export status is violated.")
+						a_text_formatter.add_new_line
+						export_status_violations.forth
+					end
+
+						-- Display how many violations were found				
+					if not export_status_violations.after then
+						a_text_formatter.add ("...")
+						a_text_formatter.add_new_line
+						a_text_formatter.add ("Total count of possible descendants: " + export_status_violations.count.out)
+						a_text_formatter.add_new_line
+						a_text_formatter.add_new_line
+					end
+				end
+
+				if compiler_limitation_type /= Void then
+					a_text_formatter.add ("Could not evaluate all possible types for ")
+					compiler_limitation_type.append_to (a_text_formatter)
 					a_text_formatter.add_new_line
 					a_text_formatter.add_new_line
 				end
 			end
-
-			if not export_status_violations.is_empty then
-				a_text_formatter.add ("Export status violation:")
-				a_text_formatter.add_new_line
-				a_text_formatter.add_new_line
-				from
-					export_status_violations.start
-				until
-						-- Show only first 2 entries
-					export_status_violations.after or export_status_violations.index > 2
-				loop
-					a_text_formatter.add ("If descendant is of type ")
-					export_status_violations.item.descendant_class.append_name (a_text_formatter)
-					a_text_formatter.add (" the export status is violated.")
-					a_text_formatter.add_new_line
-					export_status_violations.forth
-				end
-
-					-- Display how many violations were found				
-				if not export_status_violations.after then
-					a_text_formatter.add ("...")
-					a_text_formatter.add_new_line
-					a_text_formatter.add ("Total count of possible descendants: " + export_status_violations.count.out)
-					a_text_formatter.add_new_line
-					a_text_formatter.add_new_line
-				end
-			end
-
-			update_statistics
-			print_statistics (a_text_formatter)
 		end
 
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		do
-			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+			if {l_class: CLASS_C} associated_class and then {l_feature: !like called_feature} called_feature and then {l_formatter: TEXT_FORMATTER} a_text_formatter then
 				print_context_feature (l_formatter, l_feature, l_class)
 			else
 				Precursor (a_text_formatter)
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {SYSTEM_I} -- Implementation
+
+	has_covariant_generic: BOOLEAN
+			-- Does current have a covariant generic call.
 
 	covariant_argument_violations: LINKED_LIST [TUPLE [descendant_type: TYPE_A; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]]
 			-- List of descendants which produce a possible cat-call because of a covariant argument redefinition
@@ -224,83 +275,12 @@ feature {NONE} -- Implementation
 	export_status_violations: LINKED_LIST [TUPLE [descendant_class: CLASS_C; descendant_feature: E_FEATURE]]
 			-- List of descendants which produce a possible cat-call because of an export status violation
 
-	statistics: TUPLE [
-		total: INTEGER;
-		export_violation: INTEGER;
-		covariant_violation: INTEGER;
-		any_features: INTEGER;
-		generic_features: INTEGER;
-		like_current_feature: INTEGER;
-		other: INTEGER] is
-			-- Statistics of catcalls in system
-		once
-			Result := [0, 0, 0, 0, 0, 0, 0]
-		end
-
-	update_statistics is
-			-- Update statistics with catcall of current warning
-		local
-			l_feature_name: INTEGER
-		do
-			statistics.total := statistics.total + 1
-			if not export_status_violations.is_empty then
-				statistics.export_violation := statistics.export_violation + 1
-			end
-			if not covariant_argument_violations.is_empty then
-				statistics.covariant_violation := statistics.covariant_violation + 1
-				l_feature_name := called_feature.name_id
-				if
-					l_feature_name = names_heap.equal_name_id or
-					l_feature_name = names_heap.standard_equal_name_id or
-					l_feature_name = names_heap.deep_equal_name_id or
-					l_feature_name = names_heap.is_equal_name_id or
-					l_feature_name = names_heap.standard_is_equal_name_id or
-					l_feature_name = names_heap.is_deep_equal_name_id or
-					l_feature_name = names_heap.copy_name_id or
-					l_feature_name = names_heap.standard_copy_name_id or
-					l_feature_name = names_heap.deep_copy_name_id
-				then
-					statistics.any_features := statistics.any_features + 1
-				elseif
-					called_feature.arguments /= Void and then
-					called_feature.arguments.there_exists (
-						agent (a_type: TYPE_A): BOOLEAN
-							do
-								Result := a_type.is_like_current
-							end)
-				then
-					statistics.like_current_feature := statistics.like_current_feature + 1
-				elseif
-					called_feature.arguments /= Void and then
-					called_feature.arguments.there_exists (
-						agent (a_type: TYPE_A): BOOLEAN
-							do
-								Result := a_type.is_formal or else a_type.actual_type.is_formal
-							end)
-				then
-					statistics.generic_features := statistics.generic_features + 1
-				else
-					statistics.other := statistics.other + 1
-				end
-			end
-		end
-
-	print_statistics (a_text_formatter: TEXT_FORMATTER) is
-			--
-		do
-			a_text_formatter.add ("STAT (")
-			a_text_formatter.add ("total: " + statistics.total.out + "%T")
-			a_text_formatter.add ("export-violation: " + statistics.export_violation.out + "%T")
-			a_text_formatter.add ("covariant-violation: " + statistics.covariant_violation.out + "%T")
-			a_text_formatter.add ("any-features: " + statistics.any_features.out + "%T")
-			a_text_formatter.add ("like-current-features: " + statistics.like_current_feature.out + "%T")
-			a_text_formatter.add ("generics: " + statistics.generic_features.out + "%T")
-			a_text_formatter.add ("other: " + statistics.other.out + "%T")
-			a_text_formatter.add (")")
-			a_text_formatter.add_new_line
-		end
+	compiler_limitation_type: TYPE_A
+			-- Type on which compiler could not solve all descendants
 
 invariant
+	export_status_violations_not_void: export_status_violations /= Void
+	covariant_argument_violations_not_void: covariant_argument_violations /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

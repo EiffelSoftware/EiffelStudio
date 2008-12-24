@@ -11,10 +11,10 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>
-		<tests>
+		<\tests>
 	</target>
 </system>

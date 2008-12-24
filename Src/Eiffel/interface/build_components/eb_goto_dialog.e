@@ -70,12 +70,18 @@ feature {NONE} -- Initialization
 	initialize_line_number_label_text is
 			-- Set line number label text
 		local
-			l_line_count: INTEGER
+			l_line_count, l_line_number: INTEGER
 		do
 			l_line_count := editor.number_of_lines
 			if l_line_count > 0 then
 				line_number_label.set_text (names.l_line_number_range (editor.number_of_lines.out))
 				line_number_text.value_range.resize_exactly (1, l_line_count)
+				if editor.text_displayed /= Void then
+					l_line_number := editor.text_displayed.current_line_number
+				else
+					check editor_not_usable: False end
+				end
+				line_number_text.set_value (l_line_number)
 			end
 		end
 
@@ -124,9 +130,9 @@ invariant
 	has_editor: editor /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -137,19 +143,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -318,6 +318,8 @@ feature {NONE} -- Actions
 			l_windows: BILINEAR [EB_WINDOW]
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_error: ES_ERROR_PROMPT
+			l_classes: STRING
+			l_nb: INTEGER
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
@@ -326,13 +328,15 @@ feature {NONE} -- Actions
 					if {l_window: EB_DEVELOPMENT_WINDOW} l_windows.item and then l_window.is_interface_usable then
 						l_editors := l_window.editors_manager.editors
 						if l_editors /= Void then
+							create l_classes.make (256)
 							from l_editors.start until l_editors.after loop
 								if {l_editor: EB_SMART_EDITOR} l_editors.item and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
 										-- We have the class stone
 									if {l_class_i: CLASS_I} l_class.class_i then
 										if l_class_i.is_compiled then
-											create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
-											l_error.show_on_active_window
+											l_classes.append_string_general (l_class_i.name)
+											l_classes.append_character ('%N')
+											l_nb := l_nb + 1
 										else
 												-- Add the class
 											l_class_i.system.add_unref_class (l_class_i)
@@ -340,6 +344,16 @@ feature {NONE} -- Actions
 									end
 								end
 								l_editors.forth
+							end
+
+							if not l_classes.is_empty then
+								l_classes.prune_all_trailing ('%N')
+								if l_classes.index_of ('%N', 1) > 0 then
+									create l_error.make_standard ("The classes%N%N" + l_classes + "%N%Nare already compiled!")
+								else
+									create l_error.make_standard ("The class " + l_classes + " is already compiled!")
+								end
+								l_error.show_on_active_window
 							end
 						end
 					end
@@ -455,9 +469,9 @@ feature {NONE} -- Actions
 
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -468,19 +482,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

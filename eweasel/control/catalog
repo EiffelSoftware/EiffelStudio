@@ -2149,8 +2149,8 @@ if DOTNET test ca-custom-attribute-with-create dotnet100	tcf fail dotnet custom_
 if DOTNET test application-optimizations-enabled dotnet101	tcf pass dotnet optimization
 if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet consumer
 if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes
-if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass constructor generic external creation
-if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass namespace
+if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass dotnet constructor generic external creation
+if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass dotnet namespace
 if DOTNET test equal-on-dotnet-string-and-eiffel-string dotnet106	tcf pass dotnet
 if DOTNET test renaming-native-dotnet-feature-with-redefine-default-create dotnet107 tcf pass dotnet
 test anchored-creation-crash		dotnet108 tcf pass dotnet

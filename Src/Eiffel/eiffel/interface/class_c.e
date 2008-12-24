@@ -3857,17 +3857,20 @@ feature -- Genericity
 					l_old.after
 				loop
 					l_formal_type ?= l_old.item_for_iteration.type
-					if
+					if l_formal_type /= Void then
 							-- We check that the previous formal was written in the Current class and that
 							-- it is still makes sense. A case where it does not make sense is when the Current
 							-- class has less generics than before.
-						(l_formal_type /= Void and l_old.item_for_iteration.written_in = class_id) and then
-						l_formals.valid_index (l_formal_type.position)
-					then
-						check
-							not_inserted: l_formals.item (l_formal_type.position) = Void
+						if
+							not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
+							l_old.item_for_iteration.written_in = class_id and then
+							l_formals.valid_index (l_formal_type.position)
+						then
+							check
+								not_inserted: l_formals.item (l_formal_type.position) = Void
+							end
+							l_formals.put (l_old.item_for_iteration, l_formal_type.position)
 						end
-						l_formals.put (l_old.item_for_iteration, l_formal_type.position)
 					end
 					l_old.forth
 				end

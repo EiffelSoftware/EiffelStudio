@@ -45,8 +45,6 @@ feature -- Output
 			check
 				parent_class_set: parent_class /= Void
 			end
-			a_text_formatter.add ("Class: ")
-			class_c.append_signature (a_text_formatter, False)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Inherited frozen class: ")
 			parent_class.append_signature (a_text_formatter, False)

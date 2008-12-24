@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create mutex.
 		obsolete
 			"Use make instead"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			is_set: is_set
 		end
 
-	make is
+	make
 			-- Create mutex.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
 			Result := (mutex_pointer /= default_pointer)
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Status setting
 
-	lock is
+	lock
 			-- Lock mutex, waiting if necessary until that becomes possible.
 		require
 			is_set: is_set
@@ -62,7 +62,7 @@ feature -- Status setting
 			eif_thr_mutex_lock (mutex_pointer)
 		end
 
-	try_lock: BOOLEAN is
+	try_lock: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		require
 			is_set: is_set
@@ -70,7 +70,7 @@ feature -- Status setting
 			Result := eif_thr_mutex_trylock (mutex_pointer)
 		end
 
-	unlock is
+	unlock
 			-- Unlock mutex.
 		require
 			is_set: is_set
@@ -78,7 +78,7 @@ feature -- Status setting
 			eif_thr_mutex_unlock (mutex_pointer)
 		end
 
-	destroy is
+	destroy
 			-- Destroy mutex.
 		require
 			is_set: is_set
@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	trylock, has_locked: BOOLEAN is
+	trylock, has_locked: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		obsolete
 			"Use try_lock instead"
@@ -101,7 +101,7 @@ feature -- Obsolete
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Called by the garbage collector when the mutex is
 			-- collected.
 		do
@@ -117,27 +117,27 @@ feature {CONDITION_VARIABLE} -- Implementation
 
 feature {NONE} -- Externals
 
-	eif_thr_mutex_create: POINTER is
+	eif_thr_mutex_create: POINTER
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_lock (a_mutex_pointer: POINTER) is
+	eif_thr_mutex_lock (a_mutex_pointer: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_unlock (a_mutex_pointer: POINTER) is
+	eif_thr_mutex_unlock (a_mutex_pointer: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN is
+	eif_thr_mutex_trylock (a_mutex_pointer: POINTER): BOOLEAN
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_mutex_destroy (a_mutex_pointer: POINTER) is
+	eif_thr_mutex_destroy (a_mutex_pointer: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
@@ -145,19 +145,16 @@ feature {NONE} -- Externals
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class MUTEX
+end
 

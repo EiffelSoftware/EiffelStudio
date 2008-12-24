@@ -19,12 +19,12 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Routine executed by new thread.
 		deferred
 		end
 
-	launch is
+	launch
 			-- Initialize a new thread running `execute'.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -35,7 +35,7 @@ feature -- Basic operations
 			launch_with_attributes (l_attr)
 		end
 
-	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
+	launch_with_attributes (attr: THREAD_ATTRIBUTES)
 			-- Initialize a new thread running `execute', using attributes.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -48,7 +48,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	frozen thr_main is
+	frozen thr_main
 			-- Call thread routine.
 		do
 			thread_id := get_current_id
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	create_thread_with_args (current_obj: THREAD; init_func: POINTER;
-					priority, policy: INTEGER; detach: BOOLEAN) is
+					priority, policy: INTEGER; detach: BOOLEAN)
 			-- Initialize and start thread, after setting its priority
 			-- and scheduling policy.
 		external
@@ -70,16 +70,16 @@ feature {NONE} -- Externals
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class THREAD
+end
 

@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Create read/write lock.
 		obsolete
 			"Use make instead"
@@ -33,7 +33,7 @@ feature -- Initialization
 			item_set: is_set
 		end
 
-	make is
+	make
 			-- Create read/write lock.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is read/write lock initialized?
 		do
 			Result := (item /= default_pointer)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status setting
 
-	acquire_read_lock is
+	acquire_read_lock
 			-- Lock current on a read.
 		require
 			exists: is_set
@@ -61,7 +61,7 @@ feature -- Status setting
 			eif_thr_rwl_rdlock (item)
 		end
 
-	acquire_write_lock is
+	acquire_write_lock
 			-- Lock current on a write.
 		require
 			exists: is_set
@@ -69,7 +69,7 @@ feature -- Status setting
 			eif_thr_rwl_wrlock (item)
 		end
 
-	release_reader_lock is
+	release_reader_lock
 			-- Unlock Reader lock.
 		require
 			exists: is_set
@@ -77,7 +77,7 @@ feature -- Status setting
 			eif_thr_rwl_unlock (item)
 		end
 
-	release_writer_lock is
+	release_writer_lock
 			-- Unlock Writer lock.
 		require
 			exists: is_set
@@ -85,7 +85,7 @@ feature -- Status setting
 			eif_thr_rwl_unlock (item)
 		end
 
-	destroy is
+	destroy
 			-- Destroy read/write lock.
 		require
 			exists: is_set
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Called by the garbage collector when the read/write lock is
 			-- collected.
 		do
@@ -112,27 +112,27 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	eif_thr_rwl_create: POINTER is
+	eif_thr_rwl_create: POINTER
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_rwl_rdlock (an_item: POINTER) is
+	eif_thr_rwl_rdlock (an_item: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_rwl_unlock (an_item: POINTER) is
+	eif_thr_rwl_unlock (an_item: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_rwl_wrlock (an_item: POINTER) is
+	eif_thr_rwl_wrlock (an_item: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_rwl_destroy (an_item: POINTER) is
+	eif_thr_rwl_destroy (an_item: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
@@ -140,19 +140,16 @@ feature {NONE} -- Externals
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class READ_WRITE_LOCK
+end
 

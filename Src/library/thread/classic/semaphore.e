@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (count: INTEGER) is
+	make (count: INTEGER)
 			-- Create semaphore.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is semaphore initialized?
 		do
 			Result := (sem_pointer /= default_pointer)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status setting
 
-	try_wait: BOOLEAN is
+	try_wait: BOOLEAN
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		require
@@ -48,7 +48,7 @@ feature -- Status setting
 			Result := eif_thr_sem_trywait (sem_pointer)
 		end
 
-	wait is
+	wait
 			-- Decrement semaphore count, waiting if necessary until
 			-- that becomes possible.
 		require
@@ -57,7 +57,7 @@ feature -- Status setting
 			eif_thr_sem_wait (sem_pointer)
 		end
 
-	post is
+	post
 			-- Increment semaphore count.
 		require
 			valid_semaphore: is_set
@@ -65,7 +65,7 @@ feature -- Status setting
 			eif_thr_sem_post (sem_pointer)
 		end
 
-	destroy is
+	destroy
 			-- Destroy semaphore.
 		require
 			valid_semaphore: is_set
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	trywait: BOOLEAN is
+	trywait: BOOLEAN
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		obsolete
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Called by the garbage collector when the semaphore
 			-- is collected.
 		do
@@ -105,27 +105,27 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	eif_thr_sem_create (count: INTEGER): POINTER is
+	eif_thr_sem_create (count: INTEGER): POINTER
 		external
 			"C use %"eif_threads.h%""
 		end
 
-	eif_thr_sem_wait (a_sem_pointer: POINTER) is
+	eif_thr_sem_wait (a_sem_pointer: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_sem_post (a_sem_pointer: POINTER) is
+	eif_thr_sem_post (a_sem_pointer: POINTER)
 		external
 			"C use %"eif_threads.h%""
 		end
 
-	eif_thr_sem_trywait (a_sem_pointer: POINTER): BOOLEAN is
+	eif_thr_sem_trywait (a_sem_pointer: POINTER): BOOLEAN
 		external
 			"C blocking use %"eif_threads.h%""
 		end
 
-	eif_thr_sem_destroy (a_sem_pointer: POINTER) is
+	eif_thr_sem_destroy (a_sem_pointer: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
@@ -133,19 +133,16 @@ feature {NONE} -- Externals
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class SEMAPHORE
+end
 

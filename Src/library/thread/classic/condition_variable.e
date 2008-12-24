@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create and initialize condition variable.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is condition variable initialized?
 		do
 			Result := (cond_pointer /= default_pointer)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status setting
 
-	signal is
+	signal
 			-- Unblock one thread blocked on the current condition variable.
 		require
 			is_set: is_set
@@ -42,7 +42,7 @@ feature -- Status setting
 			eif_thr_cond_signal (cond_pointer)
 		end
 
-	broadcast is
+	broadcast
 			-- Unblock all threads blocked on the current condition variable.
 		require
 			is_set: is_set
@@ -50,7 +50,7 @@ feature -- Status setting
 			eif_thr_cond_broadcast (cond_pointer)
 		end
 
-	wait (a_mutex: MUTEX) is
+	wait (a_mutex: MUTEX)
 			-- Block calling thread on current condition variable.
 		require
 			is_set: is_set
@@ -59,7 +59,7 @@ feature -- Status setting
 			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
 		end
 
-	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN is
+	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN
 			-- Block calling thread on current condition variable.
 			--| Return `True' is we got the condition variable on time
 			--| Otherwise return `False'
@@ -71,7 +71,7 @@ feature -- Status setting
 			Result := (eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout) = 1)
 		end
 
-	destroy is
+	destroy
 			-- Destroy condition variable.
 		require
 			is_set: is_set
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Called by the garbage collector when the condition
 			-- variable is collected.
 		do
@@ -98,27 +98,27 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	eif_thr_cond_create: POINTER is
+	eif_thr_cond_create: POINTER
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_cond_broadcast (a_cond_ptr: POINTER) is
+	eif_thr_cond_broadcast (a_cond_ptr: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_cond_signal (a_cond_ptr: POINTER) is
+	eif_thr_cond_signal (a_cond_ptr: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
 
-	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER) is
+	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
 		external
 			"C blocking  use %"eif_threads.h%""
 		end
 
-	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER is
+	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
 		external
 			"[
 				C blocking
@@ -127,24 +127,21 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	eif_thr_cond_destroy (a_mutex_ptr: POINTER) is
+	eif_thr_cond_destroy (a_mutex_ptr: POINTER)
 		external
 			"C | %"eif_threads.h%""
 		end
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class CONDITION_VARIABLE
+end
 

@@ -9,10 +9,10 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<cluster name="thread" location="$ISE_LIBRARY\library\thread\" recursive="true">
 			<option namespace="Thread">

@@ -1,5 +1,7 @@
-indexing
-	description: "Generates uuids according to RFC 4122, Variant 1 0, Version 4."
+note
+	description: "[
+		Generates uuids according to RFC 4122, Variant 1 0, Version 4.
+	]"
 	remark: "[
 		This generator was designed for a single threaded case.
 		In a multithreaded environment only one UUID_GENERATOR should be created and then be shared among all threads.
@@ -14,7 +16,7 @@ class
 
 feature -- Access
 
-	generate_uuid: UUID is
+	generate_uuid: UUID
 			-- Generate a random UUID
         local
             l_segs: ARRAY [NATURAL_8]
@@ -30,9 +32,9 @@ feature -- Access
         		i := i + 1
         	end
 
-				-- put in version
+				-- Put in version
 			l_segs[7] := l_segs[7] & 0x0f | 0x40
-				-- put in variant
+				-- {ut in variant
 			l_segs[9] := l_segs[9] & 0x3f | 0x80
 
 			create Result.make_from_array (l_segs)
@@ -42,8 +44,8 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	rand_byte: NATURAL_8 is
-			-- Get a random byte.
+	rand_byte: NATURAL_8
+			-- Retrieve a random byte.
 		local
 			l_count: INTEGER
         do
@@ -61,7 +63,7 @@ feature {NONE} -- Implementation
         	rand_count_changed: old rand_count.item /= rand_count.item
         end
 
-	rand: RANDOM is
+	rand: RANDOM
 			-- Random number generator.
 		once
 			create Result.make
@@ -70,7 +72,7 @@ feature {NONE} -- Implementation
 			rand_not_void: Result /= Void
 		end
 
-	rand_count: CELL [INTEGER] is
+	rand_count: CELL [INTEGER]
 			-- The `rand_count'-th random number was used.
 		once
 			create Result.put (0)
@@ -78,7 +80,7 @@ feature {NONE} -- Implementation
 			rand_count_not_void: Result /= Void
 		end
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Seed of the random number generator.
 		require
 			rand_not_void: rand /= Void
@@ -99,15 +101,15 @@ feature {NONE} -- Implementation
 			Result := ((l_seed |>> 32).bit_xor (l_seed).as_integer_32 & 0x7FFFFFFF)
 		end
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class UUID_GENERATOR
+end

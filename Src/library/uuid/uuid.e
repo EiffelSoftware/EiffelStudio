@@ -1,5 +1,7 @@
-indexing
-	description: "Represents a UUID"
+note
+	description: "[
+		Represents a UUID
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -29,7 +31,7 @@ create {UUID_GENERATOR}
 
 feature {NONE} -- Initialization
 
-	make (d1: like data_1; d2: like data_2; d3: like data_3; d4: like data_4; d5: like data_5;) is
+	make (d1: like data_1; d2: like data_2; d3: like data_3; d4: like data_4; d5: like data_5;)
 			-- Initialize a UUID from data segments: `d1', `d2', `d3', `d4' and `d5'.
 		do
 			data_1 := d1
@@ -45,16 +47,16 @@ feature {NONE} -- Initialization
 			data_5_set: data_5 = d5
 		end
 
-	make_from_string (a_uuid: STRING) is
+	make_from_string (a_uuid: READABLE_STRING_8)
 			-- Initialize UUID from a string.
 			-- `a_uuid' must be in the form of FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF
 		require
 			a_uuid_attached: a_uuid /= Void
 			is_valid_uuid: is_valid_uuid (a_uuid)
 		local
-			l_parts: LIST [STRING]
+			l_parts: LIST [READABLE_STRING_8]
 			l_segs: ARRAY [NATURAL_8]
-			l_part: STRING
+			l_part: READABLE_STRING_8
 			l_index: INTEGER
 			l_count: INTEGER
 			i: INTEGER
@@ -89,7 +91,7 @@ feature {NONE} -- Initialization
 			make_from_array (l_segs)
 		end
 
-	make_from_array (a_segs: ARRAY [NATURAL_8]) is
+	make_from_array (a_segs: ARRAY [NATURAL_8])
 			-- Initializes UUID from an array of `NATURAL_8's.
 		require
 			a_segs_attached: a_segs /= Void
@@ -160,7 +162,15 @@ feature -- Access
 	data_5: NATURAL_64
 			-- Fifth and final data segment
 
-	is_null: BOOLEAN is
+	hash_code: INTEGER
+			-- <Precursor>
+		do
+			Result := data_5.hash_code
+		end
+
+feature -- Status report
+
+	is_null: BOOLEAN
 			-- Does `Current' represent a null UUID?
 		do
 			Result := data_1 = 0 and
@@ -170,56 +180,7 @@ feature -- Access
 				data_5 = 0
 		end
 
-feature -- Conversion
-
-	out: STRING is
-			-- New string containing terse printable representation
-		do
-			create Result.make (37)
-			Result.append_string (data_1.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string (data_2.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string (data_3.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string (data_4.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string (data_5.to_hex_string.substring (5, 16))
-		ensure then
-			result_attached: Result /= Void
-			result_is_valid_uuid: is_valid_uuid (Result)
-		end
-
-feature -- Access
-
-	hash_code: INTEGER is
-		do
-			Result := data_5.hash_code
-		end
-
-feature -- Comparison
-
-	is_less alias "<" (other: like Current): BOOLEAN is
-			-- Is current integer less than `other'?
-		do
-			Result := data_1 < other.data_1
-			if data_1 = other.data_1 then
-				Result := data_2 < other.data_2
-				if data_2 = other.data_2 then
-					Result := data_3 < other.data_3
-					if data_3 = other.data_3 then
-						Result := data_4 < other.data_4
-						if data_4 = other.data_4 then
-							Result := data_5 < other.data_5
-						end
-					end
-				end
-			end
-		end
-
-feature -- Query
-
-	is_valid_uuid (a_uuid: STRING): BOOLEAN is
+	is_valid_uuid (a_uuid: READABLE_STRING_8): BOOLEAN
 			-- Is `a_uuid' a valid uuid?
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -245,9 +206,49 @@ feature -- Query
 			end
 		end
 
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current integer less than `other'?
+		do
+			Result := data_1 < other.data_1
+			if data_1 = other.data_1 then
+				Result := data_2 < other.data_2
+				if data_2 = other.data_2 then
+					Result := data_3 < other.data_3
+					if data_3 = other.data_3 then
+						Result := data_4 < other.data_4
+						if data_4 = other.data_4 then
+							Result := data_5 < other.data_5
+						end
+					end
+				end
+			end
+		end
+
+feature -- Conversion
+
+	out: STRING
+			-- New string containing terse printable representation
+		do
+			create Result.make (37)
+			Result.append_string_general (data_1.to_hex_string)
+			Result.append_character (separator_char)
+			Result.append_string_general (data_2.to_hex_string)
+			Result.append_character (separator_char)
+			Result.append_string_general (data_3.to_hex_string)
+			Result.append_character (separator_char)
+			Result.append_string_general (data_4.to_hex_string)
+			Result.append_character (separator_char)
+			Result.append_string_general (data_5.to_hex_string.substring (5, 16))
+		ensure then
+			result_attached: Result /= Void
+			result_is_valid_uuid: is_valid_uuid (Result)
+		end
+
 feature {NONE} -- Implementation
 
-	hex_to_natural_8 (a_char: CHARACTER): NATURAL_8 is
+	hex_to_natural_8 (a_char: CHARACTER): NATURAL_8
 			-- Converts hex character `a_char' to a NATURAL_8
 		require
 			a_char_is_hexa_digit: a_char.is_hexa_digit
@@ -264,18 +265,17 @@ feature {NONE} -- Implementation
 			Result := n.to_natural_8
 		end
 
-	separator_char: CHARACTER is '-';
+	separator_char: CHARACTER = '-'
 			-- UUID separator character
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+;note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-end -- class UUID
+end

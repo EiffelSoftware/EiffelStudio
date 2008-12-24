@@ -156,18 +156,21 @@ feature -- Events: Connection point
 			-- <Precursor>
 		local
 			l_observer: EVENT_LIST_OBSERVER
-		attribute
-			create l_observer
-			create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make_from_array (<<
-				[item_added_event, agent l_observer.on_event_item_added],
-				[item_adopted_event, agent l_observer.on_event_item_adopted],
-				[item_changed_event, agent l_observer.on_event_item_changed],
-				[item_removed_event, agent l_observer.on_event_item_removed]
-			>>)
-			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-				l_disposable.auto_dispose (Result)
+			l_result: like internal_event_list_connection
+		do
+			l_result := internal_event_list_connection
+			if l_result = Void then
+				create l_observer
+				create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make_from_array (<<
+					[item_added_event, agent l_observer.on_event_item_added],
+					[item_adopted_event, agent l_observer.on_event_item_adopted],
+					[item_changed_event, agent l_observer.on_event_item_changed],
+					[item_removed_event, agent l_observer.on_event_item_removed]
+				>>)
+				automation.auto_dispose (Result)
+				internal_event_list_connection := Result
 			else
-				check False end
+				Result := l_result
 			end
 		end
 
@@ -263,6 +266,12 @@ feature -- Query
 		do
 			Result := all_items.has (a_event_item)
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_event_list_connection: ?like event_list_connection
+			-- Cached version of `event_list_connection'.
+			-- Note: Do not use directly!
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

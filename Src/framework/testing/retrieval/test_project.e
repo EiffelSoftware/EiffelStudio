@@ -55,6 +55,16 @@ feature {NONE} -- Initialization
 			project_set: eiffel_project = a_project
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				--| FIXME: Arno, correctly clean up resources	
+			end
+		end
+
 feature -- Access
 
 	eiffel_project_helper: !TEST_PROJECT_HELPER_I

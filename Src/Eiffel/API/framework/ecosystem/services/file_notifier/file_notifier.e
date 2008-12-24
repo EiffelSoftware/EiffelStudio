@@ -17,10 +17,7 @@ class
 inherit
 	FILE_NOTIFIER_S
 
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			safe_dispose
-		end
+	DISPOSABLE_SAFE
 
 create
 	make
@@ -55,8 +52,9 @@ feature {NONE} -- Clean up
 				file_modified_callbacks.wipe_out
 				file_records.wipe_out
 			end
-
-			Precursor (a_disposing)
+		ensure then
+			file_modified_callbacks_is_empty: a_disposing implies file_modified_callbacks.is_empty
+			file_records_is_empty: a_disposing implies file_records.is_empty
 		end
 
 feature {NONE} -- Access

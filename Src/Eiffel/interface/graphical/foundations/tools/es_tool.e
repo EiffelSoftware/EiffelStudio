@@ -87,7 +87,7 @@ feature {NONE} -- Clean up
 			internal_tool_recycled: old internal_panel /= Void implies (old internal_panel).is_recycled
 			window_detached: window = Void
 			edition_changed_detached: edition_changed = Void
-			edition_changed_disposed: (old edition_changed).is_zombie
+			not_edition_changed_is_interface_usable: not (old edition_changed).is_interface_usable
 		end
 
 feature -- Access

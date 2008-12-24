@@ -12,14 +12,20 @@ class
 inherit
 	TEST_SUITE_S
 
-	TEST_PROJECT
-		redefine
-			remove_test
-		end
-
 	TEST_PROCESSOR_REGISTRAR_I
 		redefine
 			is_valid_processor
+		end
+
+	DISPOSABLE_SAFE
+		redefine
+			is_interface_usable
+		end
+
+	TEST_PROJECT
+		redefine
+			is_interface_usable,
+			remove_test
 		end
 
 create
@@ -84,6 +90,12 @@ feature {NONE} -- Access
 		end
 
 feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {DISPOSABLE_SAFE} and then Precursor {TEST_PROJECT}
+		end
 
 	is_registered (a_processor: !TEST_PROCESSOR_I): BOOLEAN
 			-- <Precursor>

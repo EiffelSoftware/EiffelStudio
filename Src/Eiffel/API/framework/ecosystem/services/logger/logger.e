@@ -16,15 +16,12 @@ inherit
 			on_sited
 		end
 
+	DISPOSABLE_SAFE
+
 	EVENT_LIST_OBSERVER
 		redefine
 			on_event_item_added,
 			on_event_item_removed
-		end
-
-	SAFE_AUTO_DISPOSABLE
-		redefine
-			safe_dispose
 		end
 
 create
@@ -78,7 +75,6 @@ feature {NONE} -- Clean up
 					end
 				end
 			end
-			Precursor (a_disposing)
 		end
 
 feature -- Access

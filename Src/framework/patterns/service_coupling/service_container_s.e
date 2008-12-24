@@ -15,6 +15,11 @@ inherit
 
 	SERVICE_CONTAINER_I
 
+	DISPOSABLE_SAFE
+		redefine
+			is_interface_usable
+		end
+
 create
 	make
 
@@ -30,6 +35,13 @@ feature {NONE} -- Initialization
 			container_set: container = a_container
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+		end
+
 feature {NONE} -- Access
 
 	container: !SERVICE_CONTAINER_I
@@ -40,9 +52,11 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_usable: USABLE_I} container implies l_usable.is_interface_usable
+			Result := Precursor and then
+				{l_usable: USABLE_I} container implies l_usable.is_interface_usable
+		ensure then
+			container_is_interface_usable: {el_usable: USABLE_I} container implies el_usable.is_interface_usable
 		end
-
 feature -- Extension
 
 	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)

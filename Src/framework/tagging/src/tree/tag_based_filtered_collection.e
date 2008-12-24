@@ -22,6 +22,11 @@ inherit
 			are_items_available as is_connected
 		end
 
+	DISPOSABLE_SAFE
+		redefine
+			is_interface_usable
+		end
+
 	ACTIVE_COLLECTION_OBSERVER [G]
 		redefine
 			on_item_added,
@@ -44,14 +49,28 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create item_added_event
+			automation.auto_dispose (item_added_event)
 			create item_removed_event
+			automation.auto_dispose (item_removed_event)
 			create item_changed_event
+			automation.auto_dispose (item_changed_event)
 			create items_reset_event
+			automation.auto_dispose (items_reset_event)
 
 			create positive_matchers.make_default
 			create negative_matchers.make_default
 
 			create internal_items.make_default
+		end
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				--| FIXME: Arno, correctly clean up resources	
+			end
 		end
 
 feature -- Access
@@ -134,10 +153,9 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_connected and then collection.is_interface_usable
+			Result := Precursor and then (collection /= Void implies collection.is_interface_usable)
 		ensure then
-			is_connected: Result implies is_connected
-			collection_is_interface_usable: Result implies collection.is_interface_usable
+			collection_is_interface_usable: Result implies (collection = Void or else collection.is_interface_usable)
 		end
 
 	has_expression: BOOLEAN
@@ -475,6 +493,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+feature {NONE} -- Factory
 
 	create_matcher (a_expr: !STRING): !RX_PCRE_REGULAR_EXPRESSION
 			-- Create new regular expression

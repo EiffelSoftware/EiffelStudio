@@ -103,15 +103,18 @@ feature -- Events: Connection point
 			-- <Precursor>
 		local
 			l_observer: CODE_TEMPLATE_CATALOG_OBSERVER
-		attribute
-			create l_observer
-			create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make_from_array (<<
-				[catalog_changed_event, agent l_observer.on_catalog_changed]
-			>>)
-			if {l_disposable: SAFE_AUTO_DISPOSABLE} Current then
-				l_disposable.auto_dispose (Result)
+			l_result: like internal_code_template_catalog_connection
+		do
+			l_result := internal_code_template_catalog_connection
+			if l_result = Void then
+				create l_observer
+				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make_from_array (<<
+					[catalog_changed_event, agent l_observer.on_catalog_changed]
+				>>)
+				automation.auto_dispose (Result)
+				internal_code_template_catalog_connection := Result
 			else
-				check False end
+				Result := l_result
 			end
 		end
 
@@ -181,6 +184,12 @@ feature -- Removal
 		ensure
 			not_is_cataloged: not is_cataloged (a_folder)
 		end
+
+feature {NONE} -- Implementation: INternal cached
+
+	internal_code_template_catalog_connection: ?like code_template_catalog_connection
+			-- Cached version of `code_template_catalog_connection'.
+			-- Note: Do not use directly!
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

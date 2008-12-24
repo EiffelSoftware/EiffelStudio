@@ -15,6 +15,8 @@ inherit
 	TEST_COLLECTION
 		rename
 			make as make_collection
+		redefine
+			is_interface_usable
 		end
 
 	TEST_SUITE_OBSERVER
@@ -32,6 +34,16 @@ feature {NONE} -- Initialization
 			make_collection
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				--| FIXME: Arno, correctly clean up resources	
+			end
+		end
+
 feature -- Access
 
 	test_suite: !TEST_SUITE_S
@@ -43,6 +55,14 @@ feature {NONE} -- Access
 			-- Internal storage of `progress'
 
 feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor and then test_suite.is_interface_usable
+		ensure then
+			test_suite_is_interface_usable: Result implies test_suite.is_interface_usable
+		end
 
 	is_idle: BOOLEAN
 			-- <Precursor>

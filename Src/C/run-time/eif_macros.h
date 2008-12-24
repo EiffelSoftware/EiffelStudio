@@ -936,7 +936,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* If call on void target are detected, we use RTCV to perform the check. Unlike the workbench
  * mode, we won't know the message of the call as it would require too much data to be generated. */
-#if !defined(WORKBENCH) && !defined(EIF_NO_RTCV)
+#if defined(WORKBENCH) || !defined(EIF_NO_RTCV)
 #define RTCV(x) eif_check_call_on_void_target(x)
 #else
 #define RTCV(x)	(x)

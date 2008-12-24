@@ -81,12 +81,13 @@ feature -- C Code generation
 						context.generate_catcall_check (source, l_target_type, position, False)
 					end
 				end
+					-- Make sure to call RTCV to verify that TUPLE is not Void.				
 				buf.put_new_line
 				buf.put_string (once "eif_put_")
 				buf.put_string (tuple_element_name)
-				buf.put_string ("_item(")
+				buf.put_string ("_item(RTCV(")
 				a_register.print_register
-				buf.put_character (',')
+				buf.put_two_character (')', ',')
 				buf.put_integer (position)
 				buf.put_character (',')
 				source.print_register
@@ -107,11 +108,12 @@ feature -- C Code generation
 			buf: like buffer
 		do
 			buf := buffer
+				-- Make sure to call RTCV to verify that TUPLE is not Void.
 			buf.put_string (once "eif_")
 			buf.put_string (tuple_element_name)
-			buf.put_string ("_item(")
+			buf.put_string ("_item(RTCV(")
 			a_register.print_register
-			buf.put_character (',')
+			buf.put_two_character (')', ',')
 			buf.put_integer (position)
 			buf.put_character (')')
 		end

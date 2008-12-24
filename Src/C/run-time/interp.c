@@ -3083,6 +3083,7 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *last;
 
 			last = otop();
+			(void) RTCV(last->it_ref);	/* Check that TUPLE is not Void. */
 			last->type = type;	/* Stored type of accessed tuple element. */
 			switch (type & SK_HEAD) {
 				case SK_BOOL: last->it_char = eif_boolean_item (last->it_ref, pos); break;
@@ -3113,6 +3114,7 @@ rt_private void interpret(int flag, int where)
 
 			source = opop();
 			tuple = opop();
+			(void) RTCV(tuple->it_ref);	/* Check that TUPLE is not Void. */
 			switch (type & SK_HEAD) {
 				case SK_BOOL: eif_put_boolean_item (tuple->it_ref, pos, source->it_char); break;
 				case SK_CHAR: eif_put_character_item (tuple->it_ref, pos, source->it_char); break;

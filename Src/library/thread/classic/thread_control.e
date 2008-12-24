@@ -10,7 +10,7 @@ class
 
 feature -- Basic operations
 
-	yield is
+	yield
 			-- The calling thread yields its execution in favor of another
 			-- thread for an OS specific amount of time.
 		external
@@ -19,7 +19,7 @@ feature -- Basic operations
 			"eif_thr_yield"
 		end
 
-	join_all is
+	join_all
 			-- The calling thread waits for all other threads to terminate.
 		external
 			"C blocking use %"eif_threads.h%""
@@ -27,14 +27,14 @@ feature -- Basic operations
 			"eif_thr_join_all"
 		end
 
-	join is
+	join
 			-- The calling thread waits for the current child thread to
 			-- terminate.
 		do
 			thread_wait (Current)
 		end
 
-	native_join (term: POINTER) is
+	native_join (term: POINTER)
 			-- Same as `join' except that the low-level architecture-dependant
 			-- routine is used. The thread must not be created detached.
 		do
@@ -43,7 +43,7 @@ feature -- Basic operations
 
 feature -- Sleep
 
-	sleep (nanoseconds: INTEGER_64) is
+	sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
 		obsolete
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	terminated: BOOLEAN
 			-- True if the thread has terminated.
 
-	exit is
+	exit
 			-- Exit calling thread. Must be called from the thread itself.
 		external
 			"C | %"eif_threads.h%""
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	thread_wait (term: THREAD_CONTROL) is
+	thread_wait (term: THREAD_CONTROL)
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
@@ -78,7 +78,7 @@ feature {NONE} -- Externals
 			"eif_thr_wait"
 		end
 
-	thread_join (term: POINTER) is
+	thread_join (term: POINTER)
 			-- The calling thread uses the low-level join routine to
 			-- join the current Eiffel thread.
 		external
@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 			"eif_thr_join"
 		end
 
-	get_current_id: POINTER is
+	get_current_id: POINTER
 			-- Returns a pointer to the thread-id of the thread.
 		external
 			"C | %"eif_threads.h%""
@@ -95,7 +95,7 @@ feature {NONE} -- Externals
 			"eif_thr_thread_id"
 		end
 
-	last_created_thread: POINTER is
+	last_created_thread: POINTER
 			-- Returns a pointer to the thread-id of the last created thread.
 		external
 			"C | %"eif_threads.h%""
@@ -106,19 +106,16 @@ feature {NONE} -- Externals
 invariant
 	thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class THREAD_CONTROL
+end
 

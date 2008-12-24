@@ -100,7 +100,7 @@ feature -- IL code generation
 				l_actual_generic_parameter := array_type.generics.item (1)
 				if l_actual_generic_parameter.actual_type.is_formal then
 						-- Type that was provided to us didn't have much type information, we have
-						-- to rely on what we have from `Current'. 
+						-- to rely on what we have from `Current'.
 					l_actual_generic_parameter := first_generic
 				end
 				if l_actual_generic_parameter.has_associated_class_type (a_context_type) then
@@ -142,7 +142,7 @@ feature -- IL code generation
 			l_actual_generic_parameter := l_actual_array_type.generics.item (1)
 			if l_actual_generic_parameter.actual_type.is_formal and not first_generic.is_formal then
 					-- Type that was provided to us didn't have much type information, we have
-					-- to rely on what we have from `Current'. 
+					-- to rely on what we have from `Current'.
 				l_actual_generic_parameter := first_generic
 			end
 			if l_actual_generic_parameter.has_associated_class_type (a_context_type) then
@@ -197,7 +197,7 @@ feature -- IL code generation
 			inspect
 				name_id
 
-			when item_name_id, infix_at_name_id then
+			when item_name_id, infix_at_name_id, at_name_id then
 				il_generator.generate_array_access (type_kind, generic_type_id)
 
 			when put_name_id then

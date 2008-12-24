@@ -105,6 +105,7 @@ feature -- Checking
 			l_feat_tbl: FEATURE_TABLE
 			l_pos: INTEGER
 		do
+				-- First check the current names.
 			l_named_tuple_node ?= a_node
 			l_is_tuple_class_available := system.tuple_class.is_compiled and then
 				(not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed)
@@ -159,6 +160,8 @@ feature -- Checking
 				end
 				i := i + 1
 			end
+				-- Then check the potential errors in the type used in the named tuple.
+			Precursor (a_context_class, a_node)
 		end
 
 feature {NONE} -- Implementation: access

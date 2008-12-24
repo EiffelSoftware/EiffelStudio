@@ -1346,6 +1346,8 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case SK_REAL64:  l_type = EIF_REAL_64_CODE; break;
 			case SK_REF:     l_type = EIF_REFERENCE_CODE; break;
 			case SK_POINTER: l_type = EIF_POINTER_CODE; break;
+			default:
+				eise_io("Independent store: unexpected tuple element type");
 		}
 		widr_multi_char (&l_type, 1);
 		switch (l_type) {

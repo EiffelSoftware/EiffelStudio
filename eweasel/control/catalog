@@ -769,6 +769,7 @@ test	add-default-create-invalid-vtec		incr303	tcf fail incrementality
 test	change-base-library-to-base-safe	incr304	tcf fail incrementality
 test	add-then-remove-vlec-via-generic	incr305	tcf fail incrementality
 test	attempt-on-expanded-then-reference	incr306	tcf fail incrementality
+test	formal-generic-constraint-rename-crash	incr307	tcf fail incrementality
 
 
 -- Melting

@@ -46,10 +46,7 @@ feature -- Comparison
 			-- Is `other' attached to an object of the same type
 			-- as current object, and field-by-field identical to it?
 		do
-			Result := Current = other
-			if not Result then
-				Result := {ISE_RUNTIME}.standard_is_equal (Current, other)
-			end
+			Result := standard_is_equal (other)
 		end
 
 	frozen standard_is_equal (other: like Current): BOOLEAN is

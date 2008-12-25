@@ -27,7 +27,7 @@ feature {NONE} -- Creation
 	default_create is
 			-- Create and initialize degree output.
 		do
-			is_output_quiet := False
+			enable_quiet_output
 		end
 
 feature -- Access
@@ -58,6 +58,20 @@ feature -- Status Report
 					-- after degree -2 because we need to generate code at
 					-- this stage, and we cannot save what we have generated
 					-- and what we have not generated.		
+		end
+
+feature -- Status setting
+
+	enable_quiet_output is
+			-- Enable quiet output.
+		do
+			is_output_quiet := True
+		end
+
+	disable_quiet_output is
+			-- Disable quiet output.
+		do
+			is_output_quiet := False
 		end
 
 feature -- Start output features
@@ -552,19 +566,7 @@ feature {NONE} -- Implementation
 
 	is_output_quiet: BOOLEAN
 		-- Is the output quiet?
-		-- False by default as verbosity is the default compiler option
-
-	enable_quiet_output is
-			-- Enable quiet output.
-		do
-			is_output_quiet := True
-		end
-
-	disable_quiet_output is
-			-- Disable quiet output.
-		do
-			is_output_quiet := False
-		end
+		-- True by default.
 
 feature {NONE} -- Constants
 

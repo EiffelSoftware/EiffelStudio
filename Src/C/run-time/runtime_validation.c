@@ -65,14 +65,21 @@ struct align_test2 {
 	EIF_REAL_32 r;
 };
 
+struct eif_ex_type {
+	union overhead overhead;
+	char data[4];
+};
+
 rt_private void print_info(void) {
 	struct align_test t;
 	struct align_test2 t2;
+	struct eif_ex_type t3;
 
 	printf ("Size of overhead %d\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
 	printf ("Computed alignment EIF_REAL_64 %d\n", (char *) &t.d - (char *) &t);
 	printf ("Computed alignment EIF_REAL_32 %d\n", (char *) &t2.r - (char *) &t2);
+	printf ("Expanded offset between overhead and data %d\n", (char *) &t3.data - (char *) &t3.overhead);
 }
 
 rt_private int randomizer (int i) {
@@ -102,6 +109,8 @@ rt_private void double_alignment_speed_test (void) {
 
 int main(int argc, char **argv)
 {
+	struct eif_ex_type t3;
+
 	print_info();
 
 	CHECK ("TAG: Proper header alignment", (OVERHEAD % MEM_ALIGNBYTES) == 0);
@@ -113,6 +122,7 @@ int main(int argc, char **argv)
 	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,1,0,0) % MEM_ALIGNBYTES) == 0));
 	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,1,0) % MEM_ALIGNBYTES) == 0));
 	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,0,1) % MEM_ALIGNBYTES) == 0));
+	CHECK ("TAG: No gap for expanded between overhead and data", OVERHEAD == ((char *) &t3.data - (char *) &t3.overhead));
 
 	return 0;
 }

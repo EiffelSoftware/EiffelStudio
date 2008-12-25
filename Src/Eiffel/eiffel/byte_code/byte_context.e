@@ -2259,11 +2259,9 @@ feature -- C code generation: locals
 					buf.put_string (" = ")
 					if type_i.is_true_expanded then
 						type_i.c_type.generate_cast (buf)
-						buf.put_character ('(')
 						buf.put_string (l_loc_name)
 						buf.put_string (".data")
-						l_class_type.generate_expanded_overhead_size (buf)
-						buf.put_string (");")
+						buf.put_character (';')
 					else
 						type_i.c_type.generate_cast (buf)
 						buf.put_two_character ('0', ';')

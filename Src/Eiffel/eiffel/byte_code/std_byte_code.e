@@ -654,11 +654,10 @@ end
 						l_buf.put_new_line
 						l_buf.put_string ("EIF_REFERENCE earg")
 						l_buf.put_integer (i)
-						l_buf.put_string (" = (EIF_REFERENCE) (")
+						l_buf.put_string (" = (EIF_REFERENCE) ")
 						l_buf.put_string (l_arg_name)
 						l_buf.put_string (".data")
-						l_class_type.generate_expanded_overhead_size (l_buf)
-						l_buf.put_string (");")
+						l_buf.put_character (';')
 						l_buf.put_new_line
 						l_has_expanded := True
 					end
@@ -700,9 +699,9 @@ end
 							-- is redefined, not the equivalent of `standard_copy'.
 							-- Note: Safe to use `memcpy' since target is allocated on the
 							-- stack and no one can have a reference to it.
-						buf.put_string ("memcpy (sarg")
+						buf.put_string ("memcpy (&sarg")
 						buf.put_integer (i)
-						buf.put_string (".data, HEADER(arg")
+						buf.put_string (".overhead, HEADER(arg")
 						buf.put_integer (i)
 						buf.put_string ("), ")
 						l_class_type := l_adapted_type.associated_class_type (context.context_class_type.type)
@@ -716,9 +715,9 @@ end
 							-- thus it cannot move hence the EO_C flag.
 						buf.put_string (");")
 						buf.put_new_line
-						buf.put_string ("((union overhead *) sarg")
+						buf.put_string ("sarg")
 						buf.put_integer (i)
-						buffer.put_string (".data)->ov_flags = EO_EXP | EO_C")
+						buffer.put_string (".overhead.ov_flags = EO_EXP | EO_C")
 						if l_class_type.has_creation_routine then
 								-- Class has an expanded attribute we need to give it the EO_COMP flag.							
 							buffer.put_string (" | EO_COMP;")
@@ -726,9 +725,9 @@ end
 							buffer.put_character (';')
 						end
 						buf.put_new_line
-						buf.put_string ("((union overhead *) sarg")
+						buf.put_string ("sarg")
 						buf.put_integer (i)
-						buffer.put_string (".data)->ov_size = 0;")
+						buffer.put_string (".overhead.ov_size = 0;")
 						buf.put_new_line
 					end
 					i := i + 1
@@ -756,16 +755,15 @@ end
 						l_loc_name.append ("sloc")
 						l_loc_name.append_integer (i)
 
-						buf.put_string ("memset (")
+						buf.put_string ("memset (&")
 						buf.put_string (l_loc_name)
-						buf.put_string (".data, 0, ")
+						buf.put_string (".overhead, 0, OVERHEAD + ")
 						l_class_type := l_adapted_type.associated_class_type (context.context_class_type.type)
 						if context.workbench_mode then
 							l_class_type.skeleton.generate_workbench_size (buf)
 						else
 							l_class_type.skeleton.generate_size (buf, True)
 						end
-						l_class_type.generate_expanded_overhead_size (buf)
 						buf.put_string (");")
 						buf.put_new_line
 

@@ -1511,14 +1511,12 @@ feature -- Structure generation
 			if is_expanded then
 				buffer.put_new_line
 				buffer.put_string (expanded_structure_name)
-				buffer.put_string (" {")
-				buffer.put_string ("char data [")
+				buffer.put_string (" {union overhead overhead; char data [")
 				if byte_context.final_mode then
 					skeleton.generate_size (buffer, False)
 				else
 					buffer.put_integer (skeleton.workbench_size)
 				end
-				generate_expanded_overhead_size (buffer)
 				buffer.put_string ("]; };")
 			end
 		end
@@ -1556,9 +1554,8 @@ feature -- Structure generation
 					-- The dynamic type has to be set after setting the flags.
 					-- Also note that we use EO_C as those expanded cannot move.
 				buffer.put_new_line
-				buffer.put_string ("((union overhead *) ")
 				buffer.put_string (a_name)
-				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C")
+				buffer.put_string (".overhead.ov_flags = EO_EXP | EO_C")
 				if has_creation_routine then
 						-- Class has an expanded attribute we need to give it the EO_COMP flag.
 					buffer.put_string (" | EO_COMP;")
@@ -1570,9 +1567,9 @@ feature -- Structure generation
 				l_create_info.generate_gen_type_conversion (0)
 
 				buffer.put_new_line
-				buffer.put_string ("RT_DFS((union overhead *) ")
+				buffer.put_string ("RT_DFS(&")
 				buffer.put_string (a_name)
-				buffer.put_string (".data, ")
+				buffer.put_string (".overhead, ")
 				l_create_info.generate_type_id (buffer, not l_workbench_mode, 0)
 				buffer.put_character (')')
 				buffer.put_character (';')

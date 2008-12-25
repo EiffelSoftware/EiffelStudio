@@ -498,9 +498,8 @@ feature {NONE} -- C code generation
 				type_c.generate (buffer)
 				buffer.put_string ("loc1 = ")
 				type_c.generate_cast (buffer)
-				buffer.put_string ("(sloc1.data")
-				l_exp_class_type.generate_expanded_overhead_size (buffer)
-				buffer.put_two_character (')', ';')
+				buffer.put_string ("sloc1.data")
+				buffer.put_character (';')
 				buffer.put_new_line
 				buffer.put_string ("RTLD;")
 				buffer.put_new_line
@@ -508,14 +507,13 @@ feature {NONE} -- C code generation
 				buffer.put_current_registration (0)
 				buffer.put_local_registration (1, "loc1")
 				buffer.put_new_line
-				buffer.put_string ("memset (sloc1.data, 0, ")
+				buffer.put_string ("memset (&sloc1.overhead, 0, OVERHEAD + ")
 				if final_mode then
 					l_exp_class_type.skeleton.generate_size (buffer, True)
 				else
 					l_exp_class_type.skeleton.generate_workbench_size (buffer)
 				end
-				l_exp_class_type.generate_expanded_overhead_size (buffer)
-				buffer.put_string (gc_rparan_semi_c)
+				buffer.put_two_character (')', ';')
 					-- Update the type information
 				l_exp_class_type.generate_expanded_type_initialization (buffer, "sloc1", gen_param, Current)
 			elseif final_mode and then associated_class.assertion_level.is_precondition then

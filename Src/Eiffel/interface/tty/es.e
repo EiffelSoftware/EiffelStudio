@@ -151,6 +151,11 @@ feature -- Initialization
 							create file_degree_output.make (output_file_name)
 							Eiffel_project.set_degree_output (file_degree_output)
 						end
+						if verbose_option then
+							degree_output.disable_quiet_output
+						else
+							-- By default degree output is quiet.
+						end
 
 							-- Load project
 						create l_loader
@@ -278,6 +283,9 @@ feature -- Properties
 
 	output_file_option: BOOLEAN
 			-- Redirect output to `output_file_name'?
+
+	verbose_option: BOOLEAN
+			-- Make compiler output verbose (default: quiet)?
 
 	output_file_name: STRING
 			-- File which Output is redirected into
@@ -414,7 +422,7 @@ feature -- Output
 		do
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
-			io.put_string (" [-help | -version | -batch | -clean | -use_settings | ")
+			io.put_string (" [-help | -version | -batch | -clean | -verbose | -use_settings | ")
 			add_usage_special_cmds
 			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
 			if eiffel_layout.Has_documentation_generation then
@@ -616,6 +624,8 @@ feature -- Update
 				else
 					command := loop_cmd
 				end
+			elseif option.is_equal ("-verbose") then
+				verbose_option := True
 			elseif option.is_equal ("-version") then
 				version_only := True
 			elseif option.is_equal ("-quick_melt") then
@@ -1345,9 +1355,9 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1358,19 +1368,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

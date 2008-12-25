@@ -34,14 +34,16 @@ feature -- Action
 	deactivate is
 			-- Cleanup from previous call to activate.
 		do
-			Precursor {EB_GRID_EDITOR_TOKEN_ITEM}
-			if editor /= Void then
-				editor.recycle
-				editor := Void
-			end
-			if viewport /= Void then
-				viewport.destroy
-				viewport := Void
+			if not is_destroyed and then is_parented then
+				Precursor {EB_GRID_EDITOR_TOKEN_ITEM}
+				if editor /= Void then
+					editor.recycle
+					editor := Void
+				end
+				if viewport /= Void then
+					viewport.destroy
+					viewport := Void
+				end
 			end
 		end
 

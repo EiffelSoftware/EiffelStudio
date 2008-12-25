@@ -1287,6 +1287,7 @@ test	out-wrong-for-natural-attribute		exec298 tcf fail execution
 test	invariant-crash-with-attached-parent	exec299 tcf pass execution
 test	deep-twin-expanded-type			exec300 tcf fail execution
 test	attempt-on-type-none			exec301 tcf fail execution
+test	self-init-attribute-call-to-precursor	exec302 tcf fail execution manual
 
 
 -- Compiler termination (exception trace, panic, etc.)

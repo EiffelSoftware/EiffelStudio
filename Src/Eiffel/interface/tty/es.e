@@ -508,7 +508,15 @@ feature -- Output
 		do
 			if is_gc_stats_enabled then
 				create l_mem
+					-- Get current GC stats
+				l_full_gc_info := l_mem.gc_statistics ({MEM_CONST}.full_collector)
+				l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
+
+					-- Do a full collect and coalesc, then retrieve final memory statistics
+				l_mem.full_collect
+				l_mem.full_coalesce
 				l_mem_info := l_mem.memory_statistics ({MEM_CONST}.eiffel_memory)
+
 				io.put_new_line
 				io.put_string ("                   Total |      Used |  Overhead |      Free")
 				io.put_new_line
@@ -545,14 +553,14 @@ feature -- Output
 				io.put_new_line
 
 				io.put_new_line
-				l_full_gc_info := l_mem.gc_statistics ({MEM_CONST}.full_collector)
-				io.put_string ("GC full cycle is " + l_full_gc_info.cycle_count.out + "%N")
-				io.put_string ("GC full cycle is " + l_full_gc_info.cpu_time_average.out + "%N")
+
+				io.put_string ("GC full cycle iterations   = " + l_full_gc_info.cycle_count.out + "%N")
+				io.put_string ("GC full cycle average time = " + l_full_gc_info.cpu_time_average.out + "%N")
 				io.put_new_line
 
-				l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
-				io.put_string ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
-				io.put_string ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
+
+				io.put_string ("GC incremental cycle iterations   = " + l_part_gc_info.cycle_count.out + "%N")
+				io.put_string ("GC incremental cycle average time = " + l_part_gc_info.cpu_time_average.out + "%N")
 				io.put_string ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
 				io.put_string ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
 				io.put_string ("Full Collection period " + l_mem.collection_period.out + "%N")

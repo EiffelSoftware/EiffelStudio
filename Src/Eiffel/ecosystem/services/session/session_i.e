@@ -219,7 +219,7 @@ feature -- Events: Connection point
 			if l_result = Void then
 				create l_observer
 				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make_from_array (<<
-					[value_changed_event, agent l_observer.on_session_value_changed]
+					[value_changed_event, agent l_observer.hacked_on_session_value_changed]
 				>>)
 				automation.auto_dispose (Result)
 				internal_session_connection := Result

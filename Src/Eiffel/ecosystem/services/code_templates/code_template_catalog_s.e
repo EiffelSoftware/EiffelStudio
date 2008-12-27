@@ -109,7 +109,7 @@ feature -- Events: Connection point
 			if l_result = Void then
 				create l_observer
 				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make_from_array (<<
-					[catalog_changed_event, agent l_observer.on_catalog_changed]
+					[catalog_changed_event, agent l_observer.hacked_on_catalog_changed]
 				>>)
 				automation.auto_dispose (Result)
 				internal_code_template_catalog_connection := Result

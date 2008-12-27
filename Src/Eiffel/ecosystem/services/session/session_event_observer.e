@@ -28,6 +28,20 @@ feature {SESSION_I} -- Event handlers
 		do
 		end
 
+	frozen hacked_on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
+			-- Called when a event item is added to the event service.
+			--
+			-- `a_session': The session where the value changed.
+			-- `a_id': The session data identifier of the changed value.
+		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			a_session_attached: a_session /= Void
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+		do
+			on_session_value_changed (a_session, a_id)
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

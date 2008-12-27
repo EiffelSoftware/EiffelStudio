@@ -94,10 +94,10 @@ feature -- Events: Connection point
 			l_result := internal_active_collection_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]} Result.make_from_array (<<
-					[item_added_event, agent l_observer.on_item_added],
-					[item_removed_event, agent l_observer.on_item_removed],
-					[item_changed_event, agent l_observer.on_item_changed],
-					[items_reset_event, agent l_observer.on_items_reset]
+					[item_added_event, agent l_observer.hacked_on_item_added],
+					[item_removed_event, agent l_observer.hacked_on_item_removed],
+					[item_changed_event, agent l_observer.hacked_on_item_changed],
+					[items_reset_event, agent l_observer.hacked_on_items_reset]
 				>>)
 				automation.auto_dispose (Result)
 				internal_active_collection_connection := Result

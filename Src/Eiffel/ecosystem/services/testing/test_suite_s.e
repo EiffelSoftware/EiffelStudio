@@ -266,11 +266,11 @@ feature -- Event: Connection point
 				create l_observer
 				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [!TEST_I], ACTIVE_COLLECTION_I [!TEST_I]]}
 					Result.make_from_array (<<
-						[processor_launched_event, agent l_observer.on_processor_launched],
-						[processor_proceeded_event, agent l_observer.on_processor_proceeded],
-						[processor_finished_event, agent l_observer.on_processor_finished],
-						[processor_stopped_event, agent l_observer.on_processor_stopped],
-						[processor_error_event, agent l_observer.on_processor_error]
+						[processor_launched_event, agent l_observer.hacked_on_processor_launched],
+						[processor_proceeded_event, agent l_observer.hacked_on_processor_proceeded],
+						[processor_finished_event, agent l_observer.hacked_on_processor_finished],
+						[processor_stopped_event, agent l_observer.hacked_on_processor_stopped],
+						[processor_error_event, agent l_observer.hacked_on_processor_error]
 					>>, active_collection_connection)
 				automation.auto_dispose (Result)
 				internal_test_suite_connection := Result

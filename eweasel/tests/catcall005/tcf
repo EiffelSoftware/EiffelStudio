@@ -6,7 +6,7 @@ copy_raw test.e $CLUSTER test.e
 copy_raw x.e $CLUSTER x.e
 
 compile_melted
-compile_result validity_warning TEST Catcall; X Catcall
+compile_result validity_warning TEST Catcall; X Catcall; NONE Catcall
 
 execute_work 	NONE 	exec_output1
 execute_result 	ok

@@ -10,6 +10,6 @@ copy_raw test1_bis.e $CLUSTER test1_bis.e
 copy_raw test_array.e $CLUSTER test_array.e
 
 compile_melted
-compile_result validity_warning TEST_ARRAY Catcall; TEST Catcall Catcall Catcall Catcall Catcall
+compile_result validity_warning TEST_ARRAY Catcall; TEST Catcall Catcall Catcall Catcall Catcall; NONE Catcall
 
 test_end

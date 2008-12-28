@@ -1965,6 +1965,8 @@ end
 			private_melt := False
 			first_compilation := False
 			il_quick_finalization := False
+
+ 			display_catcall_statistics
 		end
 
 	reset_cached_class_i_options
@@ -6021,20 +6023,26 @@ feature -- Statistics
 			end
 		end
 
-	print_catcall_statistics is
+	display_catcall_statistics is
+		local
+			l_str: STRING
+			l_cat_call_summary: CAT_CALL_SUMMARY_WARNING
 		do
 			if statistics.total > 0 then
-				print ("Catcall statistics: " + statistics.total.out)
-				print (" (export: " + statistics.export_violation.out)
-				print ("; conformance: " + statistics.conformance_violation.out)
-				print ("; covariant: " + statistics.covariant_violation.out + ")%N")
-				print ("%Tcompiler-limitation: " + statistics.compiler_limitation.out + "%N")
-				print ("%Tcovariant-generic: " + statistics.covariant_generic.out + "%N")
-				print ("%Tis_equal: " + statistics.is_equal_feat.out + "%N")
-				print ("%Tany-features: " + statistics.any_features.out + "%N")
-				print ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
-				print ("%Tother: " + statistics.other.out)
-				print ("%N")
+				create l_str.make (1024)
+				l_str.append ("Catcall statistics: " + statistics.total.out)
+				l_str.append (" (export: " + statistics.export_violation.out)
+				l_str.append ("; conformance: " + statistics.conformance_violation.out)
+				l_str.append ("; covariant: " + statistics.covariant_violation.out + ")%N")
+				l_str.append ("%Tcompiler-limitation: " + statistics.compiler_limitation.out + "%N")
+				l_str.append ("%Tcovariant-generic: " + statistics.covariant_generic.out + "%N")
+				l_str.append ("%Tis_equal: " + statistics.is_equal_feat.out + "%N")
+				l_str.append ("%Tany-features: " + statistics.any_features.out + "%N")
+				l_str.append ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
+				l_str.append ("%Tother: " + statistics.other.out)
+				l_str.append ("%N")
+				create l_cat_call_summary.make (l_str)
+				error_handler.insert_warning (l_cat_call_summary)
 			end
 		end
 

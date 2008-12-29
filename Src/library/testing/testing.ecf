@@ -16,10 +16,5 @@
 				<exclude>/tests$</exclude>
 			</file_rule>
 		</cluster>
-		<tests name="tests" location=".\tests\" recursive="true">
-			<file_rule>
-				<exclude>/\.svn$</exclude>
-			</file_rule>
-		</tests>
 	</target>
 </system>

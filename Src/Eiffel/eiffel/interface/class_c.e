@@ -2165,11 +2165,13 @@ end
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
 			l_parents: like parents
+			l_instantiator: like instantiator
 		do
 			from
 				l_parents := parents
 				l_area := l_parents.area
 				nb := l_parents.count
+				l_instantiator := instantiator
 			until
 				i = nb
 			loop
@@ -2180,7 +2182,7 @@ end
 				if parent_type.is_expanded then
 					parent_type := parent_type.reference_type
 				end
-				Instantiator.dispatch (parent_type, Current)
+				l_instantiator.dispatch (parent_type, Current)
 				i := i + 1
 			end
 		end

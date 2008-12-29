@@ -293,19 +293,6 @@ feature
 			safe_process (l_as.internal_operands)
 		end
 
-	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
-			-- Process `l_as'.
-		do
-			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol (match_list))
-				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol (match_list))
-			end
-			safe_process (l_as.tilda_symbol (match_list))
-			safe_process (l_as.feature_name)
-			safe_process (l_as.internal_operands)
-		end
-
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
 			-- Process `l_as'.
 		do
@@ -1435,9 +1422,9 @@ feature{NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1448,19 +1435,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

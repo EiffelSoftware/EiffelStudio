@@ -790,12 +790,6 @@ feature -- Roundtrip
 			process_routine_creation_as (l_as)
 		end
 
-	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
-			-- Process `l_as'.
-		do
-			process_routine_creation_as (l_as)
-		end
-
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
 			-- Process `l_as'.
 		local

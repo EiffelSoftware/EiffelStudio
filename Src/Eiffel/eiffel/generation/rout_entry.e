@@ -144,7 +144,12 @@ end
 			Result.set_access_type_id (l_access_type_id)
 
 				-- Generate pattern info for result.
-			l_written_type_id := written_class.meta_type (class_type).type_id
+			if written_in /= access_in then
+				l_written_type_id := written_class.meta_type (class_type).type_id
+			else
+				l_written_type_id := l_access_type_id
+			end
+
 			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
 
 			if is_attribute then
@@ -157,13 +162,19 @@ feature -- update
 	update (class_type: CLASS_TYPE) is
 			-- Update `Current' for `class_type'.
 		local
+			l_access_type_id: INTEGER
 			l_written_type_id: INTEGER
 		do
 			Precursor (class_type)
-			set_access_type_id (access_class.meta_type (class_type).type_id)
+			l_access_type_id := access_class.meta_type (class_type).type_id
+			set_access_type_id (l_access_type_id)
 
+			if written_in /= access_in then
+				l_written_type_id := written_class.meta_type (class_type).type_id
+			else
+				l_written_type_id := l_access_type_id
+			end
 				-- Generate pattern id from written class.
-			l_written_type_id := written_class.meta_type (class_type).type_id
 			set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
 		end
 

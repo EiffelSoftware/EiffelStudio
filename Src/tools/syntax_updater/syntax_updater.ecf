@@ -13,14 +13,14 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="nmake" succeed="true">
+		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v63\" command="nmake" succeed="true">
 			<description>Generate Parser Files</description>
 			<condition>
 				<platform value="windows"/>
 				<custom name="ISE_C_COMPILER" value="msc"/>
 			</condition>
 		</pre_compile_action>
-		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="make" succeed="true">
+		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v63\" command="make" succeed="true">
 			<description>Generate Parser Files</description>
 			<condition>
 				<platform excluded_value="windows"/>
@@ -33,6 +33,6 @@
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="root_cluster" location=".\"/>
-		<override name="parser_v60" location="parser_v60\"/>
+		<override name="parser_v63" location="parser_v63\"/>
 	</target>
 </system>

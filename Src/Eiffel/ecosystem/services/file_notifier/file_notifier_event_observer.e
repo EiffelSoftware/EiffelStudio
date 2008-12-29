@@ -26,18 +26,6 @@ feature {FILE_NOTIFIER_S} -- Event handlers
 		do
 		end
 
-	frozen hacked_on_file_modified (a_file_name: !STRING_32; a_modification_type: NATURAL_8)
-			-- Called when a file has been modifications.
-			--
-			-- `a_file_name': The name of the file modified.
-			-- `a_modification_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
-		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
-			not_a_file_name_is_empty: not a_file_name.is_empty
-		do
-			on_file_modified (a_file_name, a_modification_type)
-		end
-
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -258,20 +258,20 @@ feature -- Event: Connection point
 	test_suite_connection: !EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
 			-- <Precursor>
 		local
-			l_observer: TEST_SUITE_OBSERVER
 			l_result: like internal_test_suite_connection
 		do
 			l_result := internal_test_suite_connection
 			if l_result = Void then
-				create l_observer
 				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [!TEST_I], ACTIVE_COLLECTION_I [!TEST_I]]}
-					Result.make_from_array (<<
-						[processor_launched_event, agent l_observer.hacked_on_processor_launched],
-						[processor_proceeded_event, agent l_observer.hacked_on_processor_proceeded],
-						[processor_finished_event, agent l_observer.hacked_on_processor_finished],
-						[processor_stopped_event, agent l_observer.hacked_on_processor_stopped],
-						[processor_error_event, agent l_observer.hacked_on_processor_error]
-					>>, active_collection_connection)
+					Result.make (
+						agent (ia_observer: !TEST_SUITE_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+							do
+								Result := << [processor_launched_event, agent ia_observer.on_processor_launched],
+									[processor_proceeded_event, agent ia_observer.on_processor_proceeded],
+									[processor_finished_event, agent ia_observer.on_processor_finished],
+									[processor_stopped_event, agent ia_observer.on_processor_stopped],
+									[processor_error_event, agent ia_observer.on_processor_error] >>
+							end, active_collection_connection)
 				automation.auto_dispose (Result)
 				internal_test_suite_connection := Result
 			else

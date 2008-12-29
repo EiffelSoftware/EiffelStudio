@@ -39,7 +39,7 @@ inherit
 			new_nested_expr_as, new_none_type_as, new_object_test_as, new_once_as, new_operand_as, new_paran_as, new_parent_as,
 			new_precursor_as, new_prefix_as, new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as, new_routine_creation_as,
-			new_old_routine_creation_as, new_static_access_as, new_string_as, new_tagged_as,
+			new_static_access_as, new_string_as, new_tagged_as,
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
 			new_un_not_as, new_un_old_as, new_un_plus_as, new_un_strip_as, new_unique_as,
 			new_variant_as, new_verbatim_string_as, new_void_as, new_filled_none_id_as,

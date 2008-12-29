@@ -123,14 +123,6 @@ feature -- Access
 			create Result.make (t, f, o, is_qualified, a_as, d_as)
 		end
 
-	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
-			-- New AGENT_ROUTINE_CREATION AST node.
-		obsolete
-			"To be removed. Use `new_old_routine_creation_as' instead."
-		do
-			create Result.make (t, f, o, is_qualified, a_as)
-		end
-
 	new_inline_agent_creation_as (a_b: BODY_AS; a_o: DELAYED_ACTUAL_LIST_AS; a_as: KEYWORD_AS): INLINE_AGENT_CREATION_AS is
 			-- New INLINE_AGENT_CREATION AST node.
 		do
@@ -1695,20 +1687,6 @@ feature -- Access
 		do
 		end
 
-	new_old_routine_creation_as (
-			l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS;
-			is_qualified: BOOLEAN; a_as: SYMBOL_AS): PAIR [ROUTINE_CREATION_AS, LOCATION_AS]
-		is
-			-- New ROUTINE_CREATION AST node for obsolete use of `~'.
-		local
-			l_routine: TILDA_ROUTINE_CREATION_AS
-		do
-			if l /= Void and f /= Void then
-				create l_routine.make (t, f, o, is_qualified, a_as)
-				create Result.make (l_routine, l.start_location)
-			end
-		end
-
 	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS is
 			-- New STATIC_ACCESS AST node
 		do
@@ -1931,9 +1909,9 @@ feature -- Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1944,19 +1922,19 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

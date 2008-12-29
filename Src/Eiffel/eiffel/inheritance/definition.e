@@ -140,7 +140,7 @@ feature -- Checking
 						until
 							inherited_features.after or else stop
 						loop
-							attr_precursor ?= inherited_features.item.a_feature
+							attr_precursor ?= inherited_features.item.internal_a_feature
 							stop :=  attr_precursor.generate_in /= 0
 							inherited_features.forth
 						end

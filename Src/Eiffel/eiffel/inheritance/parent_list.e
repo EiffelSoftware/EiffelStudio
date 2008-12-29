@@ -94,6 +94,44 @@ feature -- Validity
 			end
 		end
 
+	are_features_undefined: BOOLEAN is
+			-- Are features explicitly undefined in `Current' list?
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := count
+			until
+				i = nb
+			loop
+				Result := area [i].has_undefining
+				if Result then
+					i := nb
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	are_features_redefined: BOOLEAN is
+			-- Are features explicitly redefined in `Current' list?
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := count
+			until
+				i = nb
+			loop
+				Result := area [i].has_redefining
+				if Result then
+					i := nb
+				else
+					i := i + 1
+				end
+			end
+		end
+
 	is_explicitly_selecting (a_feature_name_id: INTEGER): BOOLEAN is
 			-- Are the parents explicitly selecting `a_feature_name_id'?
 		require

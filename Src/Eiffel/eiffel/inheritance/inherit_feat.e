@@ -109,23 +109,15 @@ feature
 			-- Insert `info' in one of the two lists.
 		require
 			info_not_void: info /= Void
-			a_feature_set: info.a_feature /= Void
+			a_feature_set: info.internal_a_feature /= Void
 		do
 				-- The position of the list of features must not change
 				-- as `treat_renamings' may call it.
-			if not info.a_feature.is_deferred then
+			if not info.internal_a_feature.is_deferred then
 				features.put_front (info)
 			else
 				deferred_features.put_front (info)
 			end
-		end
-
-	inherited_feature: FEATURE_I is
-			-- Feature in information `inherited_info'
-		require
-			inherited_info_exists: inherited_info /= Void
-		do
-			Result := inherited_info.a_feature
 		end
 
 	process_renamings is
@@ -162,7 +154,7 @@ feature
 				if next.renaming_processed then
 					feat.forth
 				else
-					feature_name_id :=  next.a_feature.feature_name_id
+					feature_name_id :=  next.internal_a_feature.feature_name_id
 					if next.parent.renaming /= Void then
 						extended_feature_name := next.parent.renaming.item (feature_name_id)
 						if extended_feature_name /= Void then
@@ -170,11 +162,16 @@ feature
 							new_name_id := extended_feature_name.feature_name_id
 							new_alias_name_id := extended_feature_name.alias_name_id
 
-								-- We only need a twin so as to not unnecessarily duplicate
-								-- arguments and type for some feature_i descendents.
-								--| Aliasing products unexpected results so a twin is needed.
-								
-							replication := next.a_feature.twin
+								-- Instantiate `a_feature', only twin if a new object
+								-- is not created to avoid aliasing.
+
+							next.instantiate_a_feature
+							if next.a_feature_instantiated_for_feature_table then
+								replication := next.a_feature
+							else
+								replication := next.a_feature.twin
+							end
+
 								-- Mark it as processed
 							next.set_renaming_processed
 								-- Move the inherit feature information under
@@ -239,17 +236,22 @@ feature
 			end
 		end
 
-	process (cl: CLASS_C; feature_name_id: INTEGER) is
+	process (cl: CLASS_C; feature_name_id: INTEGER; a_check_undefinition, a_check_redefinition: BOOLEAN) is
 			-- Process the features inherited under the same final name
 		require
 			inherited_info = Void
 		do
-			process_undefinition (cl, feature_name_id)
+			if a_check_undefinition then
+					-- If no parents have an undefine clause then we
+					-- do not need to check for undefinition.
+				process_undefinition (cl, feature_name_id)
+			end
 			if deferred_features.count > 0 then
-				check_deferred (cl)
+					-- Update `rout_id_set'.
+				rout_id_set.update (deferred_features)
 			end
 			if features.count > 0 then
-				process_features (cl, feature_name_id)
+				process_features (cl, feature_name_id, a_check_redefinition)
 			end
 		end
 
@@ -287,16 +289,16 @@ feature
 			loop
 				info := features.item;
 				if info.parent.is_undefining (feature_name_id) then
-					a_feature := info.a_feature;
+					a_feature := info.internal_a_feature;
 					if not a_feature.undefinable then
 						create vdus2;
 						vdus2.set_class (System.current_class);
 						vdus2.set_parent (info.parent.parent);
-						vdus2.set_a_feature (a_feature);
+						vdus2.set_a_feature (info.a_feature);
 						Error_handler.insert_error (vdus2);
 						features.forth;
 					else
-						new_deferred := a_feature.new_deferred;
+						new_deferred := info.a_feature.new_deferred;
 						create new_info.make (new_deferred)
 						new_info.set_parent (info.parent);
 						insert (new_info);
@@ -317,7 +319,7 @@ feature
 			rout_id_set.update (deferred_features)
 		end
 
-	process_features (cl: CLASS_C; feature_name_id: INTEGER) is
+	process_features (cl: CLASS_C; feature_name_id: INTEGER; a_check_redefinition: BOOLEAN) is
 			-- Process the non-deferred inherited features.
 		require
 			features /= Void;
@@ -326,12 +328,12 @@ feature
 			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
 		do
-			if features_all_redefined (feature_name_id) then
+			if a_check_redefinition and then features_all_redefined (feature_name_id) then
 					-- To be redefined later
 			elseif features_all_the_same then
 					-- Shared features
 				inherited_info := features.first;
-				encapsulated_i ?= inherited_info.a_feature
+				encapsulated_i ?= inherited_info.internal_a_feature
 				if encapsulated_i /= Void and then encapsulated_i.generate_in = 0 then
 					from
 						features.start
@@ -339,7 +341,7 @@ feature
 					until
 						features.after or else inherited_info /= Void
 					loop
-						encapsulated_i ?= features.item.a_feature
+						encapsulated_i ?= features.item.internal_a_feature
 						if encapsulated_i /= Void and then encapsulated_i.generate_in /= 0 then
 							inherited_info := features.item
 						end
@@ -374,7 +376,7 @@ feature
 				features.after or else not Result
 			loop
 				Result := features.item.parent.is_redefining (feature_name_id)
-				if Result and then not features.item.a_feature.redefinable then
+				if Result and then not features.item.internal_a_feature.redefinable then
 						-- Cannot redefine frozen feature, constant or once
 					create vdrs2;
 					vdrs2.set_class (System.current_class);
@@ -402,7 +404,7 @@ feature
 				-- First condition for sharing feature: same body id
 			from
 				Result := True
-				first_feature := features.first.a_feature
+				first_feature := features.first.internal_a_feature
 				body_id := first_feature.code_id
 				alias_name_id := first_feature.alias_name_id
 				features.start
@@ -410,7 +412,7 @@ feature
 			until
 				features.after or else not Result
 			loop
-				current_feature := features.item.a_feature
+				current_feature := features.item.internal_a_feature
 				Result := body_id = current_feature.code_id
 					-- Check that aliases are the same
 				if not first_feature.is_same_alias (current_feature) then
@@ -457,7 +459,7 @@ feature
 				until
 					features.after or else not Result
 				loop
-					Result := features.item.a_feature.is_attribute;
+					Result := features.item.internal_a_feature.is_attribute;
 					features.forth;
 				end;
 			end;
@@ -485,7 +487,7 @@ feature
 					-- inherited feature
 				export_status := info.parent.new_export_for (feature_name_id)
 				if export_status = Void then
-					export_status := info.a_feature.export_status
+					export_status := info.internal_a_feature.export_status
 				end
 				Result := Result.concatenation (export_status)
 
@@ -502,7 +504,7 @@ feature
 				export_status := info.parent.new_export_for (feature_name_id)
 					-- If no new export status, then take the inherted one
 				if export_status = Void then
-					export_status := info.a_feature.export_status
+					export_status := info.internal_a_feature.export_status
 				end
 				Result := Result.concatenation (export_status)
 				deferred_features.forth

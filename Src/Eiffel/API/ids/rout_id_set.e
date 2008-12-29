@@ -84,7 +84,7 @@ feature {COMPILER_EXPORTER}
 			until
 				l.after
 			loop
-				merge (l.item.a_feature.rout_id_set)
+				merge (l.item.internal_a_feature.rout_id_set)
 				l.forth
 			end
 		end

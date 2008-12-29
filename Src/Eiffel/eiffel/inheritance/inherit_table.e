@@ -309,7 +309,10 @@ feature
 			resulting_table.compute_lookup_tables
 
 				-- Check types in the feature table
-			resulting_table.check_table;
+			--resulting_table.check_table;
+
+			origin_table.check_feature_types (resulting_table)
+
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
 			end
@@ -344,7 +347,9 @@ feature
 				-- features of a changed class
 			if a_class.changed then
 					-- Generic types tracking
-				resulting_table.update_instantiator2
+				--resulting_table.update_instantiator2
+				Origin_table.update_instantiator2 (resulting_table)
+
 					-- Compute invariant clause
 				compute_invariant;
 			end;
@@ -574,12 +579,10 @@ end;
 		local
 			parent_table: SPECIAL [FEATURE_I]
 				-- Feature table of the parent `parent_c'
-			feature_i: FEATURE_I
-				-- Inherited feature
 			parent_type: LIKE_CURRENT
 				-- "like Current" type of `parent_c'
 			actual_parent_type: CL_TYPE_A
-			l_shared_with_parent_table: BOOLEAN
+			l_feature_name_id: INTEGER
 			i: INTEGER
 		do
 			from
@@ -616,23 +619,17 @@ end;
 			until
 				i < 0
 			loop
-					-- Instantiate feature for `parent_type', this is so that generics may
-					-- be processed correctly.
-				feature_i := parent_table [i].instantiated (parent_type)
-
-					-- Did `instantiate' create a new object, if so then it doesn't need to be duplicated during initialization
-					-- of the inherited feature.
-				l_shared_with_parent_table := parent_table [i] = feature_i
+				l_feature_name_id := parent_table [i].feature_name_id
 
 					-- Add inherited feature information to the concerned instance of INHERIT_FEAT
-				search (feature_i.feature_name_id)
+				search (l_feature_name_id)
 					-- If an INHERIT_FEAT object corresponding to feature_name_id is not present then add one.
 				if found_item = Void then
 							-- Add new feature to the inheritance table.
-					put (create {INHERIT_FEAT}.make, feature_i.feature_name_id)
+					put (create {INHERIT_FEAT}.make, l_feature_name_id)
 				end
 
-				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (feature_i, parent_c, l_shared_with_parent_table))
+				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (parent_table [i], parent_c, parent_type))
 				i := i - 1
 			end
 
@@ -734,8 +731,12 @@ end;
 			l_keys: like keys
 			l_content: like content
 			l_iteration_position: INTEGER
+			l_check_undefinition, l_check_redefinition: BOOLEAN
 		do
 			from
+					-- Determining whether to check features for undefinition and redefinition
+				l_check_undefinition := parents.are_features_undefined
+				l_check_redefinition := parents.are_features_redefined
 					-- Iteration on the structure.				
 				l_count := count
 				iteration_position := -1
@@ -761,7 +762,7 @@ end;
 
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.
-				inherit_feat.process (a_class, feature_name_id)
+				inherit_feat.process (a_class, feature_name_id, l_check_undefinition, l_check_redefinition)
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info /= Void then
 						-- Class inherit from a feature coming from one
@@ -1424,7 +1425,7 @@ end;
 					end;
 				else
 						-- Inherited info has been set
-					if inherit_feat.features.count > 1 and then inherit_feat.inherited_info.a_feature.written_in /= a_class.class_id then
+					if inherit_feat.features.count > 1 and then inherit_feat.inherited_info.internal_a_feature.written_in /= a_class.class_id then
 							-- We have a repeatedly inherited feature that is not defined in current class.
 							-- We need to check for any erroneous redefinitions, if so then raise VDRS-4 error
 						from
@@ -1433,11 +1434,11 @@ end;
 						until
 							l_features_list.after
 						loop
-							if l_features_list.item.parent.is_redefining (l_features_list.item.a_feature.feature_name_id) then
+							if l_features_list.item.parent.is_redefining (l_features_list.item.internal_a_feature.feature_name_id) then
 									-- We have an erroneous redefinition
 								create vdrs4;
 								vdrs4.set_class (a_class);
-								vdrs4.set_feature_name (Names_heap.item (l_features_list.item.a_feature.feature_name_id))
+								vdrs4.set_feature_name (Names_heap.item (l_features_list.item.internal_a_feature.feature_name_id))
 								Error_handler.insert_error (vdrs4);
 							end
 							l_features_list.forth
@@ -1450,17 +1451,18 @@ end;
 	init_inherited_feature (a_feature_name_id: INTEGER_32; inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT): FEATURE_I is
 			-- Initialization of an inherited feature
 		require
-			a_feature_valid: inherit_info /= Void and then inherit_info.a_feature /= Void
+			a_feature_valid: inherit_info /= Void and then inherit_info.internal_a_feature /= Void
 			inherit_feat_not_void: inherit_feat /= Void
 		local
 			l_inherit_info: INHERIT_INFO
 			old_feature: FEATURE_I
 			feature_name_id: INTEGER
 		do
-			if inherit_info.a_feature_shared then
-				Result := inherit_info.a_feature.twin
-			else
-				Result := inherit_info.a_feature
+			Result := inherit_info.a_feature
+			if not inherit_info.a_feature_instantiated_for_feature_table then
+					-- We need to duplicate so that type and argument information
+					-- get twinned too.
+				Result := Result.duplicate
 			end
 			Result.set_feature_name_id (a_feature_name_id, Result.alias_name_id)
 				-- It is no more an origin
@@ -1746,6 +1748,8 @@ indexing
 		]"
 
 end
+
+
 
 
 
